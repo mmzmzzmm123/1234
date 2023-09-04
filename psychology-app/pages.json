@@ -226,6 +226,13 @@
       }
     },
     {
+      "path": "pages/consult/likes",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "我的关注"
+      }
+    },
+    {
       "path": "pages/logincallback",
       "style": {
         "navigationStyle": "custom"

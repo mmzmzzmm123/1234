@@ -83,6 +83,14 @@
         <image src="/static/course/menu/index.png" class="page-bottom-icon"/>
         <text class="page-bottom-home">首页</text>
       </view>
+      <view v-if="liked" class="page-bottom-image" @tap="cancelLike">
+        <image src="/static/consult/like.png" class="page-bottom-icon"/>
+        <text class="page-bottom-liked">已关注</text>
+      </view>
+      <view v-else class="page-bottom-image" @tap="doLike">
+        <image src="/static/consult/unlike.png" class="page-bottom-icon"/>
+        <text class="page-bottom-home">关注</text>
+      </view>
       <button @tap="buy" class="page-bottom-btn">
         <text class="text_26">立即预约</text>
       </button>
@@ -112,6 +120,7 @@ import serveList from '@/components/consult/detail/serveList.vue'
 import utils from "@/utils/common";
 import indexServer from '@/server/consult/index'
 import consultServer from "@/server/consult/consult";
+import userServer from "@/server/consult/user";
 import orderServer from "@/server/consult/order";
 import loginServer from '@/server/login'
 let app = getApp();
@@ -151,6 +160,7 @@ export default {
           name: '可约时间'
         }],
       current: 0,
+      liked: false,
       userInfo: {},
       consultInfo: {},
       consultId: 0,
@@ -187,6 +197,12 @@ export default {
     await this.getConsultInfo()
     await this.getConsultCourseByName()
     this.openTime()
+    console.log(this.userInfo)
+    console.log(222222)
+    if (this.userInfo && this.userInfo.userId) {
+      console.log(11111)
+      this.getLiked()
+    }
   },
   // onPageScroll(e) {
   //   let scroll = e.scrollTop <= 0 ? 0 : e.scrollTop;
@@ -273,6 +289,53 @@ export default {
     },
     async getDates() {
       this.dateList = await indexServer.getDates(7);
+    },
+    async getLiked() {
+      const data = {
+        userId: this.userInfo.userId,
+        consultId: this.consultId
+      }
+      const res = await userServer.getLiked(data)
+      console.log('res: ', res)
+      this.liked = !!res
+    },
+    async doLike() {
+      if (!await utils.checkLogin()) {
+        this.confirmServe()
+        return this.openLoginConfirm()
+      }
+      const data = {
+        userId: this.userInfo.userId,
+        consultId: this.consultId
+      }
+
+      const res = await userServer.doLike(data)
+      if (res) {
+        this.liked = true
+        uni.showToast({
+          icon: 'none',
+          title: '已关注'
+        })
+      }
+    },
+    async cancelLike() {
+      if (!await utils.checkLogin()) {
+        this.confirmServe()
+        return this.openLoginConfirm()
+      }
+      const data = {
+        userId: this.userInfo.userId,
+        consultId: this.consultId
+      }
+
+      const res = await userServer.cancelLike(data)
+      if (res) {
+        this.liked = false
+        uni.showToast({
+          icon: 'none',
+          title: '已取关'
+        })
+      }
     },
     openTime() {
       this.$refs.timeBox.getWorkList(this.works, this.dateList)
@@ -641,12 +704,13 @@ export default {
   display: flex;
   align-items: center;
   .page-bottom-image {
-    width: 56upx;
+    width: 70upx;
     height: 80upx;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-left: 40upx;
+    align-items: center;
+    margin-left: 31upx;
     //margin: 10upx 0 0 40upx;
   }
   .page-bottom-icon {
@@ -656,7 +720,11 @@ export default {
   .page-bottom-home {
     color: rgba(51,51,51,1);
     font-size: 20upx;
-    //margin: 4upx 0 0 4upx;
+    margin-top: 4upx;
+  }
+  .page-bottom-liked {
+    color: #FF703F;
+    font-size: 20upx;
     margin-top: 4upx;
   }
   .page-bottom-btn {
@@ -667,8 +735,8 @@ export default {
     font-weight: 600;
     height: 80upx;
     line-height: 80upx;
-    width: 598upx;
-    margin: 9upx 24upx 0 40upx;
+    width: 518upx;
+    margin: 9upx 24upx 0 31upx;
     text-align: center;
   }
 }

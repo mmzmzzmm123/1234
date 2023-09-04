@@ -40,7 +40,7 @@
     <view class="un-test-box">
       <view class="box-title">其他服务</view>
       <uni-row class="class-box">
-        <uni-col :span="6" v-for="item in serveList" class="item">
+        <uni-col :span="8" v-for="item in serveList" class="item">
           <view @tap="toPage(item.id)">
             <img class="class-img" :src="item.classPic" />
             <view>{{ item.className }}</view>
@@ -93,24 +93,34 @@ export default {
       ],
       serveList: [
         {
+          classPic: "/static/consult/my/like.png",
+          className: "我的关注",
+          id: 10,
+        },
+        {
+          classPic: "/static/consult/my/course.png",
+          className: "我的课程",
+          id: 11,
+        },
+        {
           classPic: "/static/consult/my/cp.png",
           className: "测评中心",
-          id: 10,
+          id: 12,
         },
         {
           classPic: "/static/consult/my/integral.png",
           className: "我的积分",
-          id: 11,
+          id: 13,
         },
         {
           classPic: "/static/consult/my/coupon.png",
           className: "我的卡券",
-          id: 12,
+          id: 14,
         },
         {
           classPic: "/static/consult/my/kf.png",
           className: "客服帮助",
-          id: 13,
+          id: 15,
         }
       ],
       clientTypeObj: clientTypeObj,
@@ -152,20 +162,29 @@ export default {
           uni.navigateTo({ url: "/pages/consult/order?status=" + id });
           break
         case 10:
+          uni.navigateTo({ url: "/pages/consult/likes" })
+          break
+        case 11:
+          uni.navigateTo({ url: "/pages/course/index" })
+          break
+        case 12:
+          // uni.navigateTo({ url: "/pages/evaluation/index" })
+          uni.showToast({
+            icon: "none",
+            title: "功能开发中",
+          });
+          break
+        case 13:
+          uni.navigateTo({ url: "/pages/consult/integral" })
+          break
+        case 14:
           // uni.redirectTo({ url: "/pages/evaluation/index" })
           uni.showToast({
             icon: "none",
             title: "功能开发中",
           });
           break
-        case 11:
-          uni.navigateTo({ url: "/pages/consult/integral" })
-          break
-        case 12:
-          // uni.redirectTo({ url: "/pages/evaluation/index" })
-          console.log('我的卡劵')
-          break
-        case 13:
+        case 15:
           console.log('客服帮助')
           this.$refs.popupKf.open()
           break
@@ -303,11 +322,14 @@ page {
   .class-box {
     text-align: center;
     font-size: 26upx;
-    padding: 32upx 0;
+    padding-bottom: 32upx;
 
     .class-img {
       width: 56upx;
       height: 56upx;
+    }
+    .item {
+      margin-top: 32upx;
     }
   }
 

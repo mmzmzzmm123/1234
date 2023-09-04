@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.user.mapper.PsyUserLikedConsultMapper">
+
+    <insert id="add" parameterType="PsyUserLikedConsult">
+        insert into psy_consult_focus(user_id, consult_id, create_time)
+        values(#{userId}, #{consultId}, #{createTime})
+    </insert>
+
+    <delete id="del" parameterType="PsyUserLikedConsult">
+        delete from psy_consult_focus where consult_id = #{consultId} and user_id = #{userId}
+    </delete>
+
+    <select id="getLiked" resultType="PsyUserLikedConsult">
+        select * from psy_consult_focus where consult_id = #{consultId} and user_id = #{userId}
+    </select>
+
+    <select id="getLikes" resultType="com.ruoyi.user.vo.PsyUserLikedConsultVO">
+       select a.create_time, a.consult_id,
+              b.nicK_name consult_name, b.avatar, b.info, b.mode
+       from psy_consult_focus a inner join psy_consult b on a.consult_id = b.id
+       where a.user_id = #{userId}
+    </select>
+
+</mapper>
