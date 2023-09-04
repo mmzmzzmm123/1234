@@ -321,9 +321,10 @@ export default {
           }
 
           if (this.order.num > 0) {
+            const len = items.length
             for (let i = 1; i <= this.order.num; i++) {
               const tt = {
-                num: items.length + i,
+                num: len + i,
                 time: '用户未预约',
                 realTime: '',
                 status: '',
