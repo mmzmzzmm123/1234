@@ -178,7 +178,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 currentEq.setRecentOpenTime(new Date());
                 currentEq.setOnOff("Y");
                 equipmentService.updateTEquipment(currentEq);
-                break;
+//                break;
             }
         }
 
