@@ -208,7 +208,7 @@ export default {
   },
   onLoad() {
     setTimeout(() => {
-      this.srollHeight = (this.pageHeight - uni.upx2px(549) - 50) + 'px'
+      this.srollHeight = (this.pageHeight - uni.upx2px(549) - 60) + 'px'
       // console.log(this.pageHeight)
       // console.log(this.srollHeight)
     }, 50);
