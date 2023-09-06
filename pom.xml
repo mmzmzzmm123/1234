@@ -32,6 +32,8 @@
         <jwt.version>0.9.1</jwt.version>
         <lombok.version>1.18.22</lombok.version>
         <hutool.version>5.7.18</hutool.version>
+        <weixin-java.version>4.4.9.B</weixin-java.version>
+        <redisson.version>3.13.2</redisson.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -149,6 +151,25 @@
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-core</artifactId>
                 <version>${hutool.version}</version>
+            </dependency>
+
+            <!-- 微信登录与支付 -->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-miniapp</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-pay</artifactId>
+                <version>${weixin-java.version}</version>
+            </dependency>
+
+            <!--  redisson  -->
+            <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+                <version>${redisson.version}</version>
             </dependency>
 
             <!-- 定时任务-->
