@@ -20,7 +20,7 @@ export const categoryType = [ // 1 产品分类，2 附件分类，3 文章分�
 
 export const picModules = ['course','gauge','zx']
 
-export const picTypes = ['class','banner','item','section','avatar','other']
+export const picTypes = ['class','banner','item','section','avatar','other','column','team']
 
 export const wList = [
   { label: '上班', value: '0' },

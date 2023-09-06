@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 咨询服务对象 psy_consult_focus
+ * 咨询服务对象 psy_user_liked_consult
  *
  * @author ruoyi
  * @date 2023-06-25

@@ -57,24 +57,49 @@
         </view>
       </view>
 
-      <view key="1" id="main-1" class="course">
-        <view class="course-header">
-          <text class="course-title">TA的心理课</text>
-          <view class="course-more" @tap="toCourseMore">
-            查看更多 >
-          </view>
-        </view>
-        <course :courseList="courseList"/>
-      </view>
-
-      <view key="2" id="main-2" class="consult-desc">
+      <view key="1" id="main-1" class="consult-desc">
         <consult-desc :info="consultInfo"/>
-        <!--          <view class="consult-detail" v-html="consultInfo.detail"></view>-->
       </view>
 
-      <view  key="3" id="main-3" class="content-time">
+      <view  key="2" id="main-2" class="content-time">
         <view class="content-time-title">可约时间</view>
         <time-box ref="timeBox" @doOk="setWorkData"/>
+      </view>
+
+      <view key="3" id="main-3" class="consult-column">
+        <view class="course">
+          <view class="course-header">
+            <text class="course-title">TA的专栏</text>
+            <view class="course-more" @tap="toCourseMore" v-if="courseList.length > 3">
+              查看更多 >
+            </view>
+          </view>
+          <course v-if="courseList.length > 0" :courseList="courseList" :limit="3"/>
+          <view class="empty" v-else>
+            <image @tap="toCourseMore" src="/static/consult/order/empty.png" class="empty-img"/>
+            <text @tap="toCourseMore" class="empty-text">点击查看更多课程</text>
+          </view>
+        </view>
+
+        <view class="column" v-if="columnList.length > 0">
+          <view class="course-header">
+            <text class="course-title">TA的文章</text>
+            <view class="course-more" @tap="toColumnMore" v-if="columnList.length > 3">
+              查看更多 >
+            </view>
+          </view>
+          <column :list="columnList" :limit="3"/>
+        </view>
+
+        <view class="course" v-if="teamList.length > 0">
+          <view class="course-header">
+            <text class="course-title">TA的小组</text>
+            <view class="course-more" @tap="toTeamMore" v-if="teamList.length > 3">
+              查看更多 >
+            </view>
+          </view>
+          <team :list="teamList" :limit="3"/>
+        </view>
       </view>
     </scroll-view>
 
@@ -115,6 +140,8 @@
 <script>
 import timeBox from '@/components/consult/detail/timeBox.vue'
 import course from '@/components/consult/detail/course.vue'
+import team from '@/components/consult/detail/team.vue'
+import column from '@/components/consult/detail/column.vue'
 import consultDesc from '@/components/consult/detail/consultDesc.vue'
 import serveList from '@/components/consult/detail/serveList.vue'
 import utils from "@/utils/common";
@@ -125,7 +152,7 @@ import orderServer from "@/server/consult/order";
 import loginServer from '@/server/login'
 let app = getApp();
 export default {
-  components: {timeBox, serveList, course, consultDesc },
+  components: {timeBox, serveList, course, team, column, consultDesc },
   data() {
     return {
       mainCur: 0,
@@ -141,6 +168,8 @@ export default {
       tabs: [],
       serveList: [],
       courseList: [],
+      columnList: [],
+      teamList: [],
       sroHeight: [],
       items: [
         {
@@ -149,16 +178,22 @@ export default {
         },
         {
           id: 1,
-          name: 'TA的心理课'
-        },
-        {
-          id: 2,
           name: '老师介绍'
         },
         {
-          id: 3,
+          id: 2,
           name: '可约时间'
+        },
+        {
+          id: 3,
+          name: 'TA的专栏'
         }],
+      queryParams: {
+        pageNum: 1,
+        pageSize: 5,
+        orderByColumn: 'createTime',
+        isAsc: 'descending',
+      },
       current: 0,
       liked: false,
       userInfo: {},
@@ -197,10 +232,9 @@ export default {
     await this.getConsultInfo()
     await this.getConsultCourseByName()
     this.openTime()
-    console.log(this.userInfo)
-    console.log(222222)
+    this.getConsultColumn()
+    this.getConsultTeam()
     if (this.userInfo && this.userInfo.userId) {
-      console.log(11111)
       this.getLiked()
     }
   },
@@ -218,6 +252,16 @@ export default {
     toCourseMore () {
       uni.navigateTo({
         url: "/pages/course/class",
+      })
+    },
+    toColumnMore () {
+      uni.navigateTo({
+        url: "/pages/consult/column?id=" + this.consultId,
+      })
+    },
+    toTeamMore () {
+      uni.navigateTo({
+        url: "/pages/consult/team?id=" + this.consultId,
       })
     },
     tabSelect(id) {
@@ -246,6 +290,12 @@ export default {
           return false
         }
       }
+    },
+    async getConsultColumn() {
+      this.columnList = await consultServer.getConsultColumn('0', this.consultId, this.queryParams)
+    },
+    async getConsultTeam() {
+      this.teamList = await consultServer.getConsultColumn('1', this.consultId, this.queryParams)
     },
     async getConsultInfo() {
       this.consultInfo = await consultServer.getConsultInfo(this.consultId)
@@ -409,7 +459,6 @@ export default {
 
 <style lang="scss">
 .page {
-  background-color: #F8F8F8;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -498,12 +547,12 @@ export default {
 }
 .info-content-info {
   width: 498upx;
-  height: 74upx;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  -webkit-line-clamp: 2;
-  text-overflow: ellipsis;
+  //height: 74upx;
+  //display: -webkit-box;
+  //-webkit-box-orient: vertical;
+  //overflow: hidden;
+  //-webkit-line-clamp: 2;
+  //text-overflow: ellipsis;
   color: #777777;
   font-size: 26upx;
   margin-top: 16upx;
@@ -632,13 +681,39 @@ export default {
   }
 }
 
-.course {
-  background-color: rgba(255,255,255,1.000000);
-  max-height: 432upx;
-  margin-top: 16upx;
-  position: relative;
-  display: flex;
-  flex-direction: column;
+.consult-column {
+  padding-bottom: 138upx;
+  .empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24upx;
+  }
+  .empty-img {
+    width: 110upx;
+    height: 105upx;
+  }
+  .empty-text {
+    color: rgba(0,0,0,0.35);
+    font-size: 28rpx;
+    font-family: PingFangSC-Regular;
+    text-align: center;
+    margin-top: 6upx;
+  }
+  .column {
+    background-color: rgba(255,255,255,1.000000);
+    max-height: 593upx;
+    margin-top: 16upx;
+    position: relative;
+  }
+  .course {
+    background-color: rgba(255,255,255,1.000000);
+    max-height: 432upx;
+    margin-top: 16upx;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
   .course-header {
     padding: 24upx 24upx 0 24upx;
     height: 42upx;
@@ -704,13 +779,13 @@ export default {
   display: flex;
   align-items: center;
   .page-bottom-image {
-    width: 70upx;
+    width: 80upx;
     height: 80upx;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    margin-left: 31upx;
+    margin-left: 21upx;
     //margin: 10upx 0 0 40upx;
   }
   .page-bottom-icon {
@@ -736,7 +811,7 @@ export default {
     height: 80upx;
     line-height: 80upx;
     width: 518upx;
-    margin: 9upx 24upx 0 31upx;
+    margin: 9upx 24upx 0 21upx;
     text-align: center;
   }
 }

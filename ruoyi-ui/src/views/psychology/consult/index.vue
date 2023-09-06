@@ -111,14 +111,12 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
             @click="handleServeUpdate(scope.row)"
             v-hasPermi="['psychology:consult:serveUpdate']"
           >关联服务</el-button>
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['psychology:consult:edit']"
           >修改</el-button>

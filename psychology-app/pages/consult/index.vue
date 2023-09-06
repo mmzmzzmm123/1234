@@ -367,7 +367,6 @@
   @import "@/style/common.scss";
 
   page {
-    background-color: #F8F8F8;
     .index {
       padding-bottom: calc(constant(safe-area-inset-bottom) + 50px); /* 兼容 iOS 设备 */
       padding-bottom: calc(env(safe-area-inset-bottom) + 50px); /* 兼容 iPhone X 及以上设备 */

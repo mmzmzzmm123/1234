@@ -177,6 +177,20 @@
       }
     },
     {
+      "path": "pages/consult/team",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "全部小组"
+      }
+    },
+    {
+      "path": "pages/consult/column",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "全部文章"
+      }
+    },
+    {
       "path": "pages/consult/orderConfirm",
       "style": {
         "navigationStyle": "custom",

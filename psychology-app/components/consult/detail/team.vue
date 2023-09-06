@@ -1,10 +1,10 @@
 <template>
   <scroll-view scroll-x scroll-with-animation>
     <view class="list">
-      <view class="item" v-for="(item, index) in courseList" v-if="limit && index < limit">
-        <view class="item-content" @tap="toDetail(item.id)">
-          <image :src="item.url" mode="widthFix" class="item-imgage"></image>
-          <text class="item-name">{{ item.name }}</text>
+      <view class="item" v-for="(item, index) in list" v-if="limit && index < limit">
+        <view class="item-content" @tap="toDetail(item)">
+          <image :src="item.img" mode="widthFix" class="item-imgage"/>
+          <text class="item-name txt-overflow-line2">{{ item.title }}</text>
         </view>
       </view>
     </view>
@@ -12,17 +12,16 @@
 </template>
 <script>
 export default {
-  props: ['courseList', 'limit'],
+  props: ['list', 'limit'],
   data() {
     return {
     }
   },
   methods: {
-    toDetail(id) {
-      console.log(id)
-      uni.navigateTo({
-        url: "/pages/course/courseDetail?id=" + id,
-      });
+    toDetail(item) {
+      if (item.url) {
+        window.location.href = item.url
+      }
     }
   }
 }
@@ -60,7 +59,6 @@ export default {
   color: rgba(51,51,51,1);
   font-size: 26upx;
   font-family: PingFangSC-Regular;
-  font-weight: normal;
   text-align: left;
   line-height: 37upx;
   margin: 16upx 0 0 24upx;

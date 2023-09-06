@@ -43,4 +43,12 @@ export default {
             });
         }
     },
+    getConsultColumn: async (cat, consultId, data) => {
+        let res = await httprequest.get(`/app/consult/getConsultColumn/${cat}/${consultId}`, data);
+        if (res.code == 200) {
+            return res.rows;
+        } else {
+            return [];
+        }
+    }
 };

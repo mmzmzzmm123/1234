@@ -81,6 +81,7 @@
           <el-button
             size="mini"
             type="text"
+            style="color: red"
             @click="handleDelete(scope.row)"
             v-hasPermi="['psychology:type:remove']"
           >删除</el-button>

@@ -71,14 +71,13 @@
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['psychology:class:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-delete"
+            style="color: red"
             @click="handleDelete(scope.row)"
             v-hasPermi="['psychology:class:remove']"
           >删除</el-button>

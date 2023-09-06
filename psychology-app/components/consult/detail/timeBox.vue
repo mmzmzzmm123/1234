@@ -117,7 +117,7 @@ export default {
   //overflow-y: auto;
   position: relative;
   background-color: #FFFFFF;
-  padding-bottom: 138upx;
+  padding-bottom: 16upx;
   //height: 1000upx;
 
   .time-list {
