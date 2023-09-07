@@ -35,6 +35,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -132,6 +133,31 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
                 }
                 return true;
             }).collect(Collectors.toList());
+        }
+
+        // 默认已经存在排序，price一定会存在值，只需要处理new_price的排序问题
+        // 按照价格进行排序，并收集价格相同的元素索引
+        Map<BigDecimal, List<PsyConsult>> priceMap = new HashMap<>();
+        BigDecimal decimal = new BigDecimal("999999");
+        for (int i = 0; i < list.size(); i++) {
+            BigDecimal price = list.get(i).getNewPrice() != null ? list.get(i).getNewPrice() : decimal;
+            if (!priceMap.containsKey(price)) {
+                priceMap.put(price, new ArrayList<>());
+            }
+            priceMap.get(price).add(list.get(i));
+        }
+
+        // 乱序排列价格相同的元素，并重新构建排序后的产品列表
+        List<BigDecimal> sortedPrices = new ArrayList<>(priceMap.keySet());
+        sortedPrices.sort(BigDecimal::compareTo);
+        for (BigDecimal price : sortedPrices) {
+            List<PsyConsult> pricedProducts = priceMap.get(price);
+            if (price.compareTo(decimal) < 0) {
+                Collections.shuffle(pricedProducts);
+            }
+
+            list.removeAll(pricedProducts);
+            list.addAll(pricedProducts);
         }
 
         return list;

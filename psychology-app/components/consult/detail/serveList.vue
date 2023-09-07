@@ -93,7 +93,7 @@ export default {
   //height: 66upx;
   //position: relative;
   text-align: right;
-  width: 280upx;
+  width: 380upx;
 }
 .serve-price {
   font-weight: 500;
