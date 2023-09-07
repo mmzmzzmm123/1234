@@ -1,5 +1,6 @@
 <template>
   <view class="index">
+    <image src="/static/consult/kefu.png" class="kefu" @tap="kefu"/>
     <view class="search-box index-margin" @tap="toSearch">
 <!--      <img class="icon" src="/static/icon/search.png" />-->
 <!--      <span class="txt">搜索</span>-->
@@ -155,6 +156,9 @@
       // }
     },
     methods: {
+      kefu() {
+        window.location.href = 'https://work.weixin.qq.com/kfid/kfc4e52289a3117e650'
+      },
       async onPullDownRefresh() {
         this.resetQuery()
         this.resetFilterParams()
@@ -370,6 +374,14 @@
     .index {
       padding-bottom: calc(constant(safe-area-inset-bottom) + 50px); /* 兼容 iOS 设备 */
       padding-bottom: calc(env(safe-area-inset-bottom) + 50px); /* 兼容 iPhone X 及以上设备 */
+    }
+    .kefu {
+      width: 80upx;
+      height: 80upx;
+      position: fixed;
+      top: 900upx;
+      right: 24upx;
+      z-index: 9999;
     }
     .search-box {
       margin: 32upx 24upx;

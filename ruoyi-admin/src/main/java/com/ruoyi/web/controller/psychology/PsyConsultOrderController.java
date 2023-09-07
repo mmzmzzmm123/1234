@@ -88,6 +88,18 @@ public class PsyConsultOrderController extends BaseController
     }
 
     /**
+     * 修改咨询订单
+     */
+    @PreAuthorize("@ss.hasPermi('psychology:order:price')")
+    @Log(title = "咨询订单", businessType = BusinessType.UPDATE)
+    @PostMapping("/modifyPrice")
+    public AjaxResult modifyPrice(@RequestBody PsyConsultOrderVO req)
+    {
+        String msg = psyConsultOrderService.modifyPrice(req);
+        return "ok".equals(msg) ? AjaxResult.success() : AjaxResult.error(msg);
+    }
+
+    /**
      * 新增咨询订单
      */
     @PreAuthorize("@ss.hasPermi('psychology:order:add')")
@@ -107,6 +119,14 @@ public class PsyConsultOrderController extends BaseController
     public AjaxResult edit(@RequestBody PsyConsultOrderVO req)
     {
         return toAjax(psyConsultOrderService.update(req));
+    }
+
+    @PreAuthorize("@ss.hasPermi('psychology:order:edit')")
+    @Log(title = "咨询订单", businessType = BusinessType.UPDATE)
+    @PostMapping(value = "/remark")
+    public AjaxResult remark(@RequestBody PsyConsultOrderVO req)
+    {
+        return toAjax(psyConsultOrderService.remark(req));
     }
 
     // finish

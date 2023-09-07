@@ -47,7 +47,7 @@
             <button @tap="toCancel(item.id)" class="button_1" v-if="item.status === '0'">
               取消
             </button>
-            <button @tap="open(item)" class="button_2" v-if="item.status === '0' || (item.status === '1' && item.num > 0 && !item.orderTime)">
+            <button @tap="open(item.id)" class="button_2" v-if="item.status === '0' || (item.status === '1' && item.num > 0 && !item.orderTime)">
               <text class="text_16">{{ item.status === '0' ? '支付' : '去预约'}}</text>
             </button>
           </view>
@@ -149,8 +149,10 @@ export default {
       this.consult = res.consult
       this.works = res.works
     },
-    async open(order) {
+    async open(id) {
+      const order = await orderServer.getOrderDetail(id);
       this.order = order
+
       if (order.payStatus === '2' && order.end && new Date(order.end) < new Date()) {
         return uni.showToast({
           icon: "none",
@@ -213,7 +215,7 @@ export default {
       let res = await getPaySign(
           this.userInfo.userId,
           this.order.serveId,
-          this.order.price,
+          this.order.pay,
           {
             module: 'consult',
             workId: this.workId,

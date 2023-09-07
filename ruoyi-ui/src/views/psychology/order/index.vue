@@ -117,7 +117,7 @@
         </template>
       </el-table-column>
       <el-table-column label="下单时间" align="center" prop="createTime" width="180"/>
-      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width" width="150">
+      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width" width="180">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -132,6 +132,13 @@
             @click="handleHx(scope.row.id)"
             v-hasPermi="['psychology:order:edit']"
           >核销次数</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            :disabled="scope.row.status !== '0'"
+            @click="handlePrice(scope.row.id)"
+            v-hasPermi="['psychology:order:price']"
+          >改价</el-button>
           <el-button
             size="mini"
             type="text"
@@ -171,7 +178,9 @@
       </div>
     </el-dialog>
 
-    <times ref="formHx" @hxOk="hxOk" />
+    <times ref="formHx" @handleOk="handleOk" />
+
+    <price ref="formPrice" @handleOk="handleOk" />
 
 <!--    <el-dialog title="订单编辑" :visible.sync="openHx" width="700px" append-to-body>-->
 <!--      <times v-if="openHx" :order="order" />-->
@@ -184,14 +193,15 @@
 </template>
 
 <script>
-import { listOrder, getOrder, addOrder, updateOrder, getInfo } from "@/api/psychology/order";
+import { listOrder, getOrder, addOrder, updateOrder, doRemark, getInfo } from "@/api/psychology/order";
 import { getConsultAll } from "@/api/psychology/consult";
 import orderDetail from "./detail";
 import times from "./times";
+import price from "./price";
 
 export default {
   name: "Order",
-  components: { orderDetail, times },
+  components: { orderDetail, times, price },
   data() {
     return {
       // 遮罩层
@@ -343,6 +353,14 @@ export default {
       }
     },
     /** 修改按钮操作 */
+    handlePrice(id) {
+      getOrder(id).then(response => {
+        if (response.data) {
+          this.$refs.formPrice.setForm(response.data)
+        }
+      })
+    },
+    /** 修改按钮操作 */
     handleHx(id) {
       getOrder(id).then(response => {
         if (response.data) {
@@ -350,7 +368,7 @@ export default {
         }
       })
     },
-    hxOk() {
+    handleOk() {
       this.getList()
     },
     cancelRm() {
@@ -361,7 +379,7 @@ export default {
       this.$refs["formRm"].validate(valid => {
         if (valid) {
           if (this.formRm.id != null) {
-            updateOrder(this.formRm).then(response => {
+            doRemark(this.formRm).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.openRm = false;
               this.getList();

@@ -144,7 +144,8 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             psyConsultOrderVO.setId(id);
             psyConsultOrderVO.setConsultId(wechatPay.getConsultId());
             psyConsultOrderVO.setOrderNo(wechatPay.getOutTradeNo());
-            psyConsultOrderVO.setAmount(wechatPay.getAmount());
+            // 创建时才需要更新总价
+            // psyConsultOrderVO.setAmount(wechatPay.getAmount());
             psyConsultOrderVO.setPay(wechatPay.getAmount());
             psyConsultOrderVO.setServeId(wechatPay.getServeId());
             psyConsultOrderVO.setUserId(wechatPay.getUserId());
@@ -156,6 +157,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             if (wechatPay.getOrderId() != null) {
                 psyConsultOrderService.updatePayOrder(psyConsultOrderVO);
             } else {
+                psyConsultOrderVO.setAmount(wechatPay.getAmount());
                 psyConsultOrderService.add(psyConsultOrderVO);
             }
 

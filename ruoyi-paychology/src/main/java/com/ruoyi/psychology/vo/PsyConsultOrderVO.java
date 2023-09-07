@@ -45,6 +45,7 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
     /** 应付费用 */
     private BigDecimal amount;
 
+    /** 实际支付 */
     private BigDecimal pay;
 
     private Date payTime;
@@ -66,6 +67,7 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
     private String orderTime;
 
     private String remark;
+    private String memo1;
 
     private Integer time;
     private Long workId;

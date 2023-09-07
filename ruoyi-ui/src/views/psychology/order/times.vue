@@ -132,7 +132,7 @@ export default {
         }
         hx(data).then(response => {
           that.$modal.msgSuccess("修改成功");
-          that.$emit('hxOk');
+          that.$emit('handleOk');
         });
       }).then(() => {
         that.cancel()

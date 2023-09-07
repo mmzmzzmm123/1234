@@ -94,6 +94,9 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     @Excel(name = "备注")
     private String remark;
 
+    @Excel(name = "改价原因")
+    private String memo1;
+
     @TableField(exist = false)
     private String phone;
 

@@ -228,8 +228,10 @@ export default {
       this.consult = res.consult
       this.works = res.works
     },
-    toBuy() {
-      console.log(this.order)
+    async toBuy() {
+      // 查询最新订单信息,防止数据异常
+      await this.getOrderDetail()
+
       if (this.order.payStatus === '2' && this.order.serve.end && new Date(this.order.serve.end) < new Date()) {
         return uni.showToast({
           icon: "none",
@@ -247,7 +249,7 @@ export default {
         return this.openLoginConfirm()
       }
 
-      console.log(workName)
+      // console.log(workName)
       this.time = time
       this.workId = workId
       this.workName = workName
@@ -284,11 +286,10 @@ export default {
     },
     async doPay() {
       console.log(this.order)
-      console.log(2222)
       let res = await getPaySign(
           this.userInfo.userId,
           this.order.serve.serveId,
-          this.order.serve.price,
+          this.order.pay,
           {
             module: 'consult',
             workId: this.workId,

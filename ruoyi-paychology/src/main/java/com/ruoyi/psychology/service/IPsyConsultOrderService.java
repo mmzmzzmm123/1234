@@ -39,6 +39,8 @@ public interface IPsyConsultOrderService
 
     String hx(PsyHxOrderReq req);
 
+    String modifyPrice(PsyConsultOrderVO req);
+
     void updatePayOrder(PsyConsultOrderVO req);
 
     Boolean sendPublicMsg(PsyConsultOrderVO psyOrder);
@@ -52,6 +54,8 @@ public interface IPsyConsultOrderService
     void cancel(PsyConsultOrder order);
 
     int update(PsyConsultOrderVO req);
+
+    int remark(PsyConsultOrderVO req);
 
     int deleteAll(Long[] ids);
 

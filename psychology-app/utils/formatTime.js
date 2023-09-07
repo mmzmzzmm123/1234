@@ -18,7 +18,7 @@ export function getMinutes(orderTime) {
 }
 
 export function getSeconds(orderTime) {
-	return parseInt((new Date(orderTime).getTime() + 15 * 60 * 1000 -  new Date().getTime()) / 1000)
+	return parseInt((new Date(orderTime).getTime() + 120 * 60 * 1000 -  new Date().getTime()) / 1000)
 }
 
 export function formatTime(time) {

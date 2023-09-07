@@ -33,6 +33,15 @@ export function hx(data) {
   })
 }
 
+// 改价
+export function modifyPrice(data) {
+  return request({
+    url: '/psychology/order/modifyPrice',
+    method: 'post',
+    data: data
+  })
+}
+
 // 新增咨询订单
 export function addOrder(data) {
   return request({
@@ -47,6 +56,15 @@ export function finish(id) {
   return request({
     url: '/psychology/order/finish/' + id,
     method: 'get'
+  })
+}
+
+// 备注咨询订单
+export function doRemark(data) {
+  return request({
+    url: '/psychology/order/remark',
+    method: 'post',
+    data: data
   })
 }
 

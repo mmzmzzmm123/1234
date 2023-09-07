@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.common.mapper.PsyOrderLogMapper">
+
+    <resultMap type="PsyOrderLog" id="PsyOrderLogResult">
+        <result property="oid"    column="oid"    />
+        <result property="orderType"    column="order_type"    />
+        <result property="changeType"    column="change_type"    />
+        <result property="changeMessage"    column="change_message"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+    </resultMap>
+
+    <sql id="selectPsyOrderLogVo">
+        select oid, order_type, change_type, change_message, create_time,create_by from psy_order_log
+    </sql>
+
+    <select id="selectPsyOrderLogList" parameterType="PsyOrderLog" resultMap="PsyOrderLogResult">
+        <include refid="selectPsyOrderLogVo"/>
+        <where>
+            <if test="oid != null  and oid != ''"> and oid = #{oid}</if>
+            <if test="orderType != null  and orderType != ''"> and order_type = #{orderType}</if>
+            <if test="changeType != null  and changeType != ''"> and change_type = #{changeType}</if>
+            <if test="changeMessage != null  and changeMessage != ''"> and change_message = #{changeMessage}</if>
+        </where>
+    </select>
+
+    <select id="selectPsyOrderLogByOid" parameterType="String" resultMap="PsyOrderLogResult">
+        <include refid="selectPsyOrderLogVo"/>
+        where oid = #{oid}
+    </select>
+
+    <insert id="insertPsyOrderLog" parameterType="PsyOrderLog">
+        insert into psy_order_log
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="oid != null and oid != ''">oid,</if>
+            <if test="orderType != null  and orderType != ''">order_type,</if>
+            <if test="changeType != null and changeType != ''">change_type,</if>
+            <if test="changeMessage != null and changeMessage != ''">change_message,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="oid != null and oid != ''">#{oid},</if>
+            <if test="orderType != null  and orderType != ''">#{orderType},</if>
+            <if test="changeType != null and changeType != ''">#{changeType},</if>
+            <if test="changeMessage != null and changeMessage != ''">#{changeMessage},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePsyOrderLog" parameterType="PsyOrderLog">
+        update psy_order_log
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderType != null  and orderType != ''">order_type = #{orderType},</if>
+            <if test="changeType != null and changeType != ''">change_type = #{changeType},</if>
+            <if test="changeMessage != null and changeMessage != ''">change_message = #{changeMessage},</if>
+            <if test="createBy != null and createBy != ''">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where oid = #{oid}
+    </update>
+
+    <delete id="deletePsyOrderLogByOid" parameterType="String">
+        delete from psy_order_log where oid = #{oid}
+    </delete>
+
+    <delete id="deletePsyOrderLogByOids" parameterType="String">
+        delete from psy_order_log where oid in
+        <foreach item="oid" collection="array" open="(" separator="," close=")">
+            #{oid}
+        </foreach>
+    </delete>
+</mapper>

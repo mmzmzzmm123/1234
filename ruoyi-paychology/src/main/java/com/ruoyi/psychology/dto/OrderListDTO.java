@@ -48,6 +48,9 @@ public class OrderListDTO extends BaseValObj implements Serializable
     /** 应付费用 */
     private BigDecimal amount;
 
+    /** 实际支付 */
+    private BigDecimal pay;
+
     /** 可预约数量 */
     private Integer num;
 
@@ -76,6 +79,7 @@ public class OrderListDTO extends BaseValObj implements Serializable
     private String info;
 
     private String remark;
+    private String memo1;
 
     /** 价格 */
     private BigDecimal price;

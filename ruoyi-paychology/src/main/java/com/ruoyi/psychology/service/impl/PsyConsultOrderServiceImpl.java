@@ -5,6 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.constant.NewConstants;
 import com.ruoyi.common.constant.PsyConstants;
+import com.ruoyi.common.domain.PsyOrderLog;
+import com.ruoyi.common.service.IPsyOrderLogService;
 import com.ruoyi.common.utils.NewDateUtil;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.vo.DateLimitUtilVO;
@@ -49,6 +51,9 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
 
     @Resource
     private IPsyConsultService psyConsultService;
+
+    @Resource
+    private IPsyOrderLogService psyOrderLogService;
 
     @Resource
     private PsyConsultOrderMapper psyConsultOrderMapper;
@@ -275,8 +280,39 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
                 list.add(orderItem);
             }
         }
+        doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_HX, SecurityUtils.getUsername(), StrUtil.format(PsyConstants.ORDER_LOG_MESSAGE_HX, list.size()));
+        if (max == order.getBuyNum()) {
+            // 订单完成
+            doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_FINISHED, SecurityUtils.getUsername(), PsyConstants.ORDER_LOG_MESSAGE_FINISHED);
+        }
 
         return update(order) > 0 && psyConsultOrderItemService.updateBatch(list) ? "ok" : "核销失败";
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public String modifyPrice(PsyConsultOrderVO req) {
+        PsyConsultOrderVO order = getOne(req.getId());
+        if (!ConsultConstant.CONSULT_ORDER_STATUE_CREATED.equals(order.getStatus())) {
+            return "订单状态异常";
+        }
+
+        order.setPay(req.getPay());
+        order.setMemo1(req.getMemo1());
+
+        doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_EDIT_PRICE, SecurityUtils.getUsername(), StrUtil.format(PsyConstants.ORDER_LOG_MESSAGE_EDIT_PRICE,  order.getAmount(), order.getPay()));
+
+        return update(order) > 0 ? "ok" : "修改失败";
+    }
+
+    private void doLog(String oid, String type, String createBy, String msg)  {
+        PsyOrderLog log = new PsyOrderLog();
+        log.setOid(oid);
+        log.setOrderType(PsyConstants.ORDER_CONSULT);
+        log.setChangeType(type);
+        log.setCreateBy(createBy);
+        log.setChangeMessage(msg);
+        psyOrderLogService.insertPsyOrderLog(log);
     }
 
     @Override
@@ -292,7 +328,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         }
         // 咨询人数减1
         // psyConsultService.updateNum(order.getConsultId(), -1);
-
+        doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_CANCEL, "job", PsyConstants.ORDER_LOG_MESSAGE_CANCEL);
         psyConsultOrderMapper.updateById(order);
     }
 
@@ -364,6 +400,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
             handleItem(req);
         }
 
+        doLog(req.getOrderNo(), PsyConstants.ORDER_LOG_CREATE, req.getNickName(), PsyConstants.ORDER_LOG_MESSAGE_CREATE);
         return psyConsultOrderMapper.insert(BeanUtil.toBean(req, PsyConsultOrder.class));
     }
 
@@ -424,6 +461,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         psyConsultService.updateNum(req.getConsultId(), 1);
         // 增加服务销量
         psyConsultServeConfigService.updateNum(req.getServeId());
+        doLog(req.getOrderNo(), PsyConstants.ORDER_LOG_PAY_SUCCESS, req.getNickName(), PsyConstants.ORDER_LOG_MESSAGE_PAY_SUCCESS);
 
         update(req);
     }
@@ -432,6 +470,13 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     @Transactional(rollbackFor = Exception.class)
     public int update(PsyConsultOrderVO req) {
         return psyConsultOrderMapper.updateById(BeanUtil.toBean(req, PsyConsultOrder.class));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int remark(PsyConsultOrderVO req) {
+        doLog(req.getOrderNo(), PsyConstants.ORDER_LOG_REMARK, SecurityUtils.getUsername(), req.getRemark());
+        return update(req);
     }
 
     @Override
