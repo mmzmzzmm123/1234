@@ -139,12 +139,12 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         // 按照价格进行排序，并收集价格相同的元素索引
         Map<BigDecimal, List<PsyConsult>> priceMap = new HashMap<>();
         BigDecimal decimal = new BigDecimal("999999");
-        for (int i = 0; i < list.size(); i++) {
-            BigDecimal price = list.get(i).getNewPrice() != null ? list.get(i).getNewPrice() : decimal;
+        for (PsyConsult psyConsult : list) {
+            BigDecimal price = psyConsult.getNewPrice() != null ? psyConsult.getNewPrice() : decimal;
             if (!priceMap.containsKey(price)) {
                 priceMap.put(price, new ArrayList<>());
             }
-            priceMap.get(price).add(list.get(i));
+            priceMap.get(price).add(psyConsult);
         }
 
         // 乱序排列价格相同的元素，并重新构建排序后的产品列表
