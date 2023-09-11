@@ -441,7 +441,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         hashMap.put("thing1", new TemplateMessageItemVo(psyOrder.getNickName()));
         hashMap.put("thing2", new TemplateMessageItemVo(psyOrder.getConsultName()));
         hashMap.put("thing3", new TemplateMessageItemVo(psyOrder.getServeName()));
-        hashMap.put("time4", new TemplateMessageItemVo(psyOrder.getOrderTime()));
+        hashMap.put("time4", new TemplateMessageItemVo(StringUtils.isNotBlank(psyOrder.getOrderTime()) ? psyOrder.getOrderTime() : NewDateUtil.dateToStr(psyOrder.getUpdateTime(), NewConstants.DATE_FORMAT_HHMM)));
         hashMap.put("thing5", new TemplateMessageItemVo(psyOrder.getOrderNo()));
         msg.setData(hashMap);
         msg.setTouser(getOpenId(psyOrder.getConsultId()));
@@ -452,10 +452,11 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     @Transactional(rollbackFor = Exception.class)
     public void wechatPayNotify(PsyConsultOrderVO req) {
         req.setPayTime(new Date());
-        if (StringUtils.isNotBlank(req.getOrderTime())) {
-            // 消息推送
-            sendPublicMsg(req);
-        }
+//        if (StringUtils.isNotBlank(req.getOrderTime())) {
+//
+//        }
+        // 消息推送
+        sendPublicMsg(req);
 //        {"errcode":47003,"errmsg":"argument invalid! data.thing5.value invalid rid: 64d4912a-5e4f2ce4-13323c1a"}
         // 增加预约人数 支付成功后+1
         psyConsultService.updateNum(req.getConsultId(), 1);

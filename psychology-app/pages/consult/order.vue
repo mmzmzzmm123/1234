@@ -13,7 +13,7 @@
       </view>
       <view class="order-list">
         <view class="order-item" v-for="item in orderList">
-          <view class="item-header">
+          <view class="item-header" @tap="toDetail(item.id)">
             <view class="item-header-block"></view>
             <text class="item-header-timer">{{ item.createTime }}</text>
             <view class="item-header-countdown" v-if="item.status === '0' && item.endPay > 0">
@@ -23,9 +23,9 @@
             </view>
             <text class="item-header-status">{{ item.statusName }}</text>
           </view>
-          <view class="item-info">
+          <view class="item-info" @tap="toDetail(item.id)">
             <image :src="item.avatar" class="item-info-avatar"></image>
-            <view class="item-info-group" @tap="toDetail(item.id)">
+            <view class="item-info-group">
               <text class="item-name">{{ item.consultName }}</text>
               <text class="item-desc">{{ item.serveName }}</text>
               <text class="item-desc">有效期至：{{ item.end ? item.end : '永久有效'}}</text>

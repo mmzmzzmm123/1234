@@ -19,6 +19,10 @@
           <image src="/static/consult/order/ok.png" class="status-img"></image>
           <text class="status-text">订单已完成</text>
         </template>
+        <template v-if="order.status === '3'">
+<!--          <image src="/static/consult/order/ok.png" class="status-img"></image>-->
+          <text class="status-text-cancel">订单已取消</text>
+        </template>
       </view>
     </view>
 
@@ -32,10 +36,10 @@
         <view class="info-content">
           <image :src="order.avatar" class="info-avatar"></image>
           <view class="info-box">
-            <view class="info-box-1">
+            <view class="info-box-1" >
               <text class="info-name">{{ order.consultName }}</text>
-              <image v-if="order.status !== '0'" @tap="openWx" src="/static/consult/order/wx.png" class="info-wx"></image>
-              <text v-if="order.status !== '0'" @tap="openWx" class="info-card">查看名片</text>
+              <image v-if="order.status !== '0' && order.status !== '3'" @tap="openWx" src="/static/consult/order/wx.png" class="info-wx"></image>
+              <text v-if="order.status !== '0' && order.status !== '3'" @tap="openWx" class="info-card">查看名片</text>
             </view>
             <text class="info-serve">{{ order.serveName }}</text>
             <text class="info-end">有效期至：{{ order.serve.end ? order.serve.end : '永久有效'}}</text>
@@ -49,7 +53,7 @@
         <view class="info-divide">
           <view class="info-divide-view"></view>
         </view>
-        <view class="info-bottom" v-if="order.status !== '0'">
+        <view class="info-bottom" v-if="order.status !== '0' && order.status !== '3'">
           <view class="info-last">
             <text class="info-last-title">剩余咨询次数：</text>
             <text class="info-last-val">{{ order.num }}&nbsp;次</text>
@@ -63,7 +67,7 @@
           </button>
         </view>
       </view>
-      <view class="serve" v-if="order.status !== '0'">
+      <view class="serve" v-if="order.status !== '0' && order.status !== '3'">
         <view class="serve-header">
           <view class="block-icon"></view>
           <text class="serve-header-title">预约详情</text>
@@ -109,11 +113,11 @@
           <text class="order-info-label">订单总价</text>
           <text class="order-info-wapper">¥{{ order.amount.toFixed(2) }}</text>
         </view>
-        <view class="order-info" v-if="order.status !== '0'">
+        <view class="order-info" v-if="order.status !== '0' && order.status !== '3'">
           <text class="order-info-label">实际付款</text>
           <text class="order-info-wapper">¥{{ order.pay.toFixed(2) }}</text>
         </view>
-        <view class="order-info" v-if="order.status === '0'">
+        <view class="order-info" v-if="order.status === '0' || order.status === '3'">
           <text class="order-info-label">需付款</text>
           <text class="order-info-wapper">¥{{ order.pay.toFixed(2) }}</text>
         </view>
@@ -124,7 +128,7 @@
           <text class="button-text">立即支付</text>
           <text class="button-price">
             <text class="button-price-unit">¥</text>
-            <text class="button-price-num">{{ order.amount && order.amount.toFixed(2) }}</text>
+            <text class="button-price-num">{{ order.pay && order.pay.toFixed(2) }}</text>
           </text>
         </button>
       </view>
@@ -394,6 +398,15 @@ export default {
   display: flex;
   margin-left: 32upx;
   margin-right: 12upx;
+}
+.status-text-cancel {
+  color: rgba(51,51,51,1);
+  font-size: 36upx;
+  font-family: PingFangSC-Medium;
+  font-weight: 500;
+  display: flex;
+  //margin-left: 32upx;
+  //margin-right: 12upx;
 }
 .info {
   box-shadow: 0px 4px 28px 0px rgba(119,119,119,0.060000);

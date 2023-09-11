@@ -48,6 +48,18 @@
         </uni-col>
       </uni-row>
     </view>
+    <view class="un-test-box">
+      <view class="box-title">申请合作</view>
+      <uni-row class="class-box">
+        <uni-col :span="8" v-for="item in apps" class="item">
+          <view @tap="toApp(item)">
+            <img class="class-img" :src="item.classPic" />
+            <view>{{ item.className }}</view>
+          </view>
+        </uni-col>
+      </uni-row>
+    </view>
+
     <consult-tab-bar :currentIndex="1"></consult-tab-bar>
     <uni-popup ref="popup" type="dialog">
       <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
@@ -123,6 +135,26 @@ export default {
           id: 15,
         }
       ],
+      apps: [
+        {
+          classPic: "/static/consult/my/app1.png",
+          className: "成为经营者",
+          url: '',
+          id: 20,
+        },
+        {
+          classPic: "/static/consult/my/app2.png",
+          className: "成为咨询师",
+          url: 'https://mp.weixin.qq.com/s/ti6O0zZ07iF7so6F4ubN3w',
+          id: 21,
+        },
+        {
+          classPic: "/static/consult/my/app3.png",
+          className: "企业合作",
+          url: '',
+          id: 22,
+        }
+      ],
       clientTypeObj: clientTypeObj,
       redirectUri:location.href+"?t="+new Date().getTime()
     };
@@ -191,6 +223,15 @@ export default {
       }
 
     },
+    toApp(item) {
+      if (item.url) {
+        return window.location.href = item.url
+      }
+      uni.showToast({
+        icon: "none",
+        title: "功能开发中",
+      });
+    },
     refreshUser(){
       uni.setStorageSync("userInfo", null);
       utils.loginWx(this.redirectUri);
@@ -254,6 +295,8 @@ export default {
 
 page {
   background-color: #f8f8f8;
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 50px); /* 兼容 iOS 设备 */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 50px); /* 兼容 iPhone X 及以上设备 */
 
   .user-info {
     width: 750upx;
