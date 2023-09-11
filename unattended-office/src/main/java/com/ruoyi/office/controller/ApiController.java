@@ -391,6 +391,14 @@ public class ApiController extends BaseController {
                 return AjaxResult.error("订单开始前" + minutes + "分钟才可以开门");
 
             roomService.openRoom(roomOrder.getRoomId());
+            TRoomOrder upOrder = new TRoomOrder();
+            upOrder.setId(orderId);
+            upOrder.setStatus(3);// 使用中
+            roomOrderService.updateTRoomOrder(upOrder);
+            TRoom room = new TRoom();
+            room.setId(roomOrder.getRoomId());
+            room.setStatus("3");// 使用中
+            roomService.updateTRoom(room);
         } catch (Exception e) {
             AjaxResult.error("操作异常，请联系管理员");
         }

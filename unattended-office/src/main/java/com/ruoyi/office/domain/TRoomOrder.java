@@ -92,7 +92,7 @@ public class TRoomOrder extends BaseEntity {
     /**
      * 状态(空闲/已预约/使用中/预约超时未使用)
      */
-    @Excel(name = "状态(空闲/已预约/使用中/预约超时未使用)")
+    @Excel(name = "状态(0空闲/1待支付/2已预约/3使用中/4预约超时未使用/5已完成/9取消)")
     private Integer status;
 
 }
