@@ -10,6 +10,7 @@
       :on-exceed="handleExceed"
       :on-success="handleUploadSuccess"
       :show-file-list="false"
+      :data="paramsData"
       :headers="headers"
       class="upload-file-uploader"
       ref="fileUpload"
@@ -28,7 +29,7 @@
     <!-- 文件列表 -->
     <transition-group class="upload-file-list el-upload-list el-upload-list--text" name="el-fade-in-linear" tag="ul">
       <li :key="file.url" class="el-upload-list__item ele-upload-list__item-content" v-for="(file, index) in fileList">
-        <el-link :href="`${baseUrl}${file.url}`" :underline="false" target="_blank">
+        <el-link :href="`${file.url}`" :underline="false" target="_blank">
           <span class="el-icon-document"> {{ getFileName(file.name) }} </span>
         </el-link>
         <div class="ele-upload-list__item-content-action">
@@ -51,6 +52,11 @@ export default {
     limit: {
       type: Number,
       default: 5,
+    },
+    //上传额外参数
+    paramsData: {
+      type: Object,
+      default: {}
     },
     // 大小限制(MB)
     fileSize: {
@@ -147,7 +153,7 @@ export default {
     // 上传成功回调
     handleUploadSuccess(res, file) {
       if (res.code === 200) {
-        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        this.uploadList.push({ name: res.data.fileName, url: res.data.fileUrl });
         this.uploadedSuccessfully();
       } else {
         this.number--;

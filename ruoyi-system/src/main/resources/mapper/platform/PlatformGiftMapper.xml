@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.mapper.PlatformGiftMapper">
+
+    <resultMap type="PlatformGift" id="PlatformGiftResult">
+        <result property="id"    column="id"    />
+        <result property="cover"    column="cover"    />
+        <result property="name"    column="name"    />
+        <result property="state"    column="state"    />
+        <result property="videoUrl"    column="video_url"    />
+        <result property="videoSeconds"    column="video_seconds"    />
+        <result property="price"    column="price"    />
+        <result property="sortNum"    column="sort_num"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPlatformGiftVo">
+        select id, cover, name, state, video_url, video_seconds, price, sort_num, create_by, create_time, update_by, update_time from bus_platform_gift
+    </sql>
+
+    <select id="selectPlatformGiftList" parameterType="PlatformGift" resultMap="PlatformGiftResult">
+        <include refid="selectPlatformGiftVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+        </where>
+        order by sort_num desc
+    </select>
+
+    <select id="selectPlatformGiftById" parameterType="Long" resultMap="PlatformGiftResult">
+        <include refid="selectPlatformGiftVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPlatformGift" parameterType="PlatformGift" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_platform_gift
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cover != null">cover,</if>
+            <if test="name != null">name,</if>
+            <if test="state != null">state,</if>
+            <if test="videoUrl != null">video_url,</if>
+            <if test="videoSeconds != null">video_seconds,</if>
+            <if test="price != null">price,</if>
+            <if test="sortNum != null">sort_num,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cover != null">#{cover},</if>
+            <if test="name != null">#{name},</if>
+            <if test="state != null">#{state},</if>
+            <if test="videoUrl != null">#{videoUrl},</if>
+            <if test="videoSeconds != null">#{videoSeconds},</if>
+            <if test="price != null">#{price},</if>
+            <if test="sortNum != null">#{sortNum},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePlatformGift" parameterType="PlatformGift">
+        update bus_platform_gift
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cover != null">cover = #{cover},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="videoUrl != null">video_url = #{videoUrl},</if>
+            <if test="videoSeconds != null">video_seconds = #{videoSeconds},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="sortNum != null">sort_num = #{sortNum},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePlatformGiftById" parameterType="Long">
+        delete from bus_platform_gift where id = #{id}
+    </delete>
+
+    <delete id="deletePlatformGiftByIds" parameterType="String">
+        delete from bus_platform_gift where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

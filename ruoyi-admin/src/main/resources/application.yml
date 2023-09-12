@@ -131,3 +131,15 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+# 腾讯云产品信息
+tencent-info:
+  secret-id: AKIDztaJrEQQDSdbLsDKFwRkoeGiwvMYYLuF
+  secret-key: CCyVwDJDtNdimhQxJTQCnAO3YryvmSu7
+  # oss
+  oss:
+    region: ap-guangzhou
+    bucket-name: tree-hole-1320838256
+    base-url: https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com
+    thread_pool: 32
+

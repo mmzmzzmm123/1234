@@ -13,13 +13,14 @@
       :on-remove="handleDelete"
       :show-file-list="true"
       :headers="headers"
+      :data="paramsData"
       :file-list="fileList"
       :on-preview="handlePictureCardPreview"
       :class="{hide: this.fileList.length >= this.limit}"
     >
       <i class="el-icon-plus"></i>
     </el-upload>
-    
+
     <!-- 上传提示 -->
     <div class="el-upload__tip" slot="tip" v-if="showTip">
       请上传
@@ -52,6 +53,11 @@ export default {
     limit: {
       type: Number,
       default: 5,
+    },
+    //上传额外参数
+    paramsData: {
+      type: Object,
+      default: {}
     },
     // 大小限制(MB)
     fileSize: {
@@ -93,11 +99,7 @@ export default {
           // 然后将数组转为对象数组
           this.fileList = list.map(item => {
             if (typeof item === "string") {
-              if (item.indexOf(this.baseUrl) === -1) {
-                  item = { name: this.baseUrl + item, url: this.baseUrl + item };
-              } else {
-                  item = { name: item, url: item };
-              }
+              item = { name: item, url: item };
             }
             return item;
           });
@@ -155,7 +157,7 @@ export default {
     // 上传成功回调
     handleUploadSuccess(res, file) {
       if (res.code === 200) {
-        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        this.uploadList.push({ name: res.data.fileName, url: res.data.fileUrl });
         this.uploadedSuccessfully();
       } else {
         this.number--;
@@ -199,7 +201,7 @@ export default {
       separator = separator || ",";
       for (let i in list) {
         if (list[i].url) {
-          strs += list[i].url.replace(this.baseUrl, "") + separator;
+          strs += list[i].url + separator;
         }
       }
       return strs != '' ? strs.substr(0, strs.length - 1) : '';
