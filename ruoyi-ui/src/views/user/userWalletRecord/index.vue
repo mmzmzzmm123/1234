@@ -9,34 +9,20 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="余额" prop="balance">
-        <el-input
-          v-model="queryParams.balance"
-          placeholder="请输入余额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="记录类型" prop="walletRecordType">
+        <el-select v-model="queryParams.walletRecordType" placeholder="请选择记录类型" clearable>
+          <el-option
+            v-for="dict in dict.type.user_wallet_record_type"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
-      <el-form-item label="赠送余额" prop="giftBalance">
+      <el-form-item label="金额" prop="amount">
         <el-input
-          v-model="queryParams.giftBalance"
-          placeholder="请输入赠送余额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="消费总额" prop="totalBalance">
-        <el-input
-          v-model="queryParams.totalBalance"
-          placeholder="请输入消费总额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="赠送总额" prop="totalGiftBalance">
-        <el-input
-          v-model="queryParams.totalGiftBalance"
-          placeholder="请输入赠送总额"
+          v-model="queryParams.amount"
+          placeholder="请输入金额"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -55,20 +41,20 @@
 <!--          icon="el-icon-plus"-->
 <!--          size="mini"-->
 <!--          @click="handleAdd"-->
-<!--          v-hasPermi="['user:userWallet:add']"-->
+<!--          v-hasPermi="['user:userWalletRecord:add']"-->
 <!--        >新增</el-button>-->
 <!--      </el-col>-->
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['user:userWallet:edit']"
-        >修改</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['user:userWalletRecord:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
 <!--      <el-col :span="1.5">-->
 <!--        <el-button-->
 <!--          type="danger"-->
@@ -77,7 +63,7 @@
 <!--          size="mini"-->
 <!--          :disabled="multiple"-->
 <!--          @click="handleDelete"-->
-<!--          v-hasPermi="['user:userWallet:remove']"-->
+<!--          v-hasPermi="['user:userWalletRecord:remove']"-->
 <!--        >删除</el-button>-->
 <!--      </el-col>-->
       <el-col :span="1.5">
@@ -87,40 +73,28 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['user:userWallet:export']"
+          v-hasPermi="['user:userWalletRecord:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="userWalletList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="userWalletRecordList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="用户标识" align="center" prop="userId" :show-overflow-tooltip="true"/>
-      <el-table-column label="余额" align="center" prop="balance" :show-overflow-tooltip="true"/>
-      <el-table-column label="赠送余额" align="center" prop="giftBalance" :show-overflow-tooltip="true"/>
-      <el-table-column label="消费总额" align="center" prop="totalBalance" :show-overflow-tooltip="true"/>
-      <el-table-column label="赠送总额" align="center" prop="totalGiftBalance" :show-overflow-tooltip="true"/>
-      <el-table-column label="更新时间" align="center" prop="updateTime" width="180" :show-overflow-tooltip="true">
+      <el-table-column label="充值记录标识" align="center" prop="rechargeRecordId" :show-overflow-tooltip="true"/>
+      <el-table-column label="记录类型" align="center" prop="walletRecordType" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+          <dict-tag :options="dict.type.user_wallet_record_type" :value="scope.row.walletRecordType"/>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="金额" align="center" prop="amount" :show-overflow-tooltip="true"/>
+      <el-table-column label="余额前" align="center" prop="amountBefore" :show-overflow-tooltip="true"/>
+      <el-table-column label="余额后" align="center" prop="amountAfter" :show-overflow-tooltip="true"/>
+      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['user:userWallet:edit']"
-          >修改</el-button>
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['user:userWallet:remove']"-->
-<!--          >删除</el-button>-->
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -133,23 +107,36 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改用户钱包管理对话框 -->
+    <!-- 添加或修改用户钱包记录对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="用户标识" prop="userId">
           <el-input v-model="form.userId" placeholder="请输入用户标识" />
         </el-form-item>
-        <el-form-item label="余额" prop="balance">
-          <el-input v-model="form.balance" placeholder="请输入余额" />
+        <el-form-item label="充值记录标识" prop="rechargeRecordId">
+          <el-input v-model="form.rechargeRecordId" placeholder="请输入充值记录标识" />
         </el-form-item>
-        <el-form-item label="赠送余额" prop="giftBalance">
-          <el-input v-model="form.giftBalance" placeholder="请输入赠送余额" />
+        <el-form-item label="记录类型" prop="walletRecordType">
+          <el-select v-model="form.walletRecordType" placeholder="请选择记录类型">
+            <el-option
+              v-for="dict in dict.type.user_wallet_record_type"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="消费总额" prop="totalBalance">
-          <el-input v-model="form.totalBalance" placeholder="请输入消费总额" />
+        <el-form-item label="金额" prop="amount">
+          <el-input v-model="form.amount" placeholder="请输入金额" />
         </el-form-item>
-        <el-form-item label="赠送总额" prop="totalGiftBalance">
-          <el-input v-model="form.totalGiftBalance" placeholder="请输入赠送总额" />
+        <el-form-item label="余额前" prop="amountBefore">
+          <el-input v-model="form.amountBefore" placeholder="请输入余额前" />
+        </el-form-item>
+        <el-form-item label="余额后" prop="amountAfter">
+          <el-input v-model="form.amountAfter" placeholder="请输入余额后" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -161,10 +148,11 @@
 </template>
 
 <script>
-import { listUserWallet, getUserWallet, delUserWallet, addUserWallet, updateUserWallet } from "@/api/user/userWallet";
+import { listUserWalletRecord, getUserWalletRecord, delUserWalletRecord, addUserWalletRecord, updateUserWalletRecord } from "@/api/user/userWalletRecord";
 
 export default {
-  name: "UserWallet",
+  name: "UserWalletRecord",
+  dicts: ['user_wallet_record_type'],
   data() {
     return {
       // 遮罩层
@@ -179,8 +167,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 用户钱包管理表格数据
-      userWalletList: [],
+      // 用户钱包记录表格数据
+      userWalletRecordList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -190,10 +178,9 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userId: null,
-        balance: null,
-        giftBalance: null,
-        totalBalance: null,
-        totalGiftBalance: null,
+        rechargeRecordId: null,
+        walletRecordType: null,
+        amount: null,
       },
       // 表单参数
       form: {},
@@ -206,11 +193,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询用户钱包管理列表 */
+    /** 查询用户钱包记录列表 */
     getList() {
       this.loading = true;
-      listUserWallet(this.queryParams).then(response => {
-        this.userWalletList = response.rows;
+      listUserWalletRecord(this.queryParams).then(response => {
+        this.userWalletRecordList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -225,11 +212,13 @@ export default {
       this.form = {
         id: null,
         userId: null,
-        balance: null,
-        giftBalance: null,
-        totalBalance: null,
-        totalGiftBalance: null,
-        updateTime: null
+        rechargeRecordId: null,
+        walletRecordType: null,
+        amount: null,
+        amountBefore: null,
+        amountAfter: null,
+        remark: null,
+        createTime: null
       };
       this.resetForm("form");
     },
@@ -253,16 +242,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加用户钱包管理";
+      this.title = "添加用户钱包记录";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getUserWallet(id).then(response => {
+      getUserWalletRecord(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改用户钱包管理";
+        this.title = "修改用户钱包记录";
       });
     },
     /** 提交按钮 */
@@ -270,13 +259,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateUserWallet(this.form).then(response => {
+            updateUserWalletRecord(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addUserWallet(this.form).then(response => {
+            addUserWalletRecord(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -288,8 +277,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除用户钱包管理编号为"' + ids + '"的数据项？').then(function() {
-        return delUserWallet(ids);
+      this.$modal.confirm('是否确认删除用户钱包记录编号为"' + ids + '"的数据项？').then(function() {
+        return delUserWalletRecord(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -297,9 +286,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('user/userWallet/export', {
+      this.download('user/userWalletRecord/export', {
         ...this.queryParams
-      }, `userWallet_${new Date().getTime()}.xlsx`)
+      }, `userWalletRecord_${new Date().getTime()}.xlsx`)
     }
   }
 };

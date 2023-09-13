@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.user.mapper.UserRechargeRecordMapper">
+    
+    <resultMap type="UserRechargeRecord" id="UserRechargeRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="couponId"    column="coupon_id"    />
+        <result property="rechargeAmount"    column="recharge_amount"    />
+        <result property="discountAmount"    column="discount_amount"    />
+        <result property="rechargeAmountBefore"    column="recharge_amount_before"    />
+        <result property="rechargeAmountAfter"    column="recharge_amount_after"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectUserRechargeRecordVo">
+        select id, user_id, coupon_id, recharge_amount, discount_amount, recharge_amount_before, recharge_amount_after, create_time, update_time from bus_user_recharge_record
+    </sql>
+
+    <select id="selectUserRechargeRecordList" parameterType="UserRechargeRecord" resultMap="UserRechargeRecordResult">
+        <include refid="selectUserRechargeRecordVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="couponId != null "> and coupon_id = #{couponId}</if>
+            <if test="rechargeAmount != null "> and recharge_amount &gt;= #{rechargeAmount}</if>
+            <if test="discountAmount != null "> and discount_amount &gt;= #{discountAmount}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserRechargeRecordById" parameterType="Long" resultMap="UserRechargeRecordResult">
+        <include refid="selectUserRechargeRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserRechargeRecord" parameterType="UserRechargeRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_user_recharge_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="couponId != null">coupon_id,</if>
+            <if test="rechargeAmount != null">recharge_amount,</if>
+            <if test="discountAmount != null">discount_amount,</if>
+            <if test="rechargeAmountBefore != null">recharge_amount_before,</if>
+            <if test="rechargeAmountAfter != null">recharge_amount_after,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="couponId != null">#{couponId},</if>
+            <if test="rechargeAmount != null">#{rechargeAmount},</if>
+            <if test="discountAmount != null">#{discountAmount},</if>
+            <if test="rechargeAmountBefore != null">#{rechargeAmountBefore},</if>
+            <if test="rechargeAmountAfter != null">#{rechargeAmountAfter},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserRechargeRecord" parameterType="UserRechargeRecord">
+        update bus_user_recharge_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="couponId != null">coupon_id = #{couponId},</if>
+            <if test="rechargeAmount != null">recharge_amount = #{rechargeAmount},</if>
+            <if test="discountAmount != null">discount_amount = #{discountAmount},</if>
+            <if test="rechargeAmountBefore != null">recharge_amount_before = #{rechargeAmountBefore},</if>
+            <if test="rechargeAmountAfter != null">recharge_amount_after = #{rechargeAmountAfter},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserRechargeRecordById" parameterType="Long">
+        delete from bus_user_recharge_record where id = #{id}
+    </delete>
+
+    <delete id="deleteUserRechargeRecordByIds" parameterType="String">
+        delete from bus_user_recharge_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
