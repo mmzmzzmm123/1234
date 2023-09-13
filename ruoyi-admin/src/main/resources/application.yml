@@ -58,12 +58,12 @@ spring:
     active: druid
   # 文件上传
   servlet:
-     multipart:
-       # location: /tmp/undertow
-       # 单个文件大小
-       max-file-size:  1024MB
-       # 设置总上传的文件大小
-       max-request-size:  2048MB
+    multipart:
+      # location: /tmp/undertow
+      # 单个文件大小
+      max-file-size: 1024MB
+      # 设置总上传的文件大小
+      max-request-size: 2048MB
   # 服务模块
   devtools:
     restart:
@@ -73,7 +73,7 @@ spring:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
   # redis 配置
-# 正式
+  # 正式
   redis:
     # 地址
     host: 10.0.24.3
@@ -123,12 +123,12 @@ spring:
 
 # token配置
 token:
-    # 令牌自定义标识
-    header: Authorization
-    # 令牌密钥
-    secret: abcdefghijklmnopqrstuvwxyz
-    # 令牌有效期（默认30分钟）
-    expireTime: 120
+  # 令牌自定义标识
+  header: Authorization
+  # 令牌密钥
+  secret: abcdefghijklmnopqrstuvwxyz
+  # 令牌有效期（默认30分钟）
+  expireTime: 120
 
   # token配置
 app:
@@ -158,7 +158,7 @@ mybatis-plus:
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
   mapperLocations: classpath*:mapper/**/*Mapper.xml
   # 加载全局的配置文件
-#  configLocation: classpath:mybatis/mybatis-config.xml
+  #  configLocation: classpath:mybatis/mybatis-config.xml
   global-config:
     # 关闭MP3.0自带的banner
     banner: false
