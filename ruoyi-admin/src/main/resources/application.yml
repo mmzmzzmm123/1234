@@ -135,7 +135,7 @@ token:
   # token配置
 app:
   token:
-    # 令牌自定义标识
+    # 令牌自定义标识123
     header: Authorization
     # 令牌密钥
     secret: appabcdefghijklmnopqrstuvwxyz
