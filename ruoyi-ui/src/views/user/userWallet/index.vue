@@ -1,10 +1,42 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="名称" prop="name">
+      <el-form-item label="用户标识" prop="userId">
         <el-input
-          v-model="queryParams.name"
-          placeholder="请输入名称"
+          v-model="queryParams.userId"
+          placeholder="请输入用户标识"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="余额" prop="balance">
+        <el-input
+          v-model="queryParams.balance"
+          placeholder="请输入余额"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="赠送余额" prop="giftBalance">
+        <el-input
+          v-model="queryParams.giftBalance"
+          placeholder="请输入赠送余额"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="消费总额" prop="totalBalance">
+        <el-input
+          v-model="queryParams.totalBalance"
+          placeholder="请输入消费总额"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="赠送总额" prop="totalGiftBalance">
+        <el-input
+          v-model="queryParams.totalGiftBalance"
+          placeholder="请输入赠送总额"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -23,7 +55,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['user:userLevelConfig:add']"
+          v-hasPermi="['user:userWallet:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -34,7 +66,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['user:userLevelConfig:edit']"
+          v-hasPermi="['user:userWallet:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -45,7 +77,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['user:userLevelConfig:remove']"
+          v-hasPermi="['user:userWallet:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -55,29 +87,20 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['user:userLevelConfig:export']"
+          v-hasPermi="['user:userWallet:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="userLevelConfigList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="userWalletList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="等级图标" align="center" prop="icoUrl">
-        <template slot-scope="scope">
-          <image-preview :src="scope.row.icoUrl" :width="50" :height="50"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="头像框" align="center" prop="avatarUrl">
-        <template slot-scope="scope">
-          <image-preview :src="scope.row.avatarUrl" :width="50" :height="50"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true"/>
-      <el-table-column label="阈值" align="center" prop="threshold" :show-overflow-tooltip="true"/>
-      <el-table-column label="等级" align="center" prop="level" :show-overflow-tooltip="true"/>
-      <el-table-column label="充值折扣" align="center" prop="rechargeDiscount" :show-overflow-tooltip="true"/>
-      <el-table-column label="更新人" align="center" prop="updateBy" :show-overflow-tooltip="true"/>
+      <el-table-column label="主键" align="center" prop="id" :show-overflow-tooltip="true" />
+      <el-table-column label="用户标识" align="center" prop="userId" :show-overflow-tooltip="true"/>
+      <el-table-column label="余额" align="center" prop="balance" :show-overflow-tooltip="true"/>
+      <el-table-column label="赠送余额" align="center" prop="giftBalance" :show-overflow-tooltip="true"/>
+      <el-table-column label="消费总额" align="center" prop="totalBalance" :show-overflow-tooltip="true"/>
+      <el-table-column label="赠送总额" align="center" prop="totalGiftBalance" :show-overflow-tooltip="true"/>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
@@ -90,14 +113,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['user:userLevelConfig:edit']"
+            v-hasPermi="['user:userWallet:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['user:userLevelConfig:remove']"
+            v-hasPermi="['user:userWallet:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -111,28 +134,23 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改用户等级配置对话框 -->
+    <!-- 添加或修改用户钱包管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="等级图标" prop="icoUrl">
-          <imageUpload v-model="form.icoUrl" :limit="1" :fileType="['png','jpg']"
-                       :params-data="{ossKey: 'levelIco'}"/>
+        <el-form-item label="用户标识" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入用户标识" />
         </el-form-item>
-        <el-form-item label="头像框" prop="avatarUrl">
-          <imageUpload v-model="form.avatarUrl" :limit="1" :fileType="['png','jpg']"
-                       :params-data="{ossKey: 'avatar'}"/>
+        <el-form-item label="余额" prop="balance">
+          <el-input v-model="form.balance" placeholder="请输入余额" />
         </el-form-item>
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入名称" />
+        <el-form-item label="赠送余额" prop="giftBalance">
+          <el-input v-model="form.giftBalance" placeholder="请输入赠送余额" />
         </el-form-item>
-        <el-form-item label="阈值" prop="threshold">
-          <el-input v-model="form.threshold" placeholder="请输入阈值" />
+        <el-form-item label="消费总额" prop="totalBalance">
+          <el-input v-model="form.totalBalance" placeholder="请输入消费总额" />
         </el-form-item>
-        <el-form-item label="等级" prop="level">
-          <el-input v-model="form.level" placeholder="请输入等级" />
-        </el-form-item>
-        <el-form-item label="充值折扣" prop="rechargeDiscount">
-          <el-input v-model="form.rechargeDiscount" placeholder="请输入充值折扣" />
+        <el-form-item label="赠送总额" prop="totalGiftBalance">
+          <el-input v-model="form.totalGiftBalance" placeholder="请输入赠送总额" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -144,10 +162,10 @@
 </template>
 
 <script>
-import { listUserLevelConfig, getUserLevelConfig, delUserLevelConfig, addUserLevelConfig, updateUserLevelConfig } from "@/api/user/userLevelConfig";
+import { listUserWallet, getUserWallet, delUserWallet, addUserWallet, updateUserWallet } from "@/api/user/userWallet";
 
 export default {
-  name: "UserLevelConfig",
+  name: "UserWallet",
   data() {
     return {
       // 遮罩层
@@ -162,8 +180,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 用户等级配置表格数据
-      userLevelConfigList: [],
+      // 用户钱包管理表格数据
+      userWalletList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -172,7 +190,11 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: null,
+        userId: null,
+        balance: null,
+        giftBalance: null,
+        totalBalance: null,
+        totalGiftBalance: null,
       },
       // 表单参数
       form: {},
@@ -185,11 +207,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询用户等级配置列表 */
+    /** 查询用户钱包管理列表 */
     getList() {
       this.loading = true;
-      listUserLevelConfig(this.queryParams).then(response => {
-        this.userLevelConfigList = response.rows;
+      listUserWallet(this.queryParams).then(response => {
+        this.userWalletList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -203,15 +225,11 @@ export default {
     reset() {
       this.form = {
         id: null,
-        name: null,
-        threshold: null,
-        level: null,
-        rechargeDiscount: null,
-        icoUrl: null,
-        avatarUrl: null,
-        createBy: null,
-        createTime: null,
-        updateBy: null,
+        userId: null,
+        balance: null,
+        giftBalance: null,
+        totalBalance: null,
+        totalGiftBalance: null,
         updateTime: null
       };
       this.resetForm("form");
@@ -236,16 +254,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加用户等级配置";
+      this.title = "添加用户钱包管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getUserLevelConfig(id).then(response => {
+      getUserWallet(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改用户等级配置";
+        this.title = "修改用户钱包管理";
       });
     },
     /** 提交按钮 */
@@ -253,13 +271,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateUserLevelConfig(this.form).then(response => {
+            updateUserWallet(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addUserLevelConfig(this.form).then(response => {
+            addUserWallet(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -271,8 +289,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除用户等级配置编号为"' + ids + '"的数据项？').then(function() {
-        return delUserLevelConfig(ids);
+      this.$modal.confirm('是否确认删除用户钱包管理编号为"' + ids + '"的数据项？').then(function() {
+        return delUserWallet(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -280,9 +298,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('user/userLevelConfig/export', {
+      this.download('user/userWallet/export', {
         ...this.queryParams
-      }, `userLevelConfig_${new Date().getTime()}.xlsx`)
+      }, `userWallet_${new Date().getTime()}.xlsx`)
     }
   }
 };

@@ -32,7 +32,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @Api(tags = "admin-用户等级配置")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/userLevelConfig")
+@RequestMapping("/user/userLevelConfig")
 public class UserLevelConfigController extends BaseController {
 
     private final IUserLevelConfigService userLevelConfigService;

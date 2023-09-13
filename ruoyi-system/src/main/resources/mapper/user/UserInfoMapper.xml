@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.user.mapper.UserInfoMapper">
+    
+    <resultMap type="UserInfo" id="UserInfoResult">
+        <result property="id"    column="id"    />
+        <result property="avatarUrl"    column="avatar_url"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="sex"    column="sex"    />
+        <result property="openId"    column="openId"    />
+        <result property="sessionKey"    column="sessionKey"    />
+        <result property="unionId"    column="unionId"    />
+        <result property="phone"    column="phone"    />
+        <result property="referralCode"    column="referral_code"    />
+        <result property="hideLevel"    column="hide_level"    />
+        <result property="hideRanking"    column="hide_ranking"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="lastLoginTime"    column="last_login_time"    />
+    </resultMap>
+
+    <sql id="selectUserInfoVo">
+        select id, avatar_url, nick_name, sex, openId, sessionKey, unionId, phone, referral_code, hide_level, hide_ranking, create_time, last_login_time from bus_user_info
+    </sql>
+
+    <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        <where>  
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
+            <if test="referralCode != null "> and referral_code like concat('%', #{referralCode}, '%')</if>
+            <if test="hideLevel != null  and hideLevel != ''"> and hide_level = #{hideLevel}</if>
+            <if test="hideRanking != null  and hideRanking != ''"> and hide_ranking = #{hideRanking}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserInfoById" parameterType="Long" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserInfo" parameterType="UserInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_user_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="avatarUrl != null">avatar_url,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="openId != null">openId,</if>
+            <if test="sessionKey != null">sessionKey,</if>
+            <if test="unionId != null">unionId,</if>
+            <if test="phone != null">phone,</if>
+            <if test="referralCode != null">referral_code,</if>
+            <if test="hideLevel != null">hide_level,</if>
+            <if test="hideRanking != null">hide_ranking,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="lastLoginTime != null">last_login_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="avatarUrl != null">#{avatarUrl},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="openId != null">#{openId},</if>
+            <if test="sessionKey != null">#{sessionKey},</if>
+            <if test="unionId != null">#{unionId},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="referralCode != null">#{referralCode},</if>
+            <if test="hideLevel != null">#{hideLevel},</if>
+            <if test="hideRanking != null">#{hideRanking},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="lastLoginTime != null">#{lastLoginTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserInfo" parameterType="UserInfo">
+        update bus_user_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="openId != null">openId = #{openId},</if>
+            <if test="sessionKey != null">sessionKey = #{sessionKey},</if>
+            <if test="unionId != null">unionId = #{unionId},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="referralCode != null">referral_code = #{referralCode},</if>
+            <if test="hideLevel != null">hide_level = #{hideLevel},</if>
+            <if test="hideRanking != null">hide_ranking = #{hideRanking},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="lastLoginTime != null">last_login_time = #{lastLoginTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserInfoById" parameterType="Long">
+        delete from bus_user_info where id = #{id}
+    </delete>
+
+    <delete id="deleteUserInfoByIds" parameterType="String">
+        delete from bus_user_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
