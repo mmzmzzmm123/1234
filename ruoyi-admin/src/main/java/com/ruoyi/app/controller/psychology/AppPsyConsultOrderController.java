@@ -3,6 +3,7 @@ package com.ruoyi.app.controller.psychology;
 import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.psychology.domain.PsyConsultOrder;
 import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import org.springframework.web.bind.annotation.*;
@@ -71,7 +72,8 @@ public class AppPsyConsultOrderController extends BaseController
     @RateLimiter
     public AjaxResult cancel(@PathVariable("id") Long id)
     {
-        psyConsultOrderService.cancel(psyConsultOrderService.getOrderById(id));
+        PsyConsultOrder order = psyConsultOrderService.getOrderById(id);
+        psyConsultOrderService.cancel(order, order.getNickName());
         return AjaxResult.success();
     }
 

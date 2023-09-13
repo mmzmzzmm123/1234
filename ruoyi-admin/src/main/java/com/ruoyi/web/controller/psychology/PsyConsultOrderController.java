@@ -10,6 +10,7 @@ import com.ruoyi.psychology.constant.ConsultConstant;
 import com.ruoyi.psychology.domain.PsyConsultOrder;
 import com.ruoyi.psychology.request.PsyAdminOrderReq;
 import com.ruoyi.psychology.request.PsyHxOrderReq;
+import com.ruoyi.psychology.request.PsyRefOrderReq;
 import com.ruoyi.psychology.service.IPsyConsultOrderService;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,10 +77,10 @@ public class PsyConsultOrderController extends BaseController
 
 
     /**
-     * 修改咨询订单
+     * 订单核销
      */
     @PreAuthorize("@ss.hasPermi('psychology:order:edit')")
-    @Log(title = "咨询订单", businessType = BusinessType.UPDATE)
+    @Log(title = "咨询订单", businessType = BusinessType.HX)
     @PostMapping("/hx")
     public AjaxResult hx(@RequestBody PsyHxOrderReq req)
     {
@@ -88,14 +89,26 @@ public class PsyConsultOrderController extends BaseController
     }
 
     /**
-     * 修改咨询订单
+     * 订单改价
      */
     @PreAuthorize("@ss.hasPermi('psychology:order:price')")
-    @Log(title = "咨询订单", businessType = BusinessType.UPDATE)
+    @Log(title = "咨询订单", businessType = BusinessType.PRICE)
     @PostMapping("/modifyPrice")
     public AjaxResult modifyPrice(@RequestBody PsyConsultOrderVO req)
     {
         String msg = psyConsultOrderService.modifyPrice(req);
+        return "ok".equals(msg) ? AjaxResult.success() : AjaxResult.error(msg);
+    }
+
+    /**
+     * 订单转介
+     */
+    @PreAuthorize("@ss.hasPermi('psychology:order:referral')")
+    @Log(title = "咨询订单", businessType = BusinessType.REF)
+    @PostMapping("/modifyRef")
+    public AjaxResult modifyRef(@RequestBody PsyRefOrderReq req)
+    {
+        String msg = psyConsultOrderService.modifyRef(req);
         return "ok".equals(msg) ? AjaxResult.success() : AjaxResult.error(msg);
     }
 

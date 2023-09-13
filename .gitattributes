@@ -1,0 +1,3 @@
+**/resources/application.yml merge=ours
+**/resources/application-druid.yml merge=ours
+**/resources/logback.yml merge=ours

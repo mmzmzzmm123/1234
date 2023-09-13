@@ -23,6 +23,21 @@ public enum BusinessType
     UPDATE,
 
     /**
+     * 核销
+     */
+    HX,
+
+    /**
+     * 改价
+     */
+    PRICE,
+
+    /**
+     * 转介
+     */
+    REF,
+
+    /**
      * 删除
      */
     DELETE,
