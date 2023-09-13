@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="90px">
-      <el-form-item label="订单编号" prop="orderId">
+      <el-form-item label="订单编号" prop="orderNo">
         <el-input
           v-model="queryParams.orderNo"
           placeholder="请输入订单编号"
@@ -79,13 +79,13 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" style="width: 100%" :data="orderList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" size="mini" style="width: 100%" :data="orderList" @selection-change="handleSelectionChange">
 <!--      <el-table-column fixed type="selection" width="55" align="center" />-->
-      <el-table-column fixed label="订单编号" width="300" align="center" prop="orderNo" />
-      <el-table-column label="服务名称" width="180" align="center" prop="serveName" />
+      <el-table-column fixed label="订单编号" width="180" align="center" prop="orderNo" />
+      <el-table-column label="服务名称" width="150" align="center" prop="serveName" />
       <el-table-column label="咨询师" width="100" align="center" prop="consultName" />
       <el-table-column label="用户名称" width="100" align="center" prop="nickName" />
-      <el-table-column label="用户手机号" width="180" align="center" prop="phone" />
+      <el-table-column label="用户手机号" width="120" align="center" prop="phone" />
       <el-table-column label="订单总价" width="100" align="center" prop="amount">
         <template slot-scope="scope">
           {{ scope.row.amount.toFixed(2) }}
@@ -96,7 +96,7 @@
           {{ scope.row.pay.toFixed(2) }}
         </template>
       </el-table-column>
-      <el-table-column label="服务次数" width="130" align="center" prop="num">
+      <el-table-column label="服务次数" width="100" align="center" prop="num">
         <template slot="header" slot-scope="{ column, $index }">
           <span>服务次数</span>
           <el-tooltip class="item" effect="dark" content="剩余次数/用户购买次数" placement="top-start">
@@ -108,8 +108,8 @@
         </template>
       </el-table-column>
       <el-table-column label="下次预约时间" width="180" align="center" prop="orderTime" />
-      <el-table-column label="支付状态" width="130" align="center" prop="payStatusName" />
-      <el-table-column label="订单状态" width="130" align="center" prop="statusName">
+      <el-table-column label="支付状态" width="100" align="center" prop="payStatusName" />
+      <el-table-column label="订单状态" width="100" align="center" prop="statusName">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.status === '3'" type="info">{{ scope.row.statusName }}</el-tag>
           <el-tag v-else-if="scope.row.status === '2'" type="success">{{ scope.row.statusName }}</el-tag>
@@ -117,7 +117,7 @@
         </template>
       </el-table-column>
       <el-table-column label="下单时间" align="center" prop="createTime" width="180"/>
-      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width" width="180">
+      <el-table-column fixed="right" label="操作" align="center" class-name="small-padding fixed-width" width="120">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -125,27 +125,17 @@
             @click="handleDetail(scope.row.id, '1')"
             v-hasPermi="['psychology:order:edit']"
           >详情</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            :disabled="scope.row.num === 0 || ['0', '3'].includes(scope.row.status)"
-            @click="handleHx(scope.row.id)"
-            v-hasPermi="['psychology:order:edit']"
-          >核销次数</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            :disabled="scope.row.status !== '0'"
-            @click="handlePrice(scope.row.id)"
-            v-hasPermi="['psychology:order:price']"
-          >改价</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            :disabled="['0', '3'].includes(scope.row.status)"
-            @click="handleRemark(scope.row)"
-            v-hasPermi="['psychology:order:remove']"
-          >备注</el-button>
+          <el-dropdown trigger="click">
+            <span class="el-dropdown-link">
+              更多<i class="el-icon-arrow-down el-icon--right" />
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item :disabled="scope.row.num === 0 || ['0', '3'].includes(scope.row.status)" @click.native="handleHx(scope.row.id)" v-if="checkPermi(['psychology:order:edit'])">核销次数</el-dropdown-item>
+              <el-dropdown-item :disabled="['0', '3'].includes(scope.row.status)" @click.native="handleRemark(scope.row)" v-if="checkPermi(['psychology:order:edit'])">备注</el-dropdown-item>
+              <el-dropdown-item :disabled="scope.row.status !== '0'" @click.native="handlePrice(scope.row.id)" v-if="checkPermi(['psychology:order:price'])">改价</el-dropdown-item>
+              <el-dropdown-item :disabled="scope.row.status !== '1'" @click.native="handleRefer(scope.row)" v-if="checkPermi(['psychology:order:referral'])">转介</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -182,6 +172,8 @@
 
     <price ref="formPrice" @handleOk="handleOk" />
 
+    <referral ref="formRefer" @handleOk="handleOk" />
+
 <!--    <el-dialog title="订单编辑" :visible.sync="openHx" width="700px" append-to-body>-->
 <!--      <times v-if="openHx" :order="order" />-->
 <!--      <div slot="footer" class="dialog-footer">-->
@@ -194,14 +186,17 @@
 
 <script>
 import { listOrder, getOrder, addOrder, updateOrder, doRemark, getInfo } from "@/api/psychology/order";
+import { getServeRef } from "@/api/psychology/serveConfig";
 import { getConsultAll } from "@/api/psychology/consult";
 import orderDetail from "./detail";
 import times from "./times";
 import price from "./price";
+import referral from "./referral";
+import { checkPermi } from "@/utils/permission"; // 权限判断函数
 
 export default {
   name: "Order",
-  components: { orderDetail, times, price },
+  components: { orderDetail, times, price, referral },
   data() {
     return {
       // 遮罩层
@@ -257,6 +252,7 @@ export default {
     this.getList();
   },
   methods: {
+    checkPermi,
     onchangeTime (e) {
       this.timeVal = e;
       this.queryParams.dateLimit = e ? this.timeVal.join(',') : ''
@@ -368,6 +364,14 @@ export default {
         }
       })
     },
+    /** 转介 */
+    handleRefer(data) {
+      getServeRef({ serveId: data.serveId }).then(response => {
+        if (response.data) {
+          this.$refs.formRefer.setForm(data, response.data)
+        }
+      })
+    },
     handleOk() {
       this.getList()
     },
@@ -408,7 +412,7 @@ export default {
         }
       });
     },
-    /** 删除按钮操作 */
+    /** 备注操作 */
     handleRemark(row) {
       const id = row.id
       getInfo(id).then(response => {

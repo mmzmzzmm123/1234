@@ -29,7 +29,7 @@ public class OrderTask {
         List<PsyConsultOrder> cancelList = psyConsultOrderService.getCancelList(num);
         if (CollectionUtils.isNotEmpty(cancelList)) {
             cancelList.forEach(order -> {
-                psyConsultOrderService.cancel(order);
+                psyConsultOrderService.cancel(order, "job");
             });
             List<Long> collect = cancelList.stream().map(PsyConsultOrder::getId).collect(Collectors.toList());
             log.info("咨询订单取消, 订单id={} 自动修改订单状态为已取消，操作已完成", collect);

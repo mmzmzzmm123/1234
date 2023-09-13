@@ -32,6 +32,14 @@ export function hx(data) {
     data: data
   })
 }
+// 订单转介
+export function modifyRef(data) {
+  return request({
+    url: '/psychology/order/modifyRef',
+    method: 'post',
+    data: data
+  })
+}
 
 // 改价
 export function modifyPrice(data) {

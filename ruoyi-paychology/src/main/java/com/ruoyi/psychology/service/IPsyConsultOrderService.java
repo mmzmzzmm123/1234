@@ -6,6 +6,7 @@ import com.ruoyi.psychology.dto.OrderDTO;
 import com.ruoyi.psychology.dto.OrderListDTO;
 import com.ruoyi.psychology.request.PsyAdminOrderReq;
 import com.ruoyi.psychology.request.PsyHxOrderReq;
+import com.ruoyi.psychology.request.PsyRefOrderReq;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 
 /**
@@ -39,6 +40,8 @@ public interface IPsyConsultOrderService
 
     String hx(PsyHxOrderReq req);
 
+    String modifyRef(PsyRefOrderReq req);
+
     String modifyPrice(PsyConsultOrderVO req);
 
     void updatePayOrder(PsyConsultOrderVO req);
@@ -51,7 +54,7 @@ public interface IPsyConsultOrderService
 
     int add(PsyConsultOrderVO req);
 
-    void cancel(PsyConsultOrder order);
+    void cancel(PsyConsultOrder order, String createBy);
 
     int update(PsyConsultOrderVO req);
 

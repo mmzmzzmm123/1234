@@ -20,6 +20,7 @@ import com.ruoyi.psychology.dto.OrderListDTO;
 import com.ruoyi.psychology.mapper.PsyConsultOrderMapper;
 import com.ruoyi.psychology.request.PsyAdminOrderReq;
 import com.ruoyi.psychology.request.PsyHxOrderReq;
+import com.ruoyi.psychology.request.PsyRefOrderReq;
 import com.ruoyi.psychology.service.*;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 import com.ruoyi.psychology.vo.PsyConsultServeConfigVO;
@@ -291,6 +292,34 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    public String modifyRef(PsyRefOrderReq req) {
+        PsyConsultOrderVO order = getOne(req.getOrderId());
+        if (!ConsultConstant.CONSULT_ORDER_STATUE_PENDING.equals(order.getStatus())) {
+            return "订单状态异常";
+        }
+
+        PsyConsultVO consult = psyConsultService.getOne(req.getConsultId());
+        if ("1".equals(consult.getStatus())) {
+            return "咨询师状态异常";
+        }
+
+        // 原订单处理
+        // 新订单处理
+
+
+
+
+
+
+//        order.setPay(req.getPay());
+//        order.setMemo1(req.getMemo1());
+//
+//        doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_EDIT_PRICE, SecurityUtils.getUsername(), StrUtil.format(PsyConstants.ORDER_LOG_MESSAGE_EDIT_PRICE,  order.getAmount(), order.getPay()));
+        return  "功能开发中...";
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
     public String modifyPrice(PsyConsultOrderVO req) {
         PsyConsultOrderVO order = getOne(req.getId());
         if (!ConsultConstant.CONSULT_ORDER_STATUE_CREATED.equals(order.getStatus())) {
@@ -317,7 +346,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void cancel(PsyConsultOrder order) {
+    public void cancel(PsyConsultOrder order, String createBy) {
         order.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_CANCELED);
         List<PsyConsultOrderItem> items = psyConsultOrderItemService.getList(order.getId());
 
@@ -328,7 +357,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         }
         // 咨询人数减1
         // psyConsultService.updateNum(order.getConsultId(), -1);
-        doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_CANCEL, "job", PsyConstants.ORDER_LOG_MESSAGE_CANCEL);
+        doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_CANCEL, createBy, PsyConstants.ORDER_LOG_MESSAGE_CANCEL);
         psyConsultOrderMapper.updateById(order);
     }
 
