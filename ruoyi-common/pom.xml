@@ -144,6 +144,13 @@
             <version>4.3.0</version>
         </dependency>
 
+        <!--  第三方登录-->
+        <dependency>
+            <groupId>me.zhyd.oauth</groupId>
+            <artifactId>JustAuth</artifactId>
+            <version>1.15.9</version>
+        </dependency>
+
         <!--hutool-->
         <dependency>
             <groupId>cn.hutool</groupId>
@@ -168,7 +175,7 @@
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-pool</artifactId>
-<!--            <version>5.12.0</version>-->
+            <!--            <version>5.12.0</version>-->
         </dependency>
         <!--activemq依赖-->
 

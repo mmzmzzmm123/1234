@@ -6,6 +6,11 @@ import java.util.Set;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.office.domain.vo.LoginByOtherSourceBody;
+import me.zhyd.oauth.config.AuthConfig;
+import me.zhyd.oauth.request.AuthGiteeRequest;
+import me.zhyd.oauth.request.AuthRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -101,4 +106,31 @@ public class SysLoginController
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
         return AjaxResult.success(menuService.buildMenus(menus));
     }
+
+
+    @GetMapping("/PreLoginByGitee")
+    public AjaxResult PreLoginByGitee()
+    {
+        AjaxResult ajax = AjaxResult.success();
+        AuthRequest authRequest = new AuthGiteeRequest(AuthConfig.builder()
+                .clientId("***********************************")
+                .clientSecret("************************************")
+                .redirectUri("http://localhost/callback")
+                .build());
+        String uuid = IdUtils.fastUUID();
+        String authorizeUrl = authRequest.authorize(uuid);
+        //存储
+        ajax.put("authorizeUrl", authorizeUrl);
+        ajax.put("uuid", uuid);
+        return ajax;
+    }
+
+    @PostMapping("/loginByGitee")
+    public AjaxResult loginByGitee(@RequestBody LoginByOtherSourceBody loginByOtherSourceBody) {
+        AjaxResult ajax = AjaxResult.success();
+        String token = loginService.loginByOtherSource(loginByOtherSourceBody.getCode(), loginByOtherSourceBody.getSource(), loginByOtherSourceBody.getUuid());
+        ajax.put(Constants.TOKEN, token);
+        return ajax;
+    }
+
 }

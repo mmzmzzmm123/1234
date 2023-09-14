@@ -253,6 +253,8 @@
         </el-table-column>
         <el-table-column label="操作" align="center" width="270" class-name="small-padding fixed-width">
           <template slot-scope="scope">
+            <el-button size="mini" type="text" icon="el-icon-edit" @click="setRoomPackage(scope.row)"
+              v-hasPermi="['office:room:edit']">添加房间套餐</el-button>
             <el-button size="mini" type="text" icon="el-icon-edit" @click="setRoomPrice(scope.row)"
               v-hasPermi="['office:room:edit']">添加收费规则</el-button>
             <el-button size="mini" type="text" icon="el-icon-edit" @click="bindEquipment(scope.row,'room')"
@@ -409,6 +411,44 @@
       </div>
     </el-dialog>
 
+    <div style="float: left;width: 40%;border: 0.2rem solid solid none solid #aaaaaa;padding: 1rem;">
+      <el-table v-loading="packageLoading" :data="packageList">
+        <el-table-column label="名称" align="center" prop="name" width="90" />
+        <el-table-column label="价格" align="center" prop="price" width="90" />
+        <el-table-column label="时长(分钟)" align="center" prop="minutes" width="120" />
+        <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+          <template slot-scope="scope">
+            <el-button size="mini" type="text" icon="el-icon-edit" @click="handlePriceUpdate(scope.row)"
+              v-hasPermi="['office:roomprice:edit']">修改</el-button>
+            <el-button size="mini" type="text" icon="el-icon-delete" @click="handlePriceDelete(scope.row)"
+              v-hasPermi="['office:roomprice:remove']">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+      <pagination v-show="packageTotal>0" :total="packageTotal" :page.sync="priceQueryParams.pageNum"
+        :limit.sync="priceQueryParams.pageSize" @pagination="getPrice" />
+    </div>
+
+    <el-dialog :title="title" :visible.sync="packageOpen" width="500px" append-to-body>
+      <el-form ref="packageForm" :model="packageForm" :rules="packageRules" label-width="150px">
+        <el-form-item label="名称" prop="name">
+          <el-input v-model="packageForm.name" placeholder="请输入备注" />
+        </el-form-item>
+        <el-form-item label="价格" prop="price">
+          <el-input v-model="packageForm.price" placeholder="请输入单价" />
+        </el-form-item>
+        <el-form-item label="时长(分钟)" prop="minutes">
+          <el-input v-model="packageForm.minutes" placeholder="请输入会员单价" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="submitPackageForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+
   </div>
 </template>
 
@@ -441,6 +481,14 @@
     addRoomprice,
     updateRoomprice
   } from "@/api/office/roomprice";
+
+  import {
+    listRoompackage,
+    getRoompackage,
+    addRoompackage,
+    updateRoompackage,
+    delRoompackage
+  } from "@/api/office/roompackage";
 
   import {
     listEquipment,
@@ -533,6 +581,7 @@
         loading: true,
         roomLoading: false,
         priceLoading: false,
+        packageLoading: false,
         // 选中数组
         ids: [],
         // 非单个禁用
@@ -545,10 +594,12 @@
         total: 0,
         roomTotal: 0,
         priceTotal: 0,
+        packageTotal: 0,
         // 商家用户门店表格数据
         storeList: [],
         roomList: [],
         priceList: [],
+        packageList: [],
         equipAllOptions: [],
         equipOptions: [],
         storeEquipOptions: [],
@@ -558,6 +609,7 @@
         open: false,
         roomOpen: false,
         priceOpen: false,
+        packageOpen: false,
         bindOpen: false,
         bindStoreOpen: false,
         // 查询参数
@@ -592,6 +644,7 @@
         form: {},
         roomForm: {},
         priceForm: {},
+        packageForm: {},
         bindForm: {},
         bindStoreForm: {},
         bindType: '',
@@ -652,6 +705,23 @@
             trigger: "blur"
           }],
         },
+        packageRules: {
+          price: [{
+            required: true,
+            message: "价格不能为空",
+            trigger: "blur"
+          }],
+          name: [{
+            required: true,
+            message: "名称不能为空",
+            trigger: "blur"
+          }],
+          minutes: [{
+            required: true,
+            message: "时长不能为空",
+            trigger: "blur"
+          }],
+        },
         // 上传参数
         upload: {
           // 是否禁用上传
@@ -696,6 +766,7 @@
         this.open = false;
         this.roomOpen = false;
         this.priceOpen = false;
+        this.packageOpen = false;
         this.bindOpen = false;
         this.bindStoreOpen = false;
         this.reset();
@@ -769,6 +840,11 @@
           this.priceTotal = response.total;
           this.priceLoading = false;
         });
+        listRoompackage(this.roomQueryParam).then(response => {
+          this.packageList = response.rows;
+          this.packageTotal = response.total;
+          this.packageLoading = false;
+        })
       },
       /** 新增按钮操作 */
       handleAdd() {
@@ -850,6 +926,12 @@
         this.priceForm = {};
         this.priceForm.roomId = row.id
         this.priceOpen = true;
+      },
+      setRoomPackage(row) {
+        this.reset();
+        this.packageForm = {};
+        this.packageForm.roomId = row.id
+        this.packageOpen = true;
       },
       bindEquipment(row, type) {
         // type = "store/room";
@@ -960,6 +1042,25 @@
               addRoomprice(this.priceForm).then(response => {
                 this.$modal.msgSuccess("新增成功");
                 this.priceOpen = false;
+                this.getPrice();
+              });
+            }
+          }
+        });
+      },
+      submitPackageForm(){
+        this.$refs["packageForm"].validate(valid => {
+          if (valid) {
+            if (this.packageForm.id != null) {
+              updateRoompackage(this.packageForm).then(response => {
+                this.$modal.msgSuccess("修改成功");
+                this.packageOpen = false;
+                this.getPrice();
+              });
+            } else {
+              addRoompackage(this.packageForm).then(response => {
+                this.$modal.msgSuccess("新增成功");
+                this.packageOpen = false;
                 this.getPrice();
               });
             }
@@ -1179,13 +1280,13 @@
       },
       viewQrcode(row) {
         getQrcode(row.id).then(response => {
-            console.log(response)
-            this.$alert('<img src="data:image/png;base64,' + response + '"/>', row.name, {
-              dangerouslyUseHTMLString: true
-            });
+          console.log(response)
+          this.$alert('<img src="data:image/png;base64,' + response + '"/>', row.name, {
+            dangerouslyUseHTMLString: true
+          });
         });
+      }
     }
-  }
   };
 </script>
 <style scoped lang="scss">

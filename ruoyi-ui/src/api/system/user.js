@@ -1,5 +1,14 @@
 import request from '@/utils/request'
-import { parseStrEmpty } from "@/utils/ruoyi";
+import {
+  parseStrEmpty
+} from "@/utils/ruoyi";
+
+import {
+  login,
+  logout,
+  getInfo,
+  loginByGitee
+} from '@/api/login'
 
 // 查询用户列表
 export function listUser(query) {
@@ -132,4 +141,17 @@ export function deptTreeSelect() {
     url: '/system/user/deptTree',
     method: 'get'
   })
+}
+
+//根据gitee登录
+export function LoginByGitee(commit, body) {
+  return new Promise((resolve, reject) => {
+    loginByGitee(body.code, body.uuid).then(res => {
+      setToken(res.token);
+      commit('SET_TOKEN', res.token);
+      resolve();
+    }).catch(error => {
+      reject(error);
+    })
+  });
 }
