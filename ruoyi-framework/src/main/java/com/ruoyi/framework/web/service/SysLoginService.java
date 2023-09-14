@@ -2,11 +2,21 @@ package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
 
+import cn.binarywang.wx.miniapp.api.WxMaService;
 import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.core.domain.model.WxLoginUser;
+import com.ruoyi.framework.config.WxMaConfig;
 import com.ruoyi.framework.security.authentication.WxAuthenticationToken;
 import com.ruoyi.office.service.ITWxUserService;
+import me.zhyd.oauth.config.AuthConfig;
+import me.zhyd.oauth.exception.AuthException;
+import me.zhyd.oauth.model.AuthCallback;
+import me.zhyd.oauth.model.AuthResponse;
+import me.zhyd.oauth.model.AuthUser;
+import me.zhyd.oauth.request.AuthGiteeRequest;
+import me.zhyd.oauth.request.AuthRequest;
+import me.zhyd.oauth.request.AuthWeChatOpenRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -34,6 +44,8 @@ import com.ruoyi.framework.manager.factory.AsyncFactory;
 import com.ruoyi.framework.security.context.AuthenticationContextHolder;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
+
+import java.util.List;
 
 /**
  * 登录校验方法
@@ -172,5 +184,73 @@ public class SysLoginService {
         sysUser.setLoginDate(DateUtils.getNowDate());
         userService.updateUserProfile(sysUser);
     }
+
+    @Autowired
+    private SysPermissionService permissionService;
+
+    public String loginByOtherSource(String code, String source, String uuid) {
+        //先到数据库查询这个人曾经有没有登录过，没有就注册
+        // 创建授权request
+        AuthRequest authRequest = getAuthRequest(source);
+
+        AuthResponse<AuthUser> login = authRequest.login(AuthCallback.builder().state(uuid).code(code).build());
+        System.out.println(login);
+        //先查询数据库有没有该用户
+        AuthUser authUser = login.getData();
+        SysUser sysUser = new SysUser();
+        sysUser.setUserName(authUser.getUsername());
+        sysUser.setSource(authUser.getSource());
+        List<SysUser> sysUsers = userService.selectUserListNoDataScope(sysUser);
+        if (sysUsers.size() > 1) {
+            throw new ServiceException("第三方登录异常，账号重叠");
+        } else if (sysUsers.size() == 0) {
+            //相当于注册
+            sysUser.setNickName(authUser.getNickname());
+            sysUser.setAvatar(authUser.getAvatar());
+            sysUser.setEmail(authUser.getEmail());
+            sysUser.setRemark(authUser.getRemark());
+//            userService.registerUserAndGetUserId(sysUser);
+            userService.registerUser(sysUser);
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(sysUser.getUserName(), Constants.REGISTER,
+                    MessageUtils.message("user.register.success")));
+        } else {
+            sysUser = sysUsers.get(0);
+        }
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(sysUser.getUserName(), Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        //注册成功或者是已经存在的用户
+        LoginUser loginUser =
+                new LoginUser(sysUser.getUserId(), sysUser.getDeptId(), sysUser, permissionService.getMenuPermission(sysUser));
+        recordLoginInfo(loginUser.getUserId());
+        // 生成token
+        return tokenService.createToken(loginUser);
+    }
+
+    /**
+     * 根据具体的授权来源，获取授权请求工具类
+     *
+     * @param source
+     * @return
+     */
+    private AuthRequest getAuthRequest(String source) {
+        AuthRequest authRequest = null;
+        switch (source) {
+            case "wechat":
+                final cn.binarywang.wx.miniapp.config.WxMaConfig wxMaConfig = WxMaConfig.getMaServiceByName("office").getWxMaConfig();
+                authRequest = new AuthWeChatOpenRequest(AuthConfig.builder()
+                        .clientId(wxMaConfig.getAppid())
+                        .clientSecret(wxMaConfig.getSecret())
+                        .redirectUri("http://localhost:81/")
+                        .build());
+                break;
+
+            default:
+                break;
+        }
+        if (null == authRequest) {
+            throw new AuthException("未获取到有效的Auth配置");
+        }
+        return authRequest;
+    }
+
 
 }

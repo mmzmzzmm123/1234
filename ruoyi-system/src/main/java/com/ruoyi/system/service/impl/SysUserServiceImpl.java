@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.validation.Validator;
+
+import com.ruoyi.system.domain.SysAuthUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -540,5 +542,22 @@ public class SysUserServiceImpl implements ISysUserService
             successMsg.insert(0, "恭喜您，数据已全部导入成功！共 " + successNum + " 条，数据如下：");
         }
         return successMsg.toString();
+    }
+
+    /**
+     * 根据用户编号查询授权列表
+     * 
+     * @param userId 用户编号
+     * @return 授权列表
+     */
+    public List<SysAuthUser> selectAuthUserListByUserId(Long userId)
+    {
+        return userMapper.selectAuthUserListByUserId(userId);
+    }
+
+
+ @Override
+    public List<SysUser> selectUserListNoDataScope(SysUser sysUser) {
+            return userMapper.selectUserListNoDataScope(sysUser);
     }
 }

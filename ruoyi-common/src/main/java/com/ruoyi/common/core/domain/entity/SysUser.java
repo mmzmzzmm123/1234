@@ -89,6 +89,8 @@ public class SysUser extends BaseEntity
     /** 角色ID */
     private Long roleId;
 
+    private String source;
+
     public SysUser()
     {
 
@@ -127,6 +129,14 @@ public class SysUser extends BaseEntity
     public void setDeptId(Long deptId)
     {
         this.deptId = deptId;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     @Xss(message = "用户昵称不能包含脚本字符")
