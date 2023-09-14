@@ -8,10 +8,9 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
-import com.ruoyi.framework.config.WxMaConfig;
+import com.ruoyi.common.config.WxMaServiceUtil;
 import com.ruoyi.framework.web.service.UserDetailsServiceImpl;
 import com.ruoyi.common.core.domain.entity.WxUser;
-import com.ruoyi.office.domain.TWxUser;
 import com.ruoyi.office.mapper.WxUserMapper;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.slf4j.Logger;
@@ -34,11 +33,13 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
 
     private WxUserMapper userMapper;
 
+    @Autowired WxMaServiceUtil wxMaServiceUtil;
+
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         WxLoginBody loginBody = (WxLoginBody) authentication.getCredentials();
         WxMaService wxMaService = StringUtils.isEmpty(loginBody.getAppId()) ?
-                WxMaConfig.getMaServiceByName(loginBody.getAppName()) : WxMaConfig.getMaServiceById(loginBody.getAppId());
+                wxMaServiceUtil.getMaServiceByName(loginBody.getAppName()) : wxMaServiceUtil.getMaServiceById(loginBody.getAppId());
         try {
             WxMaJscode2SessionResult result = wxMaService.jsCode2SessionInfo(loginBody.getCode());
             WxUser wxUser = userMapper.selectUserByOpenId(result.getOpenid());

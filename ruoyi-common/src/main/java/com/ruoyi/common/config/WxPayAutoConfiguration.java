@@ -1,10 +1,10 @@
-package com.ruoyi.framework.config;
+package com.ruoyi.common.config;
 
 import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.github.binarywang.wxpay.service.impl.WxPayServiceImpl;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.framework.config.properties.WxPayProperties;
+import com.ruoyi.common.config.properties.WxPayProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

@@ -16,6 +16,8 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysUserService;
 
+import java.util.HashSet;
+
 /**
  * 用户验证处理
  *

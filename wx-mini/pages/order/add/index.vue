@@ -81,8 +81,8 @@
 			}
 		},
 		onLoad(options) {
-			if(options.roomId){
-				this.$api.getRoomList({id: options.roomId}).then(res=>{
+			if(options.scene){
+				this.$api.getRoomList({id: options.scene}).then(res=>{
 					if(res.rows.length == 1){
 						this.onAcceptRoom(res.rows[0])
 					}

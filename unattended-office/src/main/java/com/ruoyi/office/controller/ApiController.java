@@ -46,6 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -75,6 +76,9 @@ public class ApiController extends BaseController {
 
     @Autowired
     TuangouService tuangouService;
+
+    @Resource(name = "customerWxMaService")
+    WxMaService customerWxMaService;
 
     /**
      * 预定成功 api 回调
@@ -783,20 +787,12 @@ public class ApiController extends BaseController {
         String codeType = "scene";
         String parameterValue = "" + roomId;
 
-        //调用工具包的服务
-        WxMaService wxMaService = new WxMaServiceImpl();
-        WxMaDefaultConfigImpl wxMaDefaultConfigImpl = new WxMaDefaultConfigImpl();
-        wxMaDefaultConfigImpl.setAppid(config.getAppId());        //小程序appId
-//        wxMaDefaultConfigImpl.setSecret(config.getApiV3Key());    //小程序secret
-        wxMaDefaultConfigImpl.setSecret("421cfe703214d0a3688916edff0c2933");
-        wxMaService.setWxMaConfig(wxMaDefaultConfigImpl);
-
         // 设置小程序二维码线条颜色为黑色
         WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
         byte[] qrCodeBytes = null;
         try {
             //其中codeType以及parameterValue为前端页面所需要接收的参数。
-            qrCodeBytes = wxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/add/index", false, "release", 30, false, lineColor, false);
+            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/add/index", false, "release", 30, false, lineColor, false);
         } catch (WxErrorException e) {
 //            e.printStackTrace();
             logger.error(e.getMessage());
