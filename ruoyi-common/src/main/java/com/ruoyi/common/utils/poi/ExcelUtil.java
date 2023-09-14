@@ -703,7 +703,7 @@ public class ExcelUtil<T>
     @SuppressWarnings("unchecked")
     public void fillExcelData(int index, Row row)
     {
-        int startNo = index * sheetSize;
+        int startNo = index == 0 ? 0 : index * sheetSize - 1;
         int endNo = Math.min(startNo + sheetSize, list.size());
         int rowNo = (1 + rownum) - startNo;
         for (int i = startNo; i < endNo; i++)
