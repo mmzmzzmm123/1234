@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.user.mapper.UserSocialAccountsMapper">
+    
+    <resultMap type="UserSocialAccounts" id="UserSocialAccountsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="accountServiceProvider"    column="account_service_provider"    />
+        <result property="num"    column="num"    />
+        <result property="ifDefault"    column="if_default"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectUserSocialAccountsVo">
+        select id, user_id, account_service_provider, num, if_default, create_time, update_time from bus_user_social_accounts
+    </sql>
+
+    <select id="selectUserSocialAccountsList" parameterType="UserSocialAccounts" resultMap="UserSocialAccountsResult">
+        <include refid="selectUserSocialAccountsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="accountServiceProvider != null  and accountServiceProvider != ''"> and account_service_provider = #{accountServiceProvider}</if>
+            <if test="num != null  and num != ''"> and num like concat('%', #{num}, '%')</if>
+            <if test="ifDefault != null  and ifDefault != ''"> and if_default = #{ifDefault}</if>
+        </where>
+    </select>
+    
+    <select id="selectUserSocialAccountsById" parameterType="Long" resultMap="UserSocialAccountsResult">
+        <include refid="selectUserSocialAccountsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertUserSocialAccounts" parameterType="UserSocialAccounts" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_user_social_accounts
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="accountServiceProvider != null">account_service_provider,</if>
+            <if test="num != null">num,</if>
+            <if test="ifDefault != null">if_default,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="accountServiceProvider != null">#{accountServiceProvider},</if>
+            <if test="num != null">#{num},</if>
+            <if test="ifDefault != null">#{ifDefault},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserSocialAccounts" parameterType="UserSocialAccounts">
+        update bus_user_social_accounts
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="accountServiceProvider != null">account_service_provider = #{accountServiceProvider},</if>
+            <if test="num != null">num = #{num},</if>
+            <if test="ifDefault != null">if_default = #{ifDefault},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserSocialAccountsById" parameterType="Long">
+        delete from bus_user_social_accounts where id = #{id}
+    </delete>
+
+    <delete id="deleteUserSocialAccountsByIds" parameterType="String">
+        delete from bus_user_social_accounts where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

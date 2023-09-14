@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.staff.mapper.StaffSettlementRecordsMapper">
+    
+    <resultMap type="StaffSettlementRecords" id="StaffSettlementRecordsResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="settlementAmount"    column="settlement_amount"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectStaffSettlementRecordsVo">
+        select id, user_id, settlement_amount, start_time, end_time, create_by, create_time, update_by, update_time from bus_staff_settlement_records
+    </sql>
+
+    <select id="selectStaffSettlementRecordsList" parameterType="StaffSettlementRecords" resultMap="StaffSettlementRecordsResult">
+        <include refid="selectStaffSettlementRecordsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectStaffSettlementRecordsById" parameterType="Long" resultMap="StaffSettlementRecordsResult">
+        <include refid="selectStaffSettlementRecordsVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStaffSettlementRecords" parameterType="StaffSettlementRecords" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_staff_settlement_records
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="settlementAmount != null">settlement_amount,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="settlementAmount != null">#{settlementAmount},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStaffSettlementRecords" parameterType="StaffSettlementRecords">
+        update bus_staff_settlement_records
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="settlementAmount != null">settlement_amount = #{settlementAmount},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStaffSettlementRecordsById" parameterType="Long">
+        delete from bus_staff_settlement_records where id = #{id}
+    </delete>
+
+    <delete id="deleteStaffSettlementRecordsByIds" parameterType="String">
+        delete from bus_staff_settlement_records where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

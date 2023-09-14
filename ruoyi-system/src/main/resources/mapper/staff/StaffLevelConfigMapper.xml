@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.staff.mapper.StaffLevelConfigMapper">
+
+    <resultMap type="StaffLevelConfig" id="StaffLevelConfigResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="threshold"    column="threshold"    />
+        <result property="level"    column="level"    />
+        <result property="firstOrderRatio"    column="first_order_ratio"    />
+        <result property="orderRatio"    column="order_ratio"    />
+        <result property="rewardRatio"    column="reward_ratio"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectStaffLevelConfigVo">
+        select id, name, threshold, level, first_order_ratio, order_ratio, reward_ratio,
+               create_by,
+               create_time,
+               update_by,
+               update_time from bus_staff_level_config
+    </sql>
+
+    <select id="selectStaffLevelConfigList" parameterType="StaffLevelConfig" resultMap="StaffLevelConfigResult">
+        <include refid="selectStaffLevelConfigVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="threshold != null "> and threshold &gt;= #{threshold}</if>
+        </where>
+    </select>
+
+    <select id="selectStaffLevelConfigById" parameterType="Long" resultMap="StaffLevelConfigResult">
+        <include refid="selectStaffLevelConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertStaffLevelConfig" parameterType="StaffLevelConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_staff_level_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="threshold != null">threshold,</if>
+            <if test="level != null">level,</if>
+            <if test="firstOrderRatio != null">first_order_ratio,</if>
+            <if test="orderRatio != null">order_ratio,</if>
+            <if test="rewardRatio != null">reward_ratio,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="threshold != null">#{threshold},</if>
+            <if test="level != null">#{level},</if>
+            <if test="firstOrderRatio != null">#{firstOrderRatio},</if>
+            <if test="orderRatio != null">#{orderRatio},</if>
+            <if test="rewardRatio != null">#{rewardRatio},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStaffLevelConfig" parameterType="StaffLevelConfig">
+        update bus_staff_level_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="threshold != null">threshold = #{threshold},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="firstOrderRatio != null">first_order_ratio = #{firstOrderRatio},</if>
+            <if test="orderRatio != null">order_ratio = #{orderRatio},</if>
+            <if test="rewardRatio != null">reward_ratio = #{rewardRatio},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStaffLevelConfigById" parameterType="Long">
+        delete from bus_staff_level_config where id = #{id}
+    </delete>
+
+    <delete id="deleteStaffLevelConfigByIds" parameterType="String">
+        delete from bus_staff_level_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

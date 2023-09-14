@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.staff.mapper.StaffInfoMapper">
+
+    <resultMap type="StaffInfo" id="StaffInfoResult">
+        <result property="userId" column="user_id"/>
+        <result property="referralUserId" column="referral_user_id"/>
+        <result property="avatarUrl" column="avatar_url"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="state" column="state"/>
+        <result property="ifOnline" column="if_online"/>
+        <result property="staffLevel" column="staff_level"/>
+        <result property="birthDate" column="birth_date"/>
+        <result property="sex" column="sex"/>
+        <result property="weChatNum" column="we_chat_num"/>
+        <result property="phone" column="phone"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="region" column="region"/>
+        <result property="selfIntroduction" column="self_introduction"/>
+        <result property="selfTags" column="self_tags"/>
+        <result property="voiceUrl" column="voice_url"/>
+        <result property="voiceTime" column="voice_time"/>
+        <result property="ifTop" column="if_top"/>
+        <result property="sortNum" column="sort_num"/>
+        <result property="referralCode" column="referral_code"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectStaffInfoVo">
+        select user_id,
+               referral_user_id,
+               avatar_url,
+               nick_name,
+               state,
+               if_online,
+               staff_level,
+               birth_date,
+               sex,
+               we_chat_num,
+               phone,
+               province,
+               city,
+               region,
+               self_introduction,
+               self_tags,
+               voice_url,
+               voice_time,
+               if_top,
+               sort_num,
+               referral_code,
+               remark,
+               create_time,
+               update_time
+        from bus_staff_info
+    </sql>
+
+    <select id="selectStaffInfoList" parameterType="StaffInfo" resultMap="StaffInfoResult">
+        <include refid="selectStaffInfoVo"/>
+        <where>
+            <if test="referralUserId != null ">and referral_user_id = #{referralUserId}</if>
+            <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+            <if test="ifOnline != null  and ifOnline != ''">and if_online = #{ifOnline}</if>
+            <if test="sex != null  and sex != ''">and sex = #{sex}</if>
+            <if test="weChatNum != null  and weChatNum != ''">and we_chat_num like concat('%', #{weChatNum}, '%')</if>
+            <if test="phone != null  and phone != ''">and phone like concat('%', #{phone}, '%')</if>
+            <if test="ifTop != null  and ifTop != ''">and if_top = #{ifTop}</if>
+            <if test="referralCode != null ">and referral_code = #{referralCode}</if>
+        </where>
+    </select>
+
+    <select id="selectStaffInfoByUserId" parameterType="Long" resultMap="StaffInfoResult">
+        <include refid="selectStaffInfoVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <insert id="insertStaffInfo" parameterType="StaffInfo">
+        insert into bus_staff_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="referralUserId != null">referral_user_id,</if>
+            <if test="avatarUrl != null">avatar_url,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="state != null">state,</if>
+            <if test="ifOnline != null">if_online,</if>
+            <if test="staffLevel != null">staff_level,</if>
+            <if test="birthDate != null">birth_date,</if>
+            <if test="sex != null">sex,</if>
+            <if test="weChatNum != null">we_chat_num,</if>
+            <if test="phone != null">phone,</if>
+            <if test="province != null">province,</if>
+            <if test="city != null">city,</if>
+            <if test="region != null">region,</if>
+            <if test="selfIntroduction != null">self_introduction,</if>
+            <if test="selfTags != null">self_tags,</if>
+            <if test="voiceUrl != null">voice_url,</if>
+            <if test="voiceTime != null">voice_time,</if>
+            <if test="ifTop != null">if_top,</if>
+            <if test="sortNum != null">sort_num,</if>
+            <if test="referralCode != null">referral_code,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="referralUserId != null">#{referralUserId},</if>
+            <if test="avatarUrl != null">#{avatarUrl},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="state != null">#{state},</if>
+            <if test="ifOnline != null">#{ifOnline},</if>
+            <if test="staffLevel != null">#{staffLevel},</if>
+            <if test="birthDate != null">#{birthDate},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="weChatNum != null">#{weChatNum},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="province != null">#{province},</if>
+            <if test="city != null">#{city},</if>
+            <if test="region != null">#{region},</if>
+            <if test="selfIntroduction != null">#{selfIntroduction},</if>
+            <if test="selfTags != null">#{selfTags},</if>
+            <if test="voiceUrl != null">#{voiceUrl},</if>
+            <if test="voiceTime != null">#{voiceTime},</if>
+            <if test="ifTop != null">#{ifTop},</if>
+            <if test="sortNum != null">#{sortNum},</if>
+            <if test="referralCode != null">#{referralCode},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateStaffInfo" parameterType="StaffInfo">
+        update bus_staff_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="referralUserId != null">referral_user_id = #{referralUserId},</if>
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="ifOnline != null">if_online = #{ifOnline},</if>
+            <if test="staffLevel != null">staff_level = #{staffLevel},</if>
+            <if test="birthDate != null">birth_date = #{birthDate},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="weChatNum != null">we_chat_num = #{weChatNum},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="region != null">region = #{region},</if>
+            <if test="selfIntroduction != null">self_introduction = #{selfIntroduction},</if>
+            <if test="selfTags != null">self_tags = #{selfTags},</if>
+            <if test="voiceUrl != null">voice_url = #{voiceUrl},</if>
+            <if test="voiceTime != null">voice_time = #{voiceTime},</if>
+            <if test="ifTop != null">if_top = #{ifTop},</if>
+            <if test="sortNum != null">sort_num = #{sortNum},</if>
+            <if test="referralCode != null">referral_code = #{referralCode},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where user_id = #{userId}
+    </update>
+
+    <delete id="deleteStaffInfoByUserId" parameterType="Long">
+        delete
+        from bus_staff_info
+        where user_id = #{userId}
+    </delete>
+
+    <delete id="deleteStaffInfoByUserIds" parameterType="String">
+        delete from bus_staff_info where user_id in
+        <foreach item="userId" collection="array" open="(" separator="," close=")">
+            #{userId}
+        </foreach>
+    </delete>
+</mapper>

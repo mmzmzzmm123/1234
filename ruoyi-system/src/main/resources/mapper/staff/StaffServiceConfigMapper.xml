@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.staff.mapper.StaffServiceConfigMapper">
+    
+    <resultMap type="StaffServiceConfig" id="StaffServiceConfigResult">
+        <result property="id"    column="id"    />
+        <result property="staffId"    column="staff_id"    />
+        <result property="serviceId"    column="service_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectStaffServiceConfigVo">
+        select id, staff_id, service_id, create_time from bus_staff_service_config
+    </sql>
+
+    <select id="selectStaffServiceConfigList" parameterType="StaffServiceConfig" resultMap="StaffServiceConfigResult">
+        <include refid="selectStaffServiceConfigVo"/>
+        <where>  
+            <if test="staffId != null "> and staff_id = #{staffId}</if>
+            <if test="serviceId != null "> and service_id = #{serviceId}</if>
+        </where>
+    </select>
+    
+    <select id="selectStaffServiceConfigById" parameterType="Long" resultMap="StaffServiceConfigResult">
+        <include refid="selectStaffServiceConfigVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStaffServiceConfig" parameterType="StaffServiceConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_staff_service_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="staffId != null">staff_id,</if>
+            <if test="serviceId != null">service_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="staffId != null">#{staffId},</if>
+            <if test="serviceId != null">#{serviceId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStaffServiceConfig" parameterType="StaffServiceConfig">
+        update bus_staff_service_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="staffId != null">staff_id = #{staffId},</if>
+            <if test="serviceId != null">service_id = #{serviceId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStaffServiceConfigById" parameterType="Long">
+        delete from bus_staff_service_config where id = #{id}
+    </delete>
+
+    <delete id="deleteStaffServiceConfigByIds" parameterType="String">
+        delete from bus_staff_service_config where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.staff.mapper.StaffGiftRecordMapper">
+    
+    <resultMap type="StaffGiftRecord" id="StaffGiftRecordResult">
+        <result property="id"    column="id"    />
+        <result property="staffUserId"    column="staff_user_id"    />
+        <result property="giftIf"    column="gift_if"    />
+        <result property="giftNum"    column="gift_num"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectStaffGiftRecordVo">
+        select id, staff_user_id, gift_if, gift_num, create_time, update_time from staff_gift_record
+    </sql>
+
+    <select id="selectStaffGiftRecordList" parameterType="StaffGiftRecord" resultMap="StaffGiftRecordResult">
+        <include refid="selectStaffGiftRecordVo"/>
+        <where>  
+            <if test="staffUserId != null "> and staff_user_id = #{staffUserId}</if>
+            <if test="giftIf != null "> and gift_if = #{giftIf}</if>
+        </where>
+    </select>
+    
+    <select id="selectStaffGiftRecordById" parameterType="Long" resultMap="StaffGiftRecordResult">
+        <include refid="selectStaffGiftRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStaffGiftRecord" parameterType="StaffGiftRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into staff_gift_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="staffUserId != null">staff_user_id,</if>
+            <if test="giftIf != null">gift_if,</if>
+            <if test="giftNum != null">gift_num,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="staffUserId != null">#{staffUserId},</if>
+            <if test="giftIf != null">#{giftIf},</if>
+            <if test="giftNum != null">#{giftNum},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStaffGiftRecord" parameterType="StaffGiftRecord">
+        update staff_gift_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="staffUserId != null">staff_user_id = #{staffUserId},</if>
+            <if test="giftIf != null">gift_if = #{giftIf},</if>
+            <if test="giftNum != null">gift_num = #{giftNum},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStaffGiftRecordById" parameterType="Long">
+        delete from staff_gift_record where id = #{id}
+    </delete>
+
+    <delete id="deleteStaffGiftRecordByIds" parameterType="String">
+        delete from staff_gift_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
