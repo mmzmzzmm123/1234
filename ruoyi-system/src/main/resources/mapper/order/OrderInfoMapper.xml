@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.order.mapper.OrderInfoMapper">
+    
+    <resultMap type="OrderInfo" id="OrderInfoResult">
+        <result property="id"    column="id"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="orderType"    column="order_type"    />
+        <result property="orderState"    column="order_state"    />
+        <result property="ifContinuous"    column="if_continuous"    />
+        <result property="staffUserId"    column="staff_user_id"    />
+        <result property="staffLevel"    column="staff_level"    />
+        <result property="commissionRatio"    column="commission_ratio"    />
+        <result property="customUserId"    column="custom_user_id"    />
+        <result property="accountServiceProvider"    column="account_service_provider"    />
+        <result property="customNum"    column="custom_num"    />
+        <result property="custom"    column="custom"    />
+        <result property="couponId"    column="coupon_id"    />
+        <result property="discountAmount"    column="discount_amount"    />
+        <result property="payWay"    column="pay_way"    />
+        <result property="payAmount"    column="pay_amount"    />
+        <result property="autoExpireTime"    column="auto_expire_time"    />
+        <result property="autoFinshTime"    column="auto_finsh_time"    />
+        <result property="orderReceivingTime"    column="order_receiving_time"    />
+        <result property="orderServiceTime"    column="order_service_time"    />
+        <result property="orderFinshTime"    column="order_finsh_time"    />
+        <result property="orderCancelTime"    column="order_cancel_time"    />
+        <result property="canceller"    column="canceller"    />
+        <result property="cancelRemark"    column="cancel_remark"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectOrderInfoVo">
+        select id, order_no, order_type, order_state, if_continuous, staff_user_id, staff_level, commission_ratio, custom_user_id, account_service_provider, custom_num, custom, coupon_id, discount_amount, pay_way, pay_amount, auto_expire_time, auto_finsh_time, order_receiving_time, order_service_time, order_finsh_time, order_cancel_time, canceller, cancel_remark, remark, create_time, update_time from bus_order_info
+    </sql>
+
+    <select id="selectOrderInfoList" parameterType="OrderInfo" resultMap="OrderInfoResult">
+        <include refid="selectOrderInfoVo"/>
+        <where>  
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="orderType != null  and orderType != ''"> and order_type = #{orderType}</if>
+            <if test="orderState != null  and orderState != ''"> and order_state = #{orderState}</if>
+            <if test="ifContinuous != null  and ifContinuous != ''"> and if_continuous = #{ifContinuous}</if>
+            <if test="staffUserId != null "> and staff_user_id = #{staffUserId}</if>
+            <if test="customUserId != null "> and custom_user_id = #{customUserId}</if>
+            <if test="accountServiceProvider != null  and accountServiceProvider != ''"> and account_service_provider = #{accountServiceProvider}</if>
+            <if test="customNum != null  and customNum != ''"> and custom_num like concat('%', #{customNum}, '%')</if>
+            <if test="couponId != null "> and coupon_id = #{couponId}</if>
+            <if test="payWay != null  and payWay != ''"> and pay_way = #{payWay}</if>
+            <if test="params.beginAutoExpireTime != null and params.beginAutoExpireTime != '' and params.endAutoExpireTime != null and params.endAutoExpireTime != ''"> and auto_expire_time between #{params.beginAutoExpireTime} and #{params.endAutoExpireTime}</if>
+            <if test="params.beginAutoFinshTime != null and params.beginAutoFinshTime != '' and params.endAutoFinshTime != null and params.endAutoFinshTime != ''"> and auto_finsh_time between #{params.beginAutoFinshTime} and #{params.endAutoFinshTime}</if>
+            <if test="params.beginOrderReceivingTime != null and params.beginOrderReceivingTime != '' and params.endOrderReceivingTime != null and params.endOrderReceivingTime != ''"> and order_receiving_time between #{params.beginOrderReceivingTime} and #{params.endOrderReceivingTime}</if>
+            <if test="params.beginOrderServiceTime != null and params.beginOrderServiceTime != '' and params.endOrderServiceTime != null and params.endOrderServiceTime != ''"> and order_service_time between #{params.beginOrderServiceTime} and #{params.endOrderServiceTime}</if>
+            <if test="params.beginOrderFinshTime != null and params.beginOrderFinshTime != '' and params.endOrderFinshTime != null and params.endOrderFinshTime != ''"> and order_finsh_time between #{params.beginOrderFinshTime} and #{params.endOrderFinshTime}</if>
+            <if test="params.beginOrderCancelTime != null and params.beginOrderCancelTime != '' and params.endOrderCancelTime != null and params.endOrderCancelTime != ''"> and order_cancel_time between #{params.beginOrderCancelTime} and #{params.endOrderCancelTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrderInfoById" parameterType="Long" resultMap="OrderInfoResult">
+        <include refid="selectOrderInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOrderInfo" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_order_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">order_no,</if>
+            <if test="orderType != null">order_type,</if>
+            <if test="orderState != null">order_state,</if>
+            <if test="ifContinuous != null">if_continuous,</if>
+            <if test="staffUserId != null">staff_user_id,</if>
+            <if test="staffLevel != null">staff_level,</if>
+            <if test="commissionRatio != null">commission_ratio,</if>
+            <if test="customUserId != null">custom_user_id,</if>
+            <if test="accountServiceProvider != null">account_service_provider,</if>
+            <if test="customNum != null">custom_num,</if>
+            <if test="custom != null">custom,</if>
+            <if test="couponId != null">coupon_id,</if>
+            <if test="discountAmount != null">discount_amount,</if>
+            <if test="payWay != null">pay_way,</if>
+            <if test="payAmount != null">pay_amount,</if>
+            <if test="autoExpireTime != null">auto_expire_time,</if>
+            <if test="autoFinshTime != null">auto_finsh_time,</if>
+            <if test="orderReceivingTime != null">order_receiving_time,</if>
+            <if test="orderServiceTime != null">order_service_time,</if>
+            <if test="orderFinshTime != null">order_finsh_time,</if>
+            <if test="orderCancelTime != null">order_cancel_time,</if>
+            <if test="canceller != null">canceller,</if>
+            <if test="cancelRemark != null">cancel_remark,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="orderType != null">#{orderType},</if>
+            <if test="orderState != null">#{orderState},</if>
+            <if test="ifContinuous != null">#{ifContinuous},</if>
+            <if test="staffUserId != null">#{staffUserId},</if>
+            <if test="staffLevel != null">#{staffLevel},</if>
+            <if test="commissionRatio != null">#{commissionRatio},</if>
+            <if test="customUserId != null">#{customUserId},</if>
+            <if test="accountServiceProvider != null">#{accountServiceProvider},</if>
+            <if test="customNum != null">#{customNum},</if>
+            <if test="custom != null">#{custom},</if>
+            <if test="couponId != null">#{couponId},</if>
+            <if test="discountAmount != null">#{discountAmount},</if>
+            <if test="payWay != null">#{payWay},</if>
+            <if test="payAmount != null">#{payAmount},</if>
+            <if test="autoExpireTime != null">#{autoExpireTime},</if>
+            <if test="autoFinshTime != null">#{autoFinshTime},</if>
+            <if test="orderReceivingTime != null">#{orderReceivingTime},</if>
+            <if test="orderServiceTime != null">#{orderServiceTime},</if>
+            <if test="orderFinshTime != null">#{orderFinshTime},</if>
+            <if test="orderCancelTime != null">#{orderCancelTime},</if>
+            <if test="canceller != null">#{canceller},</if>
+            <if test="cancelRemark != null">#{cancelRemark},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrderInfo" parameterType="OrderInfo">
+        update bus_order_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="orderType != null">order_type = #{orderType},</if>
+            <if test="orderState != null">order_state = #{orderState},</if>
+            <if test="ifContinuous != null">if_continuous = #{ifContinuous},</if>
+            <if test="staffUserId != null">staff_user_id = #{staffUserId},</if>
+            <if test="staffLevel != null">staff_level = #{staffLevel},</if>
+            <if test="commissionRatio != null">commission_ratio = #{commissionRatio},</if>
+            <if test="customUserId != null">custom_user_id = #{customUserId},</if>
+            <if test="accountServiceProvider != null">account_service_provider = #{accountServiceProvider},</if>
+            <if test="customNum != null">custom_num = #{customNum},</if>
+            <if test="custom != null">custom = #{custom},</if>
+            <if test="couponId != null">coupon_id = #{couponId},</if>
+            <if test="discountAmount != null">discount_amount = #{discountAmount},</if>
+            <if test="payWay != null">pay_way = #{payWay},</if>
+            <if test="payAmount != null">pay_amount = #{payAmount},</if>
+            <if test="autoExpireTime != null">auto_expire_time = #{autoExpireTime},</if>
+            <if test="autoFinshTime != null">auto_finsh_time = #{autoFinshTime},</if>
+            <if test="orderReceivingTime != null">order_receiving_time = #{orderReceivingTime},</if>
+            <if test="orderServiceTime != null">order_service_time = #{orderServiceTime},</if>
+            <if test="orderFinshTime != null">order_finsh_time = #{orderFinshTime},</if>
+            <if test="orderCancelTime != null">order_cancel_time = #{orderCancelTime},</if>
+            <if test="canceller != null">canceller = #{canceller},</if>
+            <if test="cancelRemark != null">cancel_remark = #{cancelRemark},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOrderInfoById" parameterType="Long">
+        delete from bus_order_info where id = #{id}
+    </delete>
+
+    <delete id="deleteOrderInfoByIds" parameterType="String">
+        delete from bus_order_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

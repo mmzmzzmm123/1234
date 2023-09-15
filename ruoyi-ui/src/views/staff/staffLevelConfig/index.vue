@@ -71,7 +71,6 @@
 
     <el-table v-loading="loading" :data="staffLevelConfigList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" :show-overflow-tooltip="true" />
       <el-table-column label="名称" align="center" prop="name" :show-overflow-tooltip="true"/>
       <el-table-column label="阈值" align="center" prop="threshold" :show-overflow-tooltip="true"/>
       <el-table-column label="等级" align="center" prop="level" :show-overflow-tooltip="true"/>

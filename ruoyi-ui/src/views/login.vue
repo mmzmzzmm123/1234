@@ -56,7 +56,8 @@
     </el-form>
     <!--  底部  -->
     <div class="el-login-footer">
-      <span>Copyright © 2018-2023 www.vipwei.cn All Rights Reserved.</span>
+      Copyright © 2018-2023 <a target="_blank" href="https://www.vipwei.cn/">www.vipwei.cn</a> All Rights Reserved.
+      <a target="_blank" href="https://beian.miit.gov.cn/">粤ICP备2023102542号-1</a>
     </div>
   </div>
 </template>

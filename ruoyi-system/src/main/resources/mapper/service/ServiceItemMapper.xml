@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.service.mapper.ServiceItemMapper">
+
+    <resultMap type="ServiceItem" id="ServiceItemResult">
+        <result property="id" column="id"/>
+        <result property="serviceId" column="service_id"/>
+        <result property="name" column="name"/>
+        <result property="ifBuyoutItem" column="if_buyout_item"/>
+        <result property="orderExpireTimeUnit" column="order_expire_time_unit"/>
+        <result property="orderServiceDuration" column="order_service_duration"/>
+        <result property="sortNum" column="sort_num"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap id="joinServiceInfo" type="ServiceItem" extends="ServiceItemResult">
+        <association property="serviceInfo" column="service_id" javaType="com.ruoyi.service.domain.ServiceInfo"
+                     select="com.ruoyi.service.mapper.ServiceInfoMapper.selectServiceInfoById"/>
+    </resultMap>
+
+    <resultMap id="ServiceItemServiceItemPriceResult" type="ServiceItem" extends="ServiceItemResult">
+        <collection property="serviceItemPriceList" notNullColumn="sub_service_item_id" javaType="java.util.List"
+                    resultMap="ServiceItemPriceResult"/>
+    </resultMap>
+
+    <resultMap type="ServiceItemPrice" id="ServiceItemPriceResult">
+        <result property="serviceItemId" column="sub_service_item_id"/>
+        <result property="staffLevelConfigId" column="sub_staff_level_config_id"/>
+        <result property="price" column="sub_price"/>
+    </resultMap>
+
+    <sql id="selectServiceItemVo">
+        select id,
+               service_id,
+               name,
+               if_buyout_item,
+               order_expire_time_unit,
+               order_service_duration,
+               sort_num,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from bus_service_item
+    </sql>
+
+    <select id="selectServiceItemList" parameterType="ServiceItem" resultMap="ServiceItemResult">
+        <include refid="selectServiceItemVo"/>
+        <where>
+            <if test="serviceId != null ">and service_id = #{serviceId}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="ifBuyoutItem != null  and ifBuyoutItem != ''">and if_buyout_item = #{ifBuyoutItem}</if>
+            <if test="orderExpireTimeUnit != null  and orderExpireTimeUnit != ''">and order_expire_time_unit =
+                #{orderExpireTimeUnit}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectJoinServiceInfo" parameterType="ServiceItem" resultMap="joinServiceInfo">
+        <include refid="selectServiceItemVo"/>
+        <where>
+            <if test="serviceId != null ">and service_id = #{serviceId}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="ifBuyoutItem != null  and ifBuyoutItem != ''">and if_buyout_item = #{ifBuyoutItem}</if>
+            <if test="orderExpireTimeUnit != null  and orderExpireTimeUnit != ''">and order_expire_time_unit =
+                #{orderExpireTimeUnit}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectServiceItemById" parameterType="Long" resultMap="ServiceItemServiceItemPriceResult">
+        select a.id,
+               a.service_id,
+               a.name,
+               a.if_buyout_item,
+               a.order_expire_time_unit,
+               a.order_service_duration,
+               a.sort_num,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               b.service_item_id       as sub_service_item_id,
+               b.staff_level_config_id as sub_staff_level_config_id,
+               b.price                 as sub_price
+        from bus_service_item a
+                 left join bus_service_item_price b on b.service_item_id = a.id
+        where a.id = #{id}
+    </select>
+
+    <insert id="insertServiceItem" parameterType="ServiceItem" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_service_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="serviceId != null">service_id,</if>
+            <if test="name != null">name,</if>
+            <if test="ifBuyoutItem != null">if_buyout_item,</if>
+            <if test="orderExpireTimeUnit != null">order_expire_time_unit,</if>
+            <if test="orderServiceDuration != null">order_service_duration,</if>
+            <if test="sortNum != null">sort_num,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="serviceId != null">#{serviceId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="ifBuyoutItem != null">#{ifBuyoutItem},</if>
+            <if test="orderExpireTimeUnit != null">#{orderExpireTimeUnit},</if>
+            <if test="orderServiceDuration != null">#{orderServiceDuration},</if>
+            <if test="sortNum != null">#{sortNum},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateServiceItem" parameterType="ServiceItem">
+        update bus_service_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="serviceId != null">service_id = #{serviceId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="ifBuyoutItem != null">if_buyout_item = #{ifBuyoutItem},</if>
+            <if test="orderExpireTimeUnit != null">order_expire_time_unit = #{orderExpireTimeUnit},</if>
+            <if test="orderServiceDuration != null">order_service_duration = #{orderServiceDuration},</if>
+            <if test="sortNum != null">sort_num = #{sortNum},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteServiceItemById" parameterType="Long">
+        delete
+        from bus_service_item
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteServiceItemByIds" parameterType="String">
+        delete from bus_service_item where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteServiceItemPriceByServiceItemIds" parameterType="String">
+        delete from bus_service_item_price where service_item_id in
+        <foreach item="serviceItemId" collection="array" open="(" separator="," close=")">
+            #{serviceItemId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteServiceItemPriceByServiceItemId" parameterType="Long">
+        delete
+        from bus_service_item_price
+        where service_item_id = #{serviceItemId}
+    </delete>
+
+    <insert id="batchServiceItemPrice">
+        insert into bus_service_item_price( service_item_id, staff_level_config_id, price) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.serviceItemId}, #{item.staffLevelConfigId}, #{item.price})
+        </foreach>
+    </insert>
+</mapper>
