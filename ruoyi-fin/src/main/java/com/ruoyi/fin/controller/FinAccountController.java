@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.fin;
+package com.ruoyi.fin.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
