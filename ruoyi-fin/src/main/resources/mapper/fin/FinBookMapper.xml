@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.fin.mapper.FinBookMapper">
+    
+    <resultMap type="FinBook" id="FinBookResult">
+        <result property="bookId"    column="book_id"    />
+        <result property="bookName"    column="book_name"    />
+        <result property="sortNum"    column="sort_num"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectFinBookVo">
+        select book_id, book_name, sort_num, user_id from fin_book
+    </sql>
+
+    <select id="selectFinBookList" parameterType="FinBook" resultMap="FinBookResult">
+        <include refid="selectFinBookVo"/>
+        <where>  
+            <if test="bookName != null  and bookName != ''"> and book_name like concat('%', #{bookName}, '%')</if>
+            <if test="sortNum != null "> and sort_num = #{sortNum}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectFinBookByBookId" parameterType="Long" resultMap="FinBookResult">
+        <include refid="selectFinBookVo"/>
+        where book_id = #{bookId}
+    </select>
+        
+    <insert id="insertFinBook" parameterType="FinBook" useGeneratedKeys="true" keyProperty="bookId">
+        insert into fin_book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bookName != null">book_name,</if>
+            <if test="sortNum != null">sort_num,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bookName != null">#{bookName},</if>
+            <if test="sortNum != null">#{sortNum},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateFinBook" parameterType="FinBook">
+        update fin_book
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bookName != null">book_name = #{bookName},</if>
+            <if test="sortNum != null">sort_num = #{sortNum},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where book_id = #{bookId}
+    </update>
+
+    <delete id="deleteFinBookByBookId" parameterType="Long">
+        delete from fin_book where book_id = #{bookId}
+    </delete>
+
+    <delete id="deleteFinBookByBookIds" parameterType="String">
+        delete from fin_book where book_id in 
+        <foreach item="bookId" collection="array" open="(" separator="," close=")">
+            #{bookId}
+        </foreach>
+    </delete>
+</mapper>

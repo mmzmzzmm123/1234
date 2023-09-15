@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Cookies from 'js-cookie'
 
 import Element from 'element-ui'
+Element.Dialog.props.closeOnClickModal.default = false
 import './assets/styles/element-variables.scss'
 
 import '@/assets/styles/index.scss' // global css
