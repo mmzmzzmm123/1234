@@ -1,7 +1,8 @@
 package com.ruoyi.office.service.impl;
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -13,8 +14,14 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.UserPasswordNotMatchException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.MessageUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
+import com.ruoyi.office.domain.TRoom;
+import com.ruoyi.office.domain.TRoomOrder;
+import com.ruoyi.office.domain.vo.MerchantUserStatisticsVo;
 import com.ruoyi.office.domain.vo.MerchantUserVo;
+import com.ruoyi.office.service.ITRoomOrderService;
+import com.ruoyi.office.service.ITRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -121,4 +128,51 @@ public class TWxUserServiceImpl extends ServiceImpl<TWxUserMapper, TWxUser> impl
         baseMapper.update(null, updateWrapper);
     }
 
+    @Autowired
+    private ITRoomService tRoomService;
+    @Autowired
+    private ITRoomOrderService roomOrderService;
+
+    @Override
+    public List<MerchantUserStatisticsVo> statistics(Long userId, String staType) {
+        TRoom tRoom = new TRoom();
+        tRoom.setCreateBy(SecurityUtils.getUserId() + "");
+        List<TRoom> list = tRoomService.selectTRoomList(tRoom);
+        List<TRoomOrder> totalList = new ArrayList<>();
+        for (TRoom room : list) {
+            TRoomOrder roomOrder = new TRoomOrder();
+            roomOrder.setRoomId(room.getId());
+            if ("reg".equalsIgnoreCase(staType)) {
+                totalList.addAll(roomOrderService.selectTRoomOrderList(roomOrder).stream().filter(x -> x.getStatus() == 5).sorted(Comparator.comparing(TRoomOrder::getCreateTime)).collect(Collectors.toList()));
+            } else if ("act".equalsIgnoreCase(staType)) {
+                totalList.addAll(roomOrderService.selectTRoomOrderList(roomOrder).stream().filter(x -> x.getStatus() == 5).sorted(Comparator.comparing(TRoomOrder::getCreateTime).reversed()).collect(Collectors.toList()));
+            }else{
+                totalList.addAll(roomOrderService.selectTRoomOrderList(roomOrder).stream().filter(x -> x.getStatus() == 5).collect(Collectors.toList()));
+            }
+        }
+
+        Map<Long, TWxUser> wxUserList = tWxUserMapper.selectTWxUserList(new TWxUser()).stream().collect(Collectors.toMap(TWxUser::getId, Function.identity()));
+
+        Map<Long, MerchantUserStatisticsVo> userStaMap = new HashMap<>();
+        for (TRoomOrder order : totalList) {
+            int hour = Math.abs((int) ((order.getEndTime().getTime() - order.getStartTime().getTime()) / (1000 * 3600)));
+            if (userStaMap.containsKey(order.getUserId())) {
+                MerchantUserStatisticsVo vo = userStaMap.get(order.getUserId());
+                vo.setCount(vo.getCount() + 1);
+                vo.setAmount(vo.getAmount().add(order.getPayAmount()));
+                vo.setHours(vo.getHours() + hour);
+                vo.setLastestDate(order.getCreateTime());
+            } else {
+                MerchantUserStatisticsVo vo = new MerchantUserStatisticsVo();
+                vo.setCount(1);
+                vo.setHours(hour);
+                vo.setAmount(order.getPayAmount());
+                vo.setLastestDate(order.getCreateTime());
+                vo.setWxUser(wxUserList.get(order.getUserId()));
+                userStaMap.put(order.getUserId(), vo);
+            }
+        }
+        final List<MerchantUserStatisticsVo> targetList = new ArrayList<>(userStaMap.values());
+        return targetList;
+    }
 }

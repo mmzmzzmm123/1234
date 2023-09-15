@@ -5,6 +5,7 @@ import java.util.List;
 import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.office.domain.TWxUser;
+import com.ruoyi.office.domain.vo.MerchantUserStatisticsVo;
 import com.ruoyi.office.domain.vo.MerchantUserVo;
 
 /**
@@ -67,4 +68,5 @@ public interface ITWxUserService
 
     void updateLogInfo(WxUser wxUser);
 
+    List<MerchantUserStatisticsVo> statistics(Long userId, String reg);
 }

@@ -95,15 +95,27 @@ public class MqttSendClient {
         try {
             mTopic.publish(message);
             log.info("消息发送成功");
-        }catch (MqttException mqttException){
-            if(mqttException.getMessage().equalsIgnoreCase("Client is not connected")){
+        } catch (MqttException mqttException) {
+            if (mqttException.getMessage().equalsIgnoreCase("Client is not connected")) {
                 connect();
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("mqtt发送消息异常:", e);
             throw new ServiceException(e.getMessage());
         }
     }
+
+    public void sub(String topic) {
+        sub(topic, 0);
+    }
+
+    public void sub(String topic, int qos) {
+        try {
+            MqttSendClient.getClient().subscribe(topic, qos);
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.common.core.domain.entity.WxUser;
+import com.ruoyi.office.domain.vo.MerchantBindingReq;
 
 /**
  * 微信用户信息Mapper接口
@@ -62,4 +63,6 @@ public interface WxUserMapper  extends BaseMapper<WxUser>
     public int deleteWxUserByIds(Long[] ids);
 
     WxUser selectUserByOpenId(String openid);
+
+    void binding(WxUser wxUser);
 }

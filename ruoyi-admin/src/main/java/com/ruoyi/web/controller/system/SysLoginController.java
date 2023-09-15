@@ -8,6 +8,8 @@ import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.office.domain.vo.LoginByOtherSourceBody;
+import com.ruoyi.office.domain.vo.MerchantBindingReq;
+import io.swagger.annotations.ApiOperation;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.request.AuthGiteeRequest;
 import me.zhyd.oauth.request.AuthRequest;
@@ -108,29 +110,19 @@ public class SysLoginController
     }
 
 
-    @GetMapping("/PreLoginByGitee")
-    public AjaxResult PreLoginByGitee()
-    {
-        AjaxResult ajax = AjaxResult.success();
-        AuthRequest authRequest = new AuthGiteeRequest(AuthConfig.builder()
-                .clientId("***********************************")
-                .clientSecret("************************************")
-                .redirectUri("http://localhost/callback")
-                .build());
-        String uuid = IdUtils.fastUUID();
-        String authorizeUrl = authRequest.authorize(uuid);
-        //存储
-        ajax.put("authorizeUrl", authorizeUrl);
-        ajax.put("uuid", uuid);
-        return ajax;
-    }
+    /**
+     * 绑定后台账号
+     *
+     * @return
+     */
+    @ApiOperation("商家小程序绑定后台账号")
+    @PostMapping("/binding")
+    public AjaxResult binding(MerchantBindingReq bindingReq) {
 
-    @PostMapping("/loginByGitee")
-    public AjaxResult loginByGitee(@RequestBody LoginByOtherSourceBody loginByOtherSourceBody) {
         AjaxResult ajax = AjaxResult.success();
-        String token = loginService.loginByOtherSource(loginByOtherSourceBody.getCode(), loginByOtherSourceBody.getSource(), loginByOtherSourceBody.getUuid());
+        // 生成令牌
+        String token = loginService.binding(bindingReq);
         ajax.put(Constants.TOKEN, token);
         return ajax;
     }
-
 }

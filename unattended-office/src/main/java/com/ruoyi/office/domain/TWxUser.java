@@ -97,4 +97,6 @@ public class TWxUser extends BaseEntity {
     @Excel(name = "状态")
     private Long status;
 
+    private Long userId;
+
 }

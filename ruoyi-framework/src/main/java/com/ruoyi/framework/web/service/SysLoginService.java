@@ -2,19 +2,18 @@ package com.ruoyi.framework.web.service;
 
 import javax.annotation.Resource;
 
-import cn.binarywang.wx.miniapp.api.WxMaService;
+import com.ruoyi.common.config.WxMaServiceUtil;
 import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.core.domain.model.WxLoginUser;
-import com.ruoyi.framework.config.WxMaConfig;
 import com.ruoyi.framework.security.authentication.WxAuthenticationToken;
-import com.ruoyi.office.service.ITWxUserService;
+import com.ruoyi.office.domain.vo.MerchantBindingReq;
+import com.ruoyi.office.mapper.WxUserMapper;
 import me.zhyd.oauth.config.AuthConfig;
 import me.zhyd.oauth.exception.AuthException;
 import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.model.AuthResponse;
 import me.zhyd.oauth.model.AuthUser;
-import me.zhyd.oauth.request.AuthGiteeRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.request.AuthWeChatOpenRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +65,7 @@ public class SysLoginService {
     @Autowired
     private ISysUserService userService;
 
+    private WxUserMapper userMapper;
 
     @Autowired
     private ISysConfigService configService;
@@ -105,6 +105,48 @@ public class SysLoginService {
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
+        // 生成token
+        return tokenService.createToken(loginUser);
+    }
+
+    /**
+     * 商家微信绑定验证
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param code     验证码
+     * @param uuid     唯一标识
+     * @return 结果
+     */
+    public String binding(MerchantBindingReq bindingReq) {
+        String username = bindingReq.getUserName();
+        String password = bindingReq.getPwd();
+        // 登录前置校验
+        loginPreCheck(username, password);
+        // 用户验证
+        Authentication authentication = null;
+        try {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+            AuthenticationContextHolder.setContext(authenticationToken);
+            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
+            authentication = authenticationManager.authenticate(authenticationToken);
+        } catch (Exception e) {
+            if (e instanceof BadCredentialsException) {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+                throw new UserPasswordNotMatchException();
+            } else {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
+                throw new ServiceException(e.getMessage());
+            }
+        } finally {
+            AuthenticationContextHolder.clearContext();
+        }
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.binding")));
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        WxUser wxUser = new WxUser();
+        wxUser.setUserId(loginUser.getUserId());
+        wxUser.setOpenId(bindingReq.getOpenId());
+        userMapper.binding(wxUser);
         // 生成token
         return tokenService.createToken(loginUser);
     }
@@ -225,6 +267,9 @@ public class SysLoginService {
         return tokenService.createToken(loginUser);
     }
 
+    @Autowired
+    WxMaServiceUtil wxMaServiceUtil;
+
     /**
      * 根据具体的授权来源，获取授权请求工具类
      *
@@ -235,7 +280,7 @@ public class SysLoginService {
         AuthRequest authRequest = null;
         switch (source) {
             case "wechat":
-                final cn.binarywang.wx.miniapp.config.WxMaConfig wxMaConfig = WxMaConfig.getMaServiceByName("office").getWxMaConfig();
+                final cn.binarywang.wx.miniapp.config.WxMaConfig wxMaConfig = wxMaServiceUtil.getMaServiceByName("office").getWxMaConfig();
                 authRequest = new AuthWeChatOpenRequest(AuthConfig.builder()
                         .clientId(wxMaConfig.getAppid())
                         .clientSecret(wxMaConfig.getSecret())

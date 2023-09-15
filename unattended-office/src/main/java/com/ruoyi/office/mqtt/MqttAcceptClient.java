@@ -44,6 +44,7 @@ public class MqttAcceptClient {
             options.setKeepAliveInterval(mqttProperties.getKeepAlive());
             options.setAutomaticReconnect(mqttProperties.getReconnect());
             options.setCleanSession(mqttProperties.getCleanSession());
+
             MqttAcceptClient.setMqttClient(client);
             try {
                 // 设置回调

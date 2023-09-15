@@ -23,10 +23,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="userId"    column="user_id"    />
     </resultMap>
 
     <sql id="selectTWxUserVo">
-        select id, nick_name, open_id, union_id, phone, share_code, wx_code, inviter_phone, is_member, sex, login_ip, login_date, status, remark, create_by, create_time, update_by, update_time from t_wx_user
+        select id, nick_name, open_id, union_id, phone, share_code, wx_code, inviter_phone, is_member, sex, login_ip, login_date, status, remark, create_by, create_time, update_by, update_time, user_id from t_wx_user
     </sql>
 
     <select id="selectTWxUserList" parameterType="TWxUser" resultMap="TWxUserResult">
@@ -44,6 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
             <if test="loginDate != null "> and login_date = #{loginDate}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
         </where>
     </select>
     
@@ -89,6 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="userId != null">user_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="nickName != null">#{nickName},</if>
@@ -108,6 +111,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="userId != null">#{userId},</if>
          </trim>
     </insert>
 
@@ -131,6 +135,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
         </trim>
         where id = #{id}
     </update>

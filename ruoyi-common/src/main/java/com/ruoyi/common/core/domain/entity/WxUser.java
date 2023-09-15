@@ -72,5 +72,8 @@ public class WxUser extends BaseEntity
     @Excel(name = "状态")
     private Long status;
 
+    /** sys_user.user_name */
+    @Excel(name = "sys_user.userId")
+    private Long userId;
 
 }
