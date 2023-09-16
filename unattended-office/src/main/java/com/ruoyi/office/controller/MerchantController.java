@@ -3,16 +3,11 @@ package com.ruoyi.office.controller;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.core.page.TableDataInfo;
-import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TRoomOrder;
 import com.ruoyi.office.domain.TStore;
-import com.ruoyi.office.domain.TWxUser;
-import com.ruoyi.office.domain.vo.MerchantBindingReq;
 import com.ruoyi.office.domain.vo.MerchantRoomListVo;
 import com.ruoyi.office.domain.vo.MerchantUserStatisticsVo;
 import com.ruoyi.office.service.ITRoomOrderService;
@@ -155,5 +150,16 @@ public class MerchantController extends BaseController {
         return getDataTable(resList);
     }
 
+    /**
+     * 用户使用统计
+     */
+    @ApiOperation("用户使用统计-订单总时长")
+    @PreAuthorize("@ss.hasPermi('office:room:list')")
+    @GetMapping("/user")
+    public TableDataInfo user() {
+        List<MerchantUserStatisticsVo> res = wxUserService.statistics(SecurityUtils.getLoginUser().getWxUser().getUserId(), "hour");
+        final List<MerchantUserStatisticsVo> resList = res.stream().sorted(Comparator.comparing(MerchantUserStatisticsVo::getHours).reversed()).collect(Collectors.toList());
+        return getDataTable(resList);
+    }
 
 }

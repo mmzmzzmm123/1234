@@ -85,4 +85,6 @@ public interface ITRoomOrderService {
     List<RoomOrderWxVo> getOrderCanOpen(OrderCanOpenReq wxUserId);
 
     void scanToPayOrder();
+
+    PrepayResp packPrepay(PackPrepayReq order, long wxUserId);
 }

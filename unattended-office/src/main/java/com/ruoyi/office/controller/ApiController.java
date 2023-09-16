@@ -664,6 +664,40 @@ public class ApiController extends BaseController {
         return getDataTable(res);
     }
 
+    @ApiOperation("预约支付")
+    @Log(title = "预定", businessType = BusinessType.INSERT)
+    @PostMapping("/order")
+    public AjaxResult order(@RequestBody PrepayReq order) {
+        long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
+//        long wxUserId = 9l;
+        order.setUserId(wxUserId);
+        try {
+            logger.info("/order:" + order.toString());
+            final PrepayResp prepay = roomOrderService.prepay(order, wxUserId);
+//            logger.info("/order: return:" + prepay.getOrderId() + prepay.getJsapiResult().toString());
+            return AjaxResult.success(prepay);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
+
+    @ApiOperation("套餐预约支付")
+    @Log(title = "预定", businessType = BusinessType.INSERT)
+    @PostMapping("/pack/order")
+    public AjaxResult packOrder(@RequestBody PackPrepayReq order) {
+        long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
+//        long wxUserId = 9l;
+        order.setUserId(wxUserId);
+        try {
+            logger.info("/order:" + order.toString());
+            final PrepayResp prepay = roomOrderService.packPrepay(order, wxUserId);
+//            logger.info("/order: return:" + prepay.getOrderId() + prepay.getJsapiResult().toString());
+            return AjaxResult.success(prepay);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
+
     @Autowired
     private ISysNoticeService noticeService;
 
