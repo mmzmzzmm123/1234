@@ -150,8 +150,9 @@
           fileMerge(param).then(res => {
             // 文件合并成功
             Bus.$emit('fileSuccess');
-
-            this.statusRemove(file.id);
+            //换成自定义提示
+            this.statusSet(file.id, 'successed');
+            //this.statusRemove(file.id);
           }).catch(e => {
             console.log("合并异常,重新发起请求,文件名为:", file.name)
             //由于网络或服务器原因,导致合并过程中断线,此时如果不重新发起请求,就会进入失败的状态,导致该文件无法重试
@@ -161,6 +162,8 @@
           // 不需要合并
         } else {
           Bus.$emit('fileSuccess');
+          //增加文件秒传提示
+          this.statusSet(file.id, 'quickUpload');
           console.log('上传成功');
         }
       },
@@ -273,6 +276,14 @@
           },
           failed: {
             text: '上传失败',
+            bgc: '#e2eeff'
+          },
+          successed: {
+            text: '上传成功',
+            bgc: '#e2eeff'
+          },
+          quickUpload: {
+            text: '秒传成功',
             bgc: '#e2eeff'
           }
         }

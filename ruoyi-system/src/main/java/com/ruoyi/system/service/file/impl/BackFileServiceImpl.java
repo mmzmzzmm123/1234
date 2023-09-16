@@ -89,6 +89,8 @@ public class BackFileServiceImpl implements IBackFileService {
         if (backFilelists != null && !backFilelists.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_CREATED);
             vo.setSkipUpload(true);
+            vo.setNeedMerge(false);
+            vo.setUrl(backFilelists.get(0).getUrl());
             return vo;
         }
 
