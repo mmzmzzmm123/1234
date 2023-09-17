@@ -430,6 +430,9 @@ public class ApiController extends BaseController {
     @Autowired
     private ISysDictDataService dictDataService;
 
+    @Autowired
+    private ITRoomPackageService tRoomPackageService;
+
     /**
      * 查询店铺房间列表
      */
@@ -446,6 +449,8 @@ public class ApiController extends BaseController {
 
         final Map<Long, List<TRoomPrice>> roomPriceGroup = tRoomPriceService.selectTRoomPriceList(new TRoomPrice()).stream().collect(Collectors.groupingBy(TRoomPrice::getRoomId));
 
+        final Map<Long, List<TRoomPackage>> roomPackageGroup = tRoomPackageService.selectTRoomPackageList(new TRoomPackage()).stream().collect(Collectors.groupingBy(TRoomPackage::getRoomId));
+
         for (TRoom room : list) {
             RoomWxVo vo = new RoomWxVo();
             BeanUtils.copyProperties(room, vo);
@@ -458,6 +463,7 @@ public class ApiController extends BaseController {
 
             vo.setRemark(roomMark.substring(1));
             vo.setPriceList(roomPriceGroup.get(room.getId()));
+            vo.setPackageList(roomPackageGroup.get(room.getId()));
 
             RoomAvailablePeriod qry = new RoomAvailablePeriod();
             qry.setRoomId(room.getId());
