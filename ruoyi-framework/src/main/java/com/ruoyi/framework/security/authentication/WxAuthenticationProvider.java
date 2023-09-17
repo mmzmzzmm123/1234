@@ -2,6 +2,7 @@ package com.ruoyi.framework.security.authentication;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.enums.UserStatus;
 import com.ruoyi.common.exception.ServiceException;
@@ -42,6 +43,7 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
                 wxMaServiceUtil.getMaServiceByName(loginBody.getAppName()) : wxMaServiceUtil.getMaServiceById(loginBody.getAppId());
         try {
             WxMaJscode2SessionResult result = wxMaService.jsCode2SessionInfo(loginBody.getCode());
+
             WxUser wxUser = userMapper.selectUserByOpenId(result.getOpenid());
             if (wxUser == null) {
                 wxUser = new WxUser();
@@ -69,6 +71,7 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
             UserDetails userDetails = userDetailsService.createWxLoginUser(wxUser);
             WxAuthenticationToken authenticationToken = new WxAuthenticationToken(userDetails, loginBody, userDetails.getAuthorities());
             return authenticationToken;
+           return null;
         } catch (WxErrorException e) {
             throw new ServiceException("微信小程序登录出错");
         }
