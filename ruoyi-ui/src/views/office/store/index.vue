@@ -418,9 +418,9 @@
         <el-table-column label="时长(分钟)" align="center" prop="minutes" width="120" />
         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
           <template slot-scope="scope">
-            <el-button size="mini" type="text" icon="el-icon-edit" @click="handlePriceUpdate(scope.row)"
+            <el-button size="mini" type="text" icon="el-icon-edit" @click="handlePackageUpdate(scope.row)"
               v-hasPermi="['office:roomprice:edit']">修改</el-button>
-            <el-button size="mini" type="text" icon="el-icon-delete" @click="handlePriceDelete(scope.row)"
+            <el-button size="mini" type="text" icon="el-icon-delete" @click="handlePackageDelete(scope.row)"
               v-hasPermi="['office:roomprice:remove']">删除</el-button>
           </template>
         </el-table-column>
@@ -1140,11 +1140,29 @@
           this.title = "修改房间价格";
         });
       },
+      handlePackageUpdate(row){
+        this.reset();
+        const id = row.id
+        getRoompackage(id).then(response => {
+          this.packageForm = response.data;
+          this.packageOpen = true;
+          this.title = "修改房间套餐";
+        });
+      },
       /** 删除按钮操作 */
       handlePriceDelete(row) {
         const ids = row.id;
         this.$modal.confirm('是否确认删除该价格选项？').then(function() {
           return delRoomprice(ids);
+        }).then(() => {
+          this.getPrice();
+          this.$modal.msgSuccess("删除成功");
+        }).catch(() => {});
+      },
+      handlePackageDelete(row){
+        const ids = row.id;
+        this.$modal.confirm('是否确认删除该套餐选项？').then(function() {
+          return delRoompackage(ids);
         }).then(() => {
           this.getPrice();
           this.$modal.msgSuccess("删除成功");

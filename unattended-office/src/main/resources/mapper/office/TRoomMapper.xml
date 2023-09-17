@@ -39,7 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="startTime != null "> and start_time = #{startTime}</if>
             <if test="stopTime != null "> and stop_time = #{stopTime}</if>
             <if test="status != null "> and status = #{status}</if>
-            <if test="roomPayType != null "> and status = #{room_pay_type}</if>
+            <if test="roomPayType != null "> and roomPayType = #{room_pay_type}</if>
             <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
         </where>
     </select>
@@ -78,7 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stopTime != null">#{stopTime},</if>
             <if test="logo != null">#{logo},</if>
             <if test="status != null">#{status},</if>
-            <if test="roomPayType != null">room_pay_type,</if>
+            <if test="roomPayType != null">#{roomPayType},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -99,7 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stopTime != null">stop_time = #{stopTime},</if>
             <if test="logo != null">logo = #{logo},</if>
             <if test="status != null">status = #{status},</if>
-            <if test="roomPayType != null">room_pay_type,</if>
+            <if test="roomPayType != null">room_pay_type = #{roomPayType},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
