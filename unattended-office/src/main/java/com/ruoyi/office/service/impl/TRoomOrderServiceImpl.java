@@ -356,8 +356,6 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     public synchronized PrepayResp packPrepay(PackPrepayReq prepayReq, long userId) {
         PrepayResp resp = new PrepayResp();
 
-        TRoomOrder tRoomOrder = new TRoomOrder();
-        BeanUtils.copyProperties(prepayReq, tRoomOrder);
 
         // 计算总金额
         BigDecimal totalPrice = new BigDecimal(0);
@@ -366,6 +364,12 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             throw new ServiceException("套餐不可用");
         }
         totalPrice = roomPackage.getPrice();
+
+
+        TRoomOrder tRoomOrder = new TRoomOrder();
+        BeanUtils.copyProperties(prepayReq, tRoomOrder);
+        tRoomOrder.setStartTime(prepayReq.getStartTime());
+        tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), (int)(roomPackage.getMinutes()/60)));
 
 
         // 计算订单号
