@@ -35,6 +35,10 @@ public class TStorePackage extends BaseEntity
     @Excel(name = "状态")
     private Long status;
 
+    /** 门店id */
+    @Excel(name = "门店id")
+    private Long storeId;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -79,6 +83,14 @@ public class TStorePackage extends BaseEntity
     public Long getStatus() 
     {
         return status;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
     }
 
     @Override

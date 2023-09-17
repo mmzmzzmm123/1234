@@ -114,7 +114,8 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
         List<WxStoreListRspVo> resList = tStoreMapper.selectWxStoreList(wxStoreListQryVo);
         for (WxStoreListRspVo vo : resList) {
             TStorePackage storePackage = new TStorePackage();
-            storePackage.setCreateBy(vo.getCreateBy());
+//            storePackage.setCreateBy(vo.getCreateBy());
+            storePackage.setStoreId(vo.getId());
             final List<TStorePackage> tStorePackages = storePackageService.selectTStorePackageList(storePackage);
             vo.setStorePackageList(tStorePackages);
 
