@@ -37,18 +37,33 @@ const api = {
 		})
 	},
 	getUserInfo(){
-		return request('getUserInfo', null, true, 'GET')
+		return request('office/api/userInfo', null, true, 'GET')
+	},
+	bindPhoneNumber(code){
+		return post('office/api/binding', {code})
 	},
 	getStoreList(param){
 		return get("office/api/store/list", param).then(res=>{
-			 res.rows.forEach(x=>x.logo = BaseApiUrl + x.logo)
+			 res.rows.forEach(x=>{
+				if(x.logo){
+					x.logoList = x.logo.split(',').map(y=>BaseApiUrl + y)
+					x.logo = x.logoList[0]
+				}else{
+					x.logoList = []
+				}
+			 })
 			 return res
 		})
 	},
 	getRoomList(param){
 		return get('office/api/room/list', param).then(res=>{
 			res.rows.forEach(x=>{
-				x.logo = BaseApiUrl + x.logo
+				if(x.logo){
+					x.logoList = x.logo.split(',').map(y=>BaseApiUrl + y)
+					x.logo = x.logoList[0]
+				}else{
+					x.logoList = []
+				}
 				if(x.remark){
 					x.labelList = x.remark.split(',')
 				}

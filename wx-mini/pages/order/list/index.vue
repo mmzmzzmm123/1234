@@ -8,6 +8,7 @@
 		</view>
 		<pay-bar v-model="showPay" :amount="currentOrder.payAmount" :storeId="currentOrder.storeId" @prepareOrder="onPrepareOrder" @success="onPaySuccess"></pay-bar>
 		<u-empty custom-style="padding-top: 400rpx;" v-if="!orderList || !orderList.length" text="暂无订单"></u-empty>
+		<require-authorize></require-authorize>
 	</view>
 </template>
 
