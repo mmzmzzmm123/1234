@@ -25,8 +25,8 @@
 		</view>
 		<view v-if="showBtn" class="btn-bar">
 			<block v-if="orderInfo.status == 2 || orderInfo.status == 3">
-				<view class="btn-bar_btn" @click="onOpenStore">开大门</view>
-				<view class="btn-bar_btn" @click="onOpenRoom">开包厢</view>
+				<!-- <view class="btn-bar_btn" @click="onOpenStore">开大门</view> -->
+				<view v-if="canOpen" class="btn-bar_btn" @click="onOpenRoom">开包厢</view>
 			</block>
 			<view class="btn-bar_btn" v-if="orderInfo.status == 1" @click="onPayOrder">支付</view>
 		</view>
@@ -51,6 +51,14 @@
 		data() {
 			return {
 				payTypeList:[null, "微信支付", "余额支付", null, "优惠券支付"]
+			}
+		},
+		computed:{
+			canOpen(){
+				if(this.orderInfo){
+					return Date.fromString(this.orderInfo.endTime) > new Date()
+				}
+				return false
 			}
 		},
 		created() {
@@ -128,6 +136,10 @@
 				line-height: 60rpx;
 				margin-left: 20rpx;
 			}
+		}
+		.btn-bar:empty{
+			border: none;
+			padding: 0;
 		}
 		.pay-type-label{
 			padding: 5rpx 10rpx;

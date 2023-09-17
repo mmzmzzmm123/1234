@@ -29,6 +29,9 @@
 		</view>
 		<tool-bar :hidden="hiddenToolBar"></tool-bar>
 		<require-authorize></require-authorize>
+		<u-modal :show="showTongzhi" title="公告" @confirm="tongzhiReaded = true" confirmText="我知道了">
+			<rich-text :nodes="tongzhi"></rich-text>
+		</u-modal>
 	</view>
 </template>
 
@@ -45,7 +48,9 @@
 					lat: 0
 				},
 				storeList: [],
-				total: 0
+				total: 0,
+				
+				tongzhiReaded: false
 			}
 		},
 		computed: {
@@ -57,6 +62,13 @@
 			},
 			canLocation(){
 				return this.$store.state.canLocation
+			},
+			tongzhi(){
+				const value = this.$store.state.shouyetongzhi
+				return value
+			},
+			showTongzhi(){
+				return this.tongzhi && !this.tongzhiReaded
 			}
 		},
 		// watch: {
@@ -196,5 +208,9 @@
 			font-size: 26rpx;
 			color: $u-content-color;
 		}
+	}
+	rich-text{
+		max-height: 750rpx;
+		overflow: auto;
 	}
 </style>

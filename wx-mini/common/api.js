@@ -124,6 +124,9 @@ const api = {
 	},
 	buyStorePackage(param){
 		return post('office/api/package/buy', param)
+	},
+	buyStorePackageSuccess(param){
+		return post('office/api/package/payquery', param)
 	}
 }
 const install = (Vue, options) => {

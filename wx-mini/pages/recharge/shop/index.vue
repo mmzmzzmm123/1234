@@ -10,13 +10,13 @@
 					</view>
 				</view>
 				<view class="store-info_icon">
-					<text class="iconfont icon-daohang"></text>
-					<text class="iconfont icon-call"></text>
+					<text class="iconfont icon-daohang" @click="toMap"></text>
+					<text class="iconfont icon-call" @click="makePhoneCall"></text>
 				</view>
 			</view>
 			<view class="yu-e">
 				<view class="yu-e_title">可用余额(元)</view>
-				<view class="yu-e_value">100</view>
+				<view class="yu-e_value">{{storeAmount}}</view>
 				<!-- <view>
 					<view>充值记录</view>
 					<view>余额使用明细</view>
@@ -67,7 +67,8 @@
 				currentPackage: {},
 				checked: true,
 				showGuize: false,
-				showXieyi: false
+				showXieyi: false,
+				storeAmount: 0
 			}
 		},
 		computed: {
@@ -96,6 +97,9 @@
 			onAcceptStore(store){
 				this.store = store
 				this.currentPackage = store.storePackageList[0]
+				this.$api.getStoreAmount(store.id).then(res=>{
+					this.storeAmount = res
+				})
 			},
 			onPackageSelected(pack){
 				this.currentPackage = pack
@@ -114,7 +118,7 @@
 					param.package = param.packageValue
 					delete param.packageValue
 					param.success = ()=>{
-						this.$api.wxPaySuccess(res).then((payRes)=>{
+						this.$api.buyStorePackageSuccess(res).then((payRes)=>{
 							uni.navigateBack()
 						})
 					}
@@ -122,6 +126,18 @@
 						this.$toast('支付失败')
 					}
 					uni.requestPayment(param)
+				})
+			},
+			makePhoneCall(){
+				uni.makePhoneCall({
+					phoneNumber: this.store.phone
+				})
+			},
+			toMap(){
+				uni.openLocation({
+					latitude: new Number(this.store.latitude),
+					longitude: new Number(this.store.longitude),
+					address: this.store.address
 				})
 			}
 		}
@@ -226,6 +242,7 @@
 		}
 	}
 	.bottom{
+		box-sizing: border-box;
 		padding: 0 20rpx;
 		position: fixed;
 		height: 120rpx;
@@ -238,5 +255,9 @@
 	}
 	.xieyi-link{
 		color: #2979ff;
+	}
+	rich-text{
+		max-height: 750rpx;
+		overflow: auto;
 	}
 </style>

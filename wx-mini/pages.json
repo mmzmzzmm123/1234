@@ -83,12 +83,12 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "棋牌",
-		"navigationBarBackgroundColor": "#9D7C6D",
+		"navigationBarBackgroundColor": "#007440",
 		"backgroundColor": "#f3f4f6"
 	},
 	"tabBar": {
 		"color": "#909399",
-		"selectedColor": "#9D7C6D",
+		"selectedColor": "#007440",
 		"backgroundColor": "#FFFFFF",
 		"borderStyle": "black",
 		"list": [

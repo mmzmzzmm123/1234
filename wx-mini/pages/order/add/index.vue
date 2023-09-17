@@ -265,6 +265,9 @@
 					})
 					return
 				}
+				wx.requestSubscribeMessage({
+					tmplIds: ['58BvI5jDnq61I9slOIIjf89J9ionC95R14eUJ9rQLWA']
+				})
 				this.payShow = true
 			},
 			onPrepareOrder(e){
@@ -352,6 +355,7 @@
 		margin: 20rpx 0;
 	}
 	.bottom{
+		box-sizing: border-box;
 		padding: 0 20rpx;
 		position: fixed;
 		height: 120rpx;

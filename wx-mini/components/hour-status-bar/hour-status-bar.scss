@@ -2,14 +2,14 @@
 	height: 25rpx;
 	width: 25rpx;
 	border-radius: 4rpx;
-	background: $u-primary-disabled;
+	background: #d2e6e3;
 }
 .rect--fill{
-	background: $u-primary-dark;
+	background: #f40d3f;
 }
 .rect--current{
 	background: $u-success;
 }
 .rect--error{
-	background: $u-error;
+	background: $u-warning;
 }
