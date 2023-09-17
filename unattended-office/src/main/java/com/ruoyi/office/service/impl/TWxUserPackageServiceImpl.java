@@ -179,8 +179,12 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
     @Override
     public WxPayOrderQueryV3Result finish(PrepayResp vo, Long wxuserid) {
         TWxUserPackage order = tWxUserPackageMapper.selectTWxUserPackageById(vo.getOrderId());
-        if (order.getStatus().equals(OfficeEnum.PackageOrderStatus.PAYED.getCode()))
-            throw new ServiceException("订单已支付");
+        if (order.getStatus().equals(OfficeEnum.PackageOrderStatus.PAYED.getCode())) {
+//            throw new ServiceException("订单已支付");
+
+            log.debug("订单已支付");
+            return null;
+        }
         //查询支付状态；
         WxPayOrderQueryV3Result v3Result = null;
         try {

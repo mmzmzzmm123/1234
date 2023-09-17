@@ -3,6 +3,8 @@ package com.ruoyi.office.controller;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.bean.WxMaCodeLineColor;
+import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
+import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
 import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
@@ -834,6 +836,35 @@ public class ApiController extends BaseController {
         }
         String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
         return qrCodeStr;
+    }
+
+
+    @ApiOperation("绑定手机号")
+    @PostMapping(value = "/binding/{phone}")
+    public AjaxResult binding(BindingReq bindingReq) {
+        // 调用微信 API 获取用户的 openid 和 session_key
+        WxMaJscode2SessionResult session = null;
+        try {
+            session = customerWxMaService.getUserService().getSessionInfo(bindingReq.getCode());
+            String openid = session.getOpenid();
+            // 调用微信 API 获取用户的手机号
+            WxMaPhoneNumberInfo phoneInfo = customerWxMaService.getUserService().getNewPhoneNoInfo(session.getSessionKey());
+            String phoneNumber = phoneInfo.getPhoneNumber();
+        } catch (WxErrorException e) {
+            AjaxResult.error(e.getMessage());
+        }
+        return AjaxResult.success();
+    }
+
+    @Autowired
+    ITWxUserService wxUserService;
+
+    @ApiOperation("获取用户信息")
+    @GetMapping(value = "/userInfo")
+    public AjaxResult userInfo() {
+        long userWxId = SecurityUtils.getLoginUser().getWxUser().getId();
+        TWxUser wxUser = wxUserService.selectTWxUserById(userWxId);
+        return AjaxResult.success(wxUser);
     }
 
 }
