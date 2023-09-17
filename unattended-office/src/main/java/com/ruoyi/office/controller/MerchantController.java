@@ -43,7 +43,7 @@ public class MerchantController extends BaseController {
      */
     @ApiOperation("门店列表")
     @PreAuthorize("@ss.hasPermi('office:store:list')")
-    @GetMapping("/list")
+    @GetMapping("/store/list")
     public TableDataInfo list(TStore tStore) {
         if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
             tStore.setCreateBy(SecurityUtils.getUserId() + "");
@@ -62,7 +62,7 @@ public class MerchantController extends BaseController {
      */
     @ApiOperation("房间列表")
     @PreAuthorize("@ss.hasPermi('office:room:list')")
-    @GetMapping("/list")
+    @GetMapping("/room/list")
     public TableDataInfo list(TRoom tRoom) {
 //        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
         tRoom.setCreateBy(SecurityUtils.getUserId() + "");
