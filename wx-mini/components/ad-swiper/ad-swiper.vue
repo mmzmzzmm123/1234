@@ -1,5 +1,5 @@
 <template>
-	<u-swiper v-if="adList && adList.length" :list="adList" keyName="img" indicator indicatorMode="line" height="300rpx" bgColor="#fff" imgMode="aspectFill"
+	<u-swiper v-if="showAdList && showAdList.length" :list="showAdList" keyName="img" indicator indicatorMode="line" height="300rpx" bgColor="#fff" imgMode="aspectFill"
 		radius="0"
 		@click="onAdClick">
 	</u-swiper>
@@ -28,9 +28,13 @@
 			}
 		},
 		computed: {
-			// adList(){
-			// 	return this.$store.state.adList
-			// }
+			showAdList(){
+				if(this.adList){
+					return this.adList
+				}else{
+					return this.$store.state.shouyeguanggao
+				}
+			}
 		},
 		created() {
 			this.refresh()
@@ -42,14 +46,6 @@
 						return {
 							img: x
 						}
-					})
-				}else{
-					this.$api.getNoticeList().then(res=>{
-						this.adList = res.rows.map(x=>{
-							return {
-								img:  x.remark
-							}
-						})
 					})
 				}
 			}

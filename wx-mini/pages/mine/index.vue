@@ -10,7 +10,7 @@
 				<view>我的卡券</view>
 			</navigator>
 		</view>
-		<navigator class="recharge" @click="$toast('该功能即将上线')">
+		<navigator class="recharge" url="/pages/recharge/shop-list/index">
 			<text class="iconfont icon-liwu"></text>
 			充值有礼
 		</navigator>

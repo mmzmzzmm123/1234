@@ -51,13 +51,13 @@
 		{
 			"path": "pages/recharge/shop-list/index",
 			"style": {
-				"navigationBarTitleText": "会员充值"
+				"navigationBarTitleText": "充值有礼"
 			}
 		},
 		{
 			"path": "pages/recharge/shop/index",
 			"style": {
-				"navigationBarTitleText": "会员充值"
+				"navigationBarTitleText": "充值有礼"
 			}
 		},
 		{

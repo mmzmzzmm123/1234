@@ -45,6 +45,18 @@
 					name: 'askPhoneNumber',
 					value: false
 				})
+			},
+			onSubClick(){
+				uni.requestSubscribeMessage({
+					tmplIds: ['58BvI5jDnq61I9slOIIjf89J9ionC95R14eUJ9rQLWA'],
+					fail(res){
+						debugger
+						console.log(res)
+					},
+					success(res){
+						debugger
+					}
+				})
 			}
 		}
 	}

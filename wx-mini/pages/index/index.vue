@@ -9,7 +9,7 @@
 					</view>
 					<view class="menu-item_title">美团验券</view>
 				</navigator>
-				<navigator class="menu-item" @click="$toast('该功能即将上线')">
+				<navigator class="menu-item" url="../recharge/shop-list/index">
 					<view class="menu-item_icon">
 						<text class="iconfont icon-huiyuan"></text>
 					</view>

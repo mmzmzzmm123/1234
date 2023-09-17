@@ -41,7 +41,12 @@ const store = new Vuex.Store({
 		canLocation: false,
 		amount: 0,
 		validConponCount: 0,
-		askPhoneNumber: true
+		askPhoneNumber: true,
+		chongzhiguize: '',
+		chongzhixieyi: '',
+		chongzhishuoming: '',
+		shouyetongzhi: '',
+		shouyeguanggao: []
 	},
 	mutations: {
 		setCanLocation(state, value){
@@ -72,6 +77,7 @@ const store = new Vuex.Store({
 		login({state, dispatch}, para){
 			return Api.api.login(para).then(()=>{
 				state.hasLogin = true
+				dispatch('getNotice')
 				return dispatch("getUserInfo")
 			})
 		},
@@ -108,6 +114,27 @@ const store = new Vuex.Store({
 		getValidCouponCount({state}){
 			Api.api.getValidCouponCount().then(res=>{
 				state.validConponCount = res
+			})
+		},
+		getNotice({state}){
+			return Api.api.getNoticeList().then(res=>{
+				const shouyeguanggao = []
+				res.rows.forEach(x=>{
+					if(x.noticeType == 1 || x.noticeType == 2){
+						shouyeguanggao.push({img: Api.api.formatImgUrl(x.remark)})
+					}else if(x.noticeType == 3){
+						state.shouyetongzhi = x.noticeContent
+					}else if(x.noticeType == 4){
+						state.chongzhiguize = x.noticeContent
+					}
+					else if(x.noticeType == 5){
+						state.chongzhixieyi = x.noticeContent
+					}
+					else if(x.noticeType == 6){
+						state.chongzhishuoming = x.noticeContent
+					}
+				})
+				state.shouyeguanggao = shouyeguanggao
 			})
 		}
 	}

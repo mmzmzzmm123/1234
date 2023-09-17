@@ -27,6 +27,9 @@ function get(url, data, showLoading, hideError){
 }
 
 const api = {
+	formatImgUrl(url){
+		return BaseApiUrl + url
+	},
 	login(){
 		return new Promise((resolve, reject)=>{
 			uni.login({
@@ -117,12 +120,10 @@ const api = {
 		return get('office/api/amount')
 	},
 	getNoticeList(){
-		return get('office/api/notice/list').then(res=>{
-			res.rows.forEach(x=>{
-				x.remark = BaseApiUrl + x.remark
-			})
-			return res
-		})
+		return get('office/api/notice/list')
+	},
+	buyStorePackage(param){
+		return post('office/api/package/buy', param)
 	}
 }
 const install = (Vue, options) => {
