@@ -10,10 +10,18 @@
 			</view>
 			<view style="flex: 1;">
 				<view class="room-cell_name">{{roomInfo.name}}</view>
-				<view v-for="price in roomInfo.priceList" :key="price.id" class="room-cell_package">
-					<text>时段：{{price.startTime + ':00-' + (price.stopTime==24?0:price.stopTime+1) +':00'}}</text>
-					<text style="float: right;">{{price.price}}元/小时</text>
-				</view>
+				<block v-if="roomInfo.roomPayType == 1">
+					<view v-for="price in roomInfo.packageList" :key="price.id" class="room-cell_package">
+						<text>{{price.name}}</text>
+						<text style="float: right;">{{price.price}}元/场</text>
+					</view>
+				</block>
+				<block v-else>
+					<view v-for="price in roomInfo.priceList" :key="price.id" class="room-cell_package">
+						<text>时段：{{price.startTime + ':00-' + (price.stopTime==24?0:price.stopTime+1) +':00'}}</text>
+						<text style="float: right;">{{price.price}}元/小时</text>
+					</view>
+				</block>
 				<view class="label-list">
 					<view v-for="label in roomInfo.labelList" :key="label" class="label-list_item">{{label}}</view>
 				</view>

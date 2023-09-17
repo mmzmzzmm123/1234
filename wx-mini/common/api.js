@@ -95,6 +95,9 @@ const api = {
 	reOrder(param){
 		return post('office/api/reorder', param)
 	},
+	addOrderByPack(param){
+		return post('office/api/pack/order', param)
+	},
 	getRoomAvailable(param){
 		return get('office/api/room/available', param)
 	},
