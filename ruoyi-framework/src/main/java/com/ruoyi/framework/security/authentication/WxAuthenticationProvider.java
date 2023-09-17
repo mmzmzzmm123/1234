@@ -71,7 +71,6 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
             UserDetails userDetails = userDetailsService.createWxLoginUser(wxUser);
             WxAuthenticationToken authenticationToken = new WxAuthenticationToken(userDetails, loginBody, userDetails.getAuthorities());
             return authenticationToken;
-           return null;
         } catch (WxErrorException e) {
             throw new ServiceException("微信小程序登录出错");
         }
