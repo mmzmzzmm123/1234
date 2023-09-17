@@ -840,7 +840,7 @@ public class ApiController extends BaseController {
 
 
     @ApiOperation("绑定手机号")
-    @PostMapping(value = "/binding/{phone}")
+    @PostMapping(value = "/binding")
     public AjaxResult binding(BindingReq bindingReq) {
         // 调用微信 API 获取用户的 openid 和 session_key
         WxMaJscode2SessionResult session = null;
