@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.UserException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.office.domain.TRoom;
+import com.ruoyi.office.mapper.TRoomMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -23,6 +25,8 @@ import com.ruoyi.office.service.ITRoomPriceService;
 public class TRoomPriceServiceImpl extends ServiceImpl<TRoomPriceMapper, TRoomPrice> implements ITRoomPriceService {
     @Autowired
     private TRoomPriceMapper tRoomPriceMapper;
+    @Autowired
+    private TRoomMapper tRoomMapper;
 
     /**
      * 查询房间价格
@@ -54,7 +58,7 @@ public class TRoomPriceServiceImpl extends ServiceImpl<TRoomPriceMapper, TRoomPr
      */
     @Override
     public int insertTRoomPrice(TRoomPrice tRoomPrice) {
-        if(tRoomPrice.getStartTime()>tRoomPrice.getStopTime())
+        if (tRoomPrice.getStartTime() > tRoomPrice.getStopTime())
             throw new ServiceException("开始时间必须小于等于结束时间");
 
         tRoomPrice.setCreateTime(DateUtils.getNowDate());
@@ -66,7 +70,12 @@ public class TRoomPriceServiceImpl extends ServiceImpl<TRoomPriceMapper, TRoomPr
             if ((roomPrice.getStartTime() <= tRoomPrice.getStartTime() && roomPrice.getStopTime() >= tRoomPrice.getStartTime()) || (roomPrice.getStartTime() <= tRoomPrice.getStopTime() && roomPrice.getStopTime() >= tRoomPrice.getStopTime()))
                 throw new ServiceException("收费标准时间段交叉");
         }
-        return tRoomPriceMapper.insertTRoomPrice(tRoomPrice);
+        int res = tRoomPriceMapper.insertTRoomPrice(tRoomPrice);
+        TRoom tRoom = new TRoom();
+        tRoom.setId(tRoomPrice.getRoomId());
+        tRoom.setRoomPayType("2");
+        tRoomMapper.updateTRoom(tRoom);
+        return res;
     }
 
     /**
@@ -77,7 +86,7 @@ public class TRoomPriceServiceImpl extends ServiceImpl<TRoomPriceMapper, TRoomPr
      */
     @Override
     public int updateTRoomPrice(TRoomPrice tRoomPrice) {
-        if(tRoomPrice.getStartTime()>tRoomPrice.getStopTime())
+        if (tRoomPrice.getStartTime() > tRoomPrice.getStopTime())
             throw new ServiceException("开始时间必须小于等于结束时间");
 
         tRoomPrice.setUpdateTime(DateUtils.getNowDate());
@@ -92,8 +101,12 @@ public class TRoomPriceServiceImpl extends ServiceImpl<TRoomPriceMapper, TRoomPr
             if ((roomPrice.getStartTime() <= tRoomPrice.getStartTime() && roomPrice.getStopTime() >= tRoomPrice.getStartTime()) || (roomPrice.getStartTime() <= tRoomPrice.getStopTime() && roomPrice.getStopTime() >= tRoomPrice.getStopTime()))
                 throw new ServiceException("收费标准时间段交叉");
         }
-
-        return tRoomPriceMapper.updateTRoomPrice(tRoomPrice);
+        int res = tRoomPriceMapper.updateTRoomPrice(tRoomPrice);
+        TRoom tRoom = new TRoom();
+        tRoom.setId(tRoomPrice.getRoomId());
+        tRoom.setRoomPayType("2");
+        tRoomMapper.updateTRoom(tRoom);
+        return res;
     }
 
     /**

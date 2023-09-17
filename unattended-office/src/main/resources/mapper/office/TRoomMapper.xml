@@ -15,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="stopTime"    column="stop_time"    />
         <result property="logo"    column="logo"    />
         <result property="status"    column="status"    />
+        <result property="roomPayType"    column="room_pay_type"    />
         <result property="remark"    column="remark"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -23,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTRoomVo">
-        select id, store_id, name, wifi, equip_id, table_code, start_time, stop_time, logo, status, remark, create_by, create_time, update_by, update_time from t_room
+        select id, store_id, name, wifi, equip_id, table_code, start_time, stop_time, logo, status, remark, create_by, create_time, update_by, update_time, room_pay_type from t_room
     </sql>
 
     <select id="selectTRoomList" parameterType="TRoom" resultMap="TRoomResult">
@@ -38,6 +39,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="startTime != null "> and start_time = #{startTime}</if>
             <if test="stopTime != null "> and stop_time = #{stopTime}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="roomPayType != null "> and status = #{room_pay_type}</if>
             <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
         </where>
     </select>
@@ -59,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stopTime != null">stop_time,</if>
             <if test="logo != null">logo,</if>
             <if test="status != null">status,</if>
+            <if test="roomPayType != null">room_pay_type,</if>
             <if test="remark != null">remark,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -75,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stopTime != null">#{stopTime},</if>
             <if test="logo != null">#{logo},</if>
             <if test="status != null">#{status},</if>
+            <if test="roomPayType != null">room_pay_type,</if>
             <if test="remark != null">#{remark},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -95,6 +99,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stopTime != null">stop_time = #{stopTime},</if>
             <if test="logo != null">logo = #{logo},</if>
             <if test="status != null">status = #{status},</if>
+            <if test="roomPayType != null">room_pay_type,</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

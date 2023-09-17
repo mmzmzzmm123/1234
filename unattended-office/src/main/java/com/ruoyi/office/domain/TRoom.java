@@ -58,4 +58,7 @@ public class TRoom extends BaseEntity
     @Excel(name = "状态(空闲/已预约/使用中/预约超时未使用/不可用)")
     private String status;
 
+    /**房间收费规则（1、套餐收费；2、小时收费）*/
+    @Excel(name="房间收费规则（1、套餐收费；2、小时收费）")
+    private String roomPayType;
 }
