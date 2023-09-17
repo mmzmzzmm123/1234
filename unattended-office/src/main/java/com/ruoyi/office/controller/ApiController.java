@@ -343,7 +343,7 @@ public class ApiController extends BaseController {
     @GetMapping("/store/list")
     public TableDataInfo wxStoreList(WxStoreListQryVo wxStoreListQryVo) {
         startPage();
-        List<WxStoreListRspVo> list = storeService.selectWxStoreList(wxStoreListQryVo);
+        List<WxStoreListRspVo> list = storeService.selectWxStoreList(wxStoreListQryVo, SecurityUtils.getLoginUser().getWxUser().getId());
         return getDataTable(list);
     }
 
@@ -877,5 +877,13 @@ public class ApiController extends BaseController {
         TWxUser wxUser = wxUserService.selectTWxUserById(userWxId);
         return AjaxResult.success(wxUser);
     }
+
+/*    @ApiOperation("获取门店充值套餐列表")
+    @GetMapping(value = "/store/pack")
+    public TableDataInfo storePack(WxStoreListQryVo wxStoreListQryVo) {
+        startPage();
+        List<WxStoreListRspVo> list = storeService.selectWxStoreList(wxStoreListQryVo);
+        return getDataTable(list);
+    }*/
 
 }

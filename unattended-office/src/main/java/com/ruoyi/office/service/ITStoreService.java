@@ -61,7 +61,7 @@ public interface ITStoreService
      */
     public int deleteTStoreById(Long id);
 
-    List<WxStoreListRspVo> selectWxStoreList(WxStoreListQryVo wxStoreListQryVo);
+    List<WxStoreListRspVo> selectWxStoreList(WxStoreListQryVo wxStoreListQryVo, Long userId);
 
     void openStore(Long id);
 }
