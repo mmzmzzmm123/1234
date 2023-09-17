@@ -56,7 +56,7 @@
 		computed:{
 			canOpen(){
 				if(this.orderInfo){
-					return Date.fromString(this.orderInfo.endTime) > new Date()
+					return Date.fromString(this.orderInfo.endTime).getTime() + 5 * 60 * 1000 > Date.now()
 				}
 				return false
 			}
