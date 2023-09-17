@@ -851,7 +851,7 @@ public class ApiController extends BaseController {
 
             long userWxId = SecurityUtils.getLoginUser().getWxUser().getId();
             TWxUser wxUser = new TWxUser();
-            wxUser.setUserId(userWxId);
+            wxUser.setId(userWxId);
             wxUser.setPhone(phoneNumber);
             wxUserService.updateTWxUser(wxUser);
 
