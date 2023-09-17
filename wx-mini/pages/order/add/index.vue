@@ -1,11 +1,22 @@
 <template>
 	<view>
 		<view class="card">
-			<view class="price-title">计费</view>
-			<view v-for="price in roomInfo.priceList" :key="price.id" class="price-bar">
-				<text>时段：{{price.startTime + ':00-' + (price.stopTime==24?0:price.stopTime+1) +':00'}}</text>
-				<text style="float: right;">{{price.price}}元/小时</text>
-			</view>
+			<block v-if="isPackagePay">
+				<view class="price-title">选择套餐</view>
+				<view v-for="price in roomInfo.packageList" :key="price.id"
+					class="price-bar" :class="currentPackage.id == price.id ? 'price-bar--selected':''"
+					@click="onPackageSelected(price)">
+					<text>{{price.name}}</text>
+					<text style="float: right;">{{price.price}}元/小时</text>
+				</view>
+			</block>
+			<block v-else>
+				<view class="price-title">计费</view>
+				<view v-for="price in roomInfo.priceList" :key="price.id" class="price-bar">
+					<text>时段：{{price.startTime + ':00-' + (price.stopTime==24?0:price.stopTime+1) +':00'}}</text>
+					<text style="float: right;">{{price.price}}元/小时</text>
+				</view>
+			</block>
 		</view>
 		<view class="card">
 			<view>选择时间</view>
@@ -16,7 +27,13 @@
 						{{$u.timeFormat(order.startTime, 'yyyy-mm-dd hh:MM')}}
 					</view>
 				</view>
-				<view class="time-input">
+				<view v-if="isPackagePay" class="time-input time-input--readonly">
+					<view class="time-input_label">结束时间</view>
+					<view class="time-input_value">
+						{{$u.timeFormat(order.endTime, 'yyyy-mm-dd hh:MM')}}
+					</view>
+				</view>
+				<view v-else class="time-input">
 					<view class="time-input_label">结束时间</view>
 					<view class="time-input_value" @click="endShow = true">
 						{{$u.timeFormat(order.endTime, 'yyyy-mm-dd hh:MM')}}
@@ -77,7 +94,13 @@
 				hourList2: [],
 				hourRepeat: false,
 				amount: 0,
-				payShow: false
+				payShow: false,
+				currentPackage: {}
+			}
+		},
+		computed:{
+			isPackagePay(){
+				return this.roomInfo.roomPayType == 1
 			}
 		},
 		onLoad(options) {
@@ -95,22 +118,30 @@
 			onAcceptRoom(roomInfo){
 				this.roomInfo = roomInfo
 				this.period = roomInfo.period
-				this.updateHourStatus()
+				if(this.isPackagePay){
+					this.onPackageSelected(this.roomInfo.packageList[0])
+				}else{
+					this.updateHourStatus()
+				}
 			},
 			calcAmount(){
-				const start = new Date(this.order.startTime)
-				const end = new Date(this.order.endTime)
-				this.amount = 0
-				if(start.getDate() < end.getDate()){
-					for(let i = start.getHours(); i < 24; i++){
-						this.amount += this.getPrice(i)
-					}
-					for(let i = 0; i < end.getHours(); i++){
-						this.amount += this.getPrice(i)
-					}
+				if(this.isPackagePay){
+					this.amount = this.currentPackage.price
 				}else{
-					for(let i = start.getHours(); i < end.getHours(); i++){
-						this.amount += this.getPrice(i)
+					const start = new Date(this.order.startTime)
+					const end = new Date(this.order.endTime)
+					this.amount = 0
+					if(start.getDate() < end.getDate()){
+						for(let i = start.getHours(); i < 24; i++){
+							this.amount += this.getPrice(i)
+						}
+						for(let i = 0; i < end.getHours(); i++){
+							this.amount += this.getPrice(i)
+						}
+					}else{
+						for(let i = start.getHours(); i < end.getHours(); i++){
+							this.amount += this.getPrice(i)
+						}
 					}
 				}
 			},
@@ -188,7 +219,7 @@
 			},
 			onConfirmPicker(start, e){
 				let startTime = this.order.startTime
-				let endTime = this.order.endTime
+				let endTime = this.isPackagePay ? e.value + this.currentPackage.minutes * 60 * 1000 : this.order.endTime
 				if(start){
 					startTime = e.value
 				}else{
@@ -203,6 +234,9 @@
 				}
 				if(start){
 					this.order.startTime = e.value
+					if(this.isPackagePay){
+						this.order.endTime = endTime
+					}
 					this.startShow = false
 					if(new Date(e.value).getDate() != new Date(this.period.date).getDate()){
 						this.getHourStatus()
@@ -234,11 +268,19 @@
 				this.payShow = true
 			},
 			onPrepareOrder(e){
-				e.order = {
-					roomId: this.roomInfo.id,
-					startTime: this.$u.timeFormat(this.order.startTime, 'yyyy-mm-dd hh:MM'),
-					endTime: this.$u.timeFormat(this.order.endTime, 'yyyy-mm-dd hh:MM'),
-					payType: e.payType
+				if(this.isPackagePay){
+					e.order = {
+						packId: this.currentPackage.id,
+						startTime: this.$u.timeFormat(this.order.startTime, 'yyyy-mm-dd hh:MM'),
+						payType: e.payType
+					}	
+				}else{
+					e.order = {
+						roomId: this.roomInfo.id,
+						startTime: this.$u.timeFormat(this.order.startTime, 'yyyy-mm-dd hh:MM'),
+						endTime: this.$u.timeFormat(this.order.endTime, 'yyyy-mm-dd hh:MM'),
+						payType: e.payType
+					}
 				}
 			},
 			onOrderSuccess(){
@@ -252,6 +294,12 @@
 						})
 					}
 				})
+			},
+			onPackageSelected(price){
+				this.currentPackage = price
+				this.order.endTime = this.order.startTime + this.currentPackage.minutes * 60 * 1000
+				this.calcAmount()
+				this.updateHourStatus()
 			}
 		}
 	}
@@ -275,6 +323,10 @@
 		height: 80rpx;
 		line-height: 80rpx;
 		border-radius: 5rpx;
+		&--selected{
+			background: $u-primary;
+			// border: 1rpx solid $u-border-color;
+		}
 	}
 	.time-input{
 		display: flex;
@@ -289,6 +341,11 @@
 			border: 1rpx solid $u-border-color;
 			border-radius: 10rpx;
 			padding: 10rpx 20rpx;
+		}
+		&--readonly{
+			.time-input_value{
+				color: $u-content-color;
+			}
 		}
 	}
 	.u-m-v-20{

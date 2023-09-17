@@ -74,7 +74,7 @@
 				const event = {payType: this.payType}
 				this.$emit('prepareOrder', event)
 				const order = event.order
-				const doPay = order.orderId ? this.$api.reOrder : this.$api.addOrder
+				const doPay = order.orderId ? this.$api.reOrder : order.packId ? this.$api.addOrderByPack : this.$api.addOrder
 				doPay(order).then(res=>{
 					if(order.payType == 1){
 						const param = res.jsapiResult

@@ -1,43 +1,38 @@
 package com.ruoyi.office.domain;
 
-import java.math.BigDecimal;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 店铺充值套餐对象 t_store_package
+ * 我要加盟对象 t_join_us
  * 
  * @author ruoyi
- * @date 2023-05-30
+ * @date 2023-09-17
  */
-public class TStorePackage extends BaseEntity
+public class TJoinUs extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
     /** id */
     private Long id;
 
-    /** 套餐名称 */
-    @Excel(name = "套餐名称")
-    private String packageName;
+    /** 城市 */
+    @Excel(name = "城市")
+    private Long city;
 
-    /** 实付金额 */
-    @Excel(name = "实付金额")
-    private BigDecimal payAmount;
+    /** 姓名 */
+    @Excel(name = "姓名")
+    private String name;
 
-    /** 赠送金额 */
-    @Excel(name = "赠送金额")
-    private BigDecimal giftAmont;
+    /** 电话 */
+    @Excel(name = "电话")
+    private String phone;
 
     /** 状态 */
     @Excel(name = "状态")
     private Long status;
-
-    /** 门店id */
-    @Excel(name = "门店id")
-    private Long storeId;
 
     public void setId(Long id) 
     {
@@ -48,32 +43,32 @@ public class TStorePackage extends BaseEntity
     {
         return id;
     }
-    public void setPackageName(String packageName) 
+    public void setCity(Long city) 
     {
-        this.packageName = packageName;
+        this.city = city;
     }
 
-    public String getPackageName() 
+    public Long getCity() 
     {
-        return packageName;
+        return city;
     }
-    public void setPayAmount(BigDecimal payAmount) 
+    public void setName(String name) 
     {
-        this.payAmount = payAmount;
-    }
-
-    public BigDecimal getPayAmount() 
-    {
-        return payAmount;
-    }
-    public void setGiftAmont(BigDecimal giftAmont) 
-    {
-        this.giftAmont = giftAmont;
+        this.name = name;
     }
 
-    public BigDecimal getGiftAmont() 
+    public String getName() 
     {
-        return giftAmont;
+        return name;
+    }
+    public void setPhone(String phone) 
+    {
+        this.phone = phone;
+    }
+
+    public String getPhone() 
+    {
+        return phone;
     }
     public void setStatus(Long status) 
     {
@@ -85,21 +80,13 @@ public class TStorePackage extends BaseEntity
         return status;
     }
 
-    public Long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
-            .append("packageName", getPackageName())
-            .append("payAmount", getPayAmount())
-            .append("giftAmont", getGiftAmont())
+            .append("city", getCity())
+            .append("name", getName())
+            .append("phone", getPhone())
             .append("status", getStatus())
             .append("remark", getRemark())
             .append("createBy", getCreateBy())

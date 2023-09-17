@@ -181,7 +181,7 @@ public class OfficeEnum {
     }
 
     public enum WxTradeType {
-        PACK("PACK", "套餐订单"), ROOM_ORDER("ROOM_ORDER", "房间订单");
+        PACK("PACK", "套餐订单"), ROOM_ORDER("ROOM_ORDER", "房间订单"), ROOM_PACK_ORDER("ROOM_ORDER", "房间订单");
 
         private final String code;
         private final String info;

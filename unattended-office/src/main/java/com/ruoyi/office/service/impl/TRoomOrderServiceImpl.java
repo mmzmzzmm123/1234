@@ -362,8 +362,6 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     public synchronized PrepayResp packPrepay(PackPrepayReq prepayReq, long userId) {
         PrepayResp resp = new PrepayResp();
 
-        TRoomOrder tRoomOrder = new TRoomOrder();
-        BeanUtils.copyProperties(prepayReq, tRoomOrder);
 
         // 计算总金额
         BigDecimal totalPrice = new BigDecimal(0);
@@ -372,6 +370,13 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             throw new ServiceException("套餐不可用");
         }
         totalPrice = roomPackage.getPrice();
+
+
+        TRoomOrder tRoomOrder = new TRoomOrder();
+        BeanUtils.copyProperties(prepayReq, tRoomOrder);
+        tRoomOrder.setRoomId(roomPackage.getRoomId());
+        tRoomOrder.setStartTime(prepayReq.getStartTime());
+        tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), (int) (roomPackage.getMinutes() / 60)));
 
 
         // 计算订单号
@@ -509,7 +514,18 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         BigDecimal totalPrice = roomOrder.getTotalAmount();
 
         // 计算订单号
-        long orderNo = roomOrder.getOrderNo();
+//        long orderNo = roomOrder.getOrderNo();
+
+        // 计算订单号
+        long orderNo = 0l;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        final String prefix = roomOrder.getRoomId() + sdf.format(new Date());
+        Long maxId = tRoomOrderMapper.getHourMaxOrder(prefix);
+        if (maxId == null) {
+            orderNo = Long.parseLong(prefix + "00");
+        } else {
+            orderNo = maxId + 1;
+        }
 
 
         TWxUser wxUser = wxUserService.selectTWxUserById(userId);
@@ -555,6 +571,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
                 // 微信支付是不是要换个订单号?
+                roomOrder.setOrderNo(orderNo);
                 roomOrder.setPayType(OfficeEnum.PayType.WX_PAY.getCode());
                 roomOrder.setStatus(OfficeEnum.RoomOrderStatus.TO_PAY.getCode());// 待支付
                 roomOrder.setUpdateTime(DateUtils.getNowDate());
