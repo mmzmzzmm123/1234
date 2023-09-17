@@ -60,4 +60,6 @@ public interface ITWxUserAmountService
     public int deleteTWxUserAmountById(Long id);
 
     void minusCardValue(TWxUserAmount wxUserAmount);
+
+    void addUserMerchantAmount(TWxUserAmount wxUserAmount);
 }

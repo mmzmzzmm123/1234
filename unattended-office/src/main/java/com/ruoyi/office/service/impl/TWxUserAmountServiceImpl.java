@@ -104,4 +104,10 @@ public class TWxUserAmountServiceImpl extends ServiceImpl<TWxUserAmountMapper, T
     public void minusCardValue(TWxUserAmount wxUserAmount) {
         tWxUserAmountMapper.minusCardValue(wxUserAmount);
     }
+
+
+    @Override
+    public void addUserMerchantAmount(TWxUserAmount wxUserAmount) {
+        tWxUserAmountMapper.addUserMerchantAmount(wxUserAmount);
+    }
 }

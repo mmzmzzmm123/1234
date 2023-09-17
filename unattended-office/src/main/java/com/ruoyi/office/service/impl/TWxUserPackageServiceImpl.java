@@ -16,20 +16,19 @@ import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.office.domain.TRoomOrder;
-import com.ruoyi.office.domain.TStorePackage;
-import com.ruoyi.office.domain.TWxUser;
+import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.BuyStorePackReq;
 import com.ruoyi.office.domain.vo.PrepayResp;
 import com.ruoyi.office.service.ITStorePackageService;
+import com.ruoyi.office.service.ITWxUserAmountService;
 import com.ruoyi.office.service.ITWxUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.office.mapper.TWxUserPackageMapper;
-import com.ruoyi.office.domain.TWxUserPackage;
 import com.ruoyi.office.service.ITWxUserPackageService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 用户套餐购买记录Service业务层处理
@@ -176,7 +175,11 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
         return resp;
     }
 
+    @Autowired
+    ITWxUserAmountService userAmountService;
+
     @Override
+    @Transactional
     public WxPayOrderQueryV3Result finish(PrepayResp vo, Long wxuserid) {
         TWxUserPackage order = tWxUserPackageMapper.selectTWxUserPackageById(vo.getOrderId());
         if (order.getStatus().equals(OfficeEnum.PackageOrderStatus.PAYED.getCode())) {
@@ -201,6 +204,14 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
             updateOrder.setId(order.getId());
             updateOrder.setStatus(OfficeEnum.PackageOrderStatus.PAYED.getCode());
             tWxUserPackageMapper.updateTWxUserPackage(updateOrder);
+
+            // 对用户的商户余额进行增加操作；
+            TWxUserAmount wxUserAmount = new TWxUserAmount();
+            wxUserAmount.setWxUserId(wxuserid);
+            wxUserAmount.setUserId(order.getMerchant());
+            wxUserAmount.setAmount(order.getPayAmount().add(order.getGiftAmont()));
+            userAmountService.insertTWxUserAmount(wxUserAmount);
+
         } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.REFUND)) {
             throw new ServiceException("订单转入退款");
         } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.NOTPAY)) {
