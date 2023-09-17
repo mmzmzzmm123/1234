@@ -122,7 +122,7 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
         PrepayResp resp = new PrepayResp();
         TWxUser wxUser = wxUserService.selectTWxUserById(userId);
         TStorePackage storePackage = storePackageService.selectTStorePackageById(storePack.getPackId());
-        BigDecimal totalPrice = storePackage.getPayAmount().add(storePackage.getGiftAmont());
+        BigDecimal totalPrice = storePackage.getPayAmount();//.add(storePackage.getGiftAmont());
         TWxUserPackage userPackage = new TWxUserPackage();
         // 计算订单号
         long orderNo = 0l;
