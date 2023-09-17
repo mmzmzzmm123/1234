@@ -20,7 +20,7 @@
 				</view>
 			</view> -->
 			<view style="border-radius: 20rpx;overflow: hidden;">
-				<ad-swiper :imgList="[shopInfo.logo]"></ad-swiper>
+				<ad-swiper :imgList="shopInfo.logoList"></ad-swiper>
 			</view>
 		</view>
 		<view class="shop">

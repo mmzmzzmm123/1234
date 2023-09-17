@@ -63,7 +63,7 @@
 			},
 			onPreviewImage(){
 				uni.previewImage({
-					urls: [this.shopInfo.logo]
+					urls: this.shopInfo.logoList
 				})
 			},
 			toOrderRoom(){

@@ -28,6 +28,7 @@
 				<text slot="icon" class="iconfont icon-yinsixieyi"></text>
 			</u-cell> -->
 		</view>
+		<require-authorize></require-authorize>
 	</view>
 </template>
 

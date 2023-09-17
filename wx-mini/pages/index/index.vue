@@ -28,7 +28,7 @@
 			</view>
 		</view>
 		<tool-bar :hidden="hiddenToolBar"></tool-bar>
-		<!-- <yto-authorize></yto-authorize> -->
+		<require-authorize></require-authorize>
 	</view>
 </template>
 
