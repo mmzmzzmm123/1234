@@ -850,6 +850,13 @@ public class ApiController extends BaseController {
             // 调用微信 API 获取用户的手机号
             WxMaPhoneNumberInfo phoneInfo = customerWxMaService.getUserService().getNewPhoneNoInfo(session.getSessionKey());
             String phoneNumber = phoneInfo.getPhoneNumber();
+
+            long userWxId = SecurityUtils.getLoginUser().getWxUser().getId();
+            TWxUser wxUser = new TWxUser();
+            wxUser.setUserId(userWxId);
+            wxUser.setPhone(phoneNumber);
+            wxUserService.updateTWxUser(wxUser);
+
         } catch (WxErrorException e) {
             AjaxResult.error(e.getMessage());
         }
