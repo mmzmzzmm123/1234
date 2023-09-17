@@ -6,6 +6,8 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import cn.binarywang.wx.miniapp.api.WxMaService;
+import cn.binarywang.wx.miniapp.bean.WxMaSubscribeMessage;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderV3Request;
@@ -16,6 +18,7 @@ import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
+import com.ruoyi.common.config.properties.WxMaProperties;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
@@ -33,6 +36,9 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.office.mapper.TRoomOrderMapper;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 
 /**
  * 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）Service业务层处理
@@ -843,6 +849,59 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
    /* @Autowired
     HornConfig hornConfig;*/
 
+    @Resource(name = "customerWxMaService")
+    WxMaService customerWxMaService;
+
+
+    /**
+     * 订单开始提醒
+     */
+    @Override
+    @PostConstruct
+    public void msgOrder() {
+        TRoomOrder roomOrder = new TRoomOrder();
+        roomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());
+        List<TRoomOrder> roomOrderList = tRoomOrderMapper.selectTRoomOrderList(roomOrder);
+
+        for (TRoomOrder tRoomOrder : roomOrderList) {
+            try {
+                TRoom tRoom = roomService.selectTRoomById(tRoomOrder.getRoomId());
+                if (tRoom == null) {
+                    continue;
+                }
+                TStore tStore = storeService.selectTStoreById(tRoom.getStoreId());
+                if (tStore == null) {
+                    continue;
+                }
+                if (tRoomOrder.getStartTime().before(new Date())) {
+                    continue;
+                }
+                TWxUser tWxUser = wxUserService.selectTWxUserById(tRoomOrder.getUserId());
+                WxMaSubscribeMessage wxMaSubscribeMessage = new WxMaSubscribeMessage();
+                wxMaSubscribeMessage.setToUser(tWxUser.getOpenId());
+                //todo模版配置
+                wxMaSubscribeMessage.setTemplateId("58BvI5jDnq61I9slOIIjf89J9ionC95R14eUJ9rQLWA");
+                List<WxMaSubscribeMessage.MsgData> msgDataList = new ArrayList<>();
+                WxMaSubscribeMessage.MsgData msgData = new WxMaSubscribeMessage.MsgData();
+                msgData.setName("thing1");
+                msgData.setValue("您的订单即将开始！");
+                msgDataList.add(msgData);
+                msgData = new WxMaSubscribeMessage.MsgData();
+                msgData.setName("time2");
+                msgData.setValue(tRoomOrder.getStartTime().toString());
+                msgDataList.add(msgData);
+                msgData = new WxMaSubscribeMessage.MsgData();
+                msgData.setName("thing6");
+                msgData.setValue(tStore.getName() + ":" + tRoom.getName());
+                msgDataList.add(msgData);
+                wxMaSubscribeMessage.setData(msgDataList);
+                customerWxMaService.getMsgService().sendSubscribeMsg(wxMaSubscribeMessage);
+            } catch (Exception e) {
+                continue;
+            }
+        }
+    }
+
     /**
      * 订单结束提醒
      */
@@ -881,7 +940,6 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         roomOrder.setStatus(OfficeEnum.RoomOrderStatus.USING.getCode());
         List<TRoomOrder> roomOrderList = tRoomOrderMapper.selectTRoomOrderList(roomOrder);
         for (TRoomOrder order : roomOrderList) {
-
             if (order.getEndTime().before(new Date())) {
                 // 超期发送关闭
                 roomService.closeRoom(order.getRoomId());

@@ -80,6 +80,8 @@ public interface ITRoomOrderService {
 
     void scanOrder();
 
+    void msgOrder();
+
     PrepayResp reOrder(ReorderPayReq orderId, long wxUserId);
 
     List<RoomOrderWxVo> getOrderCanOpen(OrderCanOpenReq wxUserId);

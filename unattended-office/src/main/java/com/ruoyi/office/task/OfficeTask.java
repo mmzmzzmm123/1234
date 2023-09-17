@@ -47,6 +47,13 @@ public class OfficeTask {
     /**
      * 扫描快到期的订单,进行语音提醒到期时间
      */
+    public void msgOrder() {
+        roomOrderService.msgOrder();
+    }
+
+    /**
+     * 扫描快到期的订单,进行语音提醒到期时间
+     */
     public void scanOrder() {
         roomOrderService.scanOrder();
     }
@@ -79,7 +86,7 @@ public class OfficeTask {
         MqttSendClient sendClient = new MqttSendClient();
         for (TEquipment eq : equipments) {
             if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(eq.getEquipType())) {
-                if (eq.getRecentOpenTime()!=null && DateUtils.differentDaysByMillisecond(eq.getRecentOpenTime(), new Date()) > (clooseDoorMinute * 1000)) {
+                if (eq.getRecentOpenTime() != null && DateUtils.differentDaysByMillisecond(eq.getRecentOpenTime(), new Date()) > (clooseDoorMinute * 1000)) {
                     Map<String, String> msg = new HashMap<>();
                     String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
@@ -100,7 +107,7 @@ public class OfficeTask {
     /**
      * 扫描未支付订单进行取消操作
      */
-    public void scanToPayOrder(){
+    public void scanToPayOrder() {
         roomOrderService.scanToPayOrder();
     }
 
