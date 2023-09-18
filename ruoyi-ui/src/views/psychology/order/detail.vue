@@ -114,9 +114,11 @@ export default {
             })
           }
 
-          if (this.order.num > 0) {
-            const len = items.length
-            for (let i = 1; i <= this.order.num; i++) {
+          const len = items.length
+          const num = this.order.serve.num - len
+
+          if (num > 0) {
+            for (let i = 1; i <= num; i++) {
               const tt = {
                 num: len + i,
                 time: '用户未预约',

@@ -320,10 +320,12 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
                 psyConsultWorkService.handleWork(item.getWorkId(), order.getConsultId(), item.getTime(), 2);
                 psyConsultOrderItemService.del(item.getId());
             });
-            // 需要重新预约
-            order.setOrderTime("");
-            sendPublicMsg(order);
         }
+
+        // 消息推送 需要重新预约
+        order.setOrderTime("");
+        order.setUpdateTime(new Date());
+        sendPublicMsg(order);
 
         order.setRefConsultId(order.getConsultId());
         order.setRefConsultName(order.getConsultName());
@@ -511,7 +513,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         if (orderItem != null) {
             psyConsultWorkService.handleWork(orderItem.getWorkId(), req.getConsultId(), orderItem.getTime(), 1);
             // 已预约情况下,需要扣减数量
-            updateNum(req);
+//            updateNum(req);
         }
 
         // 消息推送
