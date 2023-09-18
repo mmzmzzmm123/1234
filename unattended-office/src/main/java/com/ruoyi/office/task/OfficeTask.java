@@ -86,7 +86,7 @@ public class OfficeTask {
         MqttSendClient sendClient = new MqttSendClient();
         for (TEquipment eq : equipments) {
             if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(eq.getEquipType())) {
-                if (eq.getRecentOpenTime() != null && DateUtils.differentDaysByMillisecond(eq.getRecentOpenTime(), new Date()) > (clooseDoorMinute * 1000)) {
+                if (eq.getRecentOpenTime() != null && (new Date().getTime() - eq.getRecentOpenTime().getTime()) > (clooseDoorMinute * 1000)) {
                     Map<String, String> msg = new HashMap<>();
                     String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);

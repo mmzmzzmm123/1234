@@ -379,7 +379,7 @@ public class ApiController extends BaseController {
      * @return
      */
     @ApiOperation("开房间设备")
-    @PostMapping("/room/{orderId}")
+    @PostMapping("/room")
     public AjaxResult openRoom(@PathVariable("orderId") Long orderId) {
 
         try {
