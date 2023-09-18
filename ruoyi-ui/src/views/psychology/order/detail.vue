@@ -22,7 +22,7 @@
     <el-divider/>
     <template v-if="['1', '2'].includes(this.order.status)">
       <div style="font-size: 16px;font-weight: bold;color: #303133;margin-bottom: 20px">
-        咨询明细 <el-button :disabled="order.num === 0 || ['0', '3'].includes(order.status)" icon="el-icon-circle-plus-outline" type="text" @click="handleHx">核销</el-button>
+        咨询明细 <el-button v-if="checkPermi(['psychology:order:edit']) && hasHx(order)" icon="el-icon-circle-plus-outline" type="text" @click="handleHx">核销</el-button>
       </div>
       <el-table :data="items" size="mini">
         <el-table-column label="咨询次数" align="center" prop="num" />
@@ -71,6 +71,8 @@
 <script>
 import times from "./times";
 import { getOrder, getLogs } from "@/api/psychology/order";
+import {mapState} from "vuex";
+import { checkPermi } from "@/utils/permission";
 
 export default {
   components: { times },
@@ -88,7 +90,20 @@ export default {
       this.handleDetail(this.$route.query.id)
     }
   },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user,
+    })
+  },
   methods: {
+    checkPermi,
+    hasHx(order) {
+      if (this.userInfo.userName !== 'admin' && this.userInfo.nickName !== order.consultName) {
+        return false
+      }
+
+      return order.num !== 0 && ['1', '2'].includes(order.status)
+    },
     getLogs() {
       getLogs(this.order.orderNo).then(response => {
         this.logs = response.data

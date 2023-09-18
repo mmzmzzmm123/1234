@@ -130,7 +130,7 @@
               更多<i class="el-icon-arrow-down el-icon--right" />
             </span>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item :disabled="scope.row.num === 0 || ['0', '3'].includes(scope.row.status)" @click.native="handleHx(scope.row.id)" v-if="checkPermi(['psychology:order:edit'])">核销次数</el-dropdown-item>
+              <el-dropdown-item @click.native="handleHx(scope.row.id)" v-if="checkPermi(['psychology:order:edit']) && hasHx(scope.row)">核销次数</el-dropdown-item>
               <el-dropdown-item :disabled="['0', '3'].includes(scope.row.status)" @click.native="handleRemark(scope.row)" v-if="checkPermi(['psychology:order:edit'])">备注</el-dropdown-item>
               <el-dropdown-item :disabled="scope.row.status !== '0'" @click.native="handlePrice(scope.row.id)" v-if="checkPermi(['psychology:order:price'])">改价</el-dropdown-item>
               <el-dropdown-item :disabled="scope.row.status !== '1'" @click.native="handleRefer(scope.row)" v-if="checkPermi(['psychology:order:referral'])">转介</el-dropdown-item>
@@ -183,7 +183,8 @@ import { getConsultAll } from "@/api/psychology/consult";
 import times from "./times";
 import price from "./price";
 import referral from "./referral";
-import { checkPermi } from "@/utils/permission"; // 权限判断函数
+import { checkPermi } from "@/utils/permission";
+import {mapState} from "vuex"; // 权限判断函数
 
 export default {
   name: "Order",
@@ -241,9 +242,22 @@ export default {
   async created() {
     await this.getConsultServeRef();
     this.getList();
+    console.log(this.userInfo)
+  },
+  computed: {
+    ...mapState({
+      userInfo: (state) => state.user,
+    })
   },
   methods: {
     checkPermi,
+    hasHx(order) {
+      if (this.userInfo.userName !== 'admin' && this.userInfo.nickName !== order.consultName) {
+        return false
+      }
+
+      return order.num !== 0 && ['1', '2'].includes(order.status)
+    },
     onchangeTime (e) {
       this.timeVal = e;
       this.queryParams.dateLimit = e ? this.timeVal.join(',') : ''
