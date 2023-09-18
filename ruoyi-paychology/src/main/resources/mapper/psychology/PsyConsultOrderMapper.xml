@@ -16,6 +16,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="orderNo"    column="order_no"    />
         <result property="consultId"    column="consult_id"    />
         <result property="consultName"    column="consult_name"    />
+        <result property="refConsultId"    column="ref_consult_id"    />
+        <result property="refConsultName"    column="ref_consult_name"    />
         <result property="serveId"    column="serve_id"    />
         <result property="serveName"    column="serve_name"    />
         <result property="userId"    column="user_id"    />
@@ -35,12 +37,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="orderTime"    column="order_time"    />
         <result property="remark"    column="remark"    />
         <result property="memo1"    column="memo1"    />
+        <result property="reason"    column="reason"    />
         <result property="phone"    column="phone"    />
     </resultMap>
 
     <sql id="selectPsyConsultOrderVo">
-        select a.id, a.order_no, a.consult_id, a.consult_name, a.serve_id, a.serve_name, a.user_id, a.nick_name, a.amount, num, a.buy_num, a.del_flag,
-               a.status, a.create_by, a.create_time, a.update_by, a.update_time, a.pay, a.pay_time, a.pay_status, a.order_time, b.phone, a.remark, a.memo1
+        select a.id, a.order_no, a.consult_id, a.ref_consult_id, a.ref_consult_name, a.consult_name, a.serve_id, a.serve_name, a.user_id, a.nick_name, a.amount, num, a.buy_num, a.del_flag,
+               a.status, a.create_by, a.create_time, a.update_by, a.update_time, a.pay, a.pay_time, a.pay_status, a.order_time, b.phone, a.remark, a.memo1, a.reason
         from psy_consult_order a
             left join psy_user b on a.user_id = b.id
     </sql>
@@ -49,7 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectPsyConsultOrderVo"/>
         <where>
             <if test="orderNo != null  and orderNo != ''"> and a.order_no like concat('%', #{orderNo}, '%')</if>
-            <if test="consultId != null "> and a.consult_id = #{consultId}</if>
+            <if test="consultId != null "> and (a.consult_id = #{consultId} or a.ref_consult_id = #{consultId})</if>
             <if test="serveName != null  and serveName != ''"> and a.serve_name like concat('%', #{serveName}, '%')</if>
             <if test="nickName != null "> and a.nick_name like concat('%', #{nickName}, '%')</if>
             <if test="pay != null  and pay != ''"> and a.pay_status = #{pay}</if>
@@ -62,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="getOrderList" resultType="com.ruoyi.psychology.dto.OrderListDTO">
-        select a.id, a.order_no, a.consult_id, a.consult_name, a.serve_id, a.serve_name, a.user_id,a.remark,a.memo1,
+        select a.id, a.order_no, a.consult_id, a.consult_name, a.ref_consult_id, a.ref_consult_name, a.serve_id, a.serve_name, a.user_id,a.remark,a.memo1,a.reason,
                a.nick_name, a.amount, a.num, a.buy_num, a.del_flag, a.status, a.create_by, a.order_time,a.pay_status,
                a.create_time, a.update_by, a.update_time, a.pay, a.pay_time, b.avatar,
                s.mode, s.mode_name, s.num serve_num ,s.type, s.type_name, s.info, s.price, s.time, s.bound, s.bound_name, s.end,
@@ -88,7 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="getOrderDetail" resultType="com.ruoyi.psychology.dto.OrderDTO">
-        select a.id, a.order_no, a.consult_id, a.consult_name, a.serve_id, a.serve_name, a.user_id,a.remark,a.memo1,
+        select a.id, a.order_no, a.consult_id, a.consult_name, a.ref_consult_id, a.ref_consult_name, a.serve_id, a.serve_name, a.user_id,a.remark,a.memo1,a.reason,
                a.nick_name, a.amount, a.num, a.buy_num, a.del_flag, a.status, a.create_by, a.order_time,
                a.create_time, a.update_by, a.update_time, b.avatar,b.wx_card, a.pay, a.pay_time,a.pay_status,c.phone,
                CASE

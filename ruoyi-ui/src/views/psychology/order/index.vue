@@ -122,7 +122,7 @@
           <el-button
             size="mini"
             type="text"
-            @click="handleDetail(scope.row.id, '1')"
+            @click="handleDetail(scope.row.id)"
             v-hasPermi="['psychology:order:edit']"
           >详情</el-button>
           <el-dropdown trigger="click">
@@ -147,14 +147,6 @@
       :limit.sync="queryParams.pageSize"
       @pagination="getList"
     />
-
-    <!-- 添加或修改咨询订单对话框 -->
-    <el-dialog title="订单详情" :visible.sync="open" width="1000px" append-to-body>
-      <order-detail v-if="open" :order="order" :items="items" @handleDetail="handleDetail"/>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="cancel">关 闭</el-button>
-      </div>
-    </el-dialog>
 
     <el-dialog :title="title" :visible.sync="openRm" width="700px" append-to-body>
       <el-form ref="formRm" :model="formRm" :rules="rulesRm" label-width="80px">
@@ -188,7 +180,6 @@
 import { listOrder, getOrder, addOrder, updateOrder, doRemark, getInfo } from "@/api/psychology/order";
 import { getServeRef } from "@/api/psychology/serveConfig";
 import { getConsultAll } from "@/api/psychology/consult";
-import orderDetail from "./detail";
 import times from "./times";
 import price from "./price";
 import referral from "./referral";
@@ -196,7 +187,7 @@ import { checkPermi } from "@/utils/permission"; // 权限判断函数
 
 export default {
   name: "Order",
-  components: { orderDetail, times, price, referral },
+  components: { times, price, referral },
   data() {
     return {
       // 遮罩层
@@ -306,47 +297,8 @@ export default {
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
-    handleDetail(id, type) {
-      getOrder(id).then(response => {
-        this.open = true;
-        this.order = response.data
-        const items = []
-
-        if (["1", "2"].includes(this.order.status) ) {
-          if (this.order.items && this.order.items.length > 0) {
-            this.order.items.forEach((i, idx) => {
-              const it = {
-                num: idx + 1,
-                time: i.day + ' ' + i.timeStart + '-' + i.timeEnd,
-                realTime: i.realTime,
-                status: i.status,
-                updateBy: i.realTime ? i.updateBy : null
-              }
-              items.push(it)
-            })
-          }
-
-          if (this.order.num > 0) {
-            const len = items.length
-            for (let i = 1; i <= this.order.num; i++) {
-              const tt = {
-                num: len + i,
-                time: '用户未预约',
-                realTime: '',
-                status: '',
-                updateBy: ''
-              }
-              items.push(tt)
-            }
-          }
-        }
-
-        this.items = items
-      });
-
-      if (type === '2') {
-        this.getList()
-      }
+    handleDetail(id) {
+      this.$router.push({ path: '/psychology/psyOrderDetail', query: { id: id }})
     },
     /** 修改按钮操作 */
     handlePrice(id) {
@@ -368,7 +320,7 @@ export default {
     handleRefer(data) {
       getServeRef({ serveId: data.serveId }).then(response => {
         if (response.data) {
-          this.$refs.formRefer.setForm(data, response.data)
+          this.$refs.formRefer.setForm(data, response.data.filter(a => a.status === '0'))
         }
       })
     },

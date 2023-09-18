@@ -114,11 +114,11 @@ public class WechatPayV3ApiController extends BaseController {
                 content = psyGauge.getTitle();
                 break;
             case ConsultConstant.MODULE_CONSULT:
-                out_trade_no = createOrderNo(PsyConstants.ORDER_CONSULT, userId); //创建商户订单号
+                out_trade_no = StringUtils.isNoneBlank(wechatPayDTO.getOutTradeNo()) ? wechatPayDTO.getOutTradeNo() : createOrderNo(PsyConstants.ORDER_CONSULT, userId); //创建商户订单号
                 content = "预约心理咨询服务";
 
-                // 新增支付单时需要校验服务库存
-                if (wechatPayDTO.getOrderId() == null && wechatPayDTO.getWorkId() > 0) {
+                // 支付单时需要校验服务库存
+                if (wechatPayDTO.getWorkId() > 0) {
                     if (!workService.checkWork(wechatPayDTO.getWorkId(), wechatPayDTO.getConsultId(), wechatPayDTO.getTime())) {
                         return error("当前班次已经约满");
                     }
@@ -148,7 +148,7 @@ public class WechatPayV3ApiController extends BaseController {
         String openid = user.getWxOpenid();
  
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 15);
+        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 135);// 2小时
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
  
         JSONObject params = new JSONObject();

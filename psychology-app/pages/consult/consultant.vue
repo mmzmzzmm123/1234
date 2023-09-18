@@ -473,7 +473,7 @@ export default {
 .info {
   margin-top: -86upx;
   width: 100%;
-  height: 295upx;
+  //height: 295upx;
   background: #FFFFFF;
   border-radius: 32upx 32upx 0upx 0upx;
 }

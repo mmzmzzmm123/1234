@@ -92,6 +92,7 @@ export function getPaySign(userId, produteId, amount, extra) {
           params = {
               userId: userId,
               serveId: produteId,
+              outTradeNo: extra.outTradeNo,
               time: extra.time,
               workId: extra.workId,
               consultId: extra.consultId,

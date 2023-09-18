@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.psychology.constant.ConsultConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.psychology.mapper.PsyConsultPayMapper;
@@ -29,6 +30,8 @@ public class PsyConsultPayServiceImpl implements IPsyConsultPayService
     public PsyConsultPay getOneByOrder(String outTradeNo) {
         LambdaQueryWrapper<PsyConsultPay> wp = new LambdaQueryWrapper<>();
         wp.eq(PsyConsultPay::getOutTradeNo, outTradeNo);
+        wp.eq(PsyConsultPay::getStatus, ConsultConstant.PAY_STATUE_PENDING);
+        wp.last("ORDER BY create_time DESC LIMIT 1");
         return psyConsultPayMapper.selectOne(wp);
     }
 

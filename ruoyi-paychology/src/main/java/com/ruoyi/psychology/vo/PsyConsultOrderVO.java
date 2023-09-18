@@ -30,6 +30,9 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
     /** 咨询师 */
     private String consultName;
 
+    private Long refConsultId;
+    private String refConsultName;
+
     /** 服务 */
     private Long serveId;
 
@@ -68,6 +71,7 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
 
     private String remark;
     private String memo1;
+    private String reason;
 
     private Integer time;
     private Long workId;

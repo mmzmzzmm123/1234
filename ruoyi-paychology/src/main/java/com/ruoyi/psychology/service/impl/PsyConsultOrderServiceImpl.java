@@ -72,6 +72,13 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     private IPsyConsultServeConfigService psyConsultServeConfigService;
 
     @Override
+    public List<PsyOrderLog> getLogs(String orderNo) {
+        PsyOrderLog log = new PsyOrderLog();
+        log.setOid(orderNo);
+        return psyOrderLogService.selectPsyOrderLogList(log);
+    }
+
+    @Override
     public OrderDTO getOrderDetail(Long id) {
         OrderDTO detail = psyConsultOrderMapper.getOrderDetail(id);
         PsyConsultOrder order = new PsyConsultOrder();
@@ -245,6 +252,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
             num = items.size();
             for (int i = 0; i < num; i++) {
                 PsyConsultOrderItem orderItem = items.get(i);
+                orderItem.setConsultId(order.getConsultId());
                 orderItem.setStatus(ConsultConstant.ONSULT_ORDER_ITEM_FINISHED);
                 orderItem.setRealTime(req.getTimes().get(i));
                 orderItem.setUpdateBy(SecurityUtils.getUsername());
@@ -268,6 +276,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
                 PsyConsultOrderItem orderItem = new PsyConsultOrderItem();
                 // "2023-07-26 16:09:50"
                 orderItem.setOrderId(req.getId());
+                orderItem.setConsultId(order.getConsultId());
                 orderItem.setWorkId(0L);
                 orderItem.setTime(hour);
                 orderItem.setWeek(NewDateUtil.getWeekOfDate(calendar));
@@ -303,19 +312,28 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
             return "咨询师状态异常";
         }
 
-        // 原订单处理
-        // 新订单处理
+        // 存在未核销情况下处理
+        if (StringUtils.isNotBlank(order.getOrderTime())) {
+            List<PsyConsultOrderItem> items = psyConsultOrderItemService.getList(order.getId());
+            items.stream().filter(item -> item.getStatus().equals(ConsultConstant.ONSULT_ORDER_ITEM_CREATED)).forEach(item -> {
+                // 释放排班,删除item记录
+                psyConsultWorkService.handleWork(item.getWorkId(), order.getConsultId(), item.getTime(), 2);
+                psyConsultOrderItemService.del(item.getId());
+            });
+            // 需要重新预约
+            order.setOrderTime("");
+            sendPublicMsg(order);
+        }
 
+        order.setRefConsultId(order.getConsultId());
+        order.setRefConsultName(order.getConsultName());
+        order.setReason(req.getReason());
+        order.setConsultId(req.getConsultId());
+        order.setConsultName(consult.getNickName());
 
+        doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_CHANGE, SecurityUtils.getUsername(), StrUtil.format(PsyConstants.ORDER_LOG_MESSAGE_CHANGE,  order.getRefConsultName(), order.getConsultName()));
 
-
-
-
-//        order.setPay(req.getPay());
-//        order.setMemo1(req.getMemo1());
-//
-//        doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_EDIT_PRICE, SecurityUtils.getUsername(), StrUtil.format(PsyConstants.ORDER_LOG_MESSAGE_EDIT_PRICE,  order.getAmount(), order.getPay()));
-        return  "功能开发中...";
+        return update(order) > 0 ? "ok" : "操作失败";
     }
 
     @Override
@@ -347,14 +365,15 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void cancel(PsyConsultOrder order, String createBy) {
+        //  未支付订单才能取消,所以无需释放库存
         order.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_CANCELED);
-        List<PsyConsultOrderItem> items = psyConsultOrderItemService.getList(order.getId());
+//        List<PsyConsultOrderItem> items = psyConsultOrderItemService.getList(order.getId());
 
         // 释放库存
-        if (CollectionUtils.isNotEmpty(items)) {
-            PsyConsultOrderItem orderItem = items.get(0);
-            psyConsultWorkService.handleWork(orderItem.getWorkId(), order.getConsultId(), orderItem.getTime(), 2);
-        }
+//        if (CollectionUtils.isNotEmpty(items)) {
+//            PsyConsultOrderItem orderItem = items.get(0);
+//            psyConsultWorkService.handleWork(orderItem.getWorkId(), order.getConsultId(), orderItem.getTime(), 3);
+//        }
         // 咨询人数减1
         // psyConsultService.updateNum(order.getConsultId(), -1);
         doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_CANCEL, createBy, PsyConstants.ORDER_LOG_MESSAGE_CANCEL);
@@ -376,7 +395,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
 
         order.setTime(time);
         order.setWorkId(workId);
-        handleItem(order);
+        handleItem(order, 1);
 
         if (StringUtils.isNotBlank(order.getOrderTime())) {
             // 消息推送
@@ -391,11 +410,12 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         return update(order);
     }
 
-    private void handleItem(PsyConsultOrderVO req) {
-        PsyConsultWork work = psyConsultWorkService.handleWork(req.getWorkId(), req.getConsultId(), req.getTime(), 1);
+    private void handleItem(PsyConsultOrderVO req, int type) {
+        PsyConsultWork work = psyConsultWorkService.handleWork(req.getWorkId(), req.getConsultId(), req.getTime(), type);
         // 插入子订单
         PsyConsultOrderItem orderItem = new PsyConsultOrderItem();
         orderItem.setOrderId(req.getId());
+        orderItem.setConsultId(req.getConsultId());
         orderItem.setStatus(ConsultConstant.ONSULT_ORDER_ITEM_CREATED);
         orderItem.setWorkId(req.getWorkId());
         orderItem.setDay(work.getDay());
@@ -426,7 +446,7 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         req.setPayStatus(ConsultConstant.PAY_STATUE_PENDING);
 
         if (req.getWorkId() > 0 && req.getTime() > 0) {
-            handleItem(req);
+            handleItem(req, 3);
         }
 
         doLog(req.getOrderNo(), PsyConstants.ORDER_LOG_CREATE, req.getNickName(), PsyConstants.ORDER_LOG_MESSAGE_CREATE);
@@ -436,20 +456,26 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updatePayOrder(PsyConsultOrderVO req) {
+        // 校验订单是否存在
         PsyConsultOrderVO orderVO = getOne(req.getId());
-        List<PsyConsultOrderItem> items = psyConsultOrderItemService.getList(req.getId());
+        List<PsyConsultOrderItem> items = psyConsultOrderItemService.getList(orderVO.getId());
 
-        // 释放库存
+        // 时间是否改变
+        boolean flag = true;
+
+        // 时间变更则删除历史item信息
         if (CollectionUtils.isNotEmpty(items)) {
             PsyConsultOrderItem orderItem = items.get(0);
-            psyConsultWorkService.handleWork(orderItem.getWorkId(), orderVO.getConsultId(), orderItem.getTime(), 2);
-            psyConsultOrderItemService.del(orderItem.getId());
-            req.setOrderTime("");
+            flag = !(orderItem.getWorkId().equals(req.getWorkId()) && orderItem.getTime().equals(req.getTime()));
+            if (flag) {
+                psyConsultOrderItemService.del(orderItem.getId());
+                req.setOrderTime("");
+            }
         }
 
-        // 加库存
-        if (req.getWorkId() != null && req.getWorkId() > 0) {
-            handleItem(req);
+        // 加库存、更新item
+        if (flag && req.getWorkId() != null && req.getWorkId() > 0) {
+            handleItem(req, 3);
         }
 
         // 更新订单
@@ -474,23 +500,27 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         hashMap.put("thing5", new TemplateMessageItemVo(psyOrder.getOrderNo()));
         msg.setData(hashMap);
         msg.setTouser(getOpenId(psyOrder.getConsultId()));
-        return wechatService.sendPublicMsg(msg);
+        return true;
+//        return wechatService.sendPublicMsg(msg);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void wechatPayNotify(PsyConsultOrderVO req) {
-        req.setPayTime(new Date());
-//        if (StringUtils.isNotBlank(req.getOrderTime())) {
-//
-//        }
+        PsyConsultOrderItem orderItem = psyConsultOrderItemService.getOneByOrderId(req.getId());
+        if (orderItem != null) {
+            psyConsultWorkService.handleWork(orderItem.getWorkId(), req.getConsultId(), orderItem.getTime(), 1);
+            // 已预约情况下,需要扣减数量
+            updateNum(req);
+        }
+
         // 消息推送
         sendPublicMsg(req);
 //        {"errcode":47003,"errmsg":"argument invalid! data.thing5.value invalid rid: 64d4912a-5e4f2ce4-13323c1a"}
         // 增加预约人数 支付成功后+1
         psyConsultService.updateNum(req.getConsultId(), 1);
-        // 增加服务销量
-        psyConsultServeConfigService.updateNum(req.getServeId());
+        // 增加服务销量-数据不准确,改为实时查表
+//        psyConsultServeConfigService.updateNum(req.getServeId());
         doLog(req.getOrderNo(), PsyConstants.ORDER_LOG_PAY_SUCCESS, req.getNickName(), PsyConstants.ORDER_LOG_MESSAGE_PAY_SUCCESS);
 
         update(req);

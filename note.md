@@ -175,3 +175,7 @@ exec  -it xxx  bash
 docker exec  -it xx  bash  
 docker inspect xx  
 docker logs -f --tail=1000 xx  
+
+咨询订单排班库存锁定: 支付成功, 预约, 转介  
+库存释放情况: 转介  
+不处理: 下单,再次支付,取消  

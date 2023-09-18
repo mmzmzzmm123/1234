@@ -34,6 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.UUID;
 
 //import com.ruoyi.course.task.OrderCancelTask;
@@ -240,6 +241,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
                 pay.setStatus(ConsultConstant.PAY_STATUE_PAID);
                 psyOrder.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_PENDING);
                 psyOrder.setPayStatus(ConsultConstant.PAY_STATUE_PAID);
+                psyOrder.setPayTime(new Date());
 
                 psyConsultPayService.update(pay);
                 psyConsultOrderService.wechatPayNotify(psyOrder);

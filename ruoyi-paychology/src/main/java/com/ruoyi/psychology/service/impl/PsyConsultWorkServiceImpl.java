@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.constant.NewConstants;
 import com.ruoyi.common.utils.NewDateUtil;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.psychology.constant.ConsultConstant;
 import com.ruoyi.psychology.domain.PsyConsultWork;
 import com.ruoyi.psychology.dto.HeaderDTO;
 import com.ruoyi.psychology.mapper.PsyConsultWorkMapper;
@@ -181,6 +182,7 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
             node.put("id", String.valueOf(consultId));
             node.put("nickName", works.get(0).getNickName());
             node.put("userName", StrUtil.format("(系统账号:{})", works.get(0).getUserName()));
+            req1.setStatus(ConsultConstant.PAY_STATUE_PAID);
             List<PsyConsultOrderItemVO> orderItems = psyConsultWorkMapper.getOrderItems(req1);
             node.put("items", JSONObject.toJSONString(orderItems));
 
@@ -240,13 +242,19 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
      * @param id    排班id
      * @param consultId 咨询师
      * @param time  时间
-     * @param type  1-加库存 2-释放
+     * @param type  1-扣减 2-释放 3-不处理
      * @return  排班
      */
     @Override
     public PsyConsultWork handleWork(Long id, Long consultId, Integer time, int type) {
+        // 支付、预约加库存,转介释放库存
         List<PsyConsultWork> works = psyConsultWorkMapper.selectList(getWorkWrapper(id, consultId, time));
         PsyConsultWork work = works.get(0);
+
+        // 创建订单时,不处理
+        if (type == 3) {
+            return work;
+        }
 
         List<Integer> uesd = JSON.parseArray(work.getUsed(), Integer.class);
 

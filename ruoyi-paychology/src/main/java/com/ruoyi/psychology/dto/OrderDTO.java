@@ -34,6 +34,9 @@ public class OrderDTO extends BaseValObj implements Serializable
     /** 咨询师 */
     private String consultName;
 
+    private Long refConsultId;
+    private String refConsultName;
+
     /** 服务 */
     private Long serveId;
 
@@ -72,6 +75,8 @@ public class OrderDTO extends BaseValObj implements Serializable
     private String avatar;
     private String wxCard;
     private String remark;
+    private String memo1;
+    private String reason;
 
     /** 下次咨询时间 */
     private String orderTime;

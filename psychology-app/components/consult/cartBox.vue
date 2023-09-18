@@ -114,6 +114,15 @@ export default {
     },
     async open() {
       this.getWorkList()
+      if (this.workId > 0 && this.time > 0) {
+        const item = this.works.find(a => a.id === this.workId)
+        if (item && item.day) {
+          const day = item.day.substr(5, 10)
+          if (this.workList.find(a => a.day === day) && this.workList.find(a => a.day === day).child.find(b => b.time === this.time)) {
+            this.workList.find(a => a.day === day).flag = !this.workList.find(a => a.day === day).child.find(b => b.time === this.time).disable
+          }
+        }
+      }
       this.$refs.selectTime.open('bottom')
     },
     close() {

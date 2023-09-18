@@ -22,4 +22,5 @@ public class WechatPayDTO implements Serializable {
     private BigDecimal amount;
 
     private String module;
+    private String outTradeNo;
 }

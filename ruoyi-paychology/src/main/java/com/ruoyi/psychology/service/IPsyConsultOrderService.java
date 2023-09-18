@@ -1,6 +1,7 @@
 package com.ruoyi.psychology.service;
 
 import java.util.List;
+import com.ruoyi.common.domain.PsyOrderLog;
 import com.ruoyi.psychology.domain.PsyConsultOrder;
 import com.ruoyi.psychology.dto.OrderDTO;
 import com.ruoyi.psychology.dto.OrderListDTO;
@@ -29,6 +30,8 @@ public interface IPsyConsultOrderService
     PsyConsultOrderVO getOne(Long id);
 
     String getOpenId(Long cId);
+
+    List<PsyOrderLog> getLogs(String orderNo);
 
     List<PsyConsultOrder> getList(PsyAdminOrderReq req);
 

@@ -10,7 +10,7 @@
         </el-row>
         <el-row style="margin-top: 30px;margin-bottom: 30px">
           <el-form ref="form" :model="formRef" :rules="rules" label-width="130px">
-            <el-form-item label="待转介咨询师" prop="consultId">
+            <el-form-item label="转介咨询师" prop="consultId">
               <el-select v-model="formRef.consultId">
                 <el-option
                   v-for="item in consultList"
@@ -19,9 +19,10 @@
                   :value="item.consultId"
                 />
               </el-select>
+              <div style="font-size: 10px;color: #9A9A9A">转介后原咨询师不能继续进行服务咨询和核销，将由新咨询师继续完成剩余次数咨询服务</div>
             </el-form-item>
-            <el-form-item label="修改原因" prop="reason">
-              <el-input type="textarea" :rows="3" size="mini" maxlength="100" show-word-limit v-model="formRef.reason" placeholder="请输入修改价格原因" />
+            <el-form-item label="转介原因" prop="reason">
+              <el-input type="textarea" :rows="3" size="mini" maxlength="100" show-word-limit v-model="formRef.reason" placeholder="请输入转介原因" />
             </el-form-item>
           </el-form>
         </el-row>
@@ -50,7 +51,7 @@ export default {
       // 表单校验
       rules: {
         consultId: [
-          { required: true, message: "请选择需要转介的咨询师", trigger: "change" }
+          { required: true, message: "请选择咨询师", trigger: "change" }
         ],
       }
     }
@@ -82,10 +83,10 @@ export default {
       }
 
       if (!that.formRef.consultId) {
-        return that.$modal.msgError("请选择需要转介的咨询师");
+        return that.$modal.msgError("请选择咨询师");
       }
 
-      that.$modal.confirm('你确定要转介订单吗？').then(function() {
+      that.$modal.confirm('你确定转介咨询师吗？').then(function() {
         const data = {
           orderId: that.order.id,
           consultId: that.formRef.consultId,
@@ -93,11 +94,11 @@ export default {
         }
 
         console.log(data)
-        return that.$modal.msgWarning("功能开发中")
-        // modifyRef(data).then(response => {
-        //   that.$modal.msgSuccess("修改成功");
-        //   that.$emit('handleOk');
-        // });
+        // return that.$modal.msgWarning("功能开发中")
+        modifyRef(data).then(response => {
+          that.$modal.msgSuccess("修改成功");
+          that.$emit('handleOk');
+        });
       }).then(() => {
         that.cancel()
       }).catch(() => {});

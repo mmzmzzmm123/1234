@@ -17,6 +17,14 @@ export function getOrder(id) {
   })
 }
 
+// 查询咨询订单详细
+export function getLogs(orderNo) {
+  return request({
+    url: '/psychology/order/getLogs/' + orderNo,
+    method: 'get'
+  })
+}
+
 export function getInfo(id) {
   return request({
     url: '/psychology/order/' + id,

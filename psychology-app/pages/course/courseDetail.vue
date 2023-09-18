@@ -110,6 +110,7 @@ export default {
       this.courseInfo.totalDuration+= item.duration||0;
     });
     this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;
+    utils.share(this.courseInfo.name, '', this.courseInfo.iconUrl)
     
     // this.share()
   },

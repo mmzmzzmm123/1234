@@ -90,6 +90,18 @@ export const payStatus = [
   { label: '退款失败', value: '6' },
 ]
 
+export const logName = [
+  { label: '创建', value: 'create' },
+  { label: '支付', value: 'pay' },
+  { label: '改价', value: 'price' },
+  { label: '核销', value: 'hx' },
+  { label: '备注', value: 'remark' },
+  { label: '完成', value: 'finished' },
+  { label: '退款', value: 'refund' },
+  { label: '转介', value: 'change' },
+  { label: '取消', value: 'cancel' },
+]
+
 /**
  * 暂时弃用
  * @type {*[]}

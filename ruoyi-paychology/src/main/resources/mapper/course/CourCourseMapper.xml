@@ -47,6 +47,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectCourCourseVo"/>
         <where>
             delete_flag = 0
+            <if test="lowPrice != null">
+                and price <![CDATA[>=]]> #{lowPrice}
+            </if>
+            <if test="highPrice != null">
+                and price <![CDATA[<=]]> #{highPrice}
+            </if>
             <if test="nameValue != null  and nameValue != ''"> and name like concat('%', #{nameValue}, '%')</if>
             <if test="typeValue != null "> and type = #{typeValue}</if>
             <if test="payTypeValue != null "> and pay_type = #{payTypeValue}</if>

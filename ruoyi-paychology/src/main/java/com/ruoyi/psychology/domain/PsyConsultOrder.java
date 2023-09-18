@@ -41,6 +41,14 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     @Excel(name = "咨询师")
     private String consultName;
 
+    /** 咨询师 */
+    @Excel(name = "转介咨询师")
+    private Long refConsultId;
+
+    /** 咨询师 */
+    @Excel(name = "转介咨询师")
+    private String refConsultName;
+
     /** 服务 */
     @Excel(name = "服务")
     private Long serveId;
@@ -96,6 +104,9 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
 
     @Excel(name = "改价原因")
     private String memo1;
+
+    @Excel(name = "转介原因")
+    private String reason;
 
     @TableField(exist = false)
     private String phone;

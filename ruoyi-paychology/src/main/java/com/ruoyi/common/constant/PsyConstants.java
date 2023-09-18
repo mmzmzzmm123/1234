@@ -36,7 +36,7 @@ public class PsyConstants {
     public static final String ORDER_LOG_PAY_SUCCESS = "pay"; //支付成功
     public static final String ORDER_LOG_EDIT_PRICE = "price"; //改价
     public static final String ORDER_LOG_HX = "hx"; //核销
-    public static final String ORDER_LOG_REMARK = "remark"; //核销
+    public static final String ORDER_LOG_REMARK = "remark"; //订单备注
     public static final String ORDER_LOG_FINISHED = "finished"; //完成
     public static final String ORDER_LOG_REFUND = "refund"; //退款
     public static final String ORDER_LOG_CHANGE = "change"; //转介

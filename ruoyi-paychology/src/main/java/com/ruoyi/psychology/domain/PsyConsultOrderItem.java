@@ -28,6 +28,9 @@ public class PsyConsultOrderItem extends BasePlusEntity implements Serializable
     @Excel(name = "订单号")
     private Long orderId;
 
+    /** 咨询师-结算用 */
+    private Long consultId;
+
     /** 排班 */
     @Excel(name = "排班")
     private Long workId;

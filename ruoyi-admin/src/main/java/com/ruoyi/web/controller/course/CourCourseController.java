@@ -46,12 +46,6 @@ public class CourCourseController extends BaseController
     {
         startPage();
         List<CourCourse> list = courCourseService.queryCourCourseList(courseQueryDTO);
-
-        list = list.stream().filter(item ->
-                !(courseQueryDTO.getLowPrice() != null
-                && item.getPrice().compareTo(courseQueryDTO.getLowPrice()) < 0
-                || courseQueryDTO.getHighPrice() != null
-                && item.getPrice().compareTo(courseQueryDTO.getHighPrice()) > 0)).collect(Collectors.toList());
         return getDataTable(list);
     }
 

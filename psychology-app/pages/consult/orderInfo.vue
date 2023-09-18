@@ -242,6 +242,12 @@ export default {
           title: '订单已超时',
         });
       }
+
+      if (this.order.payStatus === '1' && this.order.items.length > 0) {
+        this.$refs.cartBox.time = this.order.items[0].time
+        this.$refs.cartBox.workId = this.order.items[0].workId
+      }
+
       this.$refs.cartBox.open()
     },
     cancel() {
@@ -299,7 +305,8 @@ export default {
             workId: this.workId,
             time: this.time,
             consultId: this.order.consultId,
-            orderId: this.order.id
+            orderId: this.order.id,
+            outTradeNo: this.order.orderNo
           }
       )
 

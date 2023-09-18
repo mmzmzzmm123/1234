@@ -4,6 +4,7 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.domain.PsyOrderLog;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.psychology.constant.ConsultConstant;
@@ -38,6 +39,12 @@ public class PsyConsultOrderController extends BaseController
     public AjaxResult getDetail(@PathVariable("id") Long id)
     {
         return AjaxResult.success(psyConsultOrderService.getOrderDetail(id));
+    }
+
+    @GetMapping(value = "/getLogs/{id}")
+    public AjaxResult getLogs(@PathVariable("id") String orderNo)
+    {
+        return AjaxResult.success(psyConsultOrderService.getLogs(orderNo));
     }
 
     /**
