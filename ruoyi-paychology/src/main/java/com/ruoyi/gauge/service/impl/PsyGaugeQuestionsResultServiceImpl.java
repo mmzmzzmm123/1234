@@ -3,12 +3,14 @@ package com.ruoyi.gauge.service.impl;
 import com.ruoyi.common.core.domain.dto.GaugeCommitResultDTO;
 import com.ruoyi.common.enums.GaugeStatus;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.gauge.constant.GaugeConstant;
 import com.ruoyi.gauge.domain.*;
 import com.ruoyi.gauge.mapper.PsyGaugeQuestionsOptionsMapper;
 import com.ruoyi.gauge.mapper.PsyGaugeQuestionsResultMapper;
 import com.ruoyi.gauge.mapper.PsyGaugeScoreSettingMapper;
 import com.ruoyi.gauge.mapper.PsyOrderMapper;
 import com.ruoyi.gauge.service.IPsyGaugeQuestionsResultService;
+import com.ruoyi.gauge.service.IPsyGaugeService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.stereotype.Service;
@@ -37,6 +39,9 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
 
     @Resource
     private PsyOrderMapper psyOrderMapper;
+
+    @Resource
+    private IPsyGaugeService psyGaugeService;
 
     @Resource
     private PsyGaugeScoreSettingMapper psyGaugeScoreSettingMapper;
@@ -135,20 +140,32 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
         return psyGaugeQuestionsResultMapper.deletePsyGaugeQuestionsResultById(id);
     }
 
+    private int getScore(HashMap<String, Object> paramMap) {
+        List<PsyGaugeQuestionsResult> psyGaugeQuestionsResults = psyGaugeQuestionsResultMapper.selectPsyGaugeQuestionsResult(paramMap);
+        int sum = 0;
+        if(CollectionUtils.isNotEmpty(psyGaugeQuestionsResults)){
+            PsyGauge gauge = psyGaugeService.selectPsyGaugeById(psyGaugeQuestionsResults.get(0).getGaugeId());
+            for (PsyGaugeQuestionsResult psyGaugeQuestionsResult:psyGaugeQuestionsResults) {
+                sum += psyGaugeQuestionsResult.getScore();
+            }
+
+            if (GaugeConstant.GAUGE_COMPUTE_4 == gauge.getType()) {
+                sum = (int) Math.round(sum * GaugeConstant.GAUGE_COMPUTE_SDS);
+            }
+        }
+
+        paramMap.put("score",sum);
+        return sum;
+    }
+
     @Override
     public String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,Integer userId) {
         //获取订单分值
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("orderId",gaugeCommitResultDTO.getOrderId());
         paramMap.put("userId",userId);
-        List<PsyGaugeQuestionsResult> psyGaugeQuestionsResults = psyGaugeQuestionsResultMapper.selectPsyGaugeQuestionsResult(paramMap);
-        int sum = 0;
-        if(CollectionUtils.isNotEmpty(psyGaugeQuestionsResults)){
-            for (PsyGaugeQuestionsResult psyGaugeQuestionsResult:psyGaugeQuestionsResults) {
-                sum += psyGaugeQuestionsResult.getScore();
-            }
-        }
-        paramMap.put("score",sum);
+        int sum = getScore(paramMap);
+
         //获取当前得分匹配结果
         PsyGaugeScoreSetting psyGaugeScoreSetting = psyGaugeScoreSettingMapper.selectPsyGaugeScoreSettingByGaugeId(paramMap);
         if(psyGaugeScoreSetting!=null){

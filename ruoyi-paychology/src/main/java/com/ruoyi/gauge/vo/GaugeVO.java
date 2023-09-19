@@ -43,6 +43,7 @@ public class GaugeVO implements Serializable {
 
     /** 测评是否已购买 */
     private Integer isBuy;
+    private Integer isCompleted;
 
     /** 测评订单ID */
     private Integer orderId;

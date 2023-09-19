@@ -28,7 +28,7 @@
 				<image class="index-icon" src="/static/evaluation/menu/index.png"></image>
 				<text>首页</text>
 			</navigator>
-			<view class="start-test" @tap="startTest">开始测试</view>
+			<view class="start-test" @tap="startTest">{{ productInfo.isCompleted === 1 ? '查看测试结果' : '开始测试' }}</view>
 		</view>
 		<view class="create-order-mask" v-show="payBoxShow">
 			<view class="order-info">
@@ -67,6 +67,7 @@
 <script>
 import utils from '@/utils/common'
 import loginServer from '@/server/login'
+import questionServer from '@/server/evaluation/question'
 import productServer from '@/server/evaluation/product'
 import { getPaySign, wxPay } from "@/server/wxApi";
 export default {
@@ -138,10 +139,22 @@ export default {
 			}
 		  }
 		},
+    async toResult() {
+      let result = await questionServer.setResult(this.productInfo.orderId);
+      if (result.code == 200) {
+        uni.setStorageSync("result", result.data);
+        uni.navigateTo({
+          url: "/pages/evaluation/result?productId=" + this.productId,
+        });
+      }
+    },
 		startTest() {
-			if (this.productInfo.isBuy == 0) { // 未支付
+			if (this.productInfo.isBuy === 0) { // 未支付
 				this.payBoxShow = true;
-			} else {
+			}
+      else if (this.productInfo.isCompleted === 1) { // 已测试
+        this.toResult()
+      } else {
 				uni.navigateTo({
 					url: `/pages/evaluation/question?productId=${this.productId}&orderId=${this.productInfo.orderId}`,
 				});

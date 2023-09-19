@@ -55,8 +55,7 @@
       <el-table-column label="测评分类" align="center" prop="gaugeClass" :formatter="getGaugeClassName" />
        <el-table-column label="计算类型" align="center" prop="type" width="100">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.type==1"> 普通计算 </el-tag>
-          <el-tag v-if="scope.row.type==2"> 多维计算 </el-tag>
+          <el-tag> {{ cList.find(a => a.value === scope.row.type).label }} </el-tag>
         </template>
       </el-table-column>
       <el-table-column label="测评题数" align="center" prop="gaugeNum" />
@@ -90,10 +89,6 @@
 <!--          <image-upload v-model="form.listShowPicture" sizeTip="宽183px 高208px" :extraData="extraData" />-->
           <my-cropper v-model="form.listShowPicture" sizeTip="宽183px 高208px" :extraData="extraData" :width="183" :height="288"/>
         </el-form-item>
-        <el-form-item label="测评介绍">
-          <editor v-model="form.introduce" :min-height="192" :extraData="extraData"/>
-        </el-form-item>
-
         <el-row>
           <el-col :span="12">
             <el-form-item label="测评分类" prop="gaugeClass">
@@ -106,8 +101,12 @@
           <el-col :span="12">
             <el-form-item label="计算类型" prop="type">
               <el-select v-model="form.type" placeholder="请选择计算类型">
-                <el-option label="普通计算" :value="1"></el-option>
-                <el-option label="多维计算" :value="2"></el-option>
+                <el-option
+                  v-for="item in cList"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value"
+                />
               </el-select>
             </el-form-item>
           </el-col>
@@ -129,8 +128,9 @@
         <el-form-item label="测评说明" prop="gaugeDes">
           <editor v-model="form.gaugeDes" :min-height="192" :extraData="extraData"/>
         </el-form-item>
-
-
+        <el-form-item label="测评介绍">
+          <editor v-model="form.introduce" :min-height="192" :extraData="extraData"/>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -144,7 +144,7 @@
           <questions v-bind:gaugeId="gaugeId" ></questions>
         </el-tab-pane>
         <el-tab-pane label="测评设置" name="setting">
-           <setting v-if="gaugeType==1" v-bind:gaugeId="gaugeId" ></setting>
+           <setting v-if="gaugeType===1 || gaugeType===4" v-bind:gaugeId="gaugeId" ></setting>
            <multi v-if="gaugeType==2" v-bind:gaugeId="gaugeId" ></multi>
         </el-tab-pane>
       </el-tabs>
@@ -199,6 +199,7 @@ export default {
         module: this.$constants['picModules'][1],
         type: this.$constants['picTypes'][2]
       },
+      cList: this.$constants.gaugeCompute,
       activeTab: "questions",
       // 遮罩层
       loading: true,

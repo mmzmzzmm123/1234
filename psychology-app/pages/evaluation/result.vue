@@ -1,6 +1,6 @@
 <template>
     <view class="result-page">
-        <view class="line-box"></view>
+<!--        <view class="line-box"></view>-->
         <view class="result-box">
             <view class="info-title">测试结果</view>
             <view class="info" v-html="result">                
@@ -37,7 +37,7 @@
 			<img class="poster" :src="imageData"  mode="widthFix" crossorigin="anonymous" />
 		</view>
 		
-        <evaluation-tab-bar></evaluation-tab-bar>
+<!--        <evaluation-tab-bar></evaluation-tab-bar>-->
     </view>
 </template>
 <script>
@@ -125,6 +125,7 @@ export default {
 page {
     background-color: #FFF9F7;
     margin-top: 22upx;
+    position: relative;
 
     .line-box {
         width: 718upx;
@@ -137,18 +138,26 @@ page {
     }
 
     .result-box {
-        width: 686upx;
-        max-height: 950upx;
-        background: #FFFFFF;
-        box-shadow: 0 4upx 16upx 0 rgba(255, 112, 63, 0.16);
-        border-radius: 0px 0px 16upx 16upx;
-        padding: 57upx 40upx 48upx 48upx;
-        box-sizing: border-box;
-        z-index: 100;
-        position: absolute;
-        left: 32upx;
-        top: 16upx;
-        overflow: auto;
+        //width: 686upx;
+        //max-height: 950upx;
+        //background: #FFFFFF;
+        //box-shadow: 0 4upx 16upx 0 rgba(255, 112, 63, 0.16);
+        //border-radius: 0px 0px 16upx 16upx;
+        //padding: 57upx 40upx 48upx 48upx;
+        //box-sizing: border-box;
+        //z-index: 100;
+        //position: absolute;
+        //left: 32upx;
+        //top: 16upx;
+        //overflow: auto;
+        width: calc(100% - 48upx);
+        padding-left: 24upx;
+        padding-right: 24upx;
+        padding-bottom: 24upx;
+
+        ::v-deep img {
+          width: 100%;
+        }
     }
 
     .info-title {
@@ -185,8 +194,8 @@ page {
         font-size: 32upx;
         font-weight: 600;
         color: #FFFFFF;
-        position: absolute;
-        bottom: 200upx;
+        position: fixed;
+        bottom: 100upx;
         left: 80upx;
     }
 
@@ -230,15 +239,24 @@ page {
 			}
 
             .img-box {
-                width: 560upx;
-				height: 800upx;
-                background: #FFFFFF;
-                border-radius: 8upx;
-                padding: 24upx 28upx;
-                box-sizing: border-box;
-                margin-bottom: 24upx;
-				max-height: 400px;
-				overflow: scroll;
+        //        width: 560upx;
+				//height: 800upx;
+        //        background: #FFFFFF;
+        //        border-radius: 8upx;
+        //        padding: 24upx 28upx;
+        //        box-sizing: border-box;
+        //        margin-bottom: 24upx;
+				//max-height: 400px;
+              width: calc(100% - 48upx);
+              padding-left: 24upx;
+              padding-right: 24upx;
+              padding-bottom: 24upx;
+              overflow: scroll;
+              height: 800upx;
+
+              ::v-deep img {
+                width: 100%;
+              }
             }
 
             .user-info {

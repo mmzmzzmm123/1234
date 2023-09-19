@@ -102,6 +102,13 @@ export const logName = [
   { label: '取消', value: 'cancel' },
 ]
 
+export const gaugeCompute = [
+  { label: '普通计算', value: 1 },
+  { label: '多维计算', value: 2 },
+  { label: 'MBTI', value: 3 },
+  { label: 'SDS', value: 4 },
+]
+
 /**
  * 暂时弃用
  * @type {*[]}
