@@ -43,6 +43,9 @@ public class PsyGaugeQuestionsOptions extends BaseEntity
     @Excel(name = "排序")
     private Integer sort;
 
+    @Excel(name = "纬度")
+    private String lat;
+
     private boolean selectedFlag;
 
     @Override
@@ -55,6 +58,7 @@ public class PsyGaugeQuestionsOptions extends BaseEntity
             .append("imgUrl", getImgUrl())
             .append("type", getType())
             .append("sort", getSort())
+            .append("lat", getLat())
             .toString();
     }
 }

@@ -32,7 +32,15 @@
                   <i class="el-icon-s-operation" />
                 </div>
                 <el-input v-model="option.name" placeholder="选项名" size="small" @blur="updateOption(option)" />
-                <el-input-number v-model="option.value" controls-position="right" size="small" :min="0" :max="20" label="描述文字" @change="updateOption(option)"></el-input-number>
+                <el-input-number v-if="gaugeType !== 3" v-model="option.value" controls-position="right" size="small" :min="0" :max="20" label="描述文字" @change="updateOption(option)"></el-input-number>
+                <el-select v-if="gaugeType === 3" @change="updateOption(option)" size="small" style="width: 150px" v-model="option.lat" placeholder="纬度" clearable>
+                  <el-option
+                    v-for="item in gaugeMbti"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
                 <div class="close-btn select-line-icon">
                   <i class="el-icon-remove-outline" style="color:#777" v-if="index==0 || index==1" />
                   <i class="el-icon-remove-outline" v-else @click="removeOption(option); options.splice(index, 1);" />
@@ -101,9 +109,15 @@ export default {
       type: Number,
       default: null,
     },
+    gaugeType: {
+      type: Number,
+      default: null,
+    }
   },
   data() {
     return {
+      gaugeMbti: this.$constants.gaugeMbti,
+      gaugeMbtiRes: this.$constants.gaugeMbtiRes,
       gaugeQuestionList: [],
       options: [],
       newQuestionVisible: false,

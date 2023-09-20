@@ -12,10 +12,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="imgUrl"    column="img_url"    />
         <result property="type"    column="type"    />
         <result property="sort"    column="sort"    />
+        <result property="lat"    column="lat"    />
     </resultMap>
 
     <sql id="selectPsyGaugeQuestionsOptionsVo">
-        select id, gauge_questions_id, name, value, img_url, type,sort from psy_gauge_questions_options
+        select id, gauge_questions_id, name, value, img_url, type,sort, lat from psy_gauge_questions_options
     </sql>
 
     <select id="selectPsyGaugeQuestionsOptionsList" parameterType="com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions" resultMap="PsyGaugeQuestionsOptionsResult">
@@ -26,6 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="value != null "> and value = #{value}</if>
             <if test="imgUrl != null  and imgUrl != ''"> and img_url = #{imgUrl}</if>
             <if test="type != null "> and type = #{type}</if>
+            <if test="lat != null "> and lat = #{lat}</if>
         </where>
         order by sort
     </select>
@@ -44,6 +46,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="imgUrl != null">img_url,</if>
             <if test="type != null">type,</if>
             <if test="sort != null">sort,</if>
+            <if test="lat != null">lat,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="gaugeQuestionsId != null">#{gaugeQuestionsId},</if>
@@ -52,6 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="imgUrl != null">#{imgUrl},</if>
             <if test="type != null">#{type},</if>
             <if test="sort != null">#{sort},</if>
+            <if test="lat != null">#{lat},</if>
          </trim>
     </insert>
 
@@ -64,6 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="imgUrl != null">img_url = #{imgUrl},</if>
             <if test="type != null">type = #{type},</if>
             <if test="sort != null">sort = #{sort},</if>
+            <if test="lat != null">lat = #{lat},</if>
         </trim>
         where id = #{id}
     </update>

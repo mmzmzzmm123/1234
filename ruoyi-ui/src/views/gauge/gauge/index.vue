@@ -141,10 +141,10 @@
     <el-drawer :title="title" :visible.sync="questionOpen" size="35%" :with-header="false" append-to-body>
       <el-tabs v-model="activeTab" style="margin:0 20px">
         <el-tab-pane label="问题设置" name="questions">
-          <questions v-bind:gaugeId="gaugeId" ></questions>
+          <questions v-bind:gaugeId="gaugeId" :gaugeType="gaugeType"></questions>
         </el-tab-pane>
         <el-tab-pane label="测评设置" name="setting">
-           <setting v-if="gaugeType===1 || gaugeType===4" v-bind:gaugeId="gaugeId" ></setting>
+           <setting v-if="gaugeType!==2" v-bind:gaugeId="gaugeId" :gaugeType="gaugeType"></setting>
            <multi v-if="gaugeType==2" v-bind:gaugeId="gaugeId" ></multi>
         </el-tab-pane>
       </el-tabs>
@@ -410,7 +410,7 @@ export default {
       this.questionOpen = true;
 
       this.gaugeId = data.id;
-      this.gaugeType=data.type
+      this.gaugeType = data.type
     },
   },
 };

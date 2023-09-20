@@ -109,6 +109,37 @@ export const gaugeCompute = [
   { label: 'SDS', value: 4 },
 ]
 
+export const gaugeMbti = [
+  { label: 'E', value: 'E' },
+  { label: 'I', value: 'I' },
+  { label: 'S', value: 'S' },
+  { label: 'N', value: 'N' },
+  { label: 'T', value: 'T' },
+  { label: 'F', value: 'F' },
+  { label: 'J', value: 'J' },
+  { label: 'P', value: 'P' },
+  { label: '章节', value: 'O' },
+]
+
+export const gaugeMbtiRes = [
+  { label: 'ISTJ', value: 'ISTJ' },
+  { label: 'ISFJ', value: 'ISFJ' },
+  { label: 'INFJ', value: 'INFJ' },
+  { label: 'INTJ', value: 'INTJ' },
+  { label: 'ISTP', value: 'ISTP' },
+  { label: 'ISFP', value: 'ISFP' },
+  { label: 'INFP', value: 'INFP' },
+  { label: 'INTP', value: 'INTP' },
+  { label: 'ESTP', value: 'ESTP' },
+  { label: 'ESFP', value: 'ESFP' },
+  { label: 'ENFP', value: 'ENFP' },
+  { label: 'ENTP', value: 'ENTP' },
+  { label: 'ESTJ', value: 'ESTJ' },
+  { label: 'ESFJ', value: 'ESFJ' },
+  { label: 'ENFJ', value: 'ENFJ' },
+  { label: 'ENTJ', value: 'ENTJ' },
+]
+
 /**
  * 暂时弃用
  * @type {*[]}
