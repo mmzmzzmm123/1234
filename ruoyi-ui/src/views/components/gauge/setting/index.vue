@@ -82,20 +82,21 @@ export default {
         module: 'gauge'
       },
       form: {},
-      scoreList: [
-        {
-          id: "12987122",
-          start: 1,
-          end: 10,
-          proposal: "",
-        },
-      ],
+      scoreList: [],
     };
   },
   methods: {
     async insertSetting() {
       //获取
       let score = this.scoreList[this.scoreList.length - 1];
+      if (!score) {
+        score = {
+          id: "12987122",
+          start: 1,
+          end: 10,
+          proposal: "",
+        }
+      }
 
       await addSetting({
         gaugeId: this.gaugeId,
