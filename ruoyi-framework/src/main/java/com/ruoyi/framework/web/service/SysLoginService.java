@@ -146,6 +146,7 @@ public class SysLoginService {
         WxUser wxUser = new WxUser();
         wxUser.setUserId(loginUser.getUserId());
         wxUser.setOpenId(bindingReq.getOpenId());
+        wxUser.setUserType("merchant");
         userMapper.binding(wxUser);
         // 生成token
         return tokenService.createToken(loginUser);

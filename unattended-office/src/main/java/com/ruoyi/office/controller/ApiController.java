@@ -886,12 +886,13 @@ public class ApiController extends BaseController {
         return AjaxResult.success(wxUser);
     }
 
-/*    @ApiOperation("获取门店充值套餐列表")
+    @ApiOperation("获取所有门店充值套餐列表")
     @GetMapping(value = "/store/pack")
     public TableDataInfo storePack(WxStoreListQryVo wxStoreListQryVo) {
+        TStorePackage qry = new TStorePackage();
         startPage();
-        List<WxStoreListRspVo> list = storeService.selectWxStoreList(wxStoreListQryVo);
+        List<TStorePackage> list = storePackageService.selectTStorePackageList(qry);
         return getDataTable(list);
-    }*/
+    }
 
 }
