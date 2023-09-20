@@ -156,4 +156,13 @@
         <include refid="selectPsyGaugeQuestionsResultVo"/>
         where user_id = #{userId} and order_id  = #{orderId}
     </select>
+
+    <select id="getQuestionScore" resultType="java.lang.Integer">
+        select sum(score) from psy_gauge_questions_result where user_id = #{userId} and order_id  = #{orderId}
+    </select>
+
+    <select id="getQuestionLat" resultType="java.lang.String">
+        select lat from psy_gauge_questions_result where user_id = #{userId} and order_id  = #{orderId}
+    </select>
+
 </mapper>

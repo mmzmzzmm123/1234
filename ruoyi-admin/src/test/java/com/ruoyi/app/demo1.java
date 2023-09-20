@@ -138,4 +138,45 @@ public class demo1 {
         Matcher matcher = pattern.matcher(password);
         System.out.println(matcher.matches());
     }
+
+    @Test
+    public void mbti() {
+        String[] res = { "E", "I", "S", "N", "T", "F", "J", "P", "O"};
+        ArrayList<String> list = new ArrayList<>();
+        Random random = new Random();
+        for (int i = 0; i < 100; i++) {
+            list.add(res[random.nextInt(9)]);
+        }
+
+        HashMap<String, Integer> countMap = new HashMap<>();
+        for (String num : list) {
+            if (countMap.containsKey(num)) {
+                int count = countMap.get(num);
+                count++;
+                countMap.put(num, count);
+            } else {
+                countMap.put(num, 1);
+            }
+        }
+
+        StringBuffer sb = new StringBuffer();
+        sb.append(countMap.get("E") > countMap.get("I") ? "E" : "I");
+        sb.append(countMap.get("S") > countMap.get("N") ? "S" : "N");
+        sb.append(countMap.get("T") > countMap.get("F") ? "T" : "F");
+        sb.append(countMap.get("J") > countMap.get("P") ? "J" : "P");
+        System.out.println(sb);
+
+//        for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
+//            System.out.println(entry.getKey() + "出现的次数为：" + entry.getValue());
+//        }
+
+//        System.out.println(list);
+    }
+
+    @Test
+    public void randomTest() {
+        Random random = new Random();
+        int num = random.nextInt(8) + 1; // 生成0-7之间的随机数
+        System.out.println(num);
+    }
 }

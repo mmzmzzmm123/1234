@@ -140,31 +140,48 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
         return psyGaugeQuestionsResultMapper.deletePsyGaugeQuestionsResultById(id);
     }
 
-    private int getScore(HashMap<String, Object> paramMap) {
-        List<PsyGaugeQuestionsResult> psyGaugeQuestionsResults = psyGaugeQuestionsResultMapper.selectPsyGaugeQuestionsResult(paramMap);
-        int sum = 0;
-        if(CollectionUtils.isNotEmpty(psyGaugeQuestionsResults)){
-            PsyGauge gauge = psyGaugeService.selectPsyGaugeById(psyGaugeQuestionsResults.get(0).getGaugeId());
-            for (PsyGaugeQuestionsResult psyGaugeQuestionsResult:psyGaugeQuestionsResults) {
-                sum += psyGaugeQuestionsResult.getScore();
-            }
-
-            if (GaugeConstant.GAUGE_COMPUTE_4 == gauge.getType()) {
-                sum = (int) Math.round(sum * GaugeConstant.GAUGE_COMPUTE_SDS);
-            }
-        }
-
-        paramMap.put("score",sum);
-        return sum;
-    }
-
     @Override
     public String commitResult(GaugeCommitResultDTO gaugeCommitResultDTO ,Integer userId) {
         //获取订单分值
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("orderId",gaugeCommitResultDTO.getOrderId());
         paramMap.put("userId",userId);
-        int sum = getScore(paramMap);
+        PsyOrder order = psyOrderMapper.selectPsyOrderById(gaugeCommitResultDTO.getOrderId());
+        PsyGauge gauge = psyGaugeService.selectPsyGaugeById(order.getGaugeId());
+        String sum = "0";
+        switch (gauge.getType()) {
+            case GaugeConstant.GAUGE_COMPUTE_1:
+            case GaugeConstant.GAUGE_COMPUTE_2:
+            case GaugeConstant.GAUGE_COMPUTE_4:
+                int score = psyGaugeQuestionsResultMapper.getQuestionScore(paramMap);
+                // SDS
+                if (GaugeConstant.GAUGE_COMPUTE_4 == gauge.getType()) {
+                    score = (int) Math.round(score * GaugeConstant.GAUGE_COMPUTE_SDS);
+                }
+                sum = score + "";
+                break;
+            case GaugeConstant.GAUGE_COMPUTE_3:
+                // MBTI
+                List<String> list = psyGaugeQuestionsResultMapper.getQuestionLat(paramMap);
+                HashMap<String, Integer> countMap = new HashMap<>();
+                for (String num : list) {
+                    if (countMap.containsKey(num)) {
+                        int count = countMap.get(num);
+                        count++;
+                        countMap.put(num, count);
+                    } else {
+                        countMap.put(num, 1);
+                    }
+                }
+
+                StringBuilder sb = new StringBuilder();
+                sb.append(countMap.get("E") > countMap.get("I") ? "E" : "I");
+                sb.append(countMap.get("S") > countMap.get("N") ? "S" : "N");
+                sb.append(countMap.get("T") > countMap.get("F") ? "T" : "F");
+                sb.append(countMap.get("J") > countMap.get("P") ? "J" : "P");
+                sum = sb.toString();
+                break;
+        }
 
         //获取当前得分匹配结果
         PsyGaugeScoreSetting psyGaugeScoreSetting = psyGaugeScoreSettingMapper.selectPsyGaugeScoreSettingByGaugeId(paramMap);
@@ -172,7 +189,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
             //将该订单答题情况改为已完成
             psyOrderMapper.updatePsyOrder(PsyOrder.builder()
                     .id(gaugeCommitResultDTO.getOrderId()).gaugeStatus(GaugeStatus.FINISHED.getValue())
-                    .score(String.valueOf(sum)).resultUrl(psyGaugeScoreSetting.getProposal())
+                    .score(sum).resultUrl(psyGaugeScoreSetting.getProposal())
                     .build());
 
             return psyGaugeScoreSetting.getResult();
