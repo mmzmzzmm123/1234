@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaSubscribeMessage;
+import cn.hutool.core.date.DateTime;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderV3Request;
@@ -314,15 +315,31 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             final List<TWxUserAmount> wxUserAmounts = wxUserAmountService.selectTWxUserAmountList(wxUserAmount);
             if (wxUserAmounts.size() == 0 || wxUserAmounts.get(0).getAmount().compareTo(totalPrice) == -1)
                 throw new ServiceException("储值卡余额不够，请充值后使用");
-
+            BigDecimal cashAmount = wxUserAmounts.get(0).getCashAmount();
+            BigDecimal welfareAmount = wxUserAmounts.get(0).getWelfareAmount();
             wxUserAmount.setAmount(totalPrice);
+
+            //本金足够
+            if (totalPrice.compareTo(cashAmount) == -1) {
+                wxUserAmount.setCashAmount(totalPrice);
+            } else {
+                //优先扣除本金
+                wxUserAmount.setCashAmount(cashAmount);
+                wxUserAmount.setWelfareAmount(totalPrice.subtract(cashAmount));
+            }
             // 扣除余额
             wxUserAmountService.minusCardValue(wxUserAmount);
 
             tRoomOrder.setPayType(OfficeEnum.PayType.CARD_BALANCE_PAY.getCode());
             tRoomOrder.setOrderNo(orderNo);
             tRoomOrder.setTotalAmount(totalPrice);
-            tRoomOrder.setPayAmount(totalPrice);
+            //本金足够
+            if (totalPrice.compareTo(cashAmount) == -1) {
+                tRoomOrder.setPayAmount(totalPrice);
+            }else {
+                tRoomOrder.setPayAmount(cashAmount);
+                tRoomOrder.setWelfareAmount(totalPrice.subtract(cashAmount));
+            }
             tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
             tRoomOrder.setCreateTime(DateUtils.getNowDate());
             tRoomOrder.setCreateBy(prepayReq.getUserId() + "");
@@ -604,6 +621,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             if (wxUserAmounts.size() == 0 || wxUserAmounts.get(0).getAmount().compareTo(totalPrice) == -1)
                 throw new ServiceException("储值卡余额不够，请充值后使用");
 
+
             wxUserAmount.setAmount(totalPrice);
             // 扣除余额
             wxUserAmountService.minusCardValue(wxUserAmount);
@@ -874,7 +892,6 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
      * 订单开始提醒
      */
     @Override
-    @PostConstruct
     public void msgOrder() {
         TRoomOrder roomOrder = new TRoomOrder();
         roomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());
@@ -893,6 +910,10 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 if (tRoomOrder.getStartTime().before(new Date())) {
                     continue;
                 }
+                if ((tRoomOrder.getStartTime().getTime() - DateTime.now().getTime()) / 1000 > 15 * 60) {
+                    continue;
+                }
+
                 TWxUser tWxUser = wxUserService.selectTWxUserById(tRoomOrder.getUserId());
                 WxMaSubscribeMessage wxMaSubscribeMessage = new WxMaSubscribeMessage();
                 wxMaSubscribeMessage.setToUser(tWxUser.getOpenId());
@@ -905,7 +926,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 msgDataList.add(msgData);
                 msgData = new WxMaSubscribeMessage.MsgData();
                 msgData.setName("time2");
-                msgData.setValue(tRoomOrder.getStartTime().toString());
+                msgData.setValue(DateUtils.parseDateToStr("yyyy-MM-dd HH:mm:ss", tRoomOrder.getStartTime()));
                 msgDataList.add(msgData);
                 msgData = new WxMaSubscribeMessage.MsgData();
                 msgData.setName("thing6");

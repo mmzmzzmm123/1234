@@ -76,6 +76,12 @@ public class TRoomOrder extends BaseEntity {
     private BigDecimal payAmount;
 
     /**
+     * 赠送金额
+     */
+    @Excel(name = "支付金额")
+    private BigDecimal welfareAmount;
+
+    /**
      * 卡券金额
      */
     @Excel(name = "卡券金额")

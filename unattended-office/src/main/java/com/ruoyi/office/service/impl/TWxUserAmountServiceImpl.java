@@ -58,6 +58,8 @@ public class TWxUserAmountServiceImpl extends ServiceImpl<TWxUserAmountMapper, T
         List<TWxUserAmount> wxUserAmounts = tWxUserAmountMapper.selectTWxUserAmountList(wxUserAmount);
         if (wxUserAmounts.size() > 0) {
             wxUserAmount.setAmount(tWxUserAmount.getAmount().negate());
+            wxUserAmount.setCashAmount(tWxUserAmount.getCashAmount().negate());
+            wxUserAmount.setWelfareAmount(tWxUserAmount.getWelfareAmount().negate());
             wxUserAmount.setUpdateTime(DateUtils.getNowDate());
             return tWxUserAmountMapper.minusCardValue(wxUserAmount);
         } else {
