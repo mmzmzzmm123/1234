@@ -63,5 +63,4 @@ public interface TWxUserAmountMapper extends BaseMapper<TWxUserAmount> {
 
     int minusCardValue(TWxUserAmount wxUserAmount);
 
-    void addUserMerchantAmount(TWxUserAmount wxUserAmount);
 }

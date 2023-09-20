@@ -108,8 +108,5 @@ public class TWxUserAmountServiceImpl extends ServiceImpl<TWxUserAmountMapper, T
     }
 
 
-    @Override
-    public void addUserMerchantAmount(TWxUserAmount wxUserAmount) {
-        tWxUserAmountMapper.addUserMerchantAmount(wxUserAmount);
-    }
+
 }

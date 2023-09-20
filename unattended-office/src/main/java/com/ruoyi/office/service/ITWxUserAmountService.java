@@ -61,5 +61,5 @@ public interface ITWxUserAmountService
 
     void minusCardValue(TWxUserAmount wxUserAmount);
 
-    void addUserMerchantAmount(TWxUserAmount wxUserAmount);
+
 }

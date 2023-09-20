@@ -75,6 +75,8 @@
             <if test="wxUserId != null">#{wxUserId},</if>
             <if test="userId != null">#{userId},</if>
             <if test="amount != null">#{amount},</if>
+            <if test="cashAmount != null">#{cashAmount},</if>
+            <if test="welfareAmount != null">#{welfareAmount},</if>
             <if test="point != null">#{point},</if>
             <if test="status != null">#{status},</if>
             <if test="remark != null">#{remark},</if>
@@ -85,19 +87,14 @@
         </trim>
     </insert>
 
-    <update id="addUserMerchantAmount" parameterType="TWxUserAmount">
-        update t_wx_user_amount t
-        set t.amount = t.amount + #{amount}
-        where t.wx_user_id = #{wxUserId}
-          and t.user_id = #{userId}
-    </update>
-
     <update id="updateTWxUserAmount" parameterType="TWxUserAmount">
         update t_wx_user_amount
         <trim prefix="SET" suffixOverrides=",">
             <if test="wxUserId != null">wx_user_id = #{wxUserId},</if>
             <if test="userId != null">user_id = #{userId},</if>
             <if test="amount != null">amount = #{amount},</if>
+            <if test="cashAmount != null">cash_amount = #{cashAmount},</if>
+            <if test="welfareAmount != null">welfare_amount = #{welfareAmount},</if>
             <if test="point != null">point = #{point},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
@@ -108,10 +105,11 @@
         </trim>
         where id = #{id}
     </update>
+
     <update id="minusCardValue" parameterType="TWxUserAmount">
         update t_wx_user_amount
         set amount = amount - #{amount},
-            cash_mount = cash_mount - #{cashMount},
+            cash_amount = cash_amount - #{cashAmount},
             welfare_amount = welfare_amount - #{welfareAmount}
         where wx_user_id = #{wxUserId}
           and user_id = #{userId}
