@@ -322,6 +322,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             //本金足够
             if (totalPrice.compareTo(cashAmount) == -1) {
                 wxUserAmount.setCashAmount(totalPrice);
+                wxUserAmount.setWelfareAmount(new BigDecimal(0));
             } else {
                 //优先扣除本金
                 wxUserAmount.setCashAmount(cashAmount);

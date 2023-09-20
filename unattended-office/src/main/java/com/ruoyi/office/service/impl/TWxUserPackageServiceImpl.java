@@ -252,16 +252,16 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
             throw new ServiceException("FAIL:金额或用户不匹配");
         }
         // 注意：微信会通知多次，因此需判断此订单
-        if (userPackage.getStatus().equals(OfficeEnum.RoomOrderStatus.ORDERED.getCode()))
+        if (userPackage.getStatus().equals(OfficeEnum.PackageOrderStatus.PAYED.getCode()))
             return;
 
         TWxUserPackage update = new TWxUserPackage();
         update.setId(userPackage.getId());
-        update.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约??
+        update.setStatus(OfficeEnum.PackageOrderStatus.PAYED.getCode());// 已预约??
         update.setRemark(wxCallback);
         tWxUserPackageMapper.updateTWxUserPackage(update);
         // 对用户的商户余额进行增加操作；
-        addWxUserAmount(Long.parseLong(openId), userPackage);
+        addWxUserAmount(Long.parseLong(userPackage.getCreateBy()), userPackage);
     }
 
     /**
