@@ -82,6 +82,9 @@ public class ApiController extends BaseController {
     @Resource(name = "customerWxMaService")
     WxMaService customerWxMaService;
 
+    @Autowired
+    ITStorePromotionService tStorePromotionService;
+
     /**
      * 预定成功 api 回调
      */
@@ -895,4 +898,11 @@ public class ApiController extends BaseController {
         return getDataTable(list);
     }
 
+    @ApiOperation("获取所有门店福利")
+    @GetMapping(value = "/promotionList")
+    public TableDataInfo list(TStorePromotion tStorePromotion) {
+        startPage();
+        List<TStorePromotion> list = tStorePromotionService.selectTStorePromotionList(tStorePromotion);
+        return getDataTable(list);
+    }
 }
