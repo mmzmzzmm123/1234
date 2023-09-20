@@ -333,7 +333,13 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             tRoomOrder.setPayType(OfficeEnum.PayType.CARD_BALANCE_PAY.getCode());
             tRoomOrder.setOrderNo(orderNo);
             tRoomOrder.setTotalAmount(totalPrice);
-            tRoomOrder.setPayAmount(totalPrice);
+            //本金足够
+            if (totalPrice.compareTo(cashAmount) == -1) {
+                tRoomOrder.setPayAmount(totalPrice);
+            }else {
+                tRoomOrder.setPayAmount(cashAmount);
+                tRoomOrder.setWelfareAmount(totalPrice.subtract(cashAmount));
+            }
             tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
             tRoomOrder.setCreateTime(DateUtils.getNowDate());
             tRoomOrder.setCreateBy(prepayReq.getUserId() + "");
@@ -614,6 +620,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             final List<TWxUserAmount> wxUserAmounts = wxUserAmountService.selectTWxUserAmountList(wxUserAmount);
             if (wxUserAmounts.size() == 0 || wxUserAmounts.get(0).getAmount().compareTo(totalPrice) == -1)
                 throw new ServiceException("储值卡余额不够，请充值后使用");
+
 
             wxUserAmount.setAmount(totalPrice);
             // 扣除余额

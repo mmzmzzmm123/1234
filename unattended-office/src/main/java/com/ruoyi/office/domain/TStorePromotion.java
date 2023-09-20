@@ -79,4 +79,7 @@ public class TStorePromotion extends BaseEntity
     @Excel(name = "状态")
     private Long status;
 
+    /** logo */
+    @Excel(name = "logo")
+    private String logo;
 }
