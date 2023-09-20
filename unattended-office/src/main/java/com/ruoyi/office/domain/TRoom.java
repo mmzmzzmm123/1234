@@ -54,8 +54,8 @@ public class TRoom extends BaseEntity
     @Excel(name = "技术时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date stopTime;
 
-    /** 状态(空闲/已预约/使用中/预约超时未使用/不可用) */
-    @Excel(name = "状态(空闲/已预约/使用中/预约超时未使用/不可用)")
+    /** 状态(可用/不可用/清洁中/使用中) */
+    @Excel(name = "状态(0可用/1不可用/2清洁中/3使用中)")
     private String status;
 
     /**房间收费规则（1、套餐收费；2、小时收费）*/

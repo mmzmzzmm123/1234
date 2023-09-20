@@ -447,6 +447,11 @@ public class ApiController extends BaseController {
         dict.setDictType("room_mark");
         Map<String, String> dictMap = dictDataService.selectDictDataList(dict).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getDictLabel));
 
+        SysDictData dict1 = new SysDictData();
+        dict1.setDictType("room_status");
+        Map<String, String> roomStatusMap = dictDataService.selectDictDataList(dict1).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getDictLabel));
+
+
         final Map<Long, List<TRoomPrice>> roomPriceGroup = tRoomPriceService.selectTRoomPriceList(new TRoomPrice()).stream().collect(Collectors.groupingBy(TRoomPrice::getRoomId));
 
         final Map<Long, List<TRoomPackage>> roomPackageGroup = tRoomPackageService.selectTRoomPackageList(new TRoomPackage()).stream().collect(Collectors.groupingBy(TRoomPackage::getRoomId));
@@ -454,6 +459,9 @@ public class ApiController extends BaseController {
         for (TRoom room : list) {
             RoomWxVo vo = new RoomWxVo();
             BeanUtils.copyProperties(room, vo);
+
+            vo.setStatus(roomStatusMap.get(vo.getStatus()));
+
             String roomMark = "";
             if (StringUtils.isEmpty(room.getRemark()))
                 roomMark = ", ";

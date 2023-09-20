@@ -18,10 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="userId"    column="user_id"    />
+        <result property="userType"    column="user_type"    />
     </resultMap>
 
     <sql id="selectWxUserVo">
-        select id, open_id, union_id, wx_code, nick_name, sex, status, remark, create_by, create_time, update_by, update_time, user_id from t_wx_user
+        select id, open_id, union_id, wx_code, nick_name, sex, status, remark, create_by, create_time, update_by, update_time, user_id, user_type from t_wx_user
     </sql>
 
     <select id="selectWxUserList" parameterType="WxUser" resultMap="WxUserResult">
@@ -34,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
             <if test="status != null "> and status = #{status}</if>
             <if test="userId != null  and userId != ''"> and user_id like = #{userId}</if>
+            <if test="userType != null  and userType != ''"> and user_type = #{userType}</if>
         </where>
     </select>
     
@@ -63,6 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="userId != null">user_id,</if>
+            <if test="userType != null">user_type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 <!--            <if test="id != null">#{id},</if>-->
@@ -78,6 +81,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="userId != null">#{userId},</if>
+            <if test="userType != null">#{userType},</if>
          </trim>
     </insert>
 
@@ -96,6 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="userId != null">user_id = #{userId},</if>
+            <if test="userType != null">user_type = #{userType},</if>
         </trim>
         where id = #{id}
     </update>

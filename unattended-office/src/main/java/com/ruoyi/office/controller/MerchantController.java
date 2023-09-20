@@ -2,26 +2,20 @@ package com.ruoyi.office.controller;
 
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
+import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.office.domain.TRoom;
-import com.ruoyi.office.domain.TRoomOrder;
-import com.ruoyi.office.domain.TStore;
-import com.ruoyi.office.domain.vo.MerchantRoomListVo;
-import com.ruoyi.office.domain.vo.MerchantUserStatisticsVo;
-import com.ruoyi.office.service.ITRoomOrderService;
-import com.ruoyi.office.service.ITRoomService;
-import com.ruoyi.office.service.ITStoreService;
-import com.ruoyi.office.service.ITWxUserService;
+import com.ruoyi.office.domain.*;
+import com.ruoyi.office.domain.vo.*;
+import com.ruoyi.office.service.*;
 import com.ruoyi.system.service.ISysUserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -160,6 +154,48 @@ public class MerchantController extends BaseController {
         List<MerchantUserStatisticsVo> res = wxUserService.statistics(SecurityUtils.getLoginUser().getWxUser().getUserId(), "hour");
         final List<MerchantUserStatisticsVo> resList = res.stream().sorted(Comparator.comparing(MerchantUserStatisticsVo::getHours).reversed()).collect(Collectors.toList());
         return getDataTable(resList);
+    }
+
+    @Autowired
+    ITWxUserCleanerService cleanerService;
+
+    @ApiOperation("添加保洁")
+    @Log(title = "添加保洁", businessType = BusinessType.INSERT)
+    @PostMapping("/clean")
+    public AjaxResult clean(@RequestBody CleanerReq req) {
+        long merchant = SecurityUtils.getLoginUser().getWxUser().getId();
+//        long wxUserId = 9l;
+        try {
+            TWxUserCleaner cleaner = new TWxUserCleaner();
+            cleaner.setMerchantId(merchant);
+            cleaner.setStoreId(req.getStroeId());
+            cleanerService.insertTWxUserCleaner(cleaner);
+            return AjaxResult.success(cleaner.getId());
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
+
+    @ApiOperation("添加保洁")
+    @Log(title = "添加保洁", businessType = BusinessType.INSERT)
+    @PutMapping("/clean/bind")
+    public AjaxResult cleanBinding(@RequestBody TWxUserCleaner req) {
+        long wxuserid = SecurityUtils.getLoginUser().getWxUser().getId();
+//        long wxUserId = 9l;
+        try {
+            TWxUserCleaner cleaner = new TWxUserCleaner();
+            cleaner.setId(req.getId());
+            cleaner.setWxUserId(wxuserid);
+            cleanerService.updateTWxUserCleaner(cleaner);
+
+            TWxUser wxUser = new TWxUser();
+            wxUser.setId(wxuserid);
+            wxUser.setUserType("cleaner");
+            wxUserService.updateTWxUser(wxUser);
+            return AjaxResult.success();
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
     }
 
 }

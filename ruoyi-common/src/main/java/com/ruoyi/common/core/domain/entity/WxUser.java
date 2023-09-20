@@ -76,4 +76,7 @@ public class WxUser extends BaseEntity
     @Excel(name = "sys_user.userId")
     private Long userId;
 
+    private String userType;
+
+
 }
