@@ -206,11 +206,7 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
             tWxUserPackageMapper.updateTWxUserPackage(updateOrder);
 
             // 对用户的商户余额进行增加操作；
-            TWxUserAmount wxUserAmount = new TWxUserAmount();
-            wxUserAmount.setWxUserId(wxuserid);
-            wxUserAmount.setUserId(order.getMerchant());
-            wxUserAmount.setAmount(order.getPayAmount().add(order.getGiftAmont()));
-            userAmountService.insertTWxUserAmount(wxUserAmount);
+            addWxUserAmount(wxuserid, order);
 
         } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.REFUND)) {
             throw new ServiceException("订单转入退款");
@@ -261,9 +257,29 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
 
         TWxUserPackage update = new TWxUserPackage();
         update.setId(userPackage.getId());
-        update.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
+        update.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约??
         update.setRemark(wxCallback);
         tWxUserPackageMapper.updateTWxUserPackage(update);
+        // 对用户的商户余额进行增加操作；
+        addWxUserAmount(Long.parseLong(openId), userPackage);
     }
 
+    /**
+     * 批量删除用户套餐购买记录
+     *
+     * @param wxUserId wxUserId
+     * @param order    充值订单
+     * @return 结果
+     */
+    public void addWxUserAmount(Long wxUserId, TWxUserPackage order) {
+        TWxUserAmount wxUserAmount = new TWxUserAmount();
+        wxUserAmount.setWxUserId(wxUserId);
+        wxUserAmount.setUserId(order.getMerchant());
+        wxUserAmount.setAmount(order.getPayAmount().add(order.getGiftAmont()));//余额
+        wxUserAmount.setCashAmount(order.getPayAmount());//本金余额
+        wxUserAmount.setWelfareAmount(order.getGiftAmont());//赠送余额
+
+        userAmountService.insertTWxUserAmount(wxUserAmount);
+
+    }
 }
