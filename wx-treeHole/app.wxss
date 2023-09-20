@@ -1,0 +1,166 @@
+@import '/components/wux/dist/styles/index.wxss';
+.bView{
+  width: 100vw;
+  height: 100vh;
+}
+/* view适应于父布局 */
+.view_all_adapt{
+  width:100%;
+  height: 100%;
+}
+/* view常用宽度并居中 */
+.view_box_common{
+  width:92%;
+  margin:0 auto;
+}
+/*自适应间隔*/
+.flex{
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+}
+/* view横向布局 */
+.view_box_row{
+  display:flex;
+  align-items:center;
+}
+/* view横向布局-超出换行 */
+.view_box_row_wrap{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+}
+/* view横向布局，并垂直居中 */
+.view_box_row_content{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+/* view横向布局-上下居中-超出宽度换行 */
+.view_box_row_symmetry{
+  display:flex;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+/* view横向布局，并垂直居中，左右对称 */
+.view_box_row_content_symmetry{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+/* view横向布局，并垂直居中，左右对称-超出换行 */
+.view_box_row_content_symmetry_wrap{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+}
+/* view向下布局并左右垂直居中 */
+.view_box_content_column{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+}
+/** view向下布局并上下分布 */
+.view_box_column_symmetry{
+  display:flex;
+  justify-content:space-between;
+  flex-direction:column;
+}
+
+
+/* 常用分割线-小 */
+.cut_off_rule_small{
+  width:100%;
+  height:1px;
+  background-color:#e9eaec;
+}
+
+/* view圆角-小 */
+.radius_small{
+  border-radius: 8px;
+  overflow: hidden;
+}
+/* view圆角-中 */
+.radius_middle{
+  border-radius: 12.8px;
+  overflow: hidden;
+}
+/* view圆角-大 */
+.radius_big{
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+/* 单行超出省略号 */
+.text_ellipsis{
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+}
+/* 2行超出省略号 */
+.text_ellipsis_two{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  word-break: break-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2; 
+}
+/* 3行超出省略号 */
+.text_ellipsis_three{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  word-break: break-all;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; 
+}
+
+/* 主题按钮 */
+.themeBut{
+  width: 92%;
+  height: 38px;
+  line-height: 38px;
+  border-radius: 38px;
+  margin: 0 auto;
+  background: linear-gradient(to right,#78D6F4,#4198EF);
+  text-align: center;
+  color: white;
+  font-size: 14px;
+  letter-spacing: 5px;
+  font-weight: bold;
+  overflow: hidden; 
+}
+/* 占位view */
+.seizeSeat_mini{
+  width: 1px;
+  height: 10px;
+}
+/* 男生字体颜色 */
+.boy_font_color{
+  color: #8978E4;
+}
+/* 女生字体颜色 */
+.girl_font_color{
+  color: #f8b5b5;
+}
+/* 男生背景颜色 */
+.boy_bg_color{
+  background: linear-gradient(to right,#8978E4,#a79de0);
+}
+/* 女生背景颜色 */
+.girl_bg_color{
+  background: linear-gradient(to right,#f8b5b5,#f8c6c6);
+}
+/* 男生边框颜色 */
+.boy_edging_color{
+  border: 1px solid #8978E4;
+  box-shadow: 0 0 1px 1px #8978E4;
+}
+/* 女生边框颜色 */
+.girl_edging_color{
+  border: 1px solid #f8b5b5;
+  box-shadow: 0 0 1px 1px #f8b5b5;
+}

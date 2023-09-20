@@ -1,0 +1,179 @@
+page{
+  background-color: #f8f8f9;
+}
+.hotView{
+  width: 180px;
+  margin-right: 16px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: inline-block;
+  padding: 10px 0;
+}
+/* 热门背景颜色 */
+.hotBg_0{
+  background: linear-gradient(to bottom,#FFC0C1,#fde1e0);
+}
+.hotBg_1{
+  background: linear-gradient(to bottom,#D9FE72,#ebfda3);
+}
+.hotBg_2{
+  background: linear-gradient(to bottom,#B6D3FE,#c2d8f8);
+}
+.hotBg_3{
+  background: linear-gradient(to bottom,#9FFFC6,#CEFFE5);
+}
+.hotBg_4{
+  background: linear-gradient(to bottom,#FEDFB1,#FFECDA);
+}
+.hotBg_5{
+  background: linear-gradient(to bottom,#AAF1FE,#b2effa);
+}
+.hotVoiceView{
+  background-color: black;
+  opacity: 0.5;
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+.voicePlay{
+  width: 12px;
+  margin-right: 4px;
+}
+.voiceAudioImg{
+  width: 30px;
+}
+.voiceSeconds{
+  color: #ffffff;
+  font-size: 12px;
+  margin-left: 4px;
+}
+.hotOnLineView{
+  background-color: #ffffff;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 10px;
+}
+.hotOnLineView image{
+  width: 10px;
+}
+.hotTx{
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+}
+.hotName{
+  width: 100%;
+  font-size: 14px;
+}
+.hotAddress{
+  font-size: 12px;
+  margin-top: 4px;
+  color: #80848f;
+}
+.hotStaffDetails{
+  margin-top: 10px;
+  font-size: 14px;
+  white-space:normal;
+  height: 38px;
+}
+.filterView{
+  padding: 10px 0;
+}
+.filterItem{
+  font-size: 14px;
+}
+.filterItem span{
+  margin-right: 6px;
+}
+.staffItem{
+  padding: 10px 0;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+.staffAvatarView{
+  width: 100px;
+  height: 100px;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+.staffItem .staffName{
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+.staffBadgeLevel{
+  font-size: 10px;
+  font-weight: bold;
+  color: #ffffff;
+  padding: 2px 4px;
+  border-radius: 10px;
+}
+.staffBadgeLevel image{
+  width: 14px;
+  margin-right: 4px;
+}
+.badgeLevel_1{
+  background: linear-gradient(to right,#96dbba,#1A9F5E);
+}
+.badgeLevel_2{
+  background: linear-gradient(to right,#6ea3ce,#1473c0);
+}
+.badgeLevel_3{
+  background: linear-gradient(to right,#e9b28d,#F96500);
+}
+.badgeLevel_4{
+  background: linear-gradient(to right,#db8aa0,#C80C3E);
+}
+.staffOnLineState{
+  font-size: 12px;
+}
+.staffOnLineState image{
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+}
+.staffBaseInfo{
+  font-size: 12px;
+  margin-top: 2px;
+  color: #80848f;
+}
+.staffBaseInfo view{
+  margin-right: 6px;
+}
+.staffDetails{
+  font-size: 12px;
+  margin-top: 4px;
+}
+.staffLabel{
+  margin-top: 10px;
+}
+.staffLabelItem{
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 10px;
+  margin-right: 8px;
+  margin-top: 4px;
+}
+.staffService{
+  font-size: 10px;
+  background-color: #e9eaec;
+  padding: 4px 6px;
+  border-radius: 10px;
+}
+.staffService text{
+  margin: 0 6px;
+}
+.staffVoice{
+  width: 100%;
+  padding: 2px 0;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+.verticalLine{
+  width: 1.5px;
+  height: 12px;
+  background-color: #e9eaec;
+}

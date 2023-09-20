@@ -50,6 +50,9 @@ user:
 
 # Spring配置
 spring:
+  mvc:
+    servlet:
+      load-on-startup: 1
   # 资源信息
   messages:
     # 国际化资源文件路径
@@ -99,7 +102,7 @@ token:
   # 令牌密钥
   secret: abcdefghijklmnopqrstuvwxyz
   # 令牌有效期（默认30分钟）
-  expireTime: 60
+  expireTime: 120
 
 # MyBatis配置
 mybatis:
@@ -131,6 +134,17 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+
+# 微信信息
+weixin:
+  # 微信应用（小程序、app、网页等等）
+  application-info:
+    # 微信小程序应用
+    mini-applet:
+      # 微信小程序-appid
+      app-id: wxdfee3a598de0fb18
+      # 微信小程序-密钥
+      app-secret: 2b375a770a0f32dff4af1c2632ca3a23
 
 # 腾讯云产品信息
 tencent-info:

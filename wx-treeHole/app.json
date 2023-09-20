@@ -1,0 +1,67 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/select/index",
+    "pages/me/index",
+    "pages/trends/index"
+  ],
+  "subPackages": [
+    {
+      "root": "userPackages",
+      "name": "用户相关页面",
+      "pages": [
+        "page/userData/index"
+      ]
+    }
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#8978E4",
+    "navigationBarTitleText": "听说",
+    "navigationBarTextStyle": "white",
+    "navigationStyle": "default"
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "您的位置信息将为您带来更愉快的服务过程"
+    }
+  },
+  "requiredPrivateInfos": [
+    "getLocation",
+    "chooseAddress",
+    "choosePoi",
+    "chooseLocation"
+  ],
+  "tabBar": {
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首 页",
+        "iconPath": "static/menu/home.png",
+        "selectedIconPath": "static/menu/home_c.png"
+      },
+      {
+        "pagePath": "pages/trends/index",
+        "text": "动 态",
+        "iconPath": "static/menu/trends.png",
+        "selectedIconPath": "static/menu/trends_c.png"
+      },
+      {
+        "pagePath": "pages/select/index",
+        "text": "下 单",
+        "iconPath": "static/menu/order.png",
+        "selectedIconPath": "static/menu/order_c.png"
+      },
+      {
+        "pagePath": "pages/me/index",
+        "text": "我 的",
+        "iconPath": "static/menu/me.png",
+        "selectedIconPath": "static/menu/me_c.png"
+      }
+    ],
+    "color": "#707070",
+    "selectedColor": "#555d8c"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

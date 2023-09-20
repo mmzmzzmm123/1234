@@ -1,0 +1,152 @@
+<view class="bView">
+  <!-- 头部状态栏 -->
+  <view class="stateBarView">
+    <view style="height:{{stateBarHeight}}px;background:{{barThemeColor}};" class="stateBar"></view>
+    <view style="height:{{barHeight}}px;background:{{barThemeColor}};" class="stateBar">
+      <view class="view_box_common titleView" style="height: 100%;">
+        <view class="stateBarIcoView">
+        </view>
+        <text>我的</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- body -->
+  <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" style="width:{{pWidth}}px;height:{{pHeight}}px;">
+
+    <view class="view_box_row bannerView" style="height:{{pHeight * 0.3}}px;">
+      <image src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/psc.gif" class="bannerImage view_all_adapt"></image>
+      <view class="view_box_common view_box_row" style="position:relative;z-index:888;">
+        <wux-avatar size="large" scale="true" src="{{userInfo != null && userInfo.avatarUrl != null ? userInfo.avatarUrl : '../../../../static/images/default_tx.png'}}"></wux-avatar>
+        <view class="view_box_column_symmetry" style="width:{{pWidth*0.92-54}}px;height: 80rpx;margin-left: 10px;">
+          <view>
+            <view class="view_box_row_content_symmetry">
+              <view class="userName">{{userInfo!=null?userInfo.nickName:'请登录'}}</view>
+              <view class="userDataBut" bind:tap="toUserData">个人资料></view>
+            </view>
+            <view class="view_box_row" style="margin-top: 4px;">
+              <view class="level">vip1</view>
+              <view class="levelProgress">
+                <wux-progress status="progress" percent="50" />
+              </view>
+              <view class="level">vip2</view>
+            </view>
+            <view class="levelTips">再消费128个树币即可升级为vip2</view>
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <view class="funBigView" style="top: -{{pHeight * 0.08}}px;">
+
+      <view class="view_box_common common_fun_box_view">
+        <column-view title="我的订单" moreTitle="更多" outerMargin="0px"></column-view>
+        <view class="cut_off_rule_small" style="margin: 10px 0;"></view>
+        <view class="view_box_common view_box_row_content_symmetry_wrap" style="width:85%;">
+          <wux-badge dot="{{ true }}">
+            <view class="view_box_content_column orderStateItemView" data-state="waitPay">
+              <image mode="widthFix" src="../../static/ico/to_be_paid_64_gray.png"></image>
+              <view>待付款</view>
+            </view>
+          </wux-badge>
+          <wux-badge dot="{{ true }}">
+            <view class="view_box_content_column orderStateItemView" data-state="waitPay">
+              <image mode="widthFix" src="../../static/ico/wait_order.png"></image>
+              <view>待接单</view>
+            </view>
+          </wux-badge>
+          <wux-badge dot="{{ true }}">
+            <view class="view_box_content_column orderStateItemView" data-state="waitPay">
+              <image mode="widthFix" src="../../static/ico/wait_service.png"></image>
+              <view>待服务</view>
+            </view>
+          </wux-badge>
+          <wux-badge dot="{{ true }}">
+            <view class="view_box_content_column orderStateItemView" data-state="waitPay">
+              <image mode="widthFix" src="../../static/ico/serviceing.png"></image>
+              <view>服务中</view>
+            </view>
+          </wux-badge>
+          <wux-badge dot="{{ true }}">
+            <view class="view_box_content_column orderStateItemView" data-state="waitPay">
+              <image mode="widthFix" src="../../static/ico/comment_64_gray.png"></image>
+              <view>待评论</view>
+            </view>
+          </wux-badge>
+        </view>
+      </view>
+
+      <!-- 数据区域 -->
+      <view class="seizeSeat_mini"></view>
+      <view class="view_box_common common_fun_box_view" style="padding: 15px 0;">
+        <view class="view_box_common view_box_row_content_symmetry" style="width: 82%;">
+          <view class="view_box_content_column usedCarNumItem">
+            <span>0</span>
+            <view>我的点赞</view>
+          </view>
+          <view class="view_box_content_column usedCarNumItem">
+            <span>0.00</span>
+            <view class="view_box_row_content">
+              <text>我的树币</text>
+              <view class="goRechargeBut">去充值</view>
+            </view>
+          </view>
+          <view class="view_box_content_column usedCarNumItem">
+            <span>0</span>
+            <view>我的收藏</view>
+          </view>
+        </view>
+      </view>
+
+      <!-- 可操作区域 -->
+      <view class="view_box_common common_fun_box_view" style="padding: 15px 0;margin-top: 10px;">
+        <view class="view_box_common view_box_row_content_symmetry commonFunItem">
+          <view class="view_box_row_content">
+            <image src="../../static/ico/join_us_grey_32.png" mode="widthFix"></image>
+            <text>成为员工</text>
+          </view>
+          <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common view_box_row_content_symmetry commonFunItem">
+          <view class="view_box_row_content">
+            <image src="../../static/ico/interest_grey_32.png" mode="widthFix"></image>
+            <text>会员权益</text>
+          </view>
+          <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common view_box_row_content_symmetry commonFunItem">
+          <view class="view_box_row_content">
+            <image src="../../static/ico/contact_us_grey_32.png" mode="widthFix"></image>
+            <text>联系我们</text>
+          </view>
+          <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common view_box_row_content_symmetry commonFunItem">
+          <view class="view_box_row_content">
+            <image src="../../static/ico/agreement_grey_32.png" mode="widthFix"></image>
+            <text>平台协议</text>
+          </view>
+          <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common view_box_row_content_symmetry commonFunItem">
+          <view class="view_box_row_content">
+            <image src="../../static/ico/about_us_grey_32.png" mode="widthFix"></image>
+            <text>关于我们</text>
+          </view>
+          <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
+        </view>
+      </view>
+
+      <!-- 页尾 -->
+      <view class="seizeSeat_mini"></view>
+      <view class="seizeSeat_mini"></view>
+      <view class="seizeSeat_mini"></view>
+      <i-load-more tip='蓝诚科技提供技术支持' loading="{{false}}"></i-load-more>
+    </view>
+
+  </scroll-view>
+</view>

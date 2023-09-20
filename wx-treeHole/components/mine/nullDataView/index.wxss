@@ -1,0 +1,14 @@
+.nullDataView{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+}
+.nullDataView image{
+  width: 60%;
+}
+.nullDataView view{
+  margin-top: 10px;
+  font-weight: bold;
+  font-size: 14px;
+}

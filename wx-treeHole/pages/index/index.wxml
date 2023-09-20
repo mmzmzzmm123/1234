@@ -1,0 +1,318 @@
+<view class="bView">
+  <!-- 头部状态栏 -->
+  <view class="stateBarView">
+    <view style="height:{{stateBarHeight}}px;background:{{barThemeColor}};" class="stateBar"></view>
+    <view style="height:{{barHeight}}px;background:{{barThemeColor}};" class="stateBar">
+      <view class="view_box_common titleView" style="height: 100%;">
+        <view class="stateBarIcoView">
+        </view>
+        <text>听 说</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- body -->
+  <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" style="width:{{pWidth}}px;height:{{pHeight}}px;">
+    <!-- banner -->
+    <view class="bannerBgColorView" style="height:{{pHeight * 0.3}}px;background-color:{{banners!=null?banners[bannerCurrent].themeColor:'#555d8c'}};"></view>
+    <view style="width: 100%;height: {{showStateBarHeight+10}}px;"></view>
+    <swiper class="swiperView" style="height:{{pHeight*0.23}}px;background-color:{{banners!=null?banners[bannerCurrent].themeColor:'#555d8c'}};" bindchange="swiperChange" indicator-active-color="#ffffff" indicator-dots="true" autoplay='true' duration='1000' interval='3000'>
+      <block wx:for="{{banners}}" wx:key="id" wx:for-item="item">
+        <swiper-item data-toLink="{{item.toLink}}">
+          <image class="view_all_adapt" src="{{item.imgUrl}}" />
+        </swiper-item>
+      </block>
+    </swiper>
+
+    <!-- 消息滚动 -->
+    <view class="noticeView view_box_common girl_bg_color">
+      <view class="view_box_common view_box_row_content_symmetry">
+        <view class="view_box_row">
+          <image src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/heartbeat.gif" mode="widthFix"></image>
+          <view animation="{{animationData}}">{{content}}</view>
+        </view>
+        <wux-icon type="ios-arrow-forward" size="22" color="#ffffff"></wux-icon>
+      </view>
+    </view>
+
+    <!-- 新人推荐 -->
+    <column-view title="新人推荐" moreTitle="查看更多" bind:toPage="goSelectPage"></column-view>
+    <scroll-view scroll-x class="view_box_common">
+      <view class="flex">
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+        <view class="newPeopleItem">
+          <image src="../../static/temp/t1.png"></image>
+          <view class="newPeopleName">小甜甜</view>
+          <view class="girl_bg_color newPeopleBut">下单</view>
+        </view>
+      </view>
+    </scroll-view>
+
+    <!-- 排名 -->
+    <column-view title="周榜前三" moreTitle="查看更多" bind:toPage="goSelectPage"></column-view>
+    <view class="view_box_common rankView">
+      <view class="rankTab view_box_row_content">
+        <view class="rankTab_cli">女神榜</view>
+        <view>男神榜</view>
+      </view>
+      <view class="rankInfo">
+        <image class="rankBg" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/rank_bg.png" mode="widthFix"></image>
+        <view class="staffRankView view_box_content_column" style="top: 65px;left: {{pWidth*0.9*0.5-36}}px;">
+          <image class="staffRank" src="../../static/temp/t1.png"></image>
+          <view>小田心</view>
+          <image class="crownIco" src="../../static/ico/crown_64.png" mode="widthFix"></image>
+          <!-- gif -->
+          <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
+        </view>
+        <view class="staffRankView view_box_content_column" style="top: 95px;left: {{pWidth*0.9*0.22-36}}px;">
+          <image class="staffRank" src="../../static/temp/t2.png"></image>
+          <view>小田心</view>
+          <!-- gif -->
+          <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
+        </view>
+        <view class="staffRankView view_box_content_column" style="top: 85px;left: {{pWidth*0.9*0.77-26}}px;">
+          <image class="staffRank" src="../../static/temp/t3.png"></image>
+          <view>小田心</view>
+          <!-- gif -->
+          <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
+        </view>
+      </view>
+      <!-- 背景点缀 -->
+      <image class="rankLeftDecorate" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/bot_1.png" mode="widthFix"></image>
+      <image class="rankRigheDecorate" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/bot_1.png" mode="widthFix"></image>
+    </view>
+
+    <!-- 员工列表 -->
+    <column-view title="全部店员" moreTitle="查看更多" bind:toPage="goSelectPage"></column-view>
+
+    <view class="view_box_common view_box_row_content_symmetry_wrap">
+
+      <view class="staffView">
+        <view class="staffCover">
+          <image class="cover" src="../../static/temp/t1.png"></image>
+          <view class="view_box_common view_all_adapt view_box_column_symmetry">
+            <view class="view_box_row_content_symmetry" style="margin-top: 6px;">
+              <view class="presence view_box_row_content">
+                <image src="../../static/ico/online_32.png" mode="widthFix"></image>
+                <view>在线</view>
+              </view>
+              <view class="sexAndAgeView view_box_row_content girl_bg_color">
+                <image src="../../static/ico/girl_white_32.png"></image>
+                <view>12</view>
+              </view>
+            </view>
+            <view class="view_box_row_content_symmetry">
+              <view class="voiceView view_box_row_content girl_bg_color">
+                <view class="view_box_common view_box_row">
+                  <image class="playIco" src="../../static/ico/{{playVoiceState?'stop_play':'play'}}.png"></image>
+                  <image wx:if="{{playVoiceState}}" class="audioGif" src="../../static/gif/audio_frequency.gif"></image>
+                  <image wx:else class="audioIco" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                  <view>14s</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="view_box_common text_ellipsis staffDetail">愿意成为你的树洞</view>
+        <view class="view_box_common view_box_row_content_symmetry" style="margin-top: 6px;">
+          <view class="staffInfo view_box_row_content">
+            <image src="../../static/temp/t1.png" class="staffAvatar"></image>
+            <view class="staffName text_ellipsis">有点甜有点甜</view>
+          </view>
+          <wux-icon type="md-heart" size="22" color="#FF5401"></wux-icon>
+        </view>
+      </view>
+
+      <view class="staffView">
+        <view class="staffCover">
+          <image class="cover" src="../../static/temp/t2.png"></image>
+          <view class="view_box_common view_all_adapt view_box_column_symmetry">
+            <view class="view_box_row_content_symmetry" style="margin-top: 6px;">
+              <view class="presence view_box_row_content">
+                <image src="../../static/ico/online_32.png" mode="widthFix"></image>
+                <view>在线</view>
+              </view>
+              <view class="sexAndAgeView view_box_row_content girl_bg_color">
+                <image src="../../static/ico/girl_white_32.png"></image>
+                <view>12</view>
+              </view>
+            </view>
+            <view class="view_box_row_content_symmetry">
+              <view class="voiceView view_box_row_content girl_bg_color">
+                <view class="view_box_common view_box_row">
+                  <image class="playIco" src="../../static/ico/{{playVoiceState?'stop_play':'play'}}.png"></image>
+                  <image wx:if="{{playVoiceState}}" class="audioGif" src="../../static/gif/audio_frequency.gif"></image>
+                  <image wx:else class="audioIco" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                  <view>14s</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="view_box_common text_ellipsis staffDetail">愿意成为你的树洞</view>
+        <view class="view_box_common view_box_row_content_symmetry" style="margin-top: 6px;">
+          <view class="staffInfo view_box_row_content">
+            <image src="../../static/temp/t2.png" class="staffAvatar"></image>
+            <view class="staffName text_ellipsis">有点甜有点甜</view>
+          </view>
+          <wux-icon type="md-heart" size="22" color="#FF5401"></wux-icon>
+        </view>
+      </view>
+
+      <view class="staffView">
+        <view class="staffCover">
+          <image class="cover" src="../../static/temp/t3.png"></image>
+          <view class="view_box_common view_all_adapt view_box_column_symmetry">
+            <view class="view_box_row_content_symmetry" style="margin-top: 6px;">
+              <view class="presence view_box_row_content">
+                <image src="../../static/ico/online_32.png" mode="widthFix"></image>
+                <view>在线</view>
+              </view>
+              <view class="sexAndAgeView view_box_row_content girl_bg_color">
+                <image src="../../static/ico/girl_white_32.png"></image>
+                <view>12</view>
+              </view>
+            </view>
+            <view class="view_box_row_content_symmetry">
+              <view class="voiceView view_box_row_content girl_bg_color">
+                <view class="view_box_common view_box_row">
+                  <image class="playIco" src="../../static/ico/{{playVoiceState?'stop_play':'play'}}.png"></image>
+                  <image wx:if="{{playVoiceState}}" class="audioGif" src="../../static/gif/audio_frequency.gif"></image>
+                  <image wx:else class="audioIco" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                  <view>14s</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="view_box_common text_ellipsis staffDetail">愿意成为你的树洞</view>
+        <view class="view_box_common view_box_row_content_symmetry" style="margin-top: 6px;">
+          <view class="staffInfo view_box_row_content">
+            <image src="../../static/temp/t3.png" class="staffAvatar"></image>
+            <view class="staffName text_ellipsis">有点甜有点甜</view>
+          </view>
+          <wux-icon type="md-heart" size="22" color="#FF5401"></wux-icon>
+        </view>
+      </view>
+
+      <view class="staffView">
+        <view class="staffCover">
+          <image class="cover" src="../../static/temp/t4.png"></image>
+          <view class="view_box_common view_all_adapt view_box_column_symmetry">
+            <view class="view_box_row_content_symmetry" style="margin-top: 6px;">
+              <view class="presence view_box_row_content">
+                <image src="../../static/ico/online_32.png" mode="widthFix"></image>
+                <view>在线</view>
+              </view>
+              <view class="sexAndAgeView view_box_row_content girl_bg_color">
+                <image src="../../static/ico/girl_white_32.png"></image>
+                <view>12</view>
+              </view>
+            </view>
+            <view class="view_box_row_content_symmetry">
+              <view class="voiceView view_box_row_content girl_bg_color">
+                <view class="view_box_common view_box_row">
+                  <image class="playIco" src="../../static/ico/{{playVoiceState?'stop_play':'play'}}.png"></image>
+                  <image wx:if="{{playVoiceState}}" class="audioGif" src="../../static/gif/audio_frequency.gif"></image>
+                  <image wx:else class="audioIco" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                  <view>14s</view>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="view_box_common text_ellipsis staffDetail">愿意成为你的树洞</view>
+        <view class="view_box_common view_box_row_content_symmetry" style="margin-top: 6px;">
+          <view class="staffInfo view_box_row_content">
+            <image src="../../static/temp/t4.png" class="staffAvatar"></image>
+            <view class="staffName text_ellipsis">有点甜有点甜</view>
+          </view>
+          <wux-icon type="md-heart" size="22" color="#FF5401"></wux-icon>
+        </view>
+      </view>
+
+
+
+    </view>
+
+  </scroll-view>
+</view>

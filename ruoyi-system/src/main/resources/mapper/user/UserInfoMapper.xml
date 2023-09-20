@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.user.mapper.UserInfoMapper">
-    
+
     <resultMap type="UserInfo" id="UserInfoResult">
         <result property="id"    column="id"    />
         <result property="avatarUrl"    column="avatar_url"    />
@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectUserInfoList" parameterType="UserInfo" resultMap="UserInfoResult">
         <include refid="selectUserInfoVo"/>
-        <where>  
+        <where>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
             <if test="phone != null  and phone != ''"> and phone like concat('%', #{phone}, '%')</if>
@@ -35,12 +35,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hideRanking != null  and hideRanking != ''"> and hide_ranking = #{hideRanking}</if>
         </where>
     </select>
-    
+
     <select id="selectUserInfoById" parameterType="Long" resultMap="UserInfoResult">
         <include refid="selectUserInfoVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectByOpenId" parameterType="String" resultMap="UserInfoResult">
+        <include refid="selectUserInfoVo"/>
+        where openId = #{openId}
+    </select>
+
     <insert id="insertUserInfo" parameterType="UserInfo" useGeneratedKeys="true" keyProperty="id">
         insert into bus_user_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -97,7 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteUserInfoByIds" parameterType="String">
-        delete from bus_user_info where id in 
+        delete from bus_user_info where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

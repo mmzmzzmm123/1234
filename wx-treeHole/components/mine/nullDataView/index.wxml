@@ -1,0 +1,4 @@
+<view class="nullDataView" style="height:{{height}};width:{{width}};">
+  <image src="../../../static/images/nullData.png" mode="widthFix"></image>
+  <view style="font-size: {{size}};">{{title}}</view>
+</view>

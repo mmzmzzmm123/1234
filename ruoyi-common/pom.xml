@@ -155,6 +155,16 @@
             <artifactId>cos_api</artifactId>
         </dependency>
 
+        <!-- 微信登录与支付  -->
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-miniapp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.binarywang</groupId>
+            <artifactId>weixin-java-pay</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

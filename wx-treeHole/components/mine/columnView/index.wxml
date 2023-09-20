@@ -1,0 +1,10 @@
+<view class="view_box_common view_box_row_content_symmetry" style="margin: {{outerMargin}} auto;">
+  <view class="titleView view_box_row_content">
+    <image src="../../../static/ico/theme_dot.png" mode="widthFix"></image>
+    <view>{{title}}</view>
+  </view>
+  <view wx:if="{{ifShowMore=='0'}}" class="view_box_row_content moreView" catchtap="toPage">
+    <view style="color: {{moreTitleColor}};">{{moreTitle}}</view>
+    <wux-icon type="ios-arrow-forward" size="12" color="{{moreTitleColor}}"></wux-icon>
+  </view>
+</view>

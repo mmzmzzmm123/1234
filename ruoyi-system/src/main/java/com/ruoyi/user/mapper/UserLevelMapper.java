@@ -20,6 +20,14 @@ public interface UserLevelMapper {
     public UserLevel selectUserLevelById(Long id);
 
     /**
+     * 根据用户标识查询数据
+     *
+     * @param userId 用户标识
+     * @return 结果
+     * */
+    public UserLevel selectByUserId(Long userId);
+
+    /**
      * 查询用户等级记录列表
      *
      * @param userLevel 用户等级记录

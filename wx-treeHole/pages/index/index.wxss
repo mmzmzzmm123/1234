@@ -1,0 +1,221 @@
+page{
+  background-color: #f8f8f9;
+}
+.stateBarView{
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+}
+.stateBarView .stateBar{
+  width: 100%;
+}
+.stateBarView .titleView{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position: relative;
+  color: #ffffff;
+}
+.stateBarIcoView{
+  position: absolute;
+  left: 0px;
+}
+.bannerBgColorView{
+  width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: -999;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.swiperView{
+  width: 92%;
+  margin: 0 auto;
+  z-index: -888;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.noticeView{
+  height: 40px;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ffffff;
+}
+.noticeView image{
+  width: 40px;
+  margin-right: 8px;
+}
+.staffView{
+  width: 48%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.staffCover{
+  width: 100%;
+  height: 180px;
+  position: relative;
+}
+.staffCover .cover{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  z-index: -999;
+}
+.staffDetail{
+  font-size: 14px;
+  margin-top: 2px;
+}
+.staffAvatar{
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  overflow: hidden;
+  margin-right: 6px;
+}
+.staffName{
+  font-size: 14px;
+  width: 80px;
+}
+.presence{
+  padding: 2px 6px;
+  background-color: #ffffff;
+  font-size: 10px;
+  border-radius: 10px;
+}
+.presence image{
+  width: 12px; 
+}
+.voiceView{
+  height: 28px;
+  margin-bottom: 6px;
+  padding: 0 4px;
+  font-size: 10px;
+  color: #ffffff;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.voiceView .playIco{
+  width: 13px;
+  height: 13px; 
+  margin-right: 4px;
+}
+.voiceView .audioGif{
+  width: 30px;
+  height:20px;
+  margin-right: 4px;
+}
+.voiceView .audioIco{
+  width: 30px;
+  margin-right: 4px;
+}
+.sexAndAgeView{
+  padding: 4px 6px;
+  font-size: 10px;
+  color: #ffffff;
+  border-radius: 10px;
+}
+.sexAndAgeView image{
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+}
+.rankView{
+  position: relative;
+  overflow: hidden;
+}
+.rankView .rankLeftDecorate{
+  width: 200px;
+  position: absolute;
+  top: 0;
+  left: -10px;
+  z-index: 1;
+}
+.rankView .rankRigheDecorate{
+  width: 200px;
+  position: absolute;
+  top: 60px;
+  right: -10px;
+  z-index: 1;
+}
+.rankInfo{
+  position: relative;
+}
+.rankInfo .rankBg{
+  width: 100%;
+  border-radius: 10px;
+}
+.rankInfo .staffRank{
+  width: 80px;
+  height: 80px;
+  border-radius: 80px;
+}
+.rankInfo .staffRankView{
+  position: absolute;
+  z-index: 5;
+}
+.rankInfo .staffRankView view{
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.crownIco{
+  width: 35px;
+  position: absolute;
+  top: -25px;
+}
+.fireworks{
+  width: 300px;
+  position: absolute;
+}
+.rankTab{
+  width: 160px;
+  height: 28px;
+  background-color: #ffffff;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 6;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.rankTab view{
+  width: 50%;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  font-size: 14px;
+}
+.rankTab_cli{
+  background-color: #fa9090;
+  border-radius: 20px;
+  color: #ffffff;
+}
+.newPeopleItem{
+  width: 60px;
+  margin-right: 16px;
+  text-align: center;
+}
+.newPeopleItem image{
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
+}
+.newPeopleItem .newPeopleName{
+  font-size: 14px;
+  margin-top: 4px;
+}
+.newPeopleItem .newPeopleBut{
+  padding: 2px 0;
+  font-size: 12px;
+  border-radius: 10px;
+  margin-top: 6px;
+  color: #ffffff;
+}

@@ -20,6 +20,14 @@ public interface UserWalletMapper {
     public UserWallet selectUserWalletById(Long id);
 
     /**
+     * 根据用户标识查询记录
+     *
+     * @param userId 用户标识
+     * @return 结果
+     * */
+    public UserWallet selectByUserId(Long userId);
+
+    /**
      * 查询用户钱包管理列表
      *
      * @param userWallet 用户钱包管理

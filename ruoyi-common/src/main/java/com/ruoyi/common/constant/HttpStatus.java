@@ -2,7 +2,7 @@ package com.ruoyi.common.constant;
 
 /**
  * 返回状态码
- * 
+ *
  * @author ruoyi
  */
 public class HttpStatus
@@ -91,4 +91,9 @@ public class HttpStatus
      * 系统警告消息
      */
     public static final int WARN = 601;
+
+    /**
+     * 系统警告消息
+     */
+    public static final int WARN_WX = 505;
 }

@@ -20,6 +20,14 @@ public interface UserInfoMapper {
     public UserInfo selectUserInfoById(Long id);
 
     /**
+     * 根据openId查询微信用户信息
+     *
+     * @param openId
+     * @return 结果
+     */
+    public UserInfo selectByOpenId(String openId);
+
+    /**
      * 查询用户信息管理列表
      *
      * @param userInfo 用户信息管理
