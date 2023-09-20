@@ -2,6 +2,9 @@ package com.ruoyi.staff.service.impl;
 
 import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.constant.RedisKeyConstants;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -21,6 +24,7 @@ import com.ruoyi.staff.service.IStaffLevelConfigService;
 public class StaffLevelConfigServiceImpl implements IStaffLevelConfigService {
 
     private final StaffLevelConfigMapper staffLevelConfigMapper;
+    private final RedisCache redisCache;
 
     /**
      * 查询员工等级配置
@@ -52,6 +56,7 @@ public class StaffLevelConfigServiceImpl implements IStaffLevelConfigService {
      */
     @Override
     public int insertStaffLevelConfig(StaffLevelConfig staffLevelConfig) {
+        redisCache.deleteObject(RedisKeyConstants.STAFF_LEVEL_CONFIG_DATA);
         Date now = DateUtils.getNowDate();
         String loginName = SecurityUtils.getUsername();
         staffLevelConfig.setCreateTime(now)
@@ -69,6 +74,7 @@ public class StaffLevelConfigServiceImpl implements IStaffLevelConfigService {
      */
     @Override
     public int updateStaffLevelConfig(StaffLevelConfig staffLevelConfig) {
+        redisCache.deleteObject(RedisKeyConstants.STAFF_LEVEL_CONFIG_DATA);
         staffLevelConfig.setUpdateBy(SecurityUtils.getUsername())
                 .setUpdateTime(DateUtils.getNowDate());
         return staffLevelConfigMapper.updateStaffLevelConfig(staffLevelConfig);
@@ -82,6 +88,7 @@ public class StaffLevelConfigServiceImpl implements IStaffLevelConfigService {
      */
     @Override
     public int deleteStaffLevelConfigByIds(Long[] ids) {
+        redisCache.deleteObject(RedisKeyConstants.STAFF_LEVEL_CONFIG_DATA);
         return staffLevelConfigMapper.deleteStaffLevelConfigByIds(ids);
     }
 
@@ -93,6 +100,7 @@ public class StaffLevelConfigServiceImpl implements IStaffLevelConfigService {
      */
     @Override
     public int deleteStaffLevelConfigById(Long id) {
+        redisCache.deleteObject(RedisKeyConstants.STAFF_LEVEL_CONFIG_DATA);
         return staffLevelConfigMapper.deleteStaffLevelConfigById(id);
     }
 }

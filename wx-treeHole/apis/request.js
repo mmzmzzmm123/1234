@@ -1,6 +1,9 @@
 import globalCanstanats from "../constans/globalConstant";
 let prefix = "http://localhost/dev-api";
 //let prefix = "https://listen.vipwei.com/prod-api";
+// 上传单文件链接
+let uploadSingleFileUrl = "http://localhost/dev-api/api/file/uploadSingleFile";
+
 import util from "../utils/util";
 
 let post_header = {
@@ -110,5 +113,6 @@ let removeNullProperty = function (params) {
 module.exports = {
   prefix: prefix,
   post: post,
-  get: get
+  get: get,
+  uploadSingleFileUrl: uploadSingleFileUrl
 }

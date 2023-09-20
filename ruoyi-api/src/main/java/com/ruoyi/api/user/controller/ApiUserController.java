@@ -8,10 +8,7 @@ import com.ruoyi.common.core.domain.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -38,5 +35,11 @@ public class ApiUserController {
     @PostMapping("/update")
     public R<Boolean> update(@Valid ApiUserDto dto){
         return R.ok(service.update(dto));
+    }
+
+    @ApiOperation("生成用户推荐码")
+    @GetMapping("/generateReferralCode")
+    public R<String> generateReferralCode(@RequestParam("userId") Long userId){
+        return R.ok(service.generateReferralCode(userId));
     }
 }

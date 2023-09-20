@@ -8,6 +8,7 @@ import com.ruoyi.api.user.model.vo.ApiUserVo;
 import com.ruoyi.api.user.model.vo.ApiUserWalletVo;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.LongUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.weixin.WxService;
@@ -21,6 +22,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author LAM
@@ -102,5 +105,39 @@ public class ApiUserService {
         userInfoMapper.updateUserInfo(updateInfo);
         log.info("用户信息更新：完成");
         return Boolean.TRUE;
+    }
+
+    /**
+     * 生成用户推荐码
+     *
+     * @param userId 用户标识
+     * @return 结果
+     * */
+    public String generateReferralCode(Long userId) {
+        log.info("生成用户推荐码：开始，参数：{}", userId);
+        Long code = LongUtils.generateReferralCode();
+        code = recursionGenerateCode(code);
+        UserInfo update = new UserInfo();
+        update.setId(userId)
+                .setReferralCode(code);
+        userInfoMapper.updateUserInfo(update);
+        log.info("生成用户推荐码：完成，返回参数：{}", code);
+        return code.toString();
+    }
+
+    /**
+     * 递归构成唯一性的推荐码
+     *
+     * @param code 初始化code
+     * @return 唯一性code
+     * */
+    private Long recursionGenerateCode(Long code){
+        UserInfo select = new UserInfo();
+        select.setReferralCode(code);
+        List<UserInfo> userInfos = userInfoMapper.selectUserInfoList(select);
+        if (ObjectUtil.isNotEmpty(userInfos)){
+            return this.recursionGenerateCode(LongUtils.generateReferralCode());
+        }
+        return code;
     }
 }

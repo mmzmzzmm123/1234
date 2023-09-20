@@ -4,4 +4,8 @@ module.exports = {
   stateBarHeight: "stateBarHeight",
   //用户信息
   userInfo: "userInfo",
+  // 用户等级配置
+  userLevelConfigList: "userLevelConfigList",
+  // 员工等级配置
+  staffLevelConfigList: "staffLevelConfigList"
 }

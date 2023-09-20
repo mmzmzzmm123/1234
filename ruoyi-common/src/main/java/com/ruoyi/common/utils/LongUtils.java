@@ -22,4 +22,19 @@ public class LongUtils {
         long max = 99999999L;
         return min + ((long) (random.nextDouble() * (max - min + 1)));
     }
+
+    /**
+     * 根据提供的参数随机生成一个随机数
+     *
+     * @param min 最小值
+     * @param max 最大值
+     * @return 结果
+     * */
+    public static Long generateRandomNumber(int min, int max) {
+        if (min > max) {
+            throw new IllegalArgumentException("最小值不能大于最大值");
+        }
+        Random random = new Random();
+        return Long.parseLong(random.nextInt(max - min + 1) + min+"");
+    }
 }

@@ -19,19 +19,33 @@
       <view class="view_box_common view_box_row" style="position:relative;z-index:888;">
         <wux-avatar size="large" scale="true" src="{{userInfo != null && userInfo.avatarUrl != null ? userInfo.avatarUrl : '../../../../static/images/default_tx.png'}}"></wux-avatar>
         <view class="view_box_column_symmetry" style="width:{{pWidth*0.92-54}}px;height: 80rpx;margin-left: 10px;">
-          <view>
+          <!-- 已登录 -->
+          <view wx:if="{{userInfo != null}}">
             <view class="view_box_row_content_symmetry">
-              <view class="userName">{{userInfo!=null?userInfo.nickName:'请登录'}}</view>
+              <view class="userName">{{userInfo.nickName}}</view>
               <view class="userDataBut" bind:tap="toUserData">个人资料></view>
             </view>
-            <view class="view_box_row" style="margin-top: 4px;">
-              <view class="level">vip1</view>
+            <view wx:if="{{userLevelData != null}}" class="view_box_row" style="margin-top: 4px;">
+              <view class="level">vip{{userLevelData.currLevel}}</view>
               <view class="levelProgress">
-                <wux-progress status="progress" percent="50" />
+                <wux-progress status="progress" percent="{{userLevelData.currLevel != userLevelData.nextLevel?userLevelData.upgradationPercent:100}}" />
               </view>
-              <view class="level">vip2</view>
+              <view class="level">vip{{userLevelData.nextLevel}}</view>
             </view>
-            <view class="levelTips">再消费128个树币即可升级为vip2</view>
+            <view wx:if="{{userLevelData != null}}" class="levelTips">
+              <block wx:if="{{userLevelData.currLevel != userLevelData.nextLevel}}">
+                再消费{{userLevelData.upgradationThreshold}}个树币即可升级为vip{{userLevelData.nextLevel}}
+              </block>
+              <block wx:else>
+                哇 泰酷辣 有人等级爆啦
+              </block>
+            </view>
+            <view wx:if="{{userLevelData == null}}" style="font-size: 12px;margin-top: 10px;">等级数据加载中</view>
+          </view>
+          <!-- 未登录 -->
+          <view wx:else class="view_box_column_symmetry loginView" bind:tap="login">
+            <view>点击登录</view>
+            <span>开启登录，打开探索新世界大门</span>
           </view>
         </view>
       </view>

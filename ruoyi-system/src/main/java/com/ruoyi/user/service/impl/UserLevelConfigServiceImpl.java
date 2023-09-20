@@ -2,6 +2,8 @@ package com.ruoyi.user.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import com.ruoyi.common.constant.RedisKeyConstants;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -21,6 +23,7 @@ import com.ruoyi.user.service.IUserLevelConfigService;
 public class UserLevelConfigServiceImpl implements IUserLevelConfigService {
 
     private final UserLevelConfigMapper userLevelConfigMapper;
+    private final RedisCache redisCache;
 
     /**
      * 查询用户等级配置
@@ -58,7 +61,11 @@ public class UserLevelConfigServiceImpl implements IUserLevelConfigService {
                 .setUpdateTime(now)
                 .setUpdateBy(loginUser)
                 .setCreateBy(loginUser);
-        return userLevelConfigMapper.insertUserLevelConfig(userLevelConfig);
+        int rsLine = userLevelConfigMapper.insertUserLevelConfig(userLevelConfig);
+        if (rsLine > 0){
+            redisCache.deleteObject(RedisKeyConstants.USER_LEVEL_CONFIG_DATA);
+        }
+        return rsLine;
     }
 
     /**
@@ -71,7 +78,11 @@ public class UserLevelConfigServiceImpl implements IUserLevelConfigService {
     public int updateUserLevelConfig(UserLevelConfig userLevelConfig) {
         userLevelConfig.setUpdateBy(SecurityUtils.getUsername());
         userLevelConfig.setUpdateTime(DateUtils.getNowDate());
-        return userLevelConfigMapper.updateUserLevelConfig(userLevelConfig);
+        int rsLine = userLevelConfigMapper.updateUserLevelConfig(userLevelConfig);
+        if (rsLine > 0){
+            redisCache.deleteObject(RedisKeyConstants.USER_LEVEL_CONFIG_DATA);
+        }
+        return rsLine;
     }
 
     /**
@@ -82,6 +93,7 @@ public class UserLevelConfigServiceImpl implements IUserLevelConfigService {
      */
     @Override
     public int deleteUserLevelConfigByIds(Long[] ids) {
+        redisCache.deleteObject(RedisKeyConstants.USER_LEVEL_CONFIG_DATA);
         return userLevelConfigMapper.deleteUserLevelConfigByIds(ids);
     }
 
@@ -93,6 +105,7 @@ public class UserLevelConfigServiceImpl implements IUserLevelConfigService {
      */
     @Override
     public int deleteUserLevelConfigById(Long id) {
+        redisCache.deleteObject(RedisKeyConstants.USER_LEVEL_CONFIG_DATA);
         return userLevelConfigMapper.deleteUserLevelConfigById(id);
     }
 }

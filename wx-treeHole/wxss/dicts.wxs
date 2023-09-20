@@ -1,0 +1,11 @@
+/**
+ * 性别
+ */
+sex = function (key) {
+  return key == "0" ? "男" :
+    key == "1" ? "女" :
+        "未知";
+}
+module.exports = {
+  sex: sex
+}

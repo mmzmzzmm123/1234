@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -56,7 +54,7 @@ public class RedisCache {
      * @param timeout 超时时间
      * @return true=设置成功；false=设置失败
      */
-    public boolean expire(final String key, final long timeout) {
+    public Boolean expire(final String key, final long timeout) {
         return expire(key, timeout, TimeUnit.SECONDS);
     }
 
@@ -68,7 +66,7 @@ public class RedisCache {
      * @param unit    时间单位
      * @return true=设置成功；false=设置失败
      */
-    public boolean expire(final String key, final long timeout, final TimeUnit unit) {
+    public Boolean expire(final String key, final long timeout, final TimeUnit unit) {
         return redisTemplate.expire(key, timeout, unit);
     }
 
@@ -78,7 +76,7 @@ public class RedisCache {
      * @param key Redis键
      * @return 有效时间
      */
-    public long getExpire(final String key) {
+    public Long getExpire(final String key) {
         return redisTemplate.getExpire(key);
     }
 
@@ -106,9 +104,10 @@ public class RedisCache {
     /**
      * 删除单个对象
      *
-     * @param key
+     * @param key 键
+     * @return 结果
      */
-    public boolean deleteObject(final String key) {
+    public Boolean deleteObject(final String key) {
         return redisTemplate.delete(key);
     }
 
@@ -116,9 +115,9 @@ public class RedisCache {
      * 删除集合对象
      *
      * @param collection 多个对象
-     * @return
+     * @return 结果
      */
-    public boolean deleteObject(final Collection collection) {
+    public Boolean deleteObject(final Collection collection) {
         return redisTemplate.delete(collection) > 0;
     }
 
@@ -233,7 +232,7 @@ public class RedisCache {
      * @param hKey Hash键
      * @return 是否成功
      */
-    public boolean deleteCacheMapValue(final String key, final String hKey) {
+    public Boolean deleteCacheMapValue(final String key, final String hKey) {
         return redisTemplate.opsForHash().delete(key, hKey) > 0;
     }
 

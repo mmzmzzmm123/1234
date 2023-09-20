@@ -25,25 +25,25 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     /**
      * 名字数组
-     * */
+     */
     private static final String[] animeNamesArray = {
             "Sakura", "Naruto", "Goku", "Sailor Moon", "Luffy",
-            "Mikasa", "Gon", "Kaneki", "Inuyasha", "Asuna",
-            "Edward", "Lelouch", "Saitama", "Zero Two", "Astro Boy",
-            "Totoro", "Vegeta", "Kenshin", "Bulma", "Ichigo"
+            "Mikasa", "Gon", "Kaneki", "Asuna", "Coco", "Jojo",
+            "Edward", "Totoro", "Vegeta", "Bulma", "Ichigo", "Gogo",
+            "Fiona", "Gigi", "Mayo", "Dolby"
     };
 
     /**
      * 表情数组
-     * */
+     */
     private static final String[] emojisArray = {
-            "😊", "😍", "🐶", "🐱", "🐰",
-            "🐻", "🍭", "🍰", "🍦", "🐠"
+            "😊", "😍", "🐶", "🐱", "🐰", "🎈", "🍉",
+            "🐻", "🍭", "🍰", "🍦", "🐠", "💕", "😎"
     };
 
     /**
      * 随机生成名字
-     * */
+     */
     public static String generateUniqueNameWithAnimeElement() {
         List<String> animeNamesList = ListUtil.toList(animeNamesArray);
         List<String> emojisList = ListUtil.toList(emojisArray);
