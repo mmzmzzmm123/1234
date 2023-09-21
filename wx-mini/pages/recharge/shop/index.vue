@@ -198,7 +198,7 @@
 		margin: 20rpx;
 		background: #fff;
 		border-radius: 16rpx;
-		padding: 20rpx;
+		padding: 20rpx 0 0 20rpx;
 		.icon{
 			display: inline-block;
 			background: $u-primary;
@@ -218,7 +218,7 @@
 		color: $u-bright;
 		width: 210rpx;
 		height: 210rpx;
-		margin-right: 20rpx;
+		margin: 0 20rpx 20rpx 0;
 		&--selected{
 			background: $u-primary;
 		}

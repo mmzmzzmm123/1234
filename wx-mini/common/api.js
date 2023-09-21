@@ -58,6 +58,9 @@ const api = {
 			 return res
 		})
 	},
+	getStoreById(id){
+		return {} // todo....
+	},
 	getRoomList(param){
 		return get('office/api/room/list', param).then(res=>{
 			res.rows.forEach(x=>{
@@ -89,8 +92,8 @@ const api = {
 	openStore(storeId){
 		return post('office/api/store/' + storeId)
 	},
-	openRoom(roomId){
-		return post('office/api/room/' + roomId)
+	openRoom(orderId){
+		return post('office/api/room/' + orderId)
 	},
 	addOrder(param){
 		return post('office/roomorder/order', param)
@@ -127,6 +130,12 @@ const api = {
 	},
 	buyStorePackageSuccess(param){
 		return post('office/api/package/payquery', param)
+	},
+	getPromotionList(param){
+		return get('office/api/promotionList', param)
+	},
+	getStorePromotionList(storeId){
+		return getPromotionList({storeId})
 	}
 }
 const install = (Vue, options) => {

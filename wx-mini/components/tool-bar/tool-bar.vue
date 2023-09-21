@@ -48,7 +48,7 @@
 						style: '',
 						showList: true,
 						onChoseOrder: order=>{
-							this.$api.openRoom(order.roomId).then(res=>{
+							this.$api.openRoom(order.id).then(res=>{
 								this.showToast("开门成功")
 								this.show = false
 							}).finally(res=>{

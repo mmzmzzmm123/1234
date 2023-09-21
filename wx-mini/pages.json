@@ -19,7 +19,7 @@
 			"path": "pages/welfare/index",
 			"style": {
 				"navigationBarTitleText": "福利中心",
-				"enablePullDownRefresh": false
+				"enablePullDownRefresh": true
 			}
 		},
 		{

@@ -1,10 +1,10 @@
 <template>
 	<view>
 		<view class="top">
-			<view class="mine-card">
+			<navigator class="mine-card" url="/pages/recharge/shop-list/index?type=yu-e">
 				<view class="mine-card_value">¥{{amount}}</view>
 				<view>我的余额</view>
-			</view>
+			</navigator>
 			<navigator class="mine-card" url="../coupon/list/index">
 				<view class="mine-card_value">0</view>
 				<view>我的卡券</view>

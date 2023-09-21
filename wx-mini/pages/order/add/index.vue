@@ -7,7 +7,7 @@
 					class="price-bar" :class="currentPackage.id == price.id ? 'price-bar--selected':''"
 					@click="onPackageSelected(price)">
 					<text>{{price.name}}</text>
-					<text style="float: right;">{{price.price}}元/小时</text>
+					<text style="float: right;">{{price.price}}元/场</text>
 				</view>
 			</block>
 			<block v-else>
@@ -17,6 +17,12 @@
 					<text style="float: right;">{{price.price}}元/小时</text>
 				</view>
 			</block>
+		</view>
+		<view class="card" v-if="promotionList && promotionList.length > 0">
+			<view class="price-title">优惠套餐</view>
+			<image v-for="item in promotionList" :key="item.id" :src="item.logo" mode="aspectFill"
+				class="promotion-img" :class="item.id == currentPromotion.id ? 'promotion-img--selected':''"
+				@click="onPromotionSelected(item)"></image>
 		</view>
 		<view class="card">
 			<view>选择时间</view>
@@ -95,7 +101,10 @@
 				hourRepeat: false,
 				amount: 0,
 				payShow: false,
-				currentPackage: {}
+				currentPackage: {},
+				
+				promotionList: [],
+				currentPromotion: {}
 			}
 		},
 		computed:{
@@ -123,9 +132,17 @@
 				}else{
 					this.updateHourStatus()
 				}
+				this.$api.getPromotionList({storeId: roomInfo.id}).then(res=>{
+					this.promotionList = [{id: 1, logo: 'https://fanyiapp.cdn.bcebos.com/cms/image/e2dc2ec72e1573fe86b9e4ef71dae181.png'},
+					{id: 2, logo: "https://www.baidu.com/img/flexible/logo/pc/result@2.png"}]//res.rows
+				})
 			},
 			calcAmount(){
-				if(this.isPackagePay){
+				// 计算金额
+				if(this.currentPromotion.id){
+					this.amount = this.currentPromotion.standardPrice - this.currentPromotion.discountPrice
+				}
+				else if(this.currentPackage.id){
 					this.amount = this.currentPackage.price
 				}else{
 					const start = new Date(this.order.startTime)
@@ -219,7 +236,12 @@
 			},
 			onConfirmPicker(start, e){
 				let startTime = this.order.startTime
-				let endTime = this.isPackagePay ? e.value + this.currentPackage.minutes * 60 * 1000 : this.order.endTime
+				let endTime = this.order.endTime
+				if(this.currentPromotion.id){ //优惠套装
+					endTime = this.currentPromotion.maxMinutes * 60 * 1000
+				}else if(this.currentPackage.id){ //套餐
+					endTime = this.currentPackage.minutes * 60 * 1000
+				}
 				if(start){
 					startTime = e.value
 				}else{
@@ -234,7 +256,7 @@
 				}
 				if(start){
 					this.order.startTime = e.value
-					if(this.isPackagePay){
+					if(this.currentPromotion.id || this.currentPackage.id){ //优惠套装，套装结束时间不用选
 						this.order.endTime = endTime
 					}
 					this.startShow = false
@@ -268,10 +290,32 @@
 				wx.requestSubscribeMessage({
 					tmplIds: ['58BvI5jDnq61I9slOIIjf89J9ionC95R14eUJ9rQLWA']
 				})
-				this.payShow = true
+				if(this.currentPromotion.id){ //优惠套餐支付
+					this.$api.addOrder({
+						roomId: this.roomInfo.id,
+						startTime: this.$u.timeFormat(this.order.startTime, 'yyyy-mm-dd hh:MM'),
+						payType: 3 ,// todo...
+						couponId: this.currentPromotion.id
+					}).then(res=>{
+						const param = res.jsapiResult
+						param.package = param.packageValue
+						delete param.packageValue
+						param.success = ()=>{
+							this.$api.wxPaySuccess(res).then((payRes)=>{
+								this.onOrderSuccess()
+							})
+						}
+						param.fail = function(){
+							this.$toast('支付失败')
+						}
+						uni.requestPayment(param)
+					})
+				}else{
+					this.payShow = true
+				}
 			},
 			onPrepareOrder(e){
-				if(this.isPackagePay){
+				if(this.currentPackage.id){
 					e.order = {
 						packId: this.currentPackage.id,
 						startTime: this.$u.timeFormat(this.order.startTime, 'yyyy-mm-dd hh:MM'),
@@ -298,9 +342,17 @@
 					}
 				})
 			},
-			onPackageSelected(price){
-				this.currentPackage = price
-				this.order.endTime = this.order.startTime + this.currentPackage.minutes * 60 * 1000
+			onPackageSelected(pack){
+				this.currentPromotion = {}
+				this.currentPackage = pack
+				this.order.endTime = this.order.startTime + pack.minutes * 60 * 1000
+				this.calcAmount()
+				this.updateHourStatus()
+			},
+			onPromotionSelected(promotion){
+				this.currentPackage = {}
+				this.currentPromotion = promotion
+				this.order.endTime = this.order.startTime + promotion.maxMinutes * 60 * 1000
 				this.calcAmount()
 				this.updateHourStatus()
 			}
@@ -365,5 +417,15 @@
 		align-items: center;
 		justify-content: space-between;
 		bottom: 0;
+	}
+	.promotion-img{
+		display: block;
+		width: 670rpx;
+		height: 268rpx;
+		margin: 20rpx 0;
+		border-radius: 10rpx;
+		&--selected{
+			box-shadow: 0 0 16rpx 5rpx rgba(0,0,0,0.5);
+		}
 	}
 </style>
