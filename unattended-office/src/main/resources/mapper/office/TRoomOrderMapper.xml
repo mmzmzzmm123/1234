@@ -16,6 +16,7 @@
         <result property="welfareAmount" column="welfare_amount"/>
         <result property="couponAmount" column="coupon_amount"/>
         <result property="couponId" column="coupon_id"/>
+        <result property="promotionId" column="promotion_id"/>
         <result property="prepayId" column="prepay_id"/>
         <result property="status" column="status"/>
         <result property="remark" column="remark"/>
@@ -37,6 +38,7 @@
                welfare_amount,
                coupon_amount,
                coupon_id,
+               promotion_id,
                prepay_id,
                status,
                remark,
@@ -60,6 +62,7 @@
             <if test="welfareAmount != null ">and welfare_amount = #{welfareAmount}</if>
             <if test="couponAmount != null ">and coupon_amount = #{couponAmount}</if>
             <if test="couponId != null ">and coupon_id = #{couponId}</if>
+            <if test="promotionId != null ">and promotion_id = #{promotionId}</if>
             <if test="prepayId != null and prepayId != ''">and prepay_id = #{prepayId}</if>
             <if test="status != null ">and status = #{status}</if>
             <if test="createBy != null  and createBy != ''">and create_by = #{createBy}</if>
@@ -161,6 +164,7 @@
             <if test="welfareAmount != null">welfare_amount,</if>
             <if test="couponAmount != null">coupon_amount,</if>
             <if test="couponId != null">coupon_id,</if>
+            <if test="promotionId != null">promotion_id,</if>
             <if test="payType != null">pay_type,</if>
             <if test="prepayId != null and prepayId != ''">prepay_id,</if>
             <if test="status != null">status,</if>
@@ -181,6 +185,7 @@
             <if test="welfareAmount != null">#{welfareAmount},</if>
             <if test="couponAmount != null">#{couponAmount},</if>
             <if test="couponId != null">#{couponId},</if>
+            <if test="promotionId != null">#{promotionId},</if>
             <if test="payType != null">#{payType},</if>
             <if test="prepayId != null and prepayId != ''">#{prepayId},</if>
             <if test="status != null">#{status},</if>
@@ -205,6 +210,7 @@
             <if test="welfareAmount != null">welfare_amount = #{welfareAmount},</if>
             <if test="couponAmount != null">coupon_amount = #{couponAmount},</if>
             <if test="couponId != null">coupon_id = #{couponId},</if>
+            <if test="promotionId != null">promotion_id = #{promotionId},</if>
             <if test="prepayId != null and prepayId != ''">prepay_id = #{prepayId},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>

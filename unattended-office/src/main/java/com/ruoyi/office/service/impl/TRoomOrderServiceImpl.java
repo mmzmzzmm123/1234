@@ -337,7 +337,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             //本金足够
             if (totalPrice.compareTo(cashAmount) == -1) {
                 tRoomOrder.setPayAmount(totalPrice);
-            }else {
+            } else {
                 tRoomOrder.setPayAmount(cashAmount);
                 tRoomOrder.setWelfareAmount(totalPrice.subtract(cashAmount));
             }
@@ -1073,5 +1073,95 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         }
     }
 
+    @Autowired
+    ITStorePromotionService storePromotionService;
 
+    @Override
+    @Transactional
+    public PrepayResp promotionPrepay(PrepayReq prepayReq, long userId) {
+        PrepayResp resp = new PrepayResp();
+
+        if (prepayReq.getCouponId() == null || prepayReq.getCouponId() == 0) {
+            throw new ServiceException("优惠券异常");
+        }
+        TStorePromotion storePromotion = storePromotionService.selectTStorePromotionById(prepayReq.getCouponId());
+        if (storePromotion == null) {
+            throw new ServiceException("优惠券异常");
+        }
+
+        TRoom room = roomService.selectTRoomById(prepayReq.getRoomId());
+        if (room.getStoreId() != storePromotion.getStoreId()) {
+            throw new ServiceException("优惠券不适用于该房间");
+        }
+
+        TWxUserPromotion userPromotion = new TWxUserPromotion();
+        BeanUtils.copyProperties(storePromotion, userPromotion);
+        userPromotion.setWxId(userId);
+        userPromotion.setStatus("已使用");
+        userPromotion.setCouponId(storePromotion.getId());
+
+
+        TRoomOrder tRoomOrder = new TRoomOrder();
+        BeanUtils.copyProperties(prepayReq, tRoomOrder);
+        tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), storePromotion.getMaxMinute().intValue()));
+        tRoomOrder.setUserId(userId);
+
+        // 计算总金额
+        BigDecimal totalPrice = storePromotion.getStandardPrice();
+
+        // 计算订单号
+        long orderNo = 0l;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        final String prefix = prepayReq.getRoomId() + sdf.format(new Date());
+        Long maxId = tRoomOrderMapper.getHourMaxOrder(prefix);
+        if (maxId == null) {
+            orderNo = Long.parseLong(prefix + "00");
+        } else {
+            orderNo = maxId + 1;
+        }
+
+        TWxUser wxUser = wxUserService.selectTWxUserById(userId);
+
+        WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
+        final WxPayConfig config = wxPayService.getConfig();
+
+        WxPayUnifiedOrderV3Request.Amount v3Amount = new WxPayUnifiedOrderV3Request.Amount();
+        v3Amount.setTotal(totalPrice.multiply(new BigDecimal(100)).intValue());
+        WxPayUnifiedOrderV3Request.Payer v3payer = new WxPayUnifiedOrderV3Request.Payer();
+        v3payer.setOpenid(wxUser.getOpenId());
+
+        v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getPayScoreNotifyUrl())
+                .setDescription("roomId: " + prepayReq.getRoomId()).setOutTradeNo(String.valueOf(orderNo))
+                .setAmount(v3Amount)
+                .setPayer(v3payer)
+                .setAttach(OfficeEnum.WxTradeType.ROOM_ORDER.getCode());
+
+        WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
+        try {
+            jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+
+            tRoomOrder.setOrderNo(orderNo);
+            tRoomOrder.setTotalAmount(totalPrice);
+            tRoomOrder.setPayAmount(totalPrice);
+            tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.TO_PAY.getCode());// 待支付
+            tRoomOrder.setCreateTime(DateUtils.getNowDate());
+            tRoomOrder.setCreateBy(userId + "");
+
+            userPromotionService.insertTWxUserPromotion(userPromotion);
+
+            tRoomOrder.setPromotionId(userPromotion.getId());
+            tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
+
+
+        } catch (WxPayException e) {
+            e.printStackTrace();
+            log.error("JSAPI 下单：" + e.getLocalizedMessage());
+            throw new ServiceException(e.getLocalizedMessage());
+        }
+        resp.setJsapiResult(jsapiResult);
+        resp.setOrderId(tRoomOrder.getId());
+        log.debug("/order with promtion: return:" + resp.getOrderId() + jsapiResult.toString());
+
+        return resp;
+    }
 }

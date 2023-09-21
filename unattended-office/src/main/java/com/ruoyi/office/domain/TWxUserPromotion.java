@@ -73,6 +73,6 @@ public class TWxUserPromotion extends BaseEntity
 
     /** 状态 */
     @Excel(name = "状态")
-    private Long status;
+    private String status;
 
 }

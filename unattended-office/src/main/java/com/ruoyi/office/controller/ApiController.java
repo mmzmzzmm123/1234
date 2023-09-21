@@ -317,7 +317,7 @@ public class ApiController extends BaseController {
     public TableDataInfo payAvailable(TWxUserPromotion tWxUserPromotion) {
         TWxUserPromotion promotion = new TWxUserPromotion();
         promotion.setWxId(SecurityUtils.getUserId());
-        promotion.setStatus(0l);
+        promotion.setStatus("未使用");
         startPage();
         List<TWxUserPromotion> list = userPromotionService.selectPayAvailableList(promotion);
         return getDataTable(list);
@@ -683,8 +683,8 @@ public class ApiController extends BaseController {
         return getDataTable(res);
     }
 
-    @ApiOperation("房间预约支付")
-    @Log(title = "房间预约支付", businessType = BusinessType.INSERT)
+    @ApiOperation("房间按时间段计算价格支付")
+    @Log(title = "房间按时间段计算价格支付", businessType = BusinessType.INSERT)
     @PostMapping("/order")
     public AjaxResult order(@RequestBody PrepayReq order) {
         long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
@@ -700,8 +700,8 @@ public class ApiController extends BaseController {
         }
     }
 
-    @ApiOperation("套餐预约支付")
-    @Log(title = "套餐预约支付", businessType = BusinessType.INSERT)
+    @ApiOperation("购买房间套餐")
+    @Log(title = "购买房间套餐", businessType = BusinessType.INSERT)
     @PostMapping("/pack/order")
     public AjaxResult packOrder(@RequestBody PackPrepayReq order) {
         long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();

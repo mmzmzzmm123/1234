@@ -93,6 +93,13 @@ public class TRoomOrder extends BaseEntity {
     @Excel(name = "使用卡券")
     private Long couponId;
 
+    /**
+     * 用户领取的店铺优惠券
+     * wxUserPromotion.id
+     */
+    @Excel(name = "优惠券id")
+    private Long promotionId;
+
     private String prepayId;
 
     /**

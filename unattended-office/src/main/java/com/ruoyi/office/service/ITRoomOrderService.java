@@ -89,4 +89,6 @@ public interface ITRoomOrderService {
     void scanToPayOrder();
 
     PrepayResp packPrepay(PackPrepayReq order, long wxUserId);
+
+    PrepayResp promotionPrepay(PrepayReq order, long wxUserId);
 }
