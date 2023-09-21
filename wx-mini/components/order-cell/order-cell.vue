@@ -89,7 +89,7 @@
 				})
 			},
 			onOpenRoom(){
-				this.$api.openRoom(this.orderInfo.roomId).then(()=>{
+				this.$api.openRoom(this.orderInfo.id).then(()=>{
 					uni.showToast({
 						icon: "none",
 						title: "已发送开包厢请求"

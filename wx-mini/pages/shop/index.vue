@@ -1,28 +1,28 @@
 <template>
 	<view>
 		<view class="top">
-			<!-- <view class="top_bar">
-				<view>
-					<text class="iconfont icon-fuli"></text>
-					<view>优惠券</view>
-				</view>
-				<view>
-					<text class="iconfont icon-meituan"></text>
-					<view>美团验券</view>
-				</view>
-				<view>
-					<text class="iconfont icon-xufei"></text>
-					<view>续费</view>
-				</view>
-				<view>
-					<text class="iconfont icon-huiyuan"></text>
-					<view>会员充值</view>
-				</view>
-			</view> -->
 			<view style="border-radius: 20rpx;overflow: hidden;">
 				<ad-swiper :imgList="shopInfo.logoList"></ad-swiper>
 			</view>
 		</view>
+		<!-- <view class="btn-bar">
+			<view class="btn-bar_item">
+				<text class="iconfont icon-fuli"></text>
+				<text>本店福利</text>
+			</view>
+			<view>
+				<text class="iconfont icon-meituan"></text>
+				<view>美团验券</view>
+			</view>
+			<view>
+				<text class="iconfont icon-xufei"></text>
+				<view>续费</view>
+			</view>
+			<view class="btn-bar_item" @click="toRecharge">
+				<text class="iconfont icon-huiyuan"></text>
+				<text>会员充值</text>
+			</view>
+		</view> -->
 		<view class="shop">
 			<view class="shop-info shop-name">{{shopInfo.name}}</view>
 			<view class="shop-desc">
@@ -56,13 +56,18 @@
 				roomList: []
 			}
 		},
-		onLoad() {
-			this.getOpenerEventChannel().on('acceptShop', shopInfo => {
-				this.shopInfo = shopInfo
-				this.refresh()
-			})
+		onLoad(option) {
+			if(option.scene){
+				this.$api.getStoreById(option.scene).then(this.acceptShop)
+			}else{
+				this.getOpenerEventChannel().on('acceptShop', this.acceptShop)
+			}
 		},
 		methods: {
+			acceptShop(shopInfo){
+				this.shopInfo = shopInfo
+				this.refresh()
+			},
 			makePhoneCall(){
 				uni.makePhoneCall({
 					phoneNumber: this.shopInfo.phone
@@ -72,6 +77,14 @@
 				this.$api.getRoomList({storeId: this.shopInfo.id}).then(res=>{
 					this.roomList = res.rows
 					// console.log(res)
+				})
+			},
+			toRecharge(){
+				uni.navigateTo({
+					url: '/pages/recharge/shop/index',
+					success: res=>{
+						res.eventChannel.emit('acceptStore', this.shopInfo)
+					}
 				})
 			}
 		}
@@ -86,22 +99,28 @@
 		background: linear-gradient($u-primary, $u-bg-color);
 		padding: 20rpx;
 	}
-	.top_bar{
-		display: flex;
-		justify-content: space-around;
-		padding: 20rpx 0;
-		text-align: center;
-		color: $u-bright;
-		font-size: 26rpx;
-		.iconfont{
-			font-size: 70rpx;
-			color: $u-bright;
-			border: 4rpx solid $u-bright;
-			border-radius: 50%;
-			padding: 10rpx;
-			margin-bottom: 10rpx;
-		}
-	}
+	// .btn-bar{
+	// 	padding: 0 0 20rpx 20rpx;
+	// 	display: flex;
+	// 	justify-content: space-between;
+	// 	text-align: center;
+	// 	color: $u-bright;
+	// 	font-size: 36rpx;
+	// 	&_item{
+	// 		display: flex;
+	// 		flex: 1;
+	// 		align-items: center;
+	// 		background: $u-primary;
+	// 		padding: 30rpx;
+	// 		margin-right: 20rpx;
+	// 		border-radius: 20rpx;
+	// 	}
+	// 	.iconfont{
+	// 		font-size: 70rpx;
+	// 		color: $u-bright;
+	// 		margin-right: 30rpx;
+	// 	}
+	// }
 	.shop{
 		margin: 0 20rpx;
 		padding: 20rpx;

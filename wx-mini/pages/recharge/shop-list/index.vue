@@ -29,6 +29,7 @@
 							</view>
 						</view>
 					</view>
+					<view class="store_balance">店铺余额：<text class="store_balance_value">¥{{store.balance}}</text></view>
 					<view class="store_package-list">
 						<view v-for="pack in store.storePackageList" :key="pack.id" class="store-package">
 							充¥{{pack.payAmount}}送¥{{pack.giftAmont}}
@@ -53,7 +54,8 @@
 					lat: 0
 				},
 				storeList: [],
-				total: 0
+				total: 0,
+				type: ''
 			}
 		},
 		computed: {
@@ -67,7 +69,13 @@
 				return this.$store.state.canLocation
 			}
 		},
-		onLoad() {
+		onLoad(option) {
+			if(option.type == 'yu-e'){
+				this.type = option.type
+				uni.setNavigationBarTitle({
+					title: '余额详情'
+				})
+			}
 			this.$store.dispatch("getLocation").then(location=>{
 				this.refresh()
 			})
@@ -119,7 +127,6 @@
 		},
 		methods: {
 			refresh(nextPage){
-				console.log('refreshShopList')
 				const location = this.$store.state.location
 				if(location){
 					this.queryParam.lat = location.latitude
@@ -233,5 +240,13 @@
 		border-radius: 8rpx;
 		color: $u-bright;
 		font-size: 24rpx;
+	}
+	.store_balance{
+		margin-top: 10rpx;
+		font-size: 30rpx;
+		color: $u-content-color;
+		&_value{
+			color: $u-success;
+		}
 	}
 </style>
