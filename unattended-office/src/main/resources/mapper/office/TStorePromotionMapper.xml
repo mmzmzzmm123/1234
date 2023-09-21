@@ -1,51 +1,73 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.office.mapper.TStorePromotionMapper">
-    
+
     <resultMap type="TStorePromotion" id="TStorePromotionResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="couponType"    column="coupon_type"    />
-        <result property="merchantId"    column="merchant_id"    />
-        <result property="storeId"    column="store_id"    />
-        <result property="standardPrice"    column="standard_price"    />
-        <result property="discountPrice"    column="discount_price"    />
-        <result property="maxMinute"    column="max_minute"    />
-        <result property="maxHold"    column="max_hold"    />
-        <result property="validType"    column="valid_type"    />
-        <result property="validDays"    column="valid_days"    />
-        <result property="startDate"    column="start_date"    />
-        <result property="endDate"    column="end_date"    />
-        <result property="weekDays"    column="week_days"    />
-        <result property="status"    column="status"    />
-        <result property="remark"    column="remark"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="couponType" column="coupon_type"/>
+        <result property="merchantId" column="merchant_id"/>
+        <result property="storeId" column="store_id"/>
+        <result property="standardPrice" column="standard_price"/>
+        <result property="discountPrice" column="discount_price"/>
+        <result property="maxMinute" column="max_minute"/>
+        <result property="maxHold" column="max_hold"/>
+        <result property="validType" column="valid_type"/>
+        <result property="validDays" column="valid_days"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="weekDays" column="week_days"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="logo" column="logo"/>
     </resultMap>
 
     <sql id="selectTStorePromotionVo">
-        select id, name, coupon_type, merchant_id, store_id, standard_price, discount_price, max_minute, max_hold, valid_type, valid_days, start_date, end_date, week_days, status, remark, create_by, create_time, update_by, update_time from t_store_promotion
+        select id,
+               name,
+               coupon_type,
+               merchant_id,
+               store_id,
+               standard_price,
+               discount_price,
+               max_minute,
+               max_hold,
+               valid_type,
+               valid_days,
+               start_date,
+               end_date,
+               week_days,
+               logo,
+               status,
+               remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from t_store_promotion
     </sql>
 
     <select id="selectTStorePromotionList" parameterType="TStorePromotion" resultMap="TStorePromotionResult">
         <include refid="selectTStorePromotionVo"/>
-        <where>  
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
-            <if test="storeId != null "> and store_id = #{storeId}</if>
-            <if test="couponType != null  and couponType != ''"> and coupon_type = #{couponType}</if>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="merchantId != null ">and merchant_id = #{merchantId}</if>
+            <if test="storeId != null ">and store_id = #{storeId}</if>
+            <if test="couponType != null  and couponType != ''">and coupon_type = #{couponType}</if>
         </where>
     </select>
-    
+
     <select id="selectTStorePromotionById" parameterType="Long" resultMap="TStorePromotionResult">
         <include refid="selectTStorePromotionVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertTStorePromotion" parameterType="TStorePromotion" useGeneratedKeys="true" keyProperty="id">
         insert into t_store_promotion
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -68,7 +90,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+            <if test="logo != null">logo,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">#{name},</if>
             <if test="couponType != null and couponType != ''">#{couponType},</if>
@@ -89,7 +112,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+            <if test="logo != null">#{logo},</if>
+        </trim>
     </insert>
 
     <update id="updateTStorePromotion" parameterType="TStorePromotion">
@@ -114,16 +138,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="logo != null">logo = #{logo},</if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteTStorePromotionById" parameterType="Long">
-        delete from t_store_promotion where id = #{id}
+        delete
+        from t_store_promotion
+        where id = #{id}
     </delete>
 
     <delete id="deleteTStorePromotionByIds" parameterType="String">
-        delete from t_store_promotion where id in 
+        delete from t_store_promotion where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -29,7 +29,7 @@ public class TStorePromotion extends BaseEntity
 
     /** 优惠券类型(满减、免费体验券) */
     @Excel(name = "优惠券类型(满减、免费体验券)")
-    private Integer couponType;
+    private String couponType;
 
     /** 适用商户 0 所有商户适用 */
     @Excel(name = "适用商户 0 所有商户适用")
@@ -57,7 +57,7 @@ public class TStorePromotion extends BaseEntity
 
     /** 有效期类型(1:自购买日起2:开始结束日期） */
     @Excel(name = "有效期类型(1:自购买日起2:开始结束日期）")
-    private Long validType;
+    private String validType;
 
     /** 自购买日期有效天数 */
     @Excel(name = "自购买日期有效天数")
