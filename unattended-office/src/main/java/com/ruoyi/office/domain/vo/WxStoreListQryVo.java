@@ -4,6 +4,7 @@ import lombok.Data;
 
 @Data
 public class WxStoreListQryVo {
+    private Long id;
     private String province;
     private String lon;
     private String lat;

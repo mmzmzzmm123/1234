@@ -87,6 +87,7 @@
         select st_distance (point (#{lat},#{lon}),point(s.latitude ,s.longitude) ) * 111195 as meters, s.*
         from t_store s
         <where>
+            <if test="id != null and id != 0"> and id = #{id}</if>
             <if test="keyword != null and keyword != ''">and (name like concat('%', #{keyword}, '%') or address like
                 concat('%', #{keyword}, '%'))
             </if>

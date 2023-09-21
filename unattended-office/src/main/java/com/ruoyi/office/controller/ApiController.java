@@ -683,8 +683,8 @@ public class ApiController extends BaseController {
         return getDataTable(res);
     }
 
-    @ApiOperation("预约支付")
-    @Log(title = "预定", businessType = BusinessType.INSERT)
+    @ApiOperation("房间预约支付")
+    @Log(title = "房间预约支付", businessType = BusinessType.INSERT)
     @PostMapping("/order")
     public AjaxResult order(@RequestBody PrepayReq order) {
         long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
@@ -701,7 +701,7 @@ public class ApiController extends BaseController {
     }
 
     @ApiOperation("套餐预约支付")
-    @Log(title = "预定", businessType = BusinessType.INSERT)
+    @Log(title = "套餐预约支付", businessType = BusinessType.INSERT)
     @PostMapping("/pack/order")
     public AjaxResult packOrder(@RequestBody PackPrepayReq order) {
         long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
@@ -710,6 +710,23 @@ public class ApiController extends BaseController {
         try {
             logger.info("/order:" + order.toString());
             final PrepayResp prepay = roomOrderService.packPrepay(order, wxUserId);
+//            logger.info("/order: return:" + prepay.getOrderId() + prepay.getJsapiResult().toString());
+            return AjaxResult.success(prepay);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+    }
+
+    @ApiOperation("优惠券预定房间")
+    @Log(title = "优惠券预定房间", businessType = BusinessType.INSERT)
+    @PostMapping("/promotion/order")
+    public AjaxResult promotionOrder(@RequestBody PrepayReq order) {
+        long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
+//        long wxUserId = 9l;
+        order.setUserId(wxUserId);
+        try {
+//            logger.info("/promotion/order:" + order.toString());
+            final PrepayResp prepay = roomOrderService.promotionPrepay(order, wxUserId);
 //            logger.info("/order: return:" + prepay.getOrderId() + prepay.getJsapiResult().toString());
             return AjaxResult.success(prepay);
         } catch (Exception e) {
