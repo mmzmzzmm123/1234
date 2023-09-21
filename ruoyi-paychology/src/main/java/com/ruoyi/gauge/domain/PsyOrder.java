@@ -64,6 +64,8 @@ public class PsyOrder extends BaseEntity
      * 量表简介
      */
     private String gaugeDes;
+    private Integer gaugeType;
+    private String headPicture;
 
     /**
      * 总得分

@@ -25,7 +25,8 @@
                gauge_status,
                create_time,
                create_by,
-               user_id
+               user_id,
+               score
         from psy_order
     </sql>
 
@@ -47,9 +48,14 @@
         where id = #{id}
     </select>
 
-    <select id="selectPsyOrderByOrderId" parameterType="String" resultMap="PsyOrderResult">
-        <include refid="selectPsyOrderVo"/>
-        where order_id = #{orderId}
+    <select id="selectPsyOrderByOrderId" parameterType="String" resultType="com.ruoyi.gauge.domain.PsyOrder">
+        select po.*,
+               gauge.gauge_des as gaugeDes, gauge.type as gaugeType, gauge.title as gaugeTitle,gauge.head_picture,
+               u.name as userName
+        from psy_order po
+            left join psy_gauge gauge ON po.gauge_id = gauge.id
+            left join psy_user u ON po.user_id = u.id
+        where po.order_id = #{orderId}
     </select>
 
     <insert id="insertPsyOrder" parameterType="com.ruoyi.gauge.domain.PsyOrder" useGeneratedKeys="true"
@@ -116,7 +122,7 @@
         select po.id, po.order_id as orderId, po.gauge_id as gaugeId, gauge.title as gaugeTitle, po.order_status as
         orderStatus,
         po.amount, po.gauge_status as gaugeStatus, po.create_time as createTime, po.create_by as createBy
-        ,gauge.gauge_des as gaugeDes
+        ,gauge.gauge_des as gaugeDes, gauge.type as gaugeType
         from psy_order po left join psy_gauge gauge ON po.gauge_id = gauge.id
         <where>
             <if test="orderId != null  and orderId != ''">and po.order_id = #{orderId}</if>

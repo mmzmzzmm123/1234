@@ -13,10 +13,10 @@
 		<view class="info-title title">测评介绍</view>
 		<view class="introduce" v-html="productInfo.introduce">			
 		</view>
-		<view class="bg-line"></view>
-		<view class="info-title title">测评须知</view>
-		<view class="description" v-html="productInfo.gaugeDes">			
-		</view>
+<!--		<view class="bg-line"></view>-->
+<!--		<view class="info-title title">测评须知</view>-->
+<!--		<view class="description" v-html="productInfo.gaugeDes">			-->
+<!--		</view>-->
 		<view class="more-box">
 			<navigator url="/pages/evaluation/class" open-type="redirect" class="more">查看更多测试 <img class="img"
 					src="/static/icon/more.png" />
@@ -142,6 +142,12 @@ export default {
     async toResult() {
       let result = await questionServer.setResult(this.productInfo.orderId);
       if (result.code == 200) {
+        if (this.productInfo.type === 4) {
+          return  uni.navigateTo({
+            url: "/pages/evaluation/sdsResult?orderId=" + this.productInfo.orderNo,
+          });
+        }
+
         uni.setStorageSync("result", result.data);
         uni.navigateTo({
           url: "/pages/evaluation/result?productId=" + this.productId,

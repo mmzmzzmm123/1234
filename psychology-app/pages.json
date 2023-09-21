@@ -74,6 +74,13 @@
       }
     },
     {
+      "path": "pages/evaluation/sdsResult",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "壹加壹心理"
+      }
+    },
+    {
       "path": "pages/evaluation/report",
       "style": {
         "navigationStyle": "custom",

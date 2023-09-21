@@ -69,6 +69,12 @@
       async toResult(order) {
         let result = await questionServer.setResult(order.id);
         if (result.code == 200) {
+          if (order.gaugeType === 4) {
+            return  uni.navigateTo({
+              url: "/pages/evaluation/sdsResult?orderId=" + order.orderId,
+            });
+          }
+
           uni.setStorageSync("result", result.data);
           uni.navigateTo({
             url: "/pages/evaluation/result?productId=" + order.gaugeId,

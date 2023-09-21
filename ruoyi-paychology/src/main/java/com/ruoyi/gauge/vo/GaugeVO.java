@@ -47,6 +47,7 @@ public class GaugeVO implements Serializable {
 
     /** 测评订单ID */
     private Integer orderId;
+    private String orderNo;
     /** 测评已回答的问题数量 */
     private Integer finishedNum;
 }

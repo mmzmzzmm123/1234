@@ -79,6 +79,7 @@ public class AppPsyGaugeController extends BaseController
         PsyOrder psyOrder = psyOrderService.getPsyOrder(userId, id);
         if (psyOrder != null) { // 用户已经下单
             gaugeVO.setOrderId(psyOrder.getId());
+            gaugeVO.setOrderNo(psyOrder.getOrderId());
             gaugeVO.setIsBuy(GaugeConstant.GAUGE_IS_BUY);
             gaugeVO.setIsCompleted(psyOrder.getGaugeStatus());
         } else {

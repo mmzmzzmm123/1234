@@ -40,5 +40,9 @@ public class PsyGaugeScoreSetting extends BaseEntity
     @Excel(name = "纬度")
     private String lat;
 
+    private String memo1;
+    private String memo2;
+    private String memo3;
+    private String memo4;
 
 }

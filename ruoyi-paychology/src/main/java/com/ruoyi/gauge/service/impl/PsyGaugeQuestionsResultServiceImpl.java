@@ -11,6 +11,7 @@ import com.ruoyi.gauge.mapper.PsyGaugeScoreSettingMapper;
 import com.ruoyi.gauge.mapper.PsyOrderMapper;
 import com.ruoyi.gauge.service.IPsyGaugeQuestionsResultService;
 import com.ruoyi.gauge.service.IPsyGaugeService;
+import com.ruoyi.gauge.vo.GaugeReportVO;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.stereotype.Service;
@@ -182,7 +183,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                 sum = sb.toString();
                 break;
         }
-
+        paramMap.put("score",sum);
         //获取当前得分匹配结果
         PsyGaugeScoreSetting psyGaugeScoreSetting = psyGaugeScoreSettingMapper.selectPsyGaugeScoreSettingByGaugeId(paramMap);
         if(psyGaugeScoreSetting!=null){
@@ -237,5 +238,19 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
             //return psyGaugeQuestionsResultMapper.batchAllInsert(results);
         }
         return 0;
+    }
+
+    @Override
+    public GaugeReportVO getReport(String orderId) {
+        GaugeReportVO vo = new GaugeReportVO();
+        PsyOrder psyOrder = psyOrderMapper.selectPsyOrderByOrderId(orderId);
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("orderId",psyOrder.getId());
+        paramMap.put("userId",psyOrder.getUserId());
+        paramMap.put("score",psyOrder.getScore());
+
+        vo.setOrder(psyOrder);
+        vo.setSetting(psyGaugeScoreSettingMapper.selectPsyGaugeScoreSettingByGaugeId(paramMap));
+        return vo;
     }
 }

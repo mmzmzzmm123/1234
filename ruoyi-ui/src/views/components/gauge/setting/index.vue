@@ -27,12 +27,32 @@
                 </el-col>
               </template>
             </el-form-item>
-            <el-form-item label="建议">
-              <image-upload v-model="props.row.proposal" @input="modifySetting(props.row)" :extraData="extraData"/>
-            </el-form-item>
-            <el-form-item label="结论">
-              <editor v-model="props.row.result" placeholder="请输入内容" :min-height="192"/>
-            </el-form-item>
+<!--            <el-form-item label="建议">-->
+<!--              <image-upload v-model="props.row.proposal" @input="modifySetting(props.row)" :extraData="extraData"/>-->
+<!--            </el-form-item>-->
+            <template v-if="gaugeType === 4">
+              <el-form-item label="测评结果">
+                <el-input size="small" maxlength="255" show-word-limit v-model="props.row.memo1" placeholder="测评结果" />
+              </el-form-item>
+              <el-form-item label="结果描述">
+                <el-input size="small" maxlength="255" show-word-limit v-model="props.row.memo2" placeholder="结果描述" />
+              </el-form-item>
+              <el-form-item label="得分解读">
+                <el-input size="small" maxlength="255" show-word-limit v-model="props.row.memo3" placeholder="得分解读" />
+              </el-form-item>
+              <el-form-item label="抑郁表现">
+                <el-input size="small" maxlength="255" show-word-limit v-model="props.row.memo4" placeholder="抑郁表现" />
+              </el-form-item>
+              <el-form-item label="得分建议">
+                <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192"/>
+              </el-form-item>
+            </template>
+            <template v-else>
+              <el-form-item label="结论">
+                <editor v-model="props.row.result" placeholder="请输入内容" :min-height="192"/>
+              </el-form-item>
+            </template>
+
             <el-form-item>
               <el-button type="primary" @click="modifySetting(props.row)">确 定</el-button>
             </el-form-item>
@@ -50,11 +70,11 @@
           </span>
         </template>
       </el-table-column>
-      <el-table-column label="描述" prop="proposal">
-        <template slot-scope="props" v-if="props.row.proposal!=null">
-          <image-preview v-for="url in props.row.proposal.split(',')" :key="url" :src="url" :width="50" :height="50"/>
-        </template>
-      </el-table-column>
+<!--      <el-table-column label="描述" prop="proposal">-->
+<!--        <template slot-scope="props" v-if="props.row.proposal!=null">-->
+<!--          <image-preview v-for="url in props.row.proposal.split(',')" :key="url" :src="url" :width="50" :height="50"/>-->
+<!--        </template>-->
+<!--      </el-table-column>-->
       <el-table-column label="操作" align="center" min-width="100px" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-delete" @click="handleDelete(scope.row)"
@@ -108,6 +128,11 @@ export default {
       },
       form: {},
       scoreList: [],
+      queryParams: {
+        pageNum: 1,
+        pageSize: 999,
+        gaugeId: null,
+      },
     };
   },
   methods: {
@@ -132,7 +157,8 @@ export default {
       this.getSettingList();
     },
     async getSettingList() {
-      let res = await listSetting({gaugeId: this.gaugeId});
+      this.queryParams.gaugeId = this.gaugeId
+      let res = await listSetting(this.queryParams);
       this.scoreList = res.rows;
     },
     async modifySetting(data) {

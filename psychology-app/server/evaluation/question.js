@@ -45,4 +45,16 @@ export default {
       });
     }
   },
+  //获取测评报告
+  getReport: async (orderId) => {
+    let res = await httprequest.get("/app/gauge/result/getReport/" + orderId);
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      uni.showToast({
+        icon: "error",
+        title: "获取报告出错",
+      });
+    }
+  },
 };
