@@ -56,7 +56,7 @@ const api = {
 		})
 	},
 	getRoomList(param){
-		return get('office/mapi/room/list')
+		return get('office/mapi/room/list', param)
 	},
 	getUserListReg(param){
 		return get('office/mapi/user/reg', param)

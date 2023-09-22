@@ -4,8 +4,8 @@
 		<view class="card-list">
 			<view class="card" v-for="room in roomList" :key="room.id">
 				<view class="room-header">
-					<text class="room-title">{{room.name}}</text>
-					<view class="room-status" :class="statusClass[room.status]">{{statusDesc[room.status]}}</view>
+					<text class="room-title">{{room.room.name}}{{room.room.id}}</text>
+					<view class="room-status" :class="statusClass[room.room.status]">{{statusDesc[room.room.status]}}</view>
 					<!-- <u-icon name="arrow-right-double"></u-icon> -->
 				</view>
 				<view class="room-content">
@@ -85,6 +85,7 @@
 				if(this.currentStoreId){
 					this.$api.getRoomList({storeId: this.currentStoreId}).then(res=>{
 						this.roomList = res.rows
+						uni.stopPullDownRefresh()
 					})
 				}
 			},
