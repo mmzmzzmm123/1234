@@ -119,7 +119,7 @@ public class SysLoginController {
         final WxUser wxUser = SecurityUtils.getLoginUser().getWxUser();
         bindingReq.setOpenId(wxUser.getOpenId());
         // 生成令牌
-        String token = loginService.binding(bindingReq);
+        String token = loginService.binding(bindingReq, SecurityUtils.getLoginUser());
         ajax.put(Constants.TOKEN, token);
         return ajax;
     }

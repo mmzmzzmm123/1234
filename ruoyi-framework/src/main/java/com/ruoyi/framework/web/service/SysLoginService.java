@@ -21,6 +21,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
@@ -44,7 +45,9 @@ import com.ruoyi.framework.security.context.AuthenticationContextHolder;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysUserService;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 登录校验方法
@@ -119,7 +122,7 @@ public class SysLoginService {
      * @param uuid     唯一标识
      * @return 结果
      */
-    public String binding(MerchantBindingReq bindingReq) {
+    public String binding(MerchantBindingReq bindingReq, LoginUser oldLoginUser) {
         String username = bindingReq.getUserName();
         String password = bindingReq.getPwd();
         // 登录前置校验
@@ -149,6 +152,12 @@ public class SysLoginService {
         wxUser.setOpenId(bindingReq.getOpenId());
         wxUser.setUserType("merchant");
         userMapper.binding(wxUser);
+
+        Set<String> perms = new HashSet<>();
+        final SysUser sysUser = userService.selectUserById(loginUser.getUserId());
+        perms = permissionService.getMenuPermission(sysUser);
+        oldLoginUser.setPermissions(perms);
+        tokenService.refreshToken(oldLoginUser);
         // 生成token
         return tokenService.createToken(loginUser);
     }

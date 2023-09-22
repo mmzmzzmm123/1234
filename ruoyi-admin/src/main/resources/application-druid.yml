@@ -9,6 +9,10 @@ spring:
                 url: jdbc:mysql://rm-m5e88sywjz711pc81io.mysql.rds.aliyuncs.com/unattended_office?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
                 username: unattended_office
                 password: K@4Uis9G#
+#            master:
+#                url: jdbc:mysql://106.55.186.174:3306/unattended_office?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+#                username: foreverjade
+#                password: ForJade1314*
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
