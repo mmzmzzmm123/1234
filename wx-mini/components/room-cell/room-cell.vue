@@ -3,7 +3,7 @@
 		<view class="room-cell">
 			<view class="room-cell_img">
 				<u-image mode="aspectFill" width="200rpx" radius="10rpx" height="200rpx" :src="roomInfo.logo" @click="onPreviewImage"></u-image>
-				<view class="room-cell_status">{{roomInfo.status == '0' ? '可用' : roomInfo.status == '1' ? '不可用' : '清洁中'}}</view>
+				<view class="room-cell_status">{{roomInfo.status}}</view>
 				<view class="room-cell_img_count">
 					<u-icon name="photo-fill" color="#fff" size="30rpx"></u-icon>{{roomInfo.logoList.length}}
 				</view>

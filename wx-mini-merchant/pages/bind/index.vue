@@ -12,7 +12,7 @@
 					<u-input placeholder="请输入用户密码" type="password" v-model="bindParam.pwd"></u-input>
 				</u-form-item>
 				<view style="padding: 60rpx 20rpx 0;">
-					<u-button type="primary" @click="onLoginClick">登录</u-button>
+					<u-button type="primary" @click="onBindClick">绑定</u-button>
 				</view>
 			</u-form>
 		</view>
@@ -46,10 +46,8 @@
 			
 		},
 		methods: {
-			onLoginClick(){
-				debugger
+			onBindClick(){
 				this.$refs.loginForm.validate().then(res=>{
-					debugger
 					this.$api.bindMerchantAccount(this.bindParam).then(()=>{
 						this.$store.dispatch("getUserInfo").then(()=>{
 							uni.reLaunch({
@@ -60,7 +58,6 @@
 				}).catch(res=>{
 					this.$u.toast('请完善用户密码')
 				})
-				//bindMerchantAccount
 			}
 		}
 	}
