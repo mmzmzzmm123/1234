@@ -273,6 +273,9 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         String equips = room.getTableCode();
         for (String equip : equips.split(",")) {
             TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
+            if(currentEq==null){
+                throw new ServiceException("未知的设备绑定");
+            }
             if (req.getEquipType().contains((currentEq.getEquipType()))) {
 
                 Map<String, String> msg = new HashMap<>();
@@ -281,7 +284,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                     String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
                     msg.put(command[0], command[1]);
                 } else {
-                    throw new ServiceException(currentEq.getEquipType() + "类型的设备未设置");
+                    throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
                 }
 
                 sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));

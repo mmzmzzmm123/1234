@@ -59,7 +59,7 @@ public class MerchantController extends BaseController {
     @GetMapping("/room/list")
     public TableDataInfo list(TRoom tRoom) {
 //        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
-        tRoom.setCreateBy(SecurityUtils.getUserId() + "");
+        tRoom.setCreateBy(SecurityUtils.getLoginUser().getWxUser().getUserId() + "");
         startPage();
         List<TRoom> list = tRoomService.selectTRoomList(tRoom);
         List<MerchantRoomListVo> resList = new ArrayList<>();
@@ -215,9 +215,9 @@ public class MerchantController extends BaseController {
     public AjaxResult openRoom(@RequestBody RoomEquipeOpenReq req) {
 
         try {
-            roomService.openRoomEquipment(req, SecurityUtils.getLoginUser().getUserId());
+            roomService.openRoomEquipment(req, SecurityUtils.getLoginUser().getWxUser().getUserId());
         } catch (Exception e) {
-            AjaxResult.error("操作异常，请联系管理员");
+            return AjaxResult.error("操作异常，请联系管理员：" + e.getMessage());
         }
 
         return AjaxResult.success();

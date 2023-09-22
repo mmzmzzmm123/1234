@@ -71,7 +71,7 @@ const api = {
 		return get('office/mapi/user/hour', param)
 	},
 	openRoom(param){
-		return post('/office/mapi/roomopen', param)
+		return post('office/mapi/roomopen', param)
 	}
 	// getStoreList(param){
 	// 	return get("office/api/store/list", param).then(res=>{
