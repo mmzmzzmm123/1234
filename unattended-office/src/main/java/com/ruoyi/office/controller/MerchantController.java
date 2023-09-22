@@ -5,6 +5,7 @@ import cn.hutool.extra.qrcode.QrConfig;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -196,6 +197,28 @@ public class MerchantController extends BaseController {
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
+    }
+
+    @Autowired
+    ITRoomService roomService;
+
+    /**
+     * 开门禁
+     *
+     * @param orderId
+     * @return
+     */
+    @ApiOperation("开房间设备 门禁 door   电源： light,aircondition ")
+    @PostMapping("/roomopen")
+    public AjaxResult openRoom(@RequestBody RoomEquipeOpenReq req) {
+
+        try {
+            roomService.openRoomEquipment(req, SecurityUtils.getLoginUser().getUserId());
+        } catch (Exception e) {
+            AjaxResult.error("操作异常，请联系管理员");
+        }
+
+        return AjaxResult.success();
     }
 
 }

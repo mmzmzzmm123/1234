@@ -15,6 +15,7 @@ import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.office.domain.TEquipment;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.CloudHornRegResponse;
+import com.ruoyi.office.domain.vo.RoomEquipeOpenReq;
 import com.ruoyi.office.horn.HornConfig;
 import com.ruoyi.office.horn.HornSendMsg;
 import com.ruoyi.office.horn.HornSendMsgData;
@@ -155,7 +156,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 hornData.setInfo(hornDataInfo);
                 hornMsg.setData(hornData);
 
-                    String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", JSONObject.toJSONString(hornMsg));
+                String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", JSONObject.toJSONString(hornMsg));
 //                String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", JSONObject.toJSONString(hornMsg));
                 CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
 
@@ -251,5 +252,41 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         }
     }
 
+    @Override
+    public void openRoomEquipment(RoomEquipeOpenReq req, Long userId) {
+        TRoom room = tRoomMapper.selectTRoomById(req.getRoomId());
+        if (Long.parseLong(room.getCreateBy()) != userId) {
+            throw new ServiceException("非本人门店房间");
+        }
+        List<TEquipment> equipments = equipmentService.selectTEquipmentList(new TEquipment());
 
+        final Map<Long, TEquipment> equipmentMap = equipments.stream().collect(Collectors.toMap(TEquipment::getId, Function.identity()));
+
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType("equipment_type");
+        Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
+
+        MqttSendClient sendClient = new MqttSendClient();
+        String equips = room.getTableCode();
+        for (String equip : equips.split(",")) {
+            TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
+            if (req.getEquipType().contains((currentEq.getEquipType()))) {
+
+                Map<String, String> msg = new HashMap<>();
+
+                if (equipDict.containsKey(currentEq.getEquipType())) {
+                    String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
+                    msg.put(command[0], command[1]);
+                } else {
+                    throw new ServiceException(currentEq.getEquipType() + "类型的设备未设置");
+                }
+
+                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+
+                currentEq.setRecentOpenTime(new Date());
+                currentEq.setOnOff("Y");
+                equipmentService.updateTEquipment(currentEq);
+            }
+        }
+    }
 }
