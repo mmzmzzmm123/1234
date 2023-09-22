@@ -133,7 +133,7 @@ export default {
   flex-direction: column;
 }
 .header-title {
-  width: 280upx;
+  //width: 280upx;
   height: 56upx;
 
   color: rgba(255,255,255,1);
@@ -162,7 +162,7 @@ export default {
   margin: 20upx 0 450upx 32upx;
 }
 .header-name {
-  width: 156upx;
+  width: 200upx;
   height: 37upx;
   color: rgba(255,255,255,1);
   font-size: 26upx;
@@ -171,7 +171,6 @@ export default {
   line-height: 37upx;
 }
 .header-time {
-  //width: 382upx;
   height: 37upx;
   color: rgba(255,255,255,1);
   font-size: 26upx;
@@ -198,9 +197,9 @@ export default {
   position: absolute;
   left: 175upx;
   top: -45upx;
-  width: 336upx;
+  width: 366upx;
   height: 90upx;
-  border: 2px solid rgba(255,255,255,1);
+  border: 2px solid #fff9f7;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -214,7 +213,7 @@ export default {
   flex-direction: column;
 }
 .result-text {
-  width: 216upx;
+  //width: 216upx;
   height: 50upx;
   color: rgba(255,255,255,1);
   font-size: 36upx;
@@ -257,7 +256,7 @@ export default {
     line-height: 78upx;
   }
   .text-score-btn {
-    width: 160upx;
+    width: 180upx;
     height: 50upx;
     line-height: 50upx;
     background: #FFE4DB;
@@ -327,18 +326,13 @@ export default {
   font-weight: 600;
 }
 .understand-top {
-  width: 56upx;
+  //width: 56upx;
   height: 40upx;
   color: rgba(119,119,119,1);
   font-size: 28upx;
   font-family: PingFangSC-Regular;
   text-align: justify;
   margin-top: 80upx;
-}
-.understand-img {
-  width: 18upx;
-  height: 320upx;
-  margin-top: 32upx;
 }
 .understand-range {
   position: relative;
@@ -361,7 +355,6 @@ export default {
   background: #FF703F;
 }
 .understand-down {
-  width: 112upx;
   height: 40upx;
   color: rgba(119,119,119,1);
   font-size: 28upx;
@@ -479,7 +472,7 @@ export default {
   position: absolute;
   left: 59upx;
   top: 16upx;
-  width: 216upx;
+  //width: 216upx;
   height: 50upx;
   color: rgba(255,112,63,1);
   font-size: 36upx;
