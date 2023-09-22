@@ -50,21 +50,21 @@ import store from '@/store';
 // 		}
 // 	}
 // })
-uni.getSetting({
-	success(res){
-		// scope.userLocation
-		if(res.authSetting['scope.userFuzzyLocation']){
-			store.commit('setCanLocation', true)
-		}else{
-			// uni.authorize({
-			// 	scope: 'scope.userFuzzyLocation',
-			// 	success(){
-			// 		store.commit('setCanLocation', true)
-			// 	}
-			// })
-		}
-	}
-})
+// uni.getSetting({
+// 	success(res){
+// 		// scope.userLocation
+// 		if(res.authSetting['scope.userFuzzyLocation']){
+// 			store.commit('setCanLocation', true)
+// 		}else{
+// 			uni.authorize({
+// 				scope: 'scope.userFuzzyLocation',
+// 				success(){
+// 					store.commit('setCanLocation', true)
+// 				}
+// 			})
+// 		}
+// 	}
+// })
 store.dispatch("login")
 const app = new Vue({
 	i18n,

@@ -133,8 +133,7 @@
 					this.updateHourStatus()
 				}
 				this.$api.getPromotionList({storeId: roomInfo.id}).then(res=>{
-					this.promotionList = [{id: 1, logo: 'https://fanyiapp.cdn.bcebos.com/cms/image/e2dc2ec72e1573fe86b9e4ef71dae181.png'},
-					{id: 2, logo: "https://www.baidu.com/img/flexible/logo/pc/result@2.png"}]//res.rows
+					this.promotionList = res.rows
 				})
 			},
 			calcAmount(){
@@ -291,10 +290,10 @@
 					tmplIds: ['58BvI5jDnq61I9slOIIjf89J9ionC95R14eUJ9rQLWA']
 				})
 				if(this.currentPromotion.id){ //优惠套餐支付
-					this.$api.addOrder({
+					this.$api.addPromotionOrder({
 						roomId: this.roomInfo.id,
 						startTime: this.$u.timeFormat(this.order.startTime, 'yyyy-mm-dd hh:MM'),
-						payType: 3 ,// todo...
+						// payType: 3 ,
 						couponId: this.currentPromotion.id
 					}).then(res=>{
 						const param = res.jsapiResult

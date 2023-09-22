@@ -59,7 +59,12 @@ const api = {
 		})
 	},
 	getStoreById(id){
-		return {} // todo....
+		return this.getStoreList({id}).then(res=>{
+			if(res.rows.length){
+				return res.rows[0]
+			}
+			return null
+		})
 	},
 	getRoomList(param){
 		return get('office/api/room/list', param).then(res=>{
@@ -103,6 +108,9 @@ const api = {
 	},
 	addOrderByPack(param){
 		return post('office/api/pack/order', param)
+	},
+	addPromotionOrder(param){
+		return post('office/api/promotion/order', param)
 	},
 	getRoomAvailable(param){
 		return get('office/api/room/available', param)

@@ -23,8 +23,8 @@
 						</view>
 					</view>
 					<view class="room-btn-list">
-						<u-button plain type="primary">开门</u-button>
-						<u-button plain type="primary">开启电源</u-button>
+						<u-button plain type="primary" @click="onOpenRoom(room.id, 'door', '开门')">开门</u-button>
+						<u-button plain type="primary" @click="onOpenRoom(room.id, 'light,aircondition', '开启电源')">开启电源</u-button>
 					</view>
 				</view>
 			</view>
@@ -87,6 +87,11 @@
 						this.roomList = res.rows
 					})
 				}
+			},
+			onOpenRoom(roomId, equipType, tips){
+				this.$api.openRoom({roomId, equipType}).then(()=>{
+					this.$u.toast('已发送' + tips + '请求')
+				})
 			}
 		}
 	}
