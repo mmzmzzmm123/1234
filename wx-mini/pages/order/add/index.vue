@@ -132,7 +132,7 @@
 				}else{
 					this.updateHourStatus()
 				}
-				this.$api.getPromotionList({storeId: roomInfo.id}).then(res=>{
+				this.$api.getPromotionList({storeId: roomInfo.storeId}).then(res=>{
 					this.promotionList = res.rows
 				})
 			},
