@@ -153,12 +153,24 @@ export default {
         start: score.end,
         end: score.end + 20,
         proposal: "",
+        memo1: "",
+        memo2: "",
+        memo3: "",
+        memo4: "",
+        result: "",
       });
       this.getSettingList();
     },
     async getSettingList() {
       this.queryParams.gaugeId = this.gaugeId
       let res = await listSetting(this.queryParams);
+      res.rows.forEach(a => {
+        a.memo1 = a.memo1 || ''
+        a.memo2 = a.memo2 || ''
+        a.memo3 = a.memo3 || ''
+        a.memo4 = a.memo4 || ''
+        a.result = a.result || ''
+      })
       this.scoreList = res.rows;
     },
     async modifySetting(data) {
