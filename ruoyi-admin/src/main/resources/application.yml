@@ -159,6 +159,12 @@ wx:
         token: 1
         aesKey: 1
         msgDataFormat: xml
+      - name: merchant
+        appid: wx2a903de8e0dbd68e
+        secret: b58cc8e841995654dd023d471d60c218
+        token: 1
+        aesKey: 1
+        msgDataFormat: xml
   pay:
     appId: wx2171fc93eaed8be1
     mchId: 1648735517 #商户id
@@ -177,7 +183,7 @@ mqtt:
   hostUrl: tcp://106.55.186.174:1883
   username: admin
   password: 1234@qwer
-  clientid: mqtt_send_client
+  clientid: mqtt_send_client  # 不能跟生产环境使用一个clientId
   cleanSession: true
   reconnect: true
   #连接超时

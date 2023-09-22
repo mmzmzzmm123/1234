@@ -4,7 +4,7 @@ var i18n
 
 const client = new HttpClient({
 	baseApiUrl: BaseApiUrl + '/',
-	appName: 'office',
+	appName: 'merchant',
 	loginHandler(){
 		return new Promise((resolve, reject)=>{
 			uni.login({
