@@ -66,7 +66,7 @@
 		},
 		computed: {
 			currentStoreId(){
-				return this.$store.state.currentStoreId
+				return this.$store.state.currentStore.id
 			}
 		},
 		watch: {

@@ -139,7 +139,7 @@
 			calcAmount(){
 				// 计算金额
 				if(this.currentPromotion.id){
-					this.amount = this.currentPromotion.standardPrice - this.currentPromotion.discountPrice
+					this.amount = this.currentPromotion.standardPrice
 				}
 				else if(this.currentPackage.id){
 					this.amount = this.currentPackage.price
