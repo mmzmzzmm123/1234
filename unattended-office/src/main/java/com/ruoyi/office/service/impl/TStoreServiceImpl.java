@@ -125,6 +125,8 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
             final List<TWxUserAmount> wxUserAmounts = wxUserAmountService.selectTWxUserAmountList(wxUserAmount);
             if (wxUserAmounts.size() > 0) {
                 vo.setBalance(wxUserAmounts.get(0).getAmount().toPlainString());
+            } else {
+                vo.setBalance("0");
             }
         }
         return resList;
