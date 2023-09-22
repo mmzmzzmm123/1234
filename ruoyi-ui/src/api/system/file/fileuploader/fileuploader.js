@@ -9,6 +9,8 @@ export function fileMerge(param) {
       repeatSubmit: false
     },
     method: 'post',
+    //因上传文件较大时，文件合并时也需要更多的时间，所以自定义超时时间
+    timeout: 180000,
     params: param
   })
 }

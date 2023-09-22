@@ -289,13 +289,13 @@ export default {
           this.download(response.msg);
         }).catch(function() {});
     },
-    /** 下载操作 */
+    /** 下载操作 因上传文件较大时，下载时也需要更多的时间，所以自定义超时时间 */
     handleDownload(row) {
       //const queryParams = this.queryParams;
       const loca=row.location;
       this.download('system/filelist/download', {
         'location':loca
-      }, row.filename)
+      }, row.filename,{timeout: 180000})
     }
   },
   mounted() {
