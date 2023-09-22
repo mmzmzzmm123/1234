@@ -40,8 +40,7 @@ public class MerchantController extends BaseController {
     @PreAuthorize("@ss.hasPermi('office:merchant')")
     @GetMapping("/store/list")
     public TableDataInfo list(TStore tStore) {
-        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
-            tStore.setCreateBy(SecurityUtils.getUserId() + "");
+        tStore.setCreateBy(SecurityUtils.getLoginUser().getWxUser().getUserId() + "");
         startPage();
         List<TStore> list = tStoreService.selectTStoreList(tStore);
         return getDataTable(list);

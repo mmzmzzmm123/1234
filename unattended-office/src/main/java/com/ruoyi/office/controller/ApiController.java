@@ -409,7 +409,7 @@ public class ApiController extends BaseController {
             room.setStatus("3");// 使用中
             roomService.updateTRoom(room);
         } catch (Exception e) {
-            AjaxResult.error("操作异常，请联系管理员");
+            return AjaxResult.error("操作异常，请联系管理员" + e.getMessage());
         }
 
         return AjaxResult.success();

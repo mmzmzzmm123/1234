@@ -19,7 +19,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="endDate"    column="end_date"    />
         <result property="weekDays"    column="week_days"    />
         <result property="status"    column="status"    />
-        <result property="logo" column="logo"/>
         <result property="remark"    column="remark"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -28,7 +27,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTWxUserPromotionVo">
-        select id, wx_id, coupon_id, name, coupon_type, merchant_id, store_id, standard_price, discount_price, max_minute, start_date, end_date, week_days, status, remark, logo, create_by, create_time, update_by, update_time from t_wx_user_promotion
+        select id, wx_id, coupon_id, name, coupon_type, merchant_id, store_id, standard_price, discount_price, max_minute, start_date, end_date, week_days, status, remark, create_by, create_time, update_by, update_time from t_wx_user_promotion
     </sql>
 
     <select id="selectTWxUserPromotionList" parameterType="TWxUserPromotion" resultMap="TWxUserPromotionResult">
@@ -90,7 +89,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDate != null">end_date,</if>
             <if test="weekDays != null">week_days,</if>
             <if test="status != null">status,</if>
-            <if test="logo != null and logo != ''">logo,</if>
             <if test="remark != null">remark,</if>
             <if test="createBy != null">create_by,</if>
             <if test="createTime != null">create_time,</if>
@@ -111,7 +109,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDate != null">#{endDate},</if>
             <if test="weekDays != null">#{weekDays},</if>
             <if test="status != null">#{status},</if>
-            <if test="logo != null and logo != ''">#{logo},</if>
             <if test="remark != null">#{remark},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="createTime != null">#{createTime},</if>
@@ -136,7 +133,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDate != null">end_date = #{endDate},</if>
             <if test="weekDays != null">week_days = #{weekDays},</if>
             <if test="status != null">status = #{status},</if>
-            <if test="logo != null and logo != ''">logo = #{logo},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>

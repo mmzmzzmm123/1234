@@ -133,6 +133,9 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         String equips = room.getTableCode();
         for (String equip : equips.split(",")) {
             TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
+            if(currentEq==null){
+                throw new ServiceException("设备不存在");
+            }
             if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
                 SysDictData dictDataQry = new SysDictData();
                 dictDataQry.setDictType("horn");
