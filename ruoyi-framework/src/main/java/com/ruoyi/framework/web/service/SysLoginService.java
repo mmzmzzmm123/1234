@@ -157,6 +157,7 @@ public class SysLoginService {
         final SysUser sysUser = userService.selectUserById(loginUser.getUserId());
         perms = permissionService.getMenuPermission(sysUser);
         oldLoginUser.setPermissions(perms);
+        oldLoginUser.getWxUser().setUserId(loginUser.getUserId());
         tokenService.refreshToken(oldLoginUser);
         // 生成token
         return tokenService.createToken(loginUser);

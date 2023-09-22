@@ -96,7 +96,7 @@ public class OfficeTask {
                     TEquipment up = new TEquipment();
                     up.setId(eq.getId());
                     up.setOnOff("N");
-                    equipmentService.updateTEquipment(eq);
+                    equipmentService.updateTEquipment(up);
                 }
             }
 
