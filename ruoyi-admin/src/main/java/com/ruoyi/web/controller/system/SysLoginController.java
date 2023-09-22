@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.ruoyi.common.annotation.Log;
+import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.uuid.IdUtils;
@@ -115,6 +116,8 @@ public class SysLoginController {
     public AjaxResult binding(@RequestBody MerchantBindingReq bindingReq) {
 
         AjaxResult ajax = AjaxResult.success();
+        final WxUser wxUser = SecurityUtils.getLoginUser().getWxUser();
+        bindingReq.setOpenId(wxUser.getOpenId());
         // 生成令牌
         String token = loginService.binding(bindingReq);
         ajax.put(Constants.TOKEN, token);

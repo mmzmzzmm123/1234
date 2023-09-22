@@ -65,6 +65,7 @@ public class SysLoginService {
     @Autowired
     private ISysUserService userService;
 
+    @Autowired
     private WxUserMapper userMapper;
 
     @Autowired

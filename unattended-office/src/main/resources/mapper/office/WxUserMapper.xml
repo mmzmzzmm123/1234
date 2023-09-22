@@ -105,8 +105,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <update id="binding" parameterType="MerchantBindingReq">
-        update t_wx_user set user_id = #{userId} where open_id = #{openId}
+    <update id="binding" parameterType="WxUser">
+        update t_wx_user set user_id = #{userId}, user_type = #{userType} where open_id = #{openId}
     </update>
 
     <delete id="deleteWxUserById" parameterType="Long">

@@ -37,7 +37,7 @@ public class MerchantController extends BaseController {
      * 查询商家用户店铺列表
      */
     @ApiOperation("门店列表")
-    @PreAuthorize("@ss.hasPermi('office:store:list')")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
     @GetMapping("/store/list")
     public TableDataInfo list(TStore tStore) {
         if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
@@ -56,7 +56,7 @@ public class MerchantController extends BaseController {
      * 查询店铺房间列表
      */
     @ApiOperation("房间列表")
-    @PreAuthorize("@ss.hasPermi('office:room:list')")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
     @GetMapping("/room/list")
     public TableDataInfo list(TRoom tRoom) {
 //        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
@@ -103,7 +103,7 @@ public class MerchantController extends BaseController {
      * 用户使用统计
      */
     @ApiOperation("用户使用统计-最早注册")
-    @PreAuthorize("@ss.hasPermi('office:room:list')")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
     @GetMapping("/user/reg")
     public TableDataInfo userReg() {
         List<MerchantUserStatisticsVo> res = wxUserService.statistics(SecurityUtils.getLoginUser().getWxUser().getUserId(), "reg");
@@ -114,7 +114,7 @@ public class MerchantController extends BaseController {
      * 用户使用统计
      */
     @ApiOperation("用户使用统计-最近活跃")
-    @PreAuthorize("@ss.hasPermi('office:room:list')")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
     @GetMapping("/user/act")
     public TableDataInfo userAct() {
         List<MerchantUserStatisticsVo> res = wxUserService.statistics(SecurityUtils.getLoginUser().getWxUser().getUserId(), "act");
@@ -125,7 +125,7 @@ public class MerchantController extends BaseController {
      * 用户使用统计
      */
     @ApiOperation("用户使用统计-订单次数")
-    @PreAuthorize("@ss.hasPermi('office:room:list')")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
     @GetMapping("/user/times")
     public TableDataInfo userTimes() {
         List<MerchantUserStatisticsVo> res = wxUserService.statistics(SecurityUtils.getLoginUser().getWxUser().getUserId(), "times");
@@ -137,7 +137,7 @@ public class MerchantController extends BaseController {
      * 用户使用统计
      */
     @ApiOperation("用户使用统计-订单总时长")
-    @PreAuthorize("@ss.hasPermi('office:room:list')")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
     @GetMapping("/user/hour")
     public TableDataInfo userHours() {
         List<MerchantUserStatisticsVo> res = wxUserService.statistics(SecurityUtils.getLoginUser().getWxUser().getUserId(), "hour");
@@ -149,7 +149,7 @@ public class MerchantController extends BaseController {
      * 用户使用统计
      */
     @ApiOperation("用户使用统计-订单总时长")
-    @PreAuthorize("@ss.hasPermi('office:room:list')")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
     @GetMapping("/user")
     public TableDataInfo user() {
         List<MerchantUserStatisticsVo> res = wxUserService.statistics(SecurityUtils.getLoginUser().getWxUser().getUserId(), "hour");
@@ -161,6 +161,7 @@ public class MerchantController extends BaseController {
     ITWxUserCleanerService cleanerService;
 
     @ApiOperation("添加保洁")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
     @Log(title = "添加保洁", businessType = BusinessType.INSERT)
     @PostMapping("/clean")
     public AjaxResult clean(@RequestBody CleanerReq req) {
@@ -178,6 +179,7 @@ public class MerchantController extends BaseController {
     }
 
     @ApiOperation("添加保洁")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
     @Log(title = "添加保洁", businessType = BusinessType.INSERT)
     @PutMapping("/clean/bind")
     public AjaxResult cleanBinding(@RequestBody TWxUserCleaner req) {
@@ -209,6 +211,7 @@ public class MerchantController extends BaseController {
      * @return
      */
     @ApiOperation("开房间设备 门禁 door   电源： light,aircondition ")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
     @PostMapping("/roomopen")
     public AjaxResult openRoom(@RequestBody RoomEquipeOpenReq req) {
 
