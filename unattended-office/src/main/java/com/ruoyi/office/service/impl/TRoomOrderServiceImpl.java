@@ -989,6 +989,12 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 up.setStatus(4); //  待支付	1 已预约	2 使用中	3 超时未使用	4 已完成	5 取消	9
                 tRoomOrderMapper.updateTRoomOrder(up);
 
+                TRoom room = new TRoom();
+                room.setId(order.getRoomId());
+                room.setStatus("0"); //0 可用 1 不可用 2 清洁中 3 使用中
+                roomService.updateTRoom(room);
+
+
                 continue;
             }
 
