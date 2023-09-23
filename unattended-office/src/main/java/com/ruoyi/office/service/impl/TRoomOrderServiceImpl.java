@@ -1100,6 +1100,18 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             throw new ServiceException("优惠券不适用于该房间");
         }
 
+        if ("2".equalsIgnoreCase(storePromotion.getValidType())) { // 有效期区间
+            if (new Date().before(storePromotion.getStartDate()) || new Date().after(DateUtils.addDays(storePromotion.getEndDate(), 1))){
+                throw new ServiceException("不在有效期范围内");
+            }
+        }
+
+        int weekDay = prepayReq.getStartTime().getDay();
+        if (weekDay == 0) weekDay = 7;
+        if (!storePromotion.getWeekDays().contains(weekDay + "")) {
+            throw new ServiceException("该优惠券预约日期不可使用");
+        }
+
         TWxUserPromotion userPromotion = new TWxUserPromotion();
         BeanUtils.copyProperties(storePromotion, userPromotion);
         userPromotion.setWxId(userId);

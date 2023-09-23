@@ -331,7 +331,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
 
                 currentEq.setRecentOpenTime(new Date());
-                currentEq.setOnOff("Y");
+                currentEq.setOnOff("N");
                 equipmentService.updateTEquipment(currentEq);
             }
         }
