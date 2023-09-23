@@ -271,6 +271,16 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
         MqttSendClient sendClient = new MqttSendClient();
         String equips = room.getTableCode();
+        String hornSn = "";
+        for (String equip : equips.split(",")) {
+            TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
+            if (currentEq == null) {
+                continue;
+            }
+            if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                hornSn = currentEq.getEquipControl();
+            }
+        }
         for (String equip : equips.split(",")) {
             TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
             if (currentEq == null) {
@@ -294,9 +304,9 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 equipmentService.updateTEquipment(currentEq);
 
                 if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType())) {
-                    hornMsg(currentEq.getEquipControl(), "门已打开");
-                }else  if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
-                    hornMsg(currentEq.getEquipControl(), "房间电源已开启");
+                    hornMsg(hornSn, "门已打开");
+                } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                    hornMsg(hornSn, "房间电源已开启");
                 }
             }
         }
@@ -318,6 +328,18 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
         MqttSendClient sendClient = new MqttSendClient();
         String equips = room.getTableCode();
+
+        String hornSn = "";
+        for (String equip : equips.split(",")) {
+            TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
+            if (currentEq == null) {
+                continue;
+            }
+            if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                hornSn = currentEq.getEquipControl();
+            }
+        }
+
         for (String equip : equips.split(",")) {
             TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
             if (currentEq == null) {
@@ -341,9 +363,9 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 equipmentService.updateTEquipment(currentEq);
 
                 if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType())) {
-                    hornMsg(currentEq.getEquipControl(), "门已关闭");
-                }else  if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
-                    hornMsg(currentEq.getEquipControl(), "房间电源已关闭");
+                    hornMsg(hornSn, "门已关闭");
+                } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                    hornMsg(hornSn, "房间电源已关闭");
                 }
             }
         }
@@ -354,13 +376,25 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         dictData.setDictType("horn");
         final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));
 
-        Map<String, String> param = new HashMap<>();
-        param.put("app_id", hornConfig.get("app_id"));
-        param.put("app_secret", hornConfig.get("app_secret"));
+        HornSendMsg hornMsg = new HornSendMsg();
+        hornMsg.setAppId(hornConfig.get("app_id"));
+        hornMsg.setAppSecret(hornConfig.get("app_secret"));
 
-        param.put("device_sn", sn);
-//                        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", "您的订单还有" + minutes + "分钟结束，请及时续费，以免断电影响使用，谢谢");
-        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", msg);
+        hornMsg.setDeviceSn(sn);
+        hornMsg.setType(1);
+
+        HornSendMsgData hornData = new HornSendMsgData();
+        hornData.setCmdType("play");
+
+        HornSendMsgDataInfo hornDataInfo = new HornSendMsgDataInfo();
+        hornDataInfo.setInner(10);
+        hornDataInfo.setTts(msg);
+
+        hornData.setInfo(hornDataInfo);
+        hornMsg.setData(hornData);
+
+        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", JSONObject.toJSONString(hornMsg));
+
         CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
     }
 }
