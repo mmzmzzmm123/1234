@@ -133,7 +133,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         String equips = room.getTableCode();
         for (String equip : equips.split(",")) {
             TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
-            if(currentEq==null){
+            if (currentEq == null) {
                 throw new ServiceException("设备不存在");
             }
             if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
@@ -273,7 +273,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         String equips = room.getTableCode();
         for (String equip : equips.split(",")) {
             TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
-            if(currentEq==null){
+            if (currentEq == null) {
                 throw new ServiceException("未知的设备绑定");
             }
             if (req.getEquipType().contains((currentEq.getEquipType()))) {
@@ -292,6 +292,12 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 currentEq.setRecentOpenTime(new Date());
                 currentEq.setOnOff("Y");
                 equipmentService.updateTEquipment(currentEq);
+
+                if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType())) {
+                    hornMsg(currentEq.getEquipControl(), "门已打开");
+                }else  if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                    hornMsg(currentEq.getEquipControl(), "房间电源已开启");
+                }
             }
         }
     }
@@ -314,7 +320,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         String equips = room.getTableCode();
         for (String equip : equips.split(",")) {
             TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
-            if(currentEq==null){
+            if (currentEq == null) {
                 throw new ServiceException("未知的设备绑定");
             }
             if (req.getEquipType().contains((currentEq.getEquipType()))) {
@@ -333,7 +339,28 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 currentEq.setRecentOpenTime(new Date());
                 currentEq.setOnOff("N");
                 equipmentService.updateTEquipment(currentEq);
+
+                if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType())) {
+                    hornMsg(currentEq.getEquipControl(), "门已关闭");
+                }else  if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                    hornMsg(currentEq.getEquipControl(), "房间电源已关闭");
+                }
             }
         }
+    }
+
+    private void hornMsg(String sn, String msg) {
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType("horn");
+        final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));
+
+        Map<String, String> param = new HashMap<>();
+        param.put("app_id", hornConfig.get("app_id"));
+        param.put("app_secret", hornConfig.get("app_secret"));
+
+        param.put("device_sn", sn);
+//                        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", "您的订单还有" + minutes + "分钟结束，请及时续费，以免断电影响使用，谢谢");
+        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", msg);
+        CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
     }
 }
