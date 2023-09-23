@@ -295,4 +295,45 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
             }
         }
     }
+
+    @Override
+    public void closeRoomEquipment(RoomEquipeOpenReq req, Long userId) {
+        TRoom room = tRoomMapper.selectTRoomById(req.getRoomId());
+        if (Long.parseLong(room.getCreateBy()) != userId) {
+            throw new ServiceException("非本人门店房间");
+        }
+        List<TEquipment> equipments = equipmentService.selectTEquipmentList(new TEquipment());
+
+        final Map<Long, TEquipment> equipmentMap = equipments.stream().collect(Collectors.toMap(TEquipment::getId, Function.identity()));
+
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType("equipment_type");
+        Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
+
+        MqttSendClient sendClient = new MqttSendClient();
+        String equips = room.getTableCode();
+        for (String equip : equips.split(",")) {
+            TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
+            if(currentEq==null){
+                throw new ServiceException("未知的设备绑定");
+            }
+            if (req.getEquipType().contains((currentEq.getEquipType()))) {
+
+                Map<String, String> msg = new HashMap<>();
+
+                if (equipDict.containsKey(currentEq.getEquipType())) {
+                    String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[1].split(":");
+                    msg.put(command[0], command[1]);
+                } else {
+                    throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
+                }
+
+                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+
+                currentEq.setRecentOpenTime(new Date());
+                currentEq.setOnOff("Y");
+                equipmentService.updateTEquipment(currentEq);
+            }
+        }
+    }
 }

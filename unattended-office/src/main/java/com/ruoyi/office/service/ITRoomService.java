@@ -65,4 +65,6 @@ public interface ITRoomService {
     void closeRoom(Long id);
 
     void openRoomEquipment(RoomEquipeOpenReq req, Long userId);
+
+    void closeRoomEquipment(RoomEquipeOpenReq req, Long userId);
 }
