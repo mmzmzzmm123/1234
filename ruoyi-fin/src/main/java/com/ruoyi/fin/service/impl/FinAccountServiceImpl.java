@@ -1,6 +1,8 @@
 package com.ruoyi.fin.service.impl;
 
 import java.util.List;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.fin.mapper.FinAccountMapper;
@@ -11,7 +13,7 @@ import com.ruoyi.fin.service.IFinAccountService;
  * 记账账户Service业务层处理
  * 
  * @author ruoyi
- * @date 2023-09-15
+ * @date 2023-09-23
  */
 @Service
 public class FinAccountServiceImpl implements IFinAccountService 
@@ -52,6 +54,8 @@ public class FinAccountServiceImpl implements IFinAccountService
     @Override
     public int insertFinAccount(FinAccount finAccount)
     {
+        finAccount.setCreateTime(DateUtils.getNowDate());
+        finAccount.setCreateBy(SecurityUtils.getLoginUser().getUsername());
         return finAccountMapper.insertFinAccount(finAccount);
     }
 
@@ -64,6 +68,8 @@ public class FinAccountServiceImpl implements IFinAccountService
     @Override
     public int updateFinAccount(FinAccount finAccount)
     {
+        finAccount.setUpdateTime(DateUtils.getNowDate());
+        finAccount.setUpdateBy(SecurityUtils.getLoginUser().getUsername());
         return finAccountMapper.updateFinAccount(finAccount);
     }
 

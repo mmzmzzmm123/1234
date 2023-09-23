@@ -83,6 +83,7 @@
       <el-table-column label="账本名称" align="center" prop="bookName" />
       <el-table-column label="排序值" align="center" prop="sortNum" />
       <el-table-column label="用户ID" align="center" prop="userId" />
+      <el-table-column label="备注" align="center" prop="remark" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -122,6 +123,9 @@
         </el-form-item>
         <el-form-item label="用户ID" prop="userId">
           <el-input v-model="form.userId" placeholder="请输入用户ID" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" type="textarea" placeholder="请输入内容" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -163,7 +167,7 @@ export default {
         pageSize: 10,
         bookName: null,
         sortNum: null,
-        userId: null
+        userId: null,
       },
       // 表单参数
       form: {},
@@ -196,7 +200,12 @@ export default {
         bookId: null,
         bookName: null,
         sortNum: null,
-        userId: null
+        userId: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null,
+        remark: null
       };
       this.resetForm("form");
     },

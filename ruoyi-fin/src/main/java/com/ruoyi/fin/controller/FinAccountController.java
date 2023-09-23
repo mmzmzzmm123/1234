@@ -25,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 记账账户Controller
  * 
  * @author ruoyi
- * @date 2023-09-15
+ * @date 2023-09-23
  */
 @RestController
 @RequestMapping("/fin/account")

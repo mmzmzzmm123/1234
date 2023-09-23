@@ -9,7 +9,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 记账账本对象 fin_book
  * 
  * @author ruoyi
- * @date 2023-09-15
+ * @date 2023-09-23
  */
 public class FinBook extends BaseEntity
 {
@@ -74,6 +74,11 @@ public class FinBook extends BaseEntity
             .append("bookName", getBookName())
             .append("sortNum", getSortNum())
             .append("userId", getUserId())
+            .append("createBy", getCreateBy())
+            .append("createTime", getCreateTime())
+            .append("updateBy", getUpdateBy())
+            .append("updateTime", getUpdateTime())
+            .append("remark", getRemark())
             .toString();
     }
 }

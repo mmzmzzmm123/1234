@@ -7,7 +7,7 @@ import com.ruoyi.fin.domain.FinBook;
  * 记账账本Mapper接口
  * 
  * @author ruoyi
- * @date 2023-09-15
+ * @date 2023-09-23
  */
 public interface FinBookMapper 
 {

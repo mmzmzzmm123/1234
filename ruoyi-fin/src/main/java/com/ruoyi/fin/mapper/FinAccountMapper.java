@@ -7,7 +7,7 @@ import com.ruoyi.fin.domain.FinAccount;
  * 记账账户Mapper接口
  * 
  * @author ruoyi
- * @date 2023-09-15
+ * @date 2023-09-23
  */
 public interface FinAccountMapper 
 {
