@@ -1,6 +1,6 @@
 <template>
-	<view class="store-bar">
-		<view class="store-bar_current" @click="show = true">
+	<view class="store-bar" @touchmove.stop>
+		<view class="store-bar_current" @click="show = !show">
 			<view class="iconfont icon-shop"></view>
 			<view>【{{currentStore.name}}】</view>
 			<view class="store-bar_expend" :class="show ? 'store-bar_expend--up':''">
@@ -52,20 +52,24 @@
 <style lang="scss">
 	.store-bar{
 		color: $u-bright;
-		background: $u-primary;
+		height: 80rpx;
 		.iconfont{
 			color: $u-bright;
 		}
 		&_current{
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
 			padding: 0 20rpx;
 			height: 80rpx;
 			display: flex;
 			align-items: center;
+			background: $u-primary;
 		}
 		&_option{
 			padding: 20rpx;
-			color: $u-main-color;
-			background: $u-bright;
+			background: $u-primary;;
 			&:not(:last-child){
 				border-bottom: 1rpx solid $u-border-color;
 			}
@@ -83,6 +87,7 @@
 			right: 0;
 			bottom: 0;
 			z-index: 100;
+			background: rgba(0, 0, 0, .3);
 		}
 	}
 </style>

@@ -24,7 +24,9 @@
 					</view>
 					<view class="room-btn-list">
 						<u-button plain type="primary" @click="onOpenRoom(room.room.id, 'door', '开门')">开门</u-button>
+						<u-button plain type="primary" @click="onCloseRoom(room.room.id, 'door', '关门')">关门</u-button>
 						<u-button plain type="primary" @click="onOpenRoom(room.room.id, 'light,aircondition', '开启电源')">开启电源</u-button>
+						<u-button plain type="primary" @click="onCloseRoom(room.room.id, 'light,aircondition', '关闭电源')">关闭电源</u-button>
 					</view>
 				</view>
 			</view>
@@ -93,6 +95,11 @@
 				this.$api.openRoom({roomId, equipType}).then(()=>{
 					this.$u.toast('已发送' + tips + '请求')
 				})
+			},
+			onCloseRoom(roomId, equipType, tips){
+				this.$api.closeRoom({roomId, equipType}).then(()=>{
+					this.$u.toast('已发送' + tips + '请求')
+				})
 			}
 		}
 	}
@@ -113,17 +120,17 @@
 		margin-right: 20rpx;
 	}
 	.room-content{
-		display: flex;
-		align-items: center;
+		// display: flex;
+		// align-items: center;
 	}
 	.room-desc{
-		flex: 1;
+		// flex: 1;
 		font-size: 24rpx;
 		line-height: 50rpx;
 	}
 	.room-order{
 		color: $u-tips-color;
-		margin-top: 30rpx;
+		margin-top: 10rpx;
 	}
 	.room-status{
 		display: inline-block;
@@ -142,11 +149,12 @@
 		}
 	}
 	.room-btn-list{
-		width: 180rpx;
+		display: flex;
+		margin: 10rpx -20rpx 0 0;
 		.u-button{
-			margin-bottom: 10rpx;
-			height: 70rpx!important;
-			font-size: 28rpx!important;
+			margin-right: 20rpx;
+			height: 60rpx!important;
+			font-size: 24rpx!important;
 		}
 	}
 </style>

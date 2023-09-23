@@ -140,7 +140,14 @@ const api = {
 		return post('office/api/package/payquery', param)
 	},
 	getPromotionList(param){
-		return get('office/api/promotionList', param)
+		return get('office/api/promotionList', param).then(res=>{
+			res.rows.forEach(x=>{
+				if(x.logo){
+					x.logo = BaseApiUrl + x.logo
+				}
+			})
+			return res
+		})
 	},
 	getStorePromotionList(storeId){
 		return getPromotionList({storeId})

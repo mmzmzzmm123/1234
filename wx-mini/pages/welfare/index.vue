@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<image class="promotion" mode="aspectFill" v-for="item in list" :key="item.id" :src="item.logo" @click="toStore(item.storeId)"></image>
+		<image class="promotion" mode="aspectFill" v-for="item in list" :key="item.id" :src="item.logo" @click="toStore(item.storeId)" alt="que"></image>
 		<require-authorize></require-authorize>
 	</view>
 </template>
@@ -53,5 +53,6 @@
 		width: 710rpx;
 		margin: 20rpx;
 		border-radius: 20rpx;
+		display: block;
 	}
 </style>
