@@ -103,8 +103,8 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
             try {
                 for (int i = 0; i < ${className}s.size(); i++) {
                     int row = ${className}Mapper.insert${ClassName}(${className}s.get(i));
-                    // 防止内存溢出，没100次提交一次,并清除缓存
-                    boolean bool = (i >0 && i%3 == 0) || i == ${className}s.size() - 1;
+                    // 防止内存溢出，每100次提交一次,并清除缓存
+                    boolean bool = (i >0 && i%100 == 0) || i == ${className}s.size() - 1;
                     if (bool){
                         sqlSession.commit();
                         sqlSession.clearCache();
