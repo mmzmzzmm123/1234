@@ -59,6 +59,7 @@
                 #{orderExpireTimeUnit}
             </if>
         </where>
+        order by sort_num desc
     </select>
 
     <select id="selectJoinServiceInfo" parameterType="ServiceItem" resultMap="joinServiceInfo">
@@ -71,6 +72,28 @@
                 #{orderExpireTimeUnit}
             </if>
         </where>
+        order by sort_num desc
+    </select>
+
+    <select id="selectJoinPriceByServiceId" parameterType="Long" resultMap="ServiceItemServiceItemPriceResult">
+        select a.id,
+               a.service_id,
+               a.name,
+               a.if_buyout_item,
+               a.order_expire_time_unit,
+               a.order_service_duration,
+               a.sort_num,
+               a.create_by,
+               a.create_time,
+               a.update_by,
+               a.update_time,
+               b.service_item_id       as sub_service_item_id,
+               b.staff_level_config_id as sub_staff_level_config_id,
+               b.price                 as sub_price
+        from bus_service_item a
+                 left join bus_service_item_price b on b.service_item_id = a.id
+        where a.service_id = #{serviceId}
+        order by a.sort_num desc
     </select>
 
     <select id="selectServiceItemById" parameterType="Long" resultMap="ServiceItemServiceItemPriceResult">
@@ -91,6 +114,7 @@
         from bus_service_item a
                  left join bus_service_item_price b on b.service_item_id = a.id
         where a.id = #{id}
+        order by a.sort_num desc
     </select>
 
     <insert id="insertServiceItem" parameterType="ServiceItem" useGeneratedKeys="true" keyProperty="id">

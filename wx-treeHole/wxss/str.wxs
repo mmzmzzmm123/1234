@@ -1,0 +1,92 @@
+/**
+ * 判断数组是否包含某个值
+ * 
+ * @param arr 数组
+ * @param str 字符串
+ * @return true 包含 false 不包含
+ */
+function checkArrIncludeStr(arr, str){
+  if(arr == null || arr == "" || arr == "null"){
+    return false;
+  }
+  for(var i = 0; i < arr.length; i++){
+    if(arr[i] == str){
+      return true;
+    }
+  }
+  return false;
+}
+
+/**
+ * 字符串截取
+ * 
+ * @param str 字符串
+ * @param start 开始下标 
+ * @param end 结束下标
+ */
+function substr(str, start, end){
+  if(str.length < end){
+    return str;
+  }
+  return str.substring(start, end);
+}
+
+/**
+ * 生成用户编号
+ * 
+ * @param 加入时间
+ * @param 用户id
+ */
+function generateUserNo(joinDate, uId){
+  var dateStr = joinDate.substring(0, 10);
+  var dateArr = dateStr.split("-");
+  return dateArr[0]+dateArr[1]+dateArr[2]+uId;
+}
+
+/**
+ * 随机数
+ */
+function random(){
+  var randomStr = Math.random()+"";
+  return Number(randomStr.substring(2,3))+1;
+}
+
+/**
+ * 手机号码加密
+ */
+function encryptionPhone(str){
+  if(str==null||str==undefined||str==""){
+    return "";
+  }
+  var newStr = "";
+  for (var i = 0; i < str.length; i++) {
+    var temp = str[i];
+    if(i>2&&i<7){
+      temp = "*";
+    }
+    newStr = newStr+temp;
+  }
+  return newStr;
+}
+
+/**
+ * 字符串替换
+ */
+function replaceDate(str){
+  var arr = ["年","月","日"];
+  var strArr = str.split("-");
+  var temp = "";
+  for(var index = 0; index < strArr.length; index++){
+    temp += strArr[index]+arr[index];
+  }
+  return temp;
+}
+
+module.exports = {
+  checkArrIncludeStr: checkArrIncludeStr,
+  substr: substr,
+  generateUserNo: generateUserNo,
+  random: random,
+  encryptionPhone: encryptionPhone,
+  replaceDate: replaceDate
+}

@@ -7,5 +7,9 @@ module.exports = {
   // 用户等级配置
   userLevelConfigList: "userLevelConfigList",
   // 员工等级配置
-  staffLevelConfigList: "staffLevelConfigList"
+  staffLevelConfigList: "staffLevelConfigList",
+  // 服务数据
+  serviceList: "serviceList",
+  // 员工协议
+  staffAgreement: "staffAgreement"
 }

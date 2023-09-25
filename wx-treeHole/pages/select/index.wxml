@@ -1,3 +1,6 @@
+<wxs src="../../wxss/str.wxs" module="strUtil"></wxs>
+<wxs src="../../wxss/format.wxs" module="formatUtil"></wxs>
+<wxs src="../../wxss/dicts.wxs" module="dictsUtil"></wxs>
 <view class="bView">
   <wux-tabs class="wuxTab" theme="positive" controlled current="{{ currentKey }}" bindchange="onTabsChange">
     <block wx:for="{{ tabs }}" wx:key="key">
@@ -357,7 +360,145 @@
     </swiper-item>
     <!-- 盲盒下单 -->
     <swiper-item>
-      2
+      <scroll-view scroll-y="true" style="width:{{pWidth}}px;height:{{pHeight-tabHeight-randomBottomViewHeight}}px;">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../static/ico/theme_dot.png"></image>
+              <view>店员性别与标签</view>
+            </view>
+            <view class="randomSexView view_box_row_content">
+              <view wx:if="{{randomForm.sex == '0'}}" class="view_box_row_content boy_edging_color boy_font_color">
+                <image src="../../static/ico/theme_boy.png"></image>
+                <span>男生</span>
+              </view>
+              <view wx:if="{{randomForm.sex != '0'}}" class="view_box_row_content" data-sex="0" bind:tap="randomChooseSex">
+                <image src="../../static/ico/theme_boy.png"></image>
+                <span>男生</span>
+              </view>
+              <view wx:if="{{randomForm.sex == '1'}}" class="view_box_row_content girl_edging_color girl_font_color">
+                <image src="../../static/ico/theme_girl.png"></image>
+                <span>女生</span>
+              </view>
+              <view wx:if="{{randomForm.sex != '1'}}" class="view_box_row_content" data-sex="1" bind:tap="randomChooseSex">
+                <image src="../../static/ico/theme_girl.png"></image>
+                <span>女生</span>
+              </view>
+            </view>
+          </view>
+          <view class="view_box_common scopeLabelView view_box_row_content_symmetry_wrap">
+            <block wx:for="{{staffCustomizeLabel[randomForm.sex]}}" wx:key="index">
+              <view data-label="{{item}}" bind:tap="chooseRandomStaffLabel" class="staffLevelItem {{strUtil.checkArrIncludeStr(randomForm.chooseLabel, item) ? 'boy_bg_color randomChooseLebal' : ''}}">{{item}}</view>
+            </block>
+          </view>
+          <view class="seizeSeat_mini"></view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <column-view title="店员等级" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common scopeLabelView view_box_row_content_symmetry_wrap">
+            <block wx:for="{{staffLevelConfig}}" wx:key="id">
+              <view class="staffLevelItem {{index == randomForm.staffLevelIndex?'boy_bg_color randomChooseLebal':''}}" bind:tap="randomStaffLevelChoose" data-index="{{index}}">{{item.name}}</view>
+            </block>
+          </view>
+          <view class="seizeSeat_mini"></view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <column-view title="服务类型" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common scopeLabelView view_box_row_content_symmetry_wrap ">
+            <block wx:for="{{serviceList}}" wx:key="id">
+              <view class="staffLevelItem {{index == randomForm.serviceInfoIndex?'boy_bg_color randomChooseLebal':''}}" bind:tap="randomServiceChoose" data-index="{{index}}">{{item.name}}</view>
+            </block>
+          </view>
+          <view class="seizeSeat_mini"></view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <column-view title="服务内容选项" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common scopeLabelView view_box_row_content_symmetry_wrap ">
+            <block wx:for="{{serviceList[randomForm.serviceInfoIndex].serviceItemList}}" wx:key="id">
+              <view class="staffLevelItem {{index == randomForm.serviceInfoItemIndex?'boy_bg_color randomChooseLebal':''}}" bind:tap="randomServiceItemChoose" data-index="{{index}}">{{item.name}}</view>
+            </block>
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem" bind:tap="selectUserAccount">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../static/ico/theme_dot.png"></image>
+              <view>社交账号</view>
+            </view>
+            <view class="view_box_row_content scopeTextView">
+              <view>{{randomForm.customNum!=null?dictsUtil.social_accounts(randomForm.accountServiceProvider)+"-"+randomForm.customNum:"请选择您的社交账号"}}</view>
+              <wux-icon type="ios-arrow-forward" size="16" color="#80848f"></wux-icon>
+            </view>
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../static/ico/theme_dot.png"></image>
+              <view>排除服务过的店员</view>
+            </view>
+            <wux-switch name="light" slot="footer" color="royal" value="{{randomForm.ifExclude == 'Y'}}" bind:change="changeIfExclude" />
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../static/ico/theme_dot.png"></image>
+              <view>购买数量</view>
+            </view>
+            <wux-input-number controlled="true" color="royal" slot="footer" min="1" max="99" value="{{randomForm.num}}" bind:change="randomBuyNumChange" />
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <column-view title="备注" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common">
+            <view class="seizeSeat_mini"></view>
+            <textarea maxlength="64" auto-height="true" placeholder="可输入您的备注信息哟" style="width: 100%;z-index: 100;" bindinput="randomRemark"></textarea>
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <column-view title="支付方式" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common">
+            <view class="view_box_row_content_symmetry">
+              <view class="payWayView view_box_row_content">
+                <image src="../../static/ico/wx_pay.png" mode="widthFix"></image>
+                <span>微信支付</span>
+              </view>
+              <radio data-pay="0" checked="{{randomForm.payWay == '0'}}" color="#8978E4" bind:tap="payWayChange" />
+            </view>
+            <view class="view_box_row_content_symmetry">
+              <view class="payWayView view_box_row_content">
+                <image src="../../static/ico/wallet.png" mode="widthFix"></image>
+                <span>树币支付</span>
+              </view>
+              <view class="view_box_row_content">
+                <view style="font-size: 12px;margin-right: 10px;color: #80848f;">我的树币：{{formatUtil.toFixed(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}</view>
+                <radio data-pay="1" checked="{{randomForm.payWay == '1'}}" color="#8978E4" bind:tap="payWayChange" />
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+      </scroll-view>
+      <view class="randomBottomView view_box_row_content">
+        <view class="view_box_row_content_symmetry" style="width: {{pWidth*0.92*0.92}}px;margin: 0 auto;">
+          <view class="view_box_row_content randomPriceView">
+            <view>总价：</view>
+            <span>￥</span>
+            <text>{{formatUtil.toFixed(randomForm.price)}}</text>
+          </view>
+          <view class="submitOrderBut">立即下单</view>
+        </view>
+      </view>
     </swiper-item>
   </swiper>
 </view>

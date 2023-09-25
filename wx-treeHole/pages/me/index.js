@@ -4,6 +4,7 @@ import storageConstant from "../../constans/storageConstant";
 import globalConstant from "../../constans/globalConstant";
 import userApi from "../../apis/user/userApi";
 import userLevelApi from "../../apis/user/userLevelApi";
+import staffApi from "../../apis/staff/staffApi";
 Page({
 
   /**
@@ -20,7 +21,10 @@ Page({
     refreshState: false, //下拉刷新状态
     userInfo: app.globalData.userInfo,
     userLevelConfig: app.globalData.userLevelConfig,
-    userLevelData: null
+    userLevelData: null,
+    userLikeStaffUserIdList: app.globalData.userLikeStaffUserIdList,
+    userLikeStaffTrendsIdList: app.globalData.userLikeStaffTrendsIdList,
+
   },
 
   /**
@@ -49,12 +53,39 @@ Page({
     })
     // 处理用户等级数据
     this.handleUserLevelData();
+    // 请求用户关联数据
+    if(this.data.userInfo != null){
+      let userId = this.data.userInfo.id;
+      // 加载点赞收藏数据
+      userApi.selectUserLikeData({userId: userId}, null, this.selectUserLikeDataOnSuccess, null);
+      // 加载员工信息
+      staffApi.selectByUserId({userId: userId}, null, this.selectStaffInfoOnSuccess, null);
+    }
   },
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage() {
 
+  },
+  /**
+   * 请求员工信息数据完成
+   */
+  selectStaffInfoOnSuccess:function(res){
+    if(res.data.id != null){
+      console.log("存在员工信息：", res);
+    }
+  },
+  /**
+   * 请求用户点赞收藏数据成功
+   */
+  selectUserLikeDataOnSuccess:function(res){
+    app.globalData.userLikeStaffUserIdList = res.data.likeStaffUserIdList;
+    app.globalData.userLikeStaffTrendsIdList = res.data.likeStaffTrendsIdList;
+    this.setData({
+      userLikeStaffUserIdList: res.data.likeStaffUserIdList,
+      userLikeStaffTrendsIdList: res.data.likeStaffTrendsIdList
+    })
   },
   /**
    * 登录事件
@@ -202,4 +233,34 @@ Page({
       url: '../../userPackages/page/userData/index',
     })
   },
+  /**
+   * 前往用户账号管理页面
+   */
+  toUserAccount:function(){
+    if(this.data.userInfo == null){
+      wx.showToast({
+        title: '亲爱的，先登录哟',
+        icon: "none"
+      })
+      return;
+    }
+    wx.navigateTo({
+      url: '../../userPackages/page/accounts/index',
+    })
+  },
+  /**
+   * 前往申请员工页面
+   */
+  toApplyStaff:function(){
+    if(this.data.userInfo == null){
+      wx.showToast({
+        title: '亲爱的，先登录哟',
+        icon: "none"
+      })
+      return;
+    }
+    wx.navigateTo({
+      url: '../../staffPackages/page/applyStaff/index',
+    })
+  }
 })

@@ -59,9 +59,18 @@ Page({
   onLoad(options) {
     let that = this;
     wx.createSelectorQuery().selectAll('.bView').boundingClientRect(function (rect) {
+      let divHeight = rect[0].height;
+      wx.getSystemInfo({
+        success: function (res) {
+          let sysHeight = res.windowHeight;
+          if(divHeight != sysHeight){
+            divHeight = sysHeight;
+          }
+        }
+      });
       that.setData({
         pWidth: rect[0].width,
-        pHeight: rect[0].height
+        pHeight: divHeight
       })
     }).exec();
     wx.createSelectorQuery().selectAll('.wuxTab').boundingClientRect(function (rect) {

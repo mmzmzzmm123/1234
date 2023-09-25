@@ -14,4 +14,8 @@ public class RedisKeyConstants {
      * 员工等级配置数据
      * */
     public static final String STAFF_LEVEL_CONFIG_DATA = "staff_level_config_data";
+    /**
+     * 平台文本内容
+     * */
+    public static final String PLATFORM_TEXT_CONTENT = "platform_text_content:";
 }

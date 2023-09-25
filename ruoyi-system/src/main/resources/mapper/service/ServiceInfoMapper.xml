@@ -20,6 +20,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <collection property="serviceItemList" notNullColumn="sub_id" javaType="java.util.List" resultMap="ServiceItemResult" />
     </resultMap>
 
+    <resultMap id="selectJoinAllResult" type="ServiceInfo" extends="ServiceInfoResult">
+        <collection property="serviceItemList" column="id" javaType="java.util.List" select="com.ruoyi.service.mapper.ServiceItemMapper.selectJoinPriceByServiceId" />
+    </resultMap>
+
     <resultMap type="ServiceItem" id="ServiceItemResult">
         <result property="id"    column="sub_id"    />
         <result property="serviceId"    column="sub_service_id"    />
@@ -44,6 +48,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="shortName != null  and shortName != ''"> and short_name like concat('%', #{shortName}, '%')</if>
         </where>
+    </select>
+
+    <select id="selectJoinAll" parameterType="ServiceInfo" resultMap="selectJoinAllResult">
+        <include refid="selectServiceInfoVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="shortName != null  and shortName != ''"> and short_name like concat('%', #{shortName}, '%')</if>
+        </where>
+        order by sort_num desc
     </select>
 
     <select id="selectServiceInfoById" parameterType="Long" resultMap="ServiceInfoServiceItemResult">

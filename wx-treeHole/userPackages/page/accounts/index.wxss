@@ -1,0 +1,16 @@
+.inputItem{
+  text-align: right;
+  font-size: 14px;
+}
+.accountItem{
+  padding: 10px 0;
+  box-shadow: 0 0 5px 1px #bbbec4;
+  border-radius: 10px;
+  position: relative;
+}
+.closeImg{
+  width: 26px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}

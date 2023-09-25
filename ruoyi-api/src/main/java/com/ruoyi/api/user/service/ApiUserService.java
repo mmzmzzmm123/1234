@@ -4,6 +4,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.api.user.model.dto.ApiUserDto;
 import com.ruoyi.api.user.model.vo.ApiUserLevelVo;
+import com.ruoyi.api.user.model.vo.ApiUserLikeDataVo;
 import com.ruoyi.api.user.model.vo.ApiUserVo;
 import com.ruoyi.api.user.model.vo.ApiUserWalletVo;
 import com.ruoyi.common.core.domain.R;
@@ -15,14 +16,13 @@ import com.ruoyi.common.weixin.WxService;
 import com.ruoyi.user.domain.UserInfo;
 import com.ruoyi.user.domain.UserLevel;
 import com.ruoyi.user.domain.UserWallet;
-import com.ruoyi.user.mapper.UserInfoMapper;
-import com.ruoyi.user.mapper.UserLevelMapper;
-import com.ruoyi.user.mapper.UserWalletMapper;
+import com.ruoyi.user.mapper.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.A;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,6 +37,8 @@ public class ApiUserService {
     private final UserInfoMapper userInfoMapper;
     private final UserLevelMapper userLevelMapper;
     private final UserWalletMapper userWalletMapper;
+    private final UserLikeStaffRecordMapper userLikeStaffRecordMapper;
+    private final UserLikeStaffTrendsRecordMapper userLikeStaffTrendsRecordMapper;
     private final WxService wxService;
 
     /**
@@ -97,7 +99,7 @@ public class ApiUserService {
      *
      * @param dto 数据
      * @return 结果
-     * */
+     */
     public Boolean update(ApiUserDto dto) {
         log.info("用户信息更新：开始，参数：{}", dto);
         UserInfo updateInfo = new UserInfo();
@@ -112,7 +114,7 @@ public class ApiUserService {
      *
      * @param userId 用户标识
      * @return 结果
-     * */
+     */
     public String generateReferralCode(Long userId) {
         log.info("生成用户推荐码：开始，参数：{}", userId);
         Long code = LongUtils.generateReferralCode();
@@ -130,14 +132,44 @@ public class ApiUserService {
      *
      * @param code 初始化code
      * @return 唯一性code
-     * */
-    private Long recursionGenerateCode(Long code){
+     */
+    private Long recursionGenerateCode(Long code) {
         UserInfo select = new UserInfo();
         select.setReferralCode(code);
         List<UserInfo> userInfos = userInfoMapper.selectUserInfoList(select);
-        if (ObjectUtil.isNotEmpty(userInfos)){
+        if (ObjectUtil.isNotEmpty(userInfos)) {
             return this.recursionGenerateCode(LongUtils.generateReferralCode());
         }
         return code;
+    }
+
+    /**
+     * 获取用户点赞收藏记录数据
+     *
+     * @param userId 用户标识
+     * @return 结果
+     */
+    public ApiUserLikeDataVo selectUserLikeData(Long userId) {
+        log.info("获取用户点赞收藏记录数据：开始，参数：{}", userId);
+        ApiUserLikeDataVo vo = new ApiUserLikeDataVo();
+        List<Long> likeStaffUserIdList = new ArrayList<>();
+        List<Long> likeStaffTrendsIdList = new ArrayList<>();
+        // 开始查询
+        if (ObjectUtil.isNotNull(userId)) {
+            // 查询收藏员工记录
+            List<Long> tempStaffUserId = userLikeStaffRecordMapper.selectStaffUserIdByUserId(userId);
+            if (ObjectUtil.isNotEmpty(tempStaffUserId)) {
+                likeStaffUserIdList = tempStaffUserId;
+            }
+            // 查询点赞动态记录
+            List<Long> tempStaffTrendsIdList = userLikeStaffTrendsRecordMapper.selectTrendsIdByUserId(userId);
+            if (ObjectUtil.isNotEmpty(tempStaffTrendsIdList)){
+                likeStaffTrendsIdList = tempStaffTrendsIdList;
+            }
+        }
+        vo.setLikeStaffUserIdList(likeStaffUserIdList)
+                .setLikeStaffTrendsIdList(likeStaffTrendsIdList);
+        log.info("获取用户点赞收藏记录数据：完成，返回数据：{}", vo);
+        return vo;
     }
 }

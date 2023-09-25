@@ -7,6 +7,7 @@ let bashRequestUrl = "/api/user";
 let wxMiniLoginUrl = "/wxMiniLogin";
 let updateUrl = "/update";
 let generateReferralCodeUrl = "/generateReferralCode";
+let selectUserLikeDataUrl = "/selectUserLikeData"
 
 /**
  * 用户登录
@@ -28,8 +29,16 @@ let generateReferralCode = function (params, onStart, onSuccess, onFailed) {
   request.get(bashRequestUrl + generateReferralCodeUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed);
 }
 
+/**
+ * 获取用户点赞收藏记录数据
+ */
+let selectUserLikeData = function(params, onStart, onSuccess, onFailed){
+  request.get(bashRequestUrl + selectUserLikeDataUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed)
+}
+
 module.exports = {
   wxMiniLogin: wxMiniLogin,
   update: update,
-  generateReferralCode: generateReferralCode
+  generateReferralCode: generateReferralCode,
+  selectUserLikeData: selectUserLikeData
 }

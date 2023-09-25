@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/me/index",
     "pages/index/index",
+    "pages/me/index",
     "pages/select/index",
     "pages/trends/index"
   ],
@@ -10,7 +10,15 @@
       "root": "userPackages",
       "name": "用户相关页面",
       "pages": [
-        "page/userData/index"
+        "page/userData/index",
+        "page/accounts/index"
+      ]
+    },
+    {
+      "root": "staffPackages",
+      "name": "员工相关页面",
+      "pages": [
+        "page/applyStaff/index"
       ]
     }
   ],

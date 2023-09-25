@@ -43,7 +43,7 @@ public class StaffInfo extends BaseEntity {
     private String nickName;
 
     /** 状态（-1禁用、0正常、1待审核） */
-    @Excel(name = "状态", readConverterExp = "-=1禁用、0正常、1待审核")
+    @Excel(name = "状态", readConverterExp = "-=1禁用、0正常、1待审核、2审核不通过")
     @ApiModelProperty("状态")
     private String state;
 
@@ -128,5 +128,7 @@ public class StaffInfo extends BaseEntity {
     @ApiModelProperty("推荐码")
     private Long referralCode;
 
-
+    @Excel(name = "不通过原因")
+    @ApiModelProperty("不通过原因")
+    private String notPassReason;
 }

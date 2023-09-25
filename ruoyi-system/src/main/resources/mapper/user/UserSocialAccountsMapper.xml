@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.user.mapper.UserSocialAccountsMapper">
-    
+
     <resultMap type="UserSocialAccounts" id="UserSocialAccountsResult">
         <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
@@ -20,19 +20,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectUserSocialAccountsList" parameterType="UserSocialAccounts" resultMap="UserSocialAccountsResult">
         <include refid="selectUserSocialAccountsVo"/>
-        <where>  
+        <where>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="accountServiceProvider != null  and accountServiceProvider != ''"> and account_service_provider = #{accountServiceProvider}</if>
             <if test="num != null  and num != ''"> and num like concat('%', #{num}, '%')</if>
             <if test="ifDefault != null  and ifDefault != ''"> and if_default = #{ifDefault}</if>
         </where>
+        ORDER BY if_default DESC
     </select>
-    
+
     <select id="selectUserSocialAccountsById" parameterType="Long" resultMap="UserSocialAccountsResult">
         <include refid="selectUserSocialAccountsVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertUserSocialAccounts" parameterType="UserSocialAccounts" useGeneratedKeys="true" keyProperty="id">
         insert into bus_user_social_accounts
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -71,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteUserSocialAccountsByIds" parameterType="String">
-        delete from bus_user_social_accounts where id in 
+        delete from bus_user_social_accounts where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

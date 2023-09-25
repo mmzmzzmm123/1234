@@ -5,10 +5,24 @@
     "compileHotReLoad": true,
     "urlCheck": false
   },
-  "libVersion": "3.0.2",
+  "libVersion": "3.1.0",
   "condition": {
     "miniprogram": {
       "list": [
+        {
+          "name": "申请成为员工页",
+          "pathName": "staffPackages/page/applyStaff/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "账号管理页面",
+          "pathName": "userPackages/page/accounts/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
         {
           "name": "用户资料页面",
           "pathName": "userPackages/page/userData/index",

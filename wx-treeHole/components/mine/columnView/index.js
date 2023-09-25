@@ -23,6 +23,10 @@ Component({
     outerMargin:{
       type: String,
       value: "20px"
+    },
+    icoType: {
+      type: String,
+      value: "ios-arrow-forward"
     }
   },
 
@@ -34,7 +38,8 @@ Component({
     ifShowMore: "0",
     moreTitle: "更多",
     moreTitleColor: "#80848f",
-    outerMargin: "20px"
+    outerMargin: "20px",
+    icoType: "ios-arrow-forward"
   },
 
   /**

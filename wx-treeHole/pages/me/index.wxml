@@ -1,3 +1,4 @@
+<wxs src="../../wxss/format.wxs" module="formatUtil"></wxs>
 <view class="bView">
   <!-- 头部状态栏 -->
   <view class="stateBarView">
@@ -20,10 +21,10 @@
         <wux-avatar size="large" scale="true" src="{{userInfo != null && userInfo.avatarUrl != null ? userInfo.avatarUrl : '../../../../static/images/default_tx.png'}}"></wux-avatar>
         <view class="view_box_column_symmetry" style="width:{{pWidth*0.92-54}}px;height: 80rpx;margin-left: 10px;">
           <!-- 已登录 -->
-          <view wx:if="{{userInfo != null}}">
+          <view wx:if="{{userInfo != null}}" bind:tap="toUserData">
             <view class="view_box_row_content_symmetry">
               <view class="userName">{{userInfo.nickName}}</view>
-              <view class="userDataBut" bind:tap="toUserData">个人资料></view>
+              <view class="userDataBut">个人资料></view>
             </view>
             <view wx:if="{{userLevelData != null}}" class="view_box_row" style="margin-top: 4px;">
               <view class="level">vip{{userLevelData.currLevel}}</view>
@@ -95,18 +96,18 @@
       <view class="view_box_common common_fun_box_view" style="padding: 15px 0;">
         <view class="view_box_common view_box_row_content_symmetry" style="width: 82%;">
           <view class="view_box_content_column usedCarNumItem">
-            <span>0</span>
+            <span>{{userLikeStaffUserIdList.length}}</span>
             <view>我的点赞</view>
           </view>
           <view class="view_box_content_column usedCarNumItem">
-            <span>0.00</span>
+            <span>{{formatUtil.toFixed(userInfo!=null?(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance):'0.00')}}</span>
             <view class="view_box_row_content">
               <text>我的树币</text>
               <view class="goRechargeBut">去充值</view>
             </view>
           </view>
           <view class="view_box_content_column usedCarNumItem">
-            <span>0</span>
+            <span>{{userLikeStaffTrendsIdList.length}}</span>
             <view>我的收藏</view>
           </view>
         </view>
@@ -114,7 +115,15 @@
 
       <!-- 可操作区域 -->
       <view class="view_box_common common_fun_box_view" style="padding: 15px 0;margin-top: 10px;">
-        <view class="view_box_common view_box_row_content_symmetry commonFunItem">
+        <view class="view_box_common view_box_row_content_symmetry commonFunItem" bind:tap="toUserAccount">
+          <view class="view_box_row_content">
+            <image src="../../static/ico/socialize_grey_32.png" mode="widthFix"></image>
+            <text>账号管理</text>
+          </view>
+          <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common view_box_row_content_symmetry commonFunItem" bind:tap="toApplyStaff">
           <view class="view_box_row_content">
             <image src="../../static/ico/join_us_grey_32.png" mode="widthFix"></image>
             <text>成为员工</text>

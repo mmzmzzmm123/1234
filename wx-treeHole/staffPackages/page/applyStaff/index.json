@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "申请成为店员",
+  "usingComponents": {
+    "i-drawer": "../../../components/iview/dist/drawer/index",
+    "wux-icon": "../../../components/wux/dist/icon/index",
+    "wux-cell": "../../../components/wux/dist/cell/index",
+    "wux-switch": "../../../components/wux/dist/switch/index",
+    "wux-input": "../../../components/wux/dist/input/index",
+    "wux-upload": "../../../components/wux/dist/upload/index",
+    "column-view": "../../../components/mine/columnView/index"
+  }
+}

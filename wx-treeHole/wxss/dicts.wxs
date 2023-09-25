@@ -6,6 +6,16 @@ sex = function (key) {
     key == "1" ? "女" :
         "未知";
 }
+/**
+ * 账号服务商
+ */
+social_accounts = function(key){
+  return key == "0" ? "微信" :
+  key == "1" ? "QQ" :
+  key == "2" ? "微博" :
+        "未知";
+}
 module.exports = {
-  sex: sex
+  sex: sex,
+  social_accounts: social_accounts
 }

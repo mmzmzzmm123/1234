@@ -1,6 +1,7 @@
 package com.ruoyi.api.user.controller;
 
 import com.ruoyi.api.user.model.dto.ApiUserDto;
+import com.ruoyi.api.user.model.vo.ApiUserLikeDataVo;
 import com.ruoyi.api.user.model.vo.ApiUserVo;
 import com.ruoyi.api.user.service.ApiUserService;
 import com.ruoyi.common.annotation.Anonymous;
@@ -41,5 +42,11 @@ public class ApiUserController {
     @GetMapping("/generateReferralCode")
     public R<String> generateReferralCode(@RequestParam("userId") Long userId){
         return R.ok(service.generateReferralCode(userId));
+    }
+
+    @ApiOperation("获取用户点赞收藏记录数据")
+    @GetMapping("/selectUserLikeData")
+    public R<ApiUserLikeDataVo> selectUserLikeData(@RequestParam("userId") Long userId){
+        return R.ok(service.selectUserLikeData(userId));
     }
 }

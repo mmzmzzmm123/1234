@@ -12,7 +12,7 @@
   </wux-tabs>
   <swiper style="width:{{pWidth}}px;height:{{pHeight-tabHeight}}px;" current="{{ currentIndex }}">
     <swiper-item>
-      <scroll-view scroll-y="true" class="view_all_adapt">
+      <scroll-view scroll-y="true" style="width:{{pWidth}}px;height:{{pHeight-tabHeight}}px;">
 
         <!-- 动态item -->
         <view class="seizeSeat_mini"></view>
@@ -71,7 +71,6 @@
             </view>
           </view>
         </view>
-
 
         <!-- 动态item -->
         <view class="seizeSeat_mini"></view>
@@ -368,7 +367,8 @@
             </view>
           </view>
         </view>
-
+        <view class="seizeSeat_mini"></view>
+        <view class="seizeSeat_mini"></view>
       </scroll-view>
     </swiper-item>
   </swiper>

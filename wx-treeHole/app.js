@@ -3,6 +3,7 @@ import storageConstant from "./constans/storageConstant";
 import userApi from "./apis/user/userApi";
 import userLevelApi from "./apis/user/userLevelApi";
 import staffApi from "./apis/staff/staffApi";
+import serviceInfoApi from "./apis/service/serviceInfoApi";
 
 // app.js
 App({
@@ -21,6 +22,8 @@ App({
     this.getUserLevelConfig();
     // 员工等级配置
     this.getStaffLevelConfig();
+    // 服务数据加载
+    this.loadServiceInfoData();
   },
   /**
   * 新版本检查更新
@@ -73,6 +76,12 @@ App({
     let data = res.data;
     this.globalData.userInfo = data;
     storage.set(storageConstant.userInfo, null, data, 0);
+    // 加载用户的点赞收藏数据
+    userApi.selectUserLikeData({userId:data.id},null,this.selectUserLikeDataOnSuccess,null);
+  },
+  selectUserLikeDataOnSuccess:function(res){
+    this.globalData.userLikeStaffUserIdList = res.data.likeStaffUserIdList;
+    this.globalData.userLikeStaffTrendsIdList = res.data.likeStaffTrendsIdList;
   },
   /**
    * 获取用户等级配置信息
@@ -107,14 +116,35 @@ App({
     storage.set(storageConstant.staffLevelConfigList, null, data, 0);
   },
   /**
+   * 加载服务数据 
+   */
+  loadServiceInfoData:function(){
+    let serviceList = storage.get(storageConstant.serviceList, null);
+    if (serviceList != null) {
+      this.globalData.serviceList = serviceList;
+    }
+    serviceInfoApi.select(null,this.loadServiceInfoDataOnSuccess,null);
+  },
+  loadServiceInfoDataOnSuccess:function(res){
+    console.log("获取服务数据：", res);
+    this.globalData.serviceList = res.data;
+    storage.set(storageConstant.serviceList, null, res.data, 0);
+  },
+  /**
    * 全局参数
    */
   globalData: {
     // 登录用户信息
     userInfo: null,
+    // 用户收藏店员记录
+    userLikeStaffUserIdList: [],
+    // 用户点赞店员动态记录
+    userLikeStaffTrendsIdList: [],
     // 用户等级配置
     userLevelConfig: null,
     // 员工等级配置
-    staffLevelConfig: null
+    staffLevelConfig: null,
+    // 服务数据
+    serviceList: []
   }
 })

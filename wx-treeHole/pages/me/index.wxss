@@ -90,6 +90,9 @@ page{
   font-size: 12px;
   margin-top: 4px;
 }
+.commonFunItem{
+  padding: 4px 0;
+}
 .commonFunItem image{
   width: 18px;
   margin-right: 10px;

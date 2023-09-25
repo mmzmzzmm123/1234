@@ -29,6 +29,14 @@ public interface ServiceInfoMapper {
     public List<ServiceInfo> selectServiceInfoList(ServiceInfo serviceInfo);
 
     /**
+     * 级联查询子服务和子服务价格数据
+     *
+     * @param serviceInfo 服务信息
+     * @return 结果
+     * */
+    public List<ServiceInfo> selectJoinAll(ServiceInfo serviceInfo);
+
+    /**
      * 新增服务信息
      *
      * @param serviceInfo 服务信息

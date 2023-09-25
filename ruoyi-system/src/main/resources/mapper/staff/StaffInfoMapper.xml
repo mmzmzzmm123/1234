@@ -27,6 +27,7 @@
         <result property="sortNum" column="sort_num"/>
         <result property="referralCode" column="referral_code"/>
         <result property="remark" column="remark"/>
+        <result property="notPassReason" column="not_pass_reason" />
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
     </resultMap>
@@ -54,6 +55,7 @@
                sort_num,
                referral_code,
                remark,
+               not_pass_reason,
                create_time,
                update_time
         from bus_staff_info
@@ -104,6 +106,7 @@
             <if test="sortNum != null">sort_num,</if>
             <if test="referralCode != null">referral_code,</if>
             <if test="remark != null">remark,</if>
+            <if test="notPassReason != null">not_pass_reason,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
         </trim>
@@ -130,6 +133,7 @@
             <if test="sortNum != null">#{sortNum},</if>
             <if test="referralCode != null">#{referralCode},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="notPassReason != null">#{notPassReason},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
         </trim>
@@ -159,6 +163,7 @@
             <if test="sortNum != null">sort_num = #{sortNum},</if>
             <if test="referralCode != null">referral_code = #{referralCode},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="notPassReason != null">not_pass_reason = #{notPassReason},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>

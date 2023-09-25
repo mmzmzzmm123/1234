@@ -21,6 +21,12 @@ public interface ServiceItemMapper {
     public ServiceItem selectServiceItemById(Long id);
 
     /**
+     * 根据服务标识查询子项目
+     * @return 结果
+     * */
+    public List<ServiceItem> selectJoinPriceByServiceId(Long serviceId);
+
+    /**
      * 查询服务子项目列表
      *
      * @param serviceItem 服务子项目

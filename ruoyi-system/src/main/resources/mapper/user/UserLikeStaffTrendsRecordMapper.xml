@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.user.mapper.UserLikeStaffTrendsRecordMapper">
+
+    <resultMap type="UserLikeStaffTrendsRecord" id="UserLikeStaffTrendsRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="staffTrendsId"    column="staff_trends_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectUserLikeStaffTrendsRecordVo">
+        select id, user_id, staff_trends_id, create_time from bus_user_like_staff_trends_record
+    </sql>
+
+    <select id="selectUserLikeStaffTrendsRecordList" parameterType="UserLikeStaffTrendsRecord" resultMap="UserLikeStaffTrendsRecordResult">
+        <include refid="selectUserLikeStaffTrendsRecordVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="staffTrendsId != null "> and staff_trends_id = #{staffTrendsId}</if>
+        </where>
+    </select>
+
+    <select id="selectTrendsIdByUserId" parameterType="Long" resultType="Long">
+        select staff_trends_id from bus_user_like_staff_trends_record where user_id = #{userId}
+    </select>
+
+    <select id="selectUserLikeStaffTrendsRecordById" parameterType="Long" resultMap="UserLikeStaffTrendsRecordResult">
+        <include refid="selectUserLikeStaffTrendsRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertUserLikeStaffTrendsRecord" parameterType="UserLikeStaffTrendsRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_user_like_staff_trends_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="staffTrendsId != null">staff_trends_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="staffTrendsId != null">#{staffTrendsId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserLikeStaffTrendsRecord" parameterType="UserLikeStaffTrendsRecord">
+        update bus_user_like_staff_trends_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="staffTrendsId != null">staff_trends_id = #{staffTrendsId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserLikeStaffTrendsRecordById" parameterType="Long">
+        delete from bus_user_like_staff_trends_record where id = #{id}
+    </delete>
+
+    <delete id="deleteUserLikeStaffTrendsRecordByIds" parameterType="String">
+        delete from bus_user_like_staff_trends_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

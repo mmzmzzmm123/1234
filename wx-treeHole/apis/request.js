@@ -1,8 +1,8 @@
 import globalCanstanats from "../constans/globalConstant";
-let prefix = "http://localhost/dev-api";
-//let prefix = "https://listen.vipwei.com/prod-api";
-// 上传单文件链接
-let uploadSingleFileUrl = "http://localhost/dev-api/api/file/uploadSingleFile";
+// let prefix = "http://localhost/dev-api";
+// let uploadSingleFileUrl = "http://localhost/dev-api/api/file/uploadSingleFile";
+let prefix = "https://listen.vipwei.cn/prod-api";
+let uploadSingleFileUrl = "https://listen.vipwei.cn/prod-api/api/file/uploadSingleFile";
 
 import util from "../utils/util";
 

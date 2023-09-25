@@ -125,7 +125,7 @@
   line-height: 38px;
   border-radius: 38px;
   margin: 0 auto;
-  background: linear-gradient(to right,#78D6F4,#4198EF);
+  background: linear-gradient(to right,#a79de0,#b7b0dd);
   text-align: center;
   color: white;
   font-size: 14px;
@@ -163,4 +163,24 @@
 .girl_edging_color{
   border: 1px solid #f8b5b5;
   box-shadow: 0 0 1px 1px #f8b5b5;
+}
+/** 通用的drawer容器样式 */
+.drawerView{
+  width:100%;
+  background-color:#ffffff;
+  position: absolute;
+  bottom: 0;
+}
+.drawerTitleView{
+  font-size: 16px;
+  font-weight: bold;
+}
+.drawerBodyView{
+  width: 100%;
+  background-color: #f8f8f9;
+}
+.drawerFormView{
+  background-color: #FFFFFF;
+  border-radius: 14px;
+  overflow: hidden;
 }
