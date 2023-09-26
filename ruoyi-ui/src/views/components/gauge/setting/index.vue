@@ -5,7 +5,7 @@
     <el-table :data="scoreList" style="width: 100%" size="mini">
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-form ref="form" label-width="80px">
+          <el-form ref="form" label-width="80px" size="mini">
             <el-form-item :label="gaugeType === 3 ? '性格类型' : '得分范围'">
               <template v-if="gaugeType === 3">
                 <el-select v-if="gaugeType === 3" size="small" style="width: 150px" v-model="props.row.lat" placeholder="纬度" clearable>
@@ -32,24 +32,24 @@
 <!--            </el-form-item>-->
             <template v-if="gaugeType === 4">
               <el-form-item label="测评结果">
-                <el-input size="small" maxlength="255" show-word-limit v-model="props.row.memo1" placeholder="测评结果" />
+                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo1" placeholder="测评结果" />
               </el-form-item>
               <el-form-item label="结果描述">
-                <el-input size="small" maxlength="255" show-word-limit v-model="props.row.memo2" placeholder="结果描述" />
+                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo2" placeholder="结果描述" />
               </el-form-item>
               <el-form-item label="得分解读">
-                <el-input size="small" maxlength="255" show-word-limit v-model="props.row.memo3" placeholder="得分解读" />
+                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo3" placeholder="得分解读" />
               </el-form-item>
               <el-form-item label="抑郁表现">
-                <el-input size="small" maxlength="255" show-word-limit v-model="props.row.memo4" placeholder="抑郁表现" />
+                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo4" placeholder="抑郁表现" />
               </el-form-item>
               <el-form-item label="得分建议">
-                <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192"/>
+                <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192" :height="300"/>
               </el-form-item>
             </template>
             <template v-else>
               <el-form-item label="结论">
-                <editor v-model="props.row.result" placeholder="请输入内容" :min-height="192"/>
+                <editor v-model="props.row.result" placeholder="请输入内容" :min-height="192" :height="300"/>
               </el-form-item>
             </template>
 

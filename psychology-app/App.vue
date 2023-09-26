@@ -2,6 +2,7 @@
 
 export default {
   globalData: {
+    logo: 'http://wx.qlogo.cn/mmopen/Q3auHgzwzM7ibjK0zgMSEgozDR40A2CgKLqZxEmcDI9HlQsVD27pM38F5KCDHTEaGeTfh3yWnHVgKPfzf8oKPLLITtib7xWLyMicAd1C3icfE1Q/64',
     spid: 0,
     code: 0,
     isLogin: false,

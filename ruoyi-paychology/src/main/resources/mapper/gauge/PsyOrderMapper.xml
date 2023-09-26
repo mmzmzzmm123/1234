@@ -43,18 +43,22 @@
         </where>
     </select>
 
-    <select id="selectPsyOrderById" parameterType="Integer" resultMap="PsyOrderResult">
-        <include refid="selectPsyOrderVo"/>
-        where id = #{id}
-    </select>
-
-    <select id="selectPsyOrderByOrderId" parameterType="String" resultType="com.ruoyi.gauge.domain.PsyOrder">
+    <sql id="selectPsyOrder">
         select po.*,
                gauge.gauge_des as gaugeDes, gauge.type as gaugeType, gauge.title as gaugeTitle,gauge.head_picture,
                u.name as userName
         from psy_order po
-            left join psy_gauge gauge ON po.gauge_id = gauge.id
-            left join psy_user u ON po.user_id = u.id
+                 left join psy_gauge gauge ON po.gauge_id = gauge.id
+                 left join psy_user u ON po.user_id = u.id
+    </sql>
+
+    <select id="selectPsyOrderById" parameterType="Integer" resultType="com.ruoyi.gauge.domain.PsyOrder">
+        <include refid="selectPsyOrder"/>
+        where po.id = #{id}
+    </select>
+
+    <select id="selectPsyOrderByOrderId" parameterType="String" resultType="com.ruoyi.gauge.domain.PsyOrder">
+        <include refid="selectPsyOrder"/>
         where po.order_id = #{orderId}
     </select>
 

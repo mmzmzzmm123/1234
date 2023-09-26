@@ -57,4 +57,15 @@ export default {
       });
     }
   },
+  getOrder: async (orderId) => {
+    let res = await httprequest.get("/app/gauge/order/" + orderId);
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      uni.showToast({
+        icon: "error",
+        title: "获取报告出错",
+      });
+    }
+  },
 };

@@ -148,15 +148,15 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
         paramMap.put("orderId",gaugeCommitResultDTO.getOrderId());
         paramMap.put("userId",userId);
         PsyOrder order = psyOrderMapper.selectPsyOrderById(gaugeCommitResultDTO.getOrderId());
-        PsyGauge gauge = psyGaugeService.selectPsyGaugeById(order.getGaugeId());
+//        PsyGauge gauge = psyGaugeService.selectPsyGaugeById(order.getGaugeId());
         String sum = "0";
-        switch (gauge.getType()) {
+        switch (order.getGaugeType()) {
             case GaugeConstant.GAUGE_COMPUTE_1:
             case GaugeConstant.GAUGE_COMPUTE_2:
             case GaugeConstant.GAUGE_COMPUTE_4:
                 int score = psyGaugeQuestionsResultMapper.getQuestionScore(paramMap);
                 // SDS
-                if (GaugeConstant.GAUGE_COMPUTE_4 == gauge.getType()) {
+                if (GaugeConstant.GAUGE_COMPUTE_4 == order.getGaugeType()) {
                     score = (int) Math.round(score * GaugeConstant.GAUGE_COMPUTE_SDS);
                 }
                 sum = score + "";

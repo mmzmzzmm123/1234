@@ -100,7 +100,7 @@ export default {
     }
     this.report = await serve.getReport(this.orderId)
     this.score = parseInt(this.report.order.score)
-    this.percentage = parseInt(this.score * 1.25)
+    this.percentage = this.score
     utils.share(this.report.order.gaugeTitle, '', this.report.order.headPicture, 'https://wx.ssgpsy.com/pages/evaluation/product?id=' + this.report.order.gaugeId)
   },
   methods: {
@@ -154,11 +154,7 @@ export default {
   margin: 24upx 0 0 32upx;
 }
 .header-wrapper {
-  width: 595upx;
   height: 37upx;
-  flex-direction: row;
-  display: flex;
-  justify-content: space-between;
   margin: 20upx 0 450upx 32upx;
 }
 .header-name {
@@ -167,7 +163,6 @@ export default {
   color: rgba(255,255,255,1);
   font-size: 26upx;
   font-family: PingFangSC-Regular;
-  text-align: left;
   line-height: 37upx;
 }
 .header-time {
@@ -175,8 +170,8 @@ export default {
   color: rgba(255,255,255,1);
   font-size: 26upx;
   font-family: PingFangSC-Regular;
-  text-align: left;
   line-height: 37upx;
+  margin-left: 60upx;
 }
 .result {
   box-shadow: 0px 4px 16px 0px rgba(255,112,63,0.160000);
@@ -244,7 +239,7 @@ export default {
     top: 0;
   }
   .text-score {
-    width: 57upx;
+    //width: 57upx;
     height: 78upx;
 
     color: rgba(255,112,63,1);
@@ -365,7 +360,7 @@ export default {
 }
 .understand-desc {
   width: 622upx;
-  height: 180upx;
+  //height: 180upx;
   color: rgba(51,51,51,1);
   font-size: 32upx;
   font-family: PingFangSC-Regular;
@@ -432,7 +427,7 @@ export default {
 }
 .gloomy-desc {
   width: 622upx;
-  height: 180upx;
+  //height: 180upx;
   color: rgba(51,51,51,1);
   font-size: 32upx;
   font-family: PingFangSC-Regular;
