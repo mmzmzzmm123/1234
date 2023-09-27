@@ -62,8 +62,6 @@ export default {
       addInterceptorList: ["navigateTo", "redirectTo", "reLaunch", "switchTab"],
       lastIndex: 0,
       currentIndex: 1,
-      currentQuestion: {},
-      currentAnswer: null,
       productId: 0,
       orderId: '',
       scrollInto: '',
@@ -180,7 +178,7 @@ export default {
     getLast(next = 1) {
       const index = this.questionList.findLastIndex(a => a.answers.length > 0)
       this.lastIndex = index !== -1 ? index + 1 : 0
-      this.currentIndex = Math.min(this.lastIndex + 1, 20)
+      this.currentIndex = Math.min(this.lastIndex + 1, this.questionList.length)
       console.log(this.lastIndex)
       console.log(this.currentIndex)
     },
@@ -197,7 +195,7 @@ export default {
     //继续答题，跳转到最后一题
     toLastQuestion() {
       this.showMessage = false;
-      this.currentIndex = Math.min(this.lastIndex + 1, 20);
+      this.currentIndex = Math.min(this.lastIndex + 1, this.questionList.length);
       callTimeLoad(document.getElementById("timerBox"), true);
       setTimeout(() => {
         this.scrollInto = 'main-' + this.lastIndex

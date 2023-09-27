@@ -190,9 +190,8 @@ export default {
       if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
-      uni.setStorageSync("gaugeDes", order.gaugeDes);
       uni.navigateTo({
-        url: `/pages/evaluation/testBefore?productId=${order.gaugeId}&&orderId=${order.id}`,
+        url: `/pages/evaluation/question?productId=${order.gaugeId}&orderId=${order.id}`,
       });
     },
     copyOrderNo(orderNo) {

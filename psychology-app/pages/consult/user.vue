@@ -238,47 +238,6 @@ export default {
       //添加登录标志,为callback做返回判断
       uni.setStorageSync("wxLogining", true);
     },
-    async toReport() {
-      // 判断是否已经登录
-      if (!await utils.checkLogin()) {
-        return this.openLoginConfirm()
-      }
-      if (this.getUserInfo())
-        uni.navigateTo({url: "/pages/evaluation/report"});
-    },
-    async toOrder() {
-      // 判断是否已经登录
-      if (!await utils.checkLogin()) {
-        return this.openLoginConfirm()
-      }
-      if (this.getUserInfo())
-        uni.navigateTo({url: "/pages/evaluation/order"});
-    },
-    async toTest(order) {
-      // 判断是否已经登录
-      if (!await utils.checkLogin()) {
-        return this.openLoginConfirm()
-      }
-      uni.setStorageSync("gaugeDes", order.gaugeDes);
-      uni.navigateTo({
-        url: `/pages/evaluation/testBefore?productId=${order.gaugeId}&&orderId=${order.id}`,
-      });
-    },
-    copyOrderNo(orderNo) {
-      var input = document.createElement("input");
-      document.body.appendChild(input);
-      input.setAttribute("value", orderNo);
-      input.select();
-      document.execCommand("copy"); // 执行浏览器复制命令
-      if (document.execCommand("copy")) {
-        document.execCommand("copy");
-        uni.showToast({
-          icon: "error",
-          title: "内容复制成功",
-        });
-      }
-      document.body.removeChild(input);
-    },
     // 点击头像
     async getUserInfo() {
       if (!await utils.checkLogin()) {

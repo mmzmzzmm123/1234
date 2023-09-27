@@ -19,7 +19,7 @@
       <el-button v-else class="button-new-tag" style="width: 100%; margin-left: 0" size="small" @click="showInput">+ 新问题</el-button>
     </el-row>
 
-    <el-drawer :visible.sync="questionOptionOpen" size="40%" style="padding-right:35%;z-index:1005" :wrapperClosable="false" :with-header="true" title="问题设置" append-to-body>
+    <el-drawer :visible.sync="questionOptionOpen" size="50%" style="padding-right:35%;z-index:1005" :wrapperClosable="false" :with-header="true" title="问题设置" append-to-body>
       <div v-for="item in gaugeQuestionList" :key="item.id" style="margin:0 20px">
         <div v-if="item.id == questionId">
           <template>
@@ -41,6 +41,7 @@
                     :value="item.value"
                   />
                 </el-select>
+                <el-input disabled v-model="option.sort" size="small" style="width: 80px;text-align: center" label="排序" @change="updateOption(option)"/>
                 <div class="close-btn select-line-icon">
                   <i class="el-icon-remove-outline" style="color:#777" v-if="index==0 || index==1" />
                   <i class="el-icon-remove-outline" v-else @click="removeOption(option); options.splice(index, 1);" />

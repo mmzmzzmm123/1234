@@ -54,9 +54,8 @@
     },
     methods: {
       toTest(order) {
-        uni.setStorageSync("gaugeDes", order.gaugeDes);
         uni.navigateTo({
-          url: `/pages/evaluation/testBefore?productId=${order.gaugeId}&&orderId=${order.id}`
+          url: `/pages/evaluation/question?productId=${order.gaugeId}&orderId=${order.id}`,
         });
       },
       async changeTab(status) {

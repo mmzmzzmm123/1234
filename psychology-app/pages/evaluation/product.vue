@@ -179,7 +179,12 @@ export default {
       // 再次购买
       this.payBoxShow = true;
     },
-    startTest() {
+    async startTest() {
+      // 判断是否已经登录
+      if (!await utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       // 已购买,未完成
       if (this.productInfo.isBuy === 1 && this.productInfo.isCompleted === 2) {
         return uni.navigateTo({
