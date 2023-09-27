@@ -64,6 +64,10 @@
         where oid = #{oid}
     </update>
 
+    <update id="updatePsyOrderLogById" parameterType="String">
+        update psy_order_log set oid = #{nid} where oid = #{oid}
+    </update>
+
     <delete id="deletePsyOrderLogByOid" parameterType="String">
         delete from psy_order_log where oid = #{oid}
     </delete>

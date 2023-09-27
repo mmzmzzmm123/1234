@@ -109,5 +109,5 @@ public interface IPsyOrderService
      * @param gaugeId 测评ID
      * @return 订单信息
      */
-    public PsyOrder getPsyOrder(Integer userId, Integer gaugeId);
+    public List<PsyOrder> getPsyOrder(Integer userId, Integer gaugeId);
 }

@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -76,26 +77,40 @@ public class AppPsyGaugeController extends BaseController
         PsyGauge psyGauge = psyGaugeService.selectPsyGaugeById(id);
         GaugeVO gaugeVO = new GaugeVO();
         BeanUtils.copyProperties(psyGauge, gaugeVO);
-        PsyOrder psyOrder = psyOrderService.getPsyOrder(userId, id);
-        if (psyOrder != null) { // 用户已经下单
-            gaugeVO.setOrderId(psyOrder.getId());
-            gaugeVO.setOrderNo(psyOrder.getOrderId());
+        List<PsyOrder> psyOrder = psyOrderService.getPsyOrder(userId, id);
+
+        // 未完成测试，待测试 orderId 优先级最高
+        // 全部测试完成，查看报告 orderId
+        // 再次购买
+        if (psyOrder.size() > 0) {
+            Optional<PsyOrder> first = psyOrder.stream().filter(order -> order.getGaugeStatus() == GaugeStatus.UNFINISHED.getValue()).findFirst();
+            if (first.isPresent()) {
+                gaugeVO.setOrderId(first.get().getId());
+                gaugeVO.setOrderNo(first.get().getOrderId());
+                gaugeVO.setIsCompleted(GaugeStatus.UNFINISHED.getValue());
+            } else {
+                gaugeVO.setOrderId(psyOrder.get(0).getId());
+                gaugeVO.setOrderNo(psyOrder.get(0).getOrderId());
+                gaugeVO.setIsCompleted(psyOrder.get(0).getGaugeStatus());
+            }
+
             gaugeVO.setIsBuy(GaugeConstant.GAUGE_IS_BUY);
-            gaugeVO.setIsCompleted(psyOrder.getGaugeStatus());
         } else {
             gaugeVO.setIsBuy(GaugeConstant.GAUGE_NOT_BUY);
             gaugeVO.setIsCompleted(GaugeStatus.UNFINISHED.getValue());
         }
+
+        gaugeVO.setSize(psyOrder.size());
         PsyGaugeQuestionsResult psyGaugeQuestionsResult = new PsyGaugeQuestionsResult();
         psyGaugeQuestionsResult.setUserId(userId);
         psyGaugeQuestionsResult.setGaugeId(id);
-        if (psyOrder != null) {
-            psyGaugeQuestionsResult.setOrderId(psyOrder.getId());
+        if (gaugeVO.getOrderId() != null) {
+            psyGaugeQuestionsResult.setOrderId(gaugeVO.getOrderId());
         }
         List<PsyGaugeQuestionsResult> psyGaugeQuestionsResultList = psyGaugeQuestionsResultService.selectPsyGaugeQuestionsResultList(psyGaugeQuestionsResult);
         // 将多选题的答案选项分组归并
-        Map<Integer, Long> result  = psyGaugeQuestionsResultList.stream().collect(Collectors.groupingBy(PsyGaugeQuestionsResult::getQuestionsId, Collectors.counting()));
-        gaugeVO.setFinishedNum(result.keySet().size());
+//        Map<Integer, Long> result  = psyGaugeQuestionsResultList.stream().collect(Collectors.groupingBy(PsyGaugeQuestionsResult::getQuestionsId, Collectors.counting()));
+        gaugeVO.setFinishedNum(psyGaugeQuestionsResultList.size());
 
         return AjaxResult.success(gaugeVO);
     }

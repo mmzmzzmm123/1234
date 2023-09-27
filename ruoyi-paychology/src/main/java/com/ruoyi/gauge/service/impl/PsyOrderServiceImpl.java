@@ -174,15 +174,11 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
     }
 
     @Override
-    public PsyOrder getPsyOrder(Integer useId, Integer gaugeId) {
+    public List<PsyOrder> getPsyOrder(Integer useId, Integer gaugeId) {
         PsyOrder psyOrder = new PsyOrder();
         psyOrder.setUserId(useId);
         psyOrder.setGaugeId(gaugeId);
         psyOrder.setOrderStatus(GaugeConstant.GAUGE_ORDER_STATUE_FINISHED);
-        List<PsyOrder> psyOrderList = psyOrderMapper.selectPsyOrderList(psyOrder);
-        if (psyOrderList.size() >= 1) {
-            return psyOrderList.get(0);
-        }
-        return null;
+        return psyOrderMapper.selectPsyOrderList(psyOrder);
     }
 }

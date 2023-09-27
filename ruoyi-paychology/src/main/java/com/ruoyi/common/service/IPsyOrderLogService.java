@@ -43,6 +43,8 @@ public interface IPsyOrderLogService
      */
     public int updatePsyOrderLog(PsyOrderLog psyOrderLog);
 
+    public void updatePsyOrderLogById(String oid, String nid);
+
     /**
      * 批量删除订单操作记录
      *

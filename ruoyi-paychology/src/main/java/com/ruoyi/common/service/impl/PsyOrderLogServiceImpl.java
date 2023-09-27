@@ -69,6 +69,12 @@ public class PsyOrderLogServiceImpl implements IPsyOrderLogService
         return psyOrderLogMapper.updatePsyOrderLog(psyOrderLog);
     }
 
+    @Override
+    public void updatePsyOrderLogById(String oid, String nid)
+    {
+        psyOrderLogMapper.updatePsyOrderLogById(oid, nid);
+    }
+
     /**
      * 批量删除订单操作记录
      *

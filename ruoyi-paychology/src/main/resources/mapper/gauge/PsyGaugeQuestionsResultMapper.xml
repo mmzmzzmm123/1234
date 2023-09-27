@@ -25,6 +25,7 @@
         <include refid="selectPsyGaugeQuestionsResultVo"/>
         <where>
             <if test="userId != null  and userId != ''">and user_id = #{userId}</if>
+            <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
             <if test="gaugeId != null ">and gauge_id = #{gaugeId}</if>
             <if test="questionsId != null ">and questions_id = #{questionsId}</if>
             <if test="questionsOptionsId != null ">and questions_options_id = #{questionsOptionsId}</if>

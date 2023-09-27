@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -338,6 +339,12 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         return update(order) > 0 ? "ok" : "操作失败";
     }
 
+    private String  createOrderNo() {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        return PsyConstants.ORDER_CONSULT + sdf.format(date) + (int) ((Math.random() * 9 + 1) * 1000);
+    }
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String modifyPrice(PsyConsultOrderVO req) {
@@ -349,8 +356,13 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         order.setPay(req.getPay());
         order.setMemo1(req.getMemo1());
 
-        doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_EDIT_PRICE, SecurityUtils.getUsername(), StrUtil.format(PsyConstants.ORDER_LOG_MESSAGE_EDIT_PRICE,  order.getAmount(), order.getPay()));
+        // 订单号变更、更新历史日志 -- 临时处理
+        String orderNo = createOrderNo();
+        psyOrderLogService.updatePsyOrderLogById(order.getOrderNo(), orderNo);
 
+        doLog(orderNo, PsyConstants.ORDER_LOG_EDIT_PRICE, SecurityUtils.getUsername(), StrUtil.format(PsyConstants.ORDER_LOG_MESSAGE_EDIT_PRICE,  order.getAmount(), order.getPay()));
+
+        order.setOrderNo(orderNo);
         return update(order) > 0 ? "ok" : "修改失败";
     }
 
@@ -502,8 +514,8 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         hashMap.put("thing5", new TemplateMessageItemVo(psyOrder.getOrderNo()));
         msg.setData(hashMap);
         msg.setTouser(getOpenId(psyOrder.getConsultId()));
-//        return true;
-        return wechatService.sendPublicMsg(msg);
+        return true;
+//        return wechatService.sendPublicMsg(msg);
     }
 
     @Override

@@ -484,6 +484,7 @@ export default {
   overflow: scroll;
   //height: 800upx;
   margin-top: 80upx;
+  font-size: 32upx;
 
   ::v-deep img {
     width: 100%;

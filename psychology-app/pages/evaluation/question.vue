@@ -95,7 +95,7 @@ export default {
     this.questionList = await questionServer.getQuestionList(this.productId, this.orderId);
     this.getLast()
 
-    if (this.currentIndex > 0) {
+    if (this.currentIndex > 2) {
       this.confirmMessage.cancelBtn.callback = this.toFirstQuestion;
       this.confirmMessage.submitBtn.callback = this.toLastQuestion;
       this.showMessage = true;
@@ -179,8 +179,8 @@ export default {
     },
     getLast(next = 1) {
       const index = this.questionList.findLastIndex(a => a.answers.length > 0)
-      this.lastIndex = index !== -1 ? index : 0
-      this.currentIndex = Math.min(this.lastIndex + next, 20)
+      this.lastIndex = index !== -1 ? index + 1 : 0
+      this.currentIndex = Math.min(this.lastIndex + 1, 20)
       console.log(this.lastIndex)
       console.log(this.currentIndex)
     },
@@ -197,7 +197,7 @@ export default {
     //继续答题，跳转到最后一题
     toLastQuestion() {
       this.showMessage = false;
-      this.currentIndex = Math.min(this.lastIndex + 2, 20);
+      this.currentIndex = Math.min(this.lastIndex + 1, 20);
       callTimeLoad(document.getElementById("timerBox"), true);
       setTimeout(() => {
         this.scrollInto = 'main-' + this.lastIndex

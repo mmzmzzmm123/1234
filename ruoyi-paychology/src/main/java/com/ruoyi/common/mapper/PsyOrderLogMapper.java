@@ -2,6 +2,7 @@ package com.ruoyi.common.mapper;
 
 import java.util.List;
 import com.ruoyi.common.domain.PsyOrderLog;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 订单操作记录Mapper接口
@@ -42,6 +43,8 @@ public interface PsyOrderLogMapper
      * @return 结果
      */
     int updatePsyOrderLog(PsyOrderLog psyOrderLog);
+
+    int updatePsyOrderLogById(@Param("oid") String oid, @Param("nid") String nid);
 
     /**
      * 删除订单操作记录
