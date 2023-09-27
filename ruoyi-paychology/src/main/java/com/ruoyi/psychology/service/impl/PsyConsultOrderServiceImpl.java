@@ -514,8 +514,8 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         hashMap.put("thing5", new TemplateMessageItemVo(psyOrder.getOrderNo()));
         msg.setData(hashMap);
         msg.setTouser(getOpenId(psyOrder.getConsultId()));
-        return true;
-//        return wechatService.sendPublicMsg(msg);
+//        return true;
+        return wechatService.sendPublicMsg(msg);
     }
 
     @Override
