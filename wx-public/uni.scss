@@ -1,0 +1,79 @@
+@import '@/uni_modules/uview-ui/theme.scss';
+/**
+ * 下方引入的为uView UI的集成样式文件，为scss预处理器，其中包含了一些"u-"开头的自定义变量
+ * 使用的时候，请将下面的一行复制到您的uniapp项目根目录的uni.scss中即可
+ * uView自定义的css类名和scss变量，均以"u-"开头，不会造成冲突，请放心使用 
+ */
+page{
+	color: $u-main-color;
+}
+.card{
+	background: #fff;
+	padding: 20rpx;
+	border-radius: 16rpx;
+	background: $u-bg-color;
+}
+.card-list{
+	.card{
+		margin: 20rpx;
+	}
+}
+.card-title{
+	font-size: 32rpx;
+	font-weight: bold;
+	flex: 1;
+	margin-bottom: 10rpx;
+}
+.card-more{
+	color: $u-tips-color;
+	font-size: 26rpx;
+	display: flex;
+	align-items: center;
+	/deep/ .u-icon__icon{
+		color: $u-tips-color!important;
+	}
+}
+.card__content{
+	display: flex;
+	padding-bottom: 30rpx;
+	.uo-image{
+		margin-right: 20rpx;
+		border-radius: 20rpx;
+	}
+	&__right{
+		flex: 1;
+	}
+	&__head{
+		display: flex;
+		align-items: center;
+	}
+	&__body{
+		color: $u-content-color;
+		font-size: 26rpx;
+		line-height: 40rpx;
+	}
+}
+.card__op-list{
+	display: flex;
+	justify-content: flex-end;
+	padding-top: 20rpx;
+	border-top: 1rpx solid $u-border-color;
+	.u-button{
+		width: unset;
+		margin: 0;
+		font-size: 28rpx;
+		height: 60rpx;
+	}
+	.u-button:not(:last-child){
+		margin-right: 20rpx;
+	}
+}
+.form .u-form{
+	padding: 0 20rpx;
+	.u-form-item{
+		border-bottom: 1rpx solid $u-border-color;
+	}
+}
+.search-bar{
+	margin: 20rpx;
+}
