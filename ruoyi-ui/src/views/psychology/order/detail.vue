@@ -98,7 +98,7 @@ export default {
   methods: {
     checkPermi,
     hasHx(order) {
-      if (this.userInfo.userName !== 'admin' && this.userInfo.nickName !== order.consultName) {
+      if (this.userInfo.name !== 'admin' && this.userInfo.nickName !== order.consultName) {
         return false
       }
 
