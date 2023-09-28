@@ -11,6 +11,9 @@
 				<u-form-item label="详细地址" prop="name">
 					<u-input v-model="model.name"></u-input>
 				</u-form-item>
+				<u-form-item label="门店图片" prop="logo">
+					<uo-image-input v-model="model.logo"></uo-image-input>
+				</u-form-item>
 			</u-form>
 		</view>
 		
@@ -26,7 +29,8 @@
 		data() {
 			return {
 				model: {
-					name: '店铺名称'
+					name: '店铺名称',
+					logo: ''
 				},
 				rules: {
 					name: {
@@ -37,14 +41,17 @@
 				}
 			}
 		},
-		onLoad() {
-	
+		onLoad(option) {
+			if(option.id){
+				
+			}
 		},
 		onReady() {
 			this.$refs.form.setRules(this.rules)
 		},
 		methods: {
 			onConfirmClick(){
+				console.log(this.model)
 				this.$refs.form.validate().then(res=>{
 					debugger
 					this.getOpenerEventChannel().emit('refresh')

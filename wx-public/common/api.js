@@ -41,6 +41,63 @@ const api = {
 			return res
 		})
 	},
+	uploadImage(imagePath){
+		uni.showLoading({
+			mask: true
+		})
+		let files
+		if(Array.isArray(imagePath)){
+			files = imagePath
+		}else{
+			files = [imagePath]
+		}
+		const tasks = []
+		const uploadUrl = client.baseApiUrl + "common/upload"
+		for(let i in files){
+			tasks.push(new Promise((resolve, reject)=>{
+				uni.uploadFile({
+					url: uploadUrl,
+					name: 'file',
+					header: {Authorization: client.token},
+					filePath: files[i],
+					success: res=>{
+						if(res.statusCode != 200){
+							reject()
+						}else{
+							const data = JSON.parse(res.data)
+							if(!data || data.code != 200){
+								reject(data)
+							}else{
+								resolve({index: i, path: data.fileName})
+							}
+						}
+					},
+					fail: reject
+				})
+			}))
+		}
+		return Promise.all(tasks)
+		.then(res=>{
+			if(Array.isArray(imagePath)){
+				const ret = []
+				for(let i in res){
+					ret[res[i].index] = res[i].path
+				}
+				return ret
+			}else{
+				return res[0].path
+			}
+		})
+		.catch(error=>{
+			uni.showModal({
+				showCancel: false,
+				content: '图片上传失败'
+			})
+		})
+		.finally(()=>{
+			uni.hideLoading();
+		})
+	}
 }
 const install = (Vue, options) => {
 	Vue.prototype.$api = api
