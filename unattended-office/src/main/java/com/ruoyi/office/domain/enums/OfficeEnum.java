@@ -122,6 +122,35 @@ public class OfficeEnum {
         }
     }
 
+    public enum ValidType {
+        FROM_BUY_DATE(1, "自购买日期起"), START_END_DATE(2, "开始结束日期");
+
+        private final Integer code;
+        private final String info;
+
+        ValidType(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public static ValidType GetValueByCode(Integer code) {
+            for (ValidType e : ValidType.values()) {
+                if (e.getCode().equals(code)) {
+                    return e;
+                }
+            }
+            throw new RuntimeException("枚举值错误");
+        }
+    }
+
     public enum PayType {
         WX_PAY(1, "微信支付"), CARD_BALANCE_PAY(2, "储值卡余额支付"), COUPON_PAY(4, "优惠券支付");
 

@@ -57,7 +57,7 @@ public class TStorePromotion extends BaseEntity
 
     /** 有效期类型(1:自购买日起2:开始结束日期） */
     @Excel(name = "有效期类型(1:自购买日起2:开始结束日期）")
-    private String validType;
+    private Integer validType;
 
     /** 自购买日期有效天数 */
     @Excel(name = "自购买日期有效天数")

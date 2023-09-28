@@ -29,7 +29,7 @@ const api = {
 		return get('captchaImage')
 	},
 	getStoreList(){
-		return get('office/mapi/store/list').then(res=>{
+		return get('office/store/list').then(res=>{
 			res.rows.forEach(x=>{
 				if(x.logo){
 					x.logoList = x.logo.split(',')
@@ -96,6 +96,16 @@ const api = {
 		})
 		.finally(()=>{
 			uni.hideLoading();
+		})
+	},
+	getStroeRoomList(params) {
+		return get('office/room/list', params).then(res => {
+			return res;
+		})
+	},
+	getRoomPackList(params){
+		return get('office/roompackage/list', params).then(res => {
+			return res;
 		})
 	}
 }

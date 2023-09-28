@@ -43,7 +43,7 @@ public class TRoomController extends BaseController {
     @PreAuthorize("@ss.hasPermi('office:room:list')")
     @GetMapping("/list")
     public TableDataInfo list(TRoom tRoom) {
-//        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
+        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
             tRoom.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TRoom> list = tRoomService.selectTRoomList(tRoom);

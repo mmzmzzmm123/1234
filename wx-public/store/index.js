@@ -77,23 +77,19 @@ const store = new Vuex.Store({
 				state.hasLogin = true
 				state.loginUser = res.user
 				lifeData["loginUser"] = res.user
-				// Api.api.getStoreList().then(res=>{
-				// 	state.storeList = res.rows
-				// 	const currentStoreId = state.currentStore ? state.currentStore.id : 0
-				// 	if(currentStoreId){
-				// 		state.currentStore = res.rows.find(x=>x.id == currentStoreId)
-				// 	}else{
-				// 		state.currentStore = res.rows[0]
-				// 	}
-				// 	lifeData['currentStore'] = state.currentStore
-				// 	uni.setStorage({
-				// 		key: 'lifeData',
-				// 		data: lifeData
-				// 	})
-				// })
-				uni.setStorage({
-					key: 'lifeData',
-					data: lifeData
+				Api.api.getStoreList().then(res=>{
+					state.storeList = res.rows
+					const currentStoreId = state.currentStore ? state.currentStore.id : 0
+					if(currentStoreId){
+						state.currentStore = res.rows.find(x=>x.id == currentStoreId)
+					}else{
+						state.currentStore = res.rows[0]
+					}
+					lifeData['currentStore'] = state.currentStore
+					uni.setStorage({
+						key: 'lifeData',
+						data: lifeData
+					})
 				})
 			})
 		}

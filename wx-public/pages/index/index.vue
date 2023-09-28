@@ -2,6 +2,10 @@
 	<view>
 		<view>
 			<navigator url="../store/store-list/index">门店管理</navigator>
+			<navigator url="../price/index">定价管理</navigator>
+			<view></view>
+			<text></text>
+			
 		</view>
 	</view>
 </template>

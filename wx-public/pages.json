@@ -7,8 +7,7 @@
 	// 		"query": "uuid=c4bba940-f69e-11ea-a419-6bafda9d095e&__id__=1" //启动参数，在页面的onLoad函数里面得到
 	// 	}]
 	// },
-	"pages": [
-		{
+	"pages": [{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "首页",
@@ -32,14 +31,51 @@
 			"style": {
 				"navigationBarTitleText": "门店详情"
 			}
+		},
+		{
+			"path": "pages/price/index",
+			"style": {
+				"navigationBarTitleText": "定价管理"
+			}
+		},
+		{
+			"path": "pages/price/room-list/index",
+			"style": {
+				"navigationBarTitleText": "包厢专用套餐"
+			}
+		},
+		{
+			"path": "pages/price/room-list/room",
+			"style": {
+				"enablePullDownRefresh": false,
+				"navigationBarTitleText": "包厢专用套餐"
+			}
+		},
+		{
+			"path": "pages/price/room-pack/index",
+			"style": {
+				"navigationBarTitleText": "包厢专用套餐"
+			}
+		},
+		{
+			"path": "pages/price/room-charge/index",
+			"style": {
+				"navigationBarTitleText": "包厢专用套餐"
+			}
+		},
+		{
+			"path": "pages/price/room-pack/add",
+			"style": {
+				"navigationBarTitleText": "包厢专用套餐"
+			}
 		}
-    ],
+	],
 	"globalStyle": {
 		"navigationBarTextStyle": "white",
 		"navigationBarTitleText": "十三将商户管理中心",
 		"navigationBarBackgroundColor": "#007440",
 		"backgroundColor": "#f3f4f6"
-	}//,
+	} //,
 	// "tabBar": {
 	// 	"color": "#909399",
 	// 	"selectedColor": "#007440",
