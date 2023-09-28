@@ -70,6 +70,7 @@
 	.uo-select{
 		color: $u-main-color;
 		width: 100%;
+		flex: 1;
 		&__option{
 			text-align: center;
 			padding: 30rpx;
