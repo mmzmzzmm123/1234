@@ -7,18 +7,23 @@
       <el-tooltip class="item" effect="dark" content="刷新" placement="top">
         <el-button size="mini" circle icon="el-icon-refresh" @click="refresh()" />
       </el-tooltip>
-      <el-tooltip class="item" effect="dark" content="显隐列" placement="top" v-if="columns">
-        <el-button size="mini" circle icon="el-icon-menu" @click="showColumn()" />
+      <el-tooltip class="item popover" effect="dark" content="显示/隐藏列" placement="top" v-if="columns">
+        <el-popover placement="bottom" trigger="click">
+          <div class="tree-header">显示/隐藏列</div>
+          <el-tree
+            ref="columnRef"
+            :data="columns"
+            show-checkbox
+            @check="columnChange"
+            node-key="key"
+            :props="{ label: 'label', children: 'children' }"
+          ></el-tree>
+          <template #reference>
+            <el-button size="mini" circle icon="el-icon-menu" />
+          </template>
+        </el-popover>
       </el-tooltip>
     </el-row>
-    <el-dialog :title="title" :visible.sync="open" append-to-body>
-      <el-transfer
-        :titles="['显示', '隐藏']"
-        v-model="value"
-        :data="columns"
-        @change="dataChange"
-      ></el-transfer>
-    </el-dialog>
   </div>
 </template>
 <script>
@@ -60,13 +65,13 @@ export default {
       return ret;
     }
   },
-  created() {
+  mounted() {
     // 显隐列初始默认隐藏列
-    for (let item in this.columns) {
-      if (this.columns[item].visible === false) {
-        this.value.push(parseInt(item));
+    this.columns?.forEach((item) => {
+      if (item.visible) {
+        this.$refs.columnRef.setChecked(item.key, true, false);
       }
-    }
+    })
   },
   methods: {
     // 搜索
@@ -84,10 +89,12 @@ export default {
         this.columns[item].visible = !data.includes(key);
       }
     },
-    // 打开显隐列dialog
-    showColumn() {
-      this.open = true;
-    },
+    // 更改数据列的显示和隐藏
+    columnChange(nodeObject,checkedObject) {
+      this.columns?.forEach((item) => {
+        item.visible = checkedObject.checkedKeys.includes(item.key);
+      })
+    }
   },
 };
 </script>
@@ -100,5 +107,13 @@ export default {
 }
 ::v-deep .el-transfer__button:first-child {
   margin-bottom: 10px;
+}
+.item.popover{
+  margin-left: 10px;
+}
+.tree-header{
+  width: 100%;
+  line-height: 24px;
+  text-align: center;
 }
 </style>
