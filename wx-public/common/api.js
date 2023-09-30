@@ -160,7 +160,12 @@ const api = {
 		})
 	},
 	getRoomOrderList(params){
-		return get('office/roomorder/list', params).then(res => {
+		return get('office/roomorder/h5list', params).then(res => {
+			return res;
+		})
+	},
+	getCleanRecordList(params){
+		return get('office/cleanrecord/h5list', params).then(res => {
 			return res;
 		})
 	}

@@ -67,6 +67,7 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
     @Override
     public int insertTStore(TStore tStore) {
         tStore.setCreateTime(DateUtils.getNowDate());
+        tStore.setUserId(Long.parseLong(tStore.getCreateBy()));
         return tStoreMapper.insertTStore(tStore);
     }
 

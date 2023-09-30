@@ -8,7 +8,7 @@
 				<u-form-item label="优惠券价格" prop="standardPrice" required>
 					<u-input type="number" v-model="model.standardPrice"></u-input>
 				</u-form-item>
-				<u-form-item label="可用时长" prop="maxMinute">
+				<u-form-item label="可用时长" prop="maxMinute" required>
 					<u-input type="number" v-model="model.maxMinute"></u-input>(分钟)
 				</u-form-item>
 				<u-form-item label="周内可用日期" prop="weekDays">
@@ -31,8 +31,9 @@
 						<view class="uni-input">{{model.endDate==null?endDate:model.endDate}}</view>
 					</picker>
 				</u-form-item>
-				<u-form-item label="适用门店">
-					<uo-select :value="model.storeId" :options="storeList" valueField="id" @change="selectStore">  <!--bug : 新增时，model.storeId没有值，点击无法弹出选项 -->
+				<u-form-item label="适用门店" required>
+					<uo-select :value="model.storeId" placeholder="请选择" :options="storeList" valueField="id"
+						@change="selectStore">
 					</uo-select>
 				</u-form-item>
 			</u-form>
@@ -76,6 +77,11 @@
 					maxMinute: {
 						required: true,
 						message: '请输入可用时长',
+						trigger: ['blur', 'change']
+					},
+					storeId: {
+						required: true,
+						message: '请选择门店',
 						trigger: ['blur', 'change']
 					}
 				},
@@ -175,7 +181,6 @@
 				this.model.startDate = e.detail.value
 			},
 			bindEndDateChange: function(e) {
-				debugger
 				this.model.endDate = e.detail.value
 			},
 			getStoreList() {

@@ -80,6 +80,18 @@
 			"style": {
 				"navigationBarTitleText": "团购优惠券"
 			}
+		},
+		{
+			"path": "pages/order/index",
+			"style": {
+				"navigationBarTitleText": "我的订单"
+			}
+		},
+		{
+			"path": "pages/clean/index",
+			"style": {
+				"navigationBarTitleText": "打扫记录"
+			}
 		}
 	],
 	"globalStyle": {

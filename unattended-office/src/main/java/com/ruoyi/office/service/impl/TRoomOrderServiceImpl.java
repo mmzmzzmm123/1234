@@ -344,6 +344,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
             tRoomOrder.setCreateTime(DateUtils.getNowDate());
             tRoomOrder.setCreateBy(prepayReq.getUserId() + "");
+            tRoomOrder.setOrderType("小时收费");
             tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
 
         } else if (prepayReq.getPayType() == OfficeEnum.PayType.COUPON_PAY.getCode()) { // 美团券券支付
@@ -396,6 +397,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         tRoomOrder.setStartTime(prepayReq.getStartTime());
         tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), (int) (roomPackage.getMinutes() / 60)));
         tRoomOrder.setRoomPackId(prepayReq.getPackId());
+        tRoomOrder.setOrderType("房间小时套餐");
 
 
         // 计算订单号
@@ -1124,6 +1126,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         BeanUtils.copyProperties(prepayReq, tRoomOrder);
         tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), storePromotion.getMaxMinute().intValue()));
         tRoomOrder.setUserId(userId);
+        tRoomOrder.setPayType(OfficeEnum.PayType.WX_PAY.getCode());
 
         // 计算总金额
         BigDecimal totalPrice = storePromotion.getStandardPrice();
@@ -1169,6 +1172,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             userPromotionService.insertTWxUserPromotion(userPromotion);
 
             tRoomOrder.setPromotionId(userPromotion.getId());
+            tRoomOrder.setOrderType("团购套餐");
             tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
 
 
@@ -1182,5 +1186,10 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         log.debug("/order with promtion: return:" + resp.getOrderId() + jsapiResult.toString());
 
         return resp;
+    }
+
+    @Override
+    public List<RoomOrderH5Vo> selectTRoomOrderH5List(TRoomOrder tRoomOrder) {
+        return tRoomOrderMapper.selectTRoomOrderH5List(tRoomOrder);
     }
 }

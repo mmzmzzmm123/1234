@@ -41,7 +41,7 @@
                coupon_amount,
                coupon_id,
                promotion_id,
-                room_pack_id,
+               room_pack_id,
                order_type,
                prepay_id,
                status,
@@ -154,6 +154,20 @@
             <if test="1==1">and o.status in (2,3,4)</if>
         </where>
         order by o.create_time
+    </select>
+    <select id="selectTRoomOrderH5List" parameterType="TRoomOrder"
+            resultType="com.ruoyi.office.domain.vo.RoomOrderH5Vo">
+        select o.*,r.name as roomName, s.name as storeName
+        from t_room_order o
+        left join t_room r on o.room_id =r.id
+        left join t_store s on r.store_id =s.id
+        <where>
+            <if test="storeId != null ">and s.id = #{storeId}</if>
+            <if test="roomId != null ">and o.room_id = #{roomId}</if>
+            <if test="startTime != null ">and o.start_time &gt;= #{startTime}</if>
+            <if test="endTime != null ">and o.start_time &lt; #{endTime}</if>
+        </where>
+        order by o.create_time desc
     </select>
 
     <insert id="insertTRoomOrder" parameterType="TRoomOrder" useGeneratedKeys="true" keyProperty="id">

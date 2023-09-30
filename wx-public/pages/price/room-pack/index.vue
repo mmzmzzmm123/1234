@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="search-bar">
-			<u-search placeholder="请输入套餐名称" :showAction="false" v-model="searchParam.keyword"
+			<u-search placeholder="请输入套餐名称" :showAction="false" v-model="searchParam.name"
 				@change="onSearchKeywordInput"></u-search>
 			<view class="uni-btn-v">
 				<button type="default" style="color:#ffffff;backgroundColor:#1AAD19;borderColor:#1AAD19"

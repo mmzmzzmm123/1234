@@ -1,5 +1,6 @@
 package com.ruoyi.office.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
@@ -7,6 +8,7 @@ import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.*;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,11 +62,15 @@ public class TRoomOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('office:roomorder:list')")
     @ApiOperation("预约订单、记录")
     @GetMapping("/h5list")
-    public TableDataInfo h5list(TRoomOrder tRoomOrder) {
+    public TableDataInfo h5list(RoomOrderH5QryVo tRoomOrder) {
         if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
             tRoomOrder.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
-        List<TRoomOrder> list = tRoomOrderService.selectTRoomOrderList(tRoomOrder);
+        List<RoomOrderH5Vo> list = tRoomOrderService.selectTRoomOrderH5List(tRoomOrder);
+
+        for (RoomOrderH5Vo order : list) {
+            order.setPayTypeName(OfficeEnum.PayType.GetValueByCode(order.getPayType()).getInfo());
+        }
         return getDataTable(list);
     }
 

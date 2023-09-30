@@ -5,10 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import com.ruoyi.office.domain.TRoomOrder;
-import com.ruoyi.office.domain.vo.OrderCanOpenReq;
-import com.ruoyi.office.domain.vo.PrepayReq;
-import com.ruoyi.office.domain.vo.RoomOrderWxReqVo;
-import com.ruoyi.office.domain.vo.RoomOrderWxVo;
+import com.ruoyi.office.domain.vo.*;
 
 /**
  * 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）Mapper接口
@@ -72,4 +69,6 @@ public interface TRoomOrderMapper extends BaseMapper<TRoomOrder> {
     List<RoomOrderWxVo> getWxRoomOrder(RoomOrderWxReqVo tRoomOrder);
 
     List<RoomOrderWxVo> getOrderCanOpen(OrderCanOpenReq wxUserId);
+
+    List<RoomOrderH5Vo> selectTRoomOrderH5List(TRoomOrder tRoomOrder);
 }

@@ -3,6 +3,8 @@
 		<view>
 			<navigator url="../store/store-list/index">门店管理</navigator>
 			<navigator url="../price/index">定价管理</navigator>
+			<navigator url="../order/index">订单管理</navigator>
+			<navigator url="../clean/index">打扫记录</navigator>
 			<view></view>
 			<text></text>
 			
