@@ -3,6 +3,7 @@ package com.ruoyi.office.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.vo.CleanRecordH5Vo;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,14 +26,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 房间打扫记录Controller
- * 
+ *
  * @author ruoyi
  * @date 2023-09-30
  */
 @RestController
 @RequestMapping("/office/cleanrecord")
-public class TRoomCleanRecordController extends BaseController
-{
+public class TRoomCleanRecordController extends BaseController {
     @Autowired
     private ITRoomCleanRecordService tRoomCleanRecordService;
 
@@ -41,8 +41,7 @@ public class TRoomCleanRecordController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:cleanrecord:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TRoomCleanRecord tRoomCleanRecord)
-    {
+    public TableDataInfo list(TRoomCleanRecord tRoomCleanRecord) {
         startPage();
         List<TRoomCleanRecord> list = tRoomCleanRecordService.selectTRoomCleanRecordList(tRoomCleanRecord);
         return getDataTable(list);
@@ -54,8 +53,9 @@ public class TRoomCleanRecordController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:cleanrecord:list')")
     @GetMapping("/h5list")
-    public TableDataInfo h5list(TRoomCleanRecord tRoomCleanRecord)
-    {
+    public TableDataInfo h5list(TRoomCleanRecord tRoomCleanRecord) {
+        Long userId = SecurityUtils.getUserId();
+        tRoomCleanRecord.setCreateBy(userId + "");
         startPage();
         List<CleanRecordH5Vo> list = tRoomCleanRecordService.selectTRoomCleanRecordH5List(tRoomCleanRecord);
         return getDataTable(list);
@@ -67,8 +67,7 @@ public class TRoomCleanRecordController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:cleanrecord:export')")
     @Log(title = "房间打扫记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, TRoomCleanRecord tRoomCleanRecord)
-    {
+    public void export(HttpServletResponse response, TRoomCleanRecord tRoomCleanRecord) {
         List<TRoomCleanRecord> list = tRoomCleanRecordService.selectTRoomCleanRecordList(tRoomCleanRecord);
         ExcelUtil<TRoomCleanRecord> util = new ExcelUtil<TRoomCleanRecord>(TRoomCleanRecord.class);
         util.exportExcel(response, list, "房间打扫记录数据");
@@ -79,8 +78,7 @@ public class TRoomCleanRecordController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:cleanrecord:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(tRoomCleanRecordService.selectTRoomCleanRecordById(id));
     }
 
@@ -90,8 +88,7 @@ public class TRoomCleanRecordController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:cleanrecord:add')")
     @Log(title = "房间打扫记录", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TRoomCleanRecord tRoomCleanRecord)
-    {
+    public AjaxResult add(@RequestBody TRoomCleanRecord tRoomCleanRecord) {
         return toAjax(tRoomCleanRecordService.insertTRoomCleanRecord(tRoomCleanRecord));
     }
 
@@ -101,8 +98,7 @@ public class TRoomCleanRecordController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:cleanrecord:edit')")
     @Log(title = "房间打扫记录", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TRoomCleanRecord tRoomCleanRecord)
-    {
+    public AjaxResult edit(@RequestBody TRoomCleanRecord tRoomCleanRecord) {
         return toAjax(tRoomCleanRecordService.updateTRoomCleanRecord(tRoomCleanRecord));
     }
 
@@ -111,9 +107,8 @@ public class TRoomCleanRecordController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:cleanrecord:remove')")
     @Log(title = "房间打扫记录", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tRoomCleanRecordService.deleteTRoomCleanRecordByIds(ids));
     }
 }

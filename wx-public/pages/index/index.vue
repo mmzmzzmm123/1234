@@ -1,13 +1,51 @@
 <template>
 	<view>
 		<view>
-			<navigator url="../store/store-list/index">门店管理</navigator>
-			<navigator url="../price/index">定价管理</navigator>
-			<navigator url="../order/index">订单管理</navigator>
-			<navigator url="../clean/index">打扫记录</navigator>
+
+			<view class="card-list">
+				<view class="card">
+					<view class="card__content">
+						<view class="card__content__right">
+							<view class="card__content__head">
+								<navigator url="../store/store-list/index">门店管理</navigator>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="card">
+					<view class="card__content">
+						<view class="card__content__right">
+							<view class="card__content__head">
+								<navigator url="../price/index">定价管理</navigator>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="card">
+					<view class="card__content">
+						<view class="card__content__right">
+							<view class="card__content__head">
+
+								<navigator url="../order/index">订单管理</navigator>
+							</view>
+						</view>
+					</view>
+				</view>
+				<view class="card">
+					<view class="card__content">
+						<view class="card__content__right">
+							<view class="card__content__head">
+								<navigator url="../clean/index">打扫记录</navigator>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+
+
 			<view></view>
 			<text></text>
-			
+
 		</view>
 	</view>
 </template>
@@ -16,16 +54,16 @@
 	export default {
 		data() {
 			return {
-				
+
 			}
 		},
 		computed: {
-			currentStoreId(){
+			currentStoreId() {
 				return this.$store.state.currentStore.id
 			}
 		},
 		watch: {
-			currentStoreId: function(){
+			currentStoreId: function() {
 				this.refresh()
 			}
 		},
@@ -36,9 +74,9 @@
 			this.refresh()
 		},
 		methods: {
-			refresh(){
-				if(this.currentStoreId){
-					
+			refresh() {
+				if (this.currentStoreId) {
+
 				}
 			}
 		}
@@ -46,7 +84,7 @@
 </script>
 
 <style lang="scss">
-	page{
+	page {
 		background-color: $u-bg-color;
 	}
 </style>

@@ -57,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="startTime != null "> and c.start_time = #{startTime}</if>
             <if test="endTime != null "> and c.end_time = #{endTime}</if>
             <if test="status != null "> and c.status = #{status}</if>
+            <if test="createBy != null "> and s.user_id = #{createBy}</if>
         </where>
     </select>
 
