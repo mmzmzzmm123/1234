@@ -18,6 +18,7 @@
         <result property="couponId" column="coupon_id"/>
         <result property="promotionId" column="promotion_id"/>
         <result property="roomPackId" column="room_pack_id"/>
+        <result property="orderType" column="order_type"/>
         <result property="prepayId" column="prepay_id"/>
         <result property="status" column="status"/>
         <result property="remark" column="remark"/>
@@ -41,6 +42,7 @@
                coupon_id,
                promotion_id,
                 room_pack_id,
+               order_type,
                prepay_id,
                status,
                remark,
@@ -169,6 +171,7 @@
             <if test="couponId != null">coupon_id,</if>
             <if test="promotionId != null">promotion_id,</if>
             <if test="roomPackId != null">room_pack_id,</if>
+            <if test="orderType != null">order_type,</if>
             <if test="payType != null">pay_type,</if>
             <if test="prepayId != null and prepayId != ''">prepay_id,</if>
             <if test="status != null">status,</if>
@@ -191,6 +194,7 @@
             <if test="couponId != null">#{couponId},</if>
             <if test="promotionId != null">#{promotionId},</if>
             <if test="roomPackId != null">#{roomPackId},</if>
+            <if test="orderType != null">#{orderType},</if>
             <if test="payType != null">#{payType},</if>
             <if test="prepayId != null and prepayId != ''">#{prepayId},</if>
             <if test="status != null">#{status},</if>
@@ -217,6 +221,7 @@
             <if test="couponId != null">coupon_id = #{couponId},</if>
             <if test="promotionId != null">promotion_id = #{promotionId},</if>
             <if test="roomPackId != null">room_pack_id = #{roomPackId},</if>
+            <if test="orderType != null">order_type = #{orderType},</if>
             <if test="prepayId != null and prepayId != ''">prepay_id = #{prepayId},</if>
             <if test="status != null">status = #{status},</if>
             <if test="remark != null">remark = #{remark},</if>
