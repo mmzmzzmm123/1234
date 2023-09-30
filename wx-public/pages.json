@@ -68,6 +68,18 @@
 			"style": {
 				"navigationBarTitleText": "包厢专用套餐"
 			}
+		},
+		{
+			"path": "pages/price/store-promotion/index",
+			"style": {
+				"navigationBarTitleText": "团购优惠券"
+			}
+		},
+		{
+			"path": "pages/price/store-promotion/edit",
+			"style": {
+				"navigationBarTitleText": "团购优惠券"
+			}
 		}
 	],
 	"globalStyle": {

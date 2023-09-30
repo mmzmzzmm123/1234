@@ -1,9 +1,17 @@
 package com.ruoyi.office.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.office.domain.TStore;
+import com.ruoyi.office.domain.vo.StorePromotionVo;
+import com.ruoyi.office.service.ITStoreService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,14 +33,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 优惠券 t_store_promotionController
- * 
+ *
  * @author ruoyi
  * @date 2023-06-14
  */
 @RestController
 @RequestMapping("/office/storepromotion")
-public class TStorePromotionController extends BaseController
-{
+public class TStorePromotionController extends BaseController {
     @Autowired
     private ITStorePromotionService tStorePromotionService;
 
@@ -41,12 +48,36 @@ public class TStorePromotionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:storepromotion:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TStorePromotion tStorePromotion)
-    {
+    public TableDataInfo list(TStorePromotion tStorePromotion) {
         tStorePromotion.setMerchantId(SecurityUtils.getUserId());
         startPage();
         List<TStorePromotion> list = tStorePromotionService.selectTStorePromotionList(tStorePromotion);
         return getDataTable(list);
+    }
+
+    @Autowired
+    ITStoreService storeService;
+
+    /**
+     * 查询优惠券 t_store_promotion列表
+     */
+    @PreAuthorize("@ss.hasPermi('office:storepromotion:list')")
+    @GetMapping("/h5list")
+    public TableDataInfo h5list(TStorePromotion tStorePromotion) {
+        List<StorePromotionVo> resList = new ArrayList<>();
+        tStorePromotion.setMerchantId(SecurityUtils.getUserId());
+        startPage();
+        List<TStorePromotion> list = tStorePromotionService.selectTStorePromotionList(tStorePromotion);
+        final Map<Long, TStore> storeMap = storeService.selectTStoreList(new TStore()).stream().collect(Collectors.toMap(TStore::getId, Function.identity()));
+        for (TStorePromotion obj : list) {
+            StorePromotionVo temp = new StorePromotionVo();
+            BeanUtils.copyProperties(obj, temp);
+            if (obj.getStoreId() != null && obj.getStoreId() != 0)
+                temp.setStoreName(storeMap.get(obj.getStoreId()).getName());
+//            temp.setValidDays(obj.getWeekDays());
+            resList.add(temp);
+        }
+        return getDataTable(resList);
     }
 
     /**
@@ -55,8 +86,7 @@ public class TStorePromotionController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:storepromotion:export')")
     @Log(title = "优惠券 t_store_promotion", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, TStorePromotion tStorePromotion)
-    {
+    public void export(HttpServletResponse response, TStorePromotion tStorePromotion) {
         List<TStorePromotion> list = tStorePromotionService.selectTStorePromotionList(tStorePromotion);
         ExcelUtil<TStorePromotion> util = new ExcelUtil<TStorePromotion>(TStorePromotion.class);
         util.exportExcel(response, list, "优惠券 t_store_promotion数据");
@@ -67,8 +97,7 @@ public class TStorePromotionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:storepromotion:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(tStorePromotionService.selectTStorePromotionById(id));
     }
 
@@ -78,8 +107,7 @@ public class TStorePromotionController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:storepromotion:add')")
     @Log(title = "优惠券 t_store_promotion", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TStorePromotion tStorePromotion)
-    {
+    public AjaxResult add(@RequestBody TStorePromotion tStorePromotion) {
         return toAjax(tStorePromotionService.insertTStorePromotion(tStorePromotion));
     }
 
@@ -89,8 +117,7 @@ public class TStorePromotionController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:storepromotion:edit')")
     @Log(title = "优惠券 t_store_promotion", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TStorePromotion tStorePromotion)
-    {
+    public AjaxResult edit(@RequestBody TStorePromotion tStorePromotion) {
         return toAjax(tStorePromotionService.updateTStorePromotion(tStorePromotion));
     }
 
@@ -99,9 +126,8 @@ public class TStorePromotionController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:storepromotion:remove')")
     @Log(title = "优惠券 t_store_promotion", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tStorePromotionService.deleteTStorePromotionByIds(ids));
     }
 }

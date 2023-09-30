@@ -64,11 +64,13 @@ public class TStorePromotion extends BaseEntity
     private Long validDays;
 
     /** 开始日期（维护则为有效期开始） */
-    @Excel(name = "开始日期", readConverterExp = "维=护则为有效期开始")
+    @Excel(name = "开始日期", readConverterExp = "维护则为有效期开始")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date startDate;
 
     /** 结束日期（维护则为有效期结束） */
-    @Excel(name = "结束日期", readConverterExp = "维=护则为有效期结束")
+    @Excel(name = "结束日期", readConverterExp = "维护则为有效期结束")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private Date endDate;
 
     /** 周内可用日期(1,3,4,7) */

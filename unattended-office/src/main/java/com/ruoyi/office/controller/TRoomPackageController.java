@@ -66,6 +66,7 @@ public class TRoomPackageController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
+//        return error("xxx");
         return success(tRoomPackageService.selectTRoomPackageById(id));
     }
 
