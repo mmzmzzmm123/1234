@@ -100,6 +100,10 @@ public class TRoomOrder extends BaseEntity {
     @Excel(name = "优惠券id")
     private Long promotionId;
 
+    @Excel(name = "房间套餐ID")
+    private Long roomPackId; //room_pack_id
+
+
     private String prepayId;
 
     /**

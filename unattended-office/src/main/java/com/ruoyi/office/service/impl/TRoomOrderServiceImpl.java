@@ -395,6 +395,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         tRoomOrder.setRoomId(roomPackage.getRoomId());
         tRoomOrder.setStartTime(prepayReq.getStartTime());
         tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), (int) (roomPackage.getMinutes() / 60)));
+        tRoomOrder.setRoomPackId(prepayReq.getPackId());
 
 
         // 计算订单号

@@ -154,6 +154,16 @@ const api = {
 	delStorePromotion(id) {
 		return request('office/storepromotion/' + id, null, false, 'delete')
 	},
+	getRoomList(params) {
+		return get('office/room/list', params).then(res => {
+			return res;
+		})
+	},
+	getRoomOrderList(params){
+		return get('office/roomorder/list', params).then(res => {
+			return res;
+		})
+	}
 }
 const install = (Vue, options) => {
 	Vue.prototype.$api = api
