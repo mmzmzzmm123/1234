@@ -45,6 +45,11 @@ const api = {
 			return res
 		})
 	},
+	updateStoreInfo(params) {
+		return request('office/store', params, true, 'put').then(res => {
+			return res;
+		})
+	},
 	uploadImage(imagePath) {
 		uni.showLoading({
 			mask: true
