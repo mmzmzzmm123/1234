@@ -7,7 +7,8 @@ let selectStaffLevelConfigUrl = "/selectStaffLevelConfig";
 let selectByUserIdUrl = "/selectByUserId";
 let selectPhotoByUserIdUrl = "/selectPhotoByUserId";
 let applyUrl = "/apply";
-let updateApplyUrl = "/updateApply";
+let updateUrl = "/update";
+let selectServiceConfigIdsUrl = "/selectServiceConfigIds";
 
 /**
  * 获取员工等级配置
@@ -31,10 +32,17 @@ let selectPhotoByUserId = function (params, onStart, onSuccess, onFailed) {
 }
 
 /**
- * 修改申请数据
+ * 修改数据
  */
-let updateApply = function (params, onStart, onSuccess, onFailed, onWarn) {
-  request.post(bashRequestUrl + updateApplyUrl, params, onStart, onSuccess, onFailed, onWarn, onFailed);
+let update = function (params, onStart, onSuccess, onFailed, onWarn) {
+  request.post(bashRequestUrl + updateUrl, params, onStart, onSuccess, onFailed, onWarn, onFailed);
+}
+
+/**
+ * 获取店员配置接单服务id
+ */
+let selectServiceConfigIds = function(params, onStart, onSuccess, onFailed){
+  request.get(bashRequestUrl + selectServiceConfigIdsUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed);
 }
 
 
@@ -43,7 +51,8 @@ module.exports = {
   selectStaffLevelConfig: selectStaffLevelConfig,
   selectByUserId: selectByUserId,
   selectPhotoByUserId: selectPhotoByUserId,
-  updateApply: updateApply,
+  update: update,
   applyUrl: bashRequestUrl+applyUrl,
-  updateApplyUrl: bashRequestUrl+updateApplyUrl
+  updateUrl: bashRequestUrl+updateUrl,
+  selectServiceConfigIds: selectServiceConfigIds
 }

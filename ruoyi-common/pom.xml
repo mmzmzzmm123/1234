@@ -165,6 +165,12 @@
             <artifactId>weixin-java-pay</artifactId>
         </dependency>
 
+        <!-- 用于处理 MP3 文件的依赖 -->
+        <dependency>
+            <groupId>com.badlogicgames.jlayer</groupId>
+            <artifactId>jlayer</artifactId>
+            <version>1.0.2-gdx</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -6,7 +6,7 @@ const recorderManager = wx.getRecorderManager();
  */
 let start = function (onSuccess) {
   let options = {
-    duration: 20000,//指定录音的时长，单位 ms
+    duration: 1200000,//指定录音的时长，单位 ms
     sampleRate: 16000,//采样率
     numberOfChannels: 1,//录音通道数
     encodeBitRate: 96000,//编码码率

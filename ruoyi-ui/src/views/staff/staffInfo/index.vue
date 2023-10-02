@@ -88,7 +88,8 @@
           size="mini"
           @click="handleAdd"
           v-hasPermi="['staff:staffInfo:add']"
-        >新增</el-button>
+        >新增
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -99,7 +100,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['staff:staffInfo:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -110,7 +112,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['staff:staffInfo:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -120,14 +123,20 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['staff:staffInfo:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="staffInfoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="头像" align="center" prop="avatarUrl" :show-overflow-tooltip="true"/>
+    <el-table ref="tableData" v-loading="loading" :data="staffInfoList" @selection-change="handleSelectionChange">
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="用户标识" align="center" prop="userId" :show-overflow-tooltip="true" />
+      <el-table-column label="头像" align="center" prop="avatarUrl">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.avatarUrl" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="昵称" align="center" prop="nickName" :show-overflow-tooltip="true"/>
       <el-table-column label="状态" align="center" prop="state" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -157,7 +166,30 @@
       <el-table-column label="区" align="center" prop="region" :show-overflow-tooltip="true"/>
       <el-table-column label="个人介绍" align="center" prop="selfIntroduction" :show-overflow-tooltip="true"/>
       <el-table-column label="个人标签" align="center" prop="selfTags" :show-overflow-tooltip="true"/>
-      <el-table-column label="录音文件" align="center" prop="voiceUrl" :show-overflow-tooltip="true"/>
+      <el-table-column label="录音文件" align="center" prop="voiceUrl">
+        <template slot-scope="scope">
+          <el-button
+            v-if="!scope.row.playState"
+            @click="play(scope.$index)"
+            icon="el-icon-video-play"
+            type="info"
+            size="mini"
+            plain
+            round
+          >播放
+          </el-button>
+          <el-button
+            v-if="scope.row.playState"
+            @click="pause(scope.$index)"
+            icon="el-icon-video-pause"
+            type="success"
+            size="mini"
+            plain
+            round
+          >暂停
+          </el-button>
+        </template>
+      </el-table-column>
       <el-table-column label="录音时长" align="center" prop="voiceTime" :show-overflow-tooltip="true"/>
       <el-table-column label="是否置顶" align="center" prop="ifTop" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -181,14 +213,16 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['staff:staffInfo:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['staff:staffInfo:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -205,10 +239,10 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="头像" prop="avatarUrl">
-          <el-input v-model="form.avatarUrl" placeholder="请输入头像" />
+          <el-input v-model="form.avatarUrl" placeholder="请输入头像"/>
         </el-form-item>
         <el-form-item label="昵称" prop="nickName">
-          <el-input v-model="form.nickName" placeholder="请输入昵称" />
+          <el-input v-model="form.nickName" placeholder="请输入昵称"/>
         </el-form-item>
         <el-form-item label="状态" prop="state">
           <el-select v-model="form.state" placeholder="请选择状态">
@@ -231,14 +265,14 @@
           </el-select>
         </el-form-item>
         <el-form-item label="等级" prop="staffLevel">
-          <el-input v-model="form.staffLevel" placeholder="请输入等级" />
+          <el-input v-model="form.staffLevel" placeholder="请输入等级"/>
         </el-form-item>
         <el-form-item label="出生年月" prop="birthDate">
           <el-date-picker clearable
-            v-model="form.birthDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择出生年月">
+                          v-model="form.birthDate"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择出生年月">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="性别" prop="sex">
@@ -252,25 +286,25 @@
           </el-select>
         </el-form-item>
         <el-form-item label="微信" prop="weChatNum">
-          <el-input v-model="form.weChatNum" placeholder="请输入微信" />
+          <el-input v-model="form.weChatNum" placeholder="请输入微信"/>
         </el-form-item>
         <el-form-item label="手机号码" prop="phone">
-          <el-input v-model="form.phone" placeholder="请输入手机号码" />
+          <el-input v-model="form.phone" placeholder="请输入手机号码"/>
         </el-form-item>
         <el-form-item label="省份" prop="province">
-          <el-input v-model="form.province" placeholder="请输入省份" />
+          <el-input v-model="form.province" placeholder="请输入省份"/>
         </el-form-item>
         <el-form-item label="城市" prop="city">
-          <el-input v-model="form.city" placeholder="请输入城市" />
+          <el-input v-model="form.city" placeholder="请输入城市"/>
         </el-form-item>
         <el-form-item label="区" prop="region">
-          <el-input v-model="form.region" placeholder="请输入区" />
+          <el-input v-model="form.region" placeholder="请输入区"/>
         </el-form-item>
         <el-form-item label="个人介绍" prop="selfIntroduction">
-          <el-input v-model="form.selfIntroduction" placeholder="请输入个人介绍" />
+          <el-input v-model="form.selfIntroduction" placeholder="请输入个人介绍"/>
         </el-form-item>
         <el-form-item label="个人标签" prop="selfTags">
-          <el-input v-model="form.selfTags" placeholder="请输入个人标签" />
+          <el-input v-model="form.selfTags" placeholder="请输入个人标签"/>
         </el-form-item>
         <el-form-item label="是否置顶" prop="ifTop">
           <el-select v-model="form.ifTop" placeholder="请选择是否置顶">
@@ -283,13 +317,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="排序" prop="sortNum">
-          <el-input v-model="form.sortNum" placeholder="请输入排序" />
+          <el-input v-model="form.sortNum" placeholder="请输入排序"/>
         </el-form-item>
         <el-form-item label="失败原因" prop="notPassReason">
-          <el-input v-model="form.notPassReason" placeholder="请输入审核失败原因" />
+          <el-input v-model="form.notPassReason" placeholder="请输入审核失败原因"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
+          <el-input v-model="form.remark" placeholder="请输入备注"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -301,7 +335,7 @@
 </template>
 
 <script>
-import { listStaffInfo, getStaffInfo, delStaffInfo, addStaffInfo, updateStaffInfo } from "@/api/staff/staffInfo";
+import {listStaffInfo, getStaffInfo, delStaffInfo, addStaffInfo, updateStaffInfo} from "@/api/staff/staffInfo";
 
 export default {
   name: "StaffInfo",
@@ -344,8 +378,11 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {},
+      // 播放器对象
+      audioObj: null,
+      // 当前播放器播放语音下标
+      audioIndex: 0
     };
   },
   created() {
@@ -356,7 +393,14 @@ export default {
     getList() {
       this.loading = true;
       listStaffInfo(this.queryParams).then(response => {
-        this.staffInfoList = response.rows;
+        let newArr = [];
+        let arr = response.rows;
+        for (let index in arr){
+          let obj = {...arr[index]};
+          obj.playState = false;
+          newArr.push(obj);
+        }
+        this.staffInfoList =  newArr;
         this.total = response.total;
         this.loading = false;
       });
@@ -408,7 +452,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.userId)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -450,19 +494,53 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const userIds = row.userId || this.ids;
-      this.$modal.confirm('是否确认删除员工信息编号为"' + userIds + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除员工信息编号为"' + userIds + '"的数据项？').then(function () {
         return delStaffInfo(userIds);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
       this.download('staff/staffInfo/export', {
         ...this.queryParams
       }, `staffInfo_${new Date().getTime()}.xlsx`)
-    }
+    },
+    /**
+     * 播放
+     * */
+    play(index) {
+      let that = this;
+      if (this.audioObj != null) {
+        this.audioObj.pause();
+        this.audioObj = null;
+      }
+      // 需要判断上一个是否与当前的一致
+      if (this.audioIndex !== index){
+        this.staffInfoList[this.audioIndex].playState = false;
+      }
+      let temp = this.staffInfoList[index];
+      temp.playState = true;
+      this.audioObj = new Audio(temp.voiceUrl);
+      this.audioObj.play();
+      this.staffInfoList[index] = temp;
+      this.audioIndex = index;
+      this.audioObj.addEventListener('ended', () => {
+        that.pause(index);
+      })
+    },
+    /**
+     * 暂停
+     * */
+    pause(index) {
+      if (this.audioObj != null) {
+        this.audioObj.pause();
+        this.audioObj = null;
+      }
+      this.staffInfoList[index].playState = false;
+    },
   }
 };
 </script>

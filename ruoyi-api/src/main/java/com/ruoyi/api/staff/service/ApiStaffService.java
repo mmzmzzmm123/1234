@@ -14,6 +14,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.StaffStateEnums;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.AudioUtils;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
@@ -33,12 +34,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -95,6 +99,10 @@ public class ApiStaffService {
         StaffInfo staffInfo = staffInfoMapper.selectStaffInfoByUserId(userId);
         if (ObjectUtil.isNotNull(staffInfo)) {
             BeanUtils.copyBeanProp(vo, staffInfo);
+            List<ApiStaffPhotoVo> photoVos = selectPhotoByUserId(userId);
+            if (ObjectUtil.isNotEmpty(photoVos)) {
+                vo.setPhotoVoList(photoVos);
+            }
             log.info("根据用户标识查询员工信息：完成，返回数据：{}", vo);
             return vo;
         }
@@ -118,7 +126,7 @@ public class ApiStaffService {
             return R.warn("亲爱的，您已申请过了哟");
         }
         // 校验手机号码是否正确
-        if (!PhoneUtil.isMobile(dto.getPhone())){
+        if (!PhoneUtil.isMobile(dto.getPhone())) {
             log.warn("申请成为店员：失败，手机号码不正确");
             return R.warn("亲爱的，帮忙输入个正确的手机号码呗");
         }
@@ -130,15 +138,11 @@ public class ApiStaffService {
                 .setCreateTime(now)
                 .setUpdateTime(now);
         // 开始处理店员语音数据
-        try {
-            handleSoundRecordFile(staffInfo, dto);
-        }catch (Exception e){
-            log.warn("申请成为店员：异常，文件处理失败，信息：{}", e.getMessage());
-            return R.warn("请上传m4a/mp3格式的音频文件");
-        }
+        handleSoundRecordFile(staffInfo, dto);
+        handleSoundRecordTime(staffInfo, dto);
         // 先插入店员相册数据
         List<StaffPhoto> photoList = buildStaffPhotoData(dto.getUserId(), dto.getImageArr());
-        if (ObjectUtil.isNotEmpty(photoList)){
+        if (ObjectUtil.isNotEmpty(photoList)) {
             photoMapper.insertOfList(photoList);
         }
         // 推荐码处理
@@ -150,39 +154,41 @@ public class ApiStaffService {
     }
 
     /**
-     * 修改申请数据
+     * 修改数据
      *
      * @param dto 数据
      * @return 结果
-     * */
+     */
     @Transactional(rollbackFor = Exception.class)
-    public R<Boolean> updateApply(ApiStaffInfoDto dto) {
+    public R<Boolean> update(ApiStaffInfoDto dto) {
         log.info("修改申请数据：开始，参数：{}", dto);
         // 校验手机号码是否正确
-        if (!PhoneUtil.isMobile(dto.getPhone())){
+        if (StringUtils.isNotBlank(dto.getPhone()) && !PhoneUtil.isMobile(dto.getPhone())) {
             log.warn("申请成为店员：失败，手机号码不正确");
             return R.warn("亲爱的，帮忙输入个正确的手机号码呗");
         }
         StaffInfo staffInfo = new StaffInfo();
         BeanUtils.copyBeanProp(staffInfo, dto);
-        staffInfo.setBirthDate(DateUtils.dateTime(DateUtils.YYYY_MM_DD, dto.getBirthDate()))
-                .setUpdateTime(DateUtils.getNowDate());
-        // 开始处理店员语音数据
-        try {
-            handleSoundRecordFile(staffInfo, dto);
-        }catch (Exception e){
-            log.warn("申请成为店员：异常，文件处理失败，信息：{}", e.getMessage());
-            return R.warn("请上传m4a/mp3格式的音频文件");
+        staffInfo.setUpdateTime(DateUtils.getNowDate());
+        // 生日数据
+        if (StringUtils.isNotBlank(dto.getBirthDate())){
+            staffInfo.setBirthDate(DateUtils.dateTime(DateUtils.YYYY_MM_DD, dto.getBirthDate()));
         }
+        // 开始处理店员语音数据
+        handleSoundRecordFile(staffInfo, dto);
+        handleSoundRecordTime(staffInfo, dto);
         // 删除相册数据再插入
-        photoMapper.deleteByUserId(dto.getUserId());
-        List<StaffPhoto> staffPhotos = buildStaffPhotoData(dto.getUserId(), dto.getImageArr());
-        if (ObjectUtil.isNotEmpty(staffPhotos)){
-            photoMapper.insertOfList(staffPhotos);
+        if (StringUtils.isNotBlank(dto.getImageArr())) {
+            photoMapper.deleteByUserId(dto.getUserId());
+            List<StaffPhoto> staffPhotos = buildStaffPhotoData(dto.getUserId(), dto.getImageArr());
+            if (ObjectUtil.isNotEmpty(staffPhotos)) {
+                photoMapper.insertOfList(staffPhotos);
+            }
         }
         // 推荐码处理
-        handleReferralCode(staffInfo, dto);
-        staffInfo.setState(StaffStateEnums.EXAMINE.getCode());
+        if (ObjectUtil.isNotNull(dto.getReferralCode())){
+            handleReferralCode(staffInfo, dto);
+        }
         staffInfoMapper.updateStaffInfo(staffInfo);
         log.info("修改申请数据：完成");
         return R.ok(Boolean.TRUE);
@@ -190,11 +196,11 @@ public class ApiStaffService {
 
     /**
      * 处理推荐码数据
-     * */
-    private void handleReferralCode(StaffInfo staffInfo, ApiStaffInfoDto dto){
-        if (ObjectUtil.isNotNull(dto.getReferralCode())){
+     */
+    private void handleReferralCode(StaffInfo staffInfo, ApiStaffInfoDto dto) {
+        if (ObjectUtil.isNotNull(dto.getReferralCode())) {
             UserInfo userInfo = selectByReferralCode(dto.getReferralCode());
-            if (ObjectUtil.isNotNull(userInfo)){
+            if (ObjectUtil.isNotNull(userInfo)) {
                 staffInfo.setReferralUserId(userInfo.getId());
             }
         }
@@ -204,17 +210,34 @@ public class ApiStaffService {
      * 处理录音文件
      *
      * @param staffInfo 店员信息
-     * @param dto 数据
-     * */
-    private void handleSoundRecordFile(StaffInfo staffInfo, ApiStaffInfoDto dto) throws IOException, UnsupportedAudioFileException {
+     * @param dto       数据
+     */
+    private void handleSoundRecordFile(StaffInfo staffInfo, ApiStaffInfoDto dto) {
         // 开始处理店员语音数据
-        if (ObjectUtil.isNotNull(dto.getSoundRecordFile())){
+        if (ObjectUtil.isNotNull(dto.getSoundRecordFile())) {
             ApiOssUploadSingleFileDto uploadSingleFileDto = new ApiOssUploadSingleFileDto();
             uploadSingleFileDto.setFile(dto.getSoundRecordFile())
                     .setOssKey(dto.getOssKey());
             ApiOssUploadSingleFileVo uploadSingleFileVo = apiFileService.uploadSingleFile(uploadSingleFileDto);
-            staffInfo.setVoiceUrl(uploadSingleFileVo.getFileUrl())
-                    .setVoiceTime((Long.parseLong(StringUtils.split(uploadSingleFileVo.getFileUrl(),"=")[1])/1000)%60);
+            staffInfo.setVoiceUrl(uploadSingleFileVo.getFileUrl());
+        }
+    }
+
+    /**
+     * 处理录音文件的时长
+     *
+     * @param staffInfo 店员信息
+     * @param dto       数据
+     */
+    private void handleSoundRecordTime(StaffInfo staffInfo, ApiStaffInfoDto dto) {
+        if (ObjectUtil.isNull(dto.getVoiceTime()) && ObjectUtil.isNotNull(dto.getSoundRecordFile())) {
+            try {
+                int audioDurationInSeconds = AudioUtils.getAudioDurationInSeconds(dto.getSoundRecordFile());
+                staffInfo.setVoiceTime(Long.parseLong(audioDurationInSeconds + ""));
+            } catch (Exception e) {
+                e.printStackTrace();
+                staffInfo.setVoiceTime(0L);
+            }
         }
     }
 
@@ -223,12 +246,12 @@ public class ApiStaffService {
      *
      * @param code 推荐吗
      * @return 结果
-     * */
-    private UserInfo selectByReferralCode(Long code){
+     */
+    private UserInfo selectByReferralCode(Long code) {
         UserInfo select = new UserInfo();
         select.setReferralCode(code);
         List<UserInfo> userInfos = userInfoMapper.selectUserInfoList(select);
-        if (ObjectUtil.isNotEmpty(userInfos)){
+        if (ObjectUtil.isNotEmpty(userInfos)) {
             return userInfos.get(0);
         }
         return null;
@@ -261,15 +284,15 @@ public class ApiStaffService {
      *
      * @param userId 用户标识
      * @return 结果
-     * */
+     */
     public List<ApiStaffPhotoVo> selectPhotoByUserId(Long userId) {
         log.info("根据用户标识获取员工相册：开始，参数：{}", userId);
         List<ApiStaffPhotoVo> voList = new ArrayList<>();
         StaffPhoto select = new StaffPhoto();
         select.setUserId(userId);
         List<StaffPhoto> staffPhotos = photoMapper.selectStaffPhotoList(select);
-        if (ObjectUtil.isNotEmpty(staffPhotos)){
-            for (StaffPhoto item : staffPhotos){
+        if (ObjectUtil.isNotEmpty(staffPhotos)) {
+            for (StaffPhoto item : staffPhotos) {
                 ApiStaffPhotoVo vo = new ApiStaffPhotoVo();
                 BeanUtils.copyBeanProp(vo, item);
                 voList.add(vo);
@@ -284,17 +307,17 @@ public class ApiStaffService {
      *
      * @param userId 店员用户标识
      * @return 结果
-     * */
+     */
     public List<Long> selectServiceConfigIds(Long userId) {
         log.info("获取店员配置接单服务id：开始，参数：{}", userId);
         List<Long> serviceIdArr = new ArrayList<>();
-        if (ObjectUtil.isNull(userId)){
+        if (ObjectUtil.isNull(userId)) {
             throw new ServiceException("亲爱的，你来自哪里");
         }
         StaffServiceConfig select = new StaffServiceConfig();
         select.setStaffId(userId);
         List<StaffServiceConfig> staffServiceConfigs = staffServiceConfigMapper.selectStaffServiceConfigList(select);
-        if (ObjectUtil.isNotEmpty(staffServiceConfigs)){
+        if (ObjectUtil.isNotEmpty(staffServiceConfigs)) {
             serviceIdArr = staffServiceConfigs.stream().map(StaffServiceConfig::getServiceId).collect(Collectors.toList());
         }
         log.info("获取店员配置接单服务id：完成，返回数据：{}", serviceIdArr);

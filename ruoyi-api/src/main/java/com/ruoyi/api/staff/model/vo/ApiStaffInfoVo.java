@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author LAM
@@ -96,4 +97,7 @@ public class ApiStaffInfoVo implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("更新时间")
     private Date updateTime;
+
+    @ApiModelProperty("员工相册")
+    private List<ApiStaffPhotoVo> photoVoList;
 }

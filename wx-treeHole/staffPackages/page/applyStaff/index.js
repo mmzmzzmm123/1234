@@ -112,12 +112,14 @@ Page({
   loadStaffInfoOnSuccess: function (res) {
     wx.hideLoading();
     if (res.data != null) {
+      app.updateStaffInfo(res);
       let staffInfo = res.data;
       this.setData({
         staffInfo: staffInfo,
         ifAgree: true
       })
-      staffApi.selectPhotoByUserId({ userId: staffInfo.userId }, null, this.selectPhotoByUserIdOnSuccess, null);
+      // 构建店员相册数据
+      this.buildStaffPhotoArr();
       // 还原数据
       this.buildForm();
       // 看看是否审核不通过
@@ -140,18 +142,19 @@ Page({
     })
   },
   /**
-   * 查询员工相册成功
+   * 构建员工相册数据
    */
-  selectPhotoByUserIdOnSuccess: function (res) {
+  buildStaffPhotoArr: function () {
+    let staffInfo = this.data.staffInfo;
+    let arr = staffInfo.photoVoList;
     let imgArr = [];
-    let data = res.data;
-    for (let index in data) {
+    for (let index in arr) {
       imgArr.push({
-        uid: data[index].id,
-        url: data[index].imgUrl,
-        imgUrl: data[index].imgUrl,
+        uid: arr[index].id,
+        url: arr[index].imgUrl,
+        imgUrl: arr[index].imgUrl,
         status: 'done',
-        res: data[index],
+        res: arr[index],
       });
     }
     this.setData({
@@ -272,6 +275,7 @@ Page({
         // 通过开始获取文件的详细信息
         that.setData({
           ['form.voiceUrl']: path,
+          ['form.voiceTime']: null
         })
       }
     })
@@ -463,7 +467,8 @@ Page({
     params.imageArr = images.join(",");
     params.userId = userInfo.id;
     params.ossKey = "scound_record";
-    this.uoloadStart(staffApi.apply,params);
+    params.state = "1";
+    this.uploadStart(staffApi.applyUrl,params);
   },
   /**
    * 更新申请
@@ -475,32 +480,33 @@ Page({
     // 开始封装数据
     let form = this.data.form;
     let photoArr = this.data.photoArr;
-    let params = form;
+    let params = {...form};
     let images = [];
     for (let index in photoArr) {
       images.push(photoArr[index].imgUrl);
     }
     params.imageArr = images.join(",");
+    params.state = "1";
     // 判断录音是否改变
     let info = this.data.staffInfo;
     if (info.voiceUrl == form.voiceUrl) {
-      staffApi.updateApply(params,this.updateApplyOnStart,this.updateApplyOnSuccess,this.updateApplyOnFailed,this.updateApplyOnWarn)
+      staffApi.update(params, this.updateOnStart, this.updateOnSuccess, this.updateOnFailed, this.updateOnWarn);
     } else {
       wx.showLoading({
         title: '正在提交',
         mask: true
       })
       params.ossKey = "scound_record";
-      this.uoloadStart(staffApi.updateApplyUrl,params);
+      this.uploadStart(staffApi.updateUrl,params);
     }
   },
-  updateApplyOnStart:function(){
+  updateOnStart:function(){
     wx.showLoading({
       title: '正在提交',
       mask: true
     })
   },
-  updateApplyOnSuccess:function(res){
+  updateOnSuccess:function(res){
     wx.hideLoading();
     wx.showModal({
       title: '提示',
@@ -513,14 +519,14 @@ Page({
       }
     })
   },
-  updateApplyOnFailed:function(res){
+  updateOnFailed:function(res){
     wx.hideLoading();
     wx.showToast({
       title: '提交失败，请重试',
       icon: "none"
     })
   },
-  updateApplyOnWarn:function(res){
+  updateOnWarn:function(res){
     wx.hideLoading();
     wx.showToast({
       title: res.msg,
@@ -530,13 +536,13 @@ Page({
   /**
    * 开始提交上传
    */
-  uoloadStart: function (url, params) {
+  uploadStart: function (url, params) {
     // 开始请求
     wx.uploadFile({
       filePath: params.voiceUrl,
       name: 'soundRecordFile',
       url: requestUtil.prefix + url,
-      formData: params,
+      formData: requestUtil.removeNullProperty(params),
       timeout: 10000,
       success: function (res) {
         if (res.statusCode == globalCanstanats.httpState.ok) {

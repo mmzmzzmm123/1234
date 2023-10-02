@@ -166,8 +166,13 @@ App({
    * 更新全局店员信息
    */
   updateStaffInfo:function(res){
+    console.log("加载店员数据完成", res);
     this.globalData.staffInfo = res.data;
-    storage.set(storageConstant.staffInfo, null, res.data, 0);
+    if(res.data != null){
+      storage.set(storageConstant.staffInfo, null, res.data, 0);
+    }else{
+      storage.removeStorageSync(storageConstant.staffInfo);
+    }
   },
   /**
    * 全局参数

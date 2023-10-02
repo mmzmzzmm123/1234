@@ -130,6 +130,14 @@
                 </view>
               </wux-col>
               <wux-col span="3">
+                <view class="view_box_content_column funItemView" bind:tap="staffServiceManage">
+                  <view class="view_box_row_content background_green">
+                    <image src="../../static/ico/manage_white_32.png"></image>
+                  </view>
+                  <text>我的服务</text>
+                </view>
+              </wux-col>
+              <wux-col span="3">
                 <view class="view_box_content_column funItemView">
                   <view class="view_box_row_content background_blue">
                     <image src="../../static/ico/trends_white_32.png"></image>
@@ -218,3 +226,48 @@
 
   </scroll-view>
 </view>
+
+<!-- 店员服务管理容器 -->
+<i-drawer mode="right" visible="{{ staffServiceDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeStaffServiceDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.08}}px;">
+          <view></view>
+          <text>服务管理</text>
+          <wux-icon type="md-close" size="22" bindtap="changeStaffServiceDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <view class="drawerBodyView">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common common_fun_box_view">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../static/ico/theme_dot.png"></image>
+              <view>在线状态</view>
+            </view>
+            <wux-switch name="light" slot="footer" color="royal" value="{{staffInfo.ifOnline == 'Y'}}" bindchange="staffOnlineChange" />
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common common_fun_box_view">
+          <wux-row>
+            <block wx:for="{{serviceList}}" wx:key="id">
+              <wux-col span="3">
+                <view class="view_box_row_content serviceItem">
+                  <span>{{item.shortName}}</span>
+                  <wux-switch name="light" slot="footer" color="royal" />
+                </view>
+              </wux-col>
+            </block>
+          </wux-row>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="themeBut" bind:tap="changeStaffServiceDrawer">关 闭</view>
+        <view class="seizeSeat_mini"></view>
+      </view>
+    </view>
+  </view>
+</i-drawer>

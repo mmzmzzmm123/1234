@@ -77,8 +77,8 @@
 
     <insert id="insertOfList" parameterType="java.util.List">
         insert into bus_staff_photo (user_id, img_url, create_time, update_time) values
-        <foreach collection="list" item="obj" open="(" close=")" separator=",">
-            #{obj.userId}, #{obj.imgUrl}, #{obj.createTime}, #{obj.updateTime}
+        <foreach collection="list" item="obj" separator=",">
+            (#{obj.userId}, #{obj.imgUrl}, #{obj.createTime}, #{obj.updateTime})
         </foreach>
     </insert>
 

@@ -114,5 +114,6 @@ module.exports = {
   prefix: prefix,
   post: post,
   get: get,
-  uploadSingleFileUrl: uploadSingleFileUrl
+  uploadSingleFileUrl: uploadSingleFileUrl,
+  removeNullProperty: removeNullProperty
 }

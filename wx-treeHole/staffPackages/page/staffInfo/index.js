@@ -1,9 +1,11 @@
 const app = getApp();
 import { $wuxDialog } from '../../../components/wux/dist/index';
+import utils from "../../../utils/util";
+import requestUtil from "../../../apis/request";
 import storage from "../../../utils/storage";
 import storageConstant from "../../../constans/storageConstant";
+import globalCanstanats from "../../../constans/globalConstant";
 import staffApi from "../../../apis/staff/staffApi";
-import serviceInfoApi from "../../../apis/service/serviceInfoApi";
 import soundRecordUtil from "../../../utils/soundRecord";
 import requestApi from "../../../apis/request";
 Page({
@@ -16,7 +18,6 @@ Page({
     pHeight: 0, //获取手机高度
     userInfo: app.globalData.userInfo, // 用户信息
     staffInfo: app.globalData.staffInfo, // 店员信息
-    serviceList: app.globalData.serviceList,// 服务数据
     sexRange: [
       {
         label: "男",
@@ -26,9 +27,15 @@ Page({
         value: "1"
       }
     ],
+    ifChangeSoundRecord: false, // 是否改变录音文件
     uploadSoundRecordType: 0, // 0直接录音，1上传文件
     soundRecordState: -1, // -1 停止录音 0 录音中
     audioState: -1, // -1 停止 0 播放中
+    fileUploadUrl: requestUtil.uploadSingleFileUrl,
+    photoArr: [], // 员工相册集合
+    fileUploadForm: { // 文件上传oss类型
+      ossKey: "staff_photo"
+    },
   },
 
   /**
@@ -51,7 +58,7 @@ Page({
         pHeight: divHeight
       })
     }).exec();
-    
+
   },
   onShow() {
     // 加载用户信息和店员信息
@@ -60,28 +67,35 @@ Page({
     })
     // 店员信息
     let staffInfo = storage.get(storageConstant.staffInfo, null);
-    if(staffInfo != null){
+    if (staffInfo != null) {
       this.setData({
         staffInfo: staffInfo
       })
-    }
-    // 服务数据
-    let serviceList = this.data.serviceList;
-    if (serviceList == null || serviceList.length <= 0) {
-      serviceInfoApi.select(null, this.loadServiceInfoOnSuccess, null);
-    } else {
-      this.setData({
-        serviceList: app.globalData.serviceList
-      })
+      // 构建员工相册数据
+      this.buildStaffPhotoArr();
     }
   },
   /**
-   * 加载服务数据
+   * 构建员工相册数据
    */
-  loadServiceInfoOnSuccess: function (res) {
-    app.loadServiceInfoDataOnSuccess(res);
+  buildStaffPhotoArr: function () {
+    if (this.data.photoArr.length > 0) {
+      return;
+    }
+    let staffInfo = this.data.staffInfo;
+    let arr = [...staffInfo.photoVoList];
+    let imgArr = [];
+    for (let index in arr) {
+      imgArr.push({
+        uid: arr[index].id,
+        url: arr[index].imgUrl,
+        imgUrl: arr[index].imgUrl,
+        status: 'done',
+        res: arr[index],
+      });
+    }
     this.setData({
-      serviceList: res.data
+      photoArr: imgArr
     })
   },
   /**
@@ -139,26 +153,26 @@ Page({
    */
   selfIntroductionInput: function (e) {
     this.setData({
-      ["form.selfIntroduction"]: e.detail.value
+      ["staffInfo.selfIntroduction"]: e.detail.value
     })
   },
   /**
    * 添加标签事件
    */
-  addLabelCli:function(){
+  addLabelCli: function () {
     let that = this;
     let staffInfo = this.data.staffInfo;
     let selfTags = staffInfo.selfTags;
     let labelTotle = 0;
-    if(selfTags != null){
+    if (selfTags != null) {
       let arr = selfTags.split(",");
-      for(let index in arr){
+      for (let index in arr) {
         labelTotle += arr[index].length;
       }
     }
-    if((30 - labelTotle) <= 1){
+    if ((30 - labelTotle) <= 1) {
       wx.showToast({
-        title: '目前总标签字符：'+labelTotle+'，已不足再添加标签的量拉',
+        title: '目前总标签字符：' + labelTotle + '，已不足再添加标签的量拉',
         icon: "none"
       })
       return;
@@ -166,10 +180,10 @@ Page({
     $wuxDialog().prompt({
       resetOnClose: true,
       title: '添加标签',
-      content: '提示：标签内容最少输入两个字符，最多8个字符，总标签最多30字符哟，目前总标签字符数：'+labelTotle,
+      content: '提示：标签内容最少输入两个字符，最多8个字符，总标签最多30字符哟，目前总标签字符数：' + labelTotle,
       defaultText: "",
       placeholder: '请输入标签内容',
-      maxlength: (30-labelTotle >= 8 ? 8 : (30-labelTotle)),
+      maxlength: (30 - labelTotle >= 8 ? 8 : (30 - labelTotle)),
       onConfirm(e, response) {
         if (response == null || response == "" || response == undefined) {
           wx.showToast({
@@ -178,16 +192,16 @@ Page({
           })
           return;
         }
-        if(response.length < 2){
+        if (response.length < 2) {
           wx.showToast({
             title: '标签内容最少输入两个字符',
             icon: "none"
           })
           return;
         }
-        if(selfTags != null && selfTags != ""){
-          selfTags += (","+response);
-        }else{
+        if (selfTags != null && selfTags != "") {
+          selfTags += ("," + response);
+        } else {
           selfTags = response;
         }
         that.setData({
@@ -199,7 +213,7 @@ Page({
   /**
    * 删除标签值
    */
-  deleteLabel:function(e){
+  deleteLabel: function (e) {
     let index = e.currentTarget.dataset.index;
     let selfTagsArr = this.data.staffInfo.selfTags.split(",");
     selfTagsArr.splice(index, 1);
@@ -238,7 +252,8 @@ Page({
     staffInfo.voiceTime = Math.round(res.duration * 0.001);
     this.setData({
       soundRecordState: -1,
-      staffInfo: staffInfo
+      staffInfo: staffInfo,
+      ifChangeSoundRecord: true
     })
   },
   /**
@@ -292,13 +307,13 @@ Page({
   /**
    * 图片选择
    */
-  chooseImage:function(){
+  chooseImage: function () {
     let that = this;
     wx.chooseMedia({
       count: 1,
       mediaType: ['image'],
       sourceType: ['album', 'camera'],
-      success:function(res){
+      success: function (res) {
         wx.showLoading({
           title: '正在上传',
           mask: true
@@ -307,23 +322,181 @@ Page({
           filePath: res.tempFiles[0].tempFilePath,
           name: 'file',
           url: requestApi.uploadSingleFileUrl,
-          formData: {ossKey: "avatar"},
+          formData: { ossKey: "avatar" },
           timeout: 10000,
-          success:function(e){
+          success: function (e) {
             let fileUrl = JSON.parse(e.data).data.fileUrl;
             that.setData({
               ["staffInfo.avatarUrl"]: fileUrl
             })
-          },fail:function(e){
+          }, fail: function (e) {
             wx.showToast({
               title: '上传失败，请重试',
               icon: "none"
             })
-          },complete:function(e){
+          }, complete: function (e) {
             wx.hideLoading();
           }
         })
       }
     })
   },
+  /**
+   * 文件上传成功
+   */
+  uploadFileSuccess: function (e) {
+    let file = e.detail.file;
+    let result = e.detail.result;
+    if (result.code != 200) {
+      return;
+    }
+    let data = result.data;
+    let addObj = {
+      uid: file.uid,
+      url: file.url,
+      requestId: data.requestId,
+      imgUrl: data.fileUrl
+    };
+    let tempArr = [...this.data.photoArr];
+    tempArr.push(addObj);
+    this.setData({
+      photoArr: tempArr
+    })
+  },
+  /**
+   * 文件上传失败事件
+   */
+  uploadFileFail: function (e) {
+    wx.showToast({
+      title: '文件上传失败',
+      icon: "none"
+    })
+  },
+  /**
+   * 文件删除事件
+   */
+  uploadFileRemove: function (e) {
+    let requestId = e.detail.file.requestId;
+    let tempArr = this.data.photoArr;
+    tempArr.splice(this.matchPhotoArrItem(tempArr, requestId), 1);
+    this.setData({
+      photoArr: tempArr
+    })
+  },
+  /**
+   * 提交数据
+   */
+  submit: function () {
+    if (!this.checkData()) {
+      return;
+    }
+    let that = this;
+    let ifChangeSoundRecord = this.data.ifChangeSoundRecord;
+    let staffInfo = this.data.staffInfo;
+    let photoArr = this.data.photoArr;
+    let images = [];
+    for (let index in photoArr) {
+      images.push(photoArr[index].imgUrl);
+    }
+    staffInfo.imageArr = images.join(",");
+    if (ifChangeSoundRecord) {
+      that.updateOnStart();
+      wx.uploadFile({
+        filePath: staffInfo.voiceUrl,
+        name: 'soundRecordFile',
+        url: requestUtil.prefix + staffApi.updateUrl,
+        formData: requestUtil.removeNullProperty(staffInfo),
+        timeout: 10000,
+        success: function (res) {
+          if (res.statusCode == globalCanstanats.httpState.ok) {
+            let data = JSON.parse(res.data);
+            let requestCode = data.code;
+            switch (requestCode) {
+              case globalCanstanats.httpState.ok:
+                that.updateOnSuccess(res.data);
+                break;
+              case globalCanstanats.httpState.warn:
+                that.updateOnWarn(res.data);
+                break;
+              case globalCanstanats.httpState.operate:
+                that.uploadFileFail(res.data);
+                break;
+              default:
+                that.uploadFileFail(res.data);
+                break;
+            }
+          } else {
+            that.uploadFileFail(res.data);
+          }
+        }, fail: function (e) {
+          that.uploadFileFail(res.data);
+        }
+      })
+    } else {
+      staffApi.update(staffInfo, this.updateOnStart, this.updateOnSuccess, this.updateOnFailed, this.updateOnWarn);
+    }
+  },
+  updateOnStart: function () {
+    wx.showLoading({
+      title: '正在保存',
+      mask: true
+    })
+  },
+  updateOnSuccess: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: '保存成功',
+      icon: "success"
+    })
+    staffApi.selectByUserId({ userId: this.data.staffInfo.userId }, null, this.loadStaffInfoOnSuccess, null);
+  },
+  loadStaffInfoOnSuccess: function (res) {
+    app.updateStaffInfo(res);
+  },
+  updateOnFailed: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: '保存失败',
+      icon: "error"
+    })
+  },
+  updateOnWarn: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: res.msg,
+      icon: "none"
+    })
+  },
+  /**
+   * 校验数据
+   */
+  checkData: function () {
+    let form = this.data.staffInfo;
+    let photoArr = this.data.photoArr;
+    // 基本信息必填校验
+    if (utils.isEmpty(form.avatarUrl) || utils.isEmpty(form.selfTags) || utils.isEmpty(form.nickName) || utils.isEmpty(form.sex) || utils.isEmpty(form.weChatNum) || utils.isEmpty(form.phone) || utils.isEmpty(form.birthDate) || utils.isEmpty(form.region) || utils.isEmpty(form.selfIntroduction)) {
+      wx.showToast({
+        title: '请完善您的基本信息后再提交哟',
+        icon: "none"
+      })
+      return false;
+    }
+    // 录音校验
+    if (utils.isEmpty(form.voiceUrl)) {
+      wx.showToast({
+        title: '请完善您的录音哟',
+        icon: "none"
+      })
+      return false;
+    }
+    // 图片校验
+    if (photoArr == null || photoArr.length <= 0) {
+      wx.showToast({
+        title: '请上传至少一张图片哟',
+        icon: "none"
+      })
+      return false;
+    }
+    return true;
+  }
 })

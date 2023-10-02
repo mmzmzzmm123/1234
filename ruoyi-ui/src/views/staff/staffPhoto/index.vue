@@ -85,7 +85,11 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键" align="center" prop="id" :show-overflow-tooltip="true" />
       <el-table-column label="用户标识" align="center" prop="userId" :show-overflow-tooltip="true"/>
-      <el-table-column label="图片" align="center" prop="imgUrl" :show-overflow-tooltip="true"/>
+      <el-table-column label="图片" align="center" prop="imgUrl">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.imgUrl" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="是否解锁" align="center" prop="ifUnlock" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.ifUnlock"/>

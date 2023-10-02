@@ -15,13 +15,6 @@ page{
   height: 12px;
   margin-right: 4px;
 }
-.serviceItem{
-  font-size: 14px;
-  padding-top: 10px;
-}
-.serviceItem span{
-  margin-right: 4px;
-}
 .inputItem{
   text-align: right;
   font-size: 14px;
@@ -109,5 +102,5 @@ page{
   position: fixed;
   bottom: 0;
   left: 0;
-  z-index: 1;
+  z-index: 5;
 }

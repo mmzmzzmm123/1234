@@ -51,10 +51,10 @@ public class ApiStaffController {
         return service.apply(dto);
     }
 
-    @ApiOperation("修改申请数据")
-    @PostMapping("/updateApply")
-    public R<Boolean> updateApply(@Valid ApiStaffInfoDto dto){
-        return service.updateApply(dto);
+    @ApiOperation("修改数据")
+    @PostMapping("/update")
+    public R<Boolean> update(@Valid ApiStaffInfoDto dto){
+        return service.update(dto);
     }
 
     @ApiOperation("获取店员配置接单服务id")

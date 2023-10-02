@@ -125,3 +125,19 @@ page{
   font-size: 12px;
   color: #80848f;
 }
+.tempColumn{
+  font-size: 16px;
+  font-weight: bold;
+}
+.tempColumn image{
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+}
+.serviceItem{
+  font-size: 14px;
+  padding-top: 10px;
+}
+.serviceItem span{
+  margin-right: 4px;
+}

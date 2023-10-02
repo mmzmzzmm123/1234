@@ -4,7 +4,7 @@
  * return true:为空，反之
  */
 let isEmpty = function(str){
-  if (str!=null&&str!=""&&str!="null") {
+  if (str!=null&&str!=undefined&&str!=""&&str!="null") {
     return false;
   }
   return true;

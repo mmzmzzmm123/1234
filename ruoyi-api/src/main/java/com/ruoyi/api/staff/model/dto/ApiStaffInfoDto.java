@@ -49,6 +49,15 @@ public class ApiStaffInfoDto implements Serializable {
     @ApiModelProperty("手机号码")
     private String phone;
 
+    @ApiModelProperty("省份")
+    private String province;
+
+    @ApiModelProperty("城市")
+    private String city;
+
+    @ApiModelProperty("地区信息（-分割）")
+    private String region;
+
     @ApiModelProperty("个人介绍")
     private String selfIntroduction;
 
@@ -72,13 +81,4 @@ public class ApiStaffInfoDto implements Serializable {
 
     @ApiModelProperty("图片集合字符串（逗号分割）")
     private String imageArr;
-
-    @ApiModelProperty("省份")
-    private String province;
-
-    @ApiModelProperty("城市")
-    private String city;
-
-    @ApiModelProperty("地区信息（-分割）")
-    private String region;
 }
