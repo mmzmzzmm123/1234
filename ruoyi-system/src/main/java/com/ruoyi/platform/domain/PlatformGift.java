@@ -61,5 +61,4 @@ public class PlatformGift extends BaseEntity {
     @ApiModelProperty("排序")
     private Long sortNum;
 
-
 }

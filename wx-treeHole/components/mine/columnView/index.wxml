@@ -5,6 +5,6 @@
   </view>
   <view wx:if="{{ifShowMore=='0'}}" class="view_box_row_content moreView" catchtap="toPage">
     <view style="color: {{moreTitleColor}};">{{moreTitle}}</view>
-    <wux-icon type="{{icoType}}" size="12" color="{{moreTitleColor}}"></wux-icon>
+    <wux-icon wx:if="{{ifShowIco == 0}}" type="{{icoType}}" size="12" color="{{moreTitleColor}}"></wux-icon>
   </view>
 </view>

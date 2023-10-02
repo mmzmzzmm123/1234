@@ -12,208 +12,46 @@
     <swiper-item>
       <scroll-view scroll-y="true" class="view_all_adapt">
 
-        <!-- 热门推荐 -->
-        <column-view title="热门推荐" moreTitle="真的很热门"></column-view>
-        <scroll-view scroll-x class="view_box_common" style="overflow-x: hidden;white-space: nowrap;margin-top: -10px;" catchtouchmove="hotScrollViewMove">
-
-          <view class="hotView hotBg_0">
-            <!-- 在线信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view></view>
-              <view class="hotOnLineView view_box_row_content">
-                <image src="../../static/ico/online_32.png" mode="widthFix"></image>
-                <view>在线</view>
-              </view>
+        <!-- 新人推荐 -->
+        <column-view title="热门推荐" moreTitle="非常热门哟" ifShowIco="1"></column-view>
+        <scroll-view scroll-x class="view_box_common">
+          <view class="view_box_row">
+            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
+              <image src="../../static/temp/t1.png"></image>
+              <view class="newPeopleName">小甜甜</view>
+              <view class="girl_bg_color newPeopleBut">下单</view>
             </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 头像信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <image class="hotTx" src="../../static/temp/t1.png"></image>
-              <view style="width: {{180*0.92-60}}px;height: 42px;">
-                <view class="hotName text_ellipsis">小苹果真的很甜小苹果真的很甜</view>
-                <view class="hotAddress">广东·清远</view>
-              </view>
+            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
+              <image src="../../static/temp/t1.png"></image>
+              <view class="newPeopleName">小甜甜</view>
+              <view class="girl_bg_color newPeopleBut">下单</view>
             </view>
-            <!-- 个人介绍 -->
-            <view class="view_box_common hotStaffDetails text_ellipsis_two">
-              我希望老板们可以看上可爱的我我希望老板们可以看上可爱的我
+            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
+              <image src="../../static/temp/t1.png"></image>
+              <view class="newPeopleName">小甜甜</view>
+              <view class="girl_bg_color newPeopleBut">下单</view>
             </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 语音条 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view class="hotVoiceView view_box_row">
-                <image class="voicePlay" src="../../static/ico/play.png" mode="widthFix"></image>
-                <image class="voiceAudioImg" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
-                <view class="voiceSeconds">14s</view>
-              </view>
+            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
+              <image src="../../static/temp/t1.png"></image>
+              <view class="newPeopleName">小甜甜</view>
+              <view class="girl_bg_color newPeopleBut">下单</view>
             </view>
-          </view>
-
-          <view class="hotView hotBg_1">
-            <!-- 在线信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view></view>
-              <view class="hotOnLineView view_box_row_content">
-                <image src="../../static/ico/online_32.png" mode="widthFix"></image>
-                <view>在线</view>
-              </view>
+            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
+              <image src="../../static/temp/t1.png"></image>
+              <view class="newPeopleName">小甜甜</view>
+              <view class="girl_bg_color newPeopleBut">下单</view>
             </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 头像信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <image class="hotTx" src="../../static/temp/t1.png"></image>
-              <view style="width: {{180*0.92-60}}px;height: 42px;">
-                <view class="hotName text_ellipsis">小苹果真的很甜小苹果真的很甜</view>
-                <view class="hotAddress">广东·清远</view>
-              </view>
+            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
+              <image src="../../static/temp/t1.png"></image>
+              <view class="newPeopleName">小甜甜</view>
+              <view class="girl_bg_color newPeopleBut">下单</view>
             </view>
-            <!-- 个人介绍 -->
-            <view class="view_box_common hotStaffDetails text_ellipsis_two">
-              我希望老板们可以看上可爱的我我希望老板们可以看上可爱的我
-            </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 语音条 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view class="hotVoiceView view_box_row">
-                <image class="voicePlay" src="../../static/ico/play.png" mode="widthFix"></image>
-                <image class="voiceAudioImg" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
-                <view class="voiceSeconds">14s</view>
-              </view>
+            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
+              <image src="../../static/temp/t1.png"></image>
+              <view class="newPeopleName">小甜甜</view>
+              <view class="girl_bg_color newPeopleBut">下单</view>
             </view>
           </view>
-
-          <view class="hotView hotBg_2">
-            <!-- 在线信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view></view>
-              <view class="hotOnLineView view_box_row_content">
-                <image src="../../static/ico/online_32.png" mode="widthFix"></image>
-                <view>在线</view>
-              </view>
-            </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 头像信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <image class="hotTx" src="../../static/temp/t1.png"></image>
-              <view style="width: {{180*0.92-60}}px;height: 42px;">
-                <view class="hotName text_ellipsis">小苹果真的很甜小苹果真的很甜</view>
-                <view class="hotAddress">广东·清远</view>
-              </view>
-            </view>
-            <!-- 个人介绍 -->
-            <view class="view_box_common hotStaffDetails text_ellipsis_two">
-              我希望老板们可以看上可爱的我我希望老板们可以看上可爱的我
-            </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 语音条 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view class="hotVoiceView view_box_row">
-                <image class="voicePlay" src="../../static/ico/play.png" mode="widthFix"></image>
-                <image class="voiceAudioImg" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
-                <view class="voiceSeconds">14s</view>
-              </view>
-            </view>
-          </view>
-
-          <view class="hotView hotBg_3">
-            <!-- 在线信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view></view>
-              <view class="hotOnLineView view_box_row_content">
-                <image src="../../static/ico/online_32.png" mode="widthFix"></image>
-                <view>在线</view>
-              </view>
-            </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 头像信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <image class="hotTx" src="../../static/temp/t1.png"></image>
-              <view style="width: {{180*0.92-60}}px;height: 42px;">
-                <view class="hotName text_ellipsis">小苹果真的很甜小苹果真的很甜</view>
-                <view class="hotAddress">广东·清远</view>
-              </view>
-            </view>
-            <!-- 个人介绍 -->
-            <view class="view_box_common hotStaffDetails text_ellipsis_two">
-              我希望老板们可以看上可爱的我我希望老板们可以看上可爱的我
-            </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 语音条 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view class="hotVoiceView view_box_row">
-                <image class="voicePlay" src="../../static/ico/play.png" mode="widthFix"></image>
-                <image class="voiceAudioImg" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
-                <view class="voiceSeconds">14s</view>
-              </view>
-            </view>
-          </view>
-
-          <view class="hotView hotBg_4">
-            <!-- 在线信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view></view>
-              <view class="hotOnLineView view_box_row_content">
-                <image src="../../static/ico/online_32.png" mode="widthFix"></image>
-                <view>在线</view>
-              </view>
-            </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 头像信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <image class="hotTx" src="../../static/temp/t1.png"></image>
-              <view style="width: {{180*0.92-60}}px;height: 42px;">
-                <view class="hotName text_ellipsis">小苹果真的很甜小苹果真的很甜</view>
-                <view class="hotAddress">广东·清远</view>
-              </view>
-            </view>
-            <!-- 个人介绍 -->
-            <view class="view_box_common hotStaffDetails text_ellipsis_two">
-              我希望老板们可以看上可爱的我我希望老板们可以看上可爱的我
-            </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 语音条 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view class="hotVoiceView view_box_row">
-                <image class="voicePlay" src="../../static/ico/play.png" mode="widthFix"></image>
-                <image class="voiceAudioImg" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
-                <view class="voiceSeconds">14s</view>
-              </view>
-            </view>
-          </view>
-
-          <view class="hotView hotBg_5">
-            <!-- 在线信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view></view>
-              <view class="hotOnLineView view_box_row_content">
-                <image src="../../static/ico/online_32.png" mode="widthFix"></image>
-                <view>在线</view>
-              </view>
-            </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 头像信息 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <image class="hotTx" src="../../static/temp/t1.png"></image>
-              <view style="width: {{180*0.92-60}}px;height: 42px;">
-                <view class="hotName text_ellipsis">小苹果真的很甜小苹果真的很甜</view>
-                <view class="hotAddress">广东·清远</view>
-              </view>
-            </view>
-            <!-- 个人介绍 -->
-            <view class="view_box_common hotStaffDetails text_ellipsis_two">
-              我希望老板们可以看上可爱的我我希望老板们可以看上可爱的我
-            </view>
-            <view class="seizeSeat_mini"></view>
-            <!-- 语音条 -->
-            <view class="view_box_common view_box_row_content_symmetry">
-              <view class="hotVoiceView view_box_row">
-                <image class="voicePlay" src="../../static/ico/play.png" mode="widthFix"></image>
-                <image class="voiceAudioImg" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
-                <view class="voiceSeconds">14s</view>
-              </view>
-            </view>
-          </view>
-
         </scroll-view>
 
         <!-- 筛选栏 -->

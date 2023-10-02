@@ -36,12 +36,25 @@ public interface StaffPhotoMapper {
     public int insertStaffPhoto(StaffPhoto staffPhoto);
 
     /**
+     * 批量新增店员相册信息
+     *
+     * @param staffPhotos 集合
+     * @return 结果
+     * */
+    public int insertOfList(List<StaffPhoto> staffPhotos);
+
+    /**
      * 修改员工相册
      *
      * @param staffPhoto 员工相册
      * @return 结果
      */
     public int updateStaffPhoto(StaffPhoto staffPhoto);
+
+    /**
+     * 根据用户标识删除数据
+     * */
+    public int deleteByUserId(Long userId);
 
     /**
      * 删除员工相册

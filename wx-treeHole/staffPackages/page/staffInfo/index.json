@@ -1,0 +1,14 @@
+{
+  "navigationBarTitleText": "我的资料",
+  "usingComponents": {
+    "wux-icon": "../../../components/wux/dist/icon/index",
+    "wux-row": "../../../components/wux/dist/row/index",
+    "wux-col": "../../../components/wux/dist/col/index",
+    "wux-switch": "../../../components/wux/dist/switch/index",
+    "wux-cell": "../../../components/wux/dist/cell/index",
+    "wux-input": "../../../components/wux/dist/input/index",
+    "column-view": "../../../components/mine/columnView/index",
+    "wux-upload": "../../../components/wux/dist/upload/index",
+    "wux-dialog": "../../../components/wux/dist/dialog/index"
+  }
+}

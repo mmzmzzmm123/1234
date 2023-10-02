@@ -3,6 +3,8 @@ package com.ruoyi.platform.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.common.constant.RedisKeyConstants;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -22,6 +24,7 @@ import com.ruoyi.platform.service.IPlatformGiftService;
 public class PlatformGiftServiceImpl implements IPlatformGiftService {
 
     private final PlatformGiftMapper platformGiftMapper;
+    private final RedisCache redisCache;
 
     /**
      * 查询平台礼物管理
@@ -59,6 +62,7 @@ public class PlatformGiftServiceImpl implements IPlatformGiftService {
                 .setUpdateTime(now)
                 .setUpdateBy(loginUser)
                 .setCreateBy(loginUser);
+        redisCache.deleteObject(RedisKeyConstants.PLATFORM_GIFT);
         return platformGiftMapper.insertPlatformGift(platformGift);
     }
 
@@ -72,6 +76,7 @@ public class PlatformGiftServiceImpl implements IPlatformGiftService {
     public int updatePlatformGift(PlatformGift platformGift) {
         platformGift.setUpdateBy(SecurityUtils.getUsername())
                 .setUpdateTime(DateUtils.getNowDate());
+        redisCache.deleteObject(RedisKeyConstants.PLATFORM_GIFT);
         return platformGiftMapper.updatePlatformGift(platformGift);
     }
 
@@ -83,6 +88,7 @@ public class PlatformGiftServiceImpl implements IPlatformGiftService {
      */
     @Override
     public int deletePlatformGiftByIds(Long[] ids) {
+        redisCache.deleteObject(RedisKeyConstants.PLATFORM_GIFT);
         return platformGiftMapper.deletePlatformGiftByIds(ids);
     }
 
@@ -94,6 +100,7 @@ public class PlatformGiftServiceImpl implements IPlatformGiftService {
      */
     @Override
     public int deletePlatformGiftById(Long id) {
+        redisCache.deleteObject(RedisKeyConstants.PLATFORM_GIFT);
         return platformGiftMapper.deletePlatformGiftById(id);
     }
 }

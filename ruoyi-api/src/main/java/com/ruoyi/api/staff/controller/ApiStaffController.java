@@ -1,18 +1,17 @@
 package com.ruoyi.api.staff.controller;
 
+import com.ruoyi.api.staff.model.dto.ApiStaffInfoDto;
 import com.ruoyi.api.staff.model.vo.ApiStaffInfoVo;
 import com.ruoyi.api.staff.model.vo.ApiStaffLevelConfigVo;
+import com.ruoyi.api.staff.model.vo.ApiStaffPhotoVo;
 import com.ruoyi.api.staff.service.ApiStaffService;
 import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -40,5 +39,27 @@ public class ApiStaffController {
         return R.ok(service.selectByUserId(userId));
     }
 
-    //public R<Boolean> apply()
+    @ApiOperation("根据用户标识查询员工相册")
+    @GetMapping("/selectPhotoByUserId")
+    public R<List<ApiStaffPhotoVo>> selectPhotoByUserId(@RequestParam("userId") Long userId){
+        return R.ok(service.selectPhotoByUserId(userId));
+    }
+
+    @ApiOperation("申请成为店员")
+    @PostMapping("/apply")
+    public R<Boolean> apply(@Valid ApiStaffInfoDto dto){
+        return service.apply(dto);
+    }
+
+    @ApiOperation("修改申请数据")
+    @PostMapping("/updateApply")
+    public R<Boolean> updateApply(@Valid ApiStaffInfoDto dto){
+        return service.updateApply(dto);
+    }
+
+    @ApiOperation("获取店员配置接单服务id")
+    @GetMapping("/selectServiceConfigIds")
+    public R<List<Long>> selectServiceConfigIds(@RequestParam("userId") Long userId){
+        return R.ok(service.selectServiceConfigIds(userId));
+    }
 }

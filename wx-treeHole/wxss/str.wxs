@@ -82,11 +82,22 @@ function replaceDate(str){
   return temp;
 }
 
+/**
+ * 字符串分割返回数组
+ *
+ * s 字符串
+ * t 分割的符号
+ */
+function splitToArr(s,t){
+  return s.split(t);
+}
+
 module.exports = {
   checkArrIncludeStr: checkArrIncludeStr,
   substr: substr,
   generateUserNo: generateUserNo,
   random: random,
   encryptionPhone: encryptionPhone,
-  replaceDate: replaceDate
+  replaceDate: replaceDate,
+  splitToArr: splitToArr
 }

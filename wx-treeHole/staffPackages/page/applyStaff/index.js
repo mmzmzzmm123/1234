@@ -1,11 +1,12 @@
 const app = getApp();
-const audioContext = wx.createInnerAudioContext();
+import globalCanstanats from "../../../constans/globalConstant";
 import utils from "../../../utils/util";
 import requestUtil from "../../../apis/request";
 import soundRecordUtil from "../../../utils/soundRecord";
 import storage from "../../../utils/storage";
 import storageConstant from "../../../constans/storageConstant";
 import platformApi from "../../../apis/platform/platformApi";
+import staffApi from "../../../apis/staff/staffApi";
 var wxParse = require('../../../wxParse/wxParse');
 Page({
 
@@ -32,6 +33,8 @@ Page({
       sex: null, // 性别
       weChatNum: null, // 微信号
       phone: null, // 手机号码
+      province: null, // 省
+      city: null, // 市
       region: null, // 地区信息
       selfIntroduction: null, //个人简介
       birthDate: null, // 出生日期
@@ -48,6 +51,7 @@ Page({
     ifAgree: false, // 是否同意协议
     staffAgreementDrawer: false, // 协议容器
     userInfo: app.globalData.userInfo,
+    staffInfo: null, // 店员信息
   },
   /**
    * 生命周期函数--监听页面加载
@@ -70,24 +74,102 @@ Page({
       })
     }).exec();
     // 设置监听audio组件
-    audioContext.onTimeUpdate(() => {
+    app.globalData.audioContext.onTimeUpdate(() => {
       if (this.form.voiceTime == null) {
         this.setData({
-          ["form.voiceTime"]: Math.round(audioContext.duration)
+          ["form.voiceTime"]: Math.round(app.globalData.audioContext.duration)
         })
       }
     })
-    audioContext.onEnded(() => {
+    app.globalData.audioContext.onEnded(() => {
       this.setData({
         audioState: -1
       })
     })
     this.loadStaffTextContent();
+    // 加载员工信息
+    this.loadStaffInfo();
   },
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage() {
+
+  },
+  /**
+   * 加载员工信息
+   */
+  loadStaffInfo: function () {
+    let userInfo = this.data.userInfo;
+    staffApi.selectByUserId({ userId: userInfo.id }, this.loadStaffInfoOnStart, this.loadStaffInfoOnSuccess, this.loadStaffInfoOnFailed);
+  },
+  loadStaffInfoOnStart: function () {
+    wx.showLoading({
+      title: '加载中',
+      mask: true
+    })
+  },
+  loadStaffInfoOnSuccess: function (res) {
+    wx.hideLoading();
+    if (res.data != null) {
+      let staffInfo = res.data;
+      this.setData({
+        staffInfo: staffInfo,
+        ifAgree: true
+      })
+      staffApi.selectPhotoByUserId({ userId: staffInfo.userId }, null, this.selectPhotoByUserIdOnSuccess, null);
+      // 还原数据
+      this.buildForm();
+      // 看看是否审核不通过
+      if (staffInfo.state == 2) {
+        wx.showModal({
+          title: '审核不通过',
+          content: staffInfo.notPassReason,
+          showCancel: false,
+          complete: (res) => {
+          }
+        })
+      }
+    }
+  },
+  loadStaffInfoOnFailed: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: '数据加载失败',
+      icon: "none"
+    })
+  },
+  /**
+   * 查询员工相册成功
+   */
+  selectPhotoByUserIdOnSuccess: function (res) {
+    let imgArr = [];
+    let data = res.data;
+    for (let index in data) {
+      imgArr.push({
+        uid: data[index].id,
+        url: data[index].imgUrl,
+        imgUrl: data[index].imgUrl,
+        status: 'done',
+        res: data[index],
+      });
+    }
+    this.setData({
+      photoArr: imgArr
+    })
+  },
+  /**
+   * 根据员工信息还原form表单
+   */
+  buildForm: function () {
+    let staffInfo = this.data.staffInfo;
+    let form = {...staffInfo};
+    form.avatarUrl = null;
+    form.selfTags = null;
+    // 地区信息
+    this.setData({
+      form: form
+    })
 
   },
   /**
@@ -138,10 +220,12 @@ Page({
     })
   },
   soundRecordStopOnSuccess: function (res) {
+    let form = this.data.form;
+    form.voiceUrl = res.tempFilePath;
+    form.voiceTime = Math.round(res.duration * 0.001);
     this.setData({
       soundRecordState: -1,
-      ['form.voiceUrl']: res.tempFilePath,
-      ['form.voiceTime']: Math.round(res.duration * 0.001)
+      form: form
     })
   },
   /**
@@ -150,14 +234,14 @@ Page({
   audioCli: function () {
     let state = this.data.audioState;
     if (state == 0) {
-      audioContext.pause();
+      app.globalData.audioContext.pause();
       state = -1;
     } else {
       let form = this.data.form;
-      audioContext.autoplay = true;
-      audioContext.src = form.voiceUrl;
-      audioContext.loop = false;
-      audioContext.play();
+      app.globalData.audioContext.autoplay = true;
+      app.globalData. audioContext.src = form.voiceUrl;
+      app.globalData.audioContext.loop = false;
+      app.globalData.audioContext.play();
       state = 0;
     }
     this.setData({
@@ -338,7 +422,9 @@ Page({
    */
   regionChange: function (e) {
     this.setData({
-      ["form.region"]: e.detail.value.join("-")
+      ["form.province"]: e.detail.value[0],
+      ["form.city"]: e.detail.value[1],
+      ["form.region"]: e.detail.value[2]
     })
   },
   /**
@@ -350,9 +436,9 @@ Page({
     let form = this.data.form;
     let photoArr = this.data.photoArr;
     // 先校验用户信息
-    if(userInfo == null){
+    if (userInfo == null) {
       let info = app.globalData.userInfo;
-      if(info == null){
+      if (info == null) {
         wx.showToast({
           title: '请先提出登录后再进行申请哟',
           icon: "none"
@@ -361,13 +447,162 @@ Page({
       }
       userInfo = info;
     }
+    if (!this.checkData()) {
+      return;
+    }
+    wx.showLoading({
+      title: '正在提交',
+      mask: true
+    })
+    // 开始封装数据
+    let params = form;
+    let images = [];
+    for (let index in photoArr) {
+      images.push(photoArr[index].imgUrl);
+    }
+    params.imageArr = images.join(",");
+    params.userId = userInfo.id;
+    params.ossKey = "scound_record";
+    this.uoloadStart(staffApi.apply,params);
+  },
+  /**
+   * 更新申请
+   */
+  update: function () {
+    if (!this.checkData()) {
+      return;
+    }
+    // 开始封装数据
+    let form = this.data.form;
+    let photoArr = this.data.photoArr;
+    let params = form;
+    let images = [];
+    for (let index in photoArr) {
+      images.push(photoArr[index].imgUrl);
+    }
+    params.imageArr = images.join(",");
+    // 判断录音是否改变
+    let info = this.data.staffInfo;
+    if (info.voiceUrl == form.voiceUrl) {
+      staffApi.updateApply(params,this.updateApplyOnStart,this.updateApplyOnSuccess,this.updateApplyOnFailed,this.updateApplyOnWarn)
+    } else {
+      wx.showLoading({
+        title: '正在提交',
+        mask: true
+      })
+      params.ossKey = "scound_record";
+      this.uoloadStart(staffApi.updateApplyUrl,params);
+    }
+  },
+  updateApplyOnStart:function(){
+    wx.showLoading({
+      title: '正在提交',
+      mask: true
+    })
+  },
+  updateApplyOnSuccess:function(res){
+    wx.hideLoading();
+    wx.showModal({
+      title: '提示',
+      content: '提交成功，我们将尽快为您审核哟',
+      showCancel: false,
+      complete: (res) => {
+        if (res.confirm) {
+          wx.navigateBack({ delta: 1 });
+        }
+      }
+    })
+  },
+  updateApplyOnFailed:function(res){
+    wx.hideLoading();
+    wx.showToast({
+      title: '提交失败，请重试',
+      icon: "none"
+    })
+  },
+  updateApplyOnWarn:function(res){
+    wx.hideLoading();
+    wx.showToast({
+      title: res.msg,
+      icon: "none"
+    })
+  },
+  /**
+   * 开始提交上传
+   */
+  uoloadStart: function (url, params) {
+    // 开始请求
+    wx.uploadFile({
+      filePath: params.voiceUrl,
+      name: 'soundRecordFile',
+      url: requestUtil.prefix + url,
+      formData: params,
+      timeout: 10000,
+      success: function (res) {
+        if (res.statusCode == globalCanstanats.httpState.ok) {
+          let data = JSON.parse(res.data);
+          let requestCode = data.code;
+          switch (requestCode) {
+            case globalCanstanats.httpState.ok:
+              wx.showModal({
+                title: '提示',
+                content: '提交成功，我们将尽快为您审核哟',
+                showCancel: false,
+                complete: (res) => {
+                  if (res.confirm) {
+                    wx.navigateBack({ delta: 1 });
+                  }
+                }
+              })
+              break;
+            case globalCanstanats.httpState.warn:
+              wx.showToast({
+                title: data.msg,
+                icon: "none"
+              })
+              break;
+            case globalCanstanats.httpState.operate:
+              wx.showToast({
+                title: '提交失败，请重试',
+                icon: "none"
+              })
+              break;
+            default:
+              wx.showToast({
+                title: '提交失败，请重试',
+                icon: "none"
+              })
+              break;
+          }
+        } else {
+          wx.showToast({
+            title: '提交失败，请重试',
+            icon: "none"
+          })
+        }
+      }, fail: function (e) {
+        wx.showToast({
+          title: '提交失败，请重试',
+          icon: "none"
+        })
+      }, complete: function (e) {
+        wx.hideLoading();
+      }
+    })
+  },
+  /**
+   * 校验数据
+   */
+  checkData: function () {
+    let form = this.data.form;
+    let photoArr = this.data.photoArr;
     // 基本信息必填校验
     if (utils.isEmpty(form.nickName) || utils.isEmpty(form.sex) || utils.isEmpty(form.weChatNum) || utils.isEmpty(form.phone) || utils.isEmpty(form.birthDate) || utils.isEmpty(form.region) || utils.isEmpty(form.selfIntroduction)) {
       wx.showToast({
         title: '请完善您的基本信息后再提交哟',
         icon: "none"
       })
-      return;
+      return false;
     }
     // 录音校验
     if (utils.isEmpty(form.voiceUrl)) {
@@ -375,32 +610,24 @@ Page({
         title: '请完善您的录音哟',
         icon: "none"
       })
-      return;
+      return false;
     }
     // 图片校验
-    if(photoArr == null || photoArr.length <= 0){
+    if (photoArr == null || photoArr.length <= 0) {
       wx.showToast({
         title: '请上传至少一张图片哟',
         icon: "none"
       })
-      return;
+      return false;
     }
     // 协议接受校验
-    if(!this.data.ifAgree){
+    if (!this.data.ifAgree) {
       wx.showToast({
         title: '请先阅读店员协议勾选同意后才能提交申请哟',
         icon: "none"
       })
-      return;
+      return false;
     }
-    // 开始封装数据
-    let params = form;
-    let images = [];
-    for(let index in photoArr){
-      images.push( photoArr[index].imgUrl);
-    }
-    params.imageArr = images.join(",");
-    params.userId = userInfo.id;
-    console.log(params);
-  },
+    return true;
+  }
 })

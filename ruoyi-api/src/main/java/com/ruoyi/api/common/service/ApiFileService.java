@@ -27,8 +27,8 @@ public class ApiFileService {
      *
      * @param dto 参数
      * @return 结果
-     * */
-    public R<ApiOssUploadSingleFileVo> uploadSingleFile(ApiOssUploadSingleFileDto dto) {
+     */
+    public ApiOssUploadSingleFileVo uploadSingleFile(ApiOssUploadSingleFileDto dto) {
         log.info("单文件上传：开始，参数：{}", dto);
         ApiOssUploadSingleFileVo vo = new ApiOssUploadSingleFileVo();
         OssUploadSingleFileDto ossUploadSingleFileDto = new OssUploadSingleFileDto();
@@ -36,6 +36,6 @@ public class ApiFileService {
         OssUploadSingleFileVo ossUploadSingleFileVo = ossService.uploadSingleFile(ossUploadSingleFileDto);
         BeanUtils.copyBeanProp(vo, ossUploadSingleFileVo);
         log.info("单文件上传：完成，返回参数：{}", vo);
-        return R.ok(vo);
+        return vo;
     }
 }

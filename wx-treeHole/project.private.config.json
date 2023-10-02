@@ -10,6 +10,27 @@
     "miniprogram": {
       "list": [
         {
+          "name": "店员资料管理页",
+          "pathName": "staffPackages/page/staffInfo/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的页面",
+          "pathName": "pages/me/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "员工资料卡",
+          "pathName": "staffPackages/page/staffInfoShow/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "申请成为员工页",
           "pathName": "staffPackages/page/applyStaff/index",
           "query": "",

@@ -20,6 +20,7 @@ Page({
     themecolor: "#555d8c", //主题颜色
     refreshState: false, //下拉刷新状态
     userInfo: app.globalData.userInfo,
+    staffInfo: null, // 员工信息
     userLevelConfig: app.globalData.userLevelConfig,
     userLevelData: null,
     userLikeStaffUserIdList: app.globalData.userLikeStaffUserIdList,
@@ -72,8 +73,11 @@ Page({
    * 请求员工信息数据完成
    */
   selectStaffInfoOnSuccess:function(res){
-    if(res.data.id != null){
-      console.log("存在员工信息：", res);
+    if(res.data != null){
+      this.setData({
+        staffInfo: res.data
+      })
+      app.updateStaffInfo(res);
     }
   },
   /**
@@ -249,6 +253,21 @@ Page({
     })
   },
   /**
+   * 前往店员资料管理页
+   */
+  toStaffInfo:function(){
+    if(this.data.userInfo == null){
+      wx.showToast({
+        title: '亲爱的，先登录哟',
+        icon: "none"
+      })
+      return;
+    }
+    wx.navigateTo({
+      url: '../../staffPackages/page/staffInfo/index',
+    })
+  },
+  /**
    * 前往申请员工页面
    */
   toApplyStaff:function(){
@@ -257,6 +276,31 @@ Page({
         title: '亲爱的，先登录哟',
         icon: "none"
       })
+      return;
+    }
+    let staffInfo = this.data.staffInfo;
+    if(staffInfo != null && staffInfo.state != 2){
+      if(staffInfo.state == '-1'){
+        wx.showToast({
+          title: '抱歉，您暂不可申请哟',
+          icon: "none"
+        })
+      }else if(staffInfo.state == 0){
+        wx.showToast({
+          title: '亲爱的，您已经是店员啦',
+          icon: "none"
+        })
+      }else if(staffInfo.state == 1){
+        wx.showToast({
+          title: '亲爱的，您的申请已经提交上去啦，请耐心等候通知哟',
+          icon: "none"
+        })
+      }else{
+        wx.showToast({
+          title: '亲爱的，暂不能申请哟',
+          icon: "none"
+        })
+      }
       return;
     }
     wx.navigateTo({

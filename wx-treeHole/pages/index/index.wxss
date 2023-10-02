@@ -198,24 +198,54 @@ page{
   border-radius: 20px;
   color: #ffffff;
 }
-.newPeopleItem{
-  width: 60px;
+.hotView{
+  width: 180px;
   margin-right: 16px;
-  text-align: center;
-}
-.newPeopleItem image{
-  width: 60px;
-  height: 60px;
-  border-radius: 60px;
-}
-.newPeopleItem .newPeopleName{
-  font-size: 14px;
-  margin-top: 4px;
-}
-.newPeopleItem .newPeopleBut{
-  padding: 2px 0;
-  font-size: 12px;
   border-radius: 10px;
-  margin-top: 6px;
+  overflow: hidden;
+  display: inline-block;
+  padding: 10px 0;
+}
+.hotOnLineView{
+  background-color: #ffffff;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 10px;
+}
+.hotOnLineView image{
+  width: 10px;
+}
+.hotTx{
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+}
+.hotAddress{
+  font-size: 12px;
+  margin-top: 4px;
+  color: #80848f;
+}
+.hotStaffDetails{
+  margin-top: 10px;
+  font-size: 14px;
+  white-space:normal;
+  height: 38px;
+}
+.hotVoiceView{
+  background-color: black;
+  opacity: 0.5;
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+.voicePlay{
+  width: 12px;
+  margin-right: 4px;
+}
+.voiceAudioImg{
+  width: 30px;
+}
+.voiceSeconds{
   color: #ffffff;
+  font-size: 12px;
+  margin-left: 4px;
 }

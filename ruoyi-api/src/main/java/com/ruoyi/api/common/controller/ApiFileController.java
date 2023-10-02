@@ -30,6 +30,6 @@ public class ApiFileController {
     @ApiOperation("单文件上传")
     @PostMapping("/uploadSingleFile")
     public R<ApiOssUploadSingleFileVo> uploadSingleFile(@Valid ApiOssUploadSingleFileDto dto) {
-        return service.uploadSingleFile(dto);
+        return R.ok(service.uploadSingleFile(dto));
     }
 }

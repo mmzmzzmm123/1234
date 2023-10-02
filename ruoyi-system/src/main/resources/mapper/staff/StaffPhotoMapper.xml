@@ -1,41 +1,52 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.staff.mapper.StaffPhotoMapper">
-    
+
     <resultMap type="StaffPhoto" id="StaffPhotoResult">
-        <result property="id"    column="id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="imgUrl"    column="img_url"    />
-        <result property="ifUnlock"    column="if_unlock"    />
-        <result property="unlockAmount"    column="unlock_amount"    />
-        <result property="state"    column="state"    />
-        <result property="noPassReason"    column="no_pass_reason"    />
-        <result property="sortNum"    column="sort_num"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="imgUrl" column="img_url"/>
+        <result property="ifUnlock" column="if_unlock"/>
+        <result property="unlockAmount" column="unlock_amount"/>
+        <result property="state" column="state"/>
+        <result property="noPassReason" column="no_pass_reason"/>
+        <result property="sortNum" column="sort_num"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectStaffPhotoVo">
-        select id, user_id, img_url, if_unlock, unlock_amount, state, no_pass_reason, sort_num, create_time, update_by, update_time from bus_staff_photo
+        select id,
+               user_id,
+               img_url,
+               if_unlock,
+               unlock_amount,
+               state,
+               no_pass_reason,
+               sort_num,
+               create_time,
+               update_by,
+               update_time
+        from bus_staff_photo
     </sql>
 
     <select id="selectStaffPhotoList" parameterType="StaffPhoto" resultMap="StaffPhotoResult">
         <include refid="selectStaffPhotoVo"/>
-        <where>  
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="ifUnlock != null  and ifUnlock != ''"> and if_unlock = #{ifUnlock}</if>
-            <if test="state != null  and state != ''"> and state = #{state}</if>
+        <where>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="ifUnlock != null  and ifUnlock != ''">and if_unlock = #{ifUnlock}</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
         </where>
     </select>
-    
+
     <select id="selectStaffPhotoById" parameterType="Long" resultMap="StaffPhotoResult">
         <include refid="selectStaffPhotoVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertStaffPhoto" parameterType="StaffPhoto" useGeneratedKeys="true" keyProperty="id">
         insert into bus_staff_photo
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -49,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
             <if test="imgUrl != null">#{imgUrl},</if>
@@ -61,7 +72,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+        </trim>
+    </insert>
+
+    <insert id="insertOfList" parameterType="java.util.List">
+        insert into bus_staff_photo (user_id, img_url, create_time, update_time) values
+        <foreach collection="list" item="obj" open="(" close=")" separator=",">
+            #{obj.userId}, #{obj.imgUrl}, #{obj.createTime}, #{obj.updateTime}
+        </foreach>
     </insert>
 
     <update id="updateStaffPhoto" parameterType="StaffPhoto">
@@ -81,12 +99,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
+    <delete id="deleteByUserId" parameterType="Long">
+        delete from bus_staff_photo
+        where user_id = #{userId}
+    </delete>
+
     <delete id="deleteStaffPhotoById" parameterType="Long">
-        delete from bus_staff_photo where id = #{id}
+        delete
+        from bus_staff_photo
+        where id = #{id}
     </delete>
 
     <delete id="deleteStaffPhotoByIds" parameterType="String">
-        delete from bus_staff_photo where id in 
+        delete from bus_staff_photo where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

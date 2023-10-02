@@ -3,6 +3,7 @@
   "usingComponents": {
     "i-load-more": "../../../components/iview/dist/load-more/index",
     "wux-icon": "../../../components/wux/dist/icon/index",
+    "wux-switch": "../../../components/wux/dist/switch/index",
     "wux-dialog": "../../../components/wux/dist/dialog/index"
   }
 }

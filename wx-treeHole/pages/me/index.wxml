@@ -102,7 +102,7 @@
           <view class="view_box_content_column usedCarNumItem">
             <span>{{formatUtil.toFixed(userInfo!=null?(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance):'0.00')}}</span>
             <view class="view_box_row_content">
-              <text>我的树币</text>
+              <text>我的枫叶</text>
               <view class="goRechargeBut">去充值</view>
             </view>
           </view>
@@ -112,6 +112,51 @@
           </view>
         </view>
       </view>
+
+      <!-- 店员操作栏 -->
+      <block wx:if="{{staffInfo != null && staffInfo.state == 0}}">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common common_fun_box_view">
+          <column-view title="店员工作栏" moreTitle="" outerMargin="0px"></column-view>
+          <view class="cut_off_rule_small" style="margin: 10px 0;"></view>
+          <view class="view_box_common">
+            <wux-row>
+              <wux-col span="3">
+                <view class="view_box_content_column funItemView" bind:tap="toStaffInfo">
+                  <view class="view_box_row_content boy_bg_color">
+                    <image src="../../static/ico/information_white_32.png"></image>
+                  </view>
+                  <text>我的资料</text>
+                </view>
+              </wux-col>
+              <wux-col span="3">
+                <view class="view_box_content_column funItemView">
+                  <view class="view_box_row_content background_blue">
+                    <image src="../../static/ico/trends_white_32.png"></image>
+                  </view>
+                  <text>我的动态</text>
+                </view>
+              </wux-col>
+              <wux-col span="3">
+                <view class="view_box_content_column funItemView">
+                  <view class="view_box_row_content background_red">
+                    <image src="../../static/ico/order_white_32.png"></image>
+                  </view>
+                  <text>我的订单</text>
+                </view>
+              </wux-col>
+              <wux-col span="3">
+                <view class="view_box_content_column funItemView">
+                  <view class="view_box_row_content background_orange">
+                    <image src="../../static/ico/money_white_32.png"></image>
+                  </view>
+                  <text>我的提成</text>
+                </view>
+              </wux-col>
+            </wux-row>
+          </view>
+        </view>
+      </block>
 
       <!-- 可操作区域 -->
       <view class="view_box_common common_fun_box_view" style="padding: 15px 0;margin-top: 10px;">

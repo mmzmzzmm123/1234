@@ -46,7 +46,7 @@
   <view class="view_box_row_content_symmetry scope_view">
     <span>等级展示</span>
     <view class="view_box_row_content">
-      <switch color="#8978E4" checked="{{userInfo.hideLevel == '0'}}" bindchange="hideLevelChange"></switch>
+      <wux-switch name="light" slot="footer" color="royal" value="{{userInfo.hideLevel == '0'}}" bind:change="hideLevelChange" />
     </view>
   </view>
 

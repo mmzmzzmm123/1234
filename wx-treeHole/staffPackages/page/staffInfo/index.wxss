@@ -1,0 +1,113 @@
+page{
+  background-color: #f8f8f9;
+}
+.scope_view{
+  background-color: #ffffff;
+  padding: 10px 0;
+  border-radius: 10px;
+}
+.tempColumn{
+  font-size: 16px;
+  font-weight: bold;
+}
+.tempColumn image{
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+}
+.serviceItem{
+  font-size: 14px;
+  padding-top: 10px;
+}
+.serviceItem span{
+  margin-right: 4px;
+}
+.inputItem{
+  text-align: right;
+  font-size: 14px;
+}
+.imitateWuxCell{
+  padding: 20rpx 30rpx;
+  font-size: 14px;
+}
+.labelAddBut{
+  color: #ffffff;
+  padding: 2px 10px;
+  border-radius: 10px;
+  font-size: 12px;
+}
+.labelAddBut view{
+  margin-left: 4px;
+}
+.labelItem{
+  margin-top: 10px;
+  margin-right: 10px;
+  padding: 2px 10px;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+  padding-right: 16px;
+}
+.labelItem image{
+  width: 16px;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.userTx{
+  width: 56px;
+  height: 56px;
+  border-radius: 56px;
+  overflow: hidden;
+  box-shadow: 0 0 5px 2px #8978E4;
+}
+.switchSoundRecordView{
+  font-size: 14px;
+}
+.switchSoundRecordView image{
+  width: 14px;
+  margin-right: 4px;
+}
+.switchSoundRecordView span{
+  line-height: 16px;
+}
+.soundRecordBut{
+  font-size: 14px;
+  margin-left: 10px;
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+.soundRecordBut image{
+  width: 16px;
+  margin-right: 4px;
+}
+.audioBut{
+  height: 20px;
+  overflow: hidden;
+  padding: 4px 10px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
+}
+.audioPlay{
+  width: 16px;
+  margin-right: 10px;
+}
+.audioFrequency{
+  width: 100px;
+  margin-right: 10px;
+}
+.audioFrequencyGif{
+  width: 100px;
+  margin-right: 10px;
+}
+.submitView{
+  width: 100%;
+  padding: 20px 0;
+  background-color: #ffffff;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+}

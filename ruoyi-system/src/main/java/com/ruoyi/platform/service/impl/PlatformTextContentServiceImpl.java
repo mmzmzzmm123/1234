@@ -2,6 +2,9 @@ package com.ruoyi.platform.service.impl;
 
 import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.constant.RedisKeyConstants;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -21,6 +24,7 @@ import com.ruoyi.platform.service.IPlatformTextContentService;
 public class PlatformTextContentServiceImpl implements IPlatformTextContentService {
 
     private final PlatformTextContentMapper platformTextContentMapper;
+    private final RedisCache redisCache;
 
     /**
      * 查询文本内容管理
@@ -52,6 +56,7 @@ public class PlatformTextContentServiceImpl implements IPlatformTextContentServi
      */
     @Override
     public int insertPlatformTextContent(PlatformTextContent platformTextContent) {
+        redisCache.deleteObject(RedisKeyConstants.PLATFORM_TEXT_CONTENT+platformTextContent.getType());
         String loginUser = SecurityUtils.getUsername();
         Date now = DateUtils.getNowDate();
         platformTextContent.setCreateTime(now)
@@ -69,6 +74,7 @@ public class PlatformTextContentServiceImpl implements IPlatformTextContentServi
      */
     @Override
     public int updatePlatformTextContent(PlatformTextContent platformTextContent) {
+        redisCache.deleteObject(RedisKeyConstants.PLATFORM_TEXT_CONTENT+platformTextContent.getType());
         platformTextContent.setUpdateBy(SecurityUtils.getUsername());
         platformTextContent.setUpdateTime(DateUtils.getNowDate());
         return platformTextContentMapper.updatePlatformTextContent(platformTextContent);

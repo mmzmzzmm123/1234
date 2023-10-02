@@ -1,0 +1,160 @@
+<wxs src="../../../wxss/dicts.wxs" module="dicts"></wxs>
+<wxs src="../../../wxss/str.wxs" module="strUtil"></wxs>
+<wux-dialog id="wux-dialog" />
+<wux-dialog id="wux-dialog--alert" />
+<view class="bView">
+  <scroll-view scroll-y="true" style="width:{{pWidth}}px;height: {{pHeight}}px;">
+    <!-- 在线状态 -->
+    <view class="seizeSeat_mini"></view>
+    <view class="view_box_common scope_view">
+      <view class="view_box_common view_box_row_content_symmetry">
+        <view class="view_box_row_content tempColumn">
+          <image src="../../../static/ico/theme_dot.png"></image>
+          <view>在线状态</view>
+        </view>
+        <wux-switch name="light" slot="footer" color="royal" value="{{staffInfo.ifOnline == 'Y'}}" bindchange="onlineChange" />
+      </view>
+    </view>
+    <!-- 服务开关 -->
+    <view class="seizeSeat_mini"></view>
+    <view class="view_box_common scope_view">
+      <column-view title="服务开关" outerMargin="0" icoType="ios-arrow-down" moreTitle=""></column-view>
+      <view class="view_box_common">
+        <wux-row>
+          <block wx:for="{{serviceList}}" wx:key="id">
+            <wux-col span="3">
+              <view class="view_box_row_content serviceItem">
+                <span>{{item.shortName}}</span>
+                <wux-switch name="light" slot="footer" color="royal" />
+              </view>
+            </wux-col>
+          </block>
+        </wux-row>
+      </view>
+    </view>
+    <!-- 基本资料 -->
+    <view class="seizeSeat_mini"></view>
+    <view class="view_box_common scope_view">
+      <column-view title="基本信息" outerMargin="0" icoType="ios-arrow-down" moreTitle=""></column-view>
+      <wux-cell hover-class="none">
+        <view class="view_box_row_content_symmetry">
+          <view style="font-size: 14px;">头像</view>
+          <view class="userTx" bind:tap="chooseImage">
+            <image class="view_all_adapt" src="{{staffInfo.avatarUrl!=null?staffInfo.avatarUrl:'../../../static/images/default_tx.png'}}"></image>
+          </view>
+        </view>
+      </wux-cell>
+      <wux-cell hover-class="none">
+        <wux-input controlled label="昵称" type="text" placeholder="请输入您的店员昵称" class="inputItem" inputColor="#767b88" maxlength="8" value="{{staffInfo.nickName}}" bind:change="nickNameInput" />
+      </wux-cell>
+      <picker header-text="性别" mode="selector" range="{{sexRange}}" range-key="label" bindchange="sexChange" value="{{staffInfo.sex}}" disabled="{{true}}">
+        <wux-cell title="性别" style="font-size: 14px;" is-link extra="{{ staffInfo.sex == null ? '选择您的性别' : dicts.sex(staffInfo.sex) }}"></wux-cell>
+      </picker>
+      <wux-cell hover-class="none">
+        <wux-input controlled label="微信号" type="text" placeholder="请输入您的微信号" class="inputItem" inputColor="#767b88" value="{{staffInfo.weChatNum}}" bind:change="weChatNumInput" />
+      </wux-cell>
+      <wux-cell hover-class="none">
+        <wux-input controlled label="手机号码" type="text" placeholder="请输入您的手机号码" class="inputItem" inputColor="#767b88" maxlength="11" value="{{staffInfo.phone}}" bind:change="phoneInput" />
+      </wux-cell>
+      <picker header-text="出生日期" mode="date" end="2013-12-01" value="{{staffInfo.birthDate!=null?staffInfo.birthDate:'2013-12-01'}}" bindchange="birthDateChange">
+        <wux-cell title="出生日期" style="font-size: 14px;" is-link extra="{{staffInfo.birthDate != null ? staffInfo.birthDate : '选择您的出生日期'}}"></wux-cell>
+      </picker>
+      <picker header-text="所在地区" mode="region" bindchange="regionChange">
+        <wux-cell title="所在地区" style="font-size: 14px;" is-link extra="{{staffInfo.province != null ? (staffInfo.province+'-'+staffInfo.city+'-'+staffInfo.region) : '选择您的所在地区'}}"></wux-cell>
+      </picker>
+      <wux-cell hover-class="none">
+        <wux-input controlled label="简短自述" type="text" placeholder="请输入您的简短自述" class="inputItem" inputColor="#767b88" maxlength="20" value="{{staffInfo.selfIntroduction}}" bind:change="selfIntroductionInput" />
+      </wux-cell>
+      <view class="imitateWuxCell">
+        <view class="view_box_row_content_symmetry">
+          <view>个人标签</view>
+          <view class="view_box_row_content boy_bg_color labelAddBut" bind:tap="addLabelCli">
+            <wux-icon type="ios-add" size="22" color="#ffffff"></wux-icon>
+            <view>添加</view>
+          </view>
+        </view>
+        <view class="view_box_row_wrap">
+          <block wx:if="{{staffInfo.selfTags != null && staffInfo.selfTags != ''}}">
+            <block wx:for="{{strUtil.splitToArr(staffInfo.selfTags,',')}}" wx:key="index">
+              <view class="labelItem boy_edging_color boy_font_color" bind:tap="deleteLabel" data-index="{{index}}">
+                <view>{{item}}</view>
+                <image src="../../../static/ico/close_32.png" mode="widthFix"></image>
+              </view>
+            </block>
+          </block>
+          <view wx:else class="view_box_common view_box_row_content">
+            暂未设置标签
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 录音 -->
+    <view class="seizeSeat_mini"></view>
+    <view class="view_box_common scope_view">
+      <view class="view_box_common view_box_row_content_symmetry">
+        <view class="view_box_row_content tempColumn">
+          <image src="../../../static/ico/theme_dot.png"></image>
+          <view>录音文件</view>
+        </view>
+        <view class="view_box_row_content">
+          <view class="view_box_row_content switchSoundRecordView" bind:tap="switchSoundRecordType">
+            <image src="../../../static/ico/switch_grey_32.png" mode="widthFix"></image>
+            <span>切换模式</span>
+          </view>
+          <view wx:if="{{uploadSoundRecordType == 0}}" class="soundRecordBut boy_bg_color" bind:tap="soundRecordCli">
+            <block wx:if="{{soundRecordState == 0}}">
+              <view class="view_box_row_content">
+                <image src="../../../static/gif/sound_record.gif" mode="widthFix"></image>
+                <view>点击结束</view>
+              </view>
+            </block>
+            <block wx:else>
+              <view class="view_box_row_content">
+                <image src="../../../static/ico/sound_record_white_32.png" mode="widthFix"></image>
+                <view>点击录音</view>
+              </view>
+            </block>
+          </view>
+          <view wx:if="{{uploadSoundRecordType == 1}}" class="soundRecordBut boy_bg_color" bind:tap="soundRecordUploadCli">
+            <view class="view_box_row_content">
+              <image src="../../../static/ico/upload_white_32.png" mode="widthFix"></image>
+              <view>微信文件</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{staffInfo.voiceUrl != null}}" class="view_box_common" bind:tap="audioCli">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_row">
+          <view class="view_box_row_content audioBut boy_bg_color">
+            <image class="audioPlay" src="../../../static/ico/{{audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
+            <image wx:if="{{audioState == '-1'}}" class="audioFrequency" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
+            <image wx:if="{{audioState == '0'}}" class="audioFrequencyGif" src="../../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+            <span wx:if="{{staffInfo.voiceTime != null}}">{{staffInfo.voiceTime}}s</span>
+          </view>
+          <text style="font-size: 12px;margin-left: 10px;color: #ed3f14;">注：录制可直接覆盖</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- 我的图片 -->
+    <view class="seizeSeat_mini"></view>
+    <view class="view_box_common scope_view">
+      <column-view title="上传图片" outerMargin="0" icoType="ios-arrow-down" moreTitle="注意：红色框表示上传失败"></column-view>
+      <view class="view_box_common">
+        <view class="seizeSeat_mini"></view>
+        <view class="uploadFileView">
+          <wux-upload controlled fileList="{{photoArr}}" listType="picture-card" formData="{{ fileUploadForm }}" max="6" count="6" url="{{fileUploadUrl}}" bind:success="uploadFileSuccess" bind:fail="uploadFileFail" bind:remove="uploadFileRemove">
+            <image style="width:32px" mode="widthFix" src="../../../static/ico/theme_upload.png"></image>
+          </wux-upload>
+        </view>
+      </view>
+    </view>
+
+    <view style="width: 1px;height: 88px;"></view>
+  </scroll-view>
+  <view class="submitView">
+    <view class="themeBut">保存数据</view>
+  </view>
+</view>

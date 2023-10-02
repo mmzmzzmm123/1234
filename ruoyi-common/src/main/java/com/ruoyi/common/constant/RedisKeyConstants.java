@@ -18,4 +18,9 @@ public class RedisKeyConstants {
      * 平台文本内容
      * */
     public static final String PLATFORM_TEXT_CONTENT = "platform_text_content:";
+    /**
+     * 平台礼物
+     * */
+    public static final String PLATFORM_GIFT = "platform_gift";
+
 }

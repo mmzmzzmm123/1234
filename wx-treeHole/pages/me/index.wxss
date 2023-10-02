@@ -108,3 +108,20 @@ page{
   font-size: 12px;
   margin-top: 4px;
 }
+.funItemView{
+  margin: 10px 0;
+}
+.funItemView view{
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+}
+.funItemView image{
+  width: 20px;
+  height: 20px;
+}
+.funItemView text{
+  margin-top: 5px;
+  font-size: 12px;
+  color: #80848f;
+}

@@ -28,9 +28,18 @@ Page({
   onLoad() {
     let that = this;
     wx.createSelectorQuery().selectAll('.bView').boundingClientRect(function (rect) {
+      let divHeight = rect[0].height;
+      wx.getSystemInfo({
+        success: function (res) {
+          let sysHeight = res.windowHeight;
+          if (divHeight != sysHeight) {
+            divHeight = sysHeight;
+          }
+        }
+      });
       that.setData({
         pWidth: rect[0].width,
-        pHeight: rect[0].height
+        pHeight: divHeight
       })
     }).exec();
     this.setData({
@@ -57,6 +66,21 @@ Page({
       bannerCurrent: e.detail.current
     })
   },
+  /**
+   * 滚动事件
+   */
+  scrollView: function (e) {
+    if (e.detail.scrollTop > this.data.showStateBarHeight && this.data.barThemeColor == null) {
+      this.setData({
+        barThemeColor: "linear-gradient(to right,#a79de0,#b7b0dd)"
+      })
+    }
+    if (this.data.showStateBarHeight > e.detail.scrollTop && this.data.barThemeColor != null) {
+      this.setData({
+        barThemeColor: null
+      })
+    }
+  },
   update(content) {
     let that = this;
     let animation = wx.createAnimation();
@@ -80,5 +104,11 @@ Page({
     wx.switchTab({
       url: '../select/index',
     })
-  }
+  },
+  /**
+   * 热门容器滑动事件
+   */
+  hotScrollViewMove: function (e) {
+    console.log(e);
+  },
 })

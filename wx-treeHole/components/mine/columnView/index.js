@@ -27,6 +27,10 @@ Component({
     icoType: {
       type: String,
       value: "ios-arrow-forward"
+    },
+    ifShowIco: {
+      type: String,
+      value: "0"
     }
   },
 
@@ -39,7 +43,8 @@ Component({
     moreTitle: "更多",
     moreTitleColor: "#80848f",
     outerMargin: "20px",
-    icoType: "ios-arrow-forward"
+    icoType: "ios-arrow-forward",
+    ifShowIco: "0"
   },
 
   /**

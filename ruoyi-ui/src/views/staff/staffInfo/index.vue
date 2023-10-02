@@ -166,6 +166,7 @@
       </el-table-column>
       <el-table-column label="排序" align="center" prop="sortNum" :show-overflow-tooltip="true"/>
       <el-table-column label="推荐码" align="center" prop="referralCode" :show-overflow-tooltip="true"/>
+      <el-table-column label="失败原因" align="center" prop="notPassReason" :show-overflow-tooltip="true"/>
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -203,9 +204,6 @@
     <!-- 添加或修改员工信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="组长标识" prop="referralUserId">
-          <el-input v-model="form.referralUserId" placeholder="请输入组长标识" />
-        </el-form-item>
         <el-form-item label="头像" prop="avatarUrl">
           <el-input v-model="form.avatarUrl" placeholder="请输入头像" />
         </el-form-item>
@@ -274,12 +272,6 @@
         <el-form-item label="个人标签" prop="selfTags">
           <el-input v-model="form.selfTags" placeholder="请输入个人标签" />
         </el-form-item>
-        <el-form-item label="录音文件" prop="voiceUrl">
-          <el-input v-model="form.voiceUrl" placeholder="请输入录音文件" />
-        </el-form-item>
-        <el-form-item label="录音时长" prop="voiceTime">
-          <el-input v-model="form.voiceTime" placeholder="请输入录音时长" />
-        </el-form-item>
         <el-form-item label="是否置顶" prop="ifTop">
           <el-select v-model="form.ifTop" placeholder="请选择是否置顶">
             <el-option
@@ -293,8 +285,8 @@
         <el-form-item label="排序" prop="sortNum">
           <el-input v-model="form.sortNum" placeholder="请输入排序" />
         </el-form-item>
-        <el-form-item label="推荐码" prop="referralCode">
-          <el-input v-model="form.referralCode" placeholder="请输入推荐码" />
+        <el-form-item label="失败原因" prop="notPassReason">
+          <el-input v-model="form.notPassReason" placeholder="请输入审核失败原因" />
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />
@@ -347,6 +339,7 @@ export default {
         phone: null,
         ifTop: null,
         referralCode: null,
+        notPassReason: null,
       },
       // 表单参数
       form: {},
@@ -397,6 +390,7 @@ export default {
         ifTop: null,
         sortNum: null,
         referralCode: null,
+        notPassReason: null,
         remark: null
       };
       this.resetForm("form");

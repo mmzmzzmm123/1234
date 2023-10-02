@@ -1,6 +1,8 @@
 package com.ruoyi.staff.domain;
 
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
     import com.ruoyi.common.core.domain.BaseEntity;
@@ -25,6 +27,8 @@ public class StaffInfo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /** 用户标识 */
+    @Excel(name = "员工标识-用户标识")
+    @ApiModelProperty("员工标识-用户标识")
     private Long userId;
 
     /** 组长标识 */

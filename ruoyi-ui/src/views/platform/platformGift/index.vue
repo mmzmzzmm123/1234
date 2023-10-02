@@ -84,8 +84,7 @@
           <dict-tag :options="dict.type.sys_show_hide" :value="scope.row.state"/>
         </template>
       </el-table-column>
-      <el-table-column label="视频地址" align="center" prop="videoUrl" :show-overflow-tooltip="true" />
-      <el-table-column label="视频秒数" align="center" prop="videoSeconds" />
+      <el-table-column label="文件地址" align="center" prop="videoUrl" :show-overflow-tooltip="true" />
       <el-table-column label="价格" align="center" prop="price" />
       <el-table-column label="排序" align="center" prop="sortNum" />
       <el-table-column label="更新人" align="center" prop="updateBy" />
@@ -142,12 +141,9 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="视频地址" prop="videoUrl">
-          <fileUpload v-model="form.videoUrl" :limit="1" :fileSize="10" :fileType="['mp4']"
+        <el-form-item label="文件地址" prop="videoUrl">
+          <fileUpload v-model="form.videoUrl" :limit="1" :fileSize="10" :fileType="['mp4','svga','svg']"
                        :params-data="{ossKey: 'gift'}" />
-        </el-form-item>
-        <el-form-item label="视频秒数" prop="videoSeconds">
-          <el-input v-model="form.videoSeconds" placeholder="请输入视频秒数" />
         </el-form-item>
         <el-form-item label="价格" prop="price">
           <el-input v-model="form.price" placeholder="请输入价格" />

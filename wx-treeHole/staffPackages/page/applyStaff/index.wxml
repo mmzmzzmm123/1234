@@ -21,7 +21,7 @@
         <wux-cell title="出生日期" style="font-size: 14px;" is-link extra="{{form.birthDate != null ? form.birthDate : '选择您的出生日期'}}"></wux-cell>
       </picker>
       <picker header-text="所在地区" mode="region" bindchange="regionChange">
-        <wux-cell title="所在地区" style="font-size: 14px;" is-link extra="{{form.region != null ? form.region : '选择您的所在地区'}}"></wux-cell>
+        <wux-cell title="所在地区" style="font-size: 14px;" is-link extra="{{form.province != null ? (form.province+'-'+form.city+'-'+form.region) : '选择您的所在地区'}}"></wux-cell>
       </picker>
       <wux-cell hover-class="none">
         <wux-input controlled label="简短自述" type="text" placeholder="请输入您的简短自述" class="inputItem" inputColor="#767b88" maxlength="20" value="{{form.selfIntroduction}}" bind:change="selfIntroductionInput" />
@@ -113,7 +113,7 @@
   </scroll-view>
 
   <view class="submitView">
-    <view class="themeBut" bind:tap="submit">提交申请</view>
+    <view class="themeBut" bind:tap="{{staffInfo != null ? 'update' : 'submit'}}">{{staffInfo != null ? '再次申请' : '提交申请'}}</view>
   </view>
 </view>
 

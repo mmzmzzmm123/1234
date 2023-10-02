@@ -79,7 +79,6 @@ Page({
     }).exec();
   },
   onShow: function () {
-    let that = this;
     // 员工等级数据
     let staffLevelConfig = this.data.staffLevelConfig;
     if (staffLevelConfig == null || staffLevelConfig.length <= 0) {
@@ -146,12 +145,6 @@ Page({
       currentIndex: index,
       currentKey: this.data.tabs[index].key
     })
-  },
-  /**
-   * 热门容器滑动事件
-   */
-  hotScrollViewMove: function (e) {
-    console.log(e);
   },
   /**
    * 随机单 性别选择
@@ -285,5 +278,13 @@ Page({
     this.setData({
       ["randomForm.payWay"]: e.currentTarget.dataset.pay
     })
-  }
+  },
+  /**
+   * 前往员工资料展示页
+   */
+  toStaffInfoShow:function(){
+    wx.navigateTo({
+      url: '../../staffPackages/page/staffInfoShow/index',
+    })
+  },
 })
