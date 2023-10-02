@@ -2,31 +2,31 @@
 	<view>
 		<store-bar></store-bar>
 		<view class="card-list">
-			<view class="card" v-for="room in roomList" :key="room.id">
+			<view class="card" v-for="item in roomList" :key="item.room.id">
 				<view class="room-header">
-					<text class="room-title">{{room.room.name}}{{room.room.id}}</text>
-					<view class="room-status" :class="statusClass[room.room.status]">{{statusDesc[room.room.status]}}</view>
+					<text class="room-title">{{item.room.name}}</text>
+					<view class="room-status" :class="statusClass[item.room.status]">{{statusDesc[item.room.status]}}</view>
 					<!-- <u-icon name="arrow-right-double"></u-icon> -->
 				</view>
 				<view class="room-content">
 					<view class="room-desc">
 						<view class="room-total">
-							<view>累计时长：{{room.sumHour}}小时</view>
-							<view>累计消费：{{room.sumAmount}}元</view>
+							<view>累计时长：{{item.sumHour}}小时</view>
+							<view>累计消费：{{item.sumAmount}}元</view>
 						</view>
 						<view class="room-order">
 							<view>
-								{{room.status == 3 ? '订单结束时间：' : '上一订单结束：'}}
-								<text>{{room.orderEndTime ? room.orderEndTime : '暂无人预定'}}</text>
+								{{item.status == 3 ? '订单结束时间：' : '上一订单结束：'}}
+								<text>{{item.orderEndTime ? item.orderEndTime : '暂无人预定'}}</text>
 							</view>
-							<view>下一订单开始：{{room.nextOrderStart ? room.nextOrderStart : '暂无人预定'}}</view>
+							<view>下一订单开始：{{item.nextOrderStart ? item.nextOrderStart : '暂无人预定'}}</view>
 						</view>
 					</view>
 					<view class="room-btn-list">
-						<u-button plain type="primary" @click="onOpenRoom(room.room.id, 'door', '开门')">开门</u-button>
-						<u-button plain type="primary" @click="onCloseRoom(room.room.id, 'door', '关门')">关门</u-button>
-						<u-button plain type="primary" @click="onOpenRoom(room.room.id, 'light,aircondition', '开启电源')">开启电源</u-button>
-						<u-button plain type="primary" @click="onCloseRoom(room.room.id, 'light,aircondition', '关闭电源')">关闭电源</u-button>
+						<u-button plain type="primary" @click="onOpenRoom(item.room.id, 'door', '开门')">开门</u-button>
+						<u-button plain type="primary" @click="onCloseRoom(item.room.id, 'door', '关门')">关门</u-button>
+						<u-button plain type="primary" @click="onOpenRoom(item.room.id, 'light,aircondition', '开启电源')">开启电源</u-button>
+						<u-button plain type="primary" @click="onCloseRoom(item.room.id, 'light,aircondition', '关闭电源')">关闭电源</u-button>
 					</view>
 				</view>
 			</view>

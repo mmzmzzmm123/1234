@@ -1,5 +1,9 @@
 <template>
 	<view>
+		<view class="top">
+			<view class="store-bar"></view>
+			<view class="personal-info"></view>
+		</view>
 		<view>
 
 			<view class="card-list">
@@ -58,12 +62,12 @@
 			}
 		},
 		computed: {
-			currentStoreId() {
+			currentStore(){
 				return this.$store.state.currentStore.id
 			}
 		},
 		watch: {
-			currentStoreId: function() {
+			currentStore: function(){
 				this.refresh()
 			}
 		},
@@ -74,9 +78,9 @@
 			this.refresh()
 		},
 		methods: {
-			refresh() {
-				if (this.currentStoreId) {
-
+			refresh(){
+				if(this.currentStore && this.currentStore.id){
+					
 				}
 			}
 		}
@@ -86,5 +90,10 @@
 <style lang="scss">
 	page {
 		background-color: $u-bg-color;
+	}
+	.top{
+		height: 300rpx;
+		color: $u-bright;
+		background: linear-gradient($u-primary, $u-bg-color);
 	}
 </style>

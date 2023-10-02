@@ -14,6 +14,9 @@
 				<u-form-item label="门店图片" prop="logo">
 					<uo-image-input v-model="model.logo"></uo-image-input>
 				</u-form-item>
+				<u-form-item label="门店状态" prop="status">
+					<uo-select :options="statusOptions" v-model="model.status"></uo-select>
+				</u-form-item>
 			</u-form>
 		</view>
 		
@@ -30,7 +33,8 @@
 			return {
 				model: {
 					name: '店铺名称',
-					logo: ''
+					logo: '',
+					status: 1
 				},
 				rules: {
 					name: {
@@ -38,7 +42,8 @@
 						message: '请输入门店名称',
 						trigger: ['blur', 'change']
 					}
-				}
+				},
+				statusOptions: [{name: '状态1', value: 1},{name: '状态2', value: 2},{name: '状态3', value: 3}]
 			}
 		},
 		onLoad(option) {
