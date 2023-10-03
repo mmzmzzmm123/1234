@@ -35,10 +35,14 @@
 					if (!n) {
 						this.isError = true
 					}else{
-						if(n.indexOf('http') >= 0 || n.indexOf('data:') >= 0){
-							this.innerSrc = n
+						let src = n
+						if(n.indexOf(',') >= 0){
+							src = n.split(',')[0]
+						}
+						if(src.indexOf('http') >= 0 || src.indexOf('data:') >= 0){
+							this.innerSrc = src
 						}else{
-							this.innerSrc = BaseApiUrl + n
+							this.innerSrc = BaseApiUrl + src
 						}
 					}
 				}

@@ -26,6 +26,11 @@ const api = {
 	login(param) {
 		return client.getToken(param)
 	},
+	logout(){
+		return post('logout').then(res=>{
+			client.token = ''
+		})
+	},
 	getUserInfo() {
 		return get('getInfo')
 	},
@@ -33,22 +38,10 @@ const api = {
 		return get('captchaImage')
 	},
 	getStoreList() {
-		return get('office/store/list').then(res => {
-			res.rows.forEach(x => {
-				if (x.logo) {
-					x.logoList = x.logo.split(',')
-					x.logo = x.logoList[0]
-				} else {
-					x.logoList = []
-				}
-			})
-			return res
-		})
+		return get('office/store/list')
 	},
 	updateStoreInfo(params) {
-		return request('office/store', params, true, 'put').then(res => {
-			return res;
-		})
+		return request('office/store', params, true, 'put')
 	},
 	uploadImage(imagePath) {
 		uni.showLoading({
@@ -113,65 +106,69 @@ const api = {
 			})
 	},
 	getStroeRoomList(params) {
-		return get('office/room/list', params).then(res => {
-			return res;
-		})
+		return get('office/room/list', params)
 	},
 	getRoomPackList(params) {
-		return get('office/roompackage/list', params).then(res => {
-			return res;
-		})
+		return get('office/roompackage/list', params)
 	},
 	addRoomPack(params) {
-		return post('office/roompackage', params).then(res => {
-			return res;
-		})
+		return post('office/roompackage', params)
 	},
 	getRoomPack(id) {
 		return get('office/roompackage/' + id)
 	},
 	updateRoomPack(params) {
-		return request('office/roompackage', params, true, 'put').then(res => {
-			return res;
-		})
+		return request('office/roompackage', params, true, 'put')
 	},
 	delRoomPack(id) {
 		return request('office/roompackage/' + id, null, false, 'delete')
 	},
 	getStorePromotionList(params){
-		return get('office/storepromotion/h5list', params).then(res => {
-			return res;
-		})
+		return get('office/storepromotion/h5list', params)
 	},
 	getStorePromotion(id){
 		return get('office/storepromotion/' + id)
 	},
 	updateStorePromotion(params){
-		return request('office/storepromotion', params, true, 'put').then(res => {
-			return res;
-		})
+		return request('office/storepromotion', params, true, 'put')
 	},
 	addStorePromotion(params){
-		return post('office/storepromotion', params).then(res => {
-			return res;
-		})
+		return post('office/storepromotion', params)
 	},
 	delStorePromotion(id) {
 		return request('office/storepromotion/' + id, null, false, 'delete')
 	},
 	getRoomList(params) {
-		return get('office/room/list', params).then(res => {
-			return res;
-		})
+		return get('office/room/list', params)
 	},
 	getRoomOrderList(params){
-		return get('office/roomorder/h5list', params).then(res => {
-			return res;
-		})
+		return get('office/roomorder/h5list', params)
 	},
 	getCleanRecordList(params){
-		return get('office/cleanrecord/h5list', params).then(res => {
-			return res;
+		return get('office/cleanrecord/h5list', params)
+	},
+	getNoticeList(params){
+		return get('system/notice/list', params)
+	},
+	getRoom(id){
+		return get('office/room/' + id)
+	},
+	addRoom(params){
+		return post('office/room', params)
+	},
+	editRoom(params){
+		return request('office/room', params, true, 'PUT')
+	},
+	deleteRoom(id){
+		return request('office/room/' + id, null, true, 'delete')
+	},
+	getDict(dictType){
+		return get('system/dict/data/type/' + dictType)
+	},
+	comingSoon(){
+		uni.showToast({
+			icon:"none",
+			title:"即将上线"
 		})
 	}
 }

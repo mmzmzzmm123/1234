@@ -38,7 +38,7 @@
 		<view class="edit-bottom-bar-holder"></view>
 		<view class="edit-bottom-bar">
 			<u-button type="primary" @click="onConfirmClick">保存</u-button>
-			<u-button type="cancel" @click="onCancelClick">取消</u-button>
+			<u-button type="info" @click="onCancelClick">取消</u-button>
 		</view>
 	</view>
 </template>
@@ -113,14 +113,4 @@
 </script>
 
 <style lang="scss">
-	.edit-bottom-bar-holder{
-		height: 80rpx;
-	}
-	.edit-bottom-bar{
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		padding: 20rpx;
-	}
 </style>

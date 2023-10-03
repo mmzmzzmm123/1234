@@ -8,10 +8,12 @@
 				<view class="card__content">
 					<uo-image :src="store.logo"></uo-image>
 					<view class="card__content__right">
-						<view class="card-title">门店名称：{{store.name}}</view>
-						<view class="card-more">
-							查看详情
-							<u-icon name="arrow-right"></u-icon>
+						<view class="card__content__head">
+							<view class="card-title">{{store.name}}</view>
+							<view class="card-more">
+								查看详情
+								<u-icon name="arrow-right"></u-icon>
+							</view>
 						</view>
 						<view class="card__content__body">
 							<!-- <view>{{store}}</view> -->

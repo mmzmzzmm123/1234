@@ -4,14 +4,15 @@
  * 使用的时候，请将下面的一行复制到您的uniapp项目根目录的uni.scss中即可
  * uView自定义的css类名和scss变量，均以"u-"开头，不会造成冲突，请放心使用 
  */
+$u-primary-bg-color: #00e38c2f;
+
 page{
 	color: $u-main-color;
 }
 .card{
-	background: #fff;
+	background: $u-bg-color;
 	padding: 20rpx;
 	border-radius: 16rpx;
-	background: $u-bg-color;
 }
 .card-list{
 	.card{
@@ -78,7 +79,25 @@ page{
 	.u-form-item{
 		border-bottom: 1rpx solid $u-border-color;
 	}
+	.u-checkbox{
+		margin-right: 10rpx;
+	}
 }
 .search-bar{
 	margin: 20rpx;
+}
+.edit-bottom-bar-holder{
+	height: 90rpx;
+}
+.edit-bottom-bar{
+	position: fixed;
+	display: flex;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 0 0 20rpx 20rpx;
+	background: #fff;
+	.u-button{
+		margin-right: 20rpx;
+	}
 }

@@ -38,7 +38,8 @@ const store = new Vuex.Store({
 		loginUser: lifeData.loginUser ? lifeData.loginUser : {},
 		roles: lifeData.roles ? lifeData.roles : [],
 		currentStore: lifeData.currentStore ? lifeData.currentStore : {name: '当前店铺'},
-		storeList: []
+		storeList: [],
+		dicts: {}
 	},
 	mutations: {
 		setCanLocation(state, value){
@@ -72,6 +73,17 @@ const store = new Vuex.Store({
 				return dispatch("getUserInfo")
 			})
 		},
+		logout({state}){
+			return Api.api.logout().then(()=>{
+				state.hasLogin = false
+				state.loginUser = {}
+				lifeData["loginUser"] = {}
+				uni.setStorage({
+					key: 'lifeData',
+					data: lifeData
+				})
+			})
+		},
 		getUserInfo({state}){
 			return Api.api.getUserInfo().then(res=>{
 				state.hasLogin = true
@@ -92,6 +104,18 @@ const store = new Vuex.Store({
 					})
 				})
 			})
+		},
+		loadDict({state}, dictType){
+			if(!state.dicts[dictType]){
+				Api.api.getDict(dictType).then(res=>{
+					state.dicts = {...state.dicts, [dictType]: res.map(x=>{
+						return {
+							name: x.dictLabel,
+							value: x.dictValue
+						}
+					})}
+				})
+			}
 		}
 	}
 })

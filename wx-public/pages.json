@@ -92,6 +92,34 @@
 			"style": {
 				"navigationBarTitleText": "打扫记录"
 			}
+		},
+		{
+			"path": "pages/common/rich-text/index"
+		},
+		{
+			"path": "pages/mine/index/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		{
+			"path": "pages/cleaner/index/index",
+			"style": {
+				"navigationBarTitleText": "保洁员-首页"
+			}
+		},
+		{
+			"path": "pages/room/room-list/index",
+			"style": {
+				"navigationBarTitleText": "包厢管理",
+				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/room/room-edit/index",
+			"style": {
+				"navigationBarTitleText": "添加包厢"
+			}
 		}
 	],
 	"globalStyle": {
