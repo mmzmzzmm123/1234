@@ -2,6 +2,8 @@ package com.ruoyi.api.user.service;
 
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.crypto.Mode;
+import cn.hutool.crypto.Padding;
 import com.ruoyi.api.user.model.dto.ApiUserDto;
 import com.ruoyi.api.user.model.vo.ApiUserLevelVo;
 import com.ruoyi.api.user.model.vo.ApiUserLikeDataVo;
@@ -11,6 +13,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.LongUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.TokenUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.weixin.WxService;
 import com.ruoyi.user.domain.UserInfo;
@@ -90,6 +93,8 @@ public class ApiUserService {
         ApiUserWalletVo walletVo = new ApiUserWalletVo();
         BeanUtils.copyBeanProp(walletVo, userWallet);
         vo.setUserWalletVo(walletVo);
+        // 生成token
+        vo.setToken(TokenUtils.encryptAes(vo.getId()+""));
         log.info("小程序用户登录：完成，返回数据：{}", vo);
         return R.ok(vo);
     }
@@ -104,6 +109,7 @@ public class ApiUserService {
         log.info("用户信息更新：开始，参数：{}", dto);
         UserInfo updateInfo = new UserInfo();
         BeanUtils.copyBeanProp(updateInfo, dto);
+        updateInfo.setId(TokenUtils.getUserId());
         userInfoMapper.updateUserInfo(updateInfo);
         log.info("用户信息更新：完成");
         return Boolean.TRUE;
@@ -112,11 +118,11 @@ public class ApiUserService {
     /**
      * 生成用户推荐码
      *
-     * @param userId 用户标识
      * @return 结果
      */
-    public String generateReferralCode(Long userId) {
-        log.info("生成用户推荐码：开始，参数：{}", userId);
+    public String generateReferralCode() {
+        log.info("生成用户推荐码：开始");
+        Long userId = TokenUtils.getUserId();
         Long code = LongUtils.generateReferralCode();
         code = recursionGenerateCode(code);
         UserInfo update = new UserInfo();
@@ -146,11 +152,11 @@ public class ApiUserService {
     /**
      * 获取用户点赞收藏记录数据
      *
-     * @param userId 用户标识
      * @return 结果
      */
-    public ApiUserLikeDataVo selectUserLikeData(Long userId) {
-        log.info("获取用户点赞收藏记录数据：开始，参数：{}", userId);
+    public ApiUserLikeDataVo selectUserLikeData() {
+        log.info("获取用户点赞收藏记录数据：开始");
+        Long userId = TokenUtils.getUserId();
         ApiUserLikeDataVo vo = new ApiUserLikeDataVo();
         List<Long> likeStaffUserIdList = new ArrayList<>();
         List<Long> likeStaffTrendsIdList = new ArrayList<>();

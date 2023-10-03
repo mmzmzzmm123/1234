@@ -9,6 +9,7 @@ let selectPhotoByUserIdUrl = "/selectPhotoByUserId";
 let applyUrl = "/apply";
 let updateUrl = "/update";
 let selectServiceConfigIdsUrl = "/selectServiceConfigIds";
+let handleServiceIdUrl = "/handleServiceId";
 
 /**
  * 获取员工等级配置
@@ -45,7 +46,12 @@ let selectServiceConfigIds = function(params, onStart, onSuccess, onFailed){
   request.get(bashRequestUrl + selectServiceConfigIdsUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed);
 }
 
-
+/**
+ * 处理店员服务数据
+ */
+let handleServiceId = function(params, onStart, onSuccess, onFailed){
+  request.get(bashRequestUrl + handleServiceIdUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed);
+}
 
 module.exports = {
   selectStaffLevelConfig: selectStaffLevelConfig,
@@ -54,5 +60,6 @@ module.exports = {
   update: update,
   applyUrl: bashRequestUrl+applyUrl,
   updateUrl: bashRequestUrl+updateUrl,
-  selectServiceConfigIds: selectServiceConfigIds
+  selectServiceConfigIds: selectServiceConfigIds,
+  handleServiceId: handleServiceId
 }

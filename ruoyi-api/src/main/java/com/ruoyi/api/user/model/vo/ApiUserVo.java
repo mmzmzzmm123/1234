@@ -20,6 +20,9 @@ public class ApiUserVo implements Serializable {
     @ApiModelProperty("标识")
     private Long id;
 
+    @ApiModelProperty("token")
+    private String token;
+
     @ApiModelProperty("推荐码")
     private Long referralCode;
 

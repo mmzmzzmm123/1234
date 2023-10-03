@@ -19,10 +19,6 @@ public class ApiUserDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty("标识")
-    @NotNull(message = "标识不能为空")
-    private Long id;
-
     @ApiModelProperty("头像")
     private String avatarUrl;
 

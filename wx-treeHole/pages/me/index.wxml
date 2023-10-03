@@ -1,4 +1,5 @@
 <wxs src="../../wxss/format.wxs" module="formatUtil"></wxs>
+<wxs src="../../wxss/str.wxs" module="strUtil"></wxs>
 <view class="bView">
   <!-- 头部状态栏 -->
   <view class="stateBarView">
@@ -258,7 +259,7 @@
               <wux-col span="3">
                 <view class="view_box_row_content serviceItem">
                   <span>{{item.shortName}}</span>
-                  <wux-switch name="light" slot="footer" color="royal" />
+                  <wux-switch name="light" slot="footer" color="royal" value="{{strUtil.checkArrIncludeStr(staffServiceIds,item.id)}}" data-id="{{item.id}}" bind:tap="staffServiceCli" />
                 </view>
               </wux-col>
             </block>

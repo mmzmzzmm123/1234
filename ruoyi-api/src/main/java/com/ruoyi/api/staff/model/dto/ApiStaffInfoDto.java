@@ -21,10 +21,6 @@ import java.util.Date;
 @Accessors(chain = true)
 public class ApiStaffInfoDto implements Serializable {
 
-    @ApiModelProperty("员工标识-用户标识")
-    @NotNull(message = "用户标识不能为空")
-    private Long userId;
-
     @ApiModelProperty("头像")
     private String avatarUrl;
 

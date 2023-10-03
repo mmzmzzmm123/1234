@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.enums.SysYesNoEnums;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.TokenUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.user.domain.UserSocialAccounts;
 import com.ruoyi.user.mapper.UserSocialAccountsMapper;
@@ -33,11 +34,11 @@ public class ApiUserAccountService {
     /**
      * 获取用户账号列表
      *
-     * @param userId 用户标识
      * @return 结果
      */
-    public List<ApiUserAccountVo> selectByUserId(Long userId) {
-        log.info("获取用户账号列表：开始，参数：{}", userId);
+    public List<ApiUserAccountVo> selectByUserId() {
+        log.info("获取用户账号列表：开始");
+        Long userId = TokenUtils.getUserId();
         List<ApiUserAccountVo> voList = new ArrayList<>();
         if (ObjectUtil.isNotNull(userId)) {
             UserSocialAccounts select = new UserSocialAccounts();
@@ -64,18 +65,20 @@ public class ApiUserAccountService {
     @Transactional(rollbackFor = Exception.class)
     public R<Boolean> add(ApiUserAccountFormDto dto) {
         log.info("新增用户账号：开始，数据：{}", dto);
-        if (ObjectUtil.isNull(dto.getUserId()) || StringUtils.isBlank(dto.getAccountServiceProvider()) || StringUtils.isBlank(dto.getNum())) {
+        if (StringUtils.isBlank(dto.getAccountServiceProvider()) || StringUtils.isBlank(dto.getNum())) {
             log.warn("新增用户账号：失败，必要参数为空");
             return R.warn("亲爱的，请输入必要参数不能为空哟");
         }
+        Long userId = TokenUtils.getUserId();
         UserSocialAccounts insert = new UserSocialAccounts();
         BeanUtils.copyBeanProp(insert, dto);
         Date now = DateUtils.getNowDate();
-        insert.setCreateTime(now)
+        insert.setUserId(userId)
+                .setCreateTime(now)
                 .setUpdateTime(now);
         // 判断是否默认，如果默认需要把已设置默认的数据去除
         if (StringUtils.isNotBlank(dto.getIfDefault()) && SysYesNoEnums.YES.getCode().equals(dto.getIfDefault())) {
-            Long defaultId = selectUserDefaultId(dto.getUserId());
+            Long defaultId = selectUserDefaultId(userId);
             if (ObjectUtil.isNotNull(defaultId)) {
                 UserSocialAccounts update = new UserSocialAccounts();
                 update.setId(defaultId)
@@ -115,13 +118,15 @@ public class ApiUserAccountService {
     @Transactional(rollbackFor = Exception.class)
     public R<Boolean> update(ApiUserAccountFormDto dto) {
         log.info("更新用户账号：开始，参数：{}", dto);
+        Long userId = TokenUtils.getUserId();
         Date now = DateUtils.getNowDate();
         UserSocialAccounts userSocialAccounts = new UserSocialAccounts();
         BeanUtils.copyBeanProp(userSocialAccounts, dto);
-        userSocialAccounts.setUpdateTime(now);
+        userSocialAccounts.setUserId(userId)
+                .setUpdateTime(now);
         // 看看是否新的默认
         if (ObjectUtil.isNotNull(dto.getIfDefault()) && SysYesNoEnums.YES.getCode().equals(dto.getIfDefault())) {
-            Long defaultId = selectUserDefaultId(dto.getUserId());
+            Long defaultId = selectUserDefaultId(userId);
             if (ObjectUtil.isNotNull(defaultId) && !defaultId.equals(dto.getId())) {
                 UserSocialAccounts update = new UserSocialAccounts();
                 update.setId(defaultId)

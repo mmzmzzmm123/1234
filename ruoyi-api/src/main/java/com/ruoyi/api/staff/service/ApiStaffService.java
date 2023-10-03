@@ -17,6 +17,7 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.AudioUtils;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.TokenUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.staff.domain.StaffInfo;
 import com.ruoyi.staff.domain.StaffLevelConfig;
@@ -90,22 +91,23 @@ public class ApiStaffService {
     /**
      * 根据用户标识查询员工信息
      *
-     * @param userId 用户标识
      * @return 结果
      */
-    public ApiStaffInfoVo selectByUserId(Long userId) {
-        log.info("根据用户标识查询员工信息：开始，参数：{}", userId);
+    public ApiStaffInfoVo selectByUserId() {
+        log.info("根据用户标识查询员工信息：开始");
+        Long userId = TokenUtils.getUserId();
         ApiStaffInfoVo vo = new ApiStaffInfoVo();
         StaffInfo staffInfo = staffInfoMapper.selectStaffInfoByUserId(userId);
         if (ObjectUtil.isNotNull(staffInfo)) {
             BeanUtils.copyBeanProp(vo, staffInfo);
-            List<ApiStaffPhotoVo> photoVos = selectPhotoByUserId(userId);
+            List<ApiStaffPhotoVo> photoVos = selectPhotoByUserId();
             if (ObjectUtil.isNotEmpty(photoVos)) {
                 vo.setPhotoVoList(photoVos);
             }
             log.info("根据用户标识查询员工信息：完成，返回数据：{}", vo);
             return vo;
         }
+
         log.info("根据用户标识查询员工信息：完成，无员工信息");
         return null;
     }
@@ -119,8 +121,9 @@ public class ApiStaffService {
     @Transactional(rollbackFor = Exception.class)
     public R<Boolean> apply(ApiStaffInfoDto dto) {
         log.info("申请成为店员：开始，参数：{}", dto);
+        Long userId = TokenUtils.getUserId();
         // 判断该用户是否已申请
-        StaffInfo staffInfo = staffInfoMapper.selectStaffInfoByUserId(dto.getUserId());
+        StaffInfo staffInfo = staffInfoMapper.selectStaffInfoByUserId(userId);
         if (ObjectUtil.isNotNull(staffInfo)) {
             log.warn("申请成为店员：失败，已申请店员信息");
             return R.warn("亲爱的，您已申请过了哟");
@@ -134,14 +137,15 @@ public class ApiStaffService {
         // copy属性值
         staffInfo = new StaffInfo();
         BeanUtils.copyBeanProp(staffInfo, dto);
-        staffInfo.setBirthDate(DateUtils.dateTime(DateUtils.YYYY_MM_DD, dto.getBirthDate()))
+        staffInfo.setUserId(userId)
+                .setBirthDate(DateUtils.dateTime(DateUtils.YYYY_MM_DD, dto.getBirthDate()))
                 .setCreateTime(now)
                 .setUpdateTime(now);
         // 开始处理店员语音数据
         handleSoundRecordFile(staffInfo, dto);
         handleSoundRecordTime(staffInfo, dto);
         // 先插入店员相册数据
-        List<StaffPhoto> photoList = buildStaffPhotoData(dto.getUserId(), dto.getImageArr());
+        List<StaffPhoto> photoList = buildStaffPhotoData(userId, dto.getImageArr());
         if (ObjectUtil.isNotEmpty(photoList)) {
             photoMapper.insertOfList(photoList);
         }
@@ -162,6 +166,7 @@ public class ApiStaffService {
     @Transactional(rollbackFor = Exception.class)
     public R<Boolean> update(ApiStaffInfoDto dto) {
         log.info("修改申请数据：开始，参数：{}", dto);
+        Long userId = TokenUtils.getUserId();
         // 校验手机号码是否正确
         if (StringUtils.isNotBlank(dto.getPhone()) && !PhoneUtil.isMobile(dto.getPhone())) {
             log.warn("申请成为店员：失败，手机号码不正确");
@@ -169,7 +174,8 @@ public class ApiStaffService {
         }
         StaffInfo staffInfo = new StaffInfo();
         BeanUtils.copyBeanProp(staffInfo, dto);
-        staffInfo.setUpdateTime(DateUtils.getNowDate());
+        staffInfo.setUserId(userId)
+                .setUpdateTime(DateUtils.getNowDate());
         // 生日数据
         if (StringUtils.isNotBlank(dto.getBirthDate())){
             staffInfo.setBirthDate(DateUtils.dateTime(DateUtils.YYYY_MM_DD, dto.getBirthDate()));
@@ -179,8 +185,8 @@ public class ApiStaffService {
         handleSoundRecordTime(staffInfo, dto);
         // 删除相册数据再插入
         if (StringUtils.isNotBlank(dto.getImageArr())) {
-            photoMapper.deleteByUserId(dto.getUserId());
-            List<StaffPhoto> staffPhotos = buildStaffPhotoData(dto.getUserId(), dto.getImageArr());
+            photoMapper.deleteByUserId(userId);
+            List<StaffPhoto> staffPhotos = buildStaffPhotoData(userId, dto.getImageArr());
             if (ObjectUtil.isNotEmpty(staffPhotos)) {
                 photoMapper.insertOfList(staffPhotos);
             }
@@ -282,14 +288,13 @@ public class ApiStaffService {
     /**
      * 根据用户标识获取员工相册
      *
-     * @param userId 用户标识
      * @return 结果
      */
-    public List<ApiStaffPhotoVo> selectPhotoByUserId(Long userId) {
-        log.info("根据用户标识获取员工相册：开始，参数：{}", userId);
+    public List<ApiStaffPhotoVo> selectPhotoByUserId() {
+        log.info("根据用户标识获取员工相册：开始");
         List<ApiStaffPhotoVo> voList = new ArrayList<>();
         StaffPhoto select = new StaffPhoto();
-        select.setUserId(userId);
+        select.setUserId(TokenUtils.getUserId());
         List<StaffPhoto> staffPhotos = photoMapper.selectStaffPhotoList(select);
         if (ObjectUtil.isNotEmpty(staffPhotos)) {
             for (StaffPhoto item : staffPhotos) {
@@ -305,15 +310,12 @@ public class ApiStaffService {
     /**
      * 获取店员配置接单服务id
      *
-     * @param userId 店员用户标识
      * @return 结果
      */
-    public List<Long> selectServiceConfigIds(Long userId) {
-        log.info("获取店员配置接单服务id：开始，参数：{}", userId);
+    public List<Long> selectServiceConfigIds() {
+        log.info("获取店员配置接单服务id：开始");
+        Long userId = TokenUtils.getUserId();
         List<Long> serviceIdArr = new ArrayList<>();
-        if (ObjectUtil.isNull(userId)) {
-            throw new ServiceException("亲爱的，你来自哪里");
-        }
         StaffServiceConfig select = new StaffServiceConfig();
         select.setStaffId(userId);
         List<StaffServiceConfig> staffServiceConfigs = staffServiceConfigMapper.selectStaffServiceConfigList(select);
@@ -322,5 +324,40 @@ public class ApiStaffService {
         }
         log.info("获取店员配置接单服务id：完成，返回数据：{}", serviceIdArr);
         return serviceIdArr;
+    }
+
+    /**
+     * 处理店员服务数据
+     *
+     * @param serviceId 需要处理service标识
+     * @return 最新的店员服务标识集合
+     * */
+    public List<Long> handleServiceId(Long serviceId) {
+        log.info("处理店员服务数据：开始，参数：{}", serviceId);
+        List<Long> voList = new ArrayList<>();
+        Long userId = TokenUtils.getUserId();
+        StaffServiceConfig select = new StaffServiceConfig();
+        select.setStaffId(userId);
+        List<StaffServiceConfig> staffServiceConfigs = staffServiceConfigMapper.selectStaffServiceConfigList(select);
+        if (ObjectUtil.isEmpty(staffServiceConfigs)){
+            staffServiceConfigs = new ArrayList<>();
+        }
+        // 开始判断是插入还是删除
+        StaffServiceConfig tempRecord = staffServiceConfigs.stream().filter(item -> item.getServiceId().equals(serviceId)).findFirst().orElse(null);
+        if (ObjectUtil.isNotNull(tempRecord)){
+            staffServiceConfigMapper.deleteStaffServiceConfigById(tempRecord.getId());
+            List<StaffServiceConfig> newList = staffServiceConfigs.stream().filter(item -> !item.getServiceId().equals(serviceId)).collect(Collectors.toList());
+            voList = newList.stream().map(StaffServiceConfig::getServiceId).collect(Collectors.toList());
+        }else{
+            StaffServiceConfig insert = new StaffServiceConfig();
+            insert.setStaffId(userId)
+                    .setServiceId(serviceId)
+                    .setCreateTime(DateUtils.getNowDate());
+            staffServiceConfigMapper.insertStaffServiceConfig(insert);
+            voList = staffServiceConfigs.stream().map(StaffServiceConfig::getServiceId).collect(Collectors.toList());
+            voList.add(serviceId);
+        }
+        log.info("处理店员服务数据：完成，返回数据：{}", voList);
+        return voList;
     }
 }

@@ -28,8 +28,8 @@ public class ApiUserAccountController {
 
     @ApiOperation("获取用户账号列表")
     @GetMapping("/selectByUserId")
-    public R<List<ApiUserAccountVo>> selectByUserId(@RequestParam("userId") Long userId){
-        return R.ok(service.selectByUserId(userId));
+    public R<List<ApiUserAccountVo>> selectByUserId(){
+        return R.ok(service.selectByUserId());
     }
 
     @ApiOperation("新增用户账号")

@@ -21,9 +21,6 @@ public class ApiUserAccountFormDto implements Serializable {
     @NotNull(message = "标识不能为空")
     private Long id;
 
-    @ApiModelProperty("用户标识")
-    private Long userId;
-
     @ApiModelProperty("账号服务商")
     private String accountServiceProvider;
 

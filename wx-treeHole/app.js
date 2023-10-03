@@ -80,9 +80,9 @@ App({
     this.globalData.userInfo = data;
     storage.set(storageConstant.userInfo, null, data, 0);
     // 加载用户的点赞收藏数据
-    userApi.selectUserLikeData({userId:data.id},null,this.selectUserLikeDataOnSuccess,null);
+    userApi.selectUserLikeData({ userId: data.id }, null, this.selectUserLikeDataOnSuccess, null);
   },
-  selectUserLikeDataOnSuccess:function(res){
+  selectUserLikeDataOnSuccess: function (res) {
     this.globalData.userLikeStaffUserIdList = res.data.likeStaffUserIdList;
     this.globalData.userLikeStaffTrendsIdList = res.data.likeStaffTrendsIdList;
   },
@@ -105,14 +105,14 @@ App({
   /**
    * 获取员工等级配置
    */
-  getStaffLevelConfig:function(){
+  getStaffLevelConfig: function () {
     let staffLevelConfigList = storage.get(storageConstant.staffLevelConfigList, null);
     if (staffLevelConfigList != null) {
       this.globalData.staffLevelConfig = staffLevelConfigList;
     }
     staffApi.selectStaffLevelConfig(null, this.getStaffLevelConfigOnSuccess, null);
   },
-  getStaffLevelConfigOnSuccess:function(res){
+  getStaffLevelConfigOnSuccess: function (res) {
     console.log("获取员工等级配置结果：", res);
     let data = res.data;
     this.globalData.staffLevelConfig = data;
@@ -121,14 +121,14 @@ App({
   /**
    * 加载服务数据 
    */
-  loadServiceInfoData:function(){
+  loadServiceInfoData: function () {
     let serviceList = storage.get(storageConstant.serviceList, null);
     if (serviceList != null) {
       this.globalData.serviceList = serviceList;
     }
-    serviceInfoApi.select(null,this.loadServiceInfoDataOnSuccess,null);
+    serviceInfoApi.select(null, this.loadServiceInfoDataOnSuccess, null);
   },
-  loadServiceInfoDataOnSuccess:function(res){
+  loadServiceInfoDataOnSuccess: function (res) {
     console.log("获取服务数据：", res);
     this.globalData.serviceList = res.data;
     storage.set(storageConstant.serviceList, null, res.data, 0);
@@ -136,14 +136,14 @@ App({
   /**
    * 加载平台礼物
    */
-  loadPlatformGift:function(){
+  loadPlatformGift: function () {
     let giftList = storage.get(storageConstant.giftList, null);
     if (giftList != null) {
       this.globalData.giftList = giftList;
     }
     platformApi.selectGiftList(null, this.loadPlatformGiftOnSuccess, null);
   },
-  loadPlatformGiftOnSuccess:function(res){
+  loadPlatformGiftOnSuccess: function (res) {
     console.log("加载平台礼物", res);
     this.globalData.giftList = res.data;
     storage.set(storageConstant.giftList, null, res.data, 0);
@@ -153,7 +153,7 @@ App({
    * 初始化礼物数据
    */
   async initPlayerData(list) {
-    if(this.globalData.parserArr.length > 0){
+    if (this.globalData.parserArr.length > 0) {
       return;
     }
     for (let index in list) {
@@ -165,12 +165,12 @@ App({
   /**
    * 更新全局店员信息
    */
-  updateStaffInfo:function(res){
+  updateStaffInfo: function (res) {
     console.log("加载店员数据完成", res);
     this.globalData.staffInfo = res.data;
-    if(res.data != null){
+    if (res.data != null) {
       storage.set(storageConstant.staffInfo, null, res.data, 0);
-    }else{
+    } else {
       storage.removeStorageSync(storageConstant.staffInfo);
     }
   },

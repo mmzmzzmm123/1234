@@ -40,13 +40,13 @@ public class ApiUserController {
 
     @ApiOperation("生成用户推荐码")
     @GetMapping("/generateReferralCode")
-    public R<String> generateReferralCode(@RequestParam("userId") Long userId){
-        return R.ok(service.generateReferralCode(userId));
+    public R<String> generateReferralCode(){
+        return R.ok(service.generateReferralCode());
     }
 
     @ApiOperation("获取用户点赞收藏记录数据")
     @GetMapping("/selectUserLikeData")
-    public R<ApiUserLikeDataVo> selectUserLikeData(@RequestParam("userId") Long userId){
-        return R.ok(service.selectUserLikeData(userId));
+    public R<ApiUserLikeDataVo> selectUserLikeData(){
+        return R.ok(service.selectUserLikeData());
     }
 }

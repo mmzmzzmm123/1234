@@ -98,15 +98,15 @@ Page({
       staffInfo: res.data
     })
     app.updateStaffInfo(res);
-    if(res.data != null){
+    if (res.data != null) {
       // 加载员工服务配置数据
-      staffApi.selectServiceConfigIds({userId:this.data.userInfo.id},null,this.selectServiceConfigIdsOnSuccess,null);
+      staffApi.selectServiceConfigIds({ userId: this.data.userInfo.id }, null, this.selectServiceConfigIdsOnSuccess, null);
     }
   },
   /**
    * 加载店员服务配置信息成功
    */
-  selectServiceConfigIdsOnSuccess:function(res){
+  selectServiceConfigIdsOnSuccess: function (res) {
     this.setData({
       staffServiceIds: res.data
     })
@@ -358,22 +358,22 @@ Page({
   /**
    * 改变店员在线状态
    */
-  staffOnlineChange:function(e){
+  staffOnlineChange: function (e) {
     let staffInfo = this.data.staffInfo;
-    let state = e.detail.value?"Y":"N";
+    let state = e.detail.value ? "Y" : "N";
     let params = {
       userId: staffInfo.userId,
       ifOnline: state
     }
-    staffApi.update(params, this.updateStaffOnlineOnState,this.updateStaffOnlineOnSuccess,this.updateStaffOnlineOnFailed,this.updateStaffOnlineOnWarn)
+    staffApi.update(params, this.updateStaffOnlineOnState, this.updateStaffOnlineOnSuccess, this.updateStaffOnlineOnFailed, this.updateStaffOnlineOnWarn)
   },
-  updateStaffOnlineOnState:function(){
+  updateStaffOnlineOnState: function () {
     wx.showLoading({
       title: '正在修改',
       mask: true
     })
   },
-  updateStaffOnlineOnSuccess:function(res){
+  updateStaffOnlineOnSuccess: function (res) {
     wx.hideLoading();
     let staffInfo = this.data.staffInfo;
     staffInfo.ifOnline = staffInfo.ifOnline == 'Y' ? 'N' : 'Y';
@@ -383,18 +383,44 @@ Page({
     app.globalData.staffInfo = staffInfo;
     storage.set(storageConstant.staffInfo, null, staffInfo, 0);
   },
-  updateStaffOnlineOnFailed:function(res){
+  updateStaffOnlineOnFailed: function (res) {
     wx.hideLoading();
     wx.showToast({
       title: '请求失败',
       icon: "error"
     })
   },
-  updateStaffOnlineOnWarn:function(res){
+  updateStaffOnlineOnWarn: function (res) {
     wx.hideLoading();
     wx.showToast({
       title: res.msg,
       icon: "none"
     })
-  }
+  },
+  /**
+   * 店员服务处理事件
+   */
+  staffServiceCli: function (e) {
+    let serviceId = e.currentTarget.dataset.id;
+    staffApi.handleServiceId({ serviceId: serviceId }, this.handleServiceIdOnStart, this.handleServiceIdOnSuccess, this.handleServiceIdOnFailed);
+  },
+  handleServiceIdOnStart: function () {
+    wx.showLoading({
+      title: '正在保存',
+      mask: true
+    })
+  },
+  handleServiceIdOnSuccess: function (res) {
+    wx.hideLoading();
+    this.setData({
+      staffServiceIds: res.data
+    })
+  },
+  handleServiceIdOnFailed: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: '操作失败',
+      icon: "none"
+    })
+  },
 })

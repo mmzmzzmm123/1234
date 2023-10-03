@@ -1,4 +1,6 @@
 import globalCanstanats from "../constans/globalConstant";
+import storage from "../utils/storage";
+import storageConstant from "../constans/storageConstant";
 // let prefix = "http://localhost/dev-api";
 // let uploadSingleFileUrl = "http://localhost/dev-api/api/file/uploadSingleFile";
 let prefix = "https://listen.vipwei.cn/prod-api";
@@ -8,16 +10,22 @@ import util from "../utils/util";
 
 let post_header = {
   "Content-Type": "application/x-www-form-urlencoded",
+  "authorization": "yingde",
   "flag": "yingde"
 }
 
 let get_header = {
   'Content-Type': 'application/json',
+  "authorization": "yingde",
   "flag": "yingde"
 }
 
 /**                                  post                                          */
 function post(url, params, onStart, onSuccess, onFailed, onWarn, onOperate) {
+  let userInfo = storage.get(storageConstant.userInfo);
+  if (util.isNotEmpty(userInfo)) {
+    post_header.authorization = userInfo.token;
+  }
   if (util.isNotEmpty(params) && util.isNotEmpty(params.idempotent)) {
     post_header.idempotent = params.idempotent;
     delete params.idempotent;
@@ -27,6 +35,10 @@ function post(url, params, onStart, onSuccess, onFailed, onWarn, onOperate) {
   request(url, params, "POST", post_header, onStart, onSuccess, onFailed, onWarn, onOperate);
 }
 function get(url, params, onStart, onSuccess, onFailed, onWarn, onOperate) {
+  let userInfo = storage.get(storageConstant.userInfo);
+  if (util.isNotEmpty(userInfo)) {
+    get_header.authorization = userInfo.token;
+  }
   if (util.isNotEmpty(params) && util.isNotEmpty(params.idempotent)) {
     get_header.idempotent = params.idempotent;
     delete params.idempotent;
