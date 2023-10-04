@@ -2,7 +2,10 @@ package com.ruoyi.office.controller;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.office.domain.TRoom;
+import com.ruoyi.office.domain.TRoomCleanRecord;
 import com.ruoyi.office.domain.vo.RoomEquipeOpenReq;
+import com.ruoyi.office.service.ITRoomCleanRecordService;
 import com.ruoyi.office.service.ITRoomService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +15,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+
 @RestController
 @RequestMapping("/office/capi")
 public class CleanerController {
 
     @Autowired
     ITRoomService roomService;
+
+    @Autowired
+    ITRoomCleanRecordService cleanRecordService;
 
 
     /**
@@ -31,8 +39,22 @@ public class CleanerController {
     @PostMapping("/roomopen")
     public AjaxResult openRoom(@RequestBody RoomEquipeOpenReq req) {
 
+        Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
         try {
-            roomService.openRoomEquipment(req, SecurityUtils.getLoginUser().getWxUser().getUserId());
+            roomService.openRoomEquipment(req, userId);
+
+            TRoomCleanRecord cleanRecord = new TRoomCleanRecord();
+            cleanRecord.setCreateBy(userId + "");
+            cleanRecord.setRoomId(req.getRoomId());
+            cleanRecord.setStartTime(new Date());
+            cleanRecord.setStatus(0l);
+            cleanRecordService.insertTRoomCleanRecord(cleanRecord);
+
+            TRoom room = new TRoom();
+            room.setId(req.getRoomId());
+            room.setStatus("2"); // 2 清洁中
+            roomService.updateTRoom(room);
+
         } catch (Exception e) {
             return AjaxResult.error("操作异常，请联系管理员：" + e.getMessage());
         }
