@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.mapper.PlatformRechargeConfigMapper">
+
+    <resultMap type="PlatformRechargeConfig" id="PlatformRechargeConfigResult">
+        <result property="id"    column="id"    />
+        <result property="amount"    column="amount"    />
+        <result property="giveAmount"    column="give_amount"    />
+        <result property="sortNum" column="sort_num" />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPlatformRechargeConfigVo">
+        select id, amount, give_amount, sort_num, create_by, create_time, update_by, update_time from bus_platform_recharge_config
+    </sql>
+
+    <select id="selectPlatformRechargeConfigList" parameterType="PlatformRechargeConfig" resultMap="PlatformRechargeConfigResult">
+        <include refid="selectPlatformRechargeConfigVo"/> order by sort_num desc
+    </select>
+
+    <select id="selectPlatformRechargeConfigById" parameterType="Long" resultMap="PlatformRechargeConfigResult">
+        <include refid="selectPlatformRechargeConfigVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPlatformRechargeConfig" parameterType="PlatformRechargeConfig" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_platform_recharge_config
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="amount != null">amount,</if>
+            <if test="giveAmount != null">give_amount,</if>
+            <if test="sortNum != null">sort_num,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="amount != null">#{amount},</if>
+            <if test="giveAmount != null">#{giveAmount},</if>
+            <if test="sortNum != null">#{sortNum},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePlatformRechargeConfig" parameterType="PlatformRechargeConfig">
+        update bus_platform_recharge_config
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="giveAmount != null">give_amount = #{giveAmount},</if>
+            <if test="sortNum != null">sort_num = #{sortNum},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePlatformRechargeConfigById" parameterType="Long">
+        delete from bus_platform_recharge_config where id = #{id}
+    </delete>
+
+    <delete id="deletePlatformRechargeConfigByIds" parameterType="String">
+        delete from bus_platform_recharge_config where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

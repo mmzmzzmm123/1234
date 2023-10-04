@@ -1,6 +1,7 @@
 package com.ruoyi.api.platform.controller;
 
 import com.ruoyi.api.platform.model.vo.ApiGiftVo;
+import com.ruoyi.api.platform.model.vo.ApiRechargeConfigVo;
 import com.ruoyi.api.platform.service.ApiPlatformService;
 import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.R;
@@ -37,5 +38,11 @@ public class ApiPlatformController {
     @GetMapping("/selectGiftList")
     public R<List<ApiGiftVo>> selectGiftList(){
         return R.ok(service.selectGiftList());
+    }
+
+    @ApiOperation("查询充值配置")
+    @GetMapping("/selectRechargeConfig")
+    public R<List<ApiRechargeConfigVo>> selectRechargeConfig(){
+        return R.ok(service.selectRechargeConfig());
     }
 }

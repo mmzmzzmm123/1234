@@ -284,6 +284,21 @@ Page({
     })
   },
   /**
+   * 前往充值页面
+   */
+  toRecharge:function(){
+    if (this.data.userInfo == null) {
+      wx.showToast({
+        title: '亲爱的，先登录哟',
+        icon: "none"
+      })
+      return;
+    }
+    wx.navigateTo({
+      url: '../../platformPackages/page/recharge/index',
+    })
+  },
+  /**
    * 前往店员资料管理页
    */
   toStaffInfo: function () {
@@ -296,6 +311,21 @@ Page({
     }
     wx.navigateTo({
       url: '../../staffPackages/page/staffInfo/index',
+    })
+  },
+  /**
+   * 前往店员动态管理页
+   */
+  toStaffTrends:function(){
+    if (this.data.userInfo == null) {
+      wx.showToast({
+        title: '亲爱的，先登录哟',
+        icon: "none"
+      })
+      return;
+    }
+    wx.navigateTo({
+      url: '../../staffPackages/page/staffTrends/index',
     })
   },
   /**

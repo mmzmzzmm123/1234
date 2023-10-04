@@ -1,0 +1,166 @@
+<wxs src="../../../wxss/str.wxs" module="str"></wxs>
+<wxs src="../../../wxss/time.wxs" module="timeUtil"></wxs>
+<view class="bView">
+  <scroll-view refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{loadState.refreshState}}" bindrefresherrefresh="refresh" bindscrolltolower="loadNextPageData" scroll-y="true" style="width:{{pWidth}}px;height: {{pHeight}}px;">
+    <block wx:if="{{dataList != null && dataList.length > 0}}">
+      <block wx:for="{{dataList}}" wx:key="id">
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common">
+          <view class="trendsItem">
+            <view class="view_box_common view_box_row">
+              <view class="view_box_row">
+                <view class="trendsTime">{{timeUtil.formatTimeDiff(item.createTime)}}：</view>
+                <view class="trendsTitle" wx:if="{{item.content != null && item.content != ''}}">{{item.content}}</view>
+              </view>
+            </view>
+            <view class="view_box_common">
+              <!-- 图文展示 -->
+              <block wx:if="{{item.imgList != null && item.imgList != ''}}">
+                <!-- 还需要判断是多图还是单图 -->
+                <block wx:if="{{!str.indexOf(item.imgList, ',')}}">
+                  <image class="trendsSingleImage" src="{{item.imgList}}" mode="widthFix" data-index="{{index}}" data-imgIndex="0" bind:tap="listImgCli"></image>
+                </block>
+                <block wx:else>
+                  <view class="view_box_row_symmetry" style="width: 86%;">
+                    <block wx:for="{{str.splitToArr(item.imgList, ',')}}" wx:key="index" wx:for-item="img" wx:for-index="imgIndex">
+                      <image class="trendsImageMany" src="{{img}}" mode="aspectFill" data-index="{{index}}" data-imgIndex="{{imgIndex}}" bind:tap="listImgCli"></image>
+                    </block>
+                  </view>
+                </block>
+              </block>
+              <!-- 视频 -->
+              <block wx:if="{{item.videoUrl != null && item.videoUrl != ''}}">
+                <video id="video{{index}}" muted show-mute-btn play-btn-position="center" class="trendsVideo" src="{{item.videoUrl}}" data-index="{{index}}" bindplay="videoPlay" bindfullscreenchange="videoScreenChange"></video>
+              </block>
+              <!-- 语音 -->
+              <block wx:if="{{item.voiceUrl != null && item.voiceUrl != ''}}">
+                <view class="view_box_row" style="margin-top: 10px;">
+                  <view class="view_box_row_content audioBut boy_bg_color" data-index="{{index}}" bind:tap="listAudioCli">
+                    <image class="audioPlay" src="../../../static/ico/{{item.audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
+                    <image wx:if="{{item.audioState == '-1'}}" class="audioFrequency" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                    <image wx:if="{{item.audioState == '0'}}" class="audioFrequencyGif" src="../../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+                    <span wx:if="{{item.voiceTime != null && item.voiceTime > 0}}">{{item.voiceTime}}s</span>
+                  </view>
+                </view>
+              </block>
+            </view>
+            <view class="view_box_common">
+              <view class="seizeSeat_mini"></view>
+              <view class="cut_off_rule_small"></view>
+              <view class="seizeSeat_mini"></view>
+            </view>
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content">
+                <view class="view_box_row_content trendsOperItem">
+                  <wux-icon type="ios-thumbs-up" size="16" color="#80848f"></wux-icon>
+                  <view>{{item.likeNum}}</view>
+                </view>
+              </view>
+              <view class="view_box_row_content">
+                <view class="butItem background_red" data-id="{{item.id}}" bind:tap="deleteCli">删除</view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </block>
+      <view class="seizeSeat_mini"></view>
+      <i-load-more tip='{{((requestParams.pageNum*requestParams.pageSize) >= total) && loadState.bottomDataLoadState == false ?"没有更多的数据啦":""}}' loading="{{loadState.bottomDataLoadState}}"></i-load-more>
+      <view style="width: 1px;height: 38px;"></view>
+    </block>
+    <mine-null-data wx:else width="100%" height="100%" title="亲爱的 暂未发布动态哟"></mine-null-data>
+  </scroll-view>
+</view>
+<view class="postUpdatesView">
+  <view class="themeBut" bind:tap="changeTrendsFormDrawer">发布动态</view>
+</view>
+
+<!-- 发布动态容器 -->
+<i-drawer mode="right" visible="{{ trendsFormDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeTrendsFormDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.06}}px;">
+          <view></view>
+          <text>发布动态</text>
+          <wux-icon type="md-close" size="22" bindtap="changeTrendsFormDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <scroll-view scroll-y="true" class="drawerBodyView">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common trendsItem">
+          <column-view title="动态文本" outerMargin="0" icoType="ios-arrow-down" moreTitle=""></column-view>
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_common">
+            <textarea placeholder="请输入您的动态文本" style="font-size: 14px;" maxlength="255" bindinput="trendsContentInput" value="{{trendsContent}}"></textarea>
+            <view class="view_box_row_content_symmetry">
+              <view></view>
+              <view style="font-size: 12px;color: #80848f;">{{trendsContent==null?0:trendsContent.length}}/255</view>
+            </view>
+          </view>
+        </view>
+        <!-- 附件 -->
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common trendsItem">
+          <wux-tabs class="wuxTab" theme="positive" controlled current="{{ currentKey }}" bindchange="onTabsChange">
+            <block wx:for="{{ tabs }}" wx:key="key">
+              <wux-tab key="{{ item.key }}" title="{{ item.title }}"></wux-tab>
+            </block>
+          </wux-tabs>
+          <!-- 图片view -->
+          <wux-animation-group wux-class="animationView" in="{{currentIndex == 0}}" enter="{{ true }}" exit="{{ true }}" class-names="wux-animate--fadeInDown">
+            <view class="view_box_common">
+              <view class="seizeSeat_mini"></view>
+              <view class="uploadFileView">
+                <wux-upload controlled fileList="{{photoArr}}" listType="picture-card" formData="{{ fileUploadForm }}" max="9" count="9" url="{{fileUploadUrl}}" bind:success="uploadFileSuccess" bind:fail="uploadFileFail" bind:remove="uploadFileRemove">
+                  <image style="width:32px" mode="widthFix" src="../../../static/ico/theme_upload.png"></image>
+                </wux-upload>
+              </view>
+            </view>
+          </wux-animation-group>
+          <!-- 视频view -->
+          <wux-animation-group wux-class="animationView" in="{{currentIndex == 1}}" enter="{{ true }}" exit="{{ true }}" class-names="wux-animate--fadeInDown">
+            <view class="view_box_common">
+              <view class="seizeSeat_mini"></view>
+              <view class="uploadFileView">
+                <wux-upload defaultFileType="video" controlled fileList="{{videoArr}}" listType="picture-card" formData="{{ fileUploadForm }}" max="1" count="1" url="{{fileUploadUrl}}" bind:success="uploadFileSuccess" bind:fail="uploadFileFail" bind:remove="uploadFileRemove">
+                  <image style="width:32px" mode="widthFix" src="../../../static/ico/theme_upload.png"></image>
+                </wux-upload>
+              </view>
+            </view>
+          </wux-animation-group>
+          <!-- 语音view -->
+          <wux-animation-group wux-class="animationView" in="{{currentIndex == 2}}" enter="{{ true }}" exit="{{ true }}" class-names="wux-animate--fadeInDown">
+            <view class="view_box_common view_box_content_column">
+              <view class="seizeSeat_mini"></view>
+              <view class="soundRecordView view_box_content_column" wx:if="{{uploadSoundRecordType == 0}}" bind:tap="soundRecordCli">
+                <image wx:if="{{soundRecordState == -1}}" src="../../../static/ico/sound_record_white_32.png" mode="widthFix"></image>
+                <image wx:if="{{soundRecordState == 0}}" src="../../../static/gif/sound_record.gif" mode="widthFix"></image>
+              </view>
+              <view class="soundRecordView view_box_content_column" wx:if="{{uploadSoundRecordType == 1}}" bind:tap="soundRecordUploadCli">
+                <image src="../../../static/ico/upload_white_32.png" mode="widthFix"></image>
+              </view>
+              <view class="view_box_row_content switchSoundRecordView" bind:tap="switchSoundRecordType">
+                <image src="../../../static/ico/switch_grey_32.png" mode="widthFix"></image>
+                <span>切换模式</span>
+              </view>
+              <view class="seizeSeat_mini"></view>
+              <view class="view_box_row_content audioBut boy_bg_color" wx:if="{{voiceUrl != null}}" bind:tap="audioCli">
+                <image class="audioPlay" src="../../../static/ico/{{audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
+                <image wx:if="{{audioState == '-1'}}" class="audioFrequency" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                <image wx:if="{{audioState == '0'}}" class="audioFrequencyGif" src="../../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+                <span wx:if="{{voiceTime != null}}">{{voiceTime}}s</span>
+              </view>
+            </view>
+          </wux-animation-group>
+        </view>
+        <view class="seizeSeat_mini"></view>
+      </scroll-view>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bind:tap="submit">立即发布</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+  </view>
+</i-drawer>

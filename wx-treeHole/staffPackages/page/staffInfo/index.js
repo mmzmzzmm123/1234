@@ -2,6 +2,7 @@ const app = getApp();
 import { $wuxDialog } from '../../../components/wux/dist/index';
 import utils from "../../../utils/util";
 import requestUtil from "../../../apis/request";
+import tokenUtil from "../../../utils/token";
 import storage from "../../../utils/storage";
 import storageConstant from "../../../constans/storageConstant";
 import globalCanstanats from "../../../constans/globalConstant";
@@ -58,7 +59,11 @@ Page({
         pHeight: divHeight
       })
     }).exec();
-
+    app.globalData.audioContext.onEnded(() => {
+      this.setData({
+        audioState: -1
+      })
+    })
   },
   onShow() {
     // 加载用户信息和店员信息
@@ -74,6 +79,9 @@ Page({
       // 构建员工相册数据
       this.buildStaffPhotoArr();
     }
+  },
+  onUnload(){
+    app.globalData.audioContext.pause();
   },
   /**
    * 构建员工相册数据
@@ -407,6 +415,7 @@ Page({
         url: requestUtil.prefix + staffApi.updateUrl,
         formData: requestUtil.removeNullProperty(staffInfo),
         timeout: 10000,
+        header: tokenUtil.buildHeader(),
         success: function (res) {
           if (res.statusCode == globalCanstanats.httpState.ok) {
             let data = JSON.parse(res.data);

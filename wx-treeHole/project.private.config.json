@@ -10,6 +10,20 @@
     "miniprogram": {
       "list": [
         {
+          "name": "充值页面",
+          "pathName": "platformPackages/page/recharge/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "店员动态",
+          "pathName": "staffPackages/page/staffTrends/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "店员资料管理页",
           "pathName": "staffPackages/page/staffInfo/index",
           "query": "",

@@ -100,7 +100,7 @@
             <span>{{userLikeStaffUserIdList.length}}</span>
             <view>我的点赞</view>
           </view>
-          <view class="view_box_content_column usedCarNumItem">
+          <view class="view_box_content_column usedCarNumItem" bind:tap="toRecharge">
             <span>{{formatUtil.toFixed(userInfo!=null?(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance):'0.00')}}</span>
             <view class="view_box_row_content">
               <text>我的枫叶</text>
@@ -139,7 +139,7 @@
                 </view>
               </wux-col>
               <wux-col span="3">
-                <view class="view_box_content_column funItemView">
+                <view class="view_box_content_column funItemView" bind:tap="toStaffTrends">
                   <view class="view_box_row_content background_blue">
                     <image src="../../static/ico/trends_white_32.png"></image>
                   </view>

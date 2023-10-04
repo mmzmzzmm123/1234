@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.staff.mapper.StaffTrendsMapper">
-    
+
     <resultMap type="StaffTrends" id="StaffTrendsResult">
         <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
@@ -23,17 +23,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectStaffTrendsList" parameterType="StaffTrends" resultMap="StaffTrendsResult">
         <include refid="selectStaffTrendsVo"/>
-        <where>  
+        <where>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
         </where>
+        order by create_time desc
     </select>
-    
+
     <select id="selectStaffTrendsById" parameterType="Long" resultMap="StaffTrendsResult">
         <include refid="selectStaffTrendsVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertStaffTrends" parameterType="StaffTrends" useGeneratedKeys="true" keyProperty="id">
         insert into bus_staff_trends
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -81,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteStaffTrendsByIds" parameterType="String">
-        delete from bus_staff_trends where id in 
+        delete from bus_staff_trends where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

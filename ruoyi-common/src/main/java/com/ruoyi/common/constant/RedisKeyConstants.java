@@ -22,5 +22,9 @@ public class RedisKeyConstants {
      * 平台礼物
      * */
     public static final String PLATFORM_GIFT = "platform_gift";
+    /**
+     * 平台充值配置
+     * */
+    public static final String PLATFORM_RECHARGE_CONFIG = "platform_recharge_config";
 
 }

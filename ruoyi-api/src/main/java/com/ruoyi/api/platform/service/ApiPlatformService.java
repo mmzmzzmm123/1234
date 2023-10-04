@@ -2,14 +2,17 @@ package com.ruoyi.api.platform.service;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.api.platform.model.vo.ApiGiftVo;
+import com.ruoyi.api.platform.model.vo.ApiRechargeConfigVo;
 import com.ruoyi.common.constant.RedisKeyConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.SysShowHideEnums;
 import com.ruoyi.common.utils.LongUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.platform.domain.PlatformGift;
+import com.ruoyi.platform.domain.PlatformRechargeConfig;
 import com.ruoyi.platform.domain.PlatformTextContent;
 import com.ruoyi.platform.mapper.PlatformGiftMapper;
+import com.ruoyi.platform.mapper.PlatformRechargeConfigMapper;
 import com.ruoyi.platform.mapper.PlatformTextContentMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +32,7 @@ public class ApiPlatformService {
 
     private final PlatformTextContentMapper textContentMapper;
     private final PlatformGiftMapper giftMapper;
+    private final PlatformRechargeConfigMapper rechargeConfigMapper;
     private final RedisCache redisCache;
 
     /**
@@ -86,6 +90,36 @@ public class ApiPlatformService {
         redisCache.setCacheList(key, voList);
         redisCache.expire(key, LongUtils.generateRandomNumber(10,20), TimeUnit.HOURS);
         log.info("查询礼物列表：完成，返回数据：{}", voList);
+        return voList;
+    }
+
+    /**
+     * 查询充值配置
+     *
+     * @return 结果
+     * */
+    public List<ApiRechargeConfigVo> selectRechargeConfig() {
+        log.info("查询充值配置：开始");
+        List<ApiRechargeConfigVo> voList = new ArrayList<>();
+        String key = RedisKeyConstants.PLATFORM_RECHARGE_CONFIG;
+        if (redisCache.hasKey(key)){
+            log.info("查询充值配置：描述，存在缓存");
+            voList = redisCache.getCacheList(key);
+        }
+        // 如果缓存空，那就直接查询db
+        if (ObjectUtil.isEmpty(voList)){
+            List<PlatformRechargeConfig> platformRechargeConfigs = rechargeConfigMapper.selectPlatformRechargeConfigList(new PlatformRechargeConfig());
+            if (ObjectUtil.isNotEmpty(platformRechargeConfigs)){
+                for (PlatformRechargeConfig item : platformRechargeConfigs){
+                    ApiRechargeConfigVo vo = new ApiRechargeConfigVo();
+                    BeanUtils.copyBeanProp(vo, item);
+                    voList.add(vo);
+                }
+                redisCache.setCacheList(key, voList);
+                redisCache.expire(key, LongUtils.generateRandomNumber(1,24), TimeUnit.HOURS);
+            }
+        }
+        log.info("查询充值配置：完成，返回数据：{}", voList);
         return voList;
     }
 }

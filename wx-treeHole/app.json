@@ -20,7 +20,15 @@
       "pages": [
         "page/applyStaff/index",
         "page/staffInfoShow/index",
-        "page/staffInfo/index"
+        "page/staffInfo/index",
+        "page/staffTrends/index"
+      ]
+    },
+    {
+      "root": "platformPackages",
+      "name": "平台相关页面",
+      "pages": [
+        "page/recharge/index"
       ]
     }
   ],

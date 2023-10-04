@@ -15,5 +15,7 @@ module.exports = {
   // 员工协议
   staffAgreement: "staffAgreement",
   // 礼物数据
-  giftList: "giftList"
+  giftList: "giftList",
+  // 充值配置
+  rechargeConfig: "rechargeConfig"
 }

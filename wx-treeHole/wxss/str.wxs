@@ -1,3 +1,4 @@
+
 /**
  * 判断数组是否包含某个值
  * 
@@ -5,16 +6,23 @@
  * @param str 字符串
  * @return true 包含 false 不包含
  */
-function checkArrIncludeStr(arr, str){
-  if(arr == null || arr == "" || arr == "null"){
+function checkArrIncludeStr(arr, str) {
+  if (arr == null || arr == "" || arr == "null") {
     return false;
   }
-  for(var i = 0; i < arr.length; i++){
-    if(arr[i] == str){
+  for (var i = 0; i < arr.length; i++) {
+    if (arr[i] == str) {
       return true;
     }
   }
   return false;
+}
+
+/**
+ * 是否包含某个值
+ */
+function indexOf(original, str) {
+  return (original.indexOf(str) > -1);
 }
 
 /**
@@ -24,8 +32,8 @@ function checkArrIncludeStr(arr, str){
  * @param start 开始下标 
  * @param end 结束下标
  */
-function substr(str, start, end){
-  if(str.length < end){
+function substr(str, start, end) {
+  if (str.length < end) {
     return str;
   }
   return str.substring(start, end);
@@ -37,34 +45,34 @@ function substr(str, start, end){
  * @param 加入时间
  * @param 用户id
  */
-function generateUserNo(joinDate, uId){
+function generateUserNo(joinDate, uId) {
   var dateStr = joinDate.substring(0, 10);
   var dateArr = dateStr.split("-");
-  return dateArr[0]+dateArr[1]+dateArr[2]+uId;
+  return dateArr[0] + dateArr[1] + dateArr[2] + uId;
 }
 
 /**
  * 随机数
  */
-function random(){
-  var randomStr = Math.random()+"";
-  return Number(randomStr.substring(2,3))+1;
+function random() {
+  var randomStr = Math.random() + "";
+  return Number(randomStr.substring(2, 3)) + 1;
 }
 
 /**
  * 手机号码加密
  */
-function encryptionPhone(str){
-  if(str==null||str==undefined||str==""){
+function encryptionPhone(str) {
+  if (str == null || str == undefined || str == "") {
     return "";
   }
   var newStr = "";
   for (var i = 0; i < str.length; i++) {
     var temp = str[i];
-    if(i>2&&i<7){
+    if (i > 2 && i < 7) {
       temp = "*";
     }
-    newStr = newStr+temp;
+    newStr = newStr + temp;
   }
   return newStr;
 }
@@ -72,12 +80,12 @@ function encryptionPhone(str){
 /**
  * 字符串替换
  */
-function replaceDate(str){
-  var arr = ["年","月","日"];
+function replaceDate(str) {
+  var arr = ["年", "月", "日"];
   var strArr = str.split("-");
   var temp = "";
-  for(var index = 0; index < strArr.length; index++){
-    temp += strArr[index]+arr[index];
+  for (var index = 0; index < strArr.length; index++) {
+    temp += strArr[index] + arr[index];
   }
   return temp;
 }
@@ -88,12 +96,13 @@ function replaceDate(str){
  * s 字符串
  * t 分割的符号
  */
-function splitToArr(s,t){
+function splitToArr(s, t) {
   return s.split(t);
 }
 
 module.exports = {
   checkArrIncludeStr: checkArrIncludeStr,
+  indexOf: indexOf,
   substr: substr,
   generateUserNo: generateUserNo,
   random: random,

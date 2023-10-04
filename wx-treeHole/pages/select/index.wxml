@@ -316,10 +316,10 @@
             <view class="view_box_row_content_symmetry">
               <view class="payWayView view_box_row_content">
                 <image src="../../static/ico/wallet.png" mode="widthFix"></image>
-                <span>树币支付</span>
+                <span>枫叶支付</span>
               </view>
               <view class="view_box_row_content">
-                <view style="font-size: 12px;margin-right: 10px;color: #80848f;">我的树币：{{formatUtil.toFixed(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}</view>
+                <view style="font-size: 12px;margin-right: 10px;color: #80848f;">我的枫叶：{{formatUtil.toFixed(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}</view>
                 <radio data-pay="1" checked="{{randomForm.payWay == '1'}}" color="#8978E4" bind:tap="payWayChange" />
               </view>
             </view>

@@ -1,6 +1,7 @@
 const app = getApp();
 import globalCanstanats from "../../../constans/globalConstant";
 import utils from "../../../utils/util";
+import tokenUtil from "../../../utils/token";
 import requestUtil from "../../../apis/request";
 import soundRecordUtil from "../../../utils/soundRecord";
 import storage from "../../../utils/storage";
@@ -89,6 +90,9 @@ Page({
     this.loadStaffTextContent();
     // 加载员工信息
     this.loadStaffInfo();
+  },
+  onUnload(){
+    app.globalData.audioContext.pause();
   },
   /**
    * 用户点击右上角分享
@@ -544,6 +548,7 @@ Page({
       url: requestUtil.prefix + url,
       formData: requestUtil.removeNullProperty(params),
       timeout: 10000,
+      header: tokenUtil.buildHeader(),
       success: function (res) {
         if (res.statusCode == globalCanstanats.httpState.ok) {
           let data = JSON.parse(res.data);

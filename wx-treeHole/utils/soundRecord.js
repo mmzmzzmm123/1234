@@ -94,7 +94,9 @@ let start = function (onSuccess) {
 let stop = function(onSuccess){
   recorderManager.stop();
   recorderManager.onStop((res) => {
-    onSuccess(res);
+    if(onSuccess != null){
+      onSuccess(res);
+    }
     wx.vibrateLong({
       complete:function(){
       }
