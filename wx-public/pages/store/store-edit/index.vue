@@ -79,9 +79,10 @@
 				this.$api.updateStoreInfo(this.model).then(res=>{
 					this.$u.toast('保存成功')
 					this.isShow=false
-					this.getOpenerEventChannel().emit('refresh')
-					uni.navigateBack()
+					//this.getOpenerEventChannel().emit('refresh')
+					//uni.navigateBack()
 				}).catch(res=>{
+					console.log(res)
 					this.$u.toast('请完善门店信息')
 				})
 				
