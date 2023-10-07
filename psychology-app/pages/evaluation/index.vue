@@ -18,14 +18,14 @@
         <view>{{ item.name }}</view>
       </view>
     </view>
-    <view class="banner-box banner-box1 index-margin">
-      <swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
-       indicator-active-color="#FFFFFF">
-        <swiper-item v-for="(item, index) in bannerList1" :key="index">
-          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
-        </swiper-item>
-      </swiper>
-    </view>
+<!--    <view class="banner-box banner-box1 index-margin">-->
+<!--      <swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"-->
+<!--       indicator-active-color="#FFFFFF">-->
+<!--        <swiper-item v-for="(item, index) in bannerList1" :key="index">-->
+<!--          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />-->
+<!--        </swiper-item>-->
+<!--      </swiper>-->
+<!--    </view>-->
     <view class="hot-box">
       <view class="index-title">热门推荐</view>
       <view class="list-box">
@@ -41,41 +41,41 @@
         </view>
       </view>
     </view>
-    <view class="img-box index-margin">
-      <view class="index-title">
-        限时福利
-        <span class="more" @tap="toMore">
-          更多
-          <img class="img" src="/static/icon/more.png" />
-        </span>
-      </view>
-      <view class="img-item-box">
-        <view class="left-img" v-show="bannerList2.length > 0"
-          @tap="toProduct(bannerList2.length > 0 ? bannerList2[0].linkUrl : '')">
-          <img :src="bannerList2.length > 0 ? bannerList2[0].bannerUrl : ''" />
-        </view>
-        <view class="right-img-box" v-show="bannerList2.length > 2">
-          <view class="right-img" @tap="toProduct(bannerList2.length > 1 ? bannerList2[1].linkUrl : '')">
-            <img :src="bannerList2.length > 1 ? bannerList2[1].bannerUrl : ''" />
-          </view>
-          <view class="right-img" @tap="toProduct(bannerList2.length > 2 ? bannerList2[2].linkUrl : '')">
-            <img :src="bannerList2.length > 2 ? bannerList2[2].bannerUrl : ''" />
-          </view>
-        </view>
-      </view>
-    </view>
-    <view class="img-box index-margin">
-      <view class="index-title">
-        全面评估
-        <span class="more" @tap="toMore">
-          更多
-          <img class="img" src="/static/icon/more.png" />
-        </span>
-      </view>
-      <view class="img-item-box">
-        <img class="img" v-for="item in bannerList3" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
-      </view>
-    </view>
+<!--    <view class="img-box index-margin">-->
+<!--      <view class="index-title">-->
+<!--        限时福利-->
+<!--        <span class="more" @tap="toMore">-->
+<!--          更多-->
+<!--          <img class="img" src="/static/icon/more.png" />-->
+<!--        </span>-->
+<!--      </view>-->
+<!--      <view class="img-item-box">-->
+<!--        <view class="left-img" v-show="bannerList2.length > 0"-->
+<!--          @tap="toProduct(bannerList2.length > 0 ? bannerList2[0].linkUrl : '')">-->
+<!--          <img :src="bannerList2.length > 0 ? bannerList2[0].bannerUrl : ''" />-->
+<!--        </view>-->
+<!--        <view class="right-img-box" v-show="bannerList2.length > 2">-->
+<!--          <view class="right-img" @tap="toProduct(bannerList2.length > 1 ? bannerList2[1].linkUrl : '')">-->
+<!--            <img :src="bannerList2.length > 1 ? bannerList2[1].bannerUrl : ''" />-->
+<!--          </view>-->
+<!--          <view class="right-img" @tap="toProduct(bannerList2.length > 2 ? bannerList2[2].linkUrl : '')">-->
+<!--            <img :src="bannerList2.length > 2 ? bannerList2[2].bannerUrl : ''" />-->
+<!--          </view>-->
+<!--        </view>-->
+<!--      </view>-->
+<!--    </view>-->
+<!--    <view class="img-box index-margin">-->
+<!--      <view class="index-title">-->
+<!--        全面评估-->
+<!--        <span class="more" @tap="toMore">-->
+<!--          更多-->
+<!--          <img class="img" src="/static/icon/more.png" />-->
+<!--        </span>-->
+<!--      </view>-->
+<!--      <view class="img-item-box">-->
+<!--        <img class="img" v-for="item in bannerList3" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />-->
+<!--      </view>-->
+<!--    </view>-->
     <view class="product-box index-margin">
       <view class="index-title" @tap="toMore">
         精选测评
@@ -107,9 +107,9 @@ export default {
   data() {
     return {
       bannerList: [],
-      bannerList1: [],
-      bannerList2: [],
-      bannerList3: [],
+      // bannerList1: [],
+      // bannerList2: [],
+      // bannerList3: [],
       classList: [],
       hotList: [],
       productList: [],
@@ -120,9 +120,9 @@ export default {
     // this.userInfo = uni.getStorageSync("userInfo")
     this.userInfo = utils.getUserInfo()
     this.bannerList = await this.getBanner(0);
-    this.bannerList1 = await this.getBanner(1);
-    this.bannerList2 = await this.getBanner(2);
-    this.bannerList3 = await this.getBanner(3);
+    // this.bannerList1 = await this.getBanner(1);
+    // this.bannerList2 = await this.getBanner(2);
+    // this.bannerList3 = await this.getBanner(3);
     this.productList = await this.getProduct(0);
     this.hotList = await this.getProduct(1);
     const classData = await classServer.getClassList()
@@ -222,7 +222,7 @@ page {
 
   .banner-box {
     .banner-img {
-      width: 100%;
+      width: 702upx;
       height: 260upx;
     }
 

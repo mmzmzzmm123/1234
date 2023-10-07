@@ -118,6 +118,7 @@
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="图片地址">
           <image-upload v-model="form.bannerUrl" :sizeTip="sizeTips[form.bannerType]" :extraData="extraData"/>
+<!--          <my-cropper v-model="form.bannerUrl" :sizeTip="sizeTips[form.bannerType]" :extraData="extraData" :width="351" :height="130"/>-->
         </el-form-item>
         <el-form-item label="跳转url" prop="linkUrl">
           <el-input v-model="form.linkUrl" placeholder="请输入跳转url" />

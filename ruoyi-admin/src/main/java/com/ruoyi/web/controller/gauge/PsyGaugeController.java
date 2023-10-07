@@ -51,6 +51,12 @@ public class PsyGaugeController extends BaseController
         return getDataTable(list);
     }
 
+    @GetMapping("/getGauges")
+    public List<PsyGauge> getGauges(PsyGauge psyGauge)
+    {
+        return psyGaugeService.selectPsyGaugeList(psyGauge);
+    }
+
     /**
      * 导出心理测评列表
      */

@@ -25,7 +25,7 @@
       </el-form-item>
     </el-form>
 
-    <!-- <el-row :gutter="10" class="mb8">
+     <el-row :gutter="10" class="mb8">
       <el-col :span="1.5">
         <el-button
           type="primary"
@@ -36,68 +36,67 @@
           v-hasPermi="['gauge:label:add']"
         >新增</el-button>
       </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['gauge:label:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['gauge:label:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['gauge:label:export']"
-        >导出</el-button>
-      </el-col>
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="success"-->
+<!--          plain-->
+<!--          icon="el-icon-edit"-->
+<!--          size="mini"-->
+<!--          :disabled="single"-->
+<!--          @click="handleUpdate"-->
+<!--          v-hasPermi="['gauge:label:edit']"-->
+<!--        >修改</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="danger"-->
+<!--          plain-->
+<!--          icon="el-icon-delete"-->
+<!--          size="mini"-->
+<!--          :disabled="multiple"-->
+<!--          @click="handleDelete"-->
+<!--          v-hasPermi="['gauge:label:remove']"-->
+<!--        >删除</el-button>-->
+<!--      </el-col>-->
+<!--      <el-col :span="1.5">-->
+<!--        <el-button-->
+<!--          type="warning"-->
+<!--          plain-->
+<!--          icon="el-icon-download"-->
+<!--          size="mini"-->
+<!--          @click="handleExport"-->
+<!--          v-hasPermi="['gauge:label:export']"-->
+<!--        >导出</el-button>-->
+<!--      </el-col>-->
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row> -->
+    </el-row>
 
     <el-table v-loading="loading" :data="labelList" @selection-change="handleSelectionChange">
       <!-- <el-table-column type="selection" width="55" align="center" /> -->
-      <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="量表" align="center" prop="gaugeName" />
       <el-table-column label="量表标签" align="center" prop="label">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.gauge_label_class" :value="scope.row.label"/>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="排序" align="center" prop="sort" />
+       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['gauge:label:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
-            icon="el-icon-delete"
+            style="color: red"
             @click="handleDelete(scope.row)"
             v-hasPermi="['gauge:label:remove']"
           >删除</el-button>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -111,8 +110,15 @@
     <!-- 添加或修改测评标签对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="量表id" prop="gaugeId">
-          <el-input v-model="form.gaugeId" placeholder="请输入量表id" />
+        <el-form-item label="量表" prop="label">
+          <el-select v-model="form.gaugeId" placeholder="请选择量表">
+            <el-option
+              v-for="it in gauges"
+              :key="it.id"
+              :label="it.title"
+              :value="it.id"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="量表标签" prop="label">
           <el-select v-model="form.label" placeholder="请选择量表标签">
@@ -120,9 +126,12 @@
               v-for="dict in dict.type.gauge_label_class"
               :key="dict.value"
               :label="dict.label"
-:value="parseInt(dict.value)"
+              :value="parseInt(dict.value)"
             ></el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item label="排序" prop="sort">
+          <el-input-number :min="0" :max="999" v-model="form.sort" placeholder="请输入排序" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -135,6 +144,7 @@
 
 <script>
 import { listLabel, getLabel, delLabel, addLabel, updateLabel } from "@/api/gauge/label";
+import { getGauges } from "@/api/gauge/gauge";
 
 export default {
   name: "Label",
@@ -143,6 +153,7 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      gauges: [],
       // 选中数组
       ids: [],
       // 非单个禁用
@@ -171,7 +182,7 @@ export default {
       // 表单校验
       rules: {
         gaugeId: [
-          { required: true, message: "量表id不能为空", trigger: "blur" }
+          { required: true, message: "量表不能为空", trigger: "blur" }
         ],
         label: [
           { required: true, message: "量表标签不能为空", trigger: "change" }
@@ -180,9 +191,15 @@ export default {
     };
   },
   created() {
+    this.getGaugeList();
     this.getList();
   },
   methods: {
+    getGaugeList() {
+      getGauges().then(response => {
+        this.gauges = response;
+      })
+    },
     /** 查询测评标签列表 */
     getList() {
       this.loading = true;
@@ -202,7 +219,8 @@ export default {
       this.form = {
         id: null,
         gaugeId: null,
-        label: null
+        label: null,
+        sort: 0,
       };
       this.resetForm("form");
     },

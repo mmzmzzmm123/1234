@@ -9,6 +9,14 @@ export function listGauge(query) {
   })
 }
 
+export function getGauges(query) {
+  return request({
+    url: '/psychology/gauge/getGauges',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询心理测评详细
 export function getGauge(id) {
   return request({

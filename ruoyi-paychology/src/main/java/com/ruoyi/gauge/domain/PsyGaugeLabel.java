@@ -22,6 +22,8 @@ public class PsyGaugeLabel extends BaseEntity
 //    @Excel(name = "量表id")
     private Integer gaugeId;
 
+    private Integer sort;
+
     @Excel(name = "量表名称")
     private String gaugeName;
 

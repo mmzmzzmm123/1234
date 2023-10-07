@@ -8,10 +8,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="gaugeId"    column="gauge_id"    />
         <result property="label"    column="label"    />
+        <result property="sort"    column="sort"    />
     </resultMap>
 
     <sql id="selectPsyGaugeLabelVo">
-        select id, gauge_id, label from psy_gauge_label
+        select id, gauge_id, label, sort from psy_gauge_label
     </sql>
 
     <select id="selectPsyGaugeLabelList" parameterType="com.ruoyi.gauge.domain.PsyGaugeLabel" resultMap="PsyGaugeLabelResult">
@@ -32,10 +33,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gaugeId != null">gauge_id,</if>
             <if test="label != null">label,</if>
+            <if test="sort != null">sort,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="gaugeId != null">#{gaugeId},</if>
             <if test="label != null">#{label},</if>
+            <if test="sort != null">#{sort},</if>
         </trim>
     </insert>
 
@@ -44,6 +47,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="gaugeId != null">gauge_id = #{gaugeId},</if>
             <if test="label != null">label = #{label},</if>
+            <if test="sort != null">sort = #{sort},</if>
         </trim>
         where id = #{id}
     </update>
@@ -70,11 +74,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             gauge.gauge_class as gaugeClass,
             gauge.remark,
             gauge.price,
-            gauge.list_show_picture as listShowPicture
+            gauge.list_show_picture as listShowPicture,
+            label.sort
         FROM
             psy_gauge gauge left join psy_gauge_label label ON gauge.id = label.gauge_id
         WHERE label.label = #{labelCode}
-        GROUP BY gauge.id
+        order by label.sort desc
     </select>
 
     <select id="queryLabelPage" resultType="com.ruoyi.gauge.domain.PsyGaugeLabel">
@@ -82,12 +87,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             label.id,
             label.gauge_id,
             label.label,
+            label.sort,
             gauge.title as gaugeName
         from psy_gauge_label label LEFT JOIN psy_gauge gauge ON label.gauge_id = gauge.id
         <where>
             <if test="gaugeName != null "> and gauge.title like concat('%' ,#{gaugeName} ,'%')</if>
             <if test="label != null "> and label.label = #{label}</if>
         </where>
+        order by label.sort desc
     </select>
 
 </mapper>

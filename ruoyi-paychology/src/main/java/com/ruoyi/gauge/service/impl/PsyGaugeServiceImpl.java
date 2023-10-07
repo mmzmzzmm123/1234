@@ -43,9 +43,7 @@ public class PsyGaugeServiceImpl implements IPsyGaugeService
     @Override
     public PsyGauge selectPsyGaugeById(Integer id)
     {
-
-        return psyGaugeMapper.selectPsyGaugeById(id)
-                ;
+        return psyGaugeMapper.selectPsyGaugeById(id);
     }
 
     /**
