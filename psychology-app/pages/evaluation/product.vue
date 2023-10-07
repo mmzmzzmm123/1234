@@ -301,13 +301,15 @@ page {
     }
 
     .introduce, .description {
-      width: calc(100% - 48upx);
-      padding-left: 24upx;
-      padding-right: 24upx;
+      width: 100%;
+      //width: calc(100% - 48upx);
+      //padding-left: 24upx;
+      //padding-right: 24upx;
       padding-bottom: 24upx;
 
       ::v-deep img {
         width: 100%;
+        margin-top: -7px;
       }
     }
 

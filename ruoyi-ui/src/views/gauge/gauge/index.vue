@@ -83,7 +83,7 @@
         </el-form-item>
         <el-form-item label="头部图片">
 <!--          <image-upload v-model="form.headPicture" sizeTip="宽750px 高422px" :extraData="extraData"/>-->
-          <my-cropper v-model="form.headPicture" sizeTip="宽750px 高422px" :extraData="extraData" :width="350" :height="211"/>
+          <my-cropper v-model="form.headPicture" sizeTip="宽750px 高422px" :extraData="extraData" :width="375" :height="211"/>
         </el-form-item>
         <el-form-item label="列表展示图片">
 <!--          <image-upload v-model="form.listShowPicture" sizeTip="宽183px 高208px" :extraData="extraData" />-->

@@ -200,11 +200,7 @@ export default {
           uni.navigateTo({ url: "/pages/course/index" })
           break
         case 12:
-          // uni.navigateTo({ url: "/pages/evaluation/index" })
-          uni.showToast({
-            icon: "none",
-            title: "功能开发中",
-          });
+          uni.navigateTo({ url: "/pages/evaluation/index" })
           break
         case 13:
           uni.navigateTo({ url: "/pages/consult/integral" })
