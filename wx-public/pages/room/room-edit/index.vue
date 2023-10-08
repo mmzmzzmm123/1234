@@ -81,6 +81,7 @@
 			}
 		},
 		onLoad(options) {
+			this.room.storeId = this.$store.state.currentStore.id
 			if(options.id){
 				uni.setNavigationBarTitle({
 					title: '编辑包厢'

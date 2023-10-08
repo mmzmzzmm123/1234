@@ -18,6 +18,11 @@ page{
 	.card{
 		margin: 20rpx;
 	}
+	.u-cell{
+		margin: 20rpx;
+		background: $u-bg-color;
+		border-radius: 16rpx;
+	}
 }
 .card-title{
 	font-size: 32rpx;
@@ -100,4 +105,8 @@ page{
 	.u-button{
 		margin-right: 20rpx;
 	}
+}
+.top-shop-select{
+	display: flex;
+	padding: 20rpx;
 }

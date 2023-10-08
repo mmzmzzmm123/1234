@@ -1,9 +1,12 @@
 <template>
 <view>
+	<view class="top-shop-select">
+		<text>所属门店：</text>
+		<uo-select :value="searchParam.storeId" :options="storeList" valueField="id" @change="onStoreChange"></uo-select>
+	</view>
 	<view class="filter-bar">
 		<uo-select placeholder="包厢状态"></uo-select>
 		<uo-select placeholder="使用状态" v-model="searchParam.status" :options="roomStatus" clearable></uo-select>
-		<uo-select placeholder="绑定状态"></uo-select>
 		<u-button plain type="primary" @click="onEditRoomClick()">添加包厢</u-button>
 	</view>
 	<view style="padding: 0 10rpx 10rpx;">
@@ -56,7 +59,8 @@
 					name: '',
 					status: null,
 					pageSize: 1000,
-					pageNum: 1
+					pageNum: 1,
+					storeId: null
 				},
 				roomList: [],
 				showMore: false,
@@ -72,6 +76,7 @@
 			}
 		},
 		onLoad() {
+			this.searchParam.storeId = this.$store.state.currentStore.id
 			this.$store.dispatch("loadDict", 'room_status')
 			this.refresh()
 		},
@@ -82,6 +87,13 @@
 		// 	this.refresh(true)
 		// },
 		methods:{
+			onStoreChange(store){
+				this.searchParam.storeId = store.id
+				this.$store.commit("$uStore", {
+					name: 'currentStore',
+					value: store
+				})
+			},
 			onSearchKeywordInput(){
 				this.$u.debounce(this.refresh, 400)
 			},
@@ -145,6 +157,10 @@
 			box-sizing: border-box;
 			height: 60rpx;
 			flex: 1;
+			/deep/ .uo-select__content{
+				width: 100%;
+				justify-content: space-between;
+			}
 		}
 		.u-button{
 			height: 60rpx;

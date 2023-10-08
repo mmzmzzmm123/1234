@@ -2,26 +2,13 @@
 	<view>
 
 		<view>
-			<view class="roomlist-bar">当前门店：
+			<view class="top-shop-select">当前门店：
 				<uo-select :value="storeId" :options="storeList" valueField="id" @change="selectStore"></uo-select>
 			</view>
 		</view>
-
+		
 		<view class="card-list">
-			<view class="card" v-for="(room, index) in roomList" :key="room.id">
-				<view class="card__content">
-					<!-- <uo-image src="https://mbdp01.bdstatic.com/static/landing-pc/img/logo_top.79fdb8c2.png"></uo-image> -->
-					<view class="card__content__right">
-						<view class="card__content__head">
-							<navigator class="card-title" :url="'room?id='+room.id+'&name='+room.name">
-								<view class="card-title">{{room.name}}</view>
-							</navigator>
-						</view>
-					</view>
-				</view>
-
-			</view>
-
+			<u-cell v-for="(room, index) in roomList" :key="room.id" icon="coupon" :title="room.name" isLink :url="'room?id='+room.id+'&name='+room.name" :border="false"></u-cell>
 		</view>
 	</view>
 </template>
@@ -122,19 +109,4 @@
 </script>
 
 <style lang="scss">
-	.picker-view {
-		width: 750rpx;
-		height: 600rpx;
-		margin-top: 20rpx;
-	}
-
-	.item {
-		line-height: 100rpx;
-		text-align: center;
-	}
-
-	.roomlist-bar {
-		display: flex;
-
-	}
 </style>

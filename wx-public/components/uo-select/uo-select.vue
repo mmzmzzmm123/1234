@@ -1,9 +1,9 @@
 <template>
 	<view class="uo-select">
-		<view @click="showOptions = true">
+		<view style="width: 100%;" @click="showOptions = true">
 			<slot>
 				<view class="uo-select__content" :class="value ? '':'uo-select__placeholder'">
-					{{displayName}}
+					<text class="uo-select__content__text">{{displayName}}</text>
 					<u-icon name="arrow-down-fill"></u-icon>
 				</view>
 			</slot>
@@ -109,6 +109,11 @@
 			align-items: center;
 			.u-icon{
 				margin-left: 10rpx;
+			}
+			&__text{
+				overflow: hidden;
+				white-space: nowrap;
+				text-overflow: ellipsis;
 			}
 		}
 		&__placeholder{

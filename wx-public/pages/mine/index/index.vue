@@ -6,7 +6,7 @@
 			<view class="personal-info__name">{{loginUser.nickName}}</view>
 			<view class="personal-info__phone">{{phonenumber}}</view>
 		</view>
-		<view style="width: 140rpx;">
+		<view style="width: 160rpx;">
 			<u-button type="primary">角色切换</u-button>
 		</view>
 	</view>

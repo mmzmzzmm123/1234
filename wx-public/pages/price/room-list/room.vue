@@ -1,19 +1,14 @@
 <template>
 	<view>
-		<view class="uni-padding-wrap">
-			<view class="uni-title">当前包厢：{{roomName}}</view>
+		<view class="top-shop-select">
+			<view>当前包厢：{{roomName}}</view>
 		</view>
 		<view>
 			<view class="card-list">
-				<view class="card">
-					<navigator class="card-title" :url="'../room-pack/index?id='+roomId">包厢专用套餐</navigator>
-				</view>
-				<view class="card">
-					<navigator class="card-title" :url="'../room-charge/index?id='+roomId">包厢续费套餐<u-icon name="arrow-right">
-						</u-icon>
-					</navigator>
-				</view>
-
+				<u-cell isLink title="包厢专用套餐" :url="'../room-pack/index?id='+roomId" :border="false">
+					<text class="iconfont icon-dingdan" slot="icon"></text>
+				</u-cell>
+				<u-cell icon="" isLink title="包厢续费套餐" :url="'../room-charge/index?id='+roomId" :border="false"></u-cell>
 			</view>
 		</view>
 	</view>
@@ -63,7 +58,4 @@
 </script>
 
 <style lang="scss">
-	page {
-		background-color: $u-bg-color;
-	}
 </style>

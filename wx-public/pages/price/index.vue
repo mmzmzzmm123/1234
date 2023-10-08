@@ -76,7 +76,4 @@
 </script>
 
 <style lang="scss">
-	page {
-		background-color: $u-bg-color;
-	}
 </style>
