@@ -6,4 +6,5 @@ import lombok.Data;
 @Data
 public class RoomOrderH5QryVo extends TRoomOrder {
     private String storeId;
+    private String phone;
 }

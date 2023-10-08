@@ -1189,7 +1189,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     }
 
     @Override
-    public List<RoomOrderH5Vo> selectTRoomOrderH5List(TRoomOrder tRoomOrder) {
+    public List<RoomOrderH5Vo> selectTRoomOrderH5List(RoomOrderH5QryVo tRoomOrder) {
         return tRoomOrderMapper.selectTRoomOrderH5List(tRoomOrder);
     }
 }

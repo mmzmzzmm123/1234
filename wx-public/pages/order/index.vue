@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="search-bar">
-			<u-search placeholder="请输入手机号码" :showAction="false" v-model="searchParam.name"
+			<u-search placeholder="请输入手机号码" :showAction="false" v-model="searchParam.phone"
 				@change="onSearchKeywordInput"></u-search>
 			<view class="uni-btn-v">
 				<picker mode="date" :value="startDate" :start="pickStartDate" :end="pickEndDate"

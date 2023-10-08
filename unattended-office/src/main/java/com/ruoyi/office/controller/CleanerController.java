@@ -81,4 +81,5 @@ public class CleanerController {
 
         return AjaxResult.success();
     }
+
 }

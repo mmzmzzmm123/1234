@@ -92,5 +92,5 @@ public interface ITRoomOrderService {
 
     PrepayResp promotionPrepay(PrepayReq order, long wxUserId);
 
-    List<RoomOrderH5Vo> selectTRoomOrderH5List(TRoomOrder tRoomOrder);
+    List<RoomOrderH5Vo> selectTRoomOrderH5List(RoomOrderH5QryVo tRoomOrder);
 }

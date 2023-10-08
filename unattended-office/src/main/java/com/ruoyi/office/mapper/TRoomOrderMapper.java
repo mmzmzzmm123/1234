@@ -70,5 +70,5 @@ public interface TRoomOrderMapper extends BaseMapper<TRoomOrder> {
 
     List<RoomOrderWxVo> getOrderCanOpen(OrderCanOpenReq wxUserId);
 
-    List<RoomOrderH5Vo> selectTRoomOrderH5List(TRoomOrder tRoomOrder);
+    List<RoomOrderH5Vo> selectTRoomOrderH5List(RoomOrderH5QryVo tRoomOrder);
 }
