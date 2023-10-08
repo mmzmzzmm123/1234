@@ -7,7 +7,7 @@
 		<u-button plain type="primary" @click="onEditRoomClick()">添加包厢</u-button>
 	</view>
 	<view style="padding: 0 10rpx 10rpx;">
-		<u-search placeholder="请输入包厢名称/绑定门店名称" :showAction="false" v-model="searchParam.keyword" @change="onSearchKeywordInput"></u-search>
+		<u-search placeholder="请输入包厢名称" :showAction="false" v-model="searchParam.name" @change="onSearchKeywordInput"></u-search>
 	</view>
 	<view class="card-list">
 		<view class="card" v-for="room in roomList" :key="room.id">
@@ -53,9 +53,9 @@
 		data(){
 			return {
 				searchParam: {
-					keyword: '',
-					status: '',
-					pageSize: 20,
+					name: '',
+					status: null,
+					pageSize: 1000,
 					pageNum: 1
 				},
 				roomList: [],
@@ -78,9 +78,9 @@
 		onPullDownRefresh() {
 			this.refresh()
 		},
-		onReachBottom() {
-			this.refresh(true)
-		},
+		// onReachBottom() {
+		// 	this.refresh(true)
+		// },
 		methods:{
 			onSearchKeywordInput(){
 				this.$u.debounce(this.refresh, 400)

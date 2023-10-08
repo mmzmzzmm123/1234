@@ -21,8 +21,8 @@
 			<u-cell title="全部门店" is-link url="/pages/shop/shop-list">
 				<text slot="icon" class="iconfont icon-shop"></text>
 			</u-cell>
-			<u-cell title="加盟我们" is-link url="/pages/join/index">
-				<text slot="icon" class="iconfont icon-shop"></text>
+			<u-cell title="加盟我们" is-link url="/pages/join/index" icon="chat-fill">
+				<!-- <u-icon name="chat-fill" slot="icon"></u-icon> -->
 			</u-cell>
 			<!-- <u-cell title="服务协议" is-link>
 				<text slot="icon" class="iconfont icon-fuwuxieyi"></text>

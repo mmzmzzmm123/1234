@@ -40,3 +40,29 @@
 		}
 	}
 }
+
+.form .u-form{
+	padding: 0 20rpx;
+	.u-form-item{
+		border-bottom: 1rpx solid $u-border-color;
+	}
+	.u-checkbox{
+		margin-right: 10rpx;
+	}
+}
+
+.edit-bottom-bar-holder{
+	height: 90rpx;
+}
+.edit-bottom-bar{
+	position: fixed;
+	display: flex;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 0 0 20rpx 20rpx;
+	background: #fff;
+	.u-button{
+		margin-right: 20rpx;
+	}
+}

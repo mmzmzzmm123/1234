@@ -29,16 +29,16 @@
 				{{shopInfo.remark}}
 			</view>
 			<view class="shop-info">
-				<u-icon name="map" custom-style="margin-right:10rpx" size="40rpx"></u-icon>
-				{{shopInfo.address}}
-			</view>
-			<view class="shop-info">
 				<u-icon name="clock" custom-style="margin-right:10rpx" size="36rpx"></u-icon>
 				{{shopInfo.startTime + ' - ' + shopInfo.stopTime}}
 			</view>
 			<view class="shop-info" @click="makePhoneCall">
 				<u-icon name="phone-fill" custom-style="margin-right:10rpx" size="36rpx"></u-icon>
 				{{shopInfo.phone}}
+			</view>
+			<view class="shop-info">
+				<u-icon name="map" custom-style="margin-right:10rpx" size="40rpx"></u-icon>
+				{{shopInfo.address}}
 			</view>
 		</view>
 		<view class="u-p-h-20">
