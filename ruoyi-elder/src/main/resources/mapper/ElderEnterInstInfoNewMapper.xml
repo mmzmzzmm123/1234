@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ElderEnterInstInfoNewMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.ElderEnterInstInfoNew">
+            <id property="id" column="id" jdbcType="VARCHAR"/>
+            <result property="taxId" column="tax_id" jdbcType="VARCHAR"/>
+            <result property="enterInstType" column="enter_inst_type" jdbcType="VARCHAR"/>
+            <result property="enterInstName" column="enter_inst_name" jdbcType="VARCHAR"/>
+            <result property="establishDate" column="establish_date" jdbcType="VARCHAR"/>
+            <result property="areaCode" column="area_code" jdbcType="VARCHAR"/>
+            <result property="areaName" column="area_name" jdbcType="VARCHAR"/>
+            <result property="instProvince" column="inst_province" jdbcType="VARCHAR"/>
+            <result property="instCity" column="inst_city" jdbcType="VARCHAR"/>
+            <result property="instDistrict" column="inst_district" jdbcType="VARCHAR"/>
+            <result property="instStreet" column="inst_street" jdbcType="VARCHAR"/>
+            <result property="instVillage" column="inst_village" jdbcType="VARCHAR"/>
+            <result property="instAdd" column="inst_add" jdbcType="VARCHAR"/>
+            <result property="instLev" column="inst_lev" jdbcType="VARCHAR"/>
+            <result property="principal" column="principal" jdbcType="VARCHAR"/>
+            <result property="principalContact" column="principal_contact" jdbcType="VARCHAR"/>
+            <result property="principalCredType" column="principal_cred_type" jdbcType="VARCHAR"/>
+            <result property="principalCredId" column="principal_cred_id" jdbcType="VARCHAR"/>
+            <result property="principalRegBureau" column="principal_reg_bureau" jdbcType="VARCHAR"/>
+            <result property="principalType" column="principal_type" jdbcType="VARCHAR"/>
+            <result property="totalCareBeds" column="total_care_beds" jdbcType="INTEGER"/>
+            <result property="dayCareBeds" column="day_care_beds" jdbcType="INTEGER"/>
+            <result property="nursingBeds" column="nursing_beds" jdbcType="INTEGER"/>
+            <result property="totalBeds" column="total_beds" jdbcType="INTEGER"/>
+            <result property="structionArea" column="struction_area" jdbcType="DOUBLE"/>
+            <result property="coveredArea" column="covered_area" jdbcType="DOUBLE"/>
+            <result property="placeProp" column="place_prop" jdbcType="VARCHAR"/>
+            <result property="fireQualified" column="fire_qualified" jdbcType="VARCHAR"/>
+            <result property="fireUnqualifiedReason" column="fire_unqualified_reason" jdbcType="VARCHAR"/>
+            <result property="fireQualifiedComments" column="fire_qualified_comments" jdbcType="VARCHAR"/>
+            <result property="foodQualified" column="food_qualified" jdbcType="VARCHAR"/>
+            <result property="foodUnqualifiedReason" column="food_unqualified_reason" jdbcType="VARCHAR"/>
+            <result property="foodQualifiedComments" column="food_qualified_comments" jdbcType="VARCHAR"/>
+            <result property="unitPropFirst" column="unit_prop_first" jdbcType="VARCHAR"/>
+            <result property="unitPropSecond" column="unit_prop_second" jdbcType="VARCHAR"/>
+            <result property="isPovertyRelief" column="is_poverty_relief" jdbcType="VARCHAR"/>
+            <result property="isGloriousHomes" column="is_glorious_homes" jdbcType="VARCHAR"/>
+            <result property="isCommunityCareCenter" column="is_community_care_center" jdbcType="VARCHAR"/>
+            <result property="areaType" column="area_type" jdbcType="VARCHAR"/>
+            <result property="establishMainbody" column="establish_mainbody" jdbcType="VARCHAR"/>
+            <result property="haveCapability" column="have_capability" jdbcType="VARCHAR"/>
+            <result property="haveTotalDisability" column="have_total_disability" jdbcType="VARCHAR"/>
+            <result property="haveHalfDisability" column="have_half_disability" jdbcType="VARCHAR"/>
+            <result property="haveSpecialDifficult" column="have_special_difficult" jdbcType="VARCHAR"/>
+            <result property="haveDeformity" column="have_deformity" jdbcType="VARCHAR"/>
+            <result property="haveSpecialCare" column="have_special_care" jdbcType="VARCHAR"/>
+            <result property="haveOther" column="have_other" jdbcType="VARCHAR"/>
+            <result property="haveOtherName" column="have_other_name" jdbcType="VARCHAR"/>
+            <result property="isLiabilityInsurance" column="is_liability_insurance" jdbcType="VARCHAR"/>
+            <result property="isLongCareInsurance" column="is_long_care_insurance" jdbcType="VARCHAR"/>
+            <result property="isAidService" column="is_aid_service" jdbcType="VARCHAR"/>
+            <result property="isBedAid" column="is_bed_aid" jdbcType="VARCHAR"/>
+            <result property="bedAidCount" column="bed_aid_count" jdbcType="INTEGER"/>
+            <result property="isMealAid" column="is_meal_aid" jdbcType="VARCHAR"/>
+            <result property="mealAidCount" column="meal_aid_count" jdbcType="INTEGER"/>
+            <result property="isCleanAid" column="is_clean_aid" jdbcType="VARCHAR"/>
+            <result property="cleanAidCount" column="clean_aid_count" jdbcType="INTEGER"/>
+            <result property="isWalkAid" column="is_walk_aid" jdbcType="VARCHAR"/>
+            <result property="walkAidCount" column="walk_aid_count" jdbcType="INTEGER"/>
+            <result property="isBathAid" column="is_bath_aid" jdbcType="VARCHAR"/>
+            <result property="bathAidCount" column="bath_aid_count" jdbcType="INTEGER"/>
+            <result property="isRecoverAid" column="is_recover_aid" jdbcType="VARCHAR"/>
+            <result property="recoverAidCount" column="recover_aid_count" jdbcType="INTEGER"/>
+            <result property="isMedicalAid" column="is_medical_aid" jdbcType="VARCHAR"/>
+            <result property="medicalAidCount" column="medical_aid_count" jdbcType="INTEGER"/>
+            <result property="isVisitAid" column="is_visit_aid" jdbcType="VARCHAR"/>
+            <result property="visitAidCount" column="visit_aid_count" jdbcType="INTEGER"/>
+            <result property="isOtherAid" column="is_other_aid" jdbcType="VARCHAR"/>
+            <result property="otherAidCount" column="other_aid_count" jdbcType="INTEGER"/>
+            <result property="isCommunityCare" column="is_community_care" jdbcType="VARCHAR"/>
+            <result property="isDayCare" column="is_day_care" jdbcType="VARCHAR"/>
+            <result property="dayCareCount" column="day_care_count" jdbcType="INTEGER"/>
+            <result property="isElderDinning" column="is_elder_dinning" jdbcType="VARCHAR"/>
+            <result property="elderDinningCount" column="elder_dinning_count" jdbcType="INTEGER"/>
+            <result property="isEntertainment" column="is_entertainment" jdbcType="VARCHAR"/>
+            <result property="entertainmentCount" column="entertainment_count" jdbcType="INTEGER"/>
+            <result property="isTimeBank" column="is_time_bank" jdbcType="VARCHAR"/>
+            <result property="timeBankCount" column="time_bank_count" jdbcType="INTEGER"/>
+            <result property="isCommunityRecover" column="is_community_recover" jdbcType="VARCHAR"/>
+            <result property="communityRecoverCount" column="community_recover_count" jdbcType="INTEGER"/>
+            <result property="isOtherService" column="is_other_service" jdbcType="VARCHAR"/>
+            <result property="otherServiceName" column="other_service_name" jdbcType="VARCHAR"/>
+            <result property="otherServiceCount" column="other_service_count" jdbcType="INTEGER"/>
+            <result property="isMedicalService" column="is_medical_service" jdbcType="VARCHAR"/>
+            <result property="isMedicalInst" column="is_medical_inst" jdbcType="VARCHAR"/>
+            <result property="isPrivateHospital" column="is_private_hospital" jdbcType="VARCHAR"/>
+            <result property="isNusringStation" column="is_nusring_station" jdbcType="VARCHAR"/>
+            <result property="isClinic" column="is_clinic" jdbcType="VARCHAR"/>
+            <result property="isMedicalContracted" column="is_medical_contracted" jdbcType="VARCHAR"/>
+            <result property="isHospital" column="is_hospital" jdbcType="VARCHAR"/>
+            <result property="isTownHospital" column="is_town_hospital" jdbcType="VARCHAR"/>
+            <result property="isCommunityHospital" column="is_community_hospital" jdbcType="VARCHAR"/>
+            <result property="isMedicalCert" column="is_medical_cert" jdbcType="VARCHAR"/>
+            <result property="isMedicalInsuranceUnit" column="is_medical_insurance_unit" jdbcType="VARCHAR"/>
+            <result property="isGovernAssist" column="is_govern_assist" jdbcType="VARCHAR"/>
+            <result property="isTaxBreak" column="is_tax_break" jdbcType="VARCHAR"/>
+            <result property="isConstructBreak" column="is_construct_break" jdbcType="VARCHAR"/>
+            <result property="isOperaBreak" column="is_opera_break" jdbcType="VARCHAR"/>
+            <result property="isLandBreak" column="is_land_break" jdbcType="VARCHAR"/>
+            <result property="isAdminBreak" column="is_admin_break" jdbcType="VARCHAR"/>
+            <result property="isWaterElecBreak" column="is_water_elec_break" jdbcType="VARCHAR"/>
+            <result property="chargeType" column="charge_type" jdbcType="VARCHAR"/>
+            <result property="isMembership" column="is_membership" jdbcType="VARCHAR"/>
+            <result property="nursingUp" column="nursing_up" jdbcType="DOUBLE"/>
+            <result property="nursingLow" column="nursing_low" jdbcType="DOUBLE"/>
+            <result property="bedUp" column="bed_up" jdbcType="DOUBLE"/>
+            <result property="bedLow" column="bed_low" jdbcType="DOUBLE"/>
+            <result property="mealUp" column="meal_up" jdbcType="DOUBLE"/>
+            <result property="mealLow" column="meal_low" jdbcType="DOUBLE"/>
+            <result property="depositUp" column="deposit_up" jdbcType="DOUBLE"/>
+            <result property="depositLow" column="deposit_low" jdbcType="DOUBLE"/>
+            <result property="isOtherFee" column="is_other_fee" jdbcType="VARCHAR"/>
+            <result property="otherFeeName" column="other_fee_name" jdbcType="VARCHAR"/>
+            <result property="otherFeeLow" column="other_fee_low" jdbcType="DOUBLE"/>
+            <result property="otherFeeUp" column="other_fee_up" jdbcType="DOUBLE"/>
+            <result property="totalElders" column="total_elders" jdbcType="INTEGER"/>
+            <result property="currentStatus" column="current_status" jdbcType="VARCHAR"/>
+            <result property="isRecord" column="is_record" jdbcType="VARCHAR"/>
+            <result property="recordDate" column="record_date" jdbcType="VARCHAR"/>
+            <result property="lng" column="lng" jdbcType="DOUBLE"/>
+            <result property="lat" column="lat" jdbcType="DOUBLE"/>
+            <result property="star" column="star" jdbcType="VARCHAR"/>
+            <result property="searchValue" column="search_value" jdbcType="VARCHAR"/>
+            <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="delFlag" column="del_flag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,tax_id,enter_inst_type,
+        enter_inst_name,establish_date,area_code,
+        area_name,inst_province,inst_city,
+        inst_district,inst_street,inst_village,
+        inst_add,inst_lev,principal,
+        principal_contact,principal_cred_type,principal_cred_id,
+        principal_reg_bureau,principal_type,total_care_beds,
+        day_care_beds,nursing_beds,total_beds,
+        struction_area,covered_area,place_prop,
+        fire_qualified,fire_unqualified_reason,fire_qualified_comments,
+        food_qualified,food_unqualified_reason,food_qualified_comments,
+        unit_prop_first,unit_prop_second,is_poverty_relief,
+        is_glorious_homes,is_community_care_center,area_type,
+        establish_mainbody,have_capability,have_total_disability,
+        have_half_disability,have_special_difficult,have_deformity,
+        have_special_care,have_other,have_other_name,
+        is_liability_insurance,is_long_care_insurance,is_aid_service,
+        is_bed_aid,bed_aid_count,is_meal_aid,
+        meal_aid_count,is_clean_aid,clean_aid_count,
+        is_walk_aid,walk_aid_count,is_bath_aid,
+        bath_aid_count,is_recover_aid,recover_aid_count,
+        is_medical_aid,medical_aid_count,is_visit_aid,
+        visit_aid_count,is_other_aid,other_aid_count,
+        is_community_care,is_day_care,day_care_count,
+        is_elder_dinning,elder_dinning_count,is_entertainment,
+        entertainment_count,is_time_bank,time_bank_count,
+        is_community_recover,community_recover_count,is_other_service,
+        other_service_name,other_service_count,is_medical_service,
+        is_medical_inst,is_private_hospital,is_nusring_station,
+        is_clinic,is_medical_contracted,is_hospital,
+        is_town_hospital,is_community_hospital,is_medical_cert,
+        is_medical_insurance_unit,is_govern_assist,is_tax_break,
+        is_construct_break,is_opera_break,is_land_break,
+        is_admin_break,is_water_elec_break,charge_type,
+        is_membership,nursing_up,nursing_low,
+        bed_up,bed_low,meal_up,
+        meal_low,deposit_up,deposit_low,
+        is_other_fee,other_fee_name,other_fee_low,
+        other_fee_up,total_elders,current_status,
+        is_record,record_date,lng,
+        lat,star,search_value,
+        create_by,create_time,update_by,
+        update_time,remark,del_flag
+    </sql>
+</mapper>
