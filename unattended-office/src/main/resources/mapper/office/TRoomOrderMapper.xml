@@ -168,6 +168,7 @@
             <if test="startTime != null ">and o.start_time &gt;= #{startTime}</if>
             <if test="endTime != null ">and o.start_time &lt; #{endTime}</if>
             <if test="phone != null and phone!='' ">and u.phone like concat('%',#{phone},'%')</if>
+            <if test="1 == 1 ">and o.status in (2,3,4,5)</if>
         </where>
         order by o.create_time desc
     </select>
