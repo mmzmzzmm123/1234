@@ -378,6 +378,24 @@ public class ApiController extends BaseController {
         return AjaxResult.success();
     }
 
+    /**
+     * 开门禁
+     *
+     * @param id
+     * @return
+     */
+    @ApiOperation("开门禁")
+    @PostMapping("/openStore/{id}")
+    public AjaxResult openStoreByStoreId(@PathVariable("id") Long id) {
+        try {
+            storeService.openStoreByStoreId(id);
+        } catch (Exception e) {
+            throw new ServiceException("操作异常，请联系管理员");
+        }
+
+        return AjaxResult.success();
+    }
+
     @Autowired
     ITRoomService roomService;
 
