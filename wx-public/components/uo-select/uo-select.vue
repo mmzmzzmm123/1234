@@ -82,7 +82,7 @@
 			onCancelClick(){
 				this.showOptions = false
 				if(this.clearable){
-					this.$emit('input', '')
+					this.$emit('input', null)
 					// this.$emit('change', null)
 				}
 			}
