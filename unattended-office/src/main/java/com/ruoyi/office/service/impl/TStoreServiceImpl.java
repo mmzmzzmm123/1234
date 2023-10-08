@@ -10,9 +10,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.office.domain.TEquipment;
-import com.ruoyi.office.domain.TStorePackage;
-import com.ruoyi.office.domain.TWxUserAmount;
+import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.WxStoreListQryVo;
 import com.ruoyi.office.domain.vo.WxStoreListRspVo;
@@ -23,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.office.mapper.TStoreMapper;
-import com.ruoyi.office.domain.TStore;
 
 /**
  * 商家用户店铺Service业务层处理
@@ -139,9 +136,19 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
     @Autowired
     private ISysDictDataService dictDataService;
 
+    @Autowired
+    private ITRoomOrderService orderService;
+
+    @Autowired
+    private ITRoomService roomService;
+
     @Override
     public void openStore(Long id) {
-        TStore store = tStoreMapper.selectTStoreById(id);
+
+        TRoomOrder order = orderService.selectTRoomOrderById(id);
+        final TRoom room = roomService.selectTRoomById(order.getRoomId());
+
+        TStore store = tStoreMapper.selectTStoreById(room.getStoreId());
         TEquipment equipment = equipmentService.selectTEquipmentById(store.getEquipId());
 
         SysDictData dictData = new SysDictData();
