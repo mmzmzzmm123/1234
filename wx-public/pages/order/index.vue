@@ -3,7 +3,7 @@
 		<view class="search-bar">
 			<u-search placeholder="请输入手机号码" :showAction="false" v-model="searchParam.phone"
 				@change="onSearchKeywordInput"></u-search>
-			<view class="uni-btn-v">
+			<view class="search-clause">
 				<picker mode="date" :value="startDate" :start="pickStartDate" :end="pickEndDate"
 					@change="bindDateChange">
 					<view class="uni-input">{{startDate}}</view>
@@ -139,9 +139,9 @@
 </script>
 
 <style lang="scss">
-	.is-hover {
-		color: rgba(255, 255, 255, 0.6);
-		background-color: #179b16;
-		border-color: #179b16;
+	.search-clause{
+		display: flex;
+		flex-direction: row-reverse;
+		margin: 20rpx;
 	}
 </style>
