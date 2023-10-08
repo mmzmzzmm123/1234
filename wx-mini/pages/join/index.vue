@@ -12,7 +12,7 @@
 					<u-input v-model="model.phone" placeholder="请输入联系方式"></u-input>
 				</u-form-item>
 				<u-form-item label="留言" prop="remark">
-					<u-input v-model="model.remark" placeholder="请输入留言"></u-input>
+					<u-textarea v-model="model.remark" placeholder="请输入留言"></u-textarea> 
 				</u-form-item>
 				
 			</u-form>
