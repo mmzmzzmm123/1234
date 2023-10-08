@@ -170,4 +170,29 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
         equipment.setOnOff("Y");
         equipmentService.updateTEquipment(equipment);
     }
+
+    @Override
+    public void openStoreByStoreId(Long id) {
+        TStore store = tStoreMapper.selectTStoreById(id);
+        TEquipment equipment = equipmentService.selectTEquipmentById(store.getEquipId());
+
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType("equipment_type");
+        Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
+
+        Map<String, String> msg = new HashMap<>();
+        if (equipDict.containsKey(OfficeEnum.EquipType.DOOR.getCode())) {
+            String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
+            msg.put(command[0], command[1]);
+        } else {
+            throw new ServiceException("该门店未设置门禁");
+        }
+
+        MqttSendClient sendClient = new MqttSendClient();
+        sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+
+        equipment.setRecentOpenTime(new Date());
+        equipment.setOnOff("Y");
+        equipmentService.updateTEquipment(equipment);
+    }
 }

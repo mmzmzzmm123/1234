@@ -27,63 +27,63 @@
 			</view>
 			<view class="card menu">
 				<navigator class="menu__item" url="../store/store-list/index">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/mendian.png"></image>
 					<view>门店管理</view>
 				</navigator>
 				<navigator class="menu__item" url="/pages/room/room-list/index">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/baoxiang.png"></image>
 					<view>包厢管理</view>
 				</navigator>
 				<navigator class="menu__item" url="../price/index">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/dingjia.png"></image>
 					<view>定价管理</view>
 				</navigator>
 				<navigator class="menu__item" url="../order/index">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/dingdan.png"></image>
 					<view>订单管理</view>
 				</navigator>
 				<navigator class="menu__item" @click="comingSoon">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/yingxiao.png"></image>
 					<view>营销管理</view>
 				</navigator>
 				<navigator class="menu__item" @click="comingSoon">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/jingying.png"></image>
 					<view>经营参谋</view>
 				</navigator>
 				<navigator class="menu__item" @click="comingSoon">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/shebei.png"></image>
 					<view>设备管理</view>
 				</navigator>
 				<navigator class="menu__item" @click="comingSoon">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/yuangong.png"></image>
 					<view>员工管理</view>
 				</navigator>
 				<navigator class="menu__item" @click="comingSoon">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/tuandui.png"></image>
 					<view>团队管理</view>
 				</navigator>
 				<navigator class="menu__item" @click="comingSoon">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/chongzhi.png"></image>
 					<view>充值管理</view>
 				</navigator>
 				<navigator class="menu__item" url="../clean/index">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/dasao.png"></image>
 					<view>打扫记录</view>
 				</navigator>
 				<navigator class="menu__item" @click="comingSoon">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/fenxiang.png"></image>
 					<view>分享海报</view>
 				</navigator>
 				<navigator class="menu__item" @click="comingSoon">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/tixian.png"></image>
 					<view>提现管理</view>
 				</navigator>
 				<navigator class="menu__item" @click="comingSoon">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/jingying.png"></image>
 					<view>经营分析</view>
 				</navigator>
 				<navigator class="menu__item" @click="comingSoon">
-					<image class="menu__item__icon" src="/static/icon/mendianguanli.png"></image>
+					<image class="menu__item__icon" src="/static/icon/shangcheng.png"></image>
 					<view>商城</view>
 				</navigator>
 			</view>

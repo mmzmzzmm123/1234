@@ -64,4 +64,6 @@ public interface ITStoreService
     List<WxStoreListRspVo> selectWxStoreList(WxStoreListQryVo wxStoreListQryVo, Long userId);
 
     void openStore(Long id);
+
+    void openStoreByStoreId(Long id);
 }
