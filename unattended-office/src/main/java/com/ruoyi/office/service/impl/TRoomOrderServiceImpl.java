@@ -885,9 +885,6 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Autowired
     ITEquipmentService equipmentService;
 
-   /* @Autowired
-    HornConfig hornConfig;*/
-
     @Resource(name = "customerWxMaService")
     WxMaService customerWxMaService;
 
@@ -952,24 +949,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         Map<Long, TEquipment> equipments = equipmentService.selectTEquipmentList(new TEquipment()).stream().collect(Collectors.toMap(TEquipment::getId, Function.identity()));
 
-        // 发送 喇叭 注册 并记录注册结果
-        /*SysDictData dictData = new SysDictData();
-        dictData.setDictType(OfficeEnum.EquipType.HORN.getCode());
-        final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));
-        Map<String, String> param = new HashMap<>();
-        param.put("app_id", hornConfig.get("app_id"));
-        param.put("app_secret", hornConfig.get("app_secret"));
-        int minutes = Integer.parseInt(hornConfig.get("minute"));*/
-
-        SysDictData dictData = new SysDictData();
-        dictData.setDictType("horn");
-        final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));
-
-
-        Map<String, String> param = new HashMap<>();
-        param.put("app_id", hornConfig.get("app_id"));
-        param.put("app_secret", hornConfig.get("app_secret"));
-        String[] minuteStrs = hornConfig.get("minute").split(",");
+        String[] minuteStrs = HornConfig.minutes.split(",");
 
         List<Integer> alertList = new ArrayList<>();
         for (String m : minuteStrs) {
@@ -1011,10 +991,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     for (String s : room.getTableCode().split(",")) {
                         TEquipment equipment = equipments.get(Long.parseLong(s));
                         if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(equipment.getEquipType())) {
-                            param.put("device_sn", equipment.getEquipControl());
-//                        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", "您的订单还有" + minutes + "分钟结束，请及时续费，以免断电影响使用，谢谢");
-                            String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
-                            CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
+                            CloudHornRegResponse resp = HornConfig.hornSend(equipment.getEquipControl(), "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
+
                             order.setRemark(min + "");// 标识已经通知
                             tRoomOrderMapper.updateTRoomOrder(order);
                         }
@@ -1025,10 +1003,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                         for (String s : room.getTableCode().split(",")) {
                             TEquipment equipment = equipments.get(Long.parseLong(s));
                             if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(equipment.getEquipType())) {
-                                param.put("device_sn", equipment.getEquipControl());
-//                        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", "您的订单还有" + minutes + "分钟结束，请及时续费，以免断电影响使用，谢谢");
-                                String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
-                                CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
+                                CloudHornRegResponse resp = HornConfig.hornSend(equipment.getEquipControl(), "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
+
                                 order.setRemark(min + "");// 标识已经通知
                                 tRoomOrderMapper.updateTRoomOrder(order);
                             }

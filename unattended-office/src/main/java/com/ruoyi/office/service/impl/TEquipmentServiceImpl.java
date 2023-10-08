@@ -61,9 +61,6 @@ public class TEquipmentServiceImpl extends ServiceImpl<TEquipmentMapper, TEquipm
     @Autowired
     ISysDictDataService dictDataService;
 
-   /* @Autowired
-    HornConfig hornConfig;*/
-
     /**
      * 新增设备列表
      *
@@ -74,22 +71,7 @@ public class TEquipmentServiceImpl extends ServiceImpl<TEquipmentMapper, TEquipm
     public int insertTEquipment(TEquipment tEquipment) {
         tEquipment.setCreateTime(DateUtils.getNowDate());
         if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
-            // 发送 喇叭 注册 并记录注册结果
-         /*   SysDictData dictData = new SysDictData();
-            dictData.setDictType("horn");
-            final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));
-            Map<String, String> param = new HashMap<>();
-            param.put("app_id", hornConfig.get("app_id"));
-            param.put("app_secret", hornConfig.get("app_secret"));
-            param.put("device_sn", tEquipment.getEquipControl());
-             String response = HttpUtils.sendPost(hornConfig.get("url") + "/register", JSONObject.toJSONString(param));
-*/
-            Map<String, String> param = new HashMap<>();
-            param.put("app_id", HornConfig.appId);
-            param.put("app_secret", HornConfig.appSecret);
-            param.put("device_sn", tEquipment.getEquipControl());
-            String response = HttpUtils.sendPost(HornConfig.url + "/register", JSONObject.toJSONString(param));
-            CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
+            final CloudHornRegResponse resp = HornConfig.regHorn(tEquipment.getEquipControl());
 
             tEquipment.setRemark(resp.getMsg()); // 设备注册返回
         }

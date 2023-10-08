@@ -115,9 +115,6 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
     @Autowired
     private ISysDictDataService dictDataService;
 
-   /* @Autowired
-    HornConfig hornConfig;*/
-
     @Override
     public void openRoom(Long id) {
         TRoom room = tRoomMapper.selectTRoomById(id);
@@ -137,31 +134,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 throw new ServiceException("设备不存在");
             }
             if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
-                SysDictData dictDataQry = new SysDictData();
-                dictDataQry.setDictType("horn");
-                final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictDataQry).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));
-
-                HornSendMsg hornMsg = new HornSendMsg();
-                hornMsg.setAppId(hornConfig.get("app_id"));
-                hornMsg.setAppSecret(hornConfig.get("app_secret"));
-              /*  hornMsg.setAppId(hornConfig.getAppId());
-                hornMsg.setAppSecret(hornConfig.getAppSecret());*/
-                hornMsg.setDeviceSn(currentEq.getEquipControl());
-                hornMsg.setType(1);
-
-                HornSendMsgData hornData = new HornSendMsgData();
-                hornData.setCmdType("play");
-
-                HornSendMsgDataInfo hornDataInfo = new HornSendMsgDataInfo();
-                hornDataInfo.setInner(10);
-                hornDataInfo.setTts("已开门，欢迎使用雀行无人麻将机");
-
-                hornData.setInfo(hornDataInfo);
-                hornMsg.setData(hornData);
-
-                String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", JSONObject.toJSONString(hornMsg));
-//                String response = HttpUtils.sendPost(hornConfig.getUrl() + "/send", JSONObject.toJSONString(hornMsg));
-                CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
+                CloudHornRegResponse resp = HornConfig.hornSend(currentEq.getEquipControl(), "已开门，欢迎使用雀行无人麻将机");
 
                 TEquipment up = new TEquipment();
                 up.setId(currentEq.getId());
@@ -304,9 +277,11 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 equipmentService.updateTEquipment(currentEq);
 
                 if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType())) {
-                    hornMsg(hornSn, "门已打开");
+//                    hornMsg(hornSn, "门已打开");
+                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已打开");
                 } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
-                    hornMsg(hornSn, "房间电源已开启");
+//                    hornMsg(hornSn, "房间电源已开启");
+                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "房间电源已开启");
                 }
             }
         }
@@ -363,38 +338,14 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 equipmentService.updateTEquipment(currentEq);
 
                 if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType())) {
-                    hornMsg(hornSn, "门已关闭");
+//                    hornMsg(hornSn, "门已关闭");
+                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已关闭");
                 } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
-                    hornMsg(hornSn, "房间电源已关闭");
+//                    hornMsg(hornSn, "房间电源已关闭");
+                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "房间电源已关闭");
                 }
             }
         }
     }
 
-    private void hornMsg(String sn, String msg) {
-        SysDictData dictData = new SysDictData();
-        dictData.setDictType("horn");
-        final Map<String, String> hornConfig = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictLabel, SysDictData::getDictValue));
-
-        HornSendMsg hornMsg = new HornSendMsg();
-        hornMsg.setAppId(hornConfig.get("app_id"));
-        hornMsg.setAppSecret(hornConfig.get("app_secret"));
-
-        hornMsg.setDeviceSn(sn);
-        hornMsg.setType(1);
-
-        HornSendMsgData hornData = new HornSendMsgData();
-        hornData.setCmdType("play");
-
-        HornSendMsgDataInfo hornDataInfo = new HornSendMsgDataInfo();
-        hornDataInfo.setInner(10);
-        hornDataInfo.setTts(msg);
-
-        hornData.setInfo(hornDataInfo);
-        hornMsg.setData(hornData);
-
-        String response = HttpUtils.sendPost(hornConfig.get("url") + "/send", JSONObject.toJSONString(hornMsg));
-
-        CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
-    }
 }
