@@ -1,7 +1,8 @@
 <template>
 	<view>
+		<ad-swiper></ad-swiper>
 		<view class="form">
-			<u-form label-width="auto" :model="model">
+			<u-form label-width="160rpx" :model="model">
 				<u-form-item label="所在城市" prop="city" required>
 					<u-input v-model="model.city" placeholder="请输入所在城市"></u-input>
 				</u-form-item>
@@ -14,7 +15,6 @@
 				<u-form-item label="留言" prop="remark">
 					<u-textarea v-model="model.remark" placeholder="请输入留言"></u-textarea> 
 				</u-form-item>
-				
 			</u-form>
 		</view>
 		<view class="edit-bottom-bar-holder"></view>

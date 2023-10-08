@@ -1,6 +1,6 @@
 <template>
 	<u-swiper v-if="showAdList && showAdList.length" :list="showAdList" keyName="img" indicator indicatorMode="line" height="300rpx" bgColor="#fff" imgMode="aspectFill"
-		radius="0"
+		radius="0" :interval="imgList?2000:3000"
 		@click="onAdClick">
 	</u-swiper>
 </template>

@@ -55,7 +55,7 @@
 				searchParam: {
 					keyword: '',
 					status: '',
-					pageSize: 20,
+					pageSize: 1000,
 					pageNum: 1
 				},
 				roomList: [],
@@ -78,9 +78,9 @@
 		onPullDownRefresh() {
 			this.refresh()
 		},
-		onReachBottom() {
-			this.refresh(true)
-		},
+		// onReachBottom() {
+		// 	this.refresh(true)
+		// },
 		methods:{
 			onSearchKeywordInput(){
 				this.$u.debounce(this.refresh, 400)

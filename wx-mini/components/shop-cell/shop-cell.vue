@@ -13,16 +13,16 @@
 				</view>
 			</view>
 			<view class="shop-cell_info">
-				<u-icon name="map" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
-				<text @click.stop="toMap">{{shopInfo.address}}</text>
-			</view>
-			<view class="shop-cell_info">
 				<u-icon name="clock" custom-style="margin-right:10rpx" size="30rpx"></u-icon>
 				营业时间: {{shopInfo.startTime + ' - ' + shopInfo.stopTime}}
 			</view>
 			<view class="shop-cell_info">
 				<u-icon name="phone-fill" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
 				<text @click.stop="makePhoneCall">{{shopInfo.phone}}</text>
+			</view>
+			<view class="shop-cell_info">
+				<u-icon name="map" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
+				<text>{{shopInfo.address}}</text>
 			</view>
 			<view class="shop-cell_info">
 				<view class="shop-cell_distance" @click.stop="toMap">
