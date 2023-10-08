@@ -151,6 +151,9 @@ const api = {
 	},
 	getStorePromotionList(storeId){
 		return getPromotionList({storeId})
+	},
+	addJoinUs(param){
+		return post('office/api/joinUs',param)
 	}
 }
 const install = (Vue, options) => {

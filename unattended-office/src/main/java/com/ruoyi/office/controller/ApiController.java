@@ -85,6 +85,12 @@ public class ApiController extends BaseController {
     @Autowired
     ITStorePromotionService tStorePromotionService;
 
+    @Autowired
+    ITJoinUsService itJoinUsService;
+
+    @Autowired
+    ITWxUserCouponService itWxUserCouponService;
+
     /**
      * 预定成功 api 回调
      */
@@ -922,4 +928,13 @@ public class ApiController extends BaseController {
         List<TStorePromotion> list = tStorePromotionService.selectTStorePromotionList(tStorePromotion);
         return getDataTable(list);
     }
+
+    @ApiOperation("加盟信息")
+    @PostMapping(value = "/joinUs")
+    public AjaxResult joinUs(@RequestBody TJoinUs tJoinUs) {
+        int ret = itJoinUsService.insertTJoinUs(tJoinUs);
+        return AjaxResult.success(ret);
+    }
+
+
 }

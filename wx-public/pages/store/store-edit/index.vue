@@ -5,25 +5,25 @@
 				<u-form-item label="门店名称" prop="name" required>
 					<u-input v-model="model.name"></u-input>
 				</u-form-item>
-				<u-form-item label="电话" prop="name" required>
+				<u-form-item label="电话" prop="phone" required>
 					<u-input v-model="model.phone"></u-input>
 				</u-form-item>
 				<u-form-item label="门店地址" prop="address" required>
 					<u-input v-model="model.address"></u-input>
 				</u-form-item>
-				<u-form-item label="门店详情" prop="name">
+				<u-form-item label="门店详情" prop="remark">
 					<u-input v-model="model.remark"></u-input>
 				</u-form-item>
-				<u-form-item label="wifi" prop="name">
+				<u-form-item label="wifi" prop="wifi">
 					<u-input v-model="model.wifi"></u-input>
 				</u-form-item>
-				<u-form-item label="提前预约天数" prop="name">
+				<u-form-item label="提前预约天数" prop="preDays">
 					<u-input v-model="model.preDays"></u-input>
 				</u-form-item>
-				<u-form-item label="经度" prop="name" required>
+				<u-form-item label="经度" prop="longitude" required>
 					<u-input v-model="model.longitude"></u-input>
 				</u-form-item>
-				<u-form-item label="纬度" prop="name" required>
+				<u-form-item label="纬度" prop="latitude" required>
 					<u-input v-model="model.latitude"></u-input>
 				</u-form-item>
 				<u-form-item label="门店图片" prop="logo">

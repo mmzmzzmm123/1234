@@ -78,6 +78,12 @@
 				"navigationBarTitleText": "全部门店",
 				"enablePullDownRefresh": true
 			}
+		},
+		{
+			"path": "pages/join/index",
+			"style": {
+				"navigationBarTitleText": "加盟我们"
+			}
 		}
 	],
 	"globalStyle": {

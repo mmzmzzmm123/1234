@@ -20,7 +20,7 @@ public class TJoinUs extends BaseEntity
 
     /** 城市 */
     @Excel(name = "城市")
-    private Long city;
+    private String city;
 
     /** 姓名 */
     @Excel(name = "姓名")
@@ -43,12 +43,12 @@ public class TJoinUs extends BaseEntity
     {
         return id;
     }
-    public void setCity(Long city) 
+    public void setCity(String city)
     {
         this.city = city;
     }
 
-    public Long getCity() 
+    public String getCity()
     {
         return city;
     }
