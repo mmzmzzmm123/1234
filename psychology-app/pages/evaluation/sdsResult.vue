@@ -1,7 +1,7 @@
 <template>
-  <view class="page" v-if="report">
+  <view class="page" v-if="report && report.order">
     <view class="header">
-      <text class="header-title">抑郁表现测试题</text>
+      <text class="header-title">{{ report.order.gaugeTitle }}</text>
       <text class="header-report">报告编号：{{ report.order.orderId }}</text>
       <view class="header-wrapper">
         <text class="header-name">测试者：{{ report.order.userName }}</text>
@@ -62,6 +62,8 @@
       <view class="img-box" v-html="report.setting.result"/>
     </view>
 
+    <recommend/>
+
     <uni-popup ref="popup" type="dialog">
       <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
     </uni-popup>
@@ -71,10 +73,12 @@
 import utils from "@/utils/common";
 import loginServer from '@/server/login'
 import serve from '@/server/evaluation/question'
+import recommend from '@/components/consult/recommend'
 import circularProgress from '@/components/circular-progress/circular-progress'
 
 export default {
   components: {
+    recommend,
     circularProgress
   },
   data() {
