@@ -1108,15 +1108,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         BigDecimal totalPrice = storePromotion.getStandardPrice();
 
         // 计算订单号
-        long orderNo = 0l;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        final String prefix = prepayReq.getRoomId() + sdf.format(new Date());
-        Long maxId = tRoomOrderMapper.getHourMaxOrder(prefix);
-        if (maxId == null) {
-            orderNo = Long.parseLong(prefix + "00");
-        } else {
-            orderNo = maxId + 1;
-        }
+        long orderNo = getOrderNo(prepayReq.getRoomId());
 
         TWxUser wxUser = wxUserService.selectTWxUserById(userId);
 
