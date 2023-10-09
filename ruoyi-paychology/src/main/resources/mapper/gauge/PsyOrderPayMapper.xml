@@ -80,6 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payId != null">pay_id = #{payId},</if>
         </trim>
         where order_id = #{orderId}
+        <if test="payType != null">and pay_type = #{payType}</if>
     </update>
 
     <delete id="deletePsyOrderPayById" parameterType="Integer">

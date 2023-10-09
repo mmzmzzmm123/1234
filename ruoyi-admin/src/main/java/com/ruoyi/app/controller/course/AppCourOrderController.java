@@ -109,6 +109,7 @@ public class AppCourOrderController extends BaseController
         // 订单取消同时关闭支付信息
         PsyOrderPay orderPay = new PsyOrderPay();
         orderPay.setPayStatus(CourConstant.PAY_STATUE_CANCEL);
+        orderPay.setPayType(CourConstant.PAY_WAY_WEIXIN);
         orderPay.setOrderId(orderId);
         psyOrderPayService.updatePsyOrderPayByOrderId(orderPay);
 

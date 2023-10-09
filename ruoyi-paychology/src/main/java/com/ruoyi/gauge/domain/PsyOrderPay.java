@@ -51,7 +51,7 @@ public class PsyOrderPay extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date payTime;
 
-    /** 支付方式 */
+    /** 支付方式，支付方式一定是微信,这里标记为0-测评 1-课程 */
     @Excel(name = "支付方式")
     private int payType;
 }

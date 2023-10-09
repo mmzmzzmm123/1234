@@ -99,7 +99,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
             // TODO: 内部生成支付对象
             PsyOrderPay orderPay = new PsyOrderPay();
             orderPay.setOrderId(newCourOrder.getId());
-            orderPay.setPayType(CourConstant.PAY_WAY_WEIXIN); // 微信
+            orderPay.setPayType(CourConstant.PAY_WAY_WEIXIN); // 微信 支付方式一定是微信,这里标记为课程
             orderPay.setPayStatus(CourConstant.PAY_STATUE_PENDING);
             orderPay.setAmount(wechatPay.getAmount());
             orderPay.setPayId(UUID.randomUUID().toString()); // 当前使用随机生成的支付ID，后续使用第三方支付平台返回的
@@ -199,6 +199,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
                 // TODO: 修改支付对象状态为已支付
                 PsyOrderPay orderPay = new PsyOrderPay();
                 orderPay.setOrderId(courOrder.getId()); // 订单ID
+                orderPay.setPayType(CourConstant.PAY_WAY_WEIXIN); // 这里标记为课程
                 orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
                 orderPay.setPayId(payId);
                 orderPayService.updatePsyOrderPayByOrderId(orderPay);
@@ -220,6 +221,7 @@ public class WechatPayV3ApiServiceImpl implements WechatPayV3ApiService {
                 // TODO: 修改支付对象状态为已支付
                 PsyOrderPay orderPay = new PsyOrderPay();
                 orderPay.setOrderId(psyOrder.getId()); // 订单ID
+                orderPay.setPayType(0); // 这里标记为测评
                 orderPay.setPayStatus(CourConstant.PAY_STATUE_PAID);
                 orderPay.setPayId(payId);
                 orderPayService.updatePsyOrderPayByOrderId(orderPay);
