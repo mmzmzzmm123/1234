@@ -37,13 +37,13 @@
           <view class="understand-range-item"></view>
         </view>
       </view>
-      <text class="understand-down">抑郁表现</text>
+      <text class="understand-down">{{ report.order.gaugeType === 4 ? '抑郁表现' : '焦虑表现' }}</text>
       <text class="understand-desc">{{ report.setting.memo3 }}</text>
     </view>
     <view class="gloomy">
       <view class="btn-block">
         <view class="btn-bottom"></view>
-        <text class="btn-text">抑郁表现</text>
+        <text class="btn-text">{{ report.order.gaugeType === 4 ? '抑郁表现' : '焦虑表现' }}</text>
       </view>
       <view class="gloomy-range">
         <text class="gloomy-range-down">低</text>
@@ -272,6 +272,7 @@ export default {
   font-family: PingFangSC-Medium;
   font-weight: 500;
   margin-top: 80upx;
+  padding: 0 10upx;
 }
 .memo2 {
   width: 622upx;

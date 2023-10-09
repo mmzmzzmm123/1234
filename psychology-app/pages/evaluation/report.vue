@@ -38,7 +38,7 @@
       async toResult(item) {
         let result = await questionServer.setResult(item.id);
         if (result.code == 200) {
-          if (item.gaugeType === 4) {
+          if ([4, 5].includes(item.gaugeType)) {
             return  uni.navigateTo({
               url: "/pages/evaluation/sdsResult?orderId=" + item.orderId,
             });

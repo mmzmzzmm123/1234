@@ -237,7 +237,7 @@ export default {
       if (result.code === 200) {
         uni.setStorageSync("result", result.data);
         clearTimeLoad();
-        if (order.gaugeType === 4) {
+        if ([4, 5].includes(order.gaugeType)) {
           return  uni.navigateTo({
             url: "/pages/evaluation/sdsResult?orderId=" + order.orderId,
           });

@@ -272,13 +272,12 @@ export default {
 
   .footer {
     width: 622upx;
-    height: 37upx;
-    line-height: 37upx;
     color: #AAAAAA;
     font-size: 26upx;
     font-family: PingFangSC-Regular;
     font-weight: normal;
     text-align: left;
+    margin-bottom: 16upx;
   }
 }
 </style>

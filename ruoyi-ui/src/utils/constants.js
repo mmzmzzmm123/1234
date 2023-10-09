@@ -107,6 +107,8 @@ export const gaugeCompute = [
   { label: '多维计算', value: 2 },
   { label: 'MBTI', value: 3 },
   { label: 'SDS', value: 4 },
+  { label: 'SAS', value: 5 },
+  // { label: '马斯洛安全感', value: 6 },
 ]
 
 export const gaugeMbti = [

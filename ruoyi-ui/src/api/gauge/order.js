@@ -4,8 +4,8 @@ import request from '@/utils/request'
 export function listOrder(query) {
   return request({
     url: '/gauge/order/query',
-    method: 'post',
-    data: query
+    method: 'get',
+    params: query
   })
 }
 

@@ -47,8 +47,8 @@ public class PsyGaugeOrderController extends BaseController
      * 根据条件查询课程订单列表
      */
     @PreAuthorize("@ss.hasPermi('course:order:list')")
-    @PostMapping("/query")
-    public TableDataInfo queryOrderList(@RequestBody @NotNull OrderQueryDTO psyOrder) {
+    @GetMapping("/query")
+    public TableDataInfo queryOrderList(OrderQueryDTO psyOrder) {
         startPage();
         List<PsyOrder> list = psyOrderService.queryOrderList(psyOrder);
         return getDataTable(list);

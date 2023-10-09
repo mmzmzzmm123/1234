@@ -163,7 +163,7 @@ export default {
 
       let result = await questionServer.setResult(this.productInfo.orderId);
       if (result.code == 200) {
-        if (this.productInfo.type === 4) {
+        if ([4, 5].includes(this.productInfo.type)) {
           return uni.navigateTo({
             url: "/pages/evaluation/sdsResult?orderId=" + this.productInfo.orderNo,
           });

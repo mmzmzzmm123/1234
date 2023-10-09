@@ -154,10 +154,13 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
             case GaugeConstant.GAUGE_COMPUTE_1:
             case GaugeConstant.GAUGE_COMPUTE_2:
             case GaugeConstant.GAUGE_COMPUTE_4:
+            case GaugeConstant.GAUGE_COMPUTE_5:
                 int score = psyGaugeQuestionsResultMapper.getQuestionScore(paramMap);
                 // SDS
                 if (GaugeConstant.GAUGE_COMPUTE_4 == order.getGaugeType()) {
                     score = (int) Math.round(score * GaugeConstant.GAUGE_COMPUTE_SDS);
+                } else if (GaugeConstant.GAUGE_COMPUTE_5 == order.getGaugeType()) {
+                    score = (int) Math.round(score * GaugeConstant.GAUGE_COMPUTE_SAS);
                 }
                 sum = score + "";
                 break;
