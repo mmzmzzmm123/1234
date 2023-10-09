@@ -8,7 +8,7 @@
 				</view>
 			</slot>
 		</view>
-		<u-datetime-picker :show="show" :mode="mode" closeOnClickOverlay @confirm="confirm" @cancel="cancel"
+		<u-datetime-picker :show="show" :mode="mode" :minDate="minDate" closeOnClickOverlay @confirm="confirm" @cancel="cancel"
 			@change="change" @close="close"></u-datetime-picker>
 	</view>
 </template>
@@ -29,6 +29,7 @@
 		data() {
 			return {
 				show: false,
+				minDate: Number(new Date())
 			};
 		},
 		computed: {

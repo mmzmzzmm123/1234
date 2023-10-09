@@ -118,38 +118,7 @@
 			},
 			onCancelClick() {
 				uni.navigateBack()
-			},
-			close() {
-				this[`show${this.current}`] = false
-			},
-			cancel() {
-				this[`show${this.current}`] = false
-			},
-			confirm(e) {
-				debugger
-				this[`show${this.current}`] = false
-				this.order.endTime = this.result(e.value, e.mode)
-				this.cancel()
-			},
-			change(e) {
-				// console.log('change', e)
-			},
-			result(time, mode) {
-				const timeFormat = uni.$u.timeFormat,
-					toast = uni.$u.toast
-				switch (mode) {
-					case 'datetime':
-						return timeFormat(time, 'yyyy-mm-dd hh:MM')
-					case 'date':
-						return timeFormat(time, 'yyyy-mm-dd')
-					case 'year-month':
-						return timeFormat(time, 'yyyy-mm')
-					case 'time':
-						return time
-					default:
-						return ''
-				}
-			},
+			}
 		}
 	}
 </script>
