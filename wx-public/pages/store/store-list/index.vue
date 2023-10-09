@@ -23,7 +23,7 @@
 					</view>
 				</view>
 				<view class="card__op-list">
-					<u-button plain>非保洁时间段设置</u-button>
+					<u-button plain @click="onCleanClick(store.id)">非保洁时间段设置</u-button>
 					<!-- <u-button plain>商家相册</u-button> -->
 					<u-button type="primary" @click="onEditClick(store.id)">编辑</u-button>
 				</view>
@@ -56,6 +56,15 @@
 		methods: {
 			onEditClick(id){
 				const url = id ? "/pages/store/store-edit/index?id=" + id : "/pages/store/store-edit/index"
+				uni.navigateTo({
+					url,
+					events: {
+						refresh: this.refresh
+					}
+				})
+			},
+			onCleanClick(id){
+				const url = id ? "/pages/store/store-clean/index?id=" + id : "/pages/store/store-clean/index"
 				uni.navigateTo({
 					url,
 					events: {
