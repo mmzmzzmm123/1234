@@ -4,7 +4,7 @@
 			<u-search placeholder="请输入门店名称" :showAction="false" v-model="searchParam.keyword" @change="onSearchKeywordInput"></u-search>
 		</view>
 		<view class="card-list">
-			<view class="card" v-for="(store,index) in storeList" :key="store.id">
+			<view class="card" v-for="store in storeList" :key="store.id">
 				<view class="card__content">
 					<uo-image :src="store.logo"></uo-image>
 					<view class="card__content__right">
@@ -16,17 +16,16 @@
 							</view>
 						</view>
 						<view class="card__content__body">
-							<!-- <view>{{store}}</view> -->
-							<view>门店地址：{{store.address}}</view>
 							<view>联系电话：{{store.phone}}</view>
 							<view>营业时间：{{store.startTime}}~{{store.stopTime}}</view>
+							<view>门店地址：{{store.address}}</view>
 						</view>
 					</view>
 				</view>
 				<view class="card__op-list">
 					<u-button plain>非保洁时间段设置</u-button>
 					<!-- <u-button plain>商家相册</u-button> -->
-					<u-button type="primary" @click="onEditClick(store)">编辑</u-button>
+					<u-button type="primary" @click="onEditClick(store.id)">编辑</u-button>
 				</view>
 			</view>
 		</view>
@@ -55,9 +54,10 @@
 		// 	this.refresh(true)
 		// },
 		methods: {
-			onEditClick(store){
+			onEditClick(id){
+				const url = id ? "/pages/store/store-edit/index?id=" + id : "/pages/store/store-edit/index"
 				uni.navigateTo({
-					url: '/pages/store/store-edit/index?id=' + store.id,
+					url,
 					events: {
 						refresh: this.refresh
 					}

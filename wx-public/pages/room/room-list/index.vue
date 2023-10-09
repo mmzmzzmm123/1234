@@ -40,10 +40,10 @@
 		</view>
 	</view>
 	<u-popup :show="showMore" @close="showMore = false">
-		<view class="more-btn" @click="showMore = false">开大门</view>
-		<view class="more-btn" @click="showMore = false">临时开包厢</view>
-		<view class="more-btn" @click="showMore = false">关闭临时开包厢</view>
-		<view class="more-btn" @click="showMore = false">开包厢们</view>
+		<view class="more-btn" @click="onOpenStoreClick">开房间大门</view>
+		<view class="more-btn" @click="onOpenRoomClick">开包厢大门</view>
+		<view class="more-btn" @click="onCloseRoomClick">关包厢大门</view>
+		<!-- <view class="more-btn" @click="showMore = false">开包厢门</view> -->
 		<view class="more-btn" @click="showMore = false">立即下订单</view>
 		<view class="more-btn" @click="onDeleteRoomClick">删除包厢</view>
 		<view class="more-btn more-btn--cancel" @click="showMore = false">取消</view>
@@ -125,6 +125,56 @@
 			onMoreClick(room){
 				this.currentRoom = room
 				this.showMore = true
+			},
+			onOpenStoreClick(){
+				this.showMore = false
+				uni.showModal({
+					content: "是否打开大门",
+					success: res=>{
+						if(res.confirm){
+							this.$api.openStore(this.currentRoom.storeId).then(()=>{
+								this.$u.toast('开门指令已发送成功')
+							})
+						}
+					}
+				})
+			},
+			onOpenRoomClick(){
+				this.showMore = false
+				uni.showModal({
+					content: "是否打开包厢"+this.currentRoom.name,
+					success: res=>{
+						if(res.confirm){
+							var param={
+								roomId:this.currentRoom.id,
+								equipType:'door,light,aircondition'
+							}
+							this.$api.openRoom(param).then(()=>{
+								this.$u.toast('打开包厢指令已发送成功')
+							})
+							// Promise.all(this.$api.openStore(param1),this.$api.openStore(param2)).then(()=>{
+							// 	this.$u.toast('打开包厢指令已发送成功')
+							// })
+						}
+					}
+				})
+			},
+			onCloseRoomClick(){
+				this.showMore = false
+				uni.showModal({
+					content: "是否关闭包厢"+this.currentRoom.name,
+					success: res=>{
+						if(res.confirm){
+							var param={
+								roomId:this.currentRoom.id,
+								equipType:'door,light,aircondition'
+							}
+							this.$api.closeRoom(param).then(()=>{
+								this.$u.toast('打开包厢指令已发送成功')
+							})			
+						}
+					}
+				})
 			},
 			onDeleteRoomClick(){
 				this.showMore = false
