@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 用户充值记录对象 bus_user_recharge_record
  *
  * @author Lam
- * @date 2023-09-13
+ * @date 2023-10-05
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -31,20 +31,20 @@ public class UserRechargeRecord extends BaseEntity {
     @ApiModelProperty("用户标识")
     private Long userId;
 
-    /** 优惠券标识 */
-    @Excel(name = "优惠券标识")
-    @ApiModelProperty("优惠券标识")
-    private Long couponId;
+    /** 支付状态 */
+    @Excel(name = "支付状态")
+    @ApiModelProperty("支付状态")
+    private String payState;
 
     /** 充值金额 */
     @Excel(name = "充值金额")
     @ApiModelProperty("充值金额")
     private BigDecimal rechargeAmount;
 
-    /** 优惠金额 */
-    @Excel(name = "优惠金额")
-    @ApiModelProperty("优惠金额")
-    private BigDecimal discountAmount;
+    /** 赠送金额 */
+    @Excel(name = "赠送金额")
+    @ApiModelProperty("赠送金额")
+    private BigDecimal giftAmount;
 
     /** 充值余额前 */
     @Excel(name = "充值余额前")

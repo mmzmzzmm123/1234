@@ -1,11 +1,16 @@
 {
   "navigationBarTitleText": "下单",
   "usingComponents": {
+    "i-load-more": "../../components/iview/dist/load-more/index",
+    "wux-skeleton-avatar": "../../components/wux/dist/skeleton-avatar/index",
+    "wux-skeleton": "../../components/wux/dist/skeleton/index",
+    "wux-skeleton-paragraph": "../../components/wux/dist/skeleton-paragraph/index",
     "wux-icon": "../../components/wux/dist/icon/index",
     "wux-tabs": "../../components/wux/dist/tabs/index",
     "wux-tab": "../../components/wux/dist/tab/index",
     "wux-input-number": "../../components/wux/dist/input-number/index",
     "wux-switch": "../../../components/wux/dist/switch/index",
+    "mine-null-data": "../../components/mine/nullDataView/index",
     "column-view": "../../components/mine/columnView/index"
   }
 }

@@ -9,21 +9,15 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="充值金额" prop="rechargeAmount">
-        <el-input
-          v-model="queryParams.rechargeAmount"
-          placeholder="请输入充值金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="优惠金额" prop="discountAmount">
-        <el-input
-          v-model="queryParams.discountAmount"
-          placeholder="请输入优惠金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="支付状态" prop="payState">
+        <el-select v-model="queryParams.payState" placeholder="请选择支付状态" clearable>
+          <el-option
+            v-for="dict in dict.type.pay_state"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -32,38 +26,38 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['user:userRechargeRecord:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="success"-->
-<!--          plain-->
-<!--          icon="el-icon-edit"-->
-<!--          size="mini"-->
-<!--          :disabled="single"-->
-<!--          @click="handleUpdate"-->
-<!--          v-hasPermi="['user:userRechargeRecord:edit']"-->
-<!--        >修改</el-button>-->
-<!--      </el-col>-->
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="danger"-->
-<!--          plain-->
-<!--          icon="el-icon-delete"-->
-<!--          size="mini"-->
-<!--          :disabled="multiple"-->
-<!--          @click="handleDelete"-->
-<!--          v-hasPermi="['user:userRechargeRecord:remove']"-->
-<!--        >删除</el-button>-->
-<!--      </el-col>-->
+      <el-col :span="1.5">
+        <el-button
+          type="primary"
+          plain
+          icon="el-icon-plus"
+          size="mini"
+          @click="handleAdd"
+          v-hasPermi="['user:userRechargeRecord:add']"
+        >新增</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="success"
+          plain
+          icon="el-icon-edit"
+          size="mini"
+          :disabled="single"
+          @click="handleUpdate"
+          v-hasPermi="['user:userRechargeRecord:edit']"
+        >修改</el-button>
+      </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="danger"
+          plain
+          icon="el-icon-delete"
+          size="mini"
+          :disabled="multiple"
+          @click="handleDelete"
+          v-hasPermi="['user:userRechargeRecord:remove']"
+        >删除</el-button>
+      </el-col>
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -79,15 +73,39 @@
 
     <el-table v-loading="loading" :data="userRechargeRecordList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="主键" align="center" prop="id" :show-overflow-tooltip="true" />
       <el-table-column label="用户标识" align="center" prop="userId" :show-overflow-tooltip="true"/>
-      <el-table-column label="优惠券标识" align="center" prop="couponId" :show-overflow-tooltip="true"/>
+      <el-table-column label="支付状态" align="center" prop="payState" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.pay_state" :value="scope.row.payState"/>
+        </template>
+      </el-table-column>
       <el-table-column label="充值金额" align="center" prop="rechargeAmount" :show-overflow-tooltip="true"/>
-      <el-table-column label="优惠金额" align="center" prop="discountAmount" :show-overflow-tooltip="true"/>
+      <el-table-column label="赠送金额" align="center" prop="giftAmount" :show-overflow-tooltip="true"/>
       <el-table-column label="充值余额前" align="center" prop="rechargeAmountBefore" :show-overflow-tooltip="true"/>
       <el-table-column label="充值余额后" align="center" prop="rechargeAmountAfter" :show-overflow-tooltip="true"/>
+      <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+        <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-edit"
+            @click="handleUpdate(scope.row)"
+            v-hasPermi="['user:userRechargeRecord:edit']"
+          >修改</el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-delete"
+            @click="handleDelete(scope.row)"
+            v-hasPermi="['user:userRechargeRecord:remove']"
+          >删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -106,20 +124,30 @@
         <el-form-item label="用户标识" prop="userId">
           <el-input v-model="form.userId" placeholder="请输入用户标识" />
         </el-form-item>
-        <el-form-item label="优惠券标识" prop="couponId">
-          <el-input v-model="form.couponId" placeholder="请输入优惠券标识" />
+        <el-form-item label="支付状态" prop="payState">
+          <el-select v-model="form.payState" placeholder="请选择支付状态">
+            <el-option
+              v-for="dict in dict.type.pay_state"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="充值金额" prop="rechargeAmount">
           <el-input v-model="form.rechargeAmount" placeholder="请输入充值金额" />
         </el-form-item>
-        <el-form-item label="优惠金额" prop="discountAmount">
-          <el-input v-model="form.discountAmount" placeholder="请输入优惠金额" />
+        <el-form-item label="赠送金额" prop="giftAmount">
+          <el-input v-model="form.giftAmount" placeholder="请输入赠送金额" />
         </el-form-item>
         <el-form-item label="充值余额前" prop="rechargeAmountBefore">
           <el-input v-model="form.rechargeAmountBefore" placeholder="请输入充值余额前" />
         </el-form-item>
         <el-form-item label="充值余额后" prop="rechargeAmountAfter">
           <el-input v-model="form.rechargeAmountAfter" placeholder="请输入充值余额后" />
+        </el-form-item>
+        <el-form-item label="备注" prop="remark">
+          <el-input v-model="form.remark" placeholder="请输入备注" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -135,6 +163,7 @@ import { listUserRechargeRecord, getUserRechargeRecord, delUserRechargeRecord, a
 
 export default {
   name: "UserRechargeRecord",
+  dicts: ['pay_state'],
   data() {
     return {
       // 遮罩层
@@ -160,9 +189,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         userId: null,
-        couponId: null,
-        rechargeAmount: null,
-        discountAmount: null,
+        payState: null,
       },
       // 表单参数
       form: {},
@@ -194,12 +221,14 @@ export default {
       this.form = {
         id: null,
         userId: null,
-        couponId: null,
+        payState: null,
         rechargeAmount: null,
-        discountAmount: null,
+        giftAmount: null,
         rechargeAmountBefore: null,
         rechargeAmountAfter: null,
+        remark: null,
         createTime: null,
+        updateBy: null,
         updateTime: null
       };
       this.resetForm("form");

@@ -3,10 +3,11 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.payment.mapper.PaymentOrderMapper">
-    
+
     <resultMap type="PaymentOrder" id="PaymentOrderResult">
         <result property="id"    column="id"    />
         <result property="orderType"    column="order_type"    />
+        <result property="userId"    column="user_id"    />
         <result property="orderId"    column="order_id"    />
         <result property="outTradeNo"    column="out_trade_no"    />
         <result property="transactionId"    column="transaction_id"    />
@@ -23,13 +24,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPaymentOrderVo">
-        select id, order_type, order_id, out_trade_no, transaction_id, subject, body, pay_way, amount, pay_state, user_ip, expire_time, channel_notify_data, success_time, create_time from bus_payment_order
+        select id, order_type, user_id, order_id, out_trade_no, transaction_id, subject, body, pay_way, amount, pay_state, user_ip, expire_time, channel_notify_data, success_time, create_time from bus_payment_order
     </sql>
 
     <select id="selectPaymentOrderList" parameterType="PaymentOrder" resultMap="PaymentOrderResult">
         <include refid="selectPaymentOrderVo"/>
-        <where>  
+        <where>
             <if test="orderType != null  and orderType != ''"> and order_type = #{orderType}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
             <if test="orderId != null "> and order_id = #{orderId}</if>
             <if test="outTradeNo != null  and outTradeNo != ''"> and out_trade_no = #{outTradeNo}</if>
             <if test="transactionId != null  and transactionId != ''"> and transaction_id = #{transactionId}</if>
@@ -39,16 +41,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="params.beginSuccessTime != null and params.beginSuccessTime != '' and params.endSuccessTime != null and params.endSuccessTime != ''"> and success_time between #{params.beginSuccessTime} and #{params.endSuccessTime}</if>
         </where>
     </select>
-    
+
     <select id="selectPaymentOrderById" parameterType="Long" resultMap="PaymentOrderResult">
         <include refid="selectPaymentOrderVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectByOutTradeNo" parameterType="String" resultMap="PaymentOrderResult">
+        <include refid="selectPaymentOrderVo"/>
+        where out_trade_no = #{outTradeNo}
+    </select>
+
     <insert id="insertPaymentOrder" parameterType="PaymentOrder" useGeneratedKeys="true" keyProperty="id">
         insert into bus_payment_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderType != null">order_type,</if>
+            <if test="userId != null">user_id,</if>
             <if test="orderId != null">order_id,</if>
             <if test="outTradeNo != null">out_trade_no,</if>
             <if test="transactionId != null">transaction_id,</if>
@@ -65,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderType != null">#{orderType},</if>
+            <if test="userId != null">#{userId},</if>
             <if test="orderId != null">#{orderId},</if>
             <if test="outTradeNo != null">#{outTradeNo},</if>
             <if test="transactionId != null">#{transactionId},</if>
@@ -85,6 +94,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update bus_payment_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderType != null">order_type = #{orderType},</if>
+            <if test="userId != null">user_id = #{userId},</if>
             <if test="orderId != null">order_id = #{orderId},</if>
             <if test="outTradeNo != null">out_trade_no = #{outTradeNo},</if>
             <if test="transactionId != null">transaction_id = #{transactionId},</if>
@@ -107,7 +117,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deletePaymentOrderByIds" parameterType="String">
-        delete from bus_payment_order where id in 
+        delete from bus_payment_order where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

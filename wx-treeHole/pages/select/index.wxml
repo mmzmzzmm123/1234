@@ -1,6 +1,7 @@
 <wxs src="../../wxss/str.wxs" module="strUtil"></wxs>
 <wxs src="../../wxss/format.wxs" module="formatUtil"></wxs>
 <wxs src="../../wxss/dicts.wxs" module="dictsUtil"></wxs>
+<wxs src="../../wxss/time.wxs" module="timeUtil"></wxs>
 <view class="bView">
   <wux-tabs class="wuxTab" theme="positive" controlled current="{{ currentKey }}" bindchange="onTabsChange">
     <block wx:for="{{ tabs }}" wx:key="key">
@@ -10,190 +11,162 @@
   <swiper style="width:{{pWidth}}px;height:{{pHeight-tabHeight}}px;" current="{{ currentIndex }}" bindchange="swiperChange">
     <!-- 选人下单 -->
     <swiper-item>
-      <scroll-view scroll-y="true" class="view_all_adapt">
+      <scroll-view scroll-y="true" class="view_all_adapt" refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" bindrefresherrefresh="refresh" bindscrolltolower="loadNextPageData">
 
         <!-- 新人推荐 -->
-        <column-view title="热门推荐" moreTitle="非常热门哟" ifShowIco="1"></column-view>
+        <view class="seizeSeat_mini"></view>
+        <view class="seizeSeat_mini"></view>
+        <column-view title="热门推荐" moreTitle="非常热门哟" ifShowIco="1" outerMargin="0"></column-view>
+        <view class="seizeSeat_mini"></view>
+        <view class="seizeSeat_mini"></view>
         <scroll-view scroll-x class="view_box_common">
-          <view class="view_box_row">
-            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
-              <image src="../../static/temp/t1.png"></image>
-              <view class="newPeopleName">小甜甜</view>
-              <view class="girl_bg_color newPeopleBut">下单</view>
+          <block wx:if="{{!hotLoadState && hotStaffList != null && hotStaffList.length > 0}}">
+            <view class="view_box_row">
+              <block wx:for="{{hotStaffList}}" wx:key="id">
+                <view class="newPeopleItem" data-staffid="{{item.userId}}" bind:tap="toShowStaffInfo">
+                  <image src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}"></image>
+                  <view class="newPeopleName">{{item.nickName}}</view>
+                  <view class="{{item.sex == 1 ? 'girl_bg_color' : 'boy_bg_color'}} newPeopleBut">下单</view>
+                </view>
+              </block>
             </view>
-            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
-              <image src="../../static/temp/t1.png"></image>
-              <view class="newPeopleName">小甜甜</view>
-              <view class="girl_bg_color newPeopleBut">下单</view>
-            </view>
-            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
-              <image src="../../static/temp/t1.png"></image>
-              <view class="newPeopleName">小甜甜</view>
-              <view class="girl_bg_color newPeopleBut">下单</view>
-            </view>
-            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
-              <image src="../../static/temp/t1.png"></image>
-              <view class="newPeopleName">小甜甜</view>
-              <view class="girl_bg_color newPeopleBut">下单</view>
-            </view>
-            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
-              <image src="../../static/temp/t1.png"></image>
-              <view class="newPeopleName">小甜甜</view>
-              <view class="girl_bg_color newPeopleBut">下单</view>
-            </view>
-            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
-              <image src="../../static/temp/t1.png"></image>
-              <view class="newPeopleName">小甜甜</view>
-              <view class="girl_bg_color newPeopleBut">下单</view>
-            </view>
-            <view class="newPeopleItem" bind:tap="toStaffInfoShow">
-              <image src="../../static/temp/t1.png"></image>
-              <view class="newPeopleName">小甜甜</view>
-              <view class="girl_bg_color newPeopleBut">下单</view>
-            </view>
-          </view>
+          </block>
+          <block wx:else>
+            <wux-skeleton active>
+              <wux-skeleton-paragraph rows="3" />
+            </wux-skeleton>
+          </block>
         </scroll-view>
 
         <!-- 筛选栏 -->
         <view class="seizeSeat_mini"></view>
         <view class="view_box_common view_box_row_content_symmetry filterView" style="width: 88%;">
-          <view class="view_box_row_content filterItem">
-            <span>服务类型</span>
-            <wux-icon type="ios-arrow-down" size="14" color="#80848f"></wux-icon>
-          </view>
+          <picker header-text="性别" mode="selector" range="{{serviceList}}" range-key="name" bindchange="serviceFilterChange">
+            <view class="view_box_row_content filterItem">
+              <span>服务类型</span>
+              <wux-icon type="ios-arrow-down" size="14" color="#80848f"></wux-icon>
+            </view>
+          </picker>
           <view class="verticalLine"></view>
-          <view class="view_box_row_content filterItem">
-            <span>性别</span>
-            <wux-icon type="ios-arrow-down" size="14" color="#80848f"></wux-icon>
-          </view>
+          <picker header-text="性别" mode="selector" range="{{sexRange}}" range-key="label" bindchange="sexFilterChange">
+            <view class="view_box_row_content filterItem">
+              <span>性 别</span>
+              <wux-icon type="ios-arrow-down" size="14" color="#80848f"></wux-icon>
+            </view>
+          </picker>
           <view class="verticalLine"></view>
-          <view class="view_box_row_content filterItem">
-            <span>等级</span>
-            <wux-icon type="ios-arrow-down" size="14" color="#80848f"></wux-icon>
+          <picker header-text="等级" mode="selector" range="{{staffLevelConfig}}" range-key="name" bindchange="staffLevelFilterChange">
+            <view class="view_box_row_content filterItem">
+              <span>店员等级</span>
+              <wux-icon type="ios-arrow-down" size="14" color="#80848f"></wux-icon>
+            </view>
+          </picker>
+        </view>
+        <!-- 已选条件栏 -->
+        <view class="view_box_common view_box_row_wrap">
+          <view data-index="0" bind:tap="clearFilterItem" class="chooseFilterItem" wx:if="{{params.serviceIdArrStr != null}}">
+            <view>服务类型：{{strUtil.matchServiceNameById(params.serviceIdArrStr, serviceList)}}</view>
+            <image src="../../static/ico/close_red_32.png" mode="widthFix"></image>
+          </view>
+          <view data-index="1" bind:tap="clearFilterItem" class="chooseFilterItem" wx:if="{{params.sex != null}}">
+            <view>性别：{{params.sex == 0 ? '男' : params.sex == '1' ? '女' : '未知'}}</view>
+            <image src="../../static/ico/close_red_32.png" mode="widthFix"></image>
+          </view>
+          <view data-index="2" bind:tap="clearFilterItem" class="chooseFilterItem" wx:if="{{params.staffLevel != null}}">
+            <view>店员等级：{{strUtil.staffLevelMacth(params.staffLevel, staffLevelConfig)}}</view>
+            <image src="../../static/ico/close_red_32.png" mode="widthFix"></image>
           </view>
         </view>
 
         <!-- 员工数据 -->
-        <view class="seizeSeat_mini"></view>
-        <view class="view_box_common staffItem">
-          <view class="view_all_adapt view_box_common view_box_row_content_symmetry">
-            <view class="staffAvatarView">
-              <image class="view_all_adapt" src="../../static/temp/t1.png"></image>
-              <!-- 语音数据 -->
-              <view class="girl_bg_color staffVoice">
-                <view class="view_box_common view_box_row">
-                  <image class="voicePlay" src="../../static/ico/play.png" mode="widthFix"></image>
-                  <image class="voiceAudioImg" src="../../static/ico/audio_frequency.png" mode="widthFix" style="width: {{100*0.92-44}}px;"></image>
-                  <view class="voiceSeconds">14s</view>
-                </view>
-              </view>
-            </view>
-            <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-110}}px;height: 92px;">
-              <view>
-                <view class="view_box_row_content_symmetry">
-                  <!-- 名字和金牌情况 -->
-                  <view class="view_box_row_content">
-                    <view class="staffName">魔爪来袭</view>
-                    <view class="staffBadgeLevel view_box_row_content badgeLevel_4">
-                      <image src="../../static/images/badge_level_4.png" mode="widthFix"></image>
-                      <view>女神</view>
+        <block wx:if="{{!loadState && staffDataList != null}}">
+          <block wx:if="{{staffDataList.length > 0}}">
+            <block wx:for="{{staffDataList}}" wx:key="id">
+              <view class="seizeSeat_mini"></view>
+              <view class="view_box_common staffItem {{item.sex == 1 ? 'girl_business_card_bg_color' : 'boy_business_card_bg_color'}}" data-staffid="{{item.userId}}" bind:tap="toShowStaffInfo">
+                <view class="view_all_adapt view_box_common view_box_row_content_symmetry">
+                  <view class="staffAvatarView">
+                    <!-- 头像 -->
+                    <image class="avatarImg" src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}"></image>
+                    <!-- 头像框 -->
+                    <image class="avatarFrame" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/top_test.gif" mode="widthFix"></image>
+                    <!-- 语音条 -->
+                    <view class="{{item.sex == 1 ? 'girl_bg_color' : 'boy_bg_color'}} staffVoice view_box_row" data-index="{{index}}" catch:tap="listAudioCli">
+                      <image class="voicePlay" src="../../static/ico/{{item.audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
+                      <image wx:if="{{item.audioState == -1}}" class="voiceAudioImg" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                      <image wx:if="{{item.audioState == 0}}" class="audioFrequencyGif" src="../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+                      <view wx:if="{{item.voiceTime != null && item.voiceTime > 0}}" class="voiceSeconds">{{item.voiceTime}}s</view>
+                      <view wx:else class="voiceSeconds">　</view>
                     </view>
                   </view>
-                  <!-- 在线情况 -->
-                  <view class="staffOnLineState view_box_row_content">
-                    <image src="../../static/ico/online_32.png"></image>
-                    <view>在线</view>
-                  </view>
-                </view>
-                <!-- 用户基本信息 -->
-                <view class="view_box_row staffBaseInfo">
-                  <view>广东·清远</view>
-                  <view>女</view>
-                  <view>27</view>
-                </view>
-                <!-- 个人介绍 -->
-                <view class="staffDetails text_ellipsis">
-                  开开心心一整天又过去了
-                </view>
-              </view>
-              <!-- 员工服务 -->
-              <view class="view_box_row">
-                <view class="staffService">
-                  <span>文语</span><text>|</text><span>视频</span><text>|</text><span>连麦</span><text>|</text><span>游戏</span>
-                </view>
-              </view>
-            </view>
-          </view>
-          <!-- 员工标签 -->
-          <view class="view_box_common staffLabel view_box_row_wrap">
-            <view class="girl_edging_color girl_font_color staffLabelItem">人间蜜桃🍑</view>
-            <view class="girl_edging_color girl_font_color staffLabelItem">恶毒前妻</view>
-            <view class="girl_edging_color girl_font_color staffLabelItem">心动在此刻</view>
-            <view class="girl_edging_color girl_font_color staffLabelItem">指定可视频</view>
-          </view>
-        </view>
-        <view class="seizeSeat_mini"></view>
-
-        <view class="seizeSeat_mini"></view>
-        <view class="view_box_common staffItem">
-          <view class="view_all_adapt view_box_common view_box_row_content_symmetry">
-            <view class="staffAvatarView">
-              <image class="view_all_adapt" src="../../static/temp/t1.png"></image>
-              <!-- 语音数据 -->
-              <view class="boy_bg_color staffVoice">
-                <view class="view_box_common view_box_row">
-                  <image class="voicePlay" src="../../static/ico/play.png" mode="widthFix"></image>
-                  <image class="voiceAudioImg" src="../../static/ico/audio_frequency.png" mode="widthFix" style="width: {{100*0.92-44}}px;"></image>
-                  <view class="voiceSeconds">14s</view>
-                </view>
-              </view>
-            </view>
-            <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-110}}px;height: 92px;">
-              <view>
-                <view class="view_box_row_content_symmetry">
-                  <!-- 名字和金牌情况 -->
-                  <view class="view_box_row_content">
-                    <view class="staffName">魔爪来袭</view>
-                    <view class="staffBadgeLevel view_box_row_content badgeLevel_4">
-                      <image src="../../static/images/badge_level_4.png" mode="widthFix"></image>
-                      <view>女神</view>
+                  <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-110}}px;height: 92px;">
+                    <view>
+                      <view class="view_box_row_content_symmetry">
+                        <!-- 名字和金牌情况 -->
+                        <view class="view_box_row_content">
+                          <view class="staffName">{{item.nickName}}</view>
+                          <view class="staffBadgeLevel view_box_row_content badgeLevel_{{item.staffLevel}}">
+                            <image src="../../static/images/badge_level_{{item.staffLevel}}.png" mode="widthFix"></image>
+                            <view>{{strUtil.staffLevelMacth(item.staffLevel,staffLevelConfig)}}</view>
+                          </view>
+                        </view>
+                        <!-- 在线情况 -->
+                        <view class="staffOnLineState view_box_row_content">
+                          <image src="../../static/ico/{{item.ifOnline == 'Y' ? 'online_32' : 'offline_32'}}.png"></image>
+                          <view>{{item.ifOnline == 'Y' ? '在线' : '离线'}}</view>
+                        </view>
+                      </view>
+                      <!-- 用户基本信息 -->
+                      <view class="view_box_row staffBaseInfo">
+                        <view>{{item.province}}·{{item.city}}</view>
+                        <view>{{item.sex == 1 ? '女' : '男'}}</view>
+                        <view>{{timeUtil.calculateAge(item.birthDate)}}岁</view>
+                      </view>
+                      <!-- 个人介绍 -->
+                      <view class="staffDetails text_ellipsis">
+                        {{item.selfIntroduction}}
+                      </view>
+                    </view>
+                    <!-- 员工服务 -->
+                    <view class="view_box_row">
+                      <block wx:if="{{item.serviceIdList != null && item.serviceIdList.length > 0}}">
+                        <view class="staffService">
+                          <block wx:for="{{strUtil.matchServiceShortNameByIdArr(item.serviceIdList, serviceList)}}" wx:key="index">
+                            <text>#</text><span>{{item}}</span>
+                          </block>
+                        </view>
+                      </block>
+                      <view wx:else style="font-size: 12px;color: #80848f;">
+                        亲爱的 暂时不接单哟 很快就回来啦
+                      </view>
                     </view>
                   </view>
-                  <!-- 在线情况 -->
-                  <view class="staffOnLineState view_box_row_content">
-                    <image src="../../static/ico/online_32.png"></image>
-                    <view>在线</view>
-                  </view>
                 </view>
-                <!-- 用户基本信息 -->
-                <view class="view_box_row staffBaseInfo">
-                  <view>广东·清远</view>
-                  <view>女</view>
-                  <view>27</view>
-                </view>
-                <!-- 个人介绍 -->
-                <view class="staffDetails text_ellipsis">
-                  开开心心一整天又过去了
+                <!-- 员工标签 -->
+                <view wx:if="{{item.selfTags != null && item.selfTags != ''}}" class="view_box_common staffLabel view_box_row_wrap">
+                  <block wx:for="{{strUtil.splitToArr(item.selfTags, ',')}}" wx:key="index">
+                    <view class="{{item.sex == 1 ? 'girl_edging_color girl_font_color' : 'boy_edging_color boy_font_color'}} staffLabelItem">{{item}}</view>
+                  </block>
                 </view>
               </view>
-              <!-- 员工服务 -->
-              <view class="view_box_row">
-                <view class="staffService">
-                  <span>文语</span><text>|</text><span>视频</span><text>|</text><span>连麦</span><text>|</text><span>游戏</span>
-                </view>
-              </view>
-            </view>
+              <view class="seizeSeat_mini"></view>
+            </block>
+          </block>
+          <view wx:else class="view_box_common view_box_row_content">
+            <mine-null-data width="320px" height="320px" title="亲爱的 店员正在快马加鞭的上新中"></mine-null-data>
           </view>
-          <!-- 员工标签 -->
-          <view class="view_box_common staffLabel view_box_row_wrap">
-            <view class="boy_edging_color boy_font_color staffLabelItem">人间蜜桃🍑</view>
-            <view class="boy_edging_color boy_font_color staffLabelItem">恶毒前妻</view>
-            <view class="boy_edging_color boy_font_color staffLabelItem">心动在此刻</view>
-            <view class="boy_edging_color boy_font_color staffLabelItem">指定可视频</view>
+        </block>
+        <block wx:else>
+          <view class="seizeSeat_mini"></view>
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_common">
+            <wux-skeleton active>
+              <wux-skeleton-paragraph rows="10" />
+            </wux-skeleton>
           </view>
-        </view>
+        </block>
         <view class="seizeSeat_mini"></view>
-
+        <i-load-more tip='{{((params.pageNum*params.pageSize) >= staffDataTotal) && bottomLoadState == false ?"店员正在快马加鞭的上新中":"加载中"}}' loading="{{bottomLoadState}}"></i-load-more>
       </scroll-view>
     </swiper-item>
     <!-- 盲盒下单 -->

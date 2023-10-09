@@ -56,6 +56,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
+    <delete id="delete" parameterType="UserLikeStaffTrendsRecord">
+        delete from bus_user_like_staff_trends_record
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="staffTrendsId != null "> and staff_trends_id = #{staffTrendsId}</if>
+        </where>
+    </delete>
+
     <delete id="deleteUserLikeStaffTrendsRecordById" parameterType="Long">
         delete from bus_user_like_staff_trends_record where id = #{id}
     </delete>

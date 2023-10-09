@@ -25,10 +25,13 @@ public class StaffTrends extends BaseEntity {
     /** 主键 */
     private Long id;
 
-    /** 用户标识 */
+    /** 用户标识/店员标识 */
     @Excel(name = "用户标识")
     @ApiModelProperty("用户标识")
     private Long userId;
+
+    @ApiModelProperty("店员信息")
+    private StaffInfo staffInfo;
 
     /** 文本 */
     @Excel(name = "文本")

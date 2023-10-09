@@ -1,0 +1,109 @@
+@import "../../../wxParse/wxParse.wxss";
+.scope_view_item {
+  padding: 10px 0;
+  border-radius: 10px;
+}
+
+.userWalletView {
+  height: 100px;
+  position: relative;
+}
+
+.balanceView {
+  color: #ffffff;
+}
+
+.balanceView span {
+  font-size: 16px;
+}
+
+.balanceView view {
+  font-weight: bold;
+  font-size: 34px;
+  margin-top: 8px;
+}
+
+.balanceDetailsView {
+  height: 72px;
+  width: 160px;
+}
+
+.balanceDetailsView {
+  font-size: 14px;
+}
+
+.level {
+  font-size: 14px;
+}
+
+.levelProgress {
+  width: 50%;
+  margin: 0 10px;
+}
+
+.levelTips {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+.userWalletBgImg {
+  width: 200px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: -999;
+}
+
+.rechrageItem {
+  width: 92%;
+  height: 60px;
+  border: 1px solid #dddee1;
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+.rechrageItem view {
+  font-size: 16px;
+  font-weight: bold;
+  color: #1c2438;
+}
+
+.rechrageItem span {
+  font-size: 12px;
+  margin-top: 4px;
+  color: #4198EF;
+}
+
+.rechrageItem_cli {
+  border: 1px solid #4198EF;
+}
+
+.customizeRechrageView {
+  color: #ffffff;
+  background-color: #1c2438;
+  border-radius: 10px;
+  padding: 10px 0;
+}
+
+.customizeRechrageView image {
+  width: 24px;
+}
+
+.customizeInput {
+  width: 82%;
+  padding-left: 10px;
+  font-size: 14px;
+}
+
+.gradeEquityItem span {
+  font-weight: bold;
+}
+
+.gradeEquityItem text {
+  font-size: 14px;
+  color: #80848f;
+}
+
+.gradeEquityItem image {
+  width: 80px;
+}

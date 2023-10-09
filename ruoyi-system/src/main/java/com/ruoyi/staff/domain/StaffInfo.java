@@ -135,4 +135,17 @@ public class StaffInfo extends BaseEntity {
     @Excel(name = "不通过原因")
     @ApiModelProperty("不通过原因")
     private String notPassReason;
+
+    @ApiModelProperty("店员服务标识集合")
+    private List<Long> serviceIdList;
+
+    @ApiModelProperty("条件-店员id集合")
+    private List<Long> filterIdList;
+
+    @ApiModelProperty("排序类型 0创建时间 1创建时间 2排序字段倒叙 3排序正序")
+    private String sortType;
+
+    @ApiModelProperty("是否展示置顶 Y是 N否")
+    private String showIfTop;
+
 }

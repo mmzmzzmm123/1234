@@ -47,4 +47,7 @@ public class ApiStaffTrendsVo implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("创建时间")
     private Date createTime;
+
+    @ApiModelProperty("店员信息")
+    private ApiStaffInfoVo staffInfoVo;
 }

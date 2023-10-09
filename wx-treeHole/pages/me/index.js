@@ -61,7 +61,7 @@ Page({
     if (this.data.userInfo != null) {
       let userId = this.data.userInfo.id;
       // 加载点赞收藏数据
-      userApi.selectUserLikeData({ userId: userId }, null, this.selectUserLikeDataOnSuccess, null);
+      userApi.selectUserLikeData(null, this.selectUserLikeDataOnSuccess, null);
       // 加载员工信息
       staffApi.selectByUserId({ userId: userId }, null, this.selectStaffInfoOnSuccess, null);
     }
@@ -253,8 +253,8 @@ Page({
       currLevel: userLevelVo.currentLevel,
       nextLevel: nextLevel.level,
       nextThreshold: nextLevel.threshold,
-      upgradationThreshold: Number(nextLevel.threshold) - Number(userLevelVo.totalPoints),
-      upgradationPercent: (Number(userLevelVo.totalPoints) / Number(nextLevel.threshold) * 100)
+      upgradationThreshold: (Number(nextLevel.threshold) - Number(userLevelVo.totalPoints)).toFixed(2),
+      upgradationPercent: (Number(userLevelVo.currentPoints) / Number(nextLevel.threshold) * 100)
     };
     this.setData({
       userLevelData: userLevelData

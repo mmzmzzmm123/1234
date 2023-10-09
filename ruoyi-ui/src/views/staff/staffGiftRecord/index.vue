@@ -9,9 +9,9 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="礼物标识" prop="giftIf">
+      <el-form-item label="礼物标识" prop="giftId">
         <el-input
-          v-model="queryParams.giftIf"
+          v-model="queryParams.giftId"
           placeholder="请输入礼物标识"
           clearable
           @keyup.enter.native="handleQuery"
@@ -73,8 +73,13 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键" align="center" prop="id" :show-overflow-tooltip="true" />
       <el-table-column label="员工标识" align="center" prop="staffUserId" :show-overflow-tooltip="true"/>
-      <el-table-column label="礼物标识" align="center" prop="giftIf" :show-overflow-tooltip="true"/>
+      <el-table-column label="礼物标识" align="center" prop="giftId" :show-overflow-tooltip="true"/>
       <el-table-column label="礼物数量" align="center" prop="giftNum" :show-overflow-tooltip="true"/>
+      <el-table-column label="创建时间" align="center" prop="createTime" width="180" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
@@ -108,14 +113,14 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改员工礼物记录对话框 -->
+    <!-- 添加或修改礼物记录对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="员工标识" prop="staffUserId">
           <el-input v-model="form.staffUserId" placeholder="请输入员工标识" />
         </el-form-item>
-        <el-form-item label="礼物标识" prop="giftIf">
-          <el-input v-model="form.giftIf" placeholder="请输入礼物标识" />
+        <el-form-item label="礼物标识" prop="giftId">
+          <el-input v-model="form.giftId" placeholder="请输入礼物标识" />
         </el-form-item>
         <el-form-item label="礼物数量" prop="giftNum">
           <el-input v-model="form.giftNum" placeholder="请输入礼物数量" />
@@ -148,7 +153,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 员工礼物记录表格数据
+      // 礼物记录表格数据
       staffGiftRecordList: [],
       // 弹出层标题
       title: "",
@@ -159,7 +164,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         staffUserId: null,
-        giftIf: null,
+        giftId: null,
       },
       // 表单参数
       form: {},
@@ -172,7 +177,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询员工礼物记录列表 */
+    /** 查询礼物记录列表 */
     getList() {
       this.loading = true;
       listStaffGiftRecord(this.queryParams).then(response => {
@@ -191,7 +196,7 @@ export default {
       this.form = {
         id: null,
         staffUserId: null,
-        giftIf: null,
+        giftId: null,
         giftNum: null,
         createTime: null,
         updateTime: null
@@ -218,7 +223,7 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加员工礼物记录";
+      this.title = "添加礼物记录";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -227,7 +232,7 @@ export default {
       getStaffGiftRecord(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改员工礼物记录";
+        this.title = "修改礼物记录";
       });
     },
     /** 提交按钮 */
@@ -253,7 +258,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除员工礼物记录编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除礼物记录编号为"' + ids + '"的数据项？').then(function() {
         return delStaffGiftRecord(ids);
       }).then(() => {
         this.getList();

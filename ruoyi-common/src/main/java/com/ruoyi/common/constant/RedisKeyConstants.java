@@ -27,4 +27,13 @@ public class RedisKeyConstants {
      * */
     public static final String PLATFORM_RECHARGE_CONFIG = "platform_recharge_config";
 
+    /**
+     * 支付回调完成事件（防止重复消费）
+     * */
+    public static final String PAYMENT_PAY_SUCCESS = "payment_pay_success:";
+
+    /**
+     * banner图数据
+     * */
+    public static final String APP_BANNER_DATA = "app_banner_data:";
 }

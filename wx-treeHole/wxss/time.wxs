@@ -17,22 +17,49 @@ function formatTimeDiff(timeStr) {
     return '刚刚';
   } else if (diff < 60 * 60 * 1000) {
     var minutes = Math.floor(diff / (60 * 1000));
-    return minutes+"分钟前";
+    return minutes + "分钟前";
   } else if (diff < 24 * 60 * 60 * 1000) {
     var hours = Math.floor(diff / (60 * 60 * 1000));
-    return hours+"小时前";
+    return hours + "小时前";
   } else if (diff < 30 * 24 * 60 * 60 * 1000) { // 30天内
     var days = Math.floor(diff / (24 * 60 * 60 * 1000));
-    return days+"天前";
+    return days + "天前";
   } else if (diff < 365 * 24 * 60 * 60 * 1000) { // 1年内
     var months = Math.floor(diff / (30 * 24 * 60 * 60 * 1000));
-    return months+"个月前";
+    return months + "个月前";
   } else {
     var years = Math.floor(diff / (365 * 24 * 60 * 60 * 1000));
-    return years+"年前";
+    return years + "年前";
   }
 }
 
+/**
+ * 计算年龄
+ */
+function calculateAge(timeStr) {
+  // 创建日期对象
+  var birthdate = getDate(timeStr);
+  var birthYear = birthdate.getFullYear();
+  var birthMonth = birthdate.getMonth();
+  var birthDay = birthdate.getDate();
+
+  // 获取当前时间的日期对象
+  var today = getDate();
+  var currentYear = today.getFullYear();
+  var currentMonth = today.getMonth();
+  var currentDay = today.getDate();
+
+  // 根据年份计算年龄
+  var age = currentYear - birthYear;
+
+  // 如果当前月份小于出生月份，或者当前月份等于出生月份但当前日期小于出生日期，则减去1年
+  if (currentMonth < birthMonth || (currentMonth === birthMonth && currentDay < birthDay)) {
+    age--;
+  }
+  return age;
+}
+
 module.exports = {
-  formatTimeDiff: formatTimeDiff
+  formatTimeDiff: formatTimeDiff,
+  calculateAge: calculateAge
 }

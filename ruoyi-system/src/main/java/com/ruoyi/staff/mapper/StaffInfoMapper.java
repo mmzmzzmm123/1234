@@ -28,6 +28,14 @@ public interface StaffInfoMapper {
     public List<StaffInfo> selectStaffInfoList(StaffInfo staffInfo);
 
     /**
+     * 自定义查询员工信息列表
+     *
+     * @param staffInfo 员工信息
+     * @return 员工信息集合
+     * */
+    public List<StaffInfo> customSelect(StaffInfo staffInfo);
+
+    /**
      * 新增员工信息
      *
      * @param staffInfo 员工信息

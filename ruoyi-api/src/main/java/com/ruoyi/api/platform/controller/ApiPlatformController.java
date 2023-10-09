@@ -1,5 +1,6 @@
 package com.ruoyi.api.platform.controller;
 
+import com.ruoyi.api.platform.model.vo.ApiGetBannerVo;
 import com.ruoyi.api.platform.model.vo.ApiGiftVo;
 import com.ruoyi.api.platform.model.vo.ApiRechargeConfigVo;
 import com.ruoyi.api.platform.service.ApiPlatformService;
@@ -44,5 +45,11 @@ public class ApiPlatformController {
     @GetMapping("/selectRechargeConfig")
     public R<List<ApiRechargeConfigVo>> selectRechargeConfig(){
         return R.ok(service.selectRechargeConfig());
+    }
+
+    @ApiOperation("根据投放位置获取到相应广告图数据")
+    @GetMapping("/getBannerByPosition")
+    public R<List<ApiGetBannerVo>> getBannerByPosition(@RequestParam("position") String position){
+        return R.ok(service.getBannerByPosition(position));
     }
 }

@@ -10,6 +10,27 @@
     "miniprogram": {
       "list": [
         {
+          "name": "员工资料卡",
+          "pathName": "staffPackages/page/staffInfoShow/index",
+          "query": "staffId=2",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "选人下单",
+          "pathName": "pages/select/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "动态大厅",
+          "pathName": "pages/trends/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "充值页面",
           "pathName": "platformPackages/page/recharge/index",
           "query": "",
@@ -33,13 +54,6 @@
         {
           "name": "我的页面",
           "pathName": "pages/me/index",
-          "query": "",
-          "launchMode": "default",
-          "scene": null
-        },
-        {
-          "name": "员工资料卡",
-          "pathName": "staffPackages/page/staffInfoShow/index",
           "query": "",
           "launchMode": "default",
           "scene": null

@@ -28,6 +28,22 @@ public interface StaffServiceConfigMapper {
     public List<StaffServiceConfig> selectStaffServiceConfigList(StaffServiceConfig staffServiceConfig);
 
     /**
+     * 根据服务id集合查询对应的数据
+     *
+     * @param serviceIdList 服务标识集合
+     * @return 结果
+     * */
+    public List<StaffServiceConfig> selectByServiceIds(List<Long> serviceIdList);
+
+    /**
+     * 根据店员id查询服务id集合
+     *
+     * @param staffId 店员标识
+     * @return 结果
+     * */
+    public List<Long> selectServiceIdByStaffId(Long staffId);
+
+    /**
      * 新增员工服务配置
      *
      * @param staffServiceConfig 员工服务配置

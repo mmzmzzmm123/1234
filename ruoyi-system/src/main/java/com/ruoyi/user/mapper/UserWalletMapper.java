@@ -28,6 +28,14 @@ public interface UserWalletMapper {
     public UserWallet selectByUserId(Long userId);
 
     /**
+     * 根据用户标识查询记录（悲观锁-行级别-为user_id字段添加普通索引即可）
+     *
+     * @param userId 用户标识
+     * @return 结果
+     * */
+    public UserWallet selectByUserIdForUpdate(Long userId);
+
+    /**
      * 查询用户钱包管理列表
      *
      * @param userWallet 用户钱包管理

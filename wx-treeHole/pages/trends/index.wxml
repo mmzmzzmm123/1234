@@ -1,375 +1,134 @@
+<wxs src="../../wxss/time.wxs" module="timeUtil"></wxs>
+<wxs src="../../wxss/str.wxs" module="str"></wxs>
 <view class="bView">
-  <wux-tabs class="wuxTab" theme="positive" controlled current="{{ currentKey }}">
+  <wux-tabs class="wuxTab" theme="positive" controlled current="{{ currentKey }}" bindchange="onTabsChange">
     <block wx:for="{{ tabs }}" wx:key="key">
       <block wx:if="{{ item.ico != '' }}">
         <view class="view_box_row_content" key="{{ item.key }}">
           <image src="{{item.ico}}" style="width: 16px; height: 16px; margin-right: 5px;" />
-          <text>{{ item.title }}</text>
+          <wux-tab key="{{ item.key }}" title="{{ item.title }}"></wux-tab>
         </view>
       </block>
       <wux-tab wx:else key="{{ item.key }}" title="{{ item.title }}"></wux-tab>
     </block>
   </wux-tabs>
-  <swiper style="width:{{pWidth}}px;height:{{pHeight-tabHeight}}px;" current="{{ currentIndex }}">
-    <swiper-item>
-      <scroll-view scroll-y="true" style="width:{{pWidth}}px;height:{{pHeight-tabHeight}}px;">
 
-        <!-- 动态item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="view_box_common trendsItemView">
-          <!-- 员工头像等信息 -->
-          <view class="view_box_common">
-            <view class="view_box_row_content_symmetry trendsTxAndNameInfo">
-              <image src="../../static/temp/t1.png" class="trendsTx"></image>
-              <view class="view_box_row_content_symmetry" style="width: {{pWidth*0.92*0.92-50}}px;height: 92%;">
-                <view class="trendsName">
-                  <view class="view_box_row_content">
-                    <span>王思聪</span>
-                    <view class="view_box_row_content  trendsSexAndAge girl_bg_color">
-                      <image src="../../static/ico/girl_white_32.png" mode="widthFix"></image>28
+  <wux-spin nested spinning="{{ dataLoadState }}" tip="加载中">
+    <swiper style="width:{{pWidth}}px;height:{{pHeight-tabHeight}}px;" current="{{ currentIndex }}" bindchange="onSwiperChange">
+      <block wx:for="{{ tabs }}" wx:key="key">
+        <swiper-item>
+          <scroll-view refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{item.refreshState}}" scroll-y="true" bindrefresherrefresh="refresh" bindscrolltolower="loadNextPageData" class="view_all_adapt">
+            <block wx:if="{{item.data != null && item.data.length > 0}}">
+              <block wx:for="{{item.data}}" wx:key="id" wx:for-item="dataItem" wx:for-index="dataIndex">
+
+                <view class="seizeSeat_mini"></view>
+                <view class="view_box_common trendsItemView">
+                  <view class="view_box_common">
+                    <view class="view_box_row_content_symmetry trendsTxAndNameInfo" data-staffid="{{dataItem.staffInfoVo.userId}}" bind:tap="toShowStaffInfo">
+                      <image src="{{dataItem.staffInfoVo.avatarUrl != null ? dataItem.staffInfoVo.avatarUrl : '../../static/images/default_tx.png'}}" class="trendsTx"></image>
+                      <view class="view_box_row_content_symmetry" style="width: {{pWidth*0.92*0.92-50}}px;height: 92%;">
+                        <view class="trendsName">
+                          <view class="view_box_row_content">
+                            <span>{{dataItem.staffInfoVo.nickName}}</span>
+                            <view class="view_box_row_content  trendsSexAndAge {{dataItem.staffInfoVo.sex == 1 ? 'girl_bg_color' : 'boy_bg_color'}}">
+                              <image src="../../static/ico/girl_white_32.png" mode="widthFix"></image>{{timeUtil.calculateAge(dataItem.staffInfoVo.birthDate)}}
+                            </view>
+                          </view>
+                          <text>{{timeUtil.formatTimeDiff(dataItem.createTime)}}</text>
+                        </view>
+                        <view class="view_box_row_content">
+                          <image src="../../static/ico/{{dataItem.staffInfoVo.ifOnline == 'Y' ? 'online_32' : 'offline_32'}}.png" mode="widthFix" style="width: 16px;"></image>
+                          <view style="font-size: 14px;">{{dataItem.staffInfoVo.ifOnline == 'Y' ? '在线' : '离线'}}</view>
+                        </view>
+                      </view>
                     </view>
                   </view>
-                  <text>1分钟前</text>
-                </view>
-                <view class="view_box_row_content">
-                  <image src="../../static/ico/online_32.png" mode="widthFix" style="width: 16px;"></image>
-                  <view style="font-size: 14px;">在线</view>
-                </view>
-              </view>
-            </view>
-          </view>
-          <!-- 动态文本信息 -->
-          <view class="view_box_common trendsContent">
-            你是我的小苹果，我是你的小麻薯
-          </view>
-          <!-- 视频 -->
-          <view class="view_box_common">
-            <video bindplay="videoPlay" play-btn-position="center" class="trendsVideo" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/final.mp4"></video>
-          </view>
-          <view class="seizeSeat_mini"></view>
-          <!-- 底部操作按钮组 -->
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-heart" size="16" color="#80848f"></wux-icon>
-                <view>关注</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-thumbs-up" size="16" color="#80848f"></wux-icon>
-                <view>点赞</view>
-              </view>
-            </view>
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="logo-yen" size="16" color="#f8b5b5"></wux-icon>
-                <view>打赏</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-gift" size="16" color="#8978E4"></wux-icon>
-                <view>送礼物</view>
-              </view>
-            </view>
-          </view>
-        </view>
+                  <!-- 文本数据 -->
+                  <block wx:if="{{dataItem.content != null && dataItem.content != ''}}" data-staffid="{{dataItem.staffInfoVo.userId}}" bind:tap="toShowStaffInfo">
+                    <view class="seizeSeat_mini"></view>
+                    <view class="view_box_common trendsContent">
+                      {{dataItem.content}}
+                    </view>
+                  </block>
+                  <!-- 视频数据 -->
+                  <block wx:if="{{dataItem.videoUrl != null && dataItem.videoUrl != ''}}">
+                    <view class="seizeSeat_mini"></view>
+                    <view class="view_box_common">
+                      <video id="video{{index}}" muted show-mute-btn play-btn-position="center" class="trendsVideo" src="{{dataItem.videoUrl}}" data-index="{{dataIndex}}" bindplay="videoPlay" bindfullscreenchange="videoScreenChange"></video>
+                    </view>
+                  </block>
+                  <!-- 图片展示 -->
+                  <block wx:if="{{dataItem.imgList != null && dataItem.imgList != ''}}">
+                    <view class="seizeSeat_mini"></view>
+                    <!-- 还需要判断是多图还是单图 -->
+                    <block wx:if="{{!str.indexOf(dataItem.imgList, ',')}}">
+                      <view class="view_box_common">
+                        <image class="trendsSingleImage" src="{{dataItem.imgList}}" mode="widthFix" data-index="{{dataIndex}}" data-imgIndex="0" bind:tap="listImgCli"></image>
+                      </view>
+                    </block>
+                    <block wx:else>
+                      <view class="view_box_common">
+                        <view class="view_box_row_symmetry" style="width: 86%;">
+                          <block wx:for="{{str.splitToArr(dataItem.imgList, ',')}}" wx:key="index" wx:for-item="imgItem" wx:for-index="imgIndex">
+                            <image class="trendsImageMany" src="{{imgItem}}" mode="aspectFill" data-index="{{dataIndex}}" data-imgIndex="{{imgIndex}}" bind:tap="listImgCli"></image>
+                          </block>
+                        </view>
+                      </view>
+                    </block>
+                  </block>
+                  <!-- 语音 -->
+                  <block wx:if="{{dataItem.voiceUrl != null && dataItem.voiceUrl != ''}}">
+                    <view class="view_box_common">
+                      <view class="view_box_row" style="margin-top: 10px;">
+                        <view class="view_box_row_content audioBut boy_bg_color" data-index="{{dataIndex}}" bind:tap="listAudioCli">
+                          <image class="audioPlay" src="../../static/ico/{{dataItem.audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
+                          <image wx:if="{{dataItem.audioState == '-1'}}" class="audioFrequency" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                          <image wx:if="{{dataItem.audioState == '0'}}" class="audioFrequencyGif" src="../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+                          <span wx:if="{{dataItem.voiceTime != null && dataItem.voiceTime > 0}}">{{dataItem.voiceTime}}s</span>
+                        </view>
+                      </view>
+                    </view>
+                  </block>
 
-        <!-- 动态item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="view_box_common trendsItemView">
-          <!-- 员工头像等信息 -->
-          <view class="view_box_common">
-            <view class="view_box_row_content_symmetry trendsTxAndNameInfo">
-              <image src="../../static/temp/t1.png" class="trendsTx"></image>
-              <view class="view_box_row_content_symmetry" style="width: {{pWidth*0.92*0.92-50}}px;height: 92%;">
-                <view class="trendsName">
-                  <view class="view_box_row_content">
-                    <span>王思聪</span>
-                    <view class="view_box_row_content  trendsSexAndAge girl_bg_color">
-                      <image src="../../static/ico/girl_white_32.png" mode="widthFix"></image>28
+                  <view class="seizeSeat_mini"></view>
+                  <view class="seizeSeat_mini"></view>
+                  <!-- 底部操作按钮组 -->
+                  <view class="view_box_common view_box_row_content_symmetry" data-staffid="{{dataItem.staffInfoVo.userId}}" bind:tap="toShowStaffInfo">
+                    <view class="view_box_row_content">
+                      <!-- <view class="view_box_row_content trendsOperItem">
+                        <wux-icon type="logo-yen" size="16" color="#f8b5b5"></wux-icon>
+                        <view>打赏</view>
+                      </view>
+                      <view class="view_box_row_content trendsOperItem">
+                        <wux-icon type="ios-gift" size="16" color="#8978E4"></wux-icon>
+                        <view>送礼物</view>
+                      </view> -->
+                    </view>
+                    <view class="view_box_row_content">
+                      <view class="view_box_row_content trendsOperItem" data-id="{{dataItem.staffInfoVo.userId}}" catch:tap="{{str.checkArrIncludeStr(userLikeStaffUserIdList, dataItem.staffInfoVo.userId) ? 'cancelLikeStaff' : 'likeStaff'}}">
+                        <wux-icon type="ios-heart" size="16" color="{{str.checkArrIncludeStr(userLikeStaffUserIdList, dataItem.staffInfoVo.userId) ? (dataItem.staffInfoVo.sex == 1 ? '#f8b5b5' : '#8978E4') : '#80848f'}}"></wux-icon>
+                        <view>{{str.checkArrIncludeStr(userLikeStaffUserIdList, dataItem.staffInfoVo.userId) ? '已关注' : '关注'}}</view>
+                      </view>
+                      <view class="view_box_row_content trendsOperItem" data-id="{{dataItem.id}}" catch:tap="{{str.checkArrIncludeStr(userLikeStaffTrendsIdList, dataItem.id) ? 'cancelLikeStaffTrends' : 'likeStaffTrends'}}">
+                        <wux-icon type="ios-thumbs-up" size="16" color="{{str.checkArrIncludeStr(userLikeStaffTrendsIdList, dataItem.id) ? (dataItem.staffInfoVo.sex == 1 ? '#f8b5b5' : '#8978E4') : '#80848f'}}"></wux-icon>
+                        <view>{{dataItem.likeNum > 0 ? dataItem.likeNum : '点赞'}}</view>
+                      </view>
                     </view>
                   </view>
-                  <text>5分钟前</text>
+                  <view class="seizeSeat_mini"></view>
                 </view>
-                <view class="view_box_row_content">
-                  <image src="../../static/ico/online_32.png" mode="widthFix" style="width: 16px;"></image>
-                  <view style="font-size: 14px;">在线</view>
-                </view>
+              </block>
+              <i-load-more tip='{{((item.params.pageNum*item.params.pageSize) >= item.total) && item.bottomDataLoadState == false ?"halo 店员正在准备着发布哟":"加载中"}}' loading="{{item.bottomDataLoadState}}"></i-load-more>
+            </block>
+            <block wx:else>
+              <view class="view_all_adapt">
+                <mine-null-data width="100%" height="100%" title="哎呀，暂无店员发表动态哟"></mine-null-data>
               </view>
-            </view>
-          </view>
-          <!-- 动态文本信息 -->
-          <view class="view_box_common trendsContent">
-            找我有优惠哟
-          </view>
-          <!-- 视频 -->
-          <view class="view_box_common">
-            <video play-btn-position="center" class="trendsVideo" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/final%20%281%29.mp4"></video>
-          </view>
-          <view class="seizeSeat_mini"></view>
-          <!-- 底部操作按钮组 -->
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-heart" size="16" color="#80848f"></wux-icon>
-                <view>关注</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-thumbs-up" size="16" color="#80848f"></wux-icon>
-                <view>点赞</view>
-              </view>
-            </view>
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="logo-yen" size="16" color="#f8b5b5"></wux-icon>
-                <view>打赏</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-gift" size="16" color="#8978E4"></wux-icon>
-                <view>送礼物</view>
-              </view>
-            </view>
-          </view>
-        </view>
+            </block>
+          </scroll-view>
+        </swiper-item>
+      </block>
+    </swiper>
+  </wux-spin>
 
-        <!-- 动态item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="view_box_common trendsItemView">
-          <!-- 员工头像等信息 -->
-          <view class="view_box_common">
-            <view class="view_box_row_content_symmetry trendsTxAndNameInfo">
-              <image src="../../static/temp/t1.png" class="trendsTx"></image>
-              <view class="view_box_row_content_symmetry" style="width: {{pWidth*0.92*0.92-50}}px;height: 92%;">
-                <view class="trendsName">
-                  <view class="view_box_row_content">
-                    <span>王思聪</span>
-                    <view class="view_box_row_content  trendsSexAndAge girl_bg_color">
-                      <image src="../../static/ico/girl_white_32.png" mode="widthFix"></image>28
-                    </view>
-                  </view>
-                  <text>7分钟前</text>
-                </view>
-                <view class="view_box_row_content">
-                  <image src="../../static/ico/online_32.png" mode="widthFix" style="width: 16px;"></image>
-                  <view style="font-size: 14px;">在线</view>
-                </view>
-              </view>
-            </view>
-          </view>
-          <!-- 动态文本信息 -->
-          <view class="view_box_common trendsContent">
-            你是我的小苹果，我是你的小麻薯
-          </view>
-          <!-- 视频 -->
-          <view class="view_box_common">
-            <video play-btn-position="center" class="trendsVideo" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/%E5%85%8D%E8%B4%B9%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6.mp4"></video>
-          </view>
-          <view class="seizeSeat_mini"></view>
-          <!-- 底部操作按钮组 -->
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-heart" size="16" color="#80848f"></wux-icon>
-                <view>关注</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-thumbs-up" size="16" color="#80848f"></wux-icon>
-                <view>点赞</view>
-              </view>
-            </view>
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="logo-yen" size="16" color="#f8b5b5"></wux-icon>
-                <view>打赏</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-gift" size="16" color="#8978E4"></wux-icon>
-                <view>送礼物</view>
-              </view>
-            </view>
-          </view>
-        </view>
-
-        <!-- 动态item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="view_box_common trendsItemView">
-          <!-- 员工头像等信息 -->
-          <view class="view_box_common">
-            <view class="view_box_row_content_symmetry trendsTxAndNameInfo">
-              <image src="../../static/temp/t1.png" class="trendsTx"></image>
-              <view class="view_box_row_content_symmetry" style="width: {{pWidth*0.92*0.92-50}}px;height: 92%;">
-                <view class="trendsName">
-                  <view class="view_box_row_content">
-                    <span>王思聪</span>
-                    <view class="view_box_row_content  trendsSexAndAge girl_bg_color">
-                      <image src="../../static/ico/girl_white_32.png" mode="widthFix"></image>28
-                    </view>
-                  </view>
-                  <text>10分钟前</text>
-                </view>
-                <view class="view_box_row_content">
-                  <image src="../../static/ico/online_32.png" mode="widthFix" style="width: 16px;"></image>
-                  <view style="font-size: 14px;">在线</view>
-                </view>
-              </view>
-            </view>
-          </view>
-          <!-- 动态文本信息 -->
-          <view class="view_box_common trendsContent">
-            旅游美照曝光
-          </view>
-          <!-- 多图片展示 -->
-          <view class="view_box_common">
-            <view class="view_box_row_symmetry" style="width: 86%;">
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqUdymzhhFlFct0M9edLJZu*JNk1ePld60*H6JBWSOE9OA7TBsgTPwRUIEbfeTImldCJgvy0Tfd8p5uaMg8ku*qk!/b&bo=hAP5BAAAAAABB1o!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqdjA2*UQQm7oYOXJsiCzZth4JaTgxrTAAVplAzBpFRIASKY.Kb4GqNqkjRjlmT.mWNACE.X2J3IshIN7Dq*CWtM!/b&bo=OAQaBgAAAAABBwA!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqS4Tj83wR6B6MNByVUVz0mZLGpm2kYlKAFSq2oaxy7DHt6lNnx1Ka*LUq6RTwAMMMxw0CED4SU7By1UGowX*4Yk!/b&bo=7gKGAQAAAAADB0k!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqaFumqN5Xj.rCEYiDR0xmTZ7NxtJfwlv9Yd5glywtP6MqpqbUaovugiLLUnaOwYWMTUQeExbSiILrtQSamU4RDs!/b&bo=gAeEAwAAAAADByI!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://photogz.photo.store.qq.com/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqYFPGvT09kStMSz6.ztB516o4FS*PkMIKaJv2NQziHZNs1nrtSje3TZ4mehgt*eUfChMlHgXUG6NRuusgSsyLbg!/b&bo=hAP0AQAAAAADB1A!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://photogz.photo.store.qq.com/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqaWtNEKDQ2RK3bKwMnt.DBxBOSXh4LtkWJ9B.D5LjaAwDM3K6p2P9XrwqHsjUec8lmOFJr6yys0mofhD7TjMiEc!/b&bo=7gK2AwAAAAADRzs!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqUdymzhhFlFct0M9edLJZu*JNk1ePld60*H6JBWSOE9OA7TBsgTPwRUIEbfeTImldCJgvy0Tfd8p5uaMg8ku*qk!/b&bo=hAP5BAAAAAABB1o!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqdjA2*UQQm7oYOXJsiCzZth4JaTgxrTAAVplAzBpFRIASKY.Kb4GqNqkjRjlmT.mWNACE.X2J3IshIN7Dq*CWtM!/b&bo=OAQaBgAAAAABBwA!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqS4Tj83wR6B6MNByVUVz0mZLGpm2kYlKAFSq2oaxy7DHt6lNnx1Ka*LUq6RTwAMMMxw0CED4SU7By1UGowX*4Yk!/b&bo=7gKGAQAAAAADB0k!&rf=viewer_4" mode="aspectFill"></image>
-            </view>
-          </view>
-          <view class="seizeSeat_mini"></view>
-          <!-- 底部操作按钮组 -->
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-heart" size="16" color="#80848f"></wux-icon>
-                <view>关注</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-thumbs-up" size="16" color="#80848f"></wux-icon>
-                <view>点赞</view>
-              </view>
-            </view>
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="logo-yen" size="16" color="#f8b5b5"></wux-icon>
-                <view>打赏</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-gift" size="16" color="#8978E4"></wux-icon>
-                <view>送礼物</view>
-              </view>
-            </view>
-          </view>
-        </view>
-
-        <!-- 动态item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="view_box_common trendsItemView">
-          <!-- 员工头像等信息 -->
-          <view class="view_box_common">
-            <view class="view_box_row_content_symmetry trendsTxAndNameInfo">
-              <image src="../../static/temp/t1.png" class="trendsTx"></image>
-              <view class="view_box_row_content_symmetry" style="width: {{pWidth*0.92*0.92-50}}px;height: 92%;">
-                <view class="trendsName">
-                  <view class="view_box_row_content">
-                    <span>王思聪</span>
-                    <view class="view_box_row_content  trendsSexAndAge girl_bg_color">
-                      <image src="../../static/ico/girl_white_32.png" mode="widthFix"></image>28
-                    </view>
-                  </view>
-                  <text>半小时前</text>
-                </view>
-                <view class="view_box_row_content">
-                  <image src="../../static/ico/online_32.png" mode="widthFix" style="width: 16px;"></image>
-                  <view style="font-size: 14px;">在线</view>
-                </view>
-              </view>
-            </view>
-          </view>
-          <!-- 动态文本信息 -->
-          <view class="view_box_common trendsContent">
-            你是我的小苹果，我是你的小麻薯
-          </view>
-          <view class="seizeSeat_mini"></view>
-          <!-- 底部操作按钮组 -->
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-heart" size="16" color="#80848f"></wux-icon>
-                <view>关注</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-thumbs-up" size="16" color="#80848f"></wux-icon>
-                <view>点赞</view>
-              </view>
-            </view>
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="logo-yen" size="16" color="#f8b5b5"></wux-icon>
-                <view>打赏</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-gift" size="16" color="#8978E4"></wux-icon>
-                <view>送礼物</view>
-              </view>
-            </view>
-          </view>
-        </view>
-
-        <!-- 动态item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="view_box_common trendsItemView">
-          <!-- 员工头像等信息 -->
-          <view class="view_box_common">
-            <view class="view_box_row_content_symmetry trendsTxAndNameInfo">
-              <image src="../../static/temp/t2.png" class="trendsTx"></image>
-              <view class="view_box_row_content_symmetry" style="width: {{pWidth*0.92*0.92-50}}px;height: 92%;">
-                <view class="trendsName">
-                  <view class="view_box_row_content">
-                    <span>麻花腾</span>
-                    <view class="view_box_row_content  trendsSexAndAge girl_bg_color">
-                      <image src="../../static/ico/girl_white_32.png" mode="widthFix"></image>24
-                    </view>
-                  </view>
-                  <text>一天前</text>
-                </view>
-                <view class="view_box_row_content">
-                  <image src="../../static/ico/online_32.png" mode="widthFix" style="width: 16px;"></image>
-                  <view style="font-size: 14px;">在线</view>
-                </view>
-              </view>
-            </view>
-          </view>
-          <!-- 动态文本信息 -->
-          <view class="view_box_common trendsContent">
-            一个人寂寞的夜，想找个人聊聊天，有惊喜
-          </view>
-          <!-- 单图片 -->
-          <view class="view_box_common">
-            <image class="trendsSingleImage" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqUdymzhhFlFct0M9edLJZu*JNk1ePld60*H6JBWSOE9OA7TBsgTPwRUIEbfeTImldCJgvy0Tfd8p5uaMg8ku*qk!/b&bo=hAP5BAAAAAABB1o!&rf=viewer_4" mode="widthFix"></image>
-          </view>
-          <view class="seizeSeat_mini"></view>
-          <!-- 底部操作按钮组 -->
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-heart" size="16" color="#80848f"></wux-icon>
-                <view>关注</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-thumbs-up" size="16" color="#80848f"></wux-icon>
-                <view>点赞</view>
-              </view>
-            </view>
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="logo-yen" size="16" color="#f8b5b5"></wux-icon>
-                <view>打赏</view>
-              </view>
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-gift" size="16" color="#8978E4"></wux-icon>
-                <view>送礼物</view>
-              </view>
-            </view>
-          </view>
-        </view>
-        <view class="seizeSeat_mini"></view>
-        <view class="seizeSeat_mini"></view>
-      </scroll-view>
-    </swiper-item>
-  </swiper>
 </view>

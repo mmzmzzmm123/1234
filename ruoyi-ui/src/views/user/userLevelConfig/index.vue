@@ -115,11 +115,11 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="等级图标" prop="icoUrl">
-          <imageUpload v-model="form.icoUrl" :limit="1" :fileType="['png','jpg']"
+          <imageUpload v-model="form.icoUrl" :limit="1" :fileType="['png','jpg','gif']"
                        :params-data="{ossKey: 'levelIco'}"/>
         </el-form-item>
         <el-form-item label="头像框" prop="avatarUrl">
-          <imageUpload v-model="form.avatarUrl" :limit="1" :fileType="['png','jpg']"
+          <imageUpload v-model="form.avatarUrl" :limit="1" :fileType="['png','jpg','gif']"
                        :params-data="{ossKey: 'avatar'}"/>
         </el-form-item>
         <el-form-item label="名称" prop="name">

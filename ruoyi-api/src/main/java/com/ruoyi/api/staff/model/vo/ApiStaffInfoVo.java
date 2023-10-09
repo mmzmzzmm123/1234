@@ -75,6 +75,9 @@ public class ApiStaffInfoVo implements Serializable {
     @ApiModelProperty("录音时长")
     private Long voiceTime;
 
+    @ApiModelProperty("语音播放状态（-1 暂停 0播放）")
+    private int audioState = -1;
+
     @ApiModelProperty("是否置顶")
     private String ifTop;
 
@@ -100,4 +103,7 @@ public class ApiStaffInfoVo implements Serializable {
 
     @ApiModelProperty("员工相册")
     private List<ApiStaffPhotoVo> photoVoList;
+
+    @ApiModelProperty("店员服务id集合")
+    private List<Long> serviceIdList;
 }

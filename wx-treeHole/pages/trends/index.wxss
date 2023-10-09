@@ -1,5 +1,5 @@
 page{
-  background-color: #f8f8f9;
+  background: linear-gradient(to bottom,#d5e4f5,#fce2e6);
 }
 .trendsItemView{
   background-color: #ffffff;
@@ -59,4 +59,24 @@ page{
 .trendsVideo{
   margin-top: 10px;
   border-radius: 10px;
+}
+.audioBut{
+  height: 20px;
+  overflow: hidden;
+  padding: 4px 10px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
+}
+.audioPlay{
+  width: 16px;
+  margin-right: 10px;
+}
+.audioFrequency{
+  width: 100px;
+  margin-right: 10px;
+}
+.audioFrequencyGif{
+  width: 100px;
+  margin-right: 10px;
 }

@@ -245,4 +245,15 @@ public class RedisCache {
     public Collection<String> keys(final String pattern) {
         return redisTemplate.keys(pattern);
     }
+
+
+    /**
+     * 模糊删除
+     *
+     * @param likeKey 需要匹配的模糊key
+     * @return 结果
+     */
+    public Boolean likeDelObject(String likeKey) {
+        return deleteObject(likeKey);
+    }
 }

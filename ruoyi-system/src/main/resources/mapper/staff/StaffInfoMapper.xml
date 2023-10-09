@@ -27,9 +27,14 @@
         <result property="sortNum" column="sort_num"/>
         <result property="referralCode" column="referral_code"/>
         <result property="remark" column="remark"/>
-        <result property="notPassReason" column="not_pass_reason" />
+        <result property="notPassReason" column="not_pass_reason"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap id="joinServiceConfigResult" type="StaffInfo" extends="StaffInfoResult">
+        <collection property="serviceIdList" column="user_id" ofType="Long" javaType="java.util.List"
+                    select="com.ruoyi.staff.mapper.StaffServiceConfigMapper.selectServiceIdByStaffId"/>
     </resultMap>
 
     <sql id="selectStaffInfoVo">
@@ -79,6 +84,43 @@
     <select id="selectStaffInfoByUserId" parameterType="Long" resultMap="StaffInfoResult">
         <include refid="selectStaffInfoVo"/>
         where user_id = #{userId}
+    </select>
+
+    <select id="customSelect" parameterType="StaffInfo" resultMap="joinServiceConfigResult">
+        <include refid="selectStaffInfoVo"/>
+        <where>
+            <!-- 判断是否需要过滤员工标识 -->
+            <if test="filterIdList != null ">
+                and user_id in
+                <foreach collection="filterIdList" separator="," open="(" close=")" item="staffId">
+                    #{staffId}
+                </foreach>
+            </if>
+            <if test="referralUserId != null ">and referral_user_id = #{referralUserId}</if>
+            <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="state != null  and state != ''">and state = #{state}</if>
+            <if test="ifOnline != null  and ifOnline != ''">and if_online = #{ifOnline}</if>
+            <if test="staffLevel != null and staffLevel != ''">and staff_level = #{staffLevel}</if>
+            <if test="sex != null  and sex != ''">and sex = #{sex}</if>
+            <if test="weChatNum != null  and weChatNum != ''">and we_chat_num like concat('%', #{weChatNum}, '%')</if>
+            <if test="phone != null  and phone != ''">and phone like concat('%', #{phone}, '%')</if>
+            <if test="ifTop != null  and ifTop != ''">and if_top = #{ifTop}</if>
+            <if test="referralCode != null ">and referral_code = #{referralCode}</if>
+        </where>
+
+        <if test="showIfTop != null and showIfTop == 'Y'.toString()">
+            ORDER BY if_top DESC
+        </if>
+        <if test="sortType != null">
+            <if test="showIfTop != null and showIfTop == 'Y'.toString()">,</if>
+            <if test="showIfTop == null or showIfTop == 'N'.toString()">ORDER BY</if>
+            <if test="sortType == '0'.toString()">create_time desc</if>
+            <if test="sortType == '1'.toString()">create_time asc</if>
+            <if test="sortType == '2'.toString()">sort_num desc</if>
+            <if test="sortType == '3'.toString()">sort_num asc</if>
+            <if test="sortType == '4'.toString()">staff_level desc</if>
+            <if test="sortType == '5'.toString()">staff_level asc</if>
+        </if>
     </select>
 
     <insert id="insertStaffInfo" parameterType="StaffInfo">

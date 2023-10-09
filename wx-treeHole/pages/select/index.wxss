@@ -1,5 +1,5 @@
 page{
-  background-color: #f8f8f9;
+  background: linear-gradient(to bottom,#d5e4f5,#fce2e6);
 }
 .filterView{
   padding: 10px 0;
@@ -18,9 +18,44 @@ page{
 .staffAvatarView{
   width: 100px;
   height: 100px;
-  border-radius: 10px;
-  overflow: hidden;
   position: relative;
+}
+.avatarImg{
+  width: 80px;
+  height: 80px;
+  border-radius: 80px;
+}
+.avatarFrame{
+  width: 120px;
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  z-index: 1;
+}
+.staffVoice{
+  height: 16px;
+  overflow: hidden;
+  padding: 3px 10px;
+  position: absolute;
+  bottom: 0;
+  left: -10px;
+  z-index: 5;
+  border-radius: 10px;
+}
+.voicePlay{
+  width: 12px;
+  margin-right: 4px;
+}
+.voiceAudioImg{
+  width: 50px;
+}
+.audioFrequencyGif{
+  width: 50px;
+}
+.voiceSeconds{
+  color: #ffffff;
+  font-size: 10px;
+  margin-left: 4px;
 }
 .staffItem .staffName{
   font-size: 14px;
@@ -31,7 +66,7 @@ page{
   font-size: 10px;
   font-weight: bold;
   color: #ffffff;
-  padding: 2px 4px;
+  padding: 2px 10px;
   border-radius: 10px;
 }
 .staffBadgeLevel image{
@@ -75,16 +110,10 @@ page{
   border-radius: 10px;
 }
 .staffService text{
-  margin: 0 6px;
+  margin-right: 4px;
 }
-.staffVoice{
-  width: 100%;
-  padding: 2px 0;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
+.staffService span{
+  margin-right: 4px;
 }
 .verticalLine{
   width: 1.5px;
@@ -171,18 +200,6 @@ page{
 .payWayView span{
   font-size: 14px;
 }
-.voicePlay{
-  width: 12px;
-  margin-right: 4px;
-}
-.voiceAudioImg{
-  width: 30px;
-}
-.voiceSeconds{
-  color: #ffffff;
-  font-size: 12px;
-  margin-left: 4px;
-}
 .newPeopleItem{
   width: 60px;
   margin-right: 16px;
@@ -203,4 +220,18 @@ page{
   border-radius: 10px;
   margin-top: 6px;
   color: #ffffff;
+}
+.chooseFilterItem{
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  background-color: #ffffff;
+  position: relative;
+  margin-right: 10px;
+}
+.chooseFilterItem image{
+  width: 12px;
+  position: absolute;
+  top: -2px;
+  right: -4px;
 }

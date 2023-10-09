@@ -2,6 +2,11 @@
   "navigationStyle": "custom",
   "navigationBarTextStyle": "white",
   "usingComponents": {
+    "wux-row": "../../../components/wux/dist/row/index",
+    "wux-col": "../../../components/wux/dist/col/index",
+    "wux-skeleton": "../../../components/wux/dist/skeleton/index",
+    "wux-skeleton-avatar": "../../../components/wux/dist/skeleton-avatar/index",
+    "wux-skeleton-paragraph": "../../../components/wux/dist/skeleton-paragraph/index",
     "i-load-more": "../../../components/iview/dist/load-more/index",
     "wux-tabs": "../../../components/wux/dist/tabs/index",
     "wux-tab": "../../../components/wux/dist/tab/index",

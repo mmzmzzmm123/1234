@@ -6,6 +6,7 @@ let bashRequestUrl = "/api/platform";
 let selectTextContentByTypeUrl = "/selectTextContentByType";
 let selectGiftListUrl = "/selectGiftList";
 let selectRechargeConfigUrl = "/selectRechargeConfig";
+let getBannerByPositionUrl = "/getBannerByPosition";
 
 /**
  * 根据类型获取平台文本内容
@@ -28,8 +29,16 @@ let selectRechargeConfig = function(onStart, onSuccess, onFailed){
   request.get(bashRequestUrl + selectRechargeConfigUrl, null, onStart, onSuccess, onFailed, onFailed, onFailed);
 }
 
+/**
+ * 根据投放位置获取到相应广告图数据
+ */
+let getBannerByPosition = function(params, onStart, onSuccess, onFailed){
+  request.get(bashRequestUrl+getBannerByPositionUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed);
+}
+
   module.exports = {
     selectTextContentByType: selectTextContentByType,
     selectGiftList: selectGiftList,
-    selectRechargeConfig: selectRechargeConfig
+    selectRechargeConfig: selectRechargeConfig,
+    getBannerByPosition: getBannerByPosition
   }

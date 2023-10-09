@@ -95,6 +95,27 @@ spring:
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
 
+# RocketMQ 相关配置
+rocketmq:
+  # 指定 nameServer
+  name-server: 106.53.97.225:9876
+  # Producer 生产者
+  producer:
+    # 指定发送者组名
+    group: yingde-tree-group
+    # 发送消息超时时间，单位：毫秒。默认为 3000 。
+    send-message-timeout: 3000
+    # 消息压缩阀值，当消息体的大小超过该阀值后，进行消息压缩。默认为 4 * 1024B
+    compress-message-body-threshold: 4096
+    # 消息体的最大允许大小。。默认为 4 * 1024 * 1024B
+    max-message-size: 4194304
+    # 同步发送消息时，失败重试次数。默认为 2 次。
+    retry-times-when-send-failed: 2
+    # 异步发送消息时，失败重试次数。默认为 2 次。
+    retry-times-when-send-async-failed: 2
+    # 发送消息给 Broker 时，如果发送失败，是否重试另外一台 Broker 。默认为 false
+    retry-next-server: false
+
 # token配置
 token:
   # 令牌自定义标识
@@ -145,6 +166,26 @@ weixin:
       app-id: wxdfee3a598de0fb18
       # 微信小程序-密钥
       app-secret: 2b375a770a0f32dff4af1c2632ca3a23
+  # 微信支付账号信息
+  pay-info:
+    # 商户号
+    mch-id: 1653587833
+    # api密钥
+    mch-key: lllwyingdeshichezhidaoqichemaoyi
+    # apiv3密钥
+    mch-key-v3: JeqJoVbE7QjJ5P3d6QWNzXqKfMMdlbhR
+    # 加密方式
+    sign-type: MD5
+    # 商户证书文件路径
+    key-path: classpath:cert/apiclient_cert.p12
+    # 商户key证书路径
+    app-key-path: classpath:cert/apiclient_key.pem
+    # 商户cert证书路径
+    app-cert-path: classpath:cert/apiclient_cert.pem
+    notify-url: http://lamlin.natapp1.cc/api/wxCallback/payCallback
+    refund-notify-url: http://lamlin.natapp1.cc/api/wxCallback/refundCallBack
+#    notify-url: https://listen.vipwei.cn/prod-api/api/wxCallback/payCallback
+#    refund-notify-url: https://listen.vipwei.cn/prod-api/api/wxCallback/refundCallBack
 
 # 腾讯云产品信息
 tencent-info:

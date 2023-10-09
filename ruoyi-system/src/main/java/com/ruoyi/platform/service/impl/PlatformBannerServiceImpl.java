@@ -2,7 +2,11 @@ package com.ruoyi.platform.service.impl;
 
 import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.constant.RedisKeyConstants;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,7 @@ import com.ruoyi.platform.service.IPlatformBannerService;
 public class PlatformBannerServiceImpl implements IPlatformBannerService {
 
     private final PlatformBannerMapper platformBannerMapper;
+    private final RedisCache redisCache;
 
     /**
      * 查询平台广告图
@@ -52,6 +57,9 @@ public class PlatformBannerServiceImpl implements IPlatformBannerService {
      */
     @Override
     public int insertPlatformBanner(PlatformBanner platformBanner) {
+        if (StringUtils.isNotBlank(platformBanner.getPosition())){
+            redisCache.deleteObject(RedisKeyConstants.APP_BANNER_DATA+platformBanner.getPosition());
+        }
         String loginUser = SecurityUtils.getUsername();
         Date now = DateUtils.getNowDate();
         platformBanner.setCreateTime(now)
@@ -69,6 +77,9 @@ public class PlatformBannerServiceImpl implements IPlatformBannerService {
      */
     @Override
     public int updatePlatformBanner(PlatformBanner platformBanner) {
+        if (StringUtils.isNotBlank(platformBanner.getPosition())){
+            redisCache.deleteObject(RedisKeyConstants.APP_BANNER_DATA+platformBanner.getPosition());
+        }
         platformBanner.setUpdateBy(SecurityUtils.getUsername());
         platformBanner.setUpdateTime(DateUtils.getNowDate());
         return platformBannerMapper.updatePlatformBanner(platformBanner);
@@ -82,6 +93,7 @@ public class PlatformBannerServiceImpl implements IPlatformBannerService {
      */
     @Override
     public int deletePlatformBannerByIds(Long[] ids) {
+        redisCache.likeDelObject(RedisKeyConstants.APP_BANNER_DATA+"*");
         return platformBannerMapper.deletePlatformBannerByIds(ids);
     }
 
@@ -93,6 +105,7 @@ public class PlatformBannerServiceImpl implements IPlatformBannerService {
      */
     @Override
     public int deletePlatformBannerById(Long id) {
+        redisCache.likeDelObject(RedisKeyConstants.APP_BANNER_DATA+"*");
         return platformBannerMapper.deletePlatformBannerById(id);
     }
 }

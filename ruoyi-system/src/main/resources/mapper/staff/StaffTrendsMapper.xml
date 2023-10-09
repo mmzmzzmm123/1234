@@ -1,33 +1,107 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.staff.mapper.StaffTrendsMapper">
 
     <resultMap type="StaffTrends" id="StaffTrendsResult">
-        <result property="id"    column="id"    />
-        <result property="userId"    column="user_id"    />
-        <result property="content"    column="content"    />
-        <result property="imgList"    column="img_list"    />
-        <result property="videoUrl"    column="video_url"    />
-        <result property="voiceUrl"    column="voice_url"    />
-        <result property="voiceTime"    column="voice_time"    />
-        <result property="likeNum"    column="like_num"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="imgList" column="img_list"/>
+        <result property="videoUrl" column="video_url"/>
+        <result property="voiceUrl" column="voice_url"/>
+        <result property="voiceTime" column="voice_time"/>
+        <result property="likeNum" column="like_num"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <resultMap type="StaffInfo" id="sub_StaffInfoResult">
+        <result property="userId" column="sub_user_id"/>
+        <result property="avatarUrl" column="sub_avatar_url"/>
+        <result property="nickName" column="sub_nick_name"/>
+        <result property="state" column="sub_state"/>
+        <result property="ifOnline" column="sub_if_online"/>
+        <result property="staffLevel" column="sub_staff_level"/>
+        <result property="birthDate" column="sub_birth_date"/>
+        <result property="sex" column="sub_sex"/>
+        <result property="province" column="sub_province"/>
+        <result property="city" column="sub_city"/>
+        <result property="region" column="sub_region"/>
+        <result property="selfIntroduction" column="sub_self_introduction"/>
+        <result property="selfTags" column="sub_self_tags"/>
+        <result property="voiceUrl" column="sub_voice_url"/>
+        <result property="voiceTime" column="sub_voice_time"/>
+    </resultMap>
+
+    <resultMap id="joinStaffInfoResult" type="StaffTrends" extends="StaffTrendsResult">
+        <association property="staffInfo" column="user_id" javaType="com.ruoyi.staff.domain.StaffInfo"
+                     resultMap="sub_StaffInfoResult"/>
     </resultMap>
 
     <sql id="selectStaffTrendsVo">
-        select id, user_id, content, img_list, video_url, voice_url, voice_time, like_num, create_time, update_time from bus_staff_trends
+        select id,
+               user_id,
+               content,
+               img_list,
+               video_url,
+               voice_url,
+               voice_time,
+               like_num,
+               create_time,
+               update_time
+        from bus_staff_trends
+    </sql>
+
+    <sql id="joinStaffInfoVo">
+        select a.id,
+               a.user_id,
+               a.content,
+               a.img_list,
+               a.video_url,
+               a.voice_url,
+               a.voice_time,
+               a.like_num,
+               a.create_time,
+               a.update_time,
+               b.user_id as sub_user_id,
+               b.avatar_url as sub_avatar_url,
+               b.nick_name as sub_nick_name,
+               b.state as sub_state,
+               b.if_online as sub_if_online,
+               b.staff_level as sub_staff_level,
+               b.birth_date as sub_birth_date,
+               b.sex as sub_sex,
+               b.province as sub_province,
+               b.city as sub_city,
+               b.region as sub_region,
+               b.self_introduction as sub_self_introduction,
+               b.self_tags as sub_self_tags,
+               b.voice_url as sub_voice_url,
+               b.voice_time as sub_voice_time
+        from bus_staff_trends a
+        left join bus_staff_info b on b.user_id = a.user_id
     </sql>
 
     <select id="selectStaffTrendsList" parameterType="StaffTrends" resultMap="StaffTrendsResult">
         <include refid="selectStaffTrendsVo"/>
         <where>
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="content != null  and content != ''"> and content like concat('%', #{content}, '%')</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="content != null  and content != ''">and content like concat('%', #{content}, '%')</if>
         </where>
         order by create_time desc
+    </select>
+
+
+    <select id="selectJoinStaffInfo" parameterType="StaffTrends" resultMap="joinStaffInfoResult">
+        <include refid="joinStaffInfoVo"/>
+        <where>
+            <if test="userId != null">and a.user_id = #{userId}</if>
+            <if test="staffInfo.state != null ">and b.state = #{staffInfo.state}</if>
+            <if test="staffInfo.sex != null ">and b.sex = #{staffInfo.sex}</if>
+        </where>
+        order by a.create_time desc
     </select>
 
     <select id="selectStaffTrendsById" parameterType="Long" resultMap="StaffTrendsResult">
@@ -47,7 +121,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="likeNum != null">like_num,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
             <if test="content != null">#{content},</if>
@@ -58,7 +132,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="likeNum != null">#{likeNum},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateStaffTrends" parameterType="StaffTrends">
@@ -77,8 +151,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
+    <update id="likeNumAddOneById" parameterType="Long">
+        UPDATE bus_staff_trends SET like_num = like_num + 1 WHERE id = #{id};
+    </update>
+
+    <update id="likeNumSubtractOneById" parameterType="Long">
+        UPDATE bus_staff_trends SET like_num = like_num - 1 WHERE id = #{id};
+    </update>
+
     <delete id="deleteStaffTrendsById" parameterType="Long">
-        delete from bus_staff_trends where id = #{id}
+        delete
+        from bus_staff_trends
+        where id = #{id}
     </delete>
 
     <delete id="deleteStaffTrendsByIds" parameterType="String">

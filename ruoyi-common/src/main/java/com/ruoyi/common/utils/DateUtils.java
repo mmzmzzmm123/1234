@@ -198,4 +198,16 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         }
         return false;
     }
+
+    /**
+     * 前/后?分钟
+     * @param minute
+     * @param sdfFormat 字符串格式
+     * @return
+     */
+    public static String rollMinute(int minute,String sdfFormat) {
+        SimpleDateFormat sdf = new SimpleDateFormat(sdfFormat);
+        Date date = new Date(getNowDate().getTime() + minute * 60 * 1000);
+        return sdf.format(date);
+    }
 }

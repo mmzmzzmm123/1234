@@ -45,7 +45,36 @@ Page({
     // 服务数据
     serviceList: app.globalData.serviceList,
     // 用户信息
-    userInfo: app.globalData.userInfo
+    userInfo: app.globalData.userInfo,
+    // 热门推荐加载状态
+    hotLoadState: true,
+    // 热门推荐数据
+    hotStaffList: [],
+    // 店员数据请求参数
+    params: {
+      pageNum: 1,
+      pageSize: 20,
+      showIfTop: 'Y', // 是否展示置顶数据
+      sortType: '2', // 排序类型
+      sex: null, // 0男 1女
+      staffLevel: null, // 店员等级
+      serviceIdArrStr: null, // 服务标识集合字符串
+    },
+    loadState: true, // 请求数据状态
+    staffDataList: [], // 店员数据集合
+    staffDataTotal: 0, // 店员数据总条数
+    refreshState: false, //下拉刷新状态
+    bottomLoadState: false, // 触底加载下一页状态
+    sexRange: [
+      {
+        label: "男",
+        value: "0"
+      }, {
+        label: "女",
+        value: "1"
+      }
+    ],
+    preAudioIndex: -1, // 语音条下标
   },
   /**
    * 生命周期函数--监听页面加载
@@ -57,7 +86,7 @@ Page({
       wx.getSystemInfo({
         success: function (res) {
           let sysHeight = res.windowHeight;
-          if(divHeight != sysHeight){
+          if (divHeight != sysHeight) {
             divHeight = sysHeight;
           }
         }
@@ -77,6 +106,24 @@ Page({
         tabHeight: rect[0].height
       })
     }).exec();
+    // 加载热门推荐数据
+    this.loadHotStaff();
+    // 加载店员数据
+    this.loadStaffData(null);
+
+    // 全局语音监听暂停事件
+    app.globalData.audioContext.onEnded(() => {
+      let dataList = this.data.staffDataList;
+      let index = this.data.preAudioIndex;
+      if (index != -1) {
+        let key = 'staffDataList['+index+']';
+        dataList[index].audioState = -1;
+        this.setData({
+          [key]: dataList[index],
+          preAudioIndex: -1
+        })
+      }
+    })
   },
   onShow: function () {
     // 员工等级数据
@@ -103,11 +150,130 @@ Page({
       userInfo: app.globalData.userInfo
     })
   },
+  onHide(){
+    app.globalData.audioContext.pause();
+    let datas = this.data.staffDataList;
+    for(let index in datas){
+      datas[index].audioState = -1;
+    }
+    this.setData({
+      staffDataList: datas
+    })
+  },
   /**
    * 用户点击右上角分享
    */
   onShareAppMessage() {
 
+  },
+  /**
+   * 加载店员数据
+   */
+  loadStaffData: function (onStart) {
+    let params = this.data.params;
+    staffApi.page(params, onStart, this.loadStaffDataOnSuccess, this.loadStaffDataOnFailed);
+  },
+  loadStaffDataOnStart: function () {
+    this.setData({
+      loadState: true
+    })
+  },
+  loadStaffDataOnSuccess: function (res) {
+    let data = res.data.data;
+    let staffDataList = this.data.staffDataList;
+    let bottomLoadState = this.data.bottomLoadState;
+    if (bottomLoadState) {
+      for (let index in data) {
+        staffDataList.push(data[index]);
+      }
+    } else {
+      staffDataList = data;
+    }
+    this.setData({
+      loadState: false,
+      bottomLoadState: false,
+      refreshState: false,
+      staffDataTotal: res.data.total,
+      staffDataList: staffDataList
+    })
+  },
+  loadStaffDataOnFailed: function (res) {
+    this.setData({
+      bottomLoadState: false,
+      refreshState: false,
+      loadState: false
+    })
+    wx.showToast({
+      title: '加载店员数据失败，请刷新重试',
+      icon: "none",
+      duration: 2000
+    })
+  },
+  /**
+   * 刷新事件
+   */
+  refresh: function () {
+    this.setData({
+      ["refreshState"]: true,
+      ["params.pageNum"]: 1
+    })
+    this.loadHotStaff();
+    this.loadStaffData(this.loadStaffDataOnStart);
+    app.globalData.audioContext.pause();
+  },
+  /**
+   * 滑动条触底事件（需要判断对应的key数据是否存在下一页）
+   */
+  loadNextPageData: function () {
+    let staffDataTotal = this.data.staffDataTotal;
+    let params = this.data.params;
+    let bottomLoadState = this.data.bottomLoadState;
+    if (bottomLoadState || (Number(params.pageNum) * Number(params.pageSize) >= staffDataTotal)) {
+      return;
+    }
+    params.pageNum = params.pageNum + 1;
+    this.setData({
+      bottomLoadState: true,
+      params: params
+    })
+    this.loadStaffData(null);
+  },
+  /**
+   * 加载热门推荐事件
+   */
+  loadHotStaff: function () {
+    let params = {
+      pageNum: 1,
+      pageSize: 20,
+      sortType: 4,
+      showIfTop: 'N'
+    }
+    // 随机获取sortType的值
+    if (Math.round(Math.random()) == 1) {
+      params.sortType = 5;
+    }
+    staffApi.page(params, this.loadNewStaffDataOnStart, this.loadNewStaffDataOnSuccess, this.loadNewStaffDataOnFailed);
+  },
+  loadNewStaffDataOnStart: function () {
+    this.setData({
+      hotLoadState: true
+    })
+  },
+  loadNewStaffDataOnSuccess: function (res) {
+    this.setData({
+      hotLoadState: false,
+      hotStaffList: res.data.data
+    })
+  },
+  loadNewStaffDataOnFailed: function () {
+    this.setData({
+      hotLoadState: false
+    })
+    wx.showToast({
+      title: '加载热门推荐数据失败，请稍后重试',
+      icon: "none",
+      duration: 2000
+    })
   },
   /**
    * 加载服务数据
@@ -282,9 +448,103 @@ Page({
   /**
    * 前往员工资料展示页
    */
-  toStaffInfoShow:function(){
+  toShowStaffInfo: function (e) {
     wx.navigateTo({
-      url: '../../staffPackages/page/staffInfoShow/index',
+      url: '../../staffPackages/page/staffInfoShow/index?staffId='+e.currentTarget.dataset.staffid,
     })
   },
+  /**
+   * 条件-性别改变事件
+   */
+  sexFilterChange: function (e) {
+    this.setData({
+      ["params.sex"]: e.detail.value,
+      ["params.pageNum"]: 1
+    })
+    this.loadStaffData(null);
+  },
+  /**
+   * 条件-店员等级过滤
+   */
+  staffLevelFilterChange:function(e){
+    this.setData({
+      ["params.staffLevel"]: Number(e.detail.value)+1,
+      ["params.pageNum"]: 1
+    })
+    this.loadStaffData(null);
+  },
+  /**
+   * 条件-服务类型改变事件
+   */
+  serviceFilterChange:function(e){
+    let index = e.detail.value;
+    let obj = this.data.serviceList[index];
+    this.setData({
+      ["params.serviceIdArrStr"]: obj.id,
+      ["params.pageNum"]: 1
+    })
+    this.loadStaffData(null);
+  },
+  /**
+   * 清除筛选条件
+   */
+  clearFilterItem:function(e){
+    let index = e.currentTarget.dataset.index;
+    if(index == 0){
+      this.setData({
+        ["params.serviceIdArrStr"]: null,
+        ["params.pageNum"]: 1
+      })
+    }
+    if(index == 1){
+      this.setData({
+        ["params.sex"]: null,
+        ["params.pageNum"]: 1
+      })
+    }
+    if(index == 2){
+      this.setData({
+        ["params.staffLevel"]: null,
+        ["params.pageNum"]: 1
+      })
+    }
+    this.loadStaffData(null);
+  },
+  /**
+   * 列表语音点击事件
+   */
+  listAudioCli: function (e) {
+    let that = this;
+    let index = e.currentTarget.dataset.index;
+    let dataList = this.data.staffDataList;
+
+    // 先判断是否需要暂停上一个语音条
+    let preIndex = this.data.preAudioIndex;
+    if (preIndex != -1 && preIndex != index) {
+      dataList[preIndex].audioState = -1;
+      app.globalData.audioContext.pause();
+      let preKey = 'staffDataList['+preIndex+']';
+      that.setData({
+        [preKey]: dataList[preIndex]
+      })
+    }
+    
+    // 开始处理当前下标的语音是播放还是暂停
+    let currObj = dataList[index];
+    if (currObj.audioState == 0) {
+      dataList[index].audioState = -1;
+      app.globalData.audioContext.pause();
+    } else {
+      dataList[index].audioState = 0;
+      app.globalData.audioContext.autoplay = true;
+      app.globalData.audioContext.src = currObj.voiceUrl;
+      app.globalData.audioContext.loop = false;
+      app.globalData.audioContext.play();
+    }
+    let key = 'staffDataList['+index+']';
+    that.setData({
+      [key]: dataList[index],
+      preAudioIndex: index
+    })
+  }
 })

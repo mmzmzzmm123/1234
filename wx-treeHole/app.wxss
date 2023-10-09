@@ -153,6 +153,14 @@
 .girl_bg_color{
   background: linear-gradient(to right,#f8b5b5,#f8c6c6);
 }
+/* 男士名片背景颜色 */
+.boy_business_card_bg_color{
+  background: linear-gradient(to right,#e0eaf7,#edf4fa);
+}
+/* 女士名片背景颜色 */
+.girl_business_card_bg_color{
+  background: linear-gradient(to right,#fae7ea,#faf2f3);
+}
 /* 男生边框颜色 */
 .boy_edging_color{
   border: 1px solid #8978E4;

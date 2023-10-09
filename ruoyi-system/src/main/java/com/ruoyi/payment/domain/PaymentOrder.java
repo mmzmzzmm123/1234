@@ -33,6 +33,10 @@ public class PaymentOrder extends BaseEntity {
     @ApiModelProperty("订单类型")
     private String orderType;
 
+    @Excel(name = "用户标识")
+    @ApiModelProperty("用户标识")
+    private Long userId;
+
     /** 订单标识 */
     @Excel(name = "订单标识")
     @ApiModelProperty("订单标识")

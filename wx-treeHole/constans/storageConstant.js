@@ -14,8 +14,12 @@ module.exports = {
   serviceList: "serviceList",
   // 员工协议
   staffAgreement: "staffAgreement",
+  // 用户协议
+  userAgreement: "userAgreement",
   // 礼物数据
   giftList: "giftList",
   // 充值配置
-  rechargeConfig: "rechargeConfig"
+  rechargeConfig: "rechargeConfig",
+  // 广告图缓存
+  bannerByPosition: "banner:",
 }

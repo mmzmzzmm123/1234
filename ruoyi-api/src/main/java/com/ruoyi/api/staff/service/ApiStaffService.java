@@ -1,14 +1,18 @@
 package com.ruoyi.api.staff.service;
 
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.PhoneUtil;
 import com.ruoyi.api.common.model.dto.ApiOssUploadSingleFileDto;
 import com.ruoyi.api.common.model.vo.ApiOssUploadSingleFileVo;
 import com.ruoyi.api.common.service.ApiFileService;
+import com.ruoyi.api.staff.model.dto.ApiPageStaffInfoDto;
 import com.ruoyi.api.staff.model.dto.ApiStaffInfoDto;
+import com.ruoyi.api.staff.model.vo.ApiStaffGiftRecordVo;
 import com.ruoyi.api.staff.model.vo.ApiStaffInfoVo;
 import com.ruoyi.api.staff.model.vo.ApiStaffLevelConfigVo;
 import com.ruoyi.api.staff.model.vo.ApiStaffPhotoVo;
+import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.constant.RedisKeyConstants;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.redis.RedisCache;
@@ -19,14 +23,8 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.TokenUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
-import com.ruoyi.staff.domain.StaffInfo;
-import com.ruoyi.staff.domain.StaffLevelConfig;
-import com.ruoyi.staff.domain.StaffPhoto;
-import com.ruoyi.staff.domain.StaffServiceConfig;
-import com.ruoyi.staff.mapper.StaffInfoMapper;
-import com.ruoyi.staff.mapper.StaffLevelConfigMapper;
-import com.ruoyi.staff.mapper.StaffPhotoMapper;
-import com.ruoyi.staff.mapper.StaffServiceConfigMapper;
+import com.ruoyi.staff.domain.*;
+import com.ruoyi.staff.mapper.*;
 import com.ruoyi.user.domain.UserInfo;
 import com.ruoyi.user.mapper.UserInfoMapper;
 import lombok.RequiredArgsConstructor;
@@ -40,10 +38,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -60,6 +55,7 @@ public class ApiStaffService {
     private final StaffInfoMapper staffInfoMapper;
     private final StaffPhotoMapper photoMapper;
     private final StaffServiceConfigMapper staffServiceConfigMapper;
+    private final StaffGiftRecordMapper staffGiftRecordMapper;
     private final RedisCache redisCache;
     private final ApiFileService apiFileService;
 
@@ -358,6 +354,102 @@ public class ApiStaffService {
             voList.add(serviceId);
         }
         log.info("处理店员服务数据：完成，返回数据：{}", voList);
+        return voList;
+    }
+
+    /**
+     * 根据服务标识集合查询到需要过滤的店员标识
+     *
+     * @param dto 数据
+     * @return 结果
+     * */
+    public List<Long> selectFilterIdByServiceIds(ApiPageStaffInfoDto dto){
+        List<Long> staffIdList = new ArrayList<>();
+        // 先判断服务数据是否需要过滤
+        if (ObjectUtil.isNotNull(dto.getServiceIdArrStr())){
+            String[] tempArr = StringUtils.split(dto.getServiceIdArrStr(), ",");
+            List<Long> serviceIdList = Arrays.stream(tempArr).map(item -> Long.parseLong(item)).collect(Collectors.toList());
+            List<StaffServiceConfig> staffServiceConfigs = staffServiceConfigMapper.selectByServiceIds(serviceIdList);
+            staffIdList = staffServiceConfigs.stream().map(StaffServiceConfig::getStaffId).collect(Collectors.toList());
+        }
+        return staffIdList;
+    }
+
+    /**
+     * 店员信息分页业务处理
+     *
+     * @param select 数据
+     * @return 结果
+     * */
+    public List<StaffInfo> page(StaffInfo select) {
+        log.info("店员信息分页业务处理：开始，参数：{}", select);
+        select.setState(StaffStateEnums.NORMAL.getCode());
+        List<StaffInfo> staffInfos = staffInfoMapper.customSelect(select);
+        log.info("店员信息分页业务处理：完成，返回数据：{}", staffInfos);
+        return staffInfos;
+    }
+
+    /**
+     * 根据店员标识查询数据
+     *
+     * @param staffId 店员标识
+     * @return 结果
+     * */
+    public ApiStaffInfoVo selectByStaffId(Long staffId) {
+        log.info("根据店员标识查询数据：开始，参数：{}", staffId);
+        ApiStaffInfoVo vo = new ApiStaffInfoVo();
+        if (ObjectUtil.isNull(staffId)){
+            log.warn("根据店员标识查询数据：失败，参数为空");
+            throw new ServiceException("根据店员标识查询数据：失败，参数为空", HttpStatus.ERROR);
+        }
+        // 查询店员信息和配置的服务数据
+        Long[] ids = {staffId};
+        StaffInfo select = new StaffInfo();
+        select.setFilterIdList(ListUtil.toList(ids));
+        List<StaffInfo> staffInfos = staffInfoMapper.customSelect(select);
+        if (ObjectUtil.isEmpty(staffInfos)){
+            log.info("根据店员标识查询数据：失败，结果为空");
+            throw new ServiceException("根据店员标识查询数据：失败，结果为空", HttpStatus.ERROR);
+        }
+        StaffInfo staffInfo = staffInfos.stream().findFirst().orElse(null);
+        BeanUtils.copyBeanProp(vo, staffInfo);
+        vo.setWeChatNum("")
+                .setPhone("");
+        // 查询店员相册信息
+        StaffPhoto selectPhoto = new StaffPhoto();
+        selectPhoto.setUserId(staffId);
+        List<StaffPhoto> staffPhotos = photoMapper.selectStaffPhotoList(selectPhoto);
+        List<ApiStaffPhotoVo> photoVos = new ArrayList<>();
+        if (ObjectUtil.isNotEmpty(staffPhotos)){
+            for (StaffPhoto item : staffPhotos){
+                ApiStaffPhotoVo photoVo = new ApiStaffPhotoVo();
+                BeanUtils.copyBeanProp(photoVo, item);
+                photoVos.add(photoVo);
+            }
+        }
+        vo.setPhotoVoList(photoVos);
+        log.info("根据店员标识查询数据：完成，返回数据：{}", vo);
+        return vo;
+    }
+
+    /**
+     * 获取店员总礼物数据
+     *
+     * @param staffId 店员标识
+     * @return 结果
+     * */
+    public List<ApiStaffGiftRecordVo> selectStaffGiftRecord(Long staffId) {
+        log.info("获取店员总礼物数据：开始，参数：{}", staffId);
+        List<ApiStaffGiftRecordVo> voList = new ArrayList<>();
+        StaffGiftRecord select = new StaffGiftRecord();
+        select.setStaffUserId(staffId);
+        List<StaffGiftRecord> staffGiftRecords = staffGiftRecordMapper.selectStaffGiftRecordList(select);
+        staffGiftRecords.forEach(item -> {
+            ApiStaffGiftRecordVo vo = new ApiStaffGiftRecordVo();
+            BeanUtils.copyBeanProp(vo, item);
+            voList.add(vo);
+        });
+        log.info("获取店员总礼物数据：完成，返回数据：{}", voList);
         return voList;
     }
 }

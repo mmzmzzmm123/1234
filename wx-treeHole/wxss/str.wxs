@@ -100,6 +100,49 @@ function splitToArr(s, t) {
   return s.split(t);
 }
 
+/**
+ * 店员等级匹配
+ */
+function staffLevelMacth(currentLevel, levelConfig){
+  var name = "未知";
+  for(var i = 0; i < levelConfig.length; i++){
+    if(currentLevel == levelConfig[i].level){
+      name = levelConfig[i].name;
+    }
+  }
+  return name;
+}
+
+/**
+ * 服务类型名称匹配
+ */
+function matchServiceNameById(id, serviceList){
+  var name = "未知";
+  for(var i = 0; i < serviceList.length; i++){
+    if(id == serviceList[i].id){
+      name = serviceList[i].name;
+    }
+  }
+  return name;
+}
+
+/**
+ * 根据id数组匹配对应的简称数组返回出去
+ */
+function matchServiceShortNameByIdArr(idArr, serviceList){
+  var arr = [];
+  for(var i=0; i<idArr.length; i++){
+    var temp = "未知";
+    for(var j=0; j<serviceList.length; j++){
+      if(idArr[i] == serviceList[j].id){
+        temp = serviceList[j].shortName;
+      }
+    }
+    arr.push(temp);
+  }
+  return arr;
+}
+
 module.exports = {
   checkArrIncludeStr: checkArrIncludeStr,
   indexOf: indexOf,
@@ -108,5 +151,8 @@ module.exports = {
   random: random,
   encryptionPhone: encryptionPhone,
   replaceDate: replaceDate,
-  splitToArr: splitToArr
+  splitToArr: splitToArr,
+  staffLevelMacth: staffLevelMacth,
+  matchServiceNameById: matchServiceNameById,
+  matchServiceShortNameByIdArr: matchServiceShortNameByIdArr
 }

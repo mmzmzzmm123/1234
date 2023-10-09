@@ -39,6 +39,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where user_id = #{userId}
     </select>
 
+    <select id="selectByUserIdForUpdate" parameterType="Long" resultMap="UserWalletResult">
+        <include refid="selectUserWalletVo"/>
+        where user_id = #{userId} for update
+    </select>
+
     <insert id="insertUserWallet" parameterType="UserWallet" useGeneratedKeys="true" keyProperty="id">
         insert into bus_user_wallet
         <trim prefix="(" suffix=")" suffixOverrides=",">

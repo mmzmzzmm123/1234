@@ -2,6 +2,9 @@ package com.ruoyi.platform.service.impl;
 
 import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.constant.RedisKeyConstants;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -21,6 +24,7 @@ import com.ruoyi.platform.service.IPlatformRechargeConfigService;
 public class PlatformRechargeConfigServiceImpl implements IPlatformRechargeConfigService {
 
     private final PlatformRechargeConfigMapper platformRechargeConfigMapper;
+    private final RedisCache redisCache;
 
     /**
      * 查询平台充值配置
@@ -52,6 +56,7 @@ public class PlatformRechargeConfigServiceImpl implements IPlatformRechargeConfi
      */
     @Override
     public int insertPlatformRechargeConfig(PlatformRechargeConfig platformRechargeConfig) {
+        redisCache.deleteObject(RedisKeyConstants.PLATFORM_RECHARGE_CONFIG);
         Date now = DateUtils.getNowDate();
         String loginName = SecurityUtils.getUsername();
         platformRechargeConfig.setCreateTime(now)
@@ -69,6 +74,7 @@ public class PlatformRechargeConfigServiceImpl implements IPlatformRechargeConfi
      */
     @Override
     public int updatePlatformRechargeConfig(PlatformRechargeConfig platformRechargeConfig) {
+        redisCache.deleteObject(RedisKeyConstants.PLATFORM_RECHARGE_CONFIG);
         platformRechargeConfig.setUpdateBy(SecurityUtils.getUsername()).setUpdateTime(DateUtils.getNowDate());
         return platformRechargeConfigMapper.updatePlatformRechargeConfig(platformRechargeConfig);
     }
@@ -81,6 +87,7 @@ public class PlatformRechargeConfigServiceImpl implements IPlatformRechargeConfi
      */
     @Override
     public int deletePlatformRechargeConfigByIds(Long[] ids) {
+        redisCache.deleteObject(RedisKeyConstants.PLATFORM_RECHARGE_CONFIG);
         return platformRechargeConfigMapper.deletePlatformRechargeConfigByIds(ids);
     }
 
@@ -92,6 +99,7 @@ public class PlatformRechargeConfigServiceImpl implements IPlatformRechargeConfi
      */
     @Override
     public int deletePlatformRechargeConfigById(Long id) {
+        redisCache.deleteObject(RedisKeyConstants.PLATFORM_RECHARGE_CONFIG);
         return platformRechargeConfigMapper.deletePlatformRechargeConfigById(id);
     }
 }

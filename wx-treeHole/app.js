@@ -80,7 +80,7 @@ App({
     this.globalData.userInfo = data;
     storage.set(storageConstant.userInfo, null, data, 0);
     // 加载用户的点赞收藏数据
-    userApi.selectUserLikeData({ userId: data.id }, null, this.selectUserLikeDataOnSuccess, null);
+    userApi.selectUserLikeData(null, this.selectUserLikeDataOnSuccess, null);
   },
   selectUserLikeDataOnSuccess: function (res) {
     this.globalData.userLikeStaffUserIdList = res.data.likeStaffUserIdList;

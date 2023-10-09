@@ -20,6 +20,14 @@ public interface PaymentOrderMapper {
     public PaymentOrder selectPaymentOrderById(Long id);
 
     /**
+     * 根据商户订单号查询记录
+     *
+     * @param outTradeNo 商户单号
+     * @return 结果
+     * */
+    public PaymentOrder selectByOutTradeNo(String outTradeNo);
+
+    /**
      * 查询支付订单列表
      *
      * @param paymentOrder 支付订单

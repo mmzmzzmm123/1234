@@ -54,6 +54,14 @@ public interface UserLikeStaffTrendsRecordMapper {
     /**
      * 删除点赞动态记录
      *
+     * @param userLikeStaffTrendsRecord 点赞动态记录
+     * @return 结果
+     * */
+    public int delete(UserLikeStaffTrendsRecord userLikeStaffTrendsRecord);
+
+    /**
+     * 删除点赞动态记录
+     *
      * @param id 点赞动态记录主键
      * @return 结果
      */

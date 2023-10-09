@@ -21,6 +21,8 @@ import java.util.Date;
 @Accessors(chain = true)
 public class ApiStaffInfoDto implements Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     @ApiModelProperty("头像")
     private String avatarUrl;
 

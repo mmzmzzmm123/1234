@@ -24,12 +24,12 @@ import lombok.RequiredArgsConstructor;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 员工礼物记录Controller
+ * 礼物记录Controller
  *
  * @author Lam
- * @date 2023-09-14
+ * @date 2023-10-09
  */
-@Api(tags = "admin-员工礼物记录")
+@Api(tags = "admin-礼物记录")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/staff/staffGiftRecord")
@@ -38,7 +38,7 @@ public class StaffGiftRecordController extends BaseController {
     private final IStaffGiftRecordService staffGiftRecordService;
 
 
-    @ApiOperation("查询员工礼物记录列表")
+    @ApiOperation("查询礼物记录列表")
     @PreAuthorize("@ss.hasPermi('staff:staffGiftRecord:list')")
     @GetMapping("/list")
     public TableDataInfo list(StaffGiftRecord staffGiftRecord) {
@@ -48,18 +48,18 @@ public class StaffGiftRecordController extends BaseController {
     }
 
 
-    @ApiOperation("导出员工礼物记录列表")
+    @ApiOperation("导出礼物记录列表")
     @PreAuthorize("@ss.hasPermi('staff:staffGiftRecord:export')")
-    @Log(title = "员工礼物记录", businessType = BusinessType.EXPORT)
+    @Log(title = "礼物记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, StaffGiftRecord staffGiftRecord) {
         List<StaffGiftRecord> list = staffGiftRecordService.selectStaffGiftRecordList(staffGiftRecord);
         ExcelUtil<StaffGiftRecord> util = new ExcelUtil<StaffGiftRecord>(StaffGiftRecord.class);
-        util.exportExcel(response, list, "员工礼物记录数据");
+        util.exportExcel(response, list, "礼物记录数据");
     }
 
 
-    @ApiOperation("获取员工礼物记录详细信息")
+    @ApiOperation("获取礼物记录详细信息")
     @PreAuthorize("@ss.hasPermi('staff:staffGiftRecord:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
@@ -67,27 +67,27 @@ public class StaffGiftRecordController extends BaseController {
     }
 
 
-    @ApiOperation("新增员工礼物记录")
+    @ApiOperation("新增礼物记录")
     @PreAuthorize("@ss.hasPermi('staff:staffGiftRecord:add')")
-    @Log(title = "员工礼物记录", businessType = BusinessType.INSERT)
+    @Log(title = "礼物记录", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody StaffGiftRecord staffGiftRecord) {
         return toAjax(staffGiftRecordService.insertStaffGiftRecord(staffGiftRecord));
     }
 
 
-    @ApiOperation("修改员工礼物记录")
+    @ApiOperation("修改礼物记录")
     @PreAuthorize("@ss.hasPermi('staff:staffGiftRecord:edit')")
-    @Log(title = "员工礼物记录", businessType = BusinessType.UPDATE)
+    @Log(title = "礼物记录", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody StaffGiftRecord staffGiftRecord) {
         return toAjax(staffGiftRecordService.updateStaffGiftRecord(staffGiftRecord));
     }
 
 
-    @ApiOperation("删除员工礼物记录")
+    @ApiOperation("删除礼物记录")
     @PreAuthorize("@ss.hasPermi('staff:staffGiftRecord:remove')")
-    @Log(title = "员工礼物记录", businessType = BusinessType.DELETE)
+    @Log(title = "礼物记录", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(staffGiftRecordService.deleteStaffGiftRecordByIds(ids));

@@ -113,16 +113,6 @@
         </template>
       </el-table-column>
       <el-table-column label="跳转链接" align="center" prop="toLink" :show-overflow-tooltip="true"/>
-      <el-table-column label="开始时间" align="center" prop="startTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="结束时间" align="center" prop="endTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.endTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="排序" align="center" prop="sortNum"/>
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
       <el-table-column label="更新者" align="center" prop="updateBy"/>
@@ -197,16 +187,6 @@
         <el-form-item label="跳转链接" prop="toLink">
           <el-input v-model="form.toLink" placeholder="请输入跳转链接"/>
         </el-form-item>
-        <el-form-item label="投放时间" prop="startTime">
-          <el-date-picker
-            @change="dateTimeRangeChange"
-            v-model="dateTimeRange"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始日期"
-            end-placeholder="结束日期">
-          </el-date-picker>
-        </el-form-item>
         <el-form-item label="排序" prop="sortNum">
           <el-input v-model="form.sortNum" placeholder="请输入排序"/>
         </el-form-item>
@@ -266,7 +246,6 @@ export default {
       form: {},
       // 表单校验
       rules: {},
-      dateTimeRange: [], // 时间范围
     };
   },
   created() {
@@ -296,8 +275,6 @@ export default {
         imgUrl: null,
         themeColor: null,
         position: null,
-        startTime: null,
-        endTime: null,
         sortNum: null,
         remark: null,
         createBy: null,
@@ -326,7 +303,6 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.dateTimeRange = [];
       this.open = true;
       this.title = "添加平台广告图";
     },
@@ -336,7 +312,6 @@ export default {
       const id = row.id || this.ids
       getPlatformBanner(id).then(response => {
         this.form = response.data;
-        this.dateTimeRange = [this.form.startTime,this.form.endTime];
         this.open = true;
         this.title = "修改平台广告图";
       });
@@ -378,13 +353,6 @@ export default {
         ...this.queryParams
       }, `platformBanner_${new Date().getTime()}.xlsx`)
     },
-    /**
-     * 时间范围改变事件
-     * */
-    dateTimeRangeChange(e){
-      this.form.startTime = e[0];
-      this.form.endTime = e[1];
-    }
   }
 };
 </script>

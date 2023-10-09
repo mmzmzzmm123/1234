@@ -3,6 +3,7 @@ import request from "../request";
 // 基础url
 let bashRequestUrl = "/api/staff";
 
+let pageUrl = "/page";
 let selectStaffLevelConfigUrl = "/selectStaffLevelConfig";
 let selectByUserIdUrl = "/selectByUserId";
 let selectPhotoByUserIdUrl = "/selectPhotoByUserId";
@@ -10,6 +11,15 @@ let applyUrl = "/apply";
 let updateUrl = "/update";
 let selectServiceConfigIdsUrl = "/selectServiceConfigIds";
 let handleServiceIdUrl = "/handleServiceId";
+let selectByStaffIdUrl = "/selectByStaffId";
+let selectStaffGiftRecordIdUrl = "/selectStaffGiftRecordId";
+
+/**
+ * 分页查询
+ */
+let page = function(params, onStart, onSuccess, onFailed){
+  request.get(bashRequestUrl + pageUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed);
+}
 
 /**
  * 获取员工等级配置
@@ -53,7 +63,22 @@ let handleServiceId = function(params, onStart, onSuccess, onFailed){
   request.get(bashRequestUrl + handleServiceIdUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed);
 }
 
+/**
+ * 根据店员标识查询数据
+ */
+let selectByStaffId = function(params, onStart, onSuccess, onFailed, onWarn){
+  request.get(bashRequestUrl + selectByStaffIdUrl, params, onStart, onSuccess, onFailed, onWarn, onFailed);
+}
+
+/**
+ * 获取店员总礼物数据
+ */
+let selectStaffGiftRecordId = function(params, onStart, onSuccess, onFailed){
+  request.get(bashRequestUrl + selectStaffGiftRecordIdUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed);
+}
+
 module.exports = {
+  page: page,
   selectStaffLevelConfig: selectStaffLevelConfig,
   selectByUserId: selectByUserId,
   selectPhotoByUserId: selectPhotoByUserId,
@@ -61,5 +86,7 @@ module.exports = {
   applyUrl: bashRequestUrl+applyUrl,
   updateUrl: bashRequestUrl+updateUrl,
   selectServiceConfigIds: selectServiceConfigIds,
-  handleServiceId: handleServiceId
+  handleServiceId: handleServiceId,
+  selectByStaffId: selectByStaffId,
+  selectStaffGiftRecordId: selectStaffGiftRecordId
 }

@@ -23,6 +23,19 @@ public class TokenUtils {
     private static final String DEFAULT_FLAG = "yingde";
 
     /**
+     * 获取token信息
+     * */
+    public static String getToken(){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String token = request.getHeader("authorization");
+        boolean isAuth = StringUtils.isNull(token) || DEFAULT_FLAG.equals(token);
+        if (isAuth) {
+            throw new TokenExpireException("您未登录哟", HttpStatus.WARN_WX);
+        }
+        return token;
+    }
+
+    /**
      * 获取用户标识
      *
      * @return 结果
@@ -38,12 +51,36 @@ public class TokenUtils {
         try {
             String temp = decryptAes(token);
             if (ObjectUtil.isNotNull(temp)) {
-                idStr = temp;
+                idStr = StringUtils.split(temp, ",")[0];
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return Long.valueOf(idStr);
+    }
+
+    /**
+     * 获取用户openId
+     *
+     * @return 结果
+     * */
+    public static String getOpenId(){
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+        String token = request.getHeader("authorization");
+        boolean isAuth = StringUtils.isNull(token) || DEFAULT_FLAG.equals(token);
+        if (isAuth) {
+            throw new TokenExpireException("您未登录哟", HttpStatus.WARN_WX);
+        }
+        String openId = "";
+        try {
+            String temp = decryptAes(token);
+            if (ObjectUtil.isNotNull(temp)) {
+                openId = StringUtils.split(temp, ",")[1];
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return openId;
     }
 
     /**

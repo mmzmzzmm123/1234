@@ -1,3 +1,5 @@
+<wxs src="../../../wxss/str.wxs" module="strUtil"></wxs>
+<wxs src="../../../wxss/time.wxs" module="timeUtil"></wxs>
 <view class="bView">
 
   <!-- 头部状态栏 -->
@@ -15,105 +17,134 @@
 
   <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" style="width:{{pWidth}}px;height:{{pHeight}}px;" bindscroll="scrollView">
     <view class="bgImg" style="height: {{pHeight*0.37}}px;">
-      <image src="../../../static/temp/1.jpg" mode="widthFix"></image>
+      <image src="{{loadStaffInfoState && staffInfo == null ? 'https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/defult_banner.jpg' : staffInfo.photoVoList[0].imgUrl}}" mode="widthFix"></image>
     </view>
     <!-- 个人信息 -->
     <view class="view_box_common scope_view" style="position: relative;top: -72px;">
-      <view class="view_box_common view_box_row_content_symmetry" style="height:100px;">
-        <!-- 头像 -->
-        <view class="txView">
-          <image src="../../../static/temp/2.jpg" class="view_all_adapt"></image>
-          <view class="view_box_row_content boy_bg_color">
-            <image class="staffAudioPlay" src="../../../static/ico/play.png" mode="widthFix"></image>
-            <image class="staffAudioFrequency" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
-            <span>14s</span>
-          </view>
-        </view>
-        <!-- 店员具体数据 -->
-        <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-110}}px;height: 92%;">
-          <view>
-            <view class="view_box_row_content_symmetry">
-              <!-- 名字和金牌情况 -->
-              <view class="view_box_row_content">
-                <view class="staffName">魔爪来袭</view>
-                <view class="staffBaseInfo">
-                  广东-清远
-                </view>
-                <view class="staffBadgeLevel view_box_row_content badgeLevel_4">
-                  <image src="../../../static/images/badge_level_4.png" mode="widthFix"></image>
-                  <view>女神</view>
-                </view>
-              </view>
-              <view class="view_box_row_content onLineState">
-                <image src="../../../static/ico/online_32.png"></image>
-                <view>在线</view>
-              </view>
-            </view>
-            <!-- 员工服务 -->
-            <view class="view_box_row">
-              <view class="staffService">
-                <span>文语</span><text>|</text><span>语聊</span><text>|</text><span>视频</span><text>|</text><span>游戏</span><text>|</text><span>虚恋</span><text>|</text><span>哄睡</span><text>|</text><span>歌单</span>
-              </view>
+      <block wx:if="{{!loadStaffInfoState && staffInfo != null}}">
+        <view class="view_box_common view_box_row_content_symmetry" style="height:100px;">
+          <!-- 头像 -->
+          <view class="txView">
+            <image src="{{staffInfo.avatarUrl != null ? staffInfo.avatarUrl : '../../../static/images/default_tx.png'}}" class="view_all_adapt"></image>
+            <view class="view_box_row_content boy_bg_color" style="height: 16px;overflow: hidden;" catch:tap="staffAudioCli">
+              <image class="staffAudioPlay" src="../../../static/ico/{{staffInfo.audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
+              <image wx:if="{{staffInfo.audioState == -1}}" class="staffAudioFrequency" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
+              <image wx:if="{{staffInfo.audioState == 0}}" class="staffAudioFrequencyGif" src="../../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+              <span wx:if="{{staffInfo.voiceTime != null && staffInfo.voiceTime > 0}}" style="font-size: 10px;margin-left: 4px;">{{staffInfo.voiceTime}}s</span>
+              <span wx:else>　</span>
             </view>
           </view>
-          <!-- 员工标签 -->
-          <view class="staffLabel view_box_row_wrap">
-            <view class="girl_edging_color girl_font_color staffLabelItem">27岁👧</view>
-            <view class="girl_edging_color girl_font_color staffLabelItem">淘气人妻人妻🎈</view>
-            <view class="girl_edging_color girl_font_color staffLabelItem">恶毒前妻🍑</view>
-            <view class="girl_edging_color girl_font_color staffLabelItem">心动在此心动在此</view>
-            <view class="girl_edging_color girl_font_color staffLabelItem">淘气人妻🎈</view>
-            <view class="girl_edging_color girl_font_color staffLabelItem">恶毒前妻🍑</view>
+          <!-- 店员具体数据 -->
+          <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-110}}px;height: 92%;">
+            <view>
+              <view class="view_box_row_content_symmetry">
+                <!-- 名字和金牌情况 -->
+                <view class="view_box_row_content">
+                  <view class="staffName">{{staffInfo.nickName}}</view>
+                  <view class="staffBaseInfo">
+                    {{staffInfo.province}} · {{staffInfo.city}}
+                  </view>
+                  <view class="staffBadgeLevel view_box_row_content badgeLevel_{{staffInfo.staffLevel}}">
+                    <image src="../../../static/images/badge_level_{{staffInfo.staffLevel}}.png" mode="widthFix"></image>
+                    <view>{{strUtil.staffLevelMacth(staffInfo.staffLevel,staffLevelConfig)}}</view>
+                  </view>
+                </view>
+                <view class="view_box_row_content onLineState">
+                  <image src="../../../static/ico/{{staffInfo.ifOnline == 'Y' ? 'online_32' : 'offline_32'}}.png"></image>
+                  <view>{{staffInfo.ifOnline == 'Y' ? '在线' : '离线'}}</view>
+                </view>
+              </view>
+              <!-- 员工服务 -->
+              <view class="view_box_row">
+                <block wx:if="{{staffInfo.serviceIdList != null && staffInfo.serviceIdList.length > 0}}">
+                  <view class="staffService">
+                    <block wx:for="{{strUtil.matchServiceShortNameByIdArr(staffInfo.serviceIdList, serviceList)}}" wx:key="index">
+                      <text>#</text><span>{{item}}</span>
+                    </block>
+                  </view>
+                </block>
+                <view wx:else style="font-size: 12px;color: #80848f;">
+                  亲爱的 暂时不接单哟 很快就回来啦
+                </view>
+              </view>
+            </view>
+            <!-- 员工标签 -->
+            <view class="staffLabel view_box_row_wrap" wx:if="{{staffInfo.selfTags != null && staffInfo.selfTags != ''}}">
+              <block wx:for="{{strUtil.splitToArr(staffInfo.selfTags, ',')}}" wx:key="index">
+                <view class="girl_edging_color girl_font_color staffLabelItem">{{item}}</view>
+              </block>
+            </view>
           </view>
         </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common">
+          <view class="cut_off_rule_small"></view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="staffDetails view_box_common">
+          <span>有话想说：</span>{{staffInfo.selfIntroduction}}
+        </view>
+      </block>
+      <view wx:else class="view_box_common">
+        <wux-skeleton active>
+          <wux-row style="text-align: center;">
+            <wux-col span="3">
+              <wux-skeleton-avatar />
+            </wux-col>
+            <wux-col span="8">
+              <wux-skeleton-paragraph />
+            </wux-col>
+          </wux-row>
+        </wux-skeleton>
       </view>
-      <view class="seizeSeat_mini"></view>
-      <view class="view_box_common">
-        <view class="cut_off_rule_small"></view>
-      </view>
-      <view class="seizeSeat_mini"></view>
-      <view class="staffDetails view_box_common">
-        <span>有话想说：</span>哥哥~三分钟未接单，取消一下订单，谢谢啦
-      </view>
+
     </view>
+
     <!-- 相册 -->
     <view class="view_box_common scope_view" style="position: relative;top: -62px;">
-      <column-view title="店员相册" moreTitle="查看更多" outerMargin="0"></column-view>
+      <column-view title="店员相册" moreTitle="查看更多" outerMargin="0" bind:toPage="showStaffImgAll"></column-view>
       <view class="seizeSeat_mini"></view>
-      <scroll-view scroll-x class="view_box_common" style="white-space: nowrap;">
-        <view class="imgView">
-          <image class="view_all_adapt" src="../../../static/temp/t1.png"></image>
+      <block wx:if="{{!loadStaffInfoState && staffInfo != null}}">
+        <block wx:if="{{staffInfo.photoVoList != null && staffInfo.photoVoList.length > 0}}">
+          <scroll-view scroll-x class="view_box_common" style="white-space: nowrap;">
+            <block wx:for="{{staffInfo.photoVoList}}" wx:key="id">
+              <view class="imgView">
+                <image class="view_all_adapt" src="{{item.imgUrl}}" data-index="{{index}}" catch:tap="showStaffImg"></image>
+              </view>
+            </block>
+          </scroll-view>
+        </block>
+        <view class="view_box_common" style="text-align: center;font-size: 14px;color: #80848f;" wx:else>
+          店员暂未上传相册
         </view>
-        <view class="imgView">
-          <image class="view_all_adapt" src="../../../static/temp/t2.png"></image>
-        </view>
-        <view class="imgView">
-          <image class="view_all_adapt" src="../../../static/temp/t3.png"></image>
-        </view>
-        <view class="imgView">
-          <image class="view_all_adapt" src="../../../static/temp/t4.png"></image>
-        </view>
-        <view class="imgView">
-          <image class="view_all_adapt" src="../../../static/temp/2.jpg"></image>
-        </view>
-        <view class="imgView">
-          <image class="view_all_adapt" src="../../../static/temp/4.jpg"></image>
-        </view>
-      </scroll-view>
+      </block>
+      <view wx:else class="view_box_common">
+        <wux-skeleton active>
+          <wux-skeleton-paragraph />
+        </wux-skeleton>
+      </view>
     </view>
+
     <!-- 礼物列表 -->
     <view class="view_box_common scope_view" style="position: relative;top: -52px;">
-      <column-view title="礼物墙" moreTitle="已点亮（10/20）" outerMargin="0" ifShowIco="-1"></column-view>
+      <column-view title="礼物墙" moreTitle="已点亮（ {{staffGiftArr.length}} / 20 ）" outerMargin="0" ifShowIco="-1"></column-view>
       <view class="seizeSeat_mini"></view>
-      <scroll-view scroll-x class="view_box_common" style="white-space: nowrap;">
-        <block wx:for="{{giftList}}" wx:key="id">
-          <view class="view_box_content_column giftCover" data-index="{{index}}" bind:tap="showSvga">
-            <image src="{{item.cover}}" mode="widthFix"></image>
-            <view class="giftName">{{item.name}}</view>
-            <view class="boy_bg_color giveBut">赠送</view>
-          </view>
-        </block>
-      </scroll-view>
+      <block wx:if="{{giftList != null && giftList.length > 0}}">
+        <scroll-view scroll-x class="view_box_common" style="white-space: nowrap;">
+          <block wx:for="{{giftList}}" wx:key="id">
+            <view class="view_box_content_column giftCover" data-index="{{index}}" bind:tap="showSvga">
+              <image src="{{item.cover}}" mode="widthFix"></image>
+              <view class="giftName">{{item.name}}</view>
+              <view class="boy_bg_color giveBut" bind:tap="">赠送</view>
+            </view>
+          </block>
+        </scroll-view>
+      </block>
+      <view class="view_box_common" wx:else>
+        <wux-skeleton active>
+          <wux-skeleton-paragraph rows="3" />
+        </wux-skeleton>
+      </view>
     </view>
 
     <!-- tabs -->
@@ -124,136 +155,90 @@
         </block>
       </wux-tabs>
       <view class="seizeSeat_mini"></view>
+
+      <!-- 动态容器 -->
       <wux-animation-group wux-class="animationView" in="{{currentIndex == 0}}" enter="{{ true }}" exit="{{ true }}" class-names="wux-animate--fadeInDown">
-
-        <!-- 动态item -->
-        <view class="trendsItem">
-          <!-- 动态标题 -->
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view class="view_box_row">
-              <view class="trendsTime">半小时前：</view>
-              <view class="audioBut boy_bg_color">
-                <image class="audioPlay" src="../../../static/ico/play.png" mode="widthFix"></image>
-                <image class="audioFrequency" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
-                <span>14s</span>
+        <block wx:if="{{!loadStaffTrendsState}}">
+          <block wx:if="{{staffTrendsData!=null&&staffTrendsData.length>0}}">
+            <block wx:for="{{staffTrendsData}}" wx:key="id">
+              <!-- 动态item -->
+              <view class="seizeSeat_mini"></view>
+              <view class="trendsItem">
+                <!-- 动态标题 -->
+                <view class="view_box_common view_box_row">
+                  <view class="trendsTime">{{timeUtil.formatTimeDiff(item.createTime)}}：</view>
+                  <view class="trendsTitle">{{item.content != null ? item.content : ''}}</view>
+                </view>
+                <!-- 视频数据 -->
+                <block wx:if="{{item.videoUrl != null && item.videoUrl != ''}}">
+                  <view class="view_box_common">
+                    <video id="video{{index}}" muted show-mute-btn play-btn-position="center" class="trendsVideo" src="{{item.videoUrl}}" data-index="{{index}}" bindplay="videoPlay" bindfullscreenchange="videoScreenChange"></video>
+                  </view>
+                </block>
+                <!-- 图片展示 -->
+                <block wx:if="{{item.imgList != null && item.imgList != ''}}">
+                  <!-- 还需要判断是多图还是单图 -->
+                  <block wx:if="{{!strUtil.indexOf(item.imgList, ',')}}">
+                    <view class="view_box_common">
+                      <image class="trendsSingleImage" src="{{item.imgList}}" mode="widthFix" data-index="{{index}}" data-imgIndex="0" bind:tap="listImgCli"></image>
+                    </view>
+                  </block>
+                  <block wx:else>
+                    <view class="view_box_common">
+                      <view class="view_box_row_symmetry" style="width: 86%;">
+                        <block wx:for="{{strUtil.splitToArr(item.imgList, ',')}}" wx:key="index" wx:for-item="imgItem" wx:for-index="imgIndex">
+                          <image class="trendsImageMany" src="{{imgItem}}" mode="aspectFill" data-index="{{index}}" data-imgIndex="{{imgIndex}}" bind:tap="listImgCli"></image>
+                        </block>
+                      </view>
+                    </view>
+                  </block>
+                </block>
+                <!-- 语音 -->
+                <block wx:if="{{item.voiceUrl != null && item.voiceUrl != ''}}">
+                  <view class="seizeSeat_mini"></view>
+                  <view class="view_box_common">
+                    <view class="view_box_row">
+                      <view class="view_box_row_content audioBut boy_bg_color" data-index="{{index}}" bind:tap="listAudioCli">
+                        <image class="audioPlay" src="../../../static/ico/{{item.audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
+                        <image wx:if="{{item.audioState == '-1'}}" class="audioFrequency" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                        <image wx:if="{{item.audioState == '0'}}" class="audioFrequencyGif" src="../../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+                        <span wx:if="{{item.voiceTime != null && item.voiceTime > 0}}">{{item.voiceTime}}s</span>
+                      </view>
+                    </view>
+                  </view>
+                </block>
+                <view class="seizeSeat_mini"></view>
+                <view class="seizeSeat_mini"></view>
+                <!-- 底部操作按钮组 -->
+                <view class="view_box_common view_box_row_content_symmetry">
+                  <view></view>
+                  <view class="view_box_row_content">
+                    <view class="view_box_row_content trendsOperItem" data-id="{{item.id}}" catch:tap="{{strUtil.checkArrIncludeStr(userLikeStaffTrendsIdList, item.id) ? 'cancelLikeStaffTrends' : 'likeStaffTrends'}}">
+                      <wux-icon type="ios-thumbs-up" size="16" color="{{strUtil.checkArrIncludeStr(userLikeStaffTrendsIdList, item.id) ? (item.staffInfoVo.sex == 1 ? '#f8b5b5' : '#8978E4') : '#80848f'}}"></wux-icon>
+                      <view>{{item.likeNum > 0 ? item.likeNum : '点赞'}}</view>
+                    </view>
+                  </view>
+                </view>
               </view>
-            </view>
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-thumbs-up" size="16" color="#80848f"></wux-icon>
-                <view>0</view>
-              </view>
-            </view>
+            </block>
+          </block>
+          <view wx:else class="view_box_common">
+            <mine-null-data width="100%" height="100%" title="亲爱的 暂未发布动态哟"></mine-null-data>
+            <view class="seizeSeat_mini"></view>
           </view>
-        </view>
-
-        <!-- 动态item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="trendsItem">
-          <!-- 动态标题 -->
-          <view class="view_box_common view_box_row">
-            <view class="trendsTime">半小时前：</view>
-            <view class="trendsTitle">我看谁不喜欢包臀短裙</view>
-          </view>
-          <!-- 视频 -->
-          <view class="view_box_common">
-            <video play-btn-position="center" class="trendsVideo" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/%E5%85%8D%E8%B4%B9%E6%B5%8B%E8%AF%95%E6%96%87%E4%BB%B6.mp4"></video>
-          </view>
+        </block>
+        <view class="view_box_common" wx:else>
           <view class="seizeSeat_mini"></view>
-          <!-- 底部操作按钮组 -->
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view></view>
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-thumbs-up" size="16" color="#80848f"></wux-icon>
-                <view>0</view>
-              </view>
-            </view>
-          </view>
-        </view>
-
-        <!-- 动态item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="trendsItem">
-          <!-- 动态标题 -->
-          <view class="view_box_common view_box_row">
-            <view class="trendsTime">2天前：</view>
-            <view class="trendsTitle">我看谁不喜欢包臀短裙</view>
-          </view>
-          <view class="view_box_common">
-            <image class="trendsSingleImage" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqUdymzhhFlFct0M9edLJZu*JNk1ePld60*H6JBWSOE9OA7TBsgTPwRUIEbfeTImldCJgvy0Tfd8p5uaMg8ku*qk!/b&bo=hAP5BAAAAAABB1o!&rf=viewer_4" mode="widthFix"></image>
-          </view>
+          <wux-skeleton active>
+            <wux-skeleton-paragraph rows="6" />
+          </wux-skeleton>
           <view class="seizeSeat_mini"></view>
-          <!-- 底部操作按钮组 -->
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view></view>
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-thumbs-up" size="16" color="#8978E4"></wux-icon>
-                <view>3</view>
-              </view>
-            </view>
-          </view>
         </view>
-
-        <!-- 动态item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="trendsItem">
-          <!-- 动态标题 -->
-          <view class="view_box_common view_box_row">
-            <view class="trendsTime">5天前：</view>
-            <view class="trendsTitle">我看谁不喜欢包臀短裙</view>
-          </view>
-          <!-- 多图片展示 -->
-          <view class="view_box_common">
-            <view class="view_box_row_symmetry" style="width: 86%;">
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqUdymzhhFlFct0M9edLJZu*JNk1ePld60*H6JBWSOE9OA7TBsgTPwRUIEbfeTImldCJgvy0Tfd8p5uaMg8ku*qk!/b&bo=hAP5BAAAAAABB1o!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqdjA2*UQQm7oYOXJsiCzZth4JaTgxrTAAVplAzBpFRIASKY.Kb4GqNqkjRjlmT.mWNACE.X2J3IshIN7Dq*CWtM!/b&bo=OAQaBgAAAAABBwA!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqS4Tj83wR6B6MNByVUVz0mZLGpm2kYlKAFSq2oaxy7DHt6lNnx1Ka*LUq6RTwAMMMxw0CED4SU7By1UGowX*4Yk!/b&bo=7gKGAQAAAAADB0k!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqaFumqN5Xj.rCEYiDR0xmTZ7NxtJfwlv9Yd5glywtP6MqpqbUaovugiLLUnaOwYWMTUQeExbSiILrtQSamU4RDs!/b&bo=gAeEAwAAAAADByI!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://photogz.photo.store.qq.com/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqYFPGvT09kStMSz6.ztB516o4FS*PkMIKaJv2NQziHZNs1nrtSje3TZ4mehgt*eUfChMlHgXUG6NRuusgSsyLbg!/b&bo=hAP0AQAAAAADB1A!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://photogz.photo.store.qq.com/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqaWtNEKDQ2RK3bKwMnt.DBxBOSXh4LtkWJ9B.D5LjaAwDM3K6p2P9XrwqHsjUec8lmOFJr6yys0mofhD7TjMiEc!/b&bo=7gK2AwAAAAADRzs!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqUdymzhhFlFct0M9edLJZu*JNk1ePld60*H6JBWSOE9OA7TBsgTPwRUIEbfeTImldCJgvy0Tfd8p5uaMg8ku*qk!/b&bo=hAP5BAAAAAABB1o!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqdjA2*UQQm7oYOXJsiCzZth4JaTgxrTAAVplAzBpFRIASKY.Kb4GqNqkjRjlmT.mWNACE.X2J3IshIN7Dq*CWtM!/b&bo=OAQaBgAAAAABBwA!&rf=viewer_4" mode="aspectFill"></image>
-              <image class="trendsImageMany" src="http://m.qpic.cn/psc?/V10yc3o10KV3MJ/bqQfVz5yrrGYSXMvKr.cqS4Tj83wR6B6MNByVUVz0mZLGpm2kYlKAFSq2oaxy7DHt6lNnx1Ka*LUq6RTwAMMMxw0CED4SU7By1UGowX*4Yk!/b&bo=7gKGAQAAAAADB0k!&rf=viewer_4" mode="aspectFill"></image>
-            </view>
-          </view>
-          <view class="seizeSeat_mini"></view>
-          <!-- 底部操作按钮组 -->
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view></view>
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-thumbs-up" size="16" color="#8978E4"></wux-icon>
-                <view>3</view>
-              </view>
-            </view>
-          </view>
-        </view>
-
-        <!-- 动态item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="trendsItem">
-          <!-- 动态标题 -->
-          <view class="view_box_common view_box_row">
-            <view class="trendsTime">10天前：</view>
-            <view class="trendsTitle">我看谁不喜欢包臀短裙</view>
-          </view>
-          <view class="seizeSeat_mini"></view>
-          <!-- 底部操作按钮组 -->
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view></view>
-            <view class="view_box_row_content">
-              <view class="view_box_row_content trendsOperItem">
-                <wux-icon type="ios-thumbs-up" size="16" color="#8978E4"></wux-icon>
-                <view>3</view>
-              </view>
-            </view>
-          </view>
-        </view>
-        <!-- <mine-null-data width="100%" height="100%" title="亲爱的 暂未发布动态哟"></mine-null-data> -->
       </wux-animation-group>
+
+      <!-- 服务评论 -->
       <wux-animation-group wx:if="{{currentIndex == 1}}" wux-class="animationView" in="{{ currentIndex == 1 }}" enter="{{ true }}" exit="{{ true }}" class-names="wux-animate--punch">
+
         <!-- 评论item -->
         <view>
           <view class="view_box_row_content_symmetry commentUserInfoView">
@@ -352,9 +337,15 @@
           <view>打赏</view>
         </view>
         <view class="themeBut" style="width:{{pWidth * 0.92 * 0.65 - 10}}px;margin: 0;">立即下单</view>
-        <view class="view_box_content_column" style="font-size: 14px;">
-          <wux-icon type="md-heart-half" size="20" color="#8978E4"></wux-icon>
-          <view>关注</view>
+        <view class="view_box_content_column" style="font-size: 14px;" catch:tap="{{strUtil.checkArrIncludeStr(userLikeStaffUserIdList, staffInfo.userId) ? 'cancelLikeStaff' : 'likeStaff'}}">
+          <block wx:if="{{strUtil.checkArrIncludeStr(userLikeStaffUserIdList, staffInfo.userId)}}">
+            <wux-icon type="md-heart" size="20" color="#8978E4"></wux-icon>
+            <view>已关注</view>
+          </block>
+          <block wx:else>
+            <wux-icon type="md-heart-half" size="20" color="#8978E4"></wux-icon>
+            <view>关注</view>
+          </block>
         </view>
       </view>
     </view>

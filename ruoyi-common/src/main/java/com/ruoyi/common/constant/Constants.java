@@ -55,6 +55,16 @@ public class Constants {
     public static final String LOGIN_SUCCESS = "Success";
 
     /**
+     * 支付成功标识
+     * */
+    public static final String PAY_SUCCESS = "SUCCESS";
+
+    /**
+     * 成功小写
+     * */
+    public static final String SUCCESS_SMALL_LETTER = "success";
+
+    /**
      * 注销
      */
     public static final String LOGOUT = "Logout";
@@ -113,6 +123,11 @@ public class Constants {
      * 用户权限
      */
     public static final String JWT_AUTHORITIES = "authorities";
+
+    /**
+     * 系统标识
+     * */
+    public static final String SYS_NAME = "sys";
 
     /**
      * 资源映射路径 前缀

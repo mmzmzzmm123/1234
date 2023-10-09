@@ -28,15 +28,15 @@
               <view class="userDataBut">个人资料></view>
             </view>
             <view wx:if="{{userLevelData != null}}" class="view_box_row" style="margin-top: 4px;">
-              <view class="level">vip{{userLevelData.currLevel}}</view>
+              <view class="level">VIP {{userLevelData.currLevel}}</view>
               <view class="levelProgress">
                 <wux-progress status="progress" percent="{{userLevelData.currLevel != userLevelData.nextLevel?userLevelData.upgradationPercent:100}}" />
               </view>
-              <view class="level">vip{{userLevelData.nextLevel}}</view>
+              <view class="level">VIP {{userLevelData.nextLevel}}</view>
             </view>
             <view wx:if="{{userLevelData != null}}" class="levelTips">
               <block wx:if="{{userLevelData.currLevel != userLevelData.nextLevel}}">
-                再消费{{userLevelData.upgradationThreshold}}个树币即可升级为vip{{userLevelData.nextLevel}}
+                再充值 {{userLevelData.upgradationThreshold}} 个枫叶币即可升级为 VIP {{userLevelData.nextLevel}}
               </block>
               <block wx:else>
                 哇 泰酷辣 有人等级爆啦
@@ -103,7 +103,7 @@
           <view class="view_box_content_column usedCarNumItem" bind:tap="toRecharge">
             <span>{{formatUtil.toFixed(userInfo!=null?(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance):'0.00')}}</span>
             <view class="view_box_row_content">
-              <text>我的枫叶</text>
+              <text>我的钱包</text>
               <view class="goRechargeBut">去充值</view>
             </view>
           </view>

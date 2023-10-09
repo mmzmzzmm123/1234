@@ -1,5 +1,6 @@
 package com.ruoyi.api.user.model.dto;
 
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -11,6 +12,7 @@ import java.io.Serializable;
  * @author LAM
  * @date 2023/9/21 20:09
  */
+@ApiModel("api-用户账号表单")
 @Data
 @Accessors(chain = true)
 public class ApiUserAccountFormDto implements Serializable {
