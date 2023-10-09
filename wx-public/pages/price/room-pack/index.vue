@@ -4,8 +4,7 @@
 			<u-search placeholder="请输入套餐名称" :showAction="false" v-model="searchParam.name"
 				@change="onSearchKeywordInput"></u-search>
 			<view class="uni-btn-v">
-				<button type="default" style="color:#ffffff;backgroundColor:#1AAD19;borderColor:#1AAD19"
-					hover-class="is-hover" @click="add">新增专用套餐</button>
+				<u-button type="primary" @click="add">新增专用套餐</u-button>
 			</view>
 		</view>
 		<view class="card-list">
@@ -22,9 +21,12 @@
 							<view>套餐时长: {{room.minutes}} 分钟</view>
 							<view>套餐价格: {{room.price}} 元</view>
 							<view>
-								<button type="default" hover-class="is-hover" @click="edit(room)">编辑</button>
-								<button type="default" hover-class="is-hover" @click="del(room)">删除</button>
+
 							</view>
+						</view>
+						<view class="card__op-list">
+							<u-button type="primary" @click="edit(room)">编辑</u-button>
+							<u-button plain @click="del(room)">删除</u-button>
 						</view>
 					</view>
 				</view>
@@ -55,9 +57,9 @@
 		onPullDownRefresh() {
 			this.refresh()
 		},
-		onReachBottom() {
+		/* onReachBottom() {
 			this.refresh(true)
-		},
+		}, */
 		methods: {
 			onEditClick() {
 				uni.navigateTo({
@@ -90,7 +92,10 @@
 			},
 			add() {
 				uni.navigateTo({
-					url: "add?roomId=" + this.roomId
+					url: "add?roomId=" + this.roomId,
+					events: {
+						refresh: this.refresh
+					}
 				})
 			},
 			edit(row) {
@@ -103,36 +108,23 @@
 				})
 			},
 			del(row) {
-				
-				this.$api.delRoomPack(row.id).then(() => {
-					this.refresh();
-				})
-				
-				return ;
+
 				uni.showModal({
 					title: "确认删除？",
 					content: "确认删除？",
-					success: function(res) {
-						if(res.confirm){
-							var ids = [];
-							ids.push(row.id);
-							this.$api.delRoomPack(ids).then(() => {
+					success: (res) => {
+						if (res.confirm) {
+							this.$api.delRoomPack(row.id).then(() => {
 								this.refresh();
 							})
 						}
-						
+
 					}
 				})
-
 			},
 		}
 	}
 </script>
 
 <style lang="scss">
-	.is-hover {
-		color: rgba(255, 255, 255, 0.6);
-		background-color: #179b16;
-		border-color: #179b16;
-	}
 </style>

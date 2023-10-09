@@ -44,7 +44,7 @@
 		<view class="more-btn" @click="onOpenRoomClick">开包厢大门</view>
 		<view class="more-btn" @click="onCloseRoomClick">关包厢大门</view>
 		<!-- <view class="more-btn" @click="showMore = false">开包厢门</view> -->
-		<view class="more-btn" @click="showMore = false">立即下订单</view>
+		<view class="more-btn" @click="onOrderClick">立即下订单</view>
 		<view class="more-btn" @click="onDeleteRoomClick">删除包厢</view>
 		<view class="more-btn more-btn--cancel" @click="showMore = false">取消</view>
 	</u-popup>
@@ -188,7 +188,16 @@
 						}
 					}
 				})
-			}
+			},
+			onOrderClick() {
+							const url = "/pages/room/order/index?roomId=" + this.currentRoom.id;
+							uni.navigateTo({
+								url,
+								events: {
+									refresh: this.refresh
+								}
+							})
+						}
 		}
 	}
 </script>

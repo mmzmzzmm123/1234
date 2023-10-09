@@ -1,19 +1,24 @@
 <template>
 	<view>
+		<view>
+			<view class="top-shop-select">当前门店：
+				<uo-select :value="storeId" :options="storeList" valueField="id" @change="selectStore"></uo-select>
+			</view>
+		</view>
+
 		<view class="search-bar">
 			<u-search placeholder="请输入手机号码" :showAction="false" v-model="searchParam.phone"
 				@change="onSearchKeywordInput"></u-search>
-			<view class="search-clause">
-				<picker mode="date" :value="startDate" :start="pickStartDate" :end="pickEndDate"
-					@change="bindDateChange">
-					<view class="uni-input">{{startDate}}</view>
-				</picker>
-				<uo-select placeholder="请选择包厢" v-model="searchParam.roomId" :options="roomList" valueField="id"
-					@change="selectRoom">
-					<o
-				</uo-select>
-			</view>
 		</view>
+		<view class="filter-bar">
+			<uo-select placeholder="请选择包厢" v-model="searchParam.roomId" :options="roomList" valueField="id"
+				@change="selectRoom" clearable></uo-select>
+			<picker class="uo-select" mode="date" :value="startDate" :start="pickStartDate" :end="pickEndDate"
+				@change="bindDateChange">
+				<view class="uni-input">{{startDate}}</view>
+			</picker>
+		</view>
+
 		<view class="card-list">
 			<view class="card" v-for="(room, index) in orderList" :key="room.id">
 				<view class="card__content">
@@ -55,13 +60,16 @@
 					pageSize: 20,
 					pageNum: 1
 				},
+				showStoreList: false,
+				storeList: [],
 				roomList: [],
 				orderList: [],
 				startDate: '请选择日期',
 			}
 		},
 		onLoad(option) {
-			this.getRoomList();
+			this.getStoreList();
+			// this.getRoomList();
 			this.refresh();
 
 		},
@@ -71,6 +79,9 @@
 			},
 			pickEndDate() {
 				return this.getDate('end');
+			},
+			storeId() {
+				return this.$store.state.currentStore.id
 			}
 		},
 
@@ -103,7 +114,23 @@
 					uni.stopPullDownRefresh()
 				})
 			},
-			getRoomList() {
+			getStoreList() {
+				this.$api.getStoreList().then(res => {
+					this.storeList = res.rows
+					this.searchParam.storeId = this.storeId;
+					this.getStoreRoom(this.searchParam, false)
+				})
+			},
+			selectStore(event) {
+				this.$store.commit("$uStore", {
+					name: 'currentStore',
+					value: event
+				})
+				this.searchParam.storeId = this.storeId;
+				this.getStoreRoom(this.searchParam, false);
+				this.refresh();
+			},
+			getStoreRoom() {
 				var param = {};
 				param.storeId = this.$store.state.currentStore.id; //是否默认一个系统门店
 				this.$api.getRoomList(param).then(res => {
@@ -139,9 +166,37 @@
 </script>
 
 <style lang="scss">
-	.search-clause{
+	.search-clause {
 		display: flex;
 		flex-direction: row-reverse;
 		margin: 20rpx;
+	}
+
+	.filter-bar {
+		display: flex;
+		align-items: center;
+
+		.uo-select {
+			display: flex;
+			padding: 0 10rpx;
+			align-items: center;
+			background-color: $u-primary-bg-color;
+			border-radius: 10rpx;
+			margin: 10rpx;
+			box-sizing: border-box;
+			height: 60rpx;
+			flex: 1;
+
+			/deep/ .uo-select__content {
+				width: 100%;
+				justify-content: space-between;
+			}
+		}
+
+		.u-button {
+			height: 60rpx;
+			margin: 10rpx;
+			width: 6em;
+		}
 	}
 </style>

@@ -120,6 +120,12 @@
 			"style": {
 				"navigationBarTitleText": "添加包厢"
 			}
+		},
+		{
+			"path": "pages/room/order/index",
+			"style": {
+				"navigationBarTitleText": "立即下单"
+			}
 		}
 	],
 	"globalStyle": {

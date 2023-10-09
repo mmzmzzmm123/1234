@@ -121,7 +121,7 @@ const api = {
 		return request('office/roompackage', params, true, 'put')
 	},
 	delRoomPack(id) {
-		return request('office/roompackage/' + id, null, false, 'delete')
+		return request('office/roompackage/' + id, null, true, 'delete')
 	},
 	getStorePromotionList(params){
 		return get('office/storepromotion/h5list', params)
@@ -182,6 +182,9 @@ const api = {
 			icon:"none",
 			title:"即将上线"
 		})
+	},
+	addRoomOrder(params){
+		return post('office/roomorder/order4Guest', params)
 	}
 }
 const install = (Vue, options) => {

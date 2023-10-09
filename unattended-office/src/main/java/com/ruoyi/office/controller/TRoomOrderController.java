@@ -69,7 +69,8 @@ public class TRoomOrderController extends BaseController {
         List<RoomOrderH5Vo> list = tRoomOrderService.selectTRoomOrderH5List(tRoomOrder);
 
         for (RoomOrderH5Vo order : list) {
-            order.setPayTypeName(OfficeEnum.PayType.GetValueByCode(order.getPayType()).getInfo());
+            if (order.getPayType() != 0)
+                order.setPayTypeName(OfficeEnum.PayType.GetValueByCode(order.getPayType()).getInfo());
         }
         return getDataTable(list);
     }
@@ -197,5 +198,15 @@ public class TRoomOrderController extends BaseController {
         return AjaxResult.success(new String(QrCodeUtil.generatePng(url, new QrConfig())));
     }
 
+    /**
+     * 新增房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）
+     */
+    @PreAuthorize("@ss.hasPermi('office:roomorder:add')")
+    @Log(title = "代客预约", businessType = BusinessType.INSERT)
+    @PostMapping("/order4Guest")
+    public AjaxResult order4Guest(@RequestBody TRoomOrder tRoomOrder) {
+        tRoomOrder.setCreateBy(SecurityUtils.getUserId() + "");
+        return toAjax(tRoomOrderService.order4Guest(tRoomOrder));
+    }
 
 }
