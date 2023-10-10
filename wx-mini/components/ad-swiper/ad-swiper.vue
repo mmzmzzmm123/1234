@@ -48,6 +48,9 @@
 						}
 					})
 				}
+			},
+			onAdClick(e){
+				console.log(e)
 			}
 		}
 	}

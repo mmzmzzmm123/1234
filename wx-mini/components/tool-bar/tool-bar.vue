@@ -1,10 +1,10 @@
 <template>
 	<view>
 		<view :class="{'tool-bar': true, 'tool-bar--hidden': hidden}">
-			<view v-for="(tool, i) in tools" :key="i" class="tool-bar_item" :class="tool.style" @click="onToolClick(i)">
+			<button v-for="(tool, i) in tools" :key="i" class="empty-btn tool-bar_item" :class="tool.style" @click="onToolClick(i)" :open-type="tool.openType">
 				<text class="iconfont" :class="tool.icon"></text>
 				<view>{{tool.name}}</view>
-			</view>
+			</button>
 		</view>
 		<u-popup :show="show" @close="show=false" round="10">
 			<view class="tool-bar_title">请选择订单</view>
@@ -70,11 +70,13 @@
 							
 						}
 					},
-					// {
-					// 	name: '分享',
-					// 	icon: 'icon-fenxiang',
-					// 	style: 'tool-bar_item--light'
-					// }
+					{
+						name: '分享',
+						icon: 'icon-fenxiang',
+						style: 'tool-bar_item--light',
+						showList: false,
+						openType: 'share'
+					}
 				],
 				tooIndex: 0,
 				orderList: [],
@@ -117,6 +119,21 @@
 </script>
 
 <style lang="scss">
+	.empty-btn{
+		padding: 0;
+		text-align: initial;
+		line-height: initial;
+		font-size: initial;
+		border-radius: 0;
+		color: initial;
+		background-color: initial;
+		border: none;
+	}
+	.empty-btn::after{
+		content: "";
+		border: none;
+		border-radius: 0;
+	}
 	.tool-bar{
 		position: fixed;
 		// padding: 10rpx;

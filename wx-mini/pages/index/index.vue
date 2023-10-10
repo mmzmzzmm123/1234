@@ -16,6 +16,9 @@
 					<view class="menu-item_title">会员充值</view> 
 				</navigator>
 			</view>
+			<navigator url="/pages/join/index">
+				<image class="join-img" mode="aspectFit" src="https://www.foreverjade.cn/prod-api/profile/upload/2023/09/15/微信图片_20230915105636_20230915105822A013.jpg"></image>
+			</navigator>			
 			<view class="search-bar">
 				<u-input prefix-icon="search" placeholder="搜索门店" v-model="queryParam.keyword" @input="onKeywordInput"></u-input>
 				<view class="search-bar_more" @click="onToShopList">
@@ -82,6 +85,13 @@
 			this.$store.dispatch("getLocation").then(location=>{
 				this.refresh()
 			})
+		},
+		onShareAppMessage() {
+			return {
+				title: '十三将火热招新，欢迎体验！',
+				path: '/pages/index/index',
+				imageUrl: 'https://lineorder.oss-cn-hangzhou.aliyuncs.com/images/shisanjiang.jpg'
+			}
 		},
 		onPullDownRefresh() {
 			if(this.$store.state.canLocation){
@@ -212,5 +222,11 @@
 	rich-text{
 		max-height: 750rpx;
 		overflow: auto;
+	}
+	.join-img{
+		margin-top: 20rpx;
+		width: 710rpx;
+		border-radius: 20rpx;
+		height: 284rpx;
 	}
 </style>
