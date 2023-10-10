@@ -24,6 +24,9 @@
 			<u-cell title="加盟我们" is-link url="/pages/join/index" icon="chat-fill">
 				<!-- <u-icon name="chat-fill" slot="icon"></u-icon> -->
 			</u-cell>
+			<button open-type="share" class="empty-btn">
+				<u-cell icon="share" title="分享"></u-cell>
+			</button>
 			<!-- <u-cell title="服务协议" is-link>
 				<text slot="icon" class="iconfont icon-fuwuxieyi"></text>
 			</u-cell>
@@ -53,6 +56,13 @@
 		onLoad() {
 			this.$store.dispatch("getAmount")
 			this.$store.dispatch("getValidConponCount")
+		},
+		onShareAppMessage() {
+			return {
+				title: '十三将火热招新，欢迎体验！',
+				path: '/pages/index/index',
+				imageUrl: 'https://lineorder.oss-cn-hangzhou.aliyuncs.com/images/shisanjiang.jpg'
+			}
 		},
 		methods: {
 			
@@ -101,5 +111,20 @@
 			vertical-align: bottom;
 			margin-right: 20rpx;
 		}
+	}
+	.empty-btn{
+		padding: 0;
+		text-align: initial;
+		line-height: initial;
+		font-size: initial;
+		border-radius: 0;
+		color: initial;
+		background-color: initial;
+		border: none;
+	}
+	.empty-btn::after{
+		content: "";
+		border: none;
+		border-radius: 0;
 	}
 </style>
