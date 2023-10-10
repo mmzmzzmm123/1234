@@ -25,9 +25,8 @@
         <view class="result-right"></view>
       </view>
     </view>
-    <view class="understand">
+    <view class="block-1">
       <view class="btn-block">
-        <view class="btn-bottom"></view>
         <view class="btn-text">得分解读</view>
       </view>
       <text class="understand-top">综合</text>
@@ -40,10 +39,9 @@
       <text class="understand-down">{{ report.order.gaugeType === 4 ? '抑郁表现' : '焦虑表现' }}</text>
       <text class="understand-desc">{{ report.setting.memo3 }}</text>
     </view>
-    <view class="gloomy">
+    <view class="block-1">
       <view class="btn-block">
-        <view class="btn-bottom"></view>
-        <text class="btn-text">{{ report.order.gaugeType === 4 ? '抑郁表现' : '焦虑表现' }}</text>
+        <view class="btn-text">{{ report.order.gaugeType === 4 ? '抑郁表现' : '焦虑表现' }}</view>
       </view>
       <view class="gloomy-range">
         <text class="gloomy-range-down">低</text>
@@ -54,10 +52,9 @@
       </view>
       <text class="gloomy-desc">{{ report.setting.memo4 }}</text>
     </view>
-    <view class="suggest">
-      <view class="suggest-btn">
-        <view class="suggest-bg"></view>
-        <text class="suggest-text">您的得分建议</text>
+    <view class="block-1">
+      <view class="btn-block">
+        <view class="btn-text">您的得分建议</view>
       </view>
       <view class="img-box" v-html="report.setting.result"/>
     </view>
@@ -137,9 +134,7 @@ export default {
   flex-direction: column;
 }
 .header-title {
-  //width: 280upx;
   height: 56upx;
-
   color: rgba(255,255,255,1);
   font-size: 40upx;
   font-family: PingFangSC-Semibold;
@@ -212,7 +207,6 @@ export default {
   flex-direction: column;
 }
 .result-text {
-  //width: 216upx;
   height: 50upx;
   color: rgba(255,255,255,1);
   font-size: 36upx;
@@ -266,6 +260,35 @@ export default {
     margin-top: 4upx;
   }
 }
+.block-1 {
+  box-shadow: 0px 4px 16px 0px rgba(255, 112, 63, 0.160000);
+  background-color: rgba(255, 255, 255, 1.000000);
+  border-radius: 20upx;
+  position: relative;
+  width: 686upx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 32upx;
+  padding-bottom: 32upx;
+}
+.btn-block {
+  border-radius: 20upx;
+  border: 2px solid #ff703f;
+  margin-top: 40upx;
+  padding: 16upx 52upx;
+  text-align: center;
+}
+.btn-text {
+  height: 40upx;
+  color: rgba(255, 112, 63, 1);
+  font-size: 36upx;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  border-bottom: 17upx solid #ffe4db;
+}
+
 .memo1 {
   color: rgba(51,51,51,1);
   font-size: 36upx;
@@ -281,49 +304,6 @@ export default {
   font-family: PingFangSC-Regular;
   text-align: justify;
   margin-top: 32upx;
-}
-.understand {
-  box-shadow: 0px 4px 16px 0px rgba(255,112,63,0.160000);
-  background-color: rgba(255,255,255,1.000000);
-  border-radius: 20upx;
-  position: relative;
-  width: 686upx;
-  //height: 982upx;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 32upx;
-  padding-bottom: 32upx;
-  text-align: center;
-}
-.btn-block {
-  border-radius: 20upx;
-  position: relative;
-  width: 240upx;
-  height: 90upx;
-  border: 2px solid rgba(255,112,63,1);
-  display: flex;
-  flex-direction: column;
-  margin-top: 40upx;
-}
-.btn-bottom {
-  background-color: rgba(255,228,219,1.000000);
-  width: 162upx;
-  height: 17upx;
-  display: flex;
-  flex-direction: column;
-  margin: 57upx 39upx 0 39upx;
-}
-.btn-text {
-  position: absolute;
-  left: 48upx;
-  top: 16upx;
-  height: 50upx;
-  color: rgba(255,112,63,1);
-  font-size: 36upx;
-  font-family: PingFangSC-Semibold;
-  font-weight: 600;
 }
 .understand-top {
   //width: 56upx;
@@ -372,19 +352,6 @@ export default {
   text-align: justify;
   line-height: 45upx;
   margin-top: 80upx;
-}
-.gloomy {
-  box-shadow: 0px 4px 16px 0px rgba(255,112,63,0.160000);
-  background-color: rgba(255,255,255,1.000000);
-  border-radius: 20upx;
-  width: 686upx;
-  //height: 554upx;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 32upx;
-  text-align: center;
 }
 .gloomy-range {
   width: 622upx;
@@ -440,47 +407,6 @@ export default {
   line-height: 45upx;
   margin: 80upx 32upx 32upx 32upx;
 }
-.suggest {
-  box-shadow: 0px 4px 16px 0px rgba(255,112,63,0.160000);
-  background-color: rgba(255,255,255,1.000000);
-  border-radius: 20upx;
-  width: 686upx;
-  display: flex;
-  flex-direction: column;
-  margin: 32upx 0 0 32upx;
-}
-.suggest-btn {
-  border-radius: 20upx;
-  position: relative;
-  width: 334upx;
-  height: 90upx;
-  border: 2px solid rgba(255,112,63,1);
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  margin-top: 40upx;
-}
-.suggest-bg {
-  background-color: rgba(255,228,219,1.000000);
-  width: 226upx;
-  height: 17upx;
-  display: flex;
-  flex-direction: column;
-  margin: 57upx 0 0 54upx;
-}
-.suggest-text {
-  position: absolute;
-  left: 59upx;
-  top: 16upx;
-  //width: 216upx;
-  height: 50upx;
-  color: rgba(255,112,63,1);
-  font-size: 36upx;
-  font-family: PingFangSC-Semibold;
-  font-weight: 600;
-  text-align: center;
-  line-height: 50upx;
-}
 .img-box {
   width: calc(100% - 48upx);
   padding-left: 24upx;
@@ -494,26 +420,5 @@ export default {
   ::v-deep img {
     width: 100%;
   }
-}
-.suggest-title {
-  width: 238upx;
-  height: 45upx;
-  color: rgba(51,51,51,1);
-  font-size: 32upx;
-  font-family: PingFangSC-Medium;
-  font-weight: 500;
-  text-align: justify;
-  line-height: 45upx;
-  margin: 80upx 0 0 32upx;
-}
-.suggest-desc {
-  width: 622upx;
-  height: 180upx;
-  color: rgba(51,51,51,1);
-  font-size: 32upx;
-  font-family: PingFangSC-Regular;
-  text-align: justify;
-  line-height: 45upx;
-  margin: 16upx 0 0 32upx;
 }
 </style>

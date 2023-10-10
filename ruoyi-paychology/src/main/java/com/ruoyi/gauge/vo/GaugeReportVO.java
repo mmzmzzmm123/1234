@@ -5,6 +5,7 @@ import com.ruoyi.gauge.domain.PsyOrder;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 public class GaugeReportVO implements Serializable {
@@ -13,5 +14,7 @@ public class GaugeReportVO implements Serializable {
     private PsyOrder order;
 
     private PsyGaugeScoreSetting setting;
+
+    private List<String> lats;
 
 }

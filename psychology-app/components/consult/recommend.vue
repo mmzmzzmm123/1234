@@ -1,7 +1,6 @@
 <template>
   <view class="main">
     <view class="header">
-      <view class="header-bottom"></view>
       <view class="header-text">咨询师推荐</view>
     </view>
     <view class="list" v-if="consults.length > 0">
@@ -104,35 +103,19 @@ export default {
   }
   .header {
     border-radius: 20upx;
-    position: relative;
-    width: 334upx;
-    height: 90upx;
     border: 2px solid #ff703f;
-    display: flex;
-    flex-direction: column;
     margin-top: 40upx;
-    justify-content: center;
-    align-items: center;
-    .header-bottom {
-      position: absolute;
-      width: 226upx;
-      height: 17upx;
-      top: 57upx;
-      background: #FFE4DB;
-    }
-    .header-text {
-      position: absolute;
-      //left: 59upx;
-      top: 16upx;
-      //width: 216upx;
-      height: 50upx;
-      color: #ff703f;
-      font-size: 36upx;
-      font-family: PingFangSC-Semibold;
-      font-weight: 600;
-      text-align: center;
-      line-height: 50upx;
-    }
+    padding: 16upx 52upx;
+    text-align: center;
+  }
+
+  .header-text {
+    height: 40upx;
+    color: rgba(255, 112, 63, 1);
+    font-size: 36upx;
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    border-bottom: 17upx solid #ffe4db;
   }
   .list {
     margin-top: 46upx;

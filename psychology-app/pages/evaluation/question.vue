@@ -10,7 +10,7 @@
     </view>
     <scroll-view class="content-y" scroll-with-animation scroll-y :scroll-into-view="scrollInto">
       <view class="q-chat-block" v-for="(item, index) in questionList"
-            v-show="(currentIndex === 1 && index === 0) || (currentIndex > 1 && index < currentIndex)"
+            v-show="index <= currentIndex"
             :id="'main-' + index">
         <view class="q-index">{{ (index + 1) + '/' + questionList.length }}</view>
         <view class="q-chat-left">
@@ -175,18 +175,17 @@ export default {
         this.scrollInto = 'main-' + this.lastIndex
       })
     },
-    getLast(next = 1) {
-      const index = this.questionList.findLastIndex(a => a.answers.length > 0)
-      this.lastIndex = index !== -1 ? index + 1 : 0
+    getLast() {
+      this.lastIndex = this.questionList.findLastIndex(a => a.answers.length > 0)
       this.currentIndex = Math.min(this.lastIndex + 1, this.questionList.length)
-      console.log(this.lastIndex)
-      console.log(this.currentIndex)
+      // console.log(this.lastIndex)
+      // console.log(this.currentIndex)
     },
     //重新答题，把之前的答案清空
     toFirstQuestion() {
       this.showMessage = false
-      this.currentIndex = 1
-      this.lastIndex = 0
+      this.currentIndex = 0
+      this.lastIndex = -1
       this.questionList.forEach((question, index) => {
         question.answers = [];
       });
@@ -197,9 +196,7 @@ export default {
       this.showMessage = false;
       this.currentIndex = Math.min(this.lastIndex + 1, this.questionList.length);
       callTimeLoad(document.getElementById("timerBox"), true);
-      setTimeout(() => {
-        this.scrollInto = 'main-' + this.lastIndex
-      })
+      this.scrollTo()
     },
     getAnswer(item) {
       if (item.answers.length > 0) {
@@ -214,9 +211,7 @@ export default {
     },
     //答题
     answerOptions(item, option) {
-      let index = (item.answers || []).findIndex(i => {
-        return option.id === i
-      });
+      let index = (item.answers || []).findIndex(i => option.id === i);
       if (index > -1 && item.answers.length > 1) {
         item.answers.splice(index, 1);
       } else {
@@ -242,6 +237,11 @@ export default {
             url: "/pages/evaluation/sdsResult?orderId=" + order.orderId,
           });
         }
+        if (order.gaugeType === 3) {
+          return  uni.navigateTo({
+            url: "/pages/evaluation/mbtiResult?orderId=" + order.orderId,
+          });
+        }
         uni.navigateTo({
           url: "/pages/evaluation/result?productId=" + this.productId,
         });
@@ -249,18 +249,18 @@ export default {
     },
     //下一题
     async toNext(item) {
-      if (this.lastIndex + 1 === this.questionList.length) {
-        console.log('aaaa')
-        console.log(this.lastIndex)
-        console.log(this.questionList.length)
-        return;
-      }
+      // if (this.lastIndex + 1 === this.questionList.length) {
+      //   console.log('aaaa')
+      //   console.log(this.lastIndex)
+      //   console.log(this.questionList.length)
+      //   return;
+      // }
 
       this.checkNull = item.answers.length === 0;
 
       let res = await questionServer.setAnswer(this.productId, item.id, item.answers, this.orderId);
       if (res.code === 200) {
-        this.getLast(2)
+        this.getLast()
         this.scrollTo()
       }
     }

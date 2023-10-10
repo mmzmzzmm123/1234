@@ -47,6 +47,32 @@
                 <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192" :height="300"/>
               </el-form-item>
             </template>
+            <template v-if="gaugeType === 3">
+              <el-form-item label="结果标题">
+                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo1" placeholder="结果标题" />
+              </el-form-item>
+              <el-form-item label="结果描述">
+                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo2" placeholder="结果描述" />
+              </el-form-item>
+              <el-form-item label="综合维度解析">
+                <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo3" placeholder="综合维度解析" />
+              </el-form-item>
+              <el-form-item label="精力支配">
+                <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo4" placeholder="精力支配" />
+              </el-form-item>
+              <el-form-item label="认识世界">
+                <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo5" placeholder="认识世界" />
+              </el-form-item>
+              <el-form-item label="判断事物">
+                <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo6" placeholder="判断事物" />
+              </el-form-item>
+              <el-form-item label="'生活态度'">
+                <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo7" placeholder="生活态度" />
+              </el-form-item>
+              <el-form-item label="综合维度建议">
+                <editor v-model="props.row.result" placeholder="综合维度建议" :min-height="192" :height="300"/>
+              </el-form-item>
+            </template>
             <template v-else>
               <el-form-item label="结论">
                 <editor v-model="props.row.result" placeholder="请输入内容" :min-height="192" :height="300"/>
@@ -157,6 +183,9 @@ export default {
         memo2: "",
         memo3: "",
         memo4: "",
+        memo5: "",
+        memo6: "",
+        memo7: "",
         result: "",
       });
       this.getSettingList();
@@ -169,6 +198,9 @@ export default {
         a.memo2 = a.memo2 || ''
         a.memo3 = a.memo3 || ''
         a.memo4 = a.memo4 || ''
+        a.memo5 = a.memo5 || ''
+        a.memo6 = a.memo6 || ''
+        a.memo7 = a.memo7 || ''
         a.result = a.result || ''
       })
       this.scoreList = res.rows;

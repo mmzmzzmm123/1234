@@ -87,15 +87,16 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
 
         //查询问题分数，进行数据绑定，插入数据
         List<PsyGaugeQuestionsOptions> psyGaugeQuestionsOptions = psyGaugeQuestionsOptionsMapper.queryOptionsByIds(psyGaugeQuestionsResult.getQuestionsOptionsIdList());
-        Map<Integer, Integer> collect = psyGaugeQuestionsOptions.stream().collect(Collectors.toMap(PsyGaugeQuestionsOptions::getId, PsyGaugeQuestionsOptions::getValue));
+//        Map<Integer, Integer> collect = psyGaugeQuestionsOptions.stream().collect(Collectors.toMap(PsyGaugeQuestionsOptions::getId, PsyGaugeQuestionsOptions::getValue));
 
         List<PsyGaugeQuestionsResult> results = Lists.newArrayList();
-        for (Integer id : psyGaugeQuestionsResult.getQuestionsOptionsIdList()) {
+        for (PsyGaugeQuestionsOptions item : psyGaugeQuestionsOptions) {
             PsyGaugeQuestionsResult build = PsyGaugeQuestionsResult.builder()
                     .gaugeId(psyGaugeQuestionsResult.getGaugeId())
                     .questionsId(psyGaugeQuestionsResult.getQuestionsId())
-                    .questionsOptionsId(id)
-                    .score(collect.get(id))
+                    .questionsOptionsId(item.getId())
+                    .score(item.getValue())
+                    .lat(item.getLat())
                     .userId(userId)
                     .orderId(psyGaugeQuestionsResult.getOrderId())
                     .build();
@@ -250,8 +251,12 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("orderId",psyOrder.getId());
         paramMap.put("userId",psyOrder.getUserId());
-        paramMap.put("score",psyOrder.getScore());
 
+        if (GaugeConstant.GAUGE_COMPUTE_3 == psyOrder.getGaugeType()) {
+            vo.setLats(psyGaugeQuestionsResultMapper.getQuestionLat(paramMap));
+        }
+
+        paramMap.put("score",psyOrder.getScore());
         vo.setOrder(psyOrder);
         vo.setSetting(psyGaugeScoreSettingMapper.selectPsyGaugeScoreSettingByGaugeId(paramMap));
         return vo;

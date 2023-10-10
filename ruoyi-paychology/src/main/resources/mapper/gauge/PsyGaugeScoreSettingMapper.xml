@@ -16,10 +16,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="memo2"    column="memo2"    />
         <result property="memo3"    column="memo3"    />
         <result property="memo4"    column="memo4"    />
+        <result property="memo5"    column="memo5"    />
+        <result property="memo6"    column="memo6"    />
+        <result property="memo7"    column="memo7"    />
     </resultMap>
 
     <sql id="selectPsyGaugeScoreSettingVo">
-        select id, gauge_id, start, end, lat, proposal,result,memo1,memo2,memo3,memo4 from psy_gauge_score_setting
+        select id, gauge_id, start, end, lat, proposal,result,memo1,memo2,memo3,memo4,memo5,memo6,memo7 from psy_gauge_score_setting
     </sql>
 
     <select id="selectPsyGaugeScoreSettingList" parameterType="com.ruoyi.gauge.domain.PsyGaugeScoreSetting" resultMap="PsyGaugeScoreSettingResult">
@@ -52,22 +55,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="start != null">start,</if>
             <if test="end != null">end,</if>
             <if test="lat != null">lat,</if>
+            <if test="result != null">result,</if>
             <if test="proposal != null">proposal,</if>
             <if test="memo1 != null">memo1,</if>
             <if test="memo2 != null">memo2,</if>
             <if test="memo3 != null">memo3,</if>
             <if test="memo4 != null">memo4,</if>
+            <if test="memo5 != null">memo5,</if>
+            <if test="memo6 != null">memo6,</if>
+            <if test="memo7 != null">memo7,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="gaugeId != null">#{gaugeId},</if>
             <if test="start != null">#{start},</if>
             <if test="end != null">#{end},</if>
             <if test="lat != null">#{lat},</if>
+            <if test="result != null">#{result},</if>
             <if test="proposal != null">#{proposal},</if>
             <if test="memo1 != null">#{memo1},</if>
             <if test="memo2 != null">#{memo2},</if>
             <if test="memo3 != null">#{memo3},</if>
             <if test="memo4 != null">#{memo4},</if>
+            <if test="memo5 != null">#{memo5},</if>
+            <if test="memo6 != null">#{memo6},</if>
+            <if test="memo7 != null">#{memo7},</if>
          </trim>
     </insert>
 
@@ -83,6 +94,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="memo2 != null">memo2 = #{memo2},</if>
             <if test="memo3 != null">memo3 = #{memo3},</if>
             <if test="memo4 != null">memo4 = #{memo4},</if>
+            <if test="memo5 != null">memo5 = #{memo5},</if>
+            <if test="memo6 != null">memo6 = #{memo6},</if>
+            <if test="memo7 != null">memo7 = #{memo7},</if>
             <if test="result != null">result = #{result},</if>
         </trim>
         where id = #{id}
@@ -100,8 +114,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="selectPsyGaugeScoreSettingByGaugeId" parameterType="java.util.Map" resultMap="PsyGaugeScoreSettingResult">
-         select t1.id, t1.gauge_id, t1.start, t1.end, t1.lat, t1.proposal,t1.result,t1.memo1,t1.memo2,t1.memo3,t1.memo4 from psy_gauge_score_setting t1
-        where t1.gauge_id = (select gauge_id from psy_order where id=#{orderId} ) and #{score} >= t1.start
-        AND t1.end >= #{score}
+         select t1.id, t1.gauge_id, t1.start, t1.end, t1.lat, t1.proposal,t1.result,t1.memo1,t1.memo2,t1.memo3,t1.memo4,t1.memo5,t1.memo6,t1.memo7 from psy_gauge_score_setting t1
+        where t1.gauge_id = (select gauge_id from psy_order where id=#{orderId} )
+          and ((#{score} >= t1.start AND t1.end >= #{score}) or (t1.lat = #{score}))
     </select>
 </mapper>

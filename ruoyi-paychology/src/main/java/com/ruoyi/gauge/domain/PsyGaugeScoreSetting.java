@@ -44,5 +44,8 @@ public class PsyGaugeScoreSetting extends BaseEntity
     private String memo2;
     private String memo3;
     private String memo4;
+    private String memo5;
+    private String memo6;
+    private String memo7;
 
 }

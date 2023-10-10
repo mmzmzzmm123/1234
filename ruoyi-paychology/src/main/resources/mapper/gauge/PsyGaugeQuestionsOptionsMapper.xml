@@ -85,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="queryOptionsByIds" resultType="com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions" parameterType="arraylist">
-        select id, value from psy_gauge_questions_options
+        select id, value, lat from psy_gauge_questions_options
             where id in
         <foreach item="item" collection="ids" open="(" separator="," close=")">
             #{item}

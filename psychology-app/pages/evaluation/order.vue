@@ -74,6 +74,12 @@
             });
           }
 
+          if (order.gaugeType === 3) {
+            return  uni.navigateTo({
+              url: "/pages/evaluation/mbtiResult?orderId=" + order.orderId,
+            });
+          }
+
           uni.setStorageSync("result", result.data);
           uni.navigateTo({
             url: "/pages/evaluation/result?productId=" + order.gaugeId,

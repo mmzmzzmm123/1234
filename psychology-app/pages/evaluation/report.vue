@@ -43,9 +43,14 @@
               url: "/pages/evaluation/sdsResult?orderId=" + item.orderId,
             });
           }
+          if (item.gaugeType === 3) {
+            return  uni.navigateTo({
+              url: "/pages/evaluation/mbtiResult?orderId=" + item.orderId,
+            });
+          }
           uni.setStorageSync("result", result.data);
           uni.navigateTo({
-            url: "/pages/evaluation/result?productId=" + item.productId,
+            url: "/pages/evaluation/result?productId=" + item.gaugeId,
           });
         }
       }

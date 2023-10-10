@@ -169,6 +169,12 @@ export default {
           });
         }
 
+        if (this.productInfo.type === 3) {
+          return  uni.navigateTo({
+            url: "/pages/evaluation/mbtiResult?orderId=" + this.productInfo.orderNo,
+          });
+        }
+
         uni.setStorageSync("result", result.data);
         uni.navigateTo({
           url: "/pages/evaluation/result?productId=" + this.productId,
