@@ -18,6 +18,7 @@ import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
+import com.github.binarywang.wxpay.service.MarketingFavorService;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;

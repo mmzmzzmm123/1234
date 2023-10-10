@@ -15,19 +15,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="placeReady"    column="place_ready"    />
+        <result property="budget"    column="budget"    />
+        <result property="isExperience"    column="is_experience"    />
+        <result property="expBusiness"    column="exp_business"    />
+        <result property="isContact"    column="is_contact"    />
+        <result property="address"    column="address"    />
     </resultMap>
 
     <sql id="selectTJoinUsVo">
-        select id, city, name, phone, status, remark, create_by, create_time, update_by, update_time from t_join_us
+        select id, city, name, phone, status, remark, create_by, create_time, update_by, update_time, place_ready, budget, is_experience, exp_business, is_contact, address from t_join_us
     </sql>
 
     <select id="selectTJoinUsList" parameterType="TJoinUs" resultMap="TJoinUsResult">
         <include refid="selectTJoinUsVo"/>
-        <where>  
+        <where>
             <if test="city != null "> and city = #{city}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="placeReady != null  and placeReady != ''"> and place_ready = #{placeReady}</if>
+            <if test="budget != null  and budget != ''"> and budget = #{budget}</if>
+            <if test="isExperience != null  and isExperience != ''"> and is_experience = #{isExperience}</if>
+            <if test="expBusiness != null  and expBusiness != ''"> and exp_business = #{expBusiness}</if>
+            <if test="isContact != null  and isContact != ''"> and is_contact = #{isContact}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
         </where>
     </select>
     
@@ -48,7 +60,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+            <if test="placeReady != null">place_ready,</if>
+            <if test="budget != null">budget,</if>
+            <if test="isExperience != null">is_experience,</if>
+            <if test="expBusiness != null">exp_business,</if>
+            <if test="isContact != null">is_contact,</if>
+            <if test="address != null">address,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="city != null">#{city},</if>
             <if test="name != null and name != ''">#{name},</if>
@@ -59,7 +77,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+            <if test="placeReady != null">#{placeReady},</if>
+            <if test="budget != null">#{budget},</if>
+            <if test="isExperience != null">#{isExperience},</if>
+            <if test="expBusiness != null">#{expBusiness},</if>
+            <if test="isContact != null">#{isContact},</if>
+            <if test="address != null">#{address},</if>
+        </trim>
     </insert>
 
     <update id="updateTJoinUs" parameterType="TJoinUs">
@@ -74,6 +98,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="placeReady != null">place_ready = #{placeReady},</if>
+            <if test="budget != null">budget = #{budget},</if>
+            <if test="isExperience != null">is_experience = #{isExperience},</if>
+            <if test="expBusiness != null">exp_business = #{expBusiness},</if>
+            <if test="isContact != null">is_contact = #{isContact},</if>
+            <if test="address != null">address = #{address},</if>
         </trim>
         where id = #{id}
     </update>
