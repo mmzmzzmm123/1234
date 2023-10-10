@@ -8,8 +8,8 @@
 				</view>
 			</slot>
 		</view>
-		<u-datetime-picker :show="show" :mode="mode" :minDate="minDate" closeOnClickOverlay @confirm="confirm" @cancel="cancel"
-			@change="change" @close="close"></u-datetime-picker>
+		<u-datetime-picker :show="show" :mode="mode" :minDate="minDate" closeOnClickOverlay @confirm="confirm"
+			@cancel="cancel" @change="change" @close="close"></u-datetime-picker>
 	</view>
 </template>
 
@@ -46,18 +46,19 @@
 			},
 			confirm(e) {
 				this.value = this.result(e.value, e.mode)
+				this.$emit('input', this.timeStr)
 				this.close()
 			},
 			change(e) {
 				// console.log('change', e)
 			},
 			filter(mode, options) {
-				if(mode==='year')
-				return options.filter((option) => option % 2 === 0);
+				if (mode === 'year')
+					return options.filter((option) => option % 2 === 0);
 				if (this.filter) {
 					debugger
-					if(mode==='year')
-					return options.filter((option) => option % 2 === 0);
+					if (mode === 'year')
+						return options.filter((option) => option % 2 === 0);
 				}
 				return options;
 			},
@@ -81,32 +82,38 @@
 </script>
 
 <style lang="scss">
-.uo-select{
+	.uo-select {
 		color: $u-main-color;
 		width: 100%;
 		flex: 1;
-		&__option{
+
+		&__option {
 			text-align: center;
 			padding: 30rpx;
 			border-bottom: 1rpx solid $u-border-color;
 			color: $u-main-color;
-			&-cancel{
+
+			&-cancel {
 				border-top: 20rpx solid $u-bg-color;
 			}
 		}
-		&__content{
+
+		&__content {
 			display: flex;
 			align-items: center;
-			.u-icon{
+
+			.u-icon {
 				margin-left: 10rpx;
 			}
-			&__text{
+
+			&__text {
 				overflow: hidden;
 				white-space: nowrap;
 				text-overflow: ellipsis;
 			}
 		}
-		&__placeholder{
+
+		&__placeholder {
 			color: $u-tips-color;
 		}
 	}

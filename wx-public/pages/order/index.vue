@@ -88,9 +88,9 @@
 		onPullDownRefresh() {
 			this.refresh()
 		},
-		onReachBottom() {
-			this.refresh(true)
-		},
+		// onReachBottom() {
+		// 	this.refresh(true)
+		// },
 		methods: {
 			onSearchKeywordInput() {
 				this.$u.debounce(this.refresh, 400)

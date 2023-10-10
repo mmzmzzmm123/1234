@@ -14,14 +14,11 @@
 					<input class="uni-input" type="number" v-model="order.userId" placeholder="请输入手机号码" />
 				</u-form-item>
 				<u-form-item label="开始时间" prop="startTime" required @click="startShow = true">
-					<uo-datetime :show="startShow" mode="datetime"
-						@confirm="confirm">
-							
+					<uo-datetime :show="startShow" mode="datetime" v-model="order.startTime">
 					</uo-datetime>
 				</u-form-item>
 				<u-form-item label="结束时间" prop="endTime" required @click="endShow = true">
-					<uo-datetime :show="startShow" v-model="order.endTime"  mode="datetime"
-						@confirm="confirm">
+					<uo-datetime :show="startShow" v-model="order.endTime"  mode="datetime">
 					</uo-datetime>
 				</u-form-item>
 			</u-form>
@@ -103,8 +100,6 @@
 		},
 		methods: {
 			onConfirmClick() {
-				this.$api.addRoomOrder(this.order).then(this.onSuccess)
-				return true;
 				this.$refs.form.validate().then(res => {
 					this.$api.addRoomOrder(this.order).then(this.onSuccess)
 				}).catch((e) => {
@@ -112,9 +107,9 @@
 				})
 			},
 			onSuccess() {
-				this.$u.toast('保存成功')
-				this.getOpenerEventChannel().emit('refresh')
-				uni.navigateBack()
+				this.$u.toast('预约成功')
+				// this.getOpenerEventChannel().emit('refresh')
+				// uni.navigateBack()
 			},
 			onCancelClick() {
 				uni.navigateBack()
