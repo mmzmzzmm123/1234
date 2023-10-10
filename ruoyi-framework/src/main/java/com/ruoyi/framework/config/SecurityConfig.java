@@ -116,6 +116,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 过滤请求
                 .authorizeRequests()
                 .antMatchers("/wxLogin", "/office/api/**", "/office/roomorder/**", "/office/room/**").permitAll()
+                .antMatchers("/office/joinus").permitAll()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
                 .antMatchers("/login", "/captchaImage", "/system/auth/binding/*", "/system/auth/social-login/*", "/register").permitAll()
                 // 静态资源，可匿名访问

@@ -93,4 +93,6 @@ public interface ITRoomOrderService {
     PrepayResp promotionPrepay(PrepayReq order, long wxUserId);
 
     List<RoomOrderH5Vo> selectTRoomOrderH5List(RoomOrderH5QryVo tRoomOrder);
+
+    int order4Guest(TRoomOrder tRoomOrder);
 }

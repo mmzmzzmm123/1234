@@ -1108,15 +1108,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         BigDecimal totalPrice = storePromotion.getStandardPrice();
 
         // 计算订单号
-        long orderNo = 0l;
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        final String prefix = prepayReq.getRoomId() + sdf.format(new Date());
-        Long maxId = tRoomOrderMapper.getHourMaxOrder(prefix);
-        if (maxId == null) {
-            orderNo = Long.parseLong(prefix + "00");
-        } else {
-            orderNo = maxId + 1;
-        }
+        long orderNo = getOrderNo(prepayReq.getRoomId());
 
         TWxUser wxUser = wxUserService.selectTWxUserById(userId);
 
@@ -1167,5 +1159,37 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Override
     public List<RoomOrderH5Vo> selectTRoomOrderH5List(RoomOrderH5QryVo tRoomOrder) {
         return tRoomOrderMapper.selectTRoomOrderH5List(tRoomOrder);
+    }
+
+    @Override
+    public int order4Guest(TRoomOrder tRoomOrder) {
+        TWxUser qry = new TWxUser();
+        qry.setPhone(tRoomOrder.getUserId() + "");
+        final List<TWxUser> tWxUsers = wxUserService.selectTWxUserList(qry);
+        if (tWxUsers.size() == 0) {
+            throw new ServiceException("该手机号还未登录过小程序，未能识别");
+        }
+        tRoomOrder.setUserId(tWxUsers.get(0).getId());
+        tRoomOrder.setPayType(0);//
+        tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());//
+        tRoomOrder.setOrderNo(getOrderNo(tRoomOrder.getRoomId()));
+        tRoomOrder.setTotalAmount(new BigDecimal(0));
+        tRoomOrder.setPayAmount(new BigDecimal(0));
+        tRoomOrder.setWelfareAmount(new BigDecimal(0));
+        return tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
+    }
+
+    private Long getOrderNo(long roomId) {
+        // 计算订单号
+        long orderNo = 0l;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        final String prefix = roomId + sdf.format(new Date());
+        Long maxId = tRoomOrderMapper.getHourMaxOrder(prefix);
+        if (maxId == null) {
+            orderNo = Long.parseLong(prefix + "00");
+        } else {
+            orderNo = maxId + 1;
+        }
+        return orderNo;
     }
 }

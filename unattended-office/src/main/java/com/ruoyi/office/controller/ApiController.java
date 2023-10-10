@@ -18,6 +18,7 @@ import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
+import com.github.binarywang.wxpay.service.MarketingFavorService;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -745,8 +746,8 @@ public class ApiController extends BaseController {
     @Log(title = "优惠券预定房间", businessType = BusinessType.INSERT)
     @PostMapping("/promotion/order")
     public AjaxResult promotionOrder(@RequestBody PrepayReq order) {
-//        long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
-        long wxUserId = 9l;
+        long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
+//        long wxUserId = 9l;
         order.setUserId(wxUserId);
         try {
 //            logger.info("/promotion/order:" + order.toString());

@@ -121,7 +121,7 @@ const api = {
 		return request('office/roompackage', params, true, 'put')
 	},
 	delRoomPack(id) {
-		return request('office/roompackage/' + id, null, false, 'delete')
+		return request('office/roompackage/' + id, null, true, 'delete')
 	},
 	getStorePromotionList(params){
 		return get('office/storepromotion/h5list', params)
@@ -150,6 +150,9 @@ const api = {
 	getNoticeList(params){
 		return get('system/notice/list', params)
 	},
+	getStore(id){
+		return get('office/store/' + id)
+	},
 	getRoom(id){
 		return get('office/room/' + id)
 	},
@@ -165,11 +168,23 @@ const api = {
 	getDict(dictType){
 		return get('system/dict/data/type/' + dictType)
 	},
+	openStore(storeId){
+		return post('office/api/openStore/'+storeId)
+	},
+	openRoom(param){
+		return post('office/mapi/roomopen',param)
+	},
+	closeRoom(param){
+		return post('office/mapi/roomclose',param)
+	},
 	comingSoon(){
 		uni.showToast({
 			icon:"none",
 			title:"即将上线"
 		})
+	},
+	addRoomOrder(params){
+		return post('office/roomorder/order4Guest', params)
 	}
 }
 const install = (Vue, options) => {

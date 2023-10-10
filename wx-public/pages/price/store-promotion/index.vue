@@ -4,14 +4,13 @@
 			<u-search placeholder="请输入优惠券名称" :showAction="false" v-model="searchParam.keyword"
 				@change="onSearchKeywordInput"></u-search>
 			<view class="uni-btn-v">
-				<button type="default" style="color:#ffffff;backgroundColor:#1AAD19;borderColor:#1AAD19"
-					hover-class="is-hover" @click="add">新增优惠券</button>
+				<u-button type="primary" @click="add">新增优惠券</u-button>
 			</view>
 		</view>
 		<view class="card-list">
 			<view class="card" v-for="(room, index) in packList" :key="room.id">
 				<view class="card__content">
-					<uo-image src="https://mbdp01.bdstatic.com/static/landing-pc/img/logo_top.79fdb8c2.png"></uo-image>
+					<!-- <uo-image src="https://mbdp01.bdstatic.com/static/landing-pc/img/logo_top.79fdb8c2.png"></uo-image> -->
 					<!-- {{room.logo}} -->
 					<view class="card__content__right">
 						<view class="card__content__head">
@@ -26,10 +25,10 @@
 							<view v-if="room.validType==2">有效期: {{room.startDate}}-{{room.endDate}} </view>
 							<view v-if="room.validType==1">有效期: 子购买日起{{room.validDays}}天 </view>
 							<view>适用门店: {{room.storeName}} </view>
-							<view>
-								<button type="default" hover-class="is-hover" @click="edit(room)">编辑</button>
-								<button type="default" hover-class="is-hover" @click="del(room)">删除</button>
-							</view>
+						</view>
+						<view class="card__op-list">
+							<u-button type="primary" @click="edit(room)">编辑</u-button>
+							<u-button plain @click="del(room)">删除</u-button>
 						</view>
 					</view>
 				</view>
@@ -60,9 +59,9 @@
 		onPullDownRefresh() {
 			this.refresh()
 		},
-		onReachBottom() {
-			this.refresh(true)
-		},
+		// onReachBottom() {
+		// 	this.refresh(true)
+		// },
 		methods: {
 			onSearchKeywordInput() {
 				this.$u.debounce(this.refresh, 400)
@@ -87,7 +86,7 @@
 			},
 			add() {
 				uni.navigateTo({
-					url: "edit" ,
+					url: "edit",
 					events: {
 						refresh: this.refresh
 					}
@@ -103,20 +102,12 @@
 				})
 			},
 			del(row) {
-
-				this.$api.delRoomPack(row.id).then(() => {
-					this.refresh();
-				})
-
-				return;
 				uni.showModal({
 					title: "确认删除？",
 					content: "确认删除？",
-					success: function(res) {
+					success: res => {
 						if (res.confirm) {
-							var ids = [];
-							ids.push(row.id);
-							this.$api.delRoomPack(ids).then(() => {
+							this.$api.delStorePromotion(row.id).then(() => {
 								this.refresh();
 							})
 						}
@@ -130,9 +121,5 @@
 </script>
 
 <style lang="scss">
-	.is-hover {
-		color: rgba(255, 255, 255, 0.6);
-		background-color: #179b16;
-		border-color: #179b16;
-	}
+
 </style>

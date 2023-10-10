@@ -29,7 +29,13 @@
 		{
 			"path": "pages/store/store-edit/index",
 			"style": {
-				"navigationBarTitleText": "门店详情"
+				"navigationBarTitleText": "门店编辑"
+			}
+		},
+		{
+			"path": "pages/store/store-clean/index",
+			"style": {
+				"navigationBarTitleText": "非保洁时间段设置"
 			}
 		},
 		{
@@ -119,6 +125,12 @@
 			"path": "pages/room/room-edit/index",
 			"style": {
 				"navigationBarTitleText": "添加包厢"
+			}
+		},
+		{
+			"path": "pages/room/order/index",
+			"style": {
+				"navigationBarTitleText": "立即下单"
 			}
 		}
 	],

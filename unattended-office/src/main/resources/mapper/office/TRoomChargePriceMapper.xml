@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.office.mapper.TRoomChargePriceMapper">
+    
+    <resultMap type="TRoomChargePrice" id="TRoomChargePriceResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="roomId"    column="room_id"    />
+        <result property="minutes"    column="minutes"    />
+        <result property="price"    column="price"    />
+        <result property="memberPrice"    column="member_price"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="stopTime"    column="stop_time"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTRoomChargePriceVo">
+        select id, name, room_id, minutes, price, member_price, start_time, stop_time, status, remark, create_by, create_time, update_by, update_time from t_room_charge_price
+    </sql>
+
+    <select id="selectTRoomChargePriceList" parameterType="TRoomChargePrice" resultMap="TRoomChargePriceResult">
+        <include refid="selectTRoomChargePriceVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="roomId != null "> and room_id = #{roomId}</if>
+            <if test="minutes != null "> and minutes = #{minutes}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="memberPrice != null "> and member_price = #{memberPrice}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="stopTime != null "> and stop_time = #{stopTime}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTRoomChargePriceById" parameterType="Long" resultMap="TRoomChargePriceResult">
+        <include refid="selectTRoomChargePriceVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTRoomChargePrice" parameterType="TRoomChargePrice" useGeneratedKeys="true" keyProperty="id">
+        insert into t_room_charge_price
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="roomId != null">room_id,</if>
+            <if test="minutes != null">minutes,</if>
+            <if test="price != null">price,</if>
+            <if test="memberPrice != null">member_price,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="stopTime != null">stop_time,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="roomId != null">#{roomId},</if>
+            <if test="minutes != null">#{minutes},</if>
+            <if test="price != null">#{price},</if>
+            <if test="memberPrice != null">#{memberPrice},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="stopTime != null">#{stopTime},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTRoomChargePrice" parameterType="TRoomChargePrice">
+        update t_room_charge_price
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="minutes != null">minutes = #{minutes},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="memberPrice != null">member_price = #{memberPrice},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="stopTime != null">stop_time = #{stopTime},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTRoomChargePriceById" parameterType="Long">
+        delete from t_room_charge_price where id = #{id}
+    </delete>
+
+    <delete id="deleteTRoomChargePriceByIds" parameterType="String">
+        delete from t_room_charge_price where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

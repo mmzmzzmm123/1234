@@ -1,36 +1,36 @@
 <template>
-	<view v-show="isShow">
+	<view>
 		<view class="form">
-			<u-form ref="form" label-width="auto" :rules="rules">
+			<u-form ref="form" label-width="auto" :rules="rules" :model="store">
 				<u-form-item label="门店名称" prop="name" required>
-					<u-input v-model="model.name"></u-input>
+					<u-input v-model="store.name"></u-input>
 				</u-form-item>
 				<u-form-item label="电话" prop="phone" required>
-					<u-input v-model="model.phone"></u-input>
+					<u-input v-model="store.phone"></u-input>
 				</u-form-item>
 				<u-form-item label="门店地址" prop="address" required>
-					<u-input v-model="model.address"></u-input>
+					<u-input v-model="store.address"></u-input>
 				</u-form-item>
 				<u-form-item label="门店详情" prop="remark">
-					<u-input v-model="model.remark"></u-input>
+					<u-input v-model="store.remark"></u-input>
 				</u-form-item>
 				<u-form-item label="wifi" prop="wifi">
-					<u-input v-model="model.wifi"></u-input>
+					<u-input v-model="store.wifi"></u-input>
 				</u-form-item>
 				<u-form-item label="提前预约天数" prop="preDays">
-					<u-input v-model="model.preDays"></u-input>
+					<u-input v-model="store.preDays"></u-input>
 				</u-form-item>
 				<u-form-item label="经度" prop="longitude" required>
-					<u-input v-model="model.longitude"></u-input>
+					<u-input v-model="store.longitude"></u-input>
 				</u-form-item>
 				<u-form-item label="纬度" prop="latitude" required>
-					<u-input v-model="model.latitude"></u-input>
+					<u-input v-model="store.latitude"></u-input>
 				</u-form-item>
 				<u-form-item label="门店图片" prop="logo">
-					<uo-image-input v-model="model.logo"></uo-image-input>
+					<uo-image-input v-model="store.logo"></uo-image-input>
 				</u-form-item>
 				<u-form-item label="门店状态" prop="status">
-					<uo-select :options="statusOptions" v-model="model.status"></uo-select>
+					<uo-select :options="statusOptions" v-model="store.status"></uo-select>
 				</u-form-item>
 			</u-form>
 		</view>
@@ -47,68 +47,77 @@
 	export default {
 		data() {
 			return {
-				model: {
+				store: {
 					name: '店铺名称',
+					phone: '',
+					address: '',
+					remark: '',
+					wifi: '',
+					preDays: 0,
 					logo: '',
-					status: 1
+					status: 0
 				},
-				isShow:false,
-				store:[],
 				rules: {
 					name: {
 						required: true,
 						message: '请输入门店名称',
 						trigger: ['blur', 'change']
-					}
+					},
+					// status: {
+					// 	required: true,
+					// 	message: '请选择门店状态',
+					// 	trigger: ['blur', 'change']
+					// },
+					longitude: {
+						required: true,
+						message: '请输入门店经度',
+						trigger: ['blur', 'change']
+					},
+					latitude: {
+						required: true,
+						message: '请输入门店纬度',
+						trigger: ['blur', 'change']
+					},
 				},
-				statusOptions: [{name: '状态1', value: 1},{name: '状态2', value: 2},{name: '状态3', value: 3}]
+				statusOptions: [{name: '启用', value: 0},{name: '停用', value: 1}]
 			}
 		},
 		onLoad(option) {
-			console.log(this.store)
-			if(option.id){
-				
+			if (option.id) {
+				this.store.id = option.id;
+				this.$api.getStore(this.store.id).then(res => {
+					this.store = res;
+				})
 			}
 		},
 		onReady() {
 			this.$refs.form.setRules(this.rules)
 		},
 		methods: {
+			getStore(id){
+				this.$api.getStore(id).then(res=>{
+					this.store = res
+				})
+			},
 			onConfirmClick(){
-				console.log(this.model)
-				this.$api.updateStoreInfo(this.model).then(res=>{
-					this.$u.toast('保存成功')
-					this.isShow=false
-					//this.getOpenerEventChannel().emit('refresh')
-					//uni.navigateBack()
+				this.$refs.form.validate().then(res=>{
+					if(this.store.id){
+						this.$api.updateStoreInfo(this.store).then(this.onSuccess)
+					}else{
+						//this.$api.addRoom(this.store).then(this.onSuccess)
+					}
 				}).catch(res=>{
-					console.log(res)
 					this.$u.toast('请完善门店信息')
 				})
-				
-				// this.$refs.form.validate().then(res=>{
-				// 	debugger
-				// 	//保存
-				// 	this.$api.updateStoreInfo(this.model).then(res=>{
-				// 		this.$u.toast('保存成功')
-				// 		this.isShow=false
-				// 	})
-				// 	this.getOpenerEventChannel().emit('refresh')
-				// 	uni.navigateBack()
-
-				// }).catch(res=>{
-				// 	this.$u.toast('请完善门店信息')
-				// })
+			},
+			onSuccess(){
+				this.$u.toast('保存成功')
+				this.getOpenerEventChannel().emit('refresh')
+				uni.navigateBack()
 			},
 			onCancelClick(){
-				this.isShow=false
+				uni.navigateBack()
 			},
-			switchShow(val,data){
-				if(val){
-					this.model=data
-				}
-				this.isShow=val
-			}
 		}
 	}
 </script>
