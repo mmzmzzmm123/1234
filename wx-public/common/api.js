@@ -185,6 +185,9 @@ const api = {
 	},
 	addRoomOrder(params){
 		return post('office/roomorder/order4Guest', params)
+	},
+	getStoreCrewList(params){
+		return get('office/cleanrecord/h5list', params)
 	}
 }
 const install = (Vue, options) => {

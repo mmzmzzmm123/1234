@@ -54,7 +54,7 @@
 					<image class="menu__item__icon" src="/static/icon/shebei.png"></image>
 					<view>设备管理</view>
 				</navigator>
-				<navigator class="menu__item" @click="comingSoon">
+				<navigator class="menu__item"  url="../crew/index">
 					<image class="menu__item__icon" src="/static/icon/yuangong.png"></image>
 					<view>员工管理</view>
 				</navigator>
