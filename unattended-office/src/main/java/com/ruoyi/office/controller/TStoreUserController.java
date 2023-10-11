@@ -2,6 +2,14 @@ package com.ruoyi.office.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.office.domain.vo.StoreUserVo;
+import com.ruoyi.system.mapper.SysRoleMapper;
+import com.ruoyi.system.service.ISysRoleService;
+import com.ruoyi.system.service.ISysUserService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,14 +31,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 商家店铺用户Controller
- * 
+ *
  * @author ruoyi
  * @date 2023-10-11
  */
 @RestController
 @RequestMapping("/office/storeuser")
-public class TStoreUserController extends BaseController
-{
+public class TStoreUserController extends BaseController {
     @Autowired
     private ITStoreUserService tStoreUserService;
 
@@ -39,10 +46,21 @@ public class TStoreUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:storeuser:list')")
     @GetMapping("/list")
-    public TableDataInfo list(TStoreUser tStoreUser)
-    {
+    public TableDataInfo list(TStoreUser tStoreUser) {
         startPage();
         List<TStoreUser> list = tStoreUserService.selectTStoreUserList(tStoreUser);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询商家店铺用户列表
+     */
+    @PreAuthorize("@ss.hasPermi('office:storeuser:list')")
+    @GetMapping("/h5list")
+    public TableDataInfo h5list(TStoreUser tStoreUser) {
+        startPage();
+        List<StoreUserVo> list = tStoreUserService.selectTStoreUserH5listList(tStoreUser);
+
         return getDataTable(list);
     }
 
@@ -52,21 +70,38 @@ public class TStoreUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:storeuser:export')")
     @Log(title = "商家店铺用户", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, TStoreUser tStoreUser)
-    {
+    public void export(HttpServletResponse response, TStoreUser tStoreUser) {
         List<TStoreUser> list = tStoreUserService.selectTStoreUserList(tStoreUser);
         ExcelUtil<TStoreUser> util = new ExcelUtil<TStoreUser>(TStoreUser.class);
         util.exportExcel(response, list, "商家店铺用户数据");
     }
+
+    @Autowired
+    ISysUserService userService;
+    @Autowired
+    SysRoleMapper roleMapper;
+    @Autowired
+    ISysRoleService roleService;
 
     /**
      * 获取商家店铺用户详细信息
      */
     @PreAuthorize("@ss.hasPermi('office:storeuser:query')")
     @GetMapping(value = "/{id}")
-    public AjaxResult getInfo(@PathVariable("id") Long id)
-    {
-        return success(tStoreUserService.selectTStoreUserById(id));
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
+        final TStoreUser storeUser = tStoreUserService.selectTStoreUserById(id);
+        SysUser user = userService.selectUserById(storeUser.getUserId());
+        StoreUserVo vo = new StoreUserVo();
+        BeanUtils.copyProperties(user, vo);
+        List<SysRole> userRoles = roleService.selectUserRolesByUserId(storeUser.getUserId());
+        StringBuilder roles = new StringBuilder();
+        for (SysRole role : userRoles) {
+            roles.append(",").append(role.getRoleId());
+        }
+        vo.setRoleName(roles.substring(1));
+        vo.setStoreId(storeUser.getStoreId());
+
+        return success(vo);
     }
 
     /**
@@ -75,8 +110,7 @@ public class TStoreUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:storeuser:add')")
     @Log(title = "商家店铺用户", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody TStoreUser tStoreUser)
-    {
+    public AjaxResult add(@RequestBody StoreUserVo tStoreUser) {
         return toAjax(tStoreUserService.insertTStoreUser(tStoreUser));
     }
 
@@ -86,8 +120,7 @@ public class TStoreUserController extends BaseController
     @PreAuthorize("@ss.hasPermi('office:storeuser:edit')")
     @Log(title = "商家店铺用户", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody TStoreUser tStoreUser)
-    {
+    public AjaxResult edit(@RequestBody StoreUserVo tStoreUser) {
         return toAjax(tStoreUserService.updateTStoreUser(tStoreUser));
     }
 
@@ -96,9 +129,8 @@ public class TStoreUserController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('office:storeuser:remove')")
     @Log(title = "商家店铺用户", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{ids}")
-    public AjaxResult remove(@PathVariable Long[] ids)
-    {
+    @DeleteMapping("/{ids}")
+    public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tStoreUserService.deleteTStoreUserByIds(ids));
     }
 }

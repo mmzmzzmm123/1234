@@ -5,6 +5,7 @@ import java.util.List;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 import com.ruoyi.office.domain.TStoreUser;
+import com.ruoyi.office.domain.vo.StoreUserVo;
 
 /**
  * 商家店铺用户Mapper接口
@@ -60,4 +61,6 @@ public interface TStoreUserMapper extends BaseMapper<TStoreUser> {
      * @return 结果
      */
     public int deleteTStoreUserByIds(Long[] ids);
+
+    List<StoreUserVo> selectTStoreUserH5listList(TStoreUser tStoreUser);
 }

@@ -6,12 +6,14 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysDictData;
+import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.vo.*;
 import com.ruoyi.office.service.*;
+import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -242,5 +244,21 @@ public class MerchantController extends BaseController {
 
         return AjaxResult.success();
     }
+
+    @Autowired
+    ISysRoleService roleService;
+
+    /**
+     * h5添加员工时，员工角色列表
+     */
+    @ApiOperation("h5添加员工时，员工角色列表")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
+    @GetMapping("/role/list")
+    public TableDataInfo h5Rolelist(TStore tStore) {
+        List<SysRole> list = roleService.selectRoleWithNoscope();
+        list = list.stream().filter(x -> "h5".equalsIgnoreCase(x.getRemark())).collect(Collectors.toList());
+        return getDataTable(list);
+    }
+
 
 }

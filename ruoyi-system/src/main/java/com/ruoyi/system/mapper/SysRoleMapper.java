@@ -104,4 +104,6 @@ public interface SysRoleMapper
      * @return 结果
      */
     public int deleteRoleByIds(Long[] roleIds);
+
+    List<SysRole> selectRoleWithNoscope();
 }

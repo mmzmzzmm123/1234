@@ -170,4 +170,8 @@ public interface ISysRoleService
      * @return 结果
      */
     public int insertAuthUsers(Long roleId, Long[] userIds);
+
+    List<SysRole> selectUserRolesByUserId(Long userId);
+
+    List<SysRole> selectRoleWithNoscope();
 }
