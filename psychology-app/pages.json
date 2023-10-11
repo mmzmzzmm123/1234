@@ -81,6 +81,13 @@
       }
     },
     {
+      "path": "pages/evaluation/sasResult",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "壹加壹心理"
+      }
+    },
+    {
       "path": "pages/evaluation/mbtiResult",
       "style": {
         "navigationStyle": "custom",

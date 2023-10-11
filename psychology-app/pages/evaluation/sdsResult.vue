@@ -26,9 +26,7 @@
       </view>
     </view>
     <view class="block-1">
-      <view class="btn-block">
-        <view class="btn-text">得分解读</view>
-      </view>
+      <block-header title="得分解读"/>
       <text class="understand-top">综合</text>
       <view class="understand-range">
         <view class="understand-range-block" :style="{ top: (percentage-10) + '%' }">
@@ -36,26 +34,16 @@
           <view class="understand-range-item"></view>
         </view>
       </view>
-      <text class="understand-down">{{ report.order.gaugeType === 4 ? '抑郁表现' : '焦虑表现' }}</text>
+      <text class="understand-down">抑郁表现</text>
       <text class="understand-desc">{{ report.setting.memo3 }}</text>
     </view>
     <view class="block-1">
-      <view class="btn-block">
-        <view class="btn-text">{{ report.order.gaugeType === 4 ? '抑郁表现' : '焦虑表现' }}</view>
-      </view>
-      <view class="gloomy-range">
-        <text class="gloomy-range-down">低</text>
-        <view class="gloomy-pro">
-          <view class="gloomy-progress" :style="{ width: percentage + '%' }"></view>
-        </view>
-        <text class="gloomy-range-top">高</text>
-      </view>
+      <block-header title="抑郁表现"/>
+      <range lintHeight="32upx" proBg="#FF703F" :percentage="percentage" />
       <text class="gloomy-desc">{{ report.setting.memo4 }}</text>
     </view>
     <view class="block-1">
-      <view class="btn-block">
-        <view class="btn-text">您的得分建议</view>
-      </view>
+      <block-header title="您的得分建议"/>
       <view class="img-box" v-html="report.setting.result"/>
     </view>
 
@@ -70,12 +58,16 @@
 import utils from "@/utils/common";
 import loginServer from '@/server/login'
 import serve from '@/server/evaluation/question'
+import range from '@/components/common/range'
+import blockHeader from '@/components/common/blockHeader'
 import recommend from '@/components/consult/recommend'
 import circularProgress from '@/components/circular-progress/circular-progress'
 
 export default {
   components: {
+    range,
     recommend,
+    blockHeader,
     circularProgress
   },
   data() {
@@ -273,21 +265,6 @@ export default {
   margin: 32upx;
   padding-bottom: 32upx;
 }
-.btn-block {
-  border-radius: 20upx;
-  border: 2px solid #ff703f;
-  margin-top: 40upx;
-  padding: 16upx 52upx;
-  text-align: center;
-}
-.btn-text {
-  height: 40upx;
-  color: rgba(255, 112, 63, 1);
-  font-size: 36upx;
-  font-family: PingFangSC-Semibold;
-  font-weight: 600;
-  border-bottom: 17upx solid #ffe4db;
-}
 
 .memo1 {
   color: rgba(51,51,51,1);
@@ -352,50 +329,6 @@ export default {
   text-align: justify;
   line-height: 45upx;
   margin-top: 80upx;
-}
-.gloomy-range {
-  width: 622upx;
-  height: 40upx;
-  flex-direction: row;
-  display: flex;
-  justify-content: space-between;
-  margin-top: 76upx;
-}
-.gloomy-range-down {
-  width: 28upx;
-  height: 40upx;
-  color: rgba(119,119,119,1);
-  font-size: 28upx;
-  font-family: PingFangSC-Regular;
-  text-align: justify;
-  line-height: 40upx;
-}
-.gloomy-pro {
-  background-color: rgba(255,228,219,1.000000);
-  border-radius: 16upx;
-  height: 32upx;
-  display: flex;
-  flex-direction: column;
-  width: 518upx;
-  margin: 4upx 0 0 24upx;
-}
-.gloomy-progress {
-  background-color: rgba(255,112,63,1.000000);
-  border-radius: 16upx;
-  width: 66upx;
-  height: 32upx;
-  display: flex;
-  flex-direction: column;
-}
-.gloomy-range-top {
-  width: 28upx;
-  height: 40upx;
-  color: rgba(119,119,119,1);
-  font-size: 28upx;
-  font-family: PingFangSC-Regular;
-  text-align: justify;
-  line-height: 40upx;
-  margin-left: 24upx;
 }
 .gloomy-desc {
   width: 622upx;

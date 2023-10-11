@@ -68,15 +68,17 @@
       async toResult(order) {
         let result = await questionServer.setResult(order.id);
         if (result.code == 200) {
-          if ([4, 5].includes(order.gaugeType)) {
-            return  uni.navigateTo({
-              url: "/pages/evaluation/sdsResult?orderId=" + order.orderId,
-            });
-          }
-
           if (order.gaugeType === 3) {
             return  uni.navigateTo({
               url: "/pages/evaluation/mbtiResult?orderId=" + order.orderId,
+            });
+          } else if (order.gaugeType === 4) {
+            return  uni.navigateTo({
+              url: "/pages/evaluation/sdsResult?orderId=" + order.orderId,
+            });
+          } else if (order.gaugeType === 5) {
+            return  uni.navigateTo({
+              url: "/pages/evaluation/sasResult?orderId=" + order.orderId,
             });
           }
 

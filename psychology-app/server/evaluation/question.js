@@ -16,13 +16,8 @@ export default {
     }
   },
   //提交答案
-  setAnswer: async (gaugeId, questionsId, questionsOptionsIdList, orderId) => {
-    let res = await httprequest.post("/app/gauge/result", {
-      gaugeId,
-      questionsId,
-      questionsOptionsIdList,
-      orderId,
-    });
+  setAnswer: async (data) => {
+    let res = await httprequest.post("/app/gauge/result", data);
     if (res.code == 200) {
       return res;
     } else {

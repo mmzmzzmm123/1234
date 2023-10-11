@@ -22,6 +22,9 @@ public class PsyQuestionVO {
     @ApiModelProperty("问题描述")
     private String title;
 
+    @ApiModelProperty("问题纬度")
+    private String lat;
+
     @ApiModelProperty("问题序号")
     private Integer no;
 

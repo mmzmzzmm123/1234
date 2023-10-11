@@ -97,6 +97,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                     .questionsOptionsId(item.getId())
                     .score(item.getValue())
                     .lat(item.getLat())
+                    .questionsLat(psyGaugeQuestionsResult.getQuestionsLat())
                     .userId(userId)
                     .orderId(psyGaugeQuestionsResult.getOrderId())
                     .build();
@@ -161,7 +162,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                 if (GaugeConstant.GAUGE_COMPUTE_4 == order.getGaugeType()) {
                     score = (int) Math.round(score * GaugeConstant.GAUGE_COMPUTE_SDS);
                 } else if (GaugeConstant.GAUGE_COMPUTE_5 == order.getGaugeType()) {
-                    score = (int) Math.round(score * GaugeConstant.GAUGE_COMPUTE_SAS);
+                    score = (int) Math.round(1.0 * score / order.getGaugeNum()  * 25);
                 }
                 sum = score + "";
                 break;

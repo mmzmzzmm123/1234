@@ -257,8 +257,15 @@ export default {
       // }
 
       this.checkNull = item.answers.length === 0;
+      const data = {
+        gaugeId: this.productId,
+        questionsId: item.id,
+        questionsLat: item.lat,
+        questionsOptionsIdList: item.answers,
+        orderId: this.orderId,
+      }
 
-      let res = await questionServer.setAnswer(this.productId, item.id, item.answers, this.orderId);
+      let res = await questionServer.setAnswer(data);
       if (res.code === 200) {
         this.getLast()
         this.scrollTo()

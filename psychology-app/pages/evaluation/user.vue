@@ -97,7 +97,6 @@
 import utils, { clientTypeObj } from "@/utils/common";
 import noData from "@/components/evaluation/noData";
 import userServer from "@/server/evaluation/user";
-import productServer from "@/server/evaluation/product.js"
 import {
   uniPopup,
   uniPopupDialog
@@ -139,7 +138,7 @@ export default {
         if (!order.finishedNum || !order.gaugeNum) {
           return "0%"
         }
-        return (order.finishedNum / order.gaugeNum).toFixed(2) * 100 + "%"
+        return (order.finishedNum / order.gaugeNum * 100).toFixed(0) + "%"
       }
     }
   },
@@ -156,13 +155,6 @@ export default {
         userId: this.userInfo.userId,
         gaugeStatus: 2
       });
-      this.orderList.forEach(async (item, index) => {
-        let { gaugeNum, finishedNum } = await productServer.getProductInfo(item.gaugeId)
-        item.gaugeNum = gaugeNum
-        item.finishedNum = finishedNum
-        this.$set(this.orderList, index, item);
-      })
-      console.log(this.orderList)
       this.reportNum = await userServer.getOrderListNum(this.userInfo.userId);
     }
   },

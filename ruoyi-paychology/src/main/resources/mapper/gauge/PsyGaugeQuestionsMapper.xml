@@ -14,11 +14,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
         <result property="remark"    column="remark"    />
+        <result property="lat"    column="lat"    />
         <result property="selectType"    column="select_type"    />
     </resultMap>
 
     <sql id="selectPsyGaugeQuestionsVo">
-        select id, gauge_id, title, select_type, no, create_by, create_time, update_by, update_time, remark from psy_gauge_questions
+        select id, gauge_id, title, select_type, no, create_by, create_time, update_by, update_time, remark,lat from psy_gauge_questions
     </sql>
 
     <select id="selectPsyGaugeQuestionsList" parameterType="com.ruoyi.gauge.domain.PsyGaugeQuestions" resultMap="PsyGaugeQuestionsResult">
@@ -47,6 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="remark != null">remark,</if>
+            <if test="lat != null">lat,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="gaugeId != null">#{gaugeId},</if>
@@ -57,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="lat != null">#{lat},</if>
          </trim>
     </insert>
 
@@ -72,6 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="selectType != null">select_type = #{selectType},</if>
+            <if test="lat != null">lat = #{lat},</if>
         </trim>
         where id = #{id}
     </update>
@@ -91,6 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <id property="id" column="questionId"></id>
         <result property="title" column="title"></result>
         <result property="no" column="no"></result>
+        <result property="lat" column="lat"></result>
         <result property="selectType" column="select_type"></result>
         <collection property="options" ofType="com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions">
             <id property="id" column="optionId"></id>
@@ -109,6 +114,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             ques.title,
             ques.`no`,
             ques.select_type,
+            ques.lat,
             opt.id as optionId,
             opt.gauge_questions_id as gaugeQuestionsId,
             opt.`name`,

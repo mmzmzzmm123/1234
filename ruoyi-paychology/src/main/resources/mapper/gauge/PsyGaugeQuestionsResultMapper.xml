@@ -9,6 +9,7 @@
         <result property="userId" column="user_id"/>
         <result property="gaugeId" column="gauge_id"/>
         <result property="questionsId" column="questions_id"/>
+        <result property="questionsLat" column="questions_lat"/>
         <result property="questionsOptionsId" column="questions_options_id"/>
         <result property="score" column="score"/>
         <result property="lat" column="lat"/>
@@ -16,7 +17,7 @@
     </resultMap>
 
     <sql id="selectPsyGaugeQuestionsResultVo">
-        select id, user_id, gauge_id, questions_id, questions_options_id, score, lat, create_time
+        select id, user_id, gauge_id, questions_id, questions_options_id, score, lat, create_time, questions_lat
         from psy_gauge_questions_result
     </sql>
 
@@ -46,6 +47,7 @@
             <if test="userId != null">user_id,</if>
             <if test="gaugeId != null">gauge_id,</if>
             <if test="questionsId != null">questions_id,</if>
+            <if test="questionsLat != null">questions_lat,</if>
             <if test="questionsOptionsId != null">questions_options_id,</if>
             <if test="score != null">score,</if>
             <if test="lat != null">lat,</if>
@@ -55,6 +57,7 @@
             <if test="userId != null">#{userId},</if>
             <if test="gaugeId != null">#{gaugeId},</if>
             <if test="questionsId != null">#{questionsId},</if>
+            <if test="questionsLat != null">#{questionsLat},</if>
             <if test="questionsOptionsId != null">#{questionsOptionsId},</if>
             <if test="score != null">#{score},</if>
             <if test="lat != null">#{lat},</if>
@@ -68,6 +71,7 @@
             <if test="userId != null">user_id = #{userId},</if>
             <if test="gaugeId != null">gauge_id = #{gaugeId},</if>
             <if test="questionsId != null">questions_id = #{questionsId},</if>
+            <if test="questionsLat != null">questions_lat = #{questionsLat},</if>
             <if test="questionsOptionsId != null">questions_options_id = #{questionsOptionsId},</if>
             <if test="score != null">score = #{score},</if>
             <if test="lat != null">lat = #{lat},</if>
@@ -94,6 +98,7 @@
         (user_id,
         gauge_id,
         questions_id,
+        questions_lat,
         questions_options_id,
         score,
         lat,
@@ -101,7 +106,7 @@
         order_id)
         values
         <foreach collection="list" item="item" separator=",">
-            (#{item.userId},#{item.gaugeId},#{item.questionsId},#{item.questionsOptionsId},#{item.score},#{item.lat},#{item.createTime},#{item.orderId})
+            (#{item.userId},#{item.gaugeId},#{item.questionsId},#{item.questionsLat},#{item.questionsOptionsId},#{item.score},#{item.lat},#{item.createTime},#{item.orderId})
         </foreach>
     </insert>
 
@@ -141,6 +146,7 @@
         insert into psy_gauge_questions_result
         (user_id,
         questions_id,
+        questions_lat,
         questions_options_id,
         score,
         lat,
@@ -148,7 +154,7 @@
         order_id)
         values
         <foreach collection="list" item="item" separator=",">
-            (#{item.userId},#{item.questionId},#{item.optionId},#{item.value},#{item.lat},#{item.createTime},#{item.orderId})
+            (#{item.userId},#{item.questionId},#{item.questionLat},#{item.optionId},#{item.value},#{item.lat},#{item.createTime},#{item.orderId})
         </foreach>
     </insert>
 

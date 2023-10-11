@@ -46,7 +46,7 @@
     <sql id="selectPsyOrder">
         select po.*,
                gauge.gauge_des as gaugeDes, gauge.type as gaugeType, gauge.title as gaugeTitle,gauge.head_picture,
-               u.name as userName
+               u.name as userName,gauge.gauge_num
         from psy_order po
                  left join psy_gauge gauge ON po.gauge_id = gauge.id
                  left join psy_user u ON po.user_id = u.id
@@ -123,10 +123,10 @@
     </delete>
 
     <select id="queryOrderPage" resultType="com.ruoyi.gauge.domain.PsyOrder">
-        select po.id, po.order_id as orderId, po.gauge_id as gaugeId, gauge.title as gaugeTitle, po.order_status as
-        orderStatus,
-        po.amount, po.gauge_status as gaugeStatus, po.create_time as createTime, po.create_by as createBy
-        ,gauge.gauge_des as gaugeDes, gauge.type as gaugeType
+        select po.id, po.order_id as orderId, po.gauge_id as gaugeId, gauge.title as gaugeTitle,
+               po.order_status as orderStatus, po.amount, po.gauge_status as gaugeStatus, po.create_time as createTime, po.create_by as createBy,
+               gauge.gauge_des as gaugeDes, gauge.type as gaugeType, gauge.gauge_num,
+               (select count(id) from psy_gauge_questions_result where order_id = po.id) as finishedNum
         from psy_order po left join psy_gauge gauge ON po.gauge_id = gauge.id
         <where>
             <if test="orderId != null  and orderId != ''">and po.order_id = #{orderId}</if>

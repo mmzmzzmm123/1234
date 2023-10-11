@@ -65,6 +65,8 @@ public class PsyOrder extends BaseEntity
      */
     private String gaugeDes;
     private Integer gaugeType;
+    private Integer gaugeNum;
+    private Integer finishedNum;
     private String headPicture;
 
     /**

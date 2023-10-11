@@ -59,6 +59,15 @@
                 <el-radio-button v-for="(selectTypeOption, index) in selectTypeOptions" :key="index" :label="selectTypeOption.value">{{selectTypeOption.label}}</el-radio-button>
               </el-radio-group>
             </div>
+            <el-divider content-position="left">选择纬度</el-divider>
+            <el-select @change="updateQuestion(item)" size="small" style="width: 150px" v-model="item.lat" placeholder="纬度" clearable>
+              <el-option
+                v-for="item in questLat"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
             </template>
             <template>
 
@@ -117,6 +126,7 @@ export default {
   },
   data() {
     return {
+      questLat: this.$constants.questLat,
       gaugeMbti: this.$constants.gaugeMbti,
       gaugeMbtiRes: this.$constants.gaugeMbtiRes,
       gaugeQuestionList: [],

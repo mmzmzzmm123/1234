@@ -18,96 +18,36 @@
       </view>
     </view>
     <view class="block-1">
-      <view class="btn-block">
-        <view class="btn-text">综合维度解析</view>
-      </view>
-      <view class="range">
-        <text>外向（E)</text>
-        <view class="range-pro bg1">
-          <view class="range-progress prog1" :style="{ width: perList[0] }"></view>
-        </view>
-        <text>内向（I)</text>
-      </view>
-      <view class="range">
-        <text>实感（S)</text>
-        <view class="range-pro bg2">
-          <view class="range-progress prog2" :style="{ width: perList[1] }"></view>
-        </view>
-        <text>直觉（N)</text>
-      </view>
-      <view class="range">
-        <text>思维（T)</text>
-        <view class="range-pro bg3">
-          <view class="range-progress prog3" :style="{ width: perList[2] }"></view>
-        </view>
-        <text>情感（F)</text>
-      </view>
-      <view class="range">
-        <text>判断（J)</text>
-        <view class="range-pro bg4">
-          <view class="range-progress prog4" :style="{ width: perList[3] }"></view>
-        </view>
-        <text>知觉（P)</text>
-      </view>
+      <block-header title="综合维度解析"/>
+      <range down="外向（E)" high="内向（I)" lineWidth="348upx" :percentage="perList[0]" />
+      <range down="实感（S)" high="直觉（N)" lineBg="#D4E3FF" proBg="#7596DB"  lineWidth="348upx" :percentage="perList[1]" />
+      <range down="思维（T)" high="情感（F)" lineBg="#FFEDB2" proBg="#F8CF67"  lineWidth="348upx" :percentage="perList[2]" />
+      <range down="判断（J)" high="知觉（P)" lineBg="#C9E8C9" proBg="#96D18D"  lineWidth="348upx" :percentage="perList[3]" />
       <text class="desc-1">{{ report.setting.memo3 }}</text>
     </view>
     <view class="block-1">
-      <view class="btn-block">
-        <view class="btn-text">精力支配</view>
-      </view>
-      <view class="range">
-        <text>外向（E)</text>
-        <view class="range-pro bg1">
-          <view class="range-progress prog1" :style="{ width: perList[0] }"></view>
-        </view>
-        <text>内向（I)</text>
-      </view>
+      <block-header title="精力支配"/>
+      <range down="外向（E)" high="内向（I)" lineWidth="348upx" :percentage="perList[0]" />
       <text class="desc-1">{{ report.setting.memo4 }}</text>
     </view>
     <view class="block-1">
-      <view class="btn-block">
-        <view class="btn-text">认识世界</view>
-      </view>
-      <view class="range">
-        <text>实感（S)</text>
-        <view class="range-pro bg2">
-          <view class="range-progress prog2" :style="{ width: perList[1] }"></view>
-        </view>
-        <text>直觉（N)</text>
-      </view>
+      <block-header title="认识世界"/>
+      <range down="实感（S)" high="直觉（N)" lineBg="#D4E3FF" proBg="#7596DB"  lineWidth="348upx" :percentage="perList[1]" />
       <text class="desc-1">{{ report.setting.memo5 }}</text>
     </view>
     <view class="block-1">
-      <view class="btn-block">
-        <view class="btn-text">判断事物</view>
-      </view>
-      <view class="range">
-        <text>思维（T)</text>
-        <view class="range-pro bg3">
-          <view class="range-progress prog3" :style="{ width: perList[2] }"></view>
-        </view>
-        <text>情感（F)</text>
-      </view>
+      <block-header title="判断事物"/>
+      <range down="思维（T)" high="情感（F)" lineBg="#FFEDB2" proBg="#F8CF67"  lineWidth="348upx" :percentage="perList[2]" />
       <text class="desc-1">{{ report.setting.memo6 }}</text>
     </view>
     <view class="block-1">
-      <view class="btn-block">
-        <view class="btn-text">生活态度</view>
-      </view>
-      <view class="range">
-        <text>判断（J)</text>
-        <view class="range-pro bg4">
-          <view class="range-progress prog4" :style="{ width: perList[3] }"></view>
-        </view>
-        <text>知觉（P)</text>
-      </view>
+      <block-header title="生活态度"/>
+      <range down="判断（J)" high="知觉（P)" lineBg="#C9E8C9" proBg="#96D18D"  lineWidth="348upx" :percentage="perList[3]" />
       <text class="desc-1">{{ report.setting.memo7 }}</text>
     </view>
 
     <view class="block-1">
-      <view class="btn-block">
-        <view class="btn-text">综合维度建议</view>
-      </view>
+      <block-header title="综合维度建议"/>
       <view class="img-box" v-html="report.setting.result"/>
     </view>
 
@@ -123,11 +63,15 @@
 import utils from "@/utils/common";
 import loginServer from '@/server/login'
 import serve from '@/server/evaluation/question'
+import range from '@/components/common/range'
 import recommend from '@/components/consult/recommend'
+import blockHeader from '@/components/common/blockHeader'
 
 export default {
   components: {
-    recommend
+    range,
+    recommend,
+    blockHeader
   },
   data() {
     return {
@@ -329,85 +273,6 @@ export default {
   font-family: PingFangSC-Regular;
   text-align: justify;
   margin-top: 32upx;
-}
-
-.range {
-  width: 622upx;
-  height: 40upx;
-  flex-direction: row;
-  display: flex;
-  align-items: center;
-  margin-top: 32upx;
-  color: rgba(119, 119, 119, 1);
-  font-size: 28upx;
-
-  .range-pro {
-    display: flex;
-    flex-direction: column;
-    margin: 0 24upx;
-    width: 348upx;
-    height: 24upx;
-    background: #FFE4DB;
-    border-radius: 16upx;
-  }
-
-  .range-progress {
-    background-color: rgba(255, 112, 63, 1.000000);
-    border-radius: 16upx;
-    width: 66upx;
-    height: 24upx;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .bg1 {
-    background: #FFE4DB;
-  }
-
-  .prog1 {
-    background: #FF8960;
-  }
-
-  .bg2 {
-    background: #D4E3FF;
-  }
-
-  .prog2 {
-    background: #7596DB;
-  }
-
-  .bg3 {
-    background: #FFEDB2;
-  }
-
-  .prog3 {
-    background: #F8CF67;
-  }
-
-  .bg4 {
-    background: #C9E8C9;
-  }
-
-  .prog4 {
-    background: #96D18D;
-  }
-}
-
-.btn-block {
-  border-radius: 20upx;
-  border: 2px solid #ff703f;
-  margin-top: 40upx;
-  padding: 16upx 52upx;
-  text-align: center;
-}
-
-.btn-text {
-  height: 40upx;
-  color: rgba(255, 112, 63, 1);
-  font-size: 36upx;
-  font-family: PingFangSC-Semibold;
-  font-weight: 600;
-  border-bottom: 17upx solid #ffe4db;
 }
 
 .desc-1 {

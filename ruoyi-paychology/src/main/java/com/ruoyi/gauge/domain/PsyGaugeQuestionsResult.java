@@ -45,6 +45,8 @@ public class PsyGaugeQuestionsResult extends BaseEntity
 
     private Integer questionsOptionsId;
 
+    private Integer questionsLat;
+
     @Excel(name = "纬度")
     private String lat;
 
@@ -68,6 +70,7 @@ public class PsyGaugeQuestionsResult extends BaseEntity
             .append("score", getScore())
             .append("createTime", getCreateTime())
             .append("lat", getLat())
+            .append("questionsLat", getQuestionsLat())
             .toString();
     }
 }

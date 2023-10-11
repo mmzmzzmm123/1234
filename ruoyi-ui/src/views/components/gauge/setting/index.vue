@@ -30,7 +30,7 @@
 <!--            <el-form-item label="建议">-->
 <!--              <image-upload v-model="props.row.proposal" @input="modifySetting(props.row)" :extraData="extraData"/>-->
 <!--            </el-form-item>-->
-            <template v-if="[4, 5].includes(gaugeType)">
+            <template v-if="gaugeType === 4">
               <el-form-item label="测评结果">
                 <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo1" placeholder="测评结果" />
               </el-form-item>
@@ -40,14 +40,28 @@
               <el-form-item label="得分解读">
                 <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo3" placeholder="得分解读" />
               </el-form-item>
-              <el-form-item :label="gaugeType === 4 ? '抑郁表现' : '焦虑表现'">
-                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo4" :placeholder="gaugeType === 4 ? '抑郁表现' : '焦虑表现'" />
+              <el-form-item label="抑郁表现">
+                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo4" placeholder="抑郁表现" />
               </el-form-item>
               <el-form-item label="得分建议">
                 <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192" :height="300"/>
               </el-form-item>
             </template>
-            <template v-if="gaugeType === 3">
+            <template v-else-if="gaugeType === 5">
+              <el-form-item label="测评结果">
+                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo1" placeholder="测评结果" />
+              </el-form-item>
+              <el-form-item label="结果描述">
+                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo2" placeholder="结果描述" />
+              </el-form-item>
+              <el-form-item label="得分解读">
+                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo3" placeholder="得分解读" />
+              </el-form-item>
+              <el-form-item label="得分建议">
+                <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192" :height="300"/>
+              </el-form-item>
+            </template>
+            <template v-else-if="gaugeType === 3">
               <el-form-item label="结果标题">
                 <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo1" placeholder="结果标题" />
               </el-form-item>
