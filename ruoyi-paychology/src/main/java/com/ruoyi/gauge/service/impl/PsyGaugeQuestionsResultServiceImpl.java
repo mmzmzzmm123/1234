@@ -161,8 +161,6 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                 // SDS
                 if (GaugeConstant.GAUGE_COMPUTE_4 == order.getGaugeType()) {
                     score = (int) Math.round(score * GaugeConstant.GAUGE_COMPUTE_SDS);
-                } else if (GaugeConstant.GAUGE_COMPUTE_5 == order.getGaugeType()) {
-                    score = (int) Math.round(1.0 * score / order.getGaugeNum()  * 25);
                 }
                 sum = score + "";
                 break;
@@ -255,6 +253,13 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
 
         if (GaugeConstant.GAUGE_COMPUTE_3 == psyOrder.getGaugeType()) {
             vo.setLats(psyGaugeQuestionsResultMapper.getQuestionLat(paramMap));
+        }
+
+        if (GaugeConstant.GAUGE_COMPUTE_5 == psyOrder.getGaugeType()) {
+            PsyGaugeQuestionsResult query = new PsyGaugeQuestionsResult();
+            query.setOrderId(psyOrder.getId());
+            query.setUserId(psyOrder.getUserId());
+            vo.setResults(selectPsyGaugeQuestionsResultList(query));
         }
 
         paramMap.put("score",psyOrder.getScore());

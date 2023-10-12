@@ -1,5 +1,6 @@
 package com.ruoyi.gauge.vo;
 
+import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
 import com.ruoyi.gauge.domain.PsyGaugeScoreSetting;
 import com.ruoyi.gauge.domain.PsyOrder;
 import lombok.Data;
@@ -16,5 +17,7 @@ public class GaugeReportVO implements Serializable {
     private PsyGaugeScoreSetting setting;
 
     private List<String> lats;
+
+    private List<PsyGaugeQuestionsResult> results;
 
 }

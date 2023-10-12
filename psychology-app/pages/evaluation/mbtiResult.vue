@@ -78,7 +78,7 @@ export default {
       orderId: null,
       userInfo: {},
       report: {},
-      perList: ['0%', '0%', '0%','0%'],
+      perList: [0, 0, 0, 0],
       lats: {E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0}
     }
   },
@@ -101,10 +101,10 @@ export default {
     }, Object.create(null));
 
     this.lats = Object.assign({}, this.lats, count);
-    this.perList[0] = this.lats.E === 0 ? '100%' : (this.lats.I * 100 / (this.lats.E + this.lats.I)).toFixed(0) + '%'
-    this.perList[1] = this.lats.S === 0 ? '100%' : (this.lats.N * 100 / (this.lats.S + this.lats.N)).toFixed(0) + '%'
-    this.perList[2] = this.lats.T === 0 ? '100%' : (this.lats.F * 100 / (this.lats.T + this.lats.F)).toFixed(0) + '%'
-    this.perList[3] = this.lats.J === 0 ? '100%' : (this.lats.P * 100 / (this.lats.J + this.lats.P)).toFixed(0) + '%'
+    this.perList[0] = this.lats.E === 0 ? 100 : (this.lats.I * 100 / (this.lats.E + this.lats.I)).toFixed(0)
+    this.perList[1] = this.lats.S === 0 ? 100 : (this.lats.N * 100 / (this.lats.S + this.lats.N)).toFixed(0)
+    this.perList[2] = this.lats.T === 0 ? 100 : (this.lats.F * 100 / (this.lats.T + this.lats.F)).toFixed(0)
+    this.perList[3] = this.lats.J === 0 ? 100 : (this.lats.P * 100 / (this.lats.J + this.lats.P)).toFixed(0)
 
     console.log(this.lats);
     console.log(this.perList);
