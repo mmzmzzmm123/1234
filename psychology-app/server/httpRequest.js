@@ -17,7 +17,7 @@ function tokenExpired(result) {
         let url = '/pages/consult/index'
         if (location.href.includes('course')) {
           url = '/pages/course/index'
-        } else if (location.href.includes('gauge')) {
+        } else if (location.href.includes('evaluation')) {
           url = '/pages/evaluation/index'
         }
 
