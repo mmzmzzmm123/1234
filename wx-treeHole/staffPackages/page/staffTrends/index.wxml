@@ -31,7 +31,7 @@
               </block>
               <!-- 视频 -->
               <block wx:if="{{item.videoUrl != null && item.videoUrl != ''}}">
-                <video id="video{{index}}" muted show-mute-btn play-btn-position="center" class="trendsVideo" src="{{item.videoUrl}}" data-index="{{index}}" bindplay="videoPlay" bindfullscreenchange="videoScreenChange"></video>
+                <video id="video{{index}}" muted enable-progress-gesture="false" show-mute-btn play-btn-position="center" class="trendsVideo" src="{{item.videoUrl}}" data-index="{{index}}" bindplay="videoPlay" bindfullscreenchange="videoScreenChange"></video>
               </block>
               <!-- 语音 -->
               <block wx:if="{{item.voiceUrl != null && item.voiceUrl != ''}}">

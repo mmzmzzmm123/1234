@@ -112,8 +112,8 @@
             ORDER BY if_top DESC
         </if>
         <if test="sortType != null">
-            <if test="showIfTop != null and showIfTop == 'Y'.toString()">,</if>
-            <if test="showIfTop == null or showIfTop == 'N'.toString()">ORDER BY</if>
+            <if test="showIfTop != null and showIfTop == 'Y'.toString()">, if_online DESC,</if>
+            <if test="showIfTop == null or showIfTop == 'N'.toString()">ORDER BY if_online DESC, </if>
             <if test="sortType == '0'.toString()">create_time desc</if>
             <if test="sortType == '1'.toString()">create_time asc</if>
             <if test="sortType == '2'.toString()">sort_num desc</if>
@@ -121,6 +121,14 @@
             <if test="sortType == '4'.toString()">staff_level desc</if>
             <if test="sortType == '5'.toString()">staff_level asc</if>
         </if>
+    </select>
+
+    <select id="getSortNumTopThreeOfBoyAndGirl" resultMap="StaffInfoResult">
+        SELECT * FROM (
+        SELECT *, RANK() OVER (PARTITION BY sex ORDER BY sort_num DESC) AS ranking
+        FROM `bus_staff_info`
+        ) AS ranked
+        WHERE ranking &lt;= 3;
     </select>
 
     <insert id="insertStaffInfo" parameterType="StaffInfo">
@@ -224,4 +232,6 @@
             #{userId}
         </foreach>
     </delete>
+
+
 </mapper>

@@ -452,4 +452,22 @@ public class ApiStaffService {
         log.info("获取店员总礼物数据：完成，返回数据：{}", voList);
         return voList;
     }
+
+    /**
+     * 周排名前三
+     *
+     * @return 结果
+     * */
+    public List<ApiStaffInfoVo> weeklyRankingTopThree() {
+        log.info("获取店员周排名前三：开始");
+        List<ApiStaffInfoVo> voList = new ArrayList<>();
+        List<StaffInfo> staffInfoList = staffInfoMapper.getSortNumTopThreeOfBoyAndGirl();
+        staffInfoList.forEach(item -> {
+            ApiStaffInfoVo vo = new ApiStaffInfoVo();
+            BeanUtils.copyBeanProp(vo, item);
+            voList.add(vo);
+        });
+        log.info("获取店员周排名前三：结束");
+        return voList;
+    }
 }

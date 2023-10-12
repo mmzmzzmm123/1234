@@ -37,9 +37,18 @@ Page({
   onLoad(options) {
     let that = this;
     wx.createSelectorQuery().selectAll('.bView').boundingClientRect(function (rect) {
+      let divHeight = rect[0].height;
+      wx.getSystemInfo({
+        success: function (res) {
+          let sysHeight = res.windowHeight;
+          if (divHeight != sysHeight) {
+            divHeight = sysHeight;
+          }
+        }
+      });
       that.setData({
         pWidth: rect[0].width,
-        pHeight: rect[0].height
+        pHeight: divHeight
       })
     }).exec();
     this.setData({
@@ -286,7 +295,7 @@ Page({
   /**
    * 前往充值页面
    */
-  toRecharge:function(){
+  toRecharge: function () {
     if (this.data.userInfo == null) {
       wx.showToast({
         title: '亲爱的，先登录哟',
@@ -316,7 +325,7 @@ Page({
   /**
    * 前往店员动态管理页
    */
-  toStaffTrends:function(){
+  toStaffTrends: function () {
     if (this.data.userInfo == null) {
       wx.showToast({
         title: '亲爱的，先登录哟',
@@ -326,6 +335,21 @@ Page({
     }
     wx.navigateTo({
       url: '../../staffPackages/page/staffTrends/index',
+    })
+  },
+  /**
+   * 前往店员订单页
+   */
+  toStaffOrder:function(){
+    if (this.data.userInfo == null) {
+      wx.showToast({
+        title: '亲爱的，先登录哟',
+        icon: "none"
+      })
+      return;
+    }
+    wx.navigateTo({
+      url: '../../staffPackages/page/staffOrder/index',
     })
   },
   /**
@@ -452,5 +476,90 @@ Page({
       title: '操作失败',
       icon: "none"
     })
+  },
+  /**
+   * 店员消息订阅
+   */
+  messageSubscription: function () {
+    wx.requestSubscribeMessage({
+      tmplIds: ['na2EJEzJi9jqzBVfrj6IC18r7fItQAnzQ-U4qn1RQ4o'],
+      success: function (res) {
+        if (res.na2EJEzJi9jqzBVfrj6IC18r7fItQAnzQ-U4qn1RQ4o == 'accept') {
+          wx.showToast({
+            title: '订阅成功',
+            icon: "success"
+          })
+        } else {
+          wx.showToast({
+            title: '订阅失败',
+            icon: "error"
+          })
+        }
+      }, complete: function (res) {
+        wx.showToast({
+          title: '订阅失败',
+          icon: "error"
+        })
+      }
+    })
+  },
+  /**
+   * 前往订单页
+   */
+  toOrderListPage:function(e){
+    wx.navigateTo({
+      url: '../../orderPackages/page/list/index?index='+e.currentTarget.dataset.index,
+    })
+  },
+  /**
+   * 滚动事件
+   */
+  scrollView: function (e) {
+    if (e.detail.scrollTop > this.data.showStateBarHeight && this.data.barThemeColor == null) {
+      this.setData({
+        barThemeColor: "linear-gradient(to right,#a79de0,#b7b0dd)"
+      })
+    }
+    if (this.data.showStateBarHeight > e.detail.scrollTop && this.data.barThemeColor != null) {
+      this.setData({
+        barThemeColor: null
+      })
+    }
+  },
+  /**
+   * 下拉刷新数据
+   */
+  refresh: function () {
+    let that = this;
+    setTimeout(function(){
+      that.setData({
+        refreshState: false
+      }, 2000)
+    })
+    this.loadUserInfo();
+    // 加载用户信息
+    this.setData({
+      userInfo: app.globalData.userInfo,
+      userLevelConfig: app.globalData.userLevelConfig
+    })
+    // 处理用户等级数据
+    this.handleUserLevelData();
+    // 请求用户关联数据
+    if (this.data.userInfo != null) {
+      let userId = this.data.userInfo.id;
+      // 加载点赞收藏数据
+      userApi.selectUserLikeData(null, this.selectUserLikeDataOnSuccess, null);
+      // 加载员工信息
+      staffApi.selectByUserId({ userId: userId }, null, this.selectStaffInfoOnSuccess, null);
+    }
+    // 服务数据
+    let serviceList = this.data.serviceList;
+    if (serviceList == null || serviceList.length <= 0) {
+      serviceInfoApi.select(null, this.loadServiceInfoOnSuccess, null);
+    } else {
+      this.setData({
+        serviceList: app.globalData.serviceList
+      })
+    }
   },
 })

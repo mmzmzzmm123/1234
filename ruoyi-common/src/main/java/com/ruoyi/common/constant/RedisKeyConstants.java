@@ -31,9 +31,18 @@ public class RedisKeyConstants {
      * 支付回调完成事件（防止重复消费）
      * */
     public static final String PAYMENT_PAY_SUCCESS = "payment_pay_success:";
+    /**
+     * 退款回调完成事件（防止重复消费）
+     * */
+    public static final String PAYMENT_REFUND_SUCCESS = "payment_refund_success:";
 
     /**
      * banner图数据
      * */
     public static final String APP_BANNER_DATA = "app_banner_data:";
+
+    /**
+     * 订单支付信息
+     * */
+    public static final String ORDER_PAY_INFO = "order_pay_info:p-";
 }

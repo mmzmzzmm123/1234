@@ -11,6 +11,7 @@ Page({
     pHeight: 0, //获取手机高度
     firstJoin: true, // 第一次进入页面
     dataLoadState: false, // 数据加载状态
+    showTab: true, // 展示tab
     tabHeight: 0, // tab高度
     currentIndex: 0, // 当前tab数据
     currentKey: "all",
@@ -123,11 +124,11 @@ Page({
     let tabs = this.data.tabs;
     let currentIndex = this.data.currentIndex;
     let tab = tabs[currentIndex];
-    if(tab.data != null && tab.data.length > 0){
-      for(let index in tab.data){
+    if (tab.data != null && tab.data.length > 0) {
+      for (let index in tab.data) {
         tab.data[index].audioState = -1;
       }
-      let key = 'tabs['+currentIndex+']';
+      let key = 'tabs[' + currentIndex + ']';
       this.setData({
         [key]: tab
       })
@@ -303,6 +304,9 @@ Page({
   videoPlay: function (e) {
     // 先暂停上一个语音条
     this.stopPreAudioState();
+    this.setData({
+      showTab: false
+    })
     let videoContext = wx.createVideoContext(e.currentTarget.id);
     videoContext.requestFullScreen({ direction: 0 });
   },
@@ -313,6 +317,9 @@ Page({
     if (!e.detail.fullScreen) {
       let videoContext = wx.createVideoContext(e.currentTarget.id);
       videoContext.pause();
+      this.setData({
+        showTab: true
+      })
     }
   },
   /**
@@ -512,9 +519,9 @@ Page({
   /**
    * 前往店员资料页
    */
-  toShowStaffInfo:function(e){
+  toShowStaffInfo: function (e) {
     wx.navigateTo({
-      url: '../../staffPackages/page/staffInfoShow/index?staffId='+e.currentTarget.dataset.staffid,
+      url: '../../staffPackages/page/staffInfoShow/index?staffId=' + e.currentTarget.dataset.staffid,
     })
   }
 })

@@ -11,7 +11,8 @@ public enum PayStateEnums {
 
     CANCEL("-1","已取消"),
     SUCCESS("0", "已完成"),
-    WAIT_PAY("1", "待支付");
+    WAIT_PAY("1", "待支付"),
+    REFUND("2", "已退款");
 
     private String code;
     private String desc;

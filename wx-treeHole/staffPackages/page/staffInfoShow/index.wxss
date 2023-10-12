@@ -248,3 +248,47 @@ page{
   width: 100px;
   margin-right: 10px;
 }
+.tempColumn{
+  font-size: 16px;
+  font-weight: bold;
+}
+.tempColumn image{
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+}
+.payWayView image{
+  width: 20px;
+  margin-right: 10px;
+}
+.payWayView span{
+  font-size: 14px;
+}
+.goRechargeBut{
+  padding: 2px 6px;
+  background-color: #1c2438;
+  color: #FFD700;
+  border-radius: 10px;
+  font-size: 10px;
+  margin-left: 4px;
+}
+.customizeInput {
+  font-size: 14px;
+  text-align: right;
+}
+.staffLevelItem{
+  width: 92%;
+  text-align: center;
+  font-size: 12px;
+  padding: 4px 0;
+  border-radius: 10px;
+  background-color: #e9eaec;
+  margin-top: 10px;
+}
+.randomChooseLebal{
+  color: #ffffff;
+}
+.scopeTextView view{
+  font-size: 14px;
+  margin-right: 6px;
+}

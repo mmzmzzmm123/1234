@@ -105,15 +105,11 @@ page{
 }
 .staffService{
   font-size: 10px;
-  background-color: #e9eaec;
-  padding: 4px 6px;
+  color: #ffffff;
+  padding: 2px 10px;
   border-radius: 10px;
-}
-.staffService text{
   margin-right: 4px;
-}
-.staffService span{
-  margin-right: 4px;
+  margin-top: 6px;
 }
 .verticalLine{
   width: 1.5px;

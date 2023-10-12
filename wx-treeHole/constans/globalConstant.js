@@ -14,5 +14,5 @@ module.exports = {
   // 广告图位置常量
   banner_position: {
     index: 0
-  }
+  },
 }

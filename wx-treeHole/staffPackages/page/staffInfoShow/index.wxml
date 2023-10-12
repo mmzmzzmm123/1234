@@ -1,5 +1,7 @@
 <wxs src="../../../wxss/str.wxs" module="strUtil"></wxs>
 <wxs src="../../../wxss/time.wxs" module="timeUtil"></wxs>
+<wxs src="../../../wxss/format.wxs" module="formatUtil"></wxs>
+<wxs src="../../../wxss/dicts.wxs" module="dictsUtil"></wxs>
 <view class="bView">
 
   <!-- 头部状态栏 -->
@@ -25,7 +27,7 @@
         <view class="view_box_common view_box_row_content_symmetry" style="height:100px;">
           <!-- 头像 -->
           <view class="txView">
-            <image src="{{staffInfo.avatarUrl != null ? staffInfo.avatarUrl : '../../../static/images/default_tx.png'}}" class="view_all_adapt"></image>
+            <image src="{{staffInfo.avatarUrl != null ? staffInfo.avatarUrl : '../../../static/images/default_tx.png'}}" class="view_all_adapt" mode="aspectFill"></image>
             <view class="view_box_row_content boy_bg_color" style="height: 16px;overflow: hidden;" catch:tap="staffAudioCli">
               <image class="staffAudioPlay" src="../../../static/ico/{{staffInfo.audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
               <image wx:if="{{staffInfo.audioState == -1}}" class="staffAudioFrequency" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
@@ -41,10 +43,10 @@
                 <!-- 名字和金牌情况 -->
                 <view class="view_box_row_content">
                   <view class="staffName">{{staffInfo.nickName}}</view>
-                  <view class="staffBaseInfo">
+                  <!-- <view class="staffBaseInfo">
                     {{staffInfo.province}} · {{staffInfo.city}}
-                  </view>
-                  <view class="staffBadgeLevel view_box_row_content badgeLevel_{{staffInfo.staffLevel}}">
+                  </view> -->
+                  <view style="margin-left: 10px;" class="staffBadgeLevel view_box_row_content badgeLevel_{{staffInfo.staffLevel}}">
                     <image src="../../../static/images/badge_level_{{staffInfo.staffLevel}}.png" mode="widthFix"></image>
                     <view>{{strUtil.staffLevelMacth(staffInfo.staffLevel,staffLevelConfig)}}</view>
                   </view>
@@ -63,7 +65,7 @@
                     </block>
                   </view>
                 </block>
-                <view wx:else style="font-size: 12px;color: #80848f;">
+                <view wx:else style="font-size: 12px;color: #80848f;margin-top: 4px;">
                   亲爱的 暂时不接单哟 很快就回来啦
                 </view>
               </view>
@@ -109,7 +111,7 @@
           <scroll-view scroll-x class="view_box_common" style="white-space: nowrap;">
             <block wx:for="{{staffInfo.photoVoList}}" wx:key="id">
               <view class="imgView">
-                <image class="view_all_adapt" src="{{item.imgUrl}}" data-index="{{index}}" catch:tap="showStaffImg"></image>
+                <image mode="aspectFill" style="width: 100%;" src="{{item.imgUrl}}" data-index="{{index}}" catch:tap="showStaffImg"></image>
               </view>
             </block>
           </scroll-view>
@@ -135,7 +137,7 @@
             <view class="view_box_content_column giftCover" data-index="{{index}}" bind:tap="showSvga">
               <image src="{{item.cover}}" mode="widthFix"></image>
               <view class="giftName">{{item.name}}</view>
-              <view class="boy_bg_color giveBut" bind:tap="">赠送</view>
+              <view class="boy_bg_color giveBut" data-index="{{index}}" catch:tap="giveGiftCli">赠送</view>
             </view>
           </block>
         </scroll-view>
@@ -240,7 +242,7 @@
       <wux-animation-group wx:if="{{currentIndex == 1}}" wux-class="animationView" in="{{ currentIndex == 1 }}" enter="{{ true }}" exit="{{ true }}" class-names="wux-animate--punch">
 
         <!-- 评论item -->
-        <view>
+        <!-- <view>
           <view class="view_box_row_content_symmetry commentUserInfoView">
             <image src="../../../static/temp/4.jpg"></image>
             <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-60}}px;height: 82%;">
@@ -256,69 +258,9 @@
           <view class="commentContent">
             非常nice的姐姐
           </view>
-        </view>
-        <!-- 评论item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="seizeSeat_mini"></view>
-        <view>
-          <view class="view_box_row_content_symmetry commentUserInfoView">
-            <image src="../../../static/temp/4.jpg"></image>
-            <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-60}}px;height: 82%;">
-              <view class="view_box_row_content_symmetry">
-                <view class="commentName">小心哦</view>
-                <view class="commentService">2023-07-10 22:01:33</view>
-              </view>
-              <view class="commentService">
-                服务类型：文字语音条-半小时
-              </view>
-            </view>
-          </view>
-          <view class="commentContent">
-            非常nice的姐姐
-          </view>
-        </view>
-        <!-- 评论item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="seizeSeat_mini"></view>
-        <view>
-          <view class="view_box_row_content_symmetry commentUserInfoView">
-            <image src="../../../static/temp/4.jpg"></image>
-            <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-60}}px;height: 82%;">
-              <view class="view_box_row_content_symmetry">
-                <view class="commentName">小心哦</view>
-                <view class="commentService">2023-07-10 22:01:33</view>
-              </view>
-              <view class="commentService">
-                服务类型：文字语音条-半小时
-              </view>
-            </view>
-          </view>
-          <view class="commentContent">
-            非常nice的姐姐
-          </view>
-        </view>
-        <!-- 评论item -->
-        <view class="seizeSeat_mini"></view>
-        <view class="seizeSeat_mini"></view>
-        <view>
-          <view class="view_box_row_content_symmetry commentUserInfoView">
-            <image src="../../../static/temp/4.jpg"></image>
-            <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-60}}px;height: 82%;">
-              <view class="view_box_row_content_symmetry">
-                <view class="commentName">小心哦</view>
-                <view class="commentService">2023-07-10 22:01:33</view>
-              </view>
-              <view class="commentService">
-                服务类型：文字语音条-半小时
-              </view>
-            </view>
-          </view>
-          <view class="commentContent">
-            非常nice的姐姐
-          </view>
-        </view>
+        </view> -->
 
-        <!-- <mine-null-data width="100%" height="100%" title="亲爱的 暂时没有评论哟"></mine-null-data> -->
+        <mine-null-data width="100%" height="100%" title="亲爱的 暂时没有评论哟"></mine-null-data>
       </wux-animation-group>
     </view>
     <view class="view_box_common" style="position: relative;top: -22px;">
@@ -332,11 +274,11 @@
   <view class="bottomView">
     <view class="view_box_common" style="height: 60px;">
       <view class="view_box_common view_box_row_content_symmetry" style="height: 60px;">
-        <view class="view_box_content_column" style="font-size: 14px;">
+        <view class="view_box_content_column" style="font-size: 14px;" bind:tap="rewardCli">
           <wux-icon type="logo-octocat" size="20" color="#8978E4"></wux-icon>
           <view>打赏</view>
         </view>
-        <view class="themeBut" style="width:{{pWidth * 0.92 * 0.65 - 10}}px;margin: 0;">立即下单</view>
+        <view class="themeBut" style="width:{{pWidth * 0.92 * 0.65 - 10}}px;margin: 0;" bind:tap="appointCli">立即下单</view>
         <view class="view_box_content_column" style="font-size: 14px;" catch:tap="{{strUtil.checkArrIncludeStr(userLikeStaffUserIdList, staffInfo.userId) ? 'cancelLikeStaff' : 'likeStaff'}}">
           <block wx:if="{{strUtil.checkArrIncludeStr(userLikeStaffUserIdList, staffInfo.userId)}}">
             <wux-icon type="md-heart" size="20" color="#8978E4"></wux-icon>
@@ -351,5 +293,326 @@
     </view>
   </view>
 </view>
+
+<!-- 指定下单容器 -->
+<i-drawer mode="right" visible="{{ appointDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeAppointDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.06}}px;">
+          <view></view>
+          <text>服务选择</text>
+          <wux-icon type="md-close" size="22" bindtap="changeAppointDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <scroll-view scroll-y="true" class="drawerBodyView" style="height: {{pHeight*0.65}}px;">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <column-view title="请选择服务类型" outerMargin="0" icoType="ios-arrow-down" moreTitle=""></column-view>
+          <view class="view_box_common ">
+            <wux-row>
+              <block wx:for="{{serviceList}}" wx:key="id">
+                <wux-col wx:if="{{strUtil.checkArrIncludeStr(staffInfo.serviceIdList, item.id)}}" span="3">
+                  <view class="staffLevelItem {{index == appointServiceIndex?'boy_bg_color randomChooseLebal':''}}" bind:tap="appointServiceChoose" data-index="{{index}}">{{item.name}}</view>
+                </wux-col>
+              </block>
+            </wux-row>
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <column-view title="服务内容选项" outerMargin="0" icoType="ios-arrow-down" moreTitle=""></column-view>
+          <view class="view_box_common">
+            <wux-row>
+              <block wx:for="{{serviceList[appointServiceIndex].serviceItemList}}" wx:key="id">
+                <wux-col span="3">
+                  <view class="staffLevelItem {{index == appointServiceItemIndex?'boy_bg_color randomChooseLebal':''}}" bind:tap="appointServiceItemChoose" data-index="{{index}}">{{item.name}}</view>
+                </wux-col>
+              </block>
+            </wux-row>
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view" bind:tap="selectUserAccount">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../../static/ico/theme_dot.png"></image>
+              <view>社交账号</view>
+            </view>
+            <view class="view_box_row_content scopeTextView">
+              <view>{{appointForm.customNum!=null?dictsUtil.social_accounts(appointForm.accountServiceProvider)+"-"+appointForm.customNum:"请选择您的社交账号"}}</view>
+              <wux-icon type="ios-arrow-forward" size="14" color="#80848f"></wux-icon>
+            </view>
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../../static/ico/theme_dot.png"></image>
+              <view>购买数量</view>
+            </view>
+            <wux-input-number controlled="true" color="royal" slot="footer" min="1" max="99" value="{{appointForm.num}}" bind:change="appointNumChange" />
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <column-view title="想对他/她说" outerMargin="0" ifShowIco="-1" moreTitle=""></column-view>
+          <view class="view_box_common">
+            <view class="seizeSeat_mini"></view>
+            <textarea placeholder="请输入您想对店员说的话（可不输入哟）" style="font-size:14px;height: 80px;" bindinput="appointRemarkInput"></textarea>
+            <view class="view_box_row_content_symmetry">
+              <view></view>
+              <view style="font-size:14px;color:#80848f;">{{appointForm.remark != null && appointForm.remark != '' ? appointForm.remark.length : 0}} / 125</view>
+            </view>
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <column-view title="支付方式" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common">
+            <view class="seizeSeat_mini"></view>
+            <view class="view_box_row_content_symmetry">
+              <view class="payWayView view_box_row_content">
+                <image src="../../../static/ico/wx_pay.png" mode="widthFix"></image>
+                <span>微信支付</span>
+              </view>
+              <radio data-pay="0" checked="{{appointForm.payWay == '0'}}" color="#8978E4" bind:tap="appointFormPayWayChange" />
+            </view>
+            <view class="seizeSeat_mini"></view>
+            <view class="view_box_row_content_symmetry">
+              <view class="payWayView view_box_row_content">
+                <image src="../../../static/ico/wallet.png" mode="widthFix"></image>
+                <span>枫叶支付</span>
+              </view>
+              <view class="view_box_row_content">
+                <view class="view_box_row_content" wx:if="{{userInfo != null}}" style="font-size: 12px;margin-right: 10px;color: #80848f;">
+                  <span>剩余￥{{formatUtil.toFixed(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}</span>
+                  <view wx:if="{{appointForm.amount > (userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}" class="goRechargeBut" bind:tap="toRechargePage">不足本次支付，去充值</view>
+                </view>
+                <radio data-pay="1" checked="{{appointForm.payWay == '1'}}" color="#8978E4" bind:tap="appointFormPayWayChange" />
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../../static/ico/theme_dot.png"></image>
+              <view>订单金额</view>
+            </view>
+            <view style="color: #F96500;" wx:if="{{appointServiceIndex != -1 && appointServiceItemIndex != -1}}">
+              <span style="font-size:12px;">￥</span>
+              <text style="font-size: 16px;font-weight: bold;">{{formatUtil.toFixed(appointForm.amount)}}</text>
+            </view>
+            <view style="color: #F96500;" wx:else>
+              <text style="font-size: 14px;font-weight: bold;">请选择服务</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+      </scroll-view>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bind:tap="appointSubmit">立即下单</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+  </view>
+</i-drawer>
+
+<!-- 打赏容器 -->
+<i-drawer mode="right" visible="{{ rewardDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeRewardDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.06}}px;">
+          <view></view>
+          <text>打赏店员</text>
+          <wux-icon type="md-close" size="22" bindtap="changeRewardDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <view class="drawerBodyView">
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../../static/ico/theme_dot.png"></image>
+              <view>打赏金额</view>
+            </view>
+            <input type="number" class="customizeInput" placeholder="请输入您要打赏的金额" value="{{rewardForm.amount}}" bindinput="rewardAmountChange" />
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <column-view title="想对他/她说" outerMargin="0" ifShowIco="-1" moreTitle=""></column-view>
+          <view class="view_box_common">
+            <view class="seizeSeat_mini"></view>
+            <textarea placeholder="请输入您想对店员说的话（可不输入哟）" style="font-size:14px;height: 80px;" bindinput="rewardRemarkInput"></textarea>
+            <view class="view_box_row_content_symmetry">
+              <view></view>
+              <view style="font-size:14px;color:#80848f;">{{rewardForm.remark != null && rewardForm.remark != '' ? rewardForm.remark.length : 0}} / 125</view>
+            </view>
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <column-view title="支付方式" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common">
+            <view class="seizeSeat_mini"></view>
+            <view class="view_box_row_content_symmetry">
+              <view class="payWayView view_box_row_content">
+                <image src="../../../static/ico/wx_pay.png" mode="widthFix"></image>
+                <span>微信支付</span>
+              </view>
+              <radio data-pay="0" checked="{{rewardForm.payWay == '0'}}" color="#8978E4" bind:tap="rewardFormPayWayChange" />
+            </view>
+            <view class="seizeSeat_mini"></view>
+            <view class="view_box_row_content_symmetry">
+              <view class="payWayView view_box_row_content">
+                <image src="../../../static/ico/wallet.png" mode="widthFix"></image>
+                <span>枫叶支付</span>
+              </view>
+              <view class="view_box_row_content">
+                <view class="view_box_row_content" wx:if="{{userInfo != null}}" style="font-size: 12px;margin-right: 10px;color: #80848f;">
+                  <span>剩余￥{{formatUtil.toFixed(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}</span>
+                  <view wx:if="{{rewardForm.amount > (userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}" class="goRechargeBut" bind:tap="toRechargePage">不足本次支付，去充值</view>
+                </view>
+                <radio data-pay="1" checked="{{rewardForm.payWay == '1'}}" color="#8978E4" bind:tap="rewardFormPayWayChange" />
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+      </view>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bind:tap="rewardSubmit">立即打赏</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+  </view>
+</i-drawer>
+
+<!-- 赠送礼物容器 -->
+<i-drawer mode="right" visible="{{ giftDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeGiftDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.06}}px;">
+          <view></view>
+          <text>赠送礼物</text>
+          <wux-icon type="md-close" size="22" bindtap="changeGiftDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <view class="drawerBodyView">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <column-view title="礼物列表" outerMargin="0" ifShowIco="-1" moreTitle=""></column-view>
+
+          <view class="seizeSeat_mini"></view>
+          <picker header-text="选择礼物" mode="selector" range="{{giftList}}" range-key="name" bindchange="giftChange" value="{{giftIndex}}">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content">
+                <image src="{{giftList[giftIndex].cover}}" mode="widthFix" style="width: 36px;"></image>
+                <span style="font-size:14px;">{{giftList[giftIndex].name}}</span>
+              </view>
+              <view class="view_box_row_content" style="color: #F96500;">
+                <span style="font-size:12px;">￥</span>
+                <text style="font-size:16px;margin-right: 10px;font-weight: bold;">{{formatUtil.toFixed(giftList[giftIndex].price)}}</text>
+                <wux-icon type="ios-arrow-forward" size="16" color="#80848f"></wux-icon>
+              </view>
+            </view>
+          </picker>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../../static/ico/theme_dot.png"></image>
+              <view>购买数量</view>
+            </view>
+            <wux-input-number controlled="true" color="royal" slot="footer" min="1" max="99" value="{{giftForm.num}}" bind:change="giftNumChange" />
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <column-view title="想对他/她说" outerMargin="0" ifShowIco="-1" moreTitle=""></column-view>
+          <view class="view_box_common">
+            <view class="seizeSeat_mini"></view>
+            <textarea placeholder="请输入您想对店员说的话（可不输入哟）" style="font-size:14px;height: 80px;" value="{{giftForm.remark}}" bindinput="giftRemarkInput"></textarea>
+            <view class="view_box_row_content_symmetry">
+              <view></view>
+              <view style="font-size:14px;color:#80848f;">{{giftForm.remark != null && giftForm.remark != '' ? giftForm.remark.length : 0}} / 125</view>
+            </view>
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <column-view title="支付方式" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common">
+            <view class="seizeSeat_mini"></view>
+            <view class="view_box_row_content_symmetry">
+              <view class="payWayView view_box_row_content">
+                <image src="../../../static/ico/wx_pay.png" mode="widthFix"></image>
+                <span>微信支付</span>
+              </view>
+              <radio data-pay="0" checked="{{giftForm.payWay == '0'}}" color="#8978E4" bind:tap="giftFormPayWayChange" />
+            </view>
+            <view class="seizeSeat_mini"></view>
+            <view class="view_box_row_content_symmetry">
+              <view class="payWayView view_box_row_content">
+                <image src="../../../static/ico/wallet.png" mode="widthFix"></image>
+                <span>枫叶支付</span>
+              </view>
+              <view class="view_box_row_content">
+                <view class="view_box_row_content" wx:if="{{userInfo != null}}" style="font-size: 12px;margin-right: 10px;color: #80848f;">
+                  <span>剩余￥{{formatUtil.toFixed(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}</span>
+                  <view wx:if="{{giftList[giftIndex].price * giftForm.num > (userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}" class="goRechargeBut" bind:tap="toRechargePage">不足本次支付，去充值</view>
+                </view>
+                <radio data-pay="1" checked="{{giftForm.payWay == '1'}}" color="#8978E4" bind:tap="giftFormPayWayChange" />
+              </view>
+            </view>
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../../static/ico/theme_dot.png"></image>
+              <view>订单金额</view>
+            </view>
+            <view style="color: #F96500;">
+              <span style="font-size:12px;">￥</span>
+              <text style="font-size: 16px;font-weight: bold;">{{formatUtil.toFixed(giftList[giftIndex].price * giftForm.num)}}</text>
+            </view>
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+      </view>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bind:tap="submitGiceGift">立即赠送</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+  </view>
+</i-drawer>
 
 <canvas bind:tap="stopCanvas" id="canvas" type="2d" style="width: {{pWidth}}px;height: {{pHeight}}px;z-index: {{showGift?999:-999}}; "></canvas>

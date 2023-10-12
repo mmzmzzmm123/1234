@@ -1,8 +1,8 @@
 package com.ruoyi.api.payment.mqconsumer;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.ruoyi.api.payment.mqconsumer.service.PaymentMqConsumerService;
 import com.ruoyi.api.payment.model.vo.ApiWxPayCallbackVo;
+import com.ruoyi.api.payment.mqconsumer.service.PaymentMqConsumerService;
 import com.ruoyi.api.user.common.UserLevelCommonService;
 import com.ruoyi.common.enums.OrderTypeEnums;
 import com.ruoyi.common.enums.PayStateEnums;
@@ -37,10 +37,10 @@ public class PaySuccessMqConsumer implements RocketMQListener<ApiWxPayCallbackVo
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void onMessage(ApiWxPayCallbackVo apiWxPayCallbackVo) {
-        log.info("支付回调：开始，数据：{}", apiWxPayCallbackVo);
+        log.info("mq消费-支付回调：开始，数据：{}", apiWxPayCallbackVo);
         PaymentOrder paymentOrder = paymentOrderMapper.selectByOutTradeNo(apiWxPayCallbackVo.getOutTradeNo());
         if (ObjectUtil.isNull(paymentOrder)){
-            log.warn("支付回调：失败，无法找到对应的支付订单数据");
+            log.warn("支mq消费-付回调：失败，无法找到对应的支付订单数据");
             throw new ServiceException("支付回调：失败，无法找到对应的支付订单数据");
         }
         Date now = DateUtils.getNowDate();
@@ -53,14 +53,40 @@ public class PaySuccessMqConsumer implements RocketMQListener<ApiWxPayCallbackVo
                 .setSuccessTime(now);
         paymentOrderMapper.updatePaymentOrder(updatePo);
         // 开始进行业务处理，根据支付订单中的订单类型进行分发业务处理
+
         // 充值订单
         if (OrderTypeEnums.RECHARGE.getCode().equals(paymentOrder.getOrderType())){
-            service.rechargeOrderCallback(paymentOrder.getOrderId());
             // 计算等级变化
             userLevelCommonService.levelCount(paymentOrder.getUserId(), paymentOrder.getAmount());
+            // 开启对应业务
+            service.rechargeOrderCallback(paymentOrder.getOrderId());
+        }
+        // 礼物订单
+        if (OrderTypeEnums.GIFT.getCode().equals(paymentOrder.getOrderType())){
+            // 计算等级变化
+            userLevelCommonService.levelCount(paymentOrder.getUserId(), paymentOrder.getAmount());
+            // 开启对应业务
+            service.giftOrderCallback(paymentOrder.getOrderId());
+        }
+        // 打赏订单
+        if (OrderTypeEnums.REWARD.getCode().equals(paymentOrder.getOrderType())){
+            // 计算等级变化
+            userLevelCommonService.levelCount(paymentOrder.getUserId(), paymentOrder.getAmount());
+            // 开启对应业务
+            service.rewardOrderCallback(paymentOrder.getOrderId());
+        }
+        // 指定单
+        if (OrderTypeEnums.APPOINT.getCode().equals(paymentOrder.getOrderType())){
+            // 开启对应业务
+            service.appointOrderCallback(paymentOrder.getOrderId());
+        }
+        // 随机单
+        if (OrderTypeEnums.APPOINT.getCode().equals(paymentOrder.getOrderType())){
+            // 开启对应业务
+            service.randomOrderCallback(paymentOrder.getOrderId());
         }
 
-        log.info("支付回调：完成");
+        log.info("mq消费-支付回调：完成");
     }
 
 }

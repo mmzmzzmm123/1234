@@ -87,7 +87,7 @@
                 <view class="view_all_adapt view_box_common view_box_row_content_symmetry">
                   <view class="staffAvatarView">
                     <!-- 头像 -->
-                    <image class="avatarImg" src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}"></image>
+                    <image class="avatarImg" src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}" mode="aspectFill"></image>
                     <!-- 头像框 -->
                     <image class="avatarFrame" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/top_test.gif" mode="widthFix"></image>
                     <!-- 语音条 -->
@@ -128,13 +128,11 @@
                       </view>
                     </view>
                     <!-- 员工服务 -->
-                    <view class="view_box_row">
+                    <view class="view_box_row_wrap">
                       <block wx:if="{{item.serviceIdList != null && item.serviceIdList.length > 0}}">
-                        <view class="staffService">
-                          <block wx:for="{{strUtil.matchServiceShortNameByIdArr(item.serviceIdList, serviceList)}}" wx:key="index">
-                            <text>#</text><span>{{item}}</span>
-                          </block>
-                        </view>
+                        <block wx:for="{{strUtil.matchServiceShortNameByIdArr(item.serviceIdList, serviceList)}}" wx:for-item="serviceLabel" wx:key="index">
+                          <view class="staffService {{item.sex == 1 ? 'girl_bg_color' : 'boy_bg_color'}}">{{serviceLabel}}</view>
+                        </block>
                       </block>
                       <view wx:else style="font-size: 12px;color: #80848f;">
                         亲爱的 暂时不接单哟 很快就回来啦
@@ -144,8 +142,8 @@
                 </view>
                 <!-- 员工标签 -->
                 <view wx:if="{{item.selfTags != null && item.selfTags != ''}}" class="view_box_common staffLabel view_box_row_wrap">
-                  <block wx:for="{{strUtil.splitToArr(item.selfTags, ',')}}" wx:key="index">
-                    <view class="{{item.sex == 1 ? 'girl_edging_color girl_font_color' : 'boy_edging_color boy_font_color'}} staffLabelItem">{{item}}</view>
+                  <block wx:for="{{strUtil.splitToArr(item.selfTags, ',')}}" wx:for-item="selfTag" wx:key="index">
+                    <view class="{{item.sex == 1 ? 'girl_edging_color girl_font_color' : 'boy_edging_color boy_font_color'}} staffLabelItem">{{selfTag}}</view>
                   </block>
                 </view>
               </view>
@@ -169,6 +167,7 @@
         <i-load-more tip='{{((params.pageNum*params.pageSize) >= staffDataTotal) && bottomLoadState == false ?"店员正在快马加鞭的上新中":"加载中"}}' loading="{{bottomLoadState}}"></i-load-more>
       </scroll-view>
     </swiper-item>
+
     <!-- 盲盒下单 -->
     <swiper-item>
       <scroll-view scroll-y="true" style="width:{{pWidth}}px;height:{{pHeight-tabHeight-randomBottomViewHeight}}px;">
@@ -180,26 +179,26 @@
               <view>店员性别与标签</view>
             </view>
             <view class="randomSexView view_box_row_content">
-              <view wx:if="{{randomForm.sex == '0'}}" class="view_box_row_content boy_edging_color boy_font_color">
+              <view wx:if="{{randomForm.chooseStaffSex == '0'}}" class="view_box_row_content boy_edging_color boy_font_color">
                 <image src="../../static/ico/theme_boy.png"></image>
                 <span>男生</span>
               </view>
-              <view wx:if="{{randomForm.sex != '0'}}" class="view_box_row_content" data-sex="0" bind:tap="randomChooseSex">
+              <view wx:if="{{randomForm.chooseStaffSex != '0'}}" class="view_box_row_content" data-sex="0" bind:tap="randomChooseSex">
                 <image src="../../static/ico/theme_boy.png"></image>
                 <span>男生</span>
               </view>
-              <view wx:if="{{randomForm.sex == '1'}}" class="view_box_row_content girl_edging_color girl_font_color">
+              <view wx:if="{{randomForm.chooseStaffSex == '1'}}" class="view_box_row_content girl_edging_color girl_font_color">
                 <image src="../../static/ico/theme_girl.png"></image>
                 <span>女生</span>
               </view>
-              <view wx:if="{{randomForm.sex != '1'}}" class="view_box_row_content" data-sex="1" bind:tap="randomChooseSex">
+              <view wx:if="{{randomForm.chooseStaffSex != '1'}}" class="view_box_row_content" data-sex="1" bind:tap="randomChooseSex">
                 <image src="../../static/ico/theme_girl.png"></image>
                 <span>女生</span>
               </view>
             </view>
           </view>
           <view class="view_box_common scopeLabelView view_box_row_content_symmetry_wrap">
-            <block wx:for="{{staffCustomizeLabel[randomForm.sex]}}" wx:key="index">
+            <block wx:for="{{staffCustomizeLabel[randomForm.chooseStaffSex]}}" wx:key="index">
               <view data-label="{{item}}" bind:tap="chooseRandomStaffLabel" class="staffLevelItem {{strUtil.checkArrIncludeStr(randomForm.chooseLabel, item) ? 'boy_bg_color randomChooseLebal' : ''}}">{{item}}</view>
             </block>
           </view>
@@ -254,7 +253,7 @@
               <image src="../../static/ico/theme_dot.png"></image>
               <view>排除服务过的店员</view>
             </view>
-            <wux-switch name="light" slot="footer" color="royal" value="{{randomForm.ifExclude == 'Y'}}" bind:change="changeIfExclude" />
+            <wux-switch name="light" slot="footer" color="royal" value="{{randomForm.filterServedStaff == 'Y'}}" bind:change="changeIfExclude" />
           </view>
         </view>
         <view class="seizeSeat_mini"></view>
@@ -292,7 +291,7 @@
                 <span>枫叶支付</span>
               </view>
               <view class="view_box_row_content">
-                <view style="font-size: 12px;margin-right: 10px;color: #80848f;">我的枫叶：{{formatUtil.toFixed(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}</view>
+                <view style="font-size: 12px;margin-right: 10px;color: #80848f;">剩余￥{{formatUtil.toFixed(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}</view>
                 <radio data-pay="1" checked="{{randomForm.payWay == '1'}}" color="#8978E4" bind:tap="payWayChange" />
               </view>
             </view>
@@ -307,7 +306,7 @@
             <span>￥</span>
             <text>{{formatUtil.toFixed(randomForm.price)}}</text>
           </view>
-          <view class="submitOrderBut">立即下单</view>
+          <view class="submitOrderBut" bind:tap="submitRandomOrder">立即下单</view>
         </view>
       </view>
     </swiper-item>

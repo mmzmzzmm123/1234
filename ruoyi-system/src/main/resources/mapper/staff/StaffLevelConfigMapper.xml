@@ -1,36 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.staff.mapper.StaffLevelConfigMapper">
 
     <resultMap type="StaffLevelConfig" id="StaffLevelConfigResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="threshold"    column="threshold"    />
-        <result property="level"    column="level"    />
-        <result property="firstOrderRatio"    column="first_order_ratio"    />
-        <result property="orderRatio"    column="order_ratio"    />
-        <result property="rewardRatio"    column="reward_ratio"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="threshold" column="threshold"/>
+        <result property="level" column="level"/>
+        <result property="firstOrderRatio" column="first_order_ratio"/>
+        <result property="orderRatio" column="order_ratio"/>
+        <result property="rewardRatio" column="reward_ratio"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectStaffLevelConfigVo">
-        select id, name, threshold, level, first_order_ratio, order_ratio, reward_ratio,
+        select id,
+               name,
+               threshold,
+               level,
+               first_order_ratio,
+               order_ratio,
+               reward_ratio,
                create_by,
                create_time,
                update_by,
-               update_time from bus_staff_level_config
+               update_time
+        from bus_staff_level_config
     </sql>
 
     <select id="selectStaffLevelConfigList" parameterType="StaffLevelConfig" resultMap="StaffLevelConfigResult">
         <include refid="selectStaffLevelConfigVo"/>
         <where>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="threshold != null "> and threshold &gt;= #{threshold}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="threshold != null ">and threshold &gt;= #{threshold}</if>
+            <if test="level != null">and level = #{level}</if>
         </where>
         order by level asc
     </select>
@@ -53,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
             <if test="threshold != null">#{threshold},</if>
@@ -65,7 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateStaffLevelConfig" parameterType="StaffLevelConfig">
@@ -86,7 +94,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteStaffLevelConfigById" parameterType="Long">
-        delete from bus_staff_level_config where id = #{id}
+        delete
+        from bus_staff_level_config
+        where id = #{id}
     </delete>
 
     <delete id="deleteStaffLevelConfigByIds" parameterType="String">

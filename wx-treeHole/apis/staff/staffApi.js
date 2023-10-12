@@ -13,6 +13,7 @@ let selectServiceConfigIdsUrl = "/selectServiceConfigIds";
 let handleServiceIdUrl = "/handleServiceId";
 let selectByStaffIdUrl = "/selectByStaffId";
 let selectStaffGiftRecordIdUrl = "/selectStaffGiftRecordId";
+let weeklyRankingTopThreeUrl = "/weeklyRankingTopThree";
 
 /**
  * 分页查询
@@ -77,6 +78,13 @@ let selectStaffGiftRecordId = function(params, onStart, onSuccess, onFailed){
   request.get(bashRequestUrl + selectStaffGiftRecordIdUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed);
 }
 
+/**
+ * 周排名前三
+ */
+let weeklyRankingTopThree = function(onStart, onSuccess, onFailed){
+  request.get(bashRequestUrl + weeklyRankingTopThreeUrl, null, onStart, onSuccess, onFailed, onFailed, onFailed);
+}
+
 module.exports = {
   page: page,
   selectStaffLevelConfig: selectStaffLevelConfig,
@@ -88,5 +96,6 @@ module.exports = {
   selectServiceConfigIds: selectServiceConfigIds,
   handleServiceId: handleServiceId,
   selectByStaffId: selectByStaffId,
-  selectStaffGiftRecordId: selectStaffGiftRecordId
+  selectStaffGiftRecordId: selectStaffGiftRecordId,
+  weeklyRankingTopThree: weeklyRankingTopThree,
 }

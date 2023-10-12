@@ -95,6 +95,7 @@ Page({
     let imgArr = [];
     for (let index in arr) {
       imgArr.push({
+        requestId: arr[index].id,
         uid: arr[index].id,
         url: arr[index].imgUrl,
         imgUrl: arr[index].imgUrl,
@@ -390,6 +391,14 @@ Page({
     this.setData({
       photoArr: tempArr
     })
+  },
+  matchPhotoArrItem: function (arr, requestId) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i].requestId == requestId) {
+        return i;
+      }
+    }
+    return 0;
   },
   /**
    * 提交数据

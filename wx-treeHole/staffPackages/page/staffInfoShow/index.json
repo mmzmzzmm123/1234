@@ -2,6 +2,8 @@
   "navigationStyle": "custom",
   "navigationBarTextStyle": "white",
   "usingComponents": {
+    "i-drawer": "../../../components/iview/dist/drawer/index",
+    "wux-input-number": "../../../components/wux/dist/input-number/index",
     "wux-row": "../../../components/wux/dist/row/index",
     "wux-col": "../../../components/wux/dist/col/index",
     "wux-skeleton": "../../../components/wux/dist/skeleton/index",

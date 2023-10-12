@@ -276,7 +276,7 @@ Page({
         that.getNewUserInfo(null,null);
         wx.showModal({
           title: '温馨提示',
-          content: '亲爱的，恭喜您充值成功啦，枫叶币即将到账哟，充值高峰可能会导致延迟1-2分钟导致，感谢支持与理解',
+          content: '亲爱的，充值成功啦，枫叶币即将到账哟，充值高峰可能会导致延迟1-2分钟导致，感谢支持与理解',
           confirmText: "好的哟",
           showCancel: false,
           complete: (res) => {
@@ -292,7 +292,7 @@ Page({
         if(res.errMsg == "requestPayment:fail cancel"){ 
           //取消支付,关闭当前页面并跳转至订单页
           wx.showToast({
-            title: '取消支付',
+            title: '支付取消啦',
             icon: "none",
             duration: 2500
           })

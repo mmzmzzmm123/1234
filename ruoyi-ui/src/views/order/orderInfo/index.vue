@@ -237,7 +237,7 @@
         </template>
       </el-table-column>
       <el-table-column label="客户账号" align="center" prop="customNum" :show-overflow-tooltip="true"/>
-      <el-table-column label="订单金额" align="center" prop="custom" :show-overflow-tooltip="true"/>
+      <el-table-column label="订单金额" align="center" prop="amount" :show-overflow-tooltip="true"/>
       <el-table-column label="卡券标识" align="center" prop="couponId" :show-overflow-tooltip="true"/>
       <el-table-column label="优惠金额" align="center" prop="discountAmount" :show-overflow-tooltip="true"/>
       <el-table-column label="支付方式" align="center" prop="payWay" :show-overflow-tooltip="true">
@@ -378,8 +378,8 @@
         <el-form-item label="客户账号" prop="customNum">
           <el-input v-model="form.customNum" placeholder="请输入客户账号" />
         </el-form-item>
-        <el-form-item label="订单金额" prop="custom">
-          <el-input v-model="form.custom" placeholder="请输入订单金额" />
+        <el-form-item label="订单金额" prop="amount">
+          <el-input v-model="form.amount" placeholder="请输入订单金额" />
         </el-form-item>
         <el-form-item label="卡券标识" prop="couponId">
           <el-input v-model="form.couponId" placeholder="请输入卡券标识" />
@@ -589,7 +589,7 @@ export default {
         customUserId: null,
         accountServiceProvider: null,
         customNum: null,
-        custom: null,
+        amount: null,
         couponId: null,
         discountAmount: null,
         payWay: null,

@@ -10,7 +10,8 @@ import java.io.Serializable;
 /**
  * @author LAM
  * @date 2023/10/7 17:44
- */@ApiModel("api-查询员工信息表单")
+ */
+@ApiModel("api-查询员工信息表单")
 @Data
 @Accessors(chain = true)
 public class ApiPageStaffInfoDto implements Serializable {

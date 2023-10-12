@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.payment.mapper.PaymentRefundMapper">
-    
+
     <resultMap type="PaymentRefund" id="PaymentRefundResult">
         <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectPaymentRefundList" parameterType="PaymentRefund" resultMap="PaymentRefundResult">
         <include refid="selectPaymentRefundVo"/>
-        <where>  
+        <where>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="orderId != null "> and order_id = #{orderId}</if>
             <if test="orderDetailsId != null "> and order_details_id = #{orderDetailsId}</if>
@@ -31,12 +31,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="start != null  and start != ''"> and start = #{start}</if>
         </where>
     </select>
-    
+
     <select id="selectPaymentRefundById" parameterType="Long" resultMap="PaymentRefundResult">
         <include refid="selectPaymentRefundVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectByRefundNo" parameterType="String" resultMap="PaymentRefundResult">
+        <include refid="selectPaymentRefundVo"/>
+        where refund_no = #{refundNo}
+    </select>
+
     <insert id="insertPaymentRefund" parameterType="PaymentRefund" useGeneratedKeys="true" keyProperty="id">
         insert into bus_payment_refund
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -81,7 +86,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deletePaymentRefundByIds" parameterType="String">
-        delete from bus_payment_refund where id in 
+        delete from bus_payment_refund where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

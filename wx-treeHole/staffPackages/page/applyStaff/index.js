@@ -154,6 +154,7 @@ Page({
     let imgArr = [];
     for (let index in arr) {
       imgArr.push({
+        requestId: arr[index].id,
         uid: arr[index].id,
         url: arr[index].imgUrl,
         imgUrl: arr[index].imgUrl,

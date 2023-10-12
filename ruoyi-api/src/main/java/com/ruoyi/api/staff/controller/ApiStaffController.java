@@ -23,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -123,13 +124,17 @@ public class ApiStaffController extends BaseController {
         if (ObjectUtil.isNotEmpty(dataTable)){
             // 置顶数据
             List<StaffInfo> topList = staffInfos.stream().filter(item -> item.getIfTop().equals(SysYesNoEnums.YES.getCode())).collect(Collectors.toList());
-           if(ObjectUtil.isNotEmpty(topList)){
-               Collections.shuffle(topList);
-           }
+            if(ObjectUtil.isNotEmpty(topList)){
+                Collections.shuffle(topList);
+            }
             // 需要打乱的数据
             List<StaffInfo> randomList = staffInfos.stream().filter(item -> item.getIfTop().equals(SysYesNoEnums.NO.getCode())).collect(Collectors.toList());
-            Collections.shuffle(randomList);
-            topList.addAll(randomList);
+            if ("4".equals(dto.getSortType())){
+                topList.addAll(randomList);
+            }else{
+                Collections.shuffle(randomList);
+                topList.addAll(randomList);
+            }
             // 遍历数据并插入返回集合中
             topList.forEach(item -> {
                 ApiStaffInfoVo staffInfoVo = new ApiStaffInfoVo();
@@ -147,5 +152,11 @@ public class ApiStaffController extends BaseController {
     @GetMapping("/selectStaffGiftRecordId")
     public R<List<ApiStaffGiftRecordVo>> selectStaffGiftRecord(@RequestParam("staffId") Long staffId){
         return R.ok(service.selectStaffGiftRecord(staffId));
+    }
+
+    @ApiOperation("周排名前三")
+    @GetMapping("/weeklyRankingTopThree")
+    public R<List<ApiStaffInfoVo>> weeklyRankingTopThree(){
+        return R.ok(service.weeklyRankingTopThree());
     }
 }

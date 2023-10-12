@@ -12,7 +12,7 @@
         <view class="view_box_row_content_symmetry">
           <view style="font-size: 14px;">头像</view>
           <view class="userTx" bind:tap="chooseImage">
-            <image class="view_all_adapt" src="{{staffInfo.avatarUrl!=null?staffInfo.avatarUrl:'../../../static/images/default_tx.png'}}"></image>
+            <image mode="aspectFill" class="view_all_adapt" src="{{staffInfo.avatarUrl!=null?staffInfo.avatarUrl:'../../../static/images/default_tx.png'}}"></image>
           </view>
         </view>
       </wux-cell>
@@ -117,7 +117,7 @@
       <view class="view_box_common">
         <view class="seizeSeat_mini"></view>
         <view class="uploadFileView">
-          <wux-upload controlled fileList="{{photoArr}}" listType="picture-card" formData="{{ fileUploadForm }}" max="6" count="6" url="{{fileUploadUrl}}" bind:success="uploadFileSuccess" bind:fail="uploadFileFail" bind:remove="uploadFileRemove">
+          <wux-upload  controlled fileList="{{photoArr}}" listType="picture-card" formData="{{ fileUploadForm }}" max="6" count="6" url="{{fileUploadUrl}}" bind:success="uploadFileSuccess" bind:fail="uploadFileFail" bind:remove="uploadFileRemove">
             <image style="width:32px" mode="widthFix" src="../../../static/ico/theme_upload.png"></image>
           </wux-upload>
         </view>

@@ -31,8 +31,8 @@ public class OrderDetails extends BaseEntity {
     @ApiModelProperty("订单标识")
     private Long orderId;
 
-    /** 状态（-1已取消，0正常，1待支付，2退款中，3已退款） */
-    @Excel(name = "状态", readConverterExp = "-=1已取消，0正常，1待支付，2退款中，3已退款")
+    /** 状态（-1已取消，0正常，1待支付，888退款中，999已退款） */
+    @Excel(name = "状态", readConverterExp = "-1已取消，0正常，1待支付，888退款中，999已退款")
     @ApiModelProperty("状态")
     private String state;
 
@@ -46,10 +46,10 @@ public class OrderDetails extends BaseEntity {
     @ApiModelProperty("服务项目标识")
     private Long serviceItemId;
 
-    /** 服务价格标识 */
-    @Excel(name = "服务价格标识")
-    @ApiModelProperty("服务价格标识")
-    private Long serviceItemPriceId;
+    /** 店员等级标识 */
+    @Excel(name = "店员等级标识")
+    @ApiModelProperty("店员等级标识")
+    private Long staffLevelConfigId;
 
     /** 礼物标识 */
     @Excel(name = "礼物标识")

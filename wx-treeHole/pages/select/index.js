@@ -1,6 +1,10 @@
 const app = getApp();
+import storage from "../../utils/storage";
+import storageConstant from "../../constans/storageConstant";
 import staffApi from "../../apis/staff/staffApi";
 import serviceInfoApi from "../../apis/service/serviceInfoApi";
+import orderApi from "../../apis/order/orderApi";
+import userApi from "../../apis/user/userApi";
 Page({
 
   /**
@@ -29,14 +33,14 @@ Page({
     ],
     // 随机下单表单
     randomForm: {
-      sex: 1, // 默认女生
+      chooseStaffSex: 1, // 默认女生
       chooseLabel: [], // 所选员工标签
       staffLevelIndex: 0, // 所选员工等级下标
       serviceInfoIndex: 0, // 所选服务类型下标
       serviceInfoItemIndex: 0, // 所选服务内容下标
       num: 1, // 购买数量
       price: 0, // 订单金额
-      ifExclude: "N", // 是否排除服务过的员工
+      filterServedStaff: "N", // 是否排除服务过的员工
       remark: null, // 备注信息
       accountServiceProvider: null, // 社交账号服务商
       customNum: null, // 社交账号
@@ -55,7 +59,7 @@ Page({
       pageNum: 1,
       pageSize: 20,
       showIfTop: 'Y', // 是否展示置顶数据
-      sortType: '2', // 排序类型
+      sortType: '4', // 等级倒序
       sex: null, // 0男 1女
       staffLevel: null, // 店员等级
       serviceIdArrStr: null, // 服务标识集合字符串
@@ -116,7 +120,7 @@ Page({
       let dataList = this.data.staffDataList;
       let index = this.data.preAudioIndex;
       if (index != -1) {
-        let key = 'staffDataList['+index+']';
+        let key = 'staffDataList[' + index + ']';
         dataList[index].audioState = -1;
         this.setData({
           [key]: dataList[index],
@@ -150,10 +154,10 @@ Page({
       userInfo: app.globalData.userInfo
     })
   },
-  onHide(){
+  onHide() {
     app.globalData.audioContext.pause();
     let datas = this.data.staffDataList;
-    for(let index in datas){
+    for (let index in datas) {
       datas[index].audioState = -1;
     }
     this.setData({
@@ -245,7 +249,7 @@ Page({
     let params = {
       pageNum: 1,
       pageSize: 20,
-      sortType: 4,
+      sortType: 2,
       showIfTop: 'N'
     }
     // 随机获取sortType的值
@@ -317,7 +321,7 @@ Page({
    */
   randomChooseSex: function (e) {
     this.setData({
-      ["randomForm.sex"]: e.currentTarget.dataset.sex,
+      ["randomForm.chooseStaffSex"]: e.currentTarget.dataset.sex,
       ['randomForm.chooseLabel']: []
     })
   },
@@ -409,7 +413,7 @@ Page({
    */
   changeIfExclude: function (e) {
     this.setData({
-      ["randomForm.ifExclude"]: e.detail.value ? "Y" : "N"
+      ["randomForm.filterServedStaff"]: e.detail.value ? "Y" : "N"
     })
   },
   /**
@@ -450,7 +454,7 @@ Page({
    */
   toShowStaffInfo: function (e) {
     wx.navigateTo({
-      url: '../../staffPackages/page/staffInfoShow/index?staffId='+e.currentTarget.dataset.staffid,
+      url: '../../staffPackages/page/staffInfoShow/index?staffId=' + e.currentTarget.dataset.staffid,
     })
   },
   /**
@@ -466,9 +470,9 @@ Page({
   /**
    * 条件-店员等级过滤
    */
-  staffLevelFilterChange:function(e){
+  staffLevelFilterChange: function (e) {
     this.setData({
-      ["params.staffLevel"]: Number(e.detail.value)+1,
+      ["params.staffLevel"]: Number(e.detail.value) + 1,
       ["params.pageNum"]: 1
     })
     this.loadStaffData(null);
@@ -476,7 +480,7 @@ Page({
   /**
    * 条件-服务类型改变事件
    */
-  serviceFilterChange:function(e){
+  serviceFilterChange: function (e) {
     let index = e.detail.value;
     let obj = this.data.serviceList[index];
     this.setData({
@@ -488,21 +492,21 @@ Page({
   /**
    * 清除筛选条件
    */
-  clearFilterItem:function(e){
+  clearFilterItem: function (e) {
     let index = e.currentTarget.dataset.index;
-    if(index == 0){
+    if (index == 0) {
       this.setData({
         ["params.serviceIdArrStr"]: null,
         ["params.pageNum"]: 1
       })
     }
-    if(index == 1){
+    if (index == 1) {
       this.setData({
         ["params.sex"]: null,
         ["params.pageNum"]: 1
       })
     }
-    if(index == 2){
+    if (index == 2) {
       this.setData({
         ["params.staffLevel"]: null,
         ["params.pageNum"]: 1
@@ -523,12 +527,12 @@ Page({
     if (preIndex != -1 && preIndex != index) {
       dataList[preIndex].audioState = -1;
       app.globalData.audioContext.pause();
-      let preKey = 'staffDataList['+preIndex+']';
+      let preKey = 'staffDataList[' + preIndex + ']';
       that.setData({
         [preKey]: dataList[preIndex]
       })
     }
-    
+
     // 开始处理当前下标的语音是播放还是暂停
     let currObj = dataList[index];
     if (currObj.audioState == 0) {
@@ -541,10 +545,137 @@ Page({
       app.globalData.audioContext.loop = false;
       app.globalData.audioContext.play();
     }
-    let key = 'staffDataList['+index+']';
+    let key = 'staffDataList[' + index + ']';
     that.setData({
       [key]: dataList[index],
       preAudioIndex: index
     })
-  }
+  },
+  /**
+   * 提交随机订单
+   */
+  submitRandomOrder: function () {
+    let randomForm = this.data.randomForm;
+    if (randomForm.accountServiceProvider == null && randomForm.customNum == null) {
+      wx.showToast({
+        title: '请选择您的社交账号',
+        icon: "none"
+      })
+      return;
+    }
+    let remark = randomForm.remark;
+    let chooseLabel = randomForm.chooseLabel;
+    if (chooseLabel != null && chooseLabel.length > 0) {
+      let label = chooseLabel.join(",");
+      if (remark != null && remark != '') {
+        remark = remark + "-" + label;
+      } else {
+        remark = label;
+      }
+    }
+    let service = this.data.serviceList[randomForm.serviceInfoIndex];
+    let serviceItem = service.serviceItemList[randomForm.serviceInfoItemIndex];
+    let form = {
+      accountServiceProvider: randomForm.accountServiceProvider,
+      customNum: randomForm.customNum,
+      chooseStaffSex: randomForm.chooseStaffSex,
+      filterServedStaff: randomForm.filterServedStaff,
+      num: randomForm.num,
+      remark: remark,
+      payWay: randomForm.payWay,
+      staffLevel: this.data.staffLevelConfig[randomForm.staffLevelIndex].level,
+      serviceId: service.id,
+      serviceItemId: serviceItem.id
+    }
+    orderApi.randomOrderSubmit(form, this.randomOrderSubmitOnStart, this.randomOrderSubmitOnSuccess, this.randomOrderSubmitOnFailed, this.randomOrderSubmitOnWarn);
+  },
+  randomOrderSubmitOnStart: function () {
+    wx.showLoading({
+      title: '正在提交',
+      mask: true
+    })
+  },
+  randomOrderSubmitOnSuccess: function (res) {
+    wx.hideLoading();
+    let form = this.data.randomForm;
+    // 微信支付
+    if (form.payWay == 0) {
+      wx.requestPayment({
+        "nonceStr": res.data.nonceStr,
+        "package": res.data.packageValue,
+        "signType": res.data.signType,
+        "paySign": res.data.paySign,
+        "timeStamp": res.data.timeStamp,
+        success: function (res) {
+          wx.showModal({
+            title: '提示',
+            content: '下单成功，已通知符合条件的店员火速接单啦，感谢您的支持，祝您生活愉快!',
+            confirmText: "查看订单",
+            cancelText: "知道啦",
+            complete: (res) => {
+              if (res.cancel) { }
+              if (res.confirm) {
+                wx.navigateTo({
+                  url: '../../orderPackages/page/list/index?currentIndex',
+                })
+              }
+            }
+          })
+        }, fail: function (res) {
+          if (res.errMsg == "requestPayment:fail cancel") {
+            wx.navigateTo({
+              url: '../../orderPackages/page/list/index?currentIndex',
+            })
+          } else {
+            wx.showToast({
+              title: '亲爱的，支付失败了哟',
+              icon: "none",
+              duration: 2500
+            })
+          }
+        }
+      })
+    } else {
+      userApi.getNewUserInfo(null, this.getNewUserInfoOnSuccess, null);
+      wx.showModal({
+        title: '提示',
+        content: '下单成功，已通知符合条件的店员火速接单啦，感谢您的支持，祝您生活愉快!',
+        confirmText: "查看订单",
+        cancelText: "知道啦",
+        complete: (res) => {
+          if (res.cancel) {
+            userApi.getNewUserInfo(null, this.getNewUserInfoOnSuccess, null);
+          }
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '../../orderPackages/page/list/index?currentIndex',
+            })
+          }
+        }
+      })
+    }
+  },
+  randomOrderSubmitOnFailed: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: '请求失败',
+      icon: "error"
+    })
+  },
+  randomOrderSubmitOnWarn: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: res.msg,
+      icon: "none",
+      duration: 2000
+    })
+  },
+  getNewUserInfoOnSuccess: function (res) {
+    let data = res.data;
+    app.globalData.userInfo = data;
+    storage.set(storageConstant.userInfo, null, data, 0);
+    this.setData({
+      userInfo: data
+    })
+  },
 })

@@ -4,9 +4,13 @@ Component({
    * 组件的属性列表
    */
   properties: {
-    title:{
-      type:String,
-      value:"请输入标题"
+    title: {
+      type: String,
+      value: "请输入标题"
+    },
+    titleSize: {
+      type: String,
+      value: "16px"
     },
     moreTitle: {
       type: String,
@@ -20,7 +24,7 @@ Component({
       type: String,
       value: "0"
     },
-    outerMargin:{
+    outerMargin: {
       type: String,
       value: "20px"
     },
@@ -39,6 +43,7 @@ Component({
    */
   data: {
     titla: "标题",
+    titleSize: "16px",
     ifShowMore: "0",
     moreTitle: "更多",
     moreTitleColor: "#80848f",
@@ -51,7 +56,7 @@ Component({
    * 组件的方法列表
    */
   methods: {
-    toPage:function(){
+    toPage: function () {
       this.triggerEvent("toPage")
     }
   }

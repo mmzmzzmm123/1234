@@ -2,6 +2,7 @@ package com.ruoyi.staff.mapper;
 
 import java.util.List;
 import com.ruoyi.staff.domain.StaffWallet;
+import com.ruoyi.staff.domain.StaffWalletRecord;
 
 /**
  * 员工钱包Mapper接口
@@ -18,6 +19,13 @@ public interface StaffWalletMapper {
      * @return 员工钱包
      */
     public StaffWallet selectStaffWalletById(Long id);
+
+    /**
+     * 根据用户标识查询记录
+     * @param userId 用户标识
+     * @return 结果
+     * */
+    public StaffWallet selectByUserIdForUpdate(Long userId);
 
     /**
      * 查询员工钱包列表

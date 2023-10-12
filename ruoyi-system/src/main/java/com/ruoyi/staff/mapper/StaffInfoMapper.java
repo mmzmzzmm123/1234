@@ -28,6 +28,13 @@ public interface StaffInfoMapper {
     public List<StaffInfo> selectStaffInfoList(StaffInfo staffInfo);
 
     /**
+     * 获取男生和女生排序最高的前三位(男三和女三)
+     *
+     * @return 结果
+     * */
+    public List<StaffInfo> getSortNumTopThreeOfBoyAndGirl();
+
+    /**
      * 自定义查询员工信息列表
      *
      * @param staffInfo 员工信息

@@ -46,4 +46,16 @@ public class ApiWxCallbackController {
             throw new ServiceException("支付成功回调业务处理失败");
         }
     }
+    @ApiOperation("退款成功回调")
+    @PostMapping(value = "/refundCallback")
+    @ResponseBody
+    public void refundCallback(HttpServletRequest request, HttpServletResponse response){
+        try{
+            service.refundCallback(request);
+            response.getWriter().write(WxUtils.setXml("SUCCESS", "OK"));
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new ServiceException("退款成功回调业务处理失败");
+        }
+    }
 }

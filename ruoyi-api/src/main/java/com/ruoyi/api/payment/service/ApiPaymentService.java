@@ -47,7 +47,6 @@ import java.util.Date;
 @RequiredArgsConstructor
 public class ApiPaymentService {
 
-    private static final long MQ_DELAYED_SEND_TIME_OUT = 10000;
     private final PlatformRechargeConfigMapper rechargeConfigMapper;
     private final UserRechargeRecordMapper rechargeRecordMapper;
     private final PaymentOrderMapper paymentOrderMapper;
@@ -119,7 +118,7 @@ public class ApiPaymentService {
                     .setCreateTime(now);
             paymentOrderMapper.insertPaymentOrder(paymentOrder);
             // 发送延时消息支付订单过期
-            rocketMqService.delayedSend(MqConstants.TOPIC_RECHARGE, paymentOrder.getId(), MQ_DELAYED_SEND_TIME_OUT, MqDelayLevelEnums.level_16);
+            rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_EXPIRE, paymentOrder.getId(), MqDelayLevelEnums.level_16);
         }catch (Exception e){
             e.printStackTrace();
             log.warn("充值金额：异常，异常信息：{}", e.getMessage());

@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.staff.mapper.StaffWalletMapper">
-    
+
     <resultMap type="StaffWallet" id="StaffWalletResult">
         <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
@@ -21,16 +21,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectStaffWalletList" parameterType="StaffWallet" resultMap="StaffWalletResult">
         <include refid="selectStaffWalletVo"/>
-        <where>  
+        <where>
             <if test="userId != null "> and user_id = #{userId}</if>
         </where>
     </select>
-    
+
     <select id="selectStaffWalletById" parameterType="Long" resultMap="StaffWalletResult">
         <include refid="selectStaffWalletVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="selectByUserIdForUpdate" parameterType="Long" resultMap="StaffWalletResult">
+        <include refid="selectStaffWalletVo"/>
+        where user_id = #{userId} for update
+    </select>
+
     <insert id="insertStaffWallet" parameterType="StaffWallet" useGeneratedKeys="true" keyProperty="id">
         insert into bus_staff_wallet
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -72,7 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteStaffWalletByIds" parameterType="String">
-        delete from bus_staff_wallet where id in 
+        delete from bus_staff_wallet where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

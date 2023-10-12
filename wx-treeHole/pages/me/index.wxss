@@ -74,6 +74,7 @@ page{
 }
 .level{
   font-size: 12px;
+  font-weight: bold;
 }
 .levelProgress{
   width: 50%;

@@ -28,6 +28,14 @@ public interface PaymentRefundMapper {
     public List<PaymentRefund> selectPaymentRefundList(PaymentRefund paymentRefund);
 
     /**
+     * 根据退款单号查询
+     *
+     * @param refundNo 退款单号
+     * @return 结果
+     * */
+    public PaymentRefund selectByRefundNo(String refundNo);
+
+    /**
      * 新增支付单退款
      *
      * @param paymentRefund 支付单退款

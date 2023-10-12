@@ -22,4 +22,8 @@ module.exports = {
   rechargeConfig: "rechargeConfig",
   // 广告图缓存
   bannerByPosition: "banner:",
+  // 礼物赠送服务通知授权状态
+  giveGiftSuccessNotice: "giveGiftSuccessNotice",
+  // 下单成功通知授权状态
+  orderSuccessNotice: "orderSuccessNotice",
 }

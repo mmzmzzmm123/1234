@@ -1,0 +1,180 @@
+<wxs src="../../../wxss/dicts.wxs" module="dictsUtil"></wxs>
+<wxs src="../../../wxss/format.wxs" module="formatUtil"></wxs>
+<wux-dialog id="wux-dialog" />
+<wux-dialog id="wux-dialog--alert" />
+<view class="bView">
+  <wux-tabs class="wuxTab" theme="positive" controlled current="{{ currentKey }}" bindchange="onTabsChange">
+    <block wx:for="{{ tabs }}" wx:key="key">
+      <wux-tab key="{{ item.key }}" title="{{ item.title }}"></wux-tab>
+    </block>
+  </wux-tabs>
+  <wux-spin nested spinning="{{ dataLoadState }}" tip="加载中">
+    <swiper style="width:{{pWidth}}px;height:{{pHeight-tabHeight}}px;" current="{{ currentIndex }}" bindchange="onSwiperChange">
+      <block wx:for="{{ tabs }}" wx:key="key">
+        <swiper-item>
+          <scroll-view refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{item.refreshState}}" scroll-y="true" bindrefresherrefresh="refresh" bindscrolltolower="loadNextPageData" class="view_all_adapt">
+            <block wx:if="{{item.data != null && item.data.length > 0}}">
+              <block wx:for="{{item.data}}" wx:key="id" wx:for-item="dataItem" wx:for-index="dataIndex">
+                <view class="seizeSeat_mini"></view>
+                <view class="scope_view view_box_common" data-index="{{dataIndex}}" bind:tap="lookOrderDetails">
+                  <column-view title="{{dataItem.orderNo}}" titleSize="13px" outerMargin="0" ifShowIco="-1" moreTitle="{{dictsUtil.order_state(dataItem.orderState)}}"></column-view>
+                  <view class="seizeSeat_mini"></view>
+                  <view class="view_box_common view_box_row_content_symmetry">
+                    <image class="orderAvatar" src="{{dataItem.apiUserVo != null && dataItem.apiUserVo.avatarUrl != null ? dataItem.apiUserVo.avatarUrl : '../../../static/images/default_tx.png'}}" mode="aspectFill"></image>
+                    <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*.92-90}}px;height: 82px;">
+                      <view>
+                        <view class="view_box_row_content_symmetry">
+                          <view class="orderStaffName">{{dataItem.apiUserVo != null ? dataItem.apiUserVo.nickName : '待接单'}}</view>
+                          <view class="orderType">{{dictsUtil.order_type(dataItem.orderType)}}</view>
+                        </view>
+                        <view wx:if="{{dataItem.orderDetailsVos!=null&&dataItem.orderDetailsVos.length>0}}" class="view_box_row_content_symmetry" style="margin-top: 4px;">
+                          <view class="serviceContent">{{dataItem.orderDetailsVos[0].detailsTitle}}</view>
+                          <view class="serviceNum">x{{dataItem.orderDetailsVos[0].num}}</view>
+                        </view>
+                      </view>
+                      <view class="view_box_row_content_symmetry">
+                        <view class="orderTime">{{dataItem.createTime}}</view>
+                        <view class="orderPrice">
+                          <text>￥</text>
+                          <span>{{formatUtil.toFixed(dataItem.payAmount)}}</span>
+                        </view>
+                      </view>
+                    </view>
+                  </view>
+                  <view class="view_box_common" wx:if="{{dataItem.orderState=='2' || dataItem.orderState=='3'}}">
+                    <view class="seizeSeat_mini"></view>
+                    <view class="cut_off_rule_small"></view>
+                    <view class="seizeSeat_mini"></view>
+                  </view>
+                  <view class="view_box_common view_box_row_content_symmetry">
+                    <view></view>
+                    <view class="view_box_row_content">
+                      <block wx:if="{{dataItem.orderState=='2'}}">
+                        <block wx:if="{{(dataItem.chooseStaffSex!=null&&dataItem.chooseStaffSex!=staffInfo.sex) || (dataItem.filterServedStaff == 'Y' && strUtil.checkArrIncludeStr(servedUserIdList, dataItem.customUserId))}}">
+                          <view style="font-size: 14px;">
+                            不可接单原因（排除单：{{dataItem.filterServedStaff == 'Y' ? '是' : '否'}}，性别：{{dataItem.chooseStaffSex == '0' ? '男' : '女'}}）
+                          </view>
+                        </block>
+                        <view class="orderButItem badgeLevel_4" wx:else data-index="{{dataIndex}}" catch:tap="{{dataItem.orderType == '0' ? 'orderTakingCli' : 'randomOrderTakingCli'}}">立即接单</view>
+                      </block>
+                      <view class="orderButItem badgeLevel_1" wx:if="{{dataItem.orderState=='3'}}" data-index="{{dataIndex}}" catch:tap="orderStartServiceCli">开始服务</view>
+                    </view>
+                  </view>
+                </view>
+              </block>
+              <view class="seizeSeat_mini"></view>
+              <i-load-more tip='{{((item.params.pageNum*item.params.pageSize) >= item.total) && item.bottomDataLoadState == false ?"我是有底线哒":""}}' loading="{{item.bottomDataLoadState}}"></i-load-more>
+            </block>
+            <block wx:else>
+              <view class="view_all_adapt">
+                <mine-null-data width="100%" height="100%" title="暂无订单信息，快去下一单吧！"></mine-null-data>
+              </view>
+            </block>
+          </scroll-view>
+        </swiper-item>
+      </block>
+    </swiper>
+  </wux-spin>
+</view>
+
+<!-- 订单详情容器 -->
+<i-drawer mode="right" visible="{{ orderDetailsDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeOrderDetailsDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.06}}px;">
+          <view></view>
+          <text>订单详情</text>
+          <wux-icon type="md-close" size="22" bindtap="changeOrderDetailsDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <view class="drawerBodyView">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <column-view title="订单基本信息" titleSize="14px" outerMargin="0" icoType="ios-arrow-down" moreTitle=""></column-view>
+          <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>订单编号</view>
+            <span>{{operObj.orderNo}}</span>
+          </view>
+          <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>订单类型</view>
+            <span>{{dictsUtil.order_type(operObj.orderType)}}</span>
+          </view>
+          <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>服务内容</view>
+            <span>{{operObj.orderDetailsVos[0].detailsTitle}}</span>
+          </view>
+          <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>购买数量</view>
+            <span>x{{operObj.orderDetailsVos[0].num}}</span>
+          </view>
+          <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>支付方式</view>
+            <span>{{dictsUtil.pay_way(operObj.payWay)}}</span>
+          </view>
+          <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>订单金额</view>
+            <span>￥{{formatUtil.toFixed(operObj.payAmount)}}</span>
+          </view>
+          <block wx:if="{{operObj.orderState == '2'}}">
+            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+              <view>性别</view>
+              <span>{{operObj.chooseStaffSex == '0' ? '男' : "女"}}</span>
+            </view>
+            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+              <view>排除服务过的店员</view>
+              <span>{{operObj.filterServedStaff == 'Y' ? '是' : "否"}}</span>
+            </view>
+          </block>
+          <!-- 待服务状态显示 -->
+          <block wx:if="{{operObj.orderState == '3'}}">
+            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+              <view>是否续单</view>
+              <span>{{operObj.ifContinuous == 'Y' ? '是' : '否'}}</span>
+            </view>
+            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+              <view>预计收入</view>
+              <span>￥{{formatUtil.toFixed((operObj.payAmount*operObj.commissionRatio))}}</span>
+            </view>
+            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+              <view>账号渠道</view>
+              <span>{{dictsUtil.social_accounts(operObj.accountServiceProvider)}}</span>
+            </view>
+            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+              <view>社交账号</view>
+              <span>{{operObj.customNum}}</span>
+            </view>
+          </block>
+          <block wx:if="{{operObj.orderState == '-1'}}">
+            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+              <view>取消者</view>
+              <span>{{operObj.canceller}}</span>
+            </view>
+            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+              <view>取消原因</view>
+              <span>{{operObj.cancelRemark}}</span>
+            </view>
+            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+              <view>取消时间</view>
+              <span>{{operObj.orderCancelTime}}</span>
+            </view>
+          </block>
+          <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>备注</view>
+            <span>{{operObj.remark != null ? operObj.remark : '无'}}</span>
+          </view>
+          <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>创建时间</view>
+            <span>{{operObj.createTime}}</span>
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+      </view>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bindtap="changeOrderDetailsDrawer">关 闭</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+  </view>
+</i-drawer>

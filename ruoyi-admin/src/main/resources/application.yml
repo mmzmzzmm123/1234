@@ -182,10 +182,10 @@ weixin:
     app-key-path: classpath:cert/apiclient_key.pem
     # 商户cert证书路径
     app-cert-path: classpath:cert/apiclient_cert.pem
-    notify-url: http://lamlin.natapp1.cc/api/wxCallback/payCallback
-    refund-notify-url: http://lamlin.natapp1.cc/api/wxCallback/refundCallBack
-#    notify-url: https://listen.vipwei.cn/prod-api/api/wxCallback/payCallback
-#    refund-notify-url: https://listen.vipwei.cn/prod-api/api/wxCallback/refundCallBack
+#    notify-url: http://lamlin.natapp1.cc/api/wxCallback/payCallback
+#    refund-notify-url: http://lamlin.natapp1.cc/api/wxCallback/refundCallback
+    notify-url: https://listen.vipwei.cn/prod-api/api/wxCallback/payCallback
+    refund-notify-url: https://listen.vipwei.cn/prod-api/api/wxCallback/refundCallBack
 
 # 腾讯云产品信息
 tencent-info:

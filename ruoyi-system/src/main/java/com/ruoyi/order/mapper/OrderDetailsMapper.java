@@ -2,6 +2,7 @@ package com.ruoyi.order.mapper;
 
 import java.util.List;
 import com.ruoyi.order.domain.OrderDetails;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 订单明细Mapper接口
@@ -18,6 +19,14 @@ public interface OrderDetailsMapper {
      * @return 订单明细
      */
     public OrderDetails selectOrderDetailsById(Long id);
+
+    /**
+     * 根据订单标识查询详情记录
+     *
+     * @param orderId 订单标识
+     * @return 结果
+     * */
+    public List<OrderDetails> selectByOrderId(Long orderId);
 
     /**
      * 查询订单明细列表
@@ -42,6 +51,15 @@ public interface OrderDetailsMapper {
      * @return 结果
      */
     public int updateOrderDetails(OrderDetails orderDetails);
+
+    /**
+     * 根据订单标识修改状态
+     *
+     * @param orderId 订单标识
+     * @param state 状态
+     * @return 结果
+     * */
+    public int updateStateByOrderId(@Param("orderId") Long orderId, @Param("state") String state);
 
     /**
      * 删除订单明细

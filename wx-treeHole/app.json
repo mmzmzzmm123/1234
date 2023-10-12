@@ -3,7 +3,8 @@
     "pages/index/index",
     "pages/me/index",
     "pages/select/index",
-    "pages/trends/index"
+    "pages/trends/index",
+    "orderPackages/page/list/index"
   ],
   "subPackages": [
     {
@@ -21,7 +22,8 @@
         "page/applyStaff/index",
         "page/staffInfoShow/index",
         "page/staffInfo/index",
-        "page/staffTrends/index"
+        "page/staffTrends/index",
+        "page/staffOrder/index"
       ]
     },
     {

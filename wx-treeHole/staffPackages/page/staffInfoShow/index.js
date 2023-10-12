@@ -9,6 +9,7 @@ import staffApi from "../../../apis/staff/staffApi";
 import serviceInfoApi from "../../../apis/service/serviceInfoApi";
 import staffTrendsApi from "../../../apis/staff/staffTrendsApi";
 import userApi from "../../../apis/user/userApi";
+import orderApi from "../../../apis/order/orderApi";
 Page({
 
   /**
@@ -53,6 +54,31 @@ Page({
     userLikeStaffTrendsIdList: app.globalData.userLikeStaffTrendsIdList, // 用户点赞店员动态记录
     preListAudioPlayIndex: -1, // 上一条列表播放语音下标
     staffGiftArr: [], // 店员已点亮礼物id集合
+    giftDrawer: false, // 赠送礼物容器状态
+    giftIndex: 0, // 赠送礼物的下标
+    giftForm: {
+      num: 1, // 赠送礼物数量
+      remark: null, // 备注信息
+      payWay: 0, // 支付方式
+    },
+    userInfo: app.globalData.userInfo,// 用户信息
+    rewardDrawer: false, // 打赏容器
+    rewardForm: { // 打赏表单
+      amount: null, // 最少一元
+      remark: null, // 备注信息
+      payWay: 0, // 支付方式
+    },
+    appointDrawer: false, // 立即下单容器事件
+    appointServiceIndex: -1, // 指定服务下标
+    appointServiceItemIndex: -1, // 指定服务子项目下标
+    appointForm: {
+      num: 1, // 购买数量
+      remark: null, // 备注信息
+      payWay: 0, // 支付方式
+      amount: null, // 订单金额
+      accountServiceProvider: null, // 社交账号服务商
+      customNum: null, // 社交账号
+    },
   },
 
   /**
@@ -90,7 +116,7 @@ Page({
     this.loadStaffGiftRecord(staffId);
     // 加载店员动态数据
     this.loadStaffTrendsData(this.loadStaffTrendsDataOnStart);
-    
+
     // 全局语音监听暂停事件
     app.globalData.audioContext.onEnded(() => {
       this.stopPreAudioState(null);
@@ -130,7 +156,7 @@ Page({
     // 加载用户点击关注数据
     this.loadUserLikeData();
   },
-  onUnload(){
+  onUnload() {
     this.stopPreAudioState(null);
   },
   /**
@@ -142,10 +168,10 @@ Page({
   /**
    * 查询店员已点亮礼物数据
    */
-  loadStaffGiftRecord:function(staffId){
-    staffApi.selectStaffGiftRecordId({staffId: staffId}, null, this.loadStaffGiftRecordOnSuccess, null);
+  loadStaffGiftRecord: function (staffId) {
+    staffApi.selectStaffGiftRecordId({ staffId: staffId }, null, this.loadStaffGiftRecordOnSuccess, null);
   },
-  loadStaffGiftRecordOnSuccess:function(res){
+  loadStaffGiftRecordOnSuccess: function (res) {
     let dataArr = res.data;
     let giftIdArr = dataArr.map(item => item.giftId);
     this.setData({
@@ -238,10 +264,10 @@ Page({
     // 当前语音条业务处理
     let staffTrendsData = this.data.staffTrendsData;
     let obj = staffTrendsData[index];
-    if(obj.audioState == 0){
+    if (obj.audioState == 0) {
       obj.audioState = -1;
       app.globalData.audioContext.pause();
-    }else{
+    } else {
       obj.audioState = 0;
       app.globalData.audioContext.autoplay = true;
       app.globalData.audioContext.src = obj.voiceUrl;
@@ -544,9 +570,9 @@ Page({
       icon: "none"
     })
   },
-    /**
-   * 关注店员
-   */
+  /**
+ * 关注店员
+ */
   likeStaff: function (e) {
     let id = this.data.staffInfo.userId;
     userApi.likeStaff({ staffId: id }, this.likeStaffOnStart, this.likeStaffOnSuccess, this.likeStaffOnFailed, this.likeStaffOnWarn)
@@ -604,6 +630,623 @@ Page({
     wx.showToast({
       title: res.msg,
       icon: "none"
+    })
+  },
+  /**
+   * 礼物赠送事件
+   */
+  giveGiftCli: function (e) {
+    this.setData({
+      giftIndex: e.currentTarget.dataset.index,
+      ["giftForm.remark"]: null,
+      ["giftForm.num"]: 1,
+      giftDrawer: true
+    })
+  },
+  /**
+   * 改变送礼容器状态
+   */
+  changeGiftDrawer: function () {
+    let temp = this.data.giftDrawer;
+    this.setData({
+      giftDrawer: !temp
+    })
+  },
+  /**
+   * 赠送礼物数量改变事件
+   */
+  giftNumChange: function (e) {
+    this.setData({
+      ["giftForm.num"]: e.detail.value
+    })
+  },
+  /**
+   * 支付方式点击事件
+   */
+  giftFormPayWayChange: function (e) {
+    this.setData({
+      ["giftForm.payWay"]: e.currentTarget.dataset.pay
+    })
+  },
+  /**
+   * 选择赠送礼物
+   */
+  giftChange: function (e) {
+    this.setData({
+      giftIndex: Number(e.detail.value)
+    })
+  },
+  /**
+   * 赠送礼物备注输入事件
+   */
+  giftRemarkInput: function (e) {
+    this.setData({
+      ["giftForm.remark"]: e.detail.value
+    })
+  },
+  /**
+   * 前往充值页面
+   */
+  toRechargePage: function () {
+    wx.navigateTo({
+      url: '../../../platformPackages/page/recharge/index',
+    })
+  },
+  /**
+   * 赠送礼物提交
+   */
+  submitGiceGift: function () {
+    let userInfo = this.data.userInfo;
+    let staffInfo = this.data.staffInfo;
+    let giftList = this.data.giftList;
+    let giftIndex = this.data.giftIndex;
+    let form = this.data.giftForm;
+    let gift = giftList[giftIndex];
+    // 判断是否余额支付
+    if (form.payWay == 1) {
+      let userWalletVo = userInfo.userWalletVo;
+      let balance = userWalletVo.balance + userWalletVo.giftBalance;
+      let payAmount = gift.price * form.num;
+      if (payAmount > balance) {
+        wx.showModal({
+          title: '温馨提示',
+          content: '亲爱的，您的枫叶币不足本次礼物赠送哟，换个支付方式试试吧，或前去充值枫叶币哟，有优惠呢！',
+          confirmText: "去充值",
+          complete: (res) => {
+            if (res.confirm) {
+              wx.navigateTo({
+                url: '../../../platformPackages/page/recharge/index',
+              })
+            }
+          }
+        })
+        return;
+      }
+    }
+    wx.showLoading({
+      title: '正在提交',
+      mask: true
+    })
+    form.giftId = gift.id;
+    form.staffId = staffInfo.userId;
+    let that = this;
+    // let noticeState = storage.get(storageConstant.giveGiftSuccessNotice, null);
+    // if (noticeState != null) {
+    //   orderApi.giftOrderSubmit(form, null, that.giftOrderSubmitOnSuccess, that.giftOrderSubmitOnFailed, that.giftOrderSubmitOnWarn);
+    // } else {
+    //   wx.requestSubscribeMessage({
+    //     tmplIds: ['AfCNc1Y43ygsVXiVxgyyd1BsFNg_v6k1zXqrgLChahs'],
+    //     success: function (res) {
+    //       if (res.AfCNc1Y43ygsVXiVxgyyd1BsFNg_v6k1zXqrgLChahs == 'accept') {
+    //         storage.set(storageConstant.giveGiftSuccessNotice, null, "accept", null);
+    //       }
+    //     }, complete: function (res) {
+    //       orderApi.giftOrderSubmit(form, null, that.giftOrderSubmitOnSuccess, that.giftOrderSubmitOnFailed, that.giftOrderSubmitOnWarn);
+    //     }
+    //   })
+    // }
+    wx.requestSubscribeMessage({
+      tmplIds: ['AfCNc1Y43ygsVXiVxgyyd1BsFNg_v6k1zXqrgLChahs'],
+      success: function (res) {
+      }, complete: function (res) {
+        orderApi.giftOrderSubmit(form, null, that.giftOrderSubmitOnSuccess, that.giftOrderSubmitOnFailed, that.giftOrderSubmitOnWarn);
+      }
+    })
+  },
+  giftOrderSubmitOnSuccess: function (res) {
+    let that = this;
+    wx.hideLoading();
+    let form = this.data.giftForm;
+    // 微信支付
+    if (form.payWay == 0) {
+      wx.requestPayment({
+        "nonceStr": res.data.nonceStr,
+        "package": res.data.packageValue,
+        "signType": res.data.signType,
+        "paySign": res.data.paySign,
+        "timeStamp": res.data.timeStamp,
+        success: function (res) {
+          that.setData({
+            giftDrawer: false
+          })
+          wx.showModal({
+            title: '提示',
+            content: '礼物已经发出，店员收到将会第一时间向您道谢，感谢您的支持，祝您生活愉快!',
+            confirmText: "查看订单",
+            cancelText: "知道啦",
+            complete: (res) => {
+              if (res.cancel) { }
+              if (res.confirm) {
+                wx.navigateTo({
+                  url: '../../../orderPackages/page/list/index?currentIndex',
+                })
+              }
+            }
+          })
+        }, fail: function (res) {
+          if (res.errMsg == "requestPayment:fail cancel") {
+            wx.navigateTo({
+              url: '../../../orderPackages/page/list/index?currentIndex',
+            })
+          } else {
+            wx.showToast({
+              title: '亲爱的，支付失败了哟',
+              icon: "none",
+              duration: 2500
+            })
+          }
+        }
+      })
+    } else {
+      userApi.getNewUserInfo(null, this.getNewUserInfoOnSuccess, null);
+      this.setData({
+        giftDrawer: false
+      })
+      wx.showModal({
+        title: '提示',
+        content: '礼物已经发出，店员收到将会第一时间向您道谢，感谢您的支持，祝您生活愉快!',
+        confirmText: "查看订单",
+        cancelText: "知道啦",
+        complete: (res) => {
+          if (res.cancel) { }
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '../../../orderPackages/page/list/index?currentIndex',
+            })
+          }
+        }
+      })
+    }
+  },
+  giftOrderSubmitOnFailed: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: '请求失败',
+      icon: "none"
+    })
+  },
+  giftOrderSubmitOnWarn: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: res.msg,
+      icon: "none",
+      direction: 2000
+    })
+  },
+  getNewUserInfoOnSuccess: function (res) {
+    let data = res.data;
+    app.globalData.userInfo = data;
+    storage.set(storageConstant.userInfo, null, data, 0);
+    this.setData({
+      userInfo: data
+    })
+  },
+  /**
+   * 打赏容器改变事件
+   */
+  changeRewardDrawer: function () {
+    let temp = this.data.rewardDrawer;
+    this.setData({
+      rewardDrawer: !temp
+    })
+  },
+  /**
+   * 打赏金额输入事件
+   */
+  rewardAmountChange: function (e) {
+    this.setData({
+      ["rewardForm.amount"]: parseInt(e.detail.value)
+    })
+  },
+  /**
+   * 打赏备注输入事件
+   */
+  rewardRemarkInput: function (e) {
+    this.setData({
+      ["rewardForm.remark"]: e.detail.value
+    })
+  },
+  /**
+   * 支付方式点击事件
+   */
+  rewardFormPayWayChange: function (e) {
+    this.setData({
+      ["rewardForm.payWay"]: e.currentTarget.dataset.pay
+    })
+  },
+  /**
+   * 打赏事件
+   */
+  rewardCli: function () {
+    this.setData({
+      rewardForm: {
+        amount: null,
+        payWay: 0,
+        remark: null
+      },
+      rewardDrawer: true
+    })
+  },
+  /**
+   * 打赏表单提交
+   */
+  rewardSubmit: function () {
+    let rewardForm = this.data.rewardForm;
+    if (rewardForm.amount == null && rewardForm.amount == '' && rewardForm.amount <= 0) {
+      wx.showToast({
+        title: '请输入正确的打赏金额哟',
+        icon: "none",
+        direction: 2000
+      })
+      return;
+    }
+    let staffInfo = this.data.staffInfo;
+    rewardForm.staffId = staffInfo.userId;
+    wx.showLoading({
+      title: '正在提交',
+      mask: true
+    })
+    orderApi.rewardOrderSubmit(rewardForm, null, this.rewardOrderSubmitOnSuccess, this.rewardOrderSubmitOnFailed, this.rewardOrderSubmitOnWarn);
+  },
+  rewardOrderSubmitOnSuccess: function (res) {
+    let that = this;
+    wx.hideLoading();
+    let form = this.data.rewardForm;
+    // 微信支付
+    if (form.payWay == 0) {
+      wx.requestPayment({
+        "nonceStr": res.data.nonceStr,
+        "package": res.data.packageValue,
+        "signType": res.data.signType,
+        "paySign": res.data.paySign,
+        "timeStamp": res.data.timeStamp,
+        success: function (res) {
+          that.setData({
+            rewardDrawer: false
+          })
+          wx.showModal({
+            title: '提示',
+            content: '打赏成功啦，店员收到将会第一时间向您道谢，感谢您的支持，祝您生活愉快!',
+            confirmText: "查看订单",
+            cancelText: "知道啦",
+            complete: (res) => {
+              if (res.cancel) { }
+              if (res.confirm) {
+                wx.navigateTo({
+                  url: '../../../orderPackages/page/list/index?currentIndex',
+                })
+              }
+            }
+          })
+        }, fail: function (res) {
+          if (res.errMsg == "requestPayment:fail cancel") {
+            wx.navigateTo({
+              url: '../../../orderPackages/page/list/index?currentIndex',
+            })
+          } else {
+            wx.showToast({
+              title: '亲爱的，支付失败了哟',
+              icon: "none",
+              duration: 2500
+            })
+          }
+        }
+      })
+    } else {
+      userApi.getNewUserInfo(null, this.getNewUserInfoOnSuccess, null);
+      this.setData({
+        rewardDrawer: false
+      })
+      wx.showModal({
+        title: '提示',
+        content: '打赏成功啦，店员收到将会第一时间向您道谢，感谢您的支持，祝您生活愉快!',
+        confirmText: "查看订单",
+        cancelText: "知道啦",
+        complete: (res) => {
+          if (res.cancel) { }
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '../../../orderPackages/page/list/index?currentIndex',
+            })
+          }
+        }
+      })
+    }
+  },
+  rewardOrderSubmitOnFailed: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: '请求失败',
+      icon: "none"
+    })
+  },
+  rewardOrderSubmitOnWarn: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: res.msg,
+      icon: "none",
+      direction: 2000
+    })
+  },
+  /**
+   * 指定下单容器改变事件
+   */
+  changeAppointDrawer: function () {
+    let temp = this.data.appointDrawer;
+    this.setData({
+      appointDrawer: !temp
+    })
+  },
+  /**
+   * 服务改变
+   */
+  appointServiceChoose: function (e) {
+    this.setData({
+      appointServiceIndex: e.currentTarget.dataset.index,
+      appointServiceItemIndex: 0
+    })
+    this.buildAppointOrderAmount();
+  },
+  /**
+   * 服务子项改变
+   */
+  appointServiceItemChoose: function (e) {
+    this.setData({
+      appointServiceItemIndex: e.currentTarget.dataset.index
+    })
+    this.buildAppointOrderAmount();
+  },
+  /**
+   * 指定单数量修改
+   */
+  appointNumChange: function (e) {
+    this.setData({
+      ["appointForm.num"]: e.detail.value
+    })
+    this.buildAppointOrderAmount();
+  },
+  /**
+   * 指定单备注
+   */
+  appointRemarkInput: function (e) {
+    this.setData({
+      ["appointForm.remark"]: e.detail.value
+    })
+  },
+  /**
+   * 指定单支付方式点击事件
+   */
+  appointFormPayWayChange: function (e) {
+    this.setData({
+      ["appointForm.payWay"]: e.currentTarget.dataset.pay
+    })
+  },
+  /**
+   * 构建指定订单金额
+   */
+  buildAppointOrderAmount: function () {
+    let appointServiceIndex = this.data.appointServiceIndex;
+    let appointServiceItemIndex = this.data.appointServiceItemIndex;
+    // 其中一个选项为-1，直接退出
+    if (appointServiceIndex == -1 || appointServiceItemIndex == -1) {
+      return;
+    }
+    let appointForm = this.data.appointForm;
+    let serviceList = this.data.serviceList;
+    let staffInfo = this.data.staffInfo;
+    let staffLevelConfig = this.data.staffLevelConfig;
+    let staffLevelId = -1;
+    for (let index in staffLevelConfig) {
+      if (staffInfo.staffLevel == staffLevelConfig[index].level) {
+        staffLevelId = staffLevelConfig[index].id;
+      }
+    }
+    let levelAmount = 0; // 当前等级的服务金额
+    // 所选服务item
+    let serviceItemObj = serviceList[appointServiceIndex].serviceItemList[appointServiceItemIndex];
+    for (let index in serviceItemObj.serviceItemPriceList) {
+      if (staffLevelId == serviceItemObj.serviceItemPriceList[index].staffLevelConfigId) {
+        levelAmount = serviceItemObj.serviceItemPriceList[index].price;
+      }
+    }
+    this.setData({
+      ["appointForm.amount"]: levelAmount * appointForm.num
+    })
+  },
+  /**
+   * 指定单提交
+   */
+  appointSubmit: function () {
+    // 提交之前构建一次，防止有误
+    this.buildAppointOrderAmount();
+    let appointServiceIndex = this.data.appointServiceIndex;
+    let appointServiceItemIndex = this.data.appointServiceItemIndex;
+    // 其中一个选项为-1，直接退出
+    if (appointServiceIndex == -1 || appointServiceItemIndex == -1) {
+      wx.showToast({
+        title: '请选择服务类型与服务内容项进行下单',
+        icon: "none",
+        duration: 2000
+      })
+      return;
+    }
+    let appointForm = this.data.appointForm;
+    if (appointForm.amount == null || appointForm.amount == "" || appointForm.amount <= 0) {
+      wx.showToast({
+        title: '订单金额有误，请刷新重试',
+        icon: "none",
+        duration: 2000
+      })
+      return;
+    }
+    // 判断社交账号是否已选择
+    if (appointForm.accountServiceProvider == null || appointForm.customNum == null) {
+      wx.showToast({
+        title: '亲爱的，请选择社交账号哟',
+        icon: "none",
+        duration: 2000
+      })
+      return;
+    }
+    let staffInfo = this.data.staffInfo;
+    let serviceList = this.data.serviceList;
+    let service = serviceList[appointServiceIndex];
+    let serviceItem = service.serviceItemList[appointServiceItemIndex];
+    appointForm.staffId = staffInfo.userId;
+    appointForm.serviceId = service.id;
+    appointForm.serviceItemId = serviceItem.id;
+    let that = this;
+    wx.requestSubscribeMessage({
+      tmplIds: ['XQkRpWhVAxE99X6XkE7EajVVIleRvnNA_7wEYOMRx7Q', 'f--gE3LkP87xwyzA9py0SaWf3UcNTGd7m0htGbbBQfE'],
+      success: function (res) {
+
+      }, complete: function (res) {
+        orderApi.appointOrderSubmit(appointForm, that.appointOrderSubmitOnStart, that.appointOrderSubmitOnSuccess, that.appointOrderSubmitOnFailed, that.appointOrderSubmitOnWarn);
+      }
+    })
+  },
+  appointOrderSubmitOnStart: function () {
+    wx.showLoading({
+      title: '正在提交',
+      mask: true
+    })
+  },
+  appointOrderSubmitOnSuccess: function (res) {
+    wx.hideLoading();
+    let that = this;
+    let form = this.data.appointForm;
+    // 微信支付
+    if (form.payWay == 0) {
+      wx.requestPayment({
+        "nonceStr": res.data.nonceStr,
+        "package": res.data.packageValue,
+        "signType": res.data.signType,
+        "paySign": res.data.paySign,
+        "timeStamp": res.data.timeStamp,
+        success: function (res) {
+          that.setData({
+            appointDrawer: false
+          })
+          wx.showModal({
+            title: '提示',
+            content: '下单成功，已通知店员火速接单啦，感谢您的支持，祝您生活愉快!',
+            confirmText: "查看订单",
+            cancelText: "知道啦",
+            complete: (res) => {
+              if (res.cancel) { }
+              if (res.confirm) {
+                wx.navigateTo({
+                  url: '../../../orderPackages/page/list/index?currentIndex',
+                })
+              }
+            }
+          })
+        }, fail: function (res) {
+          if (res.errMsg == "requestPayment:fail cancel") {
+            wx.navigateTo({
+              url: '../../../orderPackages/page/list/index?currentIndex',
+            })
+          } else {
+            wx.showToast({
+              title: '亲爱的，支付失败了哟',
+              icon: "none",
+              duration: 2500
+            })
+          }
+        }
+      })
+    } else {
+      userApi.getNewUserInfo(null, this.getNewUserInfoOnSuccess, null);
+      this.setData({
+        appointDrawer: false
+      })
+      wx.showModal({
+        title: '提示',
+        content: '下单成功，已通知店员火速接单啦，感谢您的支持，祝您生活愉快!',
+        confirmText: "查看订单",
+        cancelText: "知道啦",
+        complete: (res) => {
+          if (res.cancel) {
+            userApi.getNewUserInfo(null, this.getNewUserInfoOnSuccess, null);
+          }
+          if (res.confirm) {
+            wx.navigateTo({
+              url: '../../../orderPackages/page/list/index?currentIndex',
+            })
+          }
+        }
+      })
+    }
+  },
+  appointOrderSubmitOnFailed: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: "请求失败",
+      icon: "none",
+      direction: 2000
+    })
+  },
+  appointOrderSubmitOnWarn: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: res.msg,
+      icon: "none",
+      direction: 2000
+    })
+  },
+  /**
+   * 指定单下单点击事件
+   */
+  appointCli: function () {
+    this.setData({
+      appointServiceIndex: -1, // 指定服务下标
+      appointServiceItemIndex: -1, // 指定服务子项目下标
+      appointForm: {
+        num: 1, // 购买数量
+        remark: null, // 备注信息
+        payWay: 0, // 支付方式
+        amount: null, // 订单金额
+        accountServiceProvider: null, // 社交账号服务商
+        customNum: null, // 社交账号
+      },
+      appointDrawer: true
+    })
+  },
+  /**
+   * 选择用户账号信息
+   */
+  selectUserAccount: function () {
+    wx.navigateTo({
+      url: '../../../userPackages/page/accounts/index?type=1',
+    })
+  },
+  /**
+   * 选择用户账号回调事件
+   */
+  chooseUserAccountCallBack: function (data) {
+    this.setData({
+      ["appointForm.accountServiceProvider"]: data.accountServiceProvider,
+      ["appointForm.customNum"]: data.num
     })
   },
 })

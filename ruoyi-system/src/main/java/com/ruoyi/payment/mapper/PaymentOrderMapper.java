@@ -36,6 +36,13 @@ public interface PaymentOrderMapper {
     public List<PaymentOrder> selectPaymentOrderList(PaymentOrder paymentOrder);
 
     /**
+     * 查询body信息
+     *
+     * @return 结果
+     * */
+    public List<String> selectBody();
+
+    /**
      * 新增支付订单
      *
      * @param paymentOrder 支付订单
@@ -50,6 +57,14 @@ public interface PaymentOrderMapper {
      * @return 结果
      */
     public int updatePaymentOrder(PaymentOrder paymentOrder);
+
+    /**
+     * 根据订单标识修改记录数据
+     *
+     * @param paymentOrder 数据
+     * @return 结果
+     * */
+    public int updateByOrderId(PaymentOrder paymentOrder);
 
     /**
      * 删除支付订单

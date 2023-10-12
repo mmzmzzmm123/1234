@@ -19,6 +19,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RocketMqService {
 
+    private static final long MQ_DELAYED_SEND_TIME_OUT = 10000;
     private final RocketMQTemplate rocketMQTemplate;
 
     /**
@@ -43,12 +44,11 @@ public class RocketMqService {
      *
      * @param topic      topic
      * @param params     发送参数
-     * @param timeout    毫秒-发送超时
      * @param delayLevel 延时发送等级 {@link com.ruoyi.common.enums.MqDelayLevelEnums}
      * @return SendResult 返回结果 {@link SendResult}
      */
-    public <T> SendResult delayedSend(String topic, T params, Long timeout, MqDelayLevelEnums delayLevel) {
-        log.info("发送延时信息：开始，参数：topic：{}， params：{}， timeout：{}， delayLevel：{}", topic, params, timeout, delayLevel);
-        return rocketMQTemplate.syncSend(topic, MessageBuilder.withPayload(params).build(), timeout, delayLevel.getDelayLevel());
+    public <T> SendResult delayedSend(String topic, T params, MqDelayLevelEnums delayLevel) {
+        log.info("发送延时信息：开始，参数：topic：{}， params：{}， delayLevel：{}", topic, params, delayLevel);
+        return rocketMQTemplate.syncSend(topic, MessageBuilder.withPayload(params).build(), MQ_DELAYED_SEND_TIME_OUT, delayLevel.getDelayLevel());
     }
 }

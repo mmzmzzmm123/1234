@@ -2,9 +2,13 @@ package com.ruoyi.order.domain;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
     import com.ruoyi.common.core.domain.BaseEntity;
+import com.ruoyi.staff.domain.StaffInfo;
+import com.ruoyi.user.domain.UserInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
@@ -78,10 +82,18 @@ public class OrderInfo extends BaseEntity {
     @ApiModelProperty("客户账号")
     private String customNum;
 
+    @Excel(name = "选择店员性别")
+    @ApiModelProperty("选择店员性别")
+    private String chooseStaffSex;
+
+    @Excel(name = "排除服务过的店员")
+    @ApiModelProperty("排除服务过的店员")
+    private String filterServedStaff;
+
     /** 订单金额 */
     @Excel(name = "订单金额")
     @ApiModelProperty("订单金额")
-    private BigDecimal custom;
+    private BigDecimal amount;
 
     /** 卡券标识 */
     @Excel(name = "卡券标识")
@@ -104,38 +116,38 @@ public class OrderInfo extends BaseEntity {
     private BigDecimal payAmount;
 
     /** 自动过期时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "自动过期时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "自动过期时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("自动过期时间")
     private Date autoExpireTime;
 
     /** 自动完成时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "自动完成时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "自动完成时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("自动完成时间")
     private Date autoFinshTime;
 
     /** 接单时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "接单时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "接单时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("接单时间")
     private Date orderReceivingTime;
 
     /** 开始服务时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "开始服务时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "开始服务时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("开始服务时间")
     private Date orderServiceTime;
 
     /** 订单完成时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "订单完成时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "订单完成时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("订单完成时间")
     private Date orderFinshTime;
 
     /** 订单取消时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "订单取消时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "订单取消时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("订单取消时间")
     private Date orderCancelTime;
 
@@ -149,5 +161,15 @@ public class OrderInfo extends BaseEntity {
     @ApiModelProperty("取消留言")
     private String cancelRemark;
 
+    @ApiModelProperty("过滤店员标识为空")
+    private String filterStaffIdIsNull;
 
+    @ApiModelProperty("订单详情数据")
+    private List<OrderDetails> orderDetailsList;
+
+    @ApiModelProperty("店员数据")
+    private StaffInfo staffInfo;
+
+    @ApiModelProperty("用户数据")
+    private UserInfo userInfo;
 }

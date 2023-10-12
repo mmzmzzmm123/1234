@@ -14,7 +14,7 @@
   </view>
 
   <!-- body -->
-  <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" bindscrolltolower="loadNextPageData" style="width:{{pWidth}}px;height:{{pHeight}}px;" bindscroll="scrollView">
+  <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" bindscrolltolower="loadNextPageData" style="width:{{pWidth}}px;height:{{pHeight}}px;" bindscroll="scrollView" bindrefresherrefresh="refresh">
     <!-- banner -->
     <wux-spin nested spinning="{{ bannersLoadState }}" tip="加载中">
       <view class="bannerBgColorView" style="height:{{pHeight * 0.3}}px;background-color:{{banners!=null?banners[bannerCurrent].themeColor:'#0700B6'}};"></view>
@@ -51,7 +51,7 @@
     <scroll-view scroll-x class="view_box_common" style="overflow-x: hidden;white-space: nowrap;margin-top: -10px;" catchtouchmove="hotScrollViewMove">
       <block wx:if="{{!newStaffLoadState && newStaffList!=null && newStaffList.length > 0}}">
         <block wx:for="{{newStaffList}}" wx:key="id">
-          <view class="hotView hotBg_{{index}}"  data-staffid="{{item.userId}}" bind:tap="toShowStaffInfo">
+          <view class="hotView hotBg_{{index}}" data-staffid="{{item.userId}}" bind:tap="toShowStaffInfo">
             <!-- 在线信息 -->
             <view class="view_box_common view_box_row_content_symmetry">
               <view></view>
@@ -95,38 +95,47 @@
 
 
     <!-- 排名 -->
-    <column-view title="周榜前三" moreTitle="查看更多" bind:toPage="goSelectPage"></column-view>
-    <view class="view_box_common rankView">
-      <view class="rankTab view_box_row_content">
-        <view class="rankTab_cli">女神榜</view>
-        <view>男神榜</view>
+    <column-view title="周榜前三" moreTitle="" bind:toPage="goSelectPage"></column-view>
+    <block wx:if="{{!weeklyRankingTopThreeLoadState}}">
+      <view class="view_box_common rankView">
+        <view class="rankTab view_box_row_content">
+          <view class="{{rankTabIndex == 0 ? 'rankTab_cli' : ''}}" data-index="0" bind:tap="changeRankTab">女神榜</view>
+          <view class="{{rankTabIndex == 1 ? 'rankTab_cli' : ''}}" data-index="1" bind:tap="changeRankTab">男神榜</view>
+        </view>
+        <view class="rankInfo">
+          <image class="rankBg" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/rank_bg.png" mode="widthFix"></image>
+          <view class="staffRankView view_box_content_column" style="top: 65px;left: {{pWidth*0.9*0.5-36}}px;">
+            <image class="staffRank" src="{{rankTabIndex==0?(girlWeeklyRankingTopThree[0].avatarUrl!=null?girlWeeklyRankingTopThree[0].avatarUrl:'../../static/images/default_tx.png'):(boyWeeklyRankingTopThree[0].avatarUrl != null ? boyWeeklyRankingTopThree[0].avatarUrl : '../../static/images/default_tx.png')}}" mode="aspectFill"></image>
+            <view>{{rankTabIndex==0?girlWeeklyRankingTopThree[0].nickName:boyWeeklyRankingTopThree[0].nickName}}</view>
+            <image class="crownIco" src="../../static/ico/crown_64.png" mode="widthFix"></image>
+            <!-- gif -->
+            <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
+          </view>
+          <view class="staffRankView view_box_content_column" style="top: 95px;left: {{pWidth*0.9*0.22-36}}px;">
+            <image class="staffRank" src="{{rankTabIndex==0?(girlWeeklyRankingTopThree[1].avatarUrl!=null?girlWeeklyRankingTopThree[1].avatarUrl:'../../static/images/default_tx.png'):(boyWeeklyRankingTopThree[1].avatarUrl != null ? boyWeeklyRankingTopThree[1].avatarUrl : '../../static/images/default_tx.png')}}" mode="aspectFill"></image>
+            <view>{{rankTabIndex==0?girlWeeklyRankingTopThree[1].nickName:boyWeeklyRankingTopThree[1].nickName}}</view>
+            <!-- gif -->
+            <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
+          </view>
+          <view class="staffRankView view_box_content_column" style="top: 85px;left: {{pWidth*0.9*0.77-26}}px;">
+            <image class="staffRank" src="{{rankTabIndex==0?(girlWeeklyRankingTopThree[2].avatarUrl!=null?girlWeeklyRankingTopThree[2].avatarUrl:'../../static/images/default_tx.png'):(boyWeeklyRankingTopThree[2].avatarUrl != null ? boyWeeklyRankingTopThree[2].avatarUrl : '../../static/images/default_tx.png')}}" mode="aspectFill"></image>
+            <view>{{rankTabIndex==0?girlWeeklyRankingTopThree[2].nickName:boyWeeklyRankingTopThree[2].nickName}}</view>
+            <!-- gif -->
+            <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
+          </view>
+        </view>
+        <!-- 背景点缀 -->
+        <image class="rankLeftDecorate" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/bot_1.png" mode="widthFix"></image>
+        <image class="rankRigheDecorate" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/bot_1.png" mode="widthFix"></image>
       </view>
-      <view class="rankInfo">
-        <image class="rankBg" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/rank_bg.png" mode="widthFix"></image>
-        <view class="staffRankView view_box_content_column" style="top: 65px;left: {{pWidth*0.9*0.5-36}}px;">
-          <image class="staffRank" src="../../static/temp/t1.png"></image>
-          <view>小田心</view>
-          <image class="crownIco" src="../../static/ico/crown_64.png" mode="widthFix"></image>
-          <!-- gif -->
-          <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
-        </view>
-        <view class="staffRankView view_box_content_column" style="top: 95px;left: {{pWidth*0.9*0.22-36}}px;">
-          <image class="staffRank" src="../../static/temp/t2.png"></image>
-          <view>小田心</view>
-          <!-- gif -->
-          <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
-        </view>
-        <view class="staffRankView view_box_content_column" style="top: 85px;left: {{pWidth*0.9*0.77-26}}px;">
-          <image class="staffRank" src="../../static/temp/t3.png"></image>
-          <view>小田心</view>
-          <!-- gif -->
-          <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
-        </view>
+    </block>
+    <block wx:else>
+      <view class="view_box_common">
+        <wux-skeleton active>
+          <wux-skeleton-paragraph rows="6" />
+        </wux-skeleton>
       </view>
-      <!-- 背景点缀 -->
-      <image class="rankLeftDecorate" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/bot_1.png" mode="widthFix"></image>
-      <image class="rankRigheDecorate" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/bot_1.png" mode="widthFix"></image>
-    </view>
+    </block>
 
 
     <!-- 员工列表 -->
@@ -137,7 +146,7 @@
         <block wx:for="{{staffDataList}}" wx:key="id">
           <view class="staffView" data-staffid="{{item.userId}}" bind:tap="toShowStaffInfo">
             <view class="staffCover">
-              <image class="cover" src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}"></image>
+              <image class="cover" src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}" mode="aspectFill"></image>
               <view class="view_box_common view_all_adapt view_box_column_symmetry">
                 <view class="view_box_row_content_symmetry" style="margin-top: 6px;">
                   <view class="presence view_box_row_content">

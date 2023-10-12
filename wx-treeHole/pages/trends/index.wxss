@@ -59,6 +59,7 @@ page{
 .trendsVideo{
   margin-top: 10px;
   border-radius: 10px;
+  z-index: 999;
 }
 .audioBut{
   height: 20px;

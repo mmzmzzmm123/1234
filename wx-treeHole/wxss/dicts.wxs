@@ -6,6 +6,7 @@ sex = function (key) {
     key == "1" ? "女" :
         "未知";
 }
+
 /**
  * 账号服务商
  */
@@ -15,7 +16,46 @@ social_accounts = function(key){
   key == "2" ? "微博" :
         "未知";
 }
+/**
+ * 支付方式
+ */
+pay_way = function(key){
+  return key == "0" ? "微信支付" :
+  key == "1" ? "枫叶币支付" :
+        "未知";
+}
+
+/**
+ * 订单状态
+ */
+order_state = function(key){
+  return key == "-1" ? "已取消" :
+  key == "0" ? "已完成" :
+  key == "1" ? "待支付" :
+  key == "2" ? "待接单" :
+  key == "3" ? "待服务" :
+  key == "4" ? "服务中" :
+  key == "5" ? "待评价" :
+  key == "888" ? "退款中" :
+  key == "999" ? "已退款" :
+        "未知";
+}
+/**
+ * 订单类型
+ */
+order_type = function(key){
+  return key == "0" ? "指定订单" :
+  key == "1" ? "随机订单" :
+  key == "2" ? "礼物订单" :
+  key == "3" ? "打赏订单" :
+  key == "4" ? "充值订单" :
+        "未知";
+}
+
 module.exports = {
   sex: sex,
-  social_accounts: social_accounts
+  social_accounts: social_accounts,
+  order_state: order_state,
+  order_type: order_type,
+  pay_way: pay_way
 }

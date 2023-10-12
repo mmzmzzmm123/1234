@@ -1,6 +1,7 @@
 package com.ruoyi.user.mapper;
 
 import java.util.List;
+
 import com.ruoyi.user.domain.UserInfo;
 
 /**
@@ -34,6 +35,14 @@ public interface UserInfoMapper {
      * @return 用户信息管理集合
      */
     public List<UserInfo> selectUserInfoList(UserInfo userInfo);
+
+    /**
+     * 根据主键查询openId
+     *
+     * @param id 标识
+     * @return 结果
+     */
+    public String selectOpenIdById(Long id);
 
     /**
      * 新增用户信息管理

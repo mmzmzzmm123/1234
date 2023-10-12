@@ -6,6 +6,8 @@ import globalConstant from "../../constans/globalConstant";
 import staffInfoApi from "../../apis/staff/staffApi";
 import platformApi from "../../apis/platform/platformApi";
 import userApi from "../../apis/user/userApi";
+import staffApi from "../../apis/staff/staffApi";
+import paymentApi from "../../apis/payment/paymentApi";
 Page({
 
   data: {
@@ -35,6 +37,34 @@ Page({
     userLikeStaffUserIdList: app.globalData.userLikeStaffUserIdList, // 用户收藏店员记录
     preAudioSource: -1, // 上一个播放的数据源类型 -1无 0新人推荐 1店员
     preAudioIndex: -1, // 数据中的下标
+    rankTabIndex: 0, // 周榜tab下标
+    boyWeeklyRankingTopThree: [], // 男生周榜前三
+    girlWeeklyRankingTopThree: [], // 女生周榜前三
+    weeklyRankingTopThreeLoadState: false, // 周榜前三加载状态
+    defaultRewardPublicityData: [ // 默认公示数据
+      "张伟 收到打赏枫叶币 17.00 个",
+      "Olivia 收到打赏枫叶币 12.00 个",
+      "John 收到打赏枫叶币 15.25 个",
+      "🍦Hannah🍦 收到了打赏礼物[幸运雨] x1",
+      "💖David💖 收到了打赏礼物[星梦庄园] x1",
+      "Emma 收到打赏枫叶币 8.75 个",
+      "陈静 收到打赏枫叶币 11.50 个",
+      "🌟Alice🌟 收到了打赏礼物[棒棒糖] x1",
+      "🎉Charlie🎉 收到了打赏礼物[月夜船头] x1",
+      "Lucy 收到打赏枫叶币 8.25 个",
+      "Michael 收到打赏枫叶币 6.25 个",
+      "Frank 收到了打赏礼物[梦幻海岛] x1",
+      "Emily 收到打赏枫叶币 9.75 个",
+      "😊Bob😊 收到了打赏礼物[比心心] x1",
+      "💫Grace💫 收到了打赏礼物[冰激凌] x1",
+      "林涛 收到打赏枫叶币 10.50 个",
+      "Tom 收到打赏枫叶币 20.25 个",
+      "王芳 收到打赏枫叶币 14.75 个",
+      "李明 收到打赏枫叶币 5.00 个",
+      "🌙Eva🌙 收到了打赏礼物[一起流星雨] x1"
+    ],
+    rewardPublicityData: [], // 公示数据
+    rewardPublicityIndex: 0, // 打赏公示下标
   },
 
   onLoad() {
@@ -54,10 +84,13 @@ Page({
         pHeight: divHeight
       })
     }).exec();
+
+    let defaultRewardPublicityData = this.data.defaultRewardPublicityData;
     this.setData({
       stateBarHeight: storage.get(storageConstant.stateBarHeight, null),
       barHeight: globalConstant.titleBarHeight,
-      showStateBarHeight: (Number(storage.get(storageConstant.stateBarHeight, null)) + Number(globalConstant.titleBarHeight)) - 10
+      showStateBarHeight: (Number(storage.get(storageConstant.stateBarHeight, null)) + Number(globalConstant.titleBarHeight)) - 10,
+      rewardPublicityData: defaultRewardPublicityData
     })
 
     // 加载banner
@@ -66,6 +99,10 @@ Page({
     this.loadNewStaffData();
     // 加载店员数据
     this.loadStaffData(null);
+    // 加载周榜前三
+    this.getWeeklyRankingTopThree();
+    // 加载公示数据
+    this.selectPaymentOrderBody();
 
     // 全局语音监听暂停事件
     app.globalData.audioContext.onEnded(() => {
@@ -90,16 +127,15 @@ Page({
         })
       }
     })
-
-    // 打赏公示
-    setInterval(() => {
-      let generateRandomNumber = () => Math.floor(Math.random() * 1900 + 1) // 生成1到1999的随机数
-      that.update('你获得了' + generateRandomNumber() + '个金币')
-    }, 2000)
+    // 开始公示
+    this.updateRewardPublicity(defaultRewardPublicityData[Math.floor(Math.random() * 19)]);
+    this.startRewardPublicity();
   },
   onShow() {
     // 加载用户点击关注数据
     this.loadUserLikeData();
+    // 加载公示数据
+    this.selectPaymentOrderBody();
   },
   onHide() {
     app.globalData.audioContext.pause();
@@ -129,6 +165,94 @@ Page({
    */
   onShareAppMessage() {
 
+  },
+  /**
+   * 开始打赏公示
+   */
+  startRewardPublicity: function () {
+    let that = this;
+    setInterval(() => {
+      let rewardPublicityData = this.data.rewardPublicityData;
+      let index = this.data.rewardPublicityIndex;
+      if(index >= (rewardPublicityData.length-1)){
+        index = 0;
+      }else{
+        index += 1;
+      }
+      that.updateRewardPublicity(rewardPublicityData[index]);
+      that.setData({
+        rewardPublicityIndex: index
+      })
+    }, 2000)
+  },
+  /**
+   * 更新公示数据
+   */
+  updateRewardPublicity(content) {
+    let that = this;
+    let animation = wx.createAnimation();
+    // 旧消息向上平移，以低速开始，动画时间300ms
+    animation.translateY(-30).step({ duration: 300, timingFunction: 'ease-in' })
+    // 为了实现下一条新内容向上平移的效果，必须把内容很快平移到下方，并且不能被用户看见
+    // 实现方法：动画时间设置为1ms，过渡效果设置为’动画第一帧就跳至结束状态直到结束‘
+    animation.opacity(0).translateY(30).step({ duration: 1, timingFunction: 'step-start' })
+    // 新消息向上平移的同时恢复透明度，以低速结束，动画时间300ms
+    animation.opacity(1).translateY(0).step({ duration: 300, timingFunction: 'ease-out' })
+    that.setData({
+      animationData: animation.export()
+    })
+    // 更新内容的延时必须大于第一步动画时间
+    setTimeout(that.setData.bind(that, { content: content }), 300)
+  },
+  /**
+   * 加载公示数据
+   */
+  selectPaymentOrderBody: function () {
+    paymentApi.selectPaymentOrderBody({ pageNum: 1, pageSize: 20 }, this.selectPaymentOrderBodyOnSuccess);
+  },
+  selectPaymentOrderBodyOnSuccess: function (res) {
+    let defaultRewardPublicityData = this.data.defaultRewardPublicityData;
+    for (let index = 0; index < res.data.length; index++) {
+      defaultRewardPublicityData.push(res.data[index]);
+    }
+    this.setData({
+      rewardPublicityData: defaultRewardPublicityData,
+      rewardPublicityIndex: 19
+    })
+  },
+  /**
+   * 加载周榜前三数据
+   */
+  getWeeklyRankingTopThree: function () {
+    staffApi.weeklyRankingTopThree(this.getWeeklyRankingTopThreeOnStart, this.getWeeklyRankingTopThreeOnSuccess, this.getWeeklyRankingTopThreeOnFailed);
+  },
+  getWeeklyRankingTopThreeOnStart: function () {
+    this.setData({
+      weeklyRankingTopThreeLoadState: true
+    })
+  },
+  getWeeklyRankingTopThreeOnSuccess: function (res) {
+    let dataArr = res.data;
+    let boyArr = [];
+    let girlArr = [];
+    for (let index = 0; index < dataArr.length; index++) {
+      let obj = dataArr[index];
+      if (obj.sex == '0') {
+        boyArr.push(obj);
+      } else {
+        girlArr.push(obj);
+      }
+    }
+    this.setData({
+      weeklyRankingTopThreeLoadState: false,
+      boyWeeklyRankingTopThree: boyArr,
+      girlWeeklyRankingTopThree: girlArr
+    })
+  },
+  getWeeklyRankingTopThreeOnFailed: function (res) {
+    this.setData({
+      weeklyRankingTopThreeLoadState: false
+    })
   },
   /**
    * 加载用户点击关注数据
@@ -294,22 +418,6 @@ Page({
       })
     }
   },
-  update(content) {
-    let that = this;
-    let animation = wx.createAnimation();
-    // 旧消息向上平移，以低速开始，动画时间300ms
-    animation.translateY(-30).step({ duration: 300, timingFunction: 'ease-in' })
-    // 为了实现下一条新内容向上平移的效果，必须把内容很快平移到下方，并且不能被用户看见
-    // 实现方法：动画时间设置为1ms，过渡效果设置为’动画第一帧就跳至结束状态直到结束‘
-    animation.opacity(0).translateY(30).step({ duration: 1, timingFunction: 'step-start' })
-    // 新消息向上平移的同时恢复透明度，以低速结束，动画时间300ms
-    animation.opacity(1).translateY(0).step({ duration: 300, timingFunction: 'ease-out' })
-    that.setData({
-      animationData: animation.export()
-    })
-    // 更新内容的延时必须大于第一步动画时间
-    setTimeout(that.setData.bind(that, { content: content }), 300)
-  },
   /**
    * 前往选人页面
    */
@@ -440,9 +548,40 @@ Page({
   /**
    * 前往店员资料页
    */
-  toShowStaffInfo:function(e){
+  toShowStaffInfo: function (e) {
     wx.navigateTo({
-      url: '../../staffPackages/page/staffInfoShow/index?staffId='+e.currentTarget.dataset.staffid,
+      url: '../../staffPackages/page/staffInfoShow/index?staffId=' + e.currentTarget.dataset.staffid,
     })
-  }
+  },
+  /**
+   * 周榜tab改变事件
+   */
+  changeRankTab: function (e) {
+    this.setData({
+      rankTabIndex: e.currentTarget.dataset.index
+    })
+  },
+  /**
+   * 下拉刷新数据
+   */
+  refresh: function () {
+    let that = this;
+    setTimeout(function () {
+      that.setData({
+        refreshState: false
+      }, 2000)
+    })
+    // 加载banner
+    this.loadBanner();
+    // 加载新人推荐数据
+    this.loadNewStaffData();
+    // 加载店员数据
+    this.loadStaffData(null);
+    // 加载周榜前三
+    this.getWeeklyRankingTopThree();
+    // 加载用户点击关注数据
+    this.loadUserLikeData();
+    // 加载打赏公示数据
+    this.selectPaymentOrderBody();
+  },
 })

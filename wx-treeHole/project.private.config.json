@@ -10,6 +10,20 @@
     "miniprogram": {
       "list": [
         {
+          "name": "店员订单列表页",
+          "pathName": "staffPackages/page/staffOrder/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "用户订单列表页",
+          "pathName": "orderPackages/page/list/index",
+          "query": "index=0",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "员工资料卡",
           "pathName": "staffPackages/page/staffInfoShow/index",
           "query": "staffId=2",

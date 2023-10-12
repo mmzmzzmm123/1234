@@ -8,13 +8,13 @@
       <view class="view_box_common titleView" style="height: 100%;">
         <view class="stateBarIcoView">
         </view>
-        <text>我的</text>
+        <text>我 的</text>
       </view>
     </view>
   </view>
 
   <!-- body -->
-  <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" style="width:{{pWidth}}px;height:{{pHeight}}px;">
+  <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}"  bindscroll="scrollView"  bindrefresherrefresh="refresh" style="width:{{pWidth}}px;height:{{pHeight}}px;">
 
     <view class="view_box_row bannerView" style="height:{{pHeight * 0.3}}px;">
       <image src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/psc.gif" class="bannerImage view_all_adapt"></image>
@@ -56,37 +56,37 @@
     <view class="funBigView" style="top: -{{pHeight * 0.08}}px;">
 
       <view class="view_box_common common_fun_box_view">
-        <column-view title="我的订单" moreTitle="更多" outerMargin="0px"></column-view>
+        <column-view title="我的订单" moreTitle="更多" outerMargin="0px" data-index="0" bind:toPage="toOrderListPage"></column-view>
         <view class="cut_off_rule_small" style="margin: 10px 0;"></view>
         <view class="view_box_common view_box_row_content_symmetry_wrap" style="width:85%;">
-          <wux-badge dot="{{ true }}">
-            <view class="view_box_content_column orderStateItemView" data-state="waitPay">
+          <wux-badge dot="{{ false }}">
+            <view class="view_box_content_column orderStateItemView" data-index="0" bind:tap="toOrderListPage">
               <image mode="widthFix" src="../../static/ico/to_be_paid_64_gray.png"></image>
               <view>待付款</view>
             </view>
           </wux-badge>
-          <wux-badge dot="{{ true }}">
-            <view class="view_box_content_column orderStateItemView" data-state="waitPay">
-              <image mode="widthFix" src="../../static/ico/wait_order.png"></image>
+          <wux-badge dot="{{ false }}">
+            <view class="view_box_content_column orderStateItemView" data-index="1" bind:tap="toOrderListPage">
+              <image mode="widthFix" src="../../static/ico/serviceing.png"></image>
               <view>待接单</view>
             </view>
           </wux-badge>
-          <wux-badge dot="{{ true }}">
-            <view class="view_box_content_column orderStateItemView" data-state="waitPay">
-              <image mode="widthFix" src="../../static/ico/wait_service.png"></image>
+          <wux-badge dot="{{ false }}">
+            <view class="view_box_content_column orderStateItemView" data-index="2" bind:tap="toOrderListPage">
+              <image mode="widthFix" src="../../static/ico/wait_order.png"></image>
               <view>待服务</view>
             </view>
           </wux-badge>
-          <wux-badge dot="{{ true }}">
-            <view class="view_box_content_column orderStateItemView" data-state="waitPay">
-              <image mode="widthFix" src="../../static/ico/serviceing.png"></image>
+          <wux-badge dot="{{ false }}">
+            <view class="view_box_content_column orderStateItemView" data-index="3" bind:tap="toOrderListPage">
+              <image mode="widthFix" src="../../static/ico/wait_service.png"></image>
               <view>服务中</view>
             </view>
           </wux-badge>
-          <wux-badge dot="{{ true }}">
-            <view class="view_box_content_column orderStateItemView" data-state="waitPay">
+          <wux-badge dot="{{ false }}">
+            <view class="view_box_content_column orderStateItemView" data-index="4" bind:tap="toOrderListPage">
               <image mode="widthFix" src="../../static/ico/comment_64_gray.png"></image>
-              <view>待评论</view>
+              <view>已完成</view>
             </view>
           </wux-badge>
         </view>
@@ -147,19 +147,27 @@
                 </view>
               </wux-col>
               <wux-col span="3">
-                <view class="view_box_content_column funItemView">
+                <view class="view_box_content_column funItemView" bind:tap="toStaffOrder">
                   <view class="view_box_row_content background_red">
                     <image src="../../static/ico/order_white_32.png"></image>
                   </view>
                   <text>我的订单</text>
                 </view>
               </wux-col>
-              <wux-col span="3">
+              <!-- <wux-col span="3">
                 <view class="view_box_content_column funItemView">
                   <view class="view_box_row_content background_orange">
                     <image src="../../static/ico/money_white_32.png"></image>
                   </view>
                   <text>我的提成</text>
+                </view>
+              </wux-col> -->
+              <wux-col span="3">
+                <view class="view_box_content_column funItemView" bind:tap="messageSubscription">
+                  <view class="view_box_row_content background_gold">
+                    <image src="../../static/ico/notify_white_32.png"></image>
+                  </view>
+                  <text>消息订阅</text>
                 </view>
               </wux-col>
             </wux-row>
@@ -184,7 +192,7 @@
           </view>
           <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
         </view>
-        <view class="seizeSeat_mini"></view>
+        <!-- <view class="seizeSeat_mini"></view>
         <view class="view_box_common view_box_row_content_symmetry commonFunItem">
           <view class="view_box_row_content">
             <image src="../../static/ico/interest_grey_32.png" mode="widthFix"></image>
@@ -215,7 +223,7 @@
             <text>关于我们</text>
           </view>
           <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
-        </view>
+        </view> -->
       </view>
 
       <!-- 页尾 -->
