@@ -7,20 +7,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="OrderComment" id="OrderCommentResult">
         <result property="id"    column="id"    />
         <result property="orderId"    column="order_id"    />
+        <result property="staffUserId"    column="staff_user_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userAvatar"    column="user_avatar"    />
+        <result property="userName"    column="user_name"    />
         <result property="comment"    column="comment"    />
+        <result property="serviceContent"    column="service_content"    />
         <result property="ifShow"    column="if_show"    />
         <result property="createTime"    column="create_time"    />
     </resultMap>
 
     <sql id="selectOrderCommentVo">
-        select id, order_id, comment, if_show, create_time from bus_order_comment
+        select id, order_id, staff_user_id, user_id, user_avatar, user_name, comment, service_content, if_show, create_time from bus_order_comment
     </sql>
 
     <select id="selectOrderCommentList" parameterType="OrderComment" resultMap="OrderCommentResult">
         <include refid="selectOrderCommentVo"/>
         <where>  
             <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="staffUserId != null "> and staff_user_id = #{staffUserId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userAvatar != null  and userAvatar != ''"> and user_avatar = #{userAvatar}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
             <if test="comment != null  and comment != ''"> and comment like concat('%', #{comment}, '%')</if>
+            <if test="serviceContent != null  and serviceContent != ''"> and service_content like concat('%', #{serviceContent}, '%')</if>
             <if test="ifShow != null  and ifShow != ''"> and if_show = #{ifShow}</if>
         </where>
     </select>
@@ -34,13 +44,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into bus_order_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="orderId != null">order_id,</if>
+            <if test="staffUserId != null">staff_user_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userAvatar != null">user_avatar,</if>
+            <if test="userName != null">user_name,</if>
             <if test="comment != null">comment,</if>
+            <if test="serviceContent != null">service_content,</if>
             <if test="ifShow != null">if_show,</if>
             <if test="createTime != null">create_time,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderId != null">#{orderId},</if>
+            <if test="staffUserId != null">#{staffUserId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userAvatar != null">#{userAvatar},</if>
+            <if test="userName != null">#{userName},</if>
             <if test="comment != null">#{comment},</if>
+            <if test="serviceContent != null">#{serviceContent},</if>
             <if test="ifShow != null">#{ifShow},</if>
             <if test="createTime != null">#{createTime},</if>
          </trim>
@@ -50,7 +70,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update bus_order_comment
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="staffUserId != null">staff_user_id = #{staffUserId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userAvatar != null">user_avatar = #{userAvatar},</if>
+            <if test="userName != null">user_name = #{userName},</if>
             <if test="comment != null">comment = #{comment},</if>
+            <if test="serviceContent != null">service_content = #{serviceContent},</if>
             <if test="ifShow != null">if_show = #{ifShow},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
         </trim>

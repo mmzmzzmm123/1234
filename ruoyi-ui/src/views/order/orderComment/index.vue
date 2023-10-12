@@ -9,6 +9,38 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="店员标识" prop="staffUserId">
+        <el-input
+          v-model="queryParams.staffUserId"
+          placeholder="请输入店员标识"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="用户标识" prop="userId">
+        <el-input
+          v-model="queryParams.userId"
+          placeholder="请输入用户标识"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="用户头像" prop="userAvatar">
+        <el-input
+          v-model="queryParams.userAvatar"
+          placeholder="请输入用户头像"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="用户名称" prop="userName">
+        <el-input
+          v-model="queryParams.userName"
+          placeholder="请输入用户名称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="评论内容" prop="comment">
         <el-input
           v-model="queryParams.comment"
@@ -83,7 +115,12 @@
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="主键" align="center" prop="id" :show-overflow-tooltip="true" />
       <el-table-column label="订单标识" align="center" prop="orderId" :show-overflow-tooltip="true"/>
+      <el-table-column label="店员标识" align="center" prop="staffUserId" :show-overflow-tooltip="true"/>
+      <el-table-column label="用户标识" align="center" prop="userId" :show-overflow-tooltip="true"/>
+      <el-table-column label="用户头像" align="center" prop="userAvatar" :show-overflow-tooltip="true"/>
+      <el-table-column label="用户名称" align="center" prop="userName" :show-overflow-tooltip="true"/>
       <el-table-column label="评论内容" align="center" prop="comment" :show-overflow-tooltip="true"/>
+      <el-table-column label="服务内容" align="center" prop="serviceContent" :show-overflow-tooltip="true"/>
       <el-table-column label="是否展示" align="center" prop="ifShow" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.ifShow"/>
@@ -128,8 +165,23 @@
         <el-form-item label="订单标识" prop="orderId">
           <el-input v-model="form.orderId" placeholder="请输入订单标识" />
         </el-form-item>
+        <el-form-item label="店员标识" prop="staffUserId">
+          <el-input v-model="form.staffUserId" placeholder="请输入店员标识" />
+        </el-form-item>
+        <el-form-item label="用户标识" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入用户标识" />
+        </el-form-item>
+        <el-form-item label="用户头像" prop="userAvatar">
+          <el-input v-model="form.userAvatar" placeholder="请输入用户头像" />
+        </el-form-item>
+        <el-form-item label="用户名称" prop="userName">
+          <el-input v-model="form.userName" placeholder="请输入用户名称" />
+        </el-form-item>
         <el-form-item label="评论内容" prop="comment">
           <el-input v-model="form.comment" placeholder="请输入评论内容" />
+        </el-form-item>
+        <el-form-item label="服务内容">
+          <editor v-model="form.serviceContent" :min-height="192"/>
         </el-form-item>
         <el-form-item label="是否展示" prop="ifShow">
           <el-select v-model="form.ifShow" placeholder="请选择是否展示">
@@ -181,7 +233,12 @@ export default {
         pageNum: 1,
         pageSize: 10,
         orderId: null,
+        staffUserId: null,
+        userId: null,
+        userAvatar: null,
+        userName: null,
         comment: null,
+        serviceContent: null,
         ifShow: null,
       },
       // 表单参数
@@ -214,7 +271,12 @@ export default {
       this.form = {
         id: null,
         orderId: null,
+        staffUserId: null,
+        userId: null,
+        userAvatar: null,
+        userName: null,
         comment: null,
+        serviceContent: null,
         ifShow: null,
         createTime: null
       };

@@ -45,8 +45,10 @@ import com.ruoyi.staff.domain.StaffInfo;
 import com.ruoyi.staff.domain.StaffLevelConfig;
 import com.ruoyi.staff.mapper.StaffInfoMapper;
 import com.ruoyi.staff.mapper.StaffLevelConfigMapper;
+import com.ruoyi.user.domain.UserInfo;
 import com.ruoyi.user.domain.UserWallet;
 import com.ruoyi.user.domain.UserWalletRecord;
+import com.ruoyi.user.mapper.UserInfoMapper;
 import com.ruoyi.user.mapper.UserWalletMapper;
 import com.ruoyi.user.mapper.UserWalletRecordMapper;
 import lombok.RequiredArgsConstructor;
@@ -85,6 +87,7 @@ public class ApiOrderService {
     private final ServiceItemMapper serviceItemMapper;
     private final PaymentRefundMapper paymentRefundMapper;
     private final OrderCommentMapper orderCommentMapper;
+    private final UserInfoMapper userInfoMapper;
     private final RedisCache redisCache;
     private final WxService wxService;
     private final RocketMqService rocketMqService;
@@ -929,6 +932,20 @@ public class ApiOrderService {
             log.warn("订单完成：失败，无法找到对应的订单数据");
             throw new ServiceException("亲爱的，系统繁忙，请稍后重试", HttpStatus.WARN_WX);
         }
+        // 查询订单详情信息
+        List<OrderDetails> orderDetailsList = orderDetailsMapper.selectByOrderId(orderInfo.getId());
+        if (ObjectUtil.isEmpty(orderDetailsList)) {
+            log.warn("订单完成：失败，查询订单详情失败");
+            throw new ServiceException("亲爱的，系统繁忙，请刷新重试哟", HttpStatus.WARN_WX);
+        }
+        OrderDetails orderDetails = orderDetailsList.stream().findFirst().orElse(null);
+        // 查询用户信息
+        UserInfo userInfo = userInfoMapper.selectUserInfoById(orderInfo.getCustomUserId());
+        if (ObjectUtil.isNull(userInfo)){
+            log.warn("订单完成：失败，查询用户信息失败");
+            throw new ServiceException("亲爱的，系统繁忙，请刷新重试哟", HttpStatus.WARN_WX);
+        }
+
         Date now = DateUtils.getNowDate();
         // 开始构建订单
         OrderInfo updateOi = new OrderInfo();
@@ -945,7 +962,12 @@ public class ApiOrderService {
         }
         OrderComment orderComment = new OrderComment();
         orderComment.setOrderId(orderInfo.getId())
+                .setStaffUserId(orderInfo.getStaffUserId())
+                .setUserId(orderInfo.getCustomUserId())
+                .setUserAvatar(userInfo.getAvatarUrl())
+                .setUserName(userInfo.getNickName())
                 .setComment(comment)
+                .setServiceContent(orderDetails.getDetailsTitle())
                 .setCreateTime(now);
         orderCommentMapper.insertOrderComment(orderComment);
         // 订单佣金结算

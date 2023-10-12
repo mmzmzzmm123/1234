@@ -7,7 +7,7 @@ import com.ruoyi.order.domain.OrderComment;
  * 订单评论管理Mapper接口
  *
  * @author Lam
- * @date 2023-10-11
+ * @date 2023-10-12
  */
 public interface OrderCommentMapper {
 
