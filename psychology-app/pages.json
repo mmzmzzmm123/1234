@@ -74,21 +74,7 @@
       }
     },
     {
-      "path": "pages/evaluation/sdsResult",
-      "style": {
-        "navigationStyle": "custom",
-        "navigationBarTitleText": "壹加壹心理"
-      }
-    },
-    {
-      "path": "pages/evaluation/sasResult",
-      "style": {
-        "navigationStyle": "custom",
-        "navigationBarTitleText": "壹加壹心理"
-      }
-    },
-    {
-      "path": "pages/evaluation/mbtiResult",
+      "path": "pages/evaluation/mResult",
       "style": {
         "navigationStyle": "custom",
         "navigationBarTitleText": "壹加壹心理"

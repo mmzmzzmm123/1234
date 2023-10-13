@@ -91,36 +91,30 @@
       <view class="img-box" v-html="report.setting.result"/>
     </view>
 
-    <recommend/>
-
-    <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
-                        @close="closeLoginConfirm" @confirm="confirmLogin"/>
-    </uni-popup>
   </view>
 </template>
 <script>
-import utils from "@/utils/common";
-import loginServer from '@/server/login'
-import serve from '@/server/evaluation/question'
 import range from '@/components/common/range'
-import recommend from '@/components/consult/recommend'
 import blockHeader from '@/components/common/blockHeader'
 import circularProgress from '@/components/circular-progress/circular-progress'
 
 export default {
   components: {
     range,
-    recommend,
     blockHeader,
     circularProgress
+  },
+  props: {
+    report: {
+      type: Object,
+      default: {},
+    }
   },
   data() {
     return {
       radarData: {
         disableLegend: true,
         categories: ["躯体不适", "综合", "社会适应性差", "运动性不安", "神经系统反应", "莫名恐惧"],
-        // categories: ["躯体不适", "综合", "社会适应", "运动性", "神经系", "莫名恐惧"],
         series: [{
           name: "焦虑",
           data: [0, 0, 0, 0, 0, 0]
@@ -137,24 +131,10 @@ export default {
       },
       score: 0,
       percentage: 0,
-      orderId: null,
-      userInfo: {},
-      report: {},
       perList: [],
     }
   },
   created() {
-    this.orderId = utils.getParam(location.href, "orderId")
-  },
-  async mounted() {
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
-    }
-    if (!await utils.checkLogin()) {
-      return this.openLoginConfirm()
-    }
-    this.report = await serve.getReport(this.orderId)
     this.score = parseInt(this.report.order.score)
     this.percentage = Math.round(this.report.order.score / this.report.order.gaugeNum * 25)
 
@@ -180,8 +160,6 @@ export default {
     })
 
     console.log(list)
-
-    utils.share(this.report.order.gaugeTitle, '', this.report.order.headPicture, 'https://wx.ssgpsy.com/pages/evaluation/product?id=' + this.report.order.gaugeId)
   },
   methods: {
     getResultTitle(lat, percentage) {
@@ -194,18 +172,7 @@ export default {
         title = `从测评结果来看，您的${lat}的情况比较严重。`
       }
       return title
-    },
-    // 登录
-    async confirmLogin() {
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
-    closeLoginConfirm() {
-      this.$refs.popup.close()
-    },
-    openLoginConfirm() {
-      this.$refs.popup.open()
-    },
+    }
   }
 }
 </script>

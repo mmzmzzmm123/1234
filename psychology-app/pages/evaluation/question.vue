@@ -232,17 +232,9 @@ export default {
       if (result.code === 200) {
         uni.setStorageSync("result", result.data);
         clearTimeLoad();
-        if (order.gaugeType === 3) {
+        if ([3, 4, 5].includes(order.gaugeType)) {
           return  uni.navigateTo({
-            url: "/pages/evaluation/mbtiResult?orderId=" + order.orderId,
-          });
-        } else if (order.gaugeType === 4) {
-          return  uni.navigateTo({
-            url: "/pages/evaluation/sdsResult?orderId=" + order.orderId,
-          });
-        } else if (order.gaugeType === 5) {
-          return  uni.navigateTo({
-            url: "/pages/evaluation/sasResult?orderId=" + order.orderId,
+            url: "/pages/evaluation/mResult?orderId=" + order.orderId,
           });
         }
 

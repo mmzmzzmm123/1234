@@ -38,17 +38,9 @@
       async toResult(item) {
         let result = await questionServer.setResult(item.id);
         if (result.code == 200) {
-          if (item.gaugeType === 3) {
+          if ([3, 4, 5].includes(item.gaugeType)) {
             return  uni.navigateTo({
-              url: "/pages/evaluation/mbtiResult?orderId=" + item.orderId,
-            });
-          } else if (item.gaugeType === 4) {
-            return  uni.navigateTo({
-              url: "/pages/evaluation/sdsResult?orderId=" + item.orderId,
-            });
-          } else if (item.gaugeType === 5) {
-            return  uni.navigateTo({
-              url: "/pages/evaluation/sasResult?orderId=" + item.orderId,
+              url: "/pages/evaluation/mResult?orderId=" + item.orderId,
             });
           }
 

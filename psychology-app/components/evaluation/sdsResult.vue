@@ -1,5 +1,5 @@
 <template>
-  <view class="page" v-if="report && report.order">
+  <view class="page" v-if="report && report.order && report.setting">
     <view class="header">
       <text class="header-title">{{ report.order.gaugeTitle }}</text>
       <text class="header-report">报告编号：{{ report.order.orderId }}</text>
@@ -46,68 +46,40 @@
       <block-header title="您的得分建议"/>
       <view class="img-box" v-html="report.setting.result"/>
     </view>
-
-    <recommend/>
-
-    <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
-    </uni-popup>
   </view>
 </template>
 <script>
-import utils from "@/utils/common";
-import loginServer from '@/server/login'
-import serve from '@/server/evaluation/question'
+
 import range from '@/components/common/range'
 import blockHeader from '@/components/common/blockHeader'
-import recommend from '@/components/consult/recommend'
 import circularProgress from '@/components/circular-progress/circular-progress'
 
 export default {
   components: {
     range,
-    recommend,
     blockHeader,
     circularProgress
+  },
+  props: {
+    report: {
+      type: Object,
+      default: {},
+    }
   },
   data() {
     return {
       score: 0,
       percentage: 0,
       orderId: null,
-      userInfo: {},
-      report: {},
-      maskShow: false,
     }
   },
   created() {
-    this.orderId = utils.getParam(location.href, "orderId")
-  },
-  async mounted() {
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
-    }
-    if (!await utils.checkLogin()) {
-      return this.openLoginConfirm()
-    }
-    this.report = await serve.getReport(this.orderId)
+    console.log(1111)
     this.score = parseInt(this.report.order.score)
     this.percentage = this.score
-    utils.share(this.report.order.gaugeTitle, '', this.report.order.headPicture, 'https://wx.ssgpsy.com/pages/evaluation/product?id=' + this.report.order.gaugeId)
   },
   methods: {
-    // 登录
-    async confirmLogin () {
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
-    closeLoginConfirm() {
-      this.$refs.popup.close()
-    },
-    openLoginConfirm() {
-      this.$refs.popup.open()
-    },
+
   }
 }
 </script>

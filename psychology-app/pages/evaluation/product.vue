@@ -163,17 +163,9 @@ export default {
 
       let result = await questionServer.setResult(this.productInfo.orderId);
       if (result.code == 200) {
-        if (this.productInfo.type === 3) {
+        if ([3, 4, 5].includes(this.productInfo.type)) {
           return  uni.navigateTo({
-            url: "/pages/evaluation/mbtiResult?orderId=" + this.productInfo.orderNo,
-          });
-        } else if (this.productInfo.type === 4) {
-          return  uni.navigateTo({
-            url: "/pages/evaluation/sdsResult?orderId=" + this.productInfo.orderNo,
-          });
-        } else if (this.productInfo.type === 5) {
-          return  uni.navigateTo({
-            url: "/pages/evaluation/sasResult?orderId=" + this.productInfo.orderNo,
+            url: "/pages/evaluation/mResult?orderId=" + this.productInfo.orderNo,
           });
         }
 
