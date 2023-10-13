@@ -50,28 +50,22 @@
       <block-header title="综合维度建议"/>
       <view class="img-box" v-html="report.setting.result"/>
     </view>
-
-    <recommend/>
-
-    <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
-                        @close="closeLoginConfirm" @confirm="confirmLogin"/>
-    </uni-popup>
   </view>
 </template>
 <script>
-import utils from "@/utils/common";
-import loginServer from '@/server/login'
-import serve from '@/server/evaluation/question'
 import range from '@/components/common/range'
-import recommend from '@/components/consult/recommend'
 import blockHeader from '@/components/common/blockHeader'
 
 export default {
   components: {
     range,
-    recommend,
     blockHeader
+  },
+  props: {
+    report: {
+      type: Object,
+      default: {},
+    }
   },
   data() {
     return {
@@ -83,46 +77,24 @@ export default {
     }
   },
   created() {
-    this.orderId = utils.getParam(location.href, "orderId")
-  },
-  async mounted() {
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
+    if (this.report && this.report.lats) {
+      const count = this.report.lats.reduce((counts, item) => {
+        counts[item] = (counts[item] || 0) + 1;
+        return counts;
+      }, Object.create(null));
+
+      this.lats = Object.assign({}, this.lats, count);
+      this.perList[0] = this.lats.E === 0 ? 100 : Math.round(this.lats.I * 100 / (this.lats.E + this.lats.I))
+      this.perList[1] = this.lats.S === 0 ? 100 : Math.round(this.lats.N * 100 / (this.lats.S + this.lats.N))
+      this.perList[2] = this.lats.T === 0 ? 100 : Math.round(this.lats.F * 100 / (this.lats.T + this.lats.F))
+      this.perList[3] = this.lats.J === 0 ? 100 : Math.round(this.lats.P * 100 / (this.lats.J + this.lats.P))
+
+      console.log(this.lats);
+      console.log(this.perList);
     }
-    if (!await utils.checkLogin()) {
-      return this.openLoginConfirm()
-    }
-    this.report = await serve.getReport(this.orderId)
-
-    const count = this.report.lats.reduce((counts, item) => {
-      counts[item] = (counts[item] || 0) + 1;
-      return counts;
-    }, Object.create(null));
-
-    this.lats = Object.assign({}, this.lats, count);
-    this.perList[0] = this.lats.E === 0 ? 100 : (this.lats.I * 100 / (this.lats.E + this.lats.I)).toFixed(0)
-    this.perList[1] = this.lats.S === 0 ? 100 : (this.lats.N * 100 / (this.lats.S + this.lats.N)).toFixed(0)
-    this.perList[2] = this.lats.T === 0 ? 100 : (this.lats.F * 100 / (this.lats.T + this.lats.F)).toFixed(0)
-    this.perList[3] = this.lats.J === 0 ? 100 : (this.lats.P * 100 / (this.lats.J + this.lats.P)).toFixed(0)
-
-    console.log(this.lats);
-    console.log(this.perList);
-
-    utils.share(this.report.order.gaugeTitle, '', this.report.order.headPicture, 'https://wx.ssgpsy.com/pages/evaluation/product?id=' + this.report.order.gaugeId)
   },
   methods: {
-    // 登录
-    async confirmLogin() {
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
-    closeLoginConfirm() {
-      this.$refs.popup.close()
-    },
-    openLoginConfirm() {
-      this.$refs.popup.open()
-    },
+
   }
 }
 </script>
