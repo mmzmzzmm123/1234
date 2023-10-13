@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaSubscribeMessage;
 import cn.hutool.core.date.DateTime;
-import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderV3Request;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderV3Result;
@@ -19,13 +19,11 @@ import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
-import com.ruoyi.common.config.properties.WxMaProperties;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
-import com.ruoyi.common.utils.http.HttpUtils;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.*;
@@ -38,7 +36,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.office.mapper.TRoomOrderMapper;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 
 /**
@@ -187,6 +184,27 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             TRoomOrder updateOrder = new TRoomOrder();
             updateOrder.setId(order.getId());
             updateOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());
+            if (v3Result.getAmount() != null) {
+                final WxPayOrderQueryV3Result.Amount v3ResultAmount = v3Result.getAmount();
+                final Integer payerTotal = v3ResultAmount.getPayerTotal();
+                if (payerTotal != 0) {
+                    if (order.getTotalAmount().intValue() != v3ResultAmount.getTotal().intValue()) {
+                        throw new ServiceException("订单金额不一致");
+                    }
+                    updateOrder.setPayAmount(new BigDecimal(v3ResultAmount.getPayerTotal()));
+                    if (v3Result.getPromotionDetails() != null) {
+                        final List<WxPayOrderQueryV3Result.PromotionDetail> promotionDetails = v3Result.getPromotionDetails();
+                        int totalCouponAmt = 0;
+                        for (WxPayOrderQueryV3Result.PromotionDetail promotionDetail : promotionDetails) {
+                            totalCouponAmt += promotionDetail.getAmount();
+                        }
+                        updateOrder.setCouponAmount(new BigDecimal(totalCouponAmt));
+                    } else {
+                        updateOrder.setCouponAmount(order.getTotalAmount().multiply(new BigDecimal(100)).subtract(new BigDecimal(v3ResultAmount.getPayerTotal())));
+                    }
+                }
+
+            }
             tRoomOrderMapper.updateTRoomOrder(updateOrder);
         } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.REFUND)) {
             throw new ServiceException("订单转入退款");
@@ -443,11 +461,21 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             WxPayUnifiedOrderV3Request.Payer v3payer = new WxPayUnifiedOrderV3Request.Payer();
             v3payer.setOpenid(wxUser.getOpenId());
 
+          /*  WxPayUnifiedOrderV3Request.Discount detail = new WxPayUnifiedOrderV3Request.Discount();
+            WxPayUnifiedOrderV3Request.GoodsDetail goodsDetail = new WxPayUnifiedOrderV3Request.GoodsDetail();
+            goodsDetail.setMerchantGoodsId("20231010002");
+            goodsDetail.setQuantity(1);
+            goodsDetail.setUnitPrice(1);
+            List<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetailList = new ArrayList<>();
+            goodsDetailList.add(goodsDetail);
+            detail.setGoodsDetails(goodsDetailList);*/
+
             v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getPayScoreNotifyUrl())
                     .setDescription("roomId: " + roomPackage.getRoomId()).setOutTradeNo(String.valueOf(orderNo))
                     .setAmount(v3Amount)
                     .setPayer(v3payer)
                     .setAttach(OfficeEnum.WxTradeType.ROOM_ORDER.getCode());
+//                    .setDetail(detail);
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
             try {
@@ -763,30 +791,37 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
     // 处理微信支付回调
     @Override
-    public void wxnotify(String orderNo, String openId, int centTotal, String wxCallback) {
+    public void wxnotify(String orderNo, String openId, WxPayOrderNotifyV3Result.Amount amt, String wxCallback) {
 
         // 处理订单状态
         TRoomOrder roomOrder = new TRoomOrder();
         roomOrder.setOrderNo(Long.parseLong(orderNo));
         final List<TRoomOrder> roomOrders = tRoomOrderMapper.selectTRoomOrderList(roomOrder);
-        if (roomOrders.size() > 0)
+        if (roomOrders.size() > 0) {
             roomOrder = roomOrders.get(0);
+        }
+        // 注意：微信会通知多次，因此需判断此订单
+        if (roomOrder.getStatus().equals(OfficeEnum.RoomOrderStatus.ORDERED.getCode())) {
+            return;
+        }
 
         TWxUser wxUser = wxUserService.selectTWxUserById(roomOrder.getUserId());
         // 验证金额和 openid
-        if (!openId.equalsIgnoreCase(wxUser.getOpenId()) || roomOrder.getPayAmount().multiply(new BigDecimal(100)).compareTo(new BigDecimal(centTotal)) != 0) {
+        if (!openId.equalsIgnoreCase(wxUser.getOpenId()) || roomOrder.getPayAmount().multiply(new BigDecimal(100)).compareTo(new BigDecimal(amt.getTotal())) != 0) {
             throw new ServiceException("FAIL:金额或用户不匹配");
         }
-        // 注意：微信会通知多次，因此需判断此订单
-        if (roomOrder.getStatus().equals(OfficeEnum.RoomOrderStatus.ORDERED.getCode()))
-            return;
 
         TRoomOrder update = new TRoomOrder();
         update.setId(roomOrder.getId());
         update.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
         update.setRemark(wxCallback);
-        tRoomOrderMapper.updateTRoomOrder(update);
 
+        if (amt.getPayerTotal() != null && amt.getPayerTotal() != 0) {
+            update.setPayAmount(new BigDecimal(amt.getPayerTotal()));
+            update.setCouponAmount(new BigDecimal(amt.getTotal() - amt.getPayerTotal()));
+        }
+
+        tRoomOrderMapper.updateTRoomOrder(update);
     }
 
     /**

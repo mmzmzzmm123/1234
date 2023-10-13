@@ -187,8 +187,20 @@ const api = {
 		return post('office/roomorder/order4Guest', params)
 	},
 	getStoreCrewList(params){
-		return get('office/cleanrecord/h5list', params)
-	}
+		return get('office/storeuser/h5list', params)
+	},
+	getH5Roles(){
+		return get('office/mapi/role/list')
+	},
+	editStoreCrew(params){
+		return request('office/storeuser', params, true, 'PUT')
+	},
+	addStoreCrew(params){
+		return post('office/storeuser', params)
+	},
+	getStoreUser(id){
+		return get('office/storeuser/' + id)
+	},
 }
 const install = (Vue, options) => {
 	Vue.prototype.$api = api

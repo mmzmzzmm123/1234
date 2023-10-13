@@ -116,9 +116,9 @@ public class ApiController extends BaseController {
 
                 if (result.getTradeState().equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.SUCCESS)) {
                     if (result.getAttach().equalsIgnoreCase(OfficeEnum.WxTradeType.ROOM_ORDER.getCode()))
-                        roomOrderService.wxnotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount().getTotal(), result.toString());
+                        roomOrderService.wxnotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount(), result.toString());
                     if (result.getAttach().equalsIgnoreCase(OfficeEnum.WxTradeType.PACK.getCode()))
-                        userPackageService.wxNotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount().getTotal(), result.toString());
+                        userPackageService.wxNotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount(), result.toString());
                 }
 
                 //通知应答：接收成功：HTTP应答状态码需返回200或204，无需返回应答报文。
@@ -725,6 +725,11 @@ public class ApiController extends BaseController {
         }
     }
 
+    /**
+     * 购买房间套餐预定 t_room_package
+     * @param order
+     * @return
+     */
     @ApiOperation("购买房间套餐")
     @Log(title = "购买房间套餐", businessType = BusinessType.INSERT)
     @PostMapping("/pack/order")
@@ -742,6 +747,11 @@ public class ApiController extends BaseController {
         }
     }
 
+    /**
+     * 购买店铺套餐预定 t_store_promotion
+     * @param order
+     * @return
+     */
     @ApiOperation("优惠券预定房间")
     @Log(title = "优惠券预定房间", businessType = BusinessType.INSERT)
     @PostMapping("/promotion/order")
@@ -829,7 +839,7 @@ public class ApiController extends BaseController {
     }
 
     /**
-     * 新增用户套餐购买记录
+     * 新增用户套餐购买记录  store_package
      */
     @Log(title = "用户套餐购买", businessType = BusinessType.INSERT)
     @PostMapping("/package/buy")
@@ -841,7 +851,7 @@ public class ApiController extends BaseController {
     }
 
     /**
-     * 小程序使用微信使用prepayId支付成功后，回调通知
+     * 小程序使用微信使用prepayId支付成功后，回调通知 store_package wx_user_package
      */
     @ApiOperation("套餐支付查询")
     @Log(title = "套餐支付查询", businessType = BusinessType.INSERT)

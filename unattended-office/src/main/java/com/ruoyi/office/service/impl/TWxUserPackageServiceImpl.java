@@ -2,10 +2,10 @@ package com.ruoyi.office.service.impl;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderV3Request;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderV3Result;
@@ -237,7 +237,7 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
     }
 
     @Override
-    public void wxNotify(String outTradeNo, String openId, Integer total, String wxCallback) {
+    public void wxNotify(String outTradeNo, String openId, WxPayOrderNotifyV3Result.Amount amt, String wxCallback) {
 
         // 处理订单状态
         TWxUserPackage userPackage = new TWxUserPackage();
@@ -246,19 +246,27 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
         if (userPackages.size() > 0)
             userPackage = userPackages.get(0);
 
-        TWxUser wxUser = wxUserService.selectTWxUserById(Long.parseLong(userPackage.getCreateBy()));
-        // 验证金额和 openid
-        if (!openId.equalsIgnoreCase(wxUser.getOpenId()) || userPackage.getPayAmount().multiply(new BigDecimal(100)).compareTo(new BigDecimal(total)) != 0) {
-            throw new ServiceException("FAIL:金额或用户不匹配");
-        }
         // 注意：微信会通知多次，因此需判断此订单
         if (userPackage.getStatus().equals(OfficeEnum.PackageOrderStatus.PAYED.getCode()))
             return;
+
+        TWxUser wxUser = wxUserService.selectTWxUserById(Long.parseLong(userPackage.getCreateBy()));
+        // 验证金额和 openid
+        if (!openId.equalsIgnoreCase(wxUser.getOpenId()) || userPackage.getPayAmount().multiply(new BigDecimal(100)).compareTo(new BigDecimal(amt.getTotal())) != 0) {
+            throw new ServiceException("FAIL:金额或用户不匹配");
+        }
+
 
         TWxUserPackage update = new TWxUserPackage();
         update.setId(userPackage.getId());
         update.setStatus(OfficeEnum.PackageOrderStatus.PAYED.getCode());// 已预约??
         update.setRemark(wxCallback);
+
+      /*  if (amt.getPayerTotal() != null && amt.getPayerTotal() != 0) {
+            update.setPayAmount(new BigDecimal(amt.getPayerTotal()));
+            update.setCouponAmount(new BigDecimal(amt.getTotal() - amt.getPayerTotal()));
+        }*/
+
         tWxUserPackageMapper.updateTWxUserPackage(update);
         // 对用户的商户余额进行增加操作；
         addWxUserAmount(Long.parseLong(userPackage.getCreateBy()), userPackage);

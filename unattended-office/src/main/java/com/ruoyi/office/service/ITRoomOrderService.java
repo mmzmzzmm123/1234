@@ -3,6 +3,7 @@ package com.ruoyi.office.service;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.ruoyi.office.domain.TRoomOrder;
 import com.ruoyi.office.domain.vo.*;
@@ -68,7 +69,7 @@ public interface ITRoomOrderService {
 
     boolean checkCoupon(PrepayReq vo, Long userId);
 
-    void wxnotify(String orderNo, String openId, int centTotal, String s);
+    void wxnotify(String orderNo, String openId, WxPayOrderNotifyV3Result.Amount centTotal, String s);
 
     WxPayOrderQueryV3Result finish(PrepayResp vo, Long id);
 

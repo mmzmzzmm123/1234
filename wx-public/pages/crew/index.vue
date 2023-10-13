@@ -5,37 +5,34 @@
 				<uo-select :value="storeId" :options="storeList" valueField="id" @change="selectStore"></uo-select>
 			</view>
 		</view>
-
-		<view class="search-bar">
+		<!-- <view class="search-bar">
 			<u-search placeholder="请输入手机号码" :showAction="false" v-model="searchParam.phone"
 				@change="onSearchKeywordInput"></u-search>
+		</view> -->
+		<view class="filter-bar">
+			<u-button plain type="primary" @click="onAddUser()">添加用户</u-button>
 		</view>
-		
+
+
 		<view class="card-list">
-			<view class="card" v-for="(room, index) in orderList" :key="room.id">
+			<view class="card" v-for="(obj, index) in resList" :key="obj.id">
 				<view class="card__content">
 					<!-- <uo-image src="https://mbdp01.bdstatic.com/static/landing-pc/img/logo_top.79fdb8c2.png"></uo-image> -->
 					<view class="card__content__right">
-						<view class="card__content__head">
-							<navigator class="card-title" :url="'room?id='+room.id+'&name='+room.name">
-								<view class="card-title">{{room.storeName}}</view>
-							</navigator>
-							<!-- <view class="card-title">{{room.status}}</view> -->
-						</view>
+
 						<view class="card__content__body">
-							<view>包间: {{room.roomName}}</view>
-							<view>订单金额: {{room.totalAmount}} 元</view>
-							<view>开始时间: {{room.startTime}} </view>
-							<view>结束时间: {{room.endTime}} </view>
-							<view>支付方式: {{room.payTypeName}} </view>
-							<view>下单时间: {{room.createTime}} </view>
+							<view>用户账号: {{obj.userName}}</view>
+							<view>用户昵称: {{obj.nickName}}</view>
+							<view>手机号码: {{obj.phonenumber}} </view>
+							<view>角色: {{obj.roleName}} </view>
 						</view>
 						<view class="card__content__footer">
-							<view>支付金额: {{room.payAmount}}</view>
 						</view>
 					</view>
 				</view>
-
+				<view class="card__op-list">
+					<u-button type="primary" @click="onAddUser(obj.id)">编辑</u-button>
+				</view>
 			</view>
 		</view>
 
@@ -54,6 +51,7 @@
 				},
 				showStoreList: false,
 				storeList: [],
+				resList: []
 			}
 		},
 		onLoad(option) {
@@ -63,7 +61,7 @@
 
 		},
 		computed: {
-			
+
 			storeId() {
 				return this.$store.state.currentStore.id
 			}
@@ -90,9 +88,9 @@
 				this.searchParam.storeId = this.$store.state.currentStore.id;
 				this.$api.getStoreCrewList(this.searchParam).then(res => {
 					if (nextPage) {
-						this.orderList.push(...res.rows)
+						this.resList.push(...res.rows)
 					} else {
-						this.orderList = res.rows
+						this.resList = res.rows
 					}
 					uni.stopPullDownRefresh()
 				})
@@ -101,7 +99,6 @@
 				this.$api.getStoreList().then(res => {
 					this.storeList = res.rows
 					this.searchParam.storeId = this.storeId;
-					this.getStoreRoom(this.searchParam, false)
 				})
 			},
 			selectStore(event) {
@@ -110,10 +107,17 @@
 					value: event
 				})
 				this.searchParam.storeId = this.storeId;
-				this.getStoreRoom(this.searchParam, false);
 				this.refresh();
 			},
-			
+			onAddUser(id) {
+				const url = id ? "add?id=" + id : "add"
+				uni.navigateTo({
+					url,
+					events: {
+						refresh: this.refresh
+					}
+				})
+			}
 		}
 	}
 </script>

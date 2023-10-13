@@ -132,6 +132,18 @@
 			"style": {
 				"navigationBarTitleText": "立即下单"
 			}
+		},
+		{
+			"path": "pages/crew/index",
+			"style": {
+				"navigationBarTitleText": "员工管理"
+			}
+		},
+		{
+			"path": "pages/crew/add",
+			"style": {
+				"navigationBarTitleText": "员工管理"
+			}
 		}
 	],
 	"globalStyle": {
