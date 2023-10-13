@@ -14,7 +14,7 @@
   </view>
 
   <!-- body -->
-  <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}"  bindscroll="scrollView"  bindrefresherrefresh="refresh" style="width:{{pWidth}}px;height:{{pHeight}}px;">
+  <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" bindscroll="scrollView" bindrefresherrefresh="refresh" style="width:{{pWidth}}px;height:{{pHeight}}px;">
 
     <view class="view_box_row bannerView" style="height:{{pHeight * 0.3}}px;">
       <image src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/psc.gif" class="bannerImage view_all_adapt"></image>
@@ -177,14 +177,16 @@
 
       <!-- 可操作区域 -->
       <view class="view_box_common common_fun_box_view" style="padding: 15px 0;margin-top: 10px;">
-        <view class="view_box_common view_box_row_content_symmetry commonFunItem" bind:tap="toUserAccount">
-          <view class="view_box_row_content">
-            <image src="../../static/ico/socialize_grey_32.png" mode="widthFix"></image>
-            <text>账号管理</text>
+        <block wx:if="{{ifHide == '0'}}">
+          <view class="view_box_common view_box_row_content_symmetry commonFunItem" bind:tap="toUserAccount">
+            <view class="view_box_row_content">
+              <image src="../../static/ico/socialize_grey_32.png" mode="widthFix"></image>
+              <text>账号管理</text>
+            </view>
+            <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
           </view>
-          <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
-        </view>
-        <view class="seizeSeat_mini"></view>
+          <view class="seizeSeat_mini"></view>
+        </block>
         <view class="view_box_common view_box_row_content_symmetry commonFunItem" bind:tap="toApplyStaff">
           <view class="view_box_row_content">
             <image src="../../static/ico/join_us_grey_32.png" mode="widthFix"></image>

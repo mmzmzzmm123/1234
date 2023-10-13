@@ -13,8 +13,8 @@ import java.io.Serializable;
  * @author LAM
  * @date 2023/10/11 14:30
  */
-@ApiModel("api-订单信息表单")
 @Data
+@ApiModel("api-订单信息表单")
 @Accessors(chain = true)
 public class ApiPageOrderInfoDto extends BaseEntity {
 

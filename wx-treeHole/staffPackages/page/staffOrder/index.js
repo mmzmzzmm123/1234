@@ -105,7 +105,7 @@ Page({
     orderDetailsDrawer: false, // 订单详情容器
     staffInfo: app.globalData.staffInfo, // 店员信息
     servedUserIdList: [], // 服务过的用户id集合
-
+    ifHide: app.globalData.hidePrivacy
   },
 
   /**

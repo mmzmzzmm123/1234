@@ -53,6 +53,7 @@ Page({
     staffAgreementDrawer: false, // 协议容器
     userInfo: app.globalData.userInfo,
     staffInfo: null, // 店员信息
+    ifHide: app.globalData.hidePrivacy
   },
   /**
    * 生命周期函数--监听页面加载
@@ -449,7 +450,7 @@ Page({
       let info = app.globalData.userInfo;
       if (info == null) {
         wx.showToast({
-          title: '请先提出登录后再进行申请哟',
+          title: '请先退出登录后再进行申请哟',
           icon: "none"
         })
         return;

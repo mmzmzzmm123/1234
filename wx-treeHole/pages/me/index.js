@@ -29,6 +29,7 @@ Page({
     staffServiceDrawer: false, // 店员服务管理容器状态
     serviceList: app.globalData.serviceList, // 全局服务信息数据
     staffServiceIds: [], // 店员开启服务id集合
+    ifHide: app.globalData.hidePrivacy
   },
 
   /**

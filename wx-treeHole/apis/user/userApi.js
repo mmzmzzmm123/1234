@@ -20,8 +20,8 @@ let wxMiniLogin = function (params, onStart, onSuccess, onFailed) {
 /**
  * 用户信息更新
  */
-let update = function (params, onStart, onSuccess, onFailed) {
-  request.post(bashRequestUrl + updateUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed);
+let update = function (params, onStart, onSuccess, onFailed, onWarn) {
+  request.post(bashRequestUrl + updateUrl, params, onStart, onSuccess, onFailed, onWarn, onFailed);
 }
 
 /**

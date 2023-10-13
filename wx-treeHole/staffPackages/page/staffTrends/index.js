@@ -426,7 +426,7 @@ Page({
     }
     // 直接调用
     if (voiceUrl == null || voiceUrl == '') {
-      staffTrendsApi.submit(params, this.submitOnStart, this.submitOnSuccess, this.submitOnFailed);
+      staffTrendsApi.submit(params, this.submitOnStart, this.submitOnSuccess, this.submitOnFailed, this.submitOnWarn);
     } else {
       // 使用上传附件方式进行
       let that = this;
@@ -447,7 +447,7 @@ Page({
                 that.submitOnSuccess(res.data);
                 break;
               case globalCanstanats.httpState.warn:
-                that.submitOnFailed(res.data);
+                that.submitOnWarn(res.data);
                 break;
               case globalCanstanats.httpState.operate:
                 that.submitOnFailed(res.data);
@@ -484,6 +484,14 @@ Page({
     wx.showToast({
       title: '请求失败',
       icon: "error"
+    })
+  },
+  submitOnWarn: function (res) {
+    wx.hideLoading();
+    wx.showToast({
+      title: res.msg,
+      icon: "none",
+      duration: 2000
     })
   },
   /**

@@ -27,8 +27,8 @@ let selectStaffTrends = function (params, onStart, onSuccess, onFailed) {
 /**
  * 发布动态
  */
-let submit = function(params, onStart, onSuccess, onFailed){
-  request.post(bashRequestUrl + submitUrl, params, onStart, onSuccess, onFailed, onFailed, onFailed);
+let submit = function(params, onStart, onSuccess, onFailed, onWarn){
+  request.post(bashRequestUrl + submitUrl, params, onStart, onSuccess, onFailed, onWarn, onFailed);
 }
 /**
  * 根据主键删除动态记录

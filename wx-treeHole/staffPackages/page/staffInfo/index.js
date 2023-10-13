@@ -37,6 +37,7 @@ Page({
     fileUploadForm: { // 文件上传oss类型
       ossKey: "staff_photo"
     },
+    ifHide: app.globalData.hidePrivacy
   },
 
   /**
@@ -491,8 +492,15 @@ Page({
   checkData: function () {
     let form = this.data.staffInfo;
     let photoArr = this.data.photoArr;
+    if(this.data.ifHide == '0' && (utils.isEmpty(form.weChatNum) || utils.isEmpty(form.phone))){
+      wx.showToast({
+        title: '请完善您的基本信息后再提交哟',
+        icon: "none"
+      })
+      return false;
+    }
     // 基本信息必填校验
-    if (utils.isEmpty(form.avatarUrl) || utils.isEmpty(form.selfTags) || utils.isEmpty(form.nickName) || utils.isEmpty(form.sex) || utils.isEmpty(form.weChatNum) || utils.isEmpty(form.phone) || utils.isEmpty(form.birthDate) || utils.isEmpty(form.region) || utils.isEmpty(form.selfIntroduction)) {
+    if (utils.isEmpty(form.avatarUrl) || utils.isEmpty(form.selfTags) || utils.isEmpty(form.nickName) || utils.isEmpty(form.sex) || utils.isEmpty(form.birthDate) || utils.isEmpty(form.region) || utils.isEmpty(form.selfIntroduction)) {
       wx.showToast({
         title: '请完善您的基本信息后再提交哟',
         icon: "none"

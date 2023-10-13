@@ -233,19 +233,21 @@
             </block>
           </view>
         </view>
-        <view class="seizeSeat_mini"></view>
-        <view class="view_box_common staffItem" bind:tap="selectUserAccount">
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view class="view_box_row_content tempColumn">
-              <image src="../../static/ico/theme_dot.png"></image>
-              <view>社交账号</view>
-            </view>
-            <view class="view_box_row_content scopeTextView">
-              <view>{{randomForm.customNum!=null?dictsUtil.social_accounts(randomForm.accountServiceProvider)+"-"+randomForm.customNum:"请选择您的社交账号"}}</view>
-              <wux-icon type="ios-arrow-forward" size="16" color="#80848f"></wux-icon>
+        <block wx:if="{{ifHide == '0'}}">
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_common staffItem" bind:tap="selectUserAccount">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content tempColumn">
+                <image src="../../static/ico/theme_dot.png"></image>
+                <view>社交账号</view>
+              </view>
+              <view class="view_box_row_content scopeTextView">
+                <view>{{randomForm.customNum!=null?dictsUtil.social_accounts(randomForm.accountServiceProvider)+"-"+randomForm.customNum:"请选择您的社交账号"}}</view>
+                <wux-icon type="ios-arrow-forward" size="16" color="#80848f"></wux-icon>
+              </view>
             </view>
           </view>
-        </view>
+        </block>
         <view class="seizeSeat_mini"></view>
         <view class="view_box_common staffItem">
           <view class="view_box_common view_box_row_content_symmetry">

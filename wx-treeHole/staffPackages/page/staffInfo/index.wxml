@@ -22,10 +22,10 @@
       <picker header-text="性别" mode="selector" range="{{sexRange}}" range-key="label" bindchange="sexChange" value="{{staffInfo.sex}}" disabled="{{true}}">
         <wux-cell title="性别" style="font-size: 14px;" is-link extra="{{ staffInfo.sex == null ? '选择您的性别' : dicts.sex(staffInfo.sex) }}"></wux-cell>
       </picker>
-      <wux-cell hover-class="none">
+      <wux-cell hover-class="none" wx:if="{{ifHide == '0'}}">
         <wux-input controlled label="微信号" type="text" placeholder="请输入您的微信号" class="inputItem" inputColor="#767b88" value="{{staffInfo.weChatNum}}" bind:change="weChatNumInput" />
       </wux-cell>
-      <wux-cell hover-class="none">
+      <wux-cell hover-class="none" wx:if="{{ifHide == '0'}}">
         <wux-input controlled label="手机号码" type="text" placeholder="请输入您的手机号码" class="inputItem" inputColor="#767b88" maxlength="11" value="{{staffInfo.phone}}" bind:change="phoneInput" />
       </wux-cell>
       <picker header-text="出生日期" mode="date" end="2013-12-01" value="{{staffInfo.birthDate!=null?staffInfo.birthDate:'2013-12-01'}}" bindchange="birthDateChange">

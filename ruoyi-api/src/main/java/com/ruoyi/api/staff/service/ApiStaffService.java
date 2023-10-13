@@ -1,5 +1,6 @@
 package com.ruoyi.api.staff.service;
 
+import cn.binarywang.wx.miniapp.api.WxMaSecCheckService;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.PhoneUtil;
@@ -23,6 +24,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.TokenUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.common.weixin.WxService;
 import com.ruoyi.staff.domain.*;
 import com.ruoyi.staff.mapper.*;
 import com.ruoyi.user.domain.UserInfo;
@@ -58,6 +60,7 @@ public class ApiStaffService {
     private final StaffGiftRecordMapper staffGiftRecordMapper;
     private final RedisCache redisCache;
     private final ApiFileService apiFileService;
+    private final WxService wxService;
 
     /**
      * 获取员工等级配置
@@ -125,7 +128,7 @@ public class ApiStaffService {
             return R.warn("亲爱的，您已申请过了哟");
         }
         // 校验手机号码是否正确
-        if (!PhoneUtil.isMobile(dto.getPhone())) {
+        if (ObjectUtil.isNotNull(dto.getPhone()) && !PhoneUtil.isMobile(dto.getPhone())) {
             log.warn("申请成为店员：失败，手机号码不正确");
             return R.warn("亲爱的，帮忙输入个正确的手机号码呗");
         }
@@ -173,7 +176,7 @@ public class ApiStaffService {
         staffInfo.setUserId(userId)
                 .setUpdateTime(DateUtils.getNowDate());
         // 生日数据
-        if (StringUtils.isNotBlank(dto.getBirthDate())){
+        if (StringUtils.isNotBlank(dto.getBirthDate())) {
             staffInfo.setBirthDate(DateUtils.dateTime(DateUtils.YYYY_MM_DD, dto.getBirthDate()));
         }
         // 开始处理店员语音数据
@@ -188,8 +191,33 @@ public class ApiStaffService {
             }
         }
         // 推荐码处理
-        if (ObjectUtil.isNotNull(dto.getReferralCode())){
+        if (ObjectUtil.isNotNull(dto.getReferralCode())) {
             handleReferralCode(staffInfo, dto);
+        }
+        // 敏感内容校验
+        try {
+            WxMaSecCheckService secCheckService = wxService.getWxMaSecCheckService();
+            if (StringUtils.isNotBlank(staffInfo.getSelfIntroduction())) {
+                secCheckService.checkMessage(staffInfo.getSelfIntroduction());
+            }
+            if (StringUtils.isNotBlank(staffInfo.getSelfTags())) {
+                secCheckService.checkMessage(staffInfo.getSelfTags());
+            }
+            if (StringUtils.isNotBlank(dto.getImageArr())) {
+                String[] photoArr = StringUtils.split(dto.getImageArr(), ",");
+                for (String photoItem : photoArr) {
+                    secCheckService.checkImage(photoItem);
+                }
+            }
+            if (StringUtils.isNotBlank(staffInfo.getAvatarUrl())) {
+                secCheckService.checkImage(staffInfo.getAvatarUrl());
+            }
+            if (StringUtils.isNotBlank(staffInfo.getNickName())) {
+                secCheckService.checkMessage(staffInfo.getNickName());
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            throw new ServiceException("亲爱的 您上传的内容涉及到敏感内容，请检查修改后上传", HttpStatus.WARN_WX);
         }
         staffInfoMapper.updateStaffInfo(staffInfo);
         log.info("修改申请数据：完成");
@@ -327,7 +355,7 @@ public class ApiStaffService {
      *
      * @param serviceId 需要处理service标识
      * @return 最新的店员服务标识集合
-     * */
+     */
     public List<Long> handleServiceId(Long serviceId) {
         log.info("处理店员服务数据：开始，参数：{}", serviceId);
         List<Long> voList = new ArrayList<>();
@@ -335,16 +363,16 @@ public class ApiStaffService {
         StaffServiceConfig select = new StaffServiceConfig();
         select.setStaffId(userId);
         List<StaffServiceConfig> staffServiceConfigs = staffServiceConfigMapper.selectStaffServiceConfigList(select);
-        if (ObjectUtil.isEmpty(staffServiceConfigs)){
+        if (ObjectUtil.isEmpty(staffServiceConfigs)) {
             staffServiceConfigs = new ArrayList<>();
         }
         // 开始判断是插入还是删除
         StaffServiceConfig tempRecord = staffServiceConfigs.stream().filter(item -> item.getServiceId().equals(serviceId)).findFirst().orElse(null);
-        if (ObjectUtil.isNotNull(tempRecord)){
+        if (ObjectUtil.isNotNull(tempRecord)) {
             staffServiceConfigMapper.deleteStaffServiceConfigById(tempRecord.getId());
             List<StaffServiceConfig> newList = staffServiceConfigs.stream().filter(item -> !item.getServiceId().equals(serviceId)).collect(Collectors.toList());
             voList = newList.stream().map(StaffServiceConfig::getServiceId).collect(Collectors.toList());
-        }else{
+        } else {
             StaffServiceConfig insert = new StaffServiceConfig();
             insert.setStaffId(userId)
                     .setServiceId(serviceId)
@@ -362,11 +390,11 @@ public class ApiStaffService {
      *
      * @param dto 数据
      * @return 结果
-     * */
-    public List<Long> selectFilterIdByServiceIds(ApiPageStaffInfoDto dto){
+     */
+    public List<Long> selectFilterIdByServiceIds(ApiPageStaffInfoDto dto) {
         List<Long> staffIdList = new ArrayList<>();
         // 先判断服务数据是否需要过滤
-        if (ObjectUtil.isNotNull(dto.getServiceIdArrStr())){
+        if (ObjectUtil.isNotNull(dto.getServiceIdArrStr())) {
             String[] tempArr = StringUtils.split(dto.getServiceIdArrStr(), ",");
             List<Long> serviceIdList = Arrays.stream(tempArr).map(item -> Long.parseLong(item)).collect(Collectors.toList());
             List<StaffServiceConfig> staffServiceConfigs = staffServiceConfigMapper.selectByServiceIds(serviceIdList);
@@ -380,7 +408,7 @@ public class ApiStaffService {
      *
      * @param select 数据
      * @return 结果
-     * */
+     */
     public List<StaffInfo> page(StaffInfo select) {
         log.info("店员信息分页业务处理：开始，参数：{}", select);
         select.setState(StaffStateEnums.NORMAL.getCode());
@@ -394,11 +422,11 @@ public class ApiStaffService {
      *
      * @param staffId 店员标识
      * @return 结果
-     * */
+     */
     public ApiStaffInfoVo selectByStaffId(Long staffId) {
         log.info("根据店员标识查询数据：开始，参数：{}", staffId);
         ApiStaffInfoVo vo = new ApiStaffInfoVo();
-        if (ObjectUtil.isNull(staffId)){
+        if (ObjectUtil.isNull(staffId)) {
             log.warn("根据店员标识查询数据：失败，参数为空");
             throw new ServiceException("根据店员标识查询数据：失败，参数为空", HttpStatus.ERROR);
         }
@@ -407,7 +435,7 @@ public class ApiStaffService {
         StaffInfo select = new StaffInfo();
         select.setFilterIdList(ListUtil.toList(ids));
         List<StaffInfo> staffInfos = staffInfoMapper.customSelect(select);
-        if (ObjectUtil.isEmpty(staffInfos)){
+        if (ObjectUtil.isEmpty(staffInfos)) {
             log.info("根据店员标识查询数据：失败，结果为空");
             throw new ServiceException("根据店员标识查询数据：失败，结果为空", HttpStatus.ERROR);
         }
@@ -420,8 +448,8 @@ public class ApiStaffService {
         selectPhoto.setUserId(staffId);
         List<StaffPhoto> staffPhotos = photoMapper.selectStaffPhotoList(selectPhoto);
         List<ApiStaffPhotoVo> photoVos = new ArrayList<>();
-        if (ObjectUtil.isNotEmpty(staffPhotos)){
-            for (StaffPhoto item : staffPhotos){
+        if (ObjectUtil.isNotEmpty(staffPhotos)) {
+            for (StaffPhoto item : staffPhotos) {
                 ApiStaffPhotoVo photoVo = new ApiStaffPhotoVo();
                 BeanUtils.copyBeanProp(photoVo, item);
                 photoVos.add(photoVo);
@@ -437,7 +465,7 @@ public class ApiStaffService {
      *
      * @param staffId 店员标识
      * @return 结果
-     * */
+     */
     public List<ApiStaffGiftRecordVo> selectStaffGiftRecord(Long staffId) {
         log.info("获取店员总礼物数据：开始，参数：{}", staffId);
         List<ApiStaffGiftRecordVo> voList = new ArrayList<>();
@@ -457,7 +485,7 @@ public class ApiStaffService {
      * 周排名前三
      *
      * @return 结果
-     * */
+     */
     public List<ApiStaffInfoVo> weeklyRankingTopThree() {
         log.info("获取店员周排名前三：开始");
         List<ApiStaffInfoVo> voList = new ArrayList<>();

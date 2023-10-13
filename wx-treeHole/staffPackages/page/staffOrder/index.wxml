@@ -138,14 +138,18 @@
               <view>预计收入</view>
               <span>￥{{formatUtil.toFixed((operObj.payAmount*operObj.commissionRatio))}}</span>
             </view>
-            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
-              <view>账号渠道</view>
-              <span>{{dictsUtil.social_accounts(operObj.accountServiceProvider)}}</span>
-            </view>
-            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
-              <view>社交账号</view>
-              <span>{{operObj.customNum}}</span>
-            </view>
+
+            <block wx:if="{{ifHide == '0'}}">
+              <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+                <view>账号渠道</view>
+                <span>{{dictsUtil.social_accounts(operObj.accountServiceProvider)}}</span>
+              </view>
+              <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+                <view>社交账号</view>
+                <span>{{operObj.customNum}}</span>
+              </view>
+            </block>
+
           </block>
           <block wx:if="{{operObj.orderState == '-1'}}">
             <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">

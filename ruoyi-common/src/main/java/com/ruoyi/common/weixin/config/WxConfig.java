@@ -1,5 +1,6 @@
 package com.ruoyi.common.weixin.config;
 
+import cn.binarywang.wx.miniapp.api.WxMaSecCheckService;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
@@ -38,7 +39,7 @@ public class WxConfig {
     }
 
     /**
-     * 微信小程序参数构建
+     * 微信小程序支付参数构建
      * */
     @Bean
     @Lazy

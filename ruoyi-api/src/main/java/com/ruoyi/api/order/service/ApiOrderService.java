@@ -1,5 +1,6 @@
 package com.ruoyi.api.order.service;
 
+import cn.binarywang.wx.miniapp.api.WxMaSecCheckService;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
@@ -130,7 +131,7 @@ public class ApiOrderService {
         // 自动取消时间
         String autoCancelTime = DateUtils.rollMinute(5, DateUtils.YYYY_MM_DD_HH_MM_SS);
         // 商品描述
-        String description = staffInfo.getNickName()+"收到了打赏礼物[" + platformGift.getName() + "] x" + dto.getNum();
+        String description = staffInfo.getNickName() + "收到了打赏礼物[" + platformGift.getName() + "] x" + dto.getNum();
         // 支付状态
         String payState = PayStateEnums.WAIT_PAY.getCode();
         // 封装订单信息
@@ -229,7 +230,7 @@ public class ApiOrderService {
         // 续单首单结果
         Boolean ifContinuous = ifContinuous(userId, dto.getStaffId());
         // 商品描述
-        String description = staffInfo.getNickName()+"收到打赏枫叶币 " + dto.getAmount() + " 个";
+        String description = staffInfo.getNickName() + "收到打赏枫叶币 " + dto.getAmount() + " 个";
         // 支付状态
         String payState = PayStateEnums.WAIT_PAY.getCode();
         // 构建订单数据
@@ -298,7 +299,7 @@ public class ApiOrderService {
      *
      * @param dto 表单数据
      * @return 结果
-     * */
+     */
     public ApiOrderPayInfoVo randomOrderSubmit(ApiRandomOrderFormDto dto) {
         log.info("随机单提交：开始，参数：{}", dto);
         ApiOrderPayInfoVo vo = new ApiOrderPayInfoVo();
@@ -337,7 +338,7 @@ public class ApiOrderService {
         // 自动取消时间
         String autoCancelTime = DateUtils.rollMinute(5, DateUtils.YYYY_MM_DD_HH_MM_SS);
         // 订单描述
-        String description = "随机订单："+serviceInfo.getName()+"-"+serviceItem.getName();
+        String description = "随机订单：" + serviceInfo.getName() + "-" + serviceItem.getName();
         // 支付和订单状态（主要处理余额支付的）
         String payState = PayStateEnums.WAIT_PAY.getCode();
         String orderState = OrderStateEnums.WAIT_PAY.getCode();
@@ -927,6 +928,16 @@ public class ApiOrderService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean orderFinish(ApiOrderFinishDto dto) {
         log.info("订单完成：开始，参数：{}", dto);
+        // 合法图片与敏感词校验
+        try {
+            WxMaSecCheckService secCheckService = wxService.getWxMaSecCheckService();
+            if (StringUtils.isNotBlank(dto.getComment())) {
+                secCheckService.checkMessage(dto.getComment());
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            throw new ServiceException("亲爱的 您上传的内容涉及到敏感内容，请检查修改后上传", HttpStatus.WARN_WX);
+        }
         OrderInfo orderInfo = orderInfoMapper.selectByOrderNo(dto.getOrderNo());
         if (ObjectUtil.isNull(orderInfo)) {
             log.warn("订单完成：失败，无法找到对应的订单数据");
@@ -941,7 +952,7 @@ public class ApiOrderService {
         OrderDetails orderDetails = orderDetailsList.stream().findFirst().orElse(null);
         // 查询用户信息
         UserInfo userInfo = userInfoMapper.selectUserInfoById(orderInfo.getCustomUserId());
-        if (ObjectUtil.isNull(userInfo)){
+        if (ObjectUtil.isNull(userInfo)) {
             log.warn("订单完成：失败，查询用户信息失败");
             throw new ServiceException("亲爱的，系统繁忙，请刷新重试哟", HttpStatus.WARN_WX);
         }
@@ -1072,16 +1083,30 @@ public class ApiOrderService {
      * 查询服务过的用户id集合
      *
      * @return 结果
-     * */
+     */
     public List<Long> selectServedUserId() {
         log.info("查询服务过的用户id集合：开始");
         List<Long> idList = new ArrayList<>();
         Long staffUserId = TokenUtils.getUserId();
         List<Long> userIdList = orderInfoMapper.selectUserIdByStaffUserId(staffUserId);
-        if (ObjectUtil.isNotEmpty(userIdList)){
+        if (ObjectUtil.isNotEmpty(userIdList)) {
             idList = userIdList;
         }
         log.info("查询服务过的用户id集合：完成，返回数据：{}", idList);
         return idList;
+    }
+
+    /**
+     * 查询订单评论数据
+     *
+     * @param dto 查询表单
+     * @return 结果
+     */
+    public List<OrderComment> selectOrderComment(ApiPageOrderCommentDto dto) {
+        OrderComment orderComment = new OrderComment();
+        if (ObjectUtil.isNotNull(dto.getStaffId())) {
+            orderComment.setStaffUserId(dto.getStaffId());
+        }
+        return orderCommentMapper.selectOrderCommentList(orderComment);
     }
 }

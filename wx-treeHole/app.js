@@ -6,6 +6,7 @@ import userLevelApi from "./apis/user/userLevelApi";
 import staffApi from "./apis/staff/staffApi";
 import serviceInfoApi from "./apis/service/serviceInfoApi";
 import platformApi from "./apis/platform/platformApi";
+import dictApi from "./apis/platform/dictApi";
 // app.js
 App({
   onLaunch() {
@@ -17,6 +18,7 @@ App({
         storage.set(storageConstant.stateBarHeight, null, res.statusBarHeight, 0);
       }
     })
+    this.getIfHidePrivacyItem();
     // 用户登录
     this.userLogin();
     // 用户等级配置
@@ -174,6 +176,12 @@ App({
       storage.removeStorageSync(storageConstant.staffInfo);
     }
   },
+  getIfHidePrivacyItem: function () {
+    dictApi.getIfHidePrivacyItem(null, this.getIfHidePrivacyItemOnSuccess, null);
+  },
+  getIfHidePrivacyItemOnSuccess:function(res){
+    this.globalData.hidePrivacy = res.msg;
+  },
   /**
    * 全局参数
    */
@@ -196,6 +204,9 @@ App({
     giftList: [],
     // 拉取礼物初始化数据
     parserArr: [],
-    audioContext: wx.createInnerAudioContext(), // 全局音频播放器对象
+    // 全局音频播放器对象
+    audioContext: wx.createInnerAudioContext(), 
+    // 隐藏
+    hidePrivacy: "-1"
   }
 })

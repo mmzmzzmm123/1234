@@ -17,7 +17,7 @@
     </view>
   </view>
 
-  <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" style="width:{{pWidth}}px;height:{{pHeight}}px;" bindscroll="scrollView">
+  <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" style="width:{{pWidth}}px;height:{{pHeight}}px;" bindscrolltolower="loadNextPageData" bindrefresherrefresh="refresh" bindscroll="scrollView">
     <view class="bgImg" style="height: {{pHeight*0.37}}px;">
       <image src="{{loadStaffInfoState && staffInfo == null ? 'https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/defult_banner.jpg' : staffInfo.photoVoList[0].imgUrl}}" mode="widthFix"></image>
     </view>
@@ -240,36 +240,52 @@
 
       <!-- 服务评论 -->
       <wux-animation-group wx:if="{{currentIndex == 1}}" wux-class="animationView" in="{{ currentIndex == 1 }}" enter="{{ true }}" exit="{{ true }}" class-names="wux-animate--punch">
-
-        <!-- 评论item -->
-        <!-- <view>
-          <view class="view_box_row_content_symmetry commentUserInfoView">
-            <image src="../../../static/temp/4.jpg"></image>
-            <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-60}}px;height: 82%;">
-              <view class="view_box_row_content_symmetry">
-                <view class="commentName">小心哦</view>
-                <view class="commentService">2023-07-10 22:01:33</view>
+        <block wx:if="{{!loadOrderCommentState}}">
+          <block wx:if="{{orderCommentData!=null&&orderCommentData.length>0}}">
+            <block wx:for="{{orderCommentData}}" wx:key="id">
+              <view>
+                <view class="view_box_row_content_symmetry commentUserInfoView">
+                  <image src="{{item.userAvatar}}" mode="aspectFill"></image>
+                  <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-60}}px;height: 82%;">
+                    <view class="view_box_row_content_symmetry">
+                      <view class="commentName">{{item.userName}}</view>
+                      <view class="commentService">{{item.createTime}}</view>
+                    </view>
+                    <view class="commentService">
+                      服务类型：{{item.serviceContent}}
+                    </view>
+                  </view>
+                </view>
+                <view class="commentContent">
+                  {{item.comment}}
+                </view>
               </view>
-              <view class="commentService">
-                服务类型：文字语音条-半小时
-              </view>
-            </view>
+            </block>
+          </block>
+          <view wx:else class="view_box_common">
+            <mine-null-data width="100%" height="100%" title="暂未有评论 快去下一单评论吧"></mine-null-data>
+            <view class="seizeSeat_mini"></view>
           </view>
-          <view class="commentContent">
-            非常nice的姐姐
-          </view>
-        </view> -->
-
-        <mine-null-data width="100%" height="100%" title="亲爱的 暂时没有评论哟"></mine-null-data>
+        </block>
+        <view class="view_box_common" wx:else>
+          <view class="seizeSeat_mini"></view>
+          <wux-skeleton active>
+            <wux-skeleton-paragraph rows="6" />
+          </wux-skeleton>
+          <view class="seizeSeat_mini"></view>
+        </view>
       </wux-animation-group>
+      <view class="seizeSeat_mini"></view>
+      <view class="seizeSeat_mini"></view>
+      <i-load-more wx:if="{{currentIndex == 0}}" tip='{{((trendsParams.pageNum*trendsParams.pageSize) >= staffTrendsDataTotal) && loadStaffTrendsStateOfBottom == false ?"蓝诚科技提供技术支持":"加载中"}}' loading="{{loadStaffTrendsStateOfBottom}}"></i-load-more>
+      <i-load-more wx:if="{{currentIndex == 1}}" tip='{{((commentParams.pageNum*commentParams.pageSize) >= orderCommentDataTotal) && loadOrderCommentStateOfBottom == false ?"蓝诚科技提供技术支持":"加载中"}}' loading="{{loadOrderCommentStateOfBottom}}"></i-load-more>
     </view>
-    <view class="view_box_common" style="position: relative;top: -22px;">
-      <i-load-more tip='蓝诚科技提供技术支持' loading="{{false}}"></i-load-more>
-    </view>
+
     <view class="seizeSeat_mini"></view>
     <view class="seizeSeat_mini"></view>
     <view class="seizeSeat_mini"></view>
   </scroll-view>
+
   <!-- 底部but -->
   <view class="bottomView">
     <view class="view_box_common" style="height: 60px;">
@@ -336,19 +352,22 @@
           </view>
         </view>
 
-        <view class="seizeSeat_mini"></view>
-        <view class="view_box_common scope_view" bind:tap="selectUserAccount">
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view class="view_box_row_content tempColumn">
-              <image src="../../../static/ico/theme_dot.png"></image>
-              <view>社交账号</view>
-            </view>
-            <view class="view_box_row_content scopeTextView">
-              <view>{{appointForm.customNum!=null?dictsUtil.social_accounts(appointForm.accountServiceProvider)+"-"+appointForm.customNum:"请选择您的社交账号"}}</view>
-              <wux-icon type="ios-arrow-forward" size="14" color="#80848f"></wux-icon>
+        <block wx:if="{{ifHide == '0'}}">
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_common scope_view" bind:tap="selectUserAccount">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content tempColumn">
+                <image src="../../../static/ico/theme_dot.png"></image>
+                <view>社交账号</view>
+              </view>
+              <view class="view_box_row_content scopeTextView">
+                <view>{{appointForm.customNum!=null?dictsUtil.social_accounts(appointForm.accountServiceProvider)+"-"+appointForm.customNum:"请选择您的社交账号"}}</view>
+                <wux-icon type="ios-arrow-forward" size="14" color="#80848f"></wux-icon>
+              </view>
             </view>
           </view>
-        </view>
+        </block>
+
         <view class="seizeSeat_mini"></view>
         <view class="view_box_common scope_view">
           <view class="view_box_common view_box_row_content_symmetry">

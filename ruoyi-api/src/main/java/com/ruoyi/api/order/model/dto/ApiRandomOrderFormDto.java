@@ -37,11 +37,9 @@ public class ApiRandomOrderFormDto implements Serializable {
     private Long serviceItemId;
 
     @ApiModelProperty("社交账号服务商")
-    @NotBlank(message = "社交账号服务商不能为空")
     private String accountServiceProvider;
 
     @ApiModelProperty("客户账号")
-    @NotBlank(message = "客户账号不能为空")
     private String customNum;
 
     @ApiModelProperty("备注")

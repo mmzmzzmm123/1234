@@ -26,15 +26,15 @@ Page({
     refreshState: false, //下拉刷新状态
     giftList: app.globalData.giftList, // 礼物列表
     showGift: false, // 展示礼物状态
-    currentIndex: 0, // 当前tab数据
-    currentKey: "trends",
+    currentIndex: 1, // 当前tab数据
+    currentKey: "comment",
     tabs: [
       {
         key: "trends",
-        title: "动态"
+        title: "店员动态"
       }, {
         key: "comment",
-        title: "评论"
+        title: "店员评论"
       }
     ],
     serviceList: app.globalData.serviceList, // 服务数据
@@ -43,13 +43,22 @@ Page({
     staffInfo: null, // 店员数据
     loadStaffTrendsState: false, // 店员动态数据加载状态
     loadStaffTrendsStateOfBottom: false, // 店员动态数据下一页加载状态
+    staffTrendsData: [], // 店员动态数据
+    staffTrendsDataTotal: 0, // 店员动态数据总数
     trendsParams: { // 动态请求参数
       pageNum: 1,
       pageSize: 20,
       userId: null,
     },
-    staffTrendsData: [], // 店员动态数据
-    staffTrendsDataTotal: 0, // 店员动态数据总数
+    loadOrderCommentState: false, // 店员评论数据加载状态
+    loadOrderCommentStateOfBottom: false, // 店员评论数据下一页加载状态
+    orderCommentDataTotal: 0, // 店员订单评论总数
+    orderCommentData: [], // 店员订单评论数据
+    commentParams: { // 评论请求参数
+      pageNum: 1,
+      pageSize: 20,
+      staffId: null,
+    },
     userLikeStaffUserIdList: app.globalData.userLikeStaffUserIdList, // 用户收藏店员记录
     userLikeStaffTrendsIdList: app.globalData.userLikeStaffTrendsIdList, // 用户点赞店员动态记录
     preListAudioPlayIndex: -1, // 上一条列表播放语音下标
@@ -79,6 +88,7 @@ Page({
       accountServiceProvider: null, // 社交账号服务商
       customNum: null, // 社交账号
     },
+    ifHide: app.globalData.hidePrivacy
   },
 
   /**
@@ -108,7 +118,8 @@ Page({
     })
     let staffId = options.staffId;
     this.setData({
-      ["trendsParams.userId"]: staffId
+      ["trendsParams.userId"]: staffId,
+      ["commentParams.staffId"]: staffId
     })
     // 加载店员数据
     this.loadStaffInfo(staffId);
@@ -116,6 +127,9 @@ Page({
     this.loadStaffGiftRecord(staffId);
     // 加载店员动态数据
     this.loadStaffTrendsData(this.loadStaffTrendsDataOnStart);
+    // 加载店员订单评论数据
+    this.loadStaffOrderCommentata(this.loadStaffOrderCommentataOnStart);
+
 
     // 全局语音监听暂停事件
     app.globalData.audioContext.onEnded(() => {
@@ -192,6 +206,47 @@ Page({
     })
   },
   /**
+   * 加载评论数据
+   */
+  loadStaffOrderCommentata: function (onStart) {
+    let commentParams = this.data.commentParams;
+    orderApi.selectOrderComment(commentParams, onStart, this.loadStaffOrderCommentataOnSuccess, this.loadStaffOrderCommentataOnFailed);
+  },
+  loadStaffOrderCommentataOnStart: function () {
+    this.setData({
+      loadOrderCommentState: true
+    })
+  },
+  loadStaffOrderCommentataOnSuccess: function (res) {
+    let dataArr = res.data.data;
+    let orderCommentData = this.data.orderCommentData;
+    let loadOrderCommentStateOfBottom = this.data.loadOrderCommentStateOfBottom;
+    if (loadOrderCommentStateOfBottom) {
+      for (let index in dataArr) {
+        orderCommentData.push(dataArr[index]);
+      }
+    } else {
+      orderCommentData = dataArr;
+    }
+    this.setData({
+      loadOrderCommentState: false,
+      loadOrderCommentStateOfBottom: false,
+      orderCommentDataTotal: res.data.total,
+      orderCommentData: orderCommentData
+    })
+  },
+  loadStaffOrderCommentataOnFailed: function (res) {
+    this.setData({
+      loadOrderCommentState: false,
+      loadOrderCommentStateOfBottom: false
+    })
+    wx.showToast({
+      title: '加载店员评论失败，请稍后重试',
+      icon: "none",
+      duration: 2000
+    })
+  },
+  /**
    * 加载店员的动态数据
    */
   loadStaffTrendsData: function (onStart) {
@@ -217,7 +272,7 @@ Page({
     this.setData({
       loadStaffTrendsState: false,
       loadStaffTrendsStateOfBottom: false,
-      staffTrendsDataTotal: res.data.data.total,
+      staffTrendsDataTotal: res.data.total,
       staffTrendsData: staffTrendsData
     })
   },
@@ -1100,7 +1155,7 @@ Page({
       return;
     }
     // 判断社交账号是否已选择
-    if (appointForm.accountServiceProvider == null || appointForm.customNum == null) {
+    if (this.data.ifHide == '0' && (appointForm.accountServiceProvider == null || appointForm.customNum == null)) {
       wx.showToast({
         title: '亲爱的，请选择社交账号哟',
         icon: "none",
@@ -1248,5 +1303,58 @@ Page({
       ["appointForm.accountServiceProvider"]: data.accountServiceProvider,
       ["appointForm.customNum"]: data.num
     })
+  },
+  /**
+   * 下拉刷新数据
+   */
+  refresh: function () {
+    let that = this;
+    setTimeout(function () {
+      that.setData({
+        refreshState: false
+      }, 2000)
+    })
+    let staffId = this.data.staffInfo.userId;
+    this.loadStaffInfo(staffId);
+    this.loadStaffGiftRecord(staffId);
+    this.loadStaffTrendsData(this.loadStaffTrendsDataOnStart);
+    this.loadStaffOrderCommentata(this.loadStaffOrderCommentataOnStart);
+    platformGiftApi.selectGiftList(null, this.selectGiftListOnSuccess, null);
+    serviceInfoApi.select(null, this.loadServiceInfoOnSuccess, null);
+    staffApi.selectStaffLevelConfig(null, this.staffLevelConfigOnSuccess, null);
+  },
+  /**
+   * 滑动条触底事件（需要判断对应的key数据是否存在下一页）
+   */
+  loadNextPageData: function () {
+    let index = this.data.currentIndex;
+    // 0 加载动态 1 加载评论
+    if(index == 0){
+      let staffTrendsDataTotal = this.data.staffTrendsDataTotal;
+      let params = this.data.trendsParams;
+      let loadStaffTrendsStateOfBottom = this.data.loadStaffTrendsStateOfBottom;
+      if (loadStaffTrendsStateOfBottom || (Number(params.pageNum) * Number(params.pageSize) >= staffTrendsDataTotal)) {
+        return;
+      }
+      params.pageNum = params.pageNum + 1;
+      this.setData({
+        loadStaffTrendsStateOfBottom: true,
+        trendsParams: params
+      })
+      this.loadStaffTrendsData(null);
+    }else{
+      let orderCommentDataTotal = this.data.orderCommentDataTotal;
+      let params = this.data.commentParams;
+      let loadOrderCommentStateOfBottom = this.data.loadOrderCommentStateOfBottom;
+      if (loadOrderCommentStateOfBottom || (Number(params.pageNum) * Number(params.pageSize) >= orderCommentDataTotal)) {
+        return;
+      }
+      params.pageNum = params.pageNum + 1;
+      this.setData({
+        loadOrderCommentStateOfBottom: true,
+        commentParams: params
+      })
+      this.loadStaffOrderCommentata(null);
+    }
   },
 })

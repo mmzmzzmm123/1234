@@ -173,7 +173,7 @@ Page({
   updateUser:function(params){
     let userInfo = this.data.userInfo;
     params.id = userInfo.id;
-    userApi.update(params,this.updateUserOnStart,this.updateUserOnSuccess,this.updateUserOnFailed);
+    userApi.update(params,this.updateUserOnStart,this.updateUserOnSuccess,this.updateUserOnFailed,this.updateUserOnWarn);
   },
   updateUserOnStart:function(){
     wx.showLoading({
@@ -196,6 +196,14 @@ Page({
     wx.showToast({
       title: '修改失败',
       icon: "error"
+    })
+  },
+  updateUserOnWarn:function(res){
+    wx.hideLoading();
+    wx.showToast({
+      title: res.msg,
+      icon: "none",
+      duration: 2000
     })
   },
 })

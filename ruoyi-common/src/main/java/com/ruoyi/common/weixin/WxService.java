@@ -1,5 +1,6 @@
 package com.ruoyi.common.weixin;
 
+import cn.binarywang.wx.miniapp.api.WxMaSecCheckService;
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.api.WxMaUserService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaUserServiceImpl;
@@ -42,6 +43,13 @@ public class WxService {
     private final WxMaService wxMiniAppletService;
     private final WxPayService wxPayService;
     private final WxPayInfoProperties wxPayInfoProperties;
+
+    /**
+     * 内容安全相关接口
+     * */
+    public WxMaSecCheckService getWxMaSecCheckService(){
+        return wxMiniAppletService.getSecCheckService();
+    }
 
     /**
      * 使用微信小程序前端传入code，换取sessionInfo

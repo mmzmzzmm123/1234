@@ -1,5 +1,8 @@
 package com.ruoyi.api.staff.service;
 
+import cn.binarywang.wx.miniapp.api.WxMaSecCheckService;
+import cn.binarywang.wx.miniapp.bean.WxMaMediaAsyncCheckResult;
+import cn.binarywang.wx.miniapp.constant.WxMaConstants;
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.api.common.model.dto.ApiOssUploadSingleFileDto;
 import com.ruoyi.api.common.model.vo.ApiOssUploadSingleFileVo;
@@ -12,8 +15,10 @@ import com.ruoyi.common.enums.StaffStateEnums;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.AudioUtils;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.TokenUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.common.weixin.WxService;
 import com.ruoyi.staff.domain.StaffInfo;
 import com.ruoyi.staff.domain.StaffTrends;
 import com.ruoyi.staff.mapper.StaffTrendsMapper;
@@ -44,6 +49,7 @@ public class ApiStaffTrendsService {
     private final UserLikeStaffTrendsRecordMapper userLikeStaffTrendsRecordMapper;
     private final StaffTrendsMapper staffTrendsMapper;
     private final ApiFileService apiFileService;
+    private final WxService wxService;
 
     /**
      * 获取店员动态数据
@@ -106,6 +112,30 @@ public class ApiStaffTrendsService {
                     insert.setVoiceTime(0L);
                 }
             }
+        }
+        // 合法图片与敏感词校验
+        try {
+            WxMaSecCheckService secCheckService = wxService.getWxMaSecCheckService();
+            if (StringUtils.isNotBlank(dto.getContent())){
+                secCheckService.checkMessage(dto.getContent());
+            }
+            if (StringUtils.isNotBlank(dto.getImgList())){
+                String[] imgArr = StringUtils.split(dto.getImgList(), ",");
+                for (String item : imgArr){
+                    secCheckService.checkImage(item);
+                }
+            }
+            if (StringUtils.isNotBlank(dto.getVideoUrl())){
+                WxMaMediaAsyncCheckResult videoResult = secCheckService.mediaCheckAsync(dto.getVideoUrl(), WxMaConstants.SecCheckMediaType.VOICE);
+                log.info("视频检测结果：{}", videoResult);
+            }
+            if (StringUtils.isNotBlank(insert.getVoiceUrl())){
+                WxMaMediaAsyncCheckResult voiceResult = secCheckService.mediaCheckAsync(dto.getVoiceUrl(), WxMaConstants.SecCheckMediaType.VOICE);
+                log.info("视频检测结果：{}", voiceResult);
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            throw new ServiceException("亲爱的 您上传的内容涉及到敏感内容，请检查修改后上传", HttpStatus.WARN_WX);
         }
         staffTrendsMapper.insertStaffTrends(insert);
         log.info("发布动态：完成");

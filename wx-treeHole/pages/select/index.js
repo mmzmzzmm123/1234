@@ -79,6 +79,7 @@ Page({
       }
     ],
     preAudioIndex: -1, // 语音条下标
+    ifHide: app.globalData.hidePrivacy
   },
   /**
    * 生命周期函数--监听页面加载
@@ -556,7 +557,7 @@ Page({
    */
   submitRandomOrder: function () {
     let randomForm = this.data.randomForm;
-    if (randomForm.accountServiceProvider == null && randomForm.customNum == null) {
+    if (this.data.ifHide=='0'&&(randomForm.accountServiceProvider == null && randomForm.customNum == null)) {
       wx.showToast({
         title: '请选择您的社交账号',
         icon: "none"

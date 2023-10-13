@@ -2,9 +2,7 @@ package com.ruoyi.api.order.controller;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.api.order.model.dto.*;
-import com.ruoyi.api.order.model.vo.ApiOrderDetailsVo;
-import com.ruoyi.api.order.model.vo.ApiOrderInfoVo;
-import com.ruoyi.api.order.model.vo.ApiPageOrderInfoVo;
+import com.ruoyi.api.order.model.vo.*;
 import com.ruoyi.api.order.service.ApiOrderService;
 import com.ruoyi.api.payment.model.vo.ApiOrderPayInfoVo;
 import com.ruoyi.api.staff.model.vo.ApiStaffInfoVo;
@@ -15,6 +13,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.order.domain.OrderComment;
 import com.ruoyi.order.domain.OrderDetails;
 import com.ruoyi.order.domain.OrderInfo;
 import com.ruoyi.staff.domain.StaffInfo;
@@ -172,5 +171,25 @@ public class ApiOrderController extends BaseController {
         return R.ok(service.selectServedUserId());
     }
 
-
+    @ApiOperation("查询订单评论")
+    @GetMapping("/selectOrderComment")
+    public R<ApiPageOrderCommentVo> selectOrderComment(ApiPageOrderCommentDto dto){
+        log.info("查询订单评论：开始，参数：{}", dto);
+        ApiPageOrderCommentVo vo = new ApiPageOrderCommentVo();
+        List<ApiOrderCommentVo> voList = new ArrayList<>();
+        startPage();
+        List<OrderComment> orderComments = service.selectOrderComment(dto);
+        TableDataInfo dataTable = getDataTable(orderComments);
+        if(ObjectUtil.isNotEmpty(dataTable)){
+            orderComments.forEach(item -> {
+                ApiOrderCommentVo apiOrderCommentVo = new ApiOrderCommentVo();
+                BeanUtils.copyBeanProp(apiOrderCommentVo, item);
+                voList.add(apiOrderCommentVo);
+            });
+        }
+        vo.setData(voList)
+                .setTotal(dataTable.getTotal());
+        log.info("查询订单评论：完成，返回数据：{}", vo);
+        return R.ok(vo);
+    }
 }

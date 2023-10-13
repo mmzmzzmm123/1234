@@ -1,5 +1,7 @@
 package com.ruoyi.api.user.service;
 
+import cn.binarywang.wx.miniapp.api.WxMaSecCheckService;
+import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -46,7 +48,6 @@ public class ApiUserService {
     private final UserWalletMapper userWalletMapper;
     private final UserLikeStaffRecordMapper userLikeStaffRecordMapper;
     private final UserLikeStaffTrendsRecordMapper userLikeStaffTrendsRecordMapper;
-    private final StaffTrendsMapper staffTrendsMapper;
     private final WxService wxService;
 
     /**
@@ -115,6 +116,19 @@ public class ApiUserService {
         UserInfo updateInfo = new UserInfo();
         BeanUtils.copyBeanProp(updateInfo, dto);
         updateInfo.setId(TokenUtils.getUserId());
+        // 合法图片与敏感词校验
+        try {
+            WxMaSecCheckService secCheckService = wxService.getWxMaSecCheckService();
+            if (StringUtils.isNotBlank(dto.getAvatarUrl())) {
+                secCheckService.checkImage(dto.getAvatarUrl());
+            }
+            if (StringUtils.isNotBlank(dto.getNickName())) {
+                secCheckService.checkMessage(dto.getNickName());
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            throw new ServiceException("亲爱的 您上传的内容涉及到敏感内容，请检查修改后上传", HttpStatus.WARN_WX);
+        }
         userInfoMapper.updateUserInfo(updateInfo);
         log.info("用户信息更新：完成");
         return Boolean.TRUE;
@@ -220,17 +234,17 @@ public class ApiUserService {
      *
      * @param staffId 店员标识
      * @return 结果
-     * */
+     */
     public Boolean likeStaff(Long staffId) {
         log.info("用户关注店员：开始，参数：{}", staffId);
         Long userId = TokenUtils.getUserId();
         // 判断是否自己关注自己
-        if (userId.equals(staffId)){
+        if (userId.equals(staffId)) {
             log.warn("用户关注店员：失败，自己不能关注自己");
             throw new ServiceException("亲爱的，自己不能关注自己哟", HttpStatus.WARN_WX);
         }
         List<UserLikeStaffRecord> userLikeStaffRecords = selectUserLikeStaffRecord(userId, staffId);
-        if (ObjectUtil.isNotEmpty(userLikeStaffRecords)){
+        if (ObjectUtil.isNotEmpty(userLikeStaffRecords)) {
             log.warn("用户关注店员：完成，已关注");
             return Boolean.TRUE;
         }
@@ -248,12 +262,12 @@ public class ApiUserService {
      *
      * @param staffId 店员标识
      * @return 结果
-     * */
+     */
     public Boolean cancelLikeStaff(Long staffId) {
         log.info("用户取消关注店员：开始，参数：{}", staffId);
         Long userId = TokenUtils.getUserId();
         List<UserLikeStaffRecord> userLikeStaffRecords = selectUserLikeStaffRecord(userId, staffId);
-        if (ObjectUtil.isEmpty(userLikeStaffRecords)){
+        if (ObjectUtil.isEmpty(userLikeStaffRecords)) {
             log.warn("用户取消关注店员：完成，用户暂未关注该店员");
             return Boolean.TRUE;
         }
@@ -265,10 +279,10 @@ public class ApiUserService {
 
     /**
      * 根据条件查询记录数据
-     * */
-    private List<UserLikeStaffRecord> selectUserLikeStaffRecord(Long userId, Long staffId){
+     */
+    private List<UserLikeStaffRecord> selectUserLikeStaffRecord(Long userId, Long staffId) {
         log.info("根据条件查询记录数据：开始，参数：{}，{}", userId, staffId);
-        if (ObjectUtil.isNull(staffId)){
+        if (ObjectUtil.isNull(staffId)) {
             log.warn("根据条件查询记录数据：失败，参数为空");
             throw new ServiceException("根据条件查询记录数据：失败，参数为空", HttpStatus.ERROR);
         }
