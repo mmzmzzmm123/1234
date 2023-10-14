@@ -351,4 +351,82 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         }
     }
 
+    /**
+     * 保洁只开包厢门和电源
+     *
+     * @param req
+     * @param userId
+     */
+    @Override
+    public void openCleanerRoomEquipment(RoomEquipeOpenReq req, Long userId) {
+        TRoom room = tRoomMapper.selectTRoomById(req.getRoomId());
+        List<TEquipment> equipments = equipmentService.selectTEquipmentList(new TEquipment());
+
+        final Map<Long, TEquipment> equipmentMap = equipments.stream().collect(Collectors.toMap(TEquipment::getId, Function.identity()));
+
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType("equipment_type");
+        Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
+
+        MqttSendClient sendClient = new MqttSendClient();
+        String equips = room.getTableCode();
+        String hornSn = "";
+        for (String equip : equips.split(",")) {
+            TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
+            if (currentEq == null) {
+                continue;
+            }
+            if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                hornSn = currentEq.getEquipControl();
+                CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已打开");
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String equip : equips.split(",")) {
+            TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
+            if (currentEq == null) {
+                continue;
+            }
+            if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType())) {
+                Map<String, String> msg = new HashMap<>();
+
+                if (equipDict.containsKey(currentEq.getEquipType())) {
+                    String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
+                    msg.put(command[0], command[1]);
+                } else {
+                    sb.append("未知的设备类型" + currentEq.getEquipType());
+                    continue;
+//                    throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
+                }
+
+                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+
+                currentEq.setRecentOpenTime(new Date());
+                currentEq.setOnOff("Y");
+                equipmentService.updateTEquipment(currentEq);
+
+            } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                Map<String, String> msg = new HashMap<>();
+
+                if (equipDict.containsKey(currentEq.getEquipType())) {
+                    String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
+                    msg.put(command[0], command[1]);
+                } else {
+                    sb.append("未知的设备类型" + currentEq.getEquipType());
+                    continue;
+//                    throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
+                }
+
+                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+
+                currentEq.setRecentOpenTime(new Date());
+                currentEq.setOnOff("Y");
+                equipmentService.updateTEquipment(currentEq);
+            }
+            if (sb.length() > 0) {
+                throw new ServiceException(sb.toString());
+            }
+
+        }
+    }
 }

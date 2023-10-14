@@ -51,9 +51,9 @@ public class TRoomCleanRecord extends BaseEntity
     @Excel(name = "结束时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date endTime;
 
-    /** 状态(未打扫、打扫中、已打扫) */
-    @Excel(name = "状态(未打扫、打扫中、已打扫)")
-    private Long status;
+    /** 状态 0 待打扫 1 打扫中 2 打扫完成*/
+    @Excel(name = "状态(0 待打扫 1 打扫中 2 打扫完成")
+    private Integer status;
 
     public void setId(Long id) 
     {
@@ -127,12 +127,12 @@ public class TRoomCleanRecord extends BaseEntity
     {
         return endTime;
     }
-    public void setStatus(Long status) 
+    public void setStatus(Integer status)
     {
         this.status = status;
     }
 
-    public Long getStatus() 
+    public Integer getStatus()
     {
         return status;
     }

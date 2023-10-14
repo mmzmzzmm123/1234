@@ -173,6 +173,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         WxPayOrderQueryV3Result v3Result = null;
         try {
             v3Result = wxPayService.queryOrderV3("", String.valueOf(order.getOrderNo()));
+            log.debug("查询订单返回:" + v3Result.toString());
         } catch (WxPayException e) {
             log.error("查询微信后台订单失败： " + e.getMessage());
             throw new ServiceException("查询微信后台订单失败");
@@ -184,27 +185,18 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             TRoomOrder updateOrder = new TRoomOrder();
             updateOrder.setId(order.getId());
             updateOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());
-          /*  if (v3Result.getAmount() != null) {
+            if (v3Result.getAmount() != null) {
                 final WxPayOrderQueryV3Result.Amount v3ResultAmount = v3Result.getAmount();
                 final Integer payerTotal = v3ResultAmount.getPayerTotal();
                 if (payerTotal != 0) {
-                    if (order.getTotalAmount().intValue() != v3ResultAmount.getTotal().intValue()) {
+                    if (order.getTotalAmount().multiply(new BigDecimal(100)).intValue() != v3ResultAmount.getTotal().intValue()) {
                         throw new ServiceException("订单金额不一致");
                     }
                     updateOrder.setPayAmount(new BigDecimal(v3ResultAmount.getPayerTotal()));
-                    if (v3Result.getPromotionDetails() != null) {
-                        final List<WxPayOrderQueryV3Result.PromotionDetail> promotionDetails = v3Result.getPromotionDetails();
-                        int totalCouponAmt = 0;
-                        for (WxPayOrderQueryV3Result.PromotionDetail promotionDetail : promotionDetails) {
-                            totalCouponAmt += promotionDetail.getAmount();
-                        }
-                        updateOrder.setCouponAmount(new BigDecimal(totalCouponAmt));
-                    } else {
-                        updateOrder.setCouponAmount(order.getTotalAmount().multiply(new BigDecimal(100)).subtract(new BigDecimal(v3ResultAmount.getPayerTotal())));
-                    }
+                    updateOrder.setCouponAmount(order.getTotalAmount().multiply(new BigDecimal(100)).subtract(new BigDecimal(v3ResultAmount.getPayerTotal())));
                 }
 
-            }*/
+            }
             tRoomOrderMapper.updateTRoomOrder(updateOrder);
         } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.REFUND)) {
             throw new ServiceException("订单转入退款");
@@ -466,7 +458,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             goodsDetail.setMerchantGoodsId(roomPackage.getId().toString());
             goodsDetail.setQuantity(1);
             goodsDetail.setUnitPrice(v3Amount.getTotal());
-            List<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetailList=new ArrayList<>();
+            List<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetailList = new ArrayList<>();
             goodsDetailList.add(goodsDetail);
             detail.setGoodsDetails(goodsDetailList);
 
@@ -977,6 +969,12 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         }
     }
 
+    @Autowired
+    ITRoomCleanRecordService cleanRecordService;
+
+    @Autowired
+    ITStoreUserService storeUserService;
+
     /**
      * 订单结束提醒
      */
@@ -1005,14 +1003,25 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 // 更新订单为关闭;
                 TRoomOrder up = new TRoomOrder();
                 up.setId(order.getId());
-                up.setStatus(4); //  待支付	1 已预约	2 使用中	3 超时未使用	4 已完成	5 取消	9
+                up.setStatus(OfficeEnum.RoomOrderStatus.OVER_TIME.getCode());// 4); //  待支付	1 已预约	2 使用中	3 超时未使用	4 已完成	5 取消	9
                 tRoomOrderMapper.updateTRoomOrder(up);
 
+                // 更改房间状态清洁中
                 TRoom room = new TRoom();
                 room.setId(order.getRoomId());
-                room.setStatus("0"); //0 可用 1 不可用 2 清洁中 3 使用中
+                room.setStatus(OfficeEnum.RoomStatus.IN_CLEAN.getInfo());//"2"); //0 可用 1 不可用 2 清洁中 3 使用中
                 roomService.updateTRoom(room);
 
+                TWxUser wxUser = wxUserService.selectRoomCleaner(order.getRoomId());
+                // 写带打扫记录
+                TRoomCleanRecord cleanRecord = new TRoomCleanRecord();
+                cleanRecord.setStatus(OfficeEnum.CleanRecordStatus.TOBE_CLEAN.getCode());
+                cleanRecord.setRoomId(order.getRoomId());
+                cleanRecord.setWxUserId(wxUser.getId());
+                cleanRecord.setOrderNo(order.getRoomId() + new Date().getTime());
+                cleanRecord.setCreateTime(new Date());
+                cleanRecordService.insertTRoomCleanRecord(cleanRecord);
+                // 保洁发送带打扫记录
 
                 continue;
             }
@@ -1161,7 +1170,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         goodsDetail.setMerchantGoodsId(storePromotion.getId().toString());
         goodsDetail.setQuantity(1);
         goodsDetail.setUnitPrice(v3Amount.getTotal());
-        List<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetailList=new ArrayList<>();
+        List<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetailList = new ArrayList<>();
         goodsDetailList.add(goodsDetail);
         detail.setGoodsDetails(goodsDetailList);
 

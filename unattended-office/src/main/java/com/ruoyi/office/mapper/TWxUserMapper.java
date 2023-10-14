@@ -63,4 +63,6 @@ public interface TWxUserMapper extends BaseMapper<TWxUser> {
     public int deleteTWxUserByIds(Long[] ids);
 
     List<MerchantUserVo> listStoreWxuser(TWxUser tWxUser);
+
+    TWxUser selectRoomCleaner(Long roomId);
 }

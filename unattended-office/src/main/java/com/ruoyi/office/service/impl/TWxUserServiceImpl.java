@@ -175,4 +175,9 @@ public class TWxUserServiceImpl extends ServiceImpl<TWxUserMapper, TWxUser> impl
         final List<MerchantUserStatisticsVo> targetList = new ArrayList<>(userStaMap.values());
         return targetList;
     }
+
+    @Override
+    public TWxUser selectRoomCleaner(Long roomId) {
+        return tWxUserMapper.selectRoomCleaner(roomId);
+    }
 }

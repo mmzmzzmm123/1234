@@ -69,4 +69,6 @@ public interface ITWxUserService
     void updateLogInfo(WxUser wxUser);
 
     List<MerchantUserStatisticsVo> statistics(Long userId, String reg);
+
+    TWxUser selectRoomCleaner(Long roomId);
 }

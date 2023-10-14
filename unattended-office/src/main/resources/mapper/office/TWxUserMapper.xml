@@ -1,76 +1,108 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.office.mapper.TWxUserMapper">
-    
+
     <resultMap type="TWxUser" id="TWxUserResult">
-        <result property="id"    column="id"    />
-        <result property="nickName"    column="nick_name"    />
-        <result property="openId"    column="open_id"    />
-        <result property="unionId"    column="union_id"    />
-        <result property="phone"    column="phone"    />
-        <result property="shareCode"    column="share_code"    />
-        <result property="wxCode"    column="wx_code"    />
-        <result property="inviterPhone"    column="inviter_phone"    />
-        <result property="isMember"    column="is_member"    />
-        <result property="sex"    column="sex"    />
-        <result property="loginIp"    column="login_ip"    />
-        <result property="loginDate"    column="login_date"    />
-        <result property="status"    column="status"    />
-        <result property="remark"    column="remark"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
-        <result property="userId"    column="user_id"    />
-        <result property="userType"    column="user_type"    />
+        <result property="id" column="id"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="openId" column="open_id"/>
+        <result property="unionId" column="union_id"/>
+        <result property="phone" column="phone"/>
+        <result property="shareCode" column="share_code"/>
+        <result property="wxCode" column="wx_code"/>
+        <result property="inviterPhone" column="inviter_phone"/>
+        <result property="isMember" column="is_member"/>
+        <result property="sex" column="sex"/>
+        <result property="loginIp" column="login_ip"/>
+        <result property="loginDate" column="login_date"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="userId" column="user_id"/>
+        <result property="userType" column="user_type"/>
     </resultMap>
 
     <sql id="selectTWxUserVo">
-        select id, nick_name, open_id, union_id, phone, share_code, wx_code, inviter_phone, is_member, sex, login_ip, login_date, status, remark, create_by, create_time, update_by, update_time, user_id, user_type from t_wx_user
+        select id,
+               nick_name,
+               open_id,
+               union_id,
+               phone,
+               share_code,
+               wx_code,
+               inviter_phone,
+               is_member,
+               sex,
+               login_ip,
+               login_date,
+               status,
+               remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time,
+               user_id,
+               user_type
+        from t_wx_user
     </sql>
 
     <select id="selectTWxUserList" parameterType="TWxUser" resultMap="TWxUserResult">
         <include refid="selectTWxUserVo"/>
-        <where>  
-            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
-            <if test="unionId != null  and unionId != ''"> and union_id = #{unionId}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="shareCode != null  and shareCode != ''"> and share_code = #{shareCode}</if>
-            <if test="wxCode != null  and wxCode != ''"> and wx_code = #{wxCode}</if>
-            <if test="inviterPhone != null  and inviterPhone != ''"> and inviter_phone = #{inviterPhone}</if>
-            <if test="isMember != null  and isMember != ''"> and is_member = #{isMember}</if>
-            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
-            <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
-            <if test="loginDate != null "> and login_date = #{loginDate}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
-            <if test="userType != null  and userType != ''"> and user_type = #{userType}</if>
+        <where>
+            <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="openId != null  and openId != ''">and open_id = #{openId}</if>
+            <if test="unionId != null  and unionId != ''">and union_id = #{unionId}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="shareCode != null  and shareCode != ''">and share_code = #{shareCode}</if>
+            <if test="wxCode != null  and wxCode != ''">and wx_code = #{wxCode}</if>
+            <if test="inviterPhone != null  and inviterPhone != ''">and inviter_phone = #{inviterPhone}</if>
+            <if test="isMember != null  and isMember != ''">and is_member = #{isMember}</if>
+            <if test="sex != null  and sex != ''">and sex = #{sex}</if>
+            <if test="loginIp != null  and loginIp != ''">and login_ip = #{loginIp}</if>
+            <if test="loginDate != null ">and login_date = #{loginDate}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="userId != null  and userId != ''">and user_id = #{userId}</if>
+            <if test="userType != null  and userType != ''">and user_type = #{userType}</if>
         </where>
     </select>
-    
+
     <select id="selectTWxUserById" parameterType="Long" resultMap="TWxUserResult">
         <include refid="selectTWxUserVo"/>
         where id = #{id}
     </select>
     <select id="listStoreWxuser" resultType="com.ruoyi.office.domain.vo.MerchantUserVo">
-        select a.wx_user_id ,a.user_id , a.amount ,a.`point` ,u.* from t_wx_user_amount a left join t_wx_user u on a.wx_user_id =u.id
+        select a.wx_user_id ,a.user_id , a.amount ,a.`point` ,u.* from t_wx_user_amount a left join t_wx_user u on
+        a.wx_user_id =u.id
         <where>
-            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
-            <if test="unionId != null  and unionId != ''"> and union_id = #{unionId}</if>
-            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
-            <if test="shareCode != null  and shareCode != ''"> and share_code = #{shareCode}</if>
-            <if test="wxCode != null  and wxCode != ''"> and wx_code = #{wxCode}</if>
-            <if test="inviterPhone != null  and inviterPhone != ''"> and inviter_phone = #{inviterPhone}</if>
-            <if test="isMember != null  and isMember != ''"> and is_member = #{isMember}</if>
-            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
-            <if test="loginIp != null  and loginIp != ''"> and login_ip = #{loginIp}</if>
-            <if test="loginDate != null "> and login_date = #{loginDate}</if>
-            <if test="status != null "> and status = #{status}</if>
+            <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="openId != null  and openId != ''">and open_id = #{openId}</if>
+            <if test="unionId != null  and unionId != ''">and union_id = #{unionId}</if>
+            <if test="phone != null  and phone != ''">and phone = #{phone}</if>
+            <if test="shareCode != null  and shareCode != ''">and share_code = #{shareCode}</if>
+            <if test="wxCode != null  and wxCode != ''">and wx_code = #{wxCode}</if>
+            <if test="inviterPhone != null  and inviterPhone != ''">and inviter_phone = #{inviterPhone}</if>
+            <if test="isMember != null  and isMember != ''">and is_member = #{isMember}</if>
+            <if test="sex != null  and sex != ''">and sex = #{sex}</if>
+            <if test="loginIp != null  and loginIp != ''">and login_ip = #{loginIp}</if>
+            <if test="loginDate != null ">and login_date = #{loginDate}</if>
+            <if test="status != null ">and status = #{status}</if>
         </where>
+    </select>
+    <select id="selectRoomCleaner" parameterType="Long" resultType="com.ruoyi.office.domain.TWxUser">
+        select wx.*
+        from t_room r
+                 left join t_store_user su on r.store_id = su.store_id
+                 left join sys_user_role ur on su.user_id = ur.user_id
+                 left join sys_role ro on ur.role_id = ro.role_id
+                 left join sys_user u on su.user_id = u.user_id
+                 left join t_wx_user wx on u.phonenumber = wx.phone
+        where ro.role_key = 'cleaner'
+          and r.id = #{roomId}
     </select>
 
     <insert id="insertTWxUser" parameterType="TWxUser" useGeneratedKeys="true" keyProperty="id">
@@ -95,7 +127,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
             <if test="userId != null">user_id,</if>
             <if test="userType != null">user_type,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="nickName != null">#{nickName},</if>
             <if test="openId != null">#{openId},</if>
@@ -116,7 +148,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="userId != null">#{userId},</if>
             <if test="userType != null">#{userType},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateTWxUser" parameterType="TWxUser">
@@ -146,11 +178,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteTWxUserById" parameterType="Long">
-        delete from t_wx_user where id = #{id}
+        delete
+        from t_wx_user
+        where id = #{id}
     </delete>
 
     <delete id="deleteTWxUserByIds" parameterType="String">
-        delete from t_wx_user where id in 
+        delete from t_wx_user where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

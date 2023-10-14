@@ -4,6 +4,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TRoomCleanRecord;
+import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.RoomEquipeOpenReq;
 import com.ruoyi.office.service.ITRoomCleanRecordService;
 import com.ruoyi.office.service.ITRoomService;
@@ -41,18 +42,19 @@ public class CleanerController {
 
         Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
         try {
-            roomService.openRoomEquipment(req, userId);
+            roomService.openCleanerRoomEquipment(req, userId);
 
             TRoomCleanRecord cleanRecord = new TRoomCleanRecord();
             cleanRecord.setCreateBy(userId + "");
             cleanRecord.setRoomId(req.getRoomId());
             cleanRecord.setStartTime(new Date());
-            cleanRecord.setStatus(0l);
+            cleanRecord.setStatus(OfficeEnum.CleanRecordStatus.CLEANING.getCode());
             cleanRecordService.insertTRoomCleanRecord(cleanRecord);
 
             TRoom room = new TRoom();
             room.setId(req.getRoomId());
-            room.setStatus("2"); // 2 清洁中
+            // 2 清洁中
+            room.setStatus(OfficeEnum.RoomStatus.IN_CLEAN.getCode());
             roomService.updateTRoom(room);
 
         } catch (Exception e) {

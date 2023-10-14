@@ -31,7 +31,7 @@ public class OfficeEnum {
         }
     }
 
-    public enum RoomOrderStatus {
+    public enum RoomOrderStatus { // 待支付	1 已预约	2 使用中	3 超时未使用	4 已完成	5 取消	9
         IDEAL(0, "空闲"), TO_PAY(1, "待支付"), ORDERED(2, "已预约"), USING(3, "使用中"),
         OVER_TIME(4, "超时未使用"), USED(5, "已完成"), CANCEL(9, "取消");
 
@@ -259,6 +259,64 @@ public class OfficeEnum {
 
         public static EquipType GetValueByCode(String code) {
             for (EquipType e : EquipType.values()) {
+                if (e.getCode().equals(code)) {
+                    return e;
+                }
+            }
+            throw new RuntimeException("枚举值错误");
+        }
+    }
+
+    public enum RoomStatus { // //0 可用 1 不可用 2 清洁中 3 使用中
+        CAN_USE("0", "可用"), NO_USE("1", "不可用"), IN_CLEAN("2", "清洁中"), IN_USE("3", "使用中");
+
+        private final String code;
+        private final String info;
+
+        RoomStatus(String code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public static RoomStatus GetValueByCode(String code) {
+            for (RoomStatus e : RoomStatus.values()) {
+                if (e.getCode().equals(code)) {
+                    return e;
+                }
+            }
+            throw new RuntimeException("枚举值错误");
+        }
+    }
+
+    public enum CleanRecordStatus { // //0 待打扫 1 打扫中 2 打扫完成
+        TOBE_CLEAN(0, "待打扫"), CLEANING(1, "打扫中"), COMPLETE(2, "打扫完成");
+
+        private final Integer code;
+        private final String info;
+
+        CleanRecordStatus(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public static CleanRecordStatus GetValueByCode(Integer code) {
+            for (CleanRecordStatus e : CleanRecordStatus.values()) {
                 if (e.getCode().equals(code)) {
                     return e;
                 }
