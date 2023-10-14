@@ -81,13 +81,8 @@ public class HornConfig {
 
         String response = HttpUtils.sendPost(HornConfig.url + "/send", JSONObject.toJSONString(hornMsg));
         CloudHornRegResponse resp = JSONObject.parseObject(response, CloudHornRegResponse.class);
-        if ("0".equalsIgnoreCase(resp.getCode())) {
-            return resp;
-        } else {
-            throw new ServiceException("云喇叭消息发送失败");
-        }
 
-
+        return resp;
     }
 
 

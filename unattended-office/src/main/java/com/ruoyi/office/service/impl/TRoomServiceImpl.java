@@ -116,7 +116,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
     private ISysDictDataService dictDataService;
 
     @Override
-    public void openRoom(Long id) {
+    public String openRoom(Long id) {
         TRoom room = tRoomMapper.selectTRoomById(id);
         List<TEquipment> equipments = equipmentService.selectTEquipmentList(new TEquipment());
 
@@ -126,6 +126,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         dictData.setDictType("equipment_type");
         Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
 
+        StringBuilder errMsg = new StringBuilder();
         MqttSendClient sendClient = new MqttSendClient();
         String equips = room.getTableCode();
         for (String equip : equips.split(",")) {
@@ -134,8 +135,11 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 throw new ServiceException("设备不存在");
             }
             if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
-                CloudHornRegResponse resp = HornConfig.hornSend(currentEq.getEquipControl(), "已开门，欢迎使用雀行无人麻将机");
 
+                CloudHornRegResponse resp = HornConfig.hornSend(currentEq.getEquipControl(), "已开门，欢迎使用雀行无人麻将机");
+                if (!"0".equalsIgnoreCase(resp.getCode())) {
+                    errMsg.append("云喇叭消息发送失败").append(resp.getMsg()).append(";");
+                }
                 TEquipment up = new TEquipment();
                 up.setId(currentEq.getId());
                 up.setRemark(resp.getData()); // 设备发送信息返回
@@ -147,18 +151,17 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                     String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
                     msg.put(command[0], command[1]);
                 } else {
-                    throw new ServiceException(currentEq.getEquipType() + "类型的设备未设置");
+                    errMsg.append(currentEq.getEquipType() + "类型的设备未设置开关代码;");
+                    continue;
                 }
-
                 sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
 
                 currentEq.setRecentOpenTime(new Date());
                 currentEq.setOnOff("Y");
                 equipmentService.updateTEquipment(currentEq);
-//                break;
             }
         }
-
+        return errMsg.toString();
     }
 
     @Override
