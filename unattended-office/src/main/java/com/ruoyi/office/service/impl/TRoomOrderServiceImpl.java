@@ -461,27 +461,22 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             WxPayUnifiedOrderV3Request.Payer v3payer = new WxPayUnifiedOrderV3Request.Payer();
             v3payer.setOpenid(wxUser.getOpenId());
 
-           /* WxPayUnifiedOrderV3Request.Discount detail=new WxPayUnifiedOrderV3Request.Discount();
-            WxPayUnifiedOrderV3Request.GoodsDetail goodsDetail=new WxPayUnifiedOrderV3Request.GoodsDetail();
-            goodsDetail.setMerchantGoodsId("2023101301");
-//            goodsDetail.setWechatpayGoodsId("20231010002");
-
+            WxPayUnifiedOrderV3Request.Discount detail = new WxPayUnifiedOrderV3Request.Discount();
+            WxPayUnifiedOrderV3Request.GoodsDetail goodsDetail = new WxPayUnifiedOrderV3Request.GoodsDetail();
+            goodsDetail.setMerchantGoodsId(roomPackage.getId().toString());
             goodsDetail.setQuantity(1);
-            goodsDetail.setUnitPrice(5000);
+            goodsDetail.setUnitPrice(v3Amount.getTotal());
             List<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetailList=new ArrayList<>();
             goodsDetailList.add(goodsDetail);
             detail.setGoodsDetails(goodsDetailList);
-            detail.setCostPrice(v3Amount.getTotal());
-            detail.setInvoiceId("123");
-            v3Request.setDetail(detail);
-            v3Request.setGoodsTag("101301");*/
 
             v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getPayScoreNotifyUrl())
                     .setDescription("roomId: " + roomPackage.getRoomId()).setOutTradeNo(String.valueOf(orderNo))
                     .setAmount(v3Amount)
                     .setPayer(v3payer)
-                    .setAttach(OfficeEnum.WxTradeType.ROOM_ORDER.getCode());
-//                    .setDetail(detail);
+                    .setAttach(OfficeEnum.WxTradeType.ROOM_ORDER.getCode())
+                    .setDetail(detail)
+                    .setGoodsTag(roomPackage.getRemark());
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
             try {
@@ -1161,11 +1156,22 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         WxPayUnifiedOrderV3Request.Payer v3payer = new WxPayUnifiedOrderV3Request.Payer();
         v3payer.setOpenid(wxUser.getOpenId());
 
+        WxPayUnifiedOrderV3Request.Discount detail = new WxPayUnifiedOrderV3Request.Discount();
+        WxPayUnifiedOrderV3Request.GoodsDetail goodsDetail = new WxPayUnifiedOrderV3Request.GoodsDetail();
+        goodsDetail.setMerchantGoodsId(storePromotion.getId().toString());
+        goodsDetail.setQuantity(1);
+        goodsDetail.setUnitPrice(v3Amount.getTotal());
+        List<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetailList=new ArrayList<>();
+        goodsDetailList.add(goodsDetail);
+        detail.setGoodsDetails(goodsDetailList);
+
         v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getPayScoreNotifyUrl())
                 .setDescription("roomId: " + prepayReq.getRoomId()).setOutTradeNo(String.valueOf(orderNo))
                 .setAmount(v3Amount)
                 .setPayer(v3payer)
-                .setAttach(OfficeEnum.WxTradeType.ROOM_ORDER.getCode());
+                .setAttach(OfficeEnum.WxTradeType.ROOM_ORDER.getCode())
+                .setDetail(detail)
+                .setGoodsTag(storePromotion.getRemark());
 
         WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
         try {
