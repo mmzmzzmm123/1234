@@ -69,9 +69,9 @@
 				<u-button type="primary" text="立即预定" @click="onAddOrder"></u-button>
 			</view>
 		</view>
-		<u-datetime-picker :value="order.startTime" :min-date="minDate" :max-date="maxDate" :show="startShow"
+		<u-datetime-picker :value="order.startTime" :min-date="minDate" :max-date="maxDate" :show="startShow" :formatter="timeFormatter"
 			@close="onClosePicker(true)" @cancel="onClosePicker(true)" @confirm="onConfirmPicker(true,$event)"></u-datetime-picker>
-		<u-datetime-picker :value="order.endTime" :min-date="minDate" :max-date="maxDate" :show="endShow"
+		<u-datetime-picker :value="order.endTime" :min-date="minDate" :max-date="maxDate" :show="endShow" :formatter="timeFormatter"
 			@close="onClosePicker(false)" @cancel="onClosePicker(false)" @confirm="onConfirmPicker(false,$event)"></u-datetime-picker>
 		
 		<pay-bar v-model="payShow" :amount="amount" :storeId="roomInfo.storeId" @prepareOrder="onPrepareOrder" @success="onOrderSuccess"></pay-bar>
@@ -243,6 +243,7 @@
 				}
 				if(start){
 					startTime = e.value
+					endTime = startTime + endTime
 				}else{
 					endTime = e.value
 				}
@@ -354,7 +355,25 @@
 				this.order.endTime = this.order.startTime + promotion.maxMinutes * 60 * 1000
 				this.calcAmount()
 				this.updateHourStatus()
-			}
+			},
+			timeFormatter(type, value) {
+                if (type === 'year') {
+                    return `${value}年`
+                }
+                if (type === 'month') {
+                    return `${value}月`
+                }
+                if (type === 'day') {
+                    return `${value}日`
+                }
+				if (type === 'hour') {
+					return `${value}时`
+				}
+				if (type === 'minute') {
+					return `${value}分`
+				}
+                return value
+            }
 		}
 	}
 </script>
