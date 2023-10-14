@@ -366,7 +366,7 @@ public class ApiController extends BaseController {
      * @param id
      * @return
      */
-    @ApiOperation("开门禁")
+    @ApiOperation("开门禁 orderId")
     @PostMapping("/store/{id}")
     public AjaxResult openStore(@PathVariable("id") Long id) {
 
@@ -401,12 +401,12 @@ public class ApiController extends BaseController {
     ITRoomService roomService;
 
     /**
-     * 开门禁
+     * 开包厢
      *
      * @param orderId
      * @return
      */
-    @ApiOperation("开房间设备")
+    @ApiOperation("开包厢")
     @PostMapping("/room/{orderId}")
     public AjaxResult openRoom(@PathVariable("orderId") Long orderId) {
 
@@ -424,7 +424,7 @@ public class ApiController extends BaseController {
             if (diff > minutes)
                 return AjaxResult.error("订单开始前" + minutes + "分钟才可以开门");
 
-            roomService.openRoom(roomOrder.getRoomId());
+            String errMsg = roomService.openRoom(roomOrder.getRoomId());
             TRoomOrder upOrder = new TRoomOrder();
             upOrder.setId(orderId);
             upOrder.setStatus(3);// 使用中
@@ -433,6 +433,9 @@ public class ApiController extends BaseController {
             room.setId(roomOrder.getRoomId());
             room.setStatus("3");// 使用中
             roomService.updateTRoom(room);
+            if (StringUtils.isNotEmpty(errMsg)) {
+                return AjaxResult.error("操作异常，请联系管理员：" + errMsg);
+            }
         } catch (Exception e) {
             return AjaxResult.error("操作异常，请联系管理员：" + e.getMessage());
         }
@@ -727,6 +730,7 @@ public class ApiController extends BaseController {
 
     /**
      * 购买房间套餐预定 t_room_package
+     *
      * @param order
      * @return
      */
@@ -749,6 +753,7 @@ public class ApiController extends BaseController {
 
     /**
      * 购买店铺套餐预定 t_store_promotion
+     *
      * @param order
      * @return
      */
