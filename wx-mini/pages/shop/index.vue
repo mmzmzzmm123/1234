@@ -52,7 +52,14 @@
 	export default {
 		data() {
 			return {
-				shopInfo: {},
+				shopInfo: {
+					name: '...',
+					remark: '...',
+					startTime: '...',
+					stopTime: '...',
+					phone: '...',
+					address: '...'
+				},
 				roomList: []
 			}
 		},
