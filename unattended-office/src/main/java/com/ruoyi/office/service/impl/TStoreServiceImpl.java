@@ -1,9 +1,6 @@
 package com.ruoyi.office.service.impl;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSONObject;
@@ -148,27 +145,46 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
         TRoomOrder order = orderService.selectTRoomOrderById(id);
         final TRoom room = roomService.selectTRoomById(order.getRoomId());
 
-        TStore store = tStoreMapper.selectTStoreById(room.getStoreId());
+      /*  TStore store = tStoreMapper.selectTStoreById(room.getStoreId());
         TEquipment equipment = equipmentService.selectTEquipmentById(store.getEquipId());
+        */
+        List<TEquipment> equipmentList =new ArrayList<>();
+        for(String equpid : room.getTableCode().split(",")){
+            TEquipment e = equipmentService.selectTEquipmentById(Long.parseLong(equpid));
+            equipmentList.add(e);
+            /*if(OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(e.getEquipType())){
+                equipment = e;
+                break;
+            }*/
+        }
+        if(equipmentList.size()==0){
+            throw new ServiceException("未找到订单房间的设备,请联系管理员");
+        }
 
         SysDictData dictData = new SysDictData();
         dictData.setDictType("equipment_type");
         Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
 
-        Map<String, String> msg = new HashMap<>();
-        if (equipDict.containsKey(OfficeEnum.EquipType.DOOR.getCode())) {
-            String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
-            msg.put(command[0], command[1]);
-        } else {
-            throw new ServiceException("该门店未设置门禁");
-        }
+      /*  for(TEquipment equipment: equipmentList){
+            Map<String, String> msg = new HashMap<>();
+            if (equipDict.containsKey(OfficeEnum.EquipType.DOOR.getCode())) {
+                String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
+                msg.put(command[0], command[1]);
+            } else {
+                throw new ServiceException("该门店未设置门禁");
+            }
 
-        MqttSendClient sendClient = new MqttSendClient();
-        sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+            if(OfficeEnum.EquipType.DOOR.equals(equipment.getEquipType()))
 
-        equipment.setRecentOpenTime(new Date());
-        equipment.setOnOff("Y");
-        equipmentService.updateTEquipment(equipment);
+            MqttSendClient sendClient = new MqttSendClient();
+            sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+
+            equipment.setRecentOpenTime(new Date());
+            equipment.setOnOff("Y");
+            equipmentService.updateTEquipment(equipment);
+        }*/
+
+
     }
 
     @Override
@@ -181,11 +197,14 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
         Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
 
         Map<String, String> msg = new HashMap<>();
+        if(!OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(equipment.getEquipType())){
+            throw new ServiceException("该门店未设置门禁,请联系管理员");
+        }
         if (equipDict.containsKey(OfficeEnum.EquipType.DOOR.getCode())) {
             String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
             msg.put(command[0], command[1]);
         } else {
-            throw new ServiceException("该门店未设置门禁");
+            throw new ServiceException("未找到门禁设备代码,请联系管理员");
         }
 
         MqttSendClient sendClient = new MqttSendClient();

@@ -184,7 +184,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             TRoomOrder updateOrder = new TRoomOrder();
             updateOrder.setId(order.getId());
             updateOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());
-            if (v3Result.getAmount() != null) {
+          /*  if (v3Result.getAmount() != null) {
                 final WxPayOrderQueryV3Result.Amount v3ResultAmount = v3Result.getAmount();
                 final Integer payerTotal = v3ResultAmount.getPayerTotal();
                 if (payerTotal != 0) {
@@ -204,7 +204,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     }
                 }
 
-            }
+            }*/
             tRoomOrderMapper.updateTRoomOrder(updateOrder);
         } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.REFUND)) {
             throw new ServiceException("订单转入退款");
@@ -461,14 +461,20 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             WxPayUnifiedOrderV3Request.Payer v3payer = new WxPayUnifiedOrderV3Request.Payer();
             v3payer.setOpenid(wxUser.getOpenId());
 
-          /*  WxPayUnifiedOrderV3Request.Discount detail = new WxPayUnifiedOrderV3Request.Discount();
-            WxPayUnifiedOrderV3Request.GoodsDetail goodsDetail = new WxPayUnifiedOrderV3Request.GoodsDetail();
-            goodsDetail.setMerchantGoodsId("20231010002");
+           /* WxPayUnifiedOrderV3Request.Discount detail=new WxPayUnifiedOrderV3Request.Discount();
+            WxPayUnifiedOrderV3Request.GoodsDetail goodsDetail=new WxPayUnifiedOrderV3Request.GoodsDetail();
+            goodsDetail.setMerchantGoodsId("2023101301");
+//            goodsDetail.setWechatpayGoodsId("20231010002");
+
             goodsDetail.setQuantity(1);
-            goodsDetail.setUnitPrice(1);
-            List<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetailList = new ArrayList<>();
+            goodsDetail.setUnitPrice(5000);
+            List<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetailList=new ArrayList<>();
             goodsDetailList.add(goodsDetail);
-            detail.setGoodsDetails(goodsDetailList);*/
+            detail.setGoodsDetails(goodsDetailList);
+            detail.setCostPrice(v3Amount.getTotal());
+            detail.setInvoiceId("123");
+            v3Request.setDetail(detail);
+            v3Request.setGoodsTag("101301");*/
 
             v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getPayScoreNotifyUrl())
                     .setDescription("roomId: " + roomPackage.getRoomId()).setOutTradeNo(String.valueOf(orderNo))

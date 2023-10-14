@@ -386,7 +386,7 @@
       <el-form ref="bindForm" :model="bindForm" label-width="150px">
         <el-form-item label="选择绑定设备" prop="tableCode">
           <el-select v-model="bindForm.tableCode" multiple filterable @change="$forceUpdate()">
-            <el-option v-for="option in equipOptions" :key="option.id+'456'" :label="option.name" :value="option.id" />
+            <el-option v-for="option in equipOptions" :key="option.id" :label="option.name" :value="option.id+''" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -400,7 +400,7 @@
       <el-form ref="bindStoreForm" :model="bindStoreForm" label-width="150px">
         <el-form-item label="选择绑定设备" prop="equipId">
           <el-select v-model="bindStoreForm.equipId" filterable clearable @change="$forceUpdate()">
-            <el-option v-for="option in equipOptions" :key="option.id+'123'" :label="option.name" :value="option.id" />
+            <el-option v-for="option in equipOptions" :key="option.id" :label="option.name" :value="option.id" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -937,16 +937,16 @@
         this.bindOpen = true;
         this.bindType = type;
         this.bindForm.id = row.id;
-
-
+        // this.equipAllOptions =[];
         var param = {};
         param.ids = row.tableCode;
         listAvailableEquipment(param).then(response => {
           this.equipOptions = response.rows;
+          this.bindForm.tableCode = row.tableCode.split(',');
         });
 
 
-        this.bindForm.tableCode = row.tableCode;
+
       },
       bindStoreEquipment(row, type) {
         // type = "store/room";
@@ -954,7 +954,7 @@
         this.bindType = type;
         this.bindStoreForm.id = row.id;
 
-
+// this.equipAllOptions =[];
         var param = {};
         param.ids = row.equipId;
         listAvailableEquipment(param).then(response => {
