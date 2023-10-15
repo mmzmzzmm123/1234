@@ -64,5 +64,7 @@ public interface WxUserMapper  extends BaseMapper<WxUser>
 
     WxUser selectUserByOpenId(String openid);
 
+    WxUser selectUserByUnionId(String unionId);
+
     void binding(WxUser wxUser);
 }

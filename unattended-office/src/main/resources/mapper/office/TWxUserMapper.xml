@@ -8,6 +8,7 @@
         <result property="id" column="id"/>
         <result property="nickName" column="nick_name"/>
         <result property="openId" column="open_id"/>
+        <result property="mpOpenId" column="mp_open_id"/>
         <result property="unionId" column="union_id"/>
         <result property="phone" column="phone"/>
         <result property="shareCode" column="share_code"/>
@@ -31,6 +32,7 @@
         select id,
                nick_name,
                open_id,
+               mp_open_id,
                union_id,
                phone,
                share_code,
@@ -56,6 +58,7 @@
         <where>
             <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="openId != null  and openId != ''">and open_id = #{openId}</if>
+            <if test="mpOpenId != null  and mpOpenId != ''">and mp_open_id = #{mpOpenId}</if>
             <if test="unionId != null  and unionId != ''">and union_id = #{unionId}</if>
             <if test="phone != null  and phone != ''">and phone = #{phone}</if>
             <if test="shareCode != null  and shareCode != ''">and share_code = #{shareCode}</if>
@@ -81,6 +84,7 @@
         <where>
             <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="openId != null  and openId != ''">and open_id = #{openId}</if>
+            <if test="mpOpenId != null  and mpOpenId != ''">and mp_open_id = #{mpOpenId}</if>
             <if test="unionId != null  and unionId != ''">and union_id = #{unionId}</if>
             <if test="phone != null  and phone != ''">and phone = #{phone}</if>
             <if test="shareCode != null  and shareCode != ''">and share_code = #{shareCode}</if>
@@ -110,6 +114,7 @@
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="nickName != null">nick_name,</if>
             <if test="openId != null">open_id,</if>
+            <if test="mpOpenId != null">mp_open_id,</if>
             <if test="unionId != null">union_id,</if>
             <if test="phone != null">phone,</if>
             <if test="shareCode != null">share_code,</if>
@@ -131,6 +136,7 @@
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="nickName != null">#{nickName},</if>
             <if test="openId != null">#{openId},</if>
+            <if test="mpOpenId != null">#{mpOpenId},</if>
             <if test="unionId != null">#{unionId},</if>
             <if test="phone != null">#{phone},</if>
             <if test="shareCode != null">#{shareCode},</if>
@@ -156,6 +162,7 @@
         <trim prefix="SET" suffixOverrides=",">
             <if test="nickName != null">nick_name = #{nickName},</if>
             <if test="openId != null">open_id = #{openId},</if>
+            <if test="mpOpenId != null">mp_open_id = #{mpOpenId},</if>
             <if test="unionId != null">union_id = #{unionId},</if>
             <if test="phone != null">phone = #{phone},</if>
             <if test="shareCode != null">share_code = #{shareCode},</if>
