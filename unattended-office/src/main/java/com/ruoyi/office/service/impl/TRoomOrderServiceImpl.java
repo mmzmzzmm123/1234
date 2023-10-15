@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaSubscribeMessage;
+import cn.binarywang.wx.miniapp.bean.WxMaTemplateData;
+import cn.binarywang.wx.miniapp.bean.WxMaUniformMessage;
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
@@ -222,6 +224,12 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         }/*else{
             throw new ServiceException(v3Result.getTradeStateDesc());
         }*/
+
+        try {
+            sendVxMessage(wxuserid, order);
+        }catch (Exception e){
+            throw new ServiceException("消息推送失败");
+        }
 
         return v3Result;
     }
@@ -815,6 +823,44 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         }
 
         tRoomOrderMapper.updateTRoomOrder(update);
+    }
+
+    @Autowired
+    ITRoomService itRoomService;
+    @Autowired
+    ITStoreService itStoreService;
+
+    private void sendVxMessage(Long wxuserid, TRoomOrder tRoomOrder) {
+        try {
+            //todo定时任务检测商家订单到期
+            TWxUser wxUser = wxUserService.selectTWxUserById(wxuserid);
+
+            TRoom tRoom = itRoomService.selectTRoomById(tRoomOrder.getRoomId());
+            TStore tStore = itStoreService.selectTStoreById(tRoom.getStoreId());
+            WxMaSubscribeMessage wxMaSubscribeMessage = new WxMaSubscribeMessage();
+            wxMaSubscribeMessage.setToUser(wxUser.getOpenId());
+            wxMaSubscribeMessage.setTemplateId("58BvI5jDnq61I9slOIIjf89J9ionC95R14eUJ9rQLWA");
+
+            List<WxMaSubscribeMessage.MsgData> msgDataList = new ArrayList<>();
+            WxMaSubscribeMessage.MsgData msgData = new WxMaSubscribeMessage.MsgData();
+            msgData.setName("thing1");
+            msgData.setValue("订单号："+tRoomOrder.getOrderNo());
+            msgDataList.add(msgData);
+            msgData = new WxMaSubscribeMessage.MsgData();
+            msgData.setName("time2");
+            msgData.setValue(DateUtils.parseDateToStr("yyyy-mm-dd hh:MM:ss",tRoomOrder.getStartTime()));
+            msgDataList.add(msgData);
+            msgData = new WxMaSubscribeMessage.MsgData();
+            msgData.setName("thing6");
+            msgData.setValue(tStore.getName() + "-" + tRoom.getName());
+            msgDataList.add(msgData);
+            wxMaSubscribeMessage.setData(msgDataList);
+            customerWxMaService.getMsgService().sendSubscribeMsg(wxMaSubscribeMessage);
+
+            System.out.println("Message sent successfully!");
+        } catch (Exception e) {
+            System.out.println("Failed to send message: " + e.getMessage());
+        }
     }
 
     /**
