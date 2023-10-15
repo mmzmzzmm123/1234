@@ -23,7 +23,6 @@ public class WxUser extends BaseEntity
     /** id */
     private Long id;
 
-
     /** 昵称 */
     @Excel(name = "昵称")
     private String nickName;
@@ -31,6 +30,9 @@ public class WxUser extends BaseEntity
     /** 微信app id */
     @Excel(name = "微信openId")
     private String openId;
+
+    /** 公众号openId */
+    private String mpOpenId;
 
     /** uinion id */
     @Excel(name = "uinion id")
