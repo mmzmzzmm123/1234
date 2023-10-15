@@ -136,7 +136,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
             }
             if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
 
-                CloudHornRegResponse resp = HornConfig.hornSend(currentEq.getEquipControl(), "已开门，欢迎使用雀行无人麻将机");
+                CloudHornRegResponse resp = HornConfig.hornSend(currentEq.getEquipControl(), "已开门，欢迎使用十三将无人自助棋牌");
                 if (!"0".equalsIgnoreCase(resp.getCode())) {
                     errMsg.append("云喇叭消息发送失败").append(resp.getMsg()).append(";");
                 }
