@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="WxUser" id="WxUserResult">
         <result property="id"    column="id"    />
         <result property="openId"    column="open_id"    />
+        <result property="mpOpenId" column="mp_open_id"/>
         <result property="unionId"    column="union_id"    />
         <result property="wxCode"    column="wx_code"    />
         <result property="nickName"    column="nick_name"    />
@@ -22,13 +23,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectWxUserVo">
-        select id, open_id, union_id, wx_code, nick_name, sex, status, remark, create_by, create_time, update_by, update_time, user_id, user_type from t_wx_user
+        select id, open_id, mp_open_id, union_id, wx_code, nick_name, sex, status, remark, create_by, create_time, update_by, update_time, user_id, user_type from t_wx_user
     </sql>
 
     <select id="selectWxUserList" parameterType="WxUser" resultMap="WxUserResult">
         <include refid="selectWxUserVo"/>
         <where>  
             <if test="openId != null  and openId != ''"> and open_id = #{openId}</if>
+            <if test="mpOpenId != null  and mpOpenId != ''">and mp_open_id = #{mpOpenId}</if>
             <if test="unionId != null  and unionId != ''"> and union_id = #{unionId}</if>
             <if test="wxCode != null  and wxCode != ''"> and wx_code = #{wxCode}</if>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
@@ -49,11 +51,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where open_id = #{id}
     </select>
 
-    <insert id="insertWxUser" parameterType="WxUser">
+    <select id="selectUserByUnionId" resultType="com.ruoyi.common.core.domain.entity.WxUser">
+        <include refid="selectWxUserVo"/>
+        where union_id = #{id}
+    </select>
+
+    <insert id="insertWxUser" parameterType="WxUser" useGeneratedKeys="true" keyProperty="id">
         insert into t_wx_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
 <!--            <if test="id != null">id,</if>-->
             <if test="openId != null">open_id,</if>
+            <if test="mpOpenId != null">mp_open_id,</if>
             <if test="unionId != null">union_id,</if>
             <if test="wxCode != null">wx_code,</if>
             <if test="nickName != null">nick_name,</if>
@@ -70,6 +78,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
 <!--            <if test="id != null">#{id},</if>-->
             <if test="openId != null">#{openId},</if>
+            <if test="mpOpenId != null">#{mpOpenId},</if>
             <if test="unionId != null">#{unionId},</if>
             <if test="wxCode != null">#{wxCode},</if>
             <if test="nickName != null">#{nickName},</if>
@@ -89,6 +98,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update t_wx_user
         <trim prefix="SET" suffixOverrides=",">
             <if test="openId != null">open_id = #{openId},</if>
+            <if test="mpOpenId != null">mp_open_id = #{mpOpenId},</if>
             <if test="unionId != null">union_id = #{unionId},</if>
             <if test="wxCode != null">wx_code = #{wxCode},</if>
             <if test="nickName != null">nick_name = #{nickName},</if>
