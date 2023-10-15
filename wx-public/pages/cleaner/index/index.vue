@@ -39,7 +39,7 @@
 							<view>包厢名称: {{room.roomName}}</view>
 							<view>包厢状态: {{room.roomStatus}}</view>
 						</view>
-						<view>剩余打扫时间:</view>
+						<!-- <view>剩余打扫时间:</view> -->
 						<!-- <view class="card__content__body">
 						<view>开始时间: {{room.startTime}} </view>
 						<view>结束时间: {{room.endTime}} </view>

@@ -91,8 +91,11 @@ public class OfficeTask {
                     String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
 
-                    sendClient.publish(eq.getEquipControl(), JSONObject.toJSONString(msg));
-
+                    try {
+                        sendClient.publish(eq.getEquipControl(), JSONObject.toJSONString(msg));
+                    } catch (Exception e) {
+                        continue;
+                    }
                     TEquipment up = new TEquipment();
                     up.setId(eq.getId());
                     up.setOnOff("N");

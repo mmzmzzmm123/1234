@@ -159,7 +159,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                     currentEq.setRecentOpenTime(new Date());
                     currentEq.setOnOff("Y");
                     equipmentService.updateTEquipment(currentEq);
-                }catch (Exception e){
+                } catch (Exception e) {
                     log.error(e.getMessage());
                     continue;
                 }
@@ -229,8 +229,11 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                     continue;
                 }
 
-                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-
+                try {
+                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+                } catch (Exception e) {
+                    continue;
+                }
                 currentEq.setUpdateTime(new Date());
                 currentEq.setOnOff("N");
                 equipmentService.updateTEquipment(currentEq);
@@ -295,7 +298,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 //                    hornMsg(hornSn, "房间电源已开启");
                         CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "房间电源已开启");
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     continue;
                 }
 
@@ -347,7 +350,11 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                     throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
                 }
 
-                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+                try {
+                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+                } catch (Exception e) {
+                    continue;
+                }
 
                 currentEq.setRecentOpenTime(new Date());
                 currentEq.setOnOff("N");
@@ -412,7 +419,11 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 //                    throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
                 }
 
-                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+                try {
+                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+                }catch (Exception e){
+                    continue;
+                }
 
                 currentEq.setRecentOpenTime(new Date());
                 currentEq.setOnOff("Y");
@@ -430,7 +441,11 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 //                    throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
                 }
 
-                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+                try {
+                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+                }catch (Exception e){
+                    continue;
+                }
 
                 currentEq.setRecentOpenTime(new Date());
                 currentEq.setOnOff("Y");
