@@ -105,7 +105,7 @@
 				
 			},
 			onChoseOrder(i){
-				const tool = this.tools[this.tooIndex]
+				const tool = this.tools[this.toolIndex]
 				tool.onChoseOrder(this.orderList[i])
 			},
 			showToast(title){
