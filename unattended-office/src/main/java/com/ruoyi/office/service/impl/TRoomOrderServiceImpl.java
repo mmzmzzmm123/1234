@@ -22,6 +22,7 @@ import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.core.domain.entity.SysDictData;
+import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -32,6 +33,10 @@ import com.ruoyi.office.domain.vo.*;
 import com.ruoyi.office.horn.HornConfig;
 import com.ruoyi.office.service.*;
 import com.ruoyi.system.service.ISysDictDataService;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
+import me.chanjar.weixin.mp.config.impl.WxMpDefaultConfigImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -227,7 +232,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         try {
             sendVxMessage(wxuserid, order);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new ServiceException("消息推送失败");
         }
 
@@ -844,11 +849,11 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             List<WxMaSubscribeMessage.MsgData> msgDataList = new ArrayList<>();
             WxMaSubscribeMessage.MsgData msgData = new WxMaSubscribeMessage.MsgData();
             msgData.setName("thing1");
-            msgData.setValue("订单号："+tRoomOrder.getOrderNo());
+            msgData.setValue("订单号：" + tRoomOrder.getOrderNo());
             msgDataList.add(msgData);
             msgData = new WxMaSubscribeMessage.MsgData();
             msgData.setName("time2");
-            msgData.setValue(DateUtils.parseDateToStr("yyyy-mm-dd hh:MM:ss",tRoomOrder.getStartTime()));
+            msgData.setValue(DateUtils.parseDateToStr("yyyy-MM-dd HH:mm:ss", tRoomOrder.getStartTime()));
             msgDataList.add(msgData);
             msgData = new WxMaSubscribeMessage.MsgData();
             msgData.setName("thing6");
@@ -1060,7 +1065,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 roomService.updateTRoom(room);
 
                 TWxUser wxUser = wxUserService.selectRoomCleaner(order.getRoomId());
-                // 写带打扫记录
+                // 写待打扫记录
                 TRoomCleanRecord cleanRecord = new TRoomCleanRecord();
                 cleanRecord.setStatus(OfficeEnum.CleanRecordStatus.TOBE_CLEAN.getCode());
                 cleanRecord.setRoomId(order.getRoomId());
@@ -1068,7 +1073,12 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 cleanRecord.setOrderNo(order.getRoomId() + new Date().getTime());
                 cleanRecord.setCreateTime(new Date());
                 cleanRecordService.insertTRoomCleanRecord(cleanRecord);
-                // 保洁发送带打扫记录
+                // 订单结束发送通知
+//                TStore tStore = itStoreService.selectTStoreById(room.getStoreId());
+//                //List<WxUser> wxUserList=wxUserService.selectRoomCleaner(room.getId());
+//                if (wxUser.getMpOpenId() != null) {
+//                    sendVxMpMessage(wxUser.getMpOpenId(), tStore, room, roomOrder);
+//                }
 
                 continue;
             }
@@ -1106,6 +1116,34 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             }
         }
 //        System.out.println("订单结束提醒完成");
+    }
+
+    @Resource
+    WxMpService wxMpService;
+
+    private void sendVxMpMessage(String mpOpenId, TStore tStore, TRoom tRoom, TRoomOrder tRoomOrder) {
+        try {
+
+            List<WxMpTemplateData> data = Arrays.asList(
+                    new WxMpTemplateData("thing1", tStore.getName()),
+                    new WxMpTemplateData("thing22", tRoom.getName()),
+                    new WxMpTemplateData("character_string6", tRoomOrder.getOrderNo().toString()),
+                    new WxMpTemplateData("time16", DateUtils.parseDateToStr("yyyy-MM-dd HH:mm:ss", tRoomOrder.getEndTime())),
+                    new WxMpTemplateData("phrase14", "已完成")
+            );
+
+            WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
+                    .toUser(mpOpenId)//要推送的用户openid
+                    .data(data) //数据
+                    .templateId("GJvNcmk4AbAZvP6JEmgEw9MKcplTFOXKgNEM0IIj5SA")//模版id
+//                    .url("http://www.baidu.com") // 点击详情跳转地址
+                    .build();
+
+            wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+
+        } catch (Exception e) {
+            System.out.println("Failed to send message: " + e.getMessage());
+        }
     }
 
     @Override
