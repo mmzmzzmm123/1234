@@ -43,6 +43,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -970,5 +971,17 @@ public class ApiController extends BaseController {
         return AjaxResult.success(ret);
     }
 
+    @Autowired
+    WxMpService wxMpService;
+    @GetMapping("/message")
+    public String configAccess(String signature,String timestamp,String nonce,String echostr) {
+        // 校验签名
+        if (wxMpService.checkSignature(timestamp, nonce, signature)){
+            // 校验成功原样返回echostr
+            return echostr;
+        }
+        // 校验失败
+        return null;
+    }
 
 }
