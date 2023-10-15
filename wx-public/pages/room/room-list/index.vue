@@ -149,7 +149,7 @@
 						if (res.confirm) {
 							var param = {
 								roomId: this.currentRoom.id,
-								equipType: 'door,light,aircondition'
+								equipType: 'door,light,aircondition,machine'
 							}
 							this.$api.openRoom(param).then(() => {
 								this.$u.toast('打开包厢指令已发送成功')
@@ -169,7 +169,7 @@
 						if (res.confirm) {
 							var param = {
 								roomId: this.currentRoom.id,
-								equipType: 'door,light,aircondition'
+								equipType: 'door,light,aircondition,machine'
 							}
 							this.$api.closeRoom(param).then(() => {
 								this.$u.toast('打开包厢指令已发送成功')

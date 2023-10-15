@@ -231,6 +231,26 @@ public class MerchantController extends BaseController {
      * @param orderId
      * @return
      */
+    @ApiOperation("开房间设备 门禁 door   电源： light,aircondition ")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
+    @PostMapping("/roomopenH5")
+    public AjaxResult openRoomH5(@RequestBody RoomEquipeOpenReq req) {
+
+        try {
+            roomService.openRoomEquipment(req, SecurityUtils.getLoginUser().getUserId());
+        } catch (Exception e) {
+            return AjaxResult.error("操作异常，请联系管理员：" + e.getMessage());
+        }
+
+        return AjaxResult.success();
+    }
+
+    /**
+     * 开门禁
+     *
+     * @param orderId
+     * @return
+     */
     @ApiOperation("关房间设备 门禁 door   电源： light,aircondition ")
     @PreAuthorize("@ss.hasPermi('office:merchant')")
     @PostMapping("/roomclose")
@@ -238,6 +258,26 @@ public class MerchantController extends BaseController {
 
         try {
             roomService.closeRoomEquipment(req, SecurityUtils.getLoginUser().getWxUser().getUserId());
+        } catch (Exception e) {
+            return AjaxResult.error("操作异常，请联系管理员：" + e.getMessage());
+        }
+
+        return AjaxResult.success();
+    }
+
+    /**
+     * 开门禁
+     *
+     * @param orderId
+     * @return
+     */
+    @ApiOperation("关房间设备 门禁 door   电源： light,aircondition ")
+    @PreAuthorize("@ss.hasPermi('office:merchant')")
+    @PostMapping("/roomcloseH5")
+    public AjaxResult closeRoomH5(@RequestBody RoomEquipeOpenReq req) {
+
+        try {
+            roomService.closeRoomEquipment(req, SecurityUtils.getLoginUser().getUserId());
         } catch (Exception e) {
             return AjaxResult.error("操作异常，请联系管理员：" + e.getMessage());
         }

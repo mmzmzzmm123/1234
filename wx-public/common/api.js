@@ -172,10 +172,10 @@ const api = {
 		return post('office/api/openStore/'+storeId)
 	},
 	openRoom(param){
-		return post('office/mapi/roomopen',param)
+		return post('office/mapi/roomopenH5',param)
 	},
 	closeRoom(param){
-		return post('office/mapi/roomclose',param)
+		return post('office/mapi/roomcloseH5',param)
 	},
 	comingSoon(){
 		uni.showToast({
