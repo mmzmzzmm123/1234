@@ -35,6 +35,7 @@
 					if (!n) {
 						this.isError = true
 					}else{
+						this.isError = false
 						let src = n
 						if(n.indexOf(',') >= 0){
 							src = n.split(',')[0]
