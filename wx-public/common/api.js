@@ -147,6 +147,9 @@ const api = {
 	getCleanRecordList(params){
 		return get('office/cleanrecord/h5list', params)
 	},
+	getCleanerCleanRecordList(params){
+		return get('office/capi/record', params)
+	},
 	getNoticeList(params){
 		return get('system/notice/list', params)
 	},

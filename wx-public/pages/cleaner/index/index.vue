@@ -1,93 +1,133 @@
 <template>
-<view>
-	<view class="top">
-		<uo-select :options="storeList" value-field="id" mode="top" :value="currentStore.id" @change="onStoreChange"></uo-select>
-		<view style="width: 140rpx;">
-			<u-button size="mini" @click="toManager">切换角色</u-button>
+	<view>
+		<view class="top">
+			<uo-select :options="storeList" value-field="id" mode="top" :value="currentStore.id"
+				@change="onStoreChange"></uo-select>
+			<view style="width: 140rpx;">
+				<u-button size="mini" @click="toManager">切换角色</u-button>
+			</view>
 		</view>
-	</view>
-	<view class="c-bar">
-		<view class="c-bar-item" @click="callManager">
-			<u-icon name="phone" size="80rpx"></u-icon>
-			<view>商家电话</view>
+		<view class="c-bar">
+			<view class="c-bar-item" @click="callManager">
+				<u-icon name="phone" size="80rpx"></u-icon>
+				<view>商家电话</view>
+			</view>
+			<navigator class="c-bar-item c-bar-item--warning">
+				<u-icon name="order" size="80rpx"></u-icon>
+				<view>打扫记录</view>
+			</navigator>
 		</view>
-		<navigator class="c-bar-item c-bar-item--warning">
-			<u-icon name="order" size="80rpx"></u-icon>
-			<view>打扫记录</view>
-		</navigator>
-	</view>
-	<view class="c-filter-bar">
-		<view class="c-filter-item" :class="queryParam.status == null ? 'c-filter-item--selected':''"
-			@click="onFilterClick(null)">全部</view>
-		<view v-for="item in roomStatus"
-			class="c-filter-item" :key="item.value" :class="queryParam.status == item.value ? 'c-filter-item--selected':''"
-			@click="onFilterClick(item.value)">{{item.name}}</view>
-	</view>
-	<view style="margin: 30rpx 80rpx;">
-		<u-button type="primary" size="large">开大门</u-button>
-	</view>
-	<view class="card-list">
-		<view class="card">
-			<view class="card__content">
-				<uo-image src="https://www.baidu.com/img/PCtm_d9c8750bed0b3c7d089fa7d55720d6cf.png"></uo-image>
-				<view class="card__content__right">
-					<view class="card__content__head">
-						<view>包厢名称</view>
-						<view>包厢状态</view>
+		<view class="c-filter-bar">
+			<view class="c-filter-item" :class="queryParam.status == null ? 'c-filter-item--selected':''"
+				@click="onFilterClick(null)">全部</view>
+			<view v-for="item in roomStatus" class="c-filter-item" :key="item.value"
+				:class="queryParam.status == item.value ? 'c-filter-item--selected':''"
+				@click="onFilterClick(item.value)">{{item.name}}</view>
+		</view>
+		<view style="margin: 30rpx 80rpx;">
+			<u-button type="primary" size="large">开大门</u-button>
+		</view>
+		<view class="card-list">
+			<view class="card" v-for="(room, index) in orderList" :key="room.id">
+				<view class="card__content">
+					<!-- <uo-image src="https://mbdp01.bdstatic.com/static/landing-pc/img/logo_top.79fdb8c2.png"></uo-image> -->
+					<view class="card__content__right">
+						<view class="card__content__head">
+							<!-- <navigator class="card-title" :url="'room?id='+room.id+'&name='+room.name">
+								<view class="card-title">{{room.storeName}}</view>
+							</navigator> -->
+							<view>包厢名称: {{room.roomName}}</view>
+							<view>包厢状态: {{room.roomStatus}}</view>
+						</view>
+						<view>剩余打扫时间:</view>
+						<!-- <view class="card__content__body">
+						<view>开始时间: {{room.startTime}} </view>
+						<view>结束时间: {{room.endTime}} </view>
 					</view>
-					<view>剩余打扫时间</view>
+					<view class="card__content__footer">
+						<view>打扫时长: {{room.duration}} 分钟</view>
+					</view> -->
+						<view class="card__btn-list">
+							<u-button size="large" type="success">开始打扫</u-button>
+							<u-button size="large" type="error">临时开启包厢</u-button>
+						</view>
+					</view>
 				</view>
-			</view>
-			<view class="card__btn-list">
-				<u-button size="large" type="success">开始打扫</u-button>
-				<u-button size="large" type="error">临时开启包厢</u-button>
+
 			</view>
 		</view>
 	</view>
-</view>
 </template>
 
 <script>
-	export default{
-		data(){
+	export default {
+		data() {
 			return {
 				queryParam: {
 					status: null
-				}
+				},
+				searchParam: {
+					name: '',
+					startTime: '',
+					pageSize: 20,
+					pageNum: 1
+				},
+				orderList: [],
 			}
 		},
 		computed: {
-			currentStore(){
+			currentStore() {
 				return this.$store.state.currentStore
 			},
-			storeList(){
+			storeList() {
 				return this.$store.state.storeList
 			},
-			roomStatus(){
+			roomStatus() {
 				return this.$store.state.dicts.room_status
 			}
 		},
 		onLoad() {
 			this.$store.dispatch("loadDict", 'room_status')
+			this.refresh();
+
 		},
-		methods:{
-			onStoreChange(store){
+		methods: {
+			refresh(nextPage) {
+				// debugger
+				console.log(this.searchParam)
+				if (nextPage) {
+					this.searchParam.pageNum++
+				} else {
+					this.searchParam.pageNum = 1
+				}
+				// this.searchParam.roomId = this.roomId;
+				this.searchParam.storeId = this.$store.state.currentStore.id;
+				this.$api.getCleanerCleanRecordList(this.searchParam).then(res => {
+					if (nextPage) {
+						this.orderList.push(...res.rows)
+					} else {
+						this.orderList = res.rows
+					}
+					uni.stopPullDownRefresh()
+				})
+			},
+			onStoreChange(store) {
 				this.$store.commit("$uStore", {
 					name: 'currentStore',
 					value: store
 				})
 			},
-			toManager(){
+			toManager() {
 				uni.navigateTo({
 					url: '/pages/index/index'
 				})
 			},
-			callManager(){
+			callManager() {
 				uni.makePhoneCall({
 					phoneNumber: this.currentStore.phone
 				})
 			},
-			onFilterClick(roomStatus){
+			onFilterClick(roomStatus) {
 				this.queryParam.status = roomStatus
 			}
 		}
@@ -95,24 +135,28 @@
 </script>
 
 <style lang="scss">
-	.top{
+	.top {
 		display: flex;
 		background: $u-primary;
 		padding: 20rpx;
 		align-items: center;
-		.uo-select{
+
+		.uo-select {
 			font-size: 40rpx;
 			color: $u-bright;
-			/deep/ .u-icon__icon{
-				color: $u-bright!important;
+
+			/deep/ .u-icon__icon {
+				color: $u-bright !important;
 			}
 		}
 	}
-	.c-bar{
+
+	.c-bar {
 		display: flex;
 		padding-left: 20rpx;
 	}
-	.c-bar-item{
+
+	.c-bar-item {
 		flex: 1;
 		text-align: center;
 		font-size: 40rpx;
@@ -121,22 +165,27 @@
 		margin: 20rpx 20rpx 20rpx 0;
 		padding: 30rpx 0;
 		border-radius: 20rpx;
-		/deep/ .u-icon__icon{
-			color: $u-bright!important;
+
+		/deep/ .u-icon__icon {
+			color: $u-bright !important;
 		}
-		/deep/ .u-icon{
+
+		/deep/ .u-icon {
 			justify-content: center;
 		}
-		&--warning{
+
+		&--warning {
 			background: $u-warning;
 		}
 	}
-	.c-filter-bar{
+
+	.c-filter-bar {
 		display: flex;
 		flex-wrap: wrap;
 		padding-left: 20rpx;
 	}
-	.c-filter-item{
+
+	.c-filter-item {
 		background: $u-bg-color;
 		padding: 0 30rpx;
 		font-size: 40rpx;
@@ -145,21 +194,26 @@
 		border-radius: 40rpx;
 		margin: 20rpx 20rpx 0 0;
 		color: $u-tips-color;
-		&--selected{
+
+		&--selected {
 			color: $u-primary;
 		}
 	}
-	.card__content__head{
+
+	.card__content__head {
 		justify-content: space-between;
 		margin-bottom: 30rpx;
 	}
-	.card__btn-list{
+
+	.card__btn-list {
 		display: flex;
-		.u-button{
+
+		.u-button {
 			margin: 0 20rpx;
 		}
 	}
-	.u-button--large{
+
+	.u-button--large {
 		font-size: 40rpx;
 	}
 </style>

@@ -1040,6 +1040,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TRoomOrder roomOrder = new TRoomOrder();
         roomOrder.setStatus(OfficeEnum.RoomOrderStatus.USING.getCode());
+//        roomOrder.setOrderNo(292023101501l);
         List<TRoomOrder> roomOrderList = tRoomOrderMapper.selectTRoomOrderList(roomOrder);
         for (TRoomOrder order : roomOrderList) {
             if (order.getEndTime().before(new Date())) {
@@ -1049,7 +1050,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 // 更新订单为关闭;
                 TRoomOrder up = new TRoomOrder();
                 up.setId(order.getId());
-                up.setStatus(OfficeEnum.RoomOrderStatus.OVER_TIME.getCode());// 4); //  待支付	1 已预约	2 使用中	3 超时未使用	4 已完成	5 取消	9
+                up.setStatus(OfficeEnum.RoomOrderStatus.USED.getCode());// 4); //  待支付	1 已预约	2 使用中	3 超时未使用	4 已完成	5 取消	9
                 tRoomOrderMapper.updateTRoomOrder(up);
 
                 // 更改房间状态清洁中
