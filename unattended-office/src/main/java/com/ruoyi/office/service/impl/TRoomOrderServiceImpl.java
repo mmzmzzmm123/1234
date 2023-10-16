@@ -1231,8 +1231,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TRoomOrder tRoomOrder = new TRoomOrder();
         BeanUtils.copyProperties(prepayReq, tRoomOrder);
-        tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), storePromotion.getMaxMinute().intValue()));
-//        tRoomOrder.setEndTime(DateUtils.addMinutes(prepayReq.getStartTime(), storePromotion.getMaxMinute().intValue()));// 改为分钟计时订单
+//        tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), storePromotion.getMaxMinute().intValue()));
+        tRoomOrder.setEndTime(DateUtils.addMinutes(prepayReq.getStartTime(), storePromotion.getMaxMinute().intValue()));// 改为分钟计时订单
         tRoomOrder.setUserId(userId);
         tRoomOrder.setPayType(OfficeEnum.PayType.WX_PAY.getCode());
 
@@ -1334,5 +1334,10 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             orderNo = maxId + 1;
         }
         return orderNo;
+    }
+
+    @Override
+    public List<TRoomOrder> getInUseOrder(TRoomOrder roomOrder) {
+        return tRoomOrderMapper.getInUseOrder(roomOrder);
     }
 }
