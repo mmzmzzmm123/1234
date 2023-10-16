@@ -418,7 +418,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         BeanUtils.copyProperties(prepayReq, tRoomOrder);
         tRoomOrder.setRoomId(roomPackage.getRoomId());
         tRoomOrder.setStartTime(prepayReq.getStartTime());
-        tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), (int) (roomPackage.getMinutes() / 60)));
+//        tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), (int) (roomPackage.getMinutes() / 60)));
+        tRoomOrder.setEndTime(DateUtils.addMinutes(prepayReq.getStartTime(), roomPackage.getMinutes().intValue()));
         tRoomOrder.setRoomPackId(prepayReq.getPackId());
         tRoomOrder.setOrderType("房间小时套餐");
 
@@ -1231,6 +1232,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         TRoomOrder tRoomOrder = new TRoomOrder();
         BeanUtils.copyProperties(prepayReq, tRoomOrder);
         tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), storePromotion.getMaxMinute().intValue()));
+//        tRoomOrder.setEndTime(DateUtils.addMinutes(prepayReq.getStartTime(), storePromotion.getMaxMinute().intValue()));// 改为分钟计时订单
         tRoomOrder.setUserId(userId);
         tRoomOrder.setPayType(OfficeEnum.PayType.WX_PAY.getCode());
 

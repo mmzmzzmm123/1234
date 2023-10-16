@@ -28,7 +28,7 @@
 			<u-button type="primary" size="large">开大门</u-button>
 		</view>
 		<view class="card-list">
-			<view class="card" v-for="(room, index) in orderList" :key="room.id">
+			<view class="card" v-for="(room, index) in roomList" :key="room.id">
 				<view class="card__content">
 					<!-- <uo-image src="https://mbdp01.bdstatic.com/static/landing-pc/img/logo_top.79fdb8c2.png"></uo-image> -->
 					<view class="card__content__right">
@@ -36,8 +36,8 @@
 							<!-- <navigator class="card-title" :url="'room?id='+room.id+'&name='+room.name">
 								<view class="card-title">{{room.storeName}}</view>
 							</navigator> -->
-							<view>包厢名称: {{room.roomName}}</view>
-							<view>包厢状态: {{room.roomStatus}}</view>
+							<view>包厢名称: {{room.name}}</view>
+							<view>包厢状态: {{room.status}}</view>
 						</view>
 						<!-- <view>剩余打扫时间:</view> -->
 						<!-- <view class="card__content__body">
@@ -73,6 +73,7 @@
 					pageNum: 1
 				},
 				orderList: [],
+				roomList: [],
 			}
 		},
 		computed: {
@@ -100,6 +101,17 @@
 				} else {
 					this.searchParam.pageNum = 1
 				}
+				this.searchParam.storeId = this.$store.state.currentStore.id;
+				this.$api.getCleanerRoomList(this.searchParam).then(res => {
+					if (nextPage) {
+						this.roomList.push(...res.rows)
+					} else {
+						this.roomList = res.rows
+					}
+					uni.stopPullDownRefresh()
+				})
+			},
+			getCleanRecordList(){
 				// this.searchParam.roomId = this.roomId;
 				this.searchParam.storeId = this.$store.state.currentStore.id;
 				this.$api.getCleanerCleanRecordList(this.searchParam).then(res => {

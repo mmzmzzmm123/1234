@@ -6,10 +6,10 @@
 					<u-input v-model="model.name"></u-input>
 				</u-form-item>
 				<u-form-item label="套餐价格" prop="price" required>
-					<u-input type="number" v-model="model.price"></u-input>
+					<u-input type="digit" v-model="model.price"></u-input>
 				</u-form-item>
 				<u-form-item label="可用时长" prop="minutes">
-					<u-input type="number" v-model="model.minutes"></u-input>(分钟)
+					<u-input type="digit" v-model="model.minutes"></u-input>(分钟)
 				</u-form-item>
 			</u-form>
 		</view>
