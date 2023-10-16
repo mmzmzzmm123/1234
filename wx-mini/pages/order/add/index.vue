@@ -7,14 +7,20 @@
 					class="price-bar" :class="currentPackage.id == price.id ? 'price-bar--selected':''"
 					@click="onPackageSelected(price)">
 					<text>{{price.name}}</text>
-					<text style="float: right;">{{price.price}}元/场</text>
+					<text style="float: right;">
+						<text class="price-bar_price">{{price.price}}</text>
+						元/场
+					</text>
 				</view>
 			</block>
 			<block v-else>
 				<view class="price-title">计费</view>
 				<view v-for="price in roomInfo.priceList" :key="price.id" class="price-bar">
 					<text>时段：{{price.startTime + ':00-' + (price.stopTime==24?0:price.stopTime+1) +':00'}}</text>
-					<text style="float: right;">{{price.price}}元/小时</text>
+					<text style="float: right;">
+						<text class="price-bar_price">{{price.price}}</text>
+						元/小时
+					</text>
 				</view>
 			</block>
 		</view>
@@ -25,25 +31,23 @@
 				@click="onPromotionSelected(item)"></image>
 		</view>
 		<view class="card">
-			<view>选择时间</view>
-			<view>
-				<view class="time-input">
-					<view class="time-input_label">开始时间</view>
-					<view class="time-input_value" @click="startShow = true">
-						{{$u.timeFormat(order.startTime, 'yyyy-mm-dd hh:MM')}}
-					</view>
+			<view class="day-select">
+				<view v-for="(item,i) in dayOptions" :key="i"
+					class="day-option" :class="i == selectedDayIndex ? 'day-option--selected':''"
+					@click="onDayOptionSelected(i)">
+					<view>{{item.dateStr}}</view>
+					<view>{{item.weekDayStr}}</view>
 				</view>
-				<view v-if="isPackagePay" class="time-input time-input--readonly">
-					<view class="time-input_label">结束时间</view>
-					<view class="time-input_value">
-						{{$u.timeFormat(order.endTime, 'yyyy-mm-dd hh:MM')}}
-					</view>
+			</view>
+			<view style="display: flex;align-items: center;">
+				<view>选择时间：</view>
+				<view class="time-input" @click="startShow = true">
+					{{$u.timeFormat(order.startTime, 'hh:MM')}}
+					<u-icon name="edit-pen"></u-icon>
 				</view>
-				<view v-else class="time-input">
-					<view class="time-input_label">结束时间</view>
-					<view class="time-input_value" @click="endShow = true">
-						{{$u.timeFormat(order.endTime, 'yyyy-mm-dd hh:MM')}}
-					</view>
+				<view style="margin: 0 30rpx;">到</view>
+				<view class="time-input time-input--readonly">
+					{{$u.timeFormat(order.endTime, 'hh:MM')}}
 				</view>
 			</view>
 			<view>
@@ -79,16 +83,16 @@
 </template>
 
 <script>
+	const WEEKDAYS = ['', '周一', '周二', '周三', '周四', '周五', '周六', '周日']
 	import HourStatusLegend from "../../../components/hour-status-bar/hour-status-legend"
 	export default {
 		components: {HourStatusLegend},
 		data() {
-			const now = new Date()
-			const minDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0).getTime()
+			const minDate = new Date().getTime()
 			return {
 				roomInfo: {},
 				minDate: minDate,
-				maxDate: minDate + 7 * 24 * 60 * 60 * 1000,
+				maxDate: minDate + 4 * 24 * 60 * 60 * 1000,
 				order: {
 					startTime: minDate,
 					endTime: minDate
@@ -104,12 +108,22 @@
 				currentPackage: {},
 				
 				promotionList: [],
-				currentPromotion: {}
+				currentPromotion: {},
+				
+				dayOptions: this.getDayOptions(),
 			}
 		},
 		computed:{
 			isPackagePay(){
 				return this.roomInfo.roomPayType == 1
+			},
+			selectedDayIndex(){
+				for(let i = 4; i >= 0; i--){
+					if(this.dayOptions[i].date.getTime() <= this.order.startTime){
+						return i
+					}
+				}
+				return 0
 			}
 		},
 		onLoad(options) {
@@ -373,7 +387,44 @@
 					return `${value}分`
 				}
                 return value
-            }
+            },
+			getDayOptions(){
+				const now = new Date()
+				const start = new Date(now.getFullYear(), now.getMonth(), now.getDate())
+				const dayOptions = [{
+					date: start,
+					dateStr: this.getDayOptionsDateStr(start),
+					weekDayStr: '今天'
+				}]
+				
+				for(let i = 1; i < 5; i++){
+					const curDate = new Date(start.getTime() + i * 24 * 60 * 60 * 1000)
+					dayOptions.push({
+						date: curDate,
+						dateStr: this.getDayOptionsDateStr(curDate),
+						weekDayStr: WEEKDAYS[curDate.getDay()]
+					})
+				}
+				return dayOptions
+			},
+			getDayOptionsDateStr(date){
+				return date.getMonth() + 1 + '.' + date.getDate()
+			},
+			onDayOptionSelected(index){
+				if(index == this.selectedDayIndex) return
+				const dayOption = this.dayOptions[index]
+				this.order.startTime = this.changeDate(this.order.startTime, dayOption.date).getTime()
+				this.order.endTime = this.changeDate(this.order.endTime, dayOption.date).getTime()
+				if(dayOption.getDate() != new Date(this.period.date).getDate()){
+					this.getHourStatus()
+				}else{
+					this.updateHourStatus()
+				}
+			},
+			changeDate(old, toChange){
+				old = new Date(old)
+				return new Date(toChange.getFullYear(), toChange.getMonth(), toChange.getDate(), old.getHours(), old.getMinutes())
+			}
 		}
 	}
 </script>
@@ -400,25 +451,28 @@
 			background: $u-primary;
 			// border: 1rpx solid $u-border-color;
 		}
+		&_price{
+			font-size: 38rpx;
+			font-weight: bold;
+			margin-right: 10rpx;
+			color: #f9e82a;
+		}
 	}
 	.time-input{
 		display: flex;
-		margin: 20rpx 0;
 		align-items: center;
-		&_label{
-			margin-right: 20rpx;
-			color: $u-tips-color;
-		}
-		&_value{
-			flex: 1;
-			border: 1rpx solid $u-border-color;
-			border-radius: 10rpx;
-			padding: 10rpx 20rpx;
-		}
+		justify-content: center;
+		border: 1rpx solid $u-primary;
+		border-radius: 10rpx;
+		padding: 10rpx 20rpx;
+		width: 140rpx;
+		color: $u-primary;
 		&--readonly{
-			.time-input_value{
-				color: $u-content-color;
-			}
+			color: $u-content-color;
+		}
+		/deep/ .u-icon__icon{
+			color: $u-primary!important;
+			font-size: 40rpx!important;
 		}
 	}
 	.u-m-v-20{
@@ -444,6 +498,22 @@
 		border-radius: 10rpx;
 		&--selected{
 			box-shadow: 0 0 16rpx 5rpx rgba(0,0,0,0.5);
+		}
+	}
+	.day-select{
+		display: flex;
+		margin-right: -20rpx;
+		padding: 20rpx 0;
+	}
+	.day-option{
+		margin-right: 20rpx;
+		flex: 1;
+		text-align: center;
+		padding: 10rpx;
+		&--selected{
+			border: 1rpx solid $u-primary;
+			color: $u-primary;
+			border-radius: 10rpx;
 		}
 	}
 </style>

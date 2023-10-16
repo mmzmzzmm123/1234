@@ -3,7 +3,7 @@
 		<view class="room-cell">
 			<view class="room-cell_img">
 				<u-image mode="aspectFill" width="200rpx" radius="10rpx" height="200rpx" :src="roomInfo.logo" @click="onPreviewImage"></u-image>
-				<view class="room-cell_status">{{roomInfo.status}}</view>
+				<view class="room-cell_status">{{roomStatusDesc}}</view>
 				<view class="room-cell_img_count">
 					<u-icon name="photo-fill" color="#fff" size="30rpx"></u-icon>{{roomInfo.logoList.length}}
 				</view>
@@ -13,13 +13,19 @@
 				<block v-if="roomInfo.roomPayType == 1">
 					<view v-for="price in roomInfo.packageList" :key="price.id" class="room-cell_package">
 						<text>{{price.name}}</text>
-						<text style="float: right;">{{price.price}}元/场</text>
+						<text style="float: right;">
+							<text class="room-cell_package_price">{{price.price}}</text>
+							元/场
+						</text>
 					</view>
 				</block>
 				<block v-else>
 					<view v-for="price in roomInfo.priceList" :key="price.id" class="room-cell_package">
 						<text>时段：{{price.startTime + ':00-' + (price.stopTime==24?0:price.stopTime+1) +':00'}}</text>
-						<text style="float: right;">{{price.price}}元/小时</text>
+						<text style="float: right;">
+							<text class="room-cell_package_price">{{price.price}}</text>
+							元/小时
+						</text>
 					</view>
 				</block>
 				<view class="label-list">
@@ -74,6 +80,18 @@
 					return hourList
 				}
 				return []
+			},
+			roomStatusDesc(){
+				let desc = ''
+				if(this.roomInfo){
+					if(this.roomInfo.status){
+						desc = this.roomInfo.status
+					}
+					if(this.roomInfo.estEndTime){
+						desc += ' ' + this.roomInfo.estEndTime.substr(11, 5) + '结束'
+					}
+				}
+				return desc
 			}
 		},
 		created() {
@@ -136,6 +154,7 @@
 			background-color: #e0fffbc8;
 			color: #1eb8ff;
 			text-align: center;
+			font-size: 24rpx;
 			&--pre{
 				background-color: #fffaf2;
 				color: #3fff3c;
@@ -149,13 +168,19 @@
 			
 		}
 		&_package{
-			color: $u-bright;
-			background: $u-primary-light;
+			color: $u-main-color;
+			background: #eef8f0;
 			margin-top: 10rpx;
 			padding: 0 20rpx;
 			height: 46rpx;
 			line-height: 46rpx;
 			border-radius: 20rpx;
+			&_price{
+				font-size: 34rpx;
+				font-weight: bold;
+				margin-right: 10rpx;
+				color: $u-error;
+			}
 		}
 	}
 	.label-list{
