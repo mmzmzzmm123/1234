@@ -26,6 +26,16 @@ public class PsyGaugeMultiSetting extends BaseEntity
     @Excel(name = "纬度名")
     private String name;
 
+    /** x */
+    private Integer x;
+    /** y */
+    private Integer y;
+    /** 描述 */
+    private String info;
+    /** 背景色 */
+    private String line;
+    /** 颜色 */
+    private String prd;
 
     /** 绑定问题ID */
     @Excel(name = "绑定问题ID")

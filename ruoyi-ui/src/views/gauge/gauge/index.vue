@@ -143,6 +143,9 @@
         <el-tab-pane label="问题设置" name="questions">
           <questions v-bind:gaugeId="gaugeId" :gaugeType="gaugeType"></questions>
         </el-tab-pane>
+        <el-tab-pane v-if="[5,6].includes(gaugeType)" label="维度设置" name="lat">
+          <lat v-bind:gaugeId="gaugeId"/>
+        </el-tab-pane>
         <el-tab-pane label="测评设置" name="setting">
            <setting v-if="gaugeType!==2" v-bind:gaugeId="gaugeId" :gaugeType="gaugeType"></setting>
            <multi v-if="gaugeType==2" v-bind:gaugeId="gaugeId" ></multi>
@@ -166,12 +169,14 @@ import draggable from "vuedraggable";
 import questions from "@/views/components/gauge/questions";
 import setting from "@/views/components/gauge/setting";
 import multi from "@/views/components/gauge/multi";
+import lat from "@/views/components/gauge/lat";
 export default {
   components: {
     draggable,
     questions,
     setting,
-    multi
+    multi,
+    lat
   },
   name: "Gauge",
   data() {
@@ -290,9 +295,9 @@ export default {
 
     getGaugeClassList() {
       this.loading = true;
-      listGaugeClass(this.queryParams).then((response) => {
+      listGaugeClass({pageNum: 1, pageSize: 999}).then((response) => {
         this.gaugeClassList = response.rows;
-        this.total = response.total;
+        // this.total = response.total;
         this.loading = false;
       });
     },

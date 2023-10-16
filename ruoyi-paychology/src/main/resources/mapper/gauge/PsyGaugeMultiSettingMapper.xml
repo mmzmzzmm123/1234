@@ -10,10 +10,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="name"    column="name"    />
         <result property="questionIds"    column="question_ids"    />
         <result property="scoreSettingIds"    column="score_setting_ids"    />
+        <result property="x"    column="x"    />
+        <result property="y"    column="y"    />
+        <result property="info"    column="info"    />
+        <result property="line"    column="line"    />
+        <result property="prd"    column="prd"    />
     </resultMap>
 
     <sql id="selectPsyGaugeMultiSettingVo">
-        select id, gauge_id, name, question_ids,score_setting_ids from psy_gauge_multi_setting
+        select id, gauge_id, name, question_ids,score_setting_ids,x,y,info,line,prd from psy_gauge_multi_setting
     </sql>
 
     <select id="selectPsyGaugeMultiSettingList" parameterType="com.ruoyi.gauge.domain.PsyGaugeMultiSetting" resultMap="PsyGaugeMultiSettingResult">
@@ -24,6 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="questionIds != null  and questionIds != ''"> and question_ids = #{questionIds}</if>
             <if test="scoreSettingIds != null  and scoreSettingIds != ''"> and score_setting_ids = #{scoreSettingIds}</if>
         </where>
+        order by x asc
     </select>
 
     <select id="selectPsyGaugeMultiSettingById" parameterType="Integer" resultMap="PsyGaugeMultiSettingResult">

@@ -37,16 +37,9 @@
     methods: {
       async toResult(item) {
         let result = await questionServer.setResult(item.id);
-        if (result.code == 200) {
-          if ([3, 4, 5].includes(item.gaugeType)) {
-            return  uni.navigateTo({
-              url: "/pages/evaluation/mResult?orderId=" + item.orderId,
-            });
-          }
-
-          uni.setStorageSync("result", result.data);
+        if (result.code === 200) {
           uni.navigateTo({
-            url: "/pages/evaluation/result?productId=" + item.gaugeId,
+            url: "/pages/evaluation/mResult?orderId=" + item.orderId,
           });
         }
       }

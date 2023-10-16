@@ -58,6 +58,7 @@ export default {
       logo: app.globalData.logo,
       checkNull: false,
       indexArr: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
+      lats: [],
       questionList: [],
       addInterceptorList: ["navigateTo", "redirectTo", "reLaunch", "switchTab"],
       lastIndex: 0,
@@ -91,9 +92,20 @@ export default {
     this.productId = utils.getParam(location.href, "productId");
     this.orderId = utils.getParam(location.href, "orderId");
     this.questionList = await questionServer.getQuestionList(this.productId, this.orderId);
+    // 问题维度处理
+    this.lats = await questionServer.getLats(this.productId);
+    if (this.lats.length > 0) {
+      this.lats.forEach(a => {
+        if (a.questionIds) {
+          const arr = a.questionIds.split(",")
+          this.questionList.filter(b => arr.includes(b.id + '')).forEach(c => c.lat = a.id)
+        }
+      })
+    }
+
     this.getLast()
 
-    if (this.currentIndex > 2) {
+    if (this.currentIndex > 1) {
       this.confirmMessage.cancelBtn.callback = this.toFirstQuestion;
       this.confirmMessage.submitBtn.callback = this.toLastQuestion;
       this.showMessage = true;
@@ -232,14 +244,8 @@ export default {
       if (result.code === 200) {
         uni.setStorageSync("result", result.data);
         clearTimeLoad();
-        if ([3, 4, 5].includes(order.gaugeType)) {
-          return  uni.navigateTo({
-            url: "/pages/evaluation/mResult?orderId=" + order.orderId,
-          });
-        }
-
         uni.navigateTo({
-          url: "/pages/evaluation/result?productId=" + this.productId,
+          url: "/pages/evaluation/mResult?orderId=" + order.orderId,
         });
       }
     },

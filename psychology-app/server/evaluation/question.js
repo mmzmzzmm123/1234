@@ -15,6 +15,20 @@ export default {
       });
     }
   },
+  //获取测评问题
+  getLats: async (gaugeId) => {
+    let res = await httprequest.get("/app/gauge/questions/lats", {
+      gaugeId
+    });
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      uni.showToast({
+        icon: "error",
+        title: "获取题目出错",
+      });
+    }
+  },
   //提交答案
   setAnswer: async (data) => {
     let res = await httprequest.post("/app/gauge/result", data);

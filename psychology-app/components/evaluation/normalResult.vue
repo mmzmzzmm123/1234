@@ -10,16 +10,13 @@
     </view>
     <view class="result">
       <view class="circular">
-        <circular-progress :fontShow="false" :percentage="percentage" :diam="190" :lineWidth="20" :fontSize="20"
-                           progressColor="#FF703F" fontColor="#FF703F" defaultColor="#ffe4db">
+        <circular-progress :fontShow="false" :percentage="percentage" :diam="190" :lineWidth="20" :fontSize="20" progressColor="#FF703F" fontColor="#FF703F" defaultColor="#ffe4db">
           <view class="progress-text">
             <view class="text-score">{{ score }}</view>
             <view class="text-score-btn">综合得分</view>
           </view>
         </circular-progress>
       </view>
-      <text class="memo1">{{ report.setting.memo1 }}</text>
-      <text class="memo2">{{ report.setting.memo2 }}</text>
       <view class="result-header">
         <view class="result-left"></view>
         <view class="result-text">您的测评结果</view>
@@ -27,35 +24,13 @@
       </view>
     </view>
     <view class="block-1">
-      <block-header title="得分解读"/>
-      <view class="block-radar">
-        <qiun-data-charts type="radar" :opts="opts" :chartData="radarData"/>
-      </view>
-      <view class="desc" style="margin-top: 0upx">
-        {{ report.setting.memo3 }}
-      </view>
-    </view>
-    <view class="block-1" v-for="item in lats">
-      <template v-if="item.name !== '综合'">
-        <block-header :title="item.name"/>
-        <range :lineBg="item.line" :proBg="item.prd" :percentage="item.score"/>
-        <view class="desc">
-          <text class="desc-title">{{ item.title }}</text>
-          <view>
-            {{ item.info }}
-          </view>
-        </view>
-      </template>
-    </view>
-
-    <view class="block-1">
       <block-header title="您的得分建议"/>
       <view class="img-box" v-html="report.setting.result"/>
     </view>
-
   </view>
 </template>
 <script>
+
 import range from '@/components/common/range'
 import blockHeader from '@/components/common/blockHeader'
 import circularProgress from '@/components/circular-progress/circular-progress'
@@ -70,34 +45,19 @@ export default {
     report: {
       type: Object,
       default: {},
-    },
-    radarData: {
-      type: Object,
-      default: {},
-    },
-    lats: {
-      type: Array,
-      default: [],
     }
   },
   data() {
     return {
-      opts: {
-        update: true,
-        width: '300px',
-        height: '300px',
-        padding: [0,0,0,0],
-        fontSize: 11,
-        legend: {show: false, padding: 0,margin: 0},
-        extra: {radar: {border: true, max: 64}}
-      },
       score: 0,
       percentage: 0,
+      orderId: null,
     }
   },
   created() {
+    console.log(1111)
     this.score = parseInt(this.report.order.score)
-    this.percentage = Math.round(this.report.order.score / this.report.order.gaugeNum * 25)
+    this.percentage = this.score
   },
   methods: {
 
@@ -110,7 +70,6 @@ export default {
   position: relative;
   width: 750upx;
 }
-
 .header {
   width: 750upx;
   height: 665upx;
@@ -119,12 +78,9 @@ export default {
   display: flex;
   flex-direction: column;
 }
-
 .header-title {
-  //width: 280upx;
   height: 56upx;
-
-  color: rgba(255, 255, 255, 1);
+  color: rgba(255,255,255,1);
   font-size: 40upx;
   font-family: PingFangSC-Semibold;
   font-weight: 600;
@@ -132,43 +88,38 @@ export default {
   line-height: 56upx;
   margin: 41upx 0 0 32upx;
 }
-
 .header-report {
   height: 37upx;
-  color: rgba(255, 255, 255, 1);
+  color: rgba(255,255,255,1);
   font-size: 26upx;
   font-family: PingFangSC-Regular;
   text-align: left;
   line-height: 37upx;
   margin: 24upx 0 0 32upx;
 }
-
 .header-wrapper {
   height: 37upx;
   margin: 20upx 0 450upx 32upx;
 }
-
 .header-name {
   width: 200upx;
   height: 37upx;
-  color: rgba(255, 255, 255, 1);
+  color: rgba(255,255,255,1);
   font-size: 26upx;
   font-family: PingFangSC-Regular;
   line-height: 37upx;
 }
-
 .header-time {
   height: 37upx;
-  color: rgba(255, 255, 255, 1);
+  color: rgba(255,255,255,1);
   font-size: 26upx;
   font-family: PingFangSC-Regular;
   line-height: 37upx;
   margin-left: 60upx;
 }
-
 .result {
-  box-shadow: 0px 4px 16px 0px rgba(255, 112, 63, 0.160000);
-  background-color: rgba(255, 255, 255, 1.000000);
+  box-shadow: 0px 4px 16px 0px rgba(255,112,63,0.160000);
+  background-color: rgba(255,255,255,1.000000);
   border-radius: 20upx;
   width: 686upx;
   margin-top: -380upx;
@@ -179,11 +130,45 @@ export default {
   align-items: center;
   position: relative;
 }
-
+.result-header {
+  background-color: rgba(255,168,82,1.000000);
+  border-radius: 47upx;
+  position: absolute;
+  left: 175upx;
+  top: -45upx;
+  width: 366upx;
+  height: 90upx;
+  border: 2px solid #fff9f7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.result-left {
+  background-color: rgba(255,255,255,1.000000);
+  border-radius: 50%;
+  width: 12upx;
+  height: 12upx;
+  display: flex;
+  flex-direction: column;
+}
+.result-text {
+  height: 50upx;
+  color: rgba(255,255,255,1);
+  font-size: 36upx;
+  font-family: PingFangSC-Semibold;
+  font-weight: 600;
+  margin-left: 10upx;
+}
+.result-right {
+  background-color: rgba(255,255,255,1.000000);
+  border-radius: 50%;
+  width: 12upx;
+  height: 12upx;
+  margin-left: 10upx;
+}
 .circular {
   margin-top: 80upx;
   position: relative;
-
   .progress-text {
     width: 100%;
     height: 130px;
@@ -196,72 +181,30 @@ export default {
     left: 0;
     top: 0;
   }
-
   .text-score {
     //width: 57upx;
     height: 78upx;
-    color: rgba(255, 112, 63, 1);
+
+    color: rgba(255,112,63,1);
     font-size: 56upx;
     font-family: PingFangSC-Semibold;
     font-weight: 600;
     text-align: left;
+
     line-height: 78upx;
   }
-
   .text-score-btn {
     width: 180upx;
     height: 50upx;
     line-height: 50upx;
     background: #FFE4DB;
     border-radius: 25upx;
-    color: rgba(255, 112, 63, 1);
+    color: rgba(255,112,63,1);
     font-size: 30upx;
     text-align: center;
     margin-top: 4upx;
   }
 }
-
-.result-header {
-  background-color: rgba(255, 168, 82, 1.000000);
-  border-radius: 47upx;
-  position: absolute;
-  left: 175upx;
-  top: -45upx;
-  width: 366upx;
-  height: 90upx;
-  border: 2px solid #fff9f7;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.result-left {
-  background-color: rgba(255, 255, 255, 1.000000);
-  border-radius: 50%;
-  width: 12upx;
-  height: 12upx;
-  display: flex;
-  flex-direction: column;
-}
-
-.result-text {
-  //width: 216upx;
-  height: 50upx;
-  color: rgba(255, 255, 255, 1);
-  font-size: 36upx;
-  font-family: PingFangSC-Semibold;
-  font-weight: 600;
-  margin-left: 10upx;
-}
-
-.result-right {
-  background-color: rgba(255, 255, 255, 1.000000);
-  border-radius: 50%;
-  width: 12upx;
-  height: 12upx;
-  margin-left: 10upx;
-}
-
 .block-1 {
   box-shadow: 0px 4px 16px 0px rgba(255, 112, 63, 0.160000);
   background-color: rgba(255, 255, 255, 1.000000);
@@ -276,105 +219,80 @@ export default {
   padding-bottom: 32upx;
 }
 
-.block-radar {
-  width: 100%;
-  height: 498upx;
-}
-
 .memo1 {
-  color: rgba(51, 51, 51, 1);
+  color: rgba(51,51,51,1);
   font-size: 36upx;
   font-family: PingFangSC-Medium;
   font-weight: 500;
   margin-top: 80upx;
   padding: 0 10upx;
 }
-
 .memo2 {
   width: 622upx;
-  color: rgba(119, 119, 119, 1);
+  color: rgba(119,119,119,1);
   font-size: 32upx;
   font-family: PingFangSC-Regular;
   text-align: justify;
   margin-top: 32upx;
 }
-
-.range {
-  width: 622upx;
+.understand-top {
+  //width: 56upx;
   height: 40upx;
-  flex-direction: row;
-  display: flex;
-  align-items: center;
-  margin-top: 32upx;
-  color: rgba(119, 119, 119, 1);
+  color: rgba(119,119,119,1);
   font-size: 28upx;
-
-  .range-pro {
-    display: flex;
-    flex-direction: column;
-    margin: 0 24upx;
-    width: 348upx;
-    height: 24upx;
-    background: #FFE4DB;
-    border-radius: 16upx;
-  }
-
-  .range-progress {
-    background-color: rgba(255, 112, 63, 1.000000);
-    border-radius: 16upx;
-    width: 66upx;
-    height: 24upx;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .bg1 {
-    background: #FFE4DB;
-  }
-
-  .prog1 {
-    background: #FF8960;
-  }
-
-  .bg2 {
-    background: #D4E3FF;
-  }
-
-  .prog2 {
-    background: #7596DB;
-  }
-
-  .bg3 {
-    background: #FFEDB2;
-  }
-
-  .prog3 {
-    background: #F8CF67;
-  }
-
-  .bg4 {
-    background: #C9E8C9;
-  }
-
-  .prog4 {
-    background: #96D18D;
-  }
+  font-family: PingFangSC-Regular;
+  text-align: justify;
+  margin-top: 80upx;
 }
-
-.desc {
+.understand-range {
+  position: relative;
+  margin-top: 32upx;
+  display: block;
+  width: 1upx;
+  height: 160px;
+  background: linear-gradient(to bottom, #AAAAAA 0%, #AAAAAA 50%,transparent 50%);
+  background-size: 2upx 12upx;
+  background-repeat: repeat-y;
+}
+.understand-range-block {
+  position: absolute;
+  left: -5px;
+}
+.understand-range-item {
+  width: 10px;
+  height: 10px;
+  border-radius: 100%;
+  background: #FF703F;
+}
+.understand-down {
+  height: 40upx;
+  color: rgba(119,119,119,1);
+  font-size: 28upx;
+  font-family: PingFangSC-Regular;
+  text-align: justify;
+  line-height: 40upx;
+  margin-top: 32upx;
+}
+.understand-desc {
   width: 622upx;
-  color: #333333;
+  //height: 180upx;
+  color: rgba(51,51,51,1);
   font-size: 32upx;
   font-family: PingFangSC-Regular;
   text-align: justify;
   line-height: 45upx;
   margin-top: 80upx;
-
-  .desc-title {
-    font-weight: bold;
-  }
 }
-
+.gloomy-desc {
+  width: 622upx;
+  //height: 180upx;
+  color: rgba(51,51,51,1);
+  font-size: 32upx;
+  font-family: PingFangSC-Regular;
+  text-align: justify;
+  line-height: 45upx;
+  margin: 80upx 32upx 32upx 32upx;
+}
 .img-box {
   width: calc(100% - 48upx);
   padding-left: 24upx;

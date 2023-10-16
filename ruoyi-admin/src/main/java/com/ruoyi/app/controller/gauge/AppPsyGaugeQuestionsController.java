@@ -5,7 +5,9 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.framework.web.service.AppTokenService;
+import com.ruoyi.gauge.domain.PsyGaugeMultiSetting;
 import com.ruoyi.gauge.domain.PsyGaugeQuestions;
+import com.ruoyi.gauge.service.IPsyGaugeMultiSettingService;
 import com.ruoyi.gauge.service.IPsyGaugeQuestionsService;
 import com.ruoyi.gauge.vo.PsyQuestionVO;
 import io.swagger.annotations.Api;
@@ -33,6 +35,9 @@ public class AppPsyGaugeQuestionsController extends BaseController
     private IPsyGaugeQuestionsService psyGaugeQuestionsService;
 
     @Autowired
+    private IPsyGaugeMultiSettingService psyGaugeMultiSettingService;
+
+    @Autowired
     private AppTokenService appTokenService;
 
     /**
@@ -50,5 +55,12 @@ public class AppPsyGaugeQuestionsController extends BaseController
         return AjaxResult.success(list);
     }
 
+    @GetMapping("/lats")
+    @ApiOperation("查询测评问题列表") // Integer gaugeId
+    @RateLimiter
+    public AjaxResult lats(PsyGaugeMultiSetting psyGaugeMultiSetting)
+    {
+        return AjaxResult.success(psyGaugeMultiSettingService.selectPsyGaugeMultiSettingList(psyGaugeMultiSetting));
+    }
 
 }

@@ -14,11 +14,12 @@ public class GaugeConstant {
 
     public static final Integer GAUGE_IS_BUY= 1;
 
-    public static final int GAUGE_COMPUTE_1 = 1;
-    public static final int GAUGE_COMPUTE_2 = 2;
-    public static final int GAUGE_COMPUTE_3 = 3;
-    public static final int GAUGE_COMPUTE_4 = 4;
-    public static final int GAUGE_COMPUTE_5 = 5;
+    public static final int GAUGE_COMPUTE_1 = 1;// '普通计算'
+    public static final int GAUGE_COMPUTE_2 = 2;// '多维计算'
+    public static final int GAUGE_COMPUTE_3 = 3;// 'MBTI'
+    public static final int GAUGE_COMPUTE_4 = 4;// 'SDS'
+    public static final int GAUGE_COMPUTE_5 = 5;// 'SAS'
+    public static final int GAUGE_COMPUTE_6 = 6;// 'SCL-90'
 
     public static final double GAUGE_COMPUTE_SDS = 1.25;
     public static final double GAUGE_COMPUTE_SAS = 1.25;

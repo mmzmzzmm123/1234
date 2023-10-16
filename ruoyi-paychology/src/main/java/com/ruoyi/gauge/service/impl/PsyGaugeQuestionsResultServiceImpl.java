@@ -157,6 +157,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
             case GaugeConstant.GAUGE_COMPUTE_2:
             case GaugeConstant.GAUGE_COMPUTE_4:
             case GaugeConstant.GAUGE_COMPUTE_5:
+            case GaugeConstant.GAUGE_COMPUTE_6:
                 int score = psyGaugeQuestionsResultMapper.getQuestionScore(paramMap);
                 // SDS
                 if (GaugeConstant.GAUGE_COMPUTE_4 == order.getGaugeType()) {

@@ -49,12 +49,6 @@ public class PsyGaugeQuestions extends BaseEntity
      */
     private Integer orderId;
 
-    /**
-     * 纬度 0-无,1-躯体不适,2-综合,3-社会适应性多,4-运动性不安,5-神经系统反应,6-莫名恐惧
-     */
-    @Excel(name = "纬度")
-    private Integer lat;
-
     public Integer getSelectType() {
         return selectType;
     }
@@ -76,7 +70,6 @@ public class PsyGaugeQuestions extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
-            .append("lat", getLat())
             .toString();
     }
 }

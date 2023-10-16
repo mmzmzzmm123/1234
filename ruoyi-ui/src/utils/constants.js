@@ -108,6 +108,7 @@ export const gaugeCompute = [
   { label: 'MBTI', value: 3 },
   { label: 'SDS', value: 4 },
   { label: 'SAS', value: 5 },
+  { label: 'SCL-90', value: 6 },
   // { label: '马斯洛安全感', value: 6 },
 ]
 
@@ -140,16 +141,6 @@ export const gaugeMbtiRes = [
   { label: 'ESFJ', value: 'ESFJ' },
   { label: 'ENFJ', value: 'ENFJ' },
   { label: 'ENTJ', value: 'ENTJ' },
-]
-
-export const questLat = [
-  { label: '无', value: 0 },
-  { label: '躯体不适', value: 1 },
-  { label: '综合', value: 2 },
-  { label: '社会适应性差', value: 3 },
-  { label: '运动性不安', value: 4 },
-  { label: '神经系统反应', value: 5 },
-  { label: '莫名恐惧', value: 6 }
 ]
 
 /**

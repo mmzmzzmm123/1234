@@ -162,16 +162,9 @@ export default {
       }
 
       let result = await questionServer.setResult(this.productInfo.orderId);
-      if (result.code == 200) {
-        if ([3, 4, 5].includes(this.productInfo.type)) {
-          return  uni.navigateTo({
-            url: "/pages/evaluation/mResult?orderId=" + this.productInfo.orderNo,
-          });
-        }
-
-        uni.setStorageSync("result", result.data);
+      if (result.code === 200) {
         uni.navigateTo({
-          url: "/pages/evaluation/result?productId=" + this.productId,
+          url: "/pages/evaluation/mResult?orderId=" + this.productInfo.orderNo,
         });
       }
     },
