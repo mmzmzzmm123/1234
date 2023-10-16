@@ -1,6 +1,7 @@
 package com.ruoyi.office.service;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
@@ -96,4 +97,6 @@ public interface ITRoomOrderService {
     List<RoomOrderH5Vo> selectTRoomOrderH5List(RoomOrderH5QryVo tRoomOrder);
 
     int order4Guest(TRoomOrder tRoomOrder);
+
+    List<TRoomOrder> getInUseOrder(TRoomOrder qry);
 }

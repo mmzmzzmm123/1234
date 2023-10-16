@@ -1,5 +1,6 @@
 package com.ruoyi.office.mapper;
 
+import java.util.Date;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -71,4 +72,6 @@ public interface TRoomOrderMapper extends BaseMapper<TRoomOrder> {
     List<RoomOrderWxVo> getOrderCanOpen(OrderCanOpenReq wxUserId);
 
     List<RoomOrderH5Vo> selectTRoomOrderH5List(RoomOrderH5QryVo tRoomOrder);
+
+    List<TRoomOrder> getInUseOrder(TRoomOrder roomOrder);
 }

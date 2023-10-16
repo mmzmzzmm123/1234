@@ -144,8 +144,14 @@ const api = {
 	getRoomOrderList(params){
 		return get('office/roomorder/h5list', params)
 	},
+	getCleanerRoomList(params){
+		return get('office/capi/room/list', params)
+	},
 	getCleanRecordList(params){
 		return get('office/cleanrecord/h5list', params)
+	},
+	getCleanerCleanRecordList(params){
+		return get('office/capi/record', params)
 	},
 	getNoticeList(params){
 		return get('system/notice/list', params)

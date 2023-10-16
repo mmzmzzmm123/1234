@@ -42,6 +42,8 @@ public class TWxUser extends BaseEntity {
     @Excel(name = "uinion id")
     private String unionId;
 
+    private String mpOpenId;
+
     /**
      * 手机号
      */

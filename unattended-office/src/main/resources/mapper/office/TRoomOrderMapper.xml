@@ -172,6 +172,12 @@
         </where>
         order by o.create_time desc
     </select>
+    <select id="getInUseOrder" parameterType="TRoomOrder" resultType="com.ruoyi.office.domain.TRoomOrder">
+        <include refid="selectTRoomOrderVo"/>
+        where status in (2,3,4)
+        and room_id =#{roomId}
+        and (start_time &lt;= #{startTime} and end_time &gt;= #{startTime})
+    </select>
 
     <insert id="insertTRoomOrder" parameterType="TRoomOrder" useGeneratedKeys="true" keyProperty="id">
         insert into t_room_order

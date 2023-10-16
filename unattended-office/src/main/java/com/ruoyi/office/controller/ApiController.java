@@ -509,8 +509,16 @@ public class ApiController extends BaseController {
             qry.setRoomId(room.getId());
             qry.setDate(DateUtils.parseDate(DateUtils.getDate()));
             final RoomAvailablePeriod availablePeriod = roomOrderService.getAvailablePeriod(qry);
-
             vo.setPeriod(availablePeriod);
+
+            TRoomOrder inuse = new TRoomOrder();
+            inuse.setRoomId(room.getId());
+            inuse.setStartTime(new Date());
+            List<TRoomOrder> roomOrderList = roomOrderService.getInUseOrder(inuse);
+            if (roomOrderList.size() > 0) {
+                vo.setEstEndTime(roomOrderList.get(0).getEndTime());
+            }
+
             res.add(vo);
         }
         return getDataTable(res);
@@ -973,10 +981,11 @@ public class ApiController extends BaseController {
 
     @Autowired
     WxMpService wxMpService;
+
     @GetMapping("/message")
-    public String configAccess(String signature,String timestamp,String nonce,String echostr) {
+    public String configAccess(String signature, String timestamp, String nonce, String echostr) {
         // 校验签名
-        if (wxMpService.checkSignature(timestamp, nonce, signature)){
+        if (wxMpService.checkSignature(timestamp, nonce, signature)) {
             // 校验成功原样返回echostr
             return echostr;
         }

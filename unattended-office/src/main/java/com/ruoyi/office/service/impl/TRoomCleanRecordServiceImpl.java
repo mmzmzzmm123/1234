@@ -3,6 +3,7 @@ package com.ruoyi.office.service.impl;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.CleanRecordH5Vo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -104,7 +105,9 @@ public class TRoomCleanRecordServiceImpl extends ServiceImpl<TRoomCleanRecordMap
         final List<CleanRecordH5Vo> cleanRecordH5Vos = tRoomCleanRecordMapper.selectTRoomCleanRecordH5List(tRoomCleanRecord);
         for(CleanRecordH5Vo vo: cleanRecordH5Vos){
             vo.setDuration((vo.getEndTime().getTime()-vo.getStartTime().getTime())/60000);
+            vo.setRoomStatus(OfficeEnum.RoomStatus.GetValueByCode(vo.getRoomStatus()).getInfo());
         }
+
         return cleanRecordH5Vos;
     }
 }
