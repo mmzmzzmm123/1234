@@ -55,7 +55,7 @@
                 <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo2" placeholder="结果描述" />
               </el-form-item>
               <el-form-item label="得分解读">
-                <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo3" placeholder="得分解读" />
+                <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo3" placeholder="得分解读" />
               </el-form-item>
               <el-form-item label="得分建议">
                 <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192" :height="300"/>
@@ -80,7 +80,7 @@
               <el-form-item label="判断事物">
                 <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo6" placeholder="判断事物" />
               </el-form-item>
-              <el-form-item label="'生活态度'">
+              <el-form-item label="生活态度">
                 <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo7" placeholder="生活态度" />
               </el-form-item>
               <el-form-item label="综合维度建议">

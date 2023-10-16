@@ -413,6 +413,7 @@ export default {
     },
     openGaugeQuestions(data) {
       this.questionOpen = true;
+      this.activeTab = 'questions'
 
       this.gaugeId = data.id;
       this.gaugeType = data.type
