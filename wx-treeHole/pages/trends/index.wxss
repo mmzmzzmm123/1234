@@ -50,6 +50,10 @@ page{
   border-radius: 10px;
   margin-top: 10px;
 }
+.trendsImageManyView:after {
+  content: "";
+  width: 32%;
+}
 .trendsImageMany{
   width: 32%;
   height: 90px;

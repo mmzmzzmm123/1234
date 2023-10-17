@@ -63,6 +63,14 @@ public interface OrderInfoMapper {
     public List<Long> selectUserIdByStaffUserId(Long staffUserId);
 
     /**
+     * 根据用户标识查询服务过的店员标识
+     *
+     * @param customUserId 客户标识
+     * @return 结果
+     * */
+    public List<Long> selectStaffUserIdByCustomUserId(Long customUserId);
+
+    /**
      * 新增订单信息
      *
      * @param orderInfo 订单信息

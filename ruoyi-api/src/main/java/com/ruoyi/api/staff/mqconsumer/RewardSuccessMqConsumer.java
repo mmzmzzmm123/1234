@@ -23,8 +23,8 @@ public class RewardSuccessMqConsumer implements RocketMQListener<Long> {
     @Override
     public void onMessage(Long orderId) {
         log.info("mq消费-打赏成功业务处理：开始，参数：{}", orderId);
-        // TODO LAM 需要发送模板消息通知用户和员工
-
+        //  发送模板消息通知用户和员工
+        rocketMqService.asyncSend(MqConstants.TOPIC_REWARD_SUCCESS_NOTICE, orderId);
         // 订单佣金结算
         rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_COMMISSION_SETTLEMENT, orderId);
         log.info("mq消费-打赏成功业务处理：完成");

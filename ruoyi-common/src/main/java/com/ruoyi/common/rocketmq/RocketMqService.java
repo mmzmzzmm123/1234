@@ -49,6 +49,8 @@ public class RocketMqService {
      */
     public <T> SendResult delayedSend(String topic, T params, MqDelayLevelEnums delayLevel) {
         log.info("发送延时信息：开始，参数：topic：{}， params：{}， delayLevel：{}", topic, params, delayLevel);
-        return rocketMQTemplate.syncSend(topic, MessageBuilder.withPayload(params).build(), MQ_DELAYED_SEND_TIME_OUT, delayLevel.getDelayLevel());
+        SendResult sendResult = rocketMQTemplate.syncSend(topic, MessageBuilder.withPayload(params).build(), MQ_DELAYED_SEND_TIME_OUT, delayLevel.getDelayLevel());
+        log.info("发送延时消息：完成，返回结果：{}", sendResult);
+        return sendResult;
     }
 }

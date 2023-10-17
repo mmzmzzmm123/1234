@@ -253,7 +253,8 @@ Page({
   },
   soundRecordStartOnSuccess: function () {
     this.setData({
-      soundRecordState: 0
+      soundRecordState: 0,
+      ifChangeSoundRecord: true
     })
   },
   soundRecordStopOnSuccess: function (res) {
@@ -290,6 +291,8 @@ Page({
         // 通过开始获取文件的详细信息
         that.setData({
           ['staffInfo.voiceUrl']: path,
+          ['staffInfo.voiceTime']: null,
+          ifChangeSoundRecord: true
         })
       }
     })
@@ -465,7 +468,8 @@ Page({
     wx.hideLoading();
     wx.showToast({
       title: '保存成功',
-      icon: "success"
+      icon: "success",
+      ifChangeSoundRecord: true
     })
     staffApi.selectByUserId({ userId: this.data.staffInfo.userId }, null, this.loadStaffInfoOnSuccess, null);
   },

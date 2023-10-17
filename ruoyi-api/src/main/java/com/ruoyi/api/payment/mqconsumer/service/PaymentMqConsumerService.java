@@ -149,7 +149,7 @@ public class PaymentMqConsumerService {
     }
 
     /**
-     * 随机单
+     * 随机单支付成功回调业务
      *
      * @param orderId   订单标识
      * */
@@ -158,7 +158,10 @@ public class PaymentMqConsumerService {
         PaymentMqConsumerService paymentMqConsumerService = SpringUtils.getBean(PaymentMqConsumerService.class);
         // 处理订单和详情状态
         paymentMqConsumerService.updateOrderInfoAndDetails(orderId, OrderTypeEnums.RANDOM.getCode());
-        // TODO 随机单支付完成的相关业务
+        // 随机单支付成功后通知客户与店员
+        rocketMqService.asyncSend(MqConstants.TOPIC_RANDOM_ORDER_SUCCESS_NOTICE, orderId);
+        // 发送延时消息自动退单（5分钟）
+        rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_CANCEL, orderId, MqDelayLevelEnums.level_9);
         log.info("随机单支付成功回调业务：完成");
     }
 
@@ -172,16 +175,15 @@ public class PaymentMqConsumerService {
     public void updateOrderInfoAndDetails(Long orderId, String orderType) {
         log.info("mq消费-订单信息和详情状态修改：开始，参数：{}，{}", orderId, orderType);
         // 构建订单支付完成后的数据
-        String autoSuccessTime = DateUtils.rollMinute(7, DateUtils.YYYY_MM_DD_HH_MM_SS);
         Date now = DateUtils.getNowDate();
         OrderInfo updateOrderInfo = new OrderInfo();
         updateOrderInfo.setId(orderId)
                 .setOrderState(OrderStateEnums.PAID.getCode())
-                .setAutoFinshTime(DateUtils.parseDate(autoSuccessTime))
                 .setUpdateTime(now);
         // 订单类型是礼物，直接全部业务时间设置为当前
         if (OrderTypeEnums.GIFT.getCode().equals(orderType) || OrderTypeEnums.REWARD.getCode().equals(orderType)) {
             updateOrderInfo.setOrderState(OrderStateEnums.FINISH.getCode())
+                    .setAutoFinshTime(now)
                     .setOrderReceivingTime(now)
                     .setOrderServiceTime(now)
                     .setOrderFinshTime(now);

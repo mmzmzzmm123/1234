@@ -120,13 +120,6 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     }
 
     /**
-     * 计算相差天数
-     */
-    public static int differentDaysByMillisecond(Date date1, Date date2) {
-        return Math.abs((int) ((date2.getTime() - date1.getTime()) / (1000 * 3600 * 24)));
-    }
-
-    /**
      * 计算时间差
      *
      * @param endDate   最后时间
@@ -209,5 +202,70 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         SimpleDateFormat sdf = new SimpleDateFormat(sdfFormat);
         Date date = new Date(getNowDate().getTime() + minute * 60 * 1000);
         return sdf.format(date);
+    }
+
+    /**
+     * 计算月份
+     *
+     * @param months 间隔月
+     * @return 结果
+     * */
+    public static Date calculateMonthsDifference(int months) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MONTH, months);
+        return calendar.getTime();
+    }
+
+    /**
+     * 计算周
+     *
+     * @param weeks 间隔周
+     * @return 结果
+     * */
+    public static Date calculateWeeksDifference(int weeks) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.WEEK_OF_YEAR, weeks);
+        return calendar.getTime();
+    }
+
+    /**
+     * 计算天
+     *
+     * @param days 间隔天
+     * @return 结果
+     * */
+    public static Date calculateDaysDifference(int days) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DAY_OF_YEAR, days);
+        return calendar.getTime();
+    }
+
+    /**
+     * 计算小时
+     *
+     * @param hours 间隔小时
+     * @return 结果
+     * */
+    public static Date calculateHoursDifference(int hours) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.HOUR_OF_DAY, hours);
+        return calendar.getTime();
+    }
+
+    /**
+     * 计算分钟
+     *
+     * @param minutes 间隔分钟
+     * @return 结果
+     * */
+    public static Date calculateMinutesDifference(int minutes) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MINUTE, minutes);
+        return calendar.getTime();
     }
 }

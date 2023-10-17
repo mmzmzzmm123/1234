@@ -164,11 +164,11 @@ public class ApiStaffService {
      */
     @Transactional(rollbackFor = Exception.class)
     public R<Boolean> update(ApiStaffInfoDto dto) {
-        log.info("修改申请数据：开始，参数：{}", dto);
+        log.info("更新店员个人资料数据：开始，参数：{}", dto);
         Long userId = TokenUtils.getUserId();
         // 校验手机号码是否正确
         if (StringUtils.isNotBlank(dto.getPhone()) && !PhoneUtil.isMobile(dto.getPhone())) {
-            log.warn("申请成为店员：失败，手机号码不正确");
+            log.warn("更新店员个人资料数据：失败，手机号码不正确");
             return R.warn("亲爱的，帮忙输入个正确的手机号码呗");
         }
         StaffInfo staffInfo = new StaffInfo();
@@ -220,7 +220,7 @@ public class ApiStaffService {
             throw new ServiceException("亲爱的 您上传的内容涉及到敏感内容，请检查修改后上传", HttpStatus.WARN_WX);
         }
         staffInfoMapper.updateStaffInfo(staffInfo);
-        log.info("修改申请数据：完成");
+        log.info("更新店员个人资料数据：完成");
         return R.ok(Boolean.TRUE);
     }
 

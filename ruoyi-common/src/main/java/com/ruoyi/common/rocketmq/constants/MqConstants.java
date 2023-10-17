@@ -45,22 +45,64 @@ public class MqConstants {
     public static final String GROUP_GIVE_GIFT_SUCCESS_NOTICE = "group_give_gift_success_notice";
 
     /**
+     * 打赏成功通知
+     * */
+    public static final String TOPIC_REWARD_SUCCESS_NOTICE = "topic_reward_success_notice";
+    public static final String GROUP_REWARD_SUCCESS_NOTICE = "group_reward_success_notice";
+
+    /**
      * 指定单下单后通知
      * */
     public static final String TOPIC_APPOINT_ORDER_SUCCESS_NOTICE = "topic_appoint_order_success_notice";
     public static final String GROUP_APPOINT_ORDER_SUCCESS_NOTICE = "group_appoint_order_success_notice";
 
     /**
-     * 接单通知
+     * 随机单下单后通知
+     * */
+    public static final String TOPIC_RANDOM_ORDER_SUCCESS_NOTICE = "topic_random_order_success_notice";
+    public static final String GROUP_RANDOM_ORDER_SUCCESS_NOTICE = "group_random_order_success_notice";
+
+    /**
+     * 订单接单通知
      * */
     public static final String TOPIC_ORDER_TAKING_NOTICE = "topic_order_taking_notice";
     public static final String GROUP_ORDER_TAKING_NOTICE = "group_order_taking_notice";
+
+    /**
+     * 订单取消通知
+     * */
+    public static final String TOPIC_ORDER_CANCEL_NOTICE = "topic_order_cancel_notice";
+    public static final String GROUP_ORDER_CANCEL_NOTICE = "group_order_cancel_notice";
+
+    /**
+     * 订单完成通知
+     * */
+    public static final String TOPIC_ORDER_FINISH_NOTICE = "topic_order_finish_notice";
+    public static final String GROUP_ORDER_FINISH_NOTICE = "group_order_finish_notice";
+
+    /**
+     * 服务开始通知
+     * */
+    public static final String TOPIC_ORDER_START_NOTICE = "topic_order_start_notice";
+    public static final String GROUP_ORDER_START_NOTICE = "group_order_start_notice";
 
     /**
      * 随机单和指定单下单后N分钟后未接单自动退单
      * */
     public static final String TOPIC_ORDER_AUTO_CANCEL = "topic_order_auto_cancel";
     public static final String GROUP_ORDER_AUTO_CANCEL = "group_order_auto_cancel";
+
+    /**
+     * 随机单和指定单自动完成
+     * */
+    public static final String TOPIC_ORDER_AUTO_SUCCESS = "topic_order_auto_success";
+    public static final String GROUP_ORDER_AUTO_SUCCESS = "group_order_auto_success";
+
+    /**
+     * 订单默认好评
+     * */
+    public static final String TOPIC_ORDER_AUTO_COMMENT = "topic_order_auto_comment";
+    public static final String GROUP_ORDER_AUTO_COMMENT = "group_order_auto_comment";
 
     /**
      * 订单佣金结算

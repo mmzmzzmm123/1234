@@ -1,5 +1,3 @@
-const { userInfo } = require("../../../constans/storageConstant");
-
 const app = getApp();
 import userAccountApi from "../../../apis/user/userAccount";
 Page({

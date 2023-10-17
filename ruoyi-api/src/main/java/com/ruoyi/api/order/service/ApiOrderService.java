@@ -380,8 +380,10 @@ public class ApiOrderService {
         // 根据支付类型判断发送什么类型的消息
         if (PayWayEnums.AMOUNT_PAY.getCode().equals(orderInfo.getPayWay())) {
             log.info("随机单提交：描述，支付类型：余额支付，发送指定下单成功消息");
-            // TODO 随机单支付成功后的相关业务
-
+            // 随机单支付成功后通知客户与店员
+            rocketMqService.asyncSend(MqConstants.TOPIC_RANDOM_ORDER_SUCCESS_NOTICE, orderInfo.getId());
+            // 发送延时消息自动退单（5分钟）
+            rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_CANCEL, orderInfo.getId(), MqDelayLevelEnums.level_9);
         }
         if (PayWayEnums.WEI_XIN_PAY.getCode().equals(orderInfo.getPayWay())) {
             log.info("随机单提交：描述，支付类型：微信支付，发送订单超时自动取消消息");
@@ -818,6 +820,8 @@ public class ApiOrderService {
                 paymentRefundMapper.insertPaymentRefund(paymentRefund);
                 // 用户订单金额回退到余额中
                 apiOrderService.balanceRefund(orderInfo);
+                // 发送取消通知
+                rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_CANCEL_NOTICE, orderInfo.getId());
             }
         }
         log.info("订单取消：完成");
@@ -981,6 +985,8 @@ public class ApiOrderService {
                 .setServiceContent(orderDetails.getDetailsTitle())
                 .setCreateTime(now);
         orderCommentMapper.insertOrderComment(orderComment);
+        // 发送订单完成通知
+        rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_FINISH_NOTICE, orderInfo.getId());
         // 订单佣金结算
         rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_COMMISSION_SETTLEMENT, orderInfo.getId());
         log.info("订单完成：完成");
@@ -1074,7 +1080,63 @@ public class ApiOrderService {
                 .setOrderState(OrderStateEnums.SERVICE_ING.getCode())
                 .setOrderServiceTime(now)
                 .setUpdateTime(now);
+        // 计算订单自动服务完成时间
+        MqDelayLevelEnums mqDelayLevelEnums = null;
+        List<OrderDetails> orderDetailsList = orderDetailsMapper.selectByOrderId(orderInfo.getId());
+        if (ObjectUtil.isNotEmpty(orderDetailsList)){
+            OrderDetails orderDetails = orderDetailsList.get(0);
+            Long serviceItemId = orderDetails.getServiceItemId();
+            ServiceItem serviceItem = serviceItemMapper.selectServiceItemById(serviceItemId);
+            if (ObjectUtil.isNotNull(serviceItem)) {
+                DateTimeUnitEnums timeUnitEnums = DateTimeUnitEnums.getByCode(serviceItem.getOrderExpireTimeUnit());
+                if (ObjectUtil.isNotNull(timeUnitEnums)){
+                    int orderServiceDuration = serviceItem.getOrderServiceDuration().intValue();
+                    Date autoFinishDate;
+                    switch (timeUnitEnums){
+                        case MONTH:
+                            autoFinishDate = DateUtils.calculateMonthsDifference(orderServiceDuration);
+                            mqDelayLevelEnums = MqDelayLevelEnums.level_18;
+                            break;
+                        case WEEK:
+                            autoFinishDate = DateUtils.calculateWeeksDifference(orderServiceDuration);
+                            mqDelayLevelEnums = MqDelayLevelEnums.level_18;
+                            break;
+                        case DAY:
+                            autoFinishDate = DateUtils.calculateDaysDifference(orderServiceDuration);
+                            mqDelayLevelEnums = MqDelayLevelEnums.level_18;
+                            break;
+                        case HOUR:
+                            autoFinishDate = DateUtils.calculateHoursDifference(orderServiceDuration);
+                            if (orderServiceDuration == 2){
+                                mqDelayLevelEnums = MqDelayLevelEnums.level_18;
+                            }else {
+                                mqDelayLevelEnums = MqDelayLevelEnums.level_17;
+                            }
+                            break;
+                        case MINUTE:
+                            if (orderServiceDuration <= 30){
+                                mqDelayLevelEnums = MqDelayLevelEnums.level_16;
+                            }else{
+                                mqDelayLevelEnums = MqDelayLevelEnums.level_17;
+                            }
+                            autoFinishDate = DateUtils.calculateMinutesDifference(orderServiceDuration);
+                            break;
+                        default:
+                            mqDelayLevelEnums = MqDelayLevelEnums.level_18;
+                            autoFinishDate = DateUtils.calculateMonthsDifference(7);
+                            break;
+                    }
+                    updateOi.setAutoFinshTime(autoFinishDate);
+                }
+            }
+        }
         orderInfoMapper.updateOrderInfo(updateOi);
+        // 发送订单自动完成消息
+        if (ObjectUtil.isNotNull(mqDelayLevelEnums)){
+            rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_SUCCESS, orderInfo.getId(), mqDelayLevelEnums);
+        }
+        // 发送通知消息
+        rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_START_NOTICE, orderInfo.getId());
         log.info("店员开始服务：完成");
         return Boolean.TRUE;
     }

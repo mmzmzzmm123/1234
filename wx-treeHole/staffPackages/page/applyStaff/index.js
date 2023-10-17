@@ -609,8 +609,16 @@ Page({
   checkData: function () {
     let form = this.data.form;
     let photoArr = this.data.photoArr;
+    if(this.data.ifHide == '0' && (utils.isEmpty(form.weChatNum) || utils.isEmpty(form.phone))){
+      wx.showToast({
+        title: '请完善您的基本信息后再提交哟',
+        icon: "none"
+      })
+      return false;
+    }
+
     // 基本信息必填校验
-    if (utils.isEmpty(form.nickName) || utils.isEmpty(form.sex) || utils.isEmpty(form.weChatNum) || utils.isEmpty(form.phone) || utils.isEmpty(form.birthDate) || utils.isEmpty(form.region) || utils.isEmpty(form.selfIntroduction)) {
+    if (utils.isEmpty(form.nickName) || utils.isEmpty(form.sex) || utils.isEmpty(form.birthDate) || utils.isEmpty(form.region) || utils.isEmpty(form.selfIntroduction)) {
       wx.showToast({
         title: '请完善您的基本信息后再提交哟',
         icon: "none"

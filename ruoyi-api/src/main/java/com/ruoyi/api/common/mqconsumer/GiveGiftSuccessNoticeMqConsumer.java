@@ -1,29 +1,26 @@
 package com.ruoyi.api.common.mqconsumer;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.ruoyi.common.constant.WeChatServiceNotifyTemplateIdConstants;
+import com.ruoyi.api.wechat.constant.WechatMediaIdConstant;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.rocketmq.constants.MqConstants;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.weixin.WxService;
-import com.ruoyi.common.weixin.model.dto.WxServiceNotifyDto;
-import com.ruoyi.order.domain.OrderDetails;
+import com.ruoyi.common.weixin.properties.WxProperties;
+import com.ruoyi.common.weixin.service.WechatMsgReplyService;
 import com.ruoyi.order.domain.OrderInfo;
 import com.ruoyi.order.mapper.OrderDetailsMapper;
 import com.ruoyi.order.mapper.OrderInfoMapper;
 import com.ruoyi.staff.domain.StaffInfo;
 import com.ruoyi.staff.mapper.StaffInfoMapper;
 import com.ruoyi.user.mapper.UserInfoMapper;
+import com.ruoyi.user.mapper.UserOfficialAccountMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.mp.builder.kefu.MiniProgramPageBuilder;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
+import java.util.*;
 
 /**
  * @author LAM
@@ -35,54 +32,50 @@ import java.util.WeakHashMap;
 @RocketMQMessageListener(topic = MqConstants.TOPIC_GIVE_GIFT_SUCCESS_NOTICE, consumerGroup = MqConstants.GROUP_GIVE_GIFT_SUCCESS_NOTICE, selectorExpression = "*")
 public class GiveGiftSuccessNoticeMqConsumer implements RocketMQListener<Long> {
 
+    private final UserOfficialAccountMapper userOfficialAccountMapper;
     private final UserInfoMapper userInfoMapper;
     private final OrderInfoMapper orderInfoMapper;
-    private final OrderDetailsMapper orderDetailsMapper;
-    private final StaffInfoMapper staffInfoMapper;
-    private final WxService wxService;
+    private final WechatMsgReplyService wechatMsgReplyService;
+    private final WxProperties wxProperties;
 
     @Override
     public void onMessage(Long orderId) {
-        log.info("礼物赠送成功通知：开始，参数：{}", orderId);
+        log.info("mq消费-礼物赠送成功通知：开始，参数：{}", orderId);
         // 查询订单信息
         OrderInfo orderInfo = orderInfoMapper.selectOrderInfoById(orderId);
-        // 查询订单详情数据
-        OrderDetails selectOrderDetails = new OrderDetails();
-        selectOrderDetails.setOrderId(orderId);
-        List<OrderDetails> orderDetailsList = orderDetailsMapper.selectOrderDetailsList(selectOrderDetails);
-        if (ObjectUtil.isNull(orderInfo) || ObjectUtil.isEmpty(orderDetailsList)) {
-            log.warn("礼物赠送成功通知：失败，无法找到订单相关数据");
-            throw new ServiceException("礼物赠送成功通知：失败，无法找到订单相关数据");
+        if (ObjectUtil.isNull(orderInfo)){
+            log.warn("mq消费-礼物赠送成功通知：失败，查询订单信息为空");
+            throw new ServiceException("mq消费-礼物赠送成功通知：失败，查询订单信息为空");
         }
-        OrderDetails orderDetails = orderDetailsList.stream().findFirst().orElse(null);
-        // 查询店员信息
-        StaffInfo staffInfo = staffInfoMapper.selectStaffInfoByUserId(orderInfo.getStaffUserId());
-        if (ObjectUtil.isNull(staffInfo)){
-            log.warn("礼物赠送成功通知：失败，无法查询对应店员数据");
-            throw new ServiceException("礼物赠送成功通知：失败，无法查询对应店员数据");
+        // 客户数据通知
+        String customUserUnionId = userInfoMapper.getUnionIdById(orderInfo.getCustomUserId());
+        if (StringUtils.isNotBlank(customUserUnionId)) {
+            String customUserOpenId = userOfficialAccountMapper.getOpenIdByUnionId(customUserUnionId);
+            if (StringUtils.isNotBlank(customUserOpenId)) {
+                MiniProgramPageBuilder miniProgramPageBuilder = new MiniProgramPageBuilder();
+                miniProgramPageBuilder.appId(wxProperties.getMiNiApplet().getAppId())
+                        .title("礼物赠送成功通知")
+                        .pagePath("orderPackages/page/list/index")
+                        .thumbMediaId(WechatMediaIdConstant.WX_MINI_INDEX_IMG);
+                wechatMsgReplyService.replyMiniProgram(customUserOpenId, miniProgramPageBuilder);
+            }
         }
-        // 构建消息数据
-        Map<String,String> dataMap = new HashMap<>();
-        dataMap.put("thing2", staffInfo.getNickName());
-        dataMap.put("thing1", StringUtils.split(orderDetails.getDetailsTitle(),"-")[1]);
-        dataMap.put("number3", orderDetails.getNum()+"");
-        dataMap.put("thing5", "店员将在看到后尽快给您道谢，祝生活愉快");
-
-        // 客户openid
-        String openId = userInfoMapper.selectOpenIdById(orderInfo.getCustomUserId());
-        if (StringUtils.isBlank(openId)){
-            log.warn("礼物赠送成功通知：失败，无法查询对应客户openid");
-            throw new ServiceException("礼物赠送成功通知：失败，无法查询对应客户openid");
+        // 店员通知
+        String staffUnionId = userInfoMapper.getUnionIdById(orderInfo.getStaffUserId());
+        if (StringUtils.isNotBlank(staffUnionId)) {
+            String staffOpenId = userOfficialAccountMapper.getOpenIdByUnionId(staffUnionId);
+            if (StringUtils.isNotBlank(staffOpenId)) {
+                MiniProgramPageBuilder miniProgramPageBuilder = new MiniProgramPageBuilder();
+                miniProgramPageBuilder.appId(wxProperties.getMiNiApplet().getAppId())
+                        .title("收到礼物通知")
+                        .pagePath("staffPackages/page/staffOrder/index")
+                        .thumbMediaId(WechatMediaIdConstant.WX_MINI_INDEX_IMG);
+                wechatMsgReplyService.replyMiniProgram(staffOpenId, miniProgramPageBuilder);
+            }
         }
-        WxServiceNotifyDto wxServiceNotifyDto = new WxServiceNotifyDto();
-        wxServiceNotifyDto.setToUser(openId)
-                .setTemplateId(WeChatServiceNotifyTemplateIdConstants.USER_GIVE_GIFT_SUCCESS)
-                .setData(dataMap);
-        try {
-            wxService.sendTemplateMessage(wxServiceNotifyDto);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-        log.info("礼物赠送成功通知：完成");
+        log.info("mq消费-礼物赠送成功通知：完成");
     }
+
+
+
 }

@@ -101,28 +101,7 @@ public enum MqDelayLevelEnums {
     /**
      * 2h（两小时）
      */
-    level_18(18, 7200),
-
-    /**
-     * 1d（一天）
-     */
-    level_19(19, 86400),
-
-    /**
-     * 3d（三天）
-     */
-    level_20(20, 259200),
-
-    /**
-     * 5d（五天）
-     */
-    level_21(21, 432000),
-
-    /**
-     * 7d（七天）
-     */
-    level_22(22, 604800),
-    ;
+    level_18(18, 7200);
 
     private final int delayLevel;
     private final long second;

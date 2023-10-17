@@ -71,7 +71,7 @@ public class ApiOrderController extends BaseController {
     @ApiOperation("随机单提交")
     @PostMapping("/randomOrderSubmit")
     @RepeatSubmit(interval = 1000, message = "订单已提交，请勿重复提交")
-    public R<ApiOrderPayInfoVo> randomOrderSubmit(@Valid ApiRandomOrderFormDto dto){
+    public R<ApiOrderPayInfoVo> randomOrderSubmit(@Valid ApiRandomOrderFormDto dto) {
         return R.ok(service.randomOrderSubmit(dto));
     }
 
@@ -106,14 +106,14 @@ public class ApiOrderController extends BaseController {
     @ApiOperation("店员接单")
     @GetMapping("/orderTaking")
     @RepeatSubmit(interval = 1000)
-    public R<Boolean> orderTaking(String orderNo){
+    public R<Boolean> orderTaking(String orderNo) {
         return R.ok(service.orderTaking(orderNo));
     }
 
     @ApiOperation("店员开始服务")
     @GetMapping("/orderStartService")
     @RepeatSubmit(interval = 1000)
-    public R<Boolean> orderStartService(String orderNo){
+    public R<Boolean> orderStartService(String orderNo) {
         return R.ok(service.orderStartService(orderNo));
     }
 
@@ -167,20 +167,20 @@ public class ApiOrderController extends BaseController {
 
     @ApiOperation("查询服务过的用户id集合")
     @GetMapping("/selectServedUserId")
-    public R<List<Long>> selectServedUserId(){
+    public R<List<Long>> selectServedUserId() {
         return R.ok(service.selectServedUserId());
     }
 
     @ApiOperation("查询订单评论")
     @GetMapping("/selectOrderComment")
-    public R<ApiPageOrderCommentVo> selectOrderComment(ApiPageOrderCommentDto dto){
+    public R<ApiPageOrderCommentVo> selectOrderComment(ApiPageOrderCommentDto dto) {
         log.info("查询订单评论：开始，参数：{}", dto);
         ApiPageOrderCommentVo vo = new ApiPageOrderCommentVo();
         List<ApiOrderCommentVo> voList = new ArrayList<>();
         startPage();
         List<OrderComment> orderComments = service.selectOrderComment(dto);
         TableDataInfo dataTable = getDataTable(orderComments);
-        if(ObjectUtil.isNotEmpty(dataTable)){
+        if (ObjectUtil.isNotEmpty(dataTable)) {
             orderComments.forEach(item -> {
                 ApiOrderCommentVo apiOrderCommentVo = new ApiOrderCommentVo();
                 BeanUtils.copyBeanProp(apiOrderCommentVo, item);

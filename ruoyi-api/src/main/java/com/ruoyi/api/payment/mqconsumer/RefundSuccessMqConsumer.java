@@ -6,6 +6,7 @@ import com.ruoyi.common.enums.OrderStateEnums;
 import com.ruoyi.common.enums.PayStateEnums;
 import com.ruoyi.common.enums.RefundStateEnums;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.rocketmq.RocketMqService;
 import com.ruoyi.common.rocketmq.constants.MqConstants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.order.domain.OrderDetails;
@@ -39,6 +40,7 @@ public class RefundSuccessMqConsumer implements RocketMQListener<ApiWxRefundCall
     private final OrderDetailsMapper orderDetailsMapper;
     private final PaymentOrderMapper paymentOrderMapper;
     private final PaymentRefundMapper paymentRefundMapper;
+    private final RocketMqService rocketMqService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -68,6 +70,9 @@ public class RefundSuccessMqConsumer implements RocketMQListener<ApiWxRefundCall
         PaymentRefund updatePr = new PaymentRefund();
         updatePr.setId(paymentRefund.getId())
                 .setStart(RefundStateEnums.SUCCESS.getCode());
+        paymentRefundMapper.updatePaymentRefund(updatePr);
+        // 发送退款成功通知
+        rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_CANCEL_NOTICE, paymentRefund.getOrderId());
         log.info("mq消费-微信退款成功回调：完成");
     }
 }

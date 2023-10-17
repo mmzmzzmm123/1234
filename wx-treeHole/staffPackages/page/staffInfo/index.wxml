@@ -103,7 +103,7 @@
             <image class="audioPlay" src="../../../static/ico/{{audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
             <image wx:if="{{audioState == '-1'}}" class="audioFrequency" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
             <image wx:if="{{audioState == '0'}}" class="audioFrequencyGif" src="../../../static/gif/audio_frequency.gif" mode="widthFix"></image>
-            <span wx:if="{{staffInfo.voiceTime != null}}">{{staffInfo.voiceTime}}s</span>
+            <span wx:if="{{staffInfo.voiceTime != null && staffInfo.voiceTime > 0}}">{{staffInfo.voiceTime}}s</span>
           </view>
           <text style="font-size: 12px;margin-left: 10px;color: #ed3f14;">注：录制可直接覆盖</text>
         </view>

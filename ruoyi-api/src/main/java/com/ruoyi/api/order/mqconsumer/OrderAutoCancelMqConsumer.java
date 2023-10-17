@@ -49,8 +49,6 @@ public class OrderAutoCancelMqConsumer implements RocketMQListener<Long> {
     private final OrderDetailsMapper orderDetailsMapper;
     private final PaymentOrderMapper paymentOrderMapper;
     private final PaymentRefundMapper paymentRefundMapper;
-    private final UserWalletMapper userWalletMapper;
-    private final UserWalletRecordMapper userWalletRecordMapper;
     private final ApiOrderService apiOrderService;
 
     @Override

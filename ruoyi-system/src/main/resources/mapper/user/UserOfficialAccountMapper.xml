@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.user.mapper.UserOfficialAccountMapper">
+
+    <resultMap type="UserOfficialAccount" id="UserOfficialAccountResult">
+        <result property="id" column="id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="openId" column="openId"/>
+        <result property="unionId" column="unionId"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="headImgUrl" column="head_img_url"/>
+        <result property="language" column="language"/>
+        <result property="ifSubscribe" column="if_subscribe"/>
+        <result property="subscribeScene" column="subscribe_scene"/>
+        <result property="subscribeTime" column="subscribe_time"/>
+        <result property="qrScene" column="qr_scene"/>
+        <result property="qrSceneStr" column="qr_scene_str"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectUserOfficialAccountVo">
+        select id,
+               group_id,
+               openId,
+               unionId,
+               nick_name,
+               head_img_url,
+            language,
+            if_subscribe,
+            subscribe_scene,
+            subscribe_time,
+            qr_scene,
+            qr_scene_str,
+            remark
+        from bus_user_official_account
+    </sql>
+
+    <select id="selectUserOfficialAccountList" parameterType="UserOfficialAccount"
+            resultMap="UserOfficialAccountResult">
+        <include refid="selectUserOfficialAccountVo"/>
+        <where>
+            <if test="openId != null  and openId != ''">and openId = #{openId}</if>
+            <if test="unionId != null  and unionId != ''">and unionId = #{unionId}</if>
+            <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
+            <if test="ifSubscribe != null  and ifSubscribe != ''">and if_subscribe = #{ifSubscribe}</if>
+            <if test="subscribeScene != null  and subscribeScene != ''">and subscribe_scene = #{subscribeScene}</if>
+        </where>
+    </select>
+
+    <select id="selectUserOfficialAccountById" parameterType="Long" resultMap="UserOfficialAccountResult">
+        <include refid="selectUserOfficialAccountVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectMaxRecord" resultMap="UserOfficialAccountResult">
+        SELECT *
+        FROM bus_user_official_account
+        WHERE id = (
+            SELECT MAX(id)
+            FROM bus_user_official_account
+        )
+    </select>
+
+    <select id="selectOfUnionIdIsNull" resultMap="UserOfficialAccountResult">
+        select id, openId
+        from bus_user_official_account
+        where unionId is null
+    </select>
+
+    <select id="getOpenIdByUnionId" parameterType="String" resultType="String">
+        select openId from bus_user_official_account where unionId = #{unionId}
+    </select>
+
+    <insert id="insertUserOfficialAccount" parameterType="UserOfficialAccount" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_user_official_account
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">group_id,</if>
+            <if test="openId != null">openId,</if>
+            <if test="unionId != null">unionId,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="headImgUrl != null">head_img_url,</if>
+            <if test="language != null">language,</if>
+            <if test="ifSubscribe != null">if_subscribe,</if>
+            <if test="subscribeScene != null">subscribe_scene,</if>
+            <if test="subscribeTime != null">subscribe_time,</if>
+            <if test="qrScene != null">qr_scene,</if>
+            <if test="qrSceneStr != null">qr_scene_str,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="groupId != null">#{groupId},</if>
+            <if test="openId != null">#{openId},</if>
+            <if test="unionId != null">#{unionId},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="headImgUrl != null">#{headImgUrl},</if>
+            <if test="language != null">#{language},</if>
+            <if test="ifSubscribe != null">#{ifSubscribe},</if>
+            <if test="subscribeScene != null">#{subscribeScene},</if>
+            <if test="subscribeTime != null">#{subscribeTime},</if>
+            <if test="qrScene != null">#{qrScene},</if>
+            <if test="qrSceneStr != null">#{qrSceneStr},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+
+    <insert id="insertOfOpenIdList" parameterType="List">
+        insert into bus_user_official_account(openId) values
+        <foreach collection="list" item="openId" separator=",">
+            (#{openId})
+        </foreach>
+    </insert>
+
+    <update id="updateUserOfficialAccount" parameterType="UserOfficialAccount">
+        update bus_user_official_account
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="groupId != null">group_id = #{groupId},</if>
+            <if test="openId != null">openId = #{openId},</if>
+            <if test="unionId != null">unionId = #{unionId},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="headImgUrl != null">head_img_url = #{headImgUrl},</if>
+            <if test="language != null">language = #{language},</if>
+            <if test="ifSubscribe != null">if_subscribe = #{ifSubscribe},</if>
+            <if test="subscribeScene != null">subscribe_scene = #{subscribeScene},</if>
+            <if test="subscribeTime != null">subscribe_time = #{subscribeTime},</if>
+            <if test="qrScene != null">qr_scene = #{qrScene},</if>
+            <if test="qrSceneStr != null">qr_scene_str = #{qrSceneStr},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateOfList" parameterType="List">
+        update bus_user_official_account
+        <set>
+            <trim prefix="group_id=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.groupId !=null">
+                        when id=#{item.id} then #{item.groupId}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="openId=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.openId !=null">
+                        when id=#{item.id} then #{item.openId}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="unionId=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.unionId !=null">
+                        when id=#{item.id} then #{item.unionId}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="nick_name=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.nickName !=null">
+                        when id=#{item.id} then #{item.nickName}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="head_img_url=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.headImgUrl !=null">
+                        when id=#{item.id} then #{item.headImgUrl}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="language=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.language !=null">
+                        when id=#{item.id} then #{item.language}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="if_subscribe=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.ifSubscribe !=null">
+                        when id=#{item.id} then #{item.ifSubscribe}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="subscribe_scene=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.subscribeScene !=null">
+                        when id=#{item.id} then #{item.subscribeScene}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="subscribe_time=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.subscribeTime !=null">
+                        when id=#{item.id} then #{item.subscribeTime}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="qr_scene=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.qrScene !=null">
+                        when id=#{item.id} then #{item.qrScene}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="qr_scene_str=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.qrSceneStr !=null">
+                        when id=#{item.id} then #{item.qrSceneStr}
+                    </if>
+                </foreach>
+            </trim>
+            <trim prefix="remark=case" suffix="end,">
+                <foreach collection="list" item="item" index="index">
+                    <if test="item.remark !=null">
+                        when id=#{item.id} then #{item.remark}
+                    </if>
+                </foreach>
+            </trim>
+        </set>
+        where id in
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <update id="updateIfSubscribeByOpenId">
+        update bus_user_official_account set if_subscribe = #{ifSubscribe} where openId = #{openId}
+    </update>
+
+    <delete id="deleteUserOfficialAccountById" parameterType="Long">
+        delete
+        from bus_user_official_account
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteUserOfficialAccountByIds" parameterType="String">
+        delete from bus_user_official_account where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

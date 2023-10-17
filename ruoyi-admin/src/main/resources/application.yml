@@ -166,6 +166,13 @@ weixin:
       app-id: wxdfee3a598de0fb18
       # 微信小程序-密钥
       app-secret: 2b375a770a0f32dff4af1c2632ca3a23
+    # 公众号
+    official-account:
+      # appid/密钥
+      app-id: wxd82ac8dbf68d12fe
+      app-secret: 8bfe014fb58aaf599ca1cf1b3ec94157
+      token: 1711759551015522304
+      encoding-aes-key: 0Q2FWQBHDhJcIcHWkOBfQEdorbdV2g5SMh9FXNuJVSI
   # 微信支付账号信息
   pay-info:
     # 商户号

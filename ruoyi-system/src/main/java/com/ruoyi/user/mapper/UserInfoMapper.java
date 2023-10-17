@@ -45,6 +45,14 @@ public interface UserInfoMapper {
     public String selectOpenIdById(Long id);
 
     /**
+     * 根据用户标识查询UnionId
+     *
+     * @param id 标识
+     * @return 结果
+     * */
+    public String getUnionIdById(Long id);
+
+    /**
      * 新增用户信息管理
      *
      * @param userInfo 用户信息管理

@@ -68,7 +68,7 @@
                     </block>
                     <block wx:else>
                       <view class="view_box_common">
-                        <view class="view_box_row_symmetry" style="width: 86%;">
+                        <view class="view_box_row_symmetry trendsImageManyView" style="width: 86%;">
                           <block wx:for="{{str.splitToArr(dataItem.imgList, ',')}}" wx:key="index" wx:for-item="imgItem" wx:for-index="imgIndex">
                             <image class="trendsImageMany" src="{{imgItem}}" mode="aspectFill" data-index="{{dataIndex}}" data-imgIndex="{{imgIndex}}" bind:tap="listImgCli"></image>
                           </block>

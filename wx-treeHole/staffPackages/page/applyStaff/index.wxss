@@ -51,8 +51,8 @@ page{
   font-size: 14px;
 }
 .audioPlay{
-  width: 16px;
-  margin-right: 10px;
+  width: 14px;
+  margin-right: 8px;
 }
 .audioFrequency{
   width: 100px;

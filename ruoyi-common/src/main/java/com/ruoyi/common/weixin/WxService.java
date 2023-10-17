@@ -26,8 +26,10 @@ import com.ruoyi.common.weixin.properties.WxPayInfoProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.error.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.subscribe.WxMpSubscribeMessage;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,11 +45,12 @@ public class WxService {
     private final WxMaService wxMiniAppletService;
     private final WxPayService wxPayService;
     private final WxPayInfoProperties wxPayInfoProperties;
+    private final WxMpService wxOfficialAccountService;
 
     /**
      * 内容安全相关接口
-     * */
-    public WxMaSecCheckService getWxMaSecCheckService(){
+     */
+    public WxMaSecCheckService getWxMaSecCheckService() {
         return wxMiniAppletService.getSecCheckService();
     }
 
@@ -161,11 +164,26 @@ public class WxService {
     }
 
     /**
+     * 发送公众号模板消息
+     */
+    public void wxOfficialAccountSendTemplateMessage(WxMpSubscribeMessage subscribeMessage) {
+        log.info("发送公众号模板消息：开始，参数：{}", subscribeMessage);
+        try {
+            wxOfficialAccountService.getSubscribeMsgService().send(subscribeMessage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.warn("发送公众号模板消息：异常");
+            throw new ServiceException(e.getMessage());
+        }
+        log.info("发送公众号模板消息：完成");
+    }
+
+    /**
      * 发送小程序模板消息
      *
      * @param dto 小程序订阅消息模板数据信息
      */
-    public void sendTemplateMessage(WxServiceNotifyDto dto) {
+    public void wxMiniSendTemplateMessage(WxServiceNotifyDto dto) {
         log.info("发送小程序订阅信息：开始，参数：{}", dto);
         // 构建发送消息对象
         WxMaSubscribeMessage wxMaSubscribeMessage = WxMaSubscribeMessage.builder()
@@ -188,7 +206,6 @@ public class WxService {
         try {
             wxMiniAppletService.getMsgService().sendSubscribeMsg(wxMaSubscribeMessage);
         } catch (WxErrorException e) {
-            e.printStackTrace();
             log.warn("发送小程序订阅信息：失败，异常消息：{}", e.getMessage());
             throw new ServiceException("发送小程序订阅信息：失败");
         }

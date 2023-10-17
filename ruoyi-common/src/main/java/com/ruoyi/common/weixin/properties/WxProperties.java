@@ -15,9 +15,19 @@ public class WxProperties {
 
     private MiNiApplet miNiApplet;
 
+    private OfficialAccount officialAccount;
+
     @Data
     public static class MiNiApplet{
         private String appId;
         private String appSecret;
+    }
+
+    @Data
+    public static class OfficialAccount{
+        private String appId;
+        private String appSecret;
+        private String token;
+        private String encodingAesKey;
     }
 }

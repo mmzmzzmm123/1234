@@ -16,8 +16,8 @@
         <result property="customUserId" column="custom_user_id"/>
         <result property="accountServiceProvider" column="account_service_provider"/>
         <result property="customNum" column="custom_num"/>
-        <result property="chooseStaffSex" column="choose_staff_sex" />
-        <result property="filterServedStaff" column="filter_served_staff" />
+        <result property="chooseStaffSex" column="choose_staff_sex"/>
+        <result property="filterServedStaff" column="filter_served_staff"/>
         <result property="amount" column="amount"/>
         <result property="couponId" column="coupon_id"/>
         <result property="discountAmount" column="discount_amount"/>
@@ -176,7 +176,17 @@
     </select>
 
     <select id="selectUserIdByStaffUserId" parameterType="Long" resultType="Long">
-        select custom_user_id from bus_order_info where staff_user_id = #{staffUserId}
+        select custom_user_id
+        from bus_order_info
+        where staff_user_id = #{staffUserId}
+    </select>
+
+    <select id="selectStaffUserIdByCustomUserId" parameterType="Long" resultType="Long">
+        SELECT staff_user_id
+        FROM bus_order_info
+        WHERE custom_user_id = #{customUserId}
+          AND order_state = 0
+        GROUP BY staff_user_id
     </select>
 
     <insert id="insertOrderInfo" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="id">

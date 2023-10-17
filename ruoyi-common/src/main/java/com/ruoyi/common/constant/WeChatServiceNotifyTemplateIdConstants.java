@@ -21,7 +21,7 @@ public class WeChatServiceNotifyTemplateIdConstants {
      * 备注
      * {{thing5.DATA}}
      * */
-    public static final String USER_GIVE_GIFT_SUCCESS = "AfCNc1Y43ygsVXiVxgyyd1BsFNg_v6k1zXqrgLChahs";
+    public static final String USER_GIVE_GIFT_SUCCESS = "KnNPGUWE5AoTiZ0b4AUyY0muylaIK3dpUdA5rrW2LXI";
 
 
     /**
@@ -66,7 +66,7 @@ public class WeChatServiceNotifyTemplateIdConstants {
      * 温馨提醒
      * {{thing4.DATA}}
      * */
-    public static final String STAFF_NEW_ORDER = "na2EJEzJi9jqzBVfrj6IC18r7fItQAnzQ-U4qn1RQ4o";
+    public static final String STAFF_NEW_ORDER = "KnNPGUWE5AoTiZ0b4AUyY0muylaIK3dpUdA5rrW2LXI";
 
 
 }

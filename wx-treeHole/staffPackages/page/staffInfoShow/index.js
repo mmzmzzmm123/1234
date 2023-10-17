@@ -26,8 +26,8 @@ Page({
     refreshState: false, //下拉刷新状态
     giftList: app.globalData.giftList, // 礼物列表
     showGift: false, // 展示礼物状态
-    currentIndex: 1, // 当前tab数据
-    currentKey: "comment",
+    currentIndex: 0, // 当前tab数据
+    currentKey: "trends",
     tabs: [
       {
         key: "trends",

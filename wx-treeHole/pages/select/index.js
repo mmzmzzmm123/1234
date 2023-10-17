@@ -188,6 +188,17 @@ Page({
     let staffDataList = this.data.staffDataList;
     let bottomLoadState = this.data.bottomLoadState;
     if (bottomLoadState) {
+
+      for (let i = 0; i < staffDataList.length; i++) {
+        let oldObj = staffDataList[i];
+        for (let j = 0; j < data.length; j++) {
+          let newObj = data[j];
+          if(oldObj.userId == newObj.userId){
+            data.splice(j, 1);
+          }
+        }
+        
+      }
       for (let index in data) {
         staffDataList.push(data[index]);
       }
