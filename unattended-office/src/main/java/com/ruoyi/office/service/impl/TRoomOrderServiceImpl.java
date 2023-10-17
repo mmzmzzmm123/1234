@@ -1012,9 +1012,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     continue;
                 }
 
-                sendVxFinishMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, roomOrder, "订单已开始");
-                sendVxFinishMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, roomOrder, "订单已开始");
-                sendVxFinishMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, roomOrder, "订单已开始");
+//                sendVxBeginMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, roomOrder, "订单已开始");
+//                sendVxBeginMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, roomOrder, "订单已开始");
+//                sendVxBeginMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, roomOrder, "订单已开始");
 
 
                 TWxUser tWxUser = wxUserService.selectTWxUserById(tRoomOrder.getUserId());
