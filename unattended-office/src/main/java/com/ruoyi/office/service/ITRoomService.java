@@ -3,6 +3,7 @@ package com.ruoyi.office.service;
 import java.util.List;
 
 import com.ruoyi.office.domain.TRoom;
+import com.ruoyi.office.domain.vo.CleanerRoomOpenReq;
 import com.ruoyi.office.domain.vo.RoomEquipeOpenReq;
 
 /**
@@ -68,5 +69,9 @@ public interface ITRoomService {
 
     void closeRoomEquipment(RoomEquipeOpenReq req, Long userId);
 
-    void openCleanerRoomEquipment(RoomEquipeOpenReq req, Long userId);
+    void openCleanerRoomEquipment(CleanerRoomOpenReq req, Long userId);
+
+    void closeCleanerRoomEquipment(CleanerRoomOpenReq req, Long userId);
+
+    void openCleanerStore(CleanerRoomOpenReq req, Long userId);
 }

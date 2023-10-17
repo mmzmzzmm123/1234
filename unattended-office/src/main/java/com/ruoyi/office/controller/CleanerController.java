@@ -8,6 +8,7 @@ import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TRoomCleanRecord;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.CleanRecordH5Vo;
+import com.ruoyi.office.domain.vo.CleanerRoomOpenReq;
 import com.ruoyi.office.domain.vo.RoomEquipeOpenReq;
 import com.ruoyi.office.service.ITRoomCleanRecordService;
 import com.ruoyi.office.service.ITRoomService;
@@ -33,15 +34,15 @@ public class CleanerController extends BaseController {
 
 
     /**
-     * 开门禁
+     * 保洁开包厢
      *
-     * @param orderId
+     * @param req
      * @return
      */
-    @ApiOperation("开房间设备 门禁 door   电源： light,aircondition ")
-      //@PreAuthorize("@ss.hasRole('cleaner')")
+    @ApiOperation("保洁开包厢")
+//      @PreAuthorize("@ss.hasRole('cleaner') || @ss.hasStoreRole(#req.storeId, 'ad')")
     @PostMapping("/roomopen")
-    public AjaxResult openRoom(@RequestBody RoomEquipeOpenReq req) {
+    public AjaxResult openRoom(@RequestBody CleanerRoomOpenReq req) {
 
         Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
         try {
@@ -61,27 +62,104 @@ public class CleanerController extends BaseController {
             roomService.updateTRoom(room);
 
         } catch (Exception e) {
-            return AjaxResult.error("操作异常，请联系管理员：" + e.getMessage());
+            return AjaxResult.error(e.getMessage());
         }
 
         return AjaxResult.success();
     }
 
     /**
-     * 开门禁
+     * 保洁临时开包厢
      *
-     * @param orderId
+     * @param req
      * @return
      */
-    @ApiOperation("关房间设备 门禁 door   电源： light,aircondition ")
-      //@PreAuthorize("@ss.hasRole('cleaner')")
-    @PostMapping("/roomclose")
-    public AjaxResult closeRoom(@RequestBody RoomEquipeOpenReq req) {
+    @ApiOperation("保洁临时开包厢")
+//      @PreAuthorize("@ss.hasRole('cleaner') || @ss.hasStoreRole(#req.storeId, 'ad')")
+    @PostMapping("/roomopen/temp")
+    public AjaxResult openRoomTemporary(@RequestBody CleanerRoomOpenReq req) {
 
+        Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
         try {
-            roomService.closeRoomEquipment(req, SecurityUtils.getLoginUser().getWxUser().getUserId());
+            roomService.openCleanerRoomEquipment(req, userId);
         } catch (Exception e) {
-            return AjaxResult.error("操作异常，请联系管理员：" + e.getMessage());
+            return AjaxResult.error(e.getMessage());
+        }
+
+        return AjaxResult.success();
+    }
+
+    /**
+     * 保洁关包厢
+     *
+     * @param req
+     * @return
+     */
+    @ApiOperation("保洁关包厢")
+//      @PreAuthorize("@ss.hasRole('cleaner') || @ss.hasStoreRole(#req.storeId, 'ad')")
+    @PostMapping("/roomclose")
+    public AjaxResult roomclose(@RequestBody CleanerRoomOpenReq req) {
+
+        Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
+        try {
+            roomService.closeCleanerRoomEquipment(req, userId);
+
+            TRoomCleanRecord cleanRecord = new TRoomCleanRecord();
+            cleanRecord.setCreateBy(userId + "");
+            cleanRecord.setRoomId(req.getRoomId());
+            cleanRecord.setStartTime(new Date());
+            cleanRecord.setStatus(OfficeEnum.CleanRecordStatus.COMPLETE.getCode());
+            cleanRecordService.insertTRoomCleanRecord(cleanRecord);
+
+            TRoom room = new TRoom();
+            room.setId(req.getRoomId());
+            room.setStatus(OfficeEnum.RoomStatus.CAN_USE.getCode());
+            roomService.updateTRoom(room);
+
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+
+        return AjaxResult.success();
+    }
+
+    /**
+     * 保洁临时关包厢
+     *
+     * @param req
+     * @return
+     */
+    @ApiOperation("保洁临时关包厢")
+//      @PreAuthorize("@ss.hasRole('cleaner') || @ss.hasStoreRole(#req.storeId, 'ad')")
+    @PostMapping("/roomclose/temp")
+    public AjaxResult roomcloseTemporary(@RequestBody CleanerRoomOpenReq req) {
+
+        Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
+        try {
+            roomService.closeCleanerRoomEquipment(req, userId);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+
+        return AjaxResult.success();
+    }
+
+    /**
+     * 保洁开大门
+     *
+     * @param req
+     * @return
+     */
+    @ApiOperation("保洁开大门")
+//      @PreAuthorize("@ss.hasRole('cleaner') || @ss.hasStoreRole(#req.storeId, 'ad')")
+    @PostMapping("/storeopen")
+    public AjaxResult openStore(@RequestBody CleanerRoomOpenReq req) {
+
+        Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
+        try {
+            roomService.openCleanerStore(req, userId);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
         }
 
         return AjaxResult.success();
@@ -93,7 +171,7 @@ public class CleanerController extends BaseController {
     /**
      * 查询保洁员自己房间打扫记录列表
      */
-      //@PreAuthorize("@ss.hasRole('cleaner')")
+    //@PreAuthorize("@ss.hasRole('cleaner')")
     @GetMapping("/record")
     public TableDataInfo h5list(TRoomCleanRecord tRoomCleanRecord) {
        /* Long userId = SecurityUtils.getLoginUser().getWxUser().getId();
@@ -112,7 +190,7 @@ public class CleanerController extends BaseController {
      * 查询店铺房间列表
      */
     @ApiOperation("房间列表")
-      //@PreAuthorize("@ss.hasRole('cleaner')")
+    //@PreAuthorize("@ss.hasRole('cleaner')")
     @GetMapping("/room/list")
     public TableDataInfo list(TRoom tRoom) {
         startPage();
