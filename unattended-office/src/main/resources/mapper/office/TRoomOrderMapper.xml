@@ -80,7 +80,7 @@
     </select>
     <select id="selectConflictRoomPeriod" parameterType="PrepayReq" resultType="com.ruoyi.office.domain.TRoomOrder">
         <include refid="selectTRoomOrderVo"/>
-        where status =0
+        where status != 9
         and room_id =#{roomId}
         and ( (start_time &lt;= #{startTime} and end_time &gt;= #{startTime})
         or (start_time &lt; #{endTime} and end_time &gt; #{endTime}) )

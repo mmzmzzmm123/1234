@@ -199,12 +199,15 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     if (order.getTotalAmount().multiply(new BigDecimal(100)).intValue() != v3ResultAmount.getTotal().intValue()) {
                         throw new ServiceException("订单金额不一致");
                     }
-                    updateOrder.setPayAmount(new BigDecimal(v3ResultAmount.getPayerTotal()));
-                    updateOrder.setCouponAmount(order.getTotalAmount().multiply(new BigDecimal(100)).subtract(new BigDecimal(v3ResultAmount.getPayerTotal())));
+                    BigDecimal payAmt = new BigDecimal(v3ResultAmount.getPayerTotal() / 100);
+                    updateOrder.setPayAmount(payAmt);
+                    updateOrder.setCouponAmount(order.getTotalAmount().subtract(payAmt));
                 }
 
             }
             tRoomOrderMapper.updateTRoomOrder(updateOrder);
+
+
         } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.REFUND)) {
             throw new ServiceException("订单转入退款");
         } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.NOTPAY)) {
@@ -232,6 +235,11 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         try {
             sendVxMessage(wxuserid, order);
+            TRoom tRoom = roomService.selectTRoomById(order.getRoomId());
+            TStore tStore = storeService.selectTStoreById(tRoom.getStoreId());
+            sendVxMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, order, "已预约");
+            sendVxMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, order, "已预约");
+            sendVxMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, order, "已预约");
         } catch (Exception e) {
             throw new ServiceException("消息推送失败");
         }
@@ -420,10 +428,22 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TRoomOrder tRoomOrder = new TRoomOrder();
         BeanUtils.copyProperties(prepayReq, tRoomOrder);
+
+        Date endTime = DateUtils.addMinutes(prepayReq.getStartTime(), roomPackage.getMinutes().intValue());
+        // 改成分钟后订单时间冲突校验；
+        PrepayReq confQry = new PrepayReq();
+        confQry.setRoomId(roomPackage.getRoomId());
+        confQry.setStartTime(prepayReq.getStartTime());
+        confQry.setEndTime(endTime);
+        List<TRoomOrder> exOrders = tRoomOrderMapper.selectConflictRoomPeriod(confQry);
+        if (exOrders.size() > 0) {
+            throw new ServiceException("预约时间冲突");
+        }
+
         tRoomOrder.setRoomId(roomPackage.getRoomId());
         tRoomOrder.setStartTime(prepayReq.getStartTime());
 //        tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), (int) (roomPackage.getMinutes() / 60)));
-        tRoomOrder.setEndTime(DateUtils.addMinutes(prepayReq.getStartTime(), roomPackage.getMinutes().intValue()));
+        tRoomOrder.setEndTime(endTime);
         tRoomOrder.setRoomPackId(prepayReq.getPackId());
         tRoomOrder.setOrderType("房间小时套餐");
 
@@ -825,8 +845,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         update.setRemark(wxCallback);
 
         if (amt.getPayerTotal() != null && amt.getPayerTotal() != 0) {
-            update.setPayAmount(new BigDecimal(amt.getPayerTotal()));
-            update.setCouponAmount(new BigDecimal(amt.getTotal() - amt.getPayerTotal()));
+            BigDecimal payAmt = new BigDecimal(amt.getPayerTotal() / 100);
+            update.setPayAmount(payAmt);
+            update.setCouponAmount(roomOrder.getTotalAmount().subtract(payAmt));
         }
 
         tRoomOrderMapper.updateTRoomOrder(update);
@@ -996,6 +1017,11 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     continue;
                 }
 
+                sendVxMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, roomOrder, "订单已开始");
+                sendVxMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, roomOrder, "订单已开始");
+                sendVxMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, roomOrder, "订单已开始");
+
+
                 TWxUser tWxUser = wxUserService.selectTWxUserById(tRoomOrder.getUserId());
                 WxMaSubscribeMessage wxMaSubscribeMessage = new WxMaSubscribeMessage();
                 wxMaSubscribeMessage.setToUser(tWxUser.getOpenId());
@@ -1077,10 +1103,15 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 cleanRecord.setCreateTime(new Date());
                 cleanRecordService.insertTRoomCleanRecord(cleanRecord);
                 // 订单结束发送通知
-//                TStore tStore = itStoreService.selectTStoreById(room.getStoreId());
-//                //List<WxUser> wxUserList=wxUserService.selectRoomCleaner(room.getId());
+                TStore tStore = itStoreService.selectTStoreById(room.getStoreId());
+                //List<WxUser> wxUserList=wxUserService.selectRoomCleaner(room.getId());
+
+                sendVxMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, room, roomOrder, "已完成");
+                sendVxMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, room, roomOrder, "已完成");
+                sendVxMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, room, roomOrder, "已完成");
 //                if (wxUser.getMpOpenId() != null) {
-//                    sendVxMpMessage(wxUser.getMpOpenId(), tStore, room, roomOrder);
+////                    sendVxMpMessage(wxUser.getMpOpenId(), tStore, room, roomOrder);
+//
 //                }
 
                 continue;
@@ -1124,7 +1155,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Resource
     WxMpService wxMpService;
 
-    private void sendVxMpMessage(String mpOpenId, TStore tStore, TRoom tRoom, TRoomOrder tRoomOrder) {
+    private void sendVxMpMessage(String mpOpenId, TStore tStore, TRoom tRoom, TRoomOrder tRoomOrder, String sendMsg) {
         try {
 
             List<WxMpTemplateData> data = Arrays.asList(
@@ -1132,7 +1163,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     new WxMpTemplateData("thing22", tRoom.getName()),
                     new WxMpTemplateData("character_string6", tRoomOrder.getOrderNo().toString()),
                     new WxMpTemplateData("time16", DateUtils.parseDateToStr("yyyy-MM-dd HH:mm:ss", tRoomOrder.getEndTime())),
-                    new WxMpTemplateData("phrase14", "已完成")
+                    new WxMpTemplateData("phrase14", sendMsg)
             );
 
             WxMpTemplateMessage templateMessage = WxMpTemplateMessage.builder()
@@ -1221,6 +1252,17 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             }
         }
 
+        Date endTime = DateUtils.addMinutes(prepayReq.getStartTime(), storePromotion.getMaxMinute().intValue());
+        // 改成分钟后订单时间冲突校验；
+        PrepayReq confQry = new PrepayReq();
+        confQry.setRoomId(prepayReq.getRoomId());
+        confQry.setStartTime(prepayReq.getStartTime());
+        confQry.setEndTime(endTime);
+        List<TRoomOrder> exOrders = tRoomOrderMapper.selectConflictRoomPeriod(confQry);
+        if (exOrders.size() > 0) {
+            throw new ServiceException("预约时间冲突");
+        }
+
         int weekDay = prepayReq.getStartTime().getDay();
         if (weekDay == 0) weekDay = 7;
         if (!storePromotion.getWeekDays().contains(weekDay + "")) {
@@ -1237,7 +1279,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         TRoomOrder tRoomOrder = new TRoomOrder();
         BeanUtils.copyProperties(prepayReq, tRoomOrder);
 //        tRoomOrder.setEndTime(DateUtils.addHours(prepayReq.getStartTime(), storePromotion.getMaxMinute().intValue()));
-        tRoomOrder.setEndTime(DateUtils.addMinutes(prepayReq.getStartTime(), storePromotion.getMaxMinute().intValue()));// 改为分钟计时订单
+        tRoomOrder.setEndTime(endTime);// 改为分钟计时订单
         tRoomOrder.setUserId(userId);
         tRoomOrder.setPayType(OfficeEnum.PayType.WX_PAY.getCode());
 
