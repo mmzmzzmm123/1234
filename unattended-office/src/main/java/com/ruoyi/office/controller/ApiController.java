@@ -428,11 +428,11 @@ public class ApiController extends BaseController {
             String errMsg = roomService.openRoom(roomOrder.getRoomId());
             TRoomOrder upOrder = new TRoomOrder();
             upOrder.setId(orderId);
-            upOrder.setStatus(3);// 使用中
+            upOrder.setStatus(OfficeEnum.RoomOrderStatus.USING.getCode());// 3);// 使用中
             roomOrderService.updateTRoomOrder(upOrder);
             TRoom room = new TRoom();
             room.setId(roomOrder.getRoomId());
-            room.setStatus("3");// 使用中
+            room.setStatus(OfficeEnum.RoomStatus.IN_USE.getCode());// 使用中
             roomService.updateTRoom(room);
             if (StringUtils.isNotEmpty(errMsg)) {
                 return AjaxResult.error("操作异常，请联系管理员：" + errMsg);

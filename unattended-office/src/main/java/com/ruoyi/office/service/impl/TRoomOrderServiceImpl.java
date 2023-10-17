@@ -1031,6 +1031,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     /**
      * 订单结束提醒
      */
+    @Transactional
     @Override
     public void scanOrder() {
 
@@ -1063,7 +1064,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 // 更改房间状态清洁中
                 TRoom room = new TRoom();
                 room.setId(order.getRoomId());
-                room.setStatus(OfficeEnum.RoomStatus.IN_CLEAN.getInfo());//"2"); //0 可用 1 不可用 2 清洁中 3 使用中
+                room.setStatus(OfficeEnum.RoomStatus.IN_CLEAN.getCode());//"2"); //0 可用 1 不可用 2 清洁中 3 使用中
                 roomService.updateTRoom(room);
 
                 TWxUser wxUser = wxUserService.selectRoomCleaner(order.getRoomId());

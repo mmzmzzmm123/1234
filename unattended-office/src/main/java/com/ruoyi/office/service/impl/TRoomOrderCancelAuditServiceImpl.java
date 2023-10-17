@@ -144,7 +144,7 @@ public class TRoomOrderCancelAuditServiceImpl extends ServiceImpl<TRoomOrderCanc
 
             TRoomOrder updateOrder = new TRoomOrder();
             updateOrder.setId(roomOrders.get(0).getId());
-            updateOrder.setStatus(9); // 已取消
+            updateOrder.setStatus(OfficeEnum.RoomOrderStatus.CANCEL.getCode());//9); // 已取消
             roomOrderService.updateTRoomOrder(updateOrder);
 
             //  退还余额账户
@@ -212,7 +212,7 @@ public class TRoomOrderCancelAuditServiceImpl extends ServiceImpl<TRoomOrderCanc
                 roomOrder = roomOrderService.selectTRoomOrderList(roomOrder).get(0);
                 TRoomOrder updateOrder = new TRoomOrder();
                 updateOrder.setId(roomOrder.getId());
-                updateOrder.setStatus(9); // 已取消
+                updateOrder.setStatus(OfficeEnum.RoomOrderStatus.CANCEL.getCode());//9); // 已取消
                 roomOrderService.updateTRoomOrder(updateOrder);
 
             } catch (WxPayException e) {
