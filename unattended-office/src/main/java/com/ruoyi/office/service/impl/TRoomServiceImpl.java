@@ -552,24 +552,17 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         TStore store = storeService.selectTStoreById(req.getStoreId());
         Long equipId = store.getEquipId();
 
-
-        List<TEquipment> equipments = equipmentService.selectTEquipmentList(new TEquipment());
-
-        final Map<Long, TEquipment> equipmentMap = equipments.stream().collect(Collectors.toMap(TEquipment::getId, Function.identity()));
+        TEquipment currentEq = equipmentService.selectTEquipmentById(equipId);
+        if (currentEq == null) {
+            throw new ServiceException("未知的设备绑定");
+        }
 
         SysDictData dictData = new SysDictData();
         dictData.setDictType("equipment_type");
         Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
 
         MqttSendClient sendClient = new MqttSendClient();
-
-        TEquipment currentEq = equipmentMap.get(equipId);
-        if (currentEq == null) {
-            throw new ServiceException("未知的设备绑定");
-        }
-
         Map<String, String> msg = new HashMap<>();
-
         if (equipDict.containsKey(currentEq.getEquipType())) {
             String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
             msg.put(command[0], command[1]);
