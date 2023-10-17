@@ -853,18 +853,13 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         tRoomOrderMapper.updateTRoomOrder(update);
     }
 
-    @Autowired
-    ITRoomService itRoomService;
-    @Autowired
-    ITStoreService itStoreService;
-
     private void sendVxMessage(Long wxuserid, TRoomOrder tRoomOrder) {
         try {
             //todo定时任务检测商家订单到期
             TWxUser wxUser = wxUserService.selectTWxUserById(wxuserid);
 
-            TRoom tRoom = itRoomService.selectTRoomById(tRoomOrder.getRoomId());
-            TStore tStore = itStoreService.selectTStoreById(tRoom.getStoreId());
+            TRoom tRoom = roomService.selectTRoomById(tRoomOrder.getRoomId());
+            TStore tStore = storeService.selectTStoreById(tRoom.getStoreId());
             WxMaSubscribeMessage wxMaSubscribeMessage = new WxMaSubscribeMessage();
             wxMaSubscribeMessage.setToUser(wxUser.getOpenId());
             wxMaSubscribeMessage.setTemplateId("58BvI5jDnq61I9slOIIjf89J9ionC95R14eUJ9rQLWA");
@@ -1074,6 +1069,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TRoomOrder roomOrder = new TRoomOrder();
         roomOrder.setStatus(OfficeEnum.RoomOrderStatus.USING.getCode());
+//        roomOrder.setStatus(12);
 //        roomOrder.setOrderNo(292023101501l);
         List<TRoomOrder> roomOrderList = tRoomOrderMapper.selectTRoomOrderList(roomOrder);
         for (TRoomOrder order : roomOrderList) {
@@ -1093,7 +1089,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 room.setStatus(OfficeEnum.RoomStatus.IN_CLEAN.getCode());//"2"); //0 可用 1 不可用 2 清洁中 3 使用中
                 roomService.updateTRoom(room);
 
-                TWxUser wxUser = wxUserService.selectRoomCleaner(order.getRoomId());
+               /* TWxUser wxUser = wxUserService.selectRoomCleaner(order.getRoomId());
                 // 写待打扫记录
                 TRoomCleanRecord cleanRecord = new TRoomCleanRecord();
                 cleanRecord.setStatus(OfficeEnum.CleanRecordStatus.TOBE_CLEAN.getCode());
@@ -1101,14 +1097,15 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 cleanRecord.setWxUserId(wxUser.getId());
                 cleanRecord.setOrderNo(order.getRoomId() + new Date().getTime());
                 cleanRecord.setCreateTime(new Date());
-                cleanRecordService.insertTRoomCleanRecord(cleanRecord);
+                cleanRecordService.insertTRoomCleanRecord(cleanRecord);*/
                 // 订单结束发送通知
-                TStore tStore = itStoreService.selectTStoreById(room.getStoreId());
+                TRoom sendRoom = roomService.selectTRoomById(order.getRoomId());
+                TStore tStore = storeService.selectTStoreById(sendRoom.getStoreId());
                 //List<WxUser> wxUserList=wxUserService.selectRoomCleaner(room.getId());
 
-                sendVxMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, room, roomOrder, "已完成");
-                sendVxMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, room, roomOrder, "已完成");
-                sendVxMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, room, roomOrder, "已完成");
+                sendVxMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, sendRoom, order, "已完成");
+                sendVxMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, sendRoom, order, "已完成");
+                sendVxMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, sendRoom, order, "已完成");
 //                if (wxUser.getMpOpenId() != null) {
 ////                    sendVxMpMessage(wxUser.getMpOpenId(), tStore, room, roomOrder);
 //
@@ -1176,7 +1173,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             wxMpService.getTemplateMsgService().sendTemplateMsg(templateMessage);
 
         } catch (Exception e) {
-            System.out.println("Failed to send message: " + e.getMessage());
+            log.error("Failed to send message: " + e.getMessage());
         }
     }
 

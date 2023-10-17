@@ -101,11 +101,8 @@
         select wx.*
         from t_room r
                  left join t_store_user su on r.store_id = su.store_id
-                 left join sys_user_role ur on su.user_id = ur.user_id
-                 left join sys_role ro on ur.role_id = ro.role_id
-                 left join sys_user u on su.user_id = u.user_id
-                 left join t_wx_user wx on u.phonenumber = wx.phone
-        where ro.role_key = 'cleaner'
+                 left join t_wx_user wx on su.user_id =wx.id
+        where su.remark  like  '%cleaner%'
           and r.id = #{roomId}
     </select>
 
