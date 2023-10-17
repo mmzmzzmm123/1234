@@ -413,6 +413,10 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         }
         totalPrice = roomPackage.getPrice();
 
+        TRoom room = roomService.selectTRoomById(roomPackage.getRoomId());
+        if (OfficeEnum.RoomStatus.NO_USE.getCode().equalsIgnoreCase(room.getStatus())) {
+            throw new ServiceException("所选房间不可用");
+        }
 
         TRoomOrder tRoomOrder = new TRoomOrder();
         BeanUtils.copyProperties(prepayReq, tRoomOrder);
@@ -506,9 +510,6 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         } else if (prepayReq.getPayType() == OfficeEnum.PayType.CARD_BALANCE_PAY.getCode()) {  // 储值卡余额支付
             TWxUserAmount wxUserAmount = new TWxUserAmount();
             // 判断用户在商户下的余额是否足够；
-            long roomId = roomPackage.getRoomId();
-            TRoom room = roomService.selectTRoomById(roomId);
-
             wxUserAmount.setUserId(Long.parseLong(room.getCreateBy()));
             wxUserAmount.setWxUserId(tRoomOrder.getUserId());
             final List<TWxUserAmount> wxUserAmounts = wxUserAmountService.selectTWxUserAmountList(wxUserAmount);
@@ -1206,6 +1207,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         }
 
         TRoom room = roomService.selectTRoomById(prepayReq.getRoomId());
+        if (OfficeEnum.RoomStatus.NO_USE.getCode().equalsIgnoreCase(room.getStatus())) {
+            throw new ServiceException("所选房间不可用");
+        }
         if (room.getStoreId() != storePromotion.getStoreId()) {
             throw new ServiceException("优惠券不适用于该房间");
         }
