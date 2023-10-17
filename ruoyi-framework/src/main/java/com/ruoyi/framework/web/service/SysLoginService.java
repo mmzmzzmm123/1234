@@ -166,7 +166,7 @@ public class SysLoginService {
     public String wxMaLogin(WxLoginBody loginBody) {
         Authentication authentication = authenticationManager.authenticate(new WxAuthenticationToken(loginBody));
         WxLoginUser loginUser = (WxLoginUser) authentication.getPrincipal();
-        return tokenService.createWxToken(loginUser);
+        return tokenService.createToken(loginUser);
     }
 
     /**

@@ -1,9 +1,14 @@
 package com.ruoyi.office.domain;
 
+import com.ruoyi.common.core.domain.IStoreRole;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 商家店铺用户对象 t_store_user
@@ -57,7 +62,8 @@ public class TStoreUser extends BaseEntity
     {
         return storeId;
     }
-    public void setStatus(Long status) 
+
+    public void setStatus(Long status)
     {
         this.status = status;
     }

@@ -1,6 +1,9 @@
 package com.ruoyi.framework.web.service;
 
 import java.util.Set;
+
+import com.ruoyi.common.core.domain.IStoreRole;
+import com.ruoyi.common.core.domain.model.WxLoginUser;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import com.ruoyi.common.core.domain.entity.SysRole;
@@ -110,6 +113,26 @@ public class PermissionService
             String roleKey = sysRole.getRoleKey();
             if (SUPER_ADMIN.equals(roleKey) || roleKey.equals(StringUtils.trim(role)))
             {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean hasStoreRole(Long storeId, String role){
+        if(StringUtils.isEmpty(role)){
+            return false;
+        }
+        WxLoginUser loginUser = SecurityUtils.getWxLoginUser();
+        if(loginUser == null || CollectionUtils.isEmpty(loginUser.getStoreRoles())){
+            return false;
+        }
+        for(IStoreRole storeRole : loginUser.getStoreRoles()){
+            if(storeId == null){
+                if(storeRole.getRoles().contains(role)){
+                    return true;
+                }
+            }else if(storeId.equals(storeRole.getStoreId()) && storeRole.getRoles().contains(role)){
                 return true;
             }
         }

@@ -1,5 +1,6 @@
 package com.ruoyi.common.utils;
 
+import com.ruoyi.common.core.domain.model.WxLoginUser;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -67,6 +68,18 @@ public class SecurityUtils
         try
         {
             return (LoginUser) getAuthentication().getPrincipal();
+        }
+        catch (Exception e)
+        {
+            throw new ServiceException("获取用户信息异常", HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    public static WxLoginUser getWxLoginUser()
+    {
+        try
+        {
+            return (WxLoginUser) getAuthentication().getPrincipal();
         }
         catch (Exception e)
         {

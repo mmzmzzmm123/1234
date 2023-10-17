@@ -1,12 +1,12 @@
 package com.ruoyi.office.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import com.ruoyi.common.core.domain.IStoreRole;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.service.IStoreRoleService;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -16,6 +16,7 @@ import com.ruoyi.system.domain.SysUserRole;
 import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -30,7 +31,7 @@ import com.ruoyi.office.service.ITStoreUserService;
  * @date 2023-10-11
  */
 @Service
-public class TStoreUserServiceImpl extends ServiceImpl<TStoreUserMapper, TStoreUser> implements ITStoreUserService {
+public class TStoreUserServiceImpl extends ServiceImpl<TStoreUserMapper, TStoreUser> implements ITStoreUserService, IStoreRoleService {
     @Autowired
     private TStoreUserMapper tStoreUserMapper;
 
@@ -180,5 +181,27 @@ public class TStoreUserServiceImpl extends ServiceImpl<TStoreUserMapper, TStoreU
             su.setRoleName(roleName.substring(1));
         }
         return list;
+    }
+
+    @Override
+    public List<IStoreRole> getWxUserStoreRole(Long wxUserId) {
+        TStoreUser qry = new TStoreUser();
+        qry.setUserId(wxUserId);
+        List<IStoreRole> ret = new ArrayList<>();
+        for (TStoreUser storeUser :
+                tStoreUserMapper.selectTStoreUserList(qry)) {
+            StoreRole storeRole = new StoreRole();
+            storeRole.setStoreId(storeUser.getStoreId());
+            storeRole.setUserId(storeUser.getUserId());
+            storeRole.setRoles(Arrays.asList(storeUser.getRemark().split(",")));
+        }
+        return ret;
+    }
+
+    @Data
+    static class StoreRole implements IStoreRole{
+        Long userId;
+        Long storeId;
+        Collection<String> roles;
     }
 }
