@@ -2,6 +2,7 @@ package com.ruoyi.office.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.office.domain.TRoom;
+import com.ruoyi.office.domain.TRoomOrder;
 import com.ruoyi.office.domain.TRoomPackage;
 import com.ruoyi.office.domain.TRoomPrice;
 import lombok.Data;

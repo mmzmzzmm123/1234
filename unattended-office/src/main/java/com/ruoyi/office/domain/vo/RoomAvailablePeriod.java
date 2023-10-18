@@ -1,10 +1,10 @@
 package com.ruoyi.office.domain.vo;
 
+import com.ruoyi.office.domain.TRoomOrder;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class RoomAvailablePeriod {
@@ -14,4 +14,7 @@ public class RoomAvailablePeriod {
     private List<Integer> canNotUseList;
     // date+1 不可用时间段 跨天预约
     private List<Integer> canNotUseList2;
+
+    List<TRoomOrder> orderList;
+
 }

@@ -920,9 +920,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         return tRoomOrderMapper.deleteTRoomOrderById(id);
     }
 
-    @Override
+   /* @Override
     public RoomAvailablePeriod getAvailablePeriod(RoomAvailablePeriod vo) {
-        // 校验房间可用性？ 不可用前端就不要进入；
         // 计算可用时段
         Date orderDate = vo.getDate();
         Date orderDateAfter = DateUtils.addDays(orderDate, 1);
@@ -931,11 +930,36 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         qry.setStartTime(DateUtils.addDays(orderDate, -1)); // 订单有可能是昨天延续到今天的；
         List<TRoomOrder> roomOrderList = tRoomOrderMapper.selectTRoomOrderList(qry);
 
+        List<TRoomOrder> resList = new ArrayList<>();
+
+
+        vo.setOrderList(roomOrderList);
+        return vo;
+    }*/
+
+    @Override
+    public RoomAvailablePeriod getAvailablePeriod(RoomAvailablePeriod vo) {
+        // 校验房间可用性？ 不可用前端就不要进入；
+        // 计算可用时段
+        Date orderDate = vo.getDate();
+        Date orderDateAfter = DateUtils.addDays(orderDate, 1);
+        Date orderDateAfter2 = DateUtils.addDays(orderDate, 2);
+        TRoomOrder qry = new TRoomOrder();
+        qry.setRoomId(vo.getRoomId());
+        qry.setStartTime(DateUtils.addDays(orderDate, -1)); // 订单有可能是昨天延续到今天的；
+        List<TRoomOrder> roomOrderList = tRoomOrderMapper.selectTRoomOrderList(qry);
+        List<TRoomOrder> resList = new ArrayList<>();
         // 计算已占用时间
         List<Integer> orderDateHourList = new ArrayList<>();
         List<Integer> orderDateAfterHourList = new ArrayList<>();
 
         for (TRoomOrder roomOrder : roomOrderList) {
+            if (roomOrder.getStatus() == OfficeEnum.RoomOrderStatus.CANCEL.getCode()) {
+                continue;
+            }
+            if (!roomOrder.getStartTime().before(orderDate) && roomOrder.getStartTime().before(orderDateAfter2)) {
+                resList.add(roomOrder);
+            }
             Date orderSt = roomOrder.getStartTime();
             Date orderEnd = roomOrder.getEndTime();
             if (roomOrder.getStatus() == OfficeEnum.RoomOrderStatus.IDEAL.getCode() || roomOrder.getStatus() == OfficeEnum.RoomOrderStatus.CANCEL.getCode() || orderSt.after(orderDateAfter) || orderEnd.before(orderDate)) // 筛选包含orderDate和orderDate+1 日期的有效订单
@@ -958,7 +982,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         vo.setCanNotUseList(orderDateHourList);
         vo.setCanNotUseList2(orderDateAfterHourList);
-
+        vo.setOrderList(resList);
         return vo;
     }
 
