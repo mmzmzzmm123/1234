@@ -685,6 +685,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
 
             wxUserAmount.setAmount(totalPrice);
+            wxUserAmount.setCashAmount(new BigDecimal(0));
+            wxUserAmount.setWelfareAmount(new BigDecimal(0));
             // 扣除余额
             wxUserAmountService.minusCardValue(wxUserAmount);
 
