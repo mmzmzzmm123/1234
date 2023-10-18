@@ -536,7 +536,19 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             if (wxUserAmounts.size() == 0 || wxUserAmounts.get(0).getAmount().compareTo(totalPrice) == -1)
                 throw new ServiceException("储值卡余额不够，请充值后使用");
 
+            BigDecimal cashAmount = wxUserAmounts.get(0).getCashAmount();
+            BigDecimal welfareAmount = wxUserAmounts.get(0).getWelfareAmount();
             wxUserAmount.setAmount(totalPrice);
+
+            //本金足够
+            if (totalPrice.compareTo(cashAmount) == -1) {
+                wxUserAmount.setCashAmount(totalPrice);
+                wxUserAmount.setWelfareAmount(new BigDecimal(0));
+            } else {
+                //优先扣除本金
+                wxUserAmount.setCashAmount(cashAmount);
+                wxUserAmount.setWelfareAmount(totalPrice.subtract(cashAmount));
+            }
             // 扣除余额
             wxUserAmountService.minusCardValue(wxUserAmount);
 
@@ -681,8 +693,18 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             if (wxUserAmounts.size() == 0 || wxUserAmounts.get(0).getAmount().compareTo(totalPrice) == -1)
                 throw new ServiceException("储值卡余额不够，请充值后使用");
 
-
+            BigDecimal cashAmount = wxUserAmounts.get(0).getCashAmount();
+            BigDecimal welfareAmount = wxUserAmounts.get(0).getWelfareAmount();
             wxUserAmount.setAmount(totalPrice);
+            //本金足够
+            if (totalPrice.compareTo(cashAmount) == -1) {
+                wxUserAmount.setCashAmount(totalPrice);
+                wxUserAmount.setWelfareAmount(new BigDecimal(0));
+            } else {
+                //优先扣除本金
+                wxUserAmount.setCashAmount(cashAmount);
+                wxUserAmount.setWelfareAmount(totalPrice.subtract(cashAmount));
+            }
             // 扣除余额
             wxUserAmountService.minusCardValue(wxUserAmount);
 
