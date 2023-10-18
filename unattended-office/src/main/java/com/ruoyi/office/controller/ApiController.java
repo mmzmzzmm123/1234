@@ -1001,4 +1001,12 @@ public class ApiController extends BaseController {
         return null;
     }
 
+    @GetMapping("/store/{id}")
+    public AjaxResult getStoreInfo(@PathVariable("id") Long id) {
+        final TStore store = storeService.selectTStoreById(id);
+        TStore tStore = new TStore();
+        tStore.setName(store.getName());
+        return AjaxResult.success(tStore);
+    }
+
 }
