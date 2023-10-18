@@ -47,6 +47,8 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
         try {
             String openId = null, unionId = null, mpOpenId = null;
             if(wxMpService.getWxMpConfigStorage().getAppId().equals(loginBody.getAppId())){
+//                unionId = "o1BWs6GDb1moZ-ZaZ3akmtu34f_8";
+//                mpOpenId = "oNosp6iNzApsGyyEOq9mJ1dNngps";
                 WxOAuth2AccessToken token = wxMpService.getOAuth2Service().getAccessToken(loginBody.getCode());
                 mpOpenId = token.getOpenId();
                 unionId = token.getUnionId();

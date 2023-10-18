@@ -33,6 +33,7 @@ function HttpClient(option){
 	this.loginPage = option.loginPage
 	this.loginHandler = option.loginHandler
 	this.appName = option.appName
+	this.appId = option.appId
 	this.token = uni.getStorageSync('token')
 	this.tokenTask = null
 }
@@ -107,12 +108,11 @@ HttpClient.prototype.request = function(url, data, showLoading, method, hideErro
 
 HttpClient.prototype.getToken = function(param){
 	this.token = ''
-	// #ifdef H5
-	const getTokenUrl = 'login'
-	// #endif
-	// #ifdef MP-WEIXIN
-	const getTokenUrl = 'wxLogin'
-	// #endif
+	let getTokenUrl = 'login'
+	if(param.code){
+		getTokenUrl = 'wxLogin'
+		param.appId = this.appId
+	}
 	this.tokenTask = this.request(getTokenUrl, param).then((auth)=>{
 		this.token = 'Bearer ' + auth.token
 		uni.setStorage({

@@ -3,6 +3,7 @@ package com.ruoyi.common.core.domain.model;
 import java.util.Collection;
 import java.util.Set;
 
+import com.ruoyi.common.core.domain.IStoreRole;
 import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.utils.StringUtils;
 import org.springframework.security.core.GrantedAuthority;
@@ -68,25 +69,27 @@ public class LoginUser implements UserDetails {
      */
     private Set<String> permissions;
 
+    private Collection<IStoreRole> storeRoles;
+
     /**
      * 用户信息
      */
     private SysUser user;
 
-    public Long getUserId() {
-        return userId;
-    }
+    private WxUser wxUser;
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public Long getUserId() {
+        if(user == null){
+            return null;
+        }
+        return user.getUserId();
     }
 
     public Long getDeptId() {
-        return deptId;
-    }
-
-    public void setDeptId(Long deptId) {
-        this.deptId = deptId;
+        if(user == null){
+            return  null;
+        }
+        return user.getDeptId();
     }
 
     public String getToken() {
@@ -109,6 +112,17 @@ public class LoginUser implements UserDetails {
         this.userId = userId;
         this.deptId = deptId;
         this.user = user;
+        this.permissions = permissions;
+    }
+
+    public LoginUser(SysUser sysUser, WxUser user, Set<String> permissions, Collection<IStoreRole> storeRoles) {
+        if(sysUser != null){
+            this.userId = sysUser.getUserId();
+            this.deptId = sysUser.getDeptId();
+            this.user = sysUser;
+        }
+        this.wxUser = user;
+        this.storeRoles = storeRoles;
         this.permissions = permissions;
     }
 
@@ -224,16 +238,36 @@ public class LoginUser implements UserDetails {
         this.permissions = permissions;
     }
 
+    public Collection<IStoreRole> getStoreRoles(){
+        return storeRoles;
+    }
+
+    public void setStoreRoles(Collection<IStoreRole> storeRoles){
+        this.storeRoles = storeRoles;
+    }
+
     public SysUser getUser() {
         return user;
     }
 
-    public WxUser getWxUser() {
-        return null;
-    }
-
     public void setUser(SysUser user) {
         this.user = user;
+    }
+
+    public WxUser getWxUser() {
+        return wxUser;
+    }
+
+    public void setWxUser(WxUser wxUser){
+        this.wxUser = wxUser;
+    }
+
+    public String getOpenId(){
+        return wxUser.getOpenId();
+    }
+
+    public String getUnionId(){
+        return wxUser.getUnionId();
     }
 
     @Override

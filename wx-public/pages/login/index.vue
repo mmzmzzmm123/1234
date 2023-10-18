@@ -54,7 +54,7 @@
 				}
 			}
 		},
-		onLoad() {
+		onLoad(options) {
 			this.getCaptchaImage()
 		},
 		onReady() {
@@ -64,10 +64,8 @@
 			onBindClick(){
 				this.$refs.loginForm.validate().then(res=>{
 					this.$store.dispatch("login", this.loginParam).then(()=>{
-						this.$store.dispatch("getUserInfo").then(()=>{
-							uni.reLaunch({
-								url: '/pages/index/index'
-							})
+						uni.reLaunch({
+							url: '/pages/index/index'
 						})
 					}).catch(this.getCaptchaImage)
 				}).catch(res=>{

@@ -3,7 +3,7 @@
 		<view class="top">
 			<uo-select :options="storeList" value-field="id" mode="top" :value="currentStore.id"
 				@change="onStoreChange"></uo-select>
-			<view style="width: 140rpx;">
+			<view style="width: 140rpx;" v-if="loginUser.userId">
 				<u-button size="mini" @click="toManager">切换角色</u-button>
 			</view>
 		</view>
@@ -85,6 +85,9 @@
 			},
 			roomStatus() {
 				return this.$store.state.dicts.room_status
+			},
+			loginUser(){
+				return this.$store.state.loginUser
 			}
 		},
 		onLoad() {

@@ -2,8 +2,6 @@ package com.ruoyi.framework.web.service;
 
 import com.ruoyi.common.core.domain.IStoreRole;
 import com.ruoyi.common.core.domain.entity.WxUser;
-import com.ruoyi.common.core.domain.model.WxLoginUser;
-import com.ruoyi.common.core.service.IStoreRoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,9 +39,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private SysPermissionService permissionService;
 
-    @Autowired
-    private IStoreRoleService storeRoleService;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SysUser user = userService.selectUserByUserName(username);
@@ -69,12 +64,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetails createWxLoginUser(WxUser user) {
         Set<String> perms = new HashSet<>();
+        SysUser sysUser = null;
         if (user.getUserId() != null && user.getUserId() != 0) {
-            final SysUser sysUser = userService.selectUserById(user.getUserId());
+            sysUser = userService.selectUserById(user.getUserId());
             perms = permissionService.getMenuPermission(sysUser);
         }
-        Collection<IStoreRole> storeRoles = storeRoleService.getWxUserStoreRole(user.getId());
-//        return new WxLoginUser(user.getAppId(), user.getUnionId(), user, permissionService.getMenuPermission(user));
-        return new WxLoginUser(user, perms, storeRoles);
+        Collection<IStoreRole> storeRoles = permissionService.getStoreRoles(user);
+        return new LoginUser(sysUser, user, perms, storeRoles);
     }
 }

@@ -17,7 +17,7 @@ try{
 }
 
 // 需要永久存储，且下次APP启动需要取出的，在state中的变量名
-let saveStateKeys = ['loginUser', 'currentStore'];
+let saveStateKeys = ['loginUser', 'currentStore', 'wxUser'];
 
 // 保存变量到本地存储中
 const saveLifeData = function(key, value){
@@ -34,17 +34,14 @@ const saveLifeData = function(key, value){
 const store = new Vuex.Store({
 	state: {
 		// 如果上面从本地获取的lifeData对象下有对应的属性，就赋值给state中对应的变量
-		hasLogin: false,
 		loginUser: lifeData.loginUser ? lifeData.loginUser : {},
-		roles: lifeData.roles ? lifeData.roles : [],
-		currentStore: lifeData.currentStore ? lifeData.currentStore : {name: '当前店铺'},
+		currentStore: lifeData.currentStore ? lifeData.currentStore : {id: 0, name: '暂无门店'},
 		storeList: [],
-		dicts: {}
+		dicts: {},
+		storeRoles: [],
+		wxUser: lifeData.wxUser ? lifeData.wxUser : null
 	},
 	mutations: {
-		setCanLocation(state, value){
-			state.canLocation = value
-		},
 		$uStore(state, payload) {
 			// 判断是否多层级调用，state中为对象存在的情况，诸如user.info.score = 1
 			let nameArr = payload.name.split('.');
@@ -69,13 +66,11 @@ const store = new Vuex.Store({
 	actions: {
 		login({state, dispatch}, para){
 			return Api.api.login(para).then(()=>{
-				state.hasLogin = true
 				return dispatch("getUserInfo")
 			})
 		},
 		logout({state}){
 			return Api.api.logout().then(()=>{
-				state.hasLogin = false
 				state.loginUser = {}
 				lifeData["loginUser"] = {}
 				uni.setStorage({
@@ -86,9 +81,19 @@ const store = new Vuex.Store({
 		},
 		getUserInfo({state}){
 			return Api.api.getUserInfo().then(res=>{
-				state.hasLogin = true
-				state.loginUser = res.user
-				lifeData["loginUser"] = res.user
+				if(res.user){
+					state.loginUser = res.user
+					lifeData["loginUser"] = res.user
+				}else{
+					state.loginUser = {}
+					lifeData['loginUser'] = {}
+				}
+				state.wxUser = res.wxUser
+				lifeData['wxUser'] = res.wxUser
+				state.storeRoles = res.storeRoles
+				if(!state.storeRoles.length || !state.loginUser.userId){
+					return
+				}
 				Api.api.getStoreList().then(res=>{
 					state.storeList = res.rows
 					const currentStoreId = state.currentStore ? state.currentStore.id : 0

@@ -4,10 +4,13 @@ import {
 } from "@/common/config.js"
 var i18n
 
+function toLogin(){
+	location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxec3fc9831532aa21&redirect_uri=https://5d9o815864.goho.co/pages/login/mp-login&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect'
+}
 const client = new HttpClient({
 	baseApiUrl: BaseApiUrl + '/',
-	appName: 'merchant',
-	loginPage: '/pages/login/index'
+	appId: 'wxec3fc9831532aa21',
+	loginHandler: toLogin
 })
 
 function request(url, data, showLoading, method, hideError) {
@@ -23,6 +26,7 @@ function get(url, data, showLoading, hideError) {
 }
 
 const api = {
+	toLogin,
 	login(param) {
 		return client.getToken(param)
 	},
@@ -30,6 +34,9 @@ const api = {
 		return post('logout').then(res=>{
 			client.token = ''
 		})
+	},
+	bindMerchant(param){
+		return post('binding', param)
 	},
 	getUserInfo() {
 		return get('getInfo')

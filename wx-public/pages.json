@@ -21,6 +21,20 @@
 			}
 		},
 		{
+			"path": "pages/login/mp-login",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "登录中"
+			}
+		},
+		{
+			"path": "pages/login/bind-merchant",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "绑定商家账号"
+			}
+		},
+		{
 			"path": "pages/store/store-list/index",
 			"style": {
 				"navigationBarTitleText": "门店管理"

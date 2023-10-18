@@ -5,7 +5,6 @@ import javax.annotation.Resource;
 import com.ruoyi.common.config.WxMaServiceUtil;
 import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
-import com.ruoyi.common.core.domain.model.WxLoginUser;
 import com.ruoyi.framework.security.authentication.WxAuthenticationToken;
 import com.ruoyi.office.domain.vo.MerchantBindingReq;
 import com.ruoyi.office.mapper.WxUserMapper;
@@ -21,7 +20,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
@@ -69,10 +67,13 @@ public class SysLoginService {
     private ISysUserService userService;
 
     @Autowired
-    private WxUserMapper userMapper;
+    private WxUserMapper wxUserMapper;
 
     @Autowired
     private ISysConfigService configService;
+
+    @Autowired
+    private SysPasswordService passwordService;
 
     /**
      * 登录验证
@@ -122,50 +123,28 @@ public class SysLoginService {
      * @param uuid     唯一标识
      * @return 结果
      */
-    public String binding(MerchantBindingReq bindingReq, LoginUser oldLoginUser) {
-        String username = bindingReq.getUserName();
-        String password = bindingReq.getPwd();
-        // 登录前置校验
-        loginPreCheck(username, password);
-        // 用户验证
-        Authentication authentication = null;
-        try {
-            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-            AuthenticationContextHolder.setContext(authenticationToken);
-            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
-            authentication = authenticationManager.authenticate(authenticationToken);
-        } catch (Exception e) {
-            if (e instanceof BadCredentialsException) {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
-                throw new UserPasswordNotMatchException();
-            } else {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
-                throw new ServiceException(e.getMessage());
-            }
-        } finally {
-            AuthenticationContextHolder.clearContext();
+    public void binding(MerchantBindingReq bindingReq, LoginUser loginUser) {
+        loginPreCheck(bindingReq.getUserName(), bindingReq.getPwd());
+        SysUser sysUser = userService.selectUserByUserName(bindingReq.getUserName());
+        if(sysUser == null){
+            throw new UserNotExistsException();
         }
-        AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.binding")));
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-        WxUser wxUser = new WxUser();
-        wxUser.setUserId(loginUser.getUserId());
-        wxUser.setOpenId(bindingReq.getOpenId());
+        if(!passwordService.matches(sysUser, bindingReq.getPwd())){
+            throw new UserPasswordNotMatchException();
+        }
+        WxUser wxUser = loginUser.getWxUser();
+        wxUser.setUserId(sysUser.getUserId());
         wxUser.setUserType("merchant");
-        userMapper.binding(wxUser);
-
-        Set<String> perms = new HashSet<>();
-        final SysUser sysUser = userService.selectUserById(loginUser.getUserId());
-        perms = permissionService.getMenuPermission(sysUser);
-        oldLoginUser.setPermissions(perms);
-        oldLoginUser.getWxUser().setUserId(loginUser.getUserId());
-        tokenService.refreshToken(oldLoginUser);
-        // 生成token
-        return tokenService.createToken(loginUser);
+        wxUserMapper.binding(wxUser);
+        loginUser.setUser(sysUser);
+        loginUser.setPermissions(permissionService.getRolePermission(sysUser));
+        loginUser.setStoreRoles(permissionService.getStoreRoles(wxUser));
+        tokenService.refreshToken(loginUser);
     }
 
     public String wxMaLogin(WxLoginBody loginBody) {
         Authentication authentication = authenticationManager.authenticate(new WxAuthenticationToken(loginBody));
-        WxLoginUser loginUser = (WxLoginUser) authentication.getPrincipal();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         return tokenService.createToken(loginUser);
     }
 

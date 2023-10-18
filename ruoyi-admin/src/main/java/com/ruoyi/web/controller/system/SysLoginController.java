@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.domain.entity.WxUser;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.uuid.IdUtils;
@@ -81,15 +82,22 @@ public class SysLoginController {
      */
     @GetMapping("getInfo")
     public AjaxResult getInfo() {
-        SysUser user = SecurityUtils.getLoginUser().getUser();
-        // 角色集合
-        Set<String> roles = permissionService.getRolePermission(user);
-        // 权限集合
-        Set<String> permissions = permissionService.getMenuPermission(user);
+        LoginUser loginUser = SecurityUtils.getLoginUser();
         AjaxResult ajax = AjaxResult.success();
-        ajax.put("user", user);
-        ajax.put("roles", roles);
-        ajax.put("permissions", permissions);
+        if(loginUser.getUser() != null){
+            SysUser user  = loginUser.getUser();
+            ajax.put("user", user);
+            // 角色集合
+            Set<String> roles = permissionService.getRolePermission(user);
+            ajax.put("roles", roles);
+            // 权限集合
+            Set<String> permissions = permissionService.getMenuPermission(user);
+            ajax.put("permissions", permissions);
+        }
+        if(loginUser.getWxUser() != null){
+            ajax.put("wxUser", loginUser.getWxUser());
+            ajax.put("storeRoles", permissionService.getStoreRoles(loginUser.getWxUser()));
+        }
         return ajax;
     }
 
@@ -114,13 +122,7 @@ public class SysLoginController {
     @ApiOperation("商家小程序绑定后台账号")
     @PostMapping("/binding")
     public AjaxResult binding(@RequestBody MerchantBindingReq bindingReq) {
-
-        AjaxResult ajax = AjaxResult.success();
-        final WxUser wxUser = SecurityUtils.getLoginUser().getWxUser();
-        bindingReq.setOpenId(wxUser.getOpenId());
-        // 生成令牌
-        String token = loginService.binding(bindingReq, SecurityUtils.getLoginUser());
-        ajax.put(Constants.TOKEN, token);
-        return ajax;
+        loginService.binding(bindingReq, SecurityUtils.getLoginUser());
+        return AjaxResult.success();
     }
 }

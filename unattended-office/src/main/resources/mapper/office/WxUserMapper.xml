@@ -116,7 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <update id="binding" parameterType="WxUser">
-        update t_wx_user set user_id = #{userId}, user_type = #{userType} where open_id = #{openId}
+        update t_wx_user set user_id = #{userId}, user_type = #{userType} where union_id = #{unionId}
     </update>
 
     <delete id="deleteWxUserById" parameterType="Long">

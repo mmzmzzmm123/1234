@@ -3,7 +3,6 @@ package com.ruoyi.framework.web.service;
 import java.util.Set;
 
 import com.ruoyi.common.core.domain.IStoreRole;
-import com.ruoyi.common.core.domain.model.WxLoginUser;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import com.ruoyi.common.core.domain.entity.SysRole;
@@ -123,7 +122,7 @@ public class PermissionService
         if(StringUtils.isEmpty(role)){
             return false;
         }
-        WxLoginUser loginUser = SecurityUtils.getWxLoginUser();
+        LoginUser loginUser = SecurityUtils.getLoginUser();
         if(loginUser == null || CollectionUtils.isEmpty(loginUser.getStoreRoles())){
             return false;
         }
