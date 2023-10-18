@@ -1,6 +1,20 @@
 <template>
 	<view>
 		<view class="card">
+			<view>
+				<text>预约门店：</text>
+				<text style="color: #000;">{{storeInfo.name}}</text>
+			</view>
+			<view class="u-p-v-10">
+				<text>预约包间：</text>
+				<text style="color: #000;">{{roomInfo.name}}</text>
+			</view>
+			<view>
+				<text>包间状态：</text>
+				<text style="color: #000;">{{roomStatusDesc}}</text>
+			</view>
+		</view>
+		<view class="card">
 			<block v-if="isPackagePay">
 				<view class="price-title">选择套餐</view>
 				<view v-for="price in roomInfo.packageList" :key="price.id"
@@ -78,12 +92,13 @@
 		<u-datetime-picker :value="order.endTime" :min-date="minDate" :max-date="maxDate" :show="endShow" :formatter="timeFormatter"
 			@close="onClosePicker(false)" @cancel="onClosePicker(false)" @confirm="onConfirmPicker(false,$event)"></u-datetime-picker>
 		
+		<view style="height: 100rpx;"></view>
 		<pay-bar v-model="payShow" :amount="amount" :storeId="roomInfo.storeId" @prepareOrder="onPrepareOrder" @success="onOrderSuccess"></pay-bar>
 	</view>
 </template>
 
 <script>
-	const WEEKDAYS = ['', '周一', '周二', '周三', '周四', '周五', '周六', '周日']
+	const WEEKDAYS = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 	import HourStatusLegend from "../../../components/hour-status-bar/hour-status-legend"
 	export default {
 		components: {HourStatusLegend},
@@ -111,6 +126,9 @@
 				currentPromotion: {},
 				
 				dayOptions: this.getDayOptions(),
+				storeInfo: {
+					name: '...'
+				}
 			}
 		},
 		computed:{
@@ -124,6 +142,18 @@
 					}
 				}
 				return 0
+			},
+			roomStatusDesc(){
+				let desc = ''
+				if(this.roomInfo){
+					if(this.roomInfo.status){
+						desc = this.roomInfo.status
+					}
+					if(this.roomInfo.estEndTime){
+						desc += ' ' + this.roomInfo.estEndTime.substr(11, 5) + '结束'
+					}
+				}
+				return desc
 			}
 		},
 		onLoad(options) {
@@ -133,8 +163,11 @@
 						this.onAcceptRoom(res.rows[0])
 					}
 				})
-			}else{
-				this.getOpenerEventChannel().on('acceptRoom', this.onAcceptRoom)
+			}else {
+				const eventChannel = this.getOpenerEventChannel()
+				if(eventChannel){
+					eventChannel.on('acceptRoom', this.onAcceptRoom)
+				}
 			}
 		},
 		methods: {
@@ -146,6 +179,7 @@
 				}else{
 					this.updateHourStatus()
 				}
+				this.$api.getSimpleStore(roomInfo.storeId).then(storeInfo=>this.storeInfo = storeInfo)
 				this.$api.getPromotionList({storeId: roomInfo.storeId}).then(res=>{
 					this.promotionList = res.rows
 				})
@@ -438,6 +472,7 @@
 		padding: 20rpx;
 		border-radius: 10rpx;
 		background: #fff;
+		color: $u-main-color;
 	}
 	.price-bar{
 		color: $u-bright;

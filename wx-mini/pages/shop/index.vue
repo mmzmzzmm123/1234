@@ -25,7 +25,7 @@
 		</view> -->
 		<view class="shop">
 			<view class="shop-info shop-name">{{shopInfo.name}}</view>
-			<view class="shop-desc">
+			<view v-if="shopInfo.remark" class="shop-desc">
 				{{shopInfo.remark}}
 			</view>
 			<view class="shop-info">
@@ -65,9 +65,12 @@
 		},
 		onLoad(option) {
 			if(option.scene){
-				this.$api.getStoreById(option.scene).then(this.acceptShop)
+				this.$api.getSimpleStore(option.scene).then(this.acceptShop)
 			}else{
-				this.getOpenerEventChannel().on('acceptShop', this.acceptShop)
+				const eventChannel = this.getOpenerEventChannel()
+				if(eventChannel){
+					eventChannel.on('acceptShop', this.acceptShop)
+				}
 			}
 		},
 		methods: {

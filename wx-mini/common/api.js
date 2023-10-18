@@ -66,6 +66,9 @@ const api = {
 			return null
 		})
 	},
+	getSimpleStore(id){
+		return get('office/api/simpleStore/' + id)
+	},
 	getRoomList(param){
 		return get('office/api/room/list', param).then(res=>{
 			res.rows.forEach(x=>{
