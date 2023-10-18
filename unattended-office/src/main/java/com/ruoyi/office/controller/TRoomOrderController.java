@@ -10,6 +10,7 @@ import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.*;
+import com.ruoyi.office.service.IBusinessAnalysisService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,8 @@ public class TRoomOrderController extends BaseController {
     @Autowired
     private ITRoomOrderService tRoomOrderService;
 
+    @Autowired
+    IBusinessAnalysisService iBusinessAnalysisService;
     /**
      * 查询房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）列表
      */
@@ -209,4 +212,14 @@ public class TRoomOrderController extends BaseController {
         return toAjax(tRoomOrderService.order4Guest(tRoomOrder));
     }
 
+
+
+    @ApiOperation("营收总览")
+    @GetMapping("/businessAnalysis")
+    public AjaxResult businessAnalysis() {
+        Long userId = SecurityUtils.getLoginUser().getUserId();
+        BusinessAnalysisH5Vo businessAnalysisH5Vo = iBusinessAnalysisService.getBusinessAnalysis(userId);
+
+        return success(businessAnalysisH5Vo);
+    }
 }
