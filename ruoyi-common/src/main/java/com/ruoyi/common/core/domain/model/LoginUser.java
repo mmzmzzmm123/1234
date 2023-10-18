@@ -263,10 +263,16 @@ public class LoginUser implements UserDetails {
     }
 
     public String getOpenId(){
+        if(wxUser == null){
+            return null;
+        }
         return wxUser.getOpenId();
     }
 
     public String getUnionId(){
+        if(wxUser == null){
+            return null;
+        }
         return wxUser.getUnionId();
     }
 
