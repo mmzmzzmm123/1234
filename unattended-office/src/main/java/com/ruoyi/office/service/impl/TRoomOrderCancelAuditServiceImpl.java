@@ -156,8 +156,8 @@ public class TRoomOrderCancelAuditServiceImpl extends ServiceImpl<TRoomOrderCanc
             wxUserAmount.setUserId(Long.parseLong(room.getCreateBy()));
             wxUserAmount.setWxUserId(roomOrders.get(0).getUserId());
             wxUserAmount.setAmount(roomOrders.get(0).getPayAmount().negate());
-            wxUserAmount.setCashAmount(new BigDecimal(0));
-            wxUserAmount.setWelfareAmount(new BigDecimal(0));
+//            wxUserAmount.setCashAmount(new BigDecimal(0)); 此功能暂时没用，需要时记得区分充值支付余额与赠送余额分开处理
+//            wxUserAmount.setWelfareAmount(new BigDecimal(0));
             // 扣除余额
             wxUserAmountService.minusCardValue(wxUserAmount);
 
