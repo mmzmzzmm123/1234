@@ -537,6 +537,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 throw new ServiceException("储值卡余额不够，请充值后使用");
 
             wxUserAmount.setAmount(totalPrice);
+            wxUserAmount.setCashAmount(new BigDecimal(0));
+            wxUserAmount.setWelfareAmount(new BigDecimal(0));
             // 扣除余额
             wxUserAmountService.minusCardValue(wxUserAmount);
 
