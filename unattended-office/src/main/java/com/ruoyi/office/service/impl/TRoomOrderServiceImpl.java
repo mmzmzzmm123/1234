@@ -958,7 +958,10 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 continue;
             }
             if (!roomOrder.getStartTime().before(orderDate) && roomOrder.getStartTime().before(orderDateAfter2)) {
-                resList.add(roomOrder);
+                TRoomOrder temp = new TRoomOrder();
+                temp.setStartTime(roomOrder.getStartTime());
+                temp.setEndTime(roomOrder.getEndTime());
+                resList.add(temp);
             }
             Date orderSt = roomOrder.getStartTime();
             Date orderEnd = roomOrder.getEndTime();
