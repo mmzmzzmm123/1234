@@ -1,5 +1,5 @@
 {
-    "name" : "unattended-office",
+    "name" : "十三将商家中心",
     "appid" : "__UNI__BE74765",
     "description" : "多平台快速开发的UI框架",
     "versionName" : "1.8.4",
@@ -133,18 +133,21 @@
         "appid" : ""
     },
     "h5" : {
-		"devServer" : {
-		    "port" : "18081",
-		    "disableHostCheck" : true,
-		    "proxy" : {
-		        "/api" : {
-		            "target" : "http://localhost:18080",
-		            "changeOrigin" : true,
-		            "pathRewrite" : {
-		                "^/api" : ""
-		            }
-		        }
-		    }
-		}
-	}
+        "devServer" : {
+            "port" : 18081,
+            "disableHostCheck" : true,
+            "proxy" : {
+                "/api" : {
+                    "target" : "http://localhost:18080",
+                    "changeOrigin" : true,
+                    "pathRewrite" : {
+                        "^/api" : ""
+                    }
+                }
+            }
+        },
+        "router" : {
+            "mode" : "history"
+        }
+    }
 }
