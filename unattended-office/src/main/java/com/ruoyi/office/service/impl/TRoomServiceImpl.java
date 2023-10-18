@@ -21,6 +21,7 @@ import com.ruoyi.office.horn.HornConfig;
 import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.service.ITEquipmentService;
 import com.ruoyi.office.service.ITStoreService;
+import com.ruoyi.office.util.WxMsgSender;
 import com.ruoyi.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -165,6 +166,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
             }
         }
+
         return errMsg.toString();
     }
 

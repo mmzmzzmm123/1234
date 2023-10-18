@@ -23,6 +23,11 @@
 			<u-icon name="map" custom-style="margin-right:10rpx" size="32rpx"></u-icon>
 			<text @click="toMap">{{orderInfo.storeAdress}}</text>
 		</view>
+		<view class="order-cell_info">
+			<view style="flex: 1;text-align: right;">
+				<text class="pay-type-label">{{orderInfo.orderStatus}}</text>
+			</view>
+		</view>
 		<view v-if="showBtn" class="btn-bar">
 			<block v-if="orderInfo.status == 2 || orderInfo.status == 3">
 				<!-- <view class="btn-bar_btn" @click="onOpenStore">开大门</view> -->
@@ -39,7 +44,7 @@
 		props: {
 			orderInfo: {
 				type: Object,
-				default(){
+				default () {
 					return {}
 				}
 			},
@@ -50,27 +55,27 @@
 		},
 		data() {
 			return {
-				payTypeList:[null, "微信支付", "余额支付", null, "优惠券支付"]
+				payTypeList: [null, "微信支付", "余额支付", null, "优惠券支付"]
 			}
 		},
-		computed:{
-			canOpen(){
-				if(this.orderInfo){
+		computed: {
+			canOpen() {
+				if (this.orderInfo) {
 					return Date.fromString(this.orderInfo.endTime).getTime() + 5 * 60 * 1000 > Date.now()
 				}
 				return false
 			}
 		},
 		created() {
-	
+
 		},
 		methods: {
-			makePhoneCall(){
+			makePhoneCall() {
 				uni.makePhoneCall({
 					phoneNumber: this.orderInfo.phone
 				})
 			},
-			toMap(){
+			toMap() {
 				uni.openLocation({
 					latitude: new Number(this.orderInfo.latitude),
 					longitude: new Number(this.orderInfo.longitude),
@@ -80,23 +85,23 @@
 					}
 				})
 			},
-			onOpenStore(){
-				this.$api.openStore(this.orderInfo.storeId).then(()=>{
+			onOpenStore() {
+				this.$api.openStore(this.orderInfo.storeId).then(() => {
 					uni.showToast({
 						icon: "none",
 						title: "已发送开大门请求"
 					})
 				})
 			},
-			onOpenRoom(){
-				this.$api.openRoom(this.orderInfo.id).then(()=>{
+			onOpenRoom() {
+				this.$api.openRoom(this.orderInfo.id).then(() => {
 					uni.showToast({
 						icon: "none",
 						title: "已发送开包厢请求"
 					})
 				})
 			},
-			onPayOrder(){
+			onPayOrder() {
 				this.$emit('payOrder', this.orderInfo)
 			}
 		}
@@ -104,29 +109,33 @@
 </script>
 
 <style lang="scss">
-	.order-cell{
+	.order-cell {
 		padding: 20rpx;
 		margin: 20rpx 0;
 		background-color: #fff;
 		border-radius: 10rpx;
-		&_name{
+
+		&_name {
 			display: flex;
 			justify-content: space-between;
 			margin-bottom: 20rpx;
 			color: $u-main-color;
 		}
-		&_info{
+
+		&_info {
 			display: flex;
 			color: $u-content-color;
 			font-size: 24rpx;
 			margin: 10rpx 0;
 		}
-		.btn-bar{
+
+		.btn-bar {
 			display: flex;
 			justify-content: flex-end;
 			border-top: 1rpx solid $u-border-color;
 			padding-top: 20rpx;
-			&_btn{
+
+			&_btn {
 				width: 200rpx;
 				text-align: center;
 				background: $u-primary;
@@ -137,11 +146,13 @@
 				margin-left: 20rpx;
 			}
 		}
-		.btn-bar:empty{
+
+		.btn-bar:empty {
 			border: none;
 			padding: 0;
 		}
-		.pay-type-label{
+
+		.pay-type-label {
 			padding: 5rpx 10rpx;
 			border-radius: 5rpx;
 			border: 1rpx solid $u-success;

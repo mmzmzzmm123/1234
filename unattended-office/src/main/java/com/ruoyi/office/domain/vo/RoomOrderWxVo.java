@@ -14,4 +14,6 @@ public class RoomOrderWxVo extends TRoomOrder {
     private String lat;
     private String lon;
 
+    private String orderStatus;
+
 }

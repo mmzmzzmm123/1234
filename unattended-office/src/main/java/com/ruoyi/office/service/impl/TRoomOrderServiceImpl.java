@@ -975,8 +975,11 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
     @Override
     public List<RoomOrderWxVo> getWxRoomOrder(RoomOrderWxReqVo tRoomOrder) {
-
-        return tRoomOrderMapper.getWxRoomOrder(tRoomOrder);
+        final List<RoomOrderWxVo> roomOrders = tRoomOrderMapper.getWxRoomOrder(tRoomOrder);
+        for (RoomOrderWxVo vo : roomOrders) {
+            vo.setOrderStatus(OfficeEnum.RoomOrderStatus.GetValueByCode(vo.getStatus()).getInfo());
+        }
+        return roomOrders;
     }
 
     @Autowired

@@ -35,6 +35,7 @@ import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.service.*;
+import com.ruoyi.office.util.WxMsgSender;
 import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.service.ISysDictDataService;
 import com.ruoyi.system.service.ISysNoticeService;
@@ -435,8 +436,15 @@ public class ApiController extends BaseController {
             room.setStatus(OfficeEnum.RoomStatus.IN_USE.getCode());// 使用中
             roomService.updateTRoom(room);
             if (StringUtils.isNotEmpty(errMsg)) {
-                return AjaxResult.error("操作异常，请联系管理员：" + errMsg);
+                return AjaxResult.error(errMsg);
             }
+
+            TRoom exRoom = roomService.selectTRoomById(roomOrder.getRoomId());
+            TStore store = storeService.selectTStoreById(exRoom.getStoreId());
+            new WxMsgSender().sendOrderStartMsg("oNosp6pg1nwPpNK0ojVRG3nXMUqM", room.getName(), store.getName(), roomOrder);
+            new WxMsgSender().sendOrderStartMsg("oNosp6nU4uj40-rGGCG83wkQwdzE", room.getName(), store.getName(), roomOrder);
+            new WxMsgSender().sendOrderStartMsg("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", room.getName(), store.getName(), roomOrder);
+
         } catch (Exception e) {
             return AjaxResult.error("操作异常，请联系管理员：" + e.getMessage());
         }
