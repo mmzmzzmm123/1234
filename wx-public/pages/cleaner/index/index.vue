@@ -47,9 +47,13 @@
 					<view class="card__content__footer">
 						<view>打扫时长: {{room.duration}} 分钟</view>
 					</view> -->
-						<view class="card__btn-list">
-							<u-button size="large" type="success">开始打扫</u-button>
-							<u-button size="large" type="error">临时开启包厢</u-button>
+						<view class="card__btn-clean-list">
+							<u-button size="large" type="success" @click="onStartCleanClick(room)">开始打扫</u-button>
+							<u-button size="large" type="success" @click="onFinishCleanClick(room)">打扫完毕</u-button>
+						</view>
+						<view class="card__btn-room-list">
+							<u-button size="large" type="success" @click="onOpenRoomClick(room)">临时开启包厢</u-button>
+							<u-button size="large" type="error" @click="onCloseRoomClick(room)">临时关闭包厢</u-button>
 						</view>
 					</view>
 				</view>
@@ -146,8 +150,8 @@
 				this.queryParam.status = roomStatus
 			},
 			onStartCleanClick(room) {
-				if (room.status == "清洁中") {
-					this.$api.startCleanRoom(Number(room.id)).then(res => {
+				if (room.roomStatus == "清洁中") {
+					this.$api.startCleanRoom(room.roomId).then(res => {
 						this.$u.toast('请开包厢进行打扫')
 					})
 				} else {
@@ -155,8 +159,8 @@
 				}
 			},
 			onFinishCleanClick(room) {
-				if (room.status == "清洁中") {
-					this.$api.finishCleanRoom(Number(room.id)).then(res => {
+				if (room.roomStatus == "清洁中") {
+					this.$api.finishCleanRoom(room.roomId).then(res => {
 						this.refresh()
 						this.$u.toast('已完成打扫')
 					})
@@ -165,9 +169,9 @@
 				}
 			},
 			onOpenRoomClick(room) {
-				if (room.status == "清洁中") {
+				if (room.roomStatus == "清洁中") {
 					var params = {
-						roomId: room.id,
+						roomId: room.roomId,
 						storeId: this.currentStore.id
 					}
 					this.$api.cleanerOpenRoom(params).then(res => {
@@ -179,7 +183,7 @@
 			},
 			onCloseRoomClick(room) {
 				var params = {
-					roomId: room.id,
+					roomId: room.roomId,
 					storeId: this.currentStore.id
 				}
 				this.$api.cleanerCloseRoom(params).then(res => {
@@ -188,7 +192,7 @@
 			},
 			onOpenStoreClick(storeId){
 				var params = {
-					roomId: room.id,
+					roomId: room.roomId,
 					storeId: this.currentStore.id
 				}
 				this.$api.cleanerOpenStore(params).then(res => {
@@ -270,9 +274,16 @@
 		margin-bottom: 30rpx;
 	}
 
-	.card__btn-list {
+	.card__btn-clean-list {
 		display: flex;
-
+		margin-bottom: 30rpx;
+		.u-button {
+			margin: 0 20rpx;
+		}
+	}
+	
+	.card__btn-room-list {
+		display: flex;
 		.u-button {
 			margin: 0 20rpx;
 		}
