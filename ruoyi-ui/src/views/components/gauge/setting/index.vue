@@ -5,7 +5,7 @@
     <el-table :data="scoreList" style="width: 100%" size="mini">
       <el-table-column type="expand">
         <template slot-scope="props">
-          <el-form ref="form" label-width="80px" size="mini">
+          <el-form ref="form" label-width="100px" size="mini">
             <el-form-item :label="gaugeType === 3 ? '性格类型' : '得分范围'">
               <template v-if="gaugeType === 3">
                 <el-select v-if="gaugeType === 3" size="small" style="width: 150px" v-model="props.row.lat" placeholder="纬度" clearable>
@@ -44,7 +44,7 @@
                 <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo4" placeholder="抑郁表现" />
               </el-form-item>
               <el-form-item label="得分建议">
-                <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192" :height="300"/>
+                <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192" :height="300" :extraData="extraData"/>
               </el-form-item>
             </template>
             <template v-else-if="gaugeType === 5">
@@ -58,7 +58,7 @@
                 <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo3" placeholder="得分解读" />
               </el-form-item>
               <el-form-item label="得分建议">
-                <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192" :height="300"/>
+                <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192" :height="300" :extraData="extraData"/>
               </el-form-item>
             </template>
             <template v-else-if="gaugeType === 3">
@@ -71,25 +71,26 @@
               <el-form-item label="综合维度解析">
                 <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo3" placeholder="综合维度解析" />
               </el-form-item>
-              <el-form-item label="精力支配">
-                <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo4" placeholder="精力支配" />
+              <el-form-item label="性格详解">
+<!--                <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo4" placeholder="精力支配" />-->
+                <editor v-model="props.row.memo4" placeholder="性格详解" :min-height="192" :height="300" :extraData="extraData"/>
               </el-form-item>
-              <el-form-item label="认识世界">
-                <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo5" placeholder="认识世界" />
+              <el-form-item label="情感与社交">
+                <editor v-model="props.row.memo5" placeholder="情感与社交" :min-height="192" :height="300" :extraData="extraData"/>
               </el-form-item>
-              <el-form-item label="判断事物">
-                <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo6" placeholder="判断事物" />
+              <el-form-item label="职业规划">
+                <editor v-model="props.row.memo6" placeholder="职业规划" :min-height="192" :height="300" :extraData="extraData"/>
               </el-form-item>
-              <el-form-item label="生活态度">
-                <el-input type="textarea" :rows="4" size="mini" show-word-limit v-model="props.row.memo7" placeholder="生活态度" />
+              <el-form-item label="其他人格关系">
+                <editor v-model="props.row.memo7" placeholder="其他人格关系" :min-height="192" :height="300" :extraData="extraData"/>
               </el-form-item>
-              <el-form-item label="综合维度建议">
-                <editor v-model="props.row.result" placeholder="综合维度建议" :min-height="192" :height="300"/>
+              <el-form-item label="代表人物">
+                <editor v-model="props.row.result" placeholder="代表人物" :min-height="192" :height="300" :extraData="extraData"/>
               </el-form-item>
             </template>
             <template v-else>
               <el-form-item label="结论">
-                <editor v-model="props.row.result" placeholder="请输入内容" :min-height="192" :height="300"/>
+                <editor v-model="props.row.result" placeholder="请输入内容" :min-height="192" :height="300" :extraData="extraData"/>
               </el-form-item>
             </template>
 
@@ -163,8 +164,10 @@ export default {
   data() {
     return {
       gaugeMbtiRes: this.$constants.gaugeMbtiRes,
+      // 上传
       extraData: {
-        module: 'gauge'
+        module: this.$constants['picModules'][1],
+        type: this.$constants['picTypes'][2]
       },
       form: {},
       scoreList: [],

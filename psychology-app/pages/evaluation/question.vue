@@ -65,6 +65,7 @@ export default {
       currentIndex: 1,
       productId: 0,
       orderId: '',
+      order: {},
       scrollInto: '',
       showMessage: false,
       confirmMessage: {
@@ -91,6 +92,7 @@ export default {
 
     this.productId = utils.getParam(location.href, "productId");
     this.orderId = utils.getParam(location.href, "orderId");
+    this.order = await questionServer.getOrder(this.orderId)
     this.questionList = await questionServer.getQuestionList(this.productId, this.orderId);
     // 问题维度处理
     this.lats = await questionServer.getLats(this.productId);
@@ -239,13 +241,12 @@ export default {
     async submitEvent() {
       // 已答题完成，移除页面跳转拦截器
       this.rmInterceptor()
-      const order = await questionServer.getOrder(this.orderId)
       let result = await questionServer.setResult(this.orderId);
       if (result.code === 200) {
         uni.setStorageSync("result", result.data);
         clearTimeLoad();
         uni.navigateTo({
-          url: "/pages/evaluation/mResult?orderId=" + order.orderId,
+          url: "/pages/evaluation/mResult?orderId=" + this.order.orderId,
         });
       }
     },

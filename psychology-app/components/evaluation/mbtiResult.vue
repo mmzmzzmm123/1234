@@ -16,40 +16,63 @@
         <view class="result-text">您的测评结果</view>
         <view class="result-right"></view>
       </view>
-    </view>
-    <view class="block-1">
+
       <block-header title="综合维度解析"/>
       <range down="外向（E)" high="内向（I)" lineWidth="348upx" :percentage="perList[0]" />
       <range down="实感（S)" high="直觉（N)" lineBg="#D4E3FF" proBg="#7596DB"  lineWidth="348upx" :percentage="perList[1]" />
       <range down="思维（T)" high="情感（F)" lineBg="#FFEDB2" proBg="#F8CF67"  lineWidth="348upx" :percentage="perList[2]" />
       <range down="判断（J)" high="知觉（P)" lineBg="#C9E8C9" proBg="#96D18D"  lineWidth="348upx" :percentage="perList[3]" />
       <text class="desc-1">{{ report.setting.memo3 }}</text>
-    </view>
-    <view class="block-1">
-      <block-header title="精力支配"/>
-      <range down="外向（E)" high="内向（I)" lineWidth="348upx" :percentage="perList[0]" />
-      <text class="desc-1">{{ report.setting.memo4 }}</text>
-    </view>
-    <view class="block-1">
-      <block-header title="认识世界"/>
-      <range down="实感（S)" high="直觉（N)" lineBg="#D4E3FF" proBg="#7596DB"  lineWidth="348upx" :percentage="perList[1]" />
-      <text class="desc-1">{{ report.setting.memo5 }}</text>
-    </view>
-    <view class="block-1">
-      <block-header title="判断事物"/>
-      <range down="思维（T)" high="情感（F)" lineBg="#FFEDB2" proBg="#F8CF67"  lineWidth="348upx" :percentage="perList[2]" />
-      <text class="desc-1">{{ report.setting.memo6 }}</text>
-    </view>
-    <view class="block-1">
-      <block-header title="生活态度"/>
-      <range down="判断（J)" high="知觉（P)" lineBg="#C9E8C9" proBg="#96D18D"  lineWidth="348upx" :percentage="perList[3]" />
-      <text class="desc-1">{{ report.setting.memo7 }}</text>
-    </view>
 
-    <view class="block-1">
-      <block-header title="综合维度建议"/>
+      <block-header title="性格详解"/>
+      <view class="img-box" v-html="report.setting.memo4"/>
+
+      <block-header title="情感与社交"/>
+      <view class="img-box" v-html="report.setting.memo5"/>
+
+      <block-header title="职业规划"/>
+      <view class="img-box" v-html="report.setting.memo6"/>
+
+      <block-header title="和其他人格类型的关系"/>
+      <view class="img-box" v-html="report.setting.memo7"/>
+
+      <block-header title="ENTP代表人物"/>
       <view class="img-box" v-html="report.setting.result"/>
     </view>
+
+<!--    <view class="block-1">-->
+<!--      <block-header title="综合维度解析"/>-->
+<!--      <range down="外向（E)" high="内向（I)" lineWidth="348upx" :percentage="perList[0]" />-->
+<!--      <range down="实感（S)" high="直觉（N)" lineBg="#D4E3FF" proBg="#7596DB"  lineWidth="348upx" :percentage="perList[1]" />-->
+<!--      <range down="思维（T)" high="情感（F)" lineBg="#FFEDB2" proBg="#F8CF67"  lineWidth="348upx" :percentage="perList[2]" />-->
+<!--      <range down="判断（J)" high="知觉（P)" lineBg="#C9E8C9" proBg="#96D18D"  lineWidth="348upx" :percentage="perList[3]" />-->
+<!--      <text class="desc-1">{{ report.setting.memo3 }}</text>-->
+<!--    </view>-->
+<!--    <view class="block-1">-->
+<!--      <block-header title="精力支配"/>-->
+<!--      <range down="外向（E)" high="内向（I)" lineWidth="348upx" :percentage="perList[0]" />-->
+<!--      <text class="desc-1">{{ report.setting.memo4 }}</text>-->
+<!--    </view>-->
+<!--    <view class="block-1">-->
+<!--      <block-header title="认识世界"/>-->
+<!--      <range down="实感（S)" high="直觉（N)" lineBg="#D4E3FF" proBg="#7596DB"  lineWidth="348upx" :percentage="perList[1]" />-->
+<!--      <text class="desc-1">{{ report.setting.memo5 }}</text>-->
+<!--    </view>-->
+<!--    <view class="block-1">-->
+<!--      <block-header title="判断事物"/>-->
+<!--      <range down="思维（T)" high="情感（F)" lineBg="#FFEDB2" proBg="#F8CF67"  lineWidth="348upx" :percentage="perList[2]" />-->
+<!--      <text class="desc-1">{{ report.setting.memo6 }}</text>-->
+<!--    </view>-->
+<!--    <view class="block-1">-->
+<!--      <block-header title="生活态度"/>-->
+<!--      <range down="判断（J)" high="知觉（P)" lineBg="#C9E8C9" proBg="#96D18D"  lineWidth="348upx" :percentage="perList[3]" />-->
+<!--      <text class="desc-1">{{ report.setting.memo7 }}</text>-->
+<!--    </view>-->
+
+<!--    <view class="block-1">-->
+<!--      <block-header title="性格详解"/>-->
+<!--      <view class="img-box" v-html="report.setting.result"/>-->
+<!--    </view>-->
   </view>
 </template>
 <script>
