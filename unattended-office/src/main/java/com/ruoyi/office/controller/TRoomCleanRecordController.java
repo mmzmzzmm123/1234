@@ -53,7 +53,7 @@ public class TRoomCleanRecordController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('office:cleanrecord:list')")
     @GetMapping("/h5list")
-    public TableDataInfo h5list(TRoomCleanRecord tRoomCleanRecord) {
+    public TableDataInfo h5list(CleanRecordH5Vo tRoomCleanRecord) {
         Long userId = SecurityUtils.getUserId();
         tRoomCleanRecord.setCreateBy(userId + "");
         startPage();

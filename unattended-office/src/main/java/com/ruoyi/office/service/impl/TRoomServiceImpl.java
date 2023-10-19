@@ -421,7 +421,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
                 try {
                     sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已打开");
+                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "请开始保洁");
                 } catch (Exception e) {
                     continue;
                 }
@@ -508,7 +508,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
                 try {
                     sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已关");
+                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "辛苦您了");
                 } catch (Exception e) {
                     continue;
                 }

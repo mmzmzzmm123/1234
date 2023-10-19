@@ -7,5 +7,6 @@ public class CleanerRoomOpenReq {
 
     private Long roomId;
     private Long storeId;
+    private Long recordId;
 }
 
