@@ -17,7 +17,7 @@ try{
 }
 
 // 需要永久存储，且下次APP启动需要取出的，在state中的变量名
-let saveStateKeys = ['loginUser', 'currentStore', 'wxUser'];
+let saveStateKeys = ['loginUser', 'currentStore', 'wxUser', 'storeRoles'];
 
 // 保存变量到本地存储中
 const saveLifeData = function(key, value){
@@ -38,7 +38,7 @@ const store = new Vuex.Store({
 		currentStore: lifeData.currentStore ? lifeData.currentStore : {id: 0, name: '暂无门店'},
 		storeList: [],
 		dicts: {},
-		storeRoles: [],
+		storeRoles: lifeData.storeRoles ? lifeData.storeRoles : [],
 		wxUser: lifeData.wxUser ? lifeData.wxUser : null
 	},
 	mutations: {
@@ -91,9 +91,11 @@ const store = new Vuex.Store({
 				state.wxUser = res.wxUser
 				if(res.wxUser){
 					lifeData['wxUser'] = res.wxUser
+					lifeData['storeRoles'] = res.storeRoles
 					state.storeRoles = res.storeRoles
 				}else{
 					lifeData['wxUser'] = null
+					lifeData['storeRoles'] = []
 					state.storeRoles = []	
 				}
 				if(!state.storeRoles.length && !state.loginUser.userId){

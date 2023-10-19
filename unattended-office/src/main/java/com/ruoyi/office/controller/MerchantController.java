@@ -9,6 +9,7 @@ import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.vo.*;
@@ -161,45 +162,37 @@ public class MerchantController extends BaseController {
     @Autowired
     ITWxUserCleanerService cleanerService;
 
-    @ApiOperation("添加保洁")
+    @ApiOperation("创建店铺角色授权记录")
     @PreAuthorize("@ss.hasPermi('office:merchant')")
-    @Log(title = "添加保洁", businessType = BusinessType.INSERT)
-    @PostMapping("/clean")
+    @Log(title = "创建店铺角色授权记录", businessType = BusinessType.INSERT)
+    @PostMapping("/role/toBind")
     public AjaxResult clean(@RequestBody CleanerReq req) {
-        long merchant = SecurityUtils.getLoginUser().getWxUser().getId();
-//        long wxUserId = 9l;
+        if(!"cleaner".equals(req.getRole())){
+            return AjaxResult.error("角色不合法");
+        }
+        TStore store = tStoreService.selectTStoreById(req.getStoreId());
+        long merchant = SecurityUtils.getUserId();
+        if(!store.getUserId().equals(merchant)){
+            return AjaxResult.error("店铺不合法");
+        }
         try {
             TWxUserCleaner cleaner = new TWxUserCleaner();
             cleaner.setMerchantId(merchant);
-            cleaner.setStoreId(req.getStroeId());
-            cleanerService.insertTWxUserCleaner(cleaner);
+            cleaner.setStoreId(req.getStoreId());
+            cleaner.setRemark(req.getRole());
+            cleanerService.insertTWxUserCleaner(cleaner); //todo... 修改id为UUID等
             return AjaxResult.success(cleaner.getId());
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
     }
 
-    @ApiOperation("添加保洁")
-    @PreAuthorize("@ss.hasPermi('office:merchant')")
-    @Log(title = "添加保洁", businessType = BusinessType.INSERT)
-    @PutMapping("/clean/bind")
-    public AjaxResult cleanBinding(@RequestBody TWxUserCleaner req) {
-        long wxuserid = SecurityUtils.getLoginUser().getWxUser().getId();
-//        long wxUserId = 9l;
-        try {
-            TWxUserCleaner cleaner = new TWxUserCleaner();
-            cleaner.setId(req.getId());
-            cleaner.setWxUserId(wxuserid);
-            cleanerService.updateTWxUserCleaner(cleaner);
-
-            TWxUser wxUser = new TWxUser();
-            wxUser.setId(wxuserid);
-            wxUser.setUserType("cleaner");
-            wxUserService.updateTWxUser(wxUser);
-            return AjaxResult.success();
-        } catch (Exception e) {
-            return AjaxResult.error(e.getMessage());
-        }
+    @GetMapping("/role/toBindInfo/{id}")
+    public AjaxResult getToBindInfo(@PathVariable("id") Long id){
+        TWxUserCleaner cleaner = cleanerService.selectTWxUserCleanerById(id);
+        TStore store = tStoreService.selectTStoreById(cleaner.getStoreId());
+        cleaner.setCreateBy(store.getName());
+        return AjaxResult.success(cleaner);
     }
 
     @Autowired

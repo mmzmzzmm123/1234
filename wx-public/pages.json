@@ -158,6 +158,12 @@
 			"style": {
 				"navigationBarTitleText": "员工管理"
 			}
+		},
+		{
+			"path": "pages/crew/join",
+			"style": {
+				"navigationBarTitleText": "十三将商家管理中心"
+			}
 		}
 	],
 	"globalStyle": {

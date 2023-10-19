@@ -1,36 +1,27 @@
 <template>
 	<view>
 		<view class="form">
-			<u-form ref="roomForm" label-width="auto" :model="obj">
-				<u-form-item label="用户账号" prop="userName" required>
-					<u-input v-model="obj.userName" placeholder="请输入用户账号"></u-input>
-				</u-form-item>
-				<u-form-item label="用户密码" prop="password" required>
-					<u-input v-model="obj.password" type="password" placeholder="请输入用户密码"></u-input>
-				</u-form-item>
-				<u-form-item label="用户姓名" prop="nickName" required>
-					<u-input v-model="obj.nickName" placeholder="请输入用户姓名"></u-input>
-				</u-form-item>
-				<u-form-item label="手机号码" prop="phonenumber" required>
-					<u-input v-model="obj.phonenumber" placeholder="请输入手机号码"></u-input>
-				</u-form-item>
+			<u-form ref="roomForm" label-width="200rpx" :model="obj">
 				<u-form-item label="所属门店" prop="storeId" required>
 					<uo-select placeholder="请选择所属门店" v-model="obj.storeId" :options="storeList" value-field="id">
 					</uo-select>
 				</u-form-item>
-				<u-form-item label="角色" prop="roleName" required>
-					<u-checkbox-group v-model="roleArray">
-						<u-checkbox v-for="item in roles" :key="item.roleId" :name="item.roleId+''" :label="item.roleName">
-						</u-checkbox>
-					</u-checkbox-group>
+				<u-form-item label="角色" prop="role" required>
+					<uo-select placeholder="请选择角色" v-model="obj.role" :options="roles"></uo-select>
 				</u-form-item>
 			</u-form>
 		</view>
+		<view class="link-info">
+			<view class="link-info__tip">保洁员关注十三将自助竞技公众号后，将链接发送给保洁员完成添加</view>
+			<view class="link-info__link">{{toBindUrl}}</view>
+			<view class="link-info__copy">
+				<u-button @click="onCopyClick">复制链接</u-button>
+			</view>
+		</view>
 		<view class="edit-bottom-bar-holder"></view>
 		<view class="edit-bottom-bar">
-			<u-button type="primary" @click="onConfirmClick">保存</u-button>
-			<u-button type="info" @click="onCancelClick">取消</u-button>
-
+			<u-button type="primary" @click="onConfirmClick">生成添加链接</u-button>
+			<!-- <u-button type="info" @click="onCancelClick">取消</u-button> -->
 		</view>
 	</view>
 </template>
@@ -40,13 +31,8 @@
 		data() {
 			return {
 				obj: {
-					userName: '',
-					nickName: '',
-					password: '',
-					phonenumber: null,
-					roleName: '',
-					storeId: 0,
-					id: 0
+					role: 'cleaner',
+					storeId: 0
 				},
 				rules: {
 					storeId: {
@@ -55,24 +41,28 @@
 						message: '请选择所属门店',
 						trigger: ['blur', 'change']
 					},
-					userName: {
+					role: {
 						required: true,
-						message: '请输入用户账号',
+						message: '请选择角色',
 						trigger: ['blur', 'change']
 					},
-					password: {
-						required: true,
-						message: '请输入用户密码',
-						trigger: ['blur', 'change']
-					},
-					nickName: {
-						required: true,
-						message: '请输入用户姓名',
-						trigger: ['blur', 'change']
-					},
+					// password: {
+					// 	required: true,
+					// 	message: '请输入用户密码',
+					// 	trigger: ['blur', 'change']
+					// },
+					// nickName: {
+					// 	required: true,
+					// 	message: '请输入用户姓名',
+					// 	trigger: ['blur', 'change']
+					// },
 				},
-				roles: [],
-				roleArray: []
+				roles: [{
+					name: "保洁员",
+					value: "cleaner"
+				}],
+				toBindId: '',
+				toBindUrl: 'https://5d9o815864.goho.co/pages/crew/join?id='
 			}
 		},
 		computed: {
@@ -81,40 +71,21 @@
 			},
 		},
 		onLoad(options) {
-			this.getH5Roles();
+			debugger
 			this.obj.storeId = this.$store.state.currentStore.id
-			if (options.id) {
-				uni.setNavigationBarTitle({
-					title: '编辑员工'
-				})
-				this.$api.getStoreUser(options.id).then(res => {
-					this.obj = res;
-					this.roleArray = res.roleName.split(",");
-				})
-			}
-
 		},
 		onReady() {
 			this.$refs.roomForm.setRules(this.rules)
 		},
 		methods: {
-			getH5Roles() {
-				this.$api.getH5Roles().then(res => {
-					this.roles = res.rows;
-				})
-			},
 			onConfirmClick() {
-				this.obj.roleName = this.roleArray.join(',')
 				this.$refs.roomForm.validate().then(res => {
-					if (this.options.id) {
-						this.obj.id = this.options.id;
-						this.$api.editStoreCrew(this.obj).then(this.onSuccess)
-					} else {
-						this.$api.addStoreCrew(this.obj).then(this.onSuccess)
-					}
+					this.$api.toBindRole(this.obj).then(res=>{
+						this.toBindId = res
+						this.toBindUrl = "https://5d9o815864.goho.co/pages/crew/join?id=" + res
+					})
 				}).catch((e) => {
-					debugger
-					this.$u.toast('请完善包厢信息')
+					this.$u.toast('请完善门店和角色信息')
 				})
 			},
 			onSuccess() {
@@ -124,10 +95,38 @@
 			},
 			onCancelClick() {
 				uni.navigateBack()
+			},
+			onCopyClick(){
+				uni.setClipboardData({
+					data: this.toBindUrl
+				})
 			}
 		}
 	}
 </script>
 
 <style lang="scss">
+	.u-form-item{
+		padding: 10rpx;
+	}
+	.link-info{
+		text-align: center;
+		margin-top: 80rpx;
+		&__link{
+			padding: 5rpx 0;
+			line-height: 60rpx;
+			display: inline;
+			color: #3c9cff;
+			border-bottom: 1rpx solid #3c9cff;
+		}
+		&__copy{
+			margin: 30rpx 200rpx;
+		}
+		&__tip{
+			padding-left: 20rpx;
+			text-align: left;
+			color: $u-primary;
+			margin-bottom: 20rpx;
+		}
+	}
 </style>

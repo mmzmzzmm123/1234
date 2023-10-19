@@ -61,4 +61,12 @@ public interface ITStoreUserService
     public int deleteTStoreUserById(Long id);
 
     List<StoreUserVo> selectTStoreUserH5listList(TStoreUser tStoreUser);
+
+    /**
+     * 绑定角色
+     * @param wxUserId
+     * @param storeId
+     * @param role
+     */
+    void bind(Long wxUserId, Long storeId, String role);
 }

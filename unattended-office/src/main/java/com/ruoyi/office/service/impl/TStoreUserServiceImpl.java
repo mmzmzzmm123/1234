@@ -184,6 +184,35 @@ public class TStoreUserServiceImpl extends ServiceImpl<TStoreUserMapper, TStoreU
     }
 
     @Override
+    public void bind(Long wxUserId, Long storeId, String role) {
+        TStoreUser exist = getStoreUser(wxUserId, storeId);
+        if(exist != null){
+            if(exist.getRemark().indexOf(role) >= 0){
+                throw new ServiceException("已有该角色");
+            }
+            exist.setRemark(exist.getRemark() + "," + role);
+            tStoreUserMapper.updateTStoreUser(exist);
+        }else{
+            exist = new TStoreUser();
+            exist.setUserId(wxUserId);
+            exist.setStoreId(storeId);
+            exist.setRemark(role);
+            tStoreUserMapper.insertTStoreUser(exist);
+        }
+    }
+
+    private TStoreUser getStoreUser(Long wxUserId, Long storeId){
+        TStoreUser query = new TStoreUser();
+        query.setUserId(wxUserId);
+        query.setStoreId(storeId);
+        List<TStoreUser> list = selectTStoreUserList(query);
+        if(list.size() == 1){
+            return list.get(0);
+        }
+        return null;
+    }
+
+    @Override
     public List<IStoreRole> getWxUserStoreRole(Long wxUserId) {
         TStoreUser qry = new TStoreUser();
         qry.setUserId(wxUserId);

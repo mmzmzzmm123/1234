@@ -15,7 +15,12 @@
 			// this.code = options.code
 			if(options.code){
 				this.$store.dispatch("login", {code: options.code}).then(()=>{
-					if(this.$store.state.loginUser.userId){
+					const url = this.$api.getAfterLoginToGo
+					if(url){
+						uni.reLaunch({
+							url
+						})
+					}else if(this.$store.state.loginUser.userId){
 						uni.reLaunch({
 							url: '/pages/index/index'
 						})

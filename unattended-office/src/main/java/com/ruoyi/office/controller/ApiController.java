@@ -936,9 +936,12 @@ public class ApiController extends BaseController {
         // 调用微信 API 获取用户的 openid 和 session_key
         WxMaJscode2SessionResult session = null;
         try {
-            // 调用微信 API 获取用户的手机号
-            WxMaPhoneNumberInfo phoneInfo = customerWxMaService.getUserService().getNewPhoneNoInfo(bindingReq.getCode());
-            String phoneNumber = phoneInfo.getPhoneNumber();
+            String phoneNumber = bindingReq.getPhone();
+            if(StringUtils.isNotEmpty(bindingReq.getCode())){
+                // 调用微信 API 获取用户的手机号
+                WxMaPhoneNumberInfo phoneInfo = customerWxMaService.getUserService().getNewPhoneNoInfo(bindingReq.getCode());
+                phoneNumber = phoneInfo.getPhoneNumber();
+            }
 
             long userWxId = SecurityUtils.getLoginUser().getWxUser().getId();
             TWxUser wxUser = new TWxUser();

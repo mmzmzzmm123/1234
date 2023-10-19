@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class CleanerReq {
-    private Long stroeId;
+    private Long storeId;
+    private String role;
 }

@@ -8,13 +8,14 @@ import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.uuid.IdUtils;
-import com.ruoyi.office.domain.vo.LoginByOtherSourceBody;
+import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.framework.web.service.TokenService;
+import com.ruoyi.office.domain.TWxUserCleaner;
+import com.ruoyi.office.domain.vo.BindingRoleReq;
 import com.ruoyi.office.domain.vo.MerchantBindingReq;
+import com.ruoyi.office.service.ITStoreUserService;
+import com.ruoyi.office.service.ITWxUserCleanerService;
 import io.swagger.annotations.ApiOperation;
-import me.zhyd.oauth.config.AuthConfig;
-import me.zhyd.oauth.request.AuthGiteeRequest;
-import me.zhyd.oauth.request.AuthRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,6 +46,15 @@ public class SysLoginController {
 
     @Autowired
     private SysPermissionService permissionService;
+
+    @Autowired
+    private ITWxUserCleanerService cleanerService;
+
+    @Autowired
+    private ITStoreUserService storeUserService;
+
+    @Autowired
+    private TokenService tokenService;
 
     /**
      * 登录方法
@@ -124,5 +134,28 @@ public class SysLoginController {
     public AjaxResult binding(@RequestBody MerchantBindingReq bindingReq) {
         loginService.binding(bindingReq, SecurityUtils.getLoginUser());
         return AjaxResult.success();
+    }
+
+    @ApiOperation("绑定店铺授权")
+    @Log(title = "绑定店铺授权", businessType = BusinessType.INSERT)
+    @PostMapping("/binding/role")
+    public AjaxResult bindingRole(@RequestBody BindingRoleReq req) {
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        try {
+            TWxUserCleaner cleaner = cleanerService.selectTWxUserCleanerById(req.getId());
+            if(cleaner.getStatus() != null && cleaner.getStatus() == 1l){
+                throw new ServiceException("请确认是否已经添加！");
+            }
+            cleaner.setWxUserId(loginUser.getWxUser().getId());
+            cleaner.setStatus(1l);
+            cleanerService.updateTWxUserCleaner(cleaner);
+
+            storeUserService.bind(loginUser.getWxUser().getId(), cleaner.getStoreId(), cleaner.getRemark());
+            loginUser.setStoreRoles(permissionService.getStoreRoles(loginUser.getWxUser()));
+            tokenService.refreshToken(loginUser);
+            return AjaxResult.success();
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
     }
 }

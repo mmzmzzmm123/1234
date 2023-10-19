@@ -26,6 +26,18 @@ function get(url, data, showLoading, hideError) {
 }
 
 const api = {
+	setAfterLoginToGo(url){
+		uni.setStorageSync("afterLoginToGo", url)
+	},
+	getAfterLoginToGo(){
+		let url = uni.getStorageSync("afterLoginToGo")
+		if(url){
+			uni.removeStorage({
+				key: "afterLoginToGo"
+			})
+		}
+		return url
+	},
 	toLogin,
 	login(param) {
 		return client.getToken(param)
@@ -228,6 +240,18 @@ const api = {
 	},
 	cleanerCloseRoom(params) {
 		return post('office/capi/roomclose/temp', params)
+	},
+	toBindRole(params){
+		return post('office/mapi/role/toBind', params)
+	},
+	bindRole(params){
+		return post('binding/role', params)
+	},
+	getToBindRole(id){
+		return get('office/mapi/role/toBindInfo/' + id)
+	},
+	bindPhoneNumber(phone){
+		return post('office/api/binding', {phone})
 	}
 }
 const install = (Vue, options) => {

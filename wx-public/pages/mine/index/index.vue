@@ -29,9 +29,9 @@
 			</view>
 		</view>
 	</view>
-	<view class="logout">
+	<!-- <view class="logout">
 		<u-button type="primary" @click="onLogoutClick">退出登录</u-button>
-	</view>
+	</view> -->
 </view>
 </template>
 
