@@ -26,14 +26,14 @@ public class PsyConsultServeConfig extends BasePlusEntity implements Serializabl
     private static final long serialVersionUID = 1L;
 
     /** 咨询形式 语音咨询、视频咨询、当面咨询 */
-    @Excel(name = "咨询形式 语音咨询、视频咨询、当面咨询")
+    @Excel(name = "咨询形式", readConverterExp = "1=语音咨询,2=视频咨询,3=当面咨询")
     private Integer mode;
 
     @TableField(exist = false)
     private String modeName;
 
     /** 服务类型 单次咨询 套餐咨询 */
-    @Excel(name = "服务类型 单次咨询 套餐咨询")
+    @Excel(name = "服务类型", readConverterExp = "1=单次咨询,2=套餐咨询")
     private Integer type;
 
     @TableField(exist = false)
@@ -64,7 +64,7 @@ public class PsyConsultServeConfig extends BasePlusEntity implements Serializabl
     private Integer zIndex;
 
     /** 限购 0-不限制 1-限制 */
-    @Excel(name = "限购 0-不限制 1-限制")
+    @Excel(name = "限购",  readConverterExp = "0=不限制,1=限制")
     private Integer bound;
 
     /** 销量 */

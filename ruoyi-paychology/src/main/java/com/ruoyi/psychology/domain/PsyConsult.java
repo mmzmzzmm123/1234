@@ -134,6 +134,7 @@ public class PsyConsult extends BasePlusEntity implements Serializable
 
     private String share;
 
+    @Excel(name = "语种")
     private String lang;
 
     /** 受训经历 */
