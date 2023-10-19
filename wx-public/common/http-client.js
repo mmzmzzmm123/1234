@@ -111,6 +111,7 @@ HttpClient.prototype.getToken = function(param){
 	let getTokenUrl = 'wxLogin'
 	if(param.username){
 		getTokenUrl = 'login'
+	}else{
 		param.appId = this.appId
 	}
 	this.tokenTask = this.request(getTokenUrl, param).then((auth)=>{
