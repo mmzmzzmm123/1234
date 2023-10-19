@@ -147,7 +147,8 @@
 				})
 			},
 			onFilterClick(roomStatus) {
-				this.queryParam.status = roomStatus
+				this.searchParam.status = roomStatus
+				this.refresh()
 			},
 			onStartCleanClick(room) {
 				if (room.roomStatus == "清洁中") {
