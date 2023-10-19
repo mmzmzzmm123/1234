@@ -224,10 +224,10 @@ const api = {
 		return post('office/capi/storeopen/' + storeId)
 	},
 	cleanerOpenRoom(params) {
-		return post('office/capi/roomopen', params)
+		return post('office/capi/roomopen/temp', params)
 	},
 	cleanerCloseRoom(params) {
-		return post('office/capi/roomclose', params)
+		return post('office/capi/roomclose/temp', params)
 	}
 }
 const install = (Vue, options) => {
