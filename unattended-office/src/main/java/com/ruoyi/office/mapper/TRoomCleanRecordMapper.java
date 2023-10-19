@@ -62,5 +62,8 @@ public interface TRoomCleanRecordMapper extends BaseMapper<TRoomCleanRecord> {
      */
     public int deleteTRoomCleanRecordByIds(Long[] ids);
 
-    List<CleanRecordH5Vo> selectTRoomCleanRecordH5List(TRoomCleanRecord tRoomCleanRecord);
+    List<CleanRecordH5Vo> selectTRoomCleanRecordH5List(CleanRecordH5Vo tRoomCleanRecord);
+
+    List<CleanRecordH5Vo> selectRoomAndCleanRecordByStatus(CleanRecordH5Vo tRoomCleanRecord);
+
 }

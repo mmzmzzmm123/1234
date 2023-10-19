@@ -53,7 +53,7 @@ public class TRoomCleanRecordController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('office:cleanrecord:list')")
     @GetMapping("/h5list")
-    public TableDataInfo h5list(TRoomCleanRecord tRoomCleanRecord) {
+    public TableDataInfo h5list(CleanRecordH5Vo tRoomCleanRecord) {
         Long userId = SecurityUtils.getUserId();
         tRoomCleanRecord.setCreateBy(userId + "");
         startPage();
@@ -91,27 +91,6 @@ public class TRoomCleanRecordController extends BaseController {
     public AjaxResult add(@RequestBody TRoomCleanRecord tRoomCleanRecord) {
         return toAjax(tRoomCleanRecordService.insertTRoomCleanRecord(tRoomCleanRecord));
     }
-
-    /**
-     * 保洁主动开始打扫
-     */
-    @PreAuthorize("@ss.hasPermi('office:cleanrecord:add')")
-    @Log(title = "保洁主动开始打扫", businessType = BusinessType.INSERT)
-    @PostMapping(value = "/startClean/{id}")
-    public AjaxResult startClean(@PathVariable("id") Long id) {
-        return toAjax(tRoomCleanRecordService.insertTRoomCleanRecordByCleaner(id));
-    }
-
-    /**
-     * 保洁主动打扫完毕
-     */
-    @PreAuthorize("@ss.hasPermi('office:cleanrecord:add')")
-    @Log(title = "保洁主动打扫完毕", businessType = BusinessType.INSERT)
-    @PostMapping(value = "/finishClean/{id}")
-    public AjaxResult finishClean(@PathVariable("id") Long id) {
-        return toAjax(tRoomCleanRecordService.updateTRoomCleanRecordByCleaner(id));
-    }
-
 
     /**
      * 修改房间打扫记录

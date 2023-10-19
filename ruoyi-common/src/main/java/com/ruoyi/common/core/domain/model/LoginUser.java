@@ -20,6 +20,16 @@ public class LoginUser implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 用户ID
+     */
+    private Long userId;
+
+    /**
+     * 部门ID
+     */
+    private Long deptId;
+
+    /**
      * 用户唯一标识
      */
     private String token;

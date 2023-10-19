@@ -64,12 +64,6 @@ public class OfficeTask {
      * 5-10秒
      */
     public void scanOpenEquipment() {
-        TEquipment equipment = new TEquipment();
-        equipment.setOnOff("Y");
-        final List<TEquipment> equipments = equipmentService.selectTEquipmentList(equipment);
-
-        if (equipments.size() == 0)
-            return;
 
         SysDictData dictData = new SysDictData();
         dictData.setDictType("equipment_type");
@@ -83,9 +77,21 @@ public class OfficeTask {
             clooseDoorMinute = Integer.parseInt(clooseDoor.get(0).getDictValue());
         }
 
+        if(clooseDoorMinute==0){
+            return;
+        }
+
+        TEquipment equipment = new TEquipment();
+        equipment.setOnOff("Y");
+        final List<TEquipment> equipments = equipmentService.selectTEquipmentList(equipment);
+
+        if (equipments.size() == 0)
+            return;
+
         MqttSendClient sendClient = new MqttSendClient();
         for (TEquipment eq : equipments) {
             if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(eq.getEquipType())) {
+
                 if (eq.getRecentOpenTime() != null && (new Date().getTime() - eq.getRecentOpenTime().getTime()) > (clooseDoorMinute * 1000)) {
                     Map<String, String> msg = new HashMap<>();
                     String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[1].split(":");

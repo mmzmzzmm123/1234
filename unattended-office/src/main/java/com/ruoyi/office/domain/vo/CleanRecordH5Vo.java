@@ -10,7 +10,6 @@ public class CleanRecordH5Vo extends TRoomCleanRecord {
     private String roomName;
     private Long duration;
     private String roomStatus;
-    private Long roomId;
     private Long storeId;
 
 }

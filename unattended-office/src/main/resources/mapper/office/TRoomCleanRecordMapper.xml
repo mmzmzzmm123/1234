@@ -57,7 +57,7 @@
         <include refid="selectTRoomCleanRecordVo"/>
         where id = #{id}
     </select>
-    <select id="selectTRoomCleanRecordH5List" parameterType="TRoomCleanRecord" resultType="CleanRecordH5Vo">
+    <select id="selectTRoomCleanRecordH5List" parameterType="CleanRecordH5Vo" resultType="com.ruoyi.office.domain.vo.CleanRecordH5Vo">
         select c.*,r.name as roomName, s.name as storeName, r.status as roomStatus,r.id as roomId,s.id as storeId
         from t_room_clean_record c
         left join t_room r on c.room_id =r.id
@@ -71,7 +71,23 @@
             <if test="startTime != null ">and c.start_time = #{startTime}</if>
             <if test="endTime != null ">and c.end_time = #{endTime}</if>
             <if test="status != null ">and c.status = #{status}</if>
-            <if test="createBy != null ">and s.user_id = #{createBy}</if>
+            <if test="storeId != null ">and s.id = #{storeId}</if>
+        </where>
+    </select>
+
+    <select id="selectRoomAndCleanRecordByStatus" parameterType="CleanRecordH5Vo" resultType="com.ruoyi.office.domain.vo.CleanRecordH5Vo">
+        select c.*,r.name as roomName, s.name as storeName, r.status as roomStatus,r.id as roomId,s.id as storeId
+        from t_room r
+        left join t_room_clean_record c on c.room_id =r.id and c.status in (0,1)
+        left join t_store s on r.store_id =s.id
+        <where>
+            <if test="orderNo != null ">and order_no = #{orderNo}</if>
+            <if test="roomId != null ">and room_id = #{roomId}</if>
+            <if test="wxUserId != null ">and wx_user_id = #{wxUserId}</if>
+            <if test="receiveTime != null ">and receive_time = #{receiveTime}</if>
+            <if test="startTime != null ">and c.start_time = #{startTime}</if>
+            <if test="endTime != null ">and c.end_time = #{endTime}</if>
+            <if test="storeId != null ">and s.id = #{storeId}</if>
         </where>
     </select>
 

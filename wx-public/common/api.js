@@ -229,8 +229,9 @@ const api = {
 	},
 	cleanerCloseRoom(params) {
 		return post('office/capi/roomclose', params)
-	},
+	}
 }
+
 const install = (Vue, options) => {
 	Vue.prototype.$api = api
 	Vue.prototype.$toast = function(title) {

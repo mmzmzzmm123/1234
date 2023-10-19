@@ -3,6 +3,7 @@ package com.ruoyi.office.controller;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TRoomCleanRecord;
@@ -40,26 +41,27 @@ public class CleanerController extends BaseController {
      * @return
      */
     @ApiOperation("保洁开包厢")
-//      @PreAuthorize("@ss.hasRole('cleaner') || @ss.hasStoreRole(#req.storeId, 'ad')")
+    @PreAuthorize("@ss.hasRole('cleaner') || @ss.hasStoreRole(#req.storeId, 'cleaner')")
     @PostMapping("/roomopen")
     public AjaxResult openRoom(@RequestBody CleanerRoomOpenReq req) {
 
-        Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
+        Long userId = SecurityUtils.getLoginUser().getWxUser().getId();
         try {
-            roomService.openCleanerRoomEquipment(req, userId);
+//            roomService.openCleanerRoomEquipment(req, userId);
 
             TRoomCleanRecord cleanRecord = new TRoomCleanRecord();
             cleanRecord.setCreateBy(userId + "");
+            cleanRecord.setWxUserId(userId);
             cleanRecord.setRoomId(req.getRoomId());
             cleanRecord.setStartTime(new Date());
             cleanRecord.setStatus(OfficeEnum.CleanRecordStatus.CLEANING.getCode());
             cleanRecordService.insertTRoomCleanRecord(cleanRecord);
 
-            TRoom room = new TRoom();
+          /*  TRoom room = new TRoom();
             room.setId(req.getRoomId());
             // 2 清洁中
             room.setStatus(OfficeEnum.RoomStatus.IN_CLEAN.getCode());
-            roomService.updateTRoom(room);
+            roomService.updateTRoom(room);*/
 
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -102,14 +104,19 @@ public class CleanerController extends BaseController {
 
         Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
         try {
-            roomService.closeCleanerRoomEquipment(req, userId);
+            TRoomCleanRecord exRecord = roomCleanRecordService.selectTRoomCleanRecordById(req.getRecordId());
+            if(exRecord==null){
+                throw new ServiceException("未找到制定打扫记录");
+            }
+//            roomService.closeCleanerRoomEquipment(req, userId); // 测试关闭 ，上线打开
 
             TRoomCleanRecord cleanRecord = new TRoomCleanRecord();
-            cleanRecord.setCreateBy(userId + "");
-            cleanRecord.setRoomId(req.getRoomId());
-            cleanRecord.setStartTime(new Date());
+            cleanRecord.setId(req.getRecordId());
+            cleanRecord.setEndTime(new Date());
             cleanRecord.setStatus(OfficeEnum.CleanRecordStatus.COMPLETE.getCode());
-            cleanRecordService.insertTRoomCleanRecord(cleanRecord);
+            cleanRecord.setUpdateBy(userId + "");
+            cleanRecord.setUpdateTime(new Date());
+            cleanRecordService.updateTRoomCleanRecord(cleanRecord);
 
             TRoom room = new TRoom();
             room.setId(req.getRoomId());
@@ -151,11 +158,11 @@ public class CleanerController extends BaseController {
      * @return
      */
     @ApiOperation("保洁开大门")
-//      @PreAuthorize("@ss.hasRole('cleaner') || @ss.hasStoreRole(#req.storeId, 'ad')")
+    @PreAuthorize("@ss.hasRole('cleaner') || @ss.hasStoreRole(#req.storeId, 'cleaner')")
     @PostMapping("/storeopen")
     public AjaxResult openStore(@RequestBody CleanerRoomOpenReq req) {
 
-        Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
+        Long userId = SecurityUtils.getLoginUser().getUserId();
         try {
             roomService.openCleanerStore(req, userId);
         } catch (Exception e) {
@@ -173,9 +180,9 @@ public class CleanerController extends BaseController {
      */
     //@PreAuthorize("@ss.hasRole('cleaner')")
     @GetMapping("/record")
-    public TableDataInfo h5list(TRoomCleanRecord tRoomCleanRecord) {
-       /* Long userId = SecurityUtils.getLoginUser().getWxUser().getId();
-        tRoomCleanRecord.setWxUserId(userId);*/
+    public TableDataInfo h5list(CleanRecordH5Vo tRoomCleanRecord) {
+        Long userId = SecurityUtils.getLoginUser().getWxUser().getId();
+        tRoomCleanRecord.setWxUserId(userId);
         startPage();
         List<CleanRecordH5Vo> list = roomCleanRecordService.selectTRoomCleanRecordH5List(tRoomCleanRecord);
 
@@ -192,12 +199,12 @@ public class CleanerController extends BaseController {
     @ApiOperation("房间列表")
     //@PreAuthorize("@ss.hasRole('cleaner')")
     @GetMapping("/room/list")
-    public TableDataInfo list(TRoom tRoom) {
+    public TableDataInfo list(CleanRecordH5Vo qry) {
+
+//        qry.setStatus(OfficeEnum.CleanRecordStatus.CLEANING.getCode());
         startPage();
-        List<TRoom> list = tRoomService.selectTRoomList(tRoom);
-        for (TRoom vo : list) {
-            vo.setStatus(OfficeEnum.RoomStatus.GetValueByCode(vo.getStatus()).getInfo());
-        }
+        List<CleanRecordH5Vo> list = roomCleanRecordService.selectRoomAndCleanRecordByStatus(qry);
+
         return getDataTable(list);
     }
 }
