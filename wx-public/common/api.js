@@ -4,8 +4,9 @@ import {
 } from "@/common/config.js"
 var i18n
 
-function toLogin(){
-	location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxec3fc9831532aa21&redirect_uri=https://foreverjade.cn/pages/login/mp-login&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect'
+function toLogin() {
+	location.href =
+		'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxec3fc9831532aa21&redirect_uri=https://foreverjade.cn/pages/login/mp-login&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect'
 }
 const client = new HttpClient({
 	baseApiUrl: BaseApiUrl + '/',
@@ -30,12 +31,12 @@ const api = {
 	login(param) {
 		return client.getToken(param)
 	},
-	logout(){
-		return post('logout').then(res=>{
+	logout() {
+		return post('logout').then(res => {
 			client.token = ''
 		})
 	},
-	bindMerchant(param){
+	bindMerchant(param) {
 		return post('binding', param)
 	},
 	getUserInfo() {
@@ -130,16 +131,16 @@ const api = {
 	delRoomPack(id) {
 		return request('office/roompackage/' + id, null, true, 'delete')
 	},
-	getStorePromotionList(params){
+	getStorePromotionList(params) {
 		return get('office/storepromotion/h5list', params)
 	},
-	getStorePromotion(id){
+	getStorePromotion(id) {
 		return get('office/storepromotion/' + id)
 	},
-	updateStorePromotion(params){
+	updateStorePromotion(params) {
 		return request('office/storepromotion', params, true, 'put')
 	},
-	addStorePromotion(params){
+	addStorePromotion(params) {
 		return post('office/storepromotion', params)
 	},
 	delStorePromotion(id) {
@@ -148,72 +149,78 @@ const api = {
 	getRoomList(params) {
 		return get('office/room/list', params)
 	},
-	getRoomOrderList(params){
+	getRoomOrderList(params) {
 		return get('office/roomorder/h5list', params)
 	},
-	getCleanerRoomList(params){
+	getCleanerRoomList(params) {
 		return get('office/capi/room/list', params)
 	},
-	getCleanRecordList(params){
+	getCleanRecordList(params) {
 		return get('office/cleanrecord/h5list', params)
 	},
-	getCleanerCleanRecordList(params){
+	getCleanerCleanRecordList(params) {
 		return get('office/capi/record', params)
 	},
-	getNoticeList(params){
+	getNoticeList(params) {
 		return get('system/notice/list', params)
 	},
-	getStore(id){
+	getStore(id) {
 		return get('office/store/' + id)
 	},
-	getRoom(id){
+	getRoom(id) {
 		return get('office/room/' + id)
 	},
-	addRoom(params){
+	addRoom(params) {
 		return post('office/room', params)
 	},
-	editRoom(params){
+	editRoom(params) {
 		return request('office/room', params, true, 'PUT')
 	},
-	deleteRoom(id){
+	deleteRoom(id) {
 		return request('office/room/' + id, null, true, 'delete')
 	},
-	getDict(dictType){
+	getDict(dictType) {
 		return get('system/dict/data/type/' + dictType)
 	},
-	openStore(storeId){
-		return post('office/api/openStore/'+storeId)
+	openStore(storeId) {
+		return post('office/api/openStore/' + storeId)
 	},
-	openRoom(param){
-		return post('office/mapi/roomopenH5',param)
+	openRoom(param) {
+		return post('office/mapi/roomopenH5', param)
 	},
-	closeRoom(param){
-		return post('office/mapi/roomcloseH5',param)
+	closeRoom(param) {
+		return post('office/mapi/roomcloseH5', param)
 	},
-	comingSoon(){
+	comingSoon() {
 		uni.showToast({
-			icon:"none",
-			title:"即将上线"
+			icon: "none",
+			title: "即将上线"
 		})
 	},
-	addRoomOrder(params){
+	addRoomOrder(params) {
 		return post('office/roomorder/order4Guest', params)
 	},
-	getStoreCrewList(params){
+	getStoreCrewList(params) {
 		return get('office/storeuser/h5list', params)
 	},
-	getH5Roles(){
+	getH5Roles() {
 		return get('office/mapi/role/list')
 	},
-	editStoreCrew(params){
+	editStoreCrew(params) {
 		return request('office/storeuser', params, true, 'PUT')
 	},
-	addStoreCrew(params){
+	addStoreCrew(params) {
 		return post('office/storeuser', params)
 	},
-	getStoreUser(id){
+	getStoreUser(id) {
 		return get('office/storeuser/' + id)
 	},
+	startCleanRoom(roomId) {
+		return post('office/cleanrecord/startClean/' + roomId)
+	},
+	finishCleanRoom(roomId) {
+		return post('office/cleanrecord/finishClean/' + roomId)
+	}
 }
 const install = (Vue, options) => {
 	Vue.prototype.$api = api

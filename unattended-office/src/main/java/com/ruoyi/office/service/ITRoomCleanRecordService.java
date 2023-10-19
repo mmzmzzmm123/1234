@@ -37,6 +37,14 @@ public interface ITRoomCleanRecordService
     public int insertTRoomCleanRecord(TRoomCleanRecord tRoomCleanRecord);
 
     /**
+     * 新增房间打扫记录
+     *
+     * @param roomId 房间打扫记录
+     * @return 结果
+     */
+    public int insertTRoomCleanRecordByCleaner(Long roomId);
+
+    /**
      * 修改房间打扫记录
      * 
      * @param tRoomCleanRecord 房间打扫记录
@@ -61,4 +69,6 @@ public interface ITRoomCleanRecordService
     public int deleteTRoomCleanRecordById(Long id);
 
     List<CleanRecordH5Vo> selectTRoomCleanRecordH5List(TRoomCleanRecord tRoomCleanRecord);
+
+    public int updateTRoomCleanRecordByCleaner(Long roomId);
 }

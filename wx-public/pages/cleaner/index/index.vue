@@ -48,8 +48,12 @@
 						<view>打扫时长: {{room.duration}} 分钟</view>
 					</view> -->
 						<view class="card__btn-list">
-							<u-button size="large" type="success">开始打扫</u-button>
-							<u-button size="large" type="error">临时开启包厢</u-button>
+							<u-button size="large" type="success" @click="onStartCleanClick(room)">开始打扫</u-button>
+							<u-button size="large" type="success" @click="onFinishCleanClick(room)">打扫完毕</u-button>
+						</view>
+						<view class="card__btn-list">
+							<u-button size="large" type="success" @click="onOpenRoomClick(room)">临时开启包厢</u-button>
+							<u-button size="large" type="error" @click="onCloseRoomClick(room)">临时关闭包厢</u-button>
 						</view>
 					</view>
 				</view>
@@ -60,6 +64,7 @@
 </template>
 
 <script>
+	import code from '../../../uni_modules/uview-ui/libs/config/props/code'
 	export default {
 		data() {
 			return {
@@ -74,6 +79,7 @@
 				},
 				orderList: [],
 				roomList: [],
+				isCleaning: true
 			}
 		},
 		computed: {
@@ -86,7 +92,7 @@
 			roomStatus() {
 				return this.$store.state.dicts.room_status
 			},
-			loginUser(){
+			loginUser() {
 				return this.$store.state.loginUser
 			}
 		},
@@ -114,7 +120,7 @@
 					uni.stopPullDownRefresh()
 				})
 			},
-			getCleanRecordList(){
+			getCleanRecordList() {
 				// this.searchParam.roomId = this.roomId;
 				this.searchParam.storeId = this.$store.state.currentStore.id;
 				this.$api.getCleanerCleanRecordList(this.searchParam).then(res => {
@@ -144,7 +150,32 @@
 			},
 			onFilterClick(roomStatus) {
 				this.queryParam.status = roomStatus
-			}
+			},
+			onStartCleanClick(room) {
+				if (room.status == "清洁中") {
+					this.$api.startCleanRoom(Number(room.id)).then(res => {
+						this.$u.toast('请开包厢进行打扫')
+					})
+				} else {
+					this.$u.toast('房间状态不允许保洁, 请联系商家')
+				}
+			},
+			onFinishCleanClick(room) {
+				if (room.status == "清洁中") {
+					this.$api.finishCleanRoom(Number(room.id)).then(res => {
+						this.refresh()
+						this.$u.toast('已完成打扫')
+					})
+				} else {
+					this.$u.toast('房间未在清洁中，请先开始打扫')
+				}
+			},
+			onOpenRoomClick(room){
+				
+			},
+			onCloseRoomClick(room){
+				
+			},
 		}
 	}
 </script>
@@ -222,6 +253,7 @@
 
 	.card__btn-list {
 		display: flex;
+		margin-bottom: 30rpx;
 
 		.u-button {
 			margin: 0 20rpx;
