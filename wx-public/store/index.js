@@ -101,17 +101,21 @@ const store = new Vuex.Store({
 				}
 				Api.api.getStoreList().then(res=>{
 					state.storeList = res.rows
-					const currentStoreId = state.currentStore ? state.currentStore.id : 0
-					if(currentStoreId){
-						state.currentStore = res.rows.find(x=>x.id == currentStoreId)
+					if(res.rows.length){
+						const currentStoreId = state.currentStore ? state.currentStore.id : 0
+						if(currentStoreId){
+							state.currentStore = res.rows.find(x=>x.id == currentStoreId)
+						}else{
+							state.currentStore = res.rows[0]
+						}
+						lifeData['currentStore'] = state.currentStore
+						uni.setStorage({
+							key: 'lifeData',
+							data: lifeData
+						})
 					}else{
-						state.currentStore = res.rows[0]
+						state.currentStore = {id: 0, name: '暂无门店'}
 					}
-					lifeData['currentStore'] = state.currentStore
-					uni.setStorage({
-						key: 'lifeData',
-						data: lifeData
-					})
 				})
 			})
 		},
