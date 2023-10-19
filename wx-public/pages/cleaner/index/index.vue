@@ -135,6 +135,7 @@
 					name: 'currentStore',
 					value: store
 				})
+				this.refresh()
 			},
 			toManager() {
 				uni.navigateTo({
