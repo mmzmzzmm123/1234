@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xinyu.idol.mapper.ContentMapper">
+
+<!--    <update id="updateByGuid">-->
+<!--        update t_content-->
+<!--        set-->
+<!--            display_name=#{contentEntity.displayName},-->
+<!--            description=#{contentEntity.description},-->
+<!--            classification1=#{contentEntity.description},-->
+<!--            classification2=#{contentEntity.description},-->
+<!--            classification3=#{contentEntity.description},-->
+<!--            classification4=#{contentEntity.description},-->
+<!--            special_tag=#{contentEntity.description},-->
+<!--            type=#{contentEntity.type},-->
+<!--            icon_osskey=#{contentEntity.iconOsskey},-->
+<!--            pak_osskey=#{contentEntity.pakOsskey},-->
+<!--            isTest=#{contentEntity.isTest},-->
+<!--            ownerid=#{contentEntity.ownerid},-->
+<!--            is_hide=#{contentEntity.isHide},-->
+<!--            replace_times=#{contentEntity.replaceTimes},-->
+<!--            idemHash=#{contentEntity.idemHash},-->
+<!--            pakSha1=#{contentEntity.pakSha1},-->
+<!--            currentUploadTime=#{contentEntity.currentUploadTime},-->
+<!--            identifier=#{contentEntity.currentUploadTime},-->
+<!--            json_osskey=#{contentEntity.jsonOsskey},-->
+<!--            json_sha1=#{contentEntity.jsonSha1},-->
+<!--            pakFileSize=#{contentEntity.pakFileSize},-->
+<!--            jsonFileSize=#{contentEntity.jsonFileSize},-->
+<!--            sort=#{contentEntity.sort}-->
+<!--            -->
+<!--            -->
+<!--        where guid=#{contentEntity.guid}-->
+
+<!--    </update>-->
+</mapper>
