@@ -18,10 +18,10 @@
 			</navigator>
 		</view>
 		<view class="c-filter-bar">
-			<view class="c-filter-item" :class="queryParam.status == null ? 'c-filter-item--selected':''"
+			<view class="c-filter-item" :class="searchParam.status == null ? 'c-filter-item--selected':''"
 				@click="onFilterClick(null)">全部</view>
 			<view v-for="item in roomStatus" class="c-filter-item" :key="item.value"
-				:class="queryParam.status == item.value ? 'c-filter-item--selected':''"
+				:class="searchParam.status == item.value ? 'c-filter-item--selected':''"
 				@click="onFilterClick(item.value)">{{item.name}}</view>
 		</view>
 		<view style="margin: 30rpx 80rpx;">
@@ -31,7 +31,7 @@
 			<view class="card" v-for="(room, index) in roomList" :key="room.id">
 				<view class="card__content">
 					<!-- <uo-image src="https://mbdp01.bdstatic.com/static/landing-pc/img/logo_top.79fdb8c2.png"></uo-image> -->
-					<view class="card__content__right">
+					<view class="card__content__right"> 
 						<view class="card__content__head">
 							<!-- <navigator class="card-title" :url="'room?id='+room.id+'&name='+room.name">
 								<view class="card-title">{{room.storeName}}</view>
