@@ -422,6 +422,10 @@ public class ApiController extends BaseController {
                 minutes = Integer.parseInt(sysDictData.get(0).getDictValue());
             }
             TRoomOrder roomOrder = roomOrderService.selectTRoomOrderById(orderId);
+            if (roomOrder.getUserId() != SecurityUtils.getLoginUser().getWxUser().getId()) {
+                throw new ServiceException("非本人订单");
+            }
+
             long diff = (roomOrder.getStartTime().getTime() - new Date().getTime()) / 60000;
             if (diff > minutes)
                 return AjaxResult.error("订单开始前" + minutes + "分钟才可以开门");

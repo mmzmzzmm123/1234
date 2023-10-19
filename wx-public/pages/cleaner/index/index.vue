@@ -18,10 +18,10 @@
 			</navigator>
 		</view>
 		<view class="c-filter-bar">
-			<view class="c-filter-item" :class="queryParam.roomStatus == null ? 'c-filter-item--selected':''"
+			<view class="c-filter-item" :class="searchParam.status == null ? 'c-filter-item--selected':''"
 				@click="onFilterClick(null)">全部</view>
 			<view v-for="item in roomStatus" class="c-filter-item" :key="item.value"
-				:class="queryParam.roomStatus == item.value ? 'c-filter-item--selected':''"
+				:class="searchParam.status == item.value ? 'c-filter-item--selected':''"
 				@click="onFilterClick(item.value)">{{item.name}}</view>
 		</view>
 		<view style="margin: 30rpx 80rpx;">
@@ -31,7 +31,7 @@
 			<view class="card" v-for="(room, index) in roomList" :key="room.id">
 				<view class="card__content">
 					<!-- <uo-image src="https://mbdp01.bdstatic.com/static/landing-pc/img/logo_top.79fdb8c2.png"></uo-image> -->
-					<view class="card__content__right">
+					<view class="card__content__right"> 
 						<view class="card__content__head">
 							<!-- <navigator class="card-title" :url="'room?id='+room.id+'&name='+room.name">
 								<view class="card-title">{{room.storeName}}</view>
@@ -68,7 +68,7 @@
 		data() {
 			return {
 				queryParam: {
-					roomStatus: null
+					status: null
 				},
 				searchParam: {
 					name: '',
@@ -90,7 +90,7 @@
 			roomStatus() {
 				return this.$store.state.dicts.room_status
 			},
-			loginUser() {
+			loginUser(){
 				return this.$store.state.loginUser
 			}
 		},
@@ -109,7 +109,6 @@
 					this.searchParam.pageNum = 1
 				}
 				this.searchParam.storeId = this.$store.state.currentStore.id;
-				this.searchParam.roomStatus = this.queryParam.roomStatus
 				this.$api.getCleanerRoomList(this.searchParam).then(res => {
 					if (nextPage) {
 						this.roomList.push(...res.rows)
@@ -119,7 +118,7 @@
 					uni.stopPullDownRefresh()
 				})
 			},
-			getCleanRecordList() {
+			getCleanRecordList(){
 				// this.searchParam.roomId = this.roomId;
 				this.searchParam.storeId = this.$store.state.currentStore.id;
 				this.$api.getCleanerCleanRecordList(this.searchParam).then(res => {
@@ -149,7 +148,7 @@
 				})
 			},
 			onFilterClick(roomStatus) {
-				this.queryParam.roomStatus = roomStatus
+				this.searchParam.status = roomStatus
 				this.refresh()
 			},
 			onStartCleanClick(room) {
@@ -193,7 +192,7 @@
 					this.$u.toast('包厢已关闭')
 				})
 			},
-			onOpenStoreClick(storeId) {
+			onOpenStoreClick(storeId){
 				var params = {
 					roomId: room.roomId,
 					storeId: this.currentStore.id
@@ -280,15 +279,13 @@
 	.card__btn-clean-list {
 		display: flex;
 		margin-bottom: 30rpx;
-
 		.u-button {
 			margin: 0 20rpx;
 		}
 	}
-
+	
 	.card__btn-room-list {
 		display: flex;
-
 		.u-button {
 			margin: 0 20rpx;
 		}

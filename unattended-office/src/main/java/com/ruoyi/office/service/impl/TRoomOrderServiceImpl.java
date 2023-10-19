@@ -27,6 +27,7 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.*;
@@ -1455,19 +1456,20 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
     @Override
     public int order4Guest(TRoomOrder tRoomOrder) {
-        TWxUser qry = new TWxUser();
+        /*TWxUser qry = new TWxUser();
         qry.setPhone(tRoomOrder.getUserId() + "");
         final List<TWxUser> tWxUsers = wxUserService.selectTWxUserList(qry);
         if (tWxUsers.size() == 0) {
             throw new ServiceException("该手机号还未登录过小程序，未能识别");
         }
-        tRoomOrder.setUserId(tWxUsers.get(0).getId());
+        tRoomOrder.setUserId(tWxUsers.get(0).getId());*/
         tRoomOrder.setPayType(0);//
         tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());//
         tRoomOrder.setOrderNo(getOrderNo(tRoomOrder.getRoomId()));
         tRoomOrder.setTotalAmount(new BigDecimal(0));
         tRoomOrder.setPayAmount(new BigDecimal(0));
         tRoomOrder.setWelfareAmount(new BigDecimal(0));
+        tRoomOrder.setRemark(IdUtils.randomUUID());
         return tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
     }
 

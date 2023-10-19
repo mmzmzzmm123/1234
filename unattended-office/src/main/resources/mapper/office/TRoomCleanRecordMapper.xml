@@ -81,6 +81,7 @@
         left join t_room_clean_record c on c.room_id =r.id and c.status in (0,1)
         left join t_store s on r.store_id =s.id
         <where>
+            <if test="status != null ">and r.status = #{status}</if>
             <if test="orderNo != null ">and order_no = #{orderNo}</if>
             <if test="roomId != null ">and room_id = #{roomId}</if>
             <if test="wxUserId != null ">and wx_user_id = #{wxUserId}</if>
