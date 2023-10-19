@@ -91,7 +91,7 @@ const store = new Vuex.Store({
 				state.wxUser = res.wxUser
 				lifeData['wxUser'] = res.wxUser
 				state.storeRoles = res.storeRoles
-				if(!state.storeRoles.length || !state.loginUser.userId){
+				if(!state.storeRoles.length && !state.loginUser.userId){
 					return
 				}
 				Api.api.getStoreList().then(res=>{
