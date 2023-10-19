@@ -1,11 +1,14 @@
 package com.ruoyi.office.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.CleanRecordH5Vo;
+import com.ruoyi.office.service.ITRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -120,5 +123,58 @@ public class TRoomCleanRecordServiceImpl extends ServiceImpl<TRoomCleanRecordMap
 
         return cleanRecordH5Vos;
     }
+
+    @Override
+    public int insertTRoomCleanRecordByCleaner(Long roomId) {
+        TRoomCleanRecord tRoomCleanRecord = new TRoomCleanRecord();
+        tRoomCleanRecord.setRoomId(roomId);
+        tRoomCleanRecord.setStatus(OfficeEnum.CleanRecordStatus.CLEANING.getCode());
+        List<TRoomCleanRecord> tRoomCleanRecordList = tRoomCleanRecordMapper.selectTRoomCleanRecordList(tRoomCleanRecord);
+        if (tRoomCleanRecordList.size() > 0) {
+            return 1;
+        }
+        tRoomCleanRecord = new TRoomCleanRecord();
+        tRoomCleanRecord.setRoomId(roomId);
+        tRoomCleanRecord.setStartTime(new Date());
+        if (SecurityUtils.getLoginUser().getWxUser() != null) {
+            tRoomCleanRecord.setWxUserId(SecurityUtils.getLoginUser().getWxUser().getId());
+        }
+        tRoomCleanRecord.setStatus(OfficeEnum.CleanRecordStatus.CLEANING.getCode());
+        return tRoomCleanRecordMapper.insertTRoomCleanRecord(tRoomCleanRecord);
+    }
+
+    @Autowired
+    ITRoomService itRoomService;
+
+    /**
+     * 修改房间打扫记录
+     *
+     * @param roomId 房间号
+     * @return 结果
+     */
+    @Override
+    public int updateTRoomCleanRecordByCleaner(Long roomId) {
+        TRoomCleanRecord tRoomCleanRecord = new TRoomCleanRecord();
+        tRoomCleanRecord.setRoomId(roomId);
+        tRoomCleanRecord.setStatus(OfficeEnum.CleanRecordStatus.CLEANING.getCode());
+        if (SecurityUtils.getLoginUser().getWxUser() != null) {
+            tRoomCleanRecord.setWxUserId(SecurityUtils.getLoginUser().getWxUser().getId());
+        }
+        List<TRoomCleanRecord> tRoomCleanRecordList = tRoomCleanRecordMapper.selectTRoomCleanRecordList(tRoomCleanRecord);
+        int res = 0;
+        for (TRoomCleanRecord item : tRoomCleanRecordList) {
+            item.setStatus(OfficeEnum.CleanRecordStatus.COMPLETE.getCode());
+            item.setEndTime(new Date());
+            tRoomCleanRecordMapper.updateTRoomCleanRecord(item);
+
+            //修改房间状态
+            TRoom tRoom = itRoomService.selectTRoomById(roomId);
+            tRoom.setStatus(OfficeEnum.RoomStatus.CAN_USE.getCode());
+            itRoomService.updateTRoom(tRoom);
+            res++;
+        }
+        return res;
+    }
+
 
 }
