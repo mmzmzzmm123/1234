@@ -18,10 +18,10 @@
 			</navigator>
 		</view>
 		<view class="c-filter-bar">
-			<view class="c-filter-item" :class="queryParam.status == null ? 'c-filter-item--selected':''"
+			<view class="c-filter-item" :class="queryParam.roomStatus == null ? 'c-filter-item--selected':''"
 				@click="onFilterClick(null)">全部</view>
 			<view v-for="item in roomStatus" class="c-filter-item" :key="item.value"
-				:class="queryParam.status == item.value ? 'c-filter-item--selected':''"
+				:class="queryParam.roomStatus == item.value ? 'c-filter-item--selected':''"
 				@click="onFilterClick(item.value)">{{item.name}}</view>
 		</view>
 		<view style="margin: 30rpx 80rpx;">
@@ -68,7 +68,7 @@
 		data() {
 			return {
 				queryParam: {
-					status: null
+					roomStatus: null
 				},
 				searchParam: {
 					name: '',
@@ -90,7 +90,7 @@
 			roomStatus() {
 				return this.$store.state.dicts.room_status
 			},
-			loginUser(){
+			loginUser() {
 				return this.$store.state.loginUser
 			}
 		},
@@ -109,6 +109,7 @@
 					this.searchParam.pageNum = 1
 				}
 				this.searchParam.storeId = this.$store.state.currentStore.id;
+				this.searchParam.roomStatus = this.queryParam.roomStatus
 				this.$api.getCleanerRoomList(this.searchParam).then(res => {
 					if (nextPage) {
 						this.roomList.push(...res.rows)
@@ -118,7 +119,7 @@
 					uni.stopPullDownRefresh()
 				})
 			},
-			getCleanRecordList(){
+			getCleanRecordList() {
 				// this.searchParam.roomId = this.roomId;
 				this.searchParam.storeId = this.$store.state.currentStore.id;
 				this.$api.getCleanerCleanRecordList(this.searchParam).then(res => {
@@ -135,6 +136,7 @@
 					name: 'currentStore',
 					value: store
 				})
+				this.refresh()
 			},
 			toManager() {
 				uni.navigateTo({
@@ -147,7 +149,8 @@
 				})
 			},
 			onFilterClick(roomStatus) {
-				this.queryParam.status = roomStatus
+				this.queryParam.roomStatus = roomStatus
+				this.refresh()
 			},
 			onStartCleanClick(room) {
 				if (room.roomStatus == "清洁中") {
@@ -190,7 +193,7 @@
 					this.$u.toast('包厢已关闭')
 				})
 			},
-			onOpenStoreClick(storeId){
+			onOpenStoreClick(storeId) {
 				var params = {
 					roomId: room.roomId,
 					storeId: this.currentStore.id
@@ -277,13 +280,15 @@
 	.card__btn-clean-list {
 		display: flex;
 		margin-bottom: 30rpx;
+
 		.u-button {
 			margin: 0 20rpx;
 		}
 	}
-	
+
 	.card__btn-room-list {
 		display: flex;
+
 		.u-button {
 			margin: 0 20rpx;
 		}
