@@ -220,7 +220,16 @@ const api = {
 	},
 	finishCleanRoom(roomId) {
 		return post('office/cleanrecord/finishClean/' + roomId)
-	}
+	},
+	cleanerOpenStore(storeId) {
+		return post('office/capi/storeopen/' + storeId)
+	},
+	cleanerOpenRoom(params) {
+		return post('office/capi/roomopen', params)
+	},
+	cleanerCloseRoom(params) {
+		return post('office/capi/roomclose', params)
+	},
 }
 const install = (Vue, options) => {
 	Vue.prototype.$api = api

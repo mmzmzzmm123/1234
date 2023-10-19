@@ -25,7 +25,7 @@
 				@click="onFilterClick(item.value)">{{item.name}}</view>
 		</view>
 		<view style="margin: 30rpx 80rpx;">
-			<u-button type="primary" size="large">开大门</u-button>
+			<u-button type="primary" size="large" @click="onOpenStoreClick(currentStore.id)">开大门</u-button>
 		</view>
 		<view class="card-list">
 			<view class="card" v-for="(room, index) in roomList" :key="room.id">
@@ -170,12 +170,37 @@
 					this.$u.toast('房间未在清洁中，请先开始打扫')
 				}
 			},
-			onOpenRoomClick(room){
-				
+			onOpenRoomClick(room) {
+				if (room.status == "清洁中") {
+					var params = {
+						roomId: room.id,
+						storeId: this.currentStore.id
+					}
+					this.$api.cleanerOpenRoom(params).then(res => {
+						this.$u.toast('包厢已打开')
+					})
+				} else {
+					this.$u.toast('房间未在清洁中，无法打开')
+				}
 			},
-			onCloseRoomClick(room){
-				
+			onCloseRoomClick(room) {
+				var params = {
+					roomId: room.id,
+					storeId: this.currentStore.id
+				}
+				this.$api.cleanerCloseRoom(params).then(res => {
+					this.$u.toast('包厢已关闭')
+				})
 			},
+			onOpenStoreClick(storeId){
+				var params = {
+					roomId: room.id,
+					storeId: this.currentStore.id
+				}
+				this.$api.cleanerOpenStore(params).then(res => {
+					this.$u.toast('大门已打开')
+				})
+			}
 		}
 	}
 </script>
