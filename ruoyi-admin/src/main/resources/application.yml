@@ -241,6 +241,11 @@ wx:
     appSecret: daf7d8f1b2033493921f0731dc0a2876
     redirectUri: http://wx.ssgpsy.com/pages/logincallback
 
+# 小程序
+wxchat:
+  appId: wxff96ed0f6fbd6933
+  appSecret: c18230e4d256ddcb6d68fee722c3a4c7
+
 #测试
 #wx:
 #  login:
