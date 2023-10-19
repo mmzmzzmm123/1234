@@ -36,8 +36,8 @@
 							<!-- <navigator class="card-title" :url="'room?id='+room.id+'&name='+room.name">
 								<view class="card-title">{{room.storeName}}</view>
 							</navigator> -->
-							<view>包厢名称: {{room.name}}</view>
-							<view>包厢状态: {{room.status}}</view>
+							<view>包厢名称: {{room.roomName}}</view>
+							<view>包厢状态: {{room.roomStatus}}</view>
 						</view>
 						<!-- <view>剩余打扫时间:</view> -->
 						<!-- <view class="card__content__body">
