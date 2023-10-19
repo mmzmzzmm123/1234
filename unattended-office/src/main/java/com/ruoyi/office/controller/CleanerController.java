@@ -47,7 +47,7 @@ public class CleanerController extends BaseController {
 
         Long userId = SecurityUtils.getLoginUser().getWxUser().getId();
         try {
-//            roomService.openCleanerRoomEquipment(req, userId);
+            roomService.openCleanerRoomEquipment(req, userId);
 
             TRoomCleanRecord cleanRecord = new TRoomCleanRecord();
             cleanRecord.setCreateBy(userId + "");
@@ -83,6 +83,10 @@ public class CleanerController extends BaseController {
 
         Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
         try {
+            TRoom room = roomService.selectTRoomById(req.getRoomId());
+            if (!OfficeEnum.RoomStatus.IN_CLEAN.getCode().equalsIgnoreCase(room.getStatus())) {
+                throw new ServiceException("清洁中的房间才可以开门");
+            }
             roomService.openCleanerRoomEquipment(req, userId);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
@@ -105,10 +109,10 @@ public class CleanerController extends BaseController {
         Long userId = SecurityUtils.getLoginUser().getWxUser().getUserId();
         try {
             TRoomCleanRecord exRecord = roomCleanRecordService.selectTRoomCleanRecordById(req.getRecordId());
-            if(exRecord==null){
+            if (exRecord == null) {
                 throw new ServiceException("未找到制定打扫记录");
             }
-//            roomService.closeCleanerRoomEquipment(req, userId); // 测试关闭 ，上线打开
+            roomService.closeCleanerRoomEquipment(req, userId); // 测试关闭 ，上线打开
 
             TRoomCleanRecord cleanRecord = new TRoomCleanRecord();
             cleanRecord.setId(req.getRecordId());
