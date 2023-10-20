@@ -445,9 +445,9 @@ public class ApiController extends BaseController {
 
             TRoom exRoom = roomService.selectTRoomById(roomOrder.getRoomId());
             TStore store = storeService.selectTStoreById(exRoom.getStoreId());
-            new WxMsgSender().sendOrderStartMsg("oNosp6pg1nwPpNK0ojVRG3nXMUqM", room.getName(), store.getName(), roomOrder);
-            new WxMsgSender().sendOrderStartMsg("oNosp6nU4uj40-rGGCG83wkQwdzE", room.getName(), store.getName(), roomOrder);
-            new WxMsgSender().sendOrderStartMsg("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", room.getName(), store.getName(), roomOrder);
+            new WxMsgSender().sendOrderStartMsg("oNosp6pg1nwPpNK0ojVRG3nXMUqM", exRoom.getName(), store.getName(), roomOrder);
+            new WxMsgSender().sendOrderStartMsg("oNosp6nU4uj40-rGGCG83wkQwdzE", exRoom.getName(), store.getName(), roomOrder);
+            new WxMsgSender().sendOrderStartMsg("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", exRoom.getName(), store.getName(), roomOrder);
 
         } catch (Exception e) {
             return AjaxResult.error("操作异常，请联系管理员：" + e.getMessage());
@@ -941,7 +941,7 @@ public class ApiController extends BaseController {
         WxMaJscode2SessionResult session = null;
         try {
             String phoneNumber = bindingReq.getPhone();
-            if(StringUtils.isNotEmpty(bindingReq.getCode())){
+            if (StringUtils.isNotEmpty(bindingReq.getCode())) {
                 // 调用微信 API 获取用户的手机号
                 WxMaPhoneNumberInfo phoneInfo = customerWxMaService.getUserService().getNewPhoneNoInfo(bindingReq.getCode());
                 phoneNumber = phoneInfo.getPhoneNumber();
@@ -1012,6 +1012,13 @@ public class ApiController extends BaseController {
     public AjaxResult getStoreInfo(@PathVariable("id") Long id) {
         final TStore store = storeService.selectTStoreById(id);
         return AjaxResult.success(store);
+    }
+
+    @Log(title = "代客预约订单开包厢", businessType = BusinessType.INSERT)
+    @PostMapping("/order4Guest")
+    public AjaxResult order4Guest(@RequestBody TRoomOrder tRoomOrder) {
+        tRoomOrder.setCreateBy(SecurityUtils.getUserId() + "");
+        return toAjax(roomOrderService.order4GuestOpenRoom(tRoomOrder));
     }
 
 }

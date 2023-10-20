@@ -10,9 +10,9 @@
 					<uo-select placeholder="请选择所属门店" v-model="order.roomId" :options="roomList" value-field="id">
 					</uo-select>
 				</u-form-item>
-				<u-form-item label="手机号码" prop="userId" required>
+			<!-- 	<u-form-item label="手机号码" prop="userId" required>
 					<input class="uni-input" type="number" v-model="order.userId" placeholder="请输入手机号码" />
-				</u-form-item>
+				</u-form-item> -->
 				<u-form-item label="开始时间" prop="startTime" required @click="startShow = true">
 					<uo-datetime :show="startShow" mode="datetime" v-model="order.startTime">
 					</uo-datetime>
@@ -50,11 +50,11 @@
 						message: '请选择包厢',
 						trigger: ['blur', 'change']
 					},
-					userId:{
-						required: true,
-						message: '请输入客人手机号码',
-						trigger: ['blur', 'change']
-					},
+					// userId:{
+					// 	required: true,
+					// 	message: '请输入客人手机号码',
+					// 	trigger: ['blur', 'change']
+					// },
 					startTime: {
 						required: true,
 						message: '请选择开始时间',

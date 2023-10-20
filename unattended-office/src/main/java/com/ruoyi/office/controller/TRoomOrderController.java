@@ -45,6 +45,7 @@ public class TRoomOrderController extends BaseController {
 
     @Autowired
     IBusinessAnalysisService iBusinessAnalysisService;
+
     /**
      * 查询房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）列表
      */
@@ -209,9 +210,8 @@ public class TRoomOrderController extends BaseController {
     @PostMapping("/order4Guest")
     public AjaxResult order4Guest(@RequestBody TRoomOrder tRoomOrder) {
         tRoomOrder.setCreateBy(SecurityUtils.getUserId() + "");
-        return toAjax(tRoomOrderService.order4Guest(tRoomOrder));
+        return AjaxResult.success(tRoomOrderService.order4Guest(tRoomOrder));
     }
-
 
 
     @ApiOperation("营收总览")

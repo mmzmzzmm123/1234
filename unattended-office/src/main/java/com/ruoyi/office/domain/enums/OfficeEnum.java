@@ -152,7 +152,7 @@ public class OfficeEnum {
     }
 
     public enum PayType {
-        WX_PAY(1, "微信支付"), CARD_BALANCE_PAY(2, "储值卡余额支付"), COUPON_PAY(4, "优惠券支付");
+        WX_PAY(1, "微信支付"), CARD_BALANCE_PAY(2, "储值卡余额支付"), COUPON_PAY(4, "优惠券支付"), ORDER4GUEST_PAY(9, "代客预约支付");
 
         private final Integer code;
         private final String info;
