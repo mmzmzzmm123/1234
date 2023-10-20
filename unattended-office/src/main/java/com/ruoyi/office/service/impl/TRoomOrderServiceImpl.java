@@ -1466,6 +1466,15 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             throw new ServiceException("该手机号还未登录过小程序，未能识别");
         }
         tRoomOrder.setUserId(tWxUsers.get(0).getId());*/
+        PrepayReq confQry = new PrepayReq();
+        confQry.setRoomId(tRoomOrder.getRoomId());
+        confQry.setStartTime(tRoomOrder.getStartTime());
+        confQry.setEndTime(tRoomOrder.getEndTime());
+        final List<TRoomOrder> confList = tRoomOrderMapper.selectConflictRoomPeriod(confQry);
+        if(confList.size()>0){
+            throw new ServiceException("房间预约时间段冲突");
+        }
+
         tRoomOrder.setPayType(OfficeEnum.PayType.ORDER4GUEST_PAY.getCode());//
         tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());//
         tRoomOrder.setOrderNo(getOrderNo(tRoomOrder.getRoomId()));
