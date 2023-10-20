@@ -1,15 +1,17 @@
 import HttpClient from '@/common/http-client.js'
 import {
-	BaseApiUrl
+	BaseApiUrl,
+	LoginRedirectBase,
+	AppId
 } from "@/common/config.js"
 var i18n
 
 function toLogin(){
-	location.href = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxec3fc9831532aa21&redirect_uri=https://foreverjade.cn/pages/login/mp-login&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect'
+	location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${AppId}&redirect_uri=${LoginRedirectBase}/pages/login/mp-login&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect`
 }
 const client = new HttpClient({
 	baseApiUrl: BaseApiUrl + '/',
-	appId: 'wxec3fc9831532aa21',
+	appId: AppId,
 	loginHandler: toLogin
 })
 
@@ -27,7 +29,7 @@ function get(url, data, showLoading, hideError) {
 
 const api = {
 	setAfterLoginToGo(url){
-		uni.setStorageSync("afterLoginToGo", url)
+		uni.setStorageSync("afterLoginToGo", '/' + url)
 	},
 	getAfterLoginToGo(){
 		let url = uni.getStorageSync("afterLoginToGo")
@@ -214,9 +216,6 @@ const api = {
 	getStoreCrewList(params){
 		return get('office/storeuser/h5list', params)
 	},
-	getH5Roles(){
-		return get('office/mapi/role/list')
-	},
 	editStoreCrew(params){
 		return request('office/storeuser', params, true, 'PUT')
 	},
@@ -225,6 +224,9 @@ const api = {
 	},
 	getStoreUser(id){
 		return get('office/storeuser/' + id)
+	},
+	removeStoreUser(id){
+		return request('office/storeuser/'+id, null, true, 'DELETE')
 	},
 	startCleanRoom(roomId) {
 		return post('office/cleanrecord/startClean/' + roomId)

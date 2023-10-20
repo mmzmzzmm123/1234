@@ -2,18 +2,19 @@
 	const indexPath = 'pages/index/index'
 	export default {
 		onLaunch(options) {
-			debugger
-			if(options.path != indexPath){
-				let query = ''
-				for(let i in options.query){
-					query += i + "=" + options.query[i]
-				}
-				this.$api.setAfterLoginToGo(query ? options.path + '?' + query : options.path)
-			}
 			if(options.path != 'pages/login/mp-login'){
 				if(!this.$store.state.wxUser){
-					
+					if(options.path != indexPath){
+						let query = ''
+						for(let i in options.query){
+							query += i + "=" + options.query[i]
+						}
+						this.$api.setAfterLoginToGo(query ? options.path + '?' + query : options.path)
+					}
 					this.$api.toLogin()
+					uni.navigateTo({
+						url: "/pages/login/mp-login?waiting=1"
+					})
 				}else {
 					this.$store.dispatch("getUserInfo")
 					if(options.path == indexPath){

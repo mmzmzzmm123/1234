@@ -1,0 +1,1 @@
+export default [{role: 'cleaner', name: '保洁员'}]

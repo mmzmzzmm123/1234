@@ -4,17 +4,33 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import lombok.Data;
 
 @Data
-public class StoreUserVo extends SysUser {
+public class StoreUserVo {
     /**
      * StoreUser.id
      */
     private Long id;
 
+    /**
+     * StoreUser.userId WxUser.id
+     */
+    private Long userId;
+
     private Long storeId;
 
     private String storeName;
 
-    private String roleName;
+    /**
+     * StoreUser.remark
+     */
+    private String role;
 
-    private String password;
+    /**
+     * WxUser.nickName
+     */
+    private String nickName;
+
+    /**
+     * WxUser.phone
+     */
+    private String phone;
 }

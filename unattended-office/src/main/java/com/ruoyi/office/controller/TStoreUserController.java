@@ -57,11 +57,9 @@ public class TStoreUserController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('office:storeuser:list')")
     @GetMapping("/h5list")
-    public TableDataInfo h5list(TStoreUser tStoreUser) {
-        startPage();
+    public AjaxResult h5list(TStoreUser tStoreUser) {
         List<StoreUserVo> list = tStoreUserService.selectTStoreUserH5listList(tStoreUser);
-
-        return getDataTable(list);
+        return AjaxResult.success(list);
     }
 
     /**
@@ -89,19 +87,13 @@ public class TStoreUserController extends BaseController {
     @PreAuthorize("@ss.hasPermi('office:storeuser:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
-        final TStoreUser storeUser = tStoreUserService.selectTStoreUserById(id);
-        SysUser user = userService.selectUserById(storeUser.getUserId());
-        StoreUserVo vo = new StoreUserVo();
-        BeanUtils.copyProperties(user, vo);
-        List<SysRole> userRoles = roleService.selectUserRolesByUserId(storeUser.getUserId());
-        StringBuilder roles = new StringBuilder();
-        for (SysRole role : userRoles) {
-            roles.append(",").append(role.getRoleId());
+        TStoreUser query = new TStoreUser();
+        query.setId(id);
+        List<StoreUserVo> list = tStoreUserService.selectTStoreUserH5listList(query);
+        if(list.size() != 1){
+            return AjaxResult.error("没找到该用户");
         }
-        vo.setRoleName(roles.substring(1));
-        vo.setStoreId(storeUser.getStoreId());
-
-        return success(vo);
+        return success(list.get(0));
     }
 
     /**

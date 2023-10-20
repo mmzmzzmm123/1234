@@ -7,11 +7,11 @@
 					</uo-select>
 				</u-form-item>
 				<u-form-item label="角色" prop="role" required>
-					<uo-select placeholder="请选择角色" v-model="obj.role" :options="roles"></uo-select>
+					<uo-select placeholder="请选择角色" v-model="obj.role" :options="roles" value-field="role"></uo-select>
 				</u-form-item>
 			</u-form>
 		</view>
-		<view class="link-info">
+		<view class="link-info" v-if="toBindUrl">
 			<view class="link-info__tip">保洁员关注十三将自助竞技公众号后，将链接发送给保洁员完成添加</view>
 			<view class="link-info__link">{{toBindUrl}}</view>
 			<view class="link-info__copy">
@@ -27,6 +27,9 @@
 </template>
 
 <script>
+	import { LoginRedirectBase } from "@/common/config.js"
+	import ROLES from "./roles.js"
+		
 	export default {
 		data() {
 			return {
@@ -57,12 +60,9 @@
 					// 	trigger: ['blur', 'change']
 					// },
 				},
-				roles: [{
-					name: "保洁员",
-					value: "cleaner"
-				}],
+				roles: ROLES,
 				toBindId: '',
-				toBindUrl: 'https://5d9o815864.goho.co/pages/crew/join?id='
+				toBindUrl: ''
 			}
 		},
 		computed: {
@@ -71,7 +71,6 @@
 			},
 		},
 		onLoad(options) {
-			debugger
 			this.obj.storeId = this.$store.state.currentStore.id
 		},
 		onReady() {
@@ -82,7 +81,7 @@
 				this.$refs.roomForm.validate().then(res => {
 					this.$api.toBindRole(this.obj).then(res=>{
 						this.toBindId = res
-						this.toBindUrl = "https://5d9o815864.goho.co/pages/crew/join?id=" + res
+						this.toBindUrl = `${LoginRedirectBase}/pages/crew/join?id=${res}`
 					})
 				}).catch((e) => {
 					this.$u.toast('请完善门店和角色信息')

@@ -17,6 +17,7 @@ import com.ruoyi.system.mapper.SysUserRoleMapper;
 import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import lombok.Data;
+import org.apache.commons.lang.NotImplementedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -70,35 +71,36 @@ public class TStoreUserServiceImpl extends ServiceImpl<TStoreUserMapper, TStoreU
      */
     @Override
     public int insertTStoreUser(StoreUserVo vo) {
-        final SysUser sysUsers = userService.selectUserByUserName(vo.getUserName());
-        if (sysUsers != null) {
-            throw new ServiceException("用户账号已存在");
-        }
-        SysUser user = new SysUser();
-        user.setUserName(vo.getUserName());
-        user.setNickName(vo.getNickName());
-        user.setPhonenumber(vo.getPhonenumber());
-        user.setPassword(SecurityUtils.encryptPassword(vo.getPassword()));
-        userService.registerUser(user);
-
-        if (StringUtils.isNotEmpty(vo.getRoleName())) {
-            // 新增用户与角色管理
-            List<SysUserRole> list = new ArrayList<SysUserRole>();
-            for (String roleId : vo.getRoleName().split(",")) {
-                SysUserRole ur = new SysUserRole();
-                ur.setUserId(user.getUserId());
-                ur.setRoleId(Long.parseLong(roleId));
-                list.add(ur);
-            }
-            userRoleMapper.batchUserRole(list);
-        }
-
-        TStoreUser tStoreUser = new TStoreUser();
-        tStoreUser.setCreateTime(DateUtils.getNowDate());
-        tStoreUser.setStoreId(vo.getStoreId());
-        tStoreUser.setUserId(user.getUserId());
-
-        return tStoreUserMapper.insertTStoreUser(tStoreUser);
+        throw new NotImplementedException();
+//        final SysUser sysUsers = userService.selectUserByUserName(vo.getUserName());
+//        if (sysUsers != null) {
+//            throw new ServiceException("用户账号已存在");
+//        }
+//        SysUser user = new SysUser();
+//        user.setUserName(vo.getUserName());
+//        user.setNickName(vo.getNickName());
+//        user.setPhonenumber(vo.getPhonenumber());
+//        user.setPassword(SecurityUtils.encryptPassword(vo.getPassword()));
+//        userService.registerUser(user);
+//
+//        if (StringUtils.isNotEmpty(vo.getRoleName())) {
+//            // 新增用户与角色管理
+//            List<SysUserRole> list = new ArrayList<SysUserRole>();
+//            for (String roleId : vo.getRoleName().split(",")) {
+//                SysUserRole ur = new SysUserRole();
+//                ur.setUserId(user.getUserId());
+//                ur.setRoleId(Long.parseLong(roleId));
+//                list.add(ur);
+//            }
+//            userRoleMapper.batchUserRole(list);
+//        }
+//
+//        TStoreUser tStoreUser = new TStoreUser();
+//        tStoreUser.setCreateTime(DateUtils.getNowDate());
+//        tStoreUser.setStoreId(vo.getStoreId());
+//        tStoreUser.setUserId(user.getUserId());
+//
+//        return tStoreUserMapper.insertTStoreUser(tStoreUser);
     }
 
     /**
@@ -109,38 +111,38 @@ public class TStoreUserServiceImpl extends ServiceImpl<TStoreUserMapper, TStoreU
      */
     @Override
     public int updateTStoreUser(StoreUserVo vo) {
-
-        TStoreUser storeUser = selectTStoreUserById(vo.getId());
-
-        final SysUser sysUsers = userService.selectUserByUserName(vo.getUserName());
-        if (sysUsers != null && sysUsers.getUserId() != storeUser.getUserId()) {
-            throw new ServiceException("用户账号已存在");
-        }
-
-        SysUser user = userService.selectUserById(storeUser.getUserId());
-        user.setUserName(vo.getUserName());
-        user.setNickName(vo.getNickName());
-        user.setPhonenumber(vo.getPhonenumber());
-        if (!user.getPassword().equalsIgnoreCase(vo.getPassword())) {
-            user.setPassword(SecurityUtils.encryptPassword(vo.getPassword()));
-        }
-        userService.updateUserProfile(user);
-
-        userRoleMapper.deleteUserRoleByUserId(storeUser.getUserId());
-        if (StringUtils.isNotEmpty(vo.getRoleName())) {
-            // 新增用户与角色管理
-            List<SysUserRole> list = new ArrayList<SysUserRole>();
-            for (String roleId : vo.getRoleName().split(",")) {
-                SysUserRole ur = new SysUserRole();
-                ur.setUserId(storeUser.getUserId());
-                ur.setRoleId(Long.parseLong(roleId));
-                list.add(ur);
-            }
-            userRoleMapper.batchUserRole(list);
-        }
-
-        storeUser.setStoreId(vo.getStoreId());
-        return tStoreUserMapper.updateTStoreUser(storeUser);
+        throw new NotImplementedException();
+//        TStoreUser storeUser = selectTStoreUserById(vo.getId());
+//
+//        final SysUser sysUsers = userService.selectUserByUserName(vo.getUserName());
+//        if (sysUsers != null && sysUsers.getUserId() != storeUser.getUserId()) {
+//            throw new ServiceException("用户账号已存在");
+//        }
+//
+//        SysUser user = userService.selectUserById(storeUser.getUserId());
+//        user.setUserName(vo.getUserName());
+//        user.setNickName(vo.getNickName());
+//        user.setPhonenumber(vo.getPhonenumber());
+//        if (!user.getPassword().equalsIgnoreCase(vo.getPassword())) {
+//            user.setPassword(SecurityUtils.encryptPassword(vo.getPassword()));
+//        }
+//        userService.updateUserProfile(user);
+//
+//        userRoleMapper.deleteUserRoleByUserId(storeUser.getUserId());
+//        if (StringUtils.isNotEmpty(vo.getRoleName())) {
+//            // 新增用户与角色管理
+//            List<SysUserRole> list = new ArrayList<SysUserRole>();
+//            for (String roleId : vo.getRoleName().split(",")) {
+//                SysUserRole ur = new SysUserRole();
+//                ur.setUserId(storeUser.getUserId());
+//                ur.setRoleId(Long.parseLong(roleId));
+//                list.add(ur);
+//            }
+//            userRoleMapper.batchUserRole(list);
+//        }
+//
+//        storeUser.setStoreId(vo.getStoreId());
+//        return tStoreUserMapper.updateTStoreUser(storeUser);
     }
 
     /**
@@ -171,15 +173,6 @@ public class TStoreUserServiceImpl extends ServiceImpl<TStoreUserMapper, TStoreU
     @Override
     public List<StoreUserVo> selectTStoreUserH5listList(TStoreUser tStoreUser) {
         List<StoreUserVo> list = tStoreUserMapper.selectTStoreUserH5listList(tStoreUser);
-        for (StoreUserVo su : list) {
-            List<SysRole> userRoles = sysRoleService.selectUserRolesByUserId(su.getUserId());
-            final Set<String> roleSet = userRoles.stream().map(x -> x.getRoleName()).collect(Collectors.toSet());
-            String roleName = "";
-            for (String r : roleSet) {
-                roleName += "," + r;
-            }
-            su.setRoleName(roleName.substring(1));
-        }
         return list;
     }
 
@@ -223,6 +216,7 @@ public class TStoreUserServiceImpl extends ServiceImpl<TStoreUserMapper, TStoreU
             storeRole.setStoreId(storeUser.getStoreId());
             storeRole.setUserId(storeUser.getUserId());
             storeRole.setRoles(Arrays.asList(storeUser.getRemark().split(",")));
+            ret.add(storeRole);
         }
         return ret;
     }

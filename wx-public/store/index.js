@@ -73,6 +73,8 @@ const store = new Vuex.Store({
 			return Api.api.logout().then(()=>{
 				state.loginUser = {}
 				lifeData["loginUser"] = {}
+				lifeData['wxUser'] = null
+				lifeData['storeRoles'] = []
 				uni.setStorage({
 					key: 'lifeData',
 					data: lifeData

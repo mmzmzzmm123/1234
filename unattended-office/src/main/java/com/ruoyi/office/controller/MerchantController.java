@@ -278,20 +278,4 @@ public class MerchantController extends BaseController {
         return AjaxResult.success();
     }
 
-    @Autowired
-    ISysRoleService roleService;
-
-    /**
-     * h5添加员工时，员工角色列表
-     */
-    @ApiOperation("h5添加员工时，员工角色列表")
-    @PreAuthorize("@ss.hasPermi('office:merchant')")
-    @GetMapping("/role/list")
-    public TableDataInfo h5Rolelist(TStore tStore) {
-        List<SysRole> list = roleService.selectRoleWithNoscope();
-        list = list.stream().filter(x -> "h5".equalsIgnoreCase(x.getRemark())).collect(Collectors.toList());
-        return getDataTable(list);
-    }
-
-
 }

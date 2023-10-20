@@ -2,7 +2,7 @@
 	<view style="padding: 20rpx;">
 		<view class="join-title" v-if="storeName">十三将自助竞技邀请您成为
 			<text class="join-store-name">{{storeName}}</text>
-		的保洁员</view>
+		的{{roleName}}</view>
 		<view class="join-label">
 			绑定手机号
 		</view>
@@ -19,6 +19,8 @@
 </template>
 
 <script>
+	import ROLES from "./roles.js"
+	
 	export default {
 		data() {
 			return {
@@ -32,6 +34,7 @@
 			if(options.id){
 				this.$api.getToBindRole(options.id).then(res=>{
 					this.storeName = res.createBy
+					this.roleName = ROLES.find(x=>x.role == res.remark).name
 					this.id = options.id
 				})
 			}

@@ -51,11 +51,11 @@ public class WxAuthenticationProvider implements AuthenticationProvider {
             String openId = null, unionId = null, mpOpenId = null;
             WxOAuth2AccessToken wxOAuth2AccessToken = null;
             if(wxMpService.getWxMpConfigStorage().getAppId().equals(loginBody.getAppId())){
-                unionId = "o1BWs6GDb1moZ-ZaZ3akmtu34f_8";
-                mpOpenId = "oNosp6iNzApsGyyEOq9mJ1dNngps";
-//                wxOAuth2AccessToken = wxMpService.getOAuth2Service().getAccessToken(loginBody.getCode());
-//                mpOpenId = wxOAuth2AccessToken.getOpenId();
-//                unionId = wxOAuth2AccessToken.getUnionId();
+//                unionId = "o1BWs6MXNd_4vUyOYOzyQmx3cn3g";
+//                mpOpenId = "oNosp6l0Gq6IgcXsrkVSoaVe0bN0";
+                wxOAuth2AccessToken = wxMpService.getOAuth2Service().getAccessToken(loginBody.getCode());
+                mpOpenId = wxOAuth2AccessToken.getOpenId();
+                unionId = wxOAuth2AccessToken.getUnionId();
             }else{
                 WxMaService wxMaService = StringUtils.isEmpty(loginBody.getAppId()) ?
                         wxMaServiceUtil.getMaServiceByName(loginBody.getAppName()) : wxMaServiceUtil.getMaServiceById(loginBody.getAppId());

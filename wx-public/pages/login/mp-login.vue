@@ -12,10 +12,12 @@
 			}
 		},
 		onLoad(options) {
-			// this.code = options.code
-			if(options.code){
+			if(options.waiting){
+				
+			}
+			else if(options.code){
 				this.$store.dispatch("login", {code: options.code}).then(()=>{
-					const url = this.$api.getAfterLoginToGo
+					const url = this.$api.getAfterLoginToGo()
 					if(url){
 						uni.reLaunch({
 							url

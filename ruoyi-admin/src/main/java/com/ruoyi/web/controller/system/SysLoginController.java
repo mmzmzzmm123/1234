@@ -144,7 +144,7 @@ public class SysLoginController {
         try {
             TWxUserCleaner cleaner = cleanerService.selectTWxUserCleanerById(req.getId());
             if(cleaner.getStatus() != null && cleaner.getStatus() == 1l){
-                throw new ServiceException("请确认是否已经添加！");
+                throw new ServiceException("请联系商家，确认是否已经添加！");
             }
             cleaner.setWxUserId(loginUser.getWxUser().getId());
             cleaner.setStatus(1l);

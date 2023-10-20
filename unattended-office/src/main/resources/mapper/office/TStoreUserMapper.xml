@@ -16,29 +16,14 @@
         <result property="updateTime" column="update_time"/>
     </resultMap>
 
-    <resultMap type="StoreUserVo" id="SysUserResult">
-        <id property="userId" column="user_id"/>
-        <result property="deptId" column="dept_id"/>
-        <result property="userName" column="user_name"/>
-        <result property="nickName" column="nick_name"/>
-        <result property="email" column="email"/>
-        <result property="phonenumber" column="phonenumber"/>
-        <result property="sex" column="sex"/>
-        <result property="avatar" column="avatar"/>
-        <result property="password" column="password"/>
-        <result property="status" column="status"/>
-        <result property="delFlag" column="del_flag"/>
-        <result property="loginIp" column="login_ip"/>
-        <result property="loginDate" column="login_date"/>
-        <result property="createBy" column="create_by"/>
-        <result property="createTime" column="create_time"/>
-        <result property="updateBy" column="update_by"/>
-        <result property="updateTime" column="update_time"/>
-        <result property="remark" column="remark"/>
-        <result property="source" column="source"/>
-        <result property="id" column="id"/>
+    <resultMap type="StoreUserVo" id="StoreUserVo">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="storeId" column="store_id"/>
         <result property="storeName" column="storeName"/>
-<!--        <result property="source" column="source"/>-->
+        <result property="role" column="role"/>
+        <result property="nickName" column="nick_name"/>
+        <result property="phone" column="phone"/>
     </resultMap>
 
     <sql id="selectTStoreUserVo">
@@ -68,12 +53,13 @@
         where id = #{id}
     </select>
 
-    <select id="selectTStoreUserH5listList" parameterType="TStoreUser" resultMap="SysUserResult">
-        select su.id,s.name as storeName,u.*
+    <select id="selectTStoreUserH5listList" parameterType="TStoreUser" resultMap="StoreUserVo">
+        select su.id,su.user_id,su.store_id,s.name as storeName,su.remark as role,wu.nick_name,wu.phone
         from t_store_user su
-        left join sys_user u on su.user_id =u.user_id
-        left join t_store s on su.store_id =s.id
+        left join t_wx_user wu on su.user_id = wu.id
+        left join t_store s on su.store_id = s.id
         <where>
+            <if test="id != null ">and su.id = #{id}</if>
             <if test="userId != null ">and su.user_id = #{userId}</if>
             <if test="storeId != null ">and store_id = #{storeId}</if>
             <if test="status != null ">and su.status = #{status}</if>
