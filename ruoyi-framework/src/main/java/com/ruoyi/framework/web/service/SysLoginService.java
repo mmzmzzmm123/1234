@@ -137,7 +137,7 @@ public class SysLoginService {
         wxUser.setUserType("merchant");
         wxUserMapper.binding(wxUser);
         loginUser.setUser(sysUser);
-        loginUser.setPermissions(permissionService.getRolePermission(sysUser));
+        loginUser.setPermissions(permissionService.getMenuPermission(sysUser));
         loginUser.setStoreRoles(permissionService.getStoreRoles(wxUser));
         tokenService.refreshToken(loginUser);
     }

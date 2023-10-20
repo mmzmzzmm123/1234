@@ -150,7 +150,8 @@
 		{
 			"path": "pages/crew/index",
 			"style": {
-				"navigationBarTitleText": "员工管理"
+				"navigationBarTitleText": "员工管理",
+				"enablePullDownRefresh": true
 			}
 		},
 		{
