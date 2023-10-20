@@ -1,20 +1,14 @@
 package com.ruoyi.office.controller;
 
-import cn.hutool.extra.qrcode.QrCodeUtil;
-import cn.hutool.extra.qrcode.QrConfig;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.SysDictData;
-import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.vo.*;
 import com.ruoyi.office.service.*;
-import com.ruoyi.system.service.ISysRoleService;
 import com.ruoyi.system.service.ISysUserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RestController
@@ -160,7 +153,7 @@ public class MerchantController extends BaseController {
     }
 
     @Autowired
-    ITWxUserCleanerService cleanerService;
+    ITWxUserRoleRecordService wxUserRoleRecordService;
 
     @ApiOperation("创建店铺角色授权记录")
     @PreAuthorize("@ss.hasPermi('office:merchant')")
@@ -176,20 +169,20 @@ public class MerchantController extends BaseController {
             return AjaxResult.error("店铺不合法");
         }
         try {
-            TWxUserCleaner cleaner = new TWxUserCleaner();
-            cleaner.setMerchantId(merchant);
-            cleaner.setStoreId(req.getStoreId());
-            cleaner.setRemark(req.getRole());
-            cleanerService.insertTWxUserCleaner(cleaner); //todo... 修改id为UUID等
-            return AjaxResult.success(cleaner.getId());
+            TWxUserRoleRecord roleRecord = new TWxUserRoleRecord();
+            roleRecord.setMerchantId(merchant);
+            roleRecord.setStoreId(req.getStoreId());
+            roleRecord.setRole(req.getRole());
+            wxUserRoleRecordService.insertTWxUserRoleRecord(roleRecord); //todo... 修改id为UUID等
+            return AjaxResult.success("", roleRecord.getId());
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
     }
 
     @GetMapping("/role/toBindInfo/{id}")
-    public AjaxResult getToBindInfo(@PathVariable("id") Long id){
-        TWxUserCleaner cleaner = cleanerService.selectTWxUserCleanerById(id);
+    public AjaxResult getToBindInfo(@PathVariable("id") String id){
+        TWxUserRoleRecord cleaner = wxUserRoleRecordService.selectTWxUserRoleRecordById(id);
         TStore store = tStoreService.selectTStoreById(cleaner.getStoreId());
         cleaner.setCreateBy(store.getName());
         return AjaxResult.success(cleaner);

@@ -4,17 +4,16 @@ import java.util.List;
 import java.util.Set;
 
 import com.ruoyi.common.annotation.Log;
-import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.framework.web.service.TokenService;
-import com.ruoyi.office.domain.TWxUserCleaner;
+import com.ruoyi.office.domain.TWxUserRoleRecord;
 import com.ruoyi.office.domain.vo.BindingRoleReq;
 import com.ruoyi.office.domain.vo.MerchantBindingReq;
 import com.ruoyi.office.service.ITStoreUserService;
-import com.ruoyi.office.service.ITWxUserCleanerService;
+import com.ruoyi.office.service.ITWxUserRoleRecordService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,7 +47,7 @@ public class SysLoginController {
     private SysPermissionService permissionService;
 
     @Autowired
-    private ITWxUserCleanerService cleanerService;
+    private ITWxUserRoleRecordService wxUserRoleRecordService;
 
     @Autowired
     private ITStoreUserService storeUserService;
@@ -142,15 +141,15 @@ public class SysLoginController {
     public AjaxResult bindingRole(@RequestBody BindingRoleReq req) {
         LoginUser loginUser = SecurityUtils.getLoginUser();
         try {
-            TWxUserCleaner cleaner = cleanerService.selectTWxUserCleanerById(req.getId());
+            TWxUserRoleRecord cleaner = wxUserRoleRecordService.selectTWxUserRoleRecordById(req.getId());
             if(cleaner.getStatus() != null && cleaner.getStatus() == 1l){
                 throw new ServiceException("请联系商家，确认是否已经添加！");
             }
             cleaner.setWxUserId(loginUser.getWxUser().getId());
             cleaner.setStatus(1l);
-            cleanerService.updateTWxUserCleaner(cleaner);
+            wxUserRoleRecordService.updateTWxUserRoleRecord(cleaner);
 
-            storeUserService.bind(loginUser.getWxUser().getId(), cleaner.getStoreId(), cleaner.getRemark());
+            storeUserService.bind(loginUser.getWxUser().getId(), cleaner.getStoreId(), cleaner.getRole());
             loginUser.setStoreRoles(permissionService.getStoreRoles(loginUser.getWxUser()));
             tokenService.refreshToken(loginUser);
             return AjaxResult.success();

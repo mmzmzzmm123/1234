@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.office.mapper.TWxUserCleanerMapper">
-    
-    <resultMap type="TWxUserCleaner" id="TWxUserCleanerResult">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.office.mapper.TWxUserRoleRecordMapper">
+
+    <resultMap type="TWxUserRoleRecord" id="TWxUserRoleRecordResult">
         <result property="id"    column="id"    />
         <result property="wxUserId"    column="wx_user_id"    />
         <result property="merchantId"    column="merchant_id"    />
@@ -15,30 +15,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="role"    column="role"    />
     </resultMap>
 
-    <sql id="selectTWxUserCleanerVo">
-        select id, wx_user_id, merchant_id, store_id, status, remark, create_by, create_time, update_by, update_time from t_wx_user_cleaner
+    <sql id="selectTWxUserRoleRecordVo">
+        select id, wx_user_id, merchant_id, store_id, status, remark, create_by, create_time, update_by, update_time, role from t_wx_user_role_record
     </sql>
 
-    <select id="selectTWxUserCleanerList" parameterType="TWxUserCleaner" resultMap="TWxUserCleanerResult">
-        <include refid="selectTWxUserCleanerVo"/>
-        <where>  
+    <select id="selectTWxUserRoleRecordList" parameterType="TWxUserRoleRecord" resultMap="TWxUserRoleRecordResult">
+        <include refid="selectTWxUserRoleRecordVo"/>
+        <where>
             <if test="wxUserId != null "> and wx_user_id = #{wxUserId}</if>
             <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
             <if test="storeId != null "> and store_id = #{storeId}</if>
             <if test="status != null "> and status = #{status}</if>
+            <if test="role != null  and role != ''"> and role = #{role}</if>
         </where>
     </select>
-    
-    <select id="selectTWxUserCleanerById" parameterType="Long" resultMap="TWxUserCleanerResult">
-        <include refid="selectTWxUserCleanerVo"/>
+
+    <select id="selectTWxUserRoleRecordById" parameterType="String" resultMap="TWxUserRoleRecordResult">
+        <include refid="selectTWxUserRoleRecordVo"/>
         where id = #{id}
     </select>
-        
-    <insert id="insertTWxUserCleaner" parameterType="TWxUserCleaner" useGeneratedKeys="true" keyProperty="id">
-        insert into t_wx_user_cleaner
+
+    <insert id="insertTWxUserRoleRecord" parameterType="TWxUserRoleRecord">
+        insert into t_wx_user_role_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
             <if test="wxUserId != null">wx_user_id,</if>
             <if test="merchantId != null">merchant_id,</if>
             <if test="storeId != null">store_id,</if>
@@ -48,8 +51,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+            <if test="role != null">role,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
             <if test="wxUserId != null">#{wxUserId},</if>
             <if test="merchantId != null">#{merchantId},</if>
             <if test="storeId != null">#{storeId},</if>
@@ -59,11 +64,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+            <if test="role != null">#{role},</if>
+        </trim>
     </insert>
 
-    <update id="updateTWxUserCleaner" parameterType="TWxUserCleaner">
-        update t_wx_user_cleaner
+    <update id="updateTWxUserRoleRecord" parameterType="TWxUserRoleRecord">
+        update t_wx_user_role_record
         <trim prefix="SET" suffixOverrides=",">
             <if test="wxUserId != null">wx_user_id = #{wxUserId},</if>
             <if test="merchantId != null">merchant_id = #{merchantId},</if>
@@ -74,16 +80,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="role != null">role = #{role},</if>
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteTWxUserCleanerById" parameterType="Long">
-        delete from t_wx_user_cleaner where id = #{id}
+    <delete id="deleteTWxUserRoleRecordById" parameterType="String">
+        delete from t_wx_user_role_record where id = #{id}
     </delete>
 
-    <delete id="deleteTWxUserCleanerByIds" parameterType="String">
-        delete from t_wx_user_cleaner where id in 
+    <delete id="deleteTWxUserRoleRecordByIds" parameterType="String">
+        delete from t_wx_user_role_record where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

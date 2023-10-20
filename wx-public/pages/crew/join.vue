@@ -32,10 +32,10 @@
 		},
 		onLoad(options) {
 			if(options.id){
+				this.id = options.id
 				this.$api.getToBindRole(options.id).then(res=>{
 					this.storeName = res.createBy
-					this.roleName = ROLES.find(x=>x.role == res.remark).name
-					this.id = options.id
+					this.roleName = ROLES.find(x=>x.role == res.role).name
 				})
 			}
 		},
