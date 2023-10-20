@@ -96,7 +96,9 @@ public interface ITRoomOrderService {
 
     List<RoomOrderH5Vo> selectTRoomOrderH5List(RoomOrderH5QryVo tRoomOrder);
 
-    int order4Guest(TRoomOrder tRoomOrder);
+    TRoomOrder order4Guest(TRoomOrder tRoomOrder);
 
     List<TRoomOrder> getInUseOrder(TRoomOrder qry);
+
+    int order4GuestOpenRoom(TRoomOrder tRoomOrder);
 }

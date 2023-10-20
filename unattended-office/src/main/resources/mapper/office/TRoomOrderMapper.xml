@@ -70,6 +70,7 @@
             <if test="roomPackId != null ">and room_pack_id = #{roomPackId}</if>
             <if test="prepayId != null and prepayId != ''">and prepay_id = #{prepayId}</if>
             <if test="status != null ">and status = #{status}</if>
+            <if test="remark != null and remark != ''">and remark = #{remark}</if>
             <if test="createBy != null  and createBy != ''">and create_by = #{createBy}</if>
         </where>
     </select>
@@ -83,7 +84,8 @@
         where status != 9
         and room_id =#{roomId}
         and ( (start_time &lt;= #{startTime} and end_time &gt;= #{startTime})
-        or (start_time &lt; #{endTime} and end_time &gt; #{endTime}) )
+        or (start_time &lt; #{endTime} and end_time &gt; #{endTime})
+        or (start_time &gt;= #{startTime} and end_time &lt;= #{endTime}))
     </select>
 
     <select id="getHourMaxOrder" parameterType="String" resultType="java.lang.Long">

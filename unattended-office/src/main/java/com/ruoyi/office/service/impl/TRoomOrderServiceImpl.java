@@ -21,10 +21,12 @@ import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
@@ -33,6 +35,7 @@ import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.*;
 import com.ruoyi.office.horn.HornConfig;
 import com.ruoyi.office.service.*;
+import com.ruoyi.office.util.WxMsgSender;
 import com.ruoyi.system.service.ISysDictDataService;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
@@ -1455,7 +1458,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     }
 
     @Override
-    public int order4Guest(TRoomOrder tRoomOrder) {
+    public TRoomOrder order4Guest(TRoomOrder tRoomOrder) {
         /*TWxUser qry = new TWxUser();
         qry.setPhone(tRoomOrder.getUserId() + "");
         final List<TWxUser> tWxUsers = wxUserService.selectTWxUserList(qry);
@@ -1463,14 +1466,24 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             throw new ServiceException("该手机号还未登录过小程序，未能识别");
         }
         tRoomOrder.setUserId(tWxUsers.get(0).getId());*/
-        tRoomOrder.setPayType(0);//
+        PrepayReq confQry = new PrepayReq();
+        confQry.setRoomId(tRoomOrder.getRoomId());
+        confQry.setStartTime(tRoomOrder.getStartTime());
+        confQry.setEndTime(tRoomOrder.getEndTime());
+        final List<TRoomOrder> confList = tRoomOrderMapper.selectConflictRoomPeriod(confQry);
+        if(confList.size()>0){
+            throw new ServiceException("房间预约时间段冲突");
+        }
+
+        tRoomOrder.setPayType(OfficeEnum.PayType.ORDER4GUEST_PAY.getCode());//
         tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());//
         tRoomOrder.setOrderNo(getOrderNo(tRoomOrder.getRoomId()));
         tRoomOrder.setTotalAmount(new BigDecimal(0));
         tRoomOrder.setPayAmount(new BigDecimal(0));
         tRoomOrder.setWelfareAmount(new BigDecimal(0));
         tRoomOrder.setRemark(IdUtils.randomUUID());
-        return tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
+        tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
+        return tRoomOrder;
     }
 
     private Long getOrderNo(long roomId) {
@@ -1490,5 +1503,51 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Override
     public List<TRoomOrder> getInUseOrder(TRoomOrder roomOrder) {
         return tRoomOrderMapper.getInUseOrder(roomOrder);
+    }
+
+    @Override
+    public int order4GuestOpenRoom(TRoomOrder tRoomOrder) {
+        // 判断是否到达开门允许的事件范围
+        SysDictData dictData = new SysDictData();
+        dictData.setDictLabel("open_room");
+        final List<SysDictData> sysDictData = dictDataService.selectDictDataList(dictData);
+        int minutes = 15;
+        if (sysDictData.size() > 0) {
+            minutes = Integer.parseInt(sysDictData.get(0).getDictValue());
+        }
+        TRoomOrder qry = new TRoomOrder();
+        qry.setOrderNo(tRoomOrder.getOrderNo());
+        qry.setRemark(tRoomOrder.getRemark());
+        List<TRoomOrder> roomOrders = tRoomOrderMapper.selectTRoomOrderList(qry);
+        if (roomOrders.size() == 0) {
+            throw new ServiceException("订单校验失败");
+        }
+
+        TRoomOrder roomOrder = roomOrders.get(0);
+
+        long diff = (roomOrder.getStartTime().getTime() - new Date().getTime()) / 60000;
+        if (diff > minutes)
+            throw new ServiceException("订单开始前" + minutes + "分钟才可以开门");
+
+        String errMsg = roomService.openRoom(roomOrder.getRoomId());
+        TRoomOrder upOrder = new TRoomOrder();
+        upOrder.setId(roomOrder.getId());
+        upOrder.setStatus(OfficeEnum.RoomOrderStatus.USING.getCode());// 3);// 使用中
+        tRoomOrderMapper.updateTRoomOrder(upOrder);
+        TRoom room = new TRoom();
+        room.setId(roomOrder.getRoomId());
+        room.setStatus(OfficeEnum.RoomStatus.IN_USE.getCode());// 使用中
+        roomService.updateTRoom(room);
+        if (StringUtils.isNotEmpty(errMsg)) {
+            throw new ServiceException(errMsg);
+        }
+
+        TRoom exRoom = roomService.selectTRoomById(roomOrder.getRoomId());
+        TStore store = storeService.selectTStoreById(exRoom.getStoreId());
+        new WxMsgSender().sendOrderStartMsg("oNosp6pg1nwPpNK0ojVRG3nXMUqM", exRoom.getName(), store.getName(), roomOrder);
+        new WxMsgSender().sendOrderStartMsg("oNosp6nU4uj40-rGGCG83wkQwdzE", exRoom.getName(), store.getName(), roomOrder);
+        new WxMsgSender().sendOrderStartMsg("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", exRoom.getName(), store.getName(), roomOrder);
+
+        return 0;
     }
 }
