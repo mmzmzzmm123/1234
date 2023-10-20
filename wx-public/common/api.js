@@ -61,6 +61,9 @@ const api = {
 	getStoreList() {
 		return get('office/store/list')
 	},
+	cleanerGetStoreList(){
+		return get('office/capi/store/list')
+	},
 	updateStoreInfo(params) {
 		return request('office/store', params, true, 'put')
 	},
@@ -169,6 +172,7 @@ const api = {
 		return get('office/capi/room/list', params)
 	},
 	getCleanRecordList(params){
+		debugger
 		return get('office/cleanrecord/h5list', params)
 	},
 	getCleanerCleanRecordList(params){

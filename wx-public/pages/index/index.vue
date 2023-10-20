@@ -169,7 +169,10 @@
 			},
 			phonenumber(){
 				const phonenumber = this.loginUser.phonenumber
-				return phonenumber.substr(0, 3) + '****' + phonenumber.substr(7, 4)
+				if(phonenumber){
+					return phonenumber.substr(0, 3) + '****' + phonenumber.substr(7, 4)
+				}
+				return '****'
 			}
 		},
 		watch: {

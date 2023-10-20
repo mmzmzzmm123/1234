@@ -60,7 +60,7 @@
 				this.$api.bindRole({id: this.id}).then(()=>{
 					this.$store.dispatch("getUserInfo").then(res=>{
 						uni.reLaunch({
-							url: "/pages/clean/index"
+							url: "/pages/cleaner/index/index"
 						})
 					})
 				})

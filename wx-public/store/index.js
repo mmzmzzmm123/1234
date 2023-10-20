@@ -83,7 +83,9 @@ const store = new Vuex.Store({
 		},
 		getUserInfo({state}){
 			return Api.api.getUserInfo().then(res=>{
+				let getStoreList = Api.api.cleanerGetStoreList
 				if(res.user){
+					getStoreList = Api.api.getStoreList
 					state.loginUser = res.user
 					lifeData["loginUser"] = res.user
 				}else{
@@ -103,14 +105,14 @@ const store = new Vuex.Store({
 				if(!state.storeRoles.length && !state.loginUser.userId){
 					return
 				}
-				Api.api.getStoreList().then(res=>{
-					state.storeList = res.rows
-					if(res.rows.length){
+				getStoreList().then(res=>{
+					const storeList = res.rows ? res.rows : res
+					if(storeList.length){
 						const currentStoreId = state.currentStore ? state.currentStore.id : 0
 						if(currentStoreId){
-							state.currentStore = res.rows.find(x=>x.id == currentStoreId)
+							state.currentStore = storeList.find(x=>x.id == currentStoreId)
 						}else{
-							state.currentStore = res.rows[0]
+							state.currentStore = storeList[0]
 						}
 						lifeData['currentStore'] = state.currentStore
 						uni.setStorage({
@@ -120,6 +122,7 @@ const store = new Vuex.Store({
 					}else{
 						state.currentStore = {id: 0, name: '暂无门店'}
 					}
+					state.storeList = storeList
 				})
 			})
 		},

@@ -21,7 +21,7 @@
 						if(!this.$store.state.loginUser.userId){
 							if(this.$store.state.storeRoles.length){
 								uni.reLaunch({
-									url: "/pages/clean/index"
+									url: "/pages/cleaner/index/index"
 								})
 							}else{
 								uni.reLaunch({

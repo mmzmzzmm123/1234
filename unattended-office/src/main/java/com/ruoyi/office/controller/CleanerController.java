@@ -7,17 +7,22 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TRoomCleanRecord;
+import com.ruoyi.office.domain.TStore;
+import com.ruoyi.office.domain.TStoreUser;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.CleanRecordH5Vo;
 import com.ruoyi.office.domain.vo.CleanerRoomOpenReq;
 import com.ruoyi.office.domain.vo.RoomEquipeOpenReq;
 import com.ruoyi.office.service.ITRoomCleanRecordService;
 import com.ruoyi.office.service.ITRoomService;
+import com.ruoyi.office.service.ITStoreService;
+import com.ruoyi.office.service.ITStoreUserService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -32,6 +37,12 @@ public class CleanerController extends BaseController {
 
     @Autowired
     ITRoomCleanRecordService cleanRecordService;
+
+    @Autowired
+    ITStoreUserService storeUserService;
+
+    @Autowired
+    ITStoreService storeService;
 
 
     /**
@@ -210,5 +221,17 @@ public class CleanerController extends BaseController {
         List<CleanRecordH5Vo> list = roomCleanRecordService.selectRoomAndCleanRecordByStatus(qry);
 
         return getDataTable(list);
+    }
+
+    @GetMapping("/store/list")
+    public AjaxResult storeList(){
+        TStoreUser query = new TStoreUser();
+        query.setUserId(getLoginUser().getWxUser().getId());
+        List<TStoreUser> storeUsers = storeUserService.selectTStoreUserList(query);
+        List<TStore> storeList = new ArrayList<>();
+        for (TStoreUser storeUser: storeUsers){
+            storeList.add(storeService.selectTStoreById(storeUser.getStoreId()));
+        }
+        return success(storeList);
     }
 }
