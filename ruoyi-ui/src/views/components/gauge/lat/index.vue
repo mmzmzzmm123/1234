@@ -31,7 +31,12 @@
               :header-cell-class-name="cellClass"
               @select="handleSelectionChange">>
       <el-table-column type="selection" :selectable="judgeSelect"></el-table-column>
-      <el-table-column property="no" label="序号"></el-table-column>
+      <el-table-column width="50px" property="no" label="序号"></el-table-column>
+      <el-table-column width="150px" property="id" label="维度">
+        <template slot-scope="scope">
+          <el-tag> {{ getLat(scope.row) }} </el-tag>
+        </template>
+      </el-table-column>
       <el-table-column property="title" label="标题"></el-table-column>
     </el-table>
   </div>
@@ -101,6 +106,10 @@ export default {
       let res = await listMultiSetting({gaugeId: this.gaugeId, pageSize: 999});
       this.multiList = res.rows;
       this.handleQuestionIds()
+    },
+    getLat(row) {
+      const data = this.multiList.find(a => a.questionIds && a.questionIds !== '' && a.questionIds.split(",").includes(row.id + ''))
+      return data ? data.name : '-'
     },
 
     showMultiInput() {

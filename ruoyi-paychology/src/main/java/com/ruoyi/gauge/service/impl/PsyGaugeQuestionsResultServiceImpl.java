@@ -256,7 +256,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
             vo.setLats(psyGaugeQuestionsResultMapper.getQuestionLat(paramMap));
         }
 
-        if (GaugeConstant.GAUGE_COMPUTE_5 == psyOrder.getGaugeType()) {
+        if (GaugeConstant.GAUGE_COMPUTE_5 == psyOrder.getGaugeType() || GaugeConstant.GAUGE_COMPUTE_6 == psyOrder.getGaugeType()) {
             PsyGaugeQuestionsResult query = new PsyGaugeQuestionsResult();
             query.setOrderId(psyOrder.getId());
             query.setUserId(psyOrder.getUserId());

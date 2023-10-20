@@ -35,17 +35,15 @@
         {{ report.setting.memo3 }}
       </view>
     </view>
-    <view class="block-1" v-for="item in lats">
-      <template v-if="item.name !== '综合'">
-        <block-header :title="item.name"/>
-        <range :lineBg="item.line" :proBg="item.prd" :percentage="item.score"/>
-        <view class="desc">
-          <text class="desc-title">{{ item.title }}</text>
-          <view>
-            {{ item.info }}
-          </view>
+    <view class="block-1" v-for="item in lats.filter(a => a.y !== -1)">
+      <block-header :title="item.name"/>
+      <range :lineBg="item.line" :proBg="item.prd" :percentage="item.score"/>
+      <view class="desc">
+        <text class="desc-title">{{ item.title }}</text>
+        <view>
+          {{ item.info }}
         </view>
-      </template>
+      </view>
     </view>
 
     <view class="block-1">
@@ -96,8 +94,9 @@ export default {
     }
   },
   created() {
+    const num = this.report.order.gaugeType === 5 ? 25 : 20
     this.score = parseInt(this.report.order.score)
-    this.percentage = Math.round(this.report.order.score / this.report.order.gaugeNum * 25)
+    this.percentage = Math.round(this.score / this.report.order.gaugeNum * num)
   },
   methods: {
 
@@ -297,68 +296,6 @@ export default {
   font-family: PingFangSC-Regular;
   text-align: justify;
   margin-top: 32upx;
-}
-
-.range {
-  width: 622upx;
-  height: 40upx;
-  flex-direction: row;
-  display: flex;
-  align-items: center;
-  margin-top: 32upx;
-  color: rgba(119, 119, 119, 1);
-  font-size: 28upx;
-
-  .range-pro {
-    display: flex;
-    flex-direction: column;
-    margin: 0 24upx;
-    width: 348upx;
-    height: 24upx;
-    background: #FFE4DB;
-    border-radius: 16upx;
-  }
-
-  .range-progress {
-    background-color: rgba(255, 112, 63, 1.000000);
-    border-radius: 16upx;
-    width: 66upx;
-    height: 24upx;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .bg1 {
-    background: #FFE4DB;
-  }
-
-  .prog1 {
-    background: #FF8960;
-  }
-
-  .bg2 {
-    background: #D4E3FF;
-  }
-
-  .prog2 {
-    background: #7596DB;
-  }
-
-  .bg3 {
-    background: #FFEDB2;
-  }
-
-  .prog3 {
-    background: #F8CF67;
-  }
-
-  .bg4 {
-    background: #C9E8C9;
-  }
-
-  .prog4 {
-    background: #96D18D;
-  }
 }
 
 .desc {
