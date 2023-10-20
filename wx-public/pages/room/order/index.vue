@@ -108,8 +108,8 @@
 			},
 			onSuccess() {
 				this.$u.toast('预约成功')
-				// this.getOpenerEventChannel().emit('refresh')
-				// uni.navigateBack()
+				this.getOpenerEventChannel().emit('refresh')
+				uni.navigateBack()
 			},
 			onCancelClick() {
 				uni.navigateBack()

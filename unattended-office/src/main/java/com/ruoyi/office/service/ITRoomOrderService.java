@@ -101,4 +101,8 @@ public interface ITRoomOrderService {
     List<TRoomOrder> getInUseOrder(TRoomOrder qry);
 
     int order4GuestOpenRoom(TRoomOrder tRoomOrder);
+
+    void chargrge(OrderChargeReq orderChargeReq);
+
+    void changeRoom(OrderChangeRoomReq req);
 }

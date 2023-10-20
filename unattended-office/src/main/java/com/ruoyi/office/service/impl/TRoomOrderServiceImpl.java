@@ -1471,10 +1471,11 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         confQry.setStartTime(tRoomOrder.getStartTime());
         confQry.setEndTime(tRoomOrder.getEndTime());
         final List<TRoomOrder> confList = tRoomOrderMapper.selectConflictRoomPeriod(confQry);
-        if(confList.size()>0){
+        if (confList.size() > 0) {
             throw new ServiceException("房间预约时间段冲突");
         }
 
+        tRoomOrder.setUserId(0l);
         tRoomOrder.setPayType(OfficeEnum.PayType.ORDER4GUEST_PAY.getCode());//
         tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());//
         tRoomOrder.setOrderNo(getOrderNo(tRoomOrder.getRoomId()));
@@ -1549,5 +1550,53 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         new WxMsgSender().sendOrderStartMsg("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", exRoom.getName(), store.getName(), roomOrder);
 
         return 0;
+    }
+
+    @Override
+    public void chargrge(OrderChargeReq orderChargeReq) {
+        final TRoomOrder roomOrder = tRoomOrderMapper.selectTRoomOrderById(orderChargeReq.getId());
+        if (roomOrder == null) {
+            throw new ServiceException("订单不存在");
+        }
+        Date endTime = DateUtils.addMinutes(roomOrder.getEndTime(), orderChargeReq.getMinutes());
+        PrepayReq qry = new PrepayReq();
+        qry.setRoomId(roomOrder.getRoomId());
+        qry.setStartTime(roomOrder.getStartTime());
+        qry.setEndTime(endTime);
+        final List<TRoomOrder> orderList = tRoomOrderMapper.selectConflictRoomPeriod(qry);
+        if (orderList.size() > 1) { // 跟原订单肯定冲突 所以》1
+            throw new ServiceException("订单时间冲突");
+        }
+        TRoomOrder up = new TRoomOrder();
+        up.setId(orderChargeReq.getId());
+        up.setEndTime(endTime);
+        up.setRemark("商户续单" + orderChargeReq.getMinutes() + "分钟");
+        tRoomOrderMapper.updateTRoomOrder(up);
+    }
+
+    @Transactional
+    @Override
+    public void changeRoom(OrderChangeRoomReq req) {
+        final TRoomOrder roomOrder = tRoomOrderMapper.selectTRoomOrderById(req.getOrderId());
+        if (roomOrder == null) {
+            throw new ServiceException("订单不存在");
+        }
+        PrepayReq qry = new PrepayReq();
+        qry.setRoomId(req.getRoomId());
+        qry.setStartTime(roomOrder.getStartTime());
+        qry.setEndTime(roomOrder.getEndTime());
+        final List<TRoomOrder> orderList = tRoomOrderMapper.selectConflictRoomPeriod(qry);
+        if (orderList.size() > 0) { // 跟原订单肯定冲突 所以》1
+            throw new ServiceException("订单时间冲突");
+        }
+        if (roomOrder.getStatus() == OfficeEnum.RoomOrderStatus.USING.getCode()) {
+            TRoom room = new TRoom();
+            room.setId(roomOrder.getRoomId());
+            room.setStatus(OfficeEnum.RoomStatus.CAN_USE.getCode());
+        }
+        TRoomOrder upOrder = new TRoomOrder();
+        upOrder.setId(roomOrder.getId());
+        upOrder.setRoomId(req.getRoomId());
+        tRoomOrderMapper.updateTRoomOrder(upOrder);
     }
 }

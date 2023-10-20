@@ -43,7 +43,13 @@
 						</view>
 					</view>
 				</view>
-
+				<view class="card__op-list">
+					<!-- <u-button v-if="room.payType==9" @click="shareOrder(room)" plain>分享</u-button> -->
+					<!-- <u-button plain>立即开始</u-button>  订单提前开始 订单开始结束时间前移多少分钟
+					<u-button plain>换包厢</u-button>  
+					 截至时间后移多少分钟，费用线下收取-->
+					<u-button type="primary">续单</u-button>
+				</view>
 			</view>
 		</view>
 
@@ -161,6 +167,26 @@
 				this.startDate = this.searchParam.startTime = e.detail.value
 				this.refresh();
 			},
+			shareOrder(order) {
+				this.$api.shareOrder(order).then(res => {
+					console.log(order);
+				})
+			},
+			changeRoom(order) {
+				this.$api.changeRoom(order).then(res => {
+					console.log(order);
+				})
+			},
+			chargeOrder(order) {
+				const url = "charge-order?id=" + order.id;
+				uni.navigateTo({
+					url,
+					events: {
+						refresh: this.refresh
+					}
+				})
+				
+			}
 		}
 	}
 </script>

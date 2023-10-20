@@ -222,4 +222,29 @@ public class TRoomOrderController extends BaseController {
 
         return success(businessAnalysisH5Vo);
     }
+
+    @PreAuthorize("@ss.hasPermi('office:roomorder:add')")
+    @Log(title = "商户待客续单", businessType = BusinessType.UPDATE)
+    @PostMapping("/charge")
+    public AjaxResult charge(@RequestBody OrderChargeReq orderChargeReq) {
+        try {
+            tRoomOrderService.chargrge(orderChargeReq);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+        return AjaxResult.success();
+    }
+
+    @PreAuthorize("@ss.hasPermi('office:roomorder:add')")
+    @Log(title = "商户待客换包间", businessType = BusinessType.INSERT)
+    @PostMapping("/changeRoom")
+    public AjaxResult changeRoom(@RequestBody OrderChangeRoomReq req) {
+        try {
+            tRoomOrderService.changeRoom(req);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+        return AjaxResult.success();
+    }
+
 }

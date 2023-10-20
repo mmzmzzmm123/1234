@@ -258,7 +258,17 @@ const api = {
 	},
 	bindPhoneNumber(phone){
 		return post('office/api/binding', {phone})
-	}
+	},
+	shareOrder(order){
+		return post('office/xxx/shareOrder', order)
+	},
+	changeRoom(order){
+		return post('office/roomorder/changeRoom', order)
+	},
+	chargeOrder(order){
+		return post('office/roomorder/charge', order)
+	},
+	
 }
 const install = (Vue, options) => {
 	Vue.prototype.$api = api
