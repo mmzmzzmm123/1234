@@ -290,7 +290,7 @@ public class ApiController extends BaseController {
         for (TStorePromotion storePromotion : storePromotions) {
             boolean ex = false;
             for (TWxUserPromotion userPromotion : userPromotions) {
-                if (storePromotion.getId() == userPromotion.getCouponId()) {
+                if (storePromotion.getId().equals(userPromotion.getCouponId())) {
                     ex = true;
                     break;
                 }
@@ -422,7 +422,7 @@ public class ApiController extends BaseController {
                 minutes = Integer.parseInt(sysDictData.get(0).getDictValue());
             }
             TRoomOrder roomOrder = roomOrderService.selectTRoomOrderById(orderId);
-            if (roomOrder.getUserId() != SecurityUtils.getLoginUser().getWxUser().getId()) {
+            if (!roomOrder.getUserId().equals(SecurityUtils.getLoginUser().getWxUser().getId())) {
                 throw new ServiceException("非本人订单");
             }
 

@@ -7,6 +7,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.*;
+import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.*;
 import com.ruoyi.office.service.*;
 import com.ruoyi.system.service.ISysUserService;
@@ -71,7 +72,7 @@ public class MerchantController extends BaseController {
             BigDecimal totalAmt = new BigDecimal(0);
             boolean inExe = false;
             for (TRoomOrder order : orderList) {
-                if (order.getStatus() == 5) {
+                if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.USED.getCode()) {// 5) ) {
                     sumHour += Math.abs((long) ((order.getEndTime().getTime() - order.getStartTime().getTime()) / (1000 * 3600)));
                     totalAmt.add(order.getPayAmount());
                 }
@@ -79,7 +80,7 @@ public class MerchantController extends BaseController {
                     vo.setNextOrderStart(order.getStartTime());
                     break;
                 }
-                if (order.getStatus() == 3) {
+                if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.USING.getCode()) {// == 3) {
                     vo.setOrderEndTime(order.getEndTime());
                     inExe = true;
                 }
@@ -160,12 +161,12 @@ public class MerchantController extends BaseController {
     @Log(title = "创建店铺角色授权记录", businessType = BusinessType.INSERT)
     @PostMapping("/role/toBind")
     public AjaxResult clean(@RequestBody CleanerReq req) {
-        if(!"cleaner".equals(req.getRole())){
+        if (!"cleaner".equals(req.getRole())) {
             return AjaxResult.error("角色不合法");
         }
         TStore store = tStoreService.selectTStoreById(req.getStoreId());
         long merchant = SecurityUtils.getUserId();
-        if(!store.getUserId().equals(merchant)){
+        if (!store.getUserId().equals(merchant)) {
             return AjaxResult.error("店铺不合法");
         }
         try {
@@ -181,7 +182,7 @@ public class MerchantController extends BaseController {
     }
 
     @GetMapping("/role/toBindInfo/{id}")
-    public AjaxResult getToBindInfo(@PathVariable("id") String id){
+    public AjaxResult getToBindInfo(@PathVariable("id") String id) {
         TWxUserRoleRecord cleaner = wxUserRoleRecordService.selectTWxUserRoleRecordById(id);
         TStore store = tStoreService.selectTStoreById(cleaner.getStoreId());
         cleaner.setCreateBy(store.getName());

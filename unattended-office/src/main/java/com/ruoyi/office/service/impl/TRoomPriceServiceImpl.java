@@ -95,7 +95,7 @@ public class TRoomPriceServiceImpl extends ServiceImpl<TRoomPriceMapper, TRoomPr
         queryWrapper.lambda().eq(TRoomPrice::getRoomId, tRoomPrice.getRoomId());
         final List<TRoomPrice> tRoomPrices = baseMapper.selectList(queryWrapper);
         for (TRoomPrice roomPrice : tRoomPrices) {
-            if (roomPrice.getId() == tRoomPrice.getId())
+            if (roomPrice.getId().equals(tRoomPrice.getId()))
                 continue;
 
             if ((roomPrice.getStartTime() <= tRoomPrice.getStartTime() && roomPrice.getStopTime() >= tRoomPrice.getStartTime()) || (roomPrice.getStartTime() <= tRoomPrice.getStopTime() && roomPrice.getStopTime() >= tRoomPrice.getStopTime()))

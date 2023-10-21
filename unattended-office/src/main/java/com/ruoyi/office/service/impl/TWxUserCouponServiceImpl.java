@@ -120,7 +120,8 @@ public class TWxUserCouponServiceImpl extends ServiceImpl<TWxUserCouponMapper, T
         BeanUtils.copyProperties(tStoreCoupon, userCoupon);
         BeanUtils.copyProperties(tWxUserCoupon, userCoupon);
         userCoupon.setMinuteLeft(tStoreCoupon.getMaxMinuteOnce());
-        if (tStoreCoupon.getValidType() == 1) { // 自购买日起
+        if (tStoreCoupon.getValidType() == 1) {
+            // 自购买日起
             userCoupon.setStartDate(new Date());
             userCoupon.setEndDate(DateUtils.addDays(new Date(), tStoreCoupon.getValidDays()));
         }

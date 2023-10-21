@@ -284,7 +284,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TWxUser wxUser = wxUserService.selectTWxUserById(userId);
 
-        if (prepayReq.getPayType() == OfficeEnum.PayType.WX_PAY.getCode()) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标识.
+        if (prepayReq.getPayType().equals(OfficeEnum.PayType.WX_PAY.getCode())) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标识.
 
             // 满减券
             BigDecimal payAMT = totalPrice;
@@ -298,7 +298,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 }
                 TWxUserPromotion userPromotion = userPromotions.get(0);
                 if (validPromotion(prepayReq.getRoomId(), userPromotion, userId)) {
-                    if (totalPrice.compareTo(userPromotion.getStandardPrice()) == -1) {
+                    if (totalPrice.compareTo(userPromotion.getStandardPrice()) < 0) {
                         throw new ServiceException("未达到满减金额");
                     } else {
                         payAMT = totalPrice.subtract(userPromotion.getDiscountPrice());
@@ -339,7 +339,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             resp.setJsapiResult(jsapiResult);
             resp.setOrderId(tRoomOrder.getId());
             log.debug("/order: return:" + resp.getOrderId() + jsapiResult.toString());
-        } else if (prepayReq.getPayType() == OfficeEnum.PayType.CARD_BALANCE_PAY.getCode()) {  // 储值卡余额支付
+        } else if (prepayReq.getPayType().equals(OfficeEnum.PayType.CARD_BALANCE_PAY.getCode())) {  // 储值卡余额支付
             TWxUserAmount wxUserAmount = new TWxUserAmount();
             // 判断用户在商户下的余额是否足够；
             long roomId = prepayReq.getRoomId();
@@ -348,14 +348,14 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             wxUserAmount.setUserId(Long.parseLong(room.getCreateBy()));
             wxUserAmount.setWxUserId(tRoomOrder.getUserId());
             final List<TWxUserAmount> wxUserAmounts = wxUserAmountService.selectTWxUserAmountList(wxUserAmount);
-            if (wxUserAmounts.size() == 0 || wxUserAmounts.get(0).getAmount().compareTo(totalPrice) == -1)
+            if (wxUserAmounts.size() == 0 || wxUserAmounts.get(0).getAmount().compareTo(totalPrice) < 0)
                 throw new ServiceException("储值卡余额不够，请充值后使用");
             BigDecimal cashAmount = wxUserAmounts.get(0).getCashAmount();
             BigDecimal welfareAmount = wxUserAmounts.get(0).getWelfareAmount();
             wxUserAmount.setAmount(totalPrice);
 
             //本金足够
-            if (totalPrice.compareTo(cashAmount) == -1) {
+            if (totalPrice.compareTo(cashAmount) < 0) {
                 wxUserAmount.setCashAmount(totalPrice);
                 wxUserAmount.setWelfareAmount(new BigDecimal(0));
             } else {
@@ -370,7 +370,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             tRoomOrder.setOrderNo(orderNo);
             tRoomOrder.setTotalAmount(totalPrice);
             //本金足够
-            if (totalPrice.compareTo(cashAmount) == -1) {
+            if (totalPrice.compareTo(cashAmount) < 0) {
                 tRoomOrder.setPayAmount(totalPrice);
             } else {
                 tRoomOrder.setPayAmount(cashAmount);
@@ -382,7 +382,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             tRoomOrder.setOrderType("小时收费");
             tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
 
-        } else if (prepayReq.getPayType() == OfficeEnum.PayType.COUPON_PAY.getCode()) { // 美团券券支付
+        } else if (prepayReq.getPayType().equals(OfficeEnum.PayType.COUPON_PAY.getCode())) { // 美团券券支付
             validCoupon(prepayReq, userId);// 校验可用性
 
             //  优惠券置为已使用
@@ -465,7 +465,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TWxUser wxUser = wxUserService.selectTWxUserById(userId);
 
-        if (prepayReq.getPayType() == OfficeEnum.PayType.WX_PAY.getCode()) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标识.
+        if (prepayReq.getPayType().equals(OfficeEnum.PayType.WX_PAY.getCode())) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标识.
 
             // 满减券
             BigDecimal payAMT = totalPrice;
@@ -479,7 +479,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 }
                 TWxUserPromotion userPromotion = userPromotions.get(0);
                 if (validPromotion(roomPackage.getRoomId(), userPromotion, userId)) {
-                    if (totalPrice.compareTo(userPromotion.getStandardPrice()) == -1) {
+                    if (totalPrice.compareTo(userPromotion.getStandardPrice()) < 0) {
                         throw new ServiceException("未达到满减金额");
                     } else {
                         payAMT = totalPrice.subtract(userPromotion.getDiscountPrice());
@@ -531,13 +531,13 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             resp.setJsapiResult(jsapiResult);
             resp.setOrderId(tRoomOrder.getId());
             log.debug("/order: return:" + resp.getOrderId() + jsapiResult.toString());
-        } else if (prepayReq.getPayType() == OfficeEnum.PayType.CARD_BALANCE_PAY.getCode()) {  // 储值卡余额支付
+        } else if (prepayReq.getPayType().equals(OfficeEnum.PayType.CARD_BALANCE_PAY.getCode())) {  // 储值卡余额支付
             TWxUserAmount wxUserAmount = new TWxUserAmount();
             // 判断用户在商户下的余额是否足够；
             wxUserAmount.setUserId(Long.parseLong(room.getCreateBy()));
             wxUserAmount.setWxUserId(tRoomOrder.getUserId());
             final List<TWxUserAmount> wxUserAmounts = wxUserAmountService.selectTWxUserAmountList(wxUserAmount);
-            if (wxUserAmounts.size() == 0 || wxUserAmounts.get(0).getAmount().compareTo(totalPrice) == -1)
+            if (wxUserAmounts.size() == 0 || wxUserAmounts.get(0).getAmount().compareTo(totalPrice) < 0)
                 throw new ServiceException("储值卡余额不够，请充值后使用");
 
             BigDecimal cashAmount = wxUserAmounts.get(0).getCashAmount();
@@ -545,7 +545,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             wxUserAmount.setAmount(totalPrice);
 
             //本金足够
-            if (totalPrice.compareTo(cashAmount) == -1) {
+            if (totalPrice.compareTo(cashAmount) < 0) {
                 wxUserAmount.setCashAmount(totalPrice);
                 wxUserAmount.setWelfareAmount(new BigDecimal(0));
             } else {
@@ -565,7 +565,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             tRoomOrder.setCreateBy(prepayReq.getUserId() + "");
             tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
 
-        } else if (prepayReq.getPayType() == OfficeEnum.PayType.COUPON_PAY.getCode()) { // 美团券券支付
+        } else if (prepayReq.getPayType().equals(OfficeEnum.PayType.COUPON_PAY.getCode())) { // 美团券券支付
 //            validCoupon(prepayReq, userId);// 校验可用性
 
             //  优惠券置为已使用
@@ -623,7 +623,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TWxUser wxUser = wxUserService.selectTWxUserById(userId);
 
-        if (reorederReq.getPayType() == OfficeEnum.PayType.WX_PAY.getCode()) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标识.
+        if (reorederReq.getPayType().equals(OfficeEnum.PayType.WX_PAY.getCode())) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标识.
 
             // 满减券
             BigDecimal payAMT = totalPrice;
@@ -637,7 +637,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 }
                 TWxUserPromotion userPromotion = userPromotions.get(0);
                 if (validPromotion(roomOrder.getRoomId(), userPromotion, userId)) {
-                    if (totalPrice.compareTo(userPromotion.getStandardPrice()) == -1) {
+                    if (totalPrice.compareTo(userPromotion.getStandardPrice()) < 0) {
                         throw new ServiceException("未达到满减金额");
                     } else {
                         payAMT = totalPrice.subtract(userPromotion.getDiscountPrice());
@@ -686,7 +686,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             resp.setJsapiResult(jsapiResult);
             resp.setOrderId(roomOrder.getId());
 
-        } else if (reorederReq.getPayType() == OfficeEnum.PayType.CARD_BALANCE_PAY.getCode()) {  // 储值卡余额支付
+        } else if (reorederReq.getPayType().equals(OfficeEnum.PayType.CARD_BALANCE_PAY.getCode())) {  // 储值卡余额支付
             TWxUserAmount wxUserAmount = new TWxUserAmount();
             // 判断用户在商户下的余额是否足够；
             TRoom room = roomService.selectTRoomById(roomOrder.getRoomId());
@@ -694,14 +694,14 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             wxUserAmount.setUserId(Long.parseLong(room.getCreateBy()));
             wxUserAmount.setWxUserId(roomOrder.getUserId());
             final List<TWxUserAmount> wxUserAmounts = wxUserAmountService.selectTWxUserAmountList(wxUserAmount);
-            if (wxUserAmounts.size() == 0 || wxUserAmounts.get(0).getAmount().compareTo(totalPrice) == -1)
+            if (wxUserAmounts.size() == 0 || wxUserAmounts.get(0).getAmount().compareTo(totalPrice) < 0)
                 throw new ServiceException("储值卡余额不够，请充值后使用");
 
             BigDecimal cashAmount = wxUserAmounts.get(0).getCashAmount();
             BigDecimal welfareAmount = wxUserAmounts.get(0).getWelfareAmount();
             wxUserAmount.setAmount(totalPrice);
             //本金足够
-            if (totalPrice.compareTo(cashAmount) == -1) {
+            if (totalPrice.compareTo(cashAmount) < 0) {
                 wxUserAmount.setCashAmount(totalPrice);
                 wxUserAmount.setWelfareAmount(new BigDecimal(0));
             } else {
@@ -721,7 +721,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             roomOrder.setUpdateBy(userId + "");
             tRoomOrderMapper.updateTRoomOrder(roomOrder);
 
-        } else if (reorederReq.getPayType() == OfficeEnum.PayType.COUPON_PAY.getCode()) { // 美团券券支付
+        } else if (reorederReq.getPayType().equals(OfficeEnum.PayType.COUPON_PAY.getCode())) { // 美团券券支付
 
             PrepayReq checkVo = new PrepayReq();
             checkVo.setRoomId(roomOrder.getRoomId());
