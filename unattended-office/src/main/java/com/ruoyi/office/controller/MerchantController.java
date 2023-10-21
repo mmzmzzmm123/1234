@@ -72,7 +72,7 @@ public class MerchantController extends BaseController {
             BigDecimal totalAmt = new BigDecimal(0);
             boolean inExe = false;
             for (TRoomOrder order : orderList) {
-                if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.USED.getCode()) {// 5) ) {
+                if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.USED.getCode())) {// 5) ) {
                     sumHour += Math.abs((long) ((order.getEndTime().getTime() - order.getStartTime().getTime()) / (1000 * 3600)));
                     totalAmt.add(order.getPayAmount());
                 }
@@ -80,7 +80,7 @@ public class MerchantController extends BaseController {
                     vo.setNextOrderStart(order.getStartTime());
                     break;
                 }
-                if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.USING.getCode()) {// == 3) {
+                if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.USING.getCode())) {// == 3) {
                     vo.setOrderEndTime(order.getEndTime());
                     inExe = true;
                 }
