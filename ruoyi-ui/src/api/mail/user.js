@@ -42,3 +42,13 @@ export function delUser(id) {
     method: 'delete'
   })
 }
+
+
+// 发送邮件
+export function sendMail(data) {
+  return request({
+    url: '/sendmail/sendSimpleMail',
+    method: 'post',
+    data: data
+  })
+}
