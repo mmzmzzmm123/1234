@@ -12,13 +12,13 @@ import static com.ruoyi.common.core.domain.AjaxResult.success;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/sendmail")
+@RequestMapping("/mail/sendmail")
 public class SendMailController {
 
     @Autowired
     private IMailService mailService;
 
-    @PostMapping("sendSimpleMail")
+    @PostMapping("/sendSimpleMail")
     public AjaxResult sendSimpleMail(@Validated @RequestBody MailInData mailInData){
         mailService.sendSimpleMail(mailInData.getReceiveUserMail(),mailInData.getSubject(),mailInData.getContent());
         return success();

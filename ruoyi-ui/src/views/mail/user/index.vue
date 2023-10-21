@@ -79,12 +79,12 @@
 
     <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
-      <el-table-column label="${comment}" align="center" prop="mailAccount" />
+      <el-table-column label="id" align="center" prop="id" />
+      <el-table-column label="email" align="center" prop="mailAccount" />
       <el-table-column label="1 发送晚安消息" align="center" prop="mailType" />
-      <el-table-column label="${comment}" align="center" prop="name" />
+      <el-table-column label="name" align="center" prop="name" />
       <el-table-column label="0 无问题   1 删除" align="center" prop="isDelete" />
-      <el-table-column label="学习计划人员" align="center" prop="type" />
+<!--      <el-table-column label="学习计划人员" align="center" prop="type" />-->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -104,7 +104,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -116,10 +116,10 @@
     <!-- 添加或修改邮件用户列表对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="${comment}" prop="mailAccount">
+        <el-form-item label="邮箱账户" prop="mailAccount">
           <el-input v-model="form.mailAccount" placeholder="请输入${comment}" />
         </el-form-item>
-        <el-form-item label="${comment}" prop="name">
+        <el-form-item label="姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入${comment}" />
         </el-form-item>
         <el-form-item label="0 无问题   1 删除" prop="isDelete">

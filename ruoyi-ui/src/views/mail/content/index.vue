@@ -63,8 +63,8 @@
 
     <el-table v-loading="loading" :data="contentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
-      <el-table-column label="${comment}" align="center" prop="content" />
+      <el-table-column label="id" align="center" prop="id" />
+      <el-table-column label="邮件内容" align="center" prop="content" />
       <el-table-column label="类型1：晚安语     类型0:" align="center" prop="type" />
       <el-table-column label="0 无问题  1 删除" align="center" prop="isDelete" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -86,7 +86,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
