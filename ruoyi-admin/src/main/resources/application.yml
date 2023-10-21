@@ -99,6 +99,7 @@ spring:
 rocketmq:
   # 指定 nameServer
   name-server: 106.53.97.225:9876
+  # name-server: 10.0.12.4:9876
   # Producer 生产者
   producer:
     # 指定发送者组名

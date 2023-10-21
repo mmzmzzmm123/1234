@@ -22,6 +22,14 @@ public interface StaffWalletMapper {
 
     /**
      * 根据用户标识查询记录
+     *
+     * @param userId 用户标识
+     * @return 结果
+     * */
+    public StaffWallet selectStaffWalletByUserId(Long userId);
+
+    /**
+     * 根据用户标识查询记录
      * @param userId 用户标识
      * @return 结果
      * */

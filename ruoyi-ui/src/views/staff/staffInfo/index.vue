@@ -29,6 +29,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="是否组长" prop="ifLeader">
+        <el-select v-model="queryParams.ifLeader" placeholder="请选择是否组长" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_yes_no"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="性别" prop="sex">
         <el-select v-model="queryParams.sex" placeholder="请选择性别" clearable>
           <el-option
@@ -148,6 +158,11 @@
           <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.ifOnline"/>
         </template>
       </el-table-column>
+      <el-table-column label="是否组长" align="center" prop="ifLeader" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.ifLeader"/>
+        </template>
+      </el-table-column>
       <el-table-column label="等级" align="center" prop="staffLevel" :show-overflow-tooltip="true"/>
       <el-table-column label="出生年月" align="center" prop="birthDate" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -264,6 +279,16 @@
             ></el-option>
           </el-select>
         </el-form-item>
+        <el-form-item label="是否组长" prop="ifLeader">
+          <el-select v-model="form.ifLeader" placeholder="请选择是否组长">
+            <el-option
+              v-for="dict in dict.type.sys_yes_no"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item label="等级" prop="staffLevel">
           <el-input v-model="form.staffLevel" placeholder="请输入等级"/>
         </el-form-item>
@@ -368,6 +393,7 @@ export default {
         nickName: null,
         state: null,
         ifOnline: null,
+        ifLeader: null,
         sex: null,
         weChatNum: null,
         phone: null,
@@ -419,6 +445,7 @@ export default {
         nickName: null,
         state: null,
         ifOnline: null,
+        ifLeader: null,
         staffLevel: null,
         birthDate: null,
         sex: null,

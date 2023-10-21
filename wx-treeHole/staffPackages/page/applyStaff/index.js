@@ -32,7 +32,7 @@ Page({
     form: { // 表单
       nickName: null, // 昵称
       sex: null, // 性别
-      weChatNum: null, // 微信号
+      weChatNum: null, // 绿泡泡
       phone: null, // 手机号码
       province: null, // 省
       city: null, // 市
@@ -380,7 +380,7 @@ Page({
     })
   },
   /**
-   * 微信号输入事件
+   * 绿泡泡输入事件
    */
   weChatNumInput: function (e) {
     this.setData({

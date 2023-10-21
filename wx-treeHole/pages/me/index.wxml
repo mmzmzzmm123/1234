@@ -154,22 +154,30 @@
                   <text>我的订单</text>
                 </view>
               </wux-col>
-              <!-- <wux-col span="3">
-                <view class="view_box_content_column funItemView">
+              <wux-col span="3">
+                <view class="view_box_content_column funItemView" bind:tap="toStaffSalary">
                   <view class="view_box_row_content background_orange">
                     <image src="../../static/ico/money_white_32.png"></image>
                   </view>
-                  <text>我的提成</text>
+                  <text>我的薪资</text>
                 </view>
-              </wux-col> -->
-              <wux-col span="3">
+              </wux-col>
+              <wux-col span="3" wx:if="{{staffInfo.ifLeader == 'Y'}}">
+                <view class="view_box_content_column funItemView" bind:tap="toStaffLeader">
+                  <view class="view_box_row_content badgeLevel_4">
+                    <image src="../../static/ico/leader_white_32.png"></image>
+                  </view>
+                  <text>组员管理</text>
+                </view>
+              </wux-col>
+              <!-- <wux-col span="3">
                 <view class="view_box_content_column funItemView" bind:tap="messageSubscription">
                   <view class="view_box_row_content background_gold">
                     <image src="../../static/ico/notify_white_32.png"></image>
                   </view>
                   <text>消息订阅</text>
                 </view>
-              </wux-col>
+              </wux-col> -->
             </wux-row>
           </view>
         </view>
@@ -181,7 +189,7 @@
           <view class="view_box_common view_box_row_content_symmetry commonFunItem" bind:tap="toUserAccount">
             <view class="view_box_row_content">
               <image src="../../static/ico/socialize_grey_32.png" mode="widthFix"></image>
-              <text>账号管理</text>
+              <text>绿泡泡管理</text>
             </view>
             <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
           </view>

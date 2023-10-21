@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "账号管理",
+  "navigationBarTitleText": "绿泡泡管理",
   "usingComponents": {
     "i-drawer": "../../../components/iview/dist/drawer/index",
     "wux-icon": "../../../components/wux/dist/icon/index",

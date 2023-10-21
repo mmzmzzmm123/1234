@@ -50,5 +50,4 @@ public class StaffSettlementRecords extends BaseEntity {
     @ApiModelProperty("结算结束时间")
     private Date endTime;
 
-
 }

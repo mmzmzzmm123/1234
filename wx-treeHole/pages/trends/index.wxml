@@ -63,7 +63,7 @@
                     <!-- 还需要判断是多图还是单图 -->
                     <block wx:if="{{!str.indexOf(dataItem.imgList, ',')}}">
                       <view class="view_box_common">
-                        <image class="trendsSingleImage" src="{{dataItem.imgList}}" mode="widthFix" data-index="{{dataIndex}}" data-imgIndex="0" bind:tap="listImgCli"></image>
+                        <image class="trendsSingleImage" src="{{dataItem.imgList}}" style="max-height: 400px;" mode="heightFix" data-index="{{dataIndex}}" data-imgIndex="0" bind:tap="listImgCli"></image>
                       </view>
                     </block>
                     <block wx:else>

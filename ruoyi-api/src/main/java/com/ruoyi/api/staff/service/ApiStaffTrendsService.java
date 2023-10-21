@@ -113,30 +113,6 @@ public class ApiStaffTrendsService {
                 }
             }
         }
-        // 合法图片与敏感词校验
-        try {
-            WxMaSecCheckService secCheckService = wxService.getWxMaSecCheckService();
-            if (StringUtils.isNotBlank(dto.getContent())){
-                secCheckService.checkMessage(dto.getContent());
-            }
-            if (StringUtils.isNotBlank(dto.getImgList())){
-                String[] imgArr = StringUtils.split(dto.getImgList(), ",");
-                for (String item : imgArr){
-                    secCheckService.checkImage(item);
-                }
-            }
-            if (StringUtils.isNotBlank(dto.getVideoUrl())){
-                WxMaMediaAsyncCheckResult videoResult = secCheckService.mediaCheckAsync(dto.getVideoUrl(), WxMaConstants.SecCheckMediaType.VOICE);
-                log.info("视频检测结果：{}", videoResult);
-            }
-            if (StringUtils.isNotBlank(insert.getVoiceUrl())){
-                WxMaMediaAsyncCheckResult voiceResult = secCheckService.mediaCheckAsync(dto.getVoiceUrl(), WxMaConstants.SecCheckMediaType.VOICE);
-                log.info("视频检测结果：{}", voiceResult);
-            }
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            throw new ServiceException("亲爱的 您上传的内容涉及到敏感内容，请检查修改后上传", HttpStatus.WARN_WX);
-        }
         staffTrendsMapper.insertStaffTrends(insert);
         log.info("发布动态：完成");
         return R.ok(Boolean.TRUE);

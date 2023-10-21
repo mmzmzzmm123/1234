@@ -23,7 +23,9 @@
         "page/staffInfoShow/index",
         "page/staffInfo/index",
         "page/staffTrends/index",
-        "page/staffOrder/index"
+        "page/staffOrder/index",
+        "page/staffSalary/index",
+        "page/staffLeader/index"
       ]
     },
     {

@@ -140,12 +140,12 @@
             </view>
 
             <block wx:if="{{ifHide == '0'}}">
-              <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+              <!-- <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
                 <view>账号渠道</view>
                 <span>{{dictsUtil.social_accounts(operObj.accountServiceProvider)}}</span>
-              </view>
+              </view> -->
               <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
-                <view>社交账号</view>
+                <view>绿泡泡</view>
                 <span>{{operObj.customNum}}</span>
               </view>
             </block>

@@ -1,15 +1,18 @@
 package com.ruoyi.api.order.service;
 
 import cn.binarywang.wx.miniapp.api.WxMaSecCheckService;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.ruoyi.api.order.model.dto.*;
+import com.ruoyi.api.order.model.vo.ApiOrderOfStaffThisWeekVo;
 import com.ruoyi.api.payment.model.vo.ApiOrderPayInfoVo;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.constant.RedisKeyConstants;
+import com.ruoyi.common.constant.SysTipsConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.*;
 import com.ruoyi.common.exception.ServiceException;
@@ -59,12 +62,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 /**
  * @author LAM
@@ -327,6 +331,8 @@ public class ApiOrderService {
             log.warn("随机单提交：失败，服务子项目对应等级价格信息为空");
             throw new ServiceException("亲爱的，系统繁忙，请稍后重试", HttpStatus.WARN_WX);
         }
+        // 自动取消时间
+        String autoCancelTime = DateUtils.rollMinute(5, DateUtils.YYYY_MM_DD_HH_MM_SS);
         // 订单金额
         BigDecimal orderAmount = serviceItemPrice.getPrice().multiply(BigDecimal.valueOf(dto.getNum()));
         // 构建订单信息
@@ -334,9 +340,8 @@ public class ApiOrderService {
         BeanUtils.copyBeanProp(orderInfo, dto);
         orderInfo.setOrderType(OrderTypeEnums.RANDOM.getCode())
                 .setAmount(orderAmount)
-                .setPayAmount(orderAmount);
-        // 自动取消时间
-        String autoCancelTime = DateUtils.rollMinute(5, DateUtils.YYYY_MM_DD_HH_MM_SS);
+                .setPayAmount(orderAmount)
+                .setAutoExpireTime(DateUtils.parseDate(autoCancelTime));
         // 订单描述
         String description = "随机订单：" + serviceInfo.getName() + "-" + serviceItem.getName();
         // 支付和订单状态（主要处理余额支付的）
@@ -734,7 +739,7 @@ public class ApiOrderService {
         if ("2".equals(dto.getFormUser())) {
             StaffInfo staffInfo = staffInfoMapper.selectStaffInfoByUserId(userId);
             select.setFilterStaffIdIsNull(SysYesNoEnums.YES.getCode())
-                    .setStaffLevel(staffInfo.getStaffLevel());
+                    .setLessThanOrEqualLevel(staffInfo.getStaffLevel());
         }
         return orderInfoMapper.selectJoinAll(select);
     }
@@ -932,16 +937,6 @@ public class ApiOrderService {
     @Transactional(rollbackFor = Exception.class)
     public Boolean orderFinish(ApiOrderFinishDto dto) {
         log.info("订单完成：开始，参数：{}", dto);
-        // 合法图片与敏感词校验
-        try {
-            WxMaSecCheckService secCheckService = wxService.getWxMaSecCheckService();
-            if (StringUtils.isNotBlank(dto.getComment())) {
-                secCheckService.checkMessage(dto.getComment());
-            }
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            throw new ServiceException("亲爱的 您上传的内容涉及到敏感内容，请检查修改后上传", HttpStatus.WARN_WX);
-        }
         OrderInfo orderInfo = orderInfoMapper.selectByOrderNo(dto.getOrderNo());
         if (ObjectUtil.isNull(orderInfo)) {
             log.warn("订单完成：失败，无法找到对应的订单数据");
@@ -1009,17 +1004,33 @@ public class ApiOrderService {
             OrderInfo orderInfo = orderInfoMapper.selectByOrderNo(orderNo);
             // 可以接单
             if (ObjectUtil.isNotNull(orderInfo) && ObjectUtil.isNull(orderInfo.getStaffUserId())) {
-                OrderInfo updateOi = new OrderInfo();
-                updateOi.setId(orderInfo.getId())
-                        .setStaffUserId(TokenUtils.getUserId())
-                        .setOrderState(OrderStateEnums.WAIT_SERVICE.getCode())
-                        .setOrderReceivingTime(now)
-                        .setUpdateTime(now);
-                orderInfoMapper.updateOrderInfo(updateOi);
-                // 发送通知消息
-                rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_TAKING_NOTICE, orderInfo.getId());
+                // 查询店员信息
+                StaffInfo staffInfo = staffInfoMapper.selectStaffInfoByUserId(TokenUtils.getUserId());
+                if (ObjectUtil.isNotNull(staffInfo)){
+                    // 查询当前店员等级佣金
+                    StaffLevelConfig staffLevelConfig = selectStaffLevelInfo(staffInfo.getStaffLevel());
+                    if (ObjectUtil.isNotNull(staffLevelConfig)) {
+                        Boolean ifContinuous = ifContinuous(orderInfo.getCustomUserId(), staffInfo.getUserId());
+                        OrderInfo updateOi = new OrderInfo();
+                        updateOi.setId(orderInfo.getId())
+                                .setStaffUserId(staffInfo.getUserId())
+                                .setStaffLevel(staffInfo.getStaffLevel())
+                                .setIfContinuous(ifContinuous?SysYesNoEnums.YES.getCode():SysYesNoEnums.NO.getCode())
+                                .setCommissionRatio(!ifContinuous?staffLevelConfig.getOrderRatio():staffLevelConfig.getFirstOrderRatio())
+                                .setOrderState(OrderStateEnums.WAIT_SERVICE.getCode())
+                                .setOrderReceivingTime(now)
+                                .setUpdateTime(now);
+                        orderInfoMapper.updateOrderInfo(updateOi);
+                        // 发送通知消息
+                        rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_TAKING_NOTICE, orderInfo.getId());
+                    } else {
+                        tipMsg = "亲爱的，服务器拥挤，请刷新重试";
+                    }
+                } else {
+                    tipMsg = "亲爱的，服务器拥挤，请刷新重试";
+                }
             } else {
-                tipMsg = "亲爱的，慢了一步哟，订单已被接单啦";
+                tipMsg = "亲爱的，服务器拥挤，请刷新重试";
             }
         } catch (Exception e) {
             log.warn("店员随机单接单：异常");
@@ -1083,16 +1094,16 @@ public class ApiOrderService {
         // 计算订单自动服务完成时间
         MqDelayLevelEnums mqDelayLevelEnums = null;
         List<OrderDetails> orderDetailsList = orderDetailsMapper.selectByOrderId(orderInfo.getId());
-        if (ObjectUtil.isNotEmpty(orderDetailsList)){
+        if (ObjectUtil.isNotEmpty(orderDetailsList)) {
             OrderDetails orderDetails = orderDetailsList.get(0);
             Long serviceItemId = orderDetails.getServiceItemId();
             ServiceItem serviceItem = serviceItemMapper.selectServiceItemById(serviceItemId);
             if (ObjectUtil.isNotNull(serviceItem)) {
                 DateTimeUnitEnums timeUnitEnums = DateTimeUnitEnums.getByCode(serviceItem.getOrderExpireTimeUnit());
-                if (ObjectUtil.isNotNull(timeUnitEnums)){
+                if (ObjectUtil.isNotNull(timeUnitEnums)) {
                     int orderServiceDuration = serviceItem.getOrderServiceDuration().intValue();
                     Date autoFinishDate;
-                    switch (timeUnitEnums){
+                    switch (timeUnitEnums) {
                         case MONTH:
                             autoFinishDate = DateUtils.calculateMonthsDifference(orderServiceDuration);
                             mqDelayLevelEnums = MqDelayLevelEnums.level_18;
@@ -1107,16 +1118,16 @@ public class ApiOrderService {
                             break;
                         case HOUR:
                             autoFinishDate = DateUtils.calculateHoursDifference(orderServiceDuration);
-                            if (orderServiceDuration == 2){
+                            if (orderServiceDuration == 2) {
                                 mqDelayLevelEnums = MqDelayLevelEnums.level_18;
-                            }else {
+                            } else {
                                 mqDelayLevelEnums = MqDelayLevelEnums.level_17;
                             }
                             break;
                         case MINUTE:
-                            if (orderServiceDuration <= 30){
+                            if (orderServiceDuration <= 30) {
                                 mqDelayLevelEnums = MqDelayLevelEnums.level_16;
-                            }else{
+                            } else {
                                 mqDelayLevelEnums = MqDelayLevelEnums.level_17;
                             }
                             autoFinishDate = DateUtils.calculateMinutesDifference(orderServiceDuration);
@@ -1132,7 +1143,7 @@ public class ApiOrderService {
         }
         orderInfoMapper.updateOrderInfo(updateOi);
         // 发送订单自动完成消息
-        if (ObjectUtil.isNotNull(mqDelayLevelEnums)){
+        if (ObjectUtil.isNotNull(mqDelayLevelEnums)) {
             rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_SUCCESS, orderInfo.getId(), mqDelayLevelEnums);
         }
         // 发送通知消息
@@ -1170,5 +1181,93 @@ public class ApiOrderService {
             orderComment.setStaffUserId(dto.getStaffId());
         }
         return orderCommentMapper.selectOrderCommentList(orderComment);
+    }
+
+    /**
+     * 查询店员本周订单详细情况
+     *
+     * @return 结果
+     */
+    public ApiOrderOfStaffThisWeekVo selectStaffThisWeekOrderInfo() {
+        log.info("查询店员本周订单详细情况：开始");
+        ApiOrderOfStaffThisWeekVo vo = new ApiOrderOfStaffThisWeekVo();
+        int orderNum = 0;
+        int settledNum = 0;
+        int unSettledNum = 0;
+        int cancelNum = 0;
+        int overTimeNum = 0;
+        BigDecimal renewalRate = BigDecimal.ZERO;
+        BigDecimal waitOrderFinishCommission = BigDecimal.ZERO;
+        BigDecimal orderTotalAmount = BigDecimal.ZERO;
+        BigDecimal effectiveTotalAmount = BigDecimal.ZERO;
+        // 获取周一和周日的日期
+        LocalDate currentDate = LocalDate.now();
+        LocalDate thisMonday = currentDate.with(DayOfWeek.MONDAY);
+        LocalDate thisSunday = currentDate.with(DayOfWeek.SUNDAY);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateUtils.YYYY_MM_DD);
+        String mondayStr = thisMonday.format(formatter);
+        String sundayStr = thisSunday.format(formatter);
+        // 构建查询数据
+        Map<String,Object> params = new HashMap<>();
+        params.put("beginCreateTime", mondayStr);
+        params.put("endCreateTime", sundayStr);
+        OrderInfo orderInfo = new OrderInfo();
+        orderInfo.setStaffUserId(TokenUtils.getUserId())
+                .setParams(params);
+        // 开始查询
+        List<OrderInfo> orderInfos = orderInfoMapper.selectOrderInfoList(orderInfo);
+        // 计算基本数据
+        if (ObjectUtil.isNotEmpty(orderInfos)){
+            String[] unSettledStateArr = {OrderStateEnums.PAID.getCode(),OrderStateEnums.WAIT_SERVICE.getCode(),OrderStateEnums.SERVICE_ING.getCode(),OrderStateEnums.WAIT_COMMENT.getCode()};
+            orderNum = orderInfos.size();
+            // 获取已结单数
+            List<OrderInfo> settledOrderList = orderInfos.stream().filter(temp -> OrderStateEnums.FINISH.getCode().equals(temp.getOrderState())).collect(Collectors.toList());
+            if (ObjectUtil.isNotEmpty(settledOrderList)){
+                settledNum = settledOrderList.size();
+            }
+            // 获取未结单数
+            List<OrderInfo> unSettledList = orderInfos.stream().filter(temp -> ListUtil.toList(unSettledStateArr).contains(temp.getOrderState())).collect(Collectors.toList());
+            if (ObjectUtil.isNotEmpty(unSettledList)){
+                unSettledNum = unSettledList.size();
+                for (OrderInfo item : unSettledList){
+                    waitOrderFinishCommission = waitOrderFinishCommission.add(item.getPayAmount().multiply(item.getCommissionRatio())).setScale(2, RoundingMode.HALF_UP);
+                }
+            }
+            // 取消单数
+            List<OrderInfo> cancelOrderList = orderInfos.stream().filter(temp -> OrderStateEnums.CANCEL.getCode().equals(temp.getOrderState())).collect(Collectors.toList());
+            if (ObjectUtil.isNotEmpty(cancelOrderList)){
+                cancelNum = cancelOrderList.size();
+            }
+            // 超时订单数
+            List<OrderInfo> overTimeOrderList = orderInfos.stream().filter(temp -> SysTipsConstants.ORDER_OVER_TIME_CANCEL_TIPS.equals(temp.getCancelRemark())).collect(Collectors.toList());
+            if (ObjectUtil.isNotEmpty(overTimeOrderList)){
+                overTimeNum = overTimeOrderList.size();
+            }
+            // 获取续单订单率
+            List<OrderInfo> renewalList = orderInfos.stream().filter(temp -> SysYesNoEnums.YES.getCode().equals(temp.getIfContinuous())).collect(Collectors.toList());
+            if (ObjectUtil.isNotEmpty(renewalList)){
+                renewalRate = BigDecimal.valueOf(renewalList.size()).divide(BigDecimal.valueOf(orderNum), 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
+            }
+            ArrayList<String> normalStateList = ListUtil.toList(unSettledStateArr);
+            normalStateList.add(OrderStateEnums.FINISH.getCode());
+            // 循环计算金额数据
+            for (OrderInfo item : orderInfos){
+                orderTotalAmount = orderTotalAmount.add(item.getPayAmount());
+                if (normalStateList.contains(item.getOrderState())){
+                    effectiveTotalAmount = effectiveTotalAmount.add(item.getAmount());
+                }
+            }
+        }
+        vo.setOrderNum(orderNum)
+                .setSettledNum(settledNum)
+                .setUnSettledNum(unSettledNum)
+                .setCancelNum(cancelNum)
+                .setOverTimeNum(overTimeNum)
+                .setRenewalRate(renewalRate)
+                .setWaitOrderFinishCommission(waitOrderFinishCommission)
+                .setEffectiveTotalAmount(effectiveTotalAmount)
+                .setOrderTotalAmount(orderTotalAmount);
+        log.info("查询店员本周订单详细情况：完成，返回数据：{}", vo);
+        return vo;
     }
 }

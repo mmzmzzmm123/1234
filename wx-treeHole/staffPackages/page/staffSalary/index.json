@@ -1,0 +1,12 @@
+{
+  "navigationBarTitleText": "我的薪资",
+  "usingComponents": {
+    "i-load-more": "../../../components/iview/dist/load-more/index",
+    "column-view": "../../../components/mine/columnView/index",
+    "wux-skeleton": "../../../components/wux/dist/skeleton/index",
+    "wux-skeleton-paragraph": "../../../components/wux/dist/skeleton-paragraph/index",
+    "wux-tabs": "../../../components/wux/dist/tabs/index",
+    "wux-tab": "../../../components/wux/dist/tab/index",
+    "mine-null-data": "../../../components/mine/nullDataView/index"
+  }
+}

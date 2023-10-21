@@ -11,17 +11,28 @@ sex = function (key) {
  * 账号服务商
  */
 social_accounts = function(key){
-  return key == "0" ? "微信" :
+  return key == "0" ? "绿泡泡" :
   key == "1" ? "QQ" :
   key == "2" ? "微博" :
         "未知";
 }
+
 /**
  * 支付方式
  */
 pay_way = function(key){
   return key == "0" ? "微信支付" :
   key == "1" ? "枫叶币支付" :
+        "未知";
+}
+
+/**
+ * 店员钱包记录类型
+ */
+staff_wallet_record_type = function(key){
+  return key == "0" ? "佣金入账" :
+  key == "1" ? "平台扣款" :
+  key == "2" ? "薪资结算" :
         "未知";
 }
 
@@ -57,5 +68,6 @@ module.exports = {
   social_accounts: social_accounts,
   order_state: order_state,
   order_type: order_type,
-  pay_way: pay_way
+  pay_way: pay_way,
+  staff_wallet_record_type: staff_wallet_record_type
 }

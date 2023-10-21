@@ -62,6 +62,9 @@ public class OrderInfo extends BaseEntity {
     @ApiModelProperty("员工等级")
     private Long staffLevel;
 
+    @ApiModelProperty("小于等于员工等级条件")
+    private Long lessThanOrEqualLevel;
+
     /** 提成比例 */
     @Excel(name = "提成比例")
     @ApiModelProperty("提成比例")

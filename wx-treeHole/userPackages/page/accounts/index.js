@@ -16,14 +16,6 @@ Page({
       {
         "label": "微信",
         "value": 0
-      },
-      {
-        "label": "QQ",
-        "value": 1
-      },
-      {
-        "label": "微信",
-        "value": 2
       }
     ],
     account: {
@@ -117,7 +109,7 @@ Page({
     })
   },
   /**
-   * 社交账号改变事件
+   * 绿泡泡账号改变事件
    */
   carNumberInput: function (e) {
     this.setData({
@@ -147,7 +139,7 @@ Page({
     let account = this.data.account;
     if (account.num == null || account.num == "") {
       wx.showToast({
-        title: '亲爱的，账号不能为空哟',
+        title: '亲爱的，绿泡泡不能为空哟',
         icon: "none"
       })
       return;

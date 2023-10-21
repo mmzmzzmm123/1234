@@ -192,4 +192,10 @@ public class ApiOrderController extends BaseController {
         log.info("查询订单评论：完成，返回数据：{}", vo);
         return R.ok(vo);
     }
+
+    @ApiOperation("查询店员本周订单详细情况")
+    @GetMapping("/selectStaffThisWeekOrderInfo")
+    public R<ApiOrderOfStaffThisWeekVo> selectStaffThisWeekOrderInfo(){
+        return R.ok(service.selectStaffThisWeekOrderInfo());
+    }
 }

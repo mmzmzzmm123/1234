@@ -104,24 +104,20 @@
         </view>
         <view class="rankInfo">
           <image class="rankBg" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/rank_bg.png" mode="widthFix"></image>
-          <view class="staffRankView view_box_content_column" style="top: 65px;left: {{pWidth*0.9*0.5-36}}px;">
+          <view class="staffRankView view_box_content_column" style="top: 65px;left: {{pWidth*0.9*0.5-36}}px;" data-staffid="{{rankTabIndex==0?girlWeeklyRankingTopThree[0].userId:boyWeeklyRankingTopThree[0].userId}}" bind:tap="toShowStaffInfo">
             <image class="staffRank" src="{{rankTabIndex==0?(girlWeeklyRankingTopThree[0].avatarUrl!=null?girlWeeklyRankingTopThree[0].avatarUrl:'../../static/images/default_tx.png'):(boyWeeklyRankingTopThree[0].avatarUrl != null ? boyWeeklyRankingTopThree[0].avatarUrl : '../../static/images/default_tx.png')}}" mode="aspectFill"></image>
             <view>{{rankTabIndex==0?girlWeeklyRankingTopThree[0].nickName:boyWeeklyRankingTopThree[0].nickName}}</view>
-            <image class="crownIco" src="../../static/ico/crown_64.png" mode="widthFix"></image>
-            <!-- gif -->
-            <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
+            <image class="crownIco" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/avatarFrame100.png" mode="aspectFill"></image>
           </view>
-          <view class="staffRankView view_box_content_column" style="top: 95px;left: {{pWidth*0.9*0.22-36}}px;">
+          <view class="staffRankView view_box_content_column" style="top: 95px;left: {{pWidth*0.9*0.22-36}}px;" data-staffid="{{rankTabIndex==0?girlWeeklyRankingTopThree[1].userId:boyWeeklyRankingTopThree[1].userId}}" bind:tap="toShowStaffInfo">
             <image class="staffRank" src="{{rankTabIndex==0?(girlWeeklyRankingTopThree[1].avatarUrl!=null?girlWeeklyRankingTopThree[1].avatarUrl:'../../static/images/default_tx.png'):(boyWeeklyRankingTopThree[1].avatarUrl != null ? boyWeeklyRankingTopThree[1].avatarUrl : '../../static/images/default_tx.png')}}" mode="aspectFill"></image>
             <view>{{rankTabIndex==0?girlWeeklyRankingTopThree[1].nickName:boyWeeklyRankingTopThree[1].nickName}}</view>
-            <!-- gif -->
-            <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
+            <image class="crownIco" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/avatarFrame23100.png" mode="aspectFill"></image>
           </view>
-          <view class="staffRankView view_box_content_column" style="top: 85px;left: {{pWidth*0.9*0.77-26}}px;">
+          <view class="staffRankView view_box_content_column" style="top: 85px;left: {{pWidth*0.9*0.77-26}}px;" data-staffid="{{rankTabIndex==0?girlWeeklyRankingTopThree[2].userId:boyWeeklyRankingTopThree[2].userId}}" bind:tap="toShowStaffInfo">
             <image class="staffRank" src="{{rankTabIndex==0?(girlWeeklyRankingTopThree[2].avatarUrl!=null?girlWeeklyRankingTopThree[2].avatarUrl:'../../static/images/default_tx.png'):(boyWeeklyRankingTopThree[2].avatarUrl != null ? boyWeeklyRankingTopThree[2].avatarUrl : '../../static/images/default_tx.png')}}" mode="aspectFill"></image>
             <view>{{rankTabIndex==0?girlWeeklyRankingTopThree[2].nickName:boyWeeklyRankingTopThree[2].nickName}}</view>
-            <!-- gif -->
-            <image class="fireworks" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/fireworks.gif" mode="widthFix"></image>
+            <image class="crownIco" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/avatarFrame23130.png" mode="aspectFill"></image>
           </view>
         </view>
         <!-- 背景点缀 -->

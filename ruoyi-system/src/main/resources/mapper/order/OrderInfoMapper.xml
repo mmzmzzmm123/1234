@@ -112,6 +112,9 @@
             <if test="params.beginOrderCancelTime != null and params.beginOrderCancelTime != '' and params.endOrderCancelTime != null and params.endOrderCancelTime != ''">
                 and order_cancel_time between #{params.beginOrderCancelTime} and #{params.endOrderCancelTime}
             </if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and create_time between #{params.beginCreateTime} and #{params.endCreateTime}
+            </if>
         </where>
         ORDER BY create_time DESC
     </select>
@@ -125,6 +128,7 @@
             <if test="ifContinuous != null  and ifContinuous != ''">and if_continuous = #{ifContinuous}</if>
             <if test="staffUserId != null ">and staff_user_id = #{staffUserId}</if>
             <if test="staffLevel != null ">and staff_level = #{staffLevel}</if>
+            <if test="lessThanOrEqualLevel != null">and staff_level &lt;= #{lessThanOrEqualLevel}</if>
             <if test="customUserId != null ">and custom_user_id = #{customUserId}</if>
             <if test="accountServiceProvider != null  and accountServiceProvider != ''">and account_service_provider =
                 #{accountServiceProvider}
@@ -149,6 +153,9 @@
             </if>
             <if test="params.beginOrderCancelTime != null and params.beginOrderCancelTime != '' and params.endOrderCancelTime != null and params.endOrderCancelTime != ''">
                 and order_cancel_time between #{params.beginOrderCancelTime} and #{params.endOrderCancelTime}
+            </if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''">
+                and create_time between #{beginCreateTime} and #{endCreateTime}
             </if>
             <if test="filterStaffIdIsNull != null and filterStaffIdIsNull == 'Y'.toString()">
                 and staff_user_id is null

@@ -3,10 +3,10 @@ import storage from "../utils/storage";
 import storageConstant from "../constans/storageConstant";
 // let prefix = "https://listen.vipwei.cn/prod-api";
 // let uploadSingleFileUrl = "https://listen.vipwei.cn/prod-api/api/file/uploadSingleFile";
-// let prefix = "http://lamlin.natapp1.cc";
-// let uploadSingleFileUrl = "http://lamlin.natapp1.cc/api/file/uploadSingleFile";
-let prefix = "https://listen.vipwei.cn/prod-api";
-let uploadSingleFileUrl = "https://listen.vipwei.cn/prod-api/api/file/uploadSingleFile";
+let prefix = "http://lamlin.natapp1.cc";
+let uploadSingleFileUrl = "http://lamlin.natapp1.cc/api/file/uploadSingleFile";
+// let prefix = "https://listen.vipwei.cn/prod-api";
+// let uploadSingleFileUrl = "https://listen.vipwei.cn/prod-api/api/file/uploadSingleFile";
 
 import util from "../utils/util";
 

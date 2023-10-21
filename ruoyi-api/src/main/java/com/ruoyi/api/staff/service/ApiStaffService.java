@@ -194,31 +194,6 @@ public class ApiStaffService {
         if (ObjectUtil.isNotNull(dto.getReferralCode())) {
             handleReferralCode(staffInfo, dto);
         }
-        // 敏感内容校验
-        try {
-            WxMaSecCheckService secCheckService = wxService.getWxMaSecCheckService();
-            if (StringUtils.isNotBlank(staffInfo.getSelfIntroduction())) {
-                secCheckService.checkMessage(staffInfo.getSelfIntroduction());
-            }
-            if (StringUtils.isNotBlank(staffInfo.getSelfTags())) {
-                secCheckService.checkMessage(staffInfo.getSelfTags());
-            }
-            if (StringUtils.isNotBlank(dto.getImageArr())) {
-                String[] photoArr = StringUtils.split(dto.getImageArr(), ",");
-                for (String photoItem : photoArr) {
-                    secCheckService.checkImage(photoItem);
-                }
-            }
-            if (StringUtils.isNotBlank(staffInfo.getAvatarUrl())) {
-                secCheckService.checkImage(staffInfo.getAvatarUrl());
-            }
-            if (StringUtils.isNotBlank(staffInfo.getNickName())) {
-                secCheckService.checkMessage(staffInfo.getNickName());
-            }
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            throw new ServiceException("亲爱的 您上传的内容涉及到敏感内容，请检查修改后上传", HttpStatus.WARN_WX);
-        }
         staffInfoMapper.updateStaffInfo(staffInfo);
         log.info("更新店员个人资料数据：完成");
         return R.ok(Boolean.TRUE);

@@ -2,6 +2,7 @@ package com.ruoyi.api.common.mqconsumer;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.api.wechat.constant.WechatMediaIdConstant;
+import com.ruoyi.common.enums.StaffStateEnums;
 import com.ruoyi.common.enums.SysYesNoEnums;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.rocketmq.constants.MqConstants;
@@ -77,9 +78,10 @@ public class RandomOrderSuccessNoticeMqConsumer implements RocketMQListener<Long
         }
         // 匹配条件对应的店员进行发送通知
         StaffInfo selectStaff = new StaffInfo();
-        selectStaff.setIfOnline(SysYesNoEnums.YES.getCode())
+        selectStaff.setState(StaffStateEnums.NORMAL.getCode())
+                .setIfOnline(SysYesNoEnums.YES.getCode())
                 .setSex(orderInfo.getChooseStaffSex())
-                .setStaffLevel(orderInfo.getStaffLevel());
+                .setGreaterThanOrEqualLevel(orderInfo.getStaffLevel());
         List<StaffInfo> staffInfoList = staffInfoMapper.customSelect(selectStaff);
         // 过滤掉服务类型不一样的店员
         List<StaffInfo> matchList = staffInfoList.stream().filter(staffInfo -> (ObjectUtil.isNotEmpty(staffInfo.getServiceIdList()) && staffInfo.getServiceIdList().contains(orderDetails.getServiceId()))).collect(Collectors.toList());

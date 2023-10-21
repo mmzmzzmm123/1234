@@ -11,6 +11,7 @@
         <result property="nickName" column="nick_name"/>
         <result property="state" column="state"/>
         <result property="ifOnline" column="if_online"/>
+        <result property="ifLeader" column="if_leader"/>
         <result property="staffLevel" column="staff_level"/>
         <result property="birthDate" column="birth_date"/>
         <result property="sex" column="sex"/>
@@ -44,6 +45,7 @@
                nick_name,
                state,
                if_online,
+               if_leader,
                staff_level,
                birth_date,
                sex,
@@ -73,6 +75,7 @@
             <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="state != null  and state != ''">and state = #{state}</if>
             <if test="ifOnline != null  and ifOnline != ''">and if_online = #{ifOnline}</if>
+            <if test="ifLeader != null  and ifLeader != ''">and if_leader = #{ifLeader}</if>
             <if test="sex != null  and sex != ''">and sex = #{sex}</if>
             <if test="weChatNum != null  and weChatNum != ''">and we_chat_num like concat('%', #{weChatNum}, '%')</if>
             <if test="phone != null  and phone != ''">and phone like concat('%', #{phone}, '%')</if>
@@ -100,7 +103,9 @@
             <if test="nickName != null  and nickName != ''">and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="state != null  and state != ''">and state = #{state}</if>
             <if test="ifOnline != null  and ifOnline != ''">and if_online = #{ifOnline}</if>
+            <if test="ifLeader != null  and ifLeader != ''">and if_leader = #{ifLeader}</if>
             <if test="staffLevel != null and staffLevel != ''">and staff_level = #{staffLevel}</if>
+            <if test="greaterThanOrEqualLevel != null and greaterThanOrEqualLevel != ''">and staff_level &gt;= #{greaterThanOrEqualLevel}</if>
             <if test="sex != null  and sex != ''">and sex = #{sex}</if>
             <if test="weChatNum != null  and weChatNum != ''">and we_chat_num like concat('%', #{weChatNum}, '%')</if>
             <if test="phone != null  and phone != ''">and phone like concat('%', #{phone}, '%')</if>
@@ -140,6 +145,7 @@
             <if test="nickName != null">nick_name,</if>
             <if test="state != null">state,</if>
             <if test="ifOnline != null">if_online,</if>
+            <if test="ifLeader != null">if_leader,</if>
             <if test="staffLevel != null">staff_level,</if>
             <if test="birthDate != null">birth_date,</if>
             <if test="sex != null">sex,</if>
@@ -167,6 +173,7 @@
             <if test="nickName != null">#{nickName},</if>
             <if test="state != null">#{state},</if>
             <if test="ifOnline != null">#{ifOnline},</if>
+            <if test="ifLeader != null">#{ifLeader},</if>
             <if test="staffLevel != null">#{staffLevel},</if>
             <if test="birthDate != null">#{birthDate},</if>
             <if test="sex != null">#{sex},</if>
@@ -197,6 +204,7 @@
             <if test="nickName != null">nick_name = #{nickName},</if>
             <if test="state != null">state = #{state},</if>
             <if test="ifOnline != null">if_online = #{ifOnline},</if>
+            <if test="ifLeader != null">if_leader = #{ifLeader},</if>
             <if test="staffLevel != null">staff_level = #{staffLevel},</if>
             <if test="birthDate != null">birth_date = #{birthDate},</if>
             <if test="sex != null">sex = #{sex},</if>

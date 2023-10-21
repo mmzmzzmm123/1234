@@ -1,7 +1,7 @@
 <wxs src="../../../wxss/format.wxs" module="formatUtil"></wxs>
 <import src="../../../wxParse/wxParse.wxml" />
 <view class="bView">
-  <scroll-view refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{refreshState}}" bindrefresherrefresh="refresh"  scroll-y="true" style="width:{{pWidth}}px;height: {{pHeight}}px;">
+  <scroll-view refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{refreshState}}" bindrefresherrefresh="refresh" scroll-y="true" style="width:{{pWidth}}px;height: {{pHeight}}px;">
     <!-- 我的枫叶币信息 -->
     <view class="seizeSeat_mini"></view>
     <view class="view_box_common scope_view_item" style="color: #ffffff;background: linear-gradient(to right, #4198EF,#78D6F4);position: relative;overflow: hidden;">
@@ -73,7 +73,8 @@
       <view class="seizeSeat_mini"></view>
       <view class="seizeSeat_mini"></view>
       <view class="view_box_row_content">
-        <view style="font-size: 14px;color:#1c2438;" bind:tap="changeUserAgreementDrawer">点击充值即同意《平台用户协议》</view>
+        <radio checked="{{ifAgree}}" color="#8978E4" bind:tap="ifAgreeChange" />
+        <view style="font-size: 14px;color:#1c2438;" bind:tap="changeUserAgreementDrawer">勾选表示您接受<span class="boy_font_color">《平台用户协议》</span></view>
       </view>
       <view class="seizeSeat_mini"></view>
       <view class="seizeSeat_mini"></view>

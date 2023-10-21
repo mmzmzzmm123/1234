@@ -9,9 +9,9 @@ import lombok.Getter;
 @Getter
 public enum StaffWalletRecordTypeEnums {
 
-    ENTRY("0", "入账"),
-    DEDUCTION("1", "扣款"),
-    SETTLEMENT("2","结算");
+    ENTRY("0", "佣金入账"),
+    DEDUCTION("1", "平台扣款"),
+    SETTLEMENT("2","薪资结算");
 
     private String code;
     private String desc;

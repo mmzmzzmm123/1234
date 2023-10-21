@@ -23,6 +23,7 @@ Page({
     rechargeAmount: null, // 自定义充值金额
     rechargeConfigIndex: null, // 选择充值配置项下标
     refreshState: false, // 下拉刷新状态
+    ifAgree: false, // 是否同意平台用户协议
   },
 
   /**
@@ -70,7 +71,8 @@ Page({
   onShow:function(){
     // 加载用户信息
     this.setData({
-      userInfo: app.globalData.userInfo
+      userInfo: app.globalData.userInfo,
+      ifAgree: storageUtil.get(storageConstant.rechargeAgree, null)
     })
   },
   selectUserLevelConfigOnSuccess: function (res) {
@@ -219,6 +221,13 @@ Page({
    */
   submitRecharge:function(){
     let that = this;
+    if(!this.data.ifAgree){
+      wx.showToast({
+        title: '请选勾选接受《平台用户协议》哟',
+        icon: "none"
+      })
+      return;
+    }
     let rechargeAmount = this.data.rechargeAmount;
     let rechargeConfigIndex = this.data.rechargeConfigIndex;
     if(rechargeAmount == null && rechargeConfigIndex == null){
@@ -360,5 +369,15 @@ Page({
     this.getNewUserInfo(this.getNewUserInfoOnStart,this.getNewUserInfoOnFailed);
     this.loadRechargeConfigData(null,null);
     userLevelApi.selectUserLevelConfig(null, this.selectUserLevelConfigOnSuccess, null);
+  },
+  /**
+   * 协议勾选改变事件
+   */
+  ifAgreeChange: function (e) {
+    let temp = this.data.ifAgree;
+    this.setData({
+      ifAgree: !temp
+    })
+    storageUtil.set(storageConstant.rechargeAgree, null, !temp, null);
   },
 })

@@ -63,7 +63,8 @@ Page({
     // 加载用户信息
     this.setData({
       userInfo: app.globalData.userInfo,
-      userLevelConfig: app.globalData.userLevelConfig
+      userLevelConfig: app.globalData.userLevelConfig,
+      ifHide: app.globalData.hidePrivacy
     })
     // 处理用户等级数据
     this.handleUserLevelData();
@@ -354,6 +355,36 @@ Page({
     })
   },
   /**
+   * 前往店员薪资页
+   */
+  toStaffSalary:function(){
+    if (this.data.userInfo == null) {
+      wx.showToast({
+        title: '亲爱的，先登录哟',
+        icon: "none"
+      })
+      return;
+    }
+    wx.navigateTo({
+      url: '../../staffPackages/page/staffSalary/index',
+    })
+  },
+  /**
+   * 前往店员组长页面
+   */
+  toStaffLeader:function(){
+    if (this.data.userInfo == null) {
+      wx.showToast({
+        title: '亲爱的，先登录哟',
+        icon: "none"
+      })
+      return;
+    }
+    wx.navigateTo({
+      url: '../../staffPackages/page/staffLeader/index',
+    })
+  },
+  /**
    * 前往申请员工页面
    */
   toApplyStaff: function () {
@@ -541,7 +572,8 @@ Page({
     // 加载用户信息
     this.setData({
       userInfo: app.globalData.userInfo,
-      userLevelConfig: app.globalData.userLevelConfig
+      userLevelConfig: app.globalData.userLevelConfig,
+      ifHide: app.globalData.hidePrivacy
     })
     // 处理用户等级数据
     this.handleUserLevelData();

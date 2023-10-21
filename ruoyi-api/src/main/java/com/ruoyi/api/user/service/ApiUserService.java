@@ -116,19 +116,6 @@ public class ApiUserService {
         UserInfo updateInfo = new UserInfo();
         BeanUtils.copyBeanProp(updateInfo, dto);
         updateInfo.setId(TokenUtils.getUserId());
-        // 合法图片与敏感词校验
-        try {
-            WxMaSecCheckService secCheckService = wxService.getWxMaSecCheckService();
-            if (StringUtils.isNotBlank(dto.getAvatarUrl())) {
-                secCheckService.checkImage(dto.getAvatarUrl());
-            }
-            if (StringUtils.isNotBlank(dto.getNickName())) {
-                secCheckService.checkMessage(dto.getNickName());
-            }
-        } catch (Exception e) {
-            log.info(e.getMessage());
-            throw new ServiceException("亲爱的 您上传的内容涉及到敏感内容，请检查修改后上传", HttpStatus.WARN_WX);
-        }
         userInfoMapper.updateUserInfo(updateInfo);
         log.info("用户信息更新：完成");
         return Boolean.TRUE;

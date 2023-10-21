@@ -38,6 +38,9 @@ public class ApiStaffInfoVo implements Serializable {
     @ApiModelProperty("是否在线")
     private String ifOnline;
 
+    @ApiModelProperty(value = "是否组长", dataType = "sys_yes_no")
+    private String ifLeader;
+
     @ApiModelProperty("等级")
     private Long staffLevel;
 

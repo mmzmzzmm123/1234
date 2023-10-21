@@ -24,12 +24,12 @@
         </block>
       </block>
       <block wx:else>
-        <mine-null-data width="100%" height="100%" title="亲爱的，请添加您的社交账号哟"></mine-null-data>
+        <mine-null-data width="100%" height="100%" title="亲爱的，请添加您的绿泡泡哟"></mine-null-data>
       </block>
     </scroll-view>
     <view class="seizeSeat_mini"></view>
     <view class="seizeSeat_mini"></view>
-    <view class="themeBut" bind:tap="addCli">新增账号</view>
+    <view class="themeBut" bind:tap="addCli">新增绿泡泡</view>
   </view>
 </wux-spin>
 
@@ -41,7 +41,7 @@
       <view class="view_box_common">
         <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.08}}px;">
           <view></view>
-          <text>{{account.id!=null?'修改':'新增'}}社交账号</text>
+          <text>{{account.id!=null?'修改':'新增'}}绿泡泡</text>
           <wux-icon type="md-close" size="22" bindtap="changeFormDrawer"></wux-icon>
         </view>
       </view>
@@ -49,17 +49,17 @@
       <view class="drawerBodyView">
         <view class="seizeSeat_mini"></view>
         <view class="view_box_common drawerFormView">
-          <wux-cell-group title="账号信息">
+          <wux-cell-group title="绿泡泡信息">
             <wux-cell hover-class="none">
-              <wux-input controlled label="社交账号" type="text" placeholder="请输入您的社交账号" class="inputItem" inputColor="#767b88" value="{{account.num}}" bind:change="carNumberInput" />
+              <wux-input controlled label="绿泡泡" type="text" placeholder="请输入您的绿泡泡" class="inputItem" inputColor="#767b88" value="{{account.num}}" bind:change="carNumberInput" />
             </wux-cell>
-            <picker header-text="账号服务商" mode="selector" range="{{serviceProviderArr}}" range-key="label" bindchange="serviceProviderChange" value="{{account.accountServiceProvider}}">
-              <wux-cell title="账号服务商" style="font-size: 14px;" is-link extra="{{ account.accountServiceProvider == null ? '选择账号服务商' : dicts.social_accounts(account.accountServiceProvider) }}"></wux-cell>
-            </picker>
             <wux-cell title="是否默认" style="font-size: 14px;">
               <wux-switch name="light" slot="footer" color="royal" value="{{account.ifDefault == 'Y'}}" bind:change="ifDefaultChange" />
             </wux-cell>
           </wux-cell-group>
+          <view class="view_box_common" style="margin: 10px auto; font-size: 14px;color: red;">
+            温馨提示：亲爱的，如果您不知道绿泡泡可以咨询在线客服哟（关注“热爱树洞”公众号，即可发起提问哟~）
+          </view>
         </view>
         <view class="seizeSeat_mini"></view>
         <view class="themeBut" bind:tap="submit">保存账号</view>

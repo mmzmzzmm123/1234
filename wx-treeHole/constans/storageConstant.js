@@ -26,4 +26,6 @@ module.exports = {
   giveGiftSuccessNotice: "giveGiftSuccessNotice",
   // 下单成功通知授权状态
   orderSuccessNotice: "orderSuccessNotice",
+  // 充值协议同意
+  rechargeAgree: "rechargeAgree"
 }

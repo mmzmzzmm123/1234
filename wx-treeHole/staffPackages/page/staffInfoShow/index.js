@@ -85,8 +85,8 @@ Page({
       remark: null, // 备注信息
       payWay: 0, // 支付方式
       amount: null, // 订单金额
-      accountServiceProvider: null, // 社交账号服务商
-      customNum: null, // 社交账号
+      accountServiceProvider: '0', // 绿泡泡账号服务商
+      customNum: null, // 绿泡泡账号
     },
     ifHide: app.globalData.hidePrivacy
   },
@@ -784,29 +784,7 @@ Page({
     })
     form.giftId = gift.id;
     form.staffId = staffInfo.userId;
-    let that = this;
-    // let noticeState = storage.get(storageConstant.giveGiftSuccessNotice, null);
-    // if (noticeState != null) {
-    //   orderApi.giftOrderSubmit(form, null, that.giftOrderSubmitOnSuccess, that.giftOrderSubmitOnFailed, that.giftOrderSubmitOnWarn);
-    // } else {
-    //   wx.requestSubscribeMessage({
-    //     tmplIds: ['AfCNc1Y43ygsVXiVxgyyd1BsFNg_v6k1zXqrgLChahs'],
-    //     success: function (res) {
-    //       if (res.AfCNc1Y43ygsVXiVxgyyd1BsFNg_v6k1zXqrgLChahs == 'accept') {
-    //         storage.set(storageConstant.giveGiftSuccessNotice, null, "accept", null);
-    //       }
-    //     }, complete: function (res) {
-    //       orderApi.giftOrderSubmit(form, null, that.giftOrderSubmitOnSuccess, that.giftOrderSubmitOnFailed, that.giftOrderSubmitOnWarn);
-    //     }
-    //   })
-    // }
-    wx.requestSubscribeMessage({
-      tmplIds: ['AfCNc1Y43ygsVXiVxgyyd1BsFNg_v6k1zXqrgLChahs'],
-      success: function (res) {
-      }, complete: function (res) {
-        orderApi.giftOrderSubmit(form, null, that.giftOrderSubmitOnSuccess, that.giftOrderSubmitOnFailed, that.giftOrderSubmitOnWarn);
-      }
-    })
+    orderApi.giftOrderSubmit(form, null, this.giftOrderSubmitOnSuccess, this.giftOrderSubmitOnFailed, this.giftOrderSubmitOnWarn);
   },
   giftOrderSubmitOnSuccess: function (res) {
     let that = this;
@@ -1154,10 +1132,10 @@ Page({
       })
       return;
     }
-    // 判断社交账号是否已选择
-    if (this.data.ifHide == '0' && (appointForm.accountServiceProvider == null || appointForm.customNum == null)) {
+    // 判断绿泡泡账号是否已选择
+    if (this.data.ifHide == '0' && appointForm.customNum == null) {
       wx.showToast({
-        title: '亲爱的，请选择社交账号哟',
+        title: '亲爱的，请选择绿泡泡哟',
         icon: "none",
         duration: 2000
       })
@@ -1170,15 +1148,7 @@ Page({
     appointForm.staffId = staffInfo.userId;
     appointForm.serviceId = service.id;
     appointForm.serviceItemId = serviceItem.id;
-    let that = this;
-    wx.requestSubscribeMessage({
-      tmplIds: ['XQkRpWhVAxE99X6XkE7EajVVIleRvnNA_7wEYOMRx7Q', 'f--gE3LkP87xwyzA9py0SaWf3UcNTGd7m0htGbbBQfE'],
-      success: function (res) {
-
-      }, complete: function (res) {
-        orderApi.appointOrderSubmit(appointForm, that.appointOrderSubmitOnStart, that.appointOrderSubmitOnSuccess, that.appointOrderSubmitOnFailed, that.appointOrderSubmitOnWarn);
-      }
-    })
+    orderApi.appointOrderSubmit(appointForm, this.appointOrderSubmitOnStart, this.appointOrderSubmitOnSuccess, this.appointOrderSubmitOnFailed, this.appointOrderSubmitOnWarn);
   },
   appointOrderSubmitOnStart: function () {
     wx.showLoading({
@@ -1281,8 +1251,8 @@ Page({
         remark: null, // 备注信息
         payWay: 0, // 支付方式
         amount: null, // 订单金额
-        accountServiceProvider: null, // 社交账号服务商
-        customNum: null, // 社交账号
+        accountServiceProvider: '0', // 绿泡泡账号服务商
+        customNum: null, // 绿泡泡账号
       },
       appointDrawer: true
     })

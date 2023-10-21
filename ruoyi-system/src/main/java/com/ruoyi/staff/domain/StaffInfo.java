@@ -56,10 +56,17 @@ public class StaffInfo extends BaseEntity {
     @ApiModelProperty("是否在线")
     private String ifOnline;
 
+    @Excel(name = "是否组长")
+    @ApiModelProperty(value = "是否组长", dataType = "sys_yes_no")
+    private String ifLeader;
+
     /** 等级 */
     @Excel(name = "等级")
     @ApiModelProperty("等级")
     private Long staffLevel;
+
+    @ApiModelProperty("大于等于等级条件")
+    private Long greaterThanOrEqualLevel;
 
     /** 出生年月 */
     @JsonFormat(pattern = "yyyy-MM-dd")

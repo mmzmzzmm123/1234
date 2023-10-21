@@ -3,12 +3,27 @@
   "projectname": "wx-treeHole",
   "setting": {
     "compileHotReLoad": true,
-    "urlCheck": false
+    "urlCheck": false,
+    "preloadBackgroundData": false
   },
   "libVersion": "3.1.0",
   "condition": {
     "miniprogram": {
       "list": [
+        {
+          "name": "店员管理页",
+          "pathName": "staffPackages/page/staffLeader/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "店员薪资页",
+          "pathName": "staffPackages/page/staffSalary/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
         {
           "name": "店员订单列表页",
           "pathName": "staffPackages/page/staffOrder/index",

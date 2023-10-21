@@ -42,8 +42,8 @@ Page({
       price: 0, // 订单金额
       filterServedStaff: "N", // 是否排除服务过的员工
       remark: null, // 备注信息
-      accountServiceProvider: null, // 社交账号服务商
-      customNum: null, // 社交账号
+      accountServiceProvider: '0', // 绿泡泡账号服务商
+      customNum: null, // 绿泡泡账号
       payWay: 0, // 0微信支付，1树币支付
     },
     // 服务数据
@@ -193,11 +193,11 @@ Page({
         let oldObj = staffDataList[i];
         for (let j = 0; j < data.length; j++) {
           let newObj = data[j];
-          if(oldObj.userId == newObj.userId){
+          if (oldObj.userId == newObj.userId) {
             data.splice(j, 1);
           }
         }
-        
+
       }
       for (let index in data) {
         staffDataList.push(data[index]);
@@ -568,9 +568,9 @@ Page({
    */
   submitRandomOrder: function () {
     let randomForm = this.data.randomForm;
-    if (this.data.ifHide=='0'&&(randomForm.accountServiceProvider == null && randomForm.customNum == null)) {
+    if (this.data.ifHide == '0' && randomForm.customNum == null) {
       wx.showToast({
-        title: '请选择您的社交账号',
+        title: '请选择您的绿泡泡',
         icon: "none"
       })
       return;

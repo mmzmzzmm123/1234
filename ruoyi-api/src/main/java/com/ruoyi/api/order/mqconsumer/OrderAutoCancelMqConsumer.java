@@ -1,16 +1,13 @@
 package com.ruoyi.api.order.mqconsumer;
 
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.ruoyi.api.order.service.ApiOrderService;
 import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.constant.SysTipsConstants;
 import com.ruoyi.common.enums.*;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.rocketmq.constants.MqConstants;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.weixin.WxService;
-import com.ruoyi.common.weixin.model.dto.WxPayRefundDto;
 import com.ruoyi.order.domain.OrderDetails;
 import com.ruoyi.order.domain.OrderInfo;
 import com.ruoyi.order.mapper.OrderDetailsMapper;
@@ -19,19 +16,12 @@ import com.ruoyi.payment.domain.PaymentOrder;
 import com.ruoyi.payment.domain.PaymentRefund;
 import com.ruoyi.payment.mapper.PaymentOrderMapper;
 import com.ruoyi.payment.mapper.PaymentRefundMapper;
-import com.ruoyi.user.domain.UserWallet;
-import com.ruoyi.user.domain.UserWalletRecord;
-import com.ruoyi.user.mapper.UserWalletMapper;
-import com.ruoyi.user.mapper.UserWalletRecordMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
@@ -79,7 +69,7 @@ public class OrderAutoCancelMqConsumer implements RocketMQListener<Long> {
                 .setOrderState(OrderStateEnums.REFUNDING.getCode())
                 .setCanceller(Constants.SYS_NAME)
                 .setOrderCancelTime(now)
-                .setCancelRemark("订单超时接单")
+                .setCancelRemark(SysTipsConstants.ORDER_OVER_TIME_CANCEL_TIPS)
                 .setUpdateTime(now);
         orderInfo.setCancelRemark(updateOi.getCancelRemark());
         // 微信支付业务

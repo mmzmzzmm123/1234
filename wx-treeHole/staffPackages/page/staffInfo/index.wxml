@@ -23,7 +23,7 @@
         <wux-cell title="性别" style="font-size: 14px;" is-link extra="{{ staffInfo.sex == null ? '选择您的性别' : dicts.sex(staffInfo.sex) }}"></wux-cell>
       </picker>
       <wux-cell hover-class="none" wx:if="{{ifHide == '0'}}">
-        <wux-input controlled label="微信号" type="text" placeholder="请输入您的微信号" class="inputItem" inputColor="#767b88" value="{{staffInfo.weChatNum}}" bind:change="weChatNumInput" />
+        <wux-input controlled label="绿泡泡" type="text" placeholder="请输入您的绿泡泡" class="inputItem" inputColor="#767b88" value="{{staffInfo.weChatNum}}" bind:change="weChatNumInput" />
       </wux-cell>
       <wux-cell hover-class="none" wx:if="{{ifHide == '0'}}">
         <wux-input controlled label="手机号码" type="text" placeholder="请输入您的手机号码" class="inputItem" inputColor="#767b88" maxlength="11" value="{{staffInfo.phone}}" bind:change="phoneInput" />
@@ -36,6 +36,9 @@
       </picker>
       <wux-cell hover-class="none">
         <wux-input controlled label="简短自述" type="text" placeholder="请输入您的简短自述" class="inputItem" inputColor="#767b88" maxlength="20" value="{{staffInfo.selfIntroduction}}" bind:change="selfIntroductionInput" />
+      </wux-cell>
+      <wux-cell hover-class="none">
+        <wux-input controlled disabled="{{staffInfo.referralCode!=null}}" label="推荐码" type="text" placeholder="推荐码填写后不可更改哟" class="inputItem" inputColor="#767b88" maxlength="8" value="{{staffInfo.referralCode}}" bind:change="referralCodeInput" />
       </wux-cell>
       <view class="imitateWuxCell">
         <view class="view_box_row_content_symmetry">

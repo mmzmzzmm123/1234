@@ -125,7 +125,7 @@ Page({
     })
   },
   /**
-   * 微信号输入事件
+   * 绿泡泡输入事件
    */
   weChatNumInput: function (e) {
     this.setData({
@@ -164,6 +164,14 @@ Page({
   selfIntroductionInput: function (e) {
     this.setData({
       ["staffInfo.selfIntroduction"]: e.detail.value
+    })
+  },
+  /**
+   * 推荐码输入事件
+   */
+  referralCodeInput: function (e) {
+    this.setData({
+      ["staffInfo.referralCode"]: e.detail.value
     })
   },
   /**

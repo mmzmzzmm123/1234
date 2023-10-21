@@ -207,6 +207,6 @@ App({
     // 全局音频播放器对象
     audioContext: wx.createInnerAudioContext(), 
     // 隐藏
-    hidePrivacy: "-1"
+    hidePrivacy: "0"
   }
 })
