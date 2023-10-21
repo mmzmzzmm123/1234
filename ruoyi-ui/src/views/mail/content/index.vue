@@ -23,7 +23,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:content:add']"
+          v-hasPermi="['mail:content:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -34,7 +34,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:content:edit']"
+          v-hasPermi="['mail:content:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -45,7 +45,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:content:remove']"
+          v-hasPermi="['mail:content:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -55,7 +55,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:content:export']"
+          v-hasPermi="['mail:content:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -74,14 +74,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:content:edit']"
+            v-hasPermi="['mail:content:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:content:remove']"
+            v-hasPermi="['mail:content:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -114,7 +114,7 @@
 </template>
 
 <script>
-import { listContent, getContent, delContent, addContent, updateContent } from "@/api/system/content";
+import { listContent, getContent, delContent, addContent, updateContent } from "@/api/mail/content";
 
 export default {
   name: "Content",
@@ -253,7 +253,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/content/export', {
+      this.download('mail/content/export', {
         ...this.queryParams
       }, `content_${new Date().getTime()}.xlsx`)
     }

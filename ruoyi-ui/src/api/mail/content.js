@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询晚安语列表列表
 export function listContent(query) {
   return request({
-    url: '/system/content/list',
+    url: '/mail/content/list',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listContent(query) {
 // 查询晚安语列表详细
 export function getContent(id) {
   return request({
-    url: '/system/content/' + id,
+    url: '/mail/content/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getContent(id) {
 // 新增晚安语列表
 export function addContent(data) {
   return request({
-    url: '/system/content',
+    url: '/mail/content',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addContent(data) {
 // 修改晚安语列表
 export function updateContent(data) {
   return request({
-    url: '/system/content',
+    url: '/mail/content',
     method: 'put',
     data: data
   })
@@ -38,7 +38,7 @@ export function updateContent(data) {
 // 删除晚安语列表
 export function delContent(id) {
   return request({
-    url: '/system/content/' + id,
+    url: '/mail/content/' + id,
     method: 'delete'
   })
 }

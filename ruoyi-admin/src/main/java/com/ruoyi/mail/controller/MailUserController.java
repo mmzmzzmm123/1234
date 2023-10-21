@@ -28,7 +28,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2023-10-21
  */
 @RestController
-@RequestMapping("/system/user")
+@RequestMapping("/mail/user")
 public class MailUserController extends BaseController
 {
     @Autowired
