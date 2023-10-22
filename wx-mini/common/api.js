@@ -157,6 +157,15 @@ const api = {
 	},
 	addJoinUs(param){
 		return post('office/api/joinUs',param)
+	},
+	getChargeList(param){
+		return get('office/api/charge/list', param)
+	},
+	buyCharge(param){
+		return post('office/api/order/charge', param)
+	},
+	buyChargeSuccess(param){
+		return post('office/api/order/charge/qry', param)
 	}
 }
 const install = (Vue, options) => {

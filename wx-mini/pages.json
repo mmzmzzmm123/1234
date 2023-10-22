@@ -78,13 +78,7 @@
 				"navigationBarTitleText": "续单"
 			}
 		},
-
-{
-			"path": "pages/order/add/index",
-			"style": {
-				"navigationBarTitleText": "预定"
-			}
-		},		{
+		{
 			"path": "pages/shop/shop-list",
 			"style": {
 				"navigationBarTitleText": "全部门店",
