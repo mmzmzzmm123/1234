@@ -287,10 +287,10 @@ const api = {
 		return post('office/roomorder/charge', order)
 	},
 	createQrCode(id) {
-		return get('office/api/createQrCode/' + id)
+		return get('office/api/createQrCodeH5/' + id)
 	},
 	createXudanCode(id) {
-		return get('office/api/createXudanCode/' + id)
+		return get('office/api/createXudanCodeH5/' + id)
 	}
 }
 const install = (Vue, options) => {

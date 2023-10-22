@@ -935,6 +935,34 @@ public class ApiController extends BaseController {
         return qrCodeStr;
     }
 
+    @ApiOperation("生成续单二维码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
+    })
+    @GetMapping(value = "/createXudanCode/{roomId}")
+    public String createXudanCode(@PathVariable("roomId") Long roomId) {
+        final WxPayConfig config = wxPayService.getConfig();
+
+        TRoom room = roomService.selectTRoomById(roomId);
+        String codeType = "scene";
+        String parameterValue = "" + roomId;
+
+        // 设置小程序二维码线条颜色为黑色
+        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
+        byte[] qrCodeBytes = null;
+        try {
+            //其中codeType以及parameterValue为前端页面所需要接收的参数。
+            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/renew/index", false, "release", 30, false, lineColor, false);
+        } catch (WxErrorException e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new ServiceException("打印二维码错误" + e.getMessage());
+        }
+        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
+        return qrCodeStr;
+    }
+
 
     @ApiOperation("绑定手机号")
     @PostMapping(value = "/binding")
@@ -1023,13 +1051,41 @@ public class ApiController extends BaseController {
         return toAjax(roomOrderService.order4GuestOpenRoom(tRoomOrder));
     }
 
+    @ApiOperation("生成二维码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
+    })
+    @GetMapping(value = "/createQrCodeH5/{roomId}")
+    public AjaxResult createQrCodeH5(@PathVariable("roomId") Long roomId) {
+        final WxPayConfig config = wxPayService.getConfig();
+
+        TRoom room = roomService.selectTRoomById(roomId);
+        String codeType = "scene";
+        String parameterValue = "" + roomId;
+
+        // 设置小程序二维码线条颜色为黑色
+        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
+        byte[] qrCodeBytes = null;
+        try {
+            //其中codeType以及parameterValue为前端页面所需要接收的参数。
+            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/add/index", false, "release", 30, false, lineColor, false);
+        } catch (WxErrorException e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new ServiceException("打印二维码错误" + e.getMessage());
+        }
+        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
+        return AjaxResult.success(qrCodeStr);
+    }
+
     @ApiOperation("生成续单二维码")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
             @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
     })
-    @GetMapping(value = "/createXudanCode/{roomId}")
-    public String createXudanCode(@PathVariable("roomId") Long roomId) {
+    @GetMapping(value = "/createXudanCodeH5/{roomId}")
+    public AjaxResult createXudanCodeH5(@PathVariable("roomId") Long roomId) {
         final WxPayConfig config = wxPayService.getConfig();
 
         TRoom room = roomService.selectTRoomById(roomId);
@@ -1048,7 +1104,7 @@ public class ApiController extends BaseController {
             throw new ServiceException("打印二维码错误" + e.getMessage());
         }
         String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
-        return qrCodeStr;
+        return AjaxResult.success(qrCodeStr);
     }
 
     @Autowired
