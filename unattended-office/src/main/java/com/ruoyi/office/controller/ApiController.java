@@ -1021,4 +1021,73 @@ public class ApiController extends BaseController {
         return toAjax(roomOrderService.order4GuestOpenRoom(tRoomOrder));
     }
 
+    @ApiOperation("生成续单二维码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
+    })
+    @GetMapping(value = "/createXudanCode/{roomId}")
+    public String createXudanCode(@PathVariable("roomId") Long roomId) {
+        final WxPayConfig config = wxPayService.getConfig();
+
+        TRoom room = roomService.selectTRoomById(roomId);
+        String codeType = "scene";
+        String parameterValue = "" + roomId;
+
+        // 设置小程序二维码线条颜色为黑色
+        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
+        byte[] qrCodeBytes = null;
+        try {
+            //其中codeType以及parameterValue为前端页面所需要接收的参数。
+            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/renew/index", false, "release", 30, false, lineColor, false);
+        } catch (WxErrorException e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new ServiceException("打印二维码错误" + e.getMessage());
+        }
+        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
+        return qrCodeStr;
+    }
+
+    @Autowired
+    private ITRoomChargePriceService tRoomChargePriceService;
+
+    /**
+     * 查询房间续费套餐列表
+     */
+    @PreAuthorize("@ss.hasPermi('office:roomchargeprice:list')")
+    @GetMapping("/charge/list")
+    public TableDataInfo list(TRoomChargePrice tRoomChargePrice)
+    {
+        startPage();
+        List<TRoomChargePrice> list = tRoomChargePriceService.selectTRoomChargePriceList(tRoomChargePrice);
+        return getDataTable(list);
+    }
+
+
+
+    /**
+     * 购买房间套餐预定 t_room_package
+     *
+     * @param order
+     * @return
+     */
+    @ApiOperation("小程序-购买续费套餐")
+    @Log(title = "购买续费套餐", businessType = BusinessType.INSERT)
+    @PostMapping("/order/charge")
+    public AjaxResult orderCharge(@RequestBody PackPrepayReq order) {
+        long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
+//        long wxUserId = 9l;
+        order.setUserId(wxUserId);
+        try {
+//            logger.info("/order:" + order.toString());
+//            final PrepayResp prepay = roomOrderService.orderCharge(order, wxUserId);
+//            logger.info("/order: return:" + prepay.getOrderId() + prepay.getJsapiResult().toString());
+//            return AjaxResult.success(prepay);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+        return AjaxResult.success();
+    }
+
 }
