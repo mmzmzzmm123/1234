@@ -51,11 +51,17 @@
 						<u-button type="primary" plain>换包厢</u-button>
 					</uo-select>
 					<!-- 截至时间后移多少分钟，费用线下收取 -->
-					<u-button type="primary" @click="renewOrder(room)">续单</u-button>
+					<u-button type="primary" @click="showRenewOrder(room)">续单</u-button>
 				</view>
 			</view>
 		</view>
 
+		<u-modal title="续单" :show="renew.show" :show-cancel-button="true" @cancel="renew.show = false" @confirm="renewOrder">
+			<view style="padding: 20rpx;">
+				<view style="margin-bottom: 20rpx;">续单时长（分钟）</view>
+				<u-input placeholder="请输入续单时长" type="number" v-model="renew.param.minutes"></u-input>
+			</view>
+		</u-modal>
 	</view>
 </template>
 
@@ -74,6 +80,14 @@
 				roomList: [],
 				orderList: [],
 				startDate: '请选择日期',
+				
+				renew: {
+					param: {
+						id: 0,
+						minutes: 0
+					},
+					show: false
+				}
 			}
 		},
 		onLoad(option) {
@@ -199,13 +213,21 @@
 					console.log(order);
 				})
 			},
-			renewOrder(order) {
-				var param = {
-					id: order.id,
-					minutes: 60 //选择续费时间控件
+			showRenewOrder(order){
+				this.renew = {
+					show: true,
+					param: {
+						id: order.id,
+						minutes: 60
+					}
 				}
-				this.$api.renewOrder(param).then(res => {
-					console.log(order);
+			},
+			renewOrder() {
+				if(!this.renew.param.minutes){
+					this.$u.toast("请先输入续单时长!")
+				}
+				this.$api.renewOrder(this.renew.param).then(res => {
+					this.renew.show = false
 					this.refresh()
 				})
 			},
