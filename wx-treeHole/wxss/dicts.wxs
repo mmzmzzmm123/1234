@@ -63,11 +63,23 @@ order_type = function(key){
         "未知";
 }
 
+/**
+ * 店员等级
+ */
+staff_level = function(key){
+  return key == "1" ? "显眼包" :
+  key == "2" ? "镇店" :
+  key == "3" ? "首席" :
+  key == "4" ? "神级" :
+        "未知";
+}
+
 module.exports = {
   sex: sex,
   social_accounts: social_accounts,
   order_state: order_state,
   order_type: order_type,
   pay_way: pay_way,
-  staff_wallet_record_type: staff_wallet_record_type
+  staff_wallet_record_type: staff_wallet_record_type,
+  staff_level: staff_level
 }

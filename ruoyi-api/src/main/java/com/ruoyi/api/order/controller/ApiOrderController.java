@@ -193,9 +193,9 @@ public class ApiOrderController extends BaseController {
         return R.ok(vo);
     }
 
-    @ApiOperation("查询店员本周订单详细情况")
-    @GetMapping("/selectStaffThisWeekOrderInfo")
-    public R<ApiOrderOfStaffThisWeekVo> selectStaffThisWeekOrderInfo(){
-        return R.ok(service.selectStaffThisWeekOrderInfo());
+    @ApiOperation("查询店员时间段订单详细情况")
+    @GetMapping("/selectStaffOrderInfoByDate")
+    public R<ApiOrderOfStaffThisWeekVo> selectStaffOrderInfoByDate(ApiSelectStaffOrderInfoByDateDto dto){
+        return R.ok(service.selectStaffOrderInfoByDate(dto));
     }
 }

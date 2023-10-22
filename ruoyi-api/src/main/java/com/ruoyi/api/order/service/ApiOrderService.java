@@ -7,6 +7,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.ruoyi.api.order.model.dto.*;
+import com.ruoyi.api.order.model.vo.ApiOrderInfoVo;
 import com.ruoyi.api.order.model.vo.ApiOrderOfStaffThisWeekVo;
 import com.ruoyi.api.payment.model.vo.ApiOrderPayInfoVo;
 import com.ruoyi.common.constant.Constants;
@@ -1184,12 +1185,12 @@ public class ApiOrderService {
     }
 
     /**
-     * 查询店员本周订单详细情况
+     * 查询店员时间段订单详细情况
      *
      * @return 结果
      */
-    public ApiOrderOfStaffThisWeekVo selectStaffThisWeekOrderInfo() {
-        log.info("查询店员本周订单详细情况：开始");
+    public ApiOrderOfStaffThisWeekVo selectStaffOrderInfoByDate(ApiSelectStaffOrderInfoByDateDto dto) {
+        log.info("查询店员时间段订单详细情况：开始");
         ApiOrderOfStaffThisWeekVo vo = new ApiOrderOfStaffThisWeekVo();
         int orderNum = 0;
         int settledNum = 0;
@@ -1200,17 +1201,11 @@ public class ApiOrderService {
         BigDecimal waitOrderFinishCommission = BigDecimal.ZERO;
         BigDecimal orderTotalAmount = BigDecimal.ZERO;
         BigDecimal effectiveTotalAmount = BigDecimal.ZERO;
-        // 获取周一和周日的日期
-        LocalDate currentDate = LocalDate.now();
-        LocalDate thisMonday = currentDate.with(DayOfWeek.MONDAY);
-        LocalDate thisSunday = currentDate.with(DayOfWeek.SUNDAY);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DateUtils.YYYY_MM_DD);
-        String mondayStr = thisMonday.format(formatter);
-        String sundayStr = thisSunday.format(formatter);
+        List<ApiOrderInfoVo> orderInfoVoList = new ArrayList<>();
         // 构建查询数据
         Map<String,Object> params = new HashMap<>();
-        params.put("beginCreateTime", mondayStr);
-        params.put("endCreateTime", sundayStr);
+        params.put("beginCreateTime", dto.getBeginCreateTime());
+        params.put("endCreateTime", dto.getEndCreateTime());
         OrderInfo orderInfo = new OrderInfo();
         orderInfo.setStaffUserId(TokenUtils.getUserId())
                 .setParams(params);
@@ -1252,6 +1247,9 @@ public class ApiOrderService {
             normalStateList.add(OrderStateEnums.FINISH.getCode());
             // 循环计算金额数据
             for (OrderInfo item : orderInfos){
+                ApiOrderInfoVo orderInfoVo = new ApiOrderInfoVo();
+                BeanUtils.copyBeanProp(orderInfoVo, item);
+                orderInfoVoList.add(orderInfoVo);
                 orderTotalAmount = orderTotalAmount.add(item.getPayAmount());
                 if (normalStateList.contains(item.getOrderState())){
                     effectiveTotalAmount = effectiveTotalAmount.add(item.getAmount());
@@ -1266,8 +1264,9 @@ public class ApiOrderService {
                 .setRenewalRate(renewalRate)
                 .setWaitOrderFinishCommission(waitOrderFinishCommission)
                 .setEffectiveTotalAmount(effectiveTotalAmount)
-                .setOrderTotalAmount(orderTotalAmount);
-        log.info("查询店员本周订单详细情况：完成，返回数据：{}", vo);
+                .setOrderTotalAmount(orderTotalAmount)
+                .setOrderInfoVoList(orderInfoVoList);
+        log.info("查询店员时间段订单详细情况：完成，返回数据：{}", vo);
         return vo;
     }
 }

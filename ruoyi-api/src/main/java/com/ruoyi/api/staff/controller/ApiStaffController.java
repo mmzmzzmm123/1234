@@ -63,7 +63,7 @@ public class ApiStaffController extends BaseController {
 
     @ApiOperation("根据店员标识查询数据")
     @GetMapping("/selectByStaffId")
-    public R<ApiStaffInfoVo> selectByStaffId(@RequestParam("staffId") Long staffId){
+    public R<ApiStaffInfoVo> selectByStaffId(@RequestParam("staffId") Long staffId) {
         return R.ok(service.selectByStaffId(staffId));
     }
 
@@ -96,7 +96,7 @@ public class ApiStaffController extends BaseController {
 
     @ApiOperation("店员信息分页")
     @GetMapping("/page")
-    public R<ApiPageStaffInfoVo> page(ApiPageStaffInfoDto dto){
+    public R<ApiPageStaffInfoVo> page(ApiPageStaffInfoDto dto) {
         log.info("店员信息分页：开始，参数：{}", dto);
 
         ApiPageStaffInfoVo vo = new ApiPageStaffInfoVo();
@@ -110,10 +110,10 @@ public class ApiStaffController extends BaseController {
         // 封装数据
         StaffInfo select = new StaffInfo();
         BeanUtils.copyBeanProp(select, dto);
-        if (ObjectUtil.isNotEmpty(filterStaffIdList)){
+        if (ObjectUtil.isNotEmpty(filterStaffIdList)) {
             select.setFilterIdList(filterStaffIdList);
         }
-        if (StringUtils.isNotBlank(dto.getStaffLevel())){
+        if (StringUtils.isNotBlank(dto.getStaffLevel())) {
             select.setStaffLevel(Long.parseLong(dto.getStaffLevel()));
         }
         // 开始查询
@@ -121,22 +121,25 @@ public class ApiStaffController extends BaseController {
         // 数据处理
         TableDataInfo dataTable = getDataTable(staffInfos);
         // 开始处理对应业务
-        if (ObjectUtil.isNotEmpty(dataTable)){
+        if (ObjectUtil.isNotEmpty(dataTable)) {
+            List<StaffInfo> newStaffInfoList = new ArrayList<>();
             // 置顶数据
             List<StaffInfo> topList = staffInfos.stream().filter(item -> item.getIfTop().equals(SysYesNoEnums.YES.getCode())).collect(Collectors.toList());
-            if(ObjectUtil.isNotEmpty(topList)){
+            if (ObjectUtil.isNotEmpty(topList)) {
                 Collections.shuffle(topList);
+                newStaffInfoList.addAll(topList);
             }
             // 需要打乱的数据
             List<StaffInfo> randomList = staffInfos.stream().filter(item -> item.getIfTop().equals(SysYesNoEnums.NO.getCode())).collect(Collectors.toList());
-            if ("4".equals(dto.getSortType())){
-                topList.addAll(randomList);
-            }else{
+            if (ObjectUtil.isNotEmpty(randomList) && !"4".equals(dto.getSortType())) {
                 Collections.shuffle(randomList);
                 topList.addAll(randomList);
             }
+            if (ObjectUtil.isNotEmpty(randomList)){
+                newStaffInfoList.addAll(randomList);
+            }
             // 遍历数据并插入返回集合中
-            topList.forEach(item -> {
+            newStaffInfoList.forEach(item -> {
                 ApiStaffInfoVo staffInfoVo = new ApiStaffInfoVo();
                 BeanUtils.copyBeanProp(staffInfoVo, item);
                 voList.add(staffInfoVo);
@@ -150,13 +153,13 @@ public class ApiStaffController extends BaseController {
 
     @ApiOperation("获取店员总礼物数据")
     @GetMapping("/selectStaffGiftRecordId")
-    public R<List<ApiStaffGiftRecordVo>> selectStaffGiftRecord(@RequestParam("staffId") Long staffId){
+    public R<List<ApiStaffGiftRecordVo>> selectStaffGiftRecord(@RequestParam("staffId") Long staffId) {
         return R.ok(service.selectStaffGiftRecord(staffId));
     }
 
     @ApiOperation("周排名前三")
     @GetMapping("/weeklyRankingTopThree")
-    public R<List<ApiStaffInfoVo>> weeklyRankingTopThree(){
+    public R<List<ApiStaffInfoVo>> weeklyRankingTopThree() {
         return R.ok(service.weeklyRankingTopThree());
     }
 }

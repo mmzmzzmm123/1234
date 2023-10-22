@@ -16,7 +16,7 @@ let orderStartServiceUrl = "/orderStartService";
 let randomOrderSubmitUrl = "/randomOrderSubmit";
 let selectServedUserIdUrl = "/selectServedUserId";
 let selectOrderCommentUrl = "/selectOrderComment";
-let selectStaffThisWeekOrderInfoUrl = "/selectStaffThisWeekOrderInfo";
+let selectStaffOrderInfoByDateUrl = "/selectStaffOrderInfoByDate";
 
 /**
  * 礼物赠送订单提交
@@ -110,10 +110,10 @@ let selectOrderComment = function (params, onStart, onSuccess, onFailed) {
 }
 
 /**
- * 查询店员本周订单详细情况
+ * 查询店员时间段订单详细情况
  */
-let selectStaffThisWeekOrderInfo = function (onStart, onSuccess, onFailed, onWarn) {
-  request.get(bashRequestUrl + selectStaffThisWeekOrderInfoUrl, null, onStart, onSuccess, onFailed, onWarn, onFailed);
+let selectStaffOrderInfoByDate = function (params, onStart, onSuccess, onFailed, onWarn) {
+  request.get(bashRequestUrl + selectStaffOrderInfoByDateUrl, params, onStart, onSuccess, onFailed, onWarn, onFailed);
 }
 
 
@@ -131,5 +131,5 @@ module.exports = {
   randomOrderSubmit: randomOrderSubmit,
   selectServedUserId: selectServedUserId,
   selectOrderComment: selectOrderComment,
-  selectStaffThisWeekOrderInfo: selectStaffThisWeekOrderInfo
+  selectStaffOrderInfoByDate: selectStaffOrderInfoByDate
 }

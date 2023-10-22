@@ -74,14 +74,15 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 106.53.97.225
+    host: localhost
     # host: 10.0.12.4
     # 端口，默认为6379
     port: 6379
     # 数据库索引
     database: 0
     # 密码
-    password: Lancheng1688@redis
+    password:
+    # password: Lancheng1688@redis
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -98,7 +99,7 @@ spring:
 # RocketMQ 相关配置
 rocketmq:
   # 指定 nameServer
-  name-server: 106.53.97.225:9876
+  name-server: 43.136.116.136:9876
   # name-server: 10.0.12.4:9876
   # Producer 生产者
   producer:
@@ -190,10 +191,10 @@ weixin:
     app-key-path: classpath:cert/apiclient_key.pem
     # 商户cert证书路径
     app-cert-path: classpath:cert/apiclient_cert.pem
-#    notify-url: http://lamlin.natapp1.cc/api/wxCallback/payCallback
-#    refund-notify-url: http://lamlin.natapp1.cc/api/wxCallback/refundCallback
-    notify-url: https://listen.vipwei.cn/prod-api/api/wxCallback/payCallback
-    refund-notify-url: https://listen.vipwei.cn/prod-api/api/wxCallback/refundCallBack
+    notify-url: http://lamlin.natapp1.cc/api/wxCallback/payCallback
+    refund-notify-url: http://lamlin.natapp1.cc/api/wxCallback/refundCallback
+#    notify-url: https://listen.vipwei.cn/prod-api/api/wxCallback/payCallback
+#    refund-notify-url: https://listen.vipwei.cn/prod-api/api/wxCallback/refundCallBack
 
 # 腾讯云产品信息
 tencent-info:

@@ -8,19 +8,8 @@
   </wux-tabs>
   <swiper style="width:{{pWidth}}px;height:{{pHeight-tabHeight}}px;" current="{{ currentIndex }}" bindchange="onSwiperChange">
     <swiper-item>
-      <scroll-view refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{refreshStaffWalletDataState}}" scroll-y="true" bindrefresherrefresh="refreshStaffWalletData" bindscrolltolower="loadNextPageStaffWalletRecordData" class="view_all_adapt">
+      <scroll-view refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{refreshStaffWalletDataState}}" scroll-y="true" bindrefresherrefresh="refreshStaffWalletData" class="view_all_adapt">
         <view class="seizeSeat_mini"></view>
-        <view class="view_box_common scope_view">
-          <view class="view_box_common view_box_row_content_symmetry">
-            <view class="view_box_row_content tempColumn">
-              <image src="../../../static/ico/theme_dot.png"></image>
-              <view>统计周期</view>
-            </view>
-            <view style="font-size: 14px;color: #80848f;">{{statisticalCycle}}</view>
-          </view>
-        </view>
-        <view class="seizeSeat_mini"></view>
-
         <view wx:if="{{!loadStaffWalletState && staffWallet != null}}" class="scope_view view_box_common">
           <column-view title="我的钱包" outerMargin="10px" titleSize="16px" icoType="ios-arrow-down" moreTitle=""></column-view>
           <view class="view_box_common view_box_row_content_symmetry">
@@ -63,8 +52,24 @@
         </view>
 
         <view class="seizeSeat_mini"></view>
+        <picker header-text="统计周期" mode="selector" range="{{weekListOption}}" range-key="label" value="{{weekIndex}}" bindchange="weekChange">
+          <view class="view_box_common scope_view">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content tempColumn">
+                <image src="../../../static/ico/theme_dot.png"></image>
+                <view>统计周期</view>
+              </view>
+              <view class="view_box_row_content">
+                <view style="font-size: 14px;color: #80848f;margin-right: 10px;">{{weekList[weekIndex]}}</view>
+                <wux-icon type="ios-arrow-down" size="12" color="#80848f"></wux-icon>
+              </view>
+            </view>
+          </view>
+        </picker>
+
+        <view class="seizeSeat_mini"></view>
         <view wx:if="{{!loadThisWeekOrderInfoState && thisWeekOrderInfo != null}}" class="scope_view view_box_common">
-          <column-view title="本周订单概况" outerMargin="10px" titleSize="16px" icoType="ios-arrow-down" moreTitle=""></column-view>
+          <column-view title="订单概况" outerMargin="10px" titleSize="16px" icoType="ios-arrow-down" moreTitle=""></column-view>
           <view class="view_box_common view_box_row_content_symmetry thisWeekOrderItem">
             <span>订单总数</span>
             <view>{{thisWeekOrderInfo.orderNum}}</view>
@@ -109,22 +114,66 @@
         </view>
 
         <view class="seizeSeat_mini"></view>
-        <view wx:if="{{!loadStaffWalletRecordState}}" class="scope_view view_box_common">
-          <column-view title="佣金记录" outerMargin="10px" titleSize="16px" icoType="ios-arrow-down" moreTitle=""></column-view>
-          <block wx:if="{{staffWalletRecordData != null && staffWalletRecordData.length > 0}}">
-            <block wx:for="{{staffWalletRecordData}}" wx:key="id">
-              <view class="view_box_common view_box_row_content_symmetry walletRecotItem">
-                <view>{{dictsUtil.staff_wallet_record_type(item.staffWalletRecordType)}}</view>
-                <view>￥{{formatUtil.toFixed(item.amount)}}</view>
-                <view>{{item.createTime}}</view>
+        <view wx:if="{{!loadThisWeekOrderInfoState && thisWeekOrderInfo != null}}" class="scope_view view_box_common" style="padding: 0;overflow: hidden;">
+          <wux-tabs class="orderTabs" theme="positive" controlled current="{{ orderTabCurrentKey }}" bindchange="orderOnTabsChange">
+            <block wx:for="{{ orderTabs }}" wx:key="key">
+              <wux-tab key="{{ item.key }}" title="{{ item.title }}"></wux-tab>
+            </block>
+          </wux-tabs>
+          <view class="view_box_common">
+            <block wx:for="{{ orderTabs }}" wx:key="key">
+              <view wx:if="{{orderTabCurrentIndex == index}}">
+                <block wx:if="{{item.data != null && item.data.length > 0}}">
+                  <block wx:for="{{item.data}}" wx:key="id" wx:for-item="orderItem">
+                    <view class="seizeSeat_mini"></view>
+                    <view class="scope_view boy_edging_color">
+                      <view class="view_box_common">
+                        <view class="view_box_row_content_symmetry">
+                          <view class="orderNo">订单号：{{orderItem.orderNo}}</view>
+                          <view class="orderState">{{dictsUtil.order_state(orderItem.orderState)}}</view>
+                        </view>
+                        <view class="seizeSeat_mini"></view>
+                        <view class="view_box_row_content_symmetry thisWeekOrderItem">
+                          <span>订单类型</span>
+                          <view>{{dictsUtil.order_type(orderItem.orderType)}}</view>
+                        </view>
+                        <view class="seizeSeat_mini"></view>
+                        <view class="view_box_row_content_symmetry thisWeekOrderItem">
+                          <span>订单金额</span>
+                          <view>{{formatUtil.toFixed(orderItem.payAmount)}}</view>
+                        </view>
+                        <view class="seizeSeat_mini"></view>
+                        <view class="view_box_row_content_symmetry thisWeekOrderItem">
+                          <span>接单等级</span>
+                          <view>{{dictsUtil.staff_level(orderItem.staffLevel)}}</view>
+                        </view>
+                        <view class="seizeSeat_mini"></view>
+                        <view class="view_box_row_content_symmetry thisWeekOrderItem">
+                          <span>佣金比例</span>
+                          <view>{{formatUtil.toFixed(orderItem.commissionRatio)}}</view>
+                        </view>
+                        <view class="seizeSeat_mini"></view>
+                        <view class="view_box_row_content_symmetry thisWeekOrderItem">
+                          <span>结算佣金</span>
+                          <view>{{formatUtil.toFixed(orderItem.payAmount * orderItem.commissionRatio)}}</view>
+                        </view>
+                        <view class="seizeSeat_mini"></view>
+                        <view class="view_box_row_content_symmetry thisWeekOrderItem">
+                          <span>创建时间</span>
+                          <view>{{orderItem.createTime}}</view>
+                        </view>
+                      </view>
+                    </view>
+                  </block>
+                  <view class="seizeSeat_mini"></view>
+                  <i-load-more tip='哈喽，没有更多记录啦~' loading="{{false}}"></i-load-more>
+                </block>
+                <view wx:else class="view_all_adapt">
+                  <mine-null-data width="100%" height="100%" title="亲爱的，暂无记录哟！"></mine-null-data>
+                  <view class="seizeSeat_mini"></view>
+                </view>
               </view>
             </block>
-            <view class="seizeSeat_mini"></view>
-            <i-load-more tip='{{((staffWalletRecordParams.pageNum*staffWalletRecordParams.pageSize) >= staffWalletDataTotal) && loadStaffWalletRecordNextPageState == false ?"哈喽 没有更多的记录啦":"加载中"}}' loading="{{loadStaffWalletRecordNextPageState}}"></i-load-more>
-          </block>
-          <view wx:else class="view_box_common">
-            <mine-null-data width="100%" height="100%" title="亲爱的，没有佣金记录哟！"></mine-null-data>
-            <view class="seizeSeat_mini"></view>
           </view>
         </view>
         <view class="view_box_common" wx:else>
@@ -132,10 +181,32 @@
           <wux-skeleton active>
             <wux-skeleton-paragraph rows="6" />
           </wux-skeleton>
+          <view class="seizeSeat_mini"></view>
         </view>
         <view class="seizeSeat_mini"></view>
         <view class="seizeSeat_mini"></view>
         <view class="seizeSeat_mini"></view>
+      </scroll-view>
+    </swiper-item>
+
+    <!-- 佣金记录 -->
+    <swiper-item>
+      <scroll-view refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{refreshStaffWalletDataState}}" scroll-y="true" bindrefresherrefresh="refreshStaffWalletData" bindscrolltolower="loadNextPageStaffWalletRecordData" class="view_all_adapt">
+        <block wx:if="{{staffWalletRecordData != null && staffWalletRecordData.length > 0}}">
+          <block wx:for="{{staffWalletRecordData}}" wx:key="id">
+            <view class="view_box_common view_box_row_content_symmetry walletRecotItem">
+              <view>{{dictsUtil.staff_wallet_record_type(item.staffWalletRecordType)}}</view>
+              <view>￥{{formatUtil.toFixed(item.amount)}}</view>
+              <view>{{item.createTime}}</view>
+            </view>
+          </block>
+          <view class="seizeSeat_mini"></view>
+          <i-load-more tip='{{((staffWalletRecordParams.pageNum*staffWalletRecordParams.pageSize) >= staffWalletDataTotal) && loadStaffWalletRecordNextPageState == false ?"哈喽 没有更多的记录啦":"加载中"}}' loading="{{loadStaffWalletRecordNextPageState}}"></i-load-more>
+        </block>
+        <view wx:else class="view_all_adapt">
+          <mine-null-data width="100%" height="100%" title="亲爱的，没有佣金记录哟！"></mine-null-data>
+          <view class="seizeSeat_mini"></view>
+        </view>
       </scroll-view>
     </swiper-item>
 

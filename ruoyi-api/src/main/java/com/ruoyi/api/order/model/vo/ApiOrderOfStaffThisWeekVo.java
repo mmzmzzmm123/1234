@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author LAM
@@ -43,4 +44,7 @@ public class ApiOrderOfStaffThisWeekVo implements Serializable {
 
     @ApiModelProperty("订单总额")
     private BigDecimal orderTotalAmount;
+
+    @ApiModelProperty("订单数据列表")
+    private List<ApiOrderInfoVo> orderInfoVoList;
 }

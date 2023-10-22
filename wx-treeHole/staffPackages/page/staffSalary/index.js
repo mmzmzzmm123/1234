@@ -18,13 +18,38 @@ Page({
         title: "一览表"
       },
       {
+        key: "commission_records",
+        title: "佣金记录"
+      },
+      {
         key: "settlement_records",
         title: "往期薪资"
       }
     ],
+    orderTabCurrentIndex: 0,
+    orderTabCurrentKey: "all",
+    orderTabs: [
+      {
+        key: "all",
+        title: "全部",
+        data: []
+      },
+      {
+        key: "0",
+        title: "已完成",
+        data: []
+      },
+      {
+        key: "-1",
+        title: "已取消",
+        data: []
+      }
+    ],
     refreshStaffWalletDataState: false, // 刷新店员钱包数据状态
     refreshSettlementRecordDataState: false, // 刷新店员钱包数据状态
-    statisticalCycle: "", // 统计周期
+    weekIndex: 1, // 统计周期下标
+    weekList: [], // 统计周期
+    weekListOption: [], // 统计周期选择项
     loadStaffWalletState: false, // 加载店员钱包数据
     staffWallet: null, // 店员钱包数据
     waitOrderFinishCommission: 0.00, // 待订单完结佣金
@@ -36,8 +61,8 @@ Page({
     },
     staffWalletRecordData: [], // 店员钱包记录
     staffWalletDataTotal: 0, // 店员钱包记录总数
-    loadThisWeekOrderInfoState: false, // 加载本周店员订单概况状态
-    thisWeekOrderInfo: null, // 本周店员订单概况
+    loadThisWeekOrderInfoState: false, // 加载店员订单概况状态
+    thisWeekOrderInfo: null, // 店员订单概况
     loadSettlementRecordState: false, // 加载店员往期结算信息数据
     loadNextPageOfSettlementRecordState: false, // 加载下一页店员往期结算记录
     settlementRecordData: [], // 往期薪资记录
@@ -73,36 +98,62 @@ Page({
         tabHeight: rect[0].height
       })
     }).exec();
-    let weekDataArr = timeUtil.getWeekDataList();
+
+    let weekList = [];
+    let weekListOption = [];
+    let prevWeekDataArr = timeUtil.getPrevWeekDataList();
+    let thisWeekDataArr = timeUtil.getWeekDataList();
+    weekList.push(prevWeekDataArr.join("至"));
+    weekListOption.push({
+      label: prevWeekDataArr.join("至")
+    })
+    weekList.push(thisWeekDataArr.join("至"));
+    weekListOption.push({
+      label: thisWeekDataArr.join("至")
+    })
     this.setData({
-      statisticalCycle: weekDataArr[0] + " 至 " + weekDataArr[weekDataArr.length - 1]
+      weekList: weekList,
+      weekListOption: weekListOption
     })
     // 加载店员钱包数据
     this.loadStaffWallet();
     // 加载店员钱包记录数据
     this.loadStaffWalletRecord(this.loadStaffWalletRecordOnStart);
-    // 加载本周店员订单概况
+    // 加载店员订单概况
     this.loadThisWeekOrderInfo();
     // 加载店员结算记录
     this.loadSettlementRecordData(this.loadSettlementRecordDataOnStart);
   },
-  loadSettlementRecordData:function(onStart){
-    staffWalletApi.pageSettlementRecord(onStart,this.loadSettlementRecordDataOnSuccess,this.loadSettlementRecordDataOnFailed,this.loadSettlementRecordDataOnWarn);
+  /**
+   * 结算周期时间改变事件
+   */
+  weekChange: function (e) {
+    this.setData({
+      weekIndex: e.detail.value
+    })
+    // 加载店员订单概况
+    this.loadThisWeekOrderInfo();
   },
-  loadSettlementRecordDataOnStart:function(){
+  /**
+   * 加载店员结算记录
+   */
+  loadSettlementRecordData: function (onStart) {
+    staffWalletApi.pageSettlementRecord(onStart, this.loadSettlementRecordDataOnSuccess, this.loadSettlementRecordDataOnFailed, this.loadSettlementRecordDataOnWarn);
+  },
+  loadSettlementRecordDataOnStart: function () {
     this.setData({
       loadSettlementRecordState: true
     })
   },
-  loadSettlementRecordDataOnSuccess:function(res){
+  loadSettlementRecordDataOnSuccess: function (res) {
     let dataArr = res.data.data;
     let settlementRecordData = this.data.settlementRecordData;
     let loadNextPageState = this.data.loadNextPageOfSettlementRecordState;
-    if(loadNextPageState){
+    if (loadNextPageState) {
       for (let i = 0; i < dataArr.length; i++) {
         settlementRecordData.push(dataArr[i]);
       }
-    }else{
+    } else {
       settlementRecordData = dataArr;
     }
     this.setData({
@@ -113,7 +164,7 @@ Page({
       settlementRecordData: settlementRecordData
     })
   },
-  loadSettlementRecordDataOnFailed:function(res){
+  loadSettlementRecordDataOnFailed: function (res) {
     this.setData({
       loadSettlementRecordState: false,
       refreshSettlementRecordDataState: false,
@@ -124,7 +175,7 @@ Page({
       icon: "none"
     })
   },
-  loadSettlementRecordDataOnWarn:function(res){
+  loadSettlementRecordDataOnWarn: function (res) {
     this.setData({
       loadSettlementRecordState: false,
       refreshSettlementRecordDataState: false,
@@ -136,24 +187,45 @@ Page({
     })
   },
   /**
-   * 加载本周店员订单概况
+   * 加载店员订单概况
    */
-  loadThisWeekOrderInfo:function(){
-    orderApi.selectStaffThisWeekOrderInfo(this.loadThisWeekOrderInfoOnStart,this.loadThisWeekOrderInfoOnSuccess,this.loadThisWeekOrderInfoOnFailed,this.loadThisWeekOrderInfoOnWarn);
+  loadThisWeekOrderInfo: function () {
+    let weekList = this.data.weekList;
+    let weekIndex = this.data.weekIndex;
+    let week = weekList[weekIndex];
+    let weekArr = week.split("至");
+    let params = {
+      beginCreateTime: weekArr[0],
+      endCreateTime: weekArr[1]
+    }
+    orderApi.selectStaffOrderInfoByDate(params, this.loadThisWeekOrderInfoOnStart, this.loadThisWeekOrderInfoOnSuccess, this.loadThisWeekOrderInfoOnFailed, this.loadThisWeekOrderInfoOnWarn);
   },
-  loadThisWeekOrderInfoOnStart:function(){
+  loadThisWeekOrderInfoOnStart: function () {
     this.setData({
       loadThisWeekOrderInfoState: true
     })
   },
-  loadThisWeekOrderInfoOnSuccess:function(res){
+  loadThisWeekOrderInfoOnSuccess: function (res) {
+    let orderTabs = this.data.orderTabs;
+    let dataArr = res.data.orderInfoVoList;
+    orderTabs[0].data = dataArr;
+    for (let i = 0; i < dataArr.length; i++) {
+      let tempObj = dataArr[i];
+      if (tempObj.orderState == '0') {
+        orderTabs[1].data.push(tempObj);
+      }
+      if (tempObj.orderState == '-1') {
+        orderTabs[2].data.push(tempObj);
+      }
+    }
     this.setData({
       loadThisWeekOrderInfoState: false,
+      orderTabs: orderTabs,
       thisWeekOrderInfo: res.data,
       waitOrderFinishCommission: res.data.waitOrderFinishCommission
     })
   },
-  loadThisWeekOrderInfoOnFailed:function(res){
+  loadThisWeekOrderInfoOnFailed: function (res) {
     this.setData({
       loadThisWeekOrderInfoState: false
     })
@@ -162,7 +234,7 @@ Page({
       icon: "error"
     })
   },
-  loadThisWeekOrderInfoOnWarn:function(res){
+  loadThisWeekOrderInfoOnWarn: function (res) {
     this.setData({
       loadThisWeekOrderInfoState: false
     })
@@ -231,24 +303,24 @@ Page({
   /**
    * 加载店员钱包记录数据
    */
-  loadStaffWalletRecord:function(onStart){
+  loadStaffWalletRecord: function (onStart) {
     let params = this.data.staffWalletRecordParams;
     staffWalletApi.pageWalletRecord(params, onStart, this.loadStaffWalletRecordOnSuccess, this.loadStaffWalletRecordOnFailed);
   },
-  loadStaffWalletRecordOnStart:function(){
+  loadStaffWalletRecordOnStart: function () {
     this.setData({
       loadStaffWalletRecordState: true
     })
   },
-  loadStaffWalletRecordOnSuccess:function(res){
+  loadStaffWalletRecordOnSuccess: function (res) {
     let dataArr = res.data.data;
     let staffWalletRecordData = this.data.staffWalletRecordData;
     let loadNextPageState = this.data.loadStaffWalletRecordNextPageState;
-    if(loadNextPageState){
+    if (loadNextPageState) {
       for (let i = 0; i < dataArr.length; i++) {
         staffWalletRecordData.push(dataArr[i]);
       }
-    }else{
+    } else {
       staffWalletRecordData = dataArr;
     }
 
@@ -258,9 +330,9 @@ Page({
       staffWalletRecordData: staffWalletRecordData,
       staffWalletDataTotal: res.data.total
     })
-    
+
   },
-  loadStaffWalletRecordOnFailed:function(res){
+  loadStaffWalletRecordOnFailed: function (res) {
     this.setData({
       loadStaffWalletRecordState: false
     })
@@ -307,6 +379,19 @@ Page({
     wx.showToast({
       title: res.msg,
       icon: "none"
+    })
+  },
+  /**
+   * 订单状态tab改变事件
+   */
+  orderOnTabsChange:function(e){
+    const {
+      key
+    } = e.detail
+    const index = this.data.orderTabs.map((n) => n.key).indexOf(key);
+    this.setData({
+      orderTabCurrentIndex: index,
+      orderTabCurrentKey: key
     })
   },
   /**
