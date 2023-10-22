@@ -47,7 +47,9 @@
 					<!-- <u-button v-if="room.payType==9" @click="shareOrder(room)" plain>分享</u-button> -->
 					<u-button type="primary" plain v-if="room.status==2" @click="startOrder(room)">立即开始</u-button>
 					<!-- 订单提前开始 订单开始结束时间前移多少分钟 -->
-					<u-button type="primary" plain v-if="room.status<3" @click="changeRoom(room)">换包厢</u-button>
+					<uo-select :options="roomList" @change="changeRoom($event, room)" v-if="room.status<3">
+						<u-button type="primary" plain>换包厢</u-button>
+					</uo-select>
 					<!-- 截至时间后移多少分钟，费用线下收取 -->
 					<u-button type="primary" @click="renewOrder(room)">续单</u-button>
 				</view>
@@ -173,10 +175,10 @@
 					console.log(order);
 				})
 			},
-			changeRoom(order) {
+			changeRoom(room, order) {
 				var params = {
 					orderId: order.id,
-					roomId: 34 //order.roomId 需要选择房间
+					roomId: room.id //order.roomId 需要选择房间
 				}
 				this.$api.changeRoom(params).then(res => {
 					console.log(params);
@@ -243,6 +245,13 @@
 			height: 60rpx;
 			margin: 10rpx;
 			width: 6em;
+		}
+	}
+	.card__op-list{
+		.uo-select{
+			width: auto;
+			flex: none;
+			margin-right: 20rpx;
 		}
 	}
 </style>
