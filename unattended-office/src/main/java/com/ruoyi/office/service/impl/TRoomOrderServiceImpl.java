@@ -1602,7 +1602,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         if (roomOrder == null) {
             throw new ServiceException("订单不存在");
         }
-        final long diffMinutes = (roomOrder.getStartTime().getTime() - req.getStartTime().getTime()) / (1000 * 60);
+        final long diffMinutes = (req.getStartTime().getTime() - roomOrder.getStartTime().getTime()) / (1000 * 60);
         Date endTime = DateUtils.addMinutes(roomOrder.getEndTime(), (int) diffMinutes);
 
         PrepayReq qry = new PrepayReq();
@@ -1623,7 +1623,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         up.setStartTime(req.getStartTime());
         up.setEndTime(endTime);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        up.setRemark("商家提前订单开始时间到" + sdf.format(req.getStartTime()) + ";" + roomOrder.getRemark());
+        up.setRemark("商家提前订单开始时间从" + sdf.format(roomOrder.getStartTime()) + "到" + sdf.format(req.getStartTime()) + ";" + roomOrder.getRemark());
         tRoomOrderMapper.updateTRoomOrder(up);
     }
 

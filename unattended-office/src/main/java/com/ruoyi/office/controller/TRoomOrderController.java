@@ -247,7 +247,7 @@ public class TRoomOrderController extends BaseController {
     }
 
     @ApiOperation("H5商户-立即开始订单")
-    @PreAuthorize("@ss.hasPermi('office:roomorder:add')")
+//    @PreAuthorize("@ss.hasPermi('office:roomorder:add')")
     @Log(title = "H5商户-立即开始订单", businessType = BusinessType.INSERT)
     @PostMapping("/changeTime")
     public AjaxResult changeTime(@RequestBody MerchantOrderChangeTimeReq req) {
