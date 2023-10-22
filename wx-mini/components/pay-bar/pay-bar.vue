@@ -74,14 +74,27 @@
 				const event = {payType: this.payType}
 				this.$emit('prepareOrder', event)
 				const order = event.order
-				const doPay = order.orderId ? this.$api.reOrder : order.packId ? this.$api.addOrderByPack : this.$api.addOrder
+				let doPay, doPaySuccess
+				if(order.orderId){
+					doPay = this.$api.reOrder
+					doPaySuccess = this.$api.wxPaySuccess
+				}else if(order.packId){
+					doPay = this.$api.addOrderByPack
+					doPaySuccess = this.$api.wxPaySuccess
+				}else if(order.charePackId){
+					doPay = this.$api.buyCharge
+					doPaySuccess = this.$api.buyChargeSuccess
+				}else{
+					doPay = this.$api.addOrder
+					doPaySuccess = this.$api.wxPaySuccess
+				}
 				doPay(order).then(res=>{
 					if(order.payType == 1){
 						const param = res.jsapiResult
 						param.package = param.packageValue
 						delete param.packageValue
 						param.success = ()=>{
-							this.$api.wxPaySuccess(res).then((payRes)=>{
+							doPaySuccess(res).then((payRes)=>{
 								this.$emit("success")
 							})
 						}

@@ -15,17 +15,15 @@
 			</view>
 		</view>
 		<view class="card">
-			<block>
-				<view class="price-title">选择续单套餐</view>
-				<view v-for="price in roomInfo.packageList" :key="price.id" class="price-bar"
-					:class="currentPackage.id == price.id ? 'price-bar--selected':''" @click="onPackageSelected(price)">
-					<text>{{price.name}}</text>
-					<text style="float: right;">
-						<text class="price-bar_price">{{price.price}}</text>
-						元/场
-					</text>
-				</view>
-			</block>
+			<view class="price-title">选择续单套餐</view>
+			<view v-for="price in chargeList" :key="price.id" class="price-bar"
+				:class="currentCharge.id == price.id ? 'price-bar--selected':''" @click="onChargeSelected(price)">
+				<text>{{price.name}}</text>
+				<text style="float: right;">
+					<text class="price-bar_price">{{price.price}}</text>
+					元/场
+				</text>
+			</view>
 		</view>
 		<view class="card">
 			<view class="day-select">
@@ -36,10 +34,9 @@
 				</view>
 			</view>
 			<view style="display: flex;align-items: center;">
-				<view>选择时间：</view>
-				<view class="time-input" @click="startShow = true">
+				<view>续单时间：</view>
+				<view class="time-input">
 					{{$u.timeFormat(order.startTime, 'hh:MM')}}
-					<u-icon name="edit-pen"></u-icon>
 				</view>
 				<view style="margin: 0 30rpx;">到</view>
 				<view class="time-input time-input--readonly">
@@ -69,13 +66,6 @@
 				<u-button type="primary" text="立即续单" @click="onAddOrder"></u-button>
 			</view>
 		</view>
-		<u-datetime-picker :value="order.startTime" :min-date="minDate" :max-date="maxDate" :show="startShow"
-			:formatter="timeFormatter" @close="onClosePicker(true)" @cancel="onClosePicker(true)"
-			@confirm="onConfirmPicker(true,$event)"></u-datetime-picker>
-		<u-datetime-picker :value="order.endTime" :min-date="minDate" :max-date="maxDate" :show="endShow"
-			:formatter="timeFormatter" @close="onClosePicker(false)" @cancel="onClosePicker(false)"
-			@confirm="onConfirmPicker(false,$event)"></u-datetime-picker>
-
 		<view style="height: 100rpx;"></view>
 		<pay-bar v-model="payShow" :amount="amount" :storeId="roomInfo.storeId" @prepareOrder="onPrepareOrder"
 			@success="onOrderSuccess"></pay-bar>
@@ -83,7 +73,6 @@
 </template>
 
 <script>
-	const WEEKDAYS = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 	import HourStatusLegend from "../../../components/hour-status-bar/hour-status-legend"
 	export default {
 		components: {
@@ -93,37 +82,25 @@
 			const minDate = new Date().getTime()
 			return {
 				roomInfo: {},
-				minDate: minDate,
-				maxDate: minDate + 4 * 24 * 60 * 60 * 1000,
 				order: {
 					startTime: minDate,
 					endTime: minDate
 				},
-				startShow: false,
-				endShow: false,
 				period: null,
 				hourList: [],
 				hourList2: [],
 				hourRepeat: false,
 				amount: 0,
 				payShow: false,
-				currentPackage: {},
+				chargeList: [],
+				currentCharge: {},
 
-				dayOptions: this.getDayOptions(),
 				storeInfo: {
 					name: '...'
 				}
 			}
 		},
 		computed: {
-			selectedDayIndex() {
-				for (let i = 4; i >= 0; i--) {
-					if (this.dayOptions[i].date.getTime() <= this.order.startTime) {
-						return i
-					}
-				}
-				return 0
-			},
 			roomStatusDesc() {
 				let desc = ''
 				if (this.roomInfo) {
@@ -155,14 +132,33 @@
 		},
 		methods: {
 			onAcceptRoom(roomInfo) {
+				const now = new Date()
+				roomInfo.period.date = Date.fromString(roomInfo.period.date)
+				roomInfo.period.orderList.forEach(x=>{
+					x.startTime = Date.fromString(x.startTime)
+					x.endTime = Date.fromString(x.endTime)
+					if(x.startTime <= now && x.endTime >= now){
+						this.order.startTime = x.endTime.getTime()
+					}
+				})
+				
 				this.roomInfo = roomInfo
 				this.period = roomInfo.period
 				this.$api.getSimpleStore(roomInfo.storeId).then(storeInfo => this.storeInfo = storeInfo)
+				this.$api.getChargeList({roomId: this.roomInfo.id}).then(res=>{
+					this.chargeList = res.rows
+					if(res.rows.length){
+						this.currentCharge = res.rows[0]
+						this.onChargeSelected(res.rows[0])
+					}
+				})
 			},
 			calcAmount() {
 				// 计算金额
-				if (this.currentPackage.id) {
-					this.amount = this.currentPackage.price
+				if (this.currentCharge && this.currentCharge.price) {
+					this.amount = this.currentCharge.price
+				}else{
+					this.amount = 0
 				}
 			},
 			getPrice(hour) {
@@ -187,9 +183,9 @@
 			},
 			updateHourStatus() {
 				this.hourRepeat = false
-				const period = this.period
 				const hourList = []
 				const hourList2 = []
+				const period = this.period
 				for (let i = 0; i < 24; i++) {
 					hourList.push({
 						name: i,
@@ -202,6 +198,22 @@
 						status: period.canNotUseList2.indexOf(i) >= 0
 					})
 				}
+				const orderList = this.period.orderList
+				const orderEndTime = this.order.endTime
+				const date = period.date.getDate()
+				orderList.forEach(x=>{
+					if(x.startTime.getTime() < this.order.endTime && x.endTime.getTime() > orderEndTime){
+						this.hourRepeat = true
+					}
+					// let i = x.startTime.getHours()
+					// let currentHourList = x.startTime.getDate() == date ? hourList : hourList2
+					// if(x.endTime.getDate() > x.startTime.getDate()){
+					// 	while(i < 24){
+					// 		hourList[i]
+					// 	}
+					// }
+				})
+				
 				this.hourList = hourList
 				this.hourList2 = hourList2
 				if (this.order.startTime < this.order.endTime) {
@@ -211,7 +223,6 @@
 						for (let i = start.getHours(); i < 24; i++) {
 							if (hourList[i].status) {
 								hourList[i].error = true
-								this.hourRepeat = true
 							} else {
 								hourList[i].current = true
 							}
@@ -219,7 +230,6 @@
 						for (let i = 0; i < end.getHours(); i++) {
 							if (hourList2[i].status) {
 								hourList[i].error = true
-								this.hourRepeat = true
 							} else {
 								hourList2[i].current = true
 							}
@@ -228,7 +238,6 @@
 						for (let i = start.getHours(); i < end.getHours(); i++) {
 							if (hourList[i].status) {
 								hourList[i].error = true
-								this.hourRepeat = true
 							} else {
 								hourList[i].current = true
 							}
@@ -243,99 +252,31 @@
 					this.endShow = false
 				}
 			},
-			onConfirmPicker(start, e) {
-				let startTime = this.order.startTime
-				let endTime = this.order.endTime
-				if (this.currentPackage.id) { //套餐
-					endTime = this.currentPackage.minutes * 60 * 1000
-				}
-				if (start) {
-					startTime = e.value
-					endTime = startTime + endTime
-				} else {
-					endTime = e.value
-				}
-				if (endTime - startTime > 24 * 60 * 60 * 1000) {
-					uni.showToast({
-						icon: "none",
-						title: "预定的时间不能超出24小时"
-					})
-					return
-				}
-				if (start) {
-					this.order.startTime = e.value
-					if (this.currentPackage.id) { //优惠套装，套装结束时间不用选
-						this.order.endTime = endTime
-					}
-					this.startShow = false
-					if (new Date(e.value).getDate() != new Date(this.period.date).getDate()) {
-						this.getHourStatus()
-					} else {
-						this.updateHourStatus()
-					}
-				} else {
-					this.order.endTime = e.value
-					this.endShow = false
-					this.updateHourStatus()
-				}
-				this.calcAmount()
-			},
 			onAddOrder() {
-				if (this.amount == 0) {
+				if (!this.currentCharge.id) {
 					uni.showToast({
 						icon: "none",
-						title: "请选择续单时间"
+						title: "请先选择套餐"
 					})
 					return
 				}
 				if (this.hourRepeat) {
 					uni.showToast({
 						icon: "none",
-						title: "续单时间与已被预定时间重复，请重新选择时间"
+						title: "续单时间与已被预定时间重复，请选择其它套餐"
 					})
 					return
 				}
 				wx.requestSubscribeMessage({
 					tmplIds: ['58BvI5jDnq61I9slOIIjf89J9ionC95R14eUJ9rQLWA']
 				})
-				if (this.currentPromotion.id) { //优惠套餐支付
-					this.$api.addPromotionOrder({
-						roomId: this.roomInfo.id,
-						startTime: this.$u.timeFormat(this.order.startTime, 'yyyy-mm-dd hh:MM'),
-						// payType: 3 ,
-						couponId: this.currentPromotion.id
-					}).then(res => {
-						const param = res.jsapiResult
-						param.package = param.packageValue
-						delete param.packageValue
-						param.success = () => {
-							this.$api.wxPaySuccess(res).then((payRes) => {
-								this.onOrderSuccess()
-							})
-						}
-						param.fail = function() {
-							this.$toast('支付失败')
-						}
-						uni.requestPayment(param)
-					})
-				} else {
-					this.payShow = true
-				}
+				this.payShow = true
 			},
 			onPrepareOrder(e) {
-				if (this.currentPackage.id) {
-					e.order = {
-						packId: this.currentPackage.id,
-						startTime: this.$u.timeFormat(this.order.startTime, 'yyyy-mm-dd hh:MM'),
-						payType: e.payType
-					}
-				} else {
-					e.order = {
-						roomId: this.roomInfo.id,
-						startTime: this.$u.timeFormat(this.order.startTime, 'yyyy-mm-dd hh:MM'),
-						endTime: this.$u.timeFormat(this.order.endTime, 'yyyy-mm-dd hh:MM'),
-						payType: e.payType
-					}
+				e.order = {
+					charePackId: this.currentCharge.id,
+					payType: e.payType,
+					roomId: this.roomInfo.id
 				}
 			},
 			onOrderSuccess() {
@@ -350,75 +291,11 @@
 					}
 				})
 			},
-			onPackageSelected(pack) {
-				this.currentPromotion = {}
-				this.currentPackage = pack
-				this.order.endTime = this.order.startTime + pack.minutes * 60 * 1000
+			onChargeSelected(charge) {
+				this.currentCharge = charge
+				this.order.endTime = this.order.startTime + charge.minutes * 60 * 1000
 				this.calcAmount()
 				this.updateHourStatus()
-			},
-			onPromotionSelected(promotion) {
-				this.currentPackage = {}
-				this.currentPromotion = promotion
-				this.order.endTime = this.order.startTime + promotion.maxMinutes * 60 * 1000
-				this.calcAmount()
-				this.updateHourStatus()
-			},
-			timeFormatter(type, value) {
-				if (type === 'year') {
-					return `${value}年`
-				}
-				if (type === 'month') {
-					return `${value}月`
-				}
-				if (type === 'day') {
-					return `${value}日`
-				}
-				if (type === 'hour') {
-					return `${value}时`
-				}
-				if (type === 'minute') {
-					return `${value}分`
-				}
-				return value
-			},
-			getDayOptions() {
-				const now = new Date()
-				const start = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-				const dayOptions = [{
-					date: start,
-					dateStr: this.getDayOptionsDateStr(start),
-					weekDayStr: '今天'
-				}]
-
-				for (let i = 1; i < 5; i++) {
-					const curDate = new Date(start.getTime() + i * 24 * 60 * 60 * 1000)
-					dayOptions.push({
-						date: curDate,
-						dateStr: this.getDayOptionsDateStr(curDate),
-						weekDayStr: WEEKDAYS[curDate.getDay()]
-					})
-				}
-				return dayOptions
-			},
-			getDayOptionsDateStr(date) {
-				return date.getMonth() + 1 + '.' + date.getDate()
-			},
-			onDayOptionSelected(index) {
-				if (index == this.selectedDayIndex) return
-				const dayOption = this.dayOptions[index]
-				this.order.startTime = this.changeDate(this.order.startTime, dayOption.date).getTime()
-				this.order.endTime = this.changeDate(this.order.endTime, dayOption.date).getTime()
-				if (dayOption.getDate() != new Date(this.period.date).getDate()) {
-					this.getHourStatus()
-				} else {
-					this.updateHourStatus()
-				}
-			},
-			changeDate(old, toChange) {
-				old = new Date(old)
-				return new Date(toChange.getFullYear(), toChange.getMonth(), toChange.getDate(), old.getHours(), old
-					.getMinutes())
 			}
 		}
 	}
