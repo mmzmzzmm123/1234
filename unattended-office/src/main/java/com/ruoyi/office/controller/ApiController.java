@@ -1055,7 +1055,7 @@ public class ApiController extends BaseController {
     /**
      * 查询房间续费套餐列表
      */
-    @PreAuthorize("@ss.hasPermi('office:roomchargeprice:list')")
+//    @PreAuthorize("@ss.hasPermi('office:roomchargeprice:list')")
     @GetMapping("/charge/list")
     public TableDataInfo list(TRoomChargePrice tRoomChargePrice)
     {
