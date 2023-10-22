@@ -237,9 +237,19 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             sendVxMessage(wxuserid, order);
             TRoom tRoom = roomService.selectTRoomById(order.getRoomId());
             TStore tStore = storeService.selectTStoreById(tRoom.getStoreId());
-            sendVxOrderMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, order, "已预约");
-            sendVxOrderMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, order, "已预约");
-            sendVxOrderMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, order, "已预约");
+
+            TStoreUser tStoreUser = new TStoreUser();
+            tStoreUser.setStoreId(tStore.getId());
+            List<TStoreUser> tStoreUserList = itStoreUserService.selectTStoreUserList(tStoreUser);
+            for (TStoreUser item : tStoreUserList) {
+                TWxUser tWxUser = itWxUserService.selectTWxUserById(item.getUserId());
+                if (tWxUser != null && tWxUser.getMpOpenId() != null && !tWxUser.getMpOpenId().equals("")) {
+                    sendVxOrderMpMessage(tWxUser.getMpOpenId(), tStore, tRoom, order, "");
+                }
+            }
+//            sendVxOrderMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, order, "已预约");
+//            sendVxOrderMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, order, "已预约");
+//            sendVxOrderMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, order, "已预约");
         } catch (Exception e) {
 //            throw new ServiceException("消息推送失败");
             log.error("消息推送失败");
@@ -1103,6 +1113,12 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Autowired
     ITStoreUserService storeUserService;
 
+    @Autowired
+    ITStoreUserService itStoreUserService;
+
+    @Autowired
+    ITWxUserService itWxUserService;
+
     /**
      * 订单结束提醒
      */
@@ -1155,11 +1171,21 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 // 订单结束发送通知
                 TRoom sendRoom = roomService.selectTRoomById(order.getRoomId());
                 TStore tStore = storeService.selectTStoreById(sendRoom.getStoreId());
-                //List<WxUser> wxUserList=wxUserService.selectRoomCleaner(room.getId());
+                TStoreUser tStoreUser = new TStoreUser();
+                tStoreUser.setStoreId(tStore.getId());
+                List<TStoreUser> tStoreUserList = itStoreUserService.selectTStoreUserList(tStoreUser);
+                for (TStoreUser item : tStoreUserList) {
+                    TWxUser tWxUser = itWxUserService.selectTWxUserById(item.getUserId());
+                    if (tWxUser != null) {
+                        if (!tWxUser.getMpOpenId().equals("") && tWxUser.getMpOpenId() != null) {
+                            sendVxFinishMpMessage(tWxUser.getMpOpenId(), tStore, sendRoom, order, "");
+                        }
+                    }
+                }
 
-                sendVxFinishMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, sendRoom, order, "已完成");
-                sendVxFinishMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, sendRoom, order, "已完成");
-                sendVxFinishMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, sendRoom, order, "已完成");
+//                sendVxFinishMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, sendRoom, order, "已完成");
+//                sendVxFinishMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, sendRoom, order, "已完成");
+//                sendVxFinishMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, sendRoom, order, "已完成");
 //                if (wxUser.getMpOpenId() != null) {
 ////                    sendVxMpMessage(wxUser.getMpOpenId(), tStore, room, roomOrder);
 //
@@ -1531,9 +1557,20 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TRoom exRoom = roomService.selectTRoomById(roomOrder.getRoomId());
         TStore store = storeService.selectTStoreById(exRoom.getStoreId());
-        new WxMsgSender().sendOrderStartMsg("oNosp6pg1nwPpNK0ojVRG3nXMUqM", exRoom.getName(), store.getName(), roomOrder);
-        new WxMsgSender().sendOrderStartMsg("oNosp6nU4uj40-rGGCG83wkQwdzE", exRoom.getName(), store.getName(), roomOrder);
-        new WxMsgSender().sendOrderStartMsg("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", exRoom.getName(), store.getName(), roomOrder);
+
+        //代客下单提醒商家
+        TStoreUser tStoreUser = new TStoreUser();
+        tStoreUser.setStoreId(store.getId());
+        List<TStoreUser> tStoreUserList = itStoreUserService.selectTStoreUserList(tStoreUser);
+        for (TStoreUser item : tStoreUserList) {
+            TWxUser tWxUser = itWxUserService.selectTWxUserById(item.getUserId());
+            if (tWxUser != null && tWxUser.getMpOpenId() != null && !tWxUser.getMpOpenId().equals("")) {
+                new WxMsgSender().sendOrderStartMsg(tWxUser.getMpOpenId(), exRoom.getName(), store.getName(), roomOrder);
+            }
+        }
+//        new WxMsgSender().sendOrderStartMsg("oNosp6pg1nwPpNK0ojVRG3nXMUqM", exRoom.getName(), store.getName(), roomOrder);
+//        new WxMsgSender().sendOrderStartMsg("oNosp6nU4uj40-rGGCG83wkQwdzE", exRoom.getName(), store.getName(), roomOrder);
+//        new WxMsgSender().sendOrderStartMsg("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", exRoom.getName(), store.getName(), roomOrder);
 
         return 0;
     }
@@ -1833,9 +1870,19 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             sendVxMessage(wxuserid, orgRoomOrder);
             TRoom tRoom = roomService.selectTRoomById(orgRoomOrder.getRoomId());
             TStore tStore = storeService.selectTStoreById(tRoom.getStoreId());
-            sendVxOrderMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, orgRoomOrder, "已续费");
-            sendVxOrderMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, orgRoomOrder, "已续费");
-            sendVxOrderMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, orgRoomOrder, "已续费");
+
+            TStoreUser tStoreUser = new TStoreUser();
+            tStoreUser.setStoreId(tStore.getId());
+            List<TStoreUser> tStoreUserList = itStoreUserService.selectTStoreUserList(tStoreUser);
+            for (TStoreUser item : tStoreUserList) {
+                TWxUser tWxUser = itWxUserService.selectTWxUserById(item.getUserId());
+                if (tWxUser != null && tWxUser.getMpOpenId() != null && !tWxUser.getMpOpenId().equals("")) {
+                    sendVxOrderMpMessage(tWxUser.getMpOpenId(), tStore, tRoom, orgRoomOrder, "");
+                }
+            }
+//            sendVxOrderMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, orgRoomOrder, "已续费");
+//            sendVxOrderMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, orgRoomOrder, "已续费");
+//            sendVxOrderMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, orgRoomOrder, "已续费");
         } catch (Exception e) {
             log.error("消息推送失败");
         }
