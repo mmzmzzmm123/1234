@@ -1659,6 +1659,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Autowired
     private ITRoomOrderChargeService orderChargeService;
 
+    @Transactional
     @Override
     public PrepayResp orderCharge(MiniOrderChargeReq req, long wxUserId) {
         // 1 原订单进行中 2 套餐复合型
@@ -1677,7 +1678,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             throw new ServiceException("续费套餐与当前订单套餐房间不一致");
         }
         TRoomOrder roomOrder = roomOrders.get(0);
-        Date endTime = DateUtils.addMinutes(roomOrder.getStartTime(), tRoomChargePrice.getMinutes().intValue());
+        Date endTime = DateUtils.addMinutes(roomOrder.getEndTime(), tRoomChargePrice.getMinutes().intValue());
         BigDecimal totalPrice = tRoomChargePrice.getPrice();
 
         PrepayResp resp = new PrepayResp();
@@ -1836,6 +1837,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         return resp;
     }
 
+    @Transactional
     @Override
     public WxPayOrderQueryV3Result finishCharge(Long orderId, Long wxuserid) {
         final TRoomOrderCharge tRoomOrderCharge = orderChargeService.selectTRoomOrderChargeById(orderId);
@@ -1861,14 +1863,6 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             // 原订单结束时间修改，插入续费订单记录
             Date newEndTime = tRoomOrderCharge.getEndTime();
 
-            // 续费订单支付成功，原订单修改结束时间，添加订单类型备注；
-            TRoomOrder updateOrder = new TRoomOrder();
-            updateOrder.setId(orgRoomOrder.getId());
-            updateOrder.setEndTime(newEndTime);
-            updateOrder.setRemark("续费订单;" + orgRoomOrder.getRemark());
-            updateOrder.setOrderType(orgRoomOrder.getOrderType() + ";续费订单");
-            tRoomOrderMapper.updateTRoomOrder(updateOrder);
-
             TRoomOrderCharge upChargeOrder = new TRoomOrderCharge();
             upChargeOrder.setId(tRoomOrderCharge.getId());
             upChargeOrder.setStatus(OfficeEnum.ChargeOrderStatus.PAYED.getCode());
@@ -1876,7 +1870,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 final WxPayOrderQueryV3Result.Amount v3ResultAmount = v3Result.getAmount();
                 final Integer payerTotal = v3ResultAmount.getPayerTotal();
                 if (payerTotal != 0) {
-                    if (!v3ResultAmount.getTotal().equals(orgRoomOrder.getTotalAmount().multiply(new BigDecimal(100)).intValue())) {
+                    if (!v3ResultAmount.getTotal().equals(tRoomOrderCharge.getTotalAmount().multiply(new BigDecimal(100)).intValue())) {
                         throw new ServiceException("订单金额不一致");
                     }
                     BigDecimal payAmt = new BigDecimal(v3ResultAmount.getPayerTotal() / 100);
@@ -1887,6 +1881,13 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             }
             orderChargeService.updateTRoomOrderCharge(upChargeOrder);
 
+            // 续费订单支付成功，原订单修改结束时间，添加订单类型备注；
+            TRoomOrder updateOrder = new TRoomOrder();
+            updateOrder.setId(orgRoomOrder.getId());
+            updateOrder.setEndTime(newEndTime);
+            updateOrder.setRemark("续费" + tRoomOrderCharge.getChargeMinute() + "分钟订单;" + orgRoomOrder.getRemark());
+            updateOrder.setOrderType(orgRoomOrder.getOrderType() + ";续费" + tRoomOrderCharge.getChargeMinute() + "分钟订单");
+            tRoomOrderMapper.updateTRoomOrder(updateOrder);
 
         } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.REFUND)) {
             throw new ServiceException("订单转入退款");
@@ -1955,7 +1956,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TWxUser wxUser = wxUserService.selectTWxUserById(chargeOrder.getWxUserId());
         // 验证金额和 openid
-        if (!openId.equalsIgnoreCase(wxUser.getOpenId()) || chargeOrder.getPayAmount().multiply(new BigDecimal(100)).compareTo(new BigDecimal(amt.getTotal())) != 0) {
+        if (!openId.equalsIgnoreCase(wxUser.getOpenId()) || chargeOrder.getTotalAmount().multiply(new BigDecimal(100)).compareTo(new BigDecimal(amt.getTotal())) != 0) {
             throw new ServiceException("FAIL:金额或用户不匹配");
         }
 
@@ -1966,7 +1967,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         TRoomOrder updateOrder = new TRoomOrder();
         updateOrder.setId(chargeOrder.getOrgOrderId());
         updateOrder.setEndTime(newEndTime);
-        updateOrder.setOrderType(oldRoomOrder.getOrderType() + ";续费订单");
+        updateOrder.setOrderType(oldRoomOrder.getOrderType() + ";续费" + chargeOrder.getChargeMinute() + "分钟订单");
         tRoomOrderMapper.updateTRoomOrder(updateOrder);
 
         TRoomOrderCharge upChargeOrder = new TRoomOrderCharge();

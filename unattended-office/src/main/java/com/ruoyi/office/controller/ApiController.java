@@ -1137,12 +1137,10 @@ public class ApiController extends BaseController {
         try {
             logger.info("购买续费套餐:" + order.toString());
             final PrepayResp prepay = roomOrderService.orderCharge(order, wxUserId);
-            logger.info("/order: return:" + prepay.getOrderId() + prepay.getJsapiResult().toString());
-//            return AjaxResult.success(prepay);
+            return AjaxResult.success(prepay);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
-        return AjaxResult.success();
     }
 
     /**
