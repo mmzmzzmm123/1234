@@ -107,7 +107,7 @@ public interface ITRoomOrderService {
 
     PrepayResp orderCharge(MiniOrderChargeReq order, long wxUserId);
 
-    public WxPayOrderQueryV3Result finishCharge(PrepayResp vo, Long wxuserid);
+    public WxPayOrderQueryV3Result finishCharge(Long orderId, Long wxuserid);
 
     public void wxChargeNotify(String orderNo, String openId, WxPayOrderNotifyV3Result.Amount amt, String wxCallback);
 }

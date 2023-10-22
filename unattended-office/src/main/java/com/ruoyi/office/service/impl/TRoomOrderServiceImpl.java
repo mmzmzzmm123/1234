@@ -1754,11 +1754,14 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     }
 
     @Override
-    public WxPayOrderQueryV3Result finishCharge(PrepayResp vo, Long wxuserid) {
-        final TRoomOrderCharge tRoomOrderCharge = orderChargeService.selectTRoomOrderChargeById(vo.getOrderId());
+    public WxPayOrderQueryV3Result finishCharge(Long orderId, Long wxuserid) {
+        final TRoomOrderCharge tRoomOrderCharge = orderChargeService.selectTRoomOrderChargeById(orderId);
         if (tRoomOrderCharge.getStatus().equalsIgnoreCase(OfficeEnum.ChargeOrderStatus.PAYED.getCode())) {
             return null;
         }
+        /*if (tRoomOrderCharge.getWxUserId().equals(wxuserid)) {
+            throw new ServiceException("非本人订单");
+        }*/
         TRoomOrder orgRoomOrder = tRoomOrderMapper.selectTRoomOrderById(tRoomOrderCharge.getOrgOrderId());
         //查询支付状态；
         WxPayOrderQueryV3Result v3Result = null;

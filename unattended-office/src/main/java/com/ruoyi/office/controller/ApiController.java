@@ -1067,7 +1067,7 @@ public class ApiController extends BaseController {
 
 
     /**
-     * 购买房间套餐预定 t_room_package
+     * 小程序-购买续费套餐
      *
      * @param order
      * @return
@@ -1087,6 +1087,29 @@ public class ApiController extends BaseController {
             return AjaxResult.error(e.getMessage());
         }
         return AjaxResult.success();
+    }
+
+    /**
+     * 小程序-购买续费套餐 查询支付结果
+     *
+     * @param order
+     * @return
+     */
+    @ApiOperation("小程序-购买续费套餐 查询支付结果")
+    @Log(title = "购买续费套餐 查询支付结果", businessType = BusinessType.OTHER)
+    @GetMapping("/order/charge/{orderId}")
+    public AjaxResult orderChargeQry(@PathVariable("orderId") Long orderId) {
+        try {
+            logger.info("购买续费套餐 查询:" + orderId);
+            WxPayOrderQueryV3Result v3Result = roomOrderService.finishCharge(orderId, SecurityUtils.getLoginUser().getWxUser().getId());
+            if (v3Result == null)
+                logger.info("支付成功,微信已经回调");
+            else
+                logger.info("购买续费套餐 查询返回" + v3Result.toString());
+            return AjaxResult.success();
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
     }
 
 }
