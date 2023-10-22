@@ -3,7 +3,7 @@ package com.ruoyi.office.domain.vo;
 import lombok.Data;
 
 @Data
-public class OrderChargeReq {
+public class MerchantOrderChargeReq {
     private Long id;
     private Integer minutes;
 }

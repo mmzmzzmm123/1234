@@ -210,7 +210,7 @@ public class OfficeEnum {
     }
 
     public enum WxTradeType {
-        PACK("PACK", "套餐订单"), ROOM_ORDER("ROOM_ORDER", "房间订单"), ROOM_PACK_ORDER("ROOM_ORDER", "房间订单");
+        PACK("PACK", "套餐订单"), ROOM_ORDER("ROOM_ORDER", "房间订单"), ROOM_ORDER_CHARGE("ROOM_ORDER_CHARGE", "房间订单");
 
         private final String code;
         private final String info;
@@ -317,6 +317,35 @@ public class OfficeEnum {
 
         public static CleanRecordStatus GetValueByCode(Integer code) {
             for (CleanRecordStatus e : CleanRecordStatus.values()) {
+                if (e.getCode().equals(code)) {
+                    return e;
+                }
+            }
+            throw new RuntimeException("枚举值错误");
+        }
+    }
+
+    public enum ChargeOrderStatus { // 待支付	1 已预约	2 使用中	3 超时未使用	4 已完成	5 取消	9
+        TO_PAY("TO_PAY", "待支付"), PAYED("PAYED", "已预约"), CANCEL("CANCEL", "取消");
+
+        private final String code;
+        private final String info;
+
+        ChargeOrderStatus(String code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public static ChargeOrderStatus GetValueByCode(String code) {
+            for (ChargeOrderStatus e : ChargeOrderStatus.values()) {
                 if (e.getCode().equals(code)) {
                     return e;
                 }

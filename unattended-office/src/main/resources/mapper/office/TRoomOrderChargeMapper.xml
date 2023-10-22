@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.office.mapper.TRoomOrderChargeMapper">
+    
+    <resultMap type="TRoomOrderCharge" id="TRoomOrderChargeResult">
+        <result property="id"    column="id"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="orgOrderId"    column="org_order_id"    />
+        <result property="chargePackId"    column="charge_pack_id"    />
+        <result property="roomId"    column="room_id"    />
+        <result property="wxUserId"    column="wx_user_id"    />
+        <result property="chargeMinute"    column="charge_minute"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="payType"    column="pay_type"    />
+        <result property="totalAmount"    column="total_amount"    />
+        <result property="payAmount"    column="pay_amount"    />
+        <result property="welfareAmount"    column="welfare_amount"    />
+        <result property="couponAmount"    column="coupon_amount"    />
+        <result property="couponId"    column="coupon_id"    />
+        <result property="prepayId"    column="prepay_id"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTRoomOrderChargeVo">
+        select id, order_no, org_order_id, charge_pack_id, room_id, wx_user_id, charge_minute, end_time, pay_type, total_amount, pay_amount, welfare_amount, coupon_amount, coupon_id, prepay_id, status, remark, create_by, create_time, update_by, update_time from t_room_order_charge
+    </sql>
+
+    <select id="selectTRoomOrderChargeList" parameterType="TRoomOrderCharge" resultMap="TRoomOrderChargeResult">
+        <include refid="selectTRoomOrderChargeVo"/>
+        <where>  
+            <if test="orderNo != null "> and order_no = #{orderNo}</if>
+            <if test="orgOrderId != null "> and org_order_id = #{orgOrderId}</if>
+            <if test="chargePackId != null "> and charge_pack_id = #{chargePackId}</if>
+            <if test="roomId != null "> and room_id = #{roomId}</if>
+            <if test="wxUserId != null "> and wx_user_id = #{wxUserId}</if>
+            <if test="chargeMinute != null "> and charge_minute = #{chargeMinute}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="payType != null "> and pay_type = #{payType}</if>
+            <if test="totalAmount != null "> and total_amount = #{totalAmount}</if>
+            <if test="payAmount != null "> and pay_amount = #{payAmount}</if>
+            <if test="welfareAmount != null "> and welfare_amount = #{welfareAmount}</if>
+            <if test="couponAmount != null "> and coupon_amount = #{couponAmount}</if>
+            <if test="couponId != null "> and coupon_id = #{couponId}</if>
+            <if test="prepayId != null  and prepayId != ''"> and prepay_id = #{prepayId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTRoomOrderChargeById" parameterType="Long" resultMap="TRoomOrderChargeResult">
+        <include refid="selectTRoomOrderChargeVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="getHourMaxOrder" parameterType="String" resultType="java.lang.Long">
+        select max(order_no)
+        from t_room_order_charge
+        where order_no like concat(#{id}, '%')
+    </select>
+        
+    <insert id="insertTRoomOrderCharge" parameterType="TRoomOrderCharge" useGeneratedKeys="true" keyProperty="id">
+        insert into t_room_order_charge
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">order_no,</if>
+            <if test="orgOrderId != null">org_order_id,</if>
+            <if test="chargePackId != null">charge_pack_id,</if>
+            <if test="roomId != null">room_id,</if>
+            <if test="wxUserId != null">wx_user_id,</if>
+            <if test="chargeMinute != null">charge_minute,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="payType != null">pay_type,</if>
+            <if test="totalAmount != null">total_amount,</if>
+            <if test="payAmount != null">pay_amount,</if>
+            <if test="welfareAmount != null">welfare_amount,</if>
+            <if test="couponAmount != null">coupon_amount,</if>
+            <if test="couponId != null">coupon_id,</if>
+            <if test="prepayId != null">prepay_id,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="orgOrderId != null">#{orgOrderId},</if>
+            <if test="chargePackId != null">#{chargePackId},</if>
+            <if test="roomId != null">#{roomId},</if>
+            <if test="wxUserId != null">#{wxUserId},</if>
+            <if test="chargeMinute != null">#{chargeMinute},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="payType != null">#{payType},</if>
+            <if test="totalAmount != null">#{totalAmount},</if>
+            <if test="payAmount != null">#{payAmount},</if>
+            <if test="welfareAmount != null">#{welfareAmount},</if>
+            <if test="couponAmount != null">#{couponAmount},</if>
+            <if test="couponId != null">#{couponId},</if>
+            <if test="prepayId != null">#{prepayId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTRoomOrderCharge" parameterType="TRoomOrderCharge">
+        update t_room_order_charge
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="orgOrderId != null">org_order_id = #{orgOrderId},</if>
+            <if test="chargePackId != null">charge_pack_id = #{chargePackId},</if>
+            <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="wxUserId != null">wx_user_id = #{wxUserId},</if>
+            <if test="chargeMinute != null">charge_minute = #{chargeMinute},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="payType != null">pay_type = #{payType},</if>
+            <if test="totalAmount != null">total_amount = #{totalAmount},</if>
+            <if test="payAmount != null">pay_amount = #{payAmount},</if>
+            <if test="welfareAmount != null">welfare_amount = #{welfareAmount},</if>
+            <if test="couponAmount != null">coupon_amount = #{couponAmount},</if>
+            <if test="couponId != null">coupon_id = #{couponId},</if>
+            <if test="prepayId != null">prepay_id = #{prepayId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTRoomOrderChargeById" parameterType="Long">
+        delete from t_room_order_charge where id = #{id}
+    </delete>
+
+    <delete id="deleteTRoomOrderChargeByIds" parameterType="String">
+        delete from t_room_order_charge where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

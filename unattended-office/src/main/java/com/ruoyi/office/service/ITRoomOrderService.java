@@ -1,7 +1,6 @@
 package com.ruoyi.office.service;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
@@ -102,7 +101,13 @@ public interface ITRoomOrderService {
 
     int order4GuestOpenRoom(TRoomOrder tRoomOrder);
 
-    void chargrge(OrderChargeReq orderChargeReq);
+    void merchantCharge4Guest(MerchantOrderChargeReq orderChargeReq);
 
-    void changeRoom(OrderChangeRoomReq req);
+    void merchantChangeRoom4Guest(OrderChangeRoomReq req);
+
+    PrepayResp orderCharge(MiniOrderChargeReq order, long wxUserId);
+
+    public WxPayOrderQueryV3Result finishCharge(PrepayResp vo, Long wxuserid);
+
+    public void wxChargeNotify(String orderNo, String openId, WxPayOrderNotifyV3Result.Amount amt, String wxCallback);
 }

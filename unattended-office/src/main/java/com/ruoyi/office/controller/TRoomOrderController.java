@@ -1,6 +1,5 @@
 package com.ruoyi.office.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
@@ -226,9 +225,9 @@ public class TRoomOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('office:roomorder:add')")
     @Log(title = "商户待客续单", businessType = BusinessType.UPDATE)
     @PostMapping("/charge")
-    public AjaxResult charge(@RequestBody OrderChargeReq orderChargeReq) {
+    public AjaxResult charge(@RequestBody MerchantOrderChargeReq orderChargeReq) {
         try {
-            tRoomOrderService.chargrge(orderChargeReq);
+            tRoomOrderService.merchantCharge4Guest(orderChargeReq);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }
@@ -240,7 +239,7 @@ public class TRoomOrderController extends BaseController {
     @PostMapping("/changeRoom")
     public AjaxResult changeRoom(@RequestBody OrderChangeRoomReq req) {
         try {
-            tRoomOrderService.changeRoom(req);
+            tRoomOrderService.merchantChangeRoom4Guest(req);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());
         }

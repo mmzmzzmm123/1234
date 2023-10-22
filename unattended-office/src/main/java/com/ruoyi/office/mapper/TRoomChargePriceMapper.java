@@ -60,4 +60,6 @@ public interface TRoomChargePriceMapper extends BaseMapper<TRoomChargePrice> {
      * @return 结果
      */
     public int deleteTRoomChargePriceByIds(Long[] ids);
+
+
 }

@@ -119,8 +119,10 @@ public class ApiController extends BaseController {
                 if (result.getTradeState().equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.SUCCESS)) {
                     if (result.getAttach().equalsIgnoreCase(OfficeEnum.WxTradeType.ROOM_ORDER.getCode()))
                         roomOrderService.wxnotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount(), result.toString());
-                    if (result.getAttach().equalsIgnoreCase(OfficeEnum.WxTradeType.PACK.getCode()))
+                    else if (result.getAttach().equalsIgnoreCase(OfficeEnum.WxTradeType.PACK.getCode()))
                         userPackageService.wxNotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount(), result.toString());
+                    else if (result.getAttach().equalsIgnoreCase(OfficeEnum.WxTradeType.ROOM_ORDER_CHARGE.getCode()))
+                        roomOrderService.wxChargeNotify(result.getOutTradeNo(), result.getPayer().getOpenid(), result.getAmount(), result.toString());
                 }
 
                 //通知应答：接收成功：HTTP应答状态码需返回200或204，无需返回应答报文。
@@ -1057,13 +1059,11 @@ public class ApiController extends BaseController {
      */
 //    @PreAuthorize("@ss.hasPermi('office:roomchargeprice:list')")
     @GetMapping("/charge/list")
-    public TableDataInfo list(TRoomChargePrice tRoomChargePrice)
-    {
+    public TableDataInfo list(TRoomChargePrice tRoomChargePrice) {
         startPage();
         List<TRoomChargePrice> list = tRoomChargePriceService.selectTRoomChargePriceList(tRoomChargePrice);
         return getDataTable(list);
     }
-
 
 
     /**
@@ -1075,14 +1075,13 @@ public class ApiController extends BaseController {
     @ApiOperation("小程序-购买续费套餐")
     @Log(title = "购买续费套餐", businessType = BusinessType.INSERT)
     @PostMapping("/order/charge")
-    public AjaxResult orderCharge(@RequestBody PackPrepayReq order) {
+    public AjaxResult orderCharge(@RequestBody MiniOrderChargeReq order) {
         long wxUserId = SecurityUtils.getLoginUser().getWxUser().getId();
 //        long wxUserId = 9l;
-        order.setUserId(wxUserId);
         try {
-//            logger.info("/order:" + order.toString());
-//            final PrepayResp prepay = roomOrderService.orderCharge(order, wxUserId);
-//            logger.info("/order: return:" + prepay.getOrderId() + prepay.getJsapiResult().toString());
+            logger.info("购买续费套餐:" + order.toString());
+            final PrepayResp prepay = roomOrderService.orderCharge(order, wxUserId);
+            logger.info("/order: return:" + prepay.getOrderId() + prepay.getJsapiResult().toString());
 //            return AjaxResult.success(prepay);
         } catch (Exception e) {
             return AjaxResult.error(e.getMessage());

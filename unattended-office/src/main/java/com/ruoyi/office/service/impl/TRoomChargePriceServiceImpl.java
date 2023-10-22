@@ -94,4 +94,6 @@ public class TRoomChargePriceServiceImpl extends ServiceImpl<TRoomChargePriceMap
     {
         return tRoomChargePriceMapper.deleteTRoomChargePriceById(id);
     }
+
+
 }

@@ -58,4 +58,5 @@ public interface ITRoomChargePriceService
      * @return 结果
      */
     public int deleteTRoomChargePriceById(Long id);
+
 }

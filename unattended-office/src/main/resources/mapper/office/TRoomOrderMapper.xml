@@ -87,7 +87,7 @@
         <include refid="selectTRoomOrderVo"/>
         where status != 9
         and room_id =#{roomId}
-        and ( (start_time &lt;= #{startTime} and end_time &gt;= #{startTime})
+        and ( (start_time &lt;= #{startTime} and end_time &gt; #{startTime})
         or (start_time &lt; #{endTime} and end_time &gt; #{endTime})
         or (start_time &gt;= #{startTime} and end_time &lt;= #{endTime}))
     </select>
