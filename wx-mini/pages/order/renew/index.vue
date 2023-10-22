@@ -274,7 +274,7 @@
 			},
 			onPrepareOrder(e) {
 				e.order = {
-					charePackId: this.currentCharge.id,
+					chargePackId: this.currentCharge.id,
 					payType: e.payType,
 					roomId: this.roomInfo.id
 				}
