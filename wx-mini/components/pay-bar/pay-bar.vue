@@ -81,7 +81,7 @@
 				}else if(order.packId){
 					doPay = this.$api.addOrderByPack
 					doPaySuccess = this.$api.wxPaySuccess
-				}else if(order.charePackId){
+				}else if(order.chargePackId){
 					doPay = this.$api.buyCharge
 					doPaySuccess = this.$api.buyChargeSuccess
 				}else{
