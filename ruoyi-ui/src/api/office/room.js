@@ -24,6 +24,13 @@ export function getQrcode(roomid){
   })
 }
 
+export function getXudancode(roomid){
+  return request({
+    url: '/office/api/createXudanCode/' + roomid,
+    method: 'get'
+  })
+}
+
 // 新增店铺房间
 export function addRoom(data) {
   return request({

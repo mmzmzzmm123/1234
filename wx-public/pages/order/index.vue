@@ -45,10 +45,11 @@
 				</view>
 				<view class="card__op-list">
 					<!-- <u-button v-if="room.payType==9" @click="shareOrder(room)" plain>分享</u-button> -->
-					<!-- <u-button plain>立即开始</u-button>  订单提前开始 订单开始结束时间前移多少分钟
-					<u-button plain>换包厢</u-button>  
-					 截至时间后移多少分钟，费用线下收取-->
-					<u-button type="primary">续单</u-button>
+					<u-button type="primary" plain v-if="room.status==2" @click="startOrder(room)">立即开始</u-button>
+					<!-- 订单提前开始 订单开始结束时间前移多少分钟 -->
+					<u-button type="primary" plain v-if="room.status<3" @click="changeRoom(room)">换包厢</u-button>
+					<!-- 截至时间后移多少分钟，费用线下收取 -->
+					<u-button type="primary" @click="renewOrder(room)">续单</u-button>
 				</view>
 			</view>
 		</view>
@@ -173,8 +174,13 @@
 				})
 			},
 			changeRoom(order) {
-				this.$api.changeRoom(order).then(res => {
-					console.log(order);
+				var params = {
+					orderId: order.id,
+					roomId: 34 //order.roomId 需要选择房间
+				}
+				this.$api.changeRoom(params).then(res => {
+					console.log(params);
+					this.refresh()
 				})
 			},
 			chargeOrder(order) {
@@ -185,8 +191,22 @@
 						refresh: this.refresh
 					}
 				})
-				
-			}
+			},
+			startOrder(room) {
+				this.$api.startOrder(order).then(res => {
+					console.log(order);
+				})
+			},
+			renewOrder(order) {
+				var param = {
+					id: order.id,
+					minutes: 60 //选择续费时间控件
+				}
+				this.$api.renewOrder(param).then(res => {
+					console.log(order);
+					this.refresh()
+				})
+			},
 		}
 	}
 </script>
