@@ -35,7 +35,9 @@
 				</view>
 				<view class="card__op-list">
 					<u-button plain @click="onMoreClick(room)">更多</u-button>
-					<u-button plain>解绑设备</u-button>
+					<u-button plain @click="onRoomQrCodeClick(room)">房间二维码</u-button>
+					<u-button plain @click="onRoomXudanCodeClick(room)">续单二维码</u-button>
+					<!-- <u-button plain>解绑设备</u-button> -->
 					<!-- <u-button plain>商家相册</u-button> -->
 					<u-button type="primary" @click="onEditRoomClick(room.id)">编辑</u-button>
 				</view>
@@ -199,7 +201,17 @@
 						refresh: this.refresh
 					}
 				})
-			}
+			},
+			onRoomQrCodeClick(room){
+				this.$api.createQrCode(room.id).then(()=>{
+					
+				})
+			},
+			onRoomXudanCodeClick(room){
+				this.$api.createXudanCode(room.id).then(()=>{
+					
+				})
+			},
 		}
 	}
 </script>

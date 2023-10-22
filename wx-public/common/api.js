@@ -280,10 +280,18 @@ const api = {
 	changeRoom(order){
 		return post('office/roomorder/changeRoom', order)
 	},
+	renewOrder(order){
+		return post('office/roomorder/charge', order)
+	},
 	chargeOrder(order){
 		return post('office/roomorder/charge', order)
 	},
-	
+	createQrCode(id) {
+		return get('office/api/createQrCode/' + id)
+	},
+	createXudanCode(id) {
+		return get('office/api/createXudanCode/' + id)
+	}
 }
 const install = (Vue, options) => {
 	Vue.prototype.$api = api

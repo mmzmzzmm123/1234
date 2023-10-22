@@ -13,8 +13,7 @@
       </el-form-item>
 
       <el-form-item label="所属商圈" prop="busiDistrict">
-        <el-input v-model="queryParams.busiDistrict" placeholder="请输入所属商圈" clearable
-          @keyup.enter.native="handleQuery" />
+        <el-input v-model="queryParams.busiDistrict" placeholder="请输入所属商圈" clearable @keyup.enter.native="handleQuery" />
       </el-form-item>
       <el-form-item label="地铁线路" prop="subway">
         <el-input v-model="queryParams.subway" placeholder="请输入地铁线路" clearable @keyup.enter.native="handleQuery" />
@@ -88,7 +87,7 @@
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="addStoreRoom(scope.row)"
             v-hasPermi="['office:room:add']">添加房间</el-button>
-          <el-button size="mini" type="text" icon="el-icon-edit" @click="bindStoreEquipment(scope.row,'store')"
+          <el-button size="mini" type="text" icon="el-icon-edit" @click="bindStoreEquipment(scope.row, 'store')"
             v-hasPermi="['office:store:edit']">设备绑定</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['office:store:edit']">修改</el-button>
@@ -98,7 +97,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
+    <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize"
       @pagination="getList" />
 
     <!-- 添加或修改商家用户门店对话框 -->
@@ -134,21 +133,21 @@
           <el-col :span=12>
             <el-form-item label="营业开始时间" prop="startTime">
               <el-time-select placeholder="营业开始时间" v-model="form.startTime" :picker-options="{
-                  start: '00:00',
-                   step: '01:00',
-                  end: '22:00'
-                }">
+                start: '00:00',
+                step: '01:00',
+                end: '22:00'
+              }">
               </el-time-select>
             </el-form-item>
           </el-col>
           <el-col :span=12>
             <el-form-item label="营业结束时间" prop="stopTime">
               <el-time-select placeholder="营业结束时间" v-model="form.stopTime" :picker-options="{
-                  start: '00:00',
-                   step: '01:00',
-                  end: '23:00',
-                  minTime: form.startTime
-                }">
+                start: '00:00',
+                step: '01:00',
+                end: '23:00',
+                minTime: form.startTime
+              }">
               </el-time-select>
             </el-form-item>
           </el-col>
@@ -206,7 +205,7 @@
             :on-success="handleUploadSuccess" :before-upload="handleBeforeUpload" :limit="limit"
             :on-error="handleUploadError" :on-exceed="handleExceed" ref="imageUpload" :on-remove="handleDeletePic"
             :show-file-list="true" :headers="headers" :file-list="fileList" :on-preview="handlePictureCardPreview"
-            :class="{hide: this.fileList.length >= this.limit}">
+            :class="{ hide: this.fileList.length >= this.limit }">
             <i class="el-icon-plus"></i>
           </el-upload>
 
@@ -232,7 +231,7 @@
     <el-divider></el-divider>
     <div style="float: left; width: 60%;border-right: 0.2rem solid #aaaaaa; padding: 1rem;">
       <!-- 房间列表 -->
-      <span> 房间列表({{selectedStore}}) </span>
+      <span> 房间列表({{ selectedStore }}) </span>
       <el-table v-loading="roomLoading" :data="roomList" @row-click="roomChange">
         <el-table-column type="selection" width="30" align="center" />
         <el-table-column label="id" align="center" width="40" prop="id" />
@@ -257,17 +256,18 @@
               v-hasPermi="['office:room:edit']">添加房间套餐</el-button>
             <el-button size="mini" type="text" icon="el-icon-edit" @click="setRoomPrice(scope.row)"
               v-hasPermi="['office:room:edit']">添加收费规则</el-button>
-            <el-button size="mini" type="text" icon="el-icon-edit" @click="bindEquipment(scope.row,'room')"
+            <el-button size="mini" type="text" icon="el-icon-edit" @click="bindEquipment(scope.row, 'room')"
               v-hasPermi="['office:room:edit']">设备绑定</el-button>
             <el-button size="mini" type="text" icon="el-icon-edit" @click="handleRoomUpdate(scope.row)"
               v-hasPermi="['office:room:edit']">修改</el-button>
+            <el-button size="mini" type="text" icon="el-icon-edit" @click="viewXudancode(scope.row)">续单二维码</el-button>
             <el-button size="mini" type="text" icon="el-icon-delete" @click="handleRoomDelete(scope.row)"
               v-hasPermi="['office:room:remove']">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
 
-      <pagination v-show="roomTotal>0" :total="roomTotal" :page.sync="roomQueryParam.pageNum"
+      <pagination v-show="roomTotal > 0" :total="roomTotal" :page.sync="roomQueryParam.pageNum"
         :limit.sync="roomQueryParam.pageSize" @pagination="listStoreRoom" />
 
       <!-- 房间新增修改 -->
@@ -278,8 +278,7 @@
           </el-form-item>
           <el-form-item label="房间标签" prop="remark">
             <el-select v-model="roomForm.remark" multiple>
-              <el-option v-for="dict in dict.type.room_mark" :key="dict.value" :label="dict.label"
-                :value="dict.value" />
+              <el-option v-for="dict in dict.type.room_mark" :key="dict.value" :label="dict.label" :value="dict.value" />
             </el-select>
           </el-form-item>
           <el-form-item label="wifi" prop="wifi">
@@ -299,7 +298,7 @@
               :on-success="handleUploadSuccess" :before-upload="handleBeforeUpload" :limit="limit"
               :on-error="handleUploadError" :on-exceed="handleExceed" ref="imageUpload" :on-remove="handleDeletePic"
               :show-file-list="true" :headers="headers" :file-list="fileList" :on-preview="handlePictureCardPreview"
-              :class="{hide: this.fileList.length >= this.limit}">
+              :class="{ hide: this.fileList.length >= this.limit }">
               <i class="el-icon-plus"></i>
             </el-upload>
 
@@ -323,7 +322,7 @@
       </el-dialog>
     </div>
 
-    <span>&nbsp; 时段收费规则({{selectedRoom}}) </span>
+    <span>&nbsp; 时段收费规则({{ selectedRoom }}) </span>
 
     <div style="float: left;width: 40%;border: 0.2rem solid solid none solid #aaaaaa;padding: 1rem;">
       <el-table v-loading="priceLoading" :data="priceList">
@@ -341,7 +340,7 @@
         </el-table-column>
       </el-table>
 
-      <pagination v-show="priceTotal>0" :total="priceTotal" :page.sync="priceQueryParams.pageNum"
+      <pagination v-show="priceTotal > 0" :total="priceTotal" :page.sync="priceQueryParams.pageNum"
         :limit.sync="priceQueryParams.pageSize" @pagination="getPrice" />
     </div>
     <!-- 添加或修改房间价格对话框 -->
@@ -386,7 +385,7 @@
       <el-form ref="bindForm" :model="bindForm" label-width="150px">
         <el-form-item label="选择绑定设备" prop="tableCode">
           <el-select v-model="bindForm.tableCode" multiple filterable @change="$forceUpdate()">
-            <el-option v-for="option in equipOptions" :key="option.id" :label="option.name" :value="option.id+''" />
+            <el-option v-for="option in equipOptions" :key="option.id" :label="option.name" :value="option.id + ''" />
           </el-select>
         </el-form-item>
       </el-form>
@@ -425,7 +424,7 @@
         </el-table-column>
       </el-table>
 
-      <pagination v-show="packageTotal>0" :total="packageTotal" :page.sync="priceQueryParams.pageNum"
+      <pagination v-show="packageTotal > 0" :total="packageTotal" :page.sync="priceQueryParams.pageNum"
         :limit.sync="priceQueryParams.pageSize" @pagination="getPrice" />
     </div>
 
@@ -452,875 +451,884 @@
 </template>
 
 <script>
-  import {
-    listStore,
-    getStore,
-    delStore,
-    addStore,
-    updateStore
-  } from "@/api/office/store";
+import {
+  listStore,
+  getStore,
+  delStore,
+  addStore,
+  updateStore
+} from "@/api/office/store";
 
-  import {
-    getToken
-  } from "@/utils/auth";
+import {
+  getToken
+} from "@/utils/auth";
 
-  import {
-    listRoom,
-    getRoom,
-    delRoom,
-    addRoom,
-    updateRoom,
-    getQrcode
-  } from "@/api/office/room";
+import {
+  listRoom,
+  getRoom,
+  delRoom,
+  addRoom,
+  updateRoom,
+  getQrcode,
+  getXudancode
+} from "@/api/office/room";
 
-  import {
-    listRoomprice,
-    getRoomprice,
-    delRoomprice,
-    addRoomprice,
-    updateRoomprice
-  } from "@/api/office/roomprice";
+import {
+  listRoomprice,
+  getRoomprice,
+  delRoomprice,
+  addRoomprice,
+  updateRoomprice
+} from "@/api/office/roomprice";
 
-  import {
-    listRoompackage,
-    getRoompackage,
-    addRoompackage,
-    updateRoompackage,
-    delRoompackage
-  } from "@/api/office/roompackage";
+import {
+  listRoompackage,
+  getRoompackage,
+  addRoompackage,
+  updateRoompackage,
+  delRoompackage
+} from "@/api/office/roompackage";
 
-  import {
-    listEquipment,
-    listAvailableEquipment
-  } from "@/api/office/equipment";
+import {
+  listEquipment,
+  listAvailableEquipment
+} from "@/api/office/equipment";
 
 
-  export default {
-    name: "Store",
-    dicts: ["room_status", "room_mark"],
-    props: {
-      value: [String, Object, Array],
-      // 图片数量限制
-      limit: {
-        type: Number,
-        default: 5,
+export default {
+  name: "Store",
+  dicts: ["room_status", "room_mark"],
+  props: {
+    value: [String, Object, Array],
+    // 图片数量限制
+    limit: {
+      type: Number,
+      default: 5,
+    },
+    // 大小限制(MB)
+    fileSize: {
+      type: Number,
+      default: 8,
+    },
+    // 文件类型, 例如['png', 'jpg', 'jpeg']
+    fileType: {
+      type: Array,
+      default: () => ["png", "jpg", "jpeg"],
+    },
+    // 是否显示提示
+    isShowTip: {
+      type: Boolean,
+      default: true
+    }
+  },
+  watch: {
+    value: {
+      handler(val) {
+        if (val) {
+          // 首先将值转为数组
+          const list = Array.isArray(val) ? val : this.value.split(',');
+          // 然后将数组转为对象数组
+          this.fileList = list.map(item => {
+            if (typeof item === "string") {
+              if (item.indexOf(this.baseUrl) === -1) {
+                item = {
+                  name: this.baseUrl + item,
+                  url: this.baseUrl + item
+                };
+              } else {
+                item = {
+                  name: item,
+                  url: item
+                };
+              }
+            }
+            return item;
+          });
+        } else {
+          this.fileList = [];
+          return [];
+        }
       },
-      // 大小限制(MB)
-      fileSize: {
-        type: Number,
-        default: 8,
+      deep: true,
+      immediate: true
+    }
+  },
+  computed: {
+    // 是否显示提示
+    showTip() {
+      return this.isShowTip && (this.fileType || this.fileSize);
+    },
+  },
+  data() {
+    return {
+      number: 0,
+      uploadList: [],
+      dialogImageUrl: "",
+      dialogVisible: false,
+      hideUpload: false,
+      baseUrl: process.env.VUE_APP_BASE_API,
+      uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
+      headers: {
+        Authorization: "Bearer " + getToken(),
       },
-      // 文件类型, 例如['png', 'jpg', 'jpeg']
-      fileType: {
-        type: Array,
-        default: () => ["png", "jpg", "jpeg"],
+      fileList: [],
+
+      selectedStore: '',
+      selectedRoom: '',
+      defaultTimeSt: null,
+      // 遮罩层
+      loading: true,
+      roomLoading: false,
+      priceLoading: false,
+      packageLoading: false,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 显示搜索条件
+      showSearch: true,
+      // 总条数
+      total: 0,
+      roomTotal: 0,
+      priceTotal: 0,
+      packageTotal: 0,
+      // 商家用户门店表格数据
+      storeList: [],
+      roomList: [],
+      priceList: [],
+      packageList: [],
+      equipAllOptions: [],
+      equipOptions: [],
+      storeEquipOptions: [],
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
+      roomOpen: false,
+      priceOpen: false,
+      packageOpen: false,
+      bindOpen: false,
+      bindStoreOpen: false,
+      // 查询参数
+      queryParams: {
+        pageNum: 1,
+        pageSize: 10,
+        userId: null,
+        name: null,
+        address: null,
+        phone: null,
+        startTime: null,
+        stopTime: null,
+        preDays: null,
+        wifi: null,
+        equipId: null,
+        busiDistrict: null,
+        subway: null,
+        latitude: null,
+        longitude: null,
+        logo: null,
+        status: null,
       },
-      // 是否显示提示
-      isShowTip: {
-        type: Boolean,
-        default: true
+      roomQueryParam: {
+        pageNum: 1,
+        pageSize: 10,
+      },
+      priceQueryParams: {
+        pageNum: 1,
+        pageSize: 10,
+      },
+      // 表单参数
+      form: {},
+      roomForm: {},
+      priceForm: {},
+      packageForm: {},
+      bindForm: {},
+      bindStoreForm: {},
+      bindType: '',
+      // 表单校验
+      rules: {
+        name: [{
+          required: true,
+          message: "门店名称不能为空",
+          trigger: "blur"
+        }],
+        address: [{
+          required: true,
+          message: "门店地址不能为空",
+          trigger: "blur"
+        }],
+        // startTime: [{
+        //   required: true,
+        //   message: "营业开始时间不能为空",
+        //   trigger: "blur"
+        // }],
+        // stopTime: [{
+        //   required: true,
+        //   message: "营业结束时间不能为空",
+        //   trigger: "blur"
+        // }],
+        preDays: [{
+          required: true,
+          message: "提前预约天数不能为空",
+          trigger: "blur"
+        }],
+        latitude: [{
+          required: true,
+          message: "纬度不能为空",
+          trigger: "blur"
+        }],
+        logo: [{
+          required: true,
+          message: "logo不能为空",
+          trigger: "blur"
+        }],
+      },
+      roomRules: {
+        name: [{
+          required: true,
+          message: "名称不能为空",
+          trigger: "blur"
+        }],
+      },
+      priceRules: {
+        price: [{
+          required: true,
+          message: "单价不能为空",
+          trigger: "blur"
+        }],
+        memberPrice: [{
+          required: true,
+          message: "会员单价不能为空",
+          trigger: "blur"
+        }],
+      },
+      packageRules: {
+        price: [{
+          required: true,
+          message: "价格不能为空",
+          trigger: "blur"
+        }],
+        name: [{
+          required: true,
+          message: "名称不能为空",
+          trigger: "blur"
+        }],
+        minutes: [{
+          required: true,
+          message: "时长不能为空",
+          trigger: "blur"
+        }],
+      },
+      // 上传参数
+      upload: {
+        // 是否禁用上传
+        isUploading: false,
+        // 设置上传的请求头部
+        headers: {
+          Authorization: "Bearer " + getToken()
+        },
+        // 上传的地址
+        url: process.env.VUE_APP_BASE_API + "/common/upload",
+        // 上传的文件列表
+        fileList: []
+      },
+    };
+  },
+  created() {
+    this.getList();
+    this.getEquipOptions();
+  },
+  methods: {
+    /** 查询商家用户门店列表 */
+    getList() {
+      this.loading = true;
+      listStore(this.queryParams).then(response => {
+        this.storeList = response.rows;
+
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    getEquipOptions() {
+      var param = {};
+      param.pageNum = 1;
+      param.pageSize = 1000;
+      // listAvailableEquipment(param).then(response => {
+      listEquipment(param).then(response => {
+        this.equipAllOptions = response.rows;
+      });
+    },
+    // 取消按钮
+    cancel() {
+      this.open = false;
+      this.roomOpen = false;
+      this.priceOpen = false;
+      this.packageOpen = false;
+      this.bindOpen = false;
+      this.bindStoreOpen = false;
+      this.reset();
+    },
+    // 表单重置
+    reset() {
+      this.form = {
+        id: null,
+        userId: null,
+        name: null,
+        address: null,
+        phone: null,
+        startTime: null,
+        stopTime: null,
+        preDays: null,
+        wifi: null,
+        equipId: null,
+        busiDistrict: null,
+        subway: null,
+        latitude: null,
+        longitude: null,
+        logo: null,
+        status: null,
+        remark: null,
+        createBy: null,
+        createTime: null,
+        updateBy: null,
+        updateTime: null
+      };
+      this.resetForm("form");
+    },
+    /** 搜索按钮操作 */
+    handleQuery() {
+      this.queryParams.pageNum = 1;
+      this.getList();
+    },
+    /** 重置按钮操作 */
+    resetQuery() {
+      this.resetForm("queryForm");
+      this.handleQuery();
+    },
+    // 多选框选中数据
+    handleSelectionChange(selection) {
+      this.ids = selection.map(item => item.id)
+      this.single = selection.length !== 1
+      this.multiple = !selection.length
+    },
+    storeChange(row, column, event) {
+      this.roomLoading = true;
+      this.roomQueryParam.storeId = row.id;
+      this.selectedStore = row.name;
+      this.listStoreRoom();
+    },
+    listStoreRoom() {
+      listRoom(this.roomQueryParam).then(response => {
+        this.roomList = response.rows;
+        this.roomTotal = response.total;
+        this.roomLoading = false;
+      });
+    },
+    roomChange(row, column, event) {
+      this.priceLoading = true;
+      this.roomQueryParam.roomId = row.id;
+      this.selectedRoom = row.name;
+      this.getPrice();
+    },
+    /** 查询房间价格列表 */
+    getPrice() {
+      listRoomprice(this.roomQueryParam).then(response => {
+        this.priceList = response.rows;
+        this.priceTotal = response.total;
+        this.priceLoading = false;
+      });
+      listRoompackage(this.roomQueryParam).then(response => {
+        this.packageList = response.rows;
+        this.packageTotal = response.total;
+        this.packageLoading = false;
+      })
+    },
+    /** 新增按钮操作 */
+    handleAdd() {
+      this.reset();
+      this.open = true;
+      this.title = "添加商家门店";
+    },
+    /** 修改按钮操作 */
+    handleUpdate(row) {
+      this.fileList = [];
+      this.reset();
+      const id = row.id || this.ids
+      getStore(id).then(response => {
+        this.form = response.data;
+        if (response.data.logo != null && response.data.logo.length > 0) {
+          var list = response.data.logo.split(',');
+          this.fileList = list.map(item => {
+            if (typeof item === "string") {
+              if (item.indexOf(this.baseUrl) === -1) {
+                item = {
+                  name: this.baseUrl + item,
+                  url: this.baseUrl + item
+                };
+              } else {
+                item = {
+                  name: item,
+                  url: item
+                };
+              }
+            }
+            return item;
+          });
+        }
+
+        this.open = true;
+        this.title = "修改商家门店";
+      });
+    },
+    handleRoomUpdate(row) {
+      this.fileList = [];
+      const id = row.id
+      getRoom(id).then(response => {
+        this.roomForm = response.data;
+
+        if (response.data.remark != null && response.data.remark.length > 0)
+          this.roomForm.remark = response.data.remark.split(',');
+        debugger
+        if (response.data.logo != null && response.data.logo.length > 0) {
+          var list = response.data.logo.split(',');
+          this.fileList = list.map(item => {
+            if (typeof item === "string") {
+              if (item.indexOf(this.baseUrl) === -1) {
+                item = {
+                  name: this.baseUrl + item,
+                  url: this.baseUrl + item
+                };
+              } else {
+                item = {
+                  name: item,
+                  url: item
+                };
+              }
+            }
+            return item;
+          });
+        }
+        this.roomOpen = true;
+        this.title = "修改房间";
+      });
+    },
+    addStoreRoom(row) {
+      this.reset();
+      this.roomForm = {};
+      this.roomForm.storeId = row.id
+      this.roomOpen = true;
+    },
+    setRoomPrice(row) {
+      this.reset();
+      this.priceForm = {};
+      this.priceForm.roomId = row.id
+      this.priceOpen = true;
+    },
+    setRoomPackage(row) {
+      this.reset();
+      this.packageForm = {};
+      this.packageForm.roomId = row.id
+      this.packageOpen = true;
+    },
+    bindEquipment(row, type) {
+      // type = "store/room";
+      this.bindOpen = true;
+      this.bindType = type;
+      this.bindForm.id = row.id;
+      // this.equipAllOptions =[];
+      var param = {};
+      param.ids = row.tableCode;
+      listAvailableEquipment(param).then(response => {
+        this.equipOptions = response.rows;
+        this.bindForm.tableCode = row.tableCode.split(',');
+      });
+
+
+
+    },
+    bindStoreEquipment(row, type) {
+      // type = "store/room";
+      this.bindStoreOpen = true;
+      this.bindType = type;
+      this.bindStoreForm.id = row.id;
+
+      // this.equipAllOptions =[];
+      var param = {};
+      param.ids = row.equipId;
+      listAvailableEquipment(param).then(response => {
+        this.equipOptions = response.rows;
+      });
+
+      this.bindStoreForm.equipId = row.equipId
+
+    },
+    submitBindForm() {
+      var subForm = {};
+
+      if (this.bindType == "store") {
+        subForm.id = this.bindStoreForm.id;
+        subForm.equipId = this.bindStoreForm.equipId;
+        updateStore(subForm).then(response => {
+          this.$modal.msgSuccess("修改成功");
+          this.bindStoreOpen = false;
+          this.getList();
+        });
+      } else if (this.bindType == "room") {
+        subForm.id = this.bindForm.id;
+        subForm.tableCode = this.bindForm.tableCode.join(',');
+        updateRoom(subForm).then(response => {
+          this.$modal.msgSuccess("修改成功");
+          this.bindOpen = false;
+          this.listStoreRoom();
+        });
       }
     },
-    watch: {
-      value: {
-        handler(val) {
-          if (val) {
-            // 首先将值转为数组
-            const list = Array.isArray(val) ? val : this.value.split(',');
-            // 然后将数组转为对象数组
-            this.fileList = list.map(item => {
-              if (typeof item === "string") {
-                if (item.indexOf(this.baseUrl) === -1) {
-                  item = {
-                    name: this.baseUrl + item,
-                    url: this.baseUrl + item
-                  };
-                } else {
-                  item = {
-                    name: item,
-                    url: item
-                  };
-                }
-              }
-              return item;
+    /** 提交按钮 */
+    submitForm() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+            updateStore(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
             });
           } else {
-            this.fileList = [];
-            return [];
+            addStore(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
           }
-        },
-        deep: true,
-        immediate: true
-      }
+        }
+      });
     },
-    computed: {
-      // 是否显示提示
-      showTip() {
-        return this.isShowTip && (this.fileType || this.fileSize);
-      },
-    },
-    data() {
-      return {
-        number: 0,
-        uploadList: [],
-        dialogImageUrl: "",
-        dialogVisible: false,
-        hideUpload: false,
-        baseUrl: process.env.VUE_APP_BASE_API,
-        uploadImgUrl: process.env.VUE_APP_BASE_API + "/common/upload", // 上传的图片服务器地址
-        headers: {
-          Authorization: "Bearer " + getToken(),
-        },
-        fileList: [],
+    /** 提交门店包厢 **/
+    submitRoomForm() {
 
-        selectedStore: '',
-        selectedRoom: '',
-        defaultTimeSt: null,
-        // 遮罩层
-        loading: true,
-        roomLoading: false,
-        priceLoading: false,
-        packageLoading: false,
-        // 选中数组
-        ids: [],
-        // 非单个禁用
-        single: true,
-        // 非多个禁用
-        multiple: true,
-        // 显示搜索条件
-        showSearch: true,
-        // 总条数
-        total: 0,
-        roomTotal: 0,
-        priceTotal: 0,
-        packageTotal: 0,
-        // 商家用户门店表格数据
-        storeList: [],
-        roomList: [],
-        priceList: [],
-        packageList: [],
-        equipAllOptions: [],
-        equipOptions: [],
-        storeEquipOptions: [],
-        // 弹出层标题
-        title: "",
-        // 是否显示弹出层
-        open: false,
-        roomOpen: false,
-        priceOpen: false,
-        packageOpen: false,
-        bindOpen: false,
-        bindStoreOpen: false,
-        // 查询参数
-        queryParams: {
-          pageNum: 1,
-          pageSize: 10,
-          userId: null,
-          name: null,
-          address: null,
-          phone: null,
-          startTime: null,
-          stopTime: null,
-          preDays: null,
-          wifi: null,
-          equipId: null,
-          busiDistrict: null,
-          subway: null,
-          latitude: null,
-          longitude: null,
-          logo: null,
-          status: null,
-        },
-        roomQueryParam: {
-          pageNum: 1,
-          pageSize: 10,
-        },
-        priceQueryParams: {
-          pageNum: 1,
-          pageSize: 10,
-        },
-        // 表单参数
-        form: {},
-        roomForm: {},
-        priceForm: {},
-        packageForm: {},
-        bindForm: {},
-        bindStoreForm: {},
-        bindType: '',
-        // 表单校验
-        rules: {
-          name: [{
-            required: true,
-            message: "门店名称不能为空",
-            trigger: "blur"
-          }],
-          address: [{
-            required: true,
-            message: "门店地址不能为空",
-            trigger: "blur"
-          }],
-          // startTime: [{
-          //   required: true,
-          //   message: "营业开始时间不能为空",
-          //   trigger: "blur"
-          // }],
-          // stopTime: [{
-          //   required: true,
-          //   message: "营业结束时间不能为空",
-          //   trigger: "blur"
-          // }],
-          preDays: [{
-            required: true,
-            message: "提前预约天数不能为空",
-            trigger: "blur"
-          }],
-          latitude: [{
-            required: true,
-            message: "纬度不能为空",
-            trigger: "blur"
-          }],
-          logo: [{
-            required: true,
-            message: "logo不能为空",
-            trigger: "blur"
-          }],
-        },
-        roomRules: {
-          name: [{
-            required: true,
-            message: "名称不能为空",
-            trigger: "blur"
-          }],
-        },
-        priceRules: {
-          price: [{
-            required: true,
-            message: "单价不能为空",
-            trigger: "blur"
-          }],
-          memberPrice: [{
-            required: true,
-            message: "会员单价不能为空",
-            trigger: "blur"
-          }],
-        },
-        packageRules: {
-          price: [{
-            required: true,
-            message: "价格不能为空",
-            trigger: "blur"
-          }],
-          name: [{
-            required: true,
-            message: "名称不能为空",
-            trigger: "blur"
-          }],
-          minutes: [{
-            required: true,
-            message: "时长不能为空",
-            trigger: "blur"
-          }],
-        },
-        // 上传参数
-        upload: {
-          // 是否禁用上传
-          isUploading: false,
-          // 设置上传的请求头部
-          headers: {
-            Authorization: "Bearer " + getToken()
-          },
-          // 上传的地址
-          url: process.env.VUE_APP_BASE_API + "/common/upload",
-          // 上传的文件列表
-          fileList: []
-        },
-      };
+      this.roomForm.remark = this.roomForm.remark.join(",");
+      this.$refs["roomForm"].validate(valid => {
+        if (valid) {
+          if (this.roomForm.id != null) {
+            updateRoom(this.roomForm).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.roomOpen = false;
+              this.listStoreRoom();
+            });
+          } else {
+            addRoom(this.roomForm).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.roomOpen = false;
+              this.listStoreRoom();
+            });
+          }
+        }
+      });
     },
-    created() {
-      this.getList();
-      this.getEquipOptions();
+    /** 提交房间价格**/
+    submitPriceForm() {
+      this.$refs["priceForm"].validate(valid => {
+        if (valid) {
+          if (this.priceForm.id != null) {
+            updateRoomprice(this.priceForm).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.priceOpen = false;
+              this.getPrice();
+            });
+          } else {
+            addRoomprice(this.priceForm).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.priceOpen = false;
+              this.getPrice();
+            });
+          }
+        }
+      });
     },
-    methods: {
-      /** 查询商家用户门店列表 */
-      getList() {
-        this.loading = true;
-        listStore(this.queryParams).then(response => {
-          this.storeList = response.rows;
-
-          this.total = response.total;
-          this.loading = false;
-        });
-      },
-      getEquipOptions() {
-        var param = {};
-        param.pageNum = 1;
-        param.pageSize = 1000;
-        // listAvailableEquipment(param).then(response => {
-        listEquipment(param).then(response => {
-          this.equipAllOptions = response.rows;
-        });
-      },
-      // 取消按钮
-      cancel() {
-        this.open = false;
-        this.roomOpen = false;
-        this.priceOpen = false;
-        this.packageOpen = false;
-        this.bindOpen = false;
-        this.bindStoreOpen = false;
-        this.reset();
-      },
-      // 表单重置
-      reset() {
-        this.form = {
-          id: null,
-          userId: null,
-          name: null,
-          address: null,
-          phone: null,
-          startTime: null,
-          stopTime: null,
-          preDays: null,
-          wifi: null,
-          equipId: null,
-          busiDistrict: null,
-          subway: null,
-          latitude: null,
-          longitude: null,
-          logo: null,
-          status: null,
-          remark: null,
-          createBy: null,
-          createTime: null,
-          updateBy: null,
-          updateTime: null
-        };
-        this.resetForm("form");
-      },
-      /** 搜索按钮操作 */
-      handleQuery() {
-        this.queryParams.pageNum = 1;
+    submitPackageForm() {
+      this.$refs["packageForm"].validate(valid => {
+        if (valid) {
+          if (this.packageForm.id != null) {
+            updateRoompackage(this.packageForm).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.packageOpen = false;
+              this.getPrice();
+            });
+          } else {
+            addRoompackage(this.packageForm).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.packageOpen = false;
+              this.getPrice();
+            });
+          }
+        }
+      });
+    },
+    /** 删除按钮操作 */
+    handleDelete(row) {
+      const ids = row.id || this.ids;
+      this.$modal.confirm('是否确认删除商家用户门店编号为"' + ids + '"的数据项？').then(function () {
+        return delStore(ids);
+      }).then(() => {
         this.getList();
-      },
-      /** 重置按钮操作 */
-      resetQuery() {
-        this.resetForm("queryForm");
-        this.handleQuery();
-      },
-      // 多选框选中数据
-      handleSelectionChange(selection) {
-        this.ids = selection.map(item => item.id)
-        this.single = selection.length !== 1
-        this.multiple = !selection.length
-      },
-      storeChange(row, column, event) {
-        this.roomLoading = true;
-        this.roomQueryParam.storeId = row.id;
-        this.selectedStore = row.name;
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => { });
+    },
+    handleRoomDelete(row) {
+      const ids = row.id;
+      this.$modal.confirm('是否确认删除该房间？').then(function () {
+        return delRoom(ids);
+      }).then(() => {
         this.listStoreRoom();
-      },
-      listStoreRoom() {
-        listRoom(this.roomQueryParam).then(response => {
-          this.roomList = response.rows;
-          this.roomTotal = response.total;
-          this.roomLoading = false;
-        });
-      },
-      roomChange(row, column, event) {
-        this.priceLoading = true;
-        this.roomQueryParam.roomId = row.id;
-        this.selectedRoom = row.name;
-        this.getPrice();
-      },
-      /** 查询房间价格列表 */
-      getPrice() {
-        listRoomprice(this.roomQueryParam).then(response => {
-          this.priceList = response.rows;
-          this.priceTotal = response.total;
-          this.priceLoading = false;
-        });
-        listRoompackage(this.roomQueryParam).then(response => {
-          this.packageList = response.rows;
-          this.packageTotal = response.total;
-          this.packageLoading = false;
-        })
-      },
-      /** 新增按钮操作 */
-      handleAdd() {
-        this.reset();
-        this.open = true;
-        this.title = "添加商家门店";
-      },
-      /** 修改按钮操作 */
-      handleUpdate(row) {
-        this.fileList = [];
-        this.reset();
-        const id = row.id || this.ids
-        getStore(id).then(response => {
-          this.form = response.data;
-          if (response.data.logo != null && response.data.logo.length > 0) {
-            var list = response.data.logo.split(',');
-            this.fileList = list.map(item => {
-              if (typeof item === "string") {
-                if (item.indexOf(this.baseUrl) === -1) {
-                  item = {
-                    name: this.baseUrl + item,
-                    url: this.baseUrl + item
-                  };
-                } else {
-                  item = {
-                    name: item,
-                    url: item
-                  };
-                }
-              }
-              return item;
-            });
-          }
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => { });
+    },
+    /** 导出按钮操作 */
+    handleExport() {
+      this.download('office/store/export', {
+        ...this.queryParams
+      }, `store_${new Date().getTime()}.xlsx`)
+    },
+    // 文件提交处理
+    submitUpload() {
+      this.$refs.upload.submit();
+    },
+    handleExceed(files, fileList) {
+      this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+    },
+    // 文件上传中处理
+    handleFileUploadProgress(event, file, fileList) {
+      this.upload.isUploading = true;
+    },
+    // 文件上传成功处理
+    handleFileSuccess(response, file, fileList) {
+      this.upload.isUploading = false;
 
-          this.open = true;
-          this.title = "修改商家门店";
-        });
-      },
-      handleRoomUpdate(row) {
-        this.fileList = [];
-        const id = row.id
-        getRoom(id).then(response => {
-          this.roomForm = response.data;
+      var hostPort = window.location.href;
+      hostPort = hostPort.substring(0, hostPort.length - window.location.pathname.length);
+      var url = response.url;
+      var suffix = url.lastIndexOf(":") > 7 ? url.substring(url.lastIndexOf(":"), url.length) : url.substring(url
+        .indexOf("profile") - 1, url.length);
 
-          if (response.data.remark != null && response.data.remark.length > 0)
-            this.roomForm.remark = response.data.remark.split(',');
-          debugger
-          if (response.data.logo != null && response.data.logo.length > 0) {
-            var list = response.data.logo.split(',');
-            this.fileList = list.map(item => {
-              if (typeof item === "string") {
-                if (item.indexOf(this.baseUrl) === -1) {
-                  item = {
-                    name: this.baseUrl + item,
-                    url: this.baseUrl + item
-                  };
-                } else {
-                  item = {
-                    name: item,
-                    url: item
-                  };
-                }
-              }
-              return item;
-            });
-          }
-          this.roomOpen = true;
-          this.title = "修改房间";
-        });
-      },
-      addStoreRoom(row) {
-        this.reset();
-        this.roomForm = {};
-        this.roomForm.storeId = row.id
-        this.roomOpen = true;
-      },
-      setRoomPrice(row) {
-        this.reset();
-        this.priceForm = {};
-        this.priceForm.roomId = row.id
+      this.form.logo = hostPort + suffix;
+      this.roomForm.logo = hostPort + suffix;
+      this.form.fileName = response.fileName;
+      this.$modal.msgSuccess(response.msg);
+    },
+    // 文件下载处理
+    handleDownload(row) {
+      // alert(window.location.origin)
+      // var hostPort = window.location.origin;
+      var url = row.img;
+      // var suffix = url.substring(hostPort.length, url.length);
+      // debugger
+      const a = document.createElement('a')
+      a.setAttribute('target', '_blank')
+      a.setAttribute('href', url)
+      a.click()
+    },
+    /** 修改按钮操作 */
+    handlePriceUpdate(row) {
+      this.reset();
+      const id = row.id
+      getRoomprice(id).then(response => {
+        this.priceForm = response.data;
         this.priceOpen = true;
-      },
-      setRoomPackage(row) {
-        this.reset();
-        this.packageForm = {};
-        this.packageForm.roomId = row.id
+        this.title = "修改房间价格";
+      });
+    },
+    handlePackageUpdate(row) {
+      this.reset();
+      const id = row.id
+      getRoompackage(id).then(response => {
+        this.packageForm = response.data;
         this.packageOpen = true;
-      },
-      bindEquipment(row, type) {
-        // type = "store/room";
-        this.bindOpen = true;
-        this.bindType = type;
-        this.bindForm.id = row.id;
-        // this.equipAllOptions =[];
-        var param = {};
-        param.ids = row.tableCode;
-        listAvailableEquipment(param).then(response => {
-          this.equipOptions = response.rows;
-          this.bindForm.tableCode = row.tableCode.split(',');
-        });
+        this.title = "修改房间套餐";
+      });
+    },
+    /** 删除按钮操作 */
+    handlePriceDelete(row) {
+      const ids = row.id;
+      this.$modal.confirm('是否确认删除该价格选项？').then(function () {
+        return delRoomprice(ids);
+      }).then(() => {
+        this.getPrice();
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => { });
+    },
+    handlePackageDelete(row) {
+      const ids = row.id;
+      this.$modal.confirm('是否确认删除该套餐选项？').then(function () {
+        return delRoompackage(ids);
+      }).then(() => {
+        this.getPrice();
+        this.$modal.msgSuccess("删除成功");
+      }).catch(() => { });
+    },
+    equipFormatter(row) {
+      var res = "";
 
-
-
-      },
-      bindStoreEquipment(row, type) {
-        // type = "store/room";
-        this.bindStoreOpen = true;
-        this.bindType = type;
-        this.bindStoreForm.id = row.id;
-
-// this.equipAllOptions =[];
-        var param = {};
-        param.ids = row.equipId;
-        listAvailableEquipment(param).then(response => {
-          this.equipOptions = response.rows;
-        });
-
-        this.bindStoreForm.equipId = row.equipId
-
-      },
-      submitBindForm() {
-        var subForm = {};
-
-        if (this.bindType == "store") {
-          subForm.id = this.bindStoreForm.id;
-          subForm.equipId = this.bindStoreForm.equipId;
-          updateStore(subForm).then(response => {
-            this.$modal.msgSuccess("修改成功");
-            this.bindStoreOpen = false;
-            this.getList();
-          });
-        } else if (this.bindType == "room") {
-          subForm.id = this.bindForm.id;
-          subForm.tableCode = this.bindForm.tableCode.join(',');
-          updateRoom(subForm).then(response => {
-            this.$modal.msgSuccess("修改成功");
-            this.bindOpen = false;
-            this.listStoreRoom();
-          });
-        }
-      },
-      /** 提交按钮 */
-      submitForm() {
-        this.$refs["form"].validate(valid => {
-          if (valid) {
-            if (this.form.id != null) {
-              updateStore(this.form).then(response => {
-                this.$modal.msgSuccess("修改成功");
-                this.open = false;
-                this.getList();
-              });
-            } else {
-              addStore(this.form).then(response => {
-                this.$modal.msgSuccess("新增成功");
-                this.open = false;
-                this.getList();
-              });
-            }
-          }
-        });
-      },
-      /** 提交门店包厢 **/
-      submitRoomForm() {
-
-        this.roomForm.remark = this.roomForm.remark.join(",");
-        this.$refs["roomForm"].validate(valid => {
-          if (valid) {
-            if (this.roomForm.id != null) {
-              updateRoom(this.roomForm).then(response => {
-                this.$modal.msgSuccess("修改成功");
-                this.roomOpen = false;
-                this.listStoreRoom();
-              });
-            } else {
-              addRoom(this.roomForm).then(response => {
-                this.$modal.msgSuccess("新增成功");
-                this.roomOpen = false;
-                this.listStoreRoom();
-              });
-            }
-          }
-        });
-      },
-      /** 提交房间价格**/
-      submitPriceForm() {
-        this.$refs["priceForm"].validate(valid => {
-          if (valid) {
-            if (this.priceForm.id != null) {
-              updateRoomprice(this.priceForm).then(response => {
-                this.$modal.msgSuccess("修改成功");
-                this.priceOpen = false;
-                this.getPrice();
-              });
-            } else {
-              addRoomprice(this.priceForm).then(response => {
-                this.$modal.msgSuccess("新增成功");
-                this.priceOpen = false;
-                this.getPrice();
-              });
-            }
-          }
-        });
-      },
-      submitPackageForm(){
-        this.$refs["packageForm"].validate(valid => {
-          if (valid) {
-            if (this.packageForm.id != null) {
-              updateRoompackage(this.packageForm).then(response => {
-                this.$modal.msgSuccess("修改成功");
-                this.packageOpen = false;
-                this.getPrice();
-              });
-            } else {
-              addRoompackage(this.packageForm).then(response => {
-                this.$modal.msgSuccess("新增成功");
-                this.packageOpen = false;
-                this.getPrice();
-              });
-            }
-          }
-        });
-      },
-      /** 删除按钮操作 */
-      handleDelete(row) {
-        const ids = row.id || this.ids;
-        this.$modal.confirm('是否确认删除商家用户门店编号为"' + ids + '"的数据项？').then(function() {
-          return delStore(ids);
-        }).then(() => {
-          this.getList();
-          this.$modal.msgSuccess("删除成功");
-        }).catch(() => {});
-      },
-      handleRoomDelete(row) {
-        const ids = row.id;
-        this.$modal.confirm('是否确认删除该房间？').then(function() {
-          return delRoom(ids);
-        }).then(() => {
-          this.listStoreRoom();
-          this.$modal.msgSuccess("删除成功");
-        }).catch(() => {});
-      },
-      /** 导出按钮操作 */
-      handleExport() {
-        this.download('office/store/export', {
-          ...this.queryParams
-        }, `store_${new Date().getTime()}.xlsx`)
-      },
-      // 文件提交处理
-      submitUpload() {
-        this.$refs.upload.submit();
-      },
-      handleExceed(files, fileList) {
-        this.$message.warning(`当前限制选择 1 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
-      },
-      // 文件上传中处理
-      handleFileUploadProgress(event, file, fileList) {
-        this.upload.isUploading = true;
-      },
-      // 文件上传成功处理
-      handleFileSuccess(response, file, fileList) {
-        this.upload.isUploading = false;
-
-        var hostPort = window.location.href;
-        hostPort = hostPort.substring(0, hostPort.length - window.location.pathname.length);
-        var url = response.url;
-        var suffix = url.lastIndexOf(":") > 7 ? url.substring(url.lastIndexOf(":"), url.length) : url.substring(url
-          .indexOf("profile") - 1, url.length);
-
-        this.form.logo = hostPort + suffix;
-        this.roomForm.logo = hostPort + suffix;
-        this.form.fileName = response.fileName;
-        this.$modal.msgSuccess(response.msg);
-      },
-      // 文件下载处理
-      handleDownload(row) {
-        // alert(window.location.origin)
-        // var hostPort = window.location.origin;
-        var url = row.img;
-        // var suffix = url.substring(hostPort.length, url.length);
-        // debugger
-        const a = document.createElement('a')
-        a.setAttribute('target', '_blank')
-        a.setAttribute('href', url)
-        a.click()
-      },
-      /** 修改按钮操作 */
-      handlePriceUpdate(row) {
-        this.reset();
-        const id = row.id
-        getRoomprice(id).then(response => {
-          this.priceForm = response.data;
-          this.priceOpen = true;
-          this.title = "修改房间价格";
-        });
-      },
-      handlePackageUpdate(row){
-        this.reset();
-        const id = row.id
-        getRoompackage(id).then(response => {
-          this.packageForm = response.data;
-          this.packageOpen = true;
-          this.title = "修改房间套餐";
-        });
-      },
-      /** 删除按钮操作 */
-      handlePriceDelete(row) {
-        const ids = row.id;
-        this.$modal.confirm('是否确认删除该价格选项？').then(function() {
-          return delRoomprice(ids);
-        }).then(() => {
-          this.getPrice();
-          this.$modal.msgSuccess("删除成功");
-        }).catch(() => {});
-      },
-      handlePackageDelete(row){
-        const ids = row.id;
-        this.$modal.confirm('是否确认删除该套餐选项？').then(function() {
-          return delRoompackage(ids);
-        }).then(() => {
-          this.getPrice();
-          this.$modal.msgSuccess("删除成功");
-        }).catch(() => {});
-      },
-      equipFormatter(row) {
-        var res = "";
-
-        if (row.tableCode != null) {
-          var equips = row.tableCode.split(',');
-          for (var l = 0; l < equips.length; l++) {
-            for (var i = 0; i < this.equipAllOptions.length; i++) {
-              if (this.equipAllOptions[i].id + '' == equips[l]) {
-                res += ',' + this.equipAllOptions[i].name;
-              }
+      if (row.tableCode != null) {
+        var equips = row.tableCode.split(',');
+        for (var l = 0; l < equips.length; l++) {
+          for (var i = 0; i < this.equipAllOptions.length; i++) {
+            if (this.equipAllOptions[i].id + '' == equips[l]) {
+              res += ',' + this.equipAllOptions[i].name;
             }
           }
         }
+      }
 
-        return res.substring(1);
-      },
-      equipStoreFormatter(row) {
-        var res = "";
-        for (var i = 0; i < this.equipAllOptions.length; i++) {
-          if (this.equipAllOptions[i].id == row.equipId) {
-            res = this.equipAllOptions[i].name;
-            break;
-          }
+      return res.substring(1);
+    },
+    equipStoreFormatter(row) {
+      var res = "";
+      for (var i = 0; i < this.equipAllOptions.length; i++) {
+        if (this.equipAllOptions[i].id == row.equipId) {
+          res = this.equipAllOptions[i].name;
+          break;
         }
+      }
 
-        return res;
-      },
-      // 上传前loading加载
-      handleBeforeUpload(file) {
-        let isImg = false;
-        if (this.fileType.length) {
-          let fileExtension = "";
-          if (file.name.lastIndexOf(".") > -1) {
-            fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1);
-          }
-          isImg = this.fileType.some(type => {
-            if (file.type.indexOf(type) > -1) return true;
-            if (fileExtension && fileExtension.indexOf(type) > -1) return true;
-            return false;
-          });
-        } else {
-          isImg = file.type.indexOf("image") > -1;
+      return res;
+    },
+    // 上传前loading加载
+    handleBeforeUpload(file) {
+      let isImg = false;
+      if (this.fileType.length) {
+        let fileExtension = "";
+        if (file.name.lastIndexOf(".") > -1) {
+          fileExtension = file.name.slice(file.name.lastIndexOf(".") + 1);
         }
+        isImg = this.fileType.some(type => {
+          if (file.type.indexOf(type) > -1) return true;
+          if (fileExtension && fileExtension.indexOf(type) > -1) return true;
+          return false;
+        });
+      } else {
+        isImg = file.type.indexOf("image") > -1;
+      }
 
-        if (!isImg) {
-          this.$modal.msgError(`文件格式不正确, 请上传${this.fileType.join("/")}图片格式文件!`);
+      if (!isImg) {
+        this.$modal.msgError(`文件格式不正确, 请上传${this.fileType.join("/")}图片格式文件!`);
+        return false;
+      }
+      if (this.fileSize) {
+        const isLt = file.size / 1024 / 1024 < this.fileSize;
+        if (!isLt) {
+          this.$modal.msgError(`上传图片大小不能超过 ${this.fileSize} MB!`);
           return false;
         }
-        if (this.fileSize) {
-          const isLt = file.size / 1024 / 1024 < this.fileSize;
-          if (!isLt) {
-            this.$modal.msgError(`上传图片大小不能超过 ${this.fileSize} MB!`);
-            return false;
-          }
-        }
-        this.$modal.loading("正在上传图片，请稍候...");
-        this.number++;
-      },
-      // 文件个数超出
-      handleExceed() {
-        this.$modal.msgError(`上传文件数量不能超过 ${this.limit} 个!`);
-      },
-      // 上传成功回调
-      handleUploadSuccess(res, file) {
-        if (res.code === 200) {
-          this.uploadList.push({
-            name: res.fileName,
-            url: res.fileName
-          });
-          this.uploadedSuccessfully();
-        } else {
-          this.number--;
-          this.$modal.closeLoading();
-          this.$modal.msgError(res.msg);
-          this.$refs.imageUpload.handleRemove(file);
-          this.uploadedSuccessfully();
-        }
-      },
-      // 删除图片
-      handleDeletePic(file) {
-        const findex = this.fileList.map(f => f.name).indexOf(file.name);
-        if (findex > -1) {
-          this.fileList.splice(findex, 1);
-          this.$emit("input", this.listToString(this.fileList));
-        }
-      },
-      // 上传失败
-      handleUploadError() {
-        this.$modal.msgError("上传图片失败，请重试");
-        this.$modal.closeLoading();
-      },
-      // 上传结束处理
-      uploadedSuccessfully() {
-        if (this.number > 0 && this.uploadList.length === this.number) {
-          // debugger
-          for (let i in this.uploadList) {
-            if (this.uploadList[i].url && this.uploadList[i].url.indexOf(this.baseUrl) < 0) {
-              this.uploadList[i].url = this.baseUrl + this.uploadList[i].url;
-            }
-          }
-          debugger
-          this.fileList = this.fileList.concat(this.uploadList);
-          this.uploadList = [];
-          this.number = 0;
-          this.$emit("input", this.listToString(this.fileList));
-          this.$modal.closeLoading();
-        }
-      },
-      // 预览
-      handlePictureCardPreview(file) {
-        var fileUrl = file.url.indexOf(this.baseUrl) > -1 ? file.url : this.baseUrl + file.url;
-        this.dialogImageUrl = fileUrl;
-        this.dialogVisible = true;
-      },
-      // 对象转成指定字符串分隔
-      listToString(list, separator) {
-        let strs = "";
-        separator = separator || ",";
-        for (let i in list) {
-          if (list[i].url) {
-            strs += list[i].url.replace(this.baseUrl, "") + separator;
-          }
-        }
-        var fileNames = strs != '' ? strs.substr(0, strs.length - 1) : '';
-        this.form.logo = fileNames; // 绑定对象属性
-        this.roomForm.logo = fileNames;
-        return fileNames;
-      },
-      viewQrcode(row) {
-        getQrcode(row.id).then(response => {
-          console.log(response)
-          this.$alert('<img src="data:image/png;base64,' + response + '"/>', row.name, {
-            dangerouslyUseHTMLString: true
-          });
-        });
       }
+      this.$modal.loading("正在上传图片，请稍候...");
+      this.number++;
+    },
+    // 文件个数超出
+    handleExceed() {
+      this.$modal.msgError(`上传文件数量不能超过 ${this.limit} 个!`);
+    },
+    // 上传成功回调
+    handleUploadSuccess(res, file) {
+      if (res.code === 200) {
+        this.uploadList.push({
+          name: res.fileName,
+          url: res.fileName
+        });
+        this.uploadedSuccessfully();
+      } else {
+        this.number--;
+        this.$modal.closeLoading();
+        this.$modal.msgError(res.msg);
+        this.$refs.imageUpload.handleRemove(file);
+        this.uploadedSuccessfully();
+      }
+    },
+    // 删除图片
+    handleDeletePic(file) {
+      const findex = this.fileList.map(f => f.name).indexOf(file.name);
+      if (findex > -1) {
+        this.fileList.splice(findex, 1);
+        this.$emit("input", this.listToString(this.fileList));
+      }
+    },
+    // 上传失败
+    handleUploadError() {
+      this.$modal.msgError("上传图片失败，请重试");
+      this.$modal.closeLoading();
+    },
+    // 上传结束处理
+    uploadedSuccessfully() {
+      if (this.number > 0 && this.uploadList.length === this.number) {
+        // debugger
+        for (let i in this.uploadList) {
+          if (this.uploadList[i].url && this.uploadList[i].url.indexOf(this.baseUrl) < 0) {
+            this.uploadList[i].url = this.baseUrl + this.uploadList[i].url;
+          }
+        }
+        debugger
+        this.fileList = this.fileList.concat(this.uploadList);
+        this.uploadList = [];
+        this.number = 0;
+        this.$emit("input", this.listToString(this.fileList));
+        this.$modal.closeLoading();
+      }
+    },
+    // 预览
+    handlePictureCardPreview(file) {
+      var fileUrl = file.url.indexOf(this.baseUrl) > -1 ? file.url : this.baseUrl + file.url;
+      this.dialogImageUrl = fileUrl;
+      this.dialogVisible = true;
+    },
+    // 对象转成指定字符串分隔
+    listToString(list, separator) {
+      let strs = "";
+      separator = separator || ",";
+      for (let i in list) {
+        if (list[i].url) {
+          strs += list[i].url.replace(this.baseUrl, "") + separator;
+        }
+      }
+      var fileNames = strs != '' ? strs.substr(0, strs.length - 1) : '';
+      this.form.logo = fileNames; // 绑定对象属性
+      this.roomForm.logo = fileNames;
+      return fileNames;
+    },
+    viewQrcode(row) {
+      getQrcode(row.id).then(response => {
+        console.log(response)
+        this.$alert('<img src="data:image/png;base64,' + response + '"/>', row.name, {
+          dangerouslyUseHTMLString: true
+        });
+      });
+    },
+    viewXudancode(row) {
+      getXudancode(row.id).then(response => {
+        console.log(response)
+        this.$alert('<img src="data:image/png;base64,' + response + '"/>', row.name, {
+          dangerouslyUseHTMLString: true
+        });
+      });
     }
-  };
+  }
+};
 </script>
 <style scoped lang="scss">
-  // .el-upload--picture-card 控制加号部分
-  ::v-deep.hide .el-upload--picture-card {
-    display: none;
-  }
+// .el-upload--picture-card 控制加号部分
+::v-deep.hide .el-upload--picture-card {
+  display: none;
+}
 
-  // 去掉动画效果
-  ::v-deep .el-list-enter-active,
-  ::v-deep .el-list-leave-active {
-    transition: all 0s;
-  }
+// 去掉动画效果
+::v-deep .el-list-enter-active,
+::v-deep .el-list-leave-active {
+  transition: all 0s;
+}
 
-  ::v-deep .el-list-enter,
-  .el-list-leave-active {
-    opacity: 0;
-    transform: translateY(0);
-  }
+::v-deep .el-list-enter,
+.el-list-leave-active {
+  opacity: 0;
+  transform: translateY(0);
+}
 </style>
