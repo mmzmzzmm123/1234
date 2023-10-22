@@ -246,4 +246,17 @@ public class TRoomOrderController extends BaseController {
         return AjaxResult.success();
     }
 
+    @ApiOperation("H5商户-立即开始订单")
+    @PreAuthorize("@ss.hasPermi('office:roomorder:add')")
+    @Log(title = "H5商户-立即开始订单", businessType = BusinessType.INSERT)
+    @PostMapping("/changeTime")
+    public AjaxResult changeTime(@RequestBody MerchantOrderChangeTimeReq req) {
+        try {
+            tRoomOrderService.merchantChangeTime4Guest(req);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+        return AjaxResult.success();
+    }
+
 }

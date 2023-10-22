@@ -1,7 +1,6 @@
 package com.ruoyi.office.service.impl;
 
 import java.math.BigDecimal;
-import java.sql.SQLRecoverableException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
@@ -1597,6 +1596,37 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         tRoomOrderMapper.updateTRoomOrder(up);
     }
 
+    @Override
+    public void merchantChangeTime4Guest(MerchantOrderChangeTimeReq req) {
+        final TRoomOrder roomOrder = tRoomOrderMapper.selectTRoomOrderById(req.getOrderId());
+        if (roomOrder == null) {
+            throw new ServiceException("订单不存在");
+        }
+        final long diffMinutes = (roomOrder.getStartTime().getTime() - req.getStartTime().getTime()) / (1000 * 60);
+        Date endTime = DateUtils.addMinutes(roomOrder.getEndTime(), (int) diffMinutes);
+
+        PrepayReq qry = new PrepayReq();
+        qry.setRoomId(roomOrder.getRoomId());
+        qry.setStartTime(req.getStartTime());
+        qry.setEndTime(endTime);
+        final List<TRoomOrder> orderList = tRoomOrderMapper.selectConflictRoomPeriod(qry);
+        if (orderList.size() > 0) { // 跟原订单有可能也冲突
+            for (TRoomOrder temp : orderList) {
+                if (!temp.getId().equals(roomOrder.getId())) {
+                    throw new ServiceException("订单时间冲突");
+                }
+            }
+        }
+
+        TRoomOrder up = new TRoomOrder();
+        up.setId(roomOrder.getId());
+        up.setStartTime(req.getStartTime());
+        up.setEndTime(endTime);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        up.setRemark("商家提前订单开始时间到" + sdf.format(req.getStartTime()) + ";" + roomOrder.getRemark());
+        tRoomOrderMapper.updateTRoomOrder(up);
+    }
+
     @Transactional
     @Override
     public void merchantChangeRoom4Guest(OrderChangeRoomReq req) {
@@ -1632,20 +1662,21 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Override
     public PrepayResp orderCharge(MiniOrderChargeReq req, long wxUserId) {
         // 1 原订单进行中 2 套餐复合型
-
-        final TRoomOrder roomOrder = tRoomOrderMapper.selectTRoomOrderById(req.getOrderId());
-        if (roomOrder == null) {
-            throw new ServiceException("订单不存在");
-        } else if (!roomOrder.getStatus().equals(OfficeEnum.RoomOrderStatus.USING.getCode())) {
-            throw new ServiceException("只有进行中的订单才可续单");
+        TRoomOrder inusedOrder = new TRoomOrder();
+        inusedOrder.setStatus(OfficeEnum.RoomOrderStatus.USING.getCode());
+        inusedOrder.setRoomId(req.getRoomId());
+        List<TRoomOrder> roomOrders = tRoomOrderMapper.selectTRoomOrderList(inusedOrder);
+        if (roomOrders.size() == 0) {
+            throw new ServiceException("该房间没有进行中的订单");
         }
 
-        final TRoomChargePrice tRoomChargePrice = roomChargePriceService.selectTRoomChargePriceById(req.getCharePackId());
+        final TRoomChargePrice tRoomChargePrice = roomChargePriceService.selectTRoomChargePriceById(req.getChargePackId());
         if (tRoomChargePrice == null) {
             throw new ServiceException("续费套餐不存在");
-        } else if (!roomOrder.getRoomId().equals(tRoomChargePrice.getRoomId())) {
+        } else if (!roomOrders.get(0).getRoomId().equals(tRoomChargePrice.getRoomId())) {
             throw new ServiceException("续费套餐与当前订单套餐房间不一致");
         }
+        TRoomOrder roomOrder = roomOrders.get(0);
         Date endTime = DateUtils.addMinutes(roomOrder.getStartTime(), tRoomChargePrice.getMinutes().intValue());
         BigDecimal totalPrice = tRoomChargePrice.getPrice();
 
@@ -1762,8 +1793,15 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             chargeOrder.setStatus(OfficeEnum.ChargeOrderStatus.PAYED.getCode());/// 待支付
             chargeOrder.setCreateTime(DateUtils.getNowDate());
             chargeOrder.setCreateBy(wxUserId + "");
-
             orderChargeService.insertTRoomOrderCharge(chargeOrder);
+
+            // 续费订单支付成功，原订单修改结束时间，添加订单类型备注；
+            TRoomOrder updateOrder = new TRoomOrder();
+            updateOrder.setId(roomOrder.getId());
+            updateOrder.setEndTime(endTime);
+            updateOrder.setRemark("续费订单;" + roomOrder.getRemark());
+            updateOrder.setOrderType(roomOrder.getOrderType() + ";续费订单");
+            tRoomOrderMapper.updateTRoomOrder(updateOrder);
 
         } else if (req.getPayType().equals(OfficeEnum.PayType.COUPON_PAY.getCode())) { // 美团券券支付
 //            validCoupon(prepayReq, userId);// 校验可用性
@@ -1785,6 +1823,14 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             chargeOrder.setCreateTime(DateUtils.getNowDate());
             chargeOrder.setCreateBy(wxUserId + "");
             orderChargeService.insertTRoomOrderCharge(chargeOrder);
+
+            // 续费订单支付成功，原订单修改结束时间，添加订单类型备注；
+            TRoomOrder updateOrder = new TRoomOrder();
+            updateOrder.setId(roomOrder.getId());
+            updateOrder.setEndTime(endTime);
+            updateOrder.setRemark("续费订单;" + roomOrder.getRemark());
+            updateOrder.setOrderType(roomOrder.getOrderType() + ";续费订单");
+            tRoomOrderMapper.updateTRoomOrder(updateOrder);
 
         }
         return resp;
@@ -1819,6 +1865,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             TRoomOrder updateOrder = new TRoomOrder();
             updateOrder.setId(orgRoomOrder.getId());
             updateOrder.setEndTime(newEndTime);
+            updateOrder.setRemark("续费订单;" + orgRoomOrder.getRemark());
             updateOrder.setOrderType(orgRoomOrder.getOrderType() + ";续费订单");
             tRoomOrderMapper.updateTRoomOrder(updateOrder);
 

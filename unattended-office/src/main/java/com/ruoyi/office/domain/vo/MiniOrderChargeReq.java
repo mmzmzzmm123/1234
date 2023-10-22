@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class MiniOrderChargeReq {
-    private Long orderId;
-    private Long charePackId;
+    private Long roomId;
+    private Long chargePackId;
 
     /**
      * 支付方式

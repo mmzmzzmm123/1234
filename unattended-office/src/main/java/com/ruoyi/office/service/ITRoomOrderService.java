@@ -110,4 +110,6 @@ public interface ITRoomOrderService {
     public WxPayOrderQueryV3Result finishCharge(Long orderId, Long wxuserid);
 
     public void wxChargeNotify(String orderNo, String openId, WxPayOrderNotifyV3Result.Amount amt, String wxCallback);
+
+    void merchantChangeTime4Guest(MerchantOrderChangeTimeReq req);
 }
