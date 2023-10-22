@@ -3,9 +3,7 @@
 		<view class="search-bar">
 			<u-search placeholder="请输入套餐名称" :showAction="false" v-model="searchParam.name"
 				@change="onSearchKeywordInput"></u-search>
-			<view class="uni-btn-v">
-				<u-button type="primary" @click="add">新增专用套餐</u-button>
-			</view>
+			<u-button type="primary" @click="add">新增专用套餐</u-button>
 		</view>
 		<view class="card-list">
 			<view class="card" v-for="(room, index) in packList" :key="room.id">
@@ -13,9 +11,9 @@
 					<!-- <uo-image src="https://mbdp01.bdstatic.com/static/landing-pc/img/logo_top.79fdb8c2.png"></uo-image> -->
 					<view class="card__content__right">
 						<view class="card__content__head">
-							<navigator class="card-title" :url="'room?id='+room.id+'&name='+room.name">
-								<view class="card-title">套餐名称: {{room.name}}</view>
-							</navigator>
+							<view class="card-title">
+								套餐名称: {{room.name}}
+							</view>
 						</view>
 						<view class="card__content__body">
 							<view>套餐时长: {{room.minutes}} 分钟</view>
@@ -24,13 +22,12 @@
 
 							</view>
 						</view>
-						<view class="card__op-list">
-							<u-button type="primary" @click="edit(room)">编辑</u-button>
-							<u-button plain @click="del(room)">删除</u-button>
-						</view>
 					</view>
 				</view>
-
+				<view class="card__op-list">
+					<u-button type="primary" @click="edit(room)">编辑</u-button>
+					<u-button plain @click="del(room)">删除</u-button>
+				</view>
 			</view>
 		</view>
 
@@ -61,14 +58,6 @@
 			this.refresh(true)
 		}, */
 		methods: {
-			onEditClick() {
-				uni.navigateTo({
-					url: '/pages/store/store-edit/index?',
-					events: {
-						refresh: this.refresh
-					}
-				})
-			},
 			onSearchKeywordInput() {
 				this.$u.debounce(this.refresh, 400)
 			},

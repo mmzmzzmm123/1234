@@ -80,7 +80,13 @@
 		{
 			"path": "pages/price/room-charge/index",
 			"style": {
-				"navigationBarTitleText": "包厢专用套餐"
+				"navigationBarTitleText": "包厢续费套餐"
+			}
+		},
+		{
+			"path": "pages/price/room-charge/add",
+			"style": {
+				"navigationBarTitleText": "包厢续费套餐"
 			}
 		},
 		{

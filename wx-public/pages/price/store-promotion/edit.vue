@@ -201,15 +201,4 @@
 </script>
 
 <style lang="scss">
-	.edit-bottom-bar-holder {
-		height: 80rpx;
-	}
-
-	.edit-bottom-bar {
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		padding: 20rpx;
-	}
 </style>

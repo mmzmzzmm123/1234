@@ -5,9 +5,7 @@
 		</view>
 		<view>
 			<view class="card-list">
-				<u-cell isLink title="包厢专用套餐" :url="'../room-pack/index?id='+roomId" :border="false">
-					<text class="iconfont icon-dingdan" slot="icon"></text>
-				</u-cell>
+				<u-cell icon="order" isLink title="包厢专用套餐" :url="'../room-pack/index?id='+roomId" :border="false"></u-cell>
 				<u-cell icon="clock" isLink title="包厢续费套餐" :url="'../room-charge/index?id='+roomId" :border="false"></u-cell>
 			</view>
 		</view>

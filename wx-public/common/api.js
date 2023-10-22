@@ -147,6 +147,21 @@ const api = {
 	delRoomPack(id) {
 		return request('office/roompackage/' + id, null, true, 'delete')
 	},
+	getRoomChargePriceList(params){
+		return get('office/roomchargeprice/list', params)
+	},
+	getRoomChargePrice(id){
+		return get('office/roomchargeprice/' + id)
+	},
+	addRoomChargePrice(params){
+		return post('office/roomchargeprice', params)
+	},
+	updateRoomChargePrice(params){
+		return request('office/roomchargeprice', params, true, 'PUT')
+	},
+	deleteRoomChargePrice(id){
+		return request('office/roomchargeprice/' + id, null, true, 'DELETE')
+	},
 	getStorePromotionList(params){
 		return get('office/storepromotion/h5list', params)
 	},

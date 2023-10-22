@@ -3,9 +3,7 @@
 		<view class="search-bar">
 			<u-search placeholder="请输入优惠券名称" :showAction="false" v-model="searchParam.keyword"
 				@change="onSearchKeywordInput"></u-search>
-			<view class="uni-btn-v">
-				<u-button type="primary" @click="add">新增优惠券</u-button>
-			</view>
+			<u-button type="primary" @click="add">新增优惠券</u-button>
 		</view>
 		<view class="card-list">
 			<view class="card" v-for="(room, index) in packList" :key="room.id">

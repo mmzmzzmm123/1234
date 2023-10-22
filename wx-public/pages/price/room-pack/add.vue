@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view class="form">
-			<u-form ref="form" :model="model" label-width="auto" :rules="rules">
+			<u-form ref="form" :model="model" label-width="auto">
 				<u-form-item label="套餐名称" prop="name" required>
 					<u-input v-model="model.name"></u-input>
 				</u-form-item>
@@ -35,17 +35,19 @@
 					name: {
 						required: true,
 						message: '请输入套餐名称',
-						trigger: ['blur', 'change']
+						trigger: ['blur']
 					},
 					price: {
+						type: 'number',
 						required: true,
 						message: '请输入套餐价格',
-						trigger: ['blur', 'change']
+						trigger: ['blur']
 					},
 					minutes: {
+						type: 'number',
 						required: true,
 						message: '请输入可用时长',
-						trigger: ['blur', 'change']
+						trigger: ['blur']
 					}
 				},
 				roomId: 0,
@@ -93,15 +95,4 @@
 </script>
 
 <style lang="scss">
-	.edit-bottom-bar-holder {
-		height: 80rpx;
-	}
-
-	.edit-bottom-bar {
-		position: fixed;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		padding: 20rpx;
-	}
 </style>
