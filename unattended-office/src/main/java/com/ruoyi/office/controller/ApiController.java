@@ -1097,11 +1097,11 @@ public class ApiController extends BaseController {
      */
     @ApiOperation("小程序-购买续费套餐 查询支付结果")
     @Log(title = "购买续费套餐 查询支付结果", businessType = BusinessType.OTHER)
-    @GetMapping("/order/charge/{orderId}")
-    public AjaxResult orderChargeQry(@PathVariable("orderId") Long orderId) {
+    @PostMapping("/order/charge/qry")
+    public AjaxResult orderChargeQry(@RequestBody MiniOrderChargeReq order) {
         try {
-            logger.info("购买续费套餐 查询:" + orderId);
-            WxPayOrderQueryV3Result v3Result = roomOrderService.finishCharge(orderId, SecurityUtils.getLoginUser().getWxUser().getId());
+            logger.info("购买续费套餐 查询:" + order.getOrderId());
+            WxPayOrderQueryV3Result v3Result = roomOrderService.finishCharge(order.getOrderId(), SecurityUtils.getLoginUser().getWxUser().getId());
             if (v3Result == null)
                 logger.info("支付成功,微信已经回调");
             else
