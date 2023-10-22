@@ -115,4 +115,16 @@ public class TRoomOrder extends BaseEntity {
     @Excel(name = "状态(0空闲/1待支付/2已预约/3使用中/4预约超时未使用/5已完成/9取消)")
     private Integer status;
 
+    /**
+     * 订单结束剩余分钟数
+     */
+    @Excel(name = "订单结束剩余分钟数")
+    private Integer leftMinute;
+
+    /**
+     * 代客下单随机码
+     */
+    @Excel(name = "代客下单随机码")
+    private String randomCode;
+
 }

@@ -1175,28 +1175,16 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             for (int min : alertList) {
                 if (diff > min)
                     continue;
-                if (StringUtils.isEmpty(order.getRemark())) {
+
+                if (min < order.getLeftMinute()) {
                     TRoom room = roomService.selectTRoomById(order.getRoomId());
                     for (String s : room.getTableCode().split(",")) {
                         TEquipment equipment = equipments.get(Long.parseLong(s));
                         if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(equipment.getEquipType())) {
-                            CloudHornRegResponse resp = HornConfig.hornSend(equipment.getEquipControl(), "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
+//                                CloudHornRegResponse resp = HornConfig.hornSend(equipment.getEquipControl(), "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
 
-                            order.setRemark(min + "");// 标识已经通知
+                            order.setLeftMinute(min);// 标识已经通知
                             tRoomOrderMapper.updateTRoomOrder(order);
-                        }
-                    }
-                } else {
-                    if (min != Integer.parseInt(order.getRemark())) {
-                        TRoom room = roomService.selectTRoomById(order.getRoomId());
-                        for (String s : room.getTableCode().split(",")) {
-                            TEquipment equipment = equipments.get(Long.parseLong(s));
-                            if (OfficeEnum.EquipType.HORN.getCode().equalsIgnoreCase(equipment.getEquipType())) {
-                                CloudHornRegResponse resp = HornConfig.hornSend(equipment.getEquipControl(), "您的订单还有" + diff + "分钟结束，请及时续费，以免断电影响使用，谢谢");
-
-                                order.setRemark(min + "");// 标识已经通知
-                                tRoomOrderMapper.updateTRoomOrder(order);
-                            }
                         }
                     }
                 }
@@ -1482,7 +1470,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         tRoomOrder.setTotalAmount(new BigDecimal(0));
         tRoomOrder.setPayAmount(new BigDecimal(0));
         tRoomOrder.setWelfareAmount(new BigDecimal(0));
-        tRoomOrder.setRemark(IdUtils.randomUUID());
+        tRoomOrder.setRandomCode(IdUtils.randomUUID());
         tRoomOrderMapper.insertTRoomOrder(tRoomOrder);
         return tRoomOrder;
     }
@@ -1518,7 +1506,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         }
         TRoomOrder qry = new TRoomOrder();
         qry.setOrderNo(tRoomOrder.getOrderNo());
-        qry.setRemark(tRoomOrder.getRemark());
+        qry.setRemark(tRoomOrder.getRandomCode());
         List<TRoomOrder> roomOrders = tRoomOrderMapper.selectTRoomOrderList(qry);
         if (roomOrders.size() == 0) {
             throw new ServiceException("订单校验失败");
@@ -1570,7 +1558,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         TRoomOrder up = new TRoomOrder();
         up.setId(orderChargeReq.getId());
         up.setEndTime(endTime);
-        up.setRemark("商户续单" + orderChargeReq.getMinutes() + "分钟");
+        up.setRemark("商户续单" + orderChargeReq.getMinutes() + "分钟;" + roomOrder.getRemark());
         tRoomOrderMapper.updateTRoomOrder(up);
     }
 

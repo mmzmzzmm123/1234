@@ -26,6 +26,8 @@
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
+        <result property="leftMinute" column="left_minute"/>
+        <result property="randomCode" column="random_code"/>
     </resultMap>
 
     <sql id="selectTRoomOrderVo">
@@ -49,7 +51,7 @@
                create_by,
                create_time,
                update_by,
-               update_time
+               update_time, left_minute, random_code
         from t_room_order
     </sql>
 
@@ -72,6 +74,8 @@
             <if test="status != null ">and status = #{status}</if>
             <if test="remark != null and remark != ''">and remark = #{remark}</if>
             <if test="createBy != null  and createBy != ''">and create_by = #{createBy}</if>
+            <if test="leftMinute != null "> and left_minute = #{leftMinute}</if>
+            <if test="randomCode != null  and randomCode != ''"> and random_code = #{randomCode}</if>
         </where>
     </select>
 
@@ -205,6 +209,8 @@
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="leftMinute != null">left_minute,</if>
+            <if test="randomCode != null">random_code,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="roomId != null">#{roomId},</if>
@@ -228,6 +234,8 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="leftMinute != null">#{leftMinute},</if>
+            <if test="randomCode != null">#{randomCode},</if>
         </trim>
     </insert>
 
@@ -254,6 +262,8 @@
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="leftMinute != null">left_minute = #{leftMinute},</if>
+            <if test="randomCode != null">random_code = #{randomCode},</if>
         </trim>
         where id = #{id}
     </update>
