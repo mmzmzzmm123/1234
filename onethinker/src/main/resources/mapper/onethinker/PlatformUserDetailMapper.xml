@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.onethinker.mapper.PlatformUserDetailMapper">
+    
+    <resultMap type="PlatformUserDetail" id="PlatformUserDetailResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="enabled"    column="enabled"    />
+        <result property="weight"    column="weight"    />
+        <result property="phone"    column="phone"    />
+        <result property="avatarUrl"    column="avatar_url"    />
+        <result property="type"    column="type"    />
+        <result property="dataId"    column="data_id"    />
+        <result property="loginEndTime"    column="login_end_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+    </resultMap>
+
+    <sql id="selectPlatformUserDetailVo">
+        select id, create_time, update_time, enabled, weight, phone, avatar_url, type, data_id, login_end_time, remark, username, password from t_platform_user_detail
+    </sql>
+
+    <select id="selectPlatformUserDetailList" parameterType="PlatformUserDetail" resultMap="PlatformUserDetailResult">
+        <include refid="selectPlatformUserDetailVo"/>
+        <where>  
+            <if test="enabled != null "> and enabled = #{enabled}</if>
+            <if test="weight != null "> and weight = #{weight}</if>
+            <if test="phone != null "> and phone = #{phone}</if>
+            <if test="avatarUrl != null  and avatarUrl != ''"> and avatar_url = #{avatarUrl}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="dataId != null "> and data_id = #{dataId}</if>
+            <if test="loginEndTime != null "> and login_end_time = #{loginEndTime}</if>
+            <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+        </where>
+    </select>
+    
+    <select id="selectPlatformUserDetailById" parameterType="Long" resultMap="PlatformUserDetailResult">
+        <include refid="selectPlatformUserDetailVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPlatformUserDetail" parameterType="PlatformUserDetail" useGeneratedKeys="true" keyProperty="id">
+        insert into t_platform_user_detail
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="enabled != null">enabled,</if>
+            <if test="weight != null">weight,</if>
+            <if test="phone != null">phone,</if>
+            <if test="avatarUrl != null">avatar_url,</if>
+            <if test="type != null">type,</if>
+            <if test="dataId != null">data_id,</if>
+            <if test="loginEndTime != null">login_end_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="username != null">username,</if>
+            <if test="password != null">password,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="enabled != null">#{enabled},</if>
+            <if test="weight != null">#{weight},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="avatarUrl != null">#{avatarUrl},</if>
+            <if test="type != null">#{type},</if>
+            <if test="dataId != null">#{dataId},</if>
+            <if test="loginEndTime != null">#{loginEndTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="username != null">#{username},</if>
+            <if test="password != null">#{password},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePlatformUserDetail" parameterType="PlatformUserDetail">
+        update t_platform_user_detail
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="enabled != null">enabled = #{enabled},</if>
+            <if test="weight != null">weight = #{weight},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="dataId != null">data_id = #{dataId},</if>
+            <if test="loginEndTime != null">login_end_time = #{loginEndTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="username != null">username = #{username},</if>
+            <if test="password != null">password = #{password},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePlatformUserDetailById" parameterType="Long">
+        delete from t_platform_user_detail where id = #{id}
+    </delete>
+
+    <delete id="deletePlatformUserDetailByIds" parameterType="String">
+        delete from t_platform_user_detail where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

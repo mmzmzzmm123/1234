@@ -3,6 +3,8 @@ package com.ruoyi.onethinker.service;
 import java.util.List;
 
 import com.ruoyi.onethinker.domain.PlatformUser;
+import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
+import com.ruoyi.onethinker.dto.PlatformUserResDTO;
 
 /**
  * 平台用户Service接口
@@ -58,4 +60,11 @@ public interface IPlatformUserService {
      * @return 结果
      */
     public int deletePlatformUserById(Long id);
+
+    /**
+     * 用户登录
+     * @param reqDTO
+     * @return
+     */
+    PlatformUserResDTO platformUserServiceLogin(PlatformUserReqDTO reqDTO);
 }

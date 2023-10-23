@@ -170,6 +170,18 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
+            <!-- 业务模块-->
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>onethinker</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

@@ -7,6 +7,8 @@ import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
+import com.ruoyi.onethinker.dto.PlatformUserResDTO;
 import com.ruoyi.onethinker.mapper.PlatformUserMapper;
 import com.ruoyi.onethinker.domain.PlatformUser;
 import com.ruoyi.onethinker.service.IPlatformUserService;
@@ -88,5 +90,11 @@ public class PlatformUserServiceImpl implements IPlatformUserService {
     @Override
     public int deletePlatformUserById(Long id) {
         return platformUserMapper.deletePlatformUserById(id);
+    }
+
+    @Override
+    public PlatformUserResDTO platformUserServiceLogin(PlatformUserReqDTO reqDTO) {
+
+        return null;
     }
 }
