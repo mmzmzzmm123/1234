@@ -176,12 +176,6 @@
                 <artifactId>onethinker</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
-
-            <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-            </dependency>
-
         </dependencies>
     </dependencyManagement>
 
