@@ -64,7 +64,7 @@
           </view>
         </view>
       </view>
-      <view class="btn next-btn" @tap="submitEvent" v-if="currentIndex > 1 && lastIndex + 1 === questionList.length">提交
+      <view class="btn next-btn" @tap="submitEvent" v-if="order.gaugeStatus === 2 && currentIndex > 1 && lastIndex + 1 === questionList.length">提交
       </view>
     </scroll-view>
     <message-com :message="confirmMessage" v-if="showMessage"></message-com>
@@ -144,6 +144,29 @@ export default {
 
     this.getLast()
 
+    if (this.order.gaugeStatus === 1) {
+      const that = this
+      this.form.age = that.order.age
+      this.form.sex = that.order.sex
+      this.form.mobile = that.order.mobile
+
+      return uni.showModal({
+        showCancel: false,
+        confirmColor:'#FF703F',
+        title: '提示',
+        content: '测评已提交,可查看结果报告',
+        success: function (res) {
+          if (res.confirm) {
+            uni.navigateTo({
+              url: "/pages/evaluation/mResult?orderId=" + that.order.orderId,
+            });
+          }
+        }
+      });
+    } else {
+      this.addInterceptor()
+    }
+
     if (this.currentIndex > 1) {
       this.confirmMessage.cancelBtn.callback = this.toFirstQuestion;
       this.confirmMessage.submitBtn.callback = this.toLastQuestion;
@@ -154,7 +177,6 @@ export default {
     if (this.lastIndex === 0) {
       callTimeLoad(document.getElementById("timerBox"), true);
     }
-    this.addInterceptor()
   },
   onHide: function () {
     console.log('onHide')
