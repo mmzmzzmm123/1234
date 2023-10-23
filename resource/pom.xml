@@ -52,6 +52,14 @@
                     <groupId>com.github.jsqlparser</groupId>
                 </exclusion>
                 <exclusion>
+                    <artifactId>spring-boot-starter</artifactId>
+                    <groupId>org.springframework.boot</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>mybatis-plus</artifactId>
+                    <groupId>com.baomidou</groupId>
+                </exclusion>
+                <exclusion>
                     <artifactId>mybatis</artifactId>
                     <groupId>org.mybatis</groupId>
                 </exclusion>
@@ -59,16 +67,18 @@
                     <artifactId>mybatis-spring</artifactId>
                     <groupId>org.mybatis</groupId>
                 </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.4.3.1</version>
+            <exclusions>
                 <exclusion>
                     <artifactId>spring-boot-starter</artifactId>
                     <groupId>org.springframework.boot</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus</artifactId>
-            <version>3.5.3.2</version>
         </dependency>
         <dependency>
             <groupId>com.baomidou</groupId>

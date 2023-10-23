@@ -7,6 +7,9 @@ import com.xinyu.idol.common.constant.CacheConstants;
 import com.xinyu.idol.common.core.domain.entity.SysDictData;
 import com.xinyu.idol.common.core.redis.RedisCache;
 import com.xinyu.idol.common.utils.spring.SpringUtils;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 
 /**
  * 字典工具类
@@ -33,19 +36,31 @@ public class DictUtils
 
     /**
      * 获取字典缓存
-     * 
+     * ！！已采用新版jdk序列化器
      * @param key 参数键
      * @return dictDatas 字典数据列表
      */
     public static List<SysDictData> getDictCache(String key)
     {
-        JSONArray arrayCache = SpringUtils.getBean(RedisCache.class).getCacheObject(getCacheKey(key));
-        if (StringUtils.isNotNull(arrayCache))
-        {
-            return arrayCache.toList(SysDictData.class);
+        Object cacheObject = SpringUtils.getBean(RedisCache.class).getCacheObject(getCacheKey(key));
+        if(ObjectUtils.isNotEmpty(cacheObject)){
+            return (List<SysDictData>) cacheObject;
         }
+
+
         return null;
     }
+//上方法旧版fastjson序列化器
+//    public static List<SysDictData> getDictCache(String key)
+//    {
+//        JSONArray arrayCache = SpringUtils.getBean(RedisCache.class).getCacheObject(getCacheKey(key));
+//
+//      if (StringUtils.isNotNull(arrayCache))
+//        {
+//            return arrayCache.toList(SysDictData.class);
+//        }
+//        return null;
+//    }
 
     /**
      * 根据字典类型和字典值获取字典标签

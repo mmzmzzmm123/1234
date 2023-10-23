@@ -1,8 +1,9 @@
 package com.xinyu.idol.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xinyu.idol.pojo.entity.ContentEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.xinyu.idol.pojo.entity.vo.AddContentVo;
+import com.xinyu.idol.pojo.vo.*;
 
 import java.util.List;
 
@@ -20,8 +21,11 @@ public interface IContentService extends IService<ContentEntity> {
 
     void addContent(AddContentVo addContentVo);
 
+    IPage<PageContentResp> pageContent(PageContentReq pageContentReq);
 
+    void updateContent(UpdateContentWebListReq updateContentWebListReq);
 
+    void classifications(ClassificationsReq classificationsReq);
 
 
 }

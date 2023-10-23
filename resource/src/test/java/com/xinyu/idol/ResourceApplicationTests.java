@@ -1,25 +1,17 @@
 package com.xinyu.idol;
 
 
-import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson2.JSON;
-import com.baomidou.mybatisplus.generator.FastAutoGenerator;
-import com.baomidou.mybatisplus.generator.config.OutputFile;
-import com.baomidou.mybatisplus.generator.config.rules.DbColumnType;
-import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 import com.xinyu.idol.framework.web.service.SysLoginService;
 import com.xinyu.idol.framework.web.service.TokenService;
 import com.xinyu.idol.manager.ContentManager;
 import com.xinyu.idol.pojo.entity.ContentEntity;
-import com.xinyu.idol.pojo.entity.vo.AddContentVo;
-import net.minidev.json.JSONUtil;
+import com.xinyu.idol.pojo.vo.AddContentVo;
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.sql.Types;
-import java.util.Collections;
 import java.util.UUID;
 
 @SpringBootTest
@@ -81,6 +73,10 @@ class ResourceApplicationTests {
                 .classification3("c3")
                 .classification4("c4")
                 .description("desc")
+                .iconOsskey("icon_oss")
+                .pakFileSize(100)
+                .specialTag("tag")
+                .ownerid("213").jsonFileSize(101)
                 .displayName("disp").fileName("fileN").currentUploadTime("123").pakOsskey("pakOss").jsonOsskey("Json")
         .build();
 

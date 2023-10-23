@@ -46,6 +46,18 @@ public class ClassificationsEntity implements Serializable {
     @ApiModelProperty("菜单状态（0正常 1停用）")
     private String status;
 
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    @ApiModelProperty("显示顺序")
+    private Integer level;
+
     public Long getId() {
         return id;
     }
