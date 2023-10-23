@@ -111,6 +111,10 @@ public class AppPsyGaugeController extends BaseController
         // 将多选题的答案选项分组归并
 //        Map<Integer, Long> result  = psyGaugeQuestionsResultList.stream().collect(Collectors.groupingBy(PsyGaugeQuestionsResult::getQuestionsId, Collectors.counting()));
         gaugeVO.setFinishedNum(psyGaugeQuestionsResultList.size());
+        if (gaugeVO.getNum() != null) {
+            int num = psyOrderService.getOrderNumByGaugeId(id);
+            gaugeVO.setNum(gaugeVO.getNum() + num);
+        }
 
         return AjaxResult.success(gaugeVO);
     }

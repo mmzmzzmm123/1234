@@ -131,6 +131,11 @@ public class PsyOrderServiceImpl implements IPsyOrderService {
         return psyOrderMapper.getMyReportNum(loginUser);
     }
 
+    @Override
+    public int getOrderNumByGaugeId(Integer gaugeId) {
+        return psyOrderMapper.getOrderNumByGaugeId(gaugeId);
+    }
+
     /**
      * 查询测评订单
      *

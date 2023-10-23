@@ -14,6 +14,9 @@
         <result property="createTime" column="create_time"/>
         <result property="createBy" column="create_by"/>
         <result property="userId" column="user_id"/>
+        <result property="sex" column="sex"/>
+        <result property="age" column="age"/>
+        <result property="mobile" column="mobile"/>
     </resultMap>
 
     <sql id="selectPsyOrderVo">
@@ -26,6 +29,9 @@
                create_time,
                create_by,
                user_id,
+               sex,
+               age,
+               mobile,
                score
         from psy_order
     </sql>
@@ -100,6 +106,9 @@
             <if test="score != null and score != ''">score = #{score},</if>
             <if test="resultUrl != null and resultUrl != ''">result_url = #{resultUrl},</if>
             <if test="userId != null">user_id = #{userId},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="mobile != null and mobile != ''">mobile = #{mobile},</if>
         </trim>
 
         <trim prefix="where" prefixOverrides="and">
@@ -123,7 +132,7 @@
     </delete>
 
     <select id="queryOrderPage" resultType="com.ruoyi.gauge.domain.PsyOrder">
-        select po.id, po.order_id as orderId, po.gauge_id as gaugeId, gauge.title as gaugeTitle,
+        select po.id, po.order_id as orderId, po.gauge_id as gaugeId, gauge.title as gaugeTitle,po.mobile,po.sex,po.age,
                po.order_status as orderStatus, po.amount, po.gauge_status as gaugeStatus, po.create_time as createTime, po.create_by as createBy,
                gauge.gauge_des as gaugeDes, gauge.type as gaugeType, gauge.gauge_num,
                (select count(id) from psy_gauge_questions_result where order_id = po.id) as finishedNum
@@ -146,8 +155,15 @@
           and gauge_status = 1
     </select>
 
+    <select id="getOrderNumByGaugeId" resultType="java.lang.Integer">
+        select count(1)
+        from psy_order
+        where gauge_id = #{gaugeId}
+          and gauge_status = 1
+    </select>
+
     <select id="queryOrderList" resultType="com.ruoyi.gauge.domain.PsyOrder">
-        select po.id,po.order_id,po.gauge_id,po.order_status,po.amount,po.gauge_status,po.create_time,po.create_by,po.user_id,
+        select po.id,po.order_id,po.gauge_id,po.order_status,po.amount,po.gauge_status,po.create_time,po.create_by,po.user_id,po.mobile,po.sex,po.age,
                gauge.title as gaugeTitle,pu.name as userName
         from psy_order po inner join psy_gauge gauge ON po.gauge_id = gauge.id
         left join psy_user pu ON po.user_id = pu.id

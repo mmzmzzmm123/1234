@@ -124,6 +124,13 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="测评次数" prop="num">
+              <el-input-number v-model="form.num" :min="0" placeholder="测评次数" />
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <el-form-item label="测评说明" prop="gaugeDes">
           <editor v-model="form.gaugeDes" :min-height="192" :extraData="extraData"/>

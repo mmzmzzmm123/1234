@@ -77,6 +77,8 @@ public interface PsyOrderMapper
 
     int getMyReportNum(LoginDTO loginDTO);
 
+    int getOrderNumByGaugeId(Integer gaugeId);
+
     void updatePsyOrderByOrderId(HashMap<String, Object> paramMap);
 
     /**

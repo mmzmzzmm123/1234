@@ -41,10 +41,8 @@ export default {
       });
     }
   },
-  setResult: async (orderId) => {
-    let res = await httprequest.post("/app/gauge/result/commit", {
-      orderId,
-    });
+  setResult: async (data) => {
+    let res = await httprequest.post("/app/gauge/result/commit", data);
     if (res.code == 200) {
       return res;
     } else {

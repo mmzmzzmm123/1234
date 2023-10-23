@@ -42,6 +42,15 @@ public class PsyOrder extends BaseEntity
     @Excel(name = "应付金额")
     private BigDecimal amount;
 
+    @Excel(name = "性别(1-男，2-女)")
+    private String sex;
+
+    @Excel(name = "年龄")
+    private Integer age;
+
+    @Excel(name = "手机号")
+    private String mobile;
+
     /** 测评完成情况(1-已完成，2-未完成) */
     @Excel(name = "测评完成情况(1-已完成，2-未完成)")
     private Integer gaugeStatus;

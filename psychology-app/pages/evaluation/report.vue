@@ -35,13 +35,10 @@
       });
     },
     methods: {
-      async toResult(item) {
-        let result = await questionServer.setResult(item.id);
-        if (result.code === 200) {
-          uni.navigateTo({
-            url: "/pages/evaluation/mResult?orderId=" + item.orderId,
-          });
-        }
+      toResult(item) {
+        uni.navigateTo({
+          url: "/pages/evaluation/mResult?orderId=" + item.orderId,
+        });
       }
     },
   }

@@ -77,6 +77,8 @@ public interface IPsyOrderService
 
     int getMyReportNum(LoginDTO loginUser);
 
+    int getOrderNumByGaugeId(Integer gaugeId);
+
     /**
      * 查询测评订单
      *

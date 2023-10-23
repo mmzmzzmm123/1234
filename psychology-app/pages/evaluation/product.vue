@@ -7,7 +7,7 @@
     <view class="info">
       <view class="item">{{ productInfo.gaugeNum }}道精选题</view>
       <view class="item">约30分钟</view>
-      <view class="item">{{ productInfo.num || 10 }}人已测</view>
+      <view class="item">{{ productInfo.num || 100 }}人已测</view>
     </view>
     <view class="bg-line"></view>
     <view class="info-title title">测评介绍</view>
@@ -154,19 +154,16 @@ export default {
         }
       }
     },
-    async toResult() {
+    toResult() {
       if (this.productInfo.size > 1) {
         return uni.navigateTo({
           url: "/pages/evaluation/report"
         });
       }
 
-      let result = await questionServer.setResult(this.productInfo.orderId);
-      if (result.code === 200) {
-        uni.navigateTo({
-          url: "/pages/evaluation/mResult?orderId=" + this.productInfo.orderNo,
-        });
-      }
+      uni.navigateTo({
+        url: "/pages/evaluation/mResult?orderId=" + this.productInfo.orderNo,
+      });
     },
     toBuy() {
       // 再次购买

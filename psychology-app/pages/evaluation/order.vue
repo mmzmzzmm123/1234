@@ -65,24 +65,10 @@
           gaugeStatus: status
         });
       },
-      async toResult(order) {
-        let result = await questionServer.setResult(order.id);
-        if (result.code === 200) {
-          uni.navigateTo({
-            url: "/pages/evaluation/mResult?orderId=" + order.orderId,
-          });
-
-          // if ([3, 4, 5].includes(order.gaugeType)) {
-          //   return  uni.navigateTo({
-          //     url: "/pages/evaluation/mResult?orderId=" + order.orderId,
-          //   });
-          // }
-          //
-          // uni.setStorageSync("result", result.data);
-          // uni.navigateTo({
-          //   url: "/pages/evaluation/result?productId=" + order.gaugeId,
-          // });
-        }
+      toResult(order) {
+        uni.navigateTo({
+          url: "/pages/evaluation/mResult?orderId=" + order.orderId,
+        });
       },
       copyOrderNo(orderNo) {
         var input = document.createElement("input");

@@ -190,20 +190,23 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
         paramMap.put("score",sum);
         //获取当前得分匹配结果
         PsyGaugeScoreSetting psyGaugeScoreSetting = psyGaugeScoreSettingMapper.selectPsyGaugeScoreSettingByGaugeId(paramMap);
+        // 测评完成更新测评状态
+        PsyOrder psyOrder = new PsyOrder();
+        psyOrder.setUserId(userId);
+        psyOrder.setId(gaugeCommitResultDTO.getOrderId());
+        psyOrder.setGaugeStatus(GaugeStatus.FINISHED.getValue());
+        psyOrder.setMobile(gaugeCommitResultDTO.getMobile());
+        psyOrder.setAge(gaugeCommitResultDTO.getAge());
+        psyOrder.setSex(gaugeCommitResultDTO.getSex());
+        psyOrder.setScore(sum);
+
         if(psyGaugeScoreSetting!=null){
             //将该订单答题情况改为已完成
-            psyOrderMapper.updatePsyOrder(PsyOrder.builder()
-                    .id(gaugeCommitResultDTO.getOrderId()).gaugeStatus(GaugeStatus.FINISHED.getValue())
-                    .score(sum).resultUrl(psyGaugeScoreSetting.getProposal())
-                    .build());
-
-            return psyGaugeScoreSetting.getResult();
+            psyOrder.setResultUrl(psyGaugeScoreSetting.getProposal());
         }
 
-        //计算得分总和 得出结论
-        /*gaugeCommitResultDTO.setUserId(loginDTO.getUserId());
-        String result = psyGaugeQuestionsResultMapper.getSimpleResultByScores(gaugeCommitResultDTO);*/
-        return null;
+        psyOrderMapper.updatePsyOrder(psyOrder);
+        return "ok";
     }
 
     /**

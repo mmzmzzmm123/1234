@@ -29,5 +29,14 @@ public class GaugeCommitResultDTO {
     @ApiModelProperty("用户id")
     private Integer userId;
 
+    @ApiModelProperty("性别")
+    private String sex;
+
+    @ApiModelProperty("年龄")
+    private Integer age;
+
+    @ApiModelProperty("手机号")
+    private String mobile;
+
 
 }

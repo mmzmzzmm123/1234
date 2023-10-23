@@ -36,6 +36,34 @@
           <image :src="userInfo.avatar" class="q-user-pic q-left"></image>
         </view>
       </view>
+      <view class="q-chat-block" v-if="currentIndex > 1 && lastIndex + 1 === questionList.length">
+        <view class="q-chat-left">
+          <image :src="logo" class="q-user-pic q-right"></image>
+          <view class="q-chatbox q-chatbox-left">
+            <view class="info-title">测评结束，请填写信息</view>
+            <view class="info-desc">请务必选择<text style="color: #FF703F">真实性别和年龄</text>，这将决定本次测评的计算准确度</view>
+            <view class="answer-box">
+              <view class="item" style="justify-content: space-between;">
+                <view class="item-title">性别</view>
+                <radio-group @change="sexChange">
+                  <radio class='item-radio' color="#FF703F" :checked="form.sex==='0'" value="0">男</radio>
+                  <radio class='item-radio' color="#FF703F" :checked="form.sex==='1'" value="1">女</radio>
+                </radio-group>
+              </view>
+              <view class="item" style="justify-content: space-between;">
+                <view class="item-title">年龄</view>
+                <picker @change="ageChange" :value="form.age" :range="ages">
+                  <view class="uni-input">{{ form.age > 0 ? form.age + '岁' : '请选择年龄' }} ></view>
+                </picker>
+              </view>
+              <view class="item" style="justify-content: space-between;">
+                <view class="item-title">手机号</view>
+                <input class="item-input" v-model="form.mobile" type="number" maxlength="11" placeholder="请输入手机号"/>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
       <view class="btn next-btn" @tap="submitEvent" v-if="currentIndex > 1 && lastIndex + 1 === questionList.length">提交
       </view>
     </scroll-view>
@@ -59,6 +87,13 @@ export default {
       checkNull: false,
       indexArr: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'],
       lats: [],
+      form: {
+        orderId: null,
+        mobile: null,
+        sex: '0',
+        age: 20
+      },
+      ages: [],
       questionList: [],
       addInterceptorList: ["navigateTo", "redirectTo", "reLaunch", "switchTab"],
       lastIndex: 0,
@@ -85,6 +120,8 @@ export default {
     }
   },
   async created() {
+    this.ages = Array.from({ length: 200 }, (_, i) => i + 1);
+    console.log(this.ages)
     this.userInfo = utils.getUserInfo()
     if (!this.userInfo && await utils.loginCallback()) {
       this.userInfo = utils.getUserInfo()
@@ -128,6 +165,20 @@ export default {
     this.rmInterceptor()
   },
   methods: {
+    resetForm() {
+      this.form = {
+        orderId: null,
+        mobile: null,
+        sex: '0',
+        age: 20
+      }
+    },
+    ageChange(e) {
+      this.form.age = e.detail.value + 1
+    },
+    sexChange(e) {
+      this.form.sex = e.detail.value
+    },
     /*
         页面跳转拦截器
       */
@@ -239,11 +290,27 @@ export default {
     },
     //提交
     async submitEvent() {
+      if (!this.form.age) {
+        return uni.showToast({
+          icon: 'none',
+          title: '请选择年龄',
+        })
+      }
+
+      const phoneRegex = /^1[3-9]\d{9}$/
+      if (!this.form.mobile || !phoneRegex.test(this.form.mobile)) {
+        return uni.showToast({
+          icon: 'none',
+          title: '请输入正确的手机号',
+        })
+      }
+
       // 已答题完成，移除页面跳转拦截器
       this.rmInterceptor()
-      let result = await questionServer.setResult(this.orderId);
+      this.form.orderId = this.orderId
+      let result = await questionServer.setResult(this.form);
       if (result.code === 200) {
-        uni.setStorageSync("result", result.data);
+        this.resetForm()
         clearTimeLoad();
         uni.navigateTo({
           url: "/pages/evaluation/mResult?orderId=" + this.order.orderId,
@@ -375,6 +442,25 @@ page {
       flex-direction: row;
       align-items: center;
 
+      .item-title {
+        min-width: calc(4em + 15px);
+        text-align: justify;
+        padding-right: 16px;
+        font-size: 16px;
+        position: relative;
+        //height: 32px;
+        //line-height: 32px;
+      }
+
+      .item-input {
+        text-align: right;
+      }
+
+      .item-radio {
+        margin-right: 20upx;
+        //background: #FF703F;
+      }
+
       .check-box {
         width: 32upx;
         height: 32upx;
@@ -402,7 +488,7 @@ page {
   }
 
   .btn {
-    margin: 10upx auto;
+    margin: 32upx auto;
     width: 590upx;
     height: 88upx;
     border-radius: 44upx;
@@ -411,7 +497,7 @@ page {
     font-weight: 600;
     font-size: 32upx;
     //position: absolute;
-    bottom: 56upx;
+    //bottom: 56upx;
 
     &.next-btn {
       background: #FF703F;
@@ -498,6 +584,22 @@ page {
       border: 1upx solid #fff;
       display: inline-block;
       width: 530upx;
+    }
+    
+    .info-title {
+      text-align: center;
+      font-size: 28upx;
+      font-weight: 500;
+      color: #333333;
+      line-height: 40upx;
+      margin: 30upx auto;
+    }
+
+    .info-desc{
+      font-size: 26rpx;
+      font-weight: 400;
+      color: #777777;
+      margin-bottom: 32upx;
     }
 
     .q-chatbox-left::before {
