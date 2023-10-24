@@ -138,6 +138,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
             platformUserDetail.setDataId(reqDTO.getOpenId());
             platformUserDetail.setWeight(System.currentTimeMillis());
             platformUserDetail.setCreateTime(new Date());
+            platformUserDetail.setLoginEndTime(System.currentTimeMillis());
             platformUserDetailMapper.insertPlatformUserDetail(platformUserDetail);
         } else {
             // 更新手机号

@@ -16,6 +16,8 @@ public class PlatformUserReqDTO {
 
     private String userName;
     private String password;
+
+    private String code;
     private String openId;
     private String phone;
 
@@ -77,5 +79,13 @@ public class PlatformUserReqDTO {
 
     public void setSourceType(String sourceType) {
         this.sourceType = sourceType;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }
