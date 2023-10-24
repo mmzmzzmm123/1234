@@ -523,7 +523,7 @@ export default {
 #if($table.sub)
       this.${subclassName}List = [];
 #end
-      this.resetForm("form");
+      this.resetForm("formDialog");
     },
     /** 搜索按钮操作 */
     handleQuery() {
