@@ -2,6 +2,9 @@ package com.ruoyi.mail.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +30,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author ruoyi
  * @date 2023-10-21
  */
+@Api("邮件用户列表")
 @RestController
 @RequestMapping("/mail/user")
 public class MailUserController extends BaseController
@@ -37,6 +41,7 @@ public class MailUserController extends BaseController
     /**
      * 查询邮件用户列表列表
      */
+    @ApiOperation("查询邮件用户列表列表")
     @PreAuthorize("@ss.hasPermi('system:user:list')")
     @GetMapping("/list")
     public TableDataInfo list(MailUser mailUser)
@@ -49,6 +54,7 @@ public class MailUserController extends BaseController
     /**
      * 导出邮件用户列表列表
      */
+    @ApiOperation("导出邮件用户列表列表")
     @PreAuthorize("@ss.hasPermi('system:user:export')")
     @Log(title = "邮件用户列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -62,6 +68,7 @@ public class MailUserController extends BaseController
     /**
      * 获取邮件用户列表详细信息
      */
+    @ApiOperation("获取邮件用户列表详细信息")
     @PreAuthorize("@ss.hasPermi('system:user:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
@@ -72,6 +79,7 @@ public class MailUserController extends BaseController
     /**
      * 新增邮件用户列表
      */
+    @ApiOperation("新增邮件用户列表")
     @PreAuthorize("@ss.hasPermi('system:user:add')")
     @Log(title = "邮件用户列表", businessType = BusinessType.INSERT)
     @PostMapping
@@ -83,6 +91,7 @@ public class MailUserController extends BaseController
     /**
      * 修改邮件用户列表
      */
+    @ApiOperation("修改邮件用户列表")
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "邮件用户列表", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -94,6 +103,7 @@ public class MailUserController extends BaseController
     /**
      * 删除邮件用户列表
      */
+    @ApiOperation("删除邮件用户列表")
     @PreAuthorize("@ss.hasPermi('system:user:remove')")
     @Log(title = "邮件用户列表", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")

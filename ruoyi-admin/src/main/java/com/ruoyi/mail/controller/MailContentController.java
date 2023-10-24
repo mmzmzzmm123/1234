@@ -2,6 +2,9 @@ package com.ruoyi.mail.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +30,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @author ruoyi
  * @date 2023-10-21
  */
+@Api("晚安语列表")
 @RestController
 @RequestMapping("/mail/content")
 public class MailContentController extends BaseController
@@ -37,6 +41,7 @@ public class MailContentController extends BaseController
     /**
      * 查询晚安语列表列表
      */
+    @ApiOperation("查询晚安语列表列表")
     @PreAuthorize("@ss.hasPermi('system:content:list')")
     @GetMapping("/list")
     public TableDataInfo list(MailContent mailContent)
@@ -49,6 +54,7 @@ public class MailContentController extends BaseController
     /**
      * 导出晚安语列表列表
      */
+    @ApiOperation("导出晚安语列表列表")
     @PreAuthorize("@ss.hasPermi('system:content:export')")
     @Log(title = "晚安语列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
@@ -62,6 +68,7 @@ public class MailContentController extends BaseController
     /**
      * 获取晚安语列表详细信息
      */
+    @ApiOperation("获取晚安语列表详细信息")
     @PreAuthorize("@ss.hasPermi('system:content:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
@@ -72,6 +79,7 @@ public class MailContentController extends BaseController
     /**
      * 新增晚安语列表
      */
+    @ApiOperation("新增晚安语列表")
     @PreAuthorize("@ss.hasPermi('system:content:add')")
     @Log(title = "晚安语列表", businessType = BusinessType.INSERT)
     @PostMapping
@@ -83,6 +91,7 @@ public class MailContentController extends BaseController
     /**
      * 修改晚安语列表
      */
+    @ApiOperation("修改晚安语列表")
     @PreAuthorize("@ss.hasPermi('system:content:edit')")
     @Log(title = "晚安语列表", businessType = BusinessType.UPDATE)
     @PutMapping
@@ -94,6 +103,7 @@ public class MailContentController extends BaseController
     /**
      * 删除晚安语列表
      */
+    @ApiOperation("晚安语列表")
     @PreAuthorize("@ss.hasPermi('system:content:remove')")
     @Log(title = "晚安语列表", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
