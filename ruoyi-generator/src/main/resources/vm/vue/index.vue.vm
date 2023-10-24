@@ -181,7 +181,7 @@
 
     <!-- 添加或修改${functionName}对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+      <el-form ref="formDialog" :model="form" :rules="rules" label-width="80px">
 #foreach($column in $columns)
 #set($field=$column.javaField)
 #if($column.insert && !$column.pk)
@@ -472,7 +472,7 @@ export default {
 #if($table.sub)
       this.${subclassName}List = [];
 #end
-      this.resetForm("form");
+      this.resetForm("formDialog");
     },
     /** 搜索按钮操作 */
     handleQuery() {
@@ -522,7 +522,7 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
-      this.#[[$]]#refs["form"].validate(valid => {
+      this.#[[$]]#refs["formDialog"].validate(valid => {
         if (valid) {
 #foreach ($column in $columns)
 #if($column.htmlType == "checkbox")
