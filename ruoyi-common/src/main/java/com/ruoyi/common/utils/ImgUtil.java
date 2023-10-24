@@ -28,7 +28,7 @@ public class ImgUtil {
         byte[] bytes = baos.toByteArray();//转换成字节
         BASE64Encoder encoder = new BASE64Encoder();
         String png_base64 = encoder.encodeBuffer(bytes).trim();//转换成base64串
-        png_base64 = png_base64.replaceAll("\n", "").replaceAll("\r", "");//删除 \r\n
+        png_base64 = png_base64.replaceAll("\n", "").replaceAll("\r ", "");//删除 \r\n
         System.out.println("值为：" + "data:image/jpg;base64," + png_base64);
         return "data:image/jpg;base64," + png_base64;
     }

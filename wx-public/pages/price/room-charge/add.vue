@@ -9,7 +9,7 @@
 					<u-input type="digit" v-model="model.price" placeholder="请输入套餐价格"></u-input>
 				</u-form-item>
 				<u-form-item label="可用时长" prop="minutes" required>
-					<u-input type="digit" v-model="model.minutes"  placeholder="请输入套餐可用时长"></u-input>(分钟)
+					<u-input type="digit" v-model="model.minutes" placeholder="请输入套餐可用时长"></u-input>(分钟)
 				</u-form-item>
 			</u-form>
 		</view>
@@ -56,11 +56,12 @@
 		},
 		onLoad(option) {
 			if (option.roomId) {
-				this.model.roomId = option.roomId;
+				this.model.roomId = option.roomId
+				this.roomId = option.roomId
 			}
 			if (option.id) {
 				this.model.id = option.id;
-				this.$api.getRoomChargePrice(this.model.id).then(res => {
+				this.$api.getRoomChargePrice(this.roomId).then(res => {
 					this.model = res;
 				})
 			}
