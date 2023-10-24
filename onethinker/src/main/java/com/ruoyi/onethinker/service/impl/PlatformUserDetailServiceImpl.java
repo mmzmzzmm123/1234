@@ -1,15 +1,19 @@
 package com.ruoyi.onethinker.service.impl;
 
+import java.util.Date;
 import java.util.List;
-
-import com.ruoyi.common.utils.DateUtils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
-import com.ruoyi.onethinker.mapper.PlatformUserDetailMapper;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.onethinker.domain.PlatformUser;
 import com.ruoyi.onethinker.domain.PlatformUserDetail;
+import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
+import com.ruoyi.onethinker.mapper.PlatformUserDetailMapper;
 import com.ruoyi.onethinker.service.IPlatformUserDetailService;
+import com.ruoyi.system.service.ISysConfigService;
 
 /**
  * 平台用户详情信息Service业务层处理
@@ -22,6 +26,8 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
     @Autowired
     private PlatformUserDetailMapper platformUserDetailMapper;
 
+    @Autowired
+    private ISysConfigService sysConfigService;
     /**
      * 查询平台用户详情信息
      *
@@ -88,5 +94,66 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
     @Override
     public int deletePlatformUserDetailById(Long id) {
         return platformUserDetailMapper.deletePlatformUserDetailById(id);
+    }
+
+    @Override
+    public void saveEntryUserDetailByAccount(PlatformUser platformUser) {
+        PlatformUserDetail platformUserDetail = new PlatformUserDetail();
+        platformUserDetail.setAvatarUrl(platformUser.getAvatarUrl());
+        platformUserDetail.setEnabled(PlatformUserDetail.STATE_TYPE_ENABLED);
+        platformUserDetail.setType(PlatformUserReqDTO.SOURCE_TYPE_ACCOUNT);
+        platformUserDetail.setPhone(platformUser.getPhone());
+        platformUserDetail.setUsername(platformUser.getPhone());
+        platformUserDetail.setNickName(platformUser.getNickName());
+        platformUserDetail.setPassword(sysConfigService.selectConfigByKey(PlatformUserDetail.DEFAULT_PASSWORD));
+        platformUserDetail.setDataId(platformUser.getPhone());
+        platformUserDetail.setWeight(System.currentTimeMillis());
+        platformUserDetail.setCreateTime(new Date());
+        platformUserDetailMapper.insertPlatformUserDetail(platformUserDetail);
+    }
+
+    @Override
+    public void saveEntryUserDetailByWx(PlatformUser platformUser, PlatformUserReqDTO reqDTO) {
+        PlatformUserDetail platformUserDetail = new PlatformUserDetail();
+        platformUserDetail.setDataId(reqDTO.getOpenId());
+        platformUserDetail.setType(PlatformUserReqDTO.SOURCE_TYPE_WX);
+        List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
+        if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
+            // 保存
+            platformUserDetail.setAvatarUrl(ObjectUtils.isEmpty(reqDTO.getAvatarUrl()) ? platformUser.getAvatarUrl() : reqDTO.getAvatarUrl());
+            platformUserDetail.setNickName(ObjectUtils.isEmpty(reqDTO.getNickName()) ? platformUser.getNickName() : reqDTO.getNickName());
+            platformUserDetail.setEnabled(PlatformUserDetail.STATE_TYPE_ENABLED);
+            platformUserDetail.setType(PlatformUserReqDTO.SOURCE_TYPE_WX);
+            platformUserDetail.setPhone(platformUser.getPhone());
+            platformUserDetail.setDataId(reqDTO.getOpenId());
+            platformUserDetail.setWeight(System.currentTimeMillis());
+            platformUserDetail.setCreateTime(new Date());
+            platformUserDetailMapper.insertPlatformUserDetail(platformUserDetail);
+        } else {
+            // 更新手机号
+            platformUserDetail = platformUserDetails.get(0);
+            if (!ObjectUtils.isEmpty(platformUserDetail.getPhone()) && !platformUserDetail.getPhone().equals(platformUser.getPhone())) {
+                throw new RuntimeException("该微信号已绑定手机号");
+            }
+            platformUserDetail.setPhone(platformUser.getPhone());
+            platformUserDetail.setUpdateTime(new Date());
+            platformUserDetailMapper.updatePlatformUserDetail(platformUserDetail);
+        }
+    }
+
+    @Override
+    public void existsWxRegister(String openId, String phone) {
+        PlatformUserDetail platformUserDetail = new PlatformUserDetail();
+        platformUserDetail.setPhone(phone);
+        platformUserDetail.setType(PlatformUserReqDTO.SOURCE_TYPE_WX);
+        List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
+        if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
+            return;
+        }
+        platformUserDetail = platformUserDetails.get(0);
+        if (!platformUserDetail.getDataId().equals(openId)) {
+            throw new RuntimeException("手机号已被其他微信绑定");
+        }
+
     }
 }

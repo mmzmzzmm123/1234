@@ -18,6 +18,16 @@ public class BaseEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
+     * 启用
+     */
+    public static final Integer STATE_TYPE_ENABLED = 1;
+
+    /**
+     * 禁用
+     */
+    public static final Integer STATE_TYPE_DISABLE = 0;
+
+    /**
      * 搜索值
      */
     @JsonIgnore

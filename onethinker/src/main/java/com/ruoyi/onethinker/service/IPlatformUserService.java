@@ -17,4 +17,9 @@ public interface IPlatformUserService {
      * @return
      */
     PlatformUserResDTO login(PlatformUserReqDTO reqDTO);
+
+    /**
+     * 注册
+     */
+    void register(PlatformUserReqDTO reqDTO);
 }

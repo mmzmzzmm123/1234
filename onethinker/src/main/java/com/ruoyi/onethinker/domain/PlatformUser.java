@@ -13,7 +13,12 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @date 2023-10-23
  */
 public class PlatformUser extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
+
+    public static final String DEFAULT_AVATAR_URL = "default_avatar_url";
+
+    public static final String DEFAULT_NICK_NAME = "default_nick_name";
 
     /**
      * 表主键
@@ -24,7 +29,7 @@ public class PlatformUser extends BaseEntity {
      * 是否可见，0为不可见，1为可见
      */
     @Excel(name = "是否可见，0为不可见，1为可见")
-    private Long enabled;
+    private Integer enabled;
 
     /**
      * 权重
@@ -42,7 +47,7 @@ public class PlatformUser extends BaseEntity {
      * 电话
      */
     @Excel(name = "电话")
-    private Long phone;
+    private String phone;
 
     /**
      * 用户头像
@@ -58,11 +63,11 @@ public class PlatformUser extends BaseEntity {
         return id;
     }
 
-    public void setEnabled(Long enabled) {
+    public void setEnabled(Integer enabled) {
         this.enabled = enabled;
     }
 
-    public Long getEnabled() {
+    public Integer getEnabled() {
         return enabled;
     }
 
@@ -82,11 +87,11 @@ public class PlatformUser extends BaseEntity {
         return nickName;
     }
 
-    public void setPhone(Long phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
-    public Long getPhone() {
+    public String getPhone() {
         return phone;
     }
 

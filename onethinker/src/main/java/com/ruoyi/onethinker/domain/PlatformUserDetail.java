@@ -15,6 +15,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
 public class PlatformUserDetail extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+    public static final String DEFAULT_PASSWORD = "default_password";
+
     /**
      * 表主键
      */
@@ -24,7 +26,7 @@ public class PlatformUserDetail extends BaseEntity {
      * 是否可见，0为不可见，1为可见
      */
     @Excel(name = "是否可见，0为不可见，1为可见")
-    private Long enabled;
+    private Integer enabled;
 
     /**
      * 权重
@@ -36,7 +38,7 @@ public class PlatformUserDetail extends BaseEntity {
      * 电话
      */
     @Excel(name = "电话")
-    private Long phone;
+    private String phone;
 
     /**
      * 用户头像
@@ -47,14 +49,14 @@ public class PlatformUserDetail extends BaseEntity {
     /**
      * 用户类型: 1：微信用户
      */
-    @Excel(name = "用户类型: 1：微信用户")
-    private Long type;
+    @Excel(name = "用户类型: 1：微信用户 2:账户密码登录")
+    private String type;
 
     /**
      * 抽象id，针对不同平台标识唯一标识
      */
     @Excel(name = "抽象id，针对不同平台标识唯一标识")
-    private Long dataId;
+    private String dataId;
 
     /**
      * 最后登录时间
@@ -74,84 +76,98 @@ public class PlatformUserDetail extends BaseEntity {
     @Excel(name = "用户密码")
     private String password;
 
-    public void setId(Long id) {
-        this.id = id;
+    /**
+     * 用户昵称
+     */
+    @Excel(name = "用户昵称")
+    private String nickName;
+
+    public String getNickName() {
+        return nickName;
+    }
+
+    public void setNickName(String nickName) {
+        this.nickName = nickName;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setEnabled(Long enabled) {
-        this.enabled = enabled;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public Long getEnabled() {
+    public Integer getEnabled() {
         return enabled;
     }
 
-    public void setWeight(Long weight) {
-        this.weight = weight;
+    public void setEnabled(Integer enabled) {
+        this.enabled = enabled;
     }
 
     public Long getWeight() {
         return weight;
     }
 
-    public void setPhone(Long phone) {
-        this.phone = phone;
+    public void setWeight(Long weight) {
+        this.weight = weight;
     }
 
-    public Long getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public String getAvatarUrl() {
         return avatarUrl;
     }
 
-    public void setType(Long type) {
-        this.type = type;
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
-    public Long getType() {
+    public String getType() {
         return type;
     }
 
-    public void setDataId(Long dataId) {
-        this.dataId = dataId;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public Long getDataId() {
+    public String getDataId() {
         return dataId;
     }
 
-    public void setLoginEndTime(Long loginEndTime) {
-        this.loginEndTime = loginEndTime;
+    public void setDataId(String dataId) {
+        this.dataId = dataId;
     }
 
     public Long getLoginEndTime() {
         return loginEndTime;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setLoginEndTime(Long loginEndTime) {
+        this.loginEndTime = loginEndTime;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override

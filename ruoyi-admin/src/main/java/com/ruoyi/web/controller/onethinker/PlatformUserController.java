@@ -6,12 +6,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
 import com.ruoyi.onethinker.dto.PlatformUserResDTO;
 import com.ruoyi.onethinker.service.IPlatformUserService;
-
-import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.onethinker.service.PlatformUserFactory;
 
 /**
@@ -34,4 +33,13 @@ public class PlatformUserController extends BaseController {
         PlatformUserResDTO result = platformUserService.login(reqDTO);
         return AjaxResult.success("登录成功",result);
     }
+
+    @PostMapping(value = "/register")
+    public AjaxResult platformUserRegister(@RequestBody PlatformUserReqDTO reqDTO) {
+        IPlatformUserService platformUserService = platformUserFactory.queryPlatformUserServiceBySourceType(reqDTO.getSourceType());
+        platformUserService.register(reqDTO);
+        return AjaxResult.success("注册成功");
+    }
+
+
 }

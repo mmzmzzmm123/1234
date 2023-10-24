@@ -180,11 +180,9 @@ CREATE TABLE `t_platform_user`
     `update_time` bigint       DEFAULT '0' COMMENT '更新时间',
     `enabled`     int          DEFAULT '1' COMMENT '是否可见，0为不可见，1为可见',
     `weight`      bigint       DEFAULT '0' COMMENT '权重',
-    `username`    varchar(20)  DEFAULT NULL COMMENT '用户账号',
     `nick_name`   varchar(255) DEFAULT NULL COMMENT '用户昵称',
-    `phone`       int          DEFAULT NULL COMMENT '电话',
+    `phone`       varchar      DEFAULT NULL COMMENT '电话',
     `avatar_url`  varchar(255) DEFAULT NULL COMMENT '用户头像',
-    `password`    varchar(255) DEFAULT '' COMMENT '密码',
     `remark`      varchar(255) DEFAULT '' COMMENT '备注',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb3 COMMENT='平台用户';
@@ -196,16 +194,16 @@ DROP TABLE IF EXISTS `t_platform_user_detail`;
 CREATE TABLE `t_platform_user_detail`
 (
     `id`             bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '表主键',
-    `create_time`    bigint          DEFAULT '0' COMMENT '添加时间',
-    `update_time`    bigint          DEFAULT '0' COMMENT '更新时间',
-    `enabled`        int             DEFAULT '1' COMMENT '是否可见，0为不可见，1为可见',
-    `weight`         bigint          DEFAULT '0' COMMENT '权重',
-    `phone`          int             DEFAULT NULL COMMENT '电话',
-    `avatar_url`     varchar(255)    DEFAULT NULL COMMENT '用户头像',
-    `type`           int    NOT NULL DEFAULT '0' COMMENT '用户类型: 1：微信用户',
-    `data_id`        int    NOT NULL DEFAULT '0' COMMENT '抽象id，针对不同平台标识唯一标识',
-    `login_end_time` bigint NOT NULL DEFAULT '0' COMMENT '最后登录时间',
-    `remark`         varchar(255)    DEFAULT '' COMMENT '备注',
+    `create_time`    bigint           DEFAULT '0' COMMENT '添加时间',
+    `update_time`    bigint           DEFAULT '0' COMMENT '更新时间',
+    `enabled`        int              DEFAULT '1' COMMENT '是否可见，0为不可见，1为可见',
+    `weight`         bigint           DEFAULT '0' COMMENT '权重',
+    `phone`          varchar          DEFAULT NULL COMMENT '电话',
+    `avatar_url`     varchar(255)     DEFAULT NULL COMMENT '用户头像',
+    `type`           int     NOT NULL DEFAULT '0' COMMENT '用户类型: 1：微信用户',
+    `data_id`        varchar NOT NULL DEFAULT '0' COMMENT '抽象id，针对不同平台标识唯一标识',
+    `login_end_time` bigint  NOT NULL DEFAULT '0' COMMENT '最后登录时间',
+    `remark`         varchar(255)     DEFAULT '' COMMENT '备注',
     PRIMARY KEY (`id`),
     UNIQUE KEY (`phone`,`type`)
 ) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb3 COMMENT='平台用户详情信息';

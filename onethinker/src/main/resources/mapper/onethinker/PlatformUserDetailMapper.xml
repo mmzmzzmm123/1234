@@ -18,10 +18,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
         <result property="username"    column="username"    />
         <result property="password"    column="password"    />
+        <result property="nickName"    column="nick_name"    />
     </resultMap>
 
     <sql id="selectPlatformUserDetailVo">
-        select id, create_time, update_time, enabled, weight, phone, avatar_url, type, data_id, login_end_time, remark, username, password from t_platform_user_detail
+        select id, create_time, update_time, enabled, weight, phone, avatar_url, type, data_id, login_end_time, remark, username, password,nick_name from t_platform_user_detail
     </sql>
 
     <select id="selectPlatformUserDetailList" parameterType="PlatformUserDetail" resultMap="PlatformUserDetailResult">
@@ -35,6 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="dataId != null "> and data_id = #{dataId}</if>
             <if test="loginEndTime != null "> and login_end_time = #{loginEndTime}</if>
             <if test="username != null  and username != ''"> and username like concat('%', #{username}, '%')</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
             <if test="password != null  and password != ''"> and password = #{password}</if>
         </where>
     </select>
@@ -59,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
             <if test="username != null">username,</if>
             <if test="password != null">password,</if>
+            <if test="nickName != null">nick_name,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="createTime != null">#{createTime},</if>
@@ -73,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">#{remark},</if>
             <if test="username != null">#{username},</if>
             <if test="password != null">#{password},</if>
+            <if test="nickName != null">#{nickName},</if>
          </trim>
     </insert>
 
@@ -91,6 +95,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark = #{remark},</if>
             <if test="username != null">username = #{username},</if>
             <if test="password != null">password = #{password},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
         </trim>
         where id = #{id}
     </update>
