@@ -298,6 +298,9 @@ export default {
     },
     //答题
     answerOptions(item, option) {
+      if (this.order.gaugeStatus === 1) {
+        return
+      }
       let index = (item.answers || []).findIndex(i => option.id === i);
       if (index > -1 && item.answers.length > 1) {
         item.answers.splice(index, 1);
@@ -530,8 +533,10 @@ page {
 
   .content-y {
     margin-top: 100upx;
-    padding-bottom: 100upx;
+    //padding-bottom: 100upx;
     height: 1500upx;
+    padding-bottom: calc(constant(safe-area-inset-bottom) + 50px); /* 兼容 iOS 设备 */
+    padding-bottom: calc(env(safe-area-inset-bottom) + 50px); /* 兼容 iPhone X 及以上设备 */
   }
 
   .q-chat-block {

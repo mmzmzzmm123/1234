@@ -126,7 +126,7 @@ export default {
     this.productList = await this.getProduct(0);
     this.hotList = await this.getProduct(1);
     const classData = await classServer.getClassList()
-    this.classList = classData.slice(0, 6) // 取前6个类别
+    this.classList = classData.slice(0, 8) // 取前6个类别
   },
   async mounted() {      
     if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
@@ -245,14 +245,14 @@ page {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-around;
+    //justify-content: space-around;
     text-align: center;
     font-size: 24upx;
     margin-bottom: 32upx;
     margin-top: 21upx;
     
     .item {
-      width: 33%;      
+      width: 25%;
       margin-bottom: 10px;
       .class-img {
         width: 88upx;
