@@ -52,7 +52,7 @@
 			<view class="more-btn" @click="onDeleteRoomClick">删除包厢</view>
 			<view class="more-btn more-btn--cancel" @click="showMore = false">取消</view>
 		</u-popup>
-		<u-popup :show="isShowImg" mode="center" closeable zoom @close="isShowImg=false">
+		<u-popup :show="isShowImg" mode="center" closeable zoom="true" @close="isShowImg=false">
 			<u--image :showLoading="true" :src="imgSrc" width="450rpx" height="450rpx"></u--image>
 		</u-popup>
 	</view>
@@ -210,13 +210,13 @@
 			onRoomQrCodeClick(room) {
 				this.$api.createQrCode(room.id).then(res => {
 					this.isShowImg = true
-					this.imgSrc = "data:image/png;base64," + res.msg
+					this.imgSrc = res.msg
 				})
 			},
 			onRoomXudanCodeClick(room) {
 				this.$api.createXudanCode(room.id).then(res => {
 					this.isShowImg = true
-					this.imgSrc = "data:image/png;base64," + res.msg
+					this.imgSrc = res.msg
 				})
 			},
 		}

@@ -28,6 +28,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.ImgUtil;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.office.domain.vo.*;
@@ -54,10 +55,13 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.rmi.ServerError;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.Function;
@@ -1051,62 +1055,6 @@ public class ApiController extends BaseController {
         return toAjax(roomOrderService.order4GuestOpenRoom(tRoomOrder));
     }
 
-    @ApiOperation("生成二维码")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
-            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
-    })
-    @GetMapping(value = "/createQrCodeH5/{roomId}")
-    public AjaxResult createQrCodeH5(@PathVariable("roomId") Long roomId) {
-        final WxPayConfig config = wxPayService.getConfig();
-
-        TRoom room = roomService.selectTRoomById(roomId);
-        String codeType = "scene";
-        String parameterValue = "" + roomId;
-
-        // 设置小程序二维码线条颜色为黑色
-        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
-        byte[] qrCodeBytes = null;
-        try {
-            //其中codeType以及parameterValue为前端页面所需要接收的参数。
-            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/add/index", false, "release", 30, false, lineColor, false);
-        } catch (WxErrorException e) {
-//            e.printStackTrace();
-            logger.error(e.getMessage());
-            throw new ServiceException("打印二维码错误" + e.getMessage());
-        }
-        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
-        return AjaxResult.success(qrCodeStr);
-    }
-
-    @ApiOperation("生成续单二维码")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
-            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
-    })
-    @GetMapping(value = "/createXudanCodeH5/{roomId}")
-    public AjaxResult createXudanCodeH5(@PathVariable("roomId") Long roomId) {
-        final WxPayConfig config = wxPayService.getConfig();
-
-        TRoom room = roomService.selectTRoomById(roomId);
-        String codeType = "scene";
-        String parameterValue = "" + roomId;
-
-        // 设置小程序二维码线条颜色为黑色
-        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
-        byte[] qrCodeBytes = null;
-        try {
-            //其中codeType以及parameterValue为前端页面所需要接收的参数。
-            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/renew/index", false, "release", 30, false, lineColor, false);
-        } catch (WxErrorException e) {
-//            e.printStackTrace();
-            logger.error(e.getMessage());
-            throw new ServiceException("打印二维码错误" + e.getMessage());
-        }
-        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
-        return AjaxResult.success(qrCodeStr);
-    }
-
     @Autowired
     private ITRoomChargePriceService tRoomChargePriceService;
 
@@ -1167,4 +1115,63 @@ public class ApiController extends BaseController {
         }
     }
 
+    @ApiOperation("生成二维码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
+    })
+    @GetMapping(value = "/createQrCodeH5/{roomId}")
+    public AjaxResult createQrCodeH5(@PathVariable("roomId") Long roomId) {
+        final WxPayConfig config = wxPayService.getConfig();
+
+        TRoom room = roomService.selectTRoomById(roomId);
+        String codeType = "scene";
+        String parameterValue = "" + roomId;
+
+        // 设置小程序二维码线条颜色为黑色
+        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
+        byte[] qrCodeBytes = null;
+        try {
+            //其中codeType以及parameterValue为前端页面所需要接收的参数。
+            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/add/index", false, "release", 30, false, lineColor, false);
+        } catch (WxErrorException e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new ServiceException("打印二维码错误" + e.getMessage());
+        }
+        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
+        BufferedImage bufferedImage = ImgUtil.base64ToBufferedImage(qrCodeStr);
+        qrCodeStr = ImgUtil.BufferedImageToBase64(ImgUtil.writeImage2(bufferedImage, "下单", room.getName(), new Color(7, 193, 96), new Font("宋体", Font.BOLD, 10)));
+        return AjaxResult.success(qrCodeStr);
+    }
+
+    @ApiOperation("生成续单二维码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
+    })
+    @GetMapping(value = "/createXudanCodeH5/{roomId}")
+    public AjaxResult createXudanCodeH5(@PathVariable("roomId") Long roomId) {
+        final WxPayConfig config = wxPayService.getConfig();
+
+        TRoom room = roomService.selectTRoomById(roomId);
+        String codeType = "scene";
+        String parameterValue = "" + roomId;
+
+        // 设置小程序二维码线条颜色为黑色
+        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
+        byte[] qrCodeBytes = null;
+        try {
+            //其中codeType以及parameterValue为前端页面所需要接收的参数。
+            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/renew/index", false, "release", 30, false, lineColor, false);
+        } catch (WxErrorException e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new ServiceException("打印二维码错误" + e.getMessage());
+        }
+        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
+        BufferedImage bufferedImage = ImgUtil.base64ToBufferedImage(qrCodeStr);
+        qrCodeStr = ImgUtil.BufferedImageToBase64(ImgUtil.writeImage2(bufferedImage, "续单", room.getName(), new Color(7, 193, 96), new Font("宋体", Font.BOLD, 10)));
+        return AjaxResult.success(qrCodeStr);
+    }
 }

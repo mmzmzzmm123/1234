@@ -45,7 +45,7 @@
 				</view>
 				<view class="card__op-list">
 					<!-- <u-button v-if="room.payType==9" @click="shareOrder(room)" plain>分享</u-button> -->
-					<u-button type="primary" plain v-if="room.status==2" @click="startOrder(room)">立即开始</u-button>
+					<!-- <u-button type="primary" plain v-if="room.status==2" @click="startOrder(room)">立即开始</u-button> -->
 					<!-- 订单提前开始 订单开始结束时间前移多少分钟 -->
 					<uo-select :options="roomList" @change="changeRoom($event, room)" v-if="room.status<3">
 						<u-button type="primary" plain>换包厢</u-button>
