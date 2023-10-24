@@ -231,3 +231,28 @@ page{
   top: -2px;
   right: -4px;
 }
+.nickNameView{
+  padding: 10px 0;
+  background-color: #fafafa;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.nickNameView image{
+  width: 22px;
+  margin: 0 10px;
+}
+.nickNameView input{
+  font-size: 14px;
+}
+.nickNameView view{
+  font-size: 14px;
+  padding: 0 20px;
+  height: 45px;
+  line-height: 44px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #ffffff;
+  z-index: 999;
+}

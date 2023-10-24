@@ -24,7 +24,7 @@
             <view class="view_box_row">
               <block wx:for="{{hotStaffList}}" wx:key="id">
                 <view class="newPeopleItem" data-staffid="{{item.userId}}" bind:tap="toShowStaffInfo">
-                  <image src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}"></image>
+                  <image src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}" mode="aspectFill"></image>
                   <view class="newPeopleName">{{item.nickName}}</view>
                   <view class="{{item.sex == 1 ? 'girl_bg_color' : 'boy_bg_color'}} newPeopleBut">下单</view>
                 </view>
@@ -37,6 +37,15 @@
             </wux-skeleton>
           </block>
         </scroll-view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="seizeSeat_mini"></view>
+        <!-- 按名称搜索 -->
+        <view class="view_box_common nickNameView view_box_row">
+          <image src="../../static/ico/service_select_grey_32.png" mode="widthFix"></image>
+          <input style="width: {{pWidth*0.92-52}}px;" value="{{params.nickName}}" placeholder="快来查询您想要找的店员吧" bindinput="paramsNickNameInput" />
+          <view class="boy_bg_color" bind:tap="toNickNameLoadData">查询</view>
+        </view>
 
         <!-- 筛选栏 -->
         <view class="seizeSeat_mini"></view>
@@ -66,15 +75,19 @@
         <view class="view_box_common view_box_row_wrap">
           <view data-index="0" bind:tap="clearFilterItem" class="chooseFilterItem" wx:if="{{params.serviceIdArrStr != null}}">
             <view>服务类型：{{strUtil.matchServiceNameById(params.serviceIdArrStr, serviceList)}}</view>
-            <image src="../../static/ico/close_red_32.png" mode="widthFix"></image>
+            <image src="../../static/ico/delete_32.png" mode="widthFix"></image>
+          </view>
+          <view data-index="3" bind:tap="clearFilterItem" class="chooseFilterItem" wx:if="{{params.nickName != null}}">
+            <view>昵称：{{params.nickName}}</view>
+            <image src="../../static/ico/delete_32.png" mode="widthFix"></image>
           </view>
           <view data-index="1" bind:tap="clearFilterItem" class="chooseFilterItem" wx:if="{{params.sex != null}}">
             <view>性别：{{params.sex == 0 ? '男' : params.sex == '1' ? '女' : '未知'}}</view>
-            <image src="../../static/ico/close_red_32.png" mode="widthFix"></image>
+            <image src="../../static/ico/delete_32.png" mode="widthFix"></image>
           </view>
           <view data-index="2" bind:tap="clearFilterItem" class="chooseFilterItem" wx:if="{{params.staffLevel != null}}">
             <view>店员等级：{{strUtil.staffLevelMacth(params.staffLevel, staffLevelConfig)}}</view>
-            <image src="../../static/ico/close_red_32.png" mode="widthFix"></image>
+            <image src="../../static/ico/delete_32.png" mode="widthFix"></image>
           </view>
         </view>
 
@@ -140,6 +153,7 @@
                     </view>
                   </view>
                 </view>
+                <view class="seizeSeat_mini"></view>
                 <!-- 员工标签 -->
                 <view wx:if="{{item.selfTags != null && item.selfTags != ''}}" class="view_box_common staffLabel view_box_row_wrap">
                   <block wx:for="{{strUtil.splitToArr(item.selfTags, ',')}}" wx:for-item="selfTag" wx:key="index">

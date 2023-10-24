@@ -82,10 +82,6 @@ public class OrderAutoCommentMqConsumer implements RocketMQListener<Long> {
                 .setServiceContent(orderDetails.getDetailsTitle())
                 .setCreateTime(now);
         orderCommentMapper.insertOrderComment(orderComment);
-        // 发送订单完成通知
-        rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_FINISH_NOTICE, orderInfo.getId());
-        // 订单佣金结算
-        rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_COMMISSION_SETTLEMENT, orderInfo.getId());
         log.info("mq消费-订单自动评论：完成");
     }
 }

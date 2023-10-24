@@ -24,6 +24,9 @@ public class ApiPageStaffInfoDto implements Serializable {
     @ApiModelProperty("分页数量")
     private Integer pageSize;
 
+    @ApiModelProperty("昵称")
+    private String nickName;
+
     @ApiModelProperty("排序类型 0创建时间 1创建时间 2排序字段倒叙 3排序正序 4等级倒序 5等级正序")
     private String sortType;
 

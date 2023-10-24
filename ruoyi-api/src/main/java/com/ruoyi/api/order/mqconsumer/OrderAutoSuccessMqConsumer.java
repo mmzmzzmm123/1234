@@ -58,6 +58,10 @@ public class OrderAutoSuccessMqConsumer implements RocketMQListener<Long> {
                 .setOrderState(OrderStateEnums.WAIT_COMMENT.getCode())
                 .setUpdateTime(DateUtils.getNowDate());
         orderInfoMapper.updateOrderInfo(updateOi);
+        // 发送订单完成通知
+        rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_FINISH_NOTICE, orderInfo.getId());
+        // 订单佣金结算
+        rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_COMMISSION_SETTLEMENT, orderInfo.getId());
         // 发送自动评论mq过期时间，默认两小时后自动评论
         rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_COMMENT, orderId, MqDelayLevelEnums.level_18);
         log.info("mq消费-订单自动完成：完成");

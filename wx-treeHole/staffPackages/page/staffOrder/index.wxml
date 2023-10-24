@@ -58,6 +58,7 @@
                         <view class="orderButItem badgeLevel_4" wx:else data-index="{{dataIndex}}" catch:tap="{{dataItem.orderType == '0' ? 'orderTakingCli' : 'randomOrderTakingCli'}}">立即接单</view>
                       </block>
                       <view class="orderButItem badgeLevel_1" wx:if="{{dataItem.orderState=='3'}}" data-index="{{dataIndex}}" catch:tap="orderStartServiceCli">开始服务</view>
+                      <view class="orderButItem badgeLevel_4" wx:if="{{dataItem.orderState=='3'}}" data-index="{{dataIndex}}" catch:tap="cancelOrderCli">取消订单</view>
                     </view>
                   </view>
                 </view>
@@ -128,8 +129,7 @@
               <span>{{operObj.filterServedStaff == 'Y' ? '是' : "否"}}</span>
             </view>
           </block>
-          <!-- 待服务状态显示 -->
-          <block wx:if="{{operObj.orderState == '3'}}">
+          <block wx:if="{{operObj.staffUserId != null}}">
             <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
               <view>是否续单</view>
               <span>{{operObj.ifContinuous == 'Y' ? '是' : '否'}}</span>
@@ -138,36 +138,45 @@
               <view>预计收入</view>
               <span>￥{{formatUtil.toFixed((operObj.payAmount*operObj.commissionRatio))}}</span>
             </view>
-
-            <block wx:if="{{ifHide == '0'}}">
-              <!-- <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+          </block>
+          <!-- 待服务状态显示 -->
+          <block wx:if="{{operObj.orderState == '3' && ifHide == '0'}}">
+            <!-- <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
                 <view>账号渠道</view>
                 <span>{{dictsUtil.social_accounts(operObj.accountServiceProvider)}}</span>
               </view> -->
-              <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
-                <view>绿泡泡</view>
-                <span>{{operObj.customNum}}</span>
-              </view>
-            </block>
-
-          </block>
-          <block wx:if="{{operObj.orderState == '-1'}}">
             <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
-              <view>取消者</view>
-              <span>{{operObj.canceller}}</span>
-            </view>
-            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
-              <view>取消原因</view>
-              <span>{{operObj.cancelRemark}}</span>
-            </view>
-            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
-              <view>取消时间</view>
-              <span>{{operObj.orderCancelTime}}</span>
+              <view>绿泡泡</view>
+              <span>{{operObj.customNum}}</span>
             </view>
           </block>
           <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
             <view>备注</view>
             <span>{{operObj.remark != null ? operObj.remark : '无'}}</span>
+          </view>
+          <view wx:if="{{operObj.orderReceivingTime != null}}" class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>接单时间</view>
+            <span>{{operObj.orderReceivingTime}}</span>
+          </view>
+          <view wx:if="{{operObj.orderServiceTime != null}}" class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>服务时间</view>
+            <span>{{operObj.orderServiceTime}}</span>
+          </view>
+          <view wx:if="{{operObj.orderFinshTime != null}}" class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>完成时间</view>
+            <span>{{operObj.orderFinshTime}}</span>
+          </view>
+          <view wx:if="{{operObj.canceller != null}}" class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>取消者</view>
+            <span>{{operObj.canceller}}</span>
+          </view>
+          <view wx:if="{{operObj.cancelRemark != null}}" class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>取消留言</view>
+            <span>{{operObj.cancelRemark}}</span>
+          </view>
+          <view wx:if="{{operObj.orderCancelTime != null}}" class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view>取消时间</view>
+            <span>{{operObj.orderCancelTime}}</span>
           </view>
           <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
             <view>创建时间</view>

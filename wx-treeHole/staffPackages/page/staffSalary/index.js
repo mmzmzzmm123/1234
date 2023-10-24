@@ -57,7 +57,7 @@ Page({
     loadStaffWalletRecordNextPageState: false, // 加载下一页店员钱包记录状态
     staffWalletRecordParams: { // 店员钱包记录请求参数
       pageNum: 1,
-      pageSize: 40
+      pageSize: 60
     },
     staffWalletRecordData: [], // 店员钱包记录
     staffWalletDataTotal: 0, // 店员钱包记录总数

@@ -98,7 +98,7 @@
         <view class="view_box_common view_box_row_content_symmetry" style="width: 82%;">
           <view class="view_box_content_column usedCarNumItem">
             <span>{{userLikeStaffUserIdList.length}}</span>
-            <view>我的点赞</view>
+            <view>我的关注</view>
           </view>
           <view class="view_box_content_column usedCarNumItem" bind:tap="toRecharge">
             <span>{{formatUtil.toFixed(userInfo!=null?(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance):'0.00')}}</span>
@@ -109,7 +109,7 @@
           </view>
           <view class="view_box_content_column usedCarNumItem">
             <span>{{userLikeStaffTrendsIdList.length}}</span>
-            <view>我的收藏</view>
+            <view>我的点赞</view>
           </view>
         </view>
       </view>

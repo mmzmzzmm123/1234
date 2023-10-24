@@ -55,7 +55,7 @@ public class RefundSuccessMqConsumer implements RocketMQListener<ApiWxRefundCall
         // 更新订单状态
         OrderInfo updateOi = new OrderInfo();
         updateOi.setId(paymentRefund.getOrderId())
-                .setOrderState(OrderStateEnums.REFUNDED.getCode())
+                .setOrderState(OrderStateEnums.CANCEL.getCode())
                 .setUpdateTime(now);
         orderInfoMapper.updateOrderInfo(updateOi);
         // 更新订单详情状态

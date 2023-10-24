@@ -60,6 +60,7 @@
                 and success_time between #{params.beginSuccessTime} and #{params.endSuccessTime}
             </if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectPaymentOrderById" parameterType="Long" resultMap="PaymentOrderResult">

@@ -63,6 +63,7 @@ Page({
       sex: null, // 0男 1女
       staffLevel: null, // 店员等级
       serviceIdArrStr: null, // 服务标识集合字符串
+      nickName: null, // 昵称
     },
     loadState: true, // 请求数据状态
     staffDataList: [], // 店员数据集合
@@ -170,6 +171,20 @@ Page({
    */
   onShareAppMessage() {
 
+  },
+  /**
+   * 昵称查询事件
+   */
+  toNickNameLoadData:function(){
+    this.loadStaffData(null);
+  },
+  /**
+   * 店员名称键入事件
+   */
+  paramsNickNameInput:function(e){
+    this.setData({
+      ["params.nickName"]: e.detail.value
+    })
   },
   /**
    * 加载店员数据
@@ -510,6 +525,12 @@ Page({
     if (index == 2) {
       this.setData({
         ["params.staffLevel"]: null,
+        ["params.pageNum"]: 1
+      })
+    }
+    if (index == 3) {
+      this.setData({
+        ["params.nickName"]: null,
         ["params.pageNum"]: 1
       })
     }

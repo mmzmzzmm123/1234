@@ -473,4 +473,24 @@ public class ApiStaffService {
         log.info("获取店员周排名前三：结束");
         return voList;
     }
+
+    /**
+     * 查询我的组员
+     *
+     * @return 结果
+     * */
+    public List<ApiStaffInfoVo> selectTeamMembers() {
+        log.info("查询我的组员：开始");
+        List<ApiStaffInfoVo> voList = new ArrayList<>();
+        StaffInfo selectSi = new StaffInfo();
+        selectSi.setReferralUserId(TokenUtils.getUserId()).setSortType("0");
+        List<StaffInfo> staffInfoList = staffInfoMapper.customSelect(selectSi);
+        staffInfoList.forEach(item -> {
+            ApiStaffInfoVo vo = new ApiStaffInfoVo();
+            BeanUtils.copyBeanProp(vo, item);
+            voList.add(vo);
+        });
+        log.info("查询我的组员：完成，返回数据：{}", voList);
+        return voList;
+    }
 }

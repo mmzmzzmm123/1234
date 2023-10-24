@@ -25,6 +25,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.TokenUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.common.weixin.WxService;
 import com.ruoyi.common.weixin.model.dto.UnifiedOrderRequestDto;
 import com.ruoyi.common.weixin.model.dto.WxPayRefundDto;
@@ -578,13 +579,14 @@ public class ApiOrderService {
     public Long buildPaymentOrder(OrderInfo orderInfo, String description, String payState, String autoCancelTime) {
         log.info("构建并插入支付订单记录：开始");
         Date now = DateUtils.getNowDate();
+        OrderTypeEnums orderTypeEnums = OrderTypeEnums.getByCode(orderInfo.getOrderType());
         PaymentOrder paymentOrder = new PaymentOrder();
         paymentOrder.setOrderType(orderInfo.getOrderType())
                 .setUserId(orderInfo.getCustomUserId())
                 .setOrderId(orderInfo.getId())
                 .setOutTradeNo(orderInfo.getOrderNo())
                 .setPayWay(orderInfo.getPayWay())
-                .setSubject(OrderTypeEnums.GIFT.getDesc())
+                .setSubject(orderTypeEnums.getDesc())
                 .setBody(description)
                 .setAmount(orderInfo.getPayAmount())
                 .setPayState(payState)
@@ -768,11 +770,11 @@ public class ApiOrderService {
         BeanUtils.copyBeanProp(updateOi, dto);
         updateOi.setId(orderInfo.getId())
                 .setOrderState(OrderStateEnums.CANCEL.getCode())
-                .setCanceller("user")
+                .setCanceller(TokenUtils.getUserId().equals(orderInfo.getCustomUserId()) ? "老板" : "店员")
                 .setOrderCancelTime(now)
                 .setUpdateTime(now);
         // 判断订单状态是否属于待支付或者待服务
-        if (!OrderStateEnums.WAIT_PAY.getCode().equals(orderInfo.getOrderState()) && !OrderStateEnums.PAID.getCode().equals(orderInfo.getOrderState())) {
+        if (!OrderStateEnums.WAIT_PAY.getCode().equals(orderInfo.getOrderState()) && !OrderStateEnums.PAID.getCode().equals(orderInfo.getOrderState()) && !OrderStateEnums.WAIT_SERVICE.getCode().equals(orderInfo.getOrderState())) {
             log.warn("订单取消：失败，订单状态不为：待支付/待服务");
             throw new ServiceException("亲爱的，取消失败啦，请刷新重试哟", HttpStatus.WARN_WX);
         }
@@ -789,17 +791,17 @@ public class ApiOrderService {
                     .setPayState(PayStateEnums.CANCEL.getCode());
             paymentOrderMapper.updateByOrderId(updatePo);
         }
-
-        // 查询订单详情信息
-        List<OrderDetails> orderDetailsList = orderDetailsMapper.selectByOrderId(orderInfo.getId());
-        if (ObjectUtil.isEmpty(orderDetailsList)) {
-            log.warn("订单取消：失败，查询订单详情失败");
-            throw new ServiceException("亲爱的，取消失败啦，请刷新重试哟", HttpStatus.WARN_WX);
-        }
-        OrderDetails orderDetails = orderDetailsList.stream().findFirst().orElse(null);
         orderInfo.setCancelRemark(updateOi.getCancelRemark());
         // 待服务-需要进行退款业务
-        if (OrderStateEnums.PAID.getCode().equals(orderInfo.getOrderState())) {
+        if (OrderStateEnums.PAID.getCode().equals(orderInfo.getOrderState()) || OrderStateEnums.WAIT_SERVICE.getCode().equals(orderInfo.getOrderState())) {
+            // 查询订单详情信息
+            List<OrderDetails> orderDetailsList = orderDetailsMapper.selectByOrderId(orderInfo.getId());
+            if (ObjectUtil.isEmpty(orderDetailsList)) {
+                log.warn("订单取消：失败，查询订单详情失败");
+                throw new ServiceException("亲爱的，取消失败啦，请刷新重试哟", HttpStatus.WARN_WX);
+            }
+            OrderDetails orderDetails = orderDetailsList.stream().findFirst().orElse(null);
+
             // 微信支付
             if (PayWayEnums.WEI_XIN_PAY.getCode().equals(orderInfo.getPayWay())) {
                 updateOi.setOrderState(OrderStateEnums.REFUNDED.getCode());
@@ -810,6 +812,7 @@ public class ApiOrderService {
                 // 发起微信退款
                 apiOrderService.wxRefund(orderInfo, paymentRefund);
             }
+
             // 余额支付
             if (PayWayEnums.AMOUNT_PAY.getCode().equals(orderInfo.getPayWay())) {
                 updateOi.setOrderState(OrderStateEnums.REFUNDED.getCode());
@@ -871,9 +874,10 @@ public class ApiOrderService {
     @Transactional(rollbackFor = Exception.class)
     public void wxRefund(OrderInfo orderInfo, PaymentRefund paymentRefund) {
         log.info("发起微信退款申请：开始，参数：{},{}", orderInfo, paymentRefund);
+        PaymentOrder paymentOrder = paymentOrderMapper.selectByOutTradeNo(orderInfo.getOrderNo());
         // 请求微信发起退款
         WxPayRefundDto wxPayRefundDto = new WxPayRefundDto();
-        wxPayRefundDto.setTransactionId(orderInfo.getOrderNo())
+        wxPayRefundDto.setTransactionId(paymentOrder.getTransactionId())
                 .setOutRefundNo(paymentRefund.getRefundNo())
                 .setTotalFee(orderInfo.getPayAmount().multiply(new BigDecimal(100)).setScale(100, RoundingMode.DOWN).intValue())
                 .setRefundFee(orderInfo.getPayAmount().multiply(new BigDecimal(100)).setScale(100, RoundingMode.DOWN).intValue())
@@ -901,9 +905,10 @@ public class ApiOrderService {
      */
     public PaymentRefund buildPaymentRefund(OrderInfo orderInfo, OrderDetails orderDetails) {
         PaymentRefund paymentRefund = new PaymentRefund();
-        paymentRefund.setOrderId(orderInfo.getId())
+        paymentRefund.setUserId(orderInfo.getCustomUserId())
+                .setOrderId(orderInfo.getId())
                 .setOrderDetailsId(orderDetails.getId())
-                .setRefundNo(IdUtil.getSnowflake().nextIdStr())
+                .setRefundNo(IdUtils.randomId())
                 .setRefundRoute(orderInfo.getPayWay())
                 .setStart(PayWayEnums.WEI_XIN_PAY.getCode().equals(orderInfo.getPayWay()) ? RefundStateEnums.APPLY.getDesc() : RefundStateEnums.SUCCESS.getDesc())
                 .setRemark(orderInfo.getCancelRemark())
@@ -984,7 +989,9 @@ public class ApiOrderService {
         // 发送订单完成通知
         rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_FINISH_NOTICE, orderInfo.getId());
         // 订单佣金结算
-        rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_COMMISSION_SETTLEMENT, orderInfo.getId());
+        if (OrderStateEnums.SERVICE_ING.getCode().equals(orderInfo.getOrderState())) {
+            rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_COMMISSION_SETTLEMENT, orderInfo.getId());
+        }
         log.info("订单完成：完成");
         return Boolean.TRUE;
     }
@@ -999,6 +1006,13 @@ public class ApiOrderService {
     public Boolean randomOrderTaking(String orderNo) {
         log.info("店员随机单接单：开始，参数：{}", orderNo);
         String tipMsg = null;
+        // 先判断店员是否可以接单
+        String[] tempStateArr = {OrderStateEnums.WAIT_SERVICE.getCode(), OrderStateEnums.SERVICE_ING.getCode()};
+        List<Long> hasRandomOrderIds = orderInfoMapper.selectIdByStaffIdAndTypeAndStateList(TokenUtils.getUserId(), OrderTypeEnums.RANDOM.getCode(), ListUtil.toList(tempStateArr));
+        if (ObjectUtil.isNotEmpty(hasRandomOrderIds)){
+            log.warn("店员随机单接单：失败，当前还有未完成的随机单");
+            throw new ServiceException("亲爱的，您当前有未完成随机单，暂不可接单", HttpStatus.WARN_WX);
+        }
         lock.lock();
         try {
             Date now = DateUtils.getNowDate();
@@ -1007,7 +1021,7 @@ public class ApiOrderService {
             if (ObjectUtil.isNotNull(orderInfo) && ObjectUtil.isNull(orderInfo.getStaffUserId())) {
                 // 查询店员信息
                 StaffInfo staffInfo = staffInfoMapper.selectStaffInfoByUserId(TokenUtils.getUserId());
-                if (ObjectUtil.isNotNull(staffInfo)){
+                if (ObjectUtil.isNotNull(staffInfo)) {
                     // 查询当前店员等级佣金
                     StaffLevelConfig staffLevelConfig = selectStaffLevelInfo(staffInfo.getStaffLevel());
                     if (ObjectUtil.isNotNull(staffLevelConfig)) {
@@ -1016,8 +1030,8 @@ public class ApiOrderService {
                         updateOi.setId(orderInfo.getId())
                                 .setStaffUserId(staffInfo.getUserId())
                                 .setStaffLevel(staffInfo.getStaffLevel())
-                                .setIfContinuous(ifContinuous?SysYesNoEnums.YES.getCode():SysYesNoEnums.NO.getCode())
-                                .setCommissionRatio(!ifContinuous?staffLevelConfig.getOrderRatio():staffLevelConfig.getFirstOrderRatio())
+                                .setIfContinuous(ifContinuous ? SysYesNoEnums.YES.getCode() : SysYesNoEnums.NO.getCode())
+                                .setCommissionRatio(!ifContinuous ? staffLevelConfig.getOrderRatio() : staffLevelConfig.getFirstOrderRatio())
                                 .setOrderState(OrderStateEnums.WAIT_SERVICE.getCode())
                                 .setOrderReceivingTime(now)
                                 .setUpdateTime(now);
@@ -1203,7 +1217,7 @@ public class ApiOrderService {
         BigDecimal effectiveTotalAmount = BigDecimal.ZERO;
         List<ApiOrderInfoVo> orderInfoVoList = new ArrayList<>();
         // 构建查询数据
-        Map<String,Object> params = new HashMap<>();
+        Map<String, Object> params = new HashMap<>();
         params.put("beginCreateTime", dto.getBeginCreateTime());
         params.put("endCreateTime", dto.getEndCreateTime());
         OrderInfo orderInfo = new OrderInfo();
@@ -1212,46 +1226,46 @@ public class ApiOrderService {
         // 开始查询
         List<OrderInfo> orderInfos = orderInfoMapper.selectOrderInfoList(orderInfo);
         // 计算基本数据
-        if (ObjectUtil.isNotEmpty(orderInfos)){
-            String[] unSettledStateArr = {OrderStateEnums.PAID.getCode(),OrderStateEnums.WAIT_SERVICE.getCode(),OrderStateEnums.SERVICE_ING.getCode(),OrderStateEnums.WAIT_COMMENT.getCode()};
+        if (ObjectUtil.isNotEmpty(orderInfos)) {
+            String[] unSettledStateArr = {OrderStateEnums.PAID.getCode(), OrderStateEnums.WAIT_SERVICE.getCode(), OrderStateEnums.SERVICE_ING.getCode(), OrderStateEnums.WAIT_COMMENT.getCode()};
             orderNum = orderInfos.size();
             // 获取已结单数
             List<OrderInfo> settledOrderList = orderInfos.stream().filter(temp -> OrderStateEnums.FINISH.getCode().equals(temp.getOrderState())).collect(Collectors.toList());
-            if (ObjectUtil.isNotEmpty(settledOrderList)){
+            if (ObjectUtil.isNotEmpty(settledOrderList)) {
                 settledNum = settledOrderList.size();
             }
             // 获取未结单数
             List<OrderInfo> unSettledList = orderInfos.stream().filter(temp -> ListUtil.toList(unSettledStateArr).contains(temp.getOrderState())).collect(Collectors.toList());
-            if (ObjectUtil.isNotEmpty(unSettledList)){
+            if (ObjectUtil.isNotEmpty(unSettledList)) {
                 unSettledNum = unSettledList.size();
-                for (OrderInfo item : unSettledList){
+                for (OrderInfo item : unSettledList) {
                     waitOrderFinishCommission = waitOrderFinishCommission.add(item.getPayAmount().multiply(item.getCommissionRatio())).setScale(2, RoundingMode.HALF_UP);
                 }
             }
             // 取消单数
             List<OrderInfo> cancelOrderList = orderInfos.stream().filter(temp -> OrderStateEnums.CANCEL.getCode().equals(temp.getOrderState())).collect(Collectors.toList());
-            if (ObjectUtil.isNotEmpty(cancelOrderList)){
+            if (ObjectUtil.isNotEmpty(cancelOrderList)) {
                 cancelNum = cancelOrderList.size();
             }
             // 超时订单数
             List<OrderInfo> overTimeOrderList = orderInfos.stream().filter(temp -> SysTipsConstants.ORDER_OVER_TIME_CANCEL_TIPS.equals(temp.getCancelRemark())).collect(Collectors.toList());
-            if (ObjectUtil.isNotEmpty(overTimeOrderList)){
+            if (ObjectUtil.isNotEmpty(overTimeOrderList)) {
                 overTimeNum = overTimeOrderList.size();
             }
             // 获取续单订单率
             List<OrderInfo> renewalList = orderInfos.stream().filter(temp -> SysYesNoEnums.YES.getCode().equals(temp.getIfContinuous())).collect(Collectors.toList());
-            if (ObjectUtil.isNotEmpty(renewalList)){
+            if (ObjectUtil.isNotEmpty(renewalList)) {
                 renewalRate = BigDecimal.valueOf(renewalList.size()).divide(BigDecimal.valueOf(orderNum), 2, RoundingMode.HALF_UP).multiply(BigDecimal.valueOf(100));
             }
             ArrayList<String> normalStateList = ListUtil.toList(unSettledStateArr);
             normalStateList.add(OrderStateEnums.FINISH.getCode());
             // 循环计算金额数据
-            for (OrderInfo item : orderInfos){
+            for (OrderInfo item : orderInfos) {
                 ApiOrderInfoVo orderInfoVo = new ApiOrderInfoVo();
                 BeanUtils.copyBeanProp(orderInfoVo, item);
                 orderInfoVoList.add(orderInfoVo);
                 orderTotalAmount = orderTotalAmount.add(item.getPayAmount());
-                if (normalStateList.contains(item.getOrderState())){
+                if (normalStateList.contains(item.getOrderState())) {
                     effectiveTotalAmount = effectiveTotalAmount.add(item.getAmount());
                 }
             }

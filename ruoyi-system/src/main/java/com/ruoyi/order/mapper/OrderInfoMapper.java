@@ -71,6 +71,16 @@ public interface OrderInfoMapper {
     public List<Long> selectStaffUserIdByCustomUserId(Long customUserId);
 
     /**
+     * 根据店员标识与状态集合查询id集合
+     *
+     * @param staffUserId 店员标识
+     * @param orderType 订单类型
+     * @param stateList 状态集合
+     * @return 结果
+     * */
+    public List<Long> selectIdByStaffIdAndTypeAndStateList(@Param("staffUserId") Long staffUserId, @Param("orderType") String orderType, @Param("stateList") List<String> stateList);
+
+    /**
      * 新增订单信息
      *
      * @param orderInfo 订单信息

@@ -194,6 +194,7 @@
       <scroll-view refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{refreshStaffWalletDataState}}" scroll-y="true" bindrefresherrefresh="refreshStaffWalletData" bindscrolltolower="loadNextPageStaffWalletRecordData" class="view_all_adapt">
         <block wx:if="{{staffWalletRecordData != null && staffWalletRecordData.length > 0}}">
           <block wx:for="{{staffWalletRecordData}}" wx:key="id">
+            <view class="seizeSeat_mini"></view>
             <view class="view_box_common view_box_row_content_symmetry walletRecotItem">
               <view>{{dictsUtil.staff_wallet_record_type(item.staffWalletRecordType)}}</view>
               <view>￥{{formatUtil.toFixed(item.amount)}}</view>

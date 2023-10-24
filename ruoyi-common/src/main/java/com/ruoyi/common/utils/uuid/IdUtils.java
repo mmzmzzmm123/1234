@@ -1,5 +1,7 @@
 package com.ruoyi.common.utils.uuid;
 
+import java.util.Random;
+
 /**
  * ID生成器工具类
  *
@@ -41,6 +43,25 @@ public class IdUtils {
      */
     public static String fastSimpleUUID() {
         return UUID.fastUUID().toString(true);
+    }
+
+    /**
+     * 随机生成32位纯数字id
+     *
+     * @return 结果
+     * */
+    public static String randomId() {
+        String str = "";
+        Random random = new Random();
+        for (int i = 0; i < 32; i++){
+            int temp = random.nextInt(9);
+            if (i != 0){
+                str += temp;
+            }else {
+                str += temp + 1;
+            }
+        }
+        return str;
     }
 
 }

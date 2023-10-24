@@ -81,7 +81,7 @@ public class PaySuccessMqConsumer implements RocketMQListener<ApiWxPayCallbackVo
             service.appointOrderCallback(paymentOrder.getOrderId());
         }
         // 随机单
-        if (OrderTypeEnums.APPOINT.getCode().equals(paymentOrder.getOrderType())){
+        if (OrderTypeEnums.RANDOM.getCode().equals(paymentOrder.getOrderType())){
             // 开启对应业务
             service.randomOrderCallback(paymentOrder.getOrderId());
         }

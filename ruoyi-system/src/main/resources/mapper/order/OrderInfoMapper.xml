@@ -196,6 +196,14 @@
         GROUP BY staff_user_id
     </select>
 
+    <select id="selectIdByStaffIdAndTypeAndStateList" resultType="Long">
+        select id from bus_order_info where staff_user_id = #{staffUserId} and order_type = #{orderType} and
+            order_state in
+        <foreach collection="stateList" item="state" open="(" close=")" separator=",">
+            #{state}
+        </foreach>
+    </select>
+
     <insert id="insertOrderInfo" parameterType="OrderInfo" useGeneratedKeys="true" keyProperty="id">
         insert into bus_order_info
         <trim prefix="(" suffix=")" suffixOverrides=",">

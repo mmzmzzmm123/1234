@@ -156,18 +156,18 @@
       <el-table-column label="用户ip" align="center" prop="userIp" :show-overflow-tooltip="true"/>
       <el-table-column label="订单失效时间" align="center" prop="expireTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.expireTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.expireTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="回调数据" align="center" prop="channelNotifyData" :show-overflow-tooltip="true"/>
       <el-table-column label="支付成功时间" align="center" prop="successTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.successTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.successTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

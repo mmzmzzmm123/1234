@@ -30,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="refundRoute != null  and refundRoute != ''"> and refund_route = #{refundRoute}</if>
             <if test="start != null  and start != ''"> and start = #{start}</if>
         </where>
+        order by create_time desc
     </select>
 
     <select id="selectPaymentRefundById" parameterType="Long" resultMap="PaymentRefundResult">

@@ -600,4 +600,67 @@ Page({
       icon: "none"
     })
   },
+  /**
+   * 取消订单点击事件
+   */
+  cancelOrderCli: function (e) {
+    let that = this;
+    let index = e.currentTarget.dataset.index;
+    this.setData({
+      operIndex: index
+    })
+    let currentIndex = this.data.currentIndex;
+    let obj = this.data.tabs[currentIndex].data[index];
+    let params = {
+      orderNo: obj.orderNo
+    };
+    $wuxDialog().prompt({
+      resetOnClose: true,
+      title: '取消原因',
+      content: '亲爱的，请说明一下取消原因',
+      defaultText: "",
+      placeholder: '请输入取消原因',
+      maxlength: 32,
+      onConfirm(e, response) {
+        if (response == null || response == "" || response == undefined) {
+          wx.showToast({
+            title: '取消失败，请输入取消原因哟',
+            icon: "none"
+          })
+          return;
+        }
+        params.cancelRemark = response;
+        orderApi.orderCancel(params, that.cancelOrderOnStart, that.cancelOrderOnSuccess, that.cancelOrderOnFailed, that.cancelOrderOnWarn);
+      }
+    })
+  },
+  cancelOrderOnStart: function () {
+    wx.showLoading({
+      title: '正在取消',
+      mask: true
+    })
+  },
+  cancelOrderOnSuccess: function (e) {
+    wx.hideLoading();
+    this.loadData(null);
+    wx.showToast({
+      title: '取消成功',
+      icon: "none"
+    })
+  },
+  cancelOrderOnFailed: function (e) {
+    wx.hideLoading();
+    wx.showToast({
+      title: '请求失败',
+      icon: "error"
+    })
+  },
+  cancelOrderOnWarn: function (e) {
+    wx.hideLoading();
+    wx.showToast({
+      title: e.msg,
+      icon: "none",
+      duration: 2000
+    })
+  },
 })

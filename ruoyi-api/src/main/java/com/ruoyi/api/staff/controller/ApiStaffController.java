@@ -94,6 +94,12 @@ public class ApiStaffController extends BaseController {
         return R.ok(service.handleServiceId(serviceId));
     }
 
+    @ApiOperation("查询我的组员")
+    @GetMapping("/selectTeamMembers")
+    public R<List<ApiStaffInfoVo>> selectTeamMembers(){
+        return R.ok(service.selectTeamMembers());
+    }
+
     @ApiOperation("店员信息分页")
     @GetMapping("/page")
     public R<ApiPageStaffInfoVo> page(ApiPageStaffInfoDto dto) {

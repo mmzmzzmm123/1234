@@ -43,6 +43,13 @@ public class OrderCommissionSettlementMqConsumer implements RocketMQListener<Lon
         log.info("订单完成后结算店员佣金：开始，参数：{}", orderId);
         Date now = DateUtils.getNowDate();
         String sysName = Constants.SYS_NAME;
+        // 查询是否已结佣
+        StaffWalletRecord selectSwr = new StaffWalletRecord();
+        selectSwr.setOrderId(orderId);
+        if (ObjectUtil.isNotEmpty(staffWalletRecordMapper.selectStaffWalletRecordList(selectSwr))){
+            log.info("订单完成后结算店员佣金：完成，该订单已完成佣金结算");
+            return;
+        }
         // 查询订单记录
         OrderInfo orderInfo = orderInfoMapper.selectOrderInfoById(orderId);
         if (ObjectUtil.isNull(orderInfo)){

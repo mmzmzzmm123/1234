@@ -14,6 +14,7 @@ let handleServiceIdUrl = "/handleServiceId";
 let selectByStaffIdUrl = "/selectByStaffId";
 let selectStaffGiftRecordIdUrl = "/selectStaffGiftRecordId";
 let weeklyRankingTopThreeUrl = "/weeklyRankingTopThree";
+let selectTeamMembersUrl = "/selectTeamMembers";
 
 /**
  * 分页查询
@@ -85,6 +86,13 @@ let weeklyRankingTopThree = function(onStart, onSuccess, onFailed){
   request.get(bashRequestUrl + weeklyRankingTopThreeUrl, null, onStart, onSuccess, onFailed, onFailed, onFailed);
 }
 
+/**
+ * 查询我的组员
+ */
+let selectTeamMembers = function(onStart, onSuccess, onFailed, onWarn){
+  request.get(bashRequestUrl + selectTeamMembersUrl, null, onStart, onSuccess, onFailed, onWarn, onFailed);
+}
+
 module.exports = {
   page: page,
   selectStaffLevelConfig: selectStaffLevelConfig,
@@ -98,4 +106,5 @@ module.exports = {
   selectByStaffId: selectByStaffId,
   selectStaffGiftRecordId: selectStaffGiftRecordId,
   weeklyRankingTopThree: weeklyRankingTopThree,
+  selectTeamMembers: selectTeamMembers
 }

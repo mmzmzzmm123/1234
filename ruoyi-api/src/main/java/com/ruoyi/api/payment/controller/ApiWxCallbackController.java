@@ -47,7 +47,7 @@ public class ApiWxCallbackController {
         }
     }
     @ApiOperation("退款成功回调")
-    @PostMapping(value = "/refundCallback")
+    @PostMapping(value = "/refundCallBack")
     @ResponseBody
     public void refundCallback(HttpServletRequest request, HttpServletResponse response){
         try{

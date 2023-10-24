@@ -193,6 +193,9 @@
     <!-- 添加或修改员工信息对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        <el-form-item label="等级" prop="staffLevel">
+          <el-input v-model="form.staffLevel" placeholder="请输入等级（默认等级1，可输入等级1~4）"/>
+        </el-form-item>
         <el-form-item label="状态" prop="state">
           <el-select v-model="form.state" placeholder="请选择状态">
             <el-option

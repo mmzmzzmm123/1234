@@ -211,6 +211,7 @@
 
     <el-table v-loading="loading" :data="orderInfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="主键" align="center" prop="id" :show-overflow-tooltip="true" />
       <el-table-column label="订单编号" align="center" prop="orderNo" :show-overflow-tooltip="true"/>
       <el-table-column label="订单类型" align="center" prop="orderType" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -238,8 +239,8 @@
       </el-table-column>
       <el-table-column label="客户账号" align="center" prop="customNum" :show-overflow-tooltip="true"/>
       <el-table-column label="订单金额" align="center" prop="amount" :show-overflow-tooltip="true"/>
-      <el-table-column label="卡券标识" align="center" prop="couponId" :show-overflow-tooltip="true"/>
-      <el-table-column label="优惠金额" align="center" prop="discountAmount" :show-overflow-tooltip="true"/>
+<!--      <el-table-column label="卡券标识" align="center" prop="couponId" :show-overflow-tooltip="true"/>-->
+<!--      <el-table-column label="优惠金额" align="center" prop="discountAmount" :show-overflow-tooltip="true"/>-->
       <el-table-column label="支付方式" align="center" prop="payWay" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.pay_way" :value="scope.row.payWay"/>
@@ -248,32 +249,32 @@
       <el-table-column label="支付金额" align="center" prop="payAmount" :show-overflow-tooltip="true"/>
       <el-table-column label="自动过期时间" align="center" prop="autoExpireTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.autoExpireTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.autoExpireTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="自动完成时间" align="center" prop="autoFinshTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.autoFinshTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.autoFinshTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="接单时间" align="center" prop="orderReceivingTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.orderReceivingTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.orderReceivingTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="开始服务时间" align="center" prop="orderServiceTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.orderServiceTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.orderServiceTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="订单完成时间" align="center" prop="orderFinshTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.orderFinshTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.orderFinshTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="订单取消时间" align="center" prop="orderCancelTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.orderCancelTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.orderCancelTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="取消者" align="center" prop="canceller" :show-overflow-tooltip="true"/>
@@ -281,12 +282,12 @@
       <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
