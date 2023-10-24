@@ -20,6 +20,10 @@ public class PlatformUser extends BaseEntity {
 
     public static final String DEFAULT_NICK_NAME = "default_nick_name";
 
+    public static final String PU_USER_NAME = "pu_user_name";
+
+    public static final String PU_USER_PASSWORD = "pu_user_password";
+
     /**
      * 表主键
      */

@@ -78,6 +78,8 @@ public class LoginUser implements UserDetails {
      */
     public String type;
 
+    private String dataId;
+
     public LoginUser() {
     }
 
@@ -91,6 +93,14 @@ public class LoginUser implements UserDetails {
         this.deptId = deptId;
         this.user = user;
         this.permissions = permissions;
+    }
+
+    public String getDataId() {
+        return dataId;
+    }
+
+    public void setDataId(String dataId) {
+        this.dataId = dataId;
     }
 
     public Long getUserId() {

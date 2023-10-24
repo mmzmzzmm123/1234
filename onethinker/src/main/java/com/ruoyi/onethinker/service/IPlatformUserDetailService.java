@@ -5,6 +5,7 @@ import java.util.List;
 import com.ruoyi.onethinker.domain.PlatformUser;
 import com.ruoyi.onethinker.domain.PlatformUserDetail;
 import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
+import com.ruoyi.onethinker.dto.PlatformUserResDTO;
 
 /**
  * 平台用户详情信息Service接口
@@ -83,8 +84,14 @@ public interface IPlatformUserDetailService {
 
     /**
      * 获取用户信息
-     * @param openId
+     * @param dataId
      * @return
      */
-    PlatformUserDetail selectPlatformUserDetailByDataId(String openId);
+    PlatformUserDetail selectPlatformUserDetailByDataId(String dataId);
+
+    /**
+     * 获取当前登录用户信息
+     * @return
+     */
+    PlatformUserDetail queryLoginUserInfo();
 }

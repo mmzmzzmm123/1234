@@ -47,11 +47,13 @@ public class PlatformUserSourceTypeWxServiceImpl implements IPlatformUserService
         PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(reqDTO.getOpenId());
         if (ObjectUtils.isEmpty(platformUserDetail)) {
             // 微信登录保存相关信息
-            platformUserDetail = platformUserDetailService.saveEntryUserDetailByWx(new PlatformUser(),reqDTO);
+            platformUserDetailService.saveEntryUserDetailByWx(new PlatformUser(),reqDTO);
         }
         // 获取权限内容
-        String token = loginService.loginFe(platformUserDetail.getDataId());
-        return null;
+        String token = loginService.loginFe(reqDTO.getOpenId(),configService.selectConfigByKey(PlatformUser.PU_USER_NAME),configService.selectConfigByKey(PlatformUser.PU_USER_PASSWORD));
+        PlatformUserResDTO platformUserResDTO = new PlatformUserResDTO();
+        platformUserResDTO.setToken(token);
+        return platformUserResDTO;
     }
 
     @Override

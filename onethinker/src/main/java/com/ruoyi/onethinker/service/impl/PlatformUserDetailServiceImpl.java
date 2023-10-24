@@ -11,6 +11,7 @@ import org.springframework.util.ObjectUtils;
 import com.ruoyi.common.constant.RedisKeyConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.onethinker.domain.PlatformUser;
 import com.ruoyi.onethinker.domain.PlatformUserDetail;
 import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
@@ -169,19 +170,26 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
     }
 
     @Override
-    public PlatformUserDetail selectPlatformUserDetailByDataId(String openId) {
-        String redisKey = RedisKeyConstants.QUERY_USER_DETAIL_DATA_ID_KEY + openId;
+    public PlatformUserDetail selectPlatformUserDetailByDataId(String dataId) {
+        String redisKey = RedisKeyConstants.QUERY_USER_DETAIL_DATA_ID_KEY + dataId;
 
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheObject(redisKey);
         }
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
-        platformUserDetail.setDataId(openId);
+        platformUserDetail.setDataId(dataId);
         List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
         if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
             return null;
         }
         redisCache.setCacheObject(redisKey,platformUserDetails.get(0),1, TimeUnit.DAYS);
         return platformUserDetails.get(0);
+    }
+
+    @Override
+    public PlatformUserDetail queryLoginUserInfo() {
+        String dataId = SecurityUtils.getLoginUser().getDataId();
+        PlatformUserDetail platformUserDetail = selectPlatformUserDetailByDataId(dataId);
+        return platformUserDetail;
     }
 }
