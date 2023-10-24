@@ -4,11 +4,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.ruoyi.common.enums.CacheEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import com.ruoyi.common.constant.RedisKeyConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -122,7 +122,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
 
     @Override
     public PlatformUserDetail saveEntryUserDetailByWx(PlatformUser platformUser, PlatformUserReqDTO reqDTO) {
-        String redisKey = RedisKeyConstants.QUERY_USER_DETAIL_DATA_ID_KEY + reqDTO.getOpenId();
+        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + reqDTO.getOpenId();
 
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
         platformUserDetail.setDataId(reqDTO.getOpenId());
@@ -171,7 +171,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
 
     @Override
     public PlatformUserDetail selectPlatformUserDetailByDataId(String dataId) {
-        String redisKey = RedisKeyConstants.QUERY_USER_DETAIL_DATA_ID_KEY + dataId;
+        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + dataId;
 
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheObject(redisKey);

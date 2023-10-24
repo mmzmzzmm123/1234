@@ -5,11 +5,11 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import com.ruoyi.common.enums.CacheEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ruoyi.common.annotation.DataSource;
-import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.text.Convert;
@@ -170,7 +170,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
      */
     @Override
     public void clearConfigCache() {
-        Collection<String> keys = redisCache.keys(CacheConstants.SYS_CONFIG_KEY + "*");
+        Collection<String> keys = redisCache.keys(CacheEnum.SYS_CONFIG_KEY.getCode() + "*");
         redisCache.deleteObject(keys);
     }
 
@@ -206,6 +206,6 @@ public class SysConfigServiceImpl implements ISysConfigService {
      * @return 缓存键key
      */
     private String getCacheKey(String configKey) {
-        return CacheConstants.SYS_CONFIG_KEY + configKey;
+        return CacheEnum.SYS_CONFIG_KEY.getCode() + configKey;
     }
 }

@@ -8,6 +8,7 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.enums.CacheEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.FastByteArrayOutputStream;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.code.kaptcha.Producer;
 
 import com.ruoyi.common.config.RuoYiConfig;
-import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.redis.RedisCache;
@@ -57,7 +57,7 @@ public class CaptchaController {
 
         // 保存验证码信息
         String uuid = IdUtils.simpleUUID();
-        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
+        String verifyKey = CacheEnum.CAPTCHA_CODE_KEY.getCode() + uuid;
 
         String capStr = null, code = null;
         BufferedImage image = null;
