@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.user.mapper.UserWalletRecordMapper">
-    
+
     <resultMap type="UserWalletRecord" id="UserWalletRecordResult">
         <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
@@ -22,19 +22,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectUserWalletRecordList" parameterType="UserWalletRecord" resultMap="UserWalletRecordResult">
         <include refid="selectUserWalletRecordVo"/>
-        <where>  
+        <where>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="rechargeRecordId != null "> and recharge_record_id = #{rechargeRecordId}</if>
             <if test="walletRecordType != null  and walletRecordType != ''"> and wallet_record_type = #{walletRecordType}</if>
             <if test="amount != null "> and amount &gt;= #{amount}</if>
         </where>
+        order by create_time desc
     </select>
-    
+
     <select id="selectUserWalletRecordById" parameterType="Long" resultMap="UserWalletRecordResult">
         <include refid="selectUserWalletRecordVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertUserWalletRecord" parameterType="UserWalletRecord" useGeneratedKeys="true" keyProperty="id">
         insert into bus_user_wallet_record
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -79,7 +80,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteUserWalletRecordByIds" parameterType="String">
-        delete from bus_user_wallet_record where id in 
+        delete from bus_user_wallet_record where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

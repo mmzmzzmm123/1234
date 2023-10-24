@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.order.mapper.OrderCommentMapper">
-    
+
     <resultMap type="OrderComment" id="OrderCommentResult">
         <result property="id"    column="id"    />
         <result property="orderId"    column="order_id"    />
@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectOrderCommentList" parameterType="OrderComment" resultMap="OrderCommentResult">
         <include refid="selectOrderCommentVo"/>
-        <where>  
+        <where>
             <if test="orderId != null "> and order_id = #{orderId}</if>
             <if test="staffUserId != null "> and staff_user_id = #{staffUserId}</if>
             <if test="userId != null "> and user_id = #{userId}</if>
@@ -33,13 +33,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="serviceContent != null  and serviceContent != ''"> and service_content like concat('%', #{serviceContent}, '%')</if>
             <if test="ifShow != null  and ifShow != ''"> and if_show = #{ifShow}</if>
         </where>
+        order by create_time desc
     </select>
-    
+
     <select id="selectOrderCommentById" parameterType="Long" resultMap="OrderCommentResult">
         <include refid="selectOrderCommentVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertOrderComment" parameterType="OrderComment" useGeneratedKeys="true" keyProperty="id">
         insert into bus_order_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -87,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteOrderCommentByIds" parameterType="String">
-        delete from bus_order_comment where id in 
+        delete from bus_order_comment where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

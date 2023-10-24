@@ -137,12 +137,12 @@
       </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="最后登录时间" align="center" prop="lastLoginTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.lastLoginTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.lastLoginTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
 <!--      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">-->

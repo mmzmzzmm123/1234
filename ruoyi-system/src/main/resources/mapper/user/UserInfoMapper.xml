@@ -34,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="hideLevel != null  and hideLevel != ''"> and hide_level = #{hideLevel}</if>
             <if test="hideRanking != null  and hideRanking != ''"> and hide_ranking = #{hideRanking}</if>
         </where>
+        order by last_login_time desc
     </select>
 
     <select id="selectUserInfoById" parameterType="Long" resultMap="UserInfoResult">

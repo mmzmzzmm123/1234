@@ -663,4 +663,22 @@ Page({
       duration: 2000
     })
   },
+  /**
+   * 复制老板微信
+   */
+  copyCustomNum:function(e){
+    wx.setClipboardData({ //设置系统剪贴板的内容
+      data: e.currentTarget.dataset.customnum,
+      success(res) {
+        wx.getClipboardData({ // 获取系统剪贴板的内容
+          success(res) {
+            wx.showToast({
+              title: '复制成功',
+              icon: "none"
+            })
+          }
+        })
+      }
+    })
+  }
 })

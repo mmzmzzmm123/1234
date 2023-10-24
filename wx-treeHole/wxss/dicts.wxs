@@ -74,6 +74,17 @@ staff_level = function(key){
         "未知";
 }
 
+/**
+ * 店员状态
+ */
+staff_state = function(key){
+  return key == "-1" ? "禁用" :
+  key == "0" ? "正常" :
+  key == "1" ? "审核中" :
+  key == "2" ? "不通过" :
+        "未知";
+}
+
 module.exports = {
   sex: sex,
   social_accounts: social_accounts,
@@ -81,5 +92,6 @@ module.exports = {
   order_type: order_type,
   pay_way: pay_way,
   staff_wallet_record_type: staff_wallet_record_type,
-  staff_level: staff_level
+  staff_level: staff_level,
+  staff_state: staff_state
 }

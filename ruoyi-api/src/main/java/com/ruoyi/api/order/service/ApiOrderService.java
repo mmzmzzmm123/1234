@@ -910,7 +910,7 @@ public class ApiOrderService {
                 .setOrderDetailsId(orderDetails.getId())
                 .setRefundNo(IdUtils.randomId())
                 .setRefundRoute(orderInfo.getPayWay())
-                .setStart(PayWayEnums.WEI_XIN_PAY.getCode().equals(orderInfo.getPayWay()) ? RefundStateEnums.APPLY.getDesc() : RefundStateEnums.SUCCESS.getDesc())
+                .setStart(PayWayEnums.WEI_XIN_PAY.getCode().equals(orderInfo.getPayWay()) ? RefundStateEnums.APPLY.getCode() : RefundStateEnums.SUCCESS.getCode())
                 .setRemark(orderInfo.getCancelRemark())
                 .setCreateTime(DateUtils.getNowDate());
         return paymentRefund;
@@ -1220,8 +1220,13 @@ public class ApiOrderService {
         Map<String, Object> params = new HashMap<>();
         params.put("beginCreateTime", dto.getBeginCreateTime());
         params.put("endCreateTime", dto.getEndCreateTime());
+        // 用户标识
+        Long staffUserId = TokenUtils.getUserId();
+        if (ObjectUtil.isNotNull(dto.getStaffUserId())){
+            staffUserId = dto.getStaffUserId();
+        }
         OrderInfo orderInfo = new OrderInfo();
-        orderInfo.setStaffUserId(TokenUtils.getUserId())
+        orderInfo.setStaffUserId(staffUserId)
                 .setParams(params);
         // 开始查询
         List<OrderInfo> orderInfos = orderInfoMapper.selectOrderInfoList(orderInfo);

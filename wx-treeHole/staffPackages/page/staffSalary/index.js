@@ -71,6 +71,7 @@ Page({
       pageNum: 1,
       pageSize: 60
     },
+    staffUserId: null, // 店员用户标识
   },
 
   /**
@@ -98,7 +99,6 @@ Page({
         tabHeight: rect[0].height
       })
     }).exec();
-
     let weekList = [];
     let weekListOption = [];
     let prevWeekDataArr = timeUtil.getPrevWeekDataList();
@@ -115,6 +115,12 @@ Page({
       weekList: weekList,
       weekListOption: weekListOption
     })
+    // 判断是否存在参数
+    if(options.staffUserId != null){
+      this.setData({
+        staffUserId: options.staffUserId
+      })
+    }
     // 加载店员钱包数据
     this.loadStaffWallet();
     // 加载店员钱包记录数据
@@ -138,7 +144,12 @@ Page({
    * 加载店员结算记录
    */
   loadSettlementRecordData: function (onStart) {
-    staffWalletApi.pageSettlementRecord(onStart, this.loadSettlementRecordDataOnSuccess, this.loadSettlementRecordDataOnFailed, this.loadSettlementRecordDataOnWarn);
+    let params = this.data.settlementRecordParams;
+    let staffUserId = this.data.staffUserId;
+    if(staffUserId != null){
+      params.staffUserId = staffUserId;
+    }
+    staffWalletApi.pageSettlementRecord(params, onStart, this.loadSettlementRecordDataOnSuccess, this.loadSettlementRecordDataOnFailed, this.loadSettlementRecordDataOnWarn);
   },
   loadSettlementRecordDataOnStart: function () {
     this.setData({
@@ -197,6 +208,10 @@ Page({
     let params = {
       beginCreateTime: weekArr[0],
       endCreateTime: weekArr[1]
+    }
+    let staffUserId = this.data.staffUserId;
+    if(staffUserId != null){
+      params.staffUserId = staffUserId;
     }
     orderApi.selectStaffOrderInfoByDate(params, this.loadThisWeekOrderInfoOnStart, this.loadThisWeekOrderInfoOnSuccess, this.loadThisWeekOrderInfoOnFailed, this.loadThisWeekOrderInfoOnWarn);
   },
@@ -305,6 +320,10 @@ Page({
    */
   loadStaffWalletRecord: function (onStart) {
     let params = this.data.staffWalletRecordParams;
+    let staffUserId = this.data.staffUserId;
+    if(staffUserId != null){
+      params.staffUserId = staffUserId;
+    }
     staffWalletApi.pageWalletRecord(params, onStart, this.loadStaffWalletRecordOnSuccess, this.loadStaffWalletRecordOnFailed);
   },
   loadStaffWalletRecordOnStart: function () {
@@ -345,7 +364,10 @@ Page({
    * 加载店员钱包数据
    */
   loadStaffWallet: function () {
-    staffWalletApi.selectStaffWallet(this.loadStaffWalletOnStart, this.loadStaffWalletOnSuccess, this.loadStaffWalletOnFailed, this.loadStaffWalletOnWarn);
+    let params = {
+      staffUserId: this.data.staffUserId
+    }
+    staffWalletApi.selectStaffWallet(params, this.loadStaffWalletOnStart, this.loadStaffWalletOnSuccess, this.loadStaffWalletOnFailed, this.loadStaffWalletOnWarn);
   },
   loadStaffWalletOnStart: function () {
     this.setData({

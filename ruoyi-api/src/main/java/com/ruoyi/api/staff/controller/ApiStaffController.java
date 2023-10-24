@@ -3,6 +3,7 @@ package com.ruoyi.api.staff.controller;
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.api.staff.model.dto.ApiPageStaffInfoDto;
 import com.ruoyi.api.staff.model.dto.ApiStaffInfoDto;
+import com.ruoyi.api.staff.model.dto.ApiUpdateTeamMembersInfoDto;
 import com.ruoyi.api.staff.model.vo.*;
 import com.ruoyi.api.staff.service.ApiStaffService;
 import com.ruoyi.common.annotation.Anonymous;
@@ -79,6 +80,13 @@ public class ApiStaffController extends BaseController {
     @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     public R<Boolean> update(@Valid ApiStaffInfoDto dto) {
         return service.update(dto);
+    }
+
+    @ApiOperation("组长修改组员数据")
+    @PostMapping("/updateTeamMembersInfo")
+    @RepeatSubmit(interval = 1000, message = "请求过于频繁")
+    public R<Boolean> updateTeamMembersInfo(ApiUpdateTeamMembersInfoDto dto){
+        return R.ok(service.updateTeamMembersInfo(dto));
     }
 
     @ApiOperation("获取店员配置接单服务id")

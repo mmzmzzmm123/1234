@@ -82,6 +82,7 @@
             <if test="ifTop != null  and ifTop != ''">and if_top = #{ifTop}</if>
             <if test="referralCode != null ">and referral_code = #{referralCode}</if>
         </where>
+        order by update_time desc
     </select>
 
     <select id="selectStaffInfoByUserId" parameterType="Long" resultMap="StaffInfoResult">

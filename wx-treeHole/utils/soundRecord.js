@@ -14,55 +14,93 @@ let start = function (onSuccess) {
     frameSize: 50,//指定帧大小，单位 KB
   }
   // 鉴权用户是否已授权
-  wx.authorize({
-    scope: 'scope.record',
-    success: function (e) {
-      recorderManager.start(options);
-      recorderManager.onStart(() => {
-        wx.vibrateLong({
-          complete:function(){
-          }
+  wx.getSetting({
+    success(res) {
+      // 已授权，直接开启录音功能
+      if (res.authSetting['scope.record']) {
+        recorderManager.start(options);
+        recorderManager.onStart(() => {
+          wx.vibrateLong({
+            complete: function () {
+            }
+          });
+          onSuccess();
         });
-        onSuccess();
-      });
-      //错误回调
-      recorderManager.onError((res) => {
-        console.log(res);
-      })
-    }, fail: function (e) {
-      wx.showModal({
-        title: '提示',
-        content: '您未授权录音，功能将无法使用',
-        showCancel: true,
-        confirmText: "授权",
-        confirmColor: "#8978E4",
-        success: function (res) {
-          if (res.confirm) {
-            // 确认则打开设置页面（重点）
-            wx.openSetting({
-              success: (res) => {
-                if (!res.authSetting['scope.record']) {
-                  //未设置录音授权
+        //错误回调
+        recorderManager.onError((res) => {
+          wx.showToast({
+            title: '开启录音失败',
+            icon: "none"
+          })
+        })
+      } else {
+        // 开启授权
+        wx.authorize({
+          scope: 'scope.record',
+          success: function (e) {
+            recorderManager.start(options);
+            recorderManager.onStart(() => {
+              wx.vibrateLong({
+                complete: function () {
+                }
+              });
+              onSuccess();
+            });
+            //错误回调
+            recorderManager.onError((res) => {
+              wx.showToast({
+                title: '开启录音失败',
+                icon: "none"
+              })
+            })
+          }, fail: function (e) {
+            wx.showModal({
+              title: '提示',
+              content: '您未授权录音，功能将无法使用',
+              showCancel: true,
+              confirmText: "授权",
+              confirmColor: "#8978E4",
+              success: function (res) {
+                if (res.confirm) {
+                  // 确认则打开设置页面（重点）
+                  wx.openSetting({
+                    success: (res) => {
+                      if (!res.authSetting['scope.record']) {
+                        //未设置录音授权
+                        wx.showToast({
+                          title: '您未授权录音，功能将无法使用',
+                          icon: "none"
+                        })
+                      } else {
+                        //第二次才成功授权
+                        recorderManager.start(options);
+                        recorderManager.onStart(() => {
+                          onSuccess();
+                          wx.vibrateLong({
+                            complete: function () {
+                            }
+                          });
+                        });
+                        //错误回调
+                        recorderManager.onError((res) => {
+                          wx.showToast({
+                            title: '录音失败',
+                            icon: "none"
+                          })
+                        })
+                      }
+                    },
+                    fail: function () {
+                      wx.showToast({
+                        title: '您未授权录音，功能将无法使用',
+                        icon: "none"
+                      })
+                    }
+                  })
+                } else if (res.cancel) {
                   wx.showToast({
                     title: '您未授权录音，功能将无法使用',
                     icon: "none"
-                  })
-                } else {
-                  //第二次才成功授权
-                  recorderManager.start(options);
-                  recorderManager.onStart(() => {
-                    onSuccess();
-                    wx.vibrateLong({
-                      complete:function(){
-                      }
-                    });
-                  });
-                  //错误回调
-                  recorderManager.onError((res) => {
-                    wx.showToast({
-                      title: '录音失败',
-                      icon: "none"
-                    })
                   })
                 }
               },
@@ -73,32 +111,29 @@ let start = function (onSuccess) {
                 })
               }
             })
-          } else if (res.cancel) {
-            wx.showToast({
-              title: '您未授权录音，功能将无法使用',
-              icon: "none"
-            })
           }
-        },
-        fail: function () {
-          wx.showToast({
-            title: '您未授权录音，功能将无法使用',
-            icon: "none"
-          })
-        }
+        })
+      }
+    }, fail(res) {
+      wx.showToast({
+        title: '亲爱的，请重启小程序再试试吧',
+        icon: "none"
       })
     }
   })
+
+
+
 }
 
-let stop = function(onSuccess){
+let stop = function (onSuccess) {
   recorderManager.stop();
   recorderManager.onStop((res) => {
-    if(onSuccess != null){
+    if (onSuccess != null) {
       onSuccess(res);
     }
     wx.vibrateLong({
-      complete:function(){
+      complete: function () {
       }
     });
   })

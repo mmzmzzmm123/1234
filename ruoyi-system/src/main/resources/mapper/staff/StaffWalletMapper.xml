@@ -24,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="userId != null "> and user_id = #{userId}</if>
         </where>
+        order by update_time desc
     </select>
 
     <select id="selectStaffWalletById" parameterType="Long" resultMap="StaffWalletResult">

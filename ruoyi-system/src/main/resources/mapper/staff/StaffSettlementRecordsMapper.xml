@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.staff.mapper.StaffSettlementRecordsMapper">
-    
+
     <resultMap type="StaffSettlementRecords" id="StaffSettlementRecordsResult">
         <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
@@ -22,18 +22,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectStaffSettlementRecordsList" parameterType="StaffSettlementRecords" resultMap="StaffSettlementRecordsResult">
         <include refid="selectStaffSettlementRecordsVo"/>
-        <where>  
+        <where>
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="startTime != null "> and start_time = #{startTime}</if>
             <if test="endTime != null "> and end_time = #{endTime}</if>
         </where>
+        order by update_time desc
     </select>
-    
+
     <select id="selectStaffSettlementRecordsById" parameterType="Long" resultMap="StaffSettlementRecordsResult">
         <include refid="selectStaffSettlementRecordsVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertStaffSettlementRecords" parameterType="StaffSettlementRecords" useGeneratedKeys="true" keyProperty="id">
         insert into bus_staff_settlement_records
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -78,7 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteStaffSettlementRecordsByIds" parameterType="String">
-        delete from bus_staff_settlement_records where id in 
+        delete from bus_staff_settlement_records where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

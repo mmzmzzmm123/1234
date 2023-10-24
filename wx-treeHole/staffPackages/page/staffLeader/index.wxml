@@ -64,12 +64,33 @@
                 </view>
               </view>
             </view>
+            <view class="seizeSeat_mini"></view>
+            <!-- 员工标签 -->
+            <view wx:if="{{item.selfTags != null && item.selfTags != ''}}" class="view_box_common staffLabel view_box_row_wrap">
+              <block wx:for="{{strUtil.splitToArr(item.selfTags, ',')}}" wx:for-item="selfTag" wx:key="index">
+                <view class="{{item.sex == 1 ? 'girl_edging_color girl_font_color' : 'boy_edging_color boy_font_color'}} staffLabelItem">{{selfTag}}</view>
+              </block>
+            </view>
+            <view class="seizeSeat_mini"></view>
+            <view class="cut_off_rule_small"></view>
+            <view class="seizeSeat_mini"></view>
+            <!-- 操作按钮组 -->
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view style="font-size: 12px;color: #80848f;">店员状态：{{dictsUtil.staff_state(item.state)}}</view>
+              <view class="view_box_row_content">
+                <view class="orderButItem badgeLevel_1" data-userId="{{item.userId}}" bind:tap="toSeeStaffSalary">薪资情况</view>
+                <view class="orderButItem badgeLevel_3" data-index="{{index}}" bind:tap="updateStaffInfo">修改信息</view>
+              </view>
+            </view>
           </view>
         </block>
         <view class="seizeSeat_mini"></view>
         <view class="seizeSeat_mini"></view>
+        <i-load-more tip='没有更多的组员啦，快去拉新吧' loading="{{false}}"></i-load-more>
+        <view class="seizeSeat_mini"></view>
+        <view class="seizeSeat_mini"></view>
       </block>
-      <mine-null-data width="100%" height="100%" title="亲爱的 暂无组员哟，赶紧去招新吧"></mine-null-data>
+      <mine-null-data wx:else width="100%" height="100%" title="亲爱的 暂无组员哟，赶紧去招新吧"></mine-null-data>
     </block>
     <block wx:else>
       <view class="seizeSeat_mini"></view>
@@ -82,3 +103,69 @@
     </block>
   </scroll-view>
 </view>
+
+<!-- 修改店员容器 -->
+<i-drawer mode="right" visible="{{ updateStaffInfoDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeUpdateStaffInfoDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.06}}px;">
+          <view></view>
+          <text>更新店员信息</text>
+          <wux-icon type="md-close" size="22" bindtap="changeRewardDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <view class="drawerBodyView">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../../static/ico/theme_dot.png"></image>
+              <view>在线状态</view>
+            </view>
+            <wux-switch name="light" slot="footer" color="royal" value="{{operObj.ifOnline == 'Y'}}" bindchange="staffOnlineChange" />
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <picker header-text="店员等级" mode="selector" range="{{levelList}}" range-key="label" bindchange="levelChange">
+          <view class="view_box_common scope_view">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content tempColumn">
+                <image src="../../../static/ico/theme_dot.png"></image>
+                <view>用户等级</view>
+              </view>
+              <view class="view_box_row_content">
+                <view>{{strUtil.staffLevelMacth(operObj.staffLevel,staffLevelConfig)}}</view>
+                <wux-icon style="margin-left: 10px;" type="ios-arrow-forward" size="14" color="#80848f"></wux-icon>
+              </view>
+            </view>
+          </view>
+        </picker>
+
+        <view class="seizeSeat_mini"></view>
+        <picker header-text="店员状态" mode="selector" range="{{stateList}}" range-key="label" bindchange="stateChange">
+          <view class="view_box_common scope_view">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content tempColumn">
+                <image src="../../../static/ico/theme_dot.png"></image>
+                <view>用户状态</view>
+              </view>
+              <view class="view_box_row_content">
+                <view>{{dictsUtil.staff_state(operObj.state)}}</view>
+                <wux-icon style="margin-left: 10px;" type="ios-arrow-forward" size="14" color="#80848f"></wux-icon>
+              </view>
+            </view>
+          </view>
+        </picker>
+
+        <view class="seizeSeat_mini"></view>
+      </view>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bind:tap="submitUpdate">保存</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+  </view>
+</i-drawer>

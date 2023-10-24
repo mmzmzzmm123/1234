@@ -36,7 +36,7 @@
       <el-table-column label="订单总值" align="center" prop="totalOrderPrice" :show-overflow-tooltip="true"/>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
     </el-table>

@@ -11,15 +11,15 @@
     "miniprogram": {
       "list": [
         {
-          "name": "店员管理页",
-          "pathName": "staffPackages/page/staffLeader/index",
+          "name": "店员薪资页",
+          "pathName": "staffPackages/page/staffSalary/index",
           "query": "",
           "launchMode": "default",
           "scene": null
         },
         {
-          "name": "店员薪资页",
-          "pathName": "staffPackages/page/staffSalary/index",
+          "name": "店员管理页",
+          "pathName": "staffPackages/page/staffLeader/index",
           "query": "",
           "launchMode": "default",
           "scene": null

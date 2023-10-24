@@ -10,8 +10,8 @@ let pageSettlementRecordUrl = "/pageSettlementRecord";
 /**
  * 查询员工钱包数据
  */
-let selectStaffWallet = function (onStart, onSuccess, onFailed, onWarn) {
-  request.get(bashRequestUrl + selectStaffWalletUrl, null, onStart, onSuccess, onFailed, onWarn, onFailed);
+let selectStaffWallet = function (params, onStart, onSuccess, onFailed, onWarn) {
+  request.get(bashRequestUrl + selectStaffWalletUrl, params, onStart, onSuccess, onFailed, onWarn, onFailed);
 }
 
 /**
@@ -25,8 +25,8 @@ let pageWalletRecord = function(params, onStart, onSuccess, onFailed){
 /**
  * 分页查询员工结算记录
  */
-let pageSettlementRecord = function (onStart, onSuccess, onFailed, onWarn) {
-  request.get(bashRequestUrl + pageSettlementRecordUrl, null, onStart, onSuccess, onFailed, onWarn, onFailed);
+let pageSettlementRecord = function (params, onStart, onSuccess, onFailed, onWarn) {
+  request.get(bashRequestUrl + pageSettlementRecordUrl, params, onStart, onSuccess, onFailed, onWarn, onFailed);
 }
 
 module.exports = {

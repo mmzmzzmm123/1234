@@ -28,6 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null "> and user_id = #{userId}</if>
             <if test="payState != null  and payState != ''"> and pay_state = #{payState}</if>
         </where>
+        order by update_time desc
     </select>
 
     <select id="selectUserRechargeRecordById" parameterType="Long" resultMap="UserRechargeRecordResult">

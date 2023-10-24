@@ -63,7 +63,7 @@
             <view class="seizeSeat_mini"></view>
             <!-- 头像信息 -->
             <view class="view_box_common view_box_row_content_symmetry">
-              <image class="hotTx" src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}"></image>
+              <image class="hotTx" src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}" mode="aspectFill"></image>
               <view style="width: {{180*0.92-60}}px;height: 42px;">
                 <view class="hotName text_ellipsis">{{item.nickName}}</view>
                 <view class="hotAddress">{{item.province}}·{{item.city}}</view>
@@ -112,12 +112,12 @@
           <view class="staffRankView view_box_content_column" style="top: 95px;left: {{pWidth*0.9*0.22-36}}px;" data-staffid="{{rankTabIndex==0?girlWeeklyRankingTopThree[1].userId:boyWeeklyRankingTopThree[1].userId}}" bind:tap="toShowStaffInfo">
             <image class="staffRank" src="{{rankTabIndex==0?(girlWeeklyRankingTopThree[1].avatarUrl!=null?girlWeeklyRankingTopThree[1].avatarUrl:'../../static/images/default_tx.png'):(boyWeeklyRankingTopThree[1].avatarUrl != null ? boyWeeklyRankingTopThree[1].avatarUrl : '../../static/images/default_tx.png')}}" mode="aspectFill"></image>
             <view>{{rankTabIndex==0?girlWeeklyRankingTopThree[1].nickName:boyWeeklyRankingTopThree[1].nickName}}</view>
-            <image class="crownIco" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/avatarFrame23100.png" mode="aspectFill"></image>
+            <image class="crownIco" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/avatarFrame100.png" mode="aspectFill"></image>
           </view>
           <view class="staffRankView view_box_content_column" style="top: 85px;left: {{pWidth*0.9*0.77-26}}px;" data-staffid="{{rankTabIndex==0?girlWeeklyRankingTopThree[2].userId:boyWeeklyRankingTopThree[2].userId}}" bind:tap="toShowStaffInfo">
             <image class="staffRank" src="{{rankTabIndex==0?(girlWeeklyRankingTopThree[2].avatarUrl!=null?girlWeeklyRankingTopThree[2].avatarUrl:'../../static/images/default_tx.png'):(boyWeeklyRankingTopThree[2].avatarUrl != null ? boyWeeklyRankingTopThree[2].avatarUrl : '../../static/images/default_tx.png')}}" mode="aspectFill"></image>
             <view>{{rankTabIndex==0?girlWeeklyRankingTopThree[2].nickName:boyWeeklyRankingTopThree[2].nickName}}</view>
-            <image class="crownIco" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/avatarFrame23130.png" mode="aspectFill"></image>
+            <image class="crownIco" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/avatarFrame100.png" mode="aspectFill"></image>
           </view>
         </view>
         <!-- 背景点缀 -->

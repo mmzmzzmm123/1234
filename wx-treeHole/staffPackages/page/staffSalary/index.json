@@ -1,5 +1,5 @@
 {
-  "navigationBarTitleText": "我的薪资",
+  "navigationBarTitleText": "店员薪资",
   "usingComponents": {
     "i-load-more": "../../../components/iview/dist/load-more/index",
     "column-view": "../../../components/mine/columnView/index",

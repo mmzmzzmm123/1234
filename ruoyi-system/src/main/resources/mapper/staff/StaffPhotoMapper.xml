@@ -40,6 +40,7 @@
             <if test="ifUnlock != null  and ifUnlock != ''">and if_unlock = #{ifUnlock}</if>
             <if test="state != null  and state != ''">and state = #{state}</if>
         </where>
+        order by update_time desc
     </select>
 
     <select id="selectStaffPhotoById" parameterType="Long" resultMap="StaffPhotoResult">

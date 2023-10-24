@@ -145,9 +145,12 @@
                 <view>账号渠道</view>
                 <span>{{dictsUtil.social_accounts(operObj.accountServiceProvider)}}</span>
               </view> -->
-            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
+            <view class="view_box_common orderDetailsItem view_box_row_content_symmetry" data-customNum="{{operObj.customNum}}" bind:tap="copyCustomNum">
               <view>绿泡泡</view>
-              <span>{{operObj.customNum}}</span>
+              <view class="view_box_row_content">
+                <view style="color: #000000;">{{operObj.customNum}}</view>
+                <view style="margin-left: 10px;color: #8978E4;">点击复制</view>
+              </view>
             </view>
           </block>
           <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">

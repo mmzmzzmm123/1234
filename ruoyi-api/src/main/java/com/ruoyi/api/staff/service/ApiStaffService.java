@@ -9,6 +9,7 @@ import com.ruoyi.api.common.model.vo.ApiOssUploadSingleFileVo;
 import com.ruoyi.api.common.service.ApiFileService;
 import com.ruoyi.api.staff.model.dto.ApiPageStaffInfoDto;
 import com.ruoyi.api.staff.model.dto.ApiStaffInfoDto;
+import com.ruoyi.api.staff.model.dto.ApiUpdateTeamMembersInfoDto;
 import com.ruoyi.api.staff.model.vo.ApiStaffGiftRecordVo;
 import com.ruoyi.api.staff.model.vo.ApiStaffInfoVo;
 import com.ruoyi.api.staff.model.vo.ApiStaffLevelConfigVo;
@@ -492,5 +493,23 @@ public class ApiStaffService {
         });
         log.info("查询我的组员：完成，返回数据：{}", voList);
         return voList;
+    }
+
+    /**
+     * 组长修改组员数据
+     *
+     * @param dto 数据
+     * @return 结果
+     * */
+    public Boolean updateTeamMembersInfo(ApiUpdateTeamMembersInfoDto dto) {
+        log.info("组长修改组员数据：开始，参数：{}", dto);
+        Long userId = TokenUtils.getUserId();
+        if (ObjectUtil.isNotNull(userId)){
+            StaffInfo update = new StaffInfo();
+            BeanUtils.copyBeanProp(update, dto);
+            staffInfoMapper.updateStaffInfo(update);
+        }
+        log.info("组长修改组员数据：完成");
+        return Boolean.TRUE;
     }
 }

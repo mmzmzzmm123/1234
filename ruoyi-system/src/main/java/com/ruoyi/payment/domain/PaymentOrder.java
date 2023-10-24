@@ -83,8 +83,8 @@ public class PaymentOrder extends BaseEntity {
     private String userIp;
 
     /** 订单失效时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "订单失效时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "订单失效时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("订单失效时间")
     private Date expireTime;
 
@@ -94,8 +94,8 @@ public class PaymentOrder extends BaseEntity {
     private String channelNotifyData;
 
     /** 支付成功时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "支付成功时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "支付成功时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty("支付成功时间")
     private Date successTime;
 

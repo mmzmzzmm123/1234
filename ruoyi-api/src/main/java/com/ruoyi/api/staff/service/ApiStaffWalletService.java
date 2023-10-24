@@ -1,6 +1,7 @@
 package com.ruoyi.api.staff.service;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.ruoyi.api.staff.model.dto.ApiStaffUserIdDto;
 import com.ruoyi.api.staff.model.vo.ApiStaffWalletVo;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.exception.ServiceException;
@@ -34,14 +35,17 @@ public class ApiStaffWalletService {
     /**
      * 查询员工钱包数据
      *
+     * @param userId 店员用户标识
      * @return 结果
-     * */
-    public ApiStaffWalletVo selectStaffWallet() {
+     */
+    public ApiStaffWalletVo selectStaffWallet(Long userId) {
         log.info("查询员工钱包数据：开始");
         ApiStaffWalletVo vo = new ApiStaffWalletVo();
-        Long userId = TokenUtils.getUserId();
+        if (ObjectUtil.isNull(userId)) {
+            userId = TokenUtils.getUserId();
+        }
         StaffWallet staffWallet = staffWalletMapper.selectStaffWalletByUserId(userId);
-        if (ObjectUtil.isNull(staffWallet)){
+        if (ObjectUtil.isNull(staffWallet)) {
             log.warn("查询员工钱包数据：失败，无法找到对应的店员钱包数据");
             throw new ServiceException("亲 服务拥挤，请稍后重试", HttpStatus.WARN_WX);
         }
@@ -53,22 +57,32 @@ public class ApiStaffWalletService {
     /**
      * 查询店员钱包记录
      *
+     * @param dto 查询条件
      * @return 结果
-     * */
-    public List<StaffWalletRecord> selectStaffWallRecord(){
+     */
+    public List<StaffWalletRecord> selectStaffWallRecord(ApiStaffUserIdDto dto) {
         StaffWalletRecord staffWalletRecord = new StaffWalletRecord();
-        staffWalletRecord.setStaffUserId(TokenUtils.getUserId());
+        Long staffUserId = TokenUtils.getUserId();
+        if (ObjectUtil.isNotNull(dto.getStaffUserId())){
+            staffUserId = dto.getStaffUserId();
+        }
+        staffWalletRecord.setStaffUserId(staffUserId);
         return staffWalletRecordMapper.selectStaffWalletRecordList(staffWalletRecord);
     }
 
     /**
      * 查询店员结算记录
      *
+     * @param dto 查询条件
      * @return 结果
-     * */
-    public List<StaffSettlementRecords> selectStaffSettlementRecords(){
+     */
+    public List<StaffSettlementRecords> selectStaffSettlementRecords(ApiStaffUserIdDto dto) {
+        Long staffUserId = TokenUtils.getUserId();
+        if (ObjectUtil.isNotNull(dto.getStaffUserId())){
+            staffUserId = dto.getStaffUserId();
+        }
         StaffSettlementRecords select = new StaffSettlementRecords();
-        select.setUserId(TokenUtils.getUserId());
+        select.setUserId(staffUserId);
         return staffSettlementRecordsMapper.selectStaffSettlementRecordsList(select);
     }
 }

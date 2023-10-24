@@ -15,6 +15,7 @@ let selectByStaffIdUrl = "/selectByStaffId";
 let selectStaffGiftRecordIdUrl = "/selectStaffGiftRecordId";
 let weeklyRankingTopThreeUrl = "/weeklyRankingTopThree";
 let selectTeamMembersUrl = "/selectTeamMembers";
+let updateTeamMembersInfoUrl = "/updateTeamMembersInfo";
 
 /**
  * 分页查询
@@ -49,6 +50,13 @@ let selectPhotoByUserId = function (params, onStart, onSuccess, onFailed) {
  */
 let update = function (params, onStart, onSuccess, onFailed, onWarn) {
   request.post(bashRequestUrl + updateUrl, params, onStart, onSuccess, onFailed, onWarn, onFailed);
+}
+
+/**
+ * 组长修改店员数据
+ */
+let updateTeamMembersInfo = function(params, onStart, onSuccess, onFailed, onWarn){
+  request.post(bashRequestUrl + updateTeamMembersInfoUrl, params, onStart, onSuccess, onFailed, onWarn, onFailed);
 }
 
 /**
@@ -106,5 +114,6 @@ module.exports = {
   selectByStaffId: selectByStaffId,
   selectStaffGiftRecordId: selectStaffGiftRecordId,
   weeklyRankingTopThree: weeklyRankingTopThree,
-  selectTeamMembers: selectTeamMembers
+  selectTeamMembers: selectTeamMembers,
+  updateTeamMembersInfo: updateTeamMembersInfo
 }
