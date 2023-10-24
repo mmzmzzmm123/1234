@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.ruoyi.common.utils.PhoneUtils;
+import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.onethinker.domain.PlatformUser;
+import com.ruoyi.onethinker.domain.PlatformUserDetail;
 import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
 import com.ruoyi.onethinker.dto.PlatformUserResDTO;
 import com.ruoyi.onethinker.mapper.PlatformUserMapper;
@@ -34,12 +36,21 @@ public class PlatformUserSourceTypeWxServiceImpl implements IPlatformUserService
     private IPlatformUserDetailService platformUserDetailService;
     @Autowired
     private ISysConfigService configService;
+    @Autowired
+    private SysLoginService loginService;
 
     private Logger logger = LoggerFactory.getLogger(PlatformUserSourceTypeWxServiceImpl.class);
     @Override
     public PlatformUserResDTO login(PlatformUserReqDTO reqDTO) {
         // 根据来源不同实例化不同具体实例
-        logger.info("微信登录");
+        logger.info("微信登录~" + reqDTO.getOpenId());
+        PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(reqDTO.getOpenId());
+        if (ObjectUtils.isEmpty(platformUserDetail)) {
+            // 微信登录保存相关信息
+            platformUserDetail = platformUserDetailService.saveEntryUserDetailByWx(new PlatformUser(),reqDTO);
+        }
+        // 获取权限内容
+        String token = loginService.loginFe(platformUserDetail.getDataId());
         return null;
     }
 

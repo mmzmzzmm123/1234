@@ -88,6 +88,7 @@ public class SysLoginService {
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         recordLoginInfo(loginUser.getUserId());
+        loginUser.setType(UserConstants.SYS_USER);
         // 生成token
         return tokenService.createToken(loginUser);
     }
@@ -160,5 +161,21 @@ public class SysLoginService {
         sysUser.setLoginIp(IpUtils.getIpAddr());
         sysUser.setLoginDate(DateUtils.getNowDate());
         userService.updateUserProfile(sysUser);
+    }
+
+    /**
+     * 前端获取token
+     * @param dataId
+     * @return
+     */
+    public String loginFe(String dataId) {
+
+        LoginUser loginUser = new LoginUser();
+        loginUser.setType(UserConstants.PU_USER);
+//        loginUser.setUserId(dataId);
+
+        recordLoginInfo(loginUser.getUserId());
+        // 生成token
+        return tokenService.createToken(loginUser);
     }
 }

@@ -65,14 +65,14 @@ public interface IPlatformUserDetailService {
      * 保存用户信息，平台来自账户密码输入
      * @param platformUser
      */
-    void saveEntryUserDetailByAccount(PlatformUser platformUser);
+    PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser);
 
     /**
      * 保存用户详情信息，平台来自微信登录补全手机号
      * @param platformUser
      * @param reqDTO
      */
-    void saveEntryUserDetailByWx(PlatformUser platformUser, PlatformUserReqDTO reqDTO);
+    PlatformUserDetail saveEntryUserDetailByWx(PlatformUser platformUser, PlatformUserReqDTO reqDTO);
 
     /**
      * 校验手机号是否被其他微信账号绑定
@@ -80,4 +80,11 @@ public interface IPlatformUserDetailService {
      * @param phone
      */
     void existsWxRegister(String openId, String phone);
+
+    /**
+     * 获取用户信息
+     * @param openId
+     * @return
+     */
+    PlatformUserDetail selectPlatformUserDetailByDataId(String openId);
 }

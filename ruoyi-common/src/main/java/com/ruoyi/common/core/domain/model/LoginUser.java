@@ -73,6 +73,11 @@ public class LoginUser implements UserDetails {
      */
     private SysUser user;
 
+    /**
+     * 用户类型 sys: 系统用户 pu: 平台用户
+     */
+    public String type;
+
     public LoginUser() {
     }
 
@@ -232,5 +237,13 @@ public class LoginUser implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

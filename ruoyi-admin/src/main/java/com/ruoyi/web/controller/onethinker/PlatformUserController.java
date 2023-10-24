@@ -25,7 +25,7 @@ public class PlatformUserController extends BaseController {
     private PlatformUserFactory platformUserFactory;
 
     /**
-     * 查询平台用户列表
+     * 平台用戶登錄
      */
     @PostMapping(value = "/login")
     public AjaxResult platformUserLogin(@RequestBody PlatformUserReqDTO reqDTO) {

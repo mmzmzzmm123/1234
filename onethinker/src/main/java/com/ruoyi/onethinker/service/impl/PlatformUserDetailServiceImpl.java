@@ -2,11 +2,14 @@ package com.ruoyi.onethinker.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.ruoyi.common.constant.RedisKeyConstants;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.onethinker.domain.PlatformUser;
 import com.ruoyi.onethinker.domain.PlatformUserDetail;
@@ -28,6 +31,9 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
 
     @Autowired
     private ISysConfigService sysConfigService;
+
+    @Autowired
+    private RedisCache redisCache;
     /**
      * 查询平台用户详情信息
      *
@@ -97,7 +103,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
     }
 
     @Override
-    public void saveEntryUserDetailByAccount(PlatformUser platformUser) {
+    public PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser) {
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
         platformUserDetail.setAvatarUrl(platformUser.getAvatarUrl());
         platformUserDetail.setEnabled(PlatformUserDetail.STATE_TYPE_ENABLED);
@@ -110,10 +116,13 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         platformUserDetail.setWeight(System.currentTimeMillis());
         platformUserDetail.setCreateTime(new Date());
         platformUserDetailMapper.insertPlatformUserDetail(platformUserDetail);
+        return platformUserDetail;
     }
 
     @Override
-    public void saveEntryUserDetailByWx(PlatformUser platformUser, PlatformUserReqDTO reqDTO) {
+    public PlatformUserDetail saveEntryUserDetailByWx(PlatformUser platformUser, PlatformUserReqDTO reqDTO) {
+        String redisKey = RedisKeyConstants.QUERY_USER_DETAIL_DATA_ID_KEY + reqDTO.getOpenId();
+
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
         platformUserDetail.setDataId(reqDTO.getOpenId());
         platformUserDetail.setType(PlatformUserReqDTO.SOURCE_TYPE_WX);
@@ -139,6 +148,8 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
             platformUserDetail.setUpdateTime(new Date());
             platformUserDetailMapper.updatePlatformUserDetail(platformUserDetail);
         }
+        redisCache.setCacheObject(redisKey,platformUserDetail,1,TimeUnit.DAYS);
+        return platformUserDetail;
     }
 
     @Override
@@ -155,5 +166,22 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
             throw new RuntimeException("手机号已被其他微信绑定");
         }
 
+    }
+
+    @Override
+    public PlatformUserDetail selectPlatformUserDetailByDataId(String openId) {
+        String redisKey = RedisKeyConstants.QUERY_USER_DETAIL_DATA_ID_KEY + openId;
+
+        if (redisCache.hasKey(redisKey)) {
+            return redisCache.getCacheObject(redisKey);
+        }
+        PlatformUserDetail platformUserDetail = new PlatformUserDetail();
+        platformUserDetail.setDataId(openId);
+        List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
+        if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
+            return null;
+        }
+        redisCache.setCacheObject(redisKey,platformUserDetails.get(0),1, TimeUnit.DAYS);
+        return platformUserDetails.get(0);
     }
 }

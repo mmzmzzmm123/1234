@@ -12,6 +12,12 @@ public class UserConstants {
     public static final String SYS_USER = "SYS_USER";
 
     /**
+     * 平台内用户标识
+     */
+    public static final String PU_USER = "PU_USER";
+
+
+    /**
      * 正常状态
      */
     public static final String NORMAL = "0";
