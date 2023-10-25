@@ -1,6 +1,7 @@
 package com.ruoyi.onethinker.service.impl;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.utils.DateUtils;
 
+import com.ruoyi.common.utils.file.FileUploadUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
 import org.slf4j.Logger;
@@ -24,6 +26,7 @@ import com.ruoyi.onethinker.mapper.SysFileInfoMapper;
 import com.ruoyi.onethinker.domain.SysFileInfo;
 import com.ruoyi.onethinker.service.ISysFileInfoService;
 import com.ruoyi.system.service.ISysConfigService;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 文件信息Service业务层处理
@@ -108,13 +111,10 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService {
     }
 
     @Override
-    public SysFileInfo upload(SysFileInfoReqDTO sysFileInfoReqDTO, HttpServletRequest request) {
+    public SysFileInfo upload(SysFileInfoReqDTO sysFileInfoReqDTO) {
         // 目前只支持服务器上传
-        if (!ServletFileUpload.isMultipartContent(request)) {
-            throw new RuntimeException("请求方式有误，请重新发起请求");
-        }
         // 文件路径
-        String path = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DETAIL_FILE_PATH) + File.pathSeparator + request.getMethod() + File.pathSeparator;
+        String path = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DETAIL_FILE_PATH) + File.pathSeparator + sysFileInfoReqDTO.getModule() + File.pathSeparator;
         // 文件名
         String fileName = sysFileInfoReqDTO.getName();
         // 文件MD5
@@ -122,12 +122,8 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService {
         // 文件后缀名
         String suffixName = fileName.split("\\.")[fileName.split("\\.").length - 1];
         // 文件路径
-        if (!new File(path).exists()) {
-            new File(path).mkdir();
-        }
-        File uploadFile = new File(path + File.pathSeparator + fileMd5 + "." + suffixName);
         try {
-            FileUtils.copyInputStreamToFile(sysFileInfoReqDTO.getFile().getInputStream(), uploadFile);
+            fileName = FileUploadUtils.upload(path, sysFileInfoReqDTO.getFile());
         } catch (Exception e) {
             LOG.error("文件上传失败" + e.getMessage());
             e.printStackTrace();
@@ -139,10 +135,11 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService {
         sysFileInfo.setFileType(sysFileInfoReqDTO.getFileType());
         sysFileInfo.setServerFileId(fileMd5);
         sysFileInfo.setSource(SysFileInfo.SOURCE_TYPE_LOCALHOST);
-        sysFileInfo.setSize(uploadFile.length());
         sysFileInfo.setSuffixName(suffixName);
+        sysFileInfo.setSize(sysFileInfoReqDTO.getSize());
         sysFileInfo.setFileUrl("http://" + IpUtils.getHostIp() + ":18081/");
         sysFileInfo.setCreateUserId(SecurityUtils.getUserId());
+        sysFileInfo.setCreateTime(new Date());
         sysFileInfoMapper.insertSysFileInfo(sysFileInfo);
         return sysFileInfo;
     }

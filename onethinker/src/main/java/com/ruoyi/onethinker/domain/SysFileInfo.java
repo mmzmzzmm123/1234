@@ -153,7 +153,7 @@ public class SysFileInfo extends BaseEntity {
                 .append("suffixName", getSuffixName())
                 .append("size", getSize())
                 .append("createTime", getCreateTime())
-                .append("createUpdateId", getCreateUserId())
+                .append("createUserId", getCreateUserId())
                 .append("source", getSource())
                 .append("fileUrl", getFileUrl())
                 .append("fileType", getFileType())

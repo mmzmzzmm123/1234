@@ -16,13 +16,14 @@ public class SysFileInfoReqDTO {
      */
     private String name;
     /**
-     * 分片对象
-     */
-    private MultipartFile file;
-    /**
      * MD5
      */
     private String md5;
+
+    /**
+     * 文件大小
+     */
+    private Long size;
 
     /**
      * 文件归属模块
@@ -35,6 +36,27 @@ public class SysFileInfoReqDTO {
      * @return
      */
     private Integer fileType;
+
+    /**
+     * 文件内容
+     */
+    private MultipartFile file;
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
 
     public String getModule() {
         return module;
@@ -66,14 +88,6 @@ public class SysFileInfoReqDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public MultipartFile getFile() {
-        return file;
-    }
-
-    public void setFile(MultipartFile file) {
-        this.file = file;
     }
 
     public String getMd5() {

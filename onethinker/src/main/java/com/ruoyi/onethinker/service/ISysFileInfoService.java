@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.ruoyi.onethinker.domain.SysFileInfo;
 import com.ruoyi.onethinker.dto.SysFileInfoReqDTO;
 import com.ruoyi.onethinker.dto.SysFileInfoResDTO;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 文件信息Service接口
@@ -66,8 +67,7 @@ public interface ISysFileInfoService {
     /**
      * 文件上传
      * @param sysFileInfoReqDTO
-     * @param request
      * @return
      */
-    SysFileInfo upload(SysFileInfoReqDTO sysFileInfoReqDTO, HttpServletRequest request);
+    SysFileInfo upload(SysFileInfoReqDTO sysFileInfoReqDTO);
 }

@@ -26,6 +26,7 @@ import com.ruoyi.onethinker.dto.SysFileInfoReqDTO;
 import com.ruoyi.onethinker.service.ISysFileInfoService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 文件信息Controller
@@ -65,8 +66,8 @@ public class SysFileInfoController extends BaseController {
     @PreAuthorize("@ss.hasPermi('onethinker:file:add')")
     @Log(title = "文件信息", businessType = BusinessType.INSERT)
     @PostMapping(value = "/upload")
-    public AjaxResult upload(SysFileInfoReqDTO sysFileInfoReqDTO, HttpServletRequest request) {
-        return AjaxResult.success(sysFileInfoService.upload(sysFileInfoReqDTO,request));
+    public AjaxResult upload(SysFileInfoReqDTO sysFileInfoReqDTO) {
+        return AjaxResult.success(sysFileInfoService.upload(sysFileInfoReqDTO));
     }
 
     /**
