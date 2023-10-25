@@ -1,5 +1,7 @@
 package com.ruoyi.web.controller.onethinker;
 
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +34,9 @@ public class PlatformUserController extends BaseController {
     @Autowired
     private IPlatformUserDetailService platformUserDetailService;
 
+    @Autowired
+    private RedisCache redisCache;
+
     /**
      * 平台用戶登錄
      */
@@ -47,6 +52,15 @@ public class PlatformUserController extends BaseController {
         IPlatformUserService platformUserService = platformUserFactory.queryPlatformUserServiceBySourceType(reqDTO.getSourceType());
         platformUserService.register(reqDTO);
         return AjaxResult.success("注册成功");
+    }
+
+    @PostMapping(value = "/update")
+    public AjaxResult platformUserUpdate(@RequestBody PlatformUserDetail platformUserDetail) {
+        PlatformUserDetail resDTO = platformUserDetailService.queryLoginUserInfo();
+        platformUserDetail.setId(resDTO.getId());
+        platformUserDetailService.updatePlatformUserDetail(platformUserDetail);
+        redisCache.deleteObject(CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + resDTO.getDataId());
+        return AjaxResult.success("更新成功");
     }
 
     /**

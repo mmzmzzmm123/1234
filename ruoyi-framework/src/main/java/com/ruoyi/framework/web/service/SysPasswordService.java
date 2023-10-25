@@ -2,12 +2,12 @@ package com.ruoyi.framework.web.service;
 
 import java.util.concurrent.TimeUnit;
 
+import com.ruoyi.common.enums.CacheEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.redis.RedisCache;
@@ -42,7 +42,7 @@ public class SysPasswordService {
      * @return 缓存键key
      */
     private String getCacheKey(String username) {
-        return CacheConstants.PWD_ERR_CNT_KEY + username;
+        return CacheEnum.PWD_ERR_CNT_KEY.getCode() + username;
     }
 
     public void validate(SysUser user) {
