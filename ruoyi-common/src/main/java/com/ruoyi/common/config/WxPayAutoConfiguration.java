@@ -39,7 +39,7 @@ public class WxPayAutoConfiguration {
      * @return 微信支付service
      */
     @Bean
-    @ConditionalOnMissingBean(WxPayService.class)
+//    @ConditionalOnMissingBean(WxPayService.class)
     public WxPayService wxPayService() {
         final WxPayServiceImpl wxPayService = new WxPayServiceImpl();
         WxPayConfig payConfig = new WxPayConfig();

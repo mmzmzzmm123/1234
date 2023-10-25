@@ -178,6 +178,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         //查询支付状态；
         WxPayOrderQueryV3Result v3Result = null;
         try {
+            WxPayService wxPayService = payService.getConfigByRoom(order.getRoomId());
             v3Result = wxPayService.queryOrderV3("", String.valueOf(order.getOrderNo()));
             log.debug("查询订单返回:" + v3Result.toString());
         } catch (WxPayException e) {
@@ -261,8 +262,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Autowired
     ITWxUserService wxUserService;
 
-    @Autowired
-    private WxPayService wxPayService;
+  /*  @Autowired
+    private WxPayService wxPayService;*/
 
     @Autowired
     ITWxUserPromotionService userPromotionService;
@@ -313,6 +314,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 }
             }
 
+            WxPayService wxPayService = payService.getConfigByRoom(prepayReq.getRoomId());
             WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
             final WxPayConfig config = wxPayService.getConfig();
 
@@ -329,7 +331,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
             try {
-                jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+                jsapiResult = wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
                 tRoomOrder.setOrderNo(orderNo);
                 tRoomOrder.setTotalAmount(totalPrice);
@@ -493,7 +495,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     }
                 }
             }
-
+            WxPayService wxPayService = payService.getConfigByRoom(roomPackage.getRoomId());
             WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
             final WxPayConfig config = wxPayService.getConfig();
 
@@ -521,7 +523,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
             try {
-                jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+                jsapiResult = wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
                 tRoomOrder.setOrderNo(orderNo);
                 tRoomOrder.setTotalAmount(totalPrice);
@@ -652,6 +654,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 }
             }
 
+            WxPayService wxPayService = payService.getConfigByRoom(roomOrder.getRoomId());
             WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
             final WxPayConfig config = wxPayService.getConfig();
 
@@ -668,7 +671,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
             try {
-                jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+                jsapiResult = wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
                 // 微信支付是不是要换个订单号?
                 roomOrder.setOrderNo(orderNo);
@@ -1408,6 +1411,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TWxUser wxUser = wxUserService.selectTWxUserById(userId);
 
+        WxPayService wxPayService = payService.getConfigByStore(storePromotion.getStoreId());
         WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
         final WxPayConfig config = wxPayService.getConfig();
 
@@ -1435,7 +1439,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
         try {
-            jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+            jsapiResult = wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
             tRoomOrder.setOrderNo(orderNo);
             tRoomOrder.setTotalAmount(totalPrice);
@@ -1659,6 +1663,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Autowired
     private ITRoomOrderChargeService orderChargeService;
 
+    @Autowired
+    private ITWxPayService payService;
+
     @Transactional
     @Override
     public PrepayResp orderCharge(MiniOrderChargeReq req, long wxUserId) {
@@ -1714,23 +1721,14 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         TWxUser wxUser = wxUserService.selectTWxUserById(wxUserId);
 
         if (req.getPayType().equals(OfficeEnum.PayType.WX_PAY.getCode())) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标
-
+            WxPayService iwxPayService = payService.getConfigByRoom(roomOrder.getRoomId());
             WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
-            final WxPayConfig config = wxPayService.getConfig();
+            final WxPayConfig config = iwxPayService.getConfig();
 
             WxPayUnifiedOrderV3Request.Amount v3Amount = new WxPayUnifiedOrderV3Request.Amount();
             v3Amount.setTotal(totalPrice.multiply(new BigDecimal(100)).intValue());
             WxPayUnifiedOrderV3Request.Payer v3payer = new WxPayUnifiedOrderV3Request.Payer();
             v3payer.setOpenid(wxUser.getOpenId());
-
-          /*  WxPayUnifiedOrderV3Request.Discount detail = new WxPayUnifiedOrderV3Request.Discount();
-            WxPayUnifiedOrderV3Request.GoodsDetail goodsDetail = new WxPayUnifiedOrderV3Request.GoodsDetail();
-            goodsDetail.setMerchantGoodsId(roomPackage.getId().toString());
-            goodsDetail.setQuantity(1);
-            goodsDetail.setUnitPrice(v3Amount.getTotal());
-            List<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetailList = new ArrayList<>();
-            goodsDetailList.add(goodsDetail);
-            detail.setGoodsDetails(goodsDetailList);*/
 
             v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getPayScoreNotifyUrl())
                     .setDescription("roomId: " + roomOrder.getRoomId()).setOutTradeNo(String.valueOf(orderNo))
@@ -1742,7 +1740,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
             try {
-                jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+                jsapiResult = iwxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
                 chargeOrder.setPayType(OfficeEnum.PayType.WX_PAY.getCode());
                 chargeOrder.setOrderNo(orderNo);
@@ -1851,6 +1849,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         //查询支付状态；
         WxPayOrderQueryV3Result v3Result = null;
         try {
+            WxPayService wxPayService = payService.getConfigByRoom(tRoomOrderCharge.getRoomId());
             v3Result = wxPayService.queryOrderV3("", String.valueOf(tRoomOrderCharge.getOrderNo()));
             log.debug("续费订单查询订单返回:" + v3Result.toString());
         } catch (WxPayException e) {

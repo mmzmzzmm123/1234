@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.office.mapper.TWxPayMapper">
+    
+    <resultMap type="TWxPay" id="TWxPayResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="appid"    column="appid"    />
+        <result property="mchId"    column="mchId"    />
+        <result property="apiV3Key"    column="apiV3Key"    />
+        <result property="certSerialNo"    column="certSerialNo"    />
+        <result property="privateKeyPath"    column="privateKeyPath"    />
+        <result property="privateCertPath"    column="privateCertPath"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTWxPayVo">
+        select id, user_id, appid, mchId, apiV3Key, certSerialNo, privateKeyPath, privateCertPath, status, remark, create_by, create_time, update_by, update_time from t_wx_pay
+    </sql>
+
+    <select id="selectTWxPayList" parameterType="TWxPay" resultMap="TWxPayResult">
+        <include refid="selectTWxPayVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="appid != null  and appid != ''"> and appid = #{appid}</if>
+            <if test="mchId != null  and mchId != ''"> and mchId = #{mchId}</if>
+            <if test="apiV3Key != null  and apiV3Key != ''"> and apiV3Key = #{apiV3Key}</if>
+            <if test="certSerialNo != null  and certSerialNo != ''"> and certSerialNo = #{certSerialNo}</if>
+            <if test="privateKeyPath != null  and privateKeyPath != ''"> and privateKeyPath = #{privateKeyPath}</if>
+            <if test="privateCertPath != null  and privateCertPath != ''"> and privateCertPath = #{privateCertPath}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTWxPayById" parameterType="Long" resultMap="TWxPayResult">
+        <include refid="selectTWxPayVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTWxPay" parameterType="TWxPay" useGeneratedKeys="true" keyProperty="id">
+        insert into t_wx_pay
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="appid != null and appid != ''">appid,</if>
+            <if test="mchId != null and mchId != ''">mchId,</if>
+            <if test="apiV3Key != null and apiV3Key != ''">apiV3Key,</if>
+            <if test="certSerialNo != null and certSerialNo != ''">certSerialNo,</if>
+            <if test="privateKeyPath != null and privateKeyPath != ''">privateKeyPath,</if>
+            <if test="privateCertPath != null and privateCertPath != ''">privateCertPath,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="appid != null and appid != ''">#{appid},</if>
+            <if test="mchId != null and mchId != ''">#{mchId},</if>
+            <if test="apiV3Key != null and apiV3Key != ''">#{apiV3Key},</if>
+            <if test="certSerialNo != null and certSerialNo != ''">#{certSerialNo},</if>
+            <if test="privateKeyPath != null and privateKeyPath != ''">#{privateKeyPath},</if>
+            <if test="privateCertPath != null and privateCertPath != ''">#{privateCertPath},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTWxPay" parameterType="TWxPay">
+        update t_wx_pay
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="appid != null and appid != ''">appid = #{appid},</if>
+            <if test="mchId != null and mchId != ''">mchId = #{mchId},</if>
+            <if test="apiV3Key != null and apiV3Key != ''">apiV3Key = #{apiV3Key},</if>
+            <if test="certSerialNo != null and certSerialNo != ''">certSerialNo = #{certSerialNo},</if>
+            <if test="privateKeyPath != null and privateKeyPath != ''">privateKeyPath = #{privateKeyPath},</if>
+            <if test="privateCertPath != null and privateCertPath != ''">privateCertPath = #{privateCertPath},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTWxPayById" parameterType="Long">
+        delete from t_wx_pay where id = #{id}
+    </delete>
+
+    <delete id="deleteTWxPayByIds" parameterType="String">
+        delete from t_wx_pay where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
