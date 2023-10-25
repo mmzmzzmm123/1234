@@ -200,7 +200,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     public static Date getFirstDayOfMonth(int month) {
         Calendar calendar = Calendar.getInstance();
         // 设置月份
-        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.MONTH, month);
         // 获取某月最小天数
         int firstDay = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);
         // 设置日历中月份的最小天数
@@ -220,7 +220,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     public static Date getLastDayOfMonth(int month) {
         Calendar calendar = Calendar.getInstance();
         // 设置月份
-        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.MONTH, month);
         // 获取某月最大天数
         int lastDay = 0;
         //2月的平年瑞年天数
