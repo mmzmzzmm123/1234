@@ -2,6 +2,7 @@ package com.ruoyi.mail.service;
 
 import java.util.List;
 import com.ruoyi.mail.domain.MailContent;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 晚安语列表Service接口
@@ -58,4 +59,6 @@ public interface IMailContentService
      * @return 结果
      */
     public int deleteMailContentById(Long id);
+
+    void importContentByExcel(MultipartFile file);
 }
