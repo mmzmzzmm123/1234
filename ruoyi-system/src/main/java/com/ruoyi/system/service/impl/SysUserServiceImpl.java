@@ -17,6 +17,7 @@ import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysRole;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
@@ -450,7 +451,7 @@ public class SysUserServiceImpl implements ISysUserService {
         int failureNum = 0;
         StringBuilder successMsg = new StringBuilder();
         StringBuilder failureMsg = new StringBuilder();
-        String password = configService.selectConfigByKey("sys.user.initPassword");
+        String password = configService.selectConfigByKey(SysConfigKeyEnum.SYS_USER_INITPASSWORD);
         for (SysUser user : userList) {
             try {
                 // 验证是否存在这个用户

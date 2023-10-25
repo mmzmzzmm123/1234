@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.onethinker.domain.PlatformUser;
@@ -112,7 +113,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         platformUserDetail.setPhone(platformUser.getPhone());
         platformUserDetail.setUsername(platformUser.getPhone());
         platformUserDetail.setNickName(platformUser.getNickName());
-        platformUserDetail.setPassword(sysConfigService.selectConfigByKey(PlatformUserDetail.DEFAULT_PASSWORD));
+        platformUserDetail.setPassword(sysConfigService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_PASSWORD));
         platformUserDetail.setDataId(platformUser.getPhone());
         platformUserDetail.setWeight(System.currentTimeMillis());
         platformUserDetail.setCreateTime(new Date());

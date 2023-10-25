@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import java.util.List;
 
+import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.system.domain.SysConfig;
 
 /**
@@ -24,7 +25,7 @@ public interface ISysConfigService {
      * @param configKey 参数键名
      * @return 参数键值
      */
-    public String selectConfigByKey(String configKey);
+    public String selectConfigByKey(SysConfigKeyEnum configKey);
 
     /**
      * 获取验证码开关

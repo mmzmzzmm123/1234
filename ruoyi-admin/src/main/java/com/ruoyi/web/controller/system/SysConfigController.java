@@ -21,6 +21,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.SysConfig;
 import com.ruoyi.system.service.ISysConfigService;
@@ -70,7 +71,7 @@ public class SysConfigController extends BaseController {
      */
     @GetMapping(value = "/configKey/{configKey}")
     public AjaxResult getConfigKey(@PathVariable String configKey) {
-        return success(configService.selectConfigByKey(configKey));
+        return success(configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(configKey)));
     }
 
     /**

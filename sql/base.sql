@@ -805,3 +805,5 @@ CREATE TABLE `t_platform_user_detail`  (
 -- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+

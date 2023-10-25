@@ -14,6 +14,7 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.enums.DataSourceType;
+import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysConfig;
@@ -58,11 +59,12 @@ public class SysConfigServiceImpl implements ISysConfigService {
     /**
      * 根据键名查询参数配置信息
      *
-     * @param configKey 参数key
+     * @param configKeyEnum 参数key
      * @return 参数键值
      */
     @Override
-    public String selectConfigByKey(String configKey) {
+    public String selectConfigByKey(SysConfigKeyEnum configKeyEnum) {
+        String configKey = configKeyEnum.getCode();
         String configValue = Convert.toStr(redisCache.getCacheObject(getCacheKey(configKey)));
         if (StringUtils.isNotEmpty(configValue)) {
             return configValue;
@@ -84,7 +86,7 @@ public class SysConfigServiceImpl implements ISysConfigService {
      */
     @Override
     public boolean selectCaptchaEnabled() {
-        String captchaEnabled = selectConfigByKey("sys.account.captchaEnabled");
+        String captchaEnabled = selectConfigByKey(SysConfigKeyEnum.SYS_ACCOUNT_CAPTCHAENABLED);
         if (StringUtils.isEmpty(captchaEnabled)) {
             return true;
         }

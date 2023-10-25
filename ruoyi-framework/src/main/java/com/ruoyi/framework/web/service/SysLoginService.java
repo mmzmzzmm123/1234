@@ -15,6 +15,7 @@ import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.exception.user.BlackListException;
 import com.ruoyi.common.exception.user.CaptchaException;
@@ -143,7 +144,7 @@ public class SysLoginService {
             throw new UserPasswordNotMatchException();
         }
         // IP黑名单校验
-        String blackStr = configService.selectConfigByKey("sys.login.blackIPList");
+        String blackStr = configService.selectConfigByKey(SysConfigKeyEnum.SYS_LOGIN_BLACKIPLIST);
         if (IpUtils.isMatchedIp(blackStr, IpUtils.getIpAddr())) {
             AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("login.blocked")));
             throw new BlackListException();

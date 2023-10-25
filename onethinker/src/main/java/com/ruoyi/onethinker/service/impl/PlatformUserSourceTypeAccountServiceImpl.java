@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.utils.PhoneUtils;
 import com.ruoyi.onethinker.domain.PlatformUser;
 import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
@@ -59,8 +60,8 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
         platformUser.setEnabled(PlatformUser.STATE_TYPE_ENABLED);
         platformUser.setWeight(System.currentTimeMillis());
         platformUser.setCreateTime(new Date());
-        platformUser.setAvatarUrl(configService.selectConfigByKey(PlatformUser.DEFAULT_AVATAR_URL));
-        platformUser.setNickName(configService.selectConfigByKey(PlatformUser.DEFAULT_NICK_NAME) + System.currentTimeMillis());
+        platformUser.setAvatarUrl(configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_AVATAR_URL));
+        platformUser.setNickName(configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_NICK_NAME) + System.currentTimeMillis());
         platformUserMapper.insertPlatformUser(platformUser);
         // 保存用户明细信息
         platformUserDetailService.saveEntryUserDetailByAccount(platformUser);

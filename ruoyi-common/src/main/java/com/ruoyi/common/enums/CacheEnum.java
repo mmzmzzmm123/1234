@@ -8,9 +8,6 @@ package com.ruoyi.common.enums;
  * @description: 缓存key常量枚举
  */
 public enum CacheEnum {
-    /**
-     * 登录用户 redis key
-     */
     LOGIN_TOKEN_KEY("login_tokens:", "用户信息"),
 
     SYS_CONFIG_KEY("sys_config:", "配置信息"),
