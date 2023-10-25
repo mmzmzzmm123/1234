@@ -1192,6 +1192,7 @@ public class ApiOrderService {
      */
     public List<OrderComment> selectOrderComment(ApiPageOrderCommentDto dto) {
         OrderComment orderComment = new OrderComment();
+        orderComment.setIfHideDefault(SysYesNoEnums.YES.getCode());
         if (ObjectUtil.isNotNull(dto.getStaffId())) {
             orderComment.setStaffUserId(dto.getStaffId());
         }

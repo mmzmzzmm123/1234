@@ -32,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="comment != null  and comment != ''"> and comment like concat('%', #{comment}, '%')</if>
             <if test="serviceContent != null  and serviceContent != ''"> and service_content like concat('%', #{serviceContent}, '%')</if>
             <if test="ifShow != null  and ifShow != ''"> and if_show = #{ifShow}</if>
+             <if test="ifHideDefault != null and ifHideDefault != '' and ifHideDefault == 'Y'.toString()">and comment != '默认好评'</if>
         </where>
         order by create_time desc
     </select>

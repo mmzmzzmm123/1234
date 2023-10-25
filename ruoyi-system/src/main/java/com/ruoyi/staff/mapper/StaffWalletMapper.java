@@ -44,6 +44,13 @@ public interface StaffWalletMapper {
     public List<StaffWallet> selectStaffWalletList(StaffWallet staffWallet);
 
     /**
+     * 查询待结算佣金大于0的数据，带锁
+     *
+     * @return 结果
+     * */
+    public List<StaffWallet> selectWaitCommissionGreaterThanZeroForUpdate();
+
+    /**
      * 新增员工钱包
      *
      * @param staffWallet 员工钱包

@@ -3,11 +3,8 @@ package com.ruoyi.common.utils;
 import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.temporal.TemporalAdjusters;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -269,4 +266,25 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         return calendar.getTime();
     }
 
+    /**
+     * 获取上周一的日期
+     *
+     * @return 结果
+     * */
+    public static Date getLastMonday() {
+        LocalDate today = LocalDate.now();
+        LocalDate lastMonday = today.minusWeeks(1).with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+        return java.sql.Date.valueOf(lastMonday);
+    }
+
+    /**
+     * 获取上周日的日期
+     *
+     * @return 结果
+     * */
+    public static Date getLastSunday() {
+        LocalDate today = LocalDate.now();
+        LocalDate lastSunday = today.minusWeeks(1).with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+        return java.sql.Date.valueOf(lastSunday);
+    }
 }

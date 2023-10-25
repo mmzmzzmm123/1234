@@ -65,5 +65,6 @@ public class OrderComment extends BaseEntity {
     @ApiModelProperty("是否展示")
     private String ifShow;
 
-
+    @ApiModelProperty("是否隐藏默认评论")
+    private String ifHideDefault;
 }

@@ -136,24 +136,8 @@ public class ApiStaffController extends BaseController {
         TableDataInfo dataTable = getDataTable(staffInfos);
         // 开始处理对应业务
         if (ObjectUtil.isNotEmpty(dataTable)) {
-            List<StaffInfo> newStaffInfoList = new ArrayList<>();
-            // 置顶数据
-            List<StaffInfo> topList = staffInfos.stream().filter(item -> item.getIfTop().equals(SysYesNoEnums.YES.getCode())).collect(Collectors.toList());
-            if (ObjectUtil.isNotEmpty(topList)) {
-                Collections.shuffle(topList);
-                newStaffInfoList.addAll(topList);
-            }
-            // 需要打乱的数据
-            List<StaffInfo> randomList = staffInfos.stream().filter(item -> item.getIfTop().equals(SysYesNoEnums.NO.getCode())).collect(Collectors.toList());
-            if (ObjectUtil.isNotEmpty(randomList) && !"4".equals(dto.getSortType())) {
-                Collections.shuffle(randomList);
-                topList.addAll(randomList);
-            }
-            if (ObjectUtil.isNotEmpty(randomList)){
-                newStaffInfoList.addAll(randomList);
-            }
             // 遍历数据并插入返回集合中
-            newStaffInfoList.forEach(item -> {
+            staffInfos.forEach(item -> {
                 ApiStaffInfoVo staffInfoVo = new ApiStaffInfoVo();
                 BeanUtils.copyBeanProp(staffInfoVo, item);
                 voList.add(staffInfoVo);

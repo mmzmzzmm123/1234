@@ -50,6 +50,11 @@ public class OrderAutoCancelMqConsumer implements RocketMQListener<Long> {
             log.warn("mq消费-订单未接单自动取消：失败，订单信息为空");
             throw new ServiceException("mq消费-订单未接单自动取消：失败，订单信息为空");
         }
+        // 判断订单状态是否正常
+        if (OrderStateEnums.CANCEL.getCode().equals(orderInfo.getOrderState())){
+            log.warn("mq消费-订单未接单自动取消：描述，订单已取消");
+            return;
+        }
         if (!OrderStateEnums.PAID.getCode().equals(orderInfo.getOrderState())){
             log.warn("mq消费-订单未接单自动取消：描述，订单状态不为已支付/待接单状态，直接跳过");
             return;
