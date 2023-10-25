@@ -7,14 +7,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -23,6 +16,7 @@ import com.ruoyi.mail.domain.MailContent;
 import com.ruoyi.mail.service.IMailContentService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 晚安语列表Controller
@@ -42,7 +36,7 @@ public class MailContentController extends BaseController
      * 查询晚安语列表列表
      */
     @ApiOperation("查询晚安语列表列表")
-    @PreAuthorize("@ss.hasPermi('system:content:list')")
+    @PreAuthorize("@ss.hasPermi('mail:content:list')")
     @GetMapping("/list")
     public TableDataInfo list(MailContent mailContent)
     {
@@ -55,7 +49,7 @@ public class MailContentController extends BaseController
      * 导出晚安语列表列表
      */
     @ApiOperation("导出晚安语列表列表")
-    @PreAuthorize("@ss.hasPermi('system:content:export')")
+    @PreAuthorize("@ss.hasPermi('mail:content:export')")
     @Log(title = "晚安语列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, MailContent mailContent)
@@ -69,7 +63,7 @@ public class MailContentController extends BaseController
      * 获取晚安语列表详细信息
      */
     @ApiOperation("获取晚安语列表详细信息")
-    @PreAuthorize("@ss.hasPermi('system:content:query')")
+    @PreAuthorize("@ss.hasPermi('mail:content:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -80,7 +74,7 @@ public class MailContentController extends BaseController
      * 新增晚安语列表
      */
     @ApiOperation("新增晚安语列表")
-    @PreAuthorize("@ss.hasPermi('system:content:add')")
+    @PreAuthorize("@ss.hasPermi('mail:content:add')")
     @Log(title = "晚安语列表", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MailContent mailContent)
@@ -92,7 +86,7 @@ public class MailContentController extends BaseController
      * 修改晚安语列表
      */
     @ApiOperation("修改晚安语列表")
-    @PreAuthorize("@ss.hasPermi('system:content:edit')")
+    @PreAuthorize("@ss.hasPermi('mail:content:edit')")
     @Log(title = "晚安语列表", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody MailContent mailContent)
@@ -104,11 +98,18 @@ public class MailContentController extends BaseController
      * 删除晚安语列表
      */
     @ApiOperation("晚安语列表")
-    @PreAuthorize("@ss.hasPermi('system:content:remove')")
+    @PreAuthorize("@ss.hasPermi('mail:content:remove')")
     @Log(title = "晚安语列表", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(mailContentService.deleteMailContentByIds(ids));
+    }
+
+    @ApiOperation("导入晚安语")
+    @PostMapping("/importContent")
+    public AjaxResult importContent(@RequestParam MultipartFile file){
+        mailContentService.importContentByExcel(file);
+        return success();
     }
 }
