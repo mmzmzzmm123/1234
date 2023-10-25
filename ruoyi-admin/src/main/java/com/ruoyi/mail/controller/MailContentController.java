@@ -111,6 +111,6 @@ public class MailContentController extends BaseController
     @PostMapping("importContent")
     public AjaxResult importContent(@RequestParam MultipartFile file){
         mailContentService.importContentByExcel(file);
-        return toAjax();
+        return success();
     }
 }
