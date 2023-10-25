@@ -42,7 +42,7 @@ public class MailUserController extends BaseController
      * 查询邮件用户列表列表
      */
     @ApiOperation("查询邮件用户列表列表")
-    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @PreAuthorize("@ss.hasPermi('mail:user:list')")
     @GetMapping("/list")
     public TableDataInfo list(MailUser mailUser)
     {
@@ -55,7 +55,7 @@ public class MailUserController extends BaseController
      * 导出邮件用户列表列表
      */
     @ApiOperation("导出邮件用户列表列表")
-    @PreAuthorize("@ss.hasPermi('system:user:export')")
+    @PreAuthorize("@ss.hasPermi('mail:user:export')")
     @Log(title = "邮件用户列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, MailUser mailUser)
@@ -69,7 +69,7 @@ public class MailUserController extends BaseController
      * 获取邮件用户列表详细信息
      */
     @ApiOperation("获取邮件用户列表详细信息")
-    @PreAuthorize("@ss.hasPermi('system:user:query')")
+    @PreAuthorize("@ss.hasPermi('mail:user:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -80,7 +80,7 @@ public class MailUserController extends BaseController
      * 新增邮件用户列表
      */
     @ApiOperation("新增邮件用户列表")
-    @PreAuthorize("@ss.hasPermi('system:user:add')")
+    @PreAuthorize("@ss.hasPermi('mail:user:add')")
     @Log(title = "邮件用户列表", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MailUser mailUser)
@@ -92,7 +92,7 @@ public class MailUserController extends BaseController
      * 修改邮件用户列表
      */
     @ApiOperation("修改邮件用户列表")
-    @PreAuthorize("@ss.hasPermi('system:user:edit')")
+    @PreAuthorize("@ss.hasPermi('mail:user:edit')")
     @Log(title = "邮件用户列表", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody MailUser mailUser)
@@ -104,7 +104,7 @@ public class MailUserController extends BaseController
      * 删除邮件用户列表
      */
     @ApiOperation("删除邮件用户列表")
-    @PreAuthorize("@ss.hasPermi('system:user:remove')")
+    @PreAuthorize("@ss.hasPermi('mail:user:remove')")
     @Log(title = "邮件用户列表", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

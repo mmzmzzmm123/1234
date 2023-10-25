@@ -36,7 +36,7 @@ public class MailContentController extends BaseController
      * 查询晚安语列表列表
      */
     @ApiOperation("查询晚安语列表列表")
-    @PreAuthorize("@ss.hasPermi('system:content:list')")
+    @PreAuthorize("@ss.hasPermi('mail:content:list')")
     @GetMapping("/list")
     public TableDataInfo list(MailContent mailContent)
     {
@@ -49,7 +49,7 @@ public class MailContentController extends BaseController
      * 导出晚安语列表列表
      */
     @ApiOperation("导出晚安语列表列表")
-    @PreAuthorize("@ss.hasPermi('system:content:export')")
+    @PreAuthorize("@ss.hasPermi('mail:content:export')")
     @Log(title = "晚安语列表", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, MailContent mailContent)
@@ -63,7 +63,7 @@ public class MailContentController extends BaseController
      * 获取晚安语列表详细信息
      */
     @ApiOperation("获取晚安语列表详细信息")
-    @PreAuthorize("@ss.hasPermi('system:content:query')")
+    @PreAuthorize("@ss.hasPermi('mail:content:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -74,7 +74,7 @@ public class MailContentController extends BaseController
      * 新增晚安语列表
      */
     @ApiOperation("新增晚安语列表")
-    @PreAuthorize("@ss.hasPermi('system:content:add')")
+    @PreAuthorize("@ss.hasPermi('mail:content:add')")
     @Log(title = "晚安语列表", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody MailContent mailContent)
@@ -86,7 +86,7 @@ public class MailContentController extends BaseController
      * 修改晚安语列表
      */
     @ApiOperation("修改晚安语列表")
-    @PreAuthorize("@ss.hasPermi('system:content:edit')")
+    @PreAuthorize("@ss.hasPermi('mail:content:edit')")
     @Log(title = "晚安语列表", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody MailContent mailContent)
@@ -98,7 +98,7 @@ public class MailContentController extends BaseController
      * 删除晚安语列表
      */
     @ApiOperation("晚安语列表")
-    @PreAuthorize("@ss.hasPermi('system:content:remove')")
+    @PreAuthorize("@ss.hasPermi('mail:content:remove')")
     @Log(title = "晚安语列表", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
@@ -107,8 +107,8 @@ public class MailContentController extends BaseController
     }
 
     @ApiOperation("导入晚安语")
-    @PreAuthorize("@ss.hasPermi('system:content:export')")
-    @PostMapping("importContent")
+    @PreAuthorize("@ss.hasPermi('mail:content:export')")
+    @PostMapping("/importContent")
     public AjaxResult importContent(@RequestParam MultipartFile file){
         mailContentService.importContentByExcel(file);
         return success();
