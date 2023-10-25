@@ -107,7 +107,6 @@ public class MailContentController extends BaseController
     }
 
     @ApiOperation("导入晚安语")
-    @PreAuthorize("@ss.hasPermi('mail:content:export')")
     @PostMapping("/importContent")
     public AjaxResult importContent(@RequestParam MultipartFile file){
         mailContentService.importContentByExcel(file);
