@@ -162,12 +162,13 @@
               :key="item.id"
               :label="item.content"
               :value="item.content"
+              style="width: 300px;"
               class="options"
             />
           </el-select>
         </el-form-item>
         <el-row type="flex" justify="center">
-          <el-button type="primary" size="mini" @click="sendEmail">发送邮件</el-button>
+          <el-button type="primary" size="mini" :disabled="loading1" @click="sendEmail">发送邮件</el-button>
         </el-row>
 
       </el-form>
@@ -218,9 +219,12 @@ export default {
           { required: true, message: '必填', trigger: 'blur' }
         ]
       },
+      // 发送弹框的显示隐藏
       dialogVisible: false,
+      // 发送弹框的form
       sendForm: {},
       sendRules: {},
+      // 内容列表
       contentList: [],
       // 内容请求参数
       // 查询参数
@@ -230,7 +234,9 @@ export default {
         content: null,
         type: null,
         isDelete: null
-      }
+      },
+      // 发送请求loading防止再次触发
+      loading1: false
     }
   },
   created() {
@@ -353,18 +359,30 @@ export default {
     },
     // 发送邮件
     sendEmail() {
+      // 防止重复提交
+      if (this.loading) {
+        return
+      }
       const data = {
         attachments: '',
         receiveUserMail: this.sendForm.mailAccount,
         subject: '晚安',
         content: this.sendForm.content
       }
-      sendEmail(data).then(response => {
-        // console.log(response);
-        this.$modal.msgSuccess('发送成功')
-        this.dialogVisible = false
-        this.getList()
-      })
+      this.loading1 = true
+      sendEmail(data)
+        .then(response => {
+          this.$modal.msgSuccess('发送成功')
+          this.dialogVisible = false
+          this.getList()
+        })
+        .catch(() => {
+        // 处理发送失败的情况
+          this.$modal.msgError('发送失败')
+        })
+        .finally(() => {
+          this.loading1 = false // 结束加载
+        })
     }
   }
 }
@@ -375,14 +393,4 @@ export default {
     text-overflow: ellipsis;
     white-space: nowrap;
   }
-  /* // ::v-deep .el-select-dropdown__item{
-  //   width: 150px !important;
-  //   height: 34px;
-  //   line-height: 34px;
-  //   font-size: 14px;
-  //   padding: 0 20px;
-  //   position: relative;
-  //   box-sizing: border-box;
-  //   cursor: pointer;
-  // } */
 </style>
