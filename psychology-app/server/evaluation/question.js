@@ -16,6 +16,18 @@ export default {
     }
   },
   //获取测评问题
+  getWrongList: async (gaugeId, orderId) => {
+    let res = await httprequest.get(`/app/gauge/questions/wrongs/${orderId}/${gaugeId}`);
+    if (res.code == 200) {
+      return res.data;
+    } else {
+      uni.showToast({
+        icon: "error",
+        title: "获取题目出错",
+      });
+    }
+  },
+  //获取测评问题
   getLats: async (gaugeId) => {
     let res = await httprequest.get("/app/gauge/questions/lats", {
       gaugeId

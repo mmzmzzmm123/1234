@@ -2,7 +2,6 @@ package com.ruoyi.gauge.service;
 
 import java.util.List;
 
-import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.gauge.domain.PsyGaugeQuestions;
 import com.ruoyi.gauge.vo.PsyQuestionVO;
 
@@ -69,6 +68,9 @@ public interface IPsyGaugeQuestionsService
      */
     List<PsyQuestionVO> appQueryQuesList(PsyGaugeQuestions psyGaugeQuestions , Integer userId);
 
-
-
+    /**
+     * 查询问题
+     * @return
+     */
+    List<PsyQuestionVO> wrongs(Integer orderId, Integer gaugeId);
 }

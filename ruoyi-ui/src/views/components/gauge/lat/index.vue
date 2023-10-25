@@ -184,7 +184,7 @@ export default {
       });
     },
     async getMultiQuestions() {
-      let res = await listQuestions({gaugeId: this.gaugeId, pageSize: 999});
+      let res = await listQuestions({gaugeId: this.gaugeId});
       this.questionList = res.rows;
     },
     async handleSelectionChange(selection, row) {

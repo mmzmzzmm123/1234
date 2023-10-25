@@ -31,6 +31,14 @@ public class PsyQuestionVO {
     @ApiModelProperty("问题选择类型(0-单选，1-多选)")
     private Integer selectType;
 
+    @ApiModelProperty("问题图片")
+    private String img;
+
+    @ApiModelProperty("问题解析")
+    private String remark;
+    private List<String> answerTitle;
+    private List<String> referenceAnswerTitle;
+
     @ApiModelProperty("问题选项")
     private List<PsyGaugeQuestionsOptions> options;
 

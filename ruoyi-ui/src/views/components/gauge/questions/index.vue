@@ -67,6 +67,10 @@
                 </el-radio-button>
               </el-radio-group>
             </div>
+            <el-divider content-position="left">错题解析</el-divider>
+            <el-input v-model="item.remark" maxlength="255" show-word-limit type="textarea" @blur="updateQuestion(item)"></el-input>
+            <el-divider content-position="left">问题图示</el-divider>
+            <image-upload v-model="item.img" @input="updateQuestion(item)" :extraData="extraData"/>
           </template>
           <template>
 
@@ -123,6 +127,10 @@ export default {
   },
   data() {
     return {
+      extraData: {
+        module: this.$constants['picModules'][1],
+        type: this.$constants['picTypes'][8]
+      },
       gaugeMbti: this.$constants.gaugeMbti,
       gaugeMbtiRes: this.$constants.gaugeMbtiRes,
       gaugeQuestionList: [],

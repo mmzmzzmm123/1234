@@ -1,17 +1,19 @@
 package com.ruoyi.gauge.service.impl;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.gauge.domain.PsyGaugeQuestions;
 import com.ruoyi.gauge.domain.PsyGaugeQuestionsOptions;
+import com.ruoyi.gauge.domain.PsyGaugeQuestionsResult;
+import com.ruoyi.gauge.mapper.PsyGaugeQuestionsMapper;
+import com.ruoyi.gauge.mapper.PsyGaugeQuestionsResultMapper;
+import com.ruoyi.gauge.service.IPsyGaugeQuestionsService;
 import com.ruoyi.gauge.vo.PsyQuestionVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.ruoyi.gauge.mapper.PsyGaugeQuestionsMapper;
-import com.ruoyi.gauge.domain.PsyGaugeQuestions;
-import com.ruoyi.gauge.service.IPsyGaugeQuestionsService;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 心理测评问题Service业务层处理
@@ -21,7 +23,11 @@ import com.ruoyi.gauge.service.IPsyGaugeQuestionsService;
  */
 @Service
 public class PsyGaugeQuestionsServiceImpl implements IPsyGaugeQuestionsService {
-    @Autowired
+
+    @Resource
+    private PsyGaugeQuestionsResultMapper psyGaugeQuestionsResultMapper;
+
+    @Resource
     private PsyGaugeQuestionsMapper psyGaugeQuestionsMapper;
 
     /**
@@ -104,4 +110,30 @@ public class PsyGaugeQuestionsServiceImpl implements IPsyGaugeQuestionsService {
         );
         return psyQuestionVOS;
     }
+
+    @Override
+    public List<PsyQuestionVO> wrongs(Integer orderId, Integer gaugeId) {
+        PsyGaugeQuestions query = new PsyGaugeQuestions();
+        PsyGaugeQuestionsResult queryResult = new PsyGaugeQuestionsResult();
+        query.setGaugeId(gaugeId);
+        query.setOrderId(orderId);
+        queryResult.setGaugeId(gaugeId);
+        queryResult.setOrderId(orderId);
+        queryResult.setScore(0);
+
+        List<PsyQuestionVO> questionList = psyGaugeQuestionsMapper.appQueryQuesList(query);
+        List<PsyGaugeQuestionsResult> results = psyGaugeQuestionsResultMapper.selectPsyGaugeQuestionsResultList(queryResult);
+        List<Integer> ids = results.stream().filter(i -> i.getScore() == 0).map(PsyGaugeQuestionsResult::getQuestionsId).collect(Collectors.toList());
+
+        questionList = questionList.stream().filter(item -> ids.contains(item.getId())).collect(Collectors.toList());
+        questionList.forEach(item -> {
+            item.setAnswerTitle(item.getOptions().stream().filter(PsyGaugeQuestionsOptions::isSelectedFlag)
+                    .map(PsyGaugeQuestionsOptions::getName).collect(Collectors.toList()));
+            item.setReferenceAnswerTitle(item.getOptions().stream().filter(a -> a.getValue() > 0)
+                    .map(PsyGaugeQuestionsOptions::getName).collect(Collectors.toList()));
+        });
+
+        return questionList;
+    }
+
 }

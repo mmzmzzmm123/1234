@@ -44,6 +44,8 @@ public class PsyGaugeQuestions extends BaseEntity
 
     private Integer userId;
 
+    private String img;
+
     /**
      * 订单id
      */
@@ -70,6 +72,7 @@ public class PsyGaugeQuestions extends BaseEntity
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
+            .append("img", getImg())
             .toString();
     }
 }

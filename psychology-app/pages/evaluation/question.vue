@@ -18,7 +18,8 @@
           <view class="q-chatbox q-chatbox-left">
             <view class="type">{{ item.selectType === 0 ? '单选题' : '多选题' }}</view>
             <view class="title">{{ item.no }}、{{ item.title }}</view>
-            <view class="cue">请选择最贴合实际的情况：</view>
+<!--            <view class="cue">请选择最贴合实际的情况：</view>-->
+            <img v-if="item.img" class="item-img" :src="item.img" />
             <view class="warn-txt" v-show="checkNull">请至少选择一个选项</view>
             <view class="answer-box">
               <view class="item" v-for="(option, index) in item.options" @tap="answerOptions(item, option)">
@@ -26,7 +27,8 @@
                         'radio': item.selectType === 0, 'check': item.selectType === 1,
                         'active': (item.answers || []).findIndex(i => { return option.id === i }) > -1
                     }"></view>
-                {{ indexArr[index] }}、{{ option.name }}
+<!--                {{ indexArr[index] }}、{{ option.name }}-->
+                {{ option.name }}
               </view>
             </view>
           </view>
@@ -446,6 +448,14 @@ page {
     margin-bottom: 28upx;
   }
 
+  .item-img {
+    //width: 339upx;
+    //height: 168upx;
+    max-width: 100%!important;
+    height: auto!important;
+    margin: 0 auto;
+  }
+
   .warn-txt {
     font-size: 28upx;
     font-weight: 400;
@@ -460,6 +470,7 @@ page {
     font-weight: 400;
     color: #333333;
     line-height: 44upx;
+    margin-top: 10upx;
 
     .item {
       margin-bottom: 24upx;

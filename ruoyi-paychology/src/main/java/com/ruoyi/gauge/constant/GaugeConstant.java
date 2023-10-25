@@ -20,6 +20,8 @@ public class GaugeConstant {
     public static final int GAUGE_COMPUTE_4 = 4;// 'SDS'
     public static final int GAUGE_COMPUTE_5 = 5;// 'SAS'
     public static final int GAUGE_COMPUTE_6 = 6;// 'SCL-90'
+    public static final int GAUGE_COMPUTE_7 = 7;// 'SCL-90'
+    public static final int GAUGE_COMPUTE_8 = 8;// 'SCL-90'
 
     public static final double GAUGE_COMPUTE_SDS = 1.25;
     public static final double GAUGE_COMPUTE_SAS = 1.25;

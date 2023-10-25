@@ -150,7 +150,7 @@
         <el-tab-pane label="问题设置" name="questions">
           <questions v-bind:gaugeId="gaugeId" :gaugeType="gaugeType"></questions>
         </el-tab-pane>
-        <el-tab-pane v-if="[5,6].includes(gaugeType)" label="维度设置" name="lat">
+        <el-tab-pane v-if="[5,6,7,8].includes(gaugeType)" label="维度设置" name="lat">
           <lat v-bind:gaugeId="gaugeId"/>
         </el-tab-pane>
         <el-tab-pane label="测评设置" name="setting">

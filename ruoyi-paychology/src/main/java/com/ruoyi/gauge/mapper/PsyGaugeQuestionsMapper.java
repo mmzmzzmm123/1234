@@ -61,4 +61,5 @@ public interface PsyGaugeQuestionsMapper
     public int deletePsyGaugeQuestionsByIds(Integer[] ids);
 
     List<PsyQuestionVO> appQueryQuesList(PsyGaugeQuestions psyGaugeQuestions);
+
 }

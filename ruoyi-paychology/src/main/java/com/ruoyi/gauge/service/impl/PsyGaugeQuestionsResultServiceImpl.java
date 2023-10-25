@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -153,18 +154,6 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
 //        PsyGauge gauge = psyGaugeService.selectPsyGaugeById(order.getGaugeId());
         String sum = "0";
         switch (order.getGaugeType()) {
-            case GaugeConstant.GAUGE_COMPUTE_1:
-            case GaugeConstant.GAUGE_COMPUTE_2:
-            case GaugeConstant.GAUGE_COMPUTE_4:
-            case GaugeConstant.GAUGE_COMPUTE_5:
-            case GaugeConstant.GAUGE_COMPUTE_6:
-                int score = psyGaugeQuestionsResultMapper.getQuestionScore(paramMap);
-                // SDS
-                if (GaugeConstant.GAUGE_COMPUTE_4 == order.getGaugeType()) {
-                    score = (int) Math.round(score * GaugeConstant.GAUGE_COMPUTE_SDS);
-                }
-                sum = score + "";
-                break;
             case GaugeConstant.GAUGE_COMPUTE_3:
                 // MBTI
                 List<String> list = psyGaugeQuestionsResultMapper.getQuestionLat(paramMap);
@@ -185,6 +174,14 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                 sb.append(countMap.get("T") > countMap.get("F") ? "T" : "F");
                 sb.append(countMap.get("J") > countMap.get("P") ? "J" : "P");
                 sum = sb.toString();
+                break;
+            default:
+                int score = psyGaugeQuestionsResultMapper.getQuestionScore(paramMap);
+                // SDS
+                if (GaugeConstant.GAUGE_COMPUTE_4 == order.getGaugeType()) {
+                    score = (int) Math.round(score * GaugeConstant.GAUGE_COMPUTE_SDS);
+                }
+                sum = score + "";
                 break;
         }
         paramMap.put("score",sum);
@@ -259,7 +256,9 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
             vo.setLats(psyGaugeQuestionsResultMapper.getQuestionLat(paramMap));
         }
 
-        if (GaugeConstant.GAUGE_COMPUTE_5 == psyOrder.getGaugeType() || GaugeConstant.GAUGE_COMPUTE_6 == psyOrder.getGaugeType()) {
+        List<Integer> asList = Arrays.asList(GaugeConstant.GAUGE_COMPUTE_5, GaugeConstant.GAUGE_COMPUTE_6, GaugeConstant.GAUGE_COMPUTE_7, GaugeConstant.GAUGE_COMPUTE_8);
+
+        if (asList.contains(psyOrder.getGaugeType())) {
             PsyGaugeQuestionsResult query = new PsyGaugeQuestionsResult();
             query.setOrderId(psyOrder.getId());
             query.setUserId(psyOrder.getUserId());

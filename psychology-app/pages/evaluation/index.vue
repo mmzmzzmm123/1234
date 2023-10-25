@@ -4,6 +4,16 @@
       <img class="icon" src="/static/icon/search.png" />
       <span class="txt">搜索</span>
     </view>
+
+    <view class="member">
+      <text class="member-txt-1">非会员</text>
+      <text>开通会员立享全场免费测特权＞</text>
+      <view class="member-no">
+        <img class="member-no-img" src="/static/evaluation/index/member-no.png" />
+        <text>开通会员</text>
+      </view>
+    </view>
+
     <view class="banner-box index-margin">
 			<swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
        indicator-active-color="#FFFFFF">
@@ -18,14 +28,14 @@
         <view>{{ item.name }}</view>
       </view>
     </view>
-<!--    <view class="banner-box banner-box1 index-margin">-->
-<!--      <swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"-->
-<!--       indicator-active-color="#FFFFFF">-->
-<!--        <swiper-item v-for="(item, index) in bannerList1" :key="index">-->
-<!--          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />-->
-<!--        </swiper-item>-->
-<!--      </swiper>-->
-<!--    </view>-->
+    <view class="banner-box banner-box1 index-margin">
+      <swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
+       indicator-active-color="#FFFFFF">
+        <swiper-item v-for="(item, index) in bannerList1" :key="index">
+          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
+        </swiper-item>
+      </swiper>
+    </view>
     <view class="hot-box">
       <view class="index-title">热门推荐</view>
       <view class="list-box">
@@ -107,7 +117,7 @@ export default {
   data() {
     return {
       bannerList: [],
-      // bannerList1: [],
+      bannerList1: [],
       // bannerList2: [],
       // bannerList3: [],
       classList: [],
@@ -120,7 +130,7 @@ export default {
     // this.userInfo = uni.getStorageSync("userInfo")
     this.userInfo = utils.getUserInfo()
     this.bannerList = await this.getBanner(0);
-    // this.bannerList1 = await this.getBanner(1);
+    this.bannerList1 = await this.getBanner(1);
     // this.bannerList2 = await this.getBanner(2);
     // this.bannerList3 = await this.getBanner(3);
     this.productList = await this.getProduct(0);
@@ -218,6 +228,42 @@ page {
       font-size: 12px;
       color: #aaaaaa;
     }
+  }
+
+  .member {
+    margin: 16upx 24upx;
+    height: 88upx;
+    border-radius: 12upx;
+    background: url('/static/evaluation/index/member.png') 100% no-repeat;
+    color: rgba(82,88,110,1);
+    font-size: 26upx;
+    font-family: PingFangSC-Semibold;
+    font-weight: 600;
+    padding-left: 24upx;
+    display: flex;
+    align-items: center;
+    .member-txt-1 {
+      margin-right: 24upx;
+    }
+    .member-no {
+      margin-left: 32upx;
+      width: 160upx;
+      height: 50upx;
+      line-height: 50upx;
+      background: linear-gradient(180deg, #FFA973 0%, #F66837 100%);
+      border-radius: 20upx;
+      font-size: 24upx;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;
+      color: #FFFFFF;
+      text-align: center;
+      .member-no-img {
+        width: 22upx;
+        height: 20upx;
+        margin-right: 8upx;
+      }
+    }
+
   }
 
   .banner-box {
