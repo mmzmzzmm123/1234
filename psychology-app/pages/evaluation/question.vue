@@ -10,8 +10,7 @@
     </view>
     <scroll-view class="content-y" scroll-with-animation scroll-y :scroll-into-view="scrollInto">
       <view class="q-chat-block" v-for="(item, index) in questionList"
-            v-show="index <= currentIndex"
-            :id="'main-' + index">
+            v-show="index <= currentIndex">
         <view class="q-index">{{ (index + 1) + '/' + questionList.length }}</view>
         <view class="q-chat-left">
           <image :src="logo" class="q-user-pic q-right"></image>
@@ -37,6 +36,7 @@
           <view class="q-chatbox q-chatbox-right">{{ getAnswer(item) }}</view>
           <image :src="userInfo.avatar" class="q-user-pic q-left"></image>
         </view>
+        <view class="bottom-block" :id="'main-' + index"/>
       </view>
       <view class="q-chat-block" v-if="currentIndex > 1 && lastIndex + 1 === questionList.length">
         <view class="q-chat-left">
@@ -262,6 +262,7 @@ export default {
     scrollTo() {
       setTimeout(() => {
         this.scrollInto = 'main-' + this.lastIndex
+        // this.scrollInto = 'bottom'
       })
     },
     getLast() {
@@ -548,6 +549,11 @@ page {
     height: 1500upx;
     padding-bottom: calc(constant(safe-area-inset-bottom) + 50px); /* 兼容 iOS 设备 */
     padding-bottom: calc(env(safe-area-inset-bottom) + 50px); /* 兼容 iPhone X 及以上设备 */
+  }
+
+  .bottom-block {
+    width: 100%;
+    height: 20upx;
   }
 
   .q-chat-block {

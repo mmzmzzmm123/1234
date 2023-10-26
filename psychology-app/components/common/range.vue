@@ -2,7 +2,7 @@
   <view class="range" :style="{ marginTop: mTop }">
     <text>{{ down }}</text>
     <view class="range-pro" :style="{ background: lineBg, width: lineWidth, height: lintHeight }">
-      <view class="range-progress" :style="{  background: proBg, width: percentage + '%', height: lintHeight }"></view>
+      <view class="range-progress" :style="{  background: proBg, width: Math.min(percentage, 100) + '%', height: lintHeight }"></view>
     </view>
     <text>{{ high }}</text>
   </view>

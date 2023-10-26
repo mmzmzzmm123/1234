@@ -102,18 +102,16 @@ export default {
           num = 20
           break
         case 7:
-          num = 100
+          num = 33.34
           break
       }
 
       if (data.order.gaugeType === 7) {
-        this.opts.extra.radar.max = 16
-        this.score = Math.round(data.order.score / data.order.gaugeNum * num)
-        this.percentage = this.score
-      } else {
-        this.score = parseInt(data.order.score)
-        this.percentage = Math.round(this.score / data.order.gaugeNum * num)
+        this.opts.extra.radar.max = 24
       }
+
+      this.score = parseInt(data.order.score)
+      this.percentage = Math.min(Math.round(this.score / data.order.gaugeNum * num), 100)
 
       if (lats.length > 0) {
         this.radarData.series[0].name = this.getGaugeType(data.order.gaugeType)

@@ -126,9 +126,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             (CASE WHEN isnull(result.questions_options_id) then false else true end) as selectedFlag
         FROM
             psy_gauge_questions ques LEFT JOIN psy_gauge_questions_options opt ON ques.id = opt.gauge_questions_id
-            left join psy_gauge_questions_result result ON result.questions_options_id = opt.id and result.order_id = #{orderId}
+            left join psy_gauge_questions_result result ON result.questions_options_id = opt.id and result.order_id = #{orderId} <if test="userId != null "> and result.user_id = #{userId}</if>
         WHERE ques.gauge_id = #{gaugeId}
-        <if test="userId != null "> and result.user_id = #{userId}</if>
         order by ques.`no` ,opt.sort
     </select>
 </mapper>

@@ -40,7 +40,8 @@
       <view class="index-title">热门推荐</view>
       <view class="list-box">
         <view class="item" v-for="(item, index) in hotList" @tap="toProduct('/pages/evaluation/product?id=' + item.id)">
-          <view class="ranking" v-if="index < 3">Top{{ index + 1 }}</view>
+<!--          <view class="ranking" v-if="index < 3">Top{{ index + 1 }}</view>-->
+          <img class="ranking-img" v-if="index < 3" :src="`/static/evaluation/index/top${index+1}.png`"/>
           <img class="img" :src="item.listShowPicture" />
           <span class="txt txt-overflow txt-overflow-line2">{{
               item.title
@@ -279,11 +280,11 @@ page {
 
   .banner-box1 {
     uni-swiper {
-      height: 200upx;
+      height: 170upx;
     }
 
     .banner-img {
-      height: 200upx;
+      height: 170upx;
     }
   }
 
@@ -336,6 +337,14 @@ page {
           border-radius: 0 100upx 100upx 0;
           font-size: 20upx;
           padding-left: 10upx;
+        }
+        .ranking-img {
+          position: absolute;
+          top: 0upx;
+          left: 10upx;
+          width: 36upx;
+          height: 43upx;
+          border-radius: 0;
         }
 
         .img {
