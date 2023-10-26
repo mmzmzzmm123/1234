@@ -232,6 +232,7 @@ page {
   }
 
   .member {
+    position: relative;
     margin: 16upx 24upx;
     height: 88upx;
     border-radius: 12upx;
@@ -247,7 +248,8 @@ page {
       margin-right: 24upx;
     }
     .member-no {
-      margin-left: 32upx;
+      position: absolute;
+      right: 24upx;
       width: 160upx;
       height: 50upx;
       line-height: 50upx;

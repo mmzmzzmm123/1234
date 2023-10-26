@@ -20,7 +20,7 @@
       </el-button>
     </el-row>
 
-    <el-drawer :visible.sync="questionOptionOpen" size="50%" style="padding-right:35%;z-index:1005"
+    <el-drawer :visible.sync="questionOptionOpen" size="55%" style="padding-right:35%;z-index:1005"
                :wrapperClosable="false" :with-header="true" title="问题设置" append-to-body>
       <div v-for="item in gaugeQuestionList" :key="item.id" style="margin:0 20px">
         <div v-if="item.id == questionId">
@@ -33,7 +33,8 @@
                 <div class="select-line-icon option-drag">
                   <i class="el-icon-s-operation"/>
                 </div>
-                <el-input v-model="option.name" placeholder="选项名" size="small" @blur="updateOption(option)"/>
+                <el-input disabled :value="'序号:' + option.sort" size="small" style="width: 80px;text-align: center"/>
+                <el-input style="width: 350px;" v-model="option.name" placeholder="选项名" size="small" @blur="updateOption(option)"/>
                 <el-input-number v-if="gaugeType !== 3" v-model="option.value" controls-position="right" size="small"
                                  :min="0" :max="20" label="描述文字" @change="updateOption(option)"></el-input-number>
                 <el-select v-if="gaugeType === 3" @change="updateOption(option)" size="small" style="width: 150px"
@@ -45,8 +46,9 @@
                     :value="item.value"
                   />
                 </el-select>
-                <el-input disabled v-model="option.sort" size="small" style="width: 80px;text-align: center" label="排序"
-                          @change="updateOption(option)"/>
+
+                <image-upload  v-if="gaugeType === 8" :isShowTip="false" v-model="option.imgUrl" @input="updateOption(option)" :extraData="extraData"/>
+
                 <div class="close-btn select-line-icon">
                   <i class="el-icon-remove-outline" style="color:#777" v-if="index==0 || index==1"/>
                   <i class="el-icon-remove-outline" v-else @click="removeOption(option); options.splice(index, 1);"/>
@@ -290,7 +292,7 @@ export default {
 .button-new-tag {
   margin-left: 10px;
   height: 32px;
-  line-height: 30px;
+  line-height: 32px;
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -337,6 +339,36 @@ export default {
 
 .option-drag {
   cursor: move;
+}
+
+::v-deep .select-item .component-upload-image {
+  width: 32px;
+  height: 32px;
+}
+::v-deep .select-item .el-upload--picture-card {
+  width: 32px;
+  height: 32px;
+}
+::v-deep .select-item .el-upload {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+}
+::v-deep .select-item .el-upload-list--picture-card .el-upload-list__item {
+  width: 32px;
+  height: 32px;
+}
+::v-deep .select-item .el-upload-list--picture-card .el-upload-list__item-thumbnail {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+}
+::v-deep .select-item .avatar {
+  width: 32px;
+  height: 32px;
+}
+::v-deep .select-item .el-upload__tip {
+  margin: 0;
 }
 </style>
 
