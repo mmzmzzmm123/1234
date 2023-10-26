@@ -216,7 +216,6 @@ public class ExcelUtil<T>
         this.allowWrapText = allowWrapText;
     }
 
-
     /**
      * 隐藏Excel中列属性
      *
@@ -1040,10 +1039,10 @@ public class ExcelUtil<T>
         Cell cell = null;
         try
         {
-            // 设置行高
             //如果启用了自动换行功能,则自动行高;(支援通过\n实现数据在单行内使用自定义换行符)
             if (!allowWrapText)
             {
+                // 设置行高
                 row.setHeight(maxHeight);
             }
             // 根据Excel中设置情况决定是否导出,有些情况需要保持为空,希望用户填写这一列.
@@ -1116,7 +1115,7 @@ public class ExcelUtil<T>
      * @param endCol 结束列
      */
     public void setPromptOrValidation(Sheet sheet, String[] textlist, String promptContent, int firstRow, int endRow,
-                                      int firstCol, int endCol)
+            int firstCol, int endCol)
     {
         DataValidationHelper helper = sheet.getDataValidationHelper();
         DataValidationConstraint constraint = textlist.length > 0 ? helper.createExplicitListConstraint(textlist) : helper.createCustomConstraint("DD1");
