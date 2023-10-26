@@ -31,24 +31,22 @@
       <view class="block-radar">
         <qiun-data-charts type="radar" :opts="opts" :chartData="radarData"/>
       </view>
-      <view class="desc" style="margin-top: 0upx">
-        {{ report.setting.memo3 }}
-      </view>
+      <view class="img-box" v-html="report.setting.memo3"/>
     </view>
     <view class="block-1" v-for="item in lats.filter(a => a.y !== -1)">
       <block-header :title="item.name"/>
       <range :lineBg="item.line" :proBg="item.prd" :percentage="item.score"/>
       <view class="desc">
-        <text class="desc-title">{{ item.title }}</text>
         <view>
           {{ item.info }}
         </view>
+        <view class="desc-title">{{ item.title }}</view>
       </view>
     </view>
 
     <view class="block-1">
       <block-header title="您的得分建议"/>
-      <view class="img-box" v-html="report.setting.result"/>
+      <view class="img-box" style="margin-top: 80upx" v-html="report.setting.result"/>
     </view>
 
   </view>
@@ -75,7 +73,7 @@ export default {
         padding: [0,0,0,0],
         fontSize: 11,
         legend: {show: false, padding: 0,margin: 0},
-        extra: {radar: {border: true, max: 64}}
+        extra: {radar: {border: true, max: 100}}
       },
       report: {},
       lats: [],
@@ -107,10 +105,6 @@ export default {
           break
       }
 
-      if (data.order.gaugeType === 7) {
-        this.opts.extra.radar.max = 24
-      }
-
       this.score = parseInt(data.order.score)
       this.percentage = Math.min(Math.round(this.score / data.order.gaugeNum * num), 100)
 
@@ -123,8 +117,8 @@ export default {
             const res = data.results.filter(b => arr.includes(b.questionsId + '')) || []
             const score = res.reduce((a, c) => a + c.score, 0)
             this.radarData.categories[index] = a.name
-            this.radarData.series[0].data[index] = score
             a.score = Math.round(score / res.length * num)
+            this.radarData.series[0].data[index] = a.score
             a.title = this.getResultTitle(data.order.gaugeType, a.name, a.score)
           }
         })
@@ -379,6 +373,7 @@ export default {
   margin-top: 80upx;
 
   .desc-title {
+    margin-top: 24upx;
     font-weight: bold;
   }
 }
@@ -390,7 +385,7 @@ export default {
   padding-bottom: 24upx;
   overflow: scroll;
   //height: 800upx;
-  margin-top: 80upx;
+  //margin-top: 80upx;
   font-size: 32upx;
 
   ::v-deep img {

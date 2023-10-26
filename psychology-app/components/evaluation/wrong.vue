@@ -11,7 +11,7 @@
           {{ p.name }}
         </view>
         <view class="answer">你的答案：{{ item.answerTitle.join(',') }}</view>
-        <view class="answer">你的答案：{{ item.referenceAnswerTitle.join(',') }}</view>
+        <view class="answer">正确答案：{{ item.referenceAnswerTitle.join(',') }}</view>
         <view class="result">{{ item.remark }}</view>
       </view>
     </view>
