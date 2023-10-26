@@ -12,10 +12,7 @@ import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.office.domain.TStorePackage;
-import com.ruoyi.office.domain.TWxUser;
-import com.ruoyi.office.domain.TWxUserAmount;
-import com.ruoyi.office.domain.TWxUserPackage;
+import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.BuyStorePackReq;
 import com.ruoyi.office.domain.vo.PrepayResp;
@@ -119,6 +116,8 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
     ITWxUserService wxUserService;
     @Autowired
     ITStorePackageService storePackageService;
+    @Autowired
+    ITStoreService storeService;
 
     @Override
     public PrepayResp buy(BuyStorePackReq storePack, Long userId) {
@@ -138,6 +137,7 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
             orderNo = maxId + 1;
         }
 
+        final TStore store = storeService.selectTStoreById(storePackage.getStoreId());
         WxPayService wxPayService = payService.getConfigByStore(storePackage.getStoreId());
         WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
         final WxPayConfig config = wxPayService.getConfig();
@@ -162,7 +162,7 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
             userPackage.setPackageName(storePackage.getPackageName());
             userPackage.setPayAmount(storePackage.getPayAmount());
             userPackage.setGiftAmont(storePackage.getGiftAmont());
-            userPackage.setMerchant(Long.parseLong(storePackage.getCreateBy()));
+            userPackage.setMerchant(store.getUserId());
             userPackage.setStatus(OfficeEnum.PackageOrderStatus.TO_PAY.getCode());
             userPackage.setRemark(jsapiResult.toString());
             userPackage.setCreateBy(userId + "");
