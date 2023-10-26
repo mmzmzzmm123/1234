@@ -61,6 +61,8 @@ public interface ITWxPayService
      */
     public int deleteTWxPayById(Long id);
 
+    WxPayService getConfigByUserId(Long userId);
+
     WxPayService getConfigByStore(Long storeId);
 
     WxPayService getConfigByRoom(Long roomId);

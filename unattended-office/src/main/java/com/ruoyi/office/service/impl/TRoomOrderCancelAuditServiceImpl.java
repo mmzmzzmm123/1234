@@ -1,17 +1,9 @@
 package com.ruoyi.office.service.impl;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyV3Result;
 import com.github.binarywang.wxpay.bean.request.WxPayRefundV3Request;
-import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderV3Request;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundV3Result;
-import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderV3Result;
-import com.github.binarywang.wxpay.bean.result.enums.TradeTypeEnum;
 import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
@@ -20,13 +12,17 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.RefundAuditVo;
+import com.ruoyi.office.mapper.TRoomOrderCancelAuditMapper;
 import com.ruoyi.office.service.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.office.mapper.TRoomOrderCancelAuditMapper;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 预约取消审核Service业务层处理
@@ -112,8 +108,11 @@ public class TRoomOrderCancelAuditServiceImpl extends ServiceImpl<TRoomOrderCanc
         return tRoomOrderCancelAuditMapper.selectCancelAuditInfoList(tRoomOrderCancelAudit);
     }
 
+   /* @Autowired
+    private WxPayService wxPayService;*/
+
     @Autowired
-    private WxPayService wxPayService;
+    private ITWxPayService payService;
 
     @Autowired
     ITRoomOrderService roomOrderService;
@@ -187,6 +186,7 @@ public class TRoomOrderCancelAuditServiceImpl extends ServiceImpl<TRoomOrderCanc
                 orderNo = maxId + 1;
             }
 
+            WxPayService wxPayService = payService.getConfigByRoom(roomOrders.get(0).getRoomId());
             WxPayRefundV3Request v3Request = new WxPayRefundV3Request();
             final WxPayConfig config = wxPayService.getConfig();
 
@@ -199,7 +199,7 @@ public class TRoomOrderCancelAuditServiceImpl extends ServiceImpl<TRoomOrderCanc
 
             WxPayRefundV3Result apiResult = null;
             try {
-                apiResult = this.wxPayService.refundV3(v3Request);
+                apiResult = wxPayService.refundV3(v3Request);
                 BeanUtils.copyProperties(apiResult, tRoomOrderCancelAudit);
                 tRoomOrderCancelAudit.setRefundCreateTime(apiResult.getCreateTime());
                 tRoomOrderCancelAudit.setRefundStatus(apiResult.getStatus());

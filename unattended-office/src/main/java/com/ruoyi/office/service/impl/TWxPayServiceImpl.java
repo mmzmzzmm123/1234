@@ -98,6 +98,16 @@ public class TWxPayServiceImpl extends ServiceImpl<TWxPayMapper, TWxPay> impleme
         return tWxPayMapper.deleteTWxPayById(id);
     }
 
+    @Override
+    public WxPayService getConfigByUserId(Long userId) {
+        TWxPay qry = new TWxPay();
+        qry.setUserId(userId);
+        final List<TWxPay> tWxPays = tWxPayMapper.selectTWxPayList(qry);
+        if (tWxPays.size() == 0) {
+            throw new ServiceException("未找到商户配置");
+        }
+        return getWxPayService(tWxPays.get(0));
+    }
 
     @Autowired
     ITStoreService storeService;
@@ -108,13 +118,7 @@ public class TWxPayServiceImpl extends ServiceImpl<TWxPayMapper, TWxPay> impleme
         if (store == null) {
             throw new ServiceException("门店信息有误");
         }
-        TWxPay qry = new TWxPay();
-        qry.setUserId(store.getUserId());
-        final List<TWxPay> tWxPays = tWxPayMapper.selectTWxPayList(qry);
-        if (tWxPays.size() == 0) {
-            throw new ServiceException("未找到商户配置");
-        }
-        return getWxPayService(tWxPays.get(0));
+        return getConfigByUserId(store.getUserId());
     }
 
     @Autowired
@@ -140,7 +144,7 @@ public class TWxPayServiceImpl extends ServiceImpl<TWxPayMapper, TWxPay> impleme
 //        payConfig.setKeyPath(StringUtils.trimToNull(this.properties.getPrivateKeyPath()));
         //以下是apiv3以及支付分相关
 //        payConfig.setServiceId(StringUtils.trimToNull(this.properties.getServiceId()));
-        payConfig.setPayScoreNotifyUrl("https://foreverjade.cn/office/api/wxnotify");
+        payConfig.setPayScoreNotifyUrl("https://foreverjade.cn/office/api/wxnotify/"+wxPay.getUserId());
         payConfig.setPrivateKeyPath(StringUtils.trimToNull(wxPay.getPrivateKeyPath()));
         payConfig.setPrivateCertPath(StringUtils.trimToNull(wxPay.getPrivateCertPath()));
         payConfig.setCertSerialNo(StringUtils.trimToNull(wxPay.getCertSerialNo()));

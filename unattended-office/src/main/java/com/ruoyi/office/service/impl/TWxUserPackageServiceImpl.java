@@ -20,14 +20,11 @@ import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.BuyStorePackReq;
 import com.ruoyi.office.domain.vo.PrepayResp;
-import com.ruoyi.office.service.ITStorePackageService;
-import com.ruoyi.office.service.ITWxUserAmountService;
-import com.ruoyi.office.service.ITWxUserService;
+import com.ruoyi.office.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.office.mapper.TWxUserPackageMapper;
-import com.ruoyi.office.service.ITWxUserPackageService;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -109,8 +106,12 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
         return tWxUserPackageMapper.deleteTWxUserPackageById(id);
     }
 
+   /* @Autowired
+    private WxPayService wxPayService;*/
+
     @Autowired
-    private WxPayService wxPayService;
+    private ITWxPayService payService;
+
     @Autowired
     ITWxUserService wxUserService;
     @Autowired
@@ -134,6 +135,7 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
             orderNo = maxId + 1;
         }
 
+        WxPayService wxPayService = payService.getConfigByStore(storePackage.getStoreId());
         WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
         final WxPayConfig config = wxPayService.getConfig();
 
@@ -191,6 +193,7 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
         //查询支付状态；
         WxPayOrderQueryV3Result v3Result = null;
         try {
+            WxPayService wxPayService = payService.getConfigByUserId(order.getMerchant());
             v3Result = wxPayService.queryOrderV3("", String.valueOf(order.getOrderNo()));
         } catch (WxPayException e) {
             log.error("查询微信后台订单失败： " + e.getMessage());
