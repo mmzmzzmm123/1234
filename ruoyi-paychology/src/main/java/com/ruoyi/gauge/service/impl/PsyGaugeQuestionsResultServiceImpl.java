@@ -180,6 +180,8 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                 // SDS
                 if (GaugeConstant.GAUGE_COMPUTE_4 == order.getGaugeType()) {
                     score = (int) Math.round(score * GaugeConstant.GAUGE_COMPUTE_SDS);
+                } else if (GaugeConstant.GAUGE_COMPUTE_8 == order.getGaugeType()) {
+                    score = (int) Math.round(score * 100.0 / order.getGaugeNum() + 50);
                 }
                 sum = score + "";
                 break;

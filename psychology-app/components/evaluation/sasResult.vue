@@ -40,7 +40,7 @@
         <view>
           {{ item.info }}
         </view>
-        <view class="desc-title">{{ item.title }}</view>
+        <view v-if="item.title && item.title !== ''" class="desc-title">{{ item.title }}</view>
       </view>
     </view>
 
@@ -103,10 +103,17 @@ export default {
         case 7:
           num = 33.34
           break
+        case 8:
+          num = 100
+          break
       }
 
       this.score = parseInt(data.order.score)
-      this.percentage = Math.min(Math.round(this.score / data.order.gaugeNum * num), 100)
+      if (data.order.gaugeType === 8) {
+        this.percentage = Math.min(Math.round(this.score / 150), 100)
+      } else {
+        this.percentage = Math.min(Math.round(this.score / data.order.gaugeNum * num), 100)
+      }
 
       if (lats.length > 0) {
         this.radarData.series[0].name = this.getGaugeType(data.order.gaugeType)
@@ -148,6 +155,12 @@ export default {
           break;
         case 6:
           name = 'SCL-90'
+          break;
+        case 7:
+          name = '儿童智力'
+          break;
+        case 8:
+          name = '瑞文IQ'
           break;
       }
       return name
