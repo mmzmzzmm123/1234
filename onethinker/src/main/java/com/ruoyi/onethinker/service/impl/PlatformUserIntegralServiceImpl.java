@@ -7,9 +7,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
+import com.ruoyi.onethinker.dto.PlatformUserIntegralReqDTO;
 import com.ruoyi.onethinker.mapper.PlatformUserIntegralMapper;
 import com.ruoyi.onethinker.domain.PlatformUserIntegral;
+import com.ruoyi.onethinker.service.IPlatformUserDetailService;
 import com.ruoyi.onethinker.service.IPlatformUserIntegralService;
+import com.ruoyi.onethinker.service.IPlatformUserService;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -23,6 +26,8 @@ import lombok.extern.log4j.Log4j2;
 public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralService {
     @Autowired
     private PlatformUserIntegralMapper platformUserIntegralMapper;
+    @Autowired
+    private IPlatformUserDetailService platformUserDetailService;
 
     /**
      * 查询平台用户积分
@@ -49,14 +54,19 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
     /**
      * 新增平台用户积分
      *
-     * @param platformUserIntegral 平台用户积分
+     * @param reqDTO 平台用户积分
      * @return 结果
      */
     @Override
-    public int insertPlatformUserIntegral(PlatformUserIntegral platformUserIntegral) {
-        Assert.isTrue(!ObjectUtils.isEmpty(platformUserIntegral.get));
-                platformUserIntegral.setCreateTime(DateUtils.getNowDate());
-            return platformUserIntegralMapper.insertPlatformUserIntegral(platformUserIntegral);
+    public int insertPlatformUserIntegral(PlatformUserIntegralReqDTO reqDTO) {
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPhone()),"用户信息为空");
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getIntegral()),"添加积分为空");
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getBatchNo()),"添加批次号不能为空");
+        // 查询用户信息
+
+//                platformUserIntegral.setCreateTime(DateUtils.getNowDate());
+//            return platformUserIntegralMapper.insertPlatformUserIntegral(platformUserIntegral);
+        return 0;
     }
 
     /**

@@ -21,6 +21,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 
 import com.ruoyi.onethinker.domain.PlatformUserIntegral;
+import com.ruoyi.onethinker.dto.PlatformUserIntegralReqDTO;
 import com.ruoyi.onethinker.service.IPlatformUserIntegralService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -54,7 +55,7 @@ public class PlatformUserIntegralController extends BaseController {
     @PreAuthorize("@ss.hasPermi('onethinker:integral:add')")
     @Log(title = "平台用户积分", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody PlatformUserIntegral platformUserIntegral) {
-        return toAjax(platformUserIntegralService.insertPlatformUserIntegral(platformUserIntegral));
+    public AjaxResult add(@RequestBody PlatformUserIntegralReqDTO reqDTO) {
+        return toAjax(platformUserIntegralService.insertPlatformUserIntegral(reqDTO));
     }
 }
