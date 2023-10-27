@@ -110,7 +110,7 @@ export default {
 
       this.score = parseInt(data.order.score)
       if (data.order.gaugeType === 8) {
-        this.percentage = Math.min(Math.round(this.score / 150), 100)
+        this.percentage = Math.min(Math.round(this.score / 150 * 100), 100)
       } else {
         this.percentage = Math.min(Math.round(this.score / data.order.gaugeNum * num), 100)
       }
