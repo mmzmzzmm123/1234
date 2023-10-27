@@ -1,13 +1,13 @@
 <template>
-  <view class="question-template">
-    <view class="speed-progress">
-      <view class="no">{{ currentIndex }}/{{ questionList.length }}</view>
-      <view class="progress">
-        <view class="percentage" :style="{ width: parseInt(currentIndex / questionList.length * 100) + '%' }">
-        </view>
-      </view>
-      <view class="timer" id="timerBox"></view>
-    </view>
+  <view class="page">
+<!--    <view class="speed-progress">-->
+<!--      <view class="no">{{ currentIndex }}/{{ questionList.length }}</view>-->
+<!--      <view class="progress">-->
+<!--        <view class="percentage" :style="{ width: parseInt(currentIndex / questionList.length * 100) + '%' }">-->
+<!--        </view>-->
+<!--      </view>-->
+<!--      <view class="timer" id="timerBox"></view>-->
+<!--    </view>-->
     <scroll-view class="content-y" scroll-with-animation scroll-y :scroll-into-view="scrollInto">
       <view class="q-chat-block" v-for="(item, index) in questionList"
             v-show="index <= currentIndex">
@@ -70,7 +70,6 @@
       </view>
     </scroll-view>
     <message-com :message="confirmMessage" v-if="showMessage"></message-com>
-    <evaluation-tab-bar></evaluation-tab-bar>
   </view>
 </template>
 <script>
@@ -175,11 +174,11 @@ export default {
       this.showMessage = true;
     }
   },
-  mounted() {
-    if (this.lastIndex === 0) {
-      callTimeLoad(document.getElementById("timerBox"), true);
-    }
-  },
+  // mounted() {
+  //   if (this.lastIndex === 0) {
+  //     callTimeLoad(document.getElementById("timerBox"), true);
+  //   }
+  // },
   onHide: function () {
     console.log('onHide')
     this.rmInterceptor()
@@ -279,13 +278,13 @@ export default {
       this.questionList.forEach((question, index) => {
         question.answers = [];
       });
-      callTimeLoad(document.getElementById("timerBox"), true);
+      // callTimeLoad(document.getElementById("timerBox"), true);
     },
     //继续答题，跳转到最后一题
     toLastQuestion() {
       this.showMessage = false;
       this.currentIndex = Math.min(this.lastIndex + 1, this.questionList.length);
-      callTimeLoad(document.getElementById("timerBox"), true);
+      // callTimeLoad(document.getElementById("timerBox"), true);
       this.scrollTo()
     },
     getAnswer(item) {
@@ -544,16 +543,15 @@ page {
   }
 
   .content-y {
-    margin-top: 100upx;
     //padding-bottom: 100upx;
-    height: 1500upx;
-    padding-bottom: calc(constant(safe-area-inset-bottom) + 50px); /* 兼容 iOS 设备 */
-    padding-bottom: calc(env(safe-area-inset-bottom) + 50px); /* 兼容 iPhone X 及以上设备 */
+    //height: 1700upx;
+    height: 100vh;
   }
 
   .bottom-block {
     width: 100%;
-    height: 20upx;
+    height: 10upx;
+    padding-bottom: 10upx;
   }
 
   .q-chat-block {
