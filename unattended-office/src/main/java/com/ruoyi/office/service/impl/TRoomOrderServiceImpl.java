@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Function;
@@ -198,7 +199,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     if (!v3ResultAmount.getTotal().equals(order.getTotalAmount().multiply(new BigDecimal(100)).intValue())) {
                         throw new ServiceException("订单金额不一致");
                     }
-                    BigDecimal payAmt = new BigDecimal(v3ResultAmount.getPayerTotal() / 100);
+                    BigDecimal payAmt = new BigDecimal(v3ResultAmount.getPayerTotal()).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
                     updateOrder.setPayAmount(payAmt);
                     updateOrder.setCouponAmount(order.getTotalAmount().subtract(payAmt));
                 }
@@ -880,7 +881,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         update.setRemark(wxCallback);
 
         if (amt.getPayerTotal() != null && amt.getPayerTotal() != 0) {
-            BigDecimal payAmt = new BigDecimal(amt.getPayerTotal() / 100);
+            BigDecimal payAmt = new BigDecimal(amt.getPayerTotal()).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
             update.setPayAmount(payAmt);
             update.setCouponAmount(roomOrder.getTotalAmount().subtract(payAmt));
         }
@@ -1532,7 +1533,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         }
         TRoomOrder qry = new TRoomOrder();
         qry.setOrderNo(tRoomOrder.getOrderNo());
-        qry.setRemark(tRoomOrder.getRandomCode());
+        qry.setRandomCode(tRoomOrder.getRandomCode());
         List<TRoomOrder> roomOrders = tRoomOrderMapper.selectTRoomOrderList(qry);
         if (roomOrders.size() == 0) {
             throw new ServiceException("订单校验失败");
@@ -1871,7 +1872,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     if (!v3ResultAmount.getTotal().equals(tRoomOrderCharge.getTotalAmount().multiply(new BigDecimal(100)).intValue())) {
                         throw new ServiceException("订单金额不一致");
                     }
-                    BigDecimal payAmt = new BigDecimal(v3ResultAmount.getPayerTotal() / 100);
+                    BigDecimal payAmt = new BigDecimal(v3ResultAmount.getPayerTotal()).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
                     upChargeOrder.setPayAmount(payAmt);
                     upChargeOrder.setCouponAmount(orgRoomOrder.getTotalAmount().subtract(payAmt));
                 }
@@ -1972,10 +1973,17 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         upChargeOrder.setId(chargeOrder.getId());
         upChargeOrder.setStatus(OfficeEnum.ChargeOrderStatus.PAYED.getCode());
         if (amt.getPayerTotal() != null && amt.getPayerTotal().intValue() != 0) {
-            BigDecimal payAmt = new BigDecimal(amt.getPayerTotal() / 100);
+            BigDecimal payAmt = new BigDecimal(amt.getPayerTotal()).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
             upChargeOrder.setPayAmount(payAmt);
             upChargeOrder.setCouponAmount(chargeOrder.getTotalAmount().subtract(payAmt));
         }
         orderChargeService.updateTRoomOrderCharge(upChargeOrder);
+    }
+
+    public static void main(String[] args) {
+        BigDecimal totalAmt = new BigDecimal("39.9");
+        BigDecimal payAmt = new BigDecimal(3990).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
+        System.out.println(payAmt);
+        System.out.println(totalAmt.multiply(new BigDecimal(1000)).subtract(payAmt.multiply(new BigDecimal(1000))));
     }
 }

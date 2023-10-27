@@ -54,6 +54,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -1174,5 +1175,20 @@ public class ApiController extends BaseController {
         BufferedImage bufferedImage = ImgUtil.base64ToBufferedImage(qrCodeStr);
         qrCodeStr = ImgUtil.BufferedImageToBase64(ImgUtil.writeImage2(bufferedImage, "续单", room.getName(), new Color(7, 193, 96), new Font("宋体", Font.BOLD, 10)));
         return AjaxResult.success(qrCodeStr);
+    }
+
+    @GetMapping(value = "/testOrderAmount")
+    public AjaxResult testOrderAmount() {
+
+        final TRoomOrder roomOrder = roomOrderService.selectTRoomOrderById(270L);
+        BigDecimal totalAmt = new BigDecimal("39.9"); // 注意三种写法得差距
+        totalAmt = new BigDecimal(39.9);
+        totalAmt = roomOrder.getTotalAmount(); // 数据库定义decimal类型，是以字符串形式存储得
+        BigDecimal payAmt = new BigDecimal(3990).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
+        System.out.println(payAmt);
+        System.out.println(totalAmt.subtract(payAmt));
+        System.out.println(totalAmt.multiply(new BigDecimal(1000)).subtract(payAmt.multiply(new BigDecimal(1000))));
+
+        return AjaxResult.success();
     }
 }
