@@ -16,7 +16,7 @@ public class PlatformUserIntegralReqDTO {
     /**
      * 添加积分值
      */
-    private Integer integral;
+    private Long integral;
 
     /**
      * 批次号

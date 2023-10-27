@@ -94,4 +94,11 @@ public interface IPlatformUserDetailService {
      * @return
      */
     PlatformUserDetail queryLoginUserInfo();
+
+    /**
+     * 获取用户信息
+     * @param phone
+     * @return
+     */
+    PlatformUser queryUserByPhone(String phone);
 }

@@ -17,6 +17,7 @@ import com.ruoyi.onethinker.domain.PlatformUser;
 import com.ruoyi.onethinker.domain.PlatformUserDetail;
 import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
 import com.ruoyi.onethinker.mapper.PlatformUserDetailMapper;
+import com.ruoyi.onethinker.mapper.PlatformUserMapper;
 import com.ruoyi.onethinker.service.IPlatformUserDetailService;
 import com.ruoyi.system.service.ISysConfigService;
 import lombok.extern.log4j.Log4j2;
@@ -38,6 +39,9 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private PlatformUserMapper platformUserMapper;
     /**
      * 查询平台用户详情信息
      *
@@ -195,5 +199,22 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         String dataId = SecurityUtils.getLoginUser().getDataId();
         PlatformUserDetail platformUserDetail = selectPlatformUserDetailByDataId(dataId);
         return platformUserDetail;
+    }
+
+    @Override
+    public PlatformUser queryUserByPhone(String phone) {
+        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + phone;
+
+        if (redisCache.hasKey(redisKey)) {
+            return redisCache.getCacheObject(redisKey);
+        }
+        PlatformUser platformUser = new PlatformUser();
+        platformUser.setPhone(phone);
+        List<PlatformUser> platformUsers = platformUserMapper.selectPlatformUserList(platformUser);
+        if (ObjectUtils.isEmpty(platformUsers) || platformUsers.isEmpty()) {
+            return null;
+        }
+        redisCache.setCacheObject(redisKey,platformUsers.get(0),1, TimeUnit.DAYS);
+        return platformUsers.get(0);
     }
 }

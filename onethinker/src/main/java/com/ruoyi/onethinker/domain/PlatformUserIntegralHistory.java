@@ -39,7 +39,7 @@ public class PlatformUserIntegralHistory extends BaseEntity {
      * 1:充值 2:活动获得奖励 3：参与活动扣除门槛 4：提现
      */
     @Excel(name = "1:充值 2:活动获得奖励 3：参与活动扣除门槛 4：提现")
-    private Long type;
+    private Integer type;
 
     /**
      * 平台用户
@@ -57,7 +57,7 @@ public class PlatformUserIntegralHistory extends BaseEntity {
      * 审批操作人员
      */
     @Excel(name = "审批操作人员")
-    private String sysUserId;
+    private Long sysUserId;
 
 
 }
