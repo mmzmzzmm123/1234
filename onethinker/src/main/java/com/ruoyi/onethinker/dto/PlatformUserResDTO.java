@@ -1,12 +1,15 @@
 package com.ruoyi.onethinker.dto;
 
 import com.ruoyi.onethinker.domain.PlatformUserDetail;
+import lombok.Data;
+
 import org.springframework.util.ObjectUtils;
 
 /**
  * @author : yangyouqi
  * @date : 2023/10/23 0023 21:28
  */
+@Data
 public class PlatformUserResDTO {
     private String token;
 
@@ -23,37 +26,5 @@ public class PlatformUserResDTO {
         platformUserResDTO.setAvatarUrl(platformUserDetail.getAvatarUrl());
         platformUserResDTO.setOpenId(platformUserDetail.getDataId());
         return platformUserResDTO;
-    }
-
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
     }
 }

@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
 
 /**
  * 文件信息对象 sys_file_info
@@ -12,6 +13,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author yangyouqi
  * @date 2023-10-25
  */
+@Data
 public class SysFileInfo extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
@@ -71,92 +73,4 @@ public class SysFileInfo extends BaseEntity {
      */
     @Excel(name = "文件类型 1：图片 2：视频")
     private Integer fileType;
-
-    public void setFileId(String fileId) {
-        this.fileId = fileId;
-    }
-
-    public String getFileId() {
-        return fileId;
-    }
-
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
-    }
-
-    public String getFileName() {
-        return fileName;
-    }
-
-    public void setServerFileId(String serverFileId) {
-        this.serverFileId = serverFileId;
-    }
-
-    public String getServerFileId() {
-        return serverFileId;
-    }
-
-    public void setSuffixName(String suffixName) {
-        this.suffixName = suffixName;
-    }
-
-    public String getSuffixName() {
-        return suffixName;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
-    }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setCreateUserId(Long createUserId) {
-        this.createUserId = createUserId;
-    }
-
-    public Long getCreateUserId() {
-        return createUserId;
-    }
-
-    public void setSource(Integer source) {
-        this.source = source;
-    }
-
-    public Integer getSource() {
-        return source;
-    }
-
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
-    }
-
-    public String getFileUrl() {
-        return fileUrl;
-    }
-
-    public void setFileType(Integer fileType) {
-        this.fileType = fileType;
-    }
-
-    public Integer getFileType() {
-        return fileType;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("fileId", getFileId())
-                .append("fileName", getFileName())
-                .append("serverFileId", getServerFileId())
-                .append("suffixName", getSuffixName())
-                .append("size", getSize())
-                .append("createTime", getCreateTime())
-                .append("createUserId", getCreateUserId())
-                .append("source", getSource())
-                .append("fileUrl", getFileUrl())
-                .append("fileType", getFileType())
-                .toString();
-    }
 }

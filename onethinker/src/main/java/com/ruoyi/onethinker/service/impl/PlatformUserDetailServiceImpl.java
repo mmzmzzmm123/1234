@@ -19,6 +19,7 @@ import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
 import com.ruoyi.onethinker.mapper.PlatformUserDetailMapper;
 import com.ruoyi.onethinker.service.IPlatformUserDetailService;
 import com.ruoyi.system.service.ISysConfigService;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * 平台用户详情信息Service业务层处理
@@ -27,6 +28,7 @@ import com.ruoyi.system.service.ISysConfigService;
  * @date 2023-10-23
  */
 @Service
+@Log4j2
 public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService {
     @Autowired
     private PlatformUserDetailMapper platformUserDetailMapper;

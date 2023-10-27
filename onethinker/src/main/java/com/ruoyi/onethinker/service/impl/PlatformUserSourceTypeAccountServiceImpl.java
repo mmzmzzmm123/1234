@@ -19,6 +19,7 @@ import com.ruoyi.onethinker.service.IPlatformUserDetailService;
 import com.ruoyi.onethinker.service.IPlatformUserService;
 import com.ruoyi.system.service.ISysConfigService;
 import io.jsonwebtoken.lang.Assert;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * 平台用户Service业务层处理
@@ -27,6 +28,7 @@ import io.jsonwebtoken.lang.Assert;
  * @date 2023-10-23
  */
 @Service
+@Log4j2
 public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserService {
 
     @Autowired

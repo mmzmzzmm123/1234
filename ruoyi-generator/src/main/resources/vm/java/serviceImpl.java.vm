@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import ${packageName}.mapper.${ClassName}Mapper;
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * ${functionName}Service业务层处理
@@ -29,6 +30,7 @@ import ${packageName}.service.I${ClassName}Service;
  * @date ${datetime}
  */
 @Service
+@Log4j2
 public class ${ClassName}ServiceImpl implements I${ClassName}Service {
     @Autowired
     private ${ClassName}Mapper ${className}Mapper;

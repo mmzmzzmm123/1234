@@ -5,6 +5,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import lombok.Data;
 
 /**
  * 平台用户对象 t_platform_user
@@ -12,6 +13,8 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author yangyouqi
  * @date 2023-10-23
  */
+
+@Data
 public class PlatformUser extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
@@ -58,67 +61,4 @@ public class PlatformUser extends BaseEntity {
      */
     @Excel(name = "用户头像")
     private String avatarUrl;
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setEnabled(Integer enabled) {
-        this.enabled = enabled;
-    }
-
-    public Integer getEnabled() {
-        return enabled;
-    }
-
-    public void setWeight(Long weight) {
-        this.weight = weight;
-    }
-
-    public Long getWeight() {
-        return weight;
-    }
-
-    public void setNickName(String nickName) {
-        this.nickName = nickName;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
-                .append("id", getId())
-                .append("createTime", getCreateTime())
-                .append("updateTime", getUpdateTime())
-                .append("enabled", getEnabled())
-                .append("weight", getWeight())
-                .append("nickName", getNickName())
-                .append("phone", getPhone())
-                .append("avatarUrl", getAvatarUrl())
-                .append("remark", getRemark())
-                .toString();
-    }
 }

@@ -26,6 +26,8 @@ import com.ruoyi.onethinker.mapper.SysFileInfoMapper;
 import com.ruoyi.onethinker.domain.SysFileInfo;
 import com.ruoyi.onethinker.service.ISysFileInfoService;
 import com.ruoyi.system.service.ISysConfigService;
+import lombok.extern.log4j.Log4j2;
+
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -35,9 +37,9 @@ import org.springframework.web.multipart.MultipartFile;
  * @date 2023-10-25
  */
 @Service
+@Log4j2
 public class SysFileInfoServiceImpl implements ISysFileInfoService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SysFileInfoServiceImpl.class);
     @Autowired
     private SysFileInfoMapper sysFileInfoMapper;
     @Autowired
@@ -112,7 +114,6 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService {
 
     @Override
     public SysFileInfo upload(SysFileInfoReqDTO sysFileInfoReqDTO) {
-        // 目前只支持服务器上传
         // 文件路径
         String path = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DETAIL_FILE_PATH) + File.pathSeparator + sysFileInfoReqDTO.getModule() + File.pathSeparator;
         // 文件名
@@ -125,7 +126,7 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService {
         try {
             fileName = FileUploadUtils.upload(path, sysFileInfoReqDTO.getFile());
         } catch (Exception e) {
-            LOG.error("文件上传失败" + e.getMessage());
+            log.error("文件上传失败" + e.getMessage());
             e.printStackTrace();
         }
         // 上传成功，保存文件内容信息

@@ -2,10 +2,13 @@ package com.ruoyi.onethinker.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.Data;
+
 /**
  * @author : yangyouqi
  * @date : 2023/10/25 0025 10:32
  */
+@Data
 public class SysFileInfoReqDTO {
     /**
      * 当前上传唯一标识
@@ -41,60 +44,4 @@ public class SysFileInfoReqDTO {
      * 文件内容
      */
     private MultipartFile file;
-
-    public MultipartFile getFile() {
-        return file;
-    }
-
-    public void setFile(MultipartFile file) {
-        this.file = file;
-    }
-
-    public Long getSize() {
-        return size;
-    }
-
-    public void setSize(Long size) {
-        this.size = size;
-    }
-
-    public String getModule() {
-        return module;
-    }
-
-    public void setModule(String module) {
-        this.module = module;
-    }
-
-    public Integer getFileType() {
-        return fileType;
-    }
-
-    public void setFileType(Integer fileType) {
-        this.fileType = fileType;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getMd5() {
-        return md5;
-    }
-
-    public void setMd5(String md5) {
-        this.md5 = md5;
-    }
 }
