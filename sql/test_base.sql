@@ -55,3 +55,11 @@ insert into sys_role_menu (role_id, menu_id) VALUES ('2','1062');
 insert into sys_role_menu (role_id, menu_id) VALUES ('2','1063');
 insert into sys_role_menu (role_id, menu_id) VALUES ('2','1064');
 insert into sys_role_menu (role_id, menu_id) VALUES ('2','1065');
+
+
+INSERT INTO sys_config (`config_id`, `config_name`, `config_key`, `config_value`, `config_type`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
+    (12, '小程序APPId', 'appId', '123456', 'Y', 'admin', '2023-10-22 11:58:41', '', NULL, '小程序APPId');
+INSERT INTO sys_config (`config_id`, `config_name`, `config_key`, `config_value`, `config_type`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
+    (13, '小程序APPSECRET', 'appsecret', '123456', 'Y', 'admin', '2023-10-22 11:58:41', '', NULL, '小程序APPSECRET');
+INSERT INTO sys_config (`config_id`, `config_name`, `config_key`, `config_value`, `config_type`, `create_by`, `create_time`, `update_by`, `update_time`, `remark`) VALUES
+    (14, '默认图片地址', 'detail_file_path', '/onethinker/pic/', 'Y', 'admin', '2023-10-22 11:58:41', '', NULL, '默认图片地址');
