@@ -4,6 +4,9 @@ import java.util.List;
         import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
+
 import com.ruoyi.onethinker.mapper.PlatformUserIntegralMapper;
 import com.ruoyi.onethinker.domain.PlatformUserIntegral;
 import com.ruoyi.onethinker.service.IPlatformUserIntegralService;
@@ -51,6 +54,7 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
      */
     @Override
     public int insertPlatformUserIntegral(PlatformUserIntegral platformUserIntegral) {
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUserIntegral.get));
                 platformUserIntegral.setCreateTime(DateUtils.getNowDate());
             return platformUserIntegralMapper.insertPlatformUserIntegral(platformUserIntegral);
     }

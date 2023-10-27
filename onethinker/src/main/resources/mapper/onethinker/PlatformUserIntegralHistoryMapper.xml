@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.onethinker.mapper.PlatformUserIntegralHistoryMapper">
+
+    <resultMap type="PlatformUserIntegralHistory" id="PlatformUserIntegralHistoryResult">
+            <result property="id" column="id"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="enabled" column="enabled"/>
+            <result property="integral" column="integral"/>
+            <result property="type" column="type"/>
+            <result property="puUserId" column="pu_user_id"/>
+            <result property="batchNo" column="batch_no"/>
+            <result property="sysUserId" column="sys_user_id"/>
+            <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectPlatformUserIntegralHistoryVo">
+        select id, create_time, update_time, enabled, integral, type, pu_user_id, batch_no, sys_user_id, remark
+        from t_platform_user_integral_history
+    </sql>
+
+    <select id="selectPlatformUserIntegralHistoryList" parameterType="PlatformUserIntegralHistory" resultMap="PlatformUserIntegralHistoryResult">
+        <include refid="selectPlatformUserIntegralHistoryVo"/>
+        <where>
+                        <if test="enabled != null ">
+                            and enabled = #{enabled}
+                        </if>
+                        <if test="integral != null ">
+                            and integral = #{integral}
+                        </if>
+                        <if test="type != null ">
+                            and type = #{type}
+                        </if>
+                        <if test="puUserId != null ">
+                            and pu_user_id = #{puUserId}
+                        </if>
+                        <if test="batchNo != null  and batchNo != ''">
+                            and batch_no = #{batchNo}
+                        </if>
+                        <if test="sysUserId != null  and sysUserId != ''">
+                            and sys_user_id = #{sysUserId}
+                        </if>
+        </where>
+    </select>
+
+    <select id="selectPlatformUserIntegralHistoryById" parameterType="Long"
+            resultMap="PlatformUserIntegralHistoryResult">
+            <include refid="selectPlatformUserIntegralHistoryVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertPlatformUserIntegralHistory" parameterType="PlatformUserIntegralHistory" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_platform_user_integral_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="createTime != null">create_time,
+                    </if>
+                    <if test="updateTime != null">update_time,
+                    </if>
+                    <if test="enabled != null">enabled,
+                    </if>
+                    <if test="integral != null">integral,
+                    </if>
+                    <if test="type != null">type,
+                    </if>
+                    <if test="puUserId != null">pu_user_id,
+                    </if>
+                    <if test="batchNo != null and batchNo != ''">batch_no,
+                    </if>
+                    <if test="sysUserId != null and sysUserId != ''">sys_user_id,
+                    </if>
+                    <if test="remark != null">remark,
+                    </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="createTime != null">#{createTime},
+                    </if>
+                    <if test="updateTime != null">#{updateTime},
+                    </if>
+                    <if test="enabled != null">#{enabled},
+                    </if>
+                    <if test="integral != null">#{integral},
+                    </if>
+                    <if test="type != null">#{type},
+                    </if>
+                    <if test="puUserId != null">#{puUserId},
+                    </if>
+                    <if test="batchNo != null and batchNo != ''">#{batchNo},
+                    </if>
+                    <if test="sysUserId != null and sysUserId != ''">#{sysUserId},
+                    </if>
+                    <if test="remark != null">#{remark},
+                    </if>
+        </trim>
+    </insert>
+
+    <update id="updatePlatformUserIntegralHistory" parameterType="PlatformUserIntegralHistory">
+        update t_platform_user_integral_history
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                    <if test="updateTime != null">update_time =
+                        #{updateTime},
+                    </if>
+                    <if test="enabled != null">enabled =
+                        #{enabled},
+                    </if>
+                    <if test="integral != null">integral =
+                        #{integral},
+                    </if>
+                    <if test="type != null">type =
+                        #{type},
+                    </if>
+                    <if test="puUserId != null">pu_user_id =
+                        #{puUserId},
+                    </if>
+                    <if test="batchNo != null and batchNo != ''">batch_no =
+                        #{batchNo},
+                    </if>
+                    <if test="sysUserId != null and sysUserId != ''">sys_user_id =
+                        #{sysUserId},
+                    </if>
+                    <if test="remark != null">remark =
+                        #{remark},
+                    </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePlatformUserIntegralHistoryById" parameterType="Long">
+        delete from t_platform_user_integral_history where id = #{id}
+    </delete>
+
+    <delete id="deletePlatformUserIntegralHistoryByIds" parameterType="String">
+        delete from t_platform_user_integral_history where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
