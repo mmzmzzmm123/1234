@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.onethinker.mapper.PlatformUserMapper">
-    
+
     <resultMap type="PlatformUser" id="PlatformUserResult">
         <result property="id"    column="id"    />
         <result property="createTime"    column="create_time"    />
@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectPlatformUserList" parameterType="PlatformUser" resultMap="PlatformUserResult">
         <include refid="selectPlatformUserVo"/>
-        <where>  
+        <where>
             <if test="enabled != null "> and enabled = #{enabled}</if>
             <if test="weight != null "> and weight = #{weight}</if>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
@@ -30,12 +30,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="avatarUrl != null  and avatarUrl != ''"> and avatar_url = #{avatarUrl}</if>
         </where>
     </select>
-    
+
     <select id="selectPlatformUserById" parameterType="Long" resultMap="PlatformUserResult">
         <include refid="selectPlatformUserVo"/>
         where id = #{id}
     </select>
-        
+    <select id="selectPlatformUserByIds" resultType="com.ruoyi.onethinker.domain.PlatformUser">
+        <include refid="selectPlatformUserVo"/>
+        where id in
+        <foreach item="id" collection="list" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
     <insert id="insertPlatformUser" parameterType="PlatformUser" useGeneratedKeys="true" keyProperty="id">
         insert into t_platform_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -80,7 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deletePlatformUserByIds" parameterType="String">
-        delete from t_platform_user where id in 
+        delete from t_platform_user where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

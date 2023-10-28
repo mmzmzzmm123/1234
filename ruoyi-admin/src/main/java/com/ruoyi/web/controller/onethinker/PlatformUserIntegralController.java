@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.onethinker.dto.PlatformUserIntegralResDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +46,7 @@ public class PlatformUserIntegralController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo list(PlatformUserIntegral platformUserIntegral) {
         startPage();
-        List<PlatformUserIntegral> list = platformUserIntegralService.selectPlatformUserIntegralList(platformUserIntegral);
+        List<PlatformUserIntegralResDTO> list = platformUserIntegralService.selectPlatformUserIntegralList(platformUserIntegral);
         return getDataTable(list);
     }
 

@@ -1,11 +1,19 @@
 package com.ruoyi.onethinker.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Handler;
+import java.util.stream.Collectors;
 
 import com.ruoyi.common.enums.IntegralTypeEnum;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.onethinker.dto.PlatformUserIntegralResDTO;
+import org.apache.commons.compress.utils.Lists;
+import org.omg.CORBA.LongHolder;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,8 +66,33 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
      * @return 平台用户积分
      */
     @Override
-    public List<PlatformUserIntegral> selectPlatformUserIntegralList(PlatformUserIntegral platformUserIntegral) {
-        return platformUserIntegralMapper.selectPlatformUserIntegralList(platformUserIntegral);
+    public List<PlatformUserIntegralResDTO> selectPlatformUserIntegralList(PlatformUserIntegral platformUserIntegral) {
+        List<PlatformUserIntegral> platformUserIntegrals = platformUserIntegralMapper.selectPlatformUserIntegralList(platformUserIntegral);
+        if (ObjectUtils.isEmpty(platformUserIntegrals) || platformUserIntegrals.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        // 获取用户信息
+        List<Long> puUserIds = platformUserIntegrals.stream().map(PlatformUserIntegral::getPuUserId).distinct().collect(Collectors.toList());
+        Map<Long,String> puUserMap = platformUserDetailService.selectUserPhoneByUserIds(puUserIds);
+        // 获取活动内容
+        List<String> batchNoList = platformUserIntegrals.stream().map(PlatformUserIntegral::getBatchNo).distinct().collect(Collectors.toList());
+        Map<String,String> activityNameMap = queryActivityName(batchNoList);
+        return platformUserIntegrals.stream().map(integral -> {
+            PlatformUserIntegralResDTO resDTO = new PlatformUserIntegralResDTO();
+            BeanUtils.copyProperties(integral,resDTO);
+            resDTO.setPhone(puUserMap.getOrDefault(integral.getPuUserId(),""));
+            resDTO.setActivityName(activityNameMap.getOrDefault(integral.getBatchNo(),""));
+            return resDTO;
+        }).collect(Collectors.toList());
+    }
+
+    private Map<String, String> queryActivityName(List<String> batchNoList) {
+        //目前只有默认
+        Map<String,String> result = new HashMap<>();
+        for (String s : batchNoList) {
+            result.put(s,"平台");
+        }
+        return result;
     }
 
     /**

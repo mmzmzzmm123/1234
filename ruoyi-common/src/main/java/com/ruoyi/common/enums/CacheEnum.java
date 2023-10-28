@@ -22,7 +22,9 @@ public enum CacheEnum {
 
     PWD_ERR_CNT_KEY("pwd_err_cnt:", "密码错误次数"),
 
-    QUERY_USER_DETAIL_DATA_ID_KEY("pu_login_user_info:","平台用户信息");
+    QUERY_USER_DETAIL_DATA_ID_KEY("pu_login_user_info:","平台登录用户信息"),
+
+    QUERY_USER_PHONE_KEY("pu_user_info:","平台用户信息");
 
     private String code;
     private String msg;

@@ -1,10 +1,15 @@
 package com.ruoyi.onethinker.service.impl;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import com.ruoyi.common.enums.CacheEnum;
+import io.jsonwebtoken.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
@@ -203,7 +208,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
 
     @Override
     public PlatformUser queryUserByPhone(String phone) {
-        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + phone;
+        String redisKey = CacheEnum.QUERY_USER_PHONE_KEY.getCode() + phone;
 
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheObject(redisKey);
@@ -216,5 +221,15 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         }
         redisCache.setCacheObject(redisKey,platformUsers.get(0),1, TimeUnit.DAYS);
         return platformUsers.get(0);
+    }
+
+    @Override
+    public Map<Long, String> selectUserPhoneByUserIds(List<Long> puUserIds) {
+        Assert.isTrue(!ObjectUtils.isEmpty(puUserIds) && !puUserIds.isEmpty(),"不能查询全用户信息");
+        List<PlatformUser> platformUsers = platformUserMapper.selectPlatformUserByIds(puUserIds);
+        if (ObjectUtils.isEmpty(platformUsers)) {
+            return new HashMap<>();
+        }
+        return platformUsers.stream().collect(Collectors.toMap(PlatformUser::getId,PlatformUser::getPhone));
     }
 }

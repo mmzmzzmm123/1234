@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50743
 File Encoding         : 65001
 
-Date: 2023-10-28 22:00:39
+Date: 2023-10-28 23:15:03
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -330,11 +330,12 @@ CREATE TABLE `sys_logininfor` (
   PRIMARY KEY (`info_id`) USING BTREE,
   KEY `idx_sys_logininfor_s` (`status`) USING BTREE,
   KEY `idx_sys_logininfor_lt` (`login_time`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=124 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='系统访问记录';
+) ENGINE=InnoDB AUTO_INCREMENT=125 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='系统访问记录';
 
 -- ----------------------------
 -- Records of sys_logininfor
 -- ----------------------------
+INSERT INTO `sys_logininfor` VALUES ('124', 'pu_user', '127.0.0.1', '内网IP', 'Unknown', 'Unknown', '0', '登录成功', '2023-10-28 23:09:24');
 
 -- ----------------------------
 -- Table structure for sys_menu
@@ -361,7 +362,7 @@ CREATE TABLE `sys_menu` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `remark` varchar(500) DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`menu_id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1071 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='菜单权限表';
+) ENGINE=InnoDB AUTO_INCREMENT=1073 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='菜单权限表';
 
 -- ----------------------------
 -- Records of sys_menu
@@ -460,6 +461,8 @@ INSERT INTO `sys_menu` VALUES ('1067', '接口权限', '0', '6', '/', null, null
 INSERT INTO `sys_menu` VALUES ('1068', '文件权限', '1067', '1', '/', null, null, '1', '0', 'M', '1', '0', null, 'button', 'admin', '2023-10-28 21:05:26', '', null, '');
 INSERT INTO `sys_menu` VALUES ('1069', '积分权限', '1067', '2', '/', null, null, '1', '0', 'M', '1', '0', null, 'button', 'admin', '2023-10-28 21:20:32', '', null, '');
 INSERT INTO `sys_menu` VALUES ('1070', '积分添加', '1069', '1', '', null, null, '1', '0', 'F', '0', '0', 'onethinker:integral:add', '#', 'admin', '2023-10-28 21:20:48', 'admin', '2023-10-28 21:21:01', '');
+INSERT INTO `sys_menu` VALUES ('1071', '平台活动', '0', '4', 'onethinker', null, null, '1', '0', 'M', '0', '0', null, 'build', 'onethinker', '2023-10-28 23:11:06', '', null, '');
+INSERT INTO `sys_menu` VALUES ('1072', '平台用户积分', '1071', '1', 'integral', 'onethinker/integral/index', null, '1', '0', 'C', '0', '0', 'onethinker:integral:list', 'shopping', 'admin', '2023-10-28 23:12:28', 'onethinker', '2023-10-28 23:14:43', '平台用户积分菜单');
 
 -- ----------------------------
 -- Table structure for sys_notice
@@ -510,11 +513,17 @@ CREATE TABLE `sys_oper_log` (
   KEY `idx_sys_oper_log_bt` (`business_type`) USING BTREE,
   KEY `idx_sys_oper_log_s` (`status`) USING BTREE,
   KEY `idx_sys_oper_log_ot` (`oper_time`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='操作日志记录';
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='操作日志记录';
 
 -- ----------------------------
 -- Records of sys_oper_log
 -- ----------------------------
+INSERT INTO `sys_oper_log` VALUES ('95', '平台用户积分', '1', 'com.ruoyi.web.controller.onethinker.PlatformUserIntegralController.add()', 'POST', '1', 'pu_user', null, '/onethinker/integral/add', '127.0.0.1', '内网IP', '{\"batchNo\":\"000000\",\"integral\":100,\"phone\":\"18102236625\"}', '{\"msg\":\"操作成功\",\"code\":200}', '0', null, '2023-10-28 23:09:45', '210');
+INSERT INTO `sys_oper_log` VALUES ('96', '菜单管理', '1', 'com.ruoyi.web.controller.system.SysMenuController.add()', 'POST', '1', 'onethinker', null, '/system/menu', '127.0.0.1', '内网IP', '{\"children\":[],\"createBy\":\"onethinker\",\"icon\":\"build\",\"isCache\":\"0\",\"isFrame\":\"1\",\"menuName\":\"平台活动\",\"menuType\":\"M\",\"orderNum\":4,\"params\":{},\"parentId\":0,\"path\":\"onethinker\",\"status\":\"0\",\"visible\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', '0', null, '2023-10-28 23:11:06', '53');
+INSERT INTO `sys_oper_log` VALUES ('97', '平台用户积分', '1', 'com.ruoyi.web.controller.onethinker.PlatformUserIntegralController.add()', 'POST', '1', 'onethinker', null, '/onethinker/integral/add', '127.0.0.1', '内网IP', '{\"batchNo\":\"1\",\"integral\":1,\"phone\":\"1\"}', null, '1', '平台用户有误', '2023-10-28 23:13:36', '63');
+INSERT INTO `sys_oper_log` VALUES ('98', '平台用户积分', '1', 'com.ruoyi.web.controller.onethinker.PlatformUserIntegralController.add()', 'POST', '1', 'onethinker', null, '/onethinker/integral/add', '127.0.0.1', '内网IP', '{\"batchNo\":\"1\",\"integral\":1,\"phone\":\"18102236625\"}', '{\"msg\":\"操作成功\",\"code\":200}', '0', null, '2023-10-28 23:13:46', '159');
+INSERT INTO `sys_oper_log` VALUES ('99', '平台用户积分', '1', 'com.ruoyi.web.controller.onethinker.PlatformUserIntegralController.add()', 'POST', '1', 'onethinker', null, '/onethinker/integral/add', '127.0.0.1', '内网IP', '{\"batchNo\":\"1\",\"integral\":1,\"phone\":\"18102236625\"}', '{\"msg\":\"操作成功\",\"code\":200}', '0', null, '2023-10-28 23:14:06', '113');
+INSERT INTO `sys_oper_log` VALUES ('100', '菜单管理', '2', 'com.ruoyi.web.controller.system.SysMenuController.edit()', 'PUT', '1', 'onethinker', null, '/system/menu', '127.0.0.1', '内网IP', '{\"children\":[],\"component\":\"onethinker/integral/index\",\"createTime\":\"2023-10-28 23:12:28\",\"icon\":\"shopping\",\"isCache\":\"0\",\"isFrame\":\"1\",\"menuId\":1072,\"menuName\":\"平台用户积分\",\"menuType\":\"C\",\"orderNum\":1,\"params\":{},\"parentId\":1071,\"path\":\"integral\",\"perms\":\"onethinker:integral:list\",\"status\":\"0\",\"updateBy\":\"onethinker\",\"visible\":\"0\"}', '{\"msg\":\"操作成功\",\"code\":200}', '0', null, '2023-10-28 23:14:44', '39');
 
 -- ----------------------------
 -- Table structure for sys_post
@@ -670,7 +679,7 @@ CREATE TABLE `sys_user` (
 -- Records of sys_user
 -- ----------------------------
 INSERT INTO `sys_user` VALUES ('1', '100', 'onethinker', '超级管理员', '00', '', '18102236625', '0', '/profile/avatar/2023/10/28/blob_20231028215539A001.png', '$2a$10$yb0lVengPdH.hFjzHjpu8OW6T4Zctr4WI9p3boKwJpU.LEt2CZIq.', '0', '0', '113.66.108.201', '2023-10-28 21:57:00', 'admin', '2023-10-28 21:47:52', '', '2023-10-28 21:56:59', null);
-INSERT INTO `sys_user` VALUES ('3', '111', 'pu_user', '平台用户', '00', '', '', '2', '', '$2a$10$ejOA4VT98kvssxUgqIGTyOguJ1SPO/zCS3gx3achiHDOloFC1N9f2', '0', '0', '113.66.108.201', '2023-10-28 21:56:49', 'admin', '2023-10-24 17:33:49', 'onethinker', '2023-10-28 21:56:48', null);
+INSERT INTO `sys_user` VALUES ('3', '111', 'pu_user', '平台用户', '00', '', '', '2', '', '$2a$10$ejOA4VT98kvssxUgqIGTyOguJ1SPO/zCS3gx3achiHDOloFC1N9f2', '0', '0', '127.0.0.1', '2023-10-28 23:09:25', 'admin', '2023-10-24 17:33:49', 'onethinker', '2023-10-28 23:09:24', null);
 
 -- ----------------------------
 -- Table structure for sys_user_post
@@ -721,11 +730,12 @@ CREATE TABLE `t_platform_user` (
   `remark` varchar(255) DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `idx_phone` (`phone`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='平台用户';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='平台用户';
 
 -- ----------------------------
 -- Records of t_platform_user
 -- ----------------------------
+INSERT INTO `t_platform_user` VALUES ('1', '2023-10-28 23:09:21', null, '1', '1698505761455', '平台用户_1698505761501', '18102236625', 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fsafe-img.xhscdn.com%2Fbw1%2Fae175b96-62b4-4c48-ae36-a278a8a27e2c%3FimageView2%2F2%2Fw%2F1080%2Fformat%2Fjpg&refer=http%3A%2F%2Fsafe-img.xhscdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1700712553&t=66ab6321cb2fe9f92f3e8e846d602f54', '');
 
 -- ----------------------------
 -- Table structure for t_platform_user_detail
@@ -748,11 +758,12 @@ CREATE TABLE `t_platform_user_detail` (
   `nick_name` varchar(255) CHARACTER SET utf8mb4 DEFAULT '' COMMENT '用户昵称',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `un_data_id` (`data_id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='平台用户详情信息';
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='平台用户详情信息';
 
 -- ----------------------------
 -- Records of t_platform_user_detail
 -- ----------------------------
+INSERT INTO `t_platform_user_detail` VALUES ('1', '2023-10-28 23:09:22', null, '1', '1698505761574', '18102236625', 'https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fsafe-img.xhscdn.com%2Fbw1%2Fae175b96-62b4-4c48-ae36-a278a8a27e2c%3FimageView2%2F2%2Fw%2F1080%2Fformat%2Fjpg&refer=http%3A%2F%2Fsafe-img.xhscdn.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1700712553&t=66ab6321cb2fe9f92f3e8e846d602f54', '2', '18102236625', '0', '', '18102236625', '123456', '平台用户_1698505761501');
 
 -- ----------------------------
 -- Table structure for t_platform_user_integral
@@ -769,11 +780,13 @@ CREATE TABLE `t_platform_user_integral` (
   `batch_no` varchar(64) NOT NULL DEFAULT '000000' COMMENT '活动批次号',
   `remark` varchar(255) DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='平台用户积分表';
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='平台用户积分表';
 
 -- ----------------------------
 -- Records of t_platform_user_integral
 -- ----------------------------
+INSERT INTO `t_platform_user_integral` VALUES ('1', '2023-10-28 23:09:46', null, '1', '100', '100', '1', '000000', '');
+INSERT INTO `t_platform_user_integral` VALUES ('2', '2023-10-28 23:14:06', '2023-10-28 23:14:06', '1', '2', '2', '1', '1', '');
 
 -- ----------------------------
 -- Table structure for t_platform_user_integral_history
@@ -791,8 +804,11 @@ CREATE TABLE `t_platform_user_integral_history` (
   `sys_user_id` varchar(64) NOT NULL DEFAULT '' COMMENT '审批操作人员',
   `remark` varchar(255) DEFAULT '' COMMENT '备注',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='平台用户积分流水记录表';
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC COMMENT='平台用户积分流水记录表';
 
 -- ----------------------------
 -- Records of t_platform_user_integral_history
 -- ----------------------------
+INSERT INTO `t_platform_user_integral_history` VALUES ('1', '2023-10-28 23:09:46', null, '1', '100', '1', '1', '000000', '3', '');
+INSERT INTO `t_platform_user_integral_history` VALUES ('2', '2023-10-28 23:13:46', null, '1', '1', '1', '1', '1', '1', '');
+INSERT INTO `t_platform_user_integral_history` VALUES ('3', '2023-10-28 23:14:07', null, '1', '1', '1', '1', '1', '1', '');

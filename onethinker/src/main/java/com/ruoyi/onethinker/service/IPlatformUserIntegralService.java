@@ -3,6 +3,7 @@ package com.ruoyi.onethinker.service;
 import java.util.List;
 import com.ruoyi.onethinker.domain.PlatformUserIntegral;
 import com.ruoyi.onethinker.dto.PlatformUserIntegralReqDTO;
+import com.ruoyi.onethinker.dto.PlatformUserIntegralResDTO;
 
 /**
  * 平台用户积分Service接口
@@ -25,7 +26,7 @@ public interface IPlatformUserIntegralService {
      * @param platformUserIntegral 平台用户积分
      * @return 平台用户积分集合
      */
-    public List<PlatformUserIntegral> selectPlatformUserIntegralList(PlatformUserIntegral platformUserIntegral);
+    public List<PlatformUserIntegralResDTO> selectPlatformUserIntegralList(PlatformUserIntegral platformUserIntegral);
 
     /**
      * 新增平台用户积分

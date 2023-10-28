@@ -58,4 +58,11 @@ public interface PlatformUserMapper {
      * @return 结果
      */
     public int deletePlatformUserByIds(Long[] ids);
+
+    /**
+     * 批量查询用户信息
+     * @param puUserIds
+     * @return
+     */
+    List<PlatformUser> selectPlatformUserByIds(List<Long> puUserIds);
 }

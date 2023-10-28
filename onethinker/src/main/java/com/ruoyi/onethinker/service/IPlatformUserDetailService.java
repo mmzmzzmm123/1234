@@ -1,6 +1,7 @@
 package com.ruoyi.onethinker.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.ruoyi.onethinker.domain.PlatformUser;
 import com.ruoyi.onethinker.domain.PlatformUserDetail;
@@ -101,4 +102,11 @@ public interface IPlatformUserDetailService {
      * @return
      */
     PlatformUser queryUserByPhone(String phone);
+
+    /**
+     * 用户多名用户信息
+     * @param puUserIds
+     * @return
+     */
+    Map<Long, String> selectUserPhoneByUserIds(List<Long> puUserIds);
 }

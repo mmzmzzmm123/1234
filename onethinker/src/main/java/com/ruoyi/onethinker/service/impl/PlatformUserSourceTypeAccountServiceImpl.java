@@ -53,7 +53,7 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
         // 根据来源不同实例化不同具体实例
         logger.info("账户密码登录{}",reqDTO.getPhone());
         Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPhone()),"手机号不能为空");
-        PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(reqDTO.getOpenId());
+        PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(reqDTO.getPhone());
         Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail),"账号不存在");
 
         // 获取权限内容
