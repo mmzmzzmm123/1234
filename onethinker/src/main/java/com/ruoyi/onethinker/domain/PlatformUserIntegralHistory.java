@@ -27,7 +27,7 @@ public class PlatformUserIntegralHistory extends BaseEntity {
      * 是否可见，0为审核中，1为已处理 2：审核不通过
      */
     @Excel(name = "是否可见，0为审核中，1为已处理 2：审核不通过")
-    private Long enabled;
+    private Integer enabled;
 
     /**
      * 积分

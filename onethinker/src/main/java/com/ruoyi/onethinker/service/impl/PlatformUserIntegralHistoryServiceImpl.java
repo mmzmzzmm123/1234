@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.ruoyi.common.utils.DateUtils;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,8 @@ public class PlatformUserIntegralHistoryServiceImpl implements IPlatformUserInte
     @Override
     public int insertPlatformUserIntegralHistory(PlatformUserIntegralHistory platformUserIntegralHistory) {
         platformUserIntegralHistory.setCreateTime(DateUtils.getNowDate());
+        platformUserIntegralHistory.setEnabled(PlatformUserIntegralHistory.STATE_TYPE_ENABLED);
+        platformUserIntegralHistory.setSysUserId(SecurityUtils.getUserId());
         return platformUserIntegralHistoryMapper.insertPlatformUserIntegralHistory(platformUserIntegralHistory);
     }
 

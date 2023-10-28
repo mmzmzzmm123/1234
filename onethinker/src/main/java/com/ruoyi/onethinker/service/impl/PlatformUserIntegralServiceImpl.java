@@ -1,11 +1,14 @@
 package com.ruoyi.onethinker.service.impl;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import com.ruoyi.common.enums.IntegralTypeEnum;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
@@ -66,6 +69,7 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
      * @return 结果
      */
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int insertPlatformUserIntegral(PlatformUserIntegralReqDTO reqDTO) {
         Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPhone()),"用户信息为空");
         Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getIntegral()),"添加积分为空");
@@ -78,11 +82,33 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
         PlatformUserIntegralHistory platformUserIntegralHistory = new PlatformUserIntegralHistory();
         platformUserIntegralHistory.setIntegral(reqDTO.getIntegral());
         platformUserIntegralHistory.setPuUserId(platformUser.getId());
-        platformUserIntegralHistory.setSysUserId(SecurityUtils.getUserId());
         platformUserIntegralHistory.setType(IntegralTypeEnum.RECHARGE.getCode());
         platformUserIntegralHistory.setBatchNo(reqDTO.getBatchNo());
-        platformUserIntegralHistoryService.insertPlatformUserIntegralHistory(platformUserIntegralHistory);
-        return 0;
+        int size = platformUserIntegralHistoryService.insertPlatformUserIntegralHistory(platformUserIntegralHistory);
+        int result = 0;
+        if (size > 0) {
+            // 更新平台用户信息
+            PlatformUserIntegral params = new PlatformUserIntegral();
+            params.setBatchNo(reqDTO.getBatchNo());
+            params.setPuUserId(platformUser.getId());
+            List<PlatformUserIntegral> platformUserIntegrals = platformUserIntegralMapper.selectPlatformUserIntegralList(params);
+            if (ObjectUtils.isEmpty(platformUserIntegrals) || platformUserIntegrals.isEmpty()) {
+                params.setCreateTime(new Date());
+                params.setResidualIntegral(reqDTO.getIntegral());
+                params.setTotalIntegral(reqDTO.getIntegral());
+                params.setEnabled(PlatformUserIntegral.STATE_TYPE_ENABLED);
+                result = platformUserIntegralMapper.insertPlatformUserIntegral(params);
+
+            } else {
+                params = platformUserIntegrals.get(0);
+                params.setOrgResidualIntegral(params.getResidualIntegral());
+                params.setTotalIntegral(params.getTotalIntegral() + reqDTO.getIntegral());
+                params.setResidualIntegral(params.getResidualIntegral() + reqDTO.getIntegral());
+                result = platformUserIntegralMapper.updateIntegralByResidualIntegralAndId(params);
+            }
+        }
+        Assert.isTrue(result > 0,"添加用户积分失败");
+        return result;
     }
 
     /**

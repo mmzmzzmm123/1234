@@ -54,7 +54,7 @@ public class PlatformUserIntegralController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:integral:add')")
     @Log(title = "平台用户积分", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping("/add")
     public AjaxResult add(@RequestBody PlatformUserIntegralReqDTO reqDTO) {
         return toAjax(platformUserIntegralService.insertPlatformUserIntegral(reqDTO));
     }

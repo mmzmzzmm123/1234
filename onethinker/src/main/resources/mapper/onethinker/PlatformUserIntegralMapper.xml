@@ -120,6 +120,11 @@
         where id = #{id}
     </update>
 
+    <update id="updateIntegralByResidualIntegralAndId" parameterType="PlatformUserIntegral">
+        update t_platform_user_integral set total_integral = #{totalIntegral},residual_integral = #{residualIntegral},update_time = sysdate()
+        where id = #{id} and residual_integral = #{orgResidualIntegral}
+    </update>
+
     <delete id="deletePlatformUserIntegralById" parameterType="Long">
         delete from t_platform_user_integral where id = #{id}
     </delete>

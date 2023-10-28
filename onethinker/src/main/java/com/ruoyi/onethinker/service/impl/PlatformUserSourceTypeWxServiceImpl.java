@@ -48,11 +48,11 @@ public class PlatformUserSourceTypeWxServiceImpl implements IPlatformUserService
     public PlatformUserResDTO login(PlatformUserReqDTO reqDTO) {
         // 根据来源不同实例化不同具体实例
         logger.info("微信登录~" + reqDTO.getCode());
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getCode()),"微信凭证不能为空");
         // 进行访问
         WeixinUtil weixinUtil = new WeixinUtil(configService.selectConfigByKey(SysConfigKeyEnum.APPID),configService.selectConfigByKey(SysConfigKeyEnum.APPSECRET));
-        String openId = weixinUtil.code2Session(reqDTO.getCode());
-        reqDTO.setOpenId(openId);
-        PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(openId);
+        reqDTO.setOpenId(weixinUtil.code2Session(reqDTO.getCode()));
+        PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(reqDTO.getOpenId());
         if (ObjectUtils.isEmpty(platformUserDetail)) {
             // 微信登录保存相关信息
             platformUserDetailService.saveEntryUserDetailByWx(new PlatformUser(),reqDTO);

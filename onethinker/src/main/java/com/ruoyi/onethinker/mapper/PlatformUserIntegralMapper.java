@@ -1,7 +1,10 @@
 package com.ruoyi.onethinker.mapper;
 
+import java.util.Date;
 import java.util.List;
 import com.ruoyi.onethinker.domain.PlatformUserIntegral;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Update;
 
 /**
  * 平台用户积分Mapper接口
@@ -57,4 +60,13 @@ public interface PlatformUserIntegralMapper {
      * @return 结果
      */
     public int deletePlatformUserIntegralByIds(Long[] ids);
+
+    /**
+     * 更新用户积分信息
+     * @param integral 所添加积分
+     * @param residualIntegral 原账号剩余积分
+     * @param id
+     * @return
+     */
+    int updateIntegralByResidualIntegralAndId(PlatformUserIntegral params);
 }

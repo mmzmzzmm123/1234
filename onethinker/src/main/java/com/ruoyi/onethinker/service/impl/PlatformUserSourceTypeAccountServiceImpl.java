@@ -3,6 +3,9 @@ package com.ruoyi.onethinker.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.ruoyi.framework.web.service.SysLoginService;
+import com.ruoyi.onethinker.domain.PlatformUserDetail;
+import com.ruoyi.system.service.ISysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,13 +43,22 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
     @Autowired
     private ISysConfigService configService;
 
+    @Autowired
+    private SysLoginService loginService;
+
     private Logger logger = LoggerFactory.getLogger(PlatformUserSourceTypeAccountServiceImpl.class);
 
     @Override
     public PlatformUserResDTO login(PlatformUserReqDTO reqDTO) {
         // 根据来源不同实例化不同具体实例
-        logger.info("账户密码登录");
-        return null;
+        logger.info("账户密码登录{}",reqDTO.getPhone());
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPhone()),"手机号不能为空");
+        PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(reqDTO.getOpenId());
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail),"账号不存在");
+
+        // 获取权限内容
+        String token = loginService.loginFe(platformUserDetail.getDataId(),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
+        return PlatformUserResDTO.foramtResponse(token,platformUserDetail);
     }
 
     @Override

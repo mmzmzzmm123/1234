@@ -26,7 +26,7 @@ public class PlatformUserIntegral extends BaseEntity {
      * 是否可见，0为不可见，1为可见
      */
     @Excel(name = "是否可见，0为不可见，1为可见")
-    private Long enabled;
+    private Integer enabled;
 
     /**
      * 总积分
@@ -51,6 +51,12 @@ public class PlatformUserIntegral extends BaseEntity {
      */
     @Excel(name = "活动批次号")
     private String batchNo;
+
+
+    /**
+     * 原剩余积分
+     */
+    private Long orgResidualIntegral;
 
 
 }

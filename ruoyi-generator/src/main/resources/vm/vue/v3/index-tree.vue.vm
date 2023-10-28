@@ -1,65 +1,65 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-        #foreach($column in $columns)
-            #if($column.query)
-                #set($dictType=$column.dictType)
-                #set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
-                #set($parentheseIndex=$column.columnComment.indexOf("（"))
-                #if($parentheseIndex != -1)
-                    #set($comment=$column.columnComment.substring(0, $parentheseIndex))
-                #else
-                    #set($comment=$column.columnComment)
-                #end
-                #if($column.htmlType == "input")
-                  <el-form-item label="${comment}" prop="${column.javaField}">
-                    <el-input
-                        v-model="queryParams.${column.javaField}"
-                        placeholder="请输入${comment}"
-                        clearable
-                        @keyup.enter="handleQuery"
-                    />
-                  </el-form-item>
-                #elseif(($column.htmlType == "select" || $column.htmlType == "radio") && "" != $dictType)
-                  <el-form-item label="${comment}" prop="${column.javaField}">
-                    <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable>
-                      <el-option
-                          v-for="dict in ${dictType}"
-                          :key="dict.value"
-                          :label="dict.label"
-                          :value="dict.value"
-                      />
-                    </el-select>
-                  </el-form-item>
-                #elseif(($column.htmlType == "select" || $column.htmlType == "radio") && $dictType)
-                  <el-form-item label="${comment}" prop="${column.javaField}">
-                    <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable>
-                      <el-option label="请选择字典生成" value=""/>
-                    </el-select>
-                  </el-form-item>
-                #elseif($column.htmlType == "datetime" && $column.queryType != "BETWEEN")
-                  <el-form-item label="${comment}" prop="${column.javaField}">
-                    <el-date-picker clearable
-                                    v-model="queryParams.${column.javaField}"
-                                    type="date"
-                                    value-format="YYYY-MM-DD"
-                                    placeholder="选择${comment}">
-                    </el-date-picker>
-                  </el-form-item>
-                #elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
-                  <el-form-item label="${comment}" style="width: 308px">
-                    <el-date-picker
-                        v-model="daterange${AttrName}"
-                        value-format="YYYY-MM-DD"
-                        type="daterange"
-                        range-separator="-"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                    ></el-date-picker>
-                  </el-form-item>
-                #end
-            #end
-        #end
+#foreach($column in $columns)
+#if($column.query)
+#set($dictType=$column.dictType)
+#set($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
+#set($parentheseIndex=$column.columnComment.indexOf("（"))
+#if($parentheseIndex != -1)
+#set($comment=$column.columnComment.substring(0, $parentheseIndex))
+#else
+#set($comment=$column.columnComment)
+#end
+#if($column.htmlType == "input")
+      <el-form-item label="${comment}" prop="${column.javaField}">
+        <el-input
+          v-model="queryParams.${column.javaField}"
+          placeholder="请输入${comment}"
+          clearable
+          @keyup.enter="handleQuery"
+        />
+      </el-form-item>
+#elseif(($column.htmlType == "select" || $column.htmlType == "radio") && "" != $dictType)
+      <el-form-item label="${comment}" prop="${column.javaField}">
+        <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable>
+          <el-option
+            v-for="dict in ${dictType}"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
+#elseif(($column.htmlType == "select" || $column.htmlType == "radio") && $dictType)
+      <el-form-item label="${comment}" prop="${column.javaField}">
+        <el-select v-model="queryParams.${column.javaField}" placeholder="请选择${comment}" clearable>
+          <el-option label="请选择字典生成" value="" />
+        </el-select>
+      </el-form-item>
+#elseif($column.htmlType == "datetime" && $column.queryType != "BETWEEN")
+      <el-form-item label="${comment}" prop="${column.javaField}">
+        <el-date-picker clearable
+          v-model="queryParams.${column.javaField}"
+          type="date"
+          value-format="YYYY-MM-DD"
+          placeholder="选择${comment}">
+        </el-date-picker>
+      </el-form-item>
+#elseif($column.htmlType == "datetime" && $column.queryType == "BETWEEN")
+      <el-form-item label="${comment}" style="width: 308px">
+        <el-date-picker
+          v-model="daterange${AttrName}"
+          value-format="YYYY-MM-DD"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
+      </el-form-item>
+#end
+#end
+#end
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
