@@ -199,16 +199,17 @@ Page({
    * 加载用户等级配置
    */
   loadUserLevelConfig: function () {
+    let onStart = this.loadUserLevelConfigOnStart;
     // 判断当前的数据是否为空
     let userLevelConfig = app.globalData.userLevelConfig;
     if (userLevelConfig != null) {
       this.setData({
         userLevelConfig: userLevelConfig
       })
-      return;
+      onStart = null;
     }
     // 请求服务器加载
-    userLevelApi.selectUserLevelConfig(this.loadUserLevelConfigOnStart, this.loadUserLevelConfigOnSuccess, this.loadUserLevelConfigOnFailed);
+    userLevelApi.selectUserLevelConfig(onStart, this.loadUserLevelConfigOnSuccess, this.loadUserLevelConfigOnFailed);
   },
   loadUserLevelConfigOnStart: function () {
     wx.showLoading({
@@ -569,14 +570,13 @@ Page({
       }, 2000)
     })
     this.loadUserInfo();
+    this.loadUserLevelConfig();
     // 加载用户信息
     this.setData({
       userInfo: app.globalData.userInfo,
       userLevelConfig: app.globalData.userLevelConfig,
       ifHide: app.globalData.hidePrivacy
     })
-    // 处理用户等级数据
-    this.handleUserLevelData();
     // 请求用户关联数据
     if (this.data.userInfo != null) {
       let userId = this.data.userInfo.id;

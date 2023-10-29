@@ -6,32 +6,24 @@ import cn.binarywang.wx.miniapp.api.WxMaUserService;
 import cn.binarywang.wx.miniapp.api.impl.WxMaUserServiceImpl;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
-import cn.binarywang.wx.miniapp.bean.WxMaSubscribeMessage;
-import cn.hutool.core.util.ObjectUtil;
 import com.github.binarywang.wxpay.bean.request.WxPayRefundRequest;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderRequest;
 import com.github.binarywang.wxpay.bean.result.WxPayRefundResult;
 import com.github.binarywang.wxpay.bean.result.WxPayUnifiedOrderResult;
 import com.github.binarywang.wxpay.exception.WxPayException;
 import com.github.binarywang.wxpay.service.WxPayService;
-import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.sign.Md5Utils;
 import com.ruoyi.common.weixin.model.dto.UnifiedOrderRequestDto;
 import com.ruoyi.common.weixin.model.dto.WxPayRefundDto;
-import com.ruoyi.common.weixin.model.dto.WxServiceNotifyDto;
 import com.ruoyi.common.weixin.model.vo.WxPayResultVo;
 import com.ruoyi.common.weixin.properties.WxPayInfoProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.common.error.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.bean.subscribe.WxMpSubscribeMessage;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author LAM
@@ -43,9 +35,9 @@ import java.util.List;
 public class WxService {
 
     private final WxMaService wxMiniAppletService;
+    private final WxMpService wxOfficialAccountService;
     private final WxPayService wxPayService;
     private final WxPayInfoProperties wxPayInfoProperties;
-    private final WxMpService wxOfficialAccountService;
 
     /**
      * 内容安全相关接口
@@ -166,48 +158,15 @@ public class WxService {
     /**
      * 发送公众号模板消息
      */
-    public void wxOfficialAccountSendTemplateMessage(WxMpSubscribeMessage subscribeMessage) {
-        log.info("发送公众号模板消息：开始，参数：{}", subscribeMessage);
+    public void wxMpSendTemplateMessage(WxMpTemplateMessage templateMessage) {
+        log.info("发送公众号模板消息：开始，参数：{}", templateMessage);
         try {
-            wxOfficialAccountService.getSubscribeMsgService().send(subscribeMessage);
-        } catch (Exception e) {
+            String result = wxOfficialAccountService.getTemplateMsgService().sendTemplateMsg(templateMessage);
+            log.info("发送公众号模板消息：完成，返回数据：{}", result);
+        }catch (Exception e){
             e.printStackTrace();
-            log.warn("发送公众号模板消息：异常");
-            throw new ServiceException(e.getMessage());
+            log.warn("发送公众号模板消息：异常，异常消息：{}", e.getMessage());
         }
         log.info("发送公众号模板消息：完成");
-    }
-
-    /**
-     * 发送小程序模板消息
-     *
-     * @param dto 小程序订阅消息模板数据信息
-     */
-    public void wxMiniSendTemplateMessage(WxServiceNotifyDto dto) {
-        log.info("发送小程序订阅信息：开始，参数：{}", dto);
-        // 构建发送消息对象
-        WxMaSubscribeMessage wxMaSubscribeMessage = WxMaSubscribeMessage.builder()
-                .toUser(dto.getToUser())
-                .templateId(dto.getTemplateId())
-                .page(dto.getToPage())
-                .build();
-        // 消息中的数据处理
-        if (ObjectUtil.isNotNull(dto.getData())) {
-            List<WxMaSubscribeMessage.MsgData> dataList = new ArrayList<>();
-            dto.getData().forEach((k, v) -> {
-                WxMaSubscribeMessage.MsgData temp = new WxMaSubscribeMessage.MsgData();
-                temp.setName(k);
-                temp.setValue(v);
-                dataList.add(temp);
-            });
-            wxMaSubscribeMessage.setData(dataList);
-        }
-        // 开始发送
-        try {
-            wxMiniAppletService.getMsgService().sendSubscribeMsg(wxMaSubscribeMessage);
-        } catch (WxErrorException e) {
-            log.warn("发送小程序订阅信息：失败，异常消息：{}", e.getMessage());
-            throw new ServiceException("发送小程序订阅信息：失败");
-        }
     }
 }

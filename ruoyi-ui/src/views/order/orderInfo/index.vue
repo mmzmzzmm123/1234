@@ -164,16 +164,16 @@
     </el-form>
 
     <el-row :gutter="10" class="mb8">
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="primary"-->
-<!--          plain-->
-<!--          icon="el-icon-plus"-->
-<!--          size="mini"-->
-<!--          @click="handleAdd"-->
-<!--          v-hasPermi="['order:orderInfo:add']"-->
-<!--        >新增</el-button>-->
-<!--      </el-col>-->
+      <!--      <el-col :span="1.5">-->
+      <!--        <el-button-->
+      <!--          type="primary"-->
+      <!--          plain-->
+      <!--          icon="el-icon-plus"-->
+      <!--          size="mini"-->
+      <!--          @click="handleAdd"-->
+      <!--          v-hasPermi="['order:orderInfo:add']"-->
+      <!--        >新增</el-button>-->
+      <!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="success"
@@ -183,7 +183,8 @@
           :disabled="single"
           @click="handleUpdate"
           v-hasPermi="['order:orderInfo:edit']"
-        >修改</el-button>
+        >修改
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -194,7 +195,8 @@
           :disabled="multiple"
           @click="handleDelete"
           v-hasPermi="['order:orderInfo:remove']"
-        >删除</el-button>
+        >删除
+        </el-button>
       </el-col>
       <el-col :span="1.5">
         <el-button
@@ -204,14 +206,15 @@
           size="mini"
           @click="handleExport"
           v-hasPermi="['order:orderInfo:export']"
-        >导出</el-button>
+        >导出
+        </el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="orderInfoList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" :show-overflow-tooltip="true" />
+      <el-table-column type="selection" width="55" align="center"/>
+      <el-table-column label="主键" align="center" prop="id" :show-overflow-tooltip="true"/>
       <el-table-column label="订单编号" align="center" prop="orderNo" :show-overflow-tooltip="true"/>
       <el-table-column label="订单类型" align="center" prop="orderType" :show-overflow-tooltip="true">
         <template slot-scope="scope">
@@ -232,15 +235,16 @@
       <el-table-column label="员工等级" align="center" prop="staffLevel" :show-overflow-tooltip="true"/>
       <el-table-column label="提成比例" align="center" prop="commissionRatio" :show-overflow-tooltip="true"/>
       <el-table-column label="客户标识" align="center" prop="customUserId" :show-overflow-tooltip="true"/>
-      <el-table-column label="账号服务商" align="center" prop="accountServiceProvider" :show-overflow-tooltip="true" width="100px">
+      <el-table-column label="账号服务商" align="center" prop="accountServiceProvider" :show-overflow-tooltip="true"
+                       width="100px">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.account_service_provider" :value="scope.row.accountServiceProvider"/>
         </template>
       </el-table-column>
       <el-table-column label="客户账号" align="center" prop="customNum" :show-overflow-tooltip="true"/>
       <el-table-column label="订单金额" align="center" prop="amount" :show-overflow-tooltip="true"/>
-<!--      <el-table-column label="卡券标识" align="center" prop="couponId" :show-overflow-tooltip="true"/>-->
-<!--      <el-table-column label="优惠金额" align="center" prop="discountAmount" :show-overflow-tooltip="true"/>-->
+      <!--      <el-table-column label="卡券标识" align="center" prop="couponId" :show-overflow-tooltip="true"/>-->
+      <!--      <el-table-column label="优惠金额" align="center" prop="discountAmount" :show-overflow-tooltip="true"/>-->
       <el-table-column label="支付方式" align="center" prop="payWay" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.pay_way" :value="scope.row.payWay"/>
@@ -290,7 +294,7 @@
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" fixed="right" width="200px">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -298,14 +302,33 @@
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
             v-hasPermi="['order:orderInfo:edit']"
-          >修改</el-button>
+          >修改
+          </el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
             v-hasPermi="['order:orderInfo:remove']"
-          >删除</el-button>
+          >删除
+          </el-button>
+          <el-button
+            v-if="scope.row.orderState === '4'"
+            size="mini"
+            type="text"
+            icon="el-icon-check"
+            @click="orderFinish(scope.row)"
+            v-hasPermi="['order:orderInfo:edit']"
+          >订单完成
+          </el-button>
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="lookOrderDetails(scope.row.id)"
+            v-hasPermi="['order:orderDetails:query']"
+          >订单详情
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -322,7 +345,7 @@
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="订单编号" prop="orderNo">
-          <el-input v-model="form.orderNo" placeholder="请输入订单编号" />
+          <el-input v-model="form.orderNo" placeholder="请输入订单编号"/>
         </el-form-item>
         <el-form-item label="订单类型" prop="orderType">
           <el-select v-model="form.orderType" placeholder="请选择订单类型">
@@ -355,16 +378,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="员工标识" prop="staffUserId">
-          <el-input v-model="form.staffUserId" placeholder="请输入员工标识" />
+          <el-input v-model="form.staffUserId" placeholder="请输入员工标识"/>
         </el-form-item>
         <el-form-item label="员工等级" prop="staffLevel">
-          <el-input v-model="form.staffLevel" placeholder="请输入员工等级" />
+          <el-input v-model="form.staffLevel" placeholder="请输入员工等级"/>
         </el-form-item>
         <el-form-item label="提成比例" prop="commissionRatio">
-          <el-input v-model="form.commissionRatio" placeholder="请输入提成比例" />
+          <el-input v-model="form.commissionRatio" placeholder="请输入提成比例"/>
         </el-form-item>
         <el-form-item label="客户标识" prop="customUserId">
-          <el-input v-model="form.customUserId" placeholder="请输入客户标识" />
+          <el-input v-model="form.customUserId" placeholder="请输入客户标识"/>
         </el-form-item>
         <el-form-item label="账号服务商" prop="accountServiceProvider">
           <el-select v-model="form.accountServiceProvider" placeholder="请选择账号服务商">
@@ -377,16 +400,16 @@
           </el-select>
         </el-form-item>
         <el-form-item label="客户账号" prop="customNum">
-          <el-input v-model="form.customNum" placeholder="请输入客户账号" />
+          <el-input v-model="form.customNum" placeholder="请输入客户账号"/>
         </el-form-item>
         <el-form-item label="订单金额" prop="amount">
-          <el-input v-model="form.amount" placeholder="请输入订单金额" />
+          <el-input v-model="form.amount" placeholder="请输入订单金额"/>
         </el-form-item>
         <el-form-item label="卡券标识" prop="couponId">
-          <el-input v-model="form.couponId" placeholder="请输入卡券标识" />
+          <el-input v-model="form.couponId" placeholder="请输入卡券标识"/>
         </el-form-item>
         <el-form-item label="优惠金额" prop="discountAmount">
-          <el-input v-model="form.discountAmount" placeholder="请输入优惠金额" />
+          <el-input v-model="form.discountAmount" placeholder="请输入优惠金额"/>
         </el-form-item>
         <el-form-item label="支付方式" prop="payWay">
           <el-select v-model="form.payWay" placeholder="请选择支付方式">
@@ -399,64 +422,64 @@
           </el-select>
         </el-form-item>
         <el-form-item label="支付金额" prop="payAmount">
-          <el-input v-model="form.payAmount" placeholder="请输入支付金额" />
+          <el-input v-model="form.payAmount" placeholder="请输入支付金额"/>
         </el-form-item>
         <el-form-item label="自动过期时间" prop="autoExpireTime">
           <el-date-picker clearable
-            v-model="form.autoExpireTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择自动过期时间">
+                          v-model="form.autoExpireTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择自动过期时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="自动完成时间" prop="autoFinshTime">
           <el-date-picker clearable
-            v-model="form.autoFinshTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择自动完成时间">
+                          v-model="form.autoFinshTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择自动完成时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="接单时间" prop="orderReceivingTime">
           <el-date-picker clearable
-            v-model="form.orderReceivingTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择接单时间">
+                          v-model="form.orderReceivingTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择接单时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="开始服务时间" prop="orderServiceTime">
           <el-date-picker clearable
-            v-model="form.orderServiceTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择开始服务时间">
+                          v-model="form.orderServiceTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择开始服务时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="订单完成时间" prop="orderFinshTime">
           <el-date-picker clearable
-            v-model="form.orderFinshTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择订单完成时间">
+                          v-model="form.orderFinshTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择订单完成时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="订单取消时间" prop="orderCancelTime">
           <el-date-picker clearable
-            v-model="form.orderCancelTime"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择订单取消时间">
+                          v-model="form.orderCancelTime"
+                          type="date"
+                          value-format="yyyy-MM-dd"
+                          placeholder="请选择订单取消时间">
           </el-date-picker>
         </el-form-item>
         <el-form-item label="取消者" prop="canceller">
-          <el-input v-model="form.canceller" placeholder="请输入取消者" />
+          <el-input v-model="form.canceller" placeholder="请输入取消者"/>
         </el-form-item>
         <el-form-item label="取消留言" prop="cancelRemark">
-          <el-input v-model="form.cancelRemark" placeholder="请输入取消留言" />
+          <el-input v-model="form.cancelRemark" placeholder="请输入取消留言"/>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
-          <el-input v-model="form.remark" placeholder="请输入备注" />
+          <el-input v-model="form.remark" placeholder="请输入备注"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -464,11 +487,38 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!--  订单详情查看容器  -->
+    <el-dialog title="订单详情" :visible.sync="orderDetailsopen" width="500px" append-to-body>
+      <el-table :data="orderDetails" >
+        <el-table-column label="明细" align="center" prop="detailsTitle" :show-overflow-tooltip="true"/>
+        <el-table-column label="数量" align="center" prop="num" :show-overflow-tooltip="true"/>
+        <el-table-column label="总价" align="center" prop="totalPrice" :show-overflow-tooltip="true"/>
+        <el-table-column label="状态" align="center" prop="state" :show-overflow-tooltip="true">
+          <template slot-scope="scope">
+            <dict-tag :options="dict.type.order_stater" :value="scope.row.state"/>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="closeOrderDetailsOpen">关 闭</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-import { listOrderInfo, getOrderInfo, delOrderInfo, addOrderInfo, updateOrderInfo } from "@/api/order/orderInfo";
+
+import {
+  listOrderInfo,
+  getOrderInfo,
+  delOrderInfo,
+  addOrderInfo,
+  updateOrderInfo,
+  orderFinish
+} from "@/api/order/orderInfo";
+import {listOrderDetails} from "@/api/order/orderDetails";
 
 export default {
   name: "OrderInfo",
@@ -493,6 +543,8 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      // 是否显示订单详情弹出框
+      orderDetailsopen: false,
       // 备注时间范围
       daterangeAutoExpireTime: [],
       // 备注时间范围
@@ -529,8 +581,9 @@ export default {
       // 表单参数
       form: {},
       // 表单校验
-      rules: {
-      }
+      rules: {},
+      // 订单详情数据
+      orderDetails: []
     };
   },
   created() {
@@ -628,7 +681,7 @@ export default {
     // 多选框选中数据
     handleSelectionChange(selection) {
       this.ids = selection.map(item => item.id)
-      this.single = selection.length!==1
+      this.single = selection.length !== 1
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
@@ -670,18 +723,49 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除订单信息编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除订单信息编号为"' + ids + '"的数据项？').then(function () {
         return delOrderInfo(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
-      }).catch(() => {});
+      }).catch(() => {
+      });
     },
     /** 导出按钮操作 */
     handleExport() {
       this.download('order/orderInfo/export', {
         ...this.queryParams
       }, `orderInfo_${new Date().getTime()}.xlsx`)
+    },
+    /**
+     * 订单完成操作
+     * */
+    orderFinish(row) {
+      this.$modal.loading("正在操作");
+      orderFinish(row.id).then(res => {
+        this.$modal.notifySuccess("操作完成，等待结算成功");
+        this.getList();
+      }).finally(res => {
+        this.$modal.closeLoading();
+      })
+    },
+    /**
+     * 查看订单详情
+     * */
+    lookOrderDetails(id) {
+      this.$modal.loading("正在加载");
+      listOrderDetails({orderId: id}).then(res => {
+        this.orderDetails = res.rows;
+        this.orderDetailsopen = true;
+      }).finally(res => {
+        this.$modal.closeLoading();
+      })
+    },
+    /**
+     * 关闭订单详情容器
+     * */
+    closeOrderDetailsOpen(){
+      this.orderDetailsopen = false;
     }
   }
 };

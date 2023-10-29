@@ -2,30 +2,21 @@ package com.ruoyi.api.common.mqconsumer;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.api.wechat.constant.WechatMediaIdConstant;
-import com.ruoyi.common.constant.WeChatServiceNotifyTemplateIdConstants;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.rocketmq.constants.MqConstants;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.weixin.WxService;
-import com.ruoyi.common.weixin.model.dto.WxServiceNotifyDto;
 import com.ruoyi.common.weixin.properties.WxProperties;
 import com.ruoyi.common.weixin.service.WechatMsgReplyService;
 import com.ruoyi.order.domain.OrderInfo;
 import com.ruoyi.order.mapper.OrderInfoMapper;
-import com.ruoyi.staff.domain.StaffInfo;
-import com.ruoyi.staff.mapper.StaffInfoMapper;
 import com.ruoyi.user.mapper.UserInfoMapper;
 import com.ruoyi.user.mapper.UserOfficialAccountMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.builder.kefu.MiniProgramPageBuilder;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.stereotype.Component;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author LAM

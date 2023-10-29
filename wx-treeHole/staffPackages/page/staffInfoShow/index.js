@@ -121,6 +121,11 @@ Page({
       ["trendsParams.userId"]: staffId,
       ["commentParams.staffId"]: staffId
     })
+    // 开启分享朋友圈
+    wx.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    })
     // 加载店员数据
     this.loadStaffInfo(staffId);
     // 加载店员已点亮礼物数据
@@ -1325,6 +1330,18 @@ Page({
         commentParams: params
       })
       this.loadStaffOrderCommentata(null);
+    }
+  },
+  /**
+   * 查看头像
+   */
+  lookAvatar:function(){
+    let staffInfo = this.data.staffInfo;
+    if(staffInfo.avatarUrl != null){
+      let imgArr = [staffInfo.avatarUrl];
+      wx.previewImage({
+        urls: imgArr
+      })
     }
   },
 })

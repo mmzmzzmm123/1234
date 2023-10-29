@@ -171,6 +171,9 @@ weixin:
     # 公众号
     official-account:
       # appid/密钥
+#      app-id: wxffbfce34b3d6ebf4
+#      app-secret: 2b1e66652ebc72cf85d26d4890ce25ea
+#      token: 1711759551015522304
       app-id: wxd82ac8dbf68d12fe
       app-secret: 8bfe014fb58aaf599ca1cf1b3ec94157
       token: 1711759551015522304

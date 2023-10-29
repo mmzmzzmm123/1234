@@ -112,11 +112,15 @@ Page({
         tabHeight: rect[0].height
       })
     }).exec();
+    // 开启分享朋友圈
+    wx.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    })
     // 加载热门推荐数据
     this.loadHotStaff();
     // 加载店员数据
     this.loadStaffData(null);
-
     // 全局语音监听暂停事件
     app.globalData.audioContext.onEnded(() => {
       let dataList = this.data.staffDataList;
@@ -172,16 +176,17 @@ Page({
   onShareAppMessage() {
 
   },
+
   /**
    * 昵称查询事件
    */
-  toNickNameLoadData:function(){
+  toNickNameLoadData: function () {
     this.loadStaffData(null);
   },
   /**
    * 店员名称键入事件
    */
-  paramsNickNameInput:function(e){
+  paramsNickNameInput: function (e) {
     this.setData({
       ["params.nickName"]: e.detail.value
     })

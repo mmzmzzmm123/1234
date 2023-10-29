@@ -6,7 +6,7 @@
     "urlCheck": false,
     "preloadBackgroundData": false
   },
-  "libVersion": "3.1.0",
+  "libVersion": "3.1.4",
   "condition": {
     "miniprogram": {
       "list": [

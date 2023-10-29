@@ -6,8 +6,7 @@
     "pages/trends/index",
     "orderPackages/page/list/index"
   ],
-  "subPackages": [
-    {
+  "subPackages": [{
       "root": "userPackages",
       "name": "用户相关页面",
       "pages": [
@@ -39,13 +38,16 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#8978E4",
-    "navigationBarTitleText": "听说",
+    "navigationBarTitleText": "热爱树洞",
     "navigationBarTextStyle": "white",
     "navigationStyle": "default"
   },
   "permission": {
     "scope.userLocation": {
       "desc": "您的位置信息将为您带来更愉快的服务过程"
+    },
+    "scope.record": {
+      "desc": "您的美妙声音将被记录起来"
     }
   },
   "requiredPrivateInfos": [
@@ -55,8 +57,7 @@
     "chooseLocation"
   ],
   "tabBar": {
-    "list": [
-      {
+    "list": [{
         "pagePath": "pages/index/index",
         "text": "首 页",
         "iconPath": "static/menu/home.png",

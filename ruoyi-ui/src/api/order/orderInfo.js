@@ -42,3 +42,11 @@ export function delOrderInfo(id) {
     method: 'delete'
   })
 }
+
+// 订单自动完成
+export function orderFinish(id){
+  return request({
+    url: "/order/orderInfo/orderFinish/"+id,
+    method: 'post'
+  })
+}

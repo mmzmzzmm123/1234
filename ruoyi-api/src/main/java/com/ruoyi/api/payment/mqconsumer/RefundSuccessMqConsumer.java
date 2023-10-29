@@ -2,6 +2,7 @@ package com.ruoyi.api.payment.mqconsumer;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.api.payment.model.vo.ApiWxRefundCallbackVo;
+import com.ruoyi.api.user.common.UserLevelCommonService;
 import com.ruoyi.common.enums.OrderStateEnums;
 import com.ruoyi.common.enums.PayStateEnums;
 import com.ruoyi.common.enums.RefundStateEnums;
@@ -41,6 +42,7 @@ public class RefundSuccessMqConsumer implements RocketMQListener<ApiWxRefundCall
     private final PaymentOrderMapper paymentOrderMapper;
     private final PaymentRefundMapper paymentRefundMapper;
     private final RocketMqService rocketMqService;
+    private final UserLevelCommonService userLevelCommonService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -71,6 +73,8 @@ public class RefundSuccessMqConsumer implements RocketMQListener<ApiWxRefundCall
         updatePr.setId(paymentRefund.getId())
                 .setStart(RefundStateEnums.SUCCESS.getCode());
         paymentRefundMapper.updatePaymentRefund(updatePr);
+        // 等级计算
+        userLevelCommonService.levelDeduction(paymentRefund.getOrderId());
         // 发送退款成功通知
         rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_CANCEL_NOTICE, paymentRefund.getOrderId());
         log.info("mq消费-微信退款成功回调：完成");

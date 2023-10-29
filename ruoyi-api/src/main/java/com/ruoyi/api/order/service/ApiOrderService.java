@@ -1031,7 +1031,7 @@ public class ApiOrderService {
                                 .setStaffUserId(staffInfo.getUserId())
                                 .setStaffLevel(staffInfo.getStaffLevel())
                                 .setIfContinuous(ifContinuous ? SysYesNoEnums.YES.getCode() : SysYesNoEnums.NO.getCode())
-                                .setCommissionRatio(!ifContinuous ? staffLevelConfig.getOrderRatio() : staffLevelConfig.getFirstOrderRatio())
+                                .setCommissionRatio(ifContinuous ? staffLevelConfig.getOrderRatio() : staffLevelConfig.getFirstOrderRatio())
                                 .setOrderState(OrderStateEnums.WAIT_SERVICE.getCode())
                                 .setOrderReceivingTime(now)
                                 .setUpdateTime(now);

@@ -113,20 +113,19 @@
             <if test="ifTop != null  and ifTop != ''">and if_top = #{ifTop}</if>
             <if test="referralCode != null ">and referral_code = #{referralCode}</if>
         </where>
-
+        order by if_online DESC
         <if test="showIfTop != null and showIfTop == 'Y'.toString()">
-            ORDER BY if_top DESC
+            , if_top DESC
         </if>
         <if test="sortType != null">
-            <if test="showIfTop != null and showIfTop == 'Y'.toString()">, if_online DESC,</if>
-            <if test="showIfTop == null or showIfTop == 'N'.toString()">ORDER BY if_online DESC, </if>
-            <if test="sortType == '0'.toString()">create_time desc</if>
-            <if test="sortType == '1'.toString()">create_time asc</if>
-            <if test="sortType == '2'.toString()">sort_num desc</if>
-            <if test="sortType == '3'.toString()">sort_num asc</if>
-            <if test="sortType == '4'.toString()">staff_level desc</if>
-            <if test="sortType == '5'.toString()">staff_level asc</if>
+            <if test="sortType == '0'.toString()">, create_time desc</if>
+            <if test="sortType == '1'.toString()">, create_time asc</if>
+            <if test="sortType == '2'.toString()">, sort_num desc</if>
+            <if test="sortType == '3'.toString()">, sort_num asc</if>
+            <if test="sortType == '4'.toString()">, staff_level desc</if>
+            <if test="sortType == '5'.toString()">, staff_level asc</if>
         </if>
+        , create_time desc
     </select>
 
     <select id="getSortNumTopThreeOfBoyAndGirl" resultMap="StaffInfoResult">

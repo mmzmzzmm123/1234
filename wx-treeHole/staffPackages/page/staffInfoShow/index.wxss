@@ -292,3 +292,7 @@ page{
   font-size: 14px;
   margin-right: 6px;
 }
+.unGive{
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+}

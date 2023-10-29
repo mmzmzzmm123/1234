@@ -1,6 +1,8 @@
 package com.ruoyi.order.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.order.domain.OrderInfo;
 
 /**
@@ -58,4 +60,12 @@ public interface IOrderInfoService {
      * @return 结果
      */
     public int deleteOrderInfoById(Long id);
+
+    /**
+     * 订单自动完成
+     *
+     * @param id 订单标识
+     * @return 结果
+     * */
+    AjaxResult orderFinish(Long id);
 }

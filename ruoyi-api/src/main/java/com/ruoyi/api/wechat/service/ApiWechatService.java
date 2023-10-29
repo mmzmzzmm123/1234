@@ -7,6 +7,7 @@ import com.ruoyi.api.wechat.model.dto.ApiWechatAuthGetDto;
 import com.ruoyi.api.wechat.model.dto.ApiWechatPostDto;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.api.WxConsts;
@@ -56,13 +57,17 @@ public class ApiWechatService {
      */
     public String post(ApiWechatPostDto dto, String requestBody) {
         log.info("微信POST请求：开始，参数：{},{}", dto, requestBody);
-        // 由于微信基本配置选择了密文，所以直接开启密文解密业务
-        WxMpXmlMessage wxMpXmlMessage = WxMpXmlMessage.fromEncryptedXml(requestBody, wxOfficialAccountService.getWxMpConfigStorage(), dto.getTimestamp(), dto.getNonce(), dto.getMsg_signature());
-        log.info("微信POST请求：描述，解密报文结果：{}", wxMpXmlMessage);
-        WxMpXmlOutMessage wxMpXmlOutMessage = messageRouter.route(wxMpXmlMessage);
-        if (ObjectUtil.isNotNull(wxMpXmlOutMessage)){
-            log.info("微信POST请求：描述，存在返回消息，直接返回");
-            return wxMpXmlOutMessage.toEncryptedXml(wxOfficialAccountService.getWxMpConfigStorage());
+        if (StringUtils.isNotBlank(dto.getEncrypt_type())){
+            // 由于微信基本配置选择了密文，所以直接开启密文解密业务
+            WxMpXmlMessage wxMpXmlMessage = WxMpXmlMessage.fromEncryptedXml(requestBody, wxOfficialAccountService.getWxMpConfigStorage(), dto.getTimestamp(), dto.getNonce(), dto.getMsg_signature());
+            log.info("微信POST请求：描述，解密报文结果：{}", wxMpXmlMessage);
+            WxMpXmlOutMessage wxMpXmlOutMessage = messageRouter.route(wxMpXmlMessage);
+            if (ObjectUtil.isNotNull(wxMpXmlOutMessage)){
+                log.info("微信POST请求：描述，存在返回消息，直接返回");
+                return wxMpXmlOutMessage.toEncryptedXml(wxOfficialAccountService.getWxMpConfigStorage());
+            }
+        }else{
+            log.info("测试号事件：忽视");
         }
         log.info("微信POST请求：完成");
         return Constants.SUCCESS_SMALL_LETTER;

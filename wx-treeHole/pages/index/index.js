@@ -92,7 +92,11 @@ Page({
       showStateBarHeight: (Number(storage.get(storageConstant.stateBarHeight, null)) + Number(globalConstant.titleBarHeight)) - 10,
       rewardPublicityData: defaultRewardPublicityData
     })
-
+    // 开启分享朋友圈
+    wx.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    })
     // 加载banner
     this.loadBanner();
     // 加载新人推荐数据

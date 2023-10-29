@@ -27,7 +27,7 @@
         <view class="view_box_common view_box_row_content_symmetry" style="height:100px;">
           <!-- 头像 -->
           <view class="txView">
-            <image src="{{staffInfo.avatarUrl != null ? staffInfo.avatarUrl : '../../../static/images/default_tx.png'}}" class="view_all_adapt" mode="aspectFill"></image>
+            <image src="{{staffInfo.avatarUrl != null ? staffInfo.avatarUrl : '../../../static/images/default_tx.png'}}" class="view_all_adapt" mode="aspectFill" catch:tap="lookAvatar"></image>
             <view class="view_box_row_content boy_bg_color" style="height: 16px;overflow: hidden;" catch:tap="staffAudioCli">
               <image class="staffAudioPlay" src="../../../static/ico/{{staffInfo.audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
               <image wx:if="{{staffInfo.audioState == -1}}" class="staffAudioFrequency" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
@@ -135,7 +135,7 @@
         <scroll-view scroll-x class="view_box_common" style="white-space: nowrap;">
           <block wx:for="{{giftList}}" wx:key="id">
             <view class="view_box_content_column giftCover" data-index="{{index}}" bind:tap="showSvga">
-              <image src="{{item.cover}}" mode="widthFix"></image>
+              <image class="{{strUtil.checkArrIncludeStr(staffGiftArr, item.id) ? '' : 'unGive'}}" src="{{item.cover}}" mode="widthFix"></image>
               <view class="giftName">{{item.name}}</view>
               <view class="boy_bg_color giveBut" data-index="{{index}}" catch:tap="giveGiftCli">赠送</view>
             </view>
@@ -245,7 +245,7 @@
             <block wx:for="{{orderCommentData}}" wx:key="id">
               <view>
                 <view class="view_box_row_content_symmetry commentUserInfoView">
-                  <image src="{{item.userAvatar}}" mode="aspectFill"></image>
+                  <image src="{{item.userAvatar != null ? item.userAvatar : '../../../static/images/default_tx.png'}}" mode="aspectFill"></image>
                   <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-60}}px;height: 82%;">
                     <view class="view_box_row_content_symmetry">
                       <view class="commentName">{{item.userName}}</view>

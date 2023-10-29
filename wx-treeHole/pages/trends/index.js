@@ -90,6 +90,11 @@ Page({
         tabHeight: rect[0].height
       })
     }).exec();
+    // 开启分享朋友圈
+    wx.showShareMenu({
+      withShareTicket: true,
+      menus: ['shareAppMessage', 'shareTimeline']
+    })
     // 全局语音监听暂停事件
     app.globalData.audioContext.onEnded(() => {
       let preTabIndex = this.data.preTabIndex;

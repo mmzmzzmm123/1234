@@ -3,14 +3,7 @@ package com.ruoyi.order.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -82,6 +75,14 @@ public class OrderInfoController extends BaseController {
     @PutMapping
     public AjaxResult edit(@RequestBody OrderInfo orderInfo) {
         return toAjax(orderInfoService.updateOrderInfo(orderInfo));
+    }
+
+    @ApiOperation("订单自动完成")
+    @PreAuthorize("@ss.hasPermi('order:orderInfo:edit')")
+    @Log(title = "订单信息", businessType = BusinessType.UPDATE)
+    @PostMapping("/orderFinish/{id}")
+    public AjaxResult orderFinish(@PathVariable("id") Long id){
+        return orderInfoService.orderFinish(id);
     }
 
 

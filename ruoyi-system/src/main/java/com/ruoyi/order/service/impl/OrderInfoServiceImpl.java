@@ -2,9 +2,15 @@ package com.ruoyi.order.service.impl;
 
 import java.util.Date;
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.rocketmq.RocketMqService;
+import com.ruoyi.common.rocketmq.constants.MqConstants;
 import com.ruoyi.common.utils.DateUtils;
 import lombok.RequiredArgsConstructor;
 import com.ruoyi.common.utils.SecurityUtils;
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import com.ruoyi.order.mapper.OrderInfoMapper;
 import com.ruoyi.order.domain.OrderInfo;
@@ -16,11 +22,13 @@ import com.ruoyi.order.service.IOrderInfoService;
  * @author Lam
  * @date 2023-09-15
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderInfoServiceImpl implements IOrderInfoService {
 
     private final OrderInfoMapper orderInfoMapper;
+    private final RocketMqService rocketMqService;
 
     /**
      * 查询订单信息
@@ -90,5 +98,19 @@ public class OrderInfoServiceImpl implements IOrderInfoService {
     @Override
     public int deleteOrderInfoById(Long id) {
         return orderInfoMapper.deleteOrderInfoById(id);
+    }
+
+    /**
+     * 订单自动完成
+     *
+     * @param id 订单标识
+     * @return 结果
+     * */
+    @Override
+    public AjaxResult orderFinish(Long id) {
+        log.info("admin-订单自动完成：开始，参数：{}", id);
+        rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_AUTO_SUCCESS, id);
+        log.info("admin-订单自动完成：完成");
+        return AjaxResult.success();
     }
 }
