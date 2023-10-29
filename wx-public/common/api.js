@@ -7,7 +7,7 @@ import {
 var i18n
 
 function toLogin(){
-	location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${AppId}&redirect_uri=${LoginRedirectBase}/pages/login/mp-login&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect`
+	location.replace(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${AppId}&redirect_uri=${LoginRedirectBase}/pages/login/mp-login&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect`)
 }
 const client = new HttpClient({
 	baseApiUrl: BaseApiUrl + '/',

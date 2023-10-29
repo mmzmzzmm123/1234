@@ -81,11 +81,9 @@ const store = new Vuex.Store({
 				})
 			})
 		},
-		getUserInfo({state}){
+		getUserInfo({state, dispatch}){
 			return Api.api.getUserInfo().then(res=>{
-				let getStoreList = Api.api.cleanerGetStoreList
 				if(res.user){
-					getStoreList = Api.api.getStoreList
 					state.loginUser = res.user
 					lifeData["loginUser"] = res.user
 				}else{
@@ -102,28 +100,42 @@ const store = new Vuex.Store({
 					lifeData['storeRoles'] = []
 					state.storeRoles = []	
 				}
+				uni.setStorage({
+					key: 'lifeData',
+					data: lifeData
+				})
 				if(!state.storeRoles.length && !state.loginUser.userId){
+					uni.reLaunch({
+						url: "/pages/login/bind-merchant"
+					})
 					return
 				}
-				getStoreList().then(res=>{
-					const storeList = res.rows ? res.rows : res
-					if(storeList.length){
-						const currentStoreId = state.currentStore ? state.currentStore.id : 0
-						if(currentStoreId){
-							state.currentStore = storeList.find(x=>x.id == currentStoreId)
-						}else{
-							state.currentStore = storeList[0]
-						}
-						lifeData['currentStore'] = state.currentStore
-						uni.setStorage({
-							key: 'lifeData',
-							data: lifeData
-						})
+				dispatch("getStoreList")
+			})
+		},
+		getStoreList({state}){
+			let getStoreList = Api.api.cleanerGetStoreList
+			if(state.loginUser.userId){
+				getStoreList = Api.api.getStoreList
+			}
+			getStoreList().then(res=>{
+				const storeList = res.rows ? res.rows : res
+				if(storeList.length){
+					const currentStoreId = state.currentStore ? state.currentStore.id : 0
+					if(currentStoreId){
+						state.currentStore = storeList.find(x=>x.id == currentStoreId)
 					}else{
-						state.currentStore = {id: 0, name: '暂无门店'}
+						state.currentStore = storeList[0]
 					}
-					state.storeList = storeList
-				})
+					lifeData['currentStore'] = state.currentStore
+					uni.setStorage({
+						key: 'lifeData',
+						data: lifeData
+					})
+				}else{
+					state.currentStore = {id: 0, name: '暂无门店'}
+				}
+				state.storeList = storeList
 			})
 		},
 		loadDict({state}, dictType){
