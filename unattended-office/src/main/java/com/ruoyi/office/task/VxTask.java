@@ -46,7 +46,7 @@ public class VxTask {
 //    @Resource(name = "customerWxMaService")
 //    WxMaService customerWxMaService;
 
-    @PostConstruct
+   /* @PostConstruct
     private void ttlockTest() {
         try {
             String username = "15958013510";
@@ -59,7 +59,7 @@ public class VxTask {
         } catch (Exception e) {
             System.out.println("Failed to send message: " + e.getMessage());
         }
-    }
+    }*/
 
     final String MCH_KEY = "MIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDKQII/FFXViTY0" +
             "vGVeylQ1qhnvd+lDtcCDK6IBSlKfh2Agnqdy2TiUCslWUldTI14catiuixpHL9Lz" +

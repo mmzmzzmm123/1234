@@ -14,13 +14,12 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.office.domain.TEquipment;
 import com.ruoyi.office.domain.TStore;
 import com.ruoyi.office.domain.enums.OfficeEnum;
-import com.ruoyi.office.domain.vo.CleanerRoomOpenReq;
-import com.ruoyi.office.domain.vo.CloudHornRegResponse;
-import com.ruoyi.office.domain.vo.RoomEquipeOpenReq;
+import com.ruoyi.office.domain.vo.*;
 import com.ruoyi.office.horn.HornConfig;
 import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.service.ITEquipmentService;
 import com.ruoyi.office.service.ITStoreService;
+import com.ruoyi.office.ttlock.TtlockConfig;
 import com.ruoyi.office.util.WxMsgSender;
 import com.ruoyi.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +143,18 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 up.setId(currentEq.getId());
                 up.setRemark(resp.getData()); // 设备发送信息返回
                 equipmentService.updateTEquipment(up);
+            } else if (OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                try {
+                    TStore store = storeService.selectTStoreById(room.getStoreId());
+                    String username = store.getTtlockUname();
+                    String password = store.getTtlockPwd();
+                    TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                    String lockId = currentEq.getEquipControl();
+                    TtlockGatewayRes res = TtlockConfig.unlock(ttlockTokenRes.getAccess_token(), lockId);
+                } catch (Exception e) {
+                    errMsg.append("通通锁打开失败;");
+                    continue;
+                }
             } else {
                 Map<String, String> msg = new HashMap<>();
 
@@ -269,42 +280,62 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 hornSn = currentEq.getEquipControl();
             }
         }
+
         for (String equip : equips.split(",")) {
             TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
             if (currentEq == null) {
                 throw new ServiceException("未知的设备绑定");
             }
-            if (req.getEquipType().contains((currentEq.getEquipType()))) {
-
-                Map<String, String> msg = new HashMap<>();
-
-                if (equipDict.containsKey(currentEq.getEquipType())) {
-                    String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
-                    msg.put(command[0], command[1]);
-                } else {
-                    throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
-                }
-
+            if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType()) && OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
                 try {
-                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+                    TStore store = storeService.selectTStoreById(room.getStoreId());
+                    String username = store.getTtlockUname();
+                    String password = store.getTtlockPwd();
+                    TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                    String lockId = currentEq.getEquipControl();
+                    TtlockGatewayRes res = TtlockConfig.unlock(ttlockTokenRes.getAccess_token(), lockId);
 
                     currentEq.setRecentOpenTime(new Date());
                     currentEq.setOnOff("Y");
                     equipmentService.updateTEquipment(currentEq);
 
-                    if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType())) {
-//                    hornMsg(hornSn, "门已打开");
-                        CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已打开");
-                    } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
-//                    hornMsg(hornSn, "房间电源已开启");
-                        CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "房间电源已开启");
-                    }
+                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已打开");
                 } catch (Exception e) {
-                    continue;
+                    throw new ServiceException(e.getMessage());
                 }
+            } else {
+                if (req.getEquipType().contains((currentEq.getEquipType()))) {
 
+                    Map<String, String> msg = new HashMap<>();
+
+                    if (equipDict.containsKey(currentEq.getEquipType())) {
+                        String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
+                        msg.put(command[0], command[1]);
+                    } else {
+                        throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
+                    }
+
+                    try {
+                        sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+
+                        currentEq.setRecentOpenTime(new Date());
+                        currentEq.setOnOff("Y");
+                        equipmentService.updateTEquipment(currentEq);
+
+                        if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType())) {
+//                    hornMsg(hornSn, "门已打开");
+                            CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已打开");
+                        } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+//                    hornMsg(hornSn, "房间电源已开启");
+                            CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "房间电源已开启");
+                        }
+                    } catch (Exception e) {
+                        continue;
+                    }
+                }
             }
         }
+
     }
 
     @Override
@@ -340,33 +371,53 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
             if (currentEq == null) {
                 throw new ServiceException("未知的设备绑定");
             }
-            if (req.getEquipType().contains((currentEq.getEquipType()))) {
 
-                Map<String, String> msg = new HashMap<>();
-
-                if (equipDict.containsKey(currentEq.getEquipType())) {
-                    String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[1].split(":");
-                    msg.put(command[0], command[1]);
-                } else {
-                    throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
-                }
-
+            if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType()) && OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
                 try {
-                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+                    TStore store = storeService.selectTStoreById(room.getStoreId());
+                    String username = store.getTtlockUname();
+                    String password = store.getTtlockPwd();
+                    TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                    String lockId = currentEq.getEquipControl();
+                    TtlockGatewayRes res = TtlockConfig.lock(ttlockTokenRes.getAccess_token(), lockId);
+
+                    currentEq.setRecentOpenTime(new Date());
+                    currentEq.setOnOff("Y");
+                    equipmentService.updateTEquipment(currentEq);
+
+                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已打开");
                 } catch (Exception e) {
-                    continue;
+                    throw new ServiceException(e.getMessage());
                 }
+            } else {
+                if (req.getEquipType().contains((currentEq.getEquipType()))) {
 
-                currentEq.setRecentOpenTime(new Date());
-                currentEq.setOnOff("N");
-                equipmentService.updateTEquipment(currentEq);
+                    Map<String, String> msg = new HashMap<>();
 
-                if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType())) {
+                    if (equipDict.containsKey(currentEq.getEquipType())) {
+                        String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[1].split(":");
+                        msg.put(command[0], command[1]);
+                    } else {
+                        throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
+                    }
+
+                    try {
+                        sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+                    } catch (Exception e) {
+                        continue;
+                    }
+
+                    currentEq.setRecentOpenTime(new Date());
+                    currentEq.setOnOff("N");
+                    equipmentService.updateTEquipment(currentEq);
+
+                    if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType())) {
 //                    hornMsg(hornSn, "门已关闭");
-                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已关闭");
-                } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                        CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已关闭");
+                    } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
 //                    hornMsg(hornSn, "房间电源已关闭");
-                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "房间电源已关闭");
+                        CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "房间电源已关闭");
+                    }
                 }
             }
         }
@@ -451,6 +502,22 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 currentEq.setRecentOpenTime(new Date());
                 currentEq.setOnOff("Y");
                 equipmentService.updateTEquipment(currentEq);
+            } else if (OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                try {
+                    TStore store = storeService.selectTStoreById(room.getStoreId());
+                    String username = store.getTtlockUname();
+                    String password = store.getTtlockPwd();
+                    TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                    String lockId = currentEq.getEquipControl();
+                    TtlockGatewayRes res = TtlockConfig.unlock(ttlockTokenRes.getAccess_token(), lockId);
+                } catch (Exception e) {
+                    throw new ServiceException(e.getMessage());
+                }
+
+                currentEq.setRecentOpenTime(new Date());
+                currentEq.setOnOff("Y");
+                equipmentService.updateTEquipment(currentEq);
+                CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "请开始保洁");
             }
         }
 
@@ -514,7 +581,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 }
 
                 currentEq.setRecentOpenTime(new Date());
-                currentEq.setOnOff("Y");
+                currentEq.setOnOff("N");
                 equipmentService.updateTEquipment(currentEq);
 
             } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
@@ -536,8 +603,24 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 }
 
                 currentEq.setRecentOpenTime(new Date());
-                currentEq.setOnOff("Y");
+                currentEq.setOnOff("N");
                 equipmentService.updateTEquipment(currentEq);
+            } else if (OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                try {
+                    TStore store = storeService.selectTStoreById(room.getStoreId());
+                    String username = store.getTtlockUname();
+                    String password = store.getTtlockPwd();
+                    TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                    String lockId = currentEq.getEquipControl();
+                    TtlockGatewayRes res = TtlockConfig.lock(ttlockTokenRes.getAccess_token(), lockId);
+                } catch (Exception e) {
+                    throw new ServiceException(e.getMessage());
+                }
+
+                currentEq.setRecentOpenTime(new Date());
+                currentEq.setOnOff("N");
+                equipmentService.updateTEquipment(currentEq);
+
             }
         }
 
@@ -559,29 +642,45 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
             throw new ServiceException("未知的设备绑定");
         }
 
-        SysDictData dictData = new SysDictData();
-        dictData.setDictType("equipment_type");
-        Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
+        if (OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
 
-        MqttSendClient sendClient = new MqttSendClient();
-        Map<String, String> msg = new HashMap<>();
-        if (equipDict.containsKey(currentEq.getEquipType())) {
-            String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
-            msg.put(command[0], command[1]);
-        } else {
-            throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
-        }
-
-        try {
-            sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+            try {
+                String username = store.getTtlockUname();
+                String password = store.getTtlockPwd();
+                TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                String lockId = currentEq.getEquipControl();
+                TtlockGatewayRes res = TtlockConfig.unlock(ttlockTokenRes.getAccess_token(), lockId);
+            } catch (Exception e) {
+                throw new ServiceException(e.getMessage());
+            }
 
             currentEq.setRecentOpenTime(new Date());
             currentEq.setOnOff("Y");
             equipmentService.updateTEquipment(currentEq);
-        } catch (Exception e) {
-            throw new ServiceException(e.getMessage());
-        }
+        } else {
+            SysDictData dictData = new SysDictData();
+            dictData.setDictType("equipment_type");
+            Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
 
+            MqttSendClient sendClient = new MqttSendClient();
+            Map<String, String> msg = new HashMap<>();
+            if (equipDict.containsKey(currentEq.getEquipType())) {
+                String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
+                msg.put(command[0], command[1]);
+            } else {
+                throw new ServiceException("未知的设备类型" + currentEq.getEquipType());
+            }
+
+            try {
+                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+
+                currentEq.setRecentOpenTime(new Date());
+                currentEq.setOnOff("Y");
+                equipmentService.updateTEquipment(currentEq);
+            } catch (Exception e) {
+                throw new ServiceException(e.getMessage());
+            }
+        }
     }
 
 }

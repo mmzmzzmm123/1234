@@ -26,6 +26,8 @@
         <result property="createTime" column="create_time"/>
         <result property="updateBy" column="update_by"/>
         <result property="updateTime" column="update_time"/>
+        <result property="ttlockUname"    column="ttlock_uname"    />
+        <result property="ttlockPwd"    column="ttlock_pwd"    />
     </resultMap>
 
     <sql id="selectTStoreVo">
@@ -49,7 +51,7 @@
                create_by,
                create_time,
                update_by,
-               update_time
+               update_time, ttlock_uname, ttlock_pwd
         from t_store
     </sql>
 
@@ -74,6 +76,8 @@
             <if test="logo != null  and logo != ''">and logo = #{logo}</if>
             <if test="status != null ">and status = #{status}</if>
             <if test="createBy != null  and createBy != ''">and create_by = #{createBy}</if>
+            <if test="ttlockUname != null  and ttlockUname != ''"> and ttlock_uname like concat('%', #{ttlockUname}, '%')</if>
+            <if test="ttlockPwd != null  and ttlockPwd != ''"> and ttlock_pwd = #{ttlockPwd}</if>
         </where>
     </select>
 
@@ -118,6 +122,8 @@
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="ttlockUname != null">ttlock_uname,</if>
+            <if test="ttlockPwd != null">ttlock_pwd,</if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="userId != null">#{userId},</if>
@@ -140,6 +146,8 @@
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="ttlockUname != null">#{ttlockUname},</if>
+            <if test="ttlockPwd != null">#{ttlockPwd},</if>
         </trim>
     </insert>
 
@@ -166,6 +174,8 @@
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="ttlockUname != null">ttlock_uname = #{ttlockUname},</if>
+            <if test="ttlockPwd != null">ttlock_pwd = #{ttlockPwd},</if>
         </trim>
         where id = #{id}
     </update>

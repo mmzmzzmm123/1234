@@ -85,4 +85,11 @@ public class TStore extends BaseEntity
     @Excel(name = "状态")
     private Long status;
 
+    /** 通通锁用户名 */
+    @Excel(name = "通通锁用户名")
+    private String ttlockUname;
+
+    /** 通通锁密码 */
+    @Excel(name = "通通锁密码")
+    private String ttlockPwd;
 }

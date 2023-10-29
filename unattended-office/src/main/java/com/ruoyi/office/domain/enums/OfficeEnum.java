@@ -239,7 +239,7 @@ public class OfficeEnum {
     }
 
     public enum EquipType {
-        HORN("horn", "喇叭"), MACHINE("machine", "机器"), AIR_CONDITION("aircondition", "空调"), LIGHT("light", "电灯"), DOOR("door", "门禁");
+        HORN("horn", "喇叭"), MACHINE("machine", "机器"), AIR_CONDITION("aircondition", "空调"), LIGHT("light", "电灯"), DOOR("door", "门禁"), TTLOCK("ttlock", "门禁");
 
         private final String code;
         private final String info;
