@@ -44,9 +44,9 @@
 			</view>
 		</view>
 		<u-popup :show="showMore" @close="showMore = false">
-			<view class="more-btn" @click="onOpenStoreClick">开房间大门</view>
-			<view class="more-btn" @click="onOpenRoomClick">开包厢大门</view>
-			<view class="more-btn" @click="onCloseRoomClick">关包厢大门</view>
+			<view class="more-btn" @click="onOpenStoreClick">开大门</view>
+			<view class="more-btn" @click="onOpenRoomClick">开包厢</view>
+			<view class="more-btn" @click="onCloseRoomClick">关包厢</view>
 			<!-- <view class="more-btn" @click="showMore = false">开包厢门</view> -->
 			<view class="more-btn" @click="onOrderClick">立即下订单</view>
 			<view class="more-btn" @click="onDeleteRoomClick">删除包厢</view>

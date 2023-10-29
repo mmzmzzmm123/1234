@@ -299,7 +299,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
             if (currentEq == null) {
                 throw new ServiceException("未知的设备绑定");
             }
-            if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType()) && OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+            if (req.getEquipType().contains(OfficeEnum.EquipType.DOOR.getCode()) && OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
                 try {
                     TStore store = storeService.selectTStoreById(room.getStoreId());
                     String username = store.getTtlockUname();
@@ -385,7 +385,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 throw new ServiceException("未知的设备绑定");
             }
 
-            if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(req.getEquipType()) && OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+            if (req.getEquipType().contains(OfficeEnum.EquipType.DOOR.getCode()) && OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
                 try {
                     TStore store = storeService.selectTStoreById(room.getStoreId());
                     String username = store.getTtlockUname();
