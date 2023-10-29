@@ -89,69 +89,71 @@ public class BusinessAnalysisServiceImpl implements IBusinessAnalysisService {
                 BigDecimal couponRoomAmount = roomOrderList.stream().map(TRoomOrder::getCouponAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
 
                 BigDecimal todayTotalRoomAmount = roomOrderList.stream().filter(x -> x.getStartTime().after(DateUtils.getTodayDate())).
-                        filter(x -> x.getEndTime().after(DateUtils.getNextDayDate())).
+                        filter(x -> x.getStartTime().before(DateUtils.getNextDayDate())).
                         map(TRoomOrder::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                 BigDecimal todayPayRoomAmount = roomOrderList.stream().filter(x -> x.getStartTime().after(DateUtils.getTodayDate())).
-                        filter(x -> x.getEndTime().after(DateUtils.getNextDayDate())).
+                        filter(x -> x.getStartTime().before(DateUtils.getNextDayDate())).
                         map(TRoomOrder::getPayAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                 BigDecimal todayWelfareRoomAmount = roomOrderList.stream().filter(x -> x.getStartTime().after(DateUtils.getTodayDate())).
-                        filter(x -> x.getEndTime().after(DateUtils.getNextDayDate())).
+                        filter(x -> x.getStartTime().before(DateUtils.getNextDayDate())).
                         map(TRoomOrder::getWelfareAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                 BigDecimal todayCouponRoomAmount = roomOrderList.stream().filter(x -> x.getStartTime().after(DateUtils.getTodayDate())).
-                        filter(x -> x.getEndTime().after(DateUtils.getNextDayDate())).
+                        filter(x -> x.getStartTime().before(DateUtils.getNextDayDate())).
                         map(TRoomOrder::getCouponAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
 
                 Date firstDayOfMonth = DateUtils.getFirstDayOfMonth(DateTime.now().month());
                 Date lastDayOfMonth = DateUtils.getLastDayOfMonth(DateTime.now().month());
                 BigDecimal monthTotalRoomAmount = roomOrderList.stream().filter(x -> x.getStartTime().after(firstDayOfMonth)).
-                        filter(x -> x.getEndTime().after(lastDayOfMonth)).
+                        filter(x -> x.getStartTime().before(lastDayOfMonth)).
                         map(TRoomOrder::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                 BigDecimal monthPayRoomAmount = roomOrderList.stream().filter(x -> x.getStartTime().after(firstDayOfMonth)).
-                        filter(x -> x.getEndTime().after(lastDayOfMonth)).
+                        filter(x -> x.getStartTime().before(lastDayOfMonth)).
                         map(TRoomOrder::getPayAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                 BigDecimal monthWelfareRoomAmount = roomOrderList.stream().filter(x -> x.getStartTime().after(firstDayOfMonth)).
-                        filter(x -> x.getEndTime().after(lastDayOfMonth)).
+                        filter(x -> x.getStartTime().before(lastDayOfMonth)).
                         map(TRoomOrder::getWelfareAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                 BigDecimal monthCouponRoomAmount = roomOrderList.stream().filter(x -> x.getStartTime().after(firstDayOfMonth)).
-                        filter(x -> x.getEndTime().after(lastDayOfMonth)).
+                        filter(x -> x.getStartTime().before(lastDayOfMonth)).
                         map(TRoomOrder::getCouponAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
 
-                totalStoreAmount = totalStoreAmount.subtract(totalRoomAmount);
-                payStoreAmount = payStoreAmount.subtract(payRoomAmount);
-                welfareStoreAmount = welfareStoreAmount.subtract(welfareRoomAmount);
-                couponStoreAmount = couponStoreAmount.subtract(couponRoomAmount);
+                totalStoreAmount = totalStoreAmount.add(totalRoomAmount);
+                payStoreAmount = payStoreAmount.add(payRoomAmount);
+                welfareStoreAmount = welfareStoreAmount.add(welfareRoomAmount);
+                couponStoreAmount = couponStoreAmount.add(couponRoomAmount);
 
-                totalStoreAmountToday = totalStoreAmountToday.subtract(todayTotalRoomAmount);
-                payStoreAmountToday = payStoreAmountToday.subtract(todayPayRoomAmount);
-                welfareStoreAmountToday = welfareStoreAmountToday.subtract(todayWelfareRoomAmount);
-                couponStoreAmountToday = couponStoreAmountToday.subtract(todayCouponRoomAmount);
+                totalStoreAmountToday = totalStoreAmountToday.add(todayTotalRoomAmount);
+                payStoreAmountToday = payStoreAmountToday.add(todayPayRoomAmount);
+                welfareStoreAmountToday = welfareStoreAmountToday.add(todayWelfareRoomAmount);
+                couponStoreAmountToday = couponStoreAmountToday.add(todayCouponRoomAmount);
 
-                totalStoreAmountMonth = totalStoreAmountMonth.subtract(monthTotalRoomAmount);
-                payStoreAmountMonth = payStoreAmountMonth.subtract(monthPayRoomAmount);
-                welfareStoreAmountMonth = welfareStoreAmountMonth.subtract(monthWelfareRoomAmount);
-                couponStoreAmountMonth = couponStoreAmountMonth.subtract(monthCouponRoomAmount);
+                totalStoreAmountMonth = totalStoreAmountMonth.add(monthTotalRoomAmount);
+                payStoreAmountMonth = payStoreAmountMonth.add(monthPayRoomAmount);
+                welfareStoreAmountMonth = welfareStoreAmountMonth.add(monthWelfareRoomAmount);
+                couponStoreAmountMonth = couponStoreAmountMonth.add(monthCouponRoomAmount);
 
-                if (room.getStartTime().before(DateUtils.getNextDayDate()) && room.getStartTime().after(DateUtils.getTodayDate()))
-                    todayOrderNum++;
-                if (room.getStartTime().before(lastDayOfMonth) && room.getStartTime().after(firstDayOfMonth))
-                    thisMonthOrderNum++;
-                totalOrderNum++;
+                for (TRoomOrder order : roomOrderList) {
+                    if (order.getStartTime().before(DateUtils.getNextDayDate()) && order.getStartTime().after(DateUtils.getTodayDate()))
+                        todayOrderNum++;
+                    if (order.getStartTime().before(lastDayOfMonth) && order.getStartTime().after(firstDayOfMonth))
+                        thisMonthOrderNum++;
+                    totalOrderNum++;
+                }
             }
 
-            totalAmount = totalAmount.subtract(totalStoreAmount);
-            payAmount = payAmount.subtract(payStoreAmount);
-            welfareAmount = welfareAmount.subtract(welfareStoreAmount);
-            couponAmount = couponAmount.subtract(couponStoreAmount);
+            totalAmount = totalAmount.add(totalStoreAmount);
+            payAmount = payAmount.add(payStoreAmount);
+            welfareAmount = welfareAmount.add(welfareStoreAmount);
+            couponAmount = couponAmount.add(couponStoreAmount);
 
-            totalAmountMonth = totalAmountMonth.subtract(totalStoreAmountMonth);
-            payAmountMonth = payAmountMonth.subtract(payStoreAmountMonth);
-            welfareAmountMonth = welfareAmountMonth.subtract(welfareStoreAmountMonth);
-            couponAmountMonth = couponAmountMonth.subtract(couponStoreAmountMonth);
+            totalAmountMonth = totalAmountMonth.add(totalStoreAmountMonth);
+            payAmountMonth = payAmountMonth.add(payStoreAmountMonth);
+            welfareAmountMonth = welfareAmountMonth.add(welfareStoreAmountMonth);
+            couponAmountMonth = couponAmountMonth.add(couponStoreAmountMonth);
 
-            totalAmountDay = totalAmountDay.subtract(totalStoreAmountToday);
-            payAmountDay = payAmountDay.subtract(payStoreAmountToday);
-            welfareAmountDay = welfareAmountDay.subtract(welfareStoreAmountToday);
-            couponAmountDay = couponAmountDay.subtract(couponStoreAmountToday);
+            totalAmountDay = totalAmountDay.add(totalStoreAmountToday);
+            payAmountDay = payAmountDay.add(payStoreAmountToday);
+            welfareAmountDay = welfareAmountDay.add(welfareStoreAmountToday);
+            couponAmountDay = couponAmountDay.add(couponStoreAmountToday);
         }
         businessAnalysisH5Vo.setThisMonthOrderNum(thisMonthOrderNum);
         businessAnalysisH5Vo.setTotalOrderNum(totalOrderNum);

@@ -1,10 +1,6 @@
 package com.ruoyi.office.service.impl;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderV3Request;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
@@ -20,15 +16,16 @@ import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.BuyStorePackReq;
 import com.ruoyi.office.domain.vo.PrepayResp;
-import com.ruoyi.office.service.ITStorePackageService;
-import com.ruoyi.office.service.ITWxUserAmountService;
-import com.ruoyi.office.service.ITWxUserService;
+import com.ruoyi.office.mapper.TWxUserPackageMapper;
+import com.ruoyi.office.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.office.mapper.TWxUserPackageMapper;
-import com.ruoyi.office.service.ITWxUserPackageService;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 用户套餐购买记录Service业务层处理
@@ -109,12 +106,18 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
         return tWxUserPackageMapper.deleteTWxUserPackageById(id);
     }
 
+   /* @Autowired
+    private WxPayService wxPayService;*/
+
     @Autowired
-    private WxPayService wxPayService;
+    private ITWxPayService payService;
+
     @Autowired
     ITWxUserService wxUserService;
     @Autowired
     ITStorePackageService storePackageService;
+    @Autowired
+    ITStoreService storeService;
 
     @Override
     public PrepayResp buy(BuyStorePackReq storePack, Long userId) {
@@ -134,6 +137,8 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
             orderNo = maxId + 1;
         }
 
+        final TStore store = storeService.selectTStoreById(storePackage.getStoreId());
+        WxPayService wxPayService = payService.getConfigByStore(storePackage.getStoreId());
         WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
         final WxPayConfig config = wxPayService.getConfig();
 
@@ -157,7 +162,7 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
             userPackage.setPackageName(storePackage.getPackageName());
             userPackage.setPayAmount(storePackage.getPayAmount());
             userPackage.setGiftAmont(storePackage.getGiftAmont());
-            userPackage.setMerchant(Long.parseLong(storePackage.getCreateBy()));
+            userPackage.setMerchant(store.getUserId());
             userPackage.setStatus(OfficeEnum.PackageOrderStatus.TO_PAY.getCode());
             userPackage.setRemark(jsapiResult.toString());
             userPackage.setCreateBy(userId + "");
@@ -191,6 +196,7 @@ public class TWxUserPackageServiceImpl extends ServiceImpl<TWxUserPackageMapper,
         //查询支付状态；
         WxPayOrderQueryV3Result v3Result = null;
         try {
+            WxPayService wxPayService = payService.getConfigByUserId(order.getMerchant());
             v3Result = wxPayService.queryOrderV3("", String.valueOf(order.getOrderNo()));
         } catch (WxPayException e) {
             log.error("查询微信后台订单失败： " + e.getMessage());

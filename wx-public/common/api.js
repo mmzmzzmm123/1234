@@ -291,6 +291,9 @@ const api = {
 	},
 	createXudanCode(id) {
 		return get('office/api/createXudanCodeH5/' + id)
+	},
+	getBusinessAnalysis(){
+		return get('office/roomorder/businessAnalysis')
 	}
 }
 const install = (Vue, options) => {

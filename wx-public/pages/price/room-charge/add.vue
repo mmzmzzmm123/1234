@@ -51,7 +51,6 @@
 						trigger: ['blur']
 					}
 				},
-				roomId: 0,
 			}
 		},
 		onLoad(option) {
@@ -74,7 +73,6 @@
 					if (this.model.id) {
 						this.$api.updateRoomChargePrice(this.model).then(this.gobackAndRefresh);
 					} else {
-						this.model.roomId = this.roomId;
 						this.$api.addRoomChargePrice(this.model).then(this.gobackAndRefresh);
 					}
 

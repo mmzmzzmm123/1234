@@ -2,7 +2,8 @@
 	<view>
 		<view class="top">
 			<view class="store-bar">
-				<uo-select :options="storeList" value-field="id" mode="top" :value="currentStore.id" @change="onStoreChange">
+				<uo-select :options="storeList" value-field="id" mode="top" :value="currentStore.id"
+					@change="onStoreChange">
 					<view class="store-bar__title">
 						<text>{{currentStore.name}}</text>
 						<u-icon name="arrow-down"></u-icon>
@@ -54,7 +55,7 @@
 					<image class="menu__item__icon" src="/static/icon/shebei.png"></image>
 					<view>设备管理</view>
 				</navigator>
-				<navigator class="menu__item"  url="../crew/index">
+				<navigator class="menu__item" url="../crew/index">
 					<image class="menu__item__icon" src="/static/icon/yuangong.png"></image>
 					<view>员工管理</view>
 				</navigator>
@@ -101,14 +102,14 @@
 							今日收益（元）
 							<u-icon name="arrow-upward"></u-icon>
 						</view>
-						<view class="income-item__val">1200</view>
+						<view class="income-item__val">{{businessAnalysis.todayIncome}}</view>
 						<view class="income-item__sum">
 							本月:
-							<text class="income-item__val">4830</text>
+							<text class="income-item__val">{{businessAnalysis.thisMonthIncome}}</text>
 						</view>
 						<view class="income-item__sum">
 							累计:
-							<text class="income-item__val">4830</text>
+							<text class="income-item__val">{{businessAnalysis.totalIncome}}</text>
 						</view>
 					</view>
 					<view class="income-item">
@@ -116,14 +117,14 @@
 							今日流水（元）
 							<u-icon name="arrow-upward"></u-icon>
 						</view>
-						<view class="income-item__val">1400</view>
+						<view class="income-item__val">{{businessAnalysis.todayTurnover}}</view>
 						<view class="income-item__sum">
 							本月:
-							<text class="income-item__val">5660</text>
+							<text class="income-item__val">{{businessAnalysis.thisMonthTurnover}}</text>
 						</view>
 						<view class="income-item__sum">
 							累计:
-							<text class="income-item__val">5660</text>
+							<text class="income-item__val">{{businessAnalysis.totalTurnover}}</text>
 						</view>
 					</view>
 					<view class="income-item">
@@ -131,14 +132,14 @@
 							成功订单（笔）
 							<u-icon name="arrow-upward"></u-icon>
 						</view>
-						<view class="income-item__val">10</view>
+						<view class="income-item__val">{{businessAnalysis.todayOrderNum}}</view>
 						<view class="income-item__sum">
 							本月:
-							<text class="income-item__val">43</text>
+							<text class="income-item__val">{{businessAnalysis.thisMonthOrderNum}}</text>
 						</view>
 						<view class="income-item__sum">
 							累计:
-							<text class="income-item__val">43</text>
+							<text class="income-item__val">{{businessAnalysis.totalOrderNum}}</text>
 						</view>
 					</view>
 				</view>
@@ -151,32 +152,33 @@
 	export default {
 		data() {
 			return {
-				noticeList: []
+				noticeList: [],
+				businessAnalysis: []
 			}
 		},
 		computed: {
-			currentStore(){
+			currentStore() {
 				return this.$store.state.currentStore
 			},
-			storeList(){
+			storeList() {
 				return this.$store.state.storeList
 			},
-			loginUser(){
+			loginUser() {
 				return this.$store.state.loginUser
 			},
-			noticeTextList(){
-				return this.noticeList.map(x=>x.noticeTitle)
+			noticeTextList() {
+				return this.noticeList.map(x => x.noticeTitle)
 			},
-			phonenumber(){
+			phonenumber() {
 				const phonenumber = this.loginUser.phonenumber
-				if(phonenumber){
+				if (phonenumber) {
 					return phonenumber.substr(0, 3) + '****' + phonenumber.substr(7, 4)
 				}
 				return '****'
 			}
 		},
 		watch: {
-			currentStore: function(){
+			currentStore: function() {
 				this.refresh()
 			}
 		},
@@ -187,36 +189,44 @@
 			this.refresh()
 		},
 		methods: {
-			refresh(){
-				if(this.currentStore && this.currentStore.id){
+			refresh() {
+				if (this.currentStore && this.currentStore.id) {
 					this.getNoticeList()
+					this.getBusinessAnalysis()
 				}
 			},
-			onStoreChange(store){
+			onStoreChange(store) {
 				this.$store.commit("$uStore", {
 					name: 'currentStore',
 					value: store
 				})
 			},
-			getNoticeList(){
-				this.$api.getNoticeList({noticeType: 1}).then(res=>{
+			getNoticeList() {
+				this.$api.getNoticeList({
+					noticeType: 1
+				}).then(res => {
 					this.noticeList = res.rows
 					uni.stopPullDownRefresh()
 				})
 			},
-			onNoticeClick(i){
+			onNoticeClick(i) {
 				const notice = this.noticeList[i]
 				uni.navigateTo({
 					url: '/pages/common/rich-text/index?title=' + notice.noticeTitle,
-					success: res=>{
+					success: res => {
 						res.eventChannel.emit('setText', notice.noticeContent)
 					}
 				})
 			},
-			comingSoon(){
+			comingSoon() {
 				uni.showToast({
-					icon:"none",
-					title:"即将上线"
+					icon: "none",
+					title: "即将上线"
+				})
+			},
+			getBusinessAnalysis() {
+				this.$api.getBusinessAnalysis().then(res => {
+					this.businessAnalysis = res
 				})
 			}
 		}
@@ -227,110 +237,133 @@
 	page {
 		background-color: $u-bg-color;
 	}
-	.top{
+
+	.top {
 		height: 300rpx;
 		color: $u-bright;
 		background: linear-gradient($u-primary, $u-bg-color);
 		padding: 20rpx;
-		/deep/ .u-icon__icon{
-			color: $u-bright!important;
+
+		/deep/ .u-icon__icon {
+			color: $u-bright !important;
 			margin-left: 10rpx;
 		}
 	}
-	.top-next{
+
+	.top-next {
 		margin-top: -100rpx;
 	}
-	.store-bar{
-		&__title{
+
+	.store-bar {
+		&__title {
 			display: flex;
 			align-items: center;
 			color: $u-bright;
 		}
 	}
-	.personal-info{
+
+	.personal-info {
 		position: relative;
 		display: flex;
 		padding: 30rpx 0;
-		.uo-image{
+
+		.uo-image {
 			border-radius: 50%;
 			margin-right: 20rpx;
 			height: 140rpx;
 			width: 140rpx;
 		}
-		&__body{
+
+		&__body {
 			padding: 20rpx 0;
 			line-height: 50rpx;
 		}
-		&__name{
+
+		&__name {
 			font-size: 36rpx;
 		}
 	}
-	.person-center{
+
+	.person-center {
 		display: flex;
 		position: absolute;
 		right: 0;
 		padding: 10rpx;
 		background: #fff1;
 	}
-	.notice-bar{
+
+	.notice-bar {
 		margin: 0 20rpx;
 		border-radius: 16rpx 16rpx 0 0;
 		overflow: hidden;
 	}
-	.notice-bar+.card{
+
+	.notice-bar+.card {
 		border-radius: 0 0 16rpx 16rpx;
 	}
-	.card{
+
+	.card {
 		background: $u-bright;
 	}
-	.menu.card{
+
+	.menu.card {
 		margin-top: 0;
 		padding: 40rpx 0 0;
 	}
-	.menu{
+
+	.menu {
 		display: flex;
 		flex-wrap: wrap;
-		&__item{
+
+		&__item {
 			text-align: center;
 			width: 20%;
 			margin-bottom: 40rpx;
 			font-size: 24rpx;
 			color: $u-main-color;
-			&__icon{
+
+			&__icon {
 				width: 70rpx;
 				height: 70rpx;
 				border-radius: 50%;
 			}
 		}
 	}
-	.income{
+
+	.income {
 		display: flex;
 		padding: 20rpx 20rpx 0;
 		background: $u-primary-bg-color;
-		&-item{
+
+		&-item {
 			flex: 1;
 			font-size: 24rpx;
 			line-height: 50rpx;
-			&__head{
+
+			&__head {
 				display: flex;
 				align-items: center;
 				// margin-bottom: 20rpx;
 			}
-			&__val{
+
+			&__val {
 				font-size: 36rpx;
 				color: $u-primary;
 			}
-			&__sum{
-				.income-item__val{
+
+			&__sum {
+				.income-item__val {
 					font-size: 24rpx;
 				}
 			}
 		}
 	}
-	.income-card{
+
+	.income-card {
 		padding: 0;
 		overflow: hidden;
-		.card__content__head{
+
+		.card__content__head {
 			padding: 20rpx;
 		}
 	}

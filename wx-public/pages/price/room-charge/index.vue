@@ -1,7 +1,8 @@
 <template>
 	<view>
 		<view class="search-bar">
-			<u-search placeholder="请输入套餐名称" :showAction="false" v-model="searchParam.name" @change="onSearchKeywordInput"></u-search>
+			<u-search placeholder="请输入套餐名称" :showAction="false" v-model="searchParam.name"
+				@change="onSearchKeywordInput"></u-search>
 			<u-button type="primary" @click="onAddClick">新增</u-button>
 		</view>
 		<view class="card-list">
@@ -38,18 +39,20 @@
 					pageNum: 1,
 					roomId: 0
 				},
-				priceList: []
+				priceList: [],
+				roomId: 0
 			}
 		},
 		onLoad(options) {
 			this.roomId = options.id
+			this.searchParam.roomId = this.roomId
 			this.refresh()
 		},
 		onPullDownRefresh() {
 			this.refresh()
 		},
 		methods: {
-			onAddClick(){
+			onAddClick() {
 				uni.navigateTo({
 					url: '/pages/price/room-charge/add?roomId=' + this.roomId,
 					events: {
@@ -57,7 +60,7 @@
 					}
 				})
 			},
-			onEditClick(price){
+			onEditClick(price) {
 				uni.navigateTo({
 					url: '/pages/price/room-charge/add?id=' + price.id,
 					events: {
@@ -65,22 +68,22 @@
 					}
 				})
 			},
-			onDeleteClick(price){
+			onDeleteClick(price) {
 				uni.showModal({
 					title: '确认删除?',
 					content: '是否删除' + price.name + '?',
-					success: res=>{
-						if(res.confirm){
+					success: res => {
+						if (res.confirm) {
 							this.$api.deleteRoomChargePrice(price.id).then(this.refresh)
 						}
 					}
 				})
 			},
-			onSearchKeywordInput(){
+			onSearchKeywordInput() {
 				this.$u.debounce(this.refresh, 400)
 			},
-			refresh(){
-				this.$api.getRoomChargePriceList(this.searchParam).then(res=>{
+			refresh() {
+				this.$api.getRoomChargePriceList(this.searchParam).then(res => {
 					this.priceList = res.rows
 					uni.stopPullDownRefresh()
 				})

@@ -64,7 +64,7 @@
 						onChoseOrder: ()=>{
 							this.$api.getCurrentOrder().then(res=>{
 								uni.navigateTo({
-									url: "/pages/order/add/index?roomId=" + res.roomId
+									url: "/pages/order/renew/index?scene=" + res.roomId
 								})
 							})
 							

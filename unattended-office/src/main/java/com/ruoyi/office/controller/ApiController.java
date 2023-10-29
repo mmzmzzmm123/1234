@@ -1,11 +1,9 @@
 package com.ruoyi.office.controller;
 
 import cn.binarywang.wx.miniapp.api.WxMaService;
-import cn.binarywang.wx.miniapp.api.impl.WxMaServiceImpl;
 import cn.binarywang.wx.miniapp.bean.WxMaCodeLineColor;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaPhoneNumberInfo;
-import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
 import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import com.alibaba.fastjson2.JSON;
@@ -18,7 +16,6 @@ import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
 import com.github.binarywang.wxpay.exception.WxPayException;
-import com.github.binarywang.wxpay.service.MarketingFavorService;
 import com.github.binarywang.wxpay.service.WxPayService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -28,12 +25,13 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.ImgUtil;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.office.domain.vo.*;
-import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
+import com.ruoyi.office.domain.vo.*;
+import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.service.*;
 import com.ruoyi.office.util.WxMsgSender;
 import com.ruoyi.system.domain.SysNotice;
@@ -48,22 +46,20 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.math.BigDecimal;
-import java.rmi.ServerError;
+import java.math.RoundingMode;
+import java.util.List;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-
-import static com.ruoyi.common.utils.PageUtils.startPage;
 
 @RestController
 @RequestMapping("/office/api")
@@ -73,8 +69,11 @@ public class ApiController extends BaseController {
     @Autowired
     ITRoomOrderService roomOrderService;
 
+//    @Autowired
+//    WxPayService wxPayService;
+
     @Autowired
-    WxPayService wxPayService;
+    ITWxPayService payService;
 
     @Autowired
     ITWxUserPackageService userPackageService;
@@ -94,13 +93,14 @@ public class ApiController extends BaseController {
     @Autowired
     ITWxUserCouponService itWxUserCouponService;
 
+
     /**
      * 预定成功 api 回调
      */
     @ApiOperation("支付成功 api 回调")
     @Log(title = "支付成功 api 回调")
-    @PostMapping("/wxnotify")
-    public JSONObject wxnotify(@RequestBody String jsonData, HttpServletRequest request, HttpServletResponse response) throws WxPayException {
+    @PostMapping("/wxnotify/{userId}")
+    public JSONObject wxnotify(@PathVariable("userId") Long userId, @RequestBody String jsonData, HttpServletRequest request, HttpServletResponse response) throws WxPayException {
         JSONObject wxPayResult = new JSONObject();
         Lock lock = new ReentrantLock();
         if (lock.tryLock()) {
@@ -109,6 +109,7 @@ public class ApiController extends BaseController {
             OriginNotifyResponse notifyResponse = JSON.parseObject(jsonData, OriginNotifyResponse.class);
             WxPayOrderNotifyV3Result v3Result = null;
             try {
+                WxPayService wxPayService = payService.getConfigByUserId(userId);
                 v3Result = wxPayService.parseOrderNotifyV3Result(jsonStrSort(notifyResponse), getRequestHeader(request));
                 logger.info("回调结果解析" + v3Result.toString());
                 //解密后的数据
@@ -155,8 +156,8 @@ public class ApiController extends BaseController {
      */
     @ApiOperation("退款申请 api 回调")
     @Log(title = "退款申请 api 回调")
-    @PostMapping("/wxnotify/refund")
-    public Object wxRefundNotify(@RequestBody String jsonData, HttpServletRequest request, HttpServletResponse response) throws WxPayException {
+    @PostMapping("/wxnotify/refund/{userId}")
+    public Object wxRefundNotify(@PathVariable("userId") Long userId, @RequestBody String jsonData, HttpServletRequest request, HttpServletResponse response) throws WxPayException {
         JSONObject wxPayResult = new JSONObject();
         Lock lock = new ReentrantLock();
         if (lock.tryLock()) {
@@ -164,6 +165,7 @@ public class ApiController extends BaseController {
             OriginNotifyResponse notifyResponse = JSON.parseObject(jsonData, OriginNotifyResponse.class);
             WxPayRefundNotifyV3Result v3Result = null;
             try {
+                WxPayService wxPayService = payService.getConfigByUserId(userId);
                 v3Result = wxPayService.parseRefundNotifyV3Result(jsonStrSort(notifyResponse), getRequestHeader(request));
 
                 //解密后的数据
@@ -914,6 +916,7 @@ public class ApiController extends BaseController {
     })
     @GetMapping(value = "/createQrCode/{roomId}")
     public String createQrCode(@PathVariable("roomId") Long roomId) {
+        WxPayService wxPayService = payService.getConfigByRoom(roomId);
         final WxPayConfig config = wxPayService.getConfig();
 
         TRoom room = roomService.selectTRoomById(roomId);
@@ -942,6 +945,7 @@ public class ApiController extends BaseController {
     })
     @GetMapping(value = "/createXudanCode/{roomId}")
     public String createXudanCode(@PathVariable("roomId") Long roomId) {
+        WxPayService wxPayService = payService.getConfigByRoom(roomId);
         final WxPayConfig config = wxPayService.getConfig();
 
         TRoom room = roomService.selectTRoomById(roomId);
@@ -1051,62 +1055,6 @@ public class ApiController extends BaseController {
         return toAjax(roomOrderService.order4GuestOpenRoom(tRoomOrder));
     }
 
-    @ApiOperation("生成二维码")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
-            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
-    })
-    @GetMapping(value = "/createQrCodeH5/{roomId}")
-    public AjaxResult createQrCodeH5(@PathVariable("roomId") Long roomId) {
-        final WxPayConfig config = wxPayService.getConfig();
-
-        TRoom room = roomService.selectTRoomById(roomId);
-        String codeType = "scene";
-        String parameterValue = "" + roomId;
-
-        // 设置小程序二维码线条颜色为黑色
-        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
-        byte[] qrCodeBytes = null;
-        try {
-            //其中codeType以及parameterValue为前端页面所需要接收的参数。
-            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/add/index", false, "release", 30, false, lineColor, false);
-        } catch (WxErrorException e) {
-//            e.printStackTrace();
-            logger.error(e.getMessage());
-            throw new ServiceException("打印二维码错误" + e.getMessage());
-        }
-        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
-        return AjaxResult.success(qrCodeStr);
-    }
-
-    @ApiOperation("生成续单二维码")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
-            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
-    })
-    @GetMapping(value = "/createXudanCodeH5/{roomId}")
-    public AjaxResult createXudanCodeH5(@PathVariable("roomId") Long roomId) {
-        final WxPayConfig config = wxPayService.getConfig();
-
-        TRoom room = roomService.selectTRoomById(roomId);
-        String codeType = "scene";
-        String parameterValue = "" + roomId;
-
-        // 设置小程序二维码线条颜色为黑色
-        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
-        byte[] qrCodeBytes = null;
-        try {
-            //其中codeType以及parameterValue为前端页面所需要接收的参数。
-            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/renew/index", false, "release", 30, false, lineColor, false);
-        } catch (WxErrorException e) {
-//            e.printStackTrace();
-            logger.error(e.getMessage());
-            throw new ServiceException("打印二维码错误" + e.getMessage());
-        }
-        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
-        return AjaxResult.success(qrCodeStr);
-    }
-
     @Autowired
     private ITRoomChargePriceService tRoomChargePriceService;
 
@@ -1167,4 +1115,80 @@ public class ApiController extends BaseController {
         }
     }
 
+    @ApiOperation("生成二维码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
+    })
+    @GetMapping(value = "/createQrCodeH5/{roomId}")
+    public AjaxResult createQrCodeH5(@PathVariable("roomId") Long roomId) {
+        WxPayService wxPayService = payService.getConfigByRoom(roomId);
+        final WxPayConfig config = wxPayService.getConfig();
+
+        TRoom room = roomService.selectTRoomById(roomId);
+        String codeType = "scene";
+        String parameterValue = "" + roomId;
+
+        // 设置小程序二维码线条颜色为黑色
+        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
+        byte[] qrCodeBytes = null;
+        try {
+            //其中codeType以及parameterValue为前端页面所需要接收的参数。
+            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/add/index", false, "release", 30, false, lineColor, false);
+        } catch (WxErrorException e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new ServiceException("打印二维码错误" + e.getMessage());
+        }
+        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
+        BufferedImage bufferedImage = ImgUtil.base64ToBufferedImage(qrCodeStr);
+        qrCodeStr = ImgUtil.BufferedImageToBase64(ImgUtil.writeImage2(bufferedImage, "下单", room.getName(), new Color(7, 193, 96), new Font("宋体", Font.BOLD, 10)));
+        return AjaxResult.success(qrCodeStr);
+    }
+
+    @ApiOperation("生成续单二维码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "codeType", value = "类型", dataType = "String", required = true, paramType = "query"),
+            @ApiImplicitParam(name = "parameterValue", value = "参数值", dataType = "String", required = true, paramType = "query")
+    })
+    @GetMapping(value = "/createXudanCodeH5/{roomId}")
+    public AjaxResult createXudanCodeH5(@PathVariable("roomId") Long roomId) {
+        WxPayService wxPayService = payService.getConfigByRoom(roomId);
+        final WxPayConfig config = wxPayService.getConfig();
+
+        TRoom room = roomService.selectTRoomById(roomId);
+        String codeType = "scene";
+        String parameterValue = "" + roomId;
+
+        // 设置小程序二维码线条颜色为黑色
+        WxMaCodeLineColor lineColor = new WxMaCodeLineColor("0", "0", "0");
+        byte[] qrCodeBytes = null;
+        try {
+            //其中codeType以及parameterValue为前端页面所需要接收的参数。
+            qrCodeBytes = customerWxMaService.getQrcodeService().createWxaCodeUnlimitBytes(roomId + "", "pages/order/renew/index", false, "release", 30, false, lineColor, false);
+        } catch (WxErrorException e) {
+//            e.printStackTrace();
+            logger.error(e.getMessage());
+            throw new ServiceException("打印二维码错误" + e.getMessage());
+        }
+        String qrCodeStr = Base64.getEncoder().encodeToString(qrCodeBytes);//.encodeBase64String(qrCodeBytes);
+        BufferedImage bufferedImage = ImgUtil.base64ToBufferedImage(qrCodeStr);
+        qrCodeStr = ImgUtil.BufferedImageToBase64(ImgUtil.writeImage2(bufferedImage, "续单", room.getName(), new Color(7, 193, 96), new Font("宋体", Font.BOLD, 10)));
+        return AjaxResult.success(qrCodeStr);
+    }
+
+    @GetMapping(value = "/testOrderAmount")
+    public AjaxResult testOrderAmount() {
+
+        final TRoomOrder roomOrder = roomOrderService.selectTRoomOrderById(270L);
+        BigDecimal totalAmt = new BigDecimal("39.9"); // 注意三种写法得差距
+        totalAmt = new BigDecimal(39.9);
+        totalAmt = roomOrder.getTotalAmount(); // 数据库定义decimal类型，是以字符串形式存储得
+        BigDecimal payAmt = new BigDecimal(3990).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
+        System.out.println(payAmt);
+        System.out.println(totalAmt.subtract(payAmt));
+        System.out.println(totalAmt.multiply(new BigDecimal(1000)).subtract(payAmt.multiply(new BigDecimal(1000))));
+
+        return AjaxResult.success();
+    }
 }

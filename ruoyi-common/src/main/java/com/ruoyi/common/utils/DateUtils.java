@@ -1,13 +1,10 @@
 package com.ruoyi.common.utils;
 
 import java.lang.management.ManagementFactory;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -53,7 +50,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static Date getNextDayDate() {
         try {
-            return parseDate(getDate(), YYYY_MM_DD);
+            return parseDate(getNextDate(), YYYY_MM_DD);
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
@@ -69,7 +66,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
     }
 
     public static String getNextDate() {
-        return parseDateToStr(YYYY_MM_DD, new Date());
+        return dateTimeNextDay(YYYY_MM_DD);
     }
 
     public static final String getTime() {
@@ -82,6 +79,13 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     public static final String dateTimeNow(final String format) {
         return parseDateToStr(format, new Date());
+    }
+
+    public static final String dateTimeNextDay(final String format) {
+        LocalDate localDate = LocalDate.now().plusDays(1);
+        Instant instant = Timestamp.valueOf(localDate.atTime(LocalTime.MIDNIGHT)).toInstant();
+        Date nextDate = Date.from(instant);
+        return parseDateToStr(format, nextDate);
     }
 
     public static final String dateTime(final Date date) {
@@ -189,46 +193,48 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
 
     /**
      * 获取当前月第一天
+     *
      * @param month
      * @return
      */
     public static Date getFirstDayOfMonth(int month) {
         Calendar calendar = Calendar.getInstance();
         // 设置月份
-        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.MONTH, month);
         // 获取某月最小天数
         int firstDay = calendar.getActualMinimum(Calendar.DAY_OF_MONTH);
         // 设置日历中月份的最小天数
         calendar.set(Calendar.DAY_OF_MONTH, firstDay);
         // 格式化日期
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String firstDayDate = sdf.format(calendar.getTime())+" 00:00:00";
+        String firstDayDate = sdf.format(calendar.getTime()) + " 00:00:00";
         return parseDate(firstDayDate);
     }
 
     /**
      * 获取当前月最后一天
+     *
      * @param month
      * @return
      */
     public static Date getLastDayOfMonth(int month) {
         Calendar calendar = Calendar.getInstance();
         // 设置月份
-        calendar.set(Calendar.MONTH, month - 1);
+        calendar.set(Calendar.MONTH, month);
         // 获取某月最大天数
-        int lastDay=0;
+        int lastDay = 0;
         //2月的平年瑞年天数
-        if(month==2) {
+        if (month == 2) {
             // 这个api在计算2020年2月的过程中有问题
             lastDay = calendar.getLeastMaximum(Calendar.DAY_OF_MONTH);
-        }else {
+        } else {
             lastDay = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
         }
         // 设置日历中月份的最大天数
         calendar.set(Calendar.DAY_OF_MONTH, lastDay);
         // 格式化日期
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        String lastDayDate = sdf.format(calendar.getTime())+" 23:59:59";
+        String lastDayDate = sdf.format(calendar.getTime()) + " 23:59:59";
         return parseDate(lastDayDate);
     }
 }

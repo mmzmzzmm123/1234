@@ -1,15 +1,10 @@
 package com.ruoyi.office.service.impl;
 
-import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import cn.binarywang.wx.miniapp.api.WxMaService;
 import cn.binarywang.wx.miniapp.bean.WxMaSubscribeMessage;
 import cn.hutool.core.date.DateTime;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
 import com.github.binarywang.wxpay.bean.request.WxPayUnifiedOrderV3Request;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
@@ -29,6 +24,7 @@ import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.*;
 import com.ruoyi.office.horn.HornConfig;
+import com.ruoyi.office.mapper.TRoomOrderMapper;
 import com.ruoyi.office.service.*;
 import com.ruoyi.office.util.WxMsgSender;
 import com.ruoyi.system.service.ISysDictDataService;
@@ -37,11 +33,15 @@ import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
 import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.office.mapper.TRoomOrderMapper;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * 房间占用（点支付时再次校验可用性并改变状态，支付失败回滚）Service业务层处理
@@ -178,6 +178,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         //查询支付状态；
         WxPayOrderQueryV3Result v3Result = null;
         try {
+            WxPayService wxPayService = payService.getConfigByRoom(order.getRoomId());
             v3Result = wxPayService.queryOrderV3("", String.valueOf(order.getOrderNo()));
             log.debug("查询订单返回:" + v3Result.toString());
         } catch (WxPayException e) {
@@ -198,7 +199,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     if (!v3ResultAmount.getTotal().equals(order.getTotalAmount().multiply(new BigDecimal(100)).intValue())) {
                         throw new ServiceException("订单金额不一致");
                     }
-                    BigDecimal payAmt = new BigDecimal(v3ResultAmount.getPayerTotal() / 100);
+                    BigDecimal payAmt = new BigDecimal(v3ResultAmount.getPayerTotal()).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
                     updateOrder.setPayAmount(payAmt);
                     updateOrder.setCouponAmount(order.getTotalAmount().subtract(payAmt));
                 }
@@ -261,8 +262,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Autowired
     ITWxUserService wxUserService;
 
-    @Autowired
-    private WxPayService wxPayService;
+  /*  @Autowired
+    private WxPayService wxPayService;*/
 
     @Autowired
     ITWxUserPromotionService userPromotionService;
@@ -313,6 +314,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 }
             }
 
+            WxPayService wxPayService = payService.getConfigByRoom(prepayReq.getRoomId());
             WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
             final WxPayConfig config = wxPayService.getConfig();
 
@@ -329,7 +331,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
             try {
-                jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+                jsapiResult = wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
                 tRoomOrder.setOrderNo(orderNo);
                 tRoomOrder.setTotalAmount(totalPrice);
@@ -493,7 +495,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     }
                 }
             }
-
+            WxPayService wxPayService = payService.getConfigByRoom(roomPackage.getRoomId());
             WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
             final WxPayConfig config = wxPayService.getConfig();
 
@@ -521,7 +523,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
             try {
-                jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+                jsapiResult = wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
                 tRoomOrder.setOrderNo(orderNo);
                 tRoomOrder.setTotalAmount(totalPrice);
@@ -652,6 +654,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 }
             }
 
+            WxPayService wxPayService = payService.getConfigByRoom(roomOrder.getRoomId());
             WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
             final WxPayConfig config = wxPayService.getConfig();
 
@@ -668,7 +671,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
             try {
-                jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+                jsapiResult = wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
                 // 微信支付是不是要换个订单号?
                 roomOrder.setOrderNo(orderNo);
@@ -878,7 +881,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         update.setRemark(wxCallback);
 
         if (amt.getPayerTotal() != null && amt.getPayerTotal() != 0) {
-            BigDecimal payAmt = new BigDecimal(amt.getPayerTotal() / 100);
+            BigDecimal payAmt = new BigDecimal(amt.getPayerTotal()).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
             update.setPayAmount(payAmt);
             update.setCouponAmount(roomOrder.getTotalAmount().subtract(payAmt));
         }
@@ -1408,6 +1411,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         TWxUser wxUser = wxUserService.selectTWxUserById(userId);
 
+        WxPayService wxPayService = payService.getConfigByStore(storePromotion.getStoreId());
         WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
         final WxPayConfig config = wxPayService.getConfig();
 
@@ -1435,7 +1439,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
         WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
         try {
-            jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+            jsapiResult = wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
             tRoomOrder.setOrderNo(orderNo);
             tRoomOrder.setTotalAmount(totalPrice);
@@ -1529,7 +1533,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         }
         TRoomOrder qry = new TRoomOrder();
         qry.setOrderNo(tRoomOrder.getOrderNo());
-        qry.setRemark(tRoomOrder.getRandomCode());
+        qry.setRandomCode(tRoomOrder.getRandomCode());
         List<TRoomOrder> roomOrders = tRoomOrderMapper.selectTRoomOrderList(qry);
         if (roomOrders.size() == 0) {
             throw new ServiceException("订单校验失败");
@@ -1659,6 +1663,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Autowired
     private ITRoomOrderChargeService orderChargeService;
 
+    @Autowired
+    private ITWxPayService payService;
+
     @Transactional
     @Override
     public PrepayResp orderCharge(MiniOrderChargeReq req, long wxUserId) {
@@ -1714,23 +1721,14 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         TWxUser wxUser = wxUserService.selectTWxUserById(wxUserId);
 
         if (req.getPayType().equals(OfficeEnum.PayType.WX_PAY.getCode())) { // 直接支付 发起微信支付 预支付交易单，返回微信支付返回的标
-
+            WxPayService iwxPayService = payService.getConfigByRoom(roomOrder.getRoomId());
             WxPayUnifiedOrderV3Request v3Request = new WxPayUnifiedOrderV3Request();
-            final WxPayConfig config = wxPayService.getConfig();
+            final WxPayConfig config = iwxPayService.getConfig();
 
             WxPayUnifiedOrderV3Request.Amount v3Amount = new WxPayUnifiedOrderV3Request.Amount();
             v3Amount.setTotal(totalPrice.multiply(new BigDecimal(100)).intValue());
             WxPayUnifiedOrderV3Request.Payer v3payer = new WxPayUnifiedOrderV3Request.Payer();
             v3payer.setOpenid(wxUser.getOpenId());
-
-          /*  WxPayUnifiedOrderV3Request.Discount detail = new WxPayUnifiedOrderV3Request.Discount();
-            WxPayUnifiedOrderV3Request.GoodsDetail goodsDetail = new WxPayUnifiedOrderV3Request.GoodsDetail();
-            goodsDetail.setMerchantGoodsId(roomPackage.getId().toString());
-            goodsDetail.setQuantity(1);
-            goodsDetail.setUnitPrice(v3Amount.getTotal());
-            List<WxPayUnifiedOrderV3Request.GoodsDetail> goodsDetailList = new ArrayList<>();
-            goodsDetailList.add(goodsDetail);
-            detail.setGoodsDetails(goodsDetailList);*/
 
             v3Request.setAppid(config.getAppId()).setMchid(config.getMchId()).setNotifyUrl(config.getPayScoreNotifyUrl())
                     .setDescription("roomId: " + roomOrder.getRoomId()).setOutTradeNo(String.valueOf(orderNo))
@@ -1742,7 +1740,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 
             WxPayUnifiedOrderV3Result.JsapiResult jsapiResult = null;
             try {
-                jsapiResult = this.wxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
+                jsapiResult = iwxPayService.createOrderV3(TradeTypeEnum.valueOf("JSAPI"), v3Request);
 
                 chargeOrder.setPayType(OfficeEnum.PayType.WX_PAY.getCode());
                 chargeOrder.setOrderNo(orderNo);
@@ -1851,6 +1849,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         //查询支付状态；
         WxPayOrderQueryV3Result v3Result = null;
         try {
+            WxPayService wxPayService = payService.getConfigByRoom(tRoomOrderCharge.getRoomId());
             v3Result = wxPayService.queryOrderV3("", String.valueOf(tRoomOrderCharge.getOrderNo()));
             log.debug("续费订单查询订单返回:" + v3Result.toString());
         } catch (WxPayException e) {
@@ -1873,7 +1872,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                     if (!v3ResultAmount.getTotal().equals(tRoomOrderCharge.getTotalAmount().multiply(new BigDecimal(100)).intValue())) {
                         throw new ServiceException("订单金额不一致");
                     }
-                    BigDecimal payAmt = new BigDecimal(v3ResultAmount.getPayerTotal() / 100);
+                    BigDecimal payAmt = new BigDecimal(v3ResultAmount.getPayerTotal()).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
                     upChargeOrder.setPayAmount(payAmt);
                     upChargeOrder.setCouponAmount(orgRoomOrder.getTotalAmount().subtract(payAmt));
                 }
@@ -1974,10 +1973,17 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         upChargeOrder.setId(chargeOrder.getId());
         upChargeOrder.setStatus(OfficeEnum.ChargeOrderStatus.PAYED.getCode());
         if (amt.getPayerTotal() != null && amt.getPayerTotal().intValue() != 0) {
-            BigDecimal payAmt = new BigDecimal(amt.getPayerTotal() / 100);
+            BigDecimal payAmt = new BigDecimal(amt.getPayerTotal()).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
             upChargeOrder.setPayAmount(payAmt);
             upChargeOrder.setCouponAmount(chargeOrder.getTotalAmount().subtract(payAmt));
         }
         orderChargeService.updateTRoomOrderCharge(upChargeOrder);
+    }
+
+    public static void main(String[] args) {
+        BigDecimal totalAmt = new BigDecimal("39.9");
+        BigDecimal payAmt = new BigDecimal(3990).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
+        System.out.println(payAmt);
+        System.out.println(totalAmt.multiply(new BigDecimal(1000)).subtract(payAmt.multiply(new BigDecimal(1000))));
     }
 }
