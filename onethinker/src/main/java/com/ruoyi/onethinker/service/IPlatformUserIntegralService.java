@@ -2,6 +2,7 @@ package com.ruoyi.onethinker.service;
 
 import java.util.List;
 import com.ruoyi.onethinker.domain.PlatformUserIntegral;
+import com.ruoyi.onethinker.domain.PlatformUserIntegralHistory;
 import com.ruoyi.onethinker.dto.PlatformUserIntegralReqDTO;
 import com.ruoyi.onethinker.dto.PlatformUserIntegralResDTO;
 
@@ -37,26 +38,16 @@ public interface IPlatformUserIntegralService {
     public int insertPlatformUserIntegral(PlatformUserIntegralReqDTO reqDTO);
 
     /**
-     * 修改平台用户积分
-     *
-     * @param platformUserIntegral 平台用户积分
-     * @return 结果
+     * 查询用户积分明细
+     * @param reqDTO
+     * @return
      */
-    public int updatePlatformUserIntegral(PlatformUserIntegral platformUserIntegral);
+    List<PlatformUserIntegralHistory> queryIntegralDetail(PlatformUserIntegralReqDTO reqDTO);
 
     /**
-     * 批量删除平台用户积分
-     *
-     * @param ids 需要删除的平台用户积分主键集合
-     * @return 结果
+     * 积分提现
+     * @param reqDTO
+     * @return
      */
-    public int deletePlatformUserIntegralByIds(Long[] ids);
-
-    /**
-     * 删除平台用户积分信息
-     *
-     * @param id 平台用户积分主键
-     * @return 结果
-     */
-    public int deletePlatformUserIntegralById(Long id);
+    int withdrawalIntegral(PlatformUserIntegralReqDTO reqDTO);
 }

@@ -22,4 +22,14 @@ public class PlatformUserIntegralReqDTO {
      * 批次号
      */
     private String batchNo;
+
+    /**
+     * 备注
+     */
+    private String remark;
+
+    /**
+     * userId
+     */
+    private Long puUserId;
 }

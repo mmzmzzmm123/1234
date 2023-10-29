@@ -90,7 +90,7 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
         //目前只有默认
         Map<String,String> result = new HashMap<>();
         for (String s : batchNoList) {
-            result.put(s,"平台");
+            result.put(s,"平台" + s);
         }
         return result;
     }
@@ -117,6 +117,7 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
         platformUserIntegralHistory.setPuUserId(platformUser.getId());
         platformUserIntegralHistory.setType(IntegralTypeEnum.RECHARGE.getCode());
         platformUserIntegralHistory.setBatchNo(reqDTO.getBatchNo());
+        platformUserIntegralHistory.setRemark(reqDTO.getRemark());
         int size = platformUserIntegralHistoryService.insertPlatformUserIntegralHistory(platformUserIntegralHistory);
         int result = 0;
         if (size > 0) {
@@ -144,37 +145,48 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
         return result;
     }
 
-    /**
-     * 修改平台用户积分
-     *
-     * @param platformUserIntegral 平台用户积分
-     * @return 结果
-     */
     @Override
-    public int updatePlatformUserIntegral(PlatformUserIntegral platformUserIntegral) {
-                platformUserIntegral.setUpdateTime(DateUtils.getNowDate());
-        return platformUserIntegralMapper.updatePlatformUserIntegral(platformUserIntegral);
+    public List<PlatformUserIntegralHistory> queryIntegralDetail(PlatformUserIntegralReqDTO reqDTO) {
+        PlatformUserIntegralHistory platformUserIntegralHistory = new PlatformUserIntegralHistory();
+        platformUserIntegralHistory.setPuUserId(reqDTO.getPuUserId());
+        return platformUserIntegralHistoryService.selectPlatformUserIntegralHistoryList(platformUserIntegralHistory);
     }
 
-    /**
-     * 批量删除平台用户积分
-     *
-     * @param ids 需要删除的平台用户积分主键
-     * @return 结果
-     */
     @Override
-    public int deletePlatformUserIntegralByIds(Long[] ids) {
-        return platformUserIntegralMapper.deletePlatformUserIntegralByIds(ids);
-    }
-
-    /**
-     * 删除平台用户积分信息
-     *
-     * @param id 平台用户积分主键
-     * @return 结果
-     */
-    @Override
-    public int deletePlatformUserIntegralById(Long id) {
-        return platformUserIntegralMapper.deletePlatformUserIntegralById(id);
+    @Transactional(rollbackFor = Exception.class)
+    public int withdrawalIntegral(PlatformUserIntegralReqDTO reqDTO) {
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPhone()),"用户信息为空，不允许发起提现申请");
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getIntegral()),"提现积分不能为空");
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getBatchNo()),"体现平台不允许为空");
+        Assert.isTrue(reqDTO.getIntegral() % 100 == 0,"积分提现需100整数");
+        // 查询用户信息
+        PlatformUser platformUser = platformUserDetailService.queryUserByPhone(reqDTO.getPhone());
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUser),"非法请求");
+        // 查询用户是否有积分提现
+        PlatformUserIntegral params = new PlatformUserIntegral();
+        params.setBatchNo(reqDTO.getBatchNo());
+        params.setPuUserId(platformUser.getId());
+        List<PlatformUserIntegral> platformUserIntegrals = platformUserIntegralMapper.selectPlatformUserIntegralList(params);
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUserIntegrals) && !platformUserIntegrals.isEmpty(),"积分不足，不允许提现");
+        PlatformUserIntegral platformUserIntegral = platformUserIntegrals.get(0);
+        Assert.isTrue(platformUserIntegral.getResidualIntegral() - reqDTO.getIntegral() > 0 ,"积分不足，不允许提现");
+        // 扣减用户积分处理
+        platformUserIntegral.setOrgResidualIntegral(platformUserIntegral.getResidualIntegral());
+        platformUserIntegral.setResidualIntegral(platformUserIntegral.getResidualIntegral() - reqDTO.getIntegral());
+        int size = platformUserIntegralMapper.updateIntegralByResidualIntegralAndId(platformUserIntegral);
+        int result = 0;
+        if (size > 0) {
+            // 插入明细记录
+            PlatformUserIntegralHistory platformUserIntegralHistory = new PlatformUserIntegralHistory();
+            platformUserIntegralHistory.setIntegral(reqDTO.getIntegral());
+            platformUserIntegralHistory.setPuUserId(platformUser.getId());
+            platformUserIntegralHistory.setType(IntegralTypeEnum.CASH_WITHDRAWAL.getCode());
+            platformUserIntegralHistory.setBatchNo(reqDTO.getBatchNo());
+            platformUserIntegralHistory.setRemark(reqDTO.getRemark());
+            platformUserIntegralHistory.setEnabled(PlatformUserIntegralHistory.STATE_TYPE_DISABLE);
+            result = platformUserIntegralHistoryService.insertPlatformUserIntegralHistory(platformUserIntegralHistory);
+        }
+        Assert.isTrue(result > 0,"积分提现失败，请刷新页面重新申请");
+        return result;
     }
 }

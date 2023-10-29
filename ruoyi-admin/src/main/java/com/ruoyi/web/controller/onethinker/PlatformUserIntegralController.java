@@ -43,6 +43,7 @@ public class PlatformUserIntegralController extends BaseController {
      * 查询平台用户积分列表
      */
     @PreAuthorize("@ss.hasPermi('onethinker:integral:list')")
+    @Log(title = "查询用户积分列表", businessType = BusinessType.QUERY)
     @GetMapping("/list")
     public TableDataInfo list(PlatformUserIntegral platformUserIntegral) {
         startPage();
@@ -54,9 +55,30 @@ public class PlatformUserIntegralController extends BaseController {
      * 新增平台用户积分
      */
     @PreAuthorize("@ss.hasPermi('onethinker:integral:add')")
-    @Log(title = "平台用户积分", businessType = BusinessType.INSERT)
+    @Log(title = "添加用户积分", businessType = BusinessType.INSERT)
     @PostMapping("/add")
     public AjaxResult add(@RequestBody PlatformUserIntegralReqDTO reqDTO) {
         return toAjax(platformUserIntegralService.insertPlatformUserIntegral(reqDTO));
+    }
+
+    /**
+     * 查询用户积分明细
+     */
+    @PreAuthorize("@ss.hasPermi('onethinker:integral:list')")
+    @Log(title = "查询用户积分明细", businessType = BusinessType.QUERY)
+    @PostMapping("/queryIntegralDetail")
+    public TableDataInfo queryIntegralDetail(@RequestBody PlatformUserIntegralReqDTO reqDTO) {
+        startPage();
+        return getDataTable(platformUserIntegralService.queryIntegralDetail(reqDTO));
+    }
+
+    /**
+     * 查询用户积分明细
+     */
+    @PreAuthorize("@ss.hasPermi('onethinker:integral:update')")
+    @Log(title = "积分提现", businessType = BusinessType.UPDATE)
+    @PostMapping("/withdrawalIntegral")
+    public AjaxResult withdrawalIntegral(@RequestBody PlatformUserIntegralReqDTO reqDTO) {
+        return toAjax(platformUserIntegralService.withdrawalIntegral(reqDTO));
     }
 }
