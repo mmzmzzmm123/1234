@@ -230,26 +230,39 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 up.setRemark(resp.getData()); // 设备发送信息返回
                 equipmentService.updateTEquipment(up);*/
             } else {
-                Map<String, String> msg = new HashMap<>();
-
-                if (equipDict.containsKey(currentEq.getEquipType())) {
-                    String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[1].split(":");
-                    msg.put(command[0], command[1]);
+                if (OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(currentEq.getEquipType())) {
+                    try {
+                        TStore store = storeService.selectTStoreById(room.getStoreId());
+                        String username = store.getTtlockUname();
+                        String password = store.getTtlockPwd();
+                        TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                        String lockId = currentEq.getEquipControl();
+                        TtlockGatewayRes res = TtlockConfig.lock(ttlockTokenRes.getAccess_token(), lockId);
+                    } catch (Exception e) {
+                        log.error("订单结束 通通锁 ttlock 关闭失败" + e.getMessage());
+                    }
                 } else {
-//                    throw new ServiceException(currentEq.getEquipType() + "类型的设备未设置");
-                    log.error(currentEq.getEquipType() + "类型的设备未设置");
-                    continue;
-                }
+                    Map<String, String> msg = new HashMap<>();
 
-                try {
-                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                } catch (Exception e) {
-                    continue;
-                }
-                currentEq.setUpdateTime(new Date());
-                currentEq.setOnOff("N");
-                equipmentService.updateTEquipment(currentEq);
+                    if (equipDict.containsKey(currentEq.getEquipType())) {
+                        String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[1].split(":");
+                        msg.put(command[0], command[1]);
+                    } else {
+//                    throw new ServiceException(currentEq.getEquipType() + "类型的设备未设置");
+                        log.error(currentEq.getEquipType() + "类型的设备未设置");
+                        continue;
+                    }
+
+                    try {
+                        sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
+                    } catch (Exception e) {
+                        continue;
+                    }
+                    currentEq.setUpdateTime(new Date());
+                    currentEq.setOnOff("N");
+                    equipmentService.updateTEquipment(currentEq);
 //                break;
+                }
             }
         }
     }
