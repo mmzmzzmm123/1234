@@ -59,7 +59,7 @@ public class TtlockConfig {
         ttlockTokenReq.setUsername(username);
         ttlockTokenReq.setPassword(password);
         String contentType = "application/x-www-form-urlencoded";
-        String response = HttpUtils.sendPostByType(TtlockConfig.url + "/oauth2/token", JSONObject.toJSONString(ttlockTokenReq), contentType);
+        String response = HttpUtils.sendPostByType(TtlockConfig.url + "/oauth2/token", toFormUrlEncodedString(ttlockTokenReq), contentType);
         TtlockTokenRes res = JSONObject.parseObject(response, TtlockTokenRes.class);
         return res;
     }

@@ -148,7 +148,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                     TStore store = storeService.selectTStoreById(room.getStoreId());
                     String username = store.getTtlockUname();
                     String password = store.getTtlockPwd();
-                    TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                    TtlockTokenRes ttlockTokenRes = TtlockConfig.getToken(username, password);
                     String lockId = currentEq.getEquipControl();
                     TtlockGatewayRes res = TtlockConfig.unlock(ttlockTokenRes.getAccess_token(), lockId);
                 } catch (Exception e) {
