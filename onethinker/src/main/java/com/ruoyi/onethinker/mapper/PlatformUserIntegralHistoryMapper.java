@@ -1,6 +1,9 @@
 package com.ruoyi.onethinker.mapper;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
 import com.ruoyi.onethinker.domain.PlatformUserIntegralHistory;
 
 /**

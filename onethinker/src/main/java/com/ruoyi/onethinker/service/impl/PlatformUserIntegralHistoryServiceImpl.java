@@ -2,6 +2,8 @@ package com.ruoyi.onethinker.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import com.ruoyi.common.enums.IntegralTypeEnum;
 import com.ruoyi.common.utils.DateUtils;
 
@@ -26,7 +28,7 @@ import org.springframework.util.ObjectUtils;
 @Service
 @Log4j2
 public class PlatformUserIntegralHistoryServiceImpl implements IPlatformUserIntegralHistoryService {
-    @Autowired
+    @Resource
     private PlatformUserIntegralHistoryMapper platformUserIntegralHistoryMapper;
 
     /**

@@ -3,6 +3,8 @@ package com.ruoyi.onethinker.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.onethinker.domain.PlatformUserDetail;
 import com.ruoyi.system.service.ISysUserService;
@@ -37,7 +39,7 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
     @Autowired
     private IPlatformUserDetailService platformUserDetailService;
 
-    @Autowired
+    @Resource
     private PlatformUserMapper platformUserMapper;
 
     @Autowired

@@ -3,6 +3,8 @@ package com.ruoyi.onethinker.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.utils.WeixinUtil;
 import org.slf4j.Logger;
@@ -34,7 +36,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class PlatformUserSourceTypeWxServiceImpl implements IPlatformUserService {
 
-    @Autowired
+    @Resource
     private PlatformUserMapper platformUserMapper;
     @Autowired
     private IPlatformUserDetailService platformUserDetailService;

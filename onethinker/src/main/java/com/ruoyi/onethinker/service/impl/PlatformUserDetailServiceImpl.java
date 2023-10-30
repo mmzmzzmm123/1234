@@ -8,6 +8,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
 import com.ruoyi.common.enums.CacheEnum;
 import io.jsonwebtoken.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @Log4j2
 public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService {
-    @Autowired
+    @Resource
     private PlatformUserDetailMapper platformUserDetailMapper;
 
     @Autowired
@@ -45,7 +47,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
     @Autowired
     private RedisCache redisCache;
 
-    @Autowired
+    @Resource
     private PlatformUserMapper platformUserMapper;
     /**
      * 查询平台用户详情信息

@@ -8,6 +8,8 @@ import java.util.Optional;
 import java.util.logging.Handler;
 import java.util.stream.Collectors;
 
+import javax.annotation.Resource;
+
 import com.ruoyi.common.enums.IntegralTypeEnum;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.onethinker.dto.PlatformUserIntegralResDTO;
@@ -41,7 +43,7 @@ import lombok.extern.log4j.Log4j2;
 @Service
 @Log4j2
 public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralService {
-    @Autowired
+    @Resource
     private PlatformUserIntegralMapper platformUserIntegralMapper;
     @Autowired
     private IPlatformUserDetailService platformUserDetailService;

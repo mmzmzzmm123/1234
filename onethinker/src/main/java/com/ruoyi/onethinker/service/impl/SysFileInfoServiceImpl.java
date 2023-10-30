@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import com.ruoyi.common.enums.SysConfigKeyEnum;
@@ -40,7 +41,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Log4j2
 public class SysFileInfoServiceImpl implements ISysFileInfoService {
 
-    @Autowired
+    @Resource
     private SysFileInfoMapper sysFileInfoMapper;
     @Autowired
     private ISysConfigService sysConfigService;
