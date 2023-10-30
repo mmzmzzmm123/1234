@@ -52,16 +52,6 @@ public class PlatformUserIntegralController extends BaseController {
     }
 
     /**
-     * 新增平台用户积分
-     */
-    @PreAuthorize("@ss.hasPermi('onethinker:integral:add')")
-    @Log(title = "添加用户积分", businessType = BusinessType.INSERT)
-    @PostMapping("/add")
-    public AjaxResult add(@RequestBody PlatformUserIntegralReqDTO reqDTO) {
-        return toAjax(platformUserIntegralService.insertPlatformUserIntegral(reqDTO));
-    }
-
-    /**
      * 查询用户积分明细
      */
     @PreAuthorize("@ss.hasPermi('onethinker:integral:list')")
@@ -73,7 +63,17 @@ public class PlatformUserIntegralController extends BaseController {
     }
 
     /**
-     * 查询用户积分明细
+     * 新增平台用户积分
+     */
+    @PreAuthorize("@ss.hasPermi('onethinker:integral:add')")
+    @Log(title = "添加用户积分", businessType = BusinessType.INSERT)
+    @PostMapping("/add")
+    public AjaxResult add(@RequestBody PlatformUserIntegralReqDTO reqDTO) {
+        return toAjax(platformUserIntegralService.insertPlatformUserIntegral(reqDTO));
+    }
+
+    /**
+     * 积分提现申请
      */
     @PreAuthorize("@ss.hasPermi('onethinker:integral:update')")
     @Log(title = "积分提现", businessType = BusinessType.UPDATE)

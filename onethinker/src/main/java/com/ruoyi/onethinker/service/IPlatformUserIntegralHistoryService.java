@@ -30,10 +30,16 @@ public interface IPlatformUserIntegralHistoryService {
     public int insertPlatformUserIntegralHistory(PlatformUserIntegralHistory platformUserIntegralHistory);
 
     /**
-     * 修改平台用户积分流水记录
-     *
-     * @param platformUserIntegralHistory 平台用户积分流水记录
-     * @return 结果
+     * 查询积分提现列表
+     * @param platformUserIntegralHistory
+     * @return
      */
-    public int updatePlatformUserIntegralHistory(PlatformUserIntegralHistory platformUserIntegralHistory);
+    List<PlatformUserIntegralHistory> withdrawalIntegralList(PlatformUserIntegralHistory platformUserIntegralHistory);
+
+    /**
+     * 提现审核
+     * @param platformUserIntegralHistory
+     * @return
+     */
+    int updateWithdrawalIntegral(PlatformUserIntegralHistory platformUserIntegralHistory);
 }
