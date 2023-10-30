@@ -152,7 +152,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                     String lockId = currentEq.getEquipControl();
                     TtlockGatewayRes res = TtlockConfig.unlock(ttlockTokenRes.getAccess_token(), lockId);
                 } catch (Exception e) {
-                    errMsg.append("通通锁打开失败;");
+                    errMsg.append(e.getMessage());
                     continue;
                 }
             } else {
