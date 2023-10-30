@@ -25,7 +25,7 @@ import com.ruoyi.onethinker.service.IPlatformUserIntegralHistoryService;
  * @date 2023-10-27
  */
 @RestController
-@RequestMapping("/onethinker/integralHistroy")
+@RequestMapping("/onethinker/history")
 public class PlatformUserIntegralHistroyController extends BaseController {
 
     @Autowired
@@ -37,7 +37,7 @@ public class PlatformUserIntegralHistroyController extends BaseController {
     @PreAuthorize("@ss.hasPermi('onethinker:integral:list')")
     @Log(title = "查询积分提现申请列表", businessType = BusinessType.QUERY)
     @GetMapping("/withdrawalIntegralList")
-    public TableDataInfo withdrawalIntegralList(@RequestBody PlatformUserIntegralHistory platformUserIntegralHistory) {
+    public TableDataInfo withdrawalIntegralList(PlatformUserIntegralHistory platformUserIntegralHistory) {
         startPage();
         List<PlatformUserIntegralHistory> list = platformUserIntegralHistoryService.withdrawalIntegralList(platformUserIntegralHistory);
         return getDataTable(list);

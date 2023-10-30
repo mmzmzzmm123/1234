@@ -57,7 +57,7 @@ public class PlatformUserIntegralHistoryServiceImpl implements IPlatformUserInte
 
     @Override
     public List<PlatformUserIntegralHistory> withdrawalIntegralList(PlatformUserIntegralHistory platformUserIntegralHistory) {
-        platformUserIntegralHistory.setEnabled(IntegralTypeEnum.CASH_WITHDRAWAL.getCode());
+        platformUserIntegralHistory.setType(IntegralTypeEnum.CASH_WITHDRAWAL.getCode());
         return platformUserIntegralHistoryMapper.selectPlatformUserIntegralHistoryList(platformUserIntegralHistory);
     }
 
@@ -69,6 +69,11 @@ public class PlatformUserIntegralHistoryServiceImpl implements IPlatformUserInte
         saveParams.setSysUserId(SecurityUtils.getUserId());
         saveParams.setId(platformUserIntegralHistory.getId());
         saveParams.setEnabled(platformUserIntegralHistory.getEnabled());
+        saveParams.setUpdateTime(platformUserIntegralHistory.getUpdateTime());
+        saveParams.setUpdateBy(SecurityUtils.getUsername());
+        if (!ObjectUtils.isEmpty(platformUserIntegralHistory.getRemark())) {
+            saveParams.setRemark(platformUserIntegralHistory.getRemark());
+        }
         return platformUserIntegralHistoryMapper.updatePlatformUserIntegralHistory(saveParams);
     }
 }
