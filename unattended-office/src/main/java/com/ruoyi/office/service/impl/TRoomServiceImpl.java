@@ -395,10 +395,10 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                     TtlockGatewayRes res = TtlockConfig.lock(ttlockTokenRes.getAccess_token(), lockId);
 
                     currentEq.setRecentOpenTime(new Date());
-                    currentEq.setOnOff("Y");
+                    currentEq.setOnOff("N");
                     equipmentService.updateTEquipment(currentEq);
 
-                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已打开");
+                    CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "门已关闭");
                 } catch (Exception e) {
                     throw new ServiceException(e.getMessage());
                 }
