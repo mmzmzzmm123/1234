@@ -81,9 +81,10 @@
       <!-- <el-table-column label="备注" align="center" prop="remark" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.onOff=='Y'" size="mini" type="text" icon="el-icon-edit"
-            @click="openClose(scope.row, 'N')" v-hasPermi="['office:equipment:onoff']">关闭</el-button>
-          <el-button v-else-if="scope.row.onOff=='N'" size="mini" type="text" icon="el-icon-edit"
+          <el-button v-if="scope.row.onOff=='Y' && scope.row.equipType != 'horn'" size="mini" type="text"
+            icon="el-icon-edit" @click="openClose(scope.row, 'N')" v-hasPermi="['office:equipment:onoff']">关闭
+          </el-button>
+          <el-button v-else-if="scope.row.onOff=='N' && scope.row.equipType != 'horn'" size="mini" type="text" icon="el-icon-edit"
             @click="openClose(scope.row, 'Y')" v-hasPermi="['office:equipment:onoff']">开启</el-button>
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
             v-hasPermi="['office:equipment:edit']">修改</el-button>
