@@ -2,12 +2,8 @@ package com.ruoyi.onethinker.service;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import com.ruoyi.onethinker.domain.SysFileInfo;
 import com.ruoyi.onethinker.dto.SysFileInfoReqDTO;
-import com.ruoyi.onethinker.dto.SysFileInfoResDTO;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 文件信息Service接口

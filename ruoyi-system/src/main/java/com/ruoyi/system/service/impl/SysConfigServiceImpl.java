@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import com.ruoyi.common.enums.CacheEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +12,7 @@ import com.ruoyi.common.annotation.DataSource;
 import com.ruoyi.common.constant.UserConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.text.Convert;
+import com.ruoyi.common.enums.CacheEnum;
 import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.exception.ServiceException;

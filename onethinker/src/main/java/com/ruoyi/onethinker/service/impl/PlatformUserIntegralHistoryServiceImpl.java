@@ -4,20 +4,17 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.ruoyi.common.enums.IntegralTypeEnum;
-import com.ruoyi.common.utils.DateUtils;
-
-import com.ruoyi.common.utils.SecurityUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.ruoyi.onethinker.mapper.PlatformUserIntegralHistoryMapper;
-import com.ruoyi.onethinker.domain.PlatformUserIntegralHistory;
-import com.ruoyi.onethinker.service.IPlatformUserIntegralHistoryService;
-import lombok.extern.log4j.Log4j2;
-
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
+
+import com.ruoyi.common.enums.IntegralTypeEnum;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.onethinker.domain.PlatformUserIntegralHistory;
+import com.ruoyi.onethinker.mapper.PlatformUserIntegralHistoryMapper;
+import com.ruoyi.onethinker.service.IPlatformUserIntegralHistoryService;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * 平台用户积分流水记录Service业务层处理

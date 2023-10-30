@@ -72,6 +72,8 @@ import org.openxmlformats.schemas.drawingml.x2006.spreadsheetDrawing.CTMarker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.common.collect.Maps;
+
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.annotation.Excel.ColumnType;
 import com.ruoyi.common.annotation.Excel.Type;
@@ -108,7 +110,7 @@ public class ExcelUtil<T> {
     /**
      * Excel sheet最大行数，默认65536
      */
-    public static final int sheetSize = 65536;
+    public static final int SHEET_SIZE = 65536;
 
     /**
      * 工作表名称
@@ -320,9 +322,9 @@ public class ExcelUtil<T> {
         if (sheet == null) {
             throw new IOException("文件sheet不存在");
         }
-        boolean isXSSFWorkbook = !(wb instanceof HSSFWorkbook);
+        boolean isXssfWorkbook = !(wb instanceof HSSFWorkbook);
         Map<String, PictureData> pictures;
-        if (isXSSFWorkbook) {
+        if (isXssfWorkbook) {
             pictures = getSheetPictures07((XSSFSheet) sheet, (XSSFWorkbook) wb);
         } else {
             pictures = getSheetPictures03((HSSFSheet) sheet, (HSSFWorkbook) wb);
@@ -331,7 +333,7 @@ public class ExcelUtil<T> {
         int rows = sheet.getLastRowNum();
         if (rows > 0) {
             // 定义一个map用于存放excel列的序号和field.
-            Map<String, Integer> cellMap = new HashMap<String, Integer>();
+            Map<String, Integer> cellMap = Maps.newHashMap();
             // 获取表头
             Row heard = sheet.getRow(titleNum);
             for (int i = 0; i < heard.getPhysicalNumberOfCells(); i++) {
@@ -572,7 +574,7 @@ public class ExcelUtil<T> {
      */
     public void writeSheet() {
         // 取出一共有多少个sheet.
-        int sheetNo = Math.max(1, (int) Math.ceil(list.size() * 1.0 / sheetSize));
+        int sheetNo = Math.max(1, (int) Math.ceil(list.size() * 1.0 / SHEET_SIZE));
         for (int index = 0; index < sheetNo; index++) {
             createSheet(sheetNo, index);
 
@@ -607,8 +609,8 @@ public class ExcelUtil<T> {
      */
     @SuppressWarnings("unchecked")
     public void fillExcelData(int index, Row row) {
-        int startNo = index * sheetSize;
-        int endNo = Math.min(startNo + sheetSize, list.size());
+        int startNo = index * SHEET_SIZE;
+        int endNo = Math.min(startNo + SHEET_SIZE, list.size());
         int rowNo = (1 + rownum) - startNo;
         for (int i = startNo; i < endNo; i++) {
             rowNo = isSubList() ? (i > 1 ? rowNo + 1 : rowNo + i) : i + 1 + rownum - startNo;
@@ -863,7 +865,7 @@ public class ExcelUtil<T> {
         if (StringUtils.isNotEmpty(attr.prompt()) || attr.combo().length > 0) {
             if (attr.combo().length > 15 || StringUtils.join(attr.combo()).length() > 255) {
                 // 如果下拉数大于15或字符串长度大于255，则使用一个新sheet存储，避免生成的模板下拉值获取不到
-                setXSSFValidationWithHidden(sheet, attr.combo(), attr.prompt(), 1, 100, column, column);
+                setXssfValidationWithHidden(sheet, attr.combo(), attr.prompt(), 1, 100, column, column);
             } else {
                 // 提示信息或只能选择不能输入的列内容.
                 setPromptOrValidation(sheet, attr.combo(), attr.prompt(), 1, 100, column, column);
@@ -964,7 +966,7 @@ public class ExcelUtil<T> {
      * @param firstCol      开始列
      * @param endCol        结束列
      */
-    public void setXSSFValidationWithHidden(Sheet sheet, String[] textlist, String promptContent, int firstRow, int endRow, int firstCol, int endCol) {
+    public void setXssfValidationWithHidden(Sheet sheet, String[] textlist, String promptContent, int firstRow, int endRow, int firstCol, int endCol) {
         String hideSheetName = "combo_" + firstCol + "_" + endCol;
         Sheet hideSheet = wb.createSheet(hideSheetName); // 用于存储 下拉菜单数据
         for (int i = 0; i < textlist.length; i++) {

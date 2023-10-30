@@ -1,6 +1,7 @@
 package com.ruoyi.onethinker.service;
 
 import java.util.List;
+
 import com.ruoyi.onethinker.domain.PlatformUserIntegral;
 import com.ruoyi.onethinker.domain.PlatformUserIntegralHistory;
 import com.ruoyi.onethinker.dto.PlatformUserIntegralReqDTO;

@@ -1,37 +1,23 @@
 package com.ruoyi.common.utils;
 
 
-import com.alibaba.fastjson2.JSONObject;
-import com.ruoyi.common.utils.http.HttpUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
+
+import com.alibaba.fastjson2.JSONObject;
+
+import com.ruoyi.common.utils.http.HttpUtils;
 
 @Component
 public class WeixinUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(WeixinUtil.class);
 
-    public final static String access_token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
-
-
     public static String APPID;
 
     public static String APPSECRET;
-
-//    @Value("${onethinker.Minwechat.appId}")
-//    public void setAppId(String APPID) {
-//        this.APPID = APPID;
-//    }
-
-
-//    @Value("${onethinker.Minwechat.appSecret}")
-//    public void setAppsecret(String APPSECRET) {
-//        this.APPSECRET = APPSECRET;
-//    }
-
 
     public WeixinUtil() {
     }

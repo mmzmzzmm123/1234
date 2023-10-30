@@ -1,22 +1,21 @@
 package com.ruoyi.onethinker.service.impl;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import com.ruoyi.common.enums.CacheEnum;
-import io.jsonwebtoken.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.google.common.collect.Maps;
+
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
 import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -27,6 +26,7 @@ import com.ruoyi.onethinker.mapper.PlatformUserDetailMapper;
 import com.ruoyi.onethinker.mapper.PlatformUserMapper;
 import com.ruoyi.onethinker.service.IPlatformUserDetailService;
 import com.ruoyi.system.service.ISysConfigService;
+import io.jsonwebtoken.lang.Assert;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -230,7 +230,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         Assert.isTrue(!ObjectUtils.isEmpty(puUserIds) && !puUserIds.isEmpty(),"不能查询全用户信息");
         List<PlatformUser> platformUsers = platformUserMapper.selectPlatformUserByIds(puUserIds);
         if (ObjectUtils.isEmpty(platformUsers)) {
-            return new HashMap<>();
+            return Maps.newHashMap();
         }
         return platformUsers.stream().collect(Collectors.toMap(PlatformUser::getId,PlatformUser::getPhone));
     }

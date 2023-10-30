@@ -5,15 +5,15 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.ruoyi.common.enums.SysConfigKeyEnum;
-import com.ruoyi.common.utils.WeixinUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
+import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.utils.PhoneUtils;
+import com.ruoyi.common.utils.WeixinUtil;
 import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.onethinker.domain.PlatformUser;
 import com.ruoyi.onethinker.domain.PlatformUserDetail;

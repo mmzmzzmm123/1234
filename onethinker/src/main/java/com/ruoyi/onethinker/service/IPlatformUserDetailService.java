@@ -6,7 +6,6 @@ import java.util.Map;
 import com.ruoyi.onethinker.domain.PlatformUser;
 import com.ruoyi.onethinker.domain.PlatformUserDetail;
 import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
-import com.ruoyi.onethinker.dto.PlatformUserResDTO;
 
 /**
  * 平台用户详情信息Service接口

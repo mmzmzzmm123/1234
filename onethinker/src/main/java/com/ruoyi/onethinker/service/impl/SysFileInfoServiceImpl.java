@@ -5,31 +5,22 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 
-import com.ruoyi.common.enums.SysConfigKeyEnum;
-import com.ruoyi.common.utils.DateUtils;
-
-import com.ruoyi.common.utils.file.FileUploadUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ruoyi.common.enums.SysConfigKeyEnum;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.common.utils.uuid.UUID;
-import com.ruoyi.onethinker.dto.SysFileInfoReqDTO;
-import com.ruoyi.onethinker.dto.SysFileInfoResDTO;
-import com.ruoyi.onethinker.mapper.SysFileInfoMapper;
 import com.ruoyi.onethinker.domain.SysFileInfo;
+import com.ruoyi.onethinker.dto.SysFileInfoReqDTO;
+import com.ruoyi.onethinker.mapper.SysFileInfoMapper;
 import com.ruoyi.onethinker.service.ISysFileInfoService;
 import com.ruoyi.system.service.ISysConfigService;
 import lombok.extern.log4j.Log4j2;
-
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 文件信息Service业务层处理
@@ -132,7 +123,7 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService {
         }
         // 上传成功，保存文件内容信息
         SysFileInfo sysFileInfo = new SysFileInfo();
-        sysFileInfo.setFileId(UUID.fastUUID().toString());
+        sysFileInfo.setFileId(UUID.fastUuid().toString());
         sysFileInfo.setFileName(fileName);
         sysFileInfo.setFileType(sysFileInfoReqDTO.getFileType());
         sysFileInfo.setServerFileId(fileMd5);

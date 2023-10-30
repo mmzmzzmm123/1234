@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.ServletRequest;
@@ -16,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import com.google.common.collect.Maps;
 
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.text.Convert;
@@ -86,7 +87,7 @@ public class ServletUtils {
      * @return Map
      */
     public static Map<String, String> getParamMap(ServletRequest request) {
-        Map<String, String> params = new HashMap<>();
+        Map<String, String> params = Maps.newHashMap();
         for (Map.Entry<String, String[]> entry : getParams(request).entrySet()) {
             params.put(entry.getKey(), StringUtils.join(entry.getValue(), ","));
         }

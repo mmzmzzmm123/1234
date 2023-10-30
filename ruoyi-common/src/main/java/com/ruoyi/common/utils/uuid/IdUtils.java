@@ -6,22 +6,14 @@ package com.ruoyi.common.utils.uuid;
  * @author ruoyi
  */
 public class IdUtils {
-    /**
-     * 获取随机UUID
-     *
-     * @return 随机UUID
-     */
-    public static String randomUUID() {
-        return UUID.randomUUID().toString();
-    }
 
     /**
      * 简化的UUID，去掉了横线
      *
      * @return 简化的UUID，去掉了横线
      */
-    public static String simpleUUID() {
-        return UUID.randomUUID().toString(true);
+    public static String simpleUuid() {
+        return UUID.randomUuid().toString(true);
     }
 
     /**
@@ -29,8 +21,8 @@ public class IdUtils {
      *
      * @return 随机UUID
      */
-    public static String fastUUID() {
-        return UUID.fastUUID().toString();
+    public static String fastUuid() {
+        return UUID.fastUuid().toString();
     }
 
     /**
@@ -38,7 +30,7 @@ public class IdUtils {
      *
      * @return 简化的UUID，去掉了横线
      */
-    public static String fastSimpleUUID() {
-        return UUID.fastUUID().toString(true);
+    public static String fastSimpleUuid() {
+        return UUID.fastUuid().toString(true);
     }
 }

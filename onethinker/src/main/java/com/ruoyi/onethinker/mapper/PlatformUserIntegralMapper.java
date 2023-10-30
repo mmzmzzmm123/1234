@@ -1,10 +1,8 @@
 package com.ruoyi.onethinker.mapper;
 
-import java.util.Date;
 import java.util.List;
+
 import com.ruoyi.onethinker.domain.PlatformUserIntegral;
-import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Update;
 
 /**
  * 平台用户积分Mapper接口

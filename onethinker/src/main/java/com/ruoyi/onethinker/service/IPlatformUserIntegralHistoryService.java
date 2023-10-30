@@ -1,8 +1,8 @@
 package com.ruoyi.onethinker.service;
 
 import java.util.List;
+
 import com.ruoyi.onethinker.domain.PlatformUserIntegralHistory;
-import com.ruoyi.onethinker.dto.PlatformUserIntegralReqDTO;
 
 /**
  * 平台用户积分流水记录Service接口

@@ -15,11 +15,27 @@ import com.ruoyi.common.utils.StringUtils;
  */
 public class IpUtils {
     public final static String REGX_0_255 = "(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|\\d)";
-    // 匹配 ip
+    /**
+     * 匹配 ip
+     */
     public final static String REGX_IP = "((" + REGX_0_255 + "\\.){3}" + REGX_0_255 + ")";
     public final static String REGX_IP_WILDCARD = "(((\\*\\.){3}\\*)|(" + REGX_0_255 + "(\\.\\*){3})|(" + REGX_0_255 + "\\." + REGX_0_255 + ")(\\.\\*){2}" + "|((" + REGX_0_255 + "\\.){3}\\*))";
-    // 匹配网段
+    /**
+     * 匹配网段
+     */
     public final static String REGX_IP_SEG = "(" + REGX_IP + "\\-" + REGX_IP + ")";
+
+    /**
+     * 10.x.x.x/8
+     */
+    public final static byte SECTION_1 = 0x0A;
+    // 172.16.x.x/12
+    public final static byte SECTION_2 = (byte) 0xAC;
+    public final static byte SECTION_3 = (byte) 0x10;
+    public final static byte SECTION_4 = (byte) 0x1F;
+    // 192.168.x.x/16
+    public final static byte SECTION_5 = (byte) 0xC0;
+    public final static byte SECTION_6 = (byte) 0xA8;
 
     /**
      * 获取客户端IP
@@ -84,15 +100,6 @@ public class IpUtils {
         }
         final byte b0 = addr[0];
         final byte b1 = addr[1];
-        // 10.x.x.x/8
-        final byte SECTION_1 = 0x0A;
-        // 172.16.x.x/12
-        final byte SECTION_2 = (byte) 0xAC;
-        final byte SECTION_3 = (byte) 0x10;
-        final byte SECTION_4 = (byte) 0x1F;
-        // 192.168.x.x/16
-        final byte SECTION_5 = (byte) 0xC0;
-        final byte SECTION_6 = (byte) 0xA8;
         switch (b0) {
             case SECTION_1:
                 return true;
@@ -101,9 +108,8 @@ public class IpUtils {
                     return true;
                 }
             case SECTION_5:
-                switch (b1) {
-                    case SECTION_6:
-                        return true;
+                if (b1 == SECTION_6) {
+                    return true;
                 }
             default:
                 return false;
@@ -243,7 +249,7 @@ public class IpUtils {
     /**
      * 是否为IP
      */
-    public static boolean isIP(String ip) {
+    public static boolean isIp(String ip) {
         return StringUtils.isNotBlank(ip) && ip.matches(REGX_IP);
     }
 
@@ -261,7 +267,8 @@ public class IpUtils {
         String[] s1 = ipWildCard.split("\\.");
         String[] s2 = ip.split("\\.");
         boolean isMatchedSeg = true;
-        for (int i = 0; i < s1.length && !s1[i].equals("*"); i++) {
+        String wildcard = "*";
+        for (int i = 0; i < s1.length && !wildcard.equals(s1[i]); i++) {
             if (!s1[i].equals(s2[i])) {
                 isMatchedSeg = false;
                 break;
@@ -273,7 +280,7 @@ public class IpUtils {
     /**
      * 是否为特定格式如:“10.10.10.1-10.10.10.99”的ip段字符串
      */
-    public static boolean isIPSegment(String ipSeg) {
+    public static boolean isIpSegment(String ipSeg) {
         return StringUtils.isNotBlank(ipSeg) && ipSeg.matches(REGX_IP_SEG);
     }
 
@@ -312,11 +319,11 @@ public class IpUtils {
         }
         String[] ips = filter.split(";");
         for (String iStr : ips) {
-            if (isIP(iStr) && iStr.equals(ip)) {
+            if (isIp(iStr) && iStr.equals(ip)) {
                 return true;
             } else if (isIpWildCard(iStr) && ipIsInWildCardNoCheck(iStr, ip)) {
                 return true;
-            } else if (isIPSegment(iStr) && ipIsInNetNoCheck(iStr, ip)) {
+            } else if (isIpSegment(iStr) && ipIsInNetNoCheck(iStr, ip)) {
                 return true;
             }
         }

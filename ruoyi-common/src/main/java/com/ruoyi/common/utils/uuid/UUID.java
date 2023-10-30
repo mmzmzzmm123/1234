@@ -20,7 +20,7 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
      * SecureRandom 的单例
      */
     private static class Holder {
-        static final SecureRandom numberGenerator = getSecureRandom();
+        static final SecureRandom NUMBER_GENERATOR = getSecureRandom();
     }
 
     /**
@@ -68,8 +68,8 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
      *
      * @return 随机生成的 {@code UUID}
      */
-    public static UUID fastUUID() {
-        return randomUUID(false);
+    public static UUID fastUuid() {
+        return randomUuid(false);
     }
 
     /**
@@ -77,8 +77,8 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
      *
      * @return 随机生成的 {@code UUID}
      */
-    public static UUID randomUUID() {
-        return randomUUID(true);
+    public static UUID randomUuid() {
+        return randomUuid(true);
     }
 
     /**
@@ -87,8 +87,8 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
      * @param isSecure 是否使用{@link SecureRandom}如果是可以获得更安全的随机码，否则可以得到更好的性能
      * @return 随机生成的 {@code UUID}
      */
-    public static UUID randomUUID(boolean isSecure) {
-        final Random ng = isSecure ? Holder.numberGenerator : getRandom();
+    public static UUID randomUuid(boolean isSecure) {
+        final Random ng = isSecure ? Holder.NUMBER_GENERATOR : getRandom();
 
         byte[] randomBytes = new byte[16];
         ng.nextBytes(randomBytes);
@@ -105,7 +105,7 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
      * @param name 用于构造 UUID 的字节数组。
      * @return 根据指定数组生成的 {@code UUID}
      */
-    public static UUID nameUUIDFromBytes(byte[] name) {
+    public static UUID nameUuidFromBytes(byte[] name) {
         MessageDigest md;
         try {
             md = MessageDigest.getInstance("MD5");

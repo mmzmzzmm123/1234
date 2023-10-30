@@ -13,8 +13,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.enums.HttpMethod;
+import com.ruoyi.common.utils.StringUtils;
 
 /**
  * 防止XSS攻击的过滤器
@@ -43,7 +43,7 @@ public class XssFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
-        if (handleExcludeURL(req, resp)) {
+        if (handleExcludeUrl(req, resp)) {
             chain.doFilter(request, response);
             return;
         }
@@ -51,7 +51,7 @@ public class XssFilter implements Filter {
         chain.doFilter(xssRequest, response);
     }
 
-    private boolean handleExcludeURL(HttpServletRequest request, HttpServletResponse response) {
+    private boolean handleExcludeUrl(HttpServletRequest request, HttpServletResponse response) {
         String url = request.getServletPath();
         String method = request.getMethod();
         // GET DELETE 不过滤

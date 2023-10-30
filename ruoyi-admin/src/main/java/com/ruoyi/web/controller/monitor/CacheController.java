@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import com.ruoyi.common.enums.CacheEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -20,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.enums.CacheEnum;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.SysCache;
 
@@ -34,11 +34,11 @@ public class CacheController {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
-    private final static List<SysCache> caches = new ArrayList<SysCache>();
+    private final static List<SysCache> CACHES = new ArrayList<SysCache>();
 
     {
         for (CacheEnum value : CacheEnum.values()) {
-            caches.add(new SysCache(value.getCode(), value.getMsg()));
+            CACHES.add(new SysCache(value.getCode(), value.getMsg()));
         }
     }
 
@@ -68,7 +68,7 @@ public class CacheController {
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
     @GetMapping("/getNames")
     public AjaxResult cache() {
-        return AjaxResult.success(caches);
+        return AjaxResult.success(CACHES);
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")

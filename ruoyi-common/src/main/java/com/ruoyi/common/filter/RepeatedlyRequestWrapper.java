@@ -11,8 +11,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 
-import com.ruoyi.common.utils.http.HttpHelper;
 import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.utils.http.HttpHelper;
 
 /**
  * 构建可重复读取inputStream的request

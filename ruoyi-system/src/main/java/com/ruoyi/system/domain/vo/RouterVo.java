@@ -1,8 +1,8 @@
 package com.ruoyi.system.domain.vo;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 /**
  * 路由配置信息

@@ -1,4 +1,5 @@
 package com.ruoyi.web.controller.onethinker;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,10 +15,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.onethinker.domain.PlatformUserIntegral;
 import com.ruoyi.onethinker.domain.PlatformUserIntegralHistory;
-import com.ruoyi.onethinker.dto.PlatformUserIntegralReqDTO;
-import com.ruoyi.onethinker.dto.PlatformUserIntegralResDTO;
 import com.ruoyi.onethinker.service.IPlatformUserIntegralHistoryService;
 
 /**

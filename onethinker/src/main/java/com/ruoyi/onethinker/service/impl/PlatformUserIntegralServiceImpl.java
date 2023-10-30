@@ -1,20 +1,13 @@
 package com.ruoyi.onethinker.service.impl;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.logging.Handler;
 import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 
-import com.ruoyi.common.enums.IntegralTypeEnum;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.onethinker.dto.PlatformUserIntegralResDTO;
 import org.apache.commons.compress.utils.Lists;
-import org.omg.CORBA.LongHolder;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,16 +15,18 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
-import com.ruoyi.common.utils.SecurityUtils;
+import com.google.common.collect.Maps;
+
+import com.ruoyi.common.enums.IntegralTypeEnum;
 import com.ruoyi.onethinker.domain.PlatformUser;
+import com.ruoyi.onethinker.domain.PlatformUserIntegral;
 import com.ruoyi.onethinker.domain.PlatformUserIntegralHistory;
 import com.ruoyi.onethinker.dto.PlatformUserIntegralReqDTO;
+import com.ruoyi.onethinker.dto.PlatformUserIntegralResDTO;
 import com.ruoyi.onethinker.mapper.PlatformUserIntegralMapper;
-import com.ruoyi.onethinker.domain.PlatformUserIntegral;
 import com.ruoyi.onethinker.service.IPlatformUserDetailService;
 import com.ruoyi.onethinker.service.IPlatformUserIntegralHistoryService;
 import com.ruoyi.onethinker.service.IPlatformUserIntegralService;
-import com.ruoyi.onethinker.service.IPlatformUserService;
 import lombok.extern.log4j.Log4j2;
 
 /**
@@ -90,7 +85,7 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
 
     private Map<String, String> queryActivityName(List<String> batchNoList) {
         //目前只有默认
-        Map<String,String> result = new HashMap<>();
+        Map<String,String> result = Maps.newHashMap();
         for (String s : batchNoList) {
             result.put(s,"平台" + s);
         }

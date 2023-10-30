@@ -3,8 +3,6 @@ package com.ruoyi.onethinker.dto;
 import com.ruoyi.onethinker.domain.PlatformUserDetail;
 import lombok.Data;
 
-import org.springframework.util.ObjectUtils;
-
 /**
  * @author : yangyouqi
  * @date : 2023/10/23 0023 21:28
