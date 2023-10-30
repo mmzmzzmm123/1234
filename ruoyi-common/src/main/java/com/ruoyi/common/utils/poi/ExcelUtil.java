@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -105,7 +104,7 @@ public class ExcelUtil<T> {
     /**
      * 用于dictType属性数据存储，避免重复查缓存
      */
-    public Map<String, String> sysDictMap = new HashMap<String, String>();
+    public Map<String, String> sysDictMap = Maps.newHashMap();
 
     /**
      * Excel sheet最大行数，默认65536
@@ -185,7 +184,7 @@ public class ExcelUtil<T> {
     /**
      * 统计列表
      */
-    private Map<Integer, Double> statistics = new HashMap<Integer, Double>();
+    private Map<Integer, Double> statistics = Maps.newHashMap();
 
     /**
      * 数字格式
@@ -347,7 +346,7 @@ public class ExcelUtil<T> {
             }
             // 有数据时才处理 得到类的所有field.
             List<Object[]> fields = this.getFields();
-            Map<Integer, Object[]> fieldsMap = new HashMap<Integer, Object[]>();
+            Map<Integer, Object[]> fieldsMap = Maps.newHashMap();
             for (Object[] objects : fields) {
                 Excel attr = (Excel) objects[1];
                 Integer column = cellMap.get(attr.name());
@@ -666,7 +665,7 @@ public class ExcelUtil<T> {
      */
     private Map<String, CellStyle> createStyles(Workbook wb) {
         // 写入各条记录,每条记录对应excel表中的一行
-        Map<String, CellStyle> styles = new HashMap<String, CellStyle>();
+        Map<String, CellStyle> styles = Maps.newHashMap();
         CellStyle style = wb.createCellStyle();
         style.setAlignment(HorizontalAlignment.CENTER);
         style.setVerticalAlignment(VerticalAlignment.CENTER);
@@ -717,7 +716,7 @@ public class ExcelUtil<T> {
      * @return 自定义样式列表
      */
     private Map<String, CellStyle> annotationHeaderStyles(Workbook wb, Map<String, CellStyle> styles) {
-        Map<String, CellStyle> headerStyles = new HashMap<String, CellStyle>();
+        Map<String, CellStyle> headerStyles = Maps.newHashMap();
         for (Object[] os : fields) {
             Excel excel = (Excel) os[1];
             String key = StringUtils.format("header_{}_{}", excel.headerColor(), excel.headerBackgroundColor());
@@ -747,7 +746,7 @@ public class ExcelUtil<T> {
      * @return 自定义样式列表
      */
     private Map<String, CellStyle> annotationDataStyles(Workbook wb) {
-        Map<String, CellStyle> styles = new HashMap<String, CellStyle>();
+        Map<String, CellStyle> styles = Maps.newHashMap();
         for (Object[] os : fields) {
             Excel excel = (Excel) os[1];
             String key = StringUtils.format("data_{}_{}_{}", excel.align(), excel.color(), excel.backgroundColor());
@@ -1359,7 +1358,7 @@ public class ExcelUtil<T> {
      * @return Map key:图片单元格索引（1_1）String，value:图片流PictureData
      */
     public static Map<String, PictureData> getSheetPictures03(HSSFSheet sheet, HSSFWorkbook workbook) {
-        Map<String, PictureData> sheetIndexPicMap = new HashMap<String, PictureData>();
+        Map<String, PictureData> sheetIndexPicMap = Maps.newHashMap();
         List<HSSFPictureData> pictures = workbook.getAllPictures();
         if (!pictures.isEmpty()) {
             for (HSSFShape shape : sheet.getDrawingPatriarch().getChildren()) {
@@ -1386,7 +1385,7 @@ public class ExcelUtil<T> {
      * @return Map key:图片单元格索引（1_1）String，value:图片流PictureData
      */
     public static Map<String, PictureData> getSheetPictures07(XSSFSheet sheet, XSSFWorkbook workbook) {
-        Map<String, PictureData> sheetIndexPicMap = new HashMap<String, PictureData>();
+        Map<String, PictureData> sheetIndexPicMap = Maps.newHashMap();
         for (POIXMLDocumentPart dr : sheet.getRelations()) {
             if (dr instanceof XSSFDrawing) {
                 XSSFDrawing drawing = (XSSFDrawing) dr;

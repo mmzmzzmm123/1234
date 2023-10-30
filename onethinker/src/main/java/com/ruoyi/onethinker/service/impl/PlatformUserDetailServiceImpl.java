@@ -49,39 +49,6 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
 
     @Resource
     private PlatformUserMapper platformUserMapper;
-    /**
-     * 查询平台用户详情信息
-     *
-     * @param id 平台用户详情信息主键
-     * @return 平台用户详情信息
-     */
-    @Override
-    public PlatformUserDetail selectPlatformUserDetailById(Long id) {
-        return platformUserDetailMapper.selectPlatformUserDetailById(id);
-    }
-
-    /**
-     * 查询平台用户详情信息列表
-     *
-     * @param platformUserDetail 平台用户详情信息
-     * @return 平台用户详情信息
-     */
-    @Override
-    public List<PlatformUserDetail> selectPlatformUserDetailList(PlatformUserDetail platformUserDetail) {
-        return platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
-    }
-
-    /**
-     * 新增平台用户详情信息
-     *
-     * @param platformUserDetail 平台用户详情信息
-     * @return 结果
-     */
-    @Override
-    public int insertPlatformUserDetail(PlatformUserDetail platformUserDetail) {
-        platformUserDetail.setCreateTime(DateUtils.getNowDate());
-        return platformUserDetailMapper.insertPlatformUserDetail(platformUserDetail);
-    }
 
     /**
      * 修改平台用户详情信息
@@ -93,28 +60,6 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
     public int updatePlatformUserDetail(PlatformUserDetail platformUserDetail) {
         platformUserDetail.setUpdateTime(DateUtils.getNowDate());
         return platformUserDetailMapper.updatePlatformUserDetail(platformUserDetail);
-    }
-
-    /**
-     * 批量删除平台用户详情信息
-     *
-     * @param ids 需要删除的平台用户详情信息主键
-     * @return 结果
-     */
-    @Override
-    public int deletePlatformUserDetailByIds(Long[] ids) {
-        return platformUserDetailMapper.deletePlatformUserDetailByIds(ids);
-    }
-
-    /**
-     * 删除平台用户详情信息信息
-     *
-     * @param id 平台用户详情信息主键
-     * @return 结果
-     */
-    @Override
-    public int deletePlatformUserDetailById(Long id) {
-        return platformUserDetailMapper.deletePlatformUserDetailById(id);
     }
 
     @Override

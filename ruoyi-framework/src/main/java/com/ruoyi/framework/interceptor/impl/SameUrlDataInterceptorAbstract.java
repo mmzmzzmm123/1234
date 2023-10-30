@@ -1,6 +1,5 @@
 package com.ruoyi.framework.interceptor.impl;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.google.common.collect.Maps;
 import com.alibaba.fastjson2.JSON;
 
 import com.ruoyi.common.annotation.RepeatSubmit;
@@ -52,7 +52,7 @@ public class SameUrlDataInterceptorAbstract extends AbstractRepeatSubmitIntercep
         if (StringUtils.isEmpty(nowParams)) {
             nowParams = JSON.toJSONString(request.getParameterMap());
         }
-        Map<String, Object> nowDataMap = new HashMap<String, Object>();
+        Map<String, Object> nowDataMap = Maps.newHashMap();
         nowDataMap.put(REPEAT_PARAMS, nowParams);
         nowDataMap.put(REPEAT_TIME, System.currentTimeMillis());
 
@@ -75,7 +75,7 @@ public class SameUrlDataInterceptorAbstract extends AbstractRepeatSubmitIntercep
                 }
             }
         }
-        Map<String, Object> cacheMap = new HashMap<String, Object>();
+        Map<String, Object> cacheMap = Maps.newHashMap();
         cacheMap.put(url, nowDataMap);
         redisCache.setCacheObject(cacheRepeatKey, cacheMap, annotation.interval(), TimeUnit.MILLISECONDS);
         return false;

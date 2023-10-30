@@ -17,7 +17,7 @@ import com.google.common.collect.Maps;
  *
  * @author ruoyi
  */
-public final class HTMLFilter {
+public final class HtmlFilter {
     /**
      * regex flag union representing /si modifiers in php
      **/
@@ -101,7 +101,7 @@ public final class HTMLFilter {
     /**
      * Default constructor.
      */
-    public HTMLFilter() {
+    public HtmlFilter() {
         vAllowed = Maps.newHashMap();
 
         final ArrayList<String> aAtts = new ArrayList<>();
@@ -140,7 +140,7 @@ public final class HTMLFilter {
      * @param conf map containing configuration. keys match field names.
      */
     @SuppressWarnings("unchecked")
-    public HTMLFilter(final Map<String, Object> conf) {
+    public HtmlFilter(final Map<String, Object> conf) {
 
         assert conf.containsKey("vAllowed") : "configuration requires vAllowed";
         assert conf.containsKey("vSelfClosingTags") : "configuration requires vSelfClosingTags";
@@ -344,10 +344,6 @@ public final class HTMLFilter {
                 for (int ii = 0; ii < paramNames.size(); ii++) {
                     paramName = paramNames.get(ii).toLowerCase();
                     paramValue = paramValues.get(ii);
-
-                    // debug( "paramName='" + paramName + "'" );
-                    // debug( "paramValue='" + paramValue + "'" );
-                    // debug( "allowed? " + vAllowed.get( name ).contains( paramName ) );
 
                     if (allowedAttribute(name, paramName)) {
                         if (inArray(paramName, vProtocolAtts)) {

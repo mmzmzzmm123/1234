@@ -133,7 +133,7 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
             throw new IllegalArgumentException("Invalid UUID string: " + name);
         }
         for (int i = 0; i < 5; i++) {
-            components[i] = "0x" + components[i];
+            components[i] = new String("0x" + components[i]);
         }
 
         long mostSigBits = Long.decode(components[0]).longValue();

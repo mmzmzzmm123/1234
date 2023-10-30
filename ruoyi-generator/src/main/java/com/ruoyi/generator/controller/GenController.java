@@ -1,7 +1,6 @@
 package com.ruoyi.generator.controller;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.common.collect.Maps;
 
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
@@ -65,7 +66,7 @@ public class GenController extends BaseController {
         GenTable table = genTableService.selectGenTableById(tableId);
         List<GenTable> tables = genTableService.selectGenTableAll();
         List<GenTableColumn> list = genTableColumnService.selectGenTableColumnListByTableId(tableId);
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = Maps.newHashMap();
         map.put("info", table);
         map.put("rows", list);
         map.put("tables", tables);

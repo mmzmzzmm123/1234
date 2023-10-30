@@ -1,6 +1,5 @@
 package com.ruoyi.framework.config;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.DispatcherType;
@@ -10,6 +9,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import com.google.common.collect.Maps;
 
 import com.ruoyi.common.filter.RepeatableFilter;
 import com.ruoyi.common.filter.XssFilter;
@@ -38,7 +39,7 @@ public class FilterConfig {
         registration.addUrlPatterns(StringUtils.split(urlPatterns, ","));
         registration.setName("xssFilter");
         registration.setOrder(FilterRegistrationBean.HIGHEST_PRECEDENCE);
-        Map<String, String> initParameters = new HashMap<String, String>();
+        Map<String, String> initParameters = Maps.newHashMap();
         initParameters.put("excludes", excludes);
         registration.setInitParameters(initParameters);
         return registration;
