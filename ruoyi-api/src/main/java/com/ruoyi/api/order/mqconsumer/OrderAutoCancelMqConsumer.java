@@ -6,6 +6,7 @@ import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.constant.SysTipsConstants;
 import com.ruoyi.common.enums.*;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.rocketmq.RocketMqService;
 import com.ruoyi.common.rocketmq.constants.MqConstants;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.order.domain.OrderDetails;
@@ -40,6 +41,7 @@ public class OrderAutoCancelMqConsumer implements RocketMQListener<Long> {
     private final PaymentOrderMapper paymentOrderMapper;
     private final PaymentRefundMapper paymentRefundMapper;
     private final ApiOrderService apiOrderService;
+    private final RocketMqService rocketMqService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -89,7 +91,7 @@ public class OrderAutoCancelMqConsumer implements RocketMQListener<Long> {
 
         // 余额退款业务
         if (PayWayEnums.AMOUNT_PAY.getCode().equals(orderInfo.getPayWay())) {
-            updateOi.setOrderState(OrderStateEnums.REFUNDED.getCode());
+            updateOi.setOrderState(OrderStateEnums.CANCEL.getCode());
             orderInfoMapper.updateOrderInfo(updateOi);
             // 更新订单详情状态
             orderDetailsMapper.updateStateByOrderId(orderId, OrderStateEnums.REFUNDED.getCode());
@@ -103,6 +105,8 @@ public class OrderAutoCancelMqConsumer implements RocketMQListener<Long> {
             paymentRefundMapper.insertPaymentRefund(paymentRefund);
             // 用户订单金额回退到余额中
             apiOrderService.balanceRefund(orderInfo);
+            // 发送取消通知
+            rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_CANCEL_NOTICE, orderInfo.getId());
             log.info("mq消费-订单未接单自动取消：描述，支付类型：余额，业务处理完毕");
         }
         log.info("mq消费-订单未接单自动取消：完成");

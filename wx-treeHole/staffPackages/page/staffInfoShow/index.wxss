@@ -296,3 +296,7 @@ page{
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
 }
+.trendsImageManyView:after {
+  content: "";
+  width: 32%;
+}

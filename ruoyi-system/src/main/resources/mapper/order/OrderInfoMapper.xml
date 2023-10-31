@@ -9,6 +9,7 @@
         <result property="orderNo" column="order_no"/>
         <result property="orderType" column="order_type"/>
         <result property="orderState" column="order_state"/>
+        <result property="commentState" column="comment_state" />
         <result property="ifContinuous" column="if_continuous"/>
         <result property="staffUserId" column="staff_user_id"/>
         <result property="staffLevel" column="staff_level"/>
@@ -50,6 +51,7 @@
                order_no,
                order_type,
                order_state,
+               comment_state,
                if_continuous,
                staff_user_id,
                staff_level,
@@ -84,6 +86,7 @@
             <if test="orderNo != null  and orderNo != ''">and order_no = #{orderNo}</if>
             <if test="orderType != null  and orderType != ''">and order_type = #{orderType}</if>
             <if test="orderState != null  and orderState != ''">and order_state = #{orderState}</if>
+            <if test="commentState != null  and commentState != ''">and comment_state = #{commentState}</if>
             <if test="ifContinuous != null  and ifContinuous != ''">and if_continuous = #{ifContinuous}</if>
             <if test="staffUserId != null ">and staff_user_id = #{staffUserId}</if>
             <if test="staffLevel != null ">and staff_level = #{staffLevel}</if>
@@ -125,6 +128,7 @@
             <if test="orderNo != null  and orderNo != ''">and order_no = #{orderNo}</if>
             <if test="orderType != null  and orderType != ''">and order_type = #{orderType}</if>
             <if test="orderState != null  and orderState != ''">and order_state = #{orderState}</if>
+            <if test="commentState != null  and commentState != ''">and comment_state = #{commentState}</if>
             <if test="ifContinuous != null  and ifContinuous != ''">and if_continuous = #{ifContinuous}</if>
             <if test="staffUserId != null ">and staff_user_id = #{staffUserId}</if>
             <if test="staffLevel != null ">and staff_level = #{staffLevel}</if>
@@ -210,6 +214,7 @@
             <if test="orderNo != null">order_no,</if>
             <if test="orderType != null">order_type,</if>
             <if test="orderState != null">order_state,</if>
+            <if test="commentState != null">comment_state,</if>
             <if test="ifContinuous != null">if_continuous,</if>
             <if test="staffUserId != null">staff_user_id,</if>
             <if test="staffLevel != null">staff_level,</if>
@@ -240,6 +245,7 @@
             <if test="orderNo != null">#{orderNo},</if>
             <if test="orderType != null">#{orderType},</if>
             <if test="orderState != null">#{orderState},</if>
+            <if test="commentState != null">#{commentState},</if>
             <if test="ifContinuous != null">#{ifContinuous},</if>
             <if test="staffUserId != null">#{staffUserId},</if>
             <if test="staffLevel != null">#{staffLevel},</if>
@@ -274,6 +280,7 @@
             <if test="orderNo != null">order_no = #{orderNo},</if>
             <if test="orderType != null">order_type = #{orderType},</if>
             <if test="orderState != null">order_state = #{orderState},</if>
+            <if test="commentState != null">comment_state = #{commentState},</if>
             <if test="ifContinuous != null">if_continuous = #{ifContinuous},</if>
             <if test="staffUserId != null">staff_user_id = #{staffUserId},</if>
             <if test="staffLevel != null">staff_level = #{staffLevel},</if>

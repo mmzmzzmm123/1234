@@ -3,6 +3,7 @@ package com.ruoyi.api.order.mqconsumer;
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.enums.OrderStateEnums;
+import com.ruoyi.common.enums.SysYesNoEnums;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.rocketmq.RocketMqService;
 import com.ruoyi.common.rocketmq.constants.MqConstants;
@@ -39,7 +40,6 @@ public class OrderAutoCommentMqConsumer implements RocketMQListener<Long> {
     private final OrderInfoMapper orderInfoMapper;
     private final OrderDetailsMapper orderDetailsMapper;
     private final OrderCommentMapper orderCommentMapper;
-    private final RocketMqService rocketMqService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -67,8 +67,7 @@ public class OrderAutoCommentMqConsumer implements RocketMQListener<Long> {
         // 开始构建订单
         OrderInfo updateOi = new OrderInfo();
         updateOi.setId(orderInfo.getId())
-                .setOrderState(OrderStateEnums.FINISH.getCode())
-                .setOrderFinshTime(now)
+                .setCommentState(SysYesNoEnums.YES.getCode())
                 .setUpdateTime(now);
         orderInfoMapper.updateOrderInfo(updateOi);
         // 评论信息

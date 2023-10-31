@@ -2,9 +2,13 @@ package com.ruoyi.api.common.mqconsumer;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.api.wechat.constant.WechatMediaIdConstant;
+import com.ruoyi.common.constant.WxMpTemplateIdConstants;
+import com.ruoyi.common.enums.OrderTypeEnums;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.rocketmq.constants.MqConstants;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.weixin.WxMpTemplateMassageService;
 import com.ruoyi.common.weixin.properties.WxProperties;
 import com.ruoyi.common.weixin.service.WechatMsgReplyService;
 import com.ruoyi.order.domain.OrderInfo;
@@ -13,10 +17,16 @@ import com.ruoyi.user.mapper.UserInfoMapper;
 import com.ruoyi.user.mapper.UserOfficialAccountMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import me.chanjar.weixin.mp.builder.kefu.MiniProgramPageBuilder;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author LAM
@@ -32,7 +42,7 @@ public class OrderFinishNoticeMqConsumer implements RocketMQListener<Long> {
     private final UserInfoMapper userInfoMapper;
     private final OrderInfoMapper orderInfoMapper;
     private final WxProperties wxProperties;
-    private final WechatMsgReplyService wechatMsgReplyService;
+    private final WxMpTemplateMassageService wxMpTemplateMassageService;
 
     @Override
     public void onMessage(Long orderId) {
@@ -42,32 +52,52 @@ public class OrderFinishNoticeMqConsumer implements RocketMQListener<Long> {
             log.warn("mq消费-订单完成通知：失败，查询订单信息为空");
             throw new ServiceException("mq消费-订单完成通知：失败，查询订单信息为空");
         }
-        // 客户数据通知
-        String customUserUnionId = userInfoMapper.getUnionIdById(orderInfo.getCustomUserId());
-        if (StringUtils.isNotBlank(customUserUnionId)) {
-            String customUserOpenId = userOfficialAccountMapper.getOpenIdByUnionId(customUserUnionId);
-            if (StringUtils.isNotBlank(customUserOpenId)) {
-                MiniProgramPageBuilder miniProgramPageBuilder = new MiniProgramPageBuilder();
-                miniProgramPageBuilder.appId(wxProperties.getMiNiApplet().getAppId())
-                        .title("订单完成通知")
-                        .pagePath("orderPackages/page/list/index")
-                        .thumbMediaId(WechatMediaIdConstant.WX_MINI_INDEX_IMG);
-                wechatMsgReplyService.replyMiniProgram(customUserOpenId, miniProgramPageBuilder);
-            }
-        }
         // 店员通知
         String staffUnionId = userInfoMapper.getUnionIdById(orderInfo.getStaffUserId());
         if (StringUtils.isNotBlank(staffUnionId)) {
             String staffOpenId = userOfficialAccountMapper.getOpenIdByUnionId(staffUnionId);
             if (StringUtils.isNotBlank(staffOpenId)) {
-                MiniProgramPageBuilder miniProgramPageBuilder = new MiniProgramPageBuilder();
-                miniProgramPageBuilder.appId(wxProperties.getMiNiApplet().getAppId())
-                        .title("订单完成通知")
-                        .pagePath("staffPackages/page/staffOrder/index")
-                        .thumbMediaId(WechatMediaIdConstant.WX_MINI_INDEX_IMG);
-                wechatMsgReplyService.replyMiniProgram(staffOpenId, miniProgramPageBuilder);
+                wxMpTemplateMassageService.wxMpSendTemplateMessage(buildMessageTemplate(orderInfo, staffOpenId, "staffPackages/page/staffOrder/index"));
+            }
+        }
+        // 客户数据通知
+        String customUserUnionId = userInfoMapper.getUnionIdById(orderInfo.getCustomUserId());
+        if (StringUtils.isNotBlank(customUserUnionId)) {
+            String customUserOpenId = userOfficialAccountMapper.getOpenIdByUnionId(customUserUnionId);
+            if (StringUtils.isNotBlank(customUserOpenId)) {
+                wxMpTemplateMassageService.wxMpSendTemplateMessage(buildMessageTemplate(orderInfo, customUserOpenId, "orderPackages/page/list/index"));
             }
         }
         log.info("mq消费-订单完成通知：完成");
+    }
+
+    /**
+     * 构建公众号模板消息
+     *
+     * @param orderInfo 订单信息
+     * @param openId 用户openid
+     * @param pagePath 小程序路径
+     * @return 结果
+     * */
+    private WxMpTemplateMessage buildMessageTemplate(OrderInfo orderInfo, String openId, String pagePath){
+        OrderTypeEnums orderTypeEnums = OrderTypeEnums.getByCode(orderInfo.getOrderType());
+        // 构建用户消息提醒
+        WxMpTemplateMessage message = new WxMpTemplateMessage();
+        // 基本信息设置
+        message.setToUser(openId);
+        message.setTemplateId(WxMpTemplateIdConstants.ORDER_FINISH);
+        // 跳转到小程序中
+        WxMpTemplateMessage.MiniProgram miniProgram = new WxMpTemplateMessage.MiniProgram();
+        miniProgram.setAppid(wxProperties.getMiNiApplet().getAppId());
+        message.setMiniProgram(miniProgram);
+        miniProgram.setPagePath(pagePath);
+        // 模板数据
+        Map<String,String> dataMap = new HashMap<>();
+        dataMap.put("number1", orderInfo.getOrderNo());
+        dataMap.put("phrase2", ObjectUtil.isNotNull(orderTypeEnums)?orderTypeEnums.getDesc():"未知");
+        dataMap.put("time5", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM, orderInfo.getOrderFinshTime()));
+        List<WxMpTemplateData> wxMpTemplateData = WxMpTemplateMassageService.MapToData(dataMap);
+        message.setData(wxMpTemplateData);
+        return message;
     }
 }

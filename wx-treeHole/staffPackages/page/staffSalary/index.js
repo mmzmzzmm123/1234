@@ -206,8 +206,8 @@ Page({
     let week = weekList[weekIndex];
     let weekArr = week.split("至");
     let params = {
-      beginCreateTime: weekArr[0],
-      endCreateTime: weekArr[1]
+      beginCreateTime: weekArr[0]+" 00:00:00",
+      endCreateTime: weekArr[1]+" 23:59:59"
     }
     let staffUserId = this.data.staffUserId;
     if(staffUserId != null){

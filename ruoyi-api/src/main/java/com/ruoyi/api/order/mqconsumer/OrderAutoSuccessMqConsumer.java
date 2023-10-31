@@ -52,10 +52,12 @@ public class OrderAutoSuccessMqConsumer implements RocketMQListener<Long> {
             rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_SUCCESS, orderId, MqDelayLevelEnums.level_17);
             return;
         }
+        Date now = DateUtils.getNowDate();
         // 此处可以使订单进入下一个状态
         OrderInfo updateOi = new OrderInfo();
         updateOi.setId(orderId)
-                .setOrderState(OrderStateEnums.WAIT_COMMENT.getCode())
+                .setOrderState(OrderStateEnums.FINISH.getCode())
+                .setOrderFinshTime(now)
                 .setUpdateTime(DateUtils.getNowDate());
         orderInfoMapper.updateOrderInfo(updateOi);
         // 发送订单完成通知

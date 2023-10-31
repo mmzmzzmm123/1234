@@ -39,6 +39,9 @@ public class ApiOrderInfoVo implements Serializable {
     @ApiModelProperty("订单状态")
     private String orderState;
 
+    @ApiModelProperty("评论状态")
+    private String commentState;
+
     @ApiModelProperty("是否续单")
     private String ifContinuous;
 

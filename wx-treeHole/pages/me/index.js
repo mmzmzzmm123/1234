@@ -595,4 +595,10 @@ Page({
       })
     }
   },
+  /**
+   * 联系我们
+   */
+  contactUs:function(){
+    
+  }
 })

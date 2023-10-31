@@ -525,7 +525,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @param size 字符串指定长度
      * @return 返回数字的字符串格式，该字符串为指定长度。
      */
-    public static final String padl(final Number num, final int size) {
+    public static String padl(final Number num, final int size) {
         return padl(num.toString(), size, '0');
     }
 
@@ -537,7 +537,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
      * @param c    用于补齐的字符
      * @return 返回指定长度的字符串，由原字符串左补齐或截取得到。
      */
-    public static final String padl(final String s, final int size, final char c) {
+    public static String padl(final String s, final int size, final char c) {
         final StringBuilder sb = new StringBuilder(size);
         if (s != null) {
             final int len = s.length();
@@ -555,5 +555,18 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
             }
         }
         return sb.toString();
+    }
+
+    /**
+     * 字符串超过20个字符使用省略号
+     *
+     * @param str 字符串
+     * @return 结果
+     * */
+    public static String overHide_20(String str){
+        if (str.length() > 20){
+            str = str.substring(0, 17)+"...";
+        }
+        return str;
     }
 }

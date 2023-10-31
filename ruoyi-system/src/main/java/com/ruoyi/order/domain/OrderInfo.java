@@ -47,6 +47,10 @@ public class OrderInfo extends BaseEntity {
     @ApiModelProperty("订单状态")
     private String orderState;
 
+    @Excel(name = "评论状态", dictType = "sys_yes_no")
+    @ApiModelProperty(value = "评论状态")
+    private String commentState;
+
     /** 是否续单 */
     @Excel(name = "是否续单")
     @ApiModelProperty("是否续单")

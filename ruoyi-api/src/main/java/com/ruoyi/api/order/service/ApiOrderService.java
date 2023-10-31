@@ -1,6 +1,5 @@
 package com.ruoyi.api.order.service;
 
-import cn.binarywang.wx.miniapp.api.WxMaSecCheckService;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
@@ -64,9 +63,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
@@ -128,8 +124,6 @@ public class ApiOrderService {
             log.warn("礼物赠送订单提交：失败，礼物信息/店员等级配置信息为空");
             throw new ServiceException("亲爱的，系统繁忙，请稍后重试", HttpStatus.WARN_WX);
         }
-        // 当前时间
-        Date now = DateUtils.getNowDate();
         // 续单首单结果
         Boolean ifContinuous = ifContinuous(TokenUtils.getUserId(), dto.getStaffId());
         // 金额计算
@@ -229,8 +223,6 @@ public class ApiOrderService {
         }
         // 当前用户标识
         Long userId = TokenUtils.getUserId();
-        // 当前时间
-        Date now = DateUtils.getNowDate();
         // 自动取消时间
         String autoCancelTime = DateUtils.rollMinute(5, DateUtils.YYYY_MM_DD_HH_MM_SS);
         // 续单首单结果
@@ -966,11 +958,13 @@ public class ApiOrderService {
         // 开始构建订单
         OrderInfo updateOi = new OrderInfo();
         updateOi.setId(orderInfo.getId())
-                .setOrderState(OrderStateEnums.FINISH.getCode())
-                .setOrderFinshTime(now)
+                .setCommentState(SysYesNoEnums.YES.getCode())
                 .setUpdateTime(now);
+        if (OrderStateEnums.SERVICE_ING.getCode().equals(orderInfo.getOrderState())){
+            updateOi.setOrderState(OrderStateEnums.FINISH.getCode())
+                    .setOrderFinshTime(now);
+        }
         orderInfoMapper.updateOrderInfo(updateOi);
-
         // 订单评论构建
         String comment = "默认好评";
         if (StringUtils.isNotBlank(dto.getComment())) {
@@ -986,10 +980,9 @@ public class ApiOrderService {
                 .setServiceContent(orderDetails.getDetailsTitle())
                 .setCreateTime(now);
         orderCommentMapper.insertOrderComment(orderComment);
-        // 发送订单完成通知
-        rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_FINISH_NOTICE, orderInfo.getId());
-        // 订单佣金结算
+        // 订单佣金结算/订单完成通知
         if (OrderStateEnums.SERVICE_ING.getCode().equals(orderInfo.getOrderState())) {
+            rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_FINISH_NOTICE, orderInfo.getId());
             rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_COMMISSION_SETTLEMENT, orderInfo.getId());
         }
         log.info("订单完成：完成");

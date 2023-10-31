@@ -41,7 +41,7 @@
                       </view>
                     </view>
                   </view>
-                  <view class="view_box_common" wx:if="{{dataItem.orderState=='-1' || dataItem.orderState=='0' || dataItem.orderState=='1' || dataItem.orderState=='2' || dataItem.orderState=='3' || dataItem.orderState=='4' || dataItem.orderState=='5'}}">
+                  <view class="view_box_common" wx:if="{{dataItem.orderState=='-1' || dataItem.orderState=='0' || dataItem.orderState=='1' || dataItem.orderState=='2' || dataItem.orderState=='3' || dataItem.orderState=='4'}}">
                     <view class="seizeSeat_mini"></view>
                     <view class="cut_off_rule_small"></view>
                     <view class="seizeSeat_mini"></view>
@@ -49,7 +49,7 @@
                   <view class="view_box_common view_box_row_content_symmetry">
                     <view></view>
                     <view class="view_box_row_content">
-                      <view class="orderButItem badgeLevel_1" wx:if="{{dataItem.orderState=='5'}}" data-index="{{dataIndex}}" catch:tap="orderFinishCli">前往评价</view>
+                      <view class="orderButItem badgeLevel_1" wx:if="{{dataItem.orderState=='0' && dataItem.commentState=='N'}}" data-index="{{dataIndex}}" catch:tap="orderFinishCli">前往评价</view>
                       <view class="orderButItem badgeLevel_4" wx:if="{{dataItem.orderState=='1' || dataItem.orderState=='2' || dataItem.orderState=='3'}}" data-index="{{dataIndex}}" catch:tap="cancelOrderCli">取消订单</view>
                       <view class="orderButItem badgeLevel_2" wx:if="{{dataItem.orderState=='4'}}" data-index="{{dataIndex}}" catch:tap="orderFinishCli">服务完成</view>
                       <view class="orderButItem badgeLevel_3" wx:if="{{dataItem.orderState=='1' && dataItem.payWay == '0'}}" data-index="{{dataIndex}}" catch:tap="payAgainCli">立即支付</view>

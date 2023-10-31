@@ -29,6 +29,16 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="评论状态" prop="commentState">
+        <el-select v-model="queryParams.commentState" placeholder="请选择评论状态" clearable>
+          <el-option
+            v-for="dict in dict.type.sys_yes_no"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="是否续单" prop="ifContinuous">
         <el-select v-model="queryParams.ifContinuous" placeholder="请选择是否续单" clearable>
           <el-option
@@ -226,6 +236,11 @@
           <dict-tag :options="dict.type.order_stater" :value="scope.row.orderState"/>
         </template>
       </el-table-column>
+      <el-table-column label="评论状态" align="center" prop="commentState" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.commentState"/>
+        </template>
+      </el-table-column>
       <el-table-column label="是否续单" align="center" prop="ifContinuous" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.sys_yes_no" :value="scope.row.ifContinuous"/>
@@ -361,6 +376,16 @@
           <el-select v-model="form.orderState" placeholder="请选择订单状态">
             <el-option
               v-for="dict in dict.type.order_stater"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.value"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="评论状态" prop="commentState">
+          <el-select v-model="form.commentState" placeholder="请选择评论状态">
+            <el-option
+              v-for="dict in dict.type.sys_yes_no"
               :key="dict.value"
               :label="dict.label"
               :value="dict.value"
@@ -564,6 +589,7 @@ export default {
         orderNo: null,
         orderType: null,
         orderState: null,
+        commentState: null,
         ifContinuous: null,
         staffUserId: null,
         customUserId: null,
@@ -636,6 +662,7 @@ export default {
         orderNo: null,
         orderType: null,
         orderState: null,
+        commentState: null,
         ifContinuous: null,
         staffUserId: null,
         staffLevel: null,

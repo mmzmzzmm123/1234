@@ -25,7 +25,7 @@
                 <view class="view_box_common trendsItemView">
                   <view class="view_box_common">
                     <view class="view_box_row_content_symmetry trendsTxAndNameInfo" data-staffid="{{dataItem.staffInfoVo.userId}}" bind:tap="toShowStaffInfo">
-                      <image src="{{dataItem.staffInfoVo.avatarUrl != null ? dataItem.staffInfoVo.avatarUrl : '../../static/images/default_tx.png'}}" class="trendsTx"></image>
+                      <image src="{{dataItem.staffInfoVo.avatarUrl != null ? dataItem.staffInfoVo.avatarUrl : '../../static/images/default_tx.png'}}" class="trendsTx" mode="aspectFill"></image>
                       <view class="view_box_row_content_symmetry" style="width: {{pWidth*0.92*0.92-50}}px;height: 92%;">
                         <view class="trendsName">
                           <view class="view_box_row_content">

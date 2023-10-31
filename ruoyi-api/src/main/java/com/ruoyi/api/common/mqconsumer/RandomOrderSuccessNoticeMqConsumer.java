@@ -3,13 +3,16 @@ package com.ruoyi.api.common.mqconsumer;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.api.wechat.constant.WechatMediaIdConstant;
+import com.ruoyi.common.constant.WxMpTemplateIdConstants;
 import com.ruoyi.common.enums.OrderStateEnums;
 import com.ruoyi.common.enums.OrderTypeEnums;
 import com.ruoyi.common.enums.StaffStateEnums;
 import com.ruoyi.common.enums.SysYesNoEnums;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.rocketmq.constants.MqConstants;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.weixin.WxMpTemplateMassageService;
 import com.ruoyi.common.weixin.properties.WxProperties;
 import com.ruoyi.common.weixin.service.WechatMsgReplyService;
 import com.ruoyi.order.domain.OrderDetails;
@@ -22,13 +25,17 @@ import com.ruoyi.user.mapper.UserInfoMapper;
 import com.ruoyi.user.mapper.UserOfficialAccountMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateData;
+import me.chanjar.weixin.mp.bean.template.WxMpTemplateMessage;
 import me.chanjar.weixin.mp.builder.kefu.MiniProgramPageBuilder;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -46,8 +53,8 @@ public class RandomOrderSuccessNoticeMqConsumer implements RocketMQListener<Long
     private final OrderInfoMapper orderInfoMapper;
     private final OrderDetailsMapper orderDetailsMapper;
     private final WxProperties wxProperties;
-    private final WechatMsgReplyService wechatMsgReplyService;
     private final StaffInfoMapper staffInfoMapper;
+    private final WxMpTemplateMassageService wxMpTemplateMassageService;
 
     @Override
     public void onMessage(Long orderId) {
@@ -70,12 +77,24 @@ public class RandomOrderSuccessNoticeMqConsumer implements RocketMQListener<Long
         if (StringUtils.isNotBlank(customUserUnionId)) {
             String customUserOpenId = userOfficialAccountMapper.getOpenIdByUnionId(customUserUnionId);
             if (StringUtils.isNotBlank(customUserOpenId)) {
-                MiniProgramPageBuilder miniProgramPageBuilder = new MiniProgramPageBuilder();
-                miniProgramPageBuilder.appId(wxProperties.getMiNiApplet().getAppId())
-                        .title("随机单下单成功")
-                        .pagePath("orderPackages/page/list/index")
-                        .thumbMediaId(WechatMediaIdConstant.WX_MINI_INDEX_IMG);
-                wechatMsgReplyService.replyMiniProgram(customUserOpenId, miniProgramPageBuilder);
+                // 构建用户消息提醒
+                WxMpTemplateMessage userMessage = new WxMpTemplateMessage();
+                userMessage.setToUser(customUserOpenId);
+                userMessage.setTemplateId(WxMpTemplateIdConstants.PAY_ORDER_SUCCESS);
+                // 模板数据
+                Map<String,String> dataMap = new HashMap<>();
+                dataMap.put("number1", orderInfo.getOrderNo());
+                dataMap.put("phrase2", OrderTypeEnums.RANDOM.getDesc());
+                dataMap.put("amount3", orderInfo.getPayAmount().toString());
+                dataMap.put("time4", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM, orderInfo.getCreateTime()));
+                List<WxMpTemplateData> wxMpTemplateData = WxMpTemplateMassageService.MapToData(dataMap);
+                userMessage.setData(wxMpTemplateData);
+                // 跳转到小程序中
+                WxMpTemplateMessage.MiniProgram miniProgram = new WxMpTemplateMessage.MiniProgram();
+                miniProgram.setPagePath("orderPackages/page/list/index");
+                miniProgram.setAppid(wxProperties.getMiNiApplet().getAppId());
+                userMessage.setMiniProgram(miniProgram);
+                wxMpTemplateMassageService.wxMpSendTemplateMessage(userMessage);
             }
         }
 
@@ -117,12 +136,24 @@ public class RandomOrderSuccessNoticeMqConsumer implements RocketMQListener<Long
                 if (StringUtils.isNotBlank(staffUnionId)){
                     String staffOpenId = userOfficialAccountMapper.getOpenIdByUnionId(staffUnionId);
                     if (StringUtils.isNotBlank(staffOpenId)) {
-                        MiniProgramPageBuilder miniProgramPageBuilder = new MiniProgramPageBuilder();
-                        miniProgramPageBuilder.appId(wxProperties.getMiNiApplet().getAppId())
-                                .title("有一笔随机单待接单")
-                                .pagePath("staffPackages/page/staffOrder/index")
-                                .thumbMediaId(WechatMediaIdConstant.WX_MINI_INDEX_IMG);
-                        wechatMsgReplyService.replyMiniProgram(staffOpenId, miniProgramPageBuilder);
+                        // 构建消息模板数据
+                        WxMpTemplateMessage staffMessage = new WxMpTemplateMessage();
+                        staffMessage.setTemplateId(WxMpTemplateIdConstants.NEW_ORDER_TIPS_ID);
+                        staffMessage.setToUser(staffOpenId);
+                        // 模板数据
+                        Map<String,String> dataMap = new HashMap<>();
+                        dataMap.put("character_string2", orderInfo.getOrderNo());
+                        dataMap.put("thing9", StringUtils.overHide_20(OrderTypeEnums.RANDOM.getDesc()+"，备注："+(StringUtils.isNotBlank(orderInfo.getRemark())?orderInfo.getRemark():"无")));
+                        dataMap.put("amount3", orderInfo.getPayAmount().toString());
+                        dataMap.put("time5", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM, orderInfo.getCreateTime()));
+                        List<WxMpTemplateData> wxMpTemplateData = WxMpTemplateMassageService.MapToData(dataMap);
+                        staffMessage.setData(wxMpTemplateData);
+                        // 跳转到小程序中
+                        WxMpTemplateMessage.MiniProgram miniProgram = new WxMpTemplateMessage.MiniProgram();
+                        miniProgram.setPagePath("staffPackages/page/staffOrder/index");
+                        miniProgram.setAppid(wxProperties.getMiNiApplet().getAppId());
+                        staffMessage.setMiniProgram(miniProgram);
+                        wxMpTemplateMassageService.wxMpSendTemplateMessage(staffMessage);
                     }
                 }
             });

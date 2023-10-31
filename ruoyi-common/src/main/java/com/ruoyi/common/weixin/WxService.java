@@ -35,7 +35,6 @@ import org.springframework.stereotype.Service;
 public class WxService {
 
     private final WxMaService wxMiniAppletService;
-    private final WxMpService wxOfficialAccountService;
     private final WxPayService wxPayService;
     private final WxPayInfoProperties wxPayInfoProperties;
 
@@ -153,20 +152,5 @@ public class WxService {
             wxPayRefundRequest.setRefundDesc(dto.getRefundDesc());
         }
         return wxPayService.refundV2(wxPayRefundRequest);
-    }
-
-    /**
-     * 发送公众号模板消息
-     */
-    public void wxMpSendTemplateMessage(WxMpTemplateMessage templateMessage) {
-        log.info("发送公众号模板消息：开始，参数：{}", templateMessage);
-        try {
-            String result = wxOfficialAccountService.getTemplateMsgService().sendTemplateMsg(templateMessage);
-            log.info("发送公众号模板消息：完成，返回数据：{}", result);
-        }catch (Exception e){
-            e.printStackTrace();
-            log.warn("发送公众号模板消息：异常，异常消息：{}", e.getMessage());
-        }
-        log.info("发送公众号模板消息：完成");
     }
 }
