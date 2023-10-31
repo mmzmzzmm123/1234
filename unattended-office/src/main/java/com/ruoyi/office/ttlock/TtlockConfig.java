@@ -11,8 +11,11 @@ import com.ruoyi.office.domain.vo.*;
 import com.ruoyi.office.horn.HornSendMsg;
 import com.ruoyi.office.horn.HornSendMsgData;
 import com.ruoyi.office.horn.HornSendMsgDataInfo;
+import com.ruoyi.office.util.WxMsgSender;
 import com.ruoyi.system.service.ISysDictDataService;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
@@ -30,6 +33,8 @@ import java.util.stream.Collectors;
 
 @Configuration
 public class TtlockConfig {
+
+    protected static final Logger logger = LoggerFactory.getLogger(TtlockConfig.class);
 
     public static String clientId;
     public static String clientSecret;
@@ -59,7 +64,7 @@ public class TtlockConfig {
         ttlockTokenReq.setUsername(username);
         ttlockTokenReq.setPassword(password);
         String contentType = "application/x-www-form-urlencoded";
-        String response = HttpUtils.sendPostByType(TtlockConfig.url + "/oauth2/token", JSONObject.toJSONString(ttlockTokenReq), contentType);
+        String response = HttpUtils.sendPostByType(TtlockConfig.url + "/oauth2/token", toFormUrlEncodedString(ttlockTokenReq), contentType);
         TtlockTokenRes res = JSONObject.parseObject(response, TtlockTokenRes.class);
         return res;
     }
@@ -77,7 +82,8 @@ public class TtlockConfig {
         if ("0".equalsIgnoreCase(res.getErrcode())) {
             return res;
         } else {
-            throw new ServiceException("通通锁开锁失败:" + res.getErrmsg());
+            logger.error("通通锁TTLOCK开锁失败：" + res.getErrcode() + res.getErrmsg() + res.getDescription());
+            throw new ServiceException("锁不在线或网络信号弱");
         }
     }
 
@@ -93,7 +99,8 @@ public class TtlockConfig {
         if ("0".equalsIgnoreCase(res.getErrcode())) {
             return res;
         } else {
-            throw new ServiceException("通通锁关锁失败:" + res.getErrmsg());
+            logger.error("通通锁TTLOCK关锁失败：" + res.getErrcode() + res.getErrmsg() + res.getDescription());
+            throw new ServiceException("锁不在线或网络信号弱");
         }
     }
 

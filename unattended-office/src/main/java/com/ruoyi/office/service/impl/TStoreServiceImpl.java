@@ -9,10 +9,13 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
+import com.ruoyi.office.domain.vo.TtlockGatewayRes;
+import com.ruoyi.office.domain.vo.TtlockTokenRes;
 import com.ruoyi.office.domain.vo.WxStoreListQryVo;
 import com.ruoyi.office.domain.vo.WxStoreListRspVo;
 import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.service.*;
+import com.ruoyi.office.ttlock.TtlockConfig;
 import com.ruoyi.system.service.ISysDictDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -151,22 +154,36 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
         if (equipment == null) {
             throw new ServiceException("未找到门店大门设备,请联系管理员");
         }
+        if (equipment.getEquipType().equalsIgnoreCase(OfficeEnum.EquipType.DOOR.getCode())) {
+            SysDictData dictData = new SysDictData();
+            dictData.setDictType("equipment_type");
+            Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
 
-        SysDictData dictData = new SysDictData();
-        dictData.setDictType("equipment_type");
-        Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
+            Map<String, String> msg = new HashMap<>();
+            if (equipDict.containsKey(OfficeEnum.EquipType.DOOR.getCode())) {
+                String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
+                msg.put(command[0], command[1]);
+            } else {
+                throw new ServiceException("未设置门禁开门代码");
+            }
+            MqttSendClient sendClient = new MqttSendClient();
+            sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
 
-        Map<String, String> msg = new HashMap<>();
-        if (equipDict.containsKey(OfficeEnum.EquipType.DOOR.getCode())) {
-            String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
-            msg.put(command[0], command[1]);
+        } else if (equipment.getEquipType().equalsIgnoreCase(OfficeEnum.EquipType.TTLOCK.getCode())) {
+            try {
+                String username = store.getTtlockUname();
+                String password = store.getTtlockPwd();
+                TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                String lockId = equipment.getEquipControl();
+                TtlockGatewayRes res = TtlockConfig.unlock(ttlockTokenRes.getAccess_token(), lockId);
+
+
+            } catch (Exception e) {
+                throw new ServiceException(e.getMessage());
+            }
         } else {
-            throw new ServiceException("未设置门禁开门代码");
+            throw new ServiceException("门店设备类型异常");
         }
-
-        MqttSendClient sendClient = new MqttSendClient();
-        sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
-
         equipment.setRecentOpenTime(new Date());
         equipment.setOnOff("Y");
         equipmentService.updateTEquipment(equipment);
@@ -177,24 +194,34 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
         TStore store = tStoreMapper.selectTStoreById(id);
         TEquipment equipment = equipmentService.selectTEquipmentById(store.getEquipId());
 
-        SysDictData dictData = new SysDictData();
-        dictData.setDictType("equipment_type");
-        Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
+        if (equipment.getEquipType().equalsIgnoreCase(OfficeEnum.EquipType.DOOR.getCode())) {
+            SysDictData dictData = new SysDictData();
+            dictData.setDictType("equipment_type");
+            Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
 
-        Map<String, String> msg = new HashMap<>();
-        if (!OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(equipment.getEquipType())) {
-            throw new ServiceException("该门店未设置门禁,请联系管理员");
-        }
-        if (equipDict.containsKey(OfficeEnum.EquipType.DOOR.getCode())) {
-            String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
-            msg.put(command[0], command[1]);
+            Map<String, String> msg = new HashMap<>();
+            if (equipDict.containsKey(OfficeEnum.EquipType.DOOR.getCode())) {
+                String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
+                msg.put(command[0], command[1]);
+            } else {
+                throw new ServiceException("未找到门禁设备代码,请联系管理员");
+            }
+
+            MqttSendClient sendClient = new MqttSendClient();
+            sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+        } else if (equipment.getEquipType().equalsIgnoreCase(OfficeEnum.EquipType.TTLOCK.getCode())) {
+            try {
+                String username = store.getTtlockUname();
+                String password = store.getTtlockPwd();
+                TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                String lockId = equipment.getEquipControl();
+                TtlockGatewayRes res = TtlockConfig.unlock(ttlockTokenRes.getAccess_token(), lockId);
+            } catch (Exception e) {
+                throw new ServiceException(e.getMessage());
+            }
         } else {
-            throw new ServiceException("未找到门禁设备代码,请联系管理员");
+            throw new ServiceException("门店设备类型异常");
         }
-
-        MqttSendClient sendClient = new MqttSendClient();
-        sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
-
         equipment.setRecentOpenTime(new Date());
         equipment.setOnOff("Y");
         equipmentService.updateTEquipment(equipment);

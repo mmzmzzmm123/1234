@@ -12,11 +12,19 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.office.domain.TRoom;
+import com.ruoyi.office.domain.TStore;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.EquipeAvailableQryVo;
+import com.ruoyi.office.domain.vo.TtlockGatewayRes;
+import com.ruoyi.office.domain.vo.TtlockTokenRes;
 import com.ruoyi.office.mqtt.MqttAcceptClient;
 import com.ruoyi.office.mqtt.MqttSendClient;
+import com.ruoyi.office.service.ITRoomService;
+import com.ruoyi.office.service.ITStoreService;
+import com.ruoyi.office.ttlock.TtlockConfig;
 import com.ruoyi.system.service.ISysDictDataService;
+import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -118,6 +126,9 @@ public class TEquipmentController extends BaseController {
     @Autowired
     ISysDictDataService dictDataService;
 
+    @Autowired
+    ITStoreService storeService;
+
     @PutMapping("/setting")
     public AjaxResult setDevice(@RequestBody TEquipment tEquipment) {
         MqttSendClient sendClient = new MqttSendClient();
@@ -141,8 +152,18 @@ public class TEquipmentController extends BaseController {
                 } else if (OfficeEnum.EquipType.MACHINE.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
                     String[] command = equipDict.get(OfficeEnum.EquipType.MACHINE.getCode()).split(",")[0].split(":");
                     msg.put(command[0], command[1]);
-                } else
-                    throw new ServiceException("未知类型设备");
+                } else if (OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
+                    TRoom room = getEquipRoom(qry.getId());
+                    TStore store = storeService.selectTStoreById(room.getStoreId());
+                    String username = store.getTtlockUname();
+                    String password = store.getTtlockPwd();
+                    TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                    String lockId = qry.getEquipControl();
+                    TtlockGatewayRes res = TtlockConfig.lock(ttlockTokenRes.getAccess_token(), lockId);
+
+                } else {
+                    return AjaxResult.error("未知类型设备或无需打开关闭设备");
+                }
 
                 sendClient.publish(qry.getEquipControl(), JSONObject.toJSONString(msg));
                 tEquipment.setRecentOpenTime(new Date());
@@ -160,13 +181,26 @@ public class TEquipmentController extends BaseController {
                 } else if (OfficeEnum.EquipType.MACHINE.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
                     String[] command = equipDict.get(OfficeEnum.EquipType.MACHINE.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
-                } else
-                    throw new ServiceException("未知类型设备");
+                } else if (OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
+
+                    TRoom room = getEquipRoom(qry.getId());
+                    TStore store = storeService.selectTStoreById(room.getStoreId());
+                    String username = store.getTtlockUname();
+                    String password = store.getTtlockPwd();
+                    TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                    String lockId = qry.getEquipControl();
+                    TtlockGatewayRes res = TtlockConfig.unlock(ttlockTokenRes.getAccess_token(), lockId);
+
+                } else {
+//                    throw new ServiceException("未知类型设备");
+                    return AjaxResult.error("未知类型设备或无需打开关闭设备");
+                }
 
                 sendClient.publish(qry.getEquipControl(), JSONObject.toJSONString(msg));
             }
         } catch (Exception e) {
-            throw new ServiceException("操作失败" + e.getMessage());
+//            throw new ServiceException("操作失败" + e.getMessage());
+            return AjaxResult.error("操作失败" + e.getMessage());
         }
         // messageArrived 里面处理 消息发送到接收端时触发；
         tEquipment.setUpdateBy(SecurityUtils.getUserId() + "");
@@ -196,6 +230,20 @@ public class TEquipmentController extends BaseController {
         tEquipment.setCreateBy(SecurityUtils.getUserId() + "");
         List<TEquipment> list = tEquipmentService.selectAvailableEquipmentList(tEquipment);
         return getDataTable(list);
+    }
+
+    @Autowired
+    ITRoomService roomService;
+
+    public TRoom getEquipRoom(Long equipId) {
+        final List<TRoom> tRooms = roomService.selectTRoomList(new TRoom());
+        for (TRoom room : tRooms) {
+            String rEquips = room.getTableCode() + ",";
+            if (rEquips.contains(equipId + ",")) {
+                return room;
+            }
+        }
+        return null;
     }
 
 }
