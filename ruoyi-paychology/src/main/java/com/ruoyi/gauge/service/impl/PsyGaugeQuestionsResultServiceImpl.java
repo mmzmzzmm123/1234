@@ -177,10 +177,9 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
                 break;
             default:
                 int score = psyGaugeQuestionsResultMapper.getQuestionScore(paramMap);
-                // SDS
-                if (GaugeConstant.GAUGE_COMPUTE_4 == order.getGaugeType()) {
-                    score = (int) Math.round(score * GaugeConstant.GAUGE_COMPUTE_SDS);
-                } else if (GaugeConstant.GAUGE_COMPUTE_8 == order.getGaugeType()) {
+                score = (int) Math.round(score * order.getGaugeRatio().doubleValue());
+
+                if (GaugeConstant.GAUGE_COMPUTE_8 == order.getGaugeType()) {
                     score = (int) Math.round(score * 100.0 / order.getGaugeNum() + 50);
                 }
                 sum = score + "";
@@ -258,7 +257,7 @@ public class PsyGaugeQuestionsResultServiceImpl implements IPsyGaugeQuestionsRes
             vo.setLats(psyGaugeQuestionsResultMapper.getQuestionLat(paramMap));
         }
 
-        List<Integer> asList = Arrays.asList(GaugeConstant.GAUGE_COMPUTE_5, GaugeConstant.GAUGE_COMPUTE_6, GaugeConstant.GAUGE_COMPUTE_7, GaugeConstant.GAUGE_COMPUTE_8);
+        List<Integer> asList = Arrays.asList(GaugeConstant.GAUGE_COMPUTE_2, GaugeConstant.GAUGE_COMPUTE_8);
 
         if (asList.contains(psyOrder.getGaugeType())) {
             PsyGaugeQuestionsResult query = new PsyGaugeQuestionsResult();

@@ -47,7 +47,7 @@
                 <editor v-model="props.row.result" placeholder="请输入得分建议" :min-height="192" :height="300" :extraData="extraData"/>
               </el-form-item>
             </template>
-            <template v-else-if="[5, 6, 7, 8].includes(gaugeType)">
+            <template v-else-if="[2, 8].includes(gaugeType)">
               <el-form-item label="测评结果">
                 <el-input type="textarea" :rows="4" size="mini" maxlength="255" show-word-limit v-model="props.row.memo1" placeholder="测评结果" />
               </el-form-item>

@@ -107,9 +107,9 @@ export const gaugeCompute = [
   { label: '多维计算', value: 2 },
   { label: 'MBTI', value: 3 },
   { label: 'SDS', value: 4 },
-  { label: 'SAS', value: 5 },
-  { label: 'SCL-90', value: 6 },
-  { label: '儿童智力', value: 7 },
+  // { label: 'SAS', value: 5 },
+  // { label: 'SCL-90', value: 6 },
+  // { label: '儿童智力', value: 7 },
   { label: '瑞文IQ', value: 8 },
   // { label: '马斯洛安全感', value: 6 },
 ]

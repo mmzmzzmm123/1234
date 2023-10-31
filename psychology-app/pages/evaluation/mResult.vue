@@ -6,16 +6,13 @@
     <template v-else-if="report.order && report.order.gaugeType === 4">
       <sds :report="report"/>
     </template>
-    <template v-else-if="report.order && report.order.gaugeType === 4">
-      <sds :report="report"/>
-    </template>
-    <template v-else-if="report.order && [5,6,7,8].includes(report.order.gaugeType)">
+    <template v-else-if="report.order && [2,8].includes(report.order.gaugeType)">
       <sas ref="sasTemp" :report="report" :lats="lats" :radarData="radarData"/>
     </template>
     <template v-else-if="report.order">
       <normal :report="report"/>
     </template>
-    <wrong v-if="[7,8].includes(report.order.gaugeType)" :list="wrongs"/>
+    <wrong v-if="report.order.wrong === '1' && wrongs.length > 0" :list="wrongs"/>
     <recommend/>
     <uni-popup ref="popup" type="dialog">
       <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
@@ -64,12 +61,12 @@ export default {
     this.orderId = utils.getParam(location.href, "orderId")
     this.report = await serve.getReport(this.orderId)
 
-    if ([5,6,7,8].includes(this.report.order.gaugeType)) {
+    if ([2,8].includes(this.report.order.gaugeType)) {
       let lats = await serve.getLats(this.report.order.gaugeId)
       this.$refs.sasTemp.initData(this.report ,lats)
     }
 
-    if ([7,8].includes(this.report.order.gaugeType)) {
+    if (this.report.order.wrong === '1') {
       this.wrongs = await serve.getWrongList(this.report.order.gaugeId, this.report.order.id)
       console.log(this.wrongs)
     }

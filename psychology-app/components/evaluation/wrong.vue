@@ -5,7 +5,7 @@
     </view>
     <view class="list" v-if="list.length > 0">
       <view class="item" v-for="item in list">
-        <view class="title">{{ item.title }}</view>
+        <view class="title">{{ item.no }}、{{ item.title }}</view>
         <img class="img" v-if="item.img" :src="item.img" />
         <view v-for="p in item.options" class="option" :class="{ active: item.answerTitle.includes(p.name) }">
           {{ p.name }}

@@ -19,10 +19,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="memo5"    column="memo5"    />
         <result property="memo6"    column="memo6"    />
         <result property="memo7"    column="memo7"    />
+        <result property="params"    column="params"    />
     </resultMap>
 
     <sql id="selectPsyGaugeScoreSettingVo">
-        select id, gauge_id, start, end, lat, proposal,result,memo1,memo2,memo3,memo4,memo5,memo6,memo7 from psy_gauge_score_setting
+        select id, gauge_id, start, end, lat, proposal,result,memo1,memo2,memo3,memo4,memo5,memo6,memo7,params from psy_gauge_score_setting
     </sql>
 
     <select id="selectPsyGaugeScoreSettingList" parameterType="com.ruoyi.gauge.domain.PsyGaugeScoreSetting" resultMap="PsyGaugeScoreSettingResult">
@@ -114,7 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <select id="selectPsyGaugeScoreSettingByGaugeId" parameterType="java.util.Map" resultMap="PsyGaugeScoreSettingResult">
-         select t1.id, t1.gauge_id, t1.start, t1.end, t1.lat, t1.proposal,t1.result,t1.memo1,t1.memo2,t1.memo3,t1.memo4,t1.memo5,t1.memo6,t1.memo7 from psy_gauge_score_setting t1
+         select t1.id, t1.gauge_id, t1.start, t1.end, t1.lat, t1.proposal,t1.result,t1.memo1,t1.memo2,t1.memo3,t1.memo4,t1.memo5,t1.memo6,t1.memo7,t1.params from psy_gauge_score_setting t1
         where t1.gauge_id = (select gauge_id from psy_order where id=#{orderId} )
           and ((#{score} >= t1.start AND t1.end >= #{score}) or (t1.lat = #{score}))
     </select>

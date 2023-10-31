@@ -73,22 +73,28 @@
     <pagination v-show="total > 0" :total="total" :page.sync="queryParams.pageNum" :limit.sync="queryParams.pageSize" @pagination="getList" />
 
     <!-- 添加或修改心理测评对话框 -->
-    <el-dialog :title="title" :visible.sync="open" width="800px" append-to-body>
-      <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+    <el-dialog :title="title" :visible.sync="open" top="5vh" width="1100px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">
         <el-form-item label="测评标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入测评标题" />
         </el-form-item>
         <el-form-item label="子标题" prop="subtitle">
           <el-input v-model="form.subtitle" placeholder="请输入子标题" />
         </el-form-item>
-        <el-form-item label="头部图片">
-<!--          <image-upload v-model="form.headPicture" sizeTip="宽750px 高422px" :extraData="extraData"/>-->
-          <my-cropper v-model="form.headPicture" sizeTip="宽750px 高422px" :extraData="extraData" :width="375" :height="211"/>
-        </el-form-item>
-        <el-form-item label="列表展示图片">
-<!--          <image-upload v-model="form.listShowPicture" sizeTip="宽183px 高208px" :extraData="extraData" />-->
-          <my-cropper v-model="form.listShowPicture" sizeTip="宽183px 高208px" :extraData="extraData" :width="183" :height="208"/>
-        </el-form-item>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="头部图片">
+              <!--          <image-upload v-model="form.headPicture" sizeTip="宽750px 高422px" :extraData="extraData"/>-->
+              <my-cropper v-model="form.headPicture" sizeTip="宽750px 高422px" :extraData="extraData" :width="375" :height="211"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="列表展示图片">
+              <!--          <image-upload v-model="form.listShowPicture" sizeTip="宽183px 高208px" :extraData="extraData" />-->
+              <my-cropper v-model="form.listShowPicture" sizeTip="宽183px 高208px" :extraData="extraData" :width="183" :height="208"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="12">
             <el-form-item label="测评分类" prop="gaugeClass">
@@ -115,12 +121,24 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="测评题数" prop="gaugeNum">
-              <el-input v-model="form.gaugeNum" placeholder="请输入测评题数" />
+              <el-input-number v-model="form.gaugeNum" :min="1" placeholder="请输入测评题数" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="价格" prop="price">
-              <el-input v-model="form.price" placeholder="请输入价格" />
+              <el-input-number v-model="form.price" :min="0.01" :precision="2"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="总分数" prop="gaugeScore">
+              <el-input-number v-model="form.gaugeScore" :min="1" placeholder="请输入测评题数" />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="比率" prop="gaugeRatio">
+              <el-input-number v-model="form.gaugeRatio" :min="0.01" :precision="2"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -131,12 +149,24 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="雷达展示" prop="radar">
+              <el-switch v-model="form.radar" active-value="1" inactive-value="0" active-text="展示" inactive-text="隐藏"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="错题展示" prop="wrong">
+              <el-switch v-model="form.wrong" active-value="1" inactive-value="0" active-text="展示" inactive-text="隐藏"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
 
         <el-form-item label="测评说明" prop="gaugeDes">
-          <editor v-model="form.gaugeDes" :min-height="192" :extraData="extraData"/>
+          <editor v-model="form.gaugeDes" :height="120"  :extraData="extraData"/>
         </el-form-item>
         <el-form-item label="测评介绍">
-          <editor v-model="form.introduce" :min-height="192" :extraData="extraData"/>
+          <editor v-model="form.introduce" :height="192" :extraData="extraData"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -150,12 +180,13 @@
         <el-tab-pane label="问题设置" name="questions">
           <questions v-bind:gaugeId="gaugeId" :gaugeType="gaugeType"></questions>
         </el-tab-pane>
-        <el-tab-pane v-if="[5,6,7,8].includes(gaugeType)" label="维度设置" name="lat">
+<!--        <el-tab-pane v-if="[5,6,7,8].includes(gaugeType)" label="维度设置" name="lat">-->
+        <el-tab-pane v-if="[2,8].includes(gaugeType)" label="维度设置" name="lat">
           <lat v-bind:gaugeId="gaugeId"/>
         </el-tab-pane>
         <el-tab-pane label="测评设置" name="setting">
-           <setting v-if="gaugeType!==2" v-bind:gaugeId="gaugeId" :gaugeType="gaugeType"></setting>
-           <multi v-if="gaugeType==2" v-bind:gaugeId="gaugeId" ></multi>
+           <setting v-bind:gaugeId="gaugeId" :gaugeType="gaugeType"></setting>
+<!--           <multi v-if="gaugeType==2" v-bind:gaugeId="gaugeId" ></multi>-->
         </el-tab-pane>
       </el-tabs>
     </el-drawer>
@@ -271,8 +302,16 @@ export default {
           { required: true, message: "测评题数不能为空", trigger: "blur" },
           { validator: validateNumber, trigger: "blur" }
         ],
+        gaugeScore: [
+          { required: true, message: "总分不能为空", trigger: "blur" },
+          { validator: validateNumber, trigger: "blur" }
+        ],
         price: [
           { required: true, message: "价格不能为空", trigger: "blur" },
+          { validator: validatePrice, trigger: "blur" }
+        ],
+        gaugeRatio: [
+          { required: true, message: "比率不能为空", trigger: "blur" },
           { validator: validatePrice, trigger: "blur" }
         ],
         gaugeId: [
@@ -330,6 +369,10 @@ export default {
         introduce: null,
         gaugeClass: null,
         gaugeNum: null,
+        gaugeRatio: null,
+        gaugeScore: null,
+        wrong: null,
+        radar: null,
         price: null,
         gaugeId: null,
         num: null,
@@ -429,7 +472,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .el-tag + .el-tag {
   margin-left: 10px;
 }
@@ -476,5 +519,34 @@ export default {
 }
 .option-drag {
   cursor: move;
+}
+/deep/ .el-switch .el-switch__core, .el-switch .el-switch__label {
+  width: 60px !important;
+  font-size: 12px !important;
+}
+::v-deep .el-upload--picture-card {
+  width: 80px;
+  height: 80px;
+}
+::v-deep .el-upload {
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+}
+::v-deep .el-upload-list--picture-card .el-upload-list__item {
+  width: 80px;
+  height: 80px;
+}
+::v-deep .el-upload-list--picture-card .el-upload-list__item-thumbnail {
+  width: 80px;
+  height: 80px;
+  line-height: 80px;
+}
+::v-deep .avatar {
+  width: 80px;
+  height: 80px;
+}
+::v-deep .el-upload__tip {
+  margin: 0;
 }
 </style>

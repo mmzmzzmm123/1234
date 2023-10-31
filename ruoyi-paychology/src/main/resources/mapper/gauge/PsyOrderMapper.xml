@@ -52,7 +52,7 @@
     <sql id="selectPsyOrder">
         select po.*,
                gauge.gauge_des as gaugeDes, gauge.type as gaugeType, gauge.title as gaugeTitle,gauge.head_picture,
-               u.name as userName,gauge.gauge_num
+               u.name as userName,gauge.gauge_num,gauge.gauge_score,gauge.wrong,gauge.radar,gauge.gauge_ratio
         from psy_order po
                  left join psy_gauge gauge ON po.gauge_id = gauge.id
                  left join psy_user u ON po.user_id = u.id

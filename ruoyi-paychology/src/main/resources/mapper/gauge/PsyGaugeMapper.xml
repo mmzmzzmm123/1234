@@ -14,6 +14,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="gaugeNum"    column="gauge_num"    />
         <result property="price"    column="price"    />
         <result property="num"    column="num"    />
+        <result property="gaugeRatio"    column="gauge_ratio"    />
+        <result property="gaugeScore"    column="gauge_score"    />
+        <result property="wrong"    column="wrong"    />
+        <result property="radar"    column="radar"    />
         <result property="type"    column="type"    />
         <result property="createTime"    column="create_time"    />
         <result property="createBy"      column="create_by"      />
@@ -26,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyGaugeVo">
-        select id, title, subtitle, head_picture, introduce, gauge_class, gauge_num, price, num, type,create_by, create_time, update_by, update_time, remark,gauge_des,list_show_picture  from psy_gauge
+        select id, title, subtitle, head_picture, introduce, gauge_class, gauge_num, price, num, gauge_ratio, gauge_score, wrong, radar, type,create_by, create_time, update_by, update_time, remark,gauge_des,list_show_picture  from psy_gauge
     </sql>
 
     <select id="selectPsyGaugeList" parameterType="com.ruoyi.gauge.domain.PsyGauge" resultMap="PsyGaugeResult">
@@ -38,7 +42,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="introduce != null  and introduce != ''"> and introduce = #{introduce}</if>
             <if test="gaugeClass != null "> and gauge_class = #{gaugeClass}</if>
             <if test="gaugeNum != null "> and gauge_num = #{gaugeNum}</if>
+            <if test="radar != null "> and radar = #{radar}</if>
+            <if test="wrong != null "> and wrong = #{wrong}</if>
             <if test="price != null "> and price = #{price}</if>
+            <if test="gaugeRatio != null "> and gauge_ratio = #{gaugeRatio}</if>
+            <if test="gaugeScore != null "> and gauge_score = #{gaugeScore}</if>
             <if test="num != null "> and num = #{num}</if>
             <if test="type != null "> and type = #{type}</if>
             <if test="gaugeDes != null "> and gauge_des = #{gaugeDes}</if>
@@ -59,6 +67,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="introduce != null">introduce,</if>
             <if test="gaugeClass != null">gauge_class,</if>
             <if test="gaugeNum != null">gauge_num,</if>
+            <if test="gaugeRatio != null">gauge_ratio,</if>
+            <if test="gaugeScore != null">gauge_score,</if>
+            <if test="radar != null">radar,</if>
+            <if test="wrong != null">wrong,</if>
             <if test="price != null">price,</if>
             <if test="num != null">num,</if>
             <if test="type != null">type,</if>
@@ -75,6 +87,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="introduce != null">#{introduce},</if>
             <if test="gaugeClass != null">#{gaugeClass},</if>
             <if test="gaugeNum != null">#{gaugeNum},</if>
+            <if test="gaugeRatio != null">#{gaugeRatio},</if>
+            <if test="gaugeScore != null">#{gaugeScore},</if>
+            <if test="radar != null">#{radar},</if>
+            <if test="wrong != null">#{wrong},</if>
             <if test="price != null">#{price},</if>
             <if test="num != null">#{num},</if>
             <if test="type != null">#{type},</if>
@@ -93,6 +109,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="introduce != null">introduce = #{introduce},</if>
             <if test="gaugeClass != null">gauge_class = #{gaugeClass},</if>
             <if test="gaugeNum != null">gauge_num = #{gaugeNum},</if>
+            <if test="gaugeRatio != null ">gauge_ratio = #{gaugeRatio},</if>
+            <if test="gaugeScore != null ">gauge_score = #{gaugeScore},</if>
+            <if test="radar != null ">radar = #{radar},</if>
+            <if test="wrong != null ">wrong = #{wrong},</if>
             <if test="price != null">price = #{price},</if>
             <if test="num != null">num = #{num},</if>
             <if test="type != null">type = #{type},</if>

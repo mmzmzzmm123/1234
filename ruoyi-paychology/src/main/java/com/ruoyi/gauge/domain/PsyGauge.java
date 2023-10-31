@@ -50,9 +50,25 @@ public class PsyGauge extends BaseEntity
     @Excel(name = "价格")
     private BigDecimal price;
 
+    /** 价格 */
+    @Excel(name = "比率")
+    private BigDecimal gaugeRatio;
+
     /** 测评次数 */
     @Excel(name = "测评次数")
     private Integer num;
+
+    /** 总分 */
+    @Excel(name = "总分")
+    private Integer gaugeScore;
+
+    /** 是否展示错题 */
+    @Excel(name = "错题")
+    private String wrong;
+
+    /** 是否展示雷达图 */
+    @Excel(name = "雷达图")
+    private String radar;
 
     /** 测评类型 */
     @Excel(name = "测评类型")

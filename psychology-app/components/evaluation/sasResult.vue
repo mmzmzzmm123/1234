@@ -28,10 +28,10 @@
     </view>
     <view class="block-1">
       <block-header title="得分解读"/>
-      <view class="block-radar">
+      <view class="block-radar" v-if="report.order.radar === '1'">
         <qiun-data-charts type="radar" :opts="opts" :chartData="radarData"/>
       </view>
-      <view class="img-box" v-html="report.setting.memo3"/>
+      <view class="img-box" :style="{marginTop: report.order.radar === '1' ? '0' : '80upx'}" v-html="report.setting.memo3"/>
     </view>
     <view class="block-1" v-for="item in lats.filter(a => a.y !== -1)">
       <block-header :title="item.name"/>
@@ -52,7 +52,7 @@
   </view>
 </template>
 <script>
-import latResult from '@/utils/latResult'
+// import latResult from '@/utils/latResult'
 import range from '@/components/common/range'
 import blockHeader from '@/components/common/blockHeader'
 import circularProgress from '@/components/circular-progress/circular-progress'
@@ -81,7 +81,7 @@ export default {
         disableLegend: true,
         categories: [],
         series: [{
-          name: "焦虑",
+          name: "",
           data: []
         }]
       },
@@ -92,41 +92,27 @@ export default {
   methods: {
     initData(data, list) {
       const lats = list.filter(l => l.questionIds)
-      let num = 0
-      switch (data.order.gaugeType) {
-        case 5:
-          num = 25
-          break
-        case 6:
-          num = 20
-          break
-        case 7:
-          num = 33.34
-          break
-        case 8:
-          num = 100
-          break
-      }
 
       this.score = parseInt(data.order.score)
       if (data.order.gaugeType === 8) {
         this.percentage = Math.min(Math.round(this.score / 150 * 100), 100)
       } else {
-        this.percentage = Math.min(Math.round(this.score / data.order.gaugeNum * num), 100)
+        this.percentage = Math.min(Math.round(this.score / data.order.gaugeScore * 100), 100)
       }
 
       if (lats.length > 0) {
-        this.radarData.series[0].name = this.getGaugeType(data.order.gaugeType)
+        const params = data.setting.params ? JSON.parse(data.setting.params) : []
+        const num = data.order.gaugeType === 8 ? 1 : data.order.gaugeScore / data.order.gaugeNum
         lats.forEach((a, index) => {
-          // a.score = 0
           if (a.questionIds) {
             const arr = a.questionIds.split(",")
             const res = data.results.filter(b => arr.includes(b.questionsId + '')) || []
             const score = res.reduce((a, c) => a + c.score, 0)
             this.radarData.categories[index] = a.name
-            a.score = Math.round(score / res.length * num)
+            a.score = Math.round(score / (res.length * num)  * 100)
             this.radarData.series[0].data[index] = a.score
-            a.title = this.getResultTitle(data.order.gaugeType, a.name, a.score)
+            a.title = this.getResultTitle(params, a.name)
+            // a.title = this.getResultTitle(data.order.gaugeType, a.name, a.score)
           }
         })
         this.lats = lats.sort((a,b) => parseInt(a.y) - parseInt(b.y))
@@ -135,49 +121,25 @@ export default {
       this.report = data
       this.show = true
     },
-    getGaugeType(type) {
-      let name = '测评'
-      switch (type) {
-        case 1:
-          name = '普通计算'
-          break;
-        case 2:
-          name = '多维计算'
-          break;
-        case 3:
-          name = 'MBTI'
-          break;
-        case 4:
-          name = 'SDS'
-          break;
-        case 5:
-          name = 'SAS'
-          break;
-        case 6:
-          name = 'SCL-90'
-          break;
-        case 7:
-          name = '儿童智力'
-          break;
-        case 8:
-          name = '瑞文IQ'
-          break;
+    getResultTitle(params, lat) {
+      if (params.length > 0) {
+        const  a = params.find(item => item.name === lat)
+        return a.result
       }
-      return name
     },
-    getResultTitle(type, lat, percentage) {
-      let title = ''
-
-      if (type === 5) {
-        title = latResult.getResultByLat5(lat, percentage)
-      } else if(type === 6) {
-        title = latResult.getResultByLat6(lat, percentage)
-      } else if(type === 7) {
-        title = latResult.getResultByLat7(lat, percentage)
-      }
-
-      return title
-    }
+    // getResultTitle2(type, lat, percentage) {
+    //   let title = ''
+    //
+    //   if (type === 5) {
+    //     title = latResult.getResultByLat5(lat, percentage)
+    //   } else if(type === 6) {
+    //     title = latResult.getResultByLat6(lat, percentage)
+    //   } else if(type === 7) {
+    //     title = latResult.getResultByLat7(lat, percentage)
+    //   }
+    //
+    //   return title
+    // }
   }
 }
 </script>

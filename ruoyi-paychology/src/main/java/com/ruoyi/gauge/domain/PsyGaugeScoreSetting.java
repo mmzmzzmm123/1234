@@ -11,7 +11,7 @@ import lombok.Data;
  * @date 2022-09-10
  */
 @Data
-public class PsyGaugeScoreSetting extends BaseEntity
+public class PsyGaugeScoreSetting
 {
     private static final long serialVersionUID = 1L;
 
@@ -36,6 +36,7 @@ public class PsyGaugeScoreSetting extends BaseEntity
 
     @Excel(name = "结论")
     private String result;
+    private String params;
 
     @Excel(name = "纬度")
     private String lat;
