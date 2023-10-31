@@ -30,7 +30,8 @@
 				if(this.value){
 					return this.value.split(',').map(x=>{
 						return {
-							url: BaseApiUrl + x
+							url: BaseApiUrl + x,
+							path: x
 						}
 					})
 				}
@@ -48,7 +49,7 @@
 				})
 			},
 			imageRemove(e){
-				this.$emit('input', this.fileList.splice(e.index, 1).map(x=>x.url).join(','))
+				this.$emit('input', this.fileList.splice(e.index, 1).map(x=>x.path).join(','))
 			}
 		}
 	}
