@@ -22,7 +22,7 @@ import ${packageName}.mapper.${ClassName}Mapper;
 import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
 import lombok.extern.log4j.Log4j2;
-
+import javax.annotation.Resource;
 /**
  * ${functionName}Service业务层处理
  *
