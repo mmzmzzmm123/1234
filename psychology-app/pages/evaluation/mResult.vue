@@ -71,7 +71,9 @@ export default {
       console.log(this.wrongs)
     }
 
+    // #ifdef H5
     utils.share(this.report.order.gaugeTitle, '', this.report.order.headPicture, 'https://wx.ssgpsy.com/pages/evaluation/product?id=' + this.report.order.gaugeId)
+    // #endif
   },
   async mounted() {
     this.userInfo = utils.getUserInfo()

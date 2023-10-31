@@ -1,5 +1,7 @@
 import {wxLogin, wxLoginCallBack, checkUserLogin} from "@/server/wxApi";
+// #ifdef H5
 import wxJS from "@/server/wxJS.js"
+// #endif
 
 const redis = "psy";
 export const clientTypeObj = { wx: "JSAPI", zfb: "FWC", no: "unknow" };
@@ -53,9 +55,16 @@ export default {
 
   getUserInfo() {
     const user = uni.getStorageSync("userInfo");
+    // #ifdef MP-WEIXIN
+    return user
+    // #endif
+
+    // #ifdef H5
     if (this.getClientType() === 'JSAPI') {
       return user
     }
+    // #endif
+
     return user ? user.userId ? user : JSON.parse(user) : {}
   },
   async checkLogin() {

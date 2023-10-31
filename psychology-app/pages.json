@@ -260,33 +260,33 @@
       }
     }
   ],
-  "tabBar": {
-    "color": "#C0C4CC",
-    "selectedColor": "#fa436a",
-    "borderStyle": "black",
-    "backgroundColor": "#ffffff",
-    "list": [
-      /*  {
-          "pagePath": "pages/evaluation/index",
-          "iconPath": "static/evaluation/menu/index.png",
-          "selectedIconPath": "static/evaluation/menu/index-active.png",
-          "text": "首页"
-        },
-        {
-          "pagePath": "pages/evaluation/class",
-          "iconPath": "static/evaluation/menu/class.png",
-          "selectedIconPath": "static/evaluation/menu/class-active.png",
-          "text": "分类"
-        },
-
-        {
-          "pagePath": "pages/evaluation/user",
-          "iconPath": "static/evaluation/menu/user.png",
-          "selectedIconPath": "static/evaluation/menu/user-active.png",
-          "text": "我的"
-        }*/
-    ]
-  },
+//  "tabBar": {
+//    "color": "#C0C4CC",
+//    "selectedColor": "#fa436a",
+//    "borderStyle": "black",
+//    "backgroundColor": "#ffffff",
+//    "list": [
+//      /*  {
+//          "pagePath": "pages/evaluation/index",
+//          "iconPath": "static/evaluation/menu/index.png",
+//          "selectedIconPath": "static/evaluation/menu/index-active.png",
+//          "text": "首页"
+//        },
+//        {
+//          "pagePath": "pages/evaluation/class",
+//          "iconPath": "static/evaluation/menu/class.png",
+//          "selectedIconPath": "static/evaluation/menu/class-active.png",
+//          "text": "分类"
+//        },
+//
+//        {
+//          "pagePath": "pages/evaluation/user",
+//          "iconPath": "static/evaluation/menu/user.png",
+//          "selectedIconPath": "static/evaluation/menu/user-active.png",
+//          "text": "我的"
+//        }*/
+//    ]
+//  },
   "globalStyle": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "壹加壹心理",

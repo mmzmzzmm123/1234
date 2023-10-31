@@ -99,7 +99,9 @@ import indexServer from '@/server/consult/index'
 import orderServer from "@/server/consult/order";
 import loginServer from '@/server/login'
 import cartBox from '@/components/consult/cartBox'
+// #ifdef H5
 import wxJS from "@/server/wxJS.js"
+// #endif
 import { getPaySign, wxPay } from "@/server/wxApi"
 export default {
   components: { cartBox },
@@ -279,7 +281,9 @@ export default {
       const img = this.consultInfo.iconUrl
       const url = window.location.href
       console.log('consultInfo: ', this.consultInfo)
+      // #ifdef H5
       wxJS.getConfig(title, desc, link, img, url);
+      // #endif
     }
   }
 }

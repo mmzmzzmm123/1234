@@ -60,7 +60,9 @@ import customCatalogueList from "@/components/course/catalogueList";
 import loginServer from '@/server/login'
 import videoBox from "@/components/course/videoBox.vue"
 import audioBox from "@/components/course/audioBox.vue"
+// #ifdef H5
 import wxJS from "@/server/wxJS.js"
+// #endif
 export default {
   components: { cartTabBar,cartBox,customCatalogueList, videoBox, audioBox },
   data() {
@@ -110,7 +112,9 @@ export default {
       this.courseInfo.totalDuration+= item.duration||0;
     });
     this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;
+    // #ifdef H5
     utils.share(this.courseInfo.name, '', this.courseInfo.iconUrl)
+    // #endif
     
     // this.share()
   },
@@ -159,7 +163,9 @@ export default {
       const img = this.courseInfo.iconUrl
       const url = window.location.href
       console.log('courseInfo: ', this.courseInfo)
+      // #ifdef H5
       wxJS.getConfig(title, desc, link, img, url);
+      // #endif
     }
   },
 };

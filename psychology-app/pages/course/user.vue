@@ -273,36 +273,6 @@
 					}
 				}
 			}
-
-			.link-box {
-				display: flex;
-				flex-direction: row;
-
-				.item {
-					width: 336upx;
-					height: 164upx;
-					background-image: url("/static/course/user/consulting-service.png");
-					background-size: 100% 100%;
-					padding: 30upx 32upx;
-					box-sizing: border-box;
-					font-size: 32upx;
-					font-weight: 500;
-					line-height: 45upx;
-					color: #40c2b7;
-
-					&:first-child {
-						margin-right: 26upx;
-						background-image: url("/static/course/user/report.png");
-						color: #e2724c;
-					}
-
-					.num {
-						font-size: 30upx;
-						font-weight: 400;
-						line-height: 42upx;
-					}
-				}
-			}
 		}
 
 		.class-box {
