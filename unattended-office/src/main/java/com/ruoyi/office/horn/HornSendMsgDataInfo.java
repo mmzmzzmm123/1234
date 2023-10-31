@@ -6,4 +6,5 @@ import lombok.Data;
 public class HornSendMsgDataInfo {
     private String tts;
     private Integer inner;
+    private Integer volume;
 }

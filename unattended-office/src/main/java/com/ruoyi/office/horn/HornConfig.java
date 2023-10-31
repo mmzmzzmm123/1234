@@ -26,6 +26,7 @@ public class HornConfig {
     public static String appSecret;
     public static String url;
     public static String minutes;
+    public static String volume;
 
     @Autowired
     ISysDictDataService dictDataService;
@@ -41,6 +42,7 @@ public class HornConfig {
         appSecret = hornConfig.get("app_secret");
         url = hornConfig.get("url");
         minutes = hornConfig.get("minute");
+        volume = hornConfig.get("volume");
     }
 
     public static CloudHornRegResponse regHorn(String hornSn) {
@@ -75,6 +77,7 @@ public class HornConfig {
         HornSendMsgDataInfo hornDataInfo = new HornSendMsgDataInfo();
         hornDataInfo.setInner(inner);
         hornDataInfo.setTts(msg);
+        hornDataInfo.setVolume(Integer.parseInt(HornConfig.volume));
 
         hornData.setInfo(hornDataInfo);
         hornMsg.setData(hornData);
