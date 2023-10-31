@@ -6,6 +6,7 @@ import com.xinyu.idol.pojo.vo.ClassificationsReq;
 import com.xinyu.idol.pojo.vo.ClassificationsResp;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -20,5 +21,7 @@ public interface IClassificationsService extends IService<ClassificationsEntity>
     List<ClassificationsResp> classifications(ClassificationsReq classificationsReq);
 
     List<ClassificationsResp> classificationsByLevel(String level);
+
+    Map<String,ClassificationsEntity> mapAllClassifications();
 
 }

@@ -73,13 +73,13 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: localhost
+    host: 192.168.110.190
     # 端口，默认为6379
-    port: 6379
+    port: 30379
     # 数据库索引
-    database: 2
+    database: 0
     # 密码
-    password:
+    password: xinyukeji
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -98,9 +98,9 @@ spring:
     druid:
       # 主库数据源
       master:
-        url: jdbc:mysql://localhost:3306/ruoyi-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        url: jdbc:mysql://192.168.110.190:30306/idol-stage?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
         username: root
-        password: 123456
+        password: xinyukeji
       # 从库数据源
       slave:
         # 从数据源开关/默认关闭

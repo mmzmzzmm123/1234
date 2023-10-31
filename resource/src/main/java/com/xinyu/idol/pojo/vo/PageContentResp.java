@@ -14,6 +14,7 @@ import java.io.Serializable;
 @ToString
 public class PageContentResp implements Serializable {
 
+    private Long id;
 
     private String fileName;
 
@@ -102,4 +103,36 @@ public class PageContentResp implements Serializable {
     private String preDiff;
 
     private String onlineDiff;
+
+    private ClassificationRowResp classification1Row;
+
+    private ClassificationRowResp classification2Row;
+
+    private ClassificationRowResp classification3Row;
+
+    private ClassificationRowResp classification4Row;
+
+
+    @Data
+    @NoArgsConstructor
+    @Builder
+    @AllArgsConstructor
+    public static class  ClassificationRowResp implements Serializable{
+
+        private Long id;
+
+        private String name;
+
+        private Integer level;
+
+//        private Long parentId;
+//
+//        private Integer orderNum;
+//
+//        private String status;
+//
+//        private String englishName;
+
+
+   }
 }

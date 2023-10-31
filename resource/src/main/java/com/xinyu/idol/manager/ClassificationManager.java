@@ -27,9 +27,15 @@ public class ClassificationManager {
     public List<ClassificationsEntity> selectClassificationsByLevel(String level) {
         Assert.notNull(level, "classificationId非空");
         List<ClassificationsEntity> classificationsEntityList = classificationsMapper.selectList(new QueryWrapper<ClassificationsEntity>().eq("level", level));
-
         return classificationsEntityList;
     }
+
+    public List<ClassificationsEntity> selectAllClassifications() {
+
+        List<ClassificationsEntity> classificationsEntityList = classificationsMapper.selectList(new QueryWrapper<ClassificationsEntity>());
+        return classificationsEntityList;
+    }
+
 
 
 

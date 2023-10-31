@@ -1,10 +1,14 @@
 package com.xinyu.idol.service;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.xinyu.idol.pojo.entity.ContentEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xinyu.idol.pojo.vo.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.plaf.IconUIResource;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -23,9 +27,22 @@ public interface IContentService extends IService<ContentEntity> {
 
     IPage<PageContentResp> pageContent(PageContentReq pageContentReq);
 
+    /**
+     * 从web后台更新数据
+     * @param updateContentWebListReq
+     */
     void updateContent(UpdateContentWebListReq updateContentWebListReq);
 
-    void classifications(ClassificationsReq classificationsReq);
+    /**
+     * 后台上传icon
+     * @param multipartFile
+     * @return
+     * @throws ClientException
+     * @throws IOException
+     */
+     FileUploadResp uploadIcon(MultipartFile multipartFile) throws ClientException, IOException;
+
+     void pullResourceFromEnv(PullResourceFromEnvReq pullResourceFromEnvReq);
 
 
 }

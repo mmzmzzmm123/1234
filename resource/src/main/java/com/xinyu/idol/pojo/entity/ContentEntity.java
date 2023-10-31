@@ -115,6 +115,16 @@ public class ContentEntity implements Serializable {
 
     private Integer sort;
 
+    public String getGeneralTag() {
+        return generalTag;
+    }
+
+    public void setGeneralTag(String generalTag) {
+        this.generalTag = generalTag;
+    }
+
+    private String generalTag;
+
     public Long getId() {
         return id;
     }

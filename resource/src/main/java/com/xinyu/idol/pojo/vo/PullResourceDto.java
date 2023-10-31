@@ -1,20 +1,18 @@
 package com.xinyu.idol.pojo.vo;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.io.Serializable;
-
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
 @ToString
-public class UpdateContentWebReq implements Serializable {
-    @TableId(value = "id", type = IdType.AUTO)
+public class PullResourceDto implements Serializable {
+
     private Long id;
 
     private String fileName;
@@ -36,17 +34,17 @@ public class UpdateContentWebReq implements Serializable {
     @ApiModelProperty("被取代资源pak_id")
     private Long replaceId;
 
-//    @ApiModelProperty("一级分类")
-//    private String classification1;
-//
-//    @ApiModelProperty("二级分类")
-//    private String classification2;
-//
-//    @ApiModelProperty("三级分类")
-//    private String classification3;
-//
-//    @ApiModelProperty("四级分类")
-//    private String classification4;
+    @ApiModelProperty("一级分类")
+    private String classification1;
+
+    @ApiModelProperty("二级分类")
+    private String classification2;
+
+    @ApiModelProperty("三级分类")
+    private String classification3;
+
+    @ApiModelProperty("四级分类")
+    private String classification4;
 
     @ApiModelProperty("特殊标签,用来标记....")
     private String specialTag;
@@ -61,12 +59,17 @@ public class UpdateContentWebReq implements Serializable {
     @ApiModelProperty("是否为测试资源,测试资源无法同步到下个环境")
     private Integer isTest;
 
-    @ApiModelProperty("是否为测试资源,测试资源无法同步到下个环境")
-    private Integer isHide;
-
     @ApiModelProperty("用户名id")
     private String ownerid;
 
+    @ApiModelProperty("是否隐藏")
+    private Integer isHide;
+
+    @ApiModelProperty("被覆盖次数")
+    private Integer replaceTimes;
+
+
+    private Integer version;
 
     @ApiModelProperty("字段幂等键哈希")
     private String idemHash;
@@ -95,14 +98,6 @@ public class UpdateContentWebReq implements Serializable {
 
     private Integer jsonFileSize;
 
-    private String generalTag;
-
-    private PageContentResp.ClassificationRowResp classification1Row;
-
-    private PageContentResp.ClassificationRowResp classification2Row;
-
-    private PageContentResp.ClassificationRowResp classification3Row;
-
-    private PageContentResp.ClassificationRowResp classification4Row;
+    private Integer sort;
 
 }

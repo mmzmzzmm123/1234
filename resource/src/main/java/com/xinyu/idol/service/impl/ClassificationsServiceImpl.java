@@ -15,6 +15,8 @@ import org.springframework.util.Assert;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -76,5 +78,13 @@ public class ClassificationsServiceImpl extends ServiceImpl<ClassificationsMappe
 
         return classificationsRespList;
 
+    }
+
+    @Override
+    public Map<String,ClassificationsEntity> mapAllClassifications() {
+        List<ClassificationsEntity> classificationsEntityList = classificationManager.selectAllClassifications();
+      Map<String,ClassificationsEntity> classificationsEntityMap=  classificationsEntityList.stream().collect(Collectors.toMap(it-> it.getId().toString(), it->it));
+
+        return classificationsEntityMap;
     }
 }

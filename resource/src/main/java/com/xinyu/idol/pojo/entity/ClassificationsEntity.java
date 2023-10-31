@@ -47,6 +47,9 @@ public class ClassificationsEntity implements Serializable {
     private String status;
 
 
+    private String englishName;
+
+
     public Integer getLevel() {
         return level;
     }

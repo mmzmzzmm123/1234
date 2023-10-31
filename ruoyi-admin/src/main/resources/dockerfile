@@ -1,0 +1,4 @@
+FROM openjdk:17
+ADD resource-0.0.2.jar  /app.jar
+ADD application.yml /application.yml
+cmd java -jar app.jar --spring.config.location=application.yml

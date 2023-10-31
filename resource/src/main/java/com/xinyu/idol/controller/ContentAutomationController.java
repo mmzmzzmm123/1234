@@ -30,20 +30,13 @@ public class ContentAutomationController {
     @Log(title = "通知公告", businessType = BusinessType.INSERT)
     @RequestMapping(value = "/test/list/all",method = RequestMethod.GET)
     AjaxResult listAllTest(){
-
         return AjaxResult.success(contentService.testList());
     }
-
 
     @RequestMapping(value = "/addContent",method = RequestMethod.POST)
     AjaxResult addContent(@RequestBody AddContentVo addContentVo){
         contentService.addContent(addContentVo);
         return AjaxResult.success();
-    }
-
-    @RequestMapping(value = "/pageContent",method = RequestMethod.POST)
-    AjaxResult pageContent(@RequestBody PageContentReq pageContentReq){
-        return AjaxResult.success(contentService.pageContent(pageContentReq));
     }
 
 }
