@@ -1,6 +1,9 @@
 package com.xinyu.idol.domain;
 
 import com.xinyu.idol.common.annotation.Excel;
+import com.xinyu.idol.common.core.domain.BaseEntity;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 美术资源上传原件对象 t_art_resource_origin
@@ -92,7 +95,7 @@ public class TArtResourceOrigin extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
+        return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("displayName", getDisplayName())
             .append("repalceGuid", getRepalceGuid())
