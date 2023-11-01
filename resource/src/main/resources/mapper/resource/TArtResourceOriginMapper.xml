@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xinyu.idol.mapper.TArtResourceOriginMapper">
+    
+    <resultMap type="TArtResourceOrigin" id="TArtResourceOriginResult">
+        <result property="id"    column="id"    />
+        <result property="displayName"    column="display_name"    />
+        <result property="repalceGuid"    column="repalce_guid"    />
+        <result property="linkedGuid"    column="linked_guid"    />
+        <result property="iconOsskey"    column="icon_osskey"    />
+        <result property="originFileOsskey"    column="origin_file_osskey"    />
+        <result property="createBy"    column="createBy"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTArtResourceOriginVo">
+        select id, display_name, repalce_guid, linked_guid, icon_osskey, origin_file_osskey, createBy, create_time, update_time from t_art_resource_origin
+    </sql>
+
+    <select id="selectTArtResourceOriginList" parameterType="TArtResourceOrigin" resultMap="TArtResourceOriginResult">
+        <include refid="selectTArtResourceOriginVo"/>
+        <where>  
+            <if test="displayName != null  and displayName != ''"> and display_name like concat('%', #{displayName}, '%')</if>
+            <if test="repalceGuid != null  and repalceGuid != ''"> and repalce_guid = #{repalceGuid}</if>
+            <if test="linkedGuid != null  and linkedGuid != ''"> and linked_guid = #{linkedGuid}</if>
+            <if test="iconOsskey != null  and iconOsskey != ''"> and icon_osskey = #{iconOsskey}</if>
+            <if test="originFileOsskey != null  and originFileOsskey != ''"> and origin_file_osskey = #{originFileOsskey}</if>
+            <if test="createBy != null  and createBy != ''"> and createBy = #{createBy}</if>
+        </where>
+    </select>
+    
+    <select id="selectTArtResourceOriginById" parameterType="String" resultMap="TArtResourceOriginResult">
+        <include refid="selectTArtResourceOriginVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTArtResourceOrigin" parameterType="TArtResourceOrigin" useGeneratedKeys="true" keyProperty="id">
+        insert into t_art_resource_origin
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="displayName != null">display_name,</if>
+            <if test="repalceGuid != null">repalce_guid,</if>
+            <if test="linkedGuid != null">linked_guid,</if>
+            <if test="iconOsskey != null">icon_osskey,</if>
+            <if test="originFileOsskey != null">origin_file_osskey,</if>
+            <if test="createBy != null">createBy,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="displayName != null">#{displayName},</if>
+            <if test="repalceGuid != null">#{repalceGuid},</if>
+            <if test="linkedGuid != null">#{linkedGuid},</if>
+            <if test="iconOsskey != null">#{iconOsskey},</if>
+            <if test="originFileOsskey != null">#{originFileOsskey},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTArtResourceOrigin" parameterType="TArtResourceOrigin">
+        update t_art_resource_origin
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="displayName != null">display_name = #{displayName},</if>
+            <if test="repalceGuid != null">repalce_guid = #{repalceGuid},</if>
+            <if test="linkedGuid != null">linked_guid = #{linkedGuid},</if>
+            <if test="iconOsskey != null">icon_osskey = #{iconOsskey},</if>
+            <if test="originFileOsskey != null">origin_file_osskey = #{originFileOsskey},</if>
+            <if test="createBy != null">createBy = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTArtResourceOriginById" parameterType="String">
+        delete from t_art_resource_origin where id = #{id}
+    </delete>
+
+    <delete id="deleteTArtResourceOriginByIds" parameterType="String">
+        delete from t_art_resource_origin where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
