@@ -1,4 +1,4 @@
-package com.ruoyi.onethinker.service.impl;
+package com.ruoyi.onethinker.factory.service.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -21,7 +21,7 @@ import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
 import com.ruoyi.onethinker.dto.PlatformUserResDTO;
 import com.ruoyi.onethinker.mapper.PlatformUserMapper;
 import com.ruoyi.onethinker.service.IPlatformUserDetailService;
-import com.ruoyi.onethinker.service.IPlatformUserService;
+import com.ruoyi.onethinker.factory.service.IPlatformUserService;
 import com.ruoyi.system.service.ISysConfigService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.extern.log4j.Log4j2;

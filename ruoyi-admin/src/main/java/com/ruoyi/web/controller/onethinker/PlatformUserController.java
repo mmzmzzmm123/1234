@@ -16,8 +16,8 @@ import com.ruoyi.onethinker.domain.PlatformUserDetail;
 import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
 import com.ruoyi.onethinker.dto.PlatformUserResDTO;
 import com.ruoyi.onethinker.service.IPlatformUserDetailService;
-import com.ruoyi.onethinker.service.IPlatformUserService;
-import com.ruoyi.onethinker.service.PlatformUserFactory;
+import com.ruoyi.onethinker.factory.service.IPlatformUserService;
+import com.ruoyi.onethinker.factory.PlatformUserFactory;
 
 /**
  * @author : yangyouqi

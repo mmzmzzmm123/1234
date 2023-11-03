@@ -1,4 +1,4 @@
-package com.ruoyi.onethinker.service;
+package com.ruoyi.onethinker.factory.service;
 
 import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
 import com.ruoyi.onethinker.dto.PlatformUserResDTO;

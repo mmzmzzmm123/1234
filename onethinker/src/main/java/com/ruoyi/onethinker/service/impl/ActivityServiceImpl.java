@@ -2,9 +2,20 @@ package com.ruoyi.onethinker.service.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.enums.ActivityTypeEnum;
 import com.ruoyi.common.utils.DateUtils;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
+
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.onethinker.dto.ActivityReqDTO;
+import com.ruoyi.onethinker.factory.ActivityDetailFactory;
+import com.ruoyi.onethinker.factory.service.IActivityDetailService;
 import com.ruoyi.onethinker.mapper.ActivityMapper;
 import com.ruoyi.onethinker.domain.Activity;
 import com.ruoyi.onethinker.service.IActivityService;
@@ -23,6 +34,9 @@ import javax.annotation.Resource;
 public class ActivityServiceImpl implements IActivityService {
     @Resource
     private ActivityMapper activityMapper;
+
+    @Autowired
+    private ActivityDetailFactory activityDetailFactory;
 
     /**
      * 查询活动
@@ -49,13 +63,30 @@ public class ActivityServiceImpl implements IActivityService {
     /**
      * 新增活动
      *
-     * @param activity 活动
+     * @param reqDTO 活动
      * @return 结果
      */
     @Override
-    public int insertActivity(Activity activity) {
+    @Transactional(rollbackFor = Exception.class)
+    public int insertActivity(ActivityReqDTO reqDTO) {
+        // 常规校验
+        Assert.isTrue(StringUtils.isEmpty(reqDTO.getTitle()),"活动标题不能为空");
+        Assert.isTrue(ObjectUtils.isEmpty(reqDTO.getActivityType()),"活动类型有误");
+        ActivityTypeEnum.existsActivityTypeEnumByCode(reqDTO.getActivityType());
+        Activity activity = new Activity();
+        BeanUtils.copyProperties(reqDTO,activity);
         activity.setCreateTime(DateUtils.getNowDate());
-        return activityMapper.insertActivity(activity);
+        int i = activityMapper.insertActivity(activity);
+        if (i == 0) {
+            throw new RuntimeException("活动创建有误，请稍后再试");
+        }
+        // 保存活动明细数据
+        IActivityDetailService activityDetailService = activityDetailFactory.queryActivityDetailByActivityType(reqDTO.getActivityType());
+        int result = activityDetailService.saveEntry(reqDTO);
+        if (result != 0) {
+            throw new RuntimeException("活动明细创建有误，请稍后再试");
+        }
+        return result;
     }
 
     /**

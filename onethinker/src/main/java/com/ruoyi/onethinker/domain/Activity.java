@@ -1,7 +1,5 @@
 package com.ruoyi.onethinker.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
@@ -48,7 +46,7 @@ public class Activity extends BaseEntity {
 
     /** 活动类型id */
     @Excel(name = "活动类型id")
-    private Long activityTypeId;
+    private Integer activityType;
 
 
 }

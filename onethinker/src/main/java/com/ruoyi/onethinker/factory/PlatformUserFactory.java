@@ -1,16 +1,17 @@
-package com.ruoyi.onethinker.service;
+package com.ruoyi.onethinker.factory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.onethinker.dto.PlatformUserReqDTO;
-import com.ruoyi.onethinker.service.impl.PlatformUserSourceTypeAccountServiceImpl;
-import com.ruoyi.onethinker.service.impl.PlatformUserSourceTypeWxServiceImpl;
+import com.ruoyi.onethinker.factory.service.IPlatformUserService;
+import com.ruoyi.onethinker.factory.service.impl.PlatformUserSourceTypeAccountServiceImpl;
+import com.ruoyi.onethinker.factory.service.impl.PlatformUserSourceTypeWxServiceImpl;
 
 /**
  * @author : yangyouqi
  * @date : 2023/10/23 0023 22:15
- * 实例化工厂
+ * 实例化工厂: 根据用户来源不同实例化不同处理
  */
 @Component
 public class PlatformUserFactory {

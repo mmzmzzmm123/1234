@@ -2,6 +2,7 @@ package com.ruoyi.onethinker.service;
 
 import java.util.List;
 import com.ruoyi.onethinker.domain.Activity;
+import com.ruoyi.onethinker.dto.ActivityReqDTO;
 
 /**
  * 活动Service接口
@@ -32,7 +33,7 @@ public interface IActivityService {
      * @param activity 活动
      * @return 结果
      */
-    public int insertActivity(Activity activity);
+    public int insertActivity(ActivityReqDTO activity);
 
     /**
      * 修改活动

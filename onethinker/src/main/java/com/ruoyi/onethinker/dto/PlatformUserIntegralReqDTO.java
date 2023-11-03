@@ -5,6 +5,7 @@ import lombok.Data;
 /**
  * @author : yangyouqi
  * @date : 2023/10/27 0027 19:03
+ * 用户积分DTO
  */
 @Data
 public class PlatformUserIntegralReqDTO {

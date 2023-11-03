@@ -24,20 +24,6 @@ CREATE TABLE `t_activity`
   AUTO_INCREMENT = 56
   DEFAULT CHARSET = utf8mb3 COMMENT ='活动表';
 
--- ----------------------------
--- Table structure for t_activity_type
--- ----------------------------
-DROP TABLE IF EXISTS `t_activity_type`;
-CREATE TABLE `t_activity_type`
-(
-    `id`      bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '表主键',
-    `enabled` int                      DEFAULT '1' COMMENT '是否可见，0为不可见，1为可见',
-    `name`    varchar(20)     NOT NULL DEFAULT '' COMMENT '活动类型名',
-    PRIMARY KEY (`id`),
-    UNIQUE KEY `name` (`name`)
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 42
-  DEFAULT CHARSET = utf8mb3 COMMENT ='活动类型表';
 
 -- ----------------------------
 -- Table structure for t_banner

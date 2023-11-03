@@ -21,6 +21,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 
 import com.ruoyi.onethinker.domain.Activity;
+import com.ruoyi.onethinker.dto.ActivityReqDTO;
 import com.ruoyi.onethinker.service.IActivityService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -75,7 +76,7 @@ public class ActivityController extends BaseController {
     @PreAuthorize("@ss.hasPermi('onethinker:activity:add')")
     @Log(title = "活动", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody Activity activity) {
+    public AjaxResult add(@RequestBody ActivityReqDTO activity) {
         return toAjax(activityService.insertActivity(activity));
     }
 
