@@ -38,6 +38,22 @@ public class TArtResourceOrigin extends BaseEntity
     @Excel(name = "原件osskey")
     private String originFileOsskey;
 
+
+
+
+
+
+    private String originOssKeysStr;
+
+
+    public String getOriginOssKeysStr() {
+        return originOssKeysStr;
+    }
+
+    public void setOriginOssKeysStr(String originOssKeysStr) {
+        this.originOssKeysStr = originOssKeysStr;
+    }
+
     public void setId(String id) 
     {
         this.id = id;

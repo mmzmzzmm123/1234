@@ -1,7 +1,10 @@
 package com.xinyu.idol.service.impl;
 
 import java.util.List;
+
+import com.xinyu.idol.common.core.domain.model.LoginUser;
 import com.xinyu.idol.common.utils.DateUtils;
+import com.xinyu.idol.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.xinyu.idol.mapper.TArtResourceOriginMapper;
@@ -19,6 +22,7 @@ public class TArtResourceOriginServiceImpl implements ITArtResourceOriginService
 {
     @Autowired
     private TArtResourceOriginMapper tArtResourceOriginMapper;
+
 
     /**
      * 查询美术资源上传原件
@@ -53,7 +57,11 @@ public class TArtResourceOriginServiceImpl implements ITArtResourceOriginService
     @Override
     public int insertTArtResourceOrigin(TArtResourceOrigin tArtResourceOrigin)
     {
+        LoginUser loginUser = SecurityUtils.getLoginUser();
         tArtResourceOrigin.setCreateTime(DateUtils.getNowDate());
+        tArtResourceOrigin.setCreateBy(loginUser.getUser().getUserId().toString());
+
+
         return tArtResourceOriginMapper.insertTArtResourceOrigin(tArtResourceOrigin);
     }
 

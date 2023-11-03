@@ -4,6 +4,7 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.CredentialsProviderFactory;
 import com.aliyun.oss.common.auth.EnvironmentVariableCredentialsProvider;
+import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import com.aliyuncs.exceptions.ClientException;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -40,7 +41,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -195,7 +198,7 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
     }
 
     @Override
-    public FileUploadResp uploadIcon(MultipartFile multipartFile) throws ClientException, IOException {
+    public FileUploadResp uploadIcon(MultipartFile multipartFile) throws IOException {
         Assert.notNull(multipartFile, "multipartFile非空");
 
         String rootPath = "resource";
@@ -209,10 +212,45 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
 
         String wholePath = rootPath + "/" + size + "/" + sha1;
 
+
         oss.putObject(bucketName, wholePath, multipartFile.getInputStream());
 
 
         return FileUploadResp.builder().ossKey("/"+wholePath).fileSize(String.valueOf(size)).build();
+    }
+
+    @Override
+    public OriginUploadResp uploadOrigins(List<MultipartFile> multipartFileList) throws  IOException {
+        Assert.notNull(multipartFileList, "multipartFile非空");
+
+        FileUploadResp fileUploadResp=new FileUploadResp();
+
+        String rootPath = "origin";
+
+        List<String>ossKeyList=new ArrayList<>();
+
+        StringBuffer ossKeyListStr=new StringBuffer();
+
+        String timestampStr=String.valueOf(DateUtils.dateTimeNow());
+
+        for (MultipartFile multipartFile:multipartFileList) {
+
+            String wholePath=rootPath+"/"+timestampStr+"/"+multipartFile.getOriginalFilename();
+
+            ObjectMetadata metadata = new ObjectMetadata();
+            // 指定Content-Type
+
+            metadata.setContentType("application/octet-stream");
+
+            oss.putObject(bucketName, wholePath, multipartFile.getInputStream(),metadata);
+
+            log.info("批量上传oss路径:{}",wholePath);
+
+            ossKeyListStr.append("/"+wholePath+",");
+
+            ossKeyList.add("/"+wholePath);
+        }
+        return OriginUploadResp.builder().ossKeyListStr(ossKeyListStr.toString()).ossKeyList(ossKeyList).build();
     }
 
     @Override

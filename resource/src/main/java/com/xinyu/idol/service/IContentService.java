@@ -40,7 +40,15 @@ public interface IContentService extends IService<ContentEntity> {
      * @throws ClientException
      * @throws IOException
      */
-     FileUploadResp uploadIcon(MultipartFile multipartFile) throws ClientException, IOException;
+     FileUploadResp uploadIcon(MultipartFile multipartFile) throws  IOException;
+
+    /**
+     * 批量上传源文件
+     * @param multipartFileList
+     * @return
+     * @throws IOException
+     */
+    OriginUploadResp uploadOrigins(List<MultipartFile> multipartFileList) throws  IOException;
 
      void pullResourceFromEnv(PullResourceFromEnvReq pullResourceFromEnvReq);
 

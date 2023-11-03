@@ -11,13 +11,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="linkedGuid"    column="linked_guid"    />
         <result property="iconOsskey"    column="icon_osskey"    />
         <result property="originFileOsskey"    column="origin_file_osskey"    />
-        <result property="createBy"    column="createBy"    />
+        <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
     </resultMap>
 
     <sql id="selectTArtResourceOriginVo">
-        select id, display_name, repalce_guid, linked_guid, icon_osskey, origin_file_osskey, createBy, create_time, update_time from t_art_resource_origin
+        select id, display_name, repalce_guid, linked_guid, icon_osskey, origin_file_osskey, create_by, create_time, update_time from t_art_resource_origin
     </sql>
 
     <select id="selectTArtResourceOriginList" parameterType="TArtResourceOrigin" resultMap="TArtResourceOriginResult">
@@ -45,7 +45,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="linkedGuid != null">linked_guid,</if>
             <if test="iconOsskey != null">icon_osskey,</if>
             <if test="originFileOsskey != null">origin_file_osskey,</if>
-            <if test="createBy != null">createBy,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="originOssKeysStr != null">origin_oss_keys_str,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
          </trim>
@@ -56,6 +57,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="iconOsskey != null">#{iconOsskey},</if>
             <if test="originFileOsskey != null">#{originFileOsskey},</if>
             <if test="createBy != null">#{createBy},</if>
+            <if test="originOssKeysStr != null">#{originOssKeysStr},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
          </trim>
@@ -69,7 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="linkedGuid != null">linked_guid = #{linkedGuid},</if>
             <if test="iconOsskey != null">icon_osskey = #{iconOsskey},</if>
             <if test="originFileOsskey != null">origin_file_osskey = #{originFileOsskey},</if>
-            <if test="createBy != null">createBy = #{createBy},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
         </trim>

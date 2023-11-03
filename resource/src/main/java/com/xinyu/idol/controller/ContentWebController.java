@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/content/web")
@@ -50,10 +51,17 @@ public class ContentWebController {
         return AjaxResult.success(contentService.uploadIcon(file));
     }
 
+    @RequestMapping(value = "/file/uploadOrigins",method = RequestMethod.POST)
+    AjaxResult pushToEnv(List<MultipartFile> file) throws IOException {
+        return AjaxResult.success(contentService.uploadOrigins(file));
+    }
+
     @RequestMapping(value = "/pull",method = RequestMethod.POST)
     AjaxResult pushToEnv(@RequestBody PullResourceFromEnvReq pullResourceFromEnvReq)  {
         return AjaxResult.success();
     }
+
+
 
 
 }
