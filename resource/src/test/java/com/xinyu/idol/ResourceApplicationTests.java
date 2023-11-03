@@ -1,6 +1,7 @@
 package com.xinyu.idol;
 
 
+import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson2.JSON;
 import com.aliyun.oss.ClientException;
 import com.aliyun.oss.OSS;
@@ -10,6 +11,8 @@ import com.aliyun.oss.common.auth.CredentialsProviderFactory;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import com.aliyuncs.auth.EnvironmentVariableCredentialsProvider;
+import com.xinyu.idol.common.core.redis.RedisCache;
+import com.xinyu.idol.common.utils.StringUtils;
 import com.xinyu.idol.framework.web.service.SysLoginService;
 import com.xinyu.idol.framework.web.service.TokenService;
 import com.xinyu.idol.manager.ContentManager;
@@ -19,10 +22,13 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.util.UUID;
 
 @SpringBootTest
@@ -76,8 +82,25 @@ class ResourceApplicationTests {
 
     }
 
+    @Autowired
+    RedisTemplate<String,String> redisTemplate;
+
+    @Autowired
+    RedisCache redisCache;
+
+
+    @Test
+    void testRedisQueue(){
+        String queueKey="Message:Queue:ArtUpload";
+        com.xinyu.idol.domain.TArtResourceOrigin tArtResourceOrigin = redisCache.rPop(queueKey);
+        System.out.println(tArtResourceOrigin.toString());
+
+
+    }
+
     @Test
     void jsonToBean(){
+
         AddContentVo addContentVo= AddContentVo.builder()
                 .classification1("c1")
                 .classification2("c2")
@@ -98,10 +121,10 @@ class ResourceApplicationTests {
 
 
         addContentVo.setPath(UUID.randomUUID().toString());
-        //String jsonStr = JSONUtils.toJSONString(addContentVo);
-        String s = JSON.toJSONString(addContentVo);
+       redisCache.lPush("testKey33",addContentVo);
 
-        System.out.println("json->"+s);
+
+
 
     }
 

@@ -7,10 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundSetOperations;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 /**
@@ -142,6 +139,21 @@ public class RedisCache
         Long count = redisTemplate.opsForList().rightPushAll(key, dataList);
         return count == null ? 0 : count;
     }
+
+    public <T> void lPush(final String key, final T value)
+    {
+         redisTemplate.opsForList().leftPush(key,value);
+
+    }
+
+    public <T> T rPop(final String key)
+    {
+        ListOperations<String,T> listOperations = redisTemplate.opsForList();
+
+
+        return listOperations.rightPop(key);
+    }
+
 
     /**
      * 获得缓存的list对象

@@ -5,13 +5,15 @@ import com.xinyu.idol.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import java.io.Serializable;
+
 /**
  * 美术资源上传原件对象 t_art_resource_origin
  * 
  * @author liyu
  * @date 2023-10-31
  */
-public class TArtResourceOrigin extends BaseEntity
+public class TArtResourceOrigin extends BaseEntity implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
@@ -37,10 +39,6 @@ public class TArtResourceOrigin extends BaseEntity
     /** 原件osskey */
     @Excel(name = "原件osskey")
     private String originFileOsskey;
-
-
-
-
 
 
     private String originOssKeysStr;

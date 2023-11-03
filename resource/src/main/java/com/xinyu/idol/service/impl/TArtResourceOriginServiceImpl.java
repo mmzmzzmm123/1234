@@ -3,6 +3,7 @@ package com.xinyu.idol.service.impl;
 import java.util.List;
 
 import com.xinyu.idol.common.core.domain.model.LoginUser;
+import com.xinyu.idol.common.core.redis.RedisCache;
 import com.xinyu.idol.common.utils.DateUtils;
 import com.xinyu.idol.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class TArtResourceOriginServiceImpl implements ITArtResourceOriginService
 {
     @Autowired
     private TArtResourceOriginMapper tArtResourceOriginMapper;
+
+    @Autowired
+    private RedisCache redisCache;
 
 
     /**
@@ -61,8 +65,13 @@ public class TArtResourceOriginServiceImpl implements ITArtResourceOriginService
         tArtResourceOrigin.setCreateTime(DateUtils.getNowDate());
         tArtResourceOrigin.setCreateBy(loginUser.getUser().getUserId().toString());
 
+        int rows=  tArtResourceOriginMapper.insertTArtResourceOrigin(tArtResourceOrigin);
 
-        return tArtResourceOriginMapper.insertTArtResourceOrigin(tArtResourceOrigin);
+        String queueKey="Message:Queue:ArtUpload";
+
+        redisCache.lPush(queueKey,tArtResourceOrigin);
+
+        return rows;
     }
 
     /**
