@@ -52,6 +52,7 @@
                             and qr_code_status = #{qrCodeStatus}
                         </if>
         </where>
+        order by batch desc
     </select>
 
     <select id="selectRedEnvelopeDtlById" parameterType="Long"
@@ -112,6 +113,13 @@
                     </if>
         </trim>
     </insert>
+    <insert id="insertRedEnvelopeDtls">
+        insert into t_red_envelope_dtl(create_time,update_time,enabled,weight,batch_no,money,lucky_award_type,remark,batch,qr_code_url,qr_code_status) values
+        <foreach collection="saveEntitys" item="item" separator=",">
+            (#{item.createTime},#{item.updateTime},#{item.enabled},#{item.weight},#{item.batchNo},#{item.money},#{item.luckyAwardType},#{item.remark},#{item.batch},#{item.qrCodeUrl},#{item.qrCodeStatus})
+        </foreach>
+
+    </insert>
 
     <update id="updateRedEnvelopeDtl" parameterType="RedEnvelopeDtl">
         update t_red_envelope_dtl
@@ -150,7 +158,10 @@
                         #{qrCodeStatus},
                     </if>
         </trim>
-        where id = #{id}
+        <where>
+            id = #{id}
+        <if test="orgQrCodeStatus != null"> and qr_code_status=#{orgQrCodeStatus}</if>
+        </where>
     </update>
 
     <delete id="deleteRedEnvelopeDtlById" parameterType="Long">

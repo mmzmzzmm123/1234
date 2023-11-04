@@ -34,8 +34,8 @@ public enum ActivityTypeEnum {
         this.msg = msg;
     }
 
-    public static SysConfigKeyEnum getActivityTypeEnumByCode(Integer code) {
-        for (SysConfigKeyEnum value : SysConfigKeyEnum.values()) {
+    public static ActivityTypeEnum getActivityTypeEnumByCode(Integer code) {
+        for (ActivityTypeEnum value : ActivityTypeEnum.values()) {
             if (Objects.equals(value.code, code)) {
                 return value;
             }
@@ -43,10 +43,10 @@ public enum ActivityTypeEnum {
         return null;
     }
 
-    public static void existsActivityTypeEnumByCode(Integer code) {
-        for (SysConfigKeyEnum value : SysConfigKeyEnum.values()) {
+    public static ActivityTypeEnum existsActivityTypeEnumByCode(Integer code) {
+        for (ActivityTypeEnum value : ActivityTypeEnum.values()) {
             if (Objects.equals(value.code, code)) {
-                return;
+                return value;
             }
         }
         throw new RuntimeException("活动类型有误");

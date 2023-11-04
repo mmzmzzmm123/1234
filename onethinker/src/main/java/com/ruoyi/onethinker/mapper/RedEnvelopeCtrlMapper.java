@@ -2,6 +2,7 @@ package com.ruoyi.onethinker.mapper;
 
 import java.util.List;
 import com.ruoyi.onethinker.domain.RedEnvelopeCtrl;
+import com.ruoyi.onethinker.dto.RedEnvelopeCtrlDTO;
 
 /**
  * 红包批控制Mapper接口
@@ -57,4 +58,11 @@ public interface RedEnvelopeCtrlMapper {
      * @return 结果
      */
     public int deleteRedEnvelopeCtrlByIds(Long[] ids);
+
+    /**
+     * 更新用户状态
+     * @param redEnvelopeCtrl
+     * @return
+     */
+    int updateRedEnvelopeCtrlAndStatus(RedEnvelopeCtrlDTO redEnvelopeCtrl);
 }

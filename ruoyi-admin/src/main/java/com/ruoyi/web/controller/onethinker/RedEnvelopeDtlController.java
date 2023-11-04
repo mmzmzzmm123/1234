@@ -70,26 +70,6 @@ public class RedEnvelopeDtlController extends BaseController {
     }
 
     /**
-     * 新增红包明细
-     */
-    @PreAuthorize("@ss.hasPermi('onethinker:dtl:add')")
-    @Log(title = "红包明细", businessType = BusinessType.INSERT)
-    @PostMapping
-    public AjaxResult add(@RequestBody RedEnvelopeDtl redEnvelopeDtl) {
-        return toAjax(redEnvelopeDtlService.insertRedEnvelopeDtl(redEnvelopeDtl));
-    }
-
-    /**
-     * 修改红包明细
-     */
-    @PreAuthorize("@ss.hasPermi('onethinker:dtl:edit')")
-    @Log(title = "红包明细", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public AjaxResult edit(@RequestBody RedEnvelopeDtl redEnvelopeDtl) {
-        return toAjax(redEnvelopeDtlService.updateRedEnvelopeDtl(redEnvelopeDtl));
-    }
-
-    /**
      * 删除红包明细
      */
     @PreAuthorize("@ss.hasPermi('onethinker:dtl:remove')")

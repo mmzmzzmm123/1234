@@ -57,4 +57,11 @@ public interface RedEnvelopeDtlMapper {
      * @return 结果
      */
     public int deleteRedEnvelopeDtlByIds(Long[] ids);
+
+    /**
+     * 批量插入数据
+     * @param saveEntitys
+     * @return
+     */
+    int insertRedEnvelopeDtls(List<RedEnvelopeDtl> saveEntitys);
 }

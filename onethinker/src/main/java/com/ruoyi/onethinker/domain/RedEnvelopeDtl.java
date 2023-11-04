@@ -20,7 +20,7 @@ public class RedEnvelopeDtl extends BaseEntity {
 
     /** 是否可见，0为未领取，1为已领取 2：归档 */
     @Excel(name = "是否可见，0为未领取，1为已领取 2：归档")
-    private Long enabled;
+    private Integer enabled;
 
     /** 权重 */
     @Excel(name = "权重")
@@ -36,11 +36,11 @@ public class RedEnvelopeDtl extends BaseEntity {
 
     /** 是否为幸运奖 */
     @Excel(name = "是否为幸运奖")
-    private Long luckyAwardType;
+    private Integer luckyAwardType;
 
     /** 当前批数 */
     @Excel(name = "当前批数")
-    private Long batch;
+    private Integer batch;
 
     /** 二维码地址 */
     @Excel(name = "二维码地址")
@@ -48,7 +48,10 @@ public class RedEnvelopeDtl extends BaseEntity {
 
     /** 创建二维码状态  0：初始化 1：正在执行 2:创建成功 3：创建失败 */
     @Excel(name = "创建二维码状态  0：初始化 1：正在执行 2:创建成功 3：创建失败")
-    private Long qrCodeStatus;
+    private Integer qrCodeStatus;
+
+    /** 原二维码状态 **/
+    private Integer orgQrCodeStatus;
 
 
 }

@@ -33,6 +33,8 @@
         <mybatis.version>3.4.1</mybatis.version>
         <lombok.version>1.18.28</lombok.version>
         <google.version>19.0</google.version>
+        <hutool.version>5.3.1</hutool.version>
+        <core.version>3.3.3</core.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -170,6 +172,19 @@
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${google.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-crypto</artifactId>
+                <version>${hutool.version}</version>
+            </dependency>
+
+            <!--二维码-->
+            <dependency>
+                <groupId>com.google.zxing</groupId>
+                <artifactId>core</artifactId>
+                <version>${core.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -2,6 +2,7 @@ package com.ruoyi.onethinker.service;
 
 import java.util.List;
 import com.ruoyi.onethinker.domain.RedEnvelopeDtl;
+import com.ruoyi.onethinker.dto.RedEnvelopeCtrlDTO;
 
 /**
  * 红包明细Service接口
@@ -32,7 +33,7 @@ public interface IRedEnvelopeDtlService {
      * @param redEnvelopeDtl 红包明细
      * @return 结果
      */
-    public int insertRedEnvelopeDtl(RedEnvelopeDtl redEnvelopeDtl);
+    public int insertRedEnvelopeDtl(RedEnvelopeCtrlDTO redEnvelopeDtl);
 
     /**
      * 修改红包明细
@@ -40,7 +41,7 @@ public interface IRedEnvelopeDtlService {
      * @param redEnvelopeDtl 红包明细
      * @return 结果
      */
-    public int updateRedEnvelopeDtl(RedEnvelopeDtl redEnvelopeDtl);
+    public int updateRedEnvelopeDtl(RedEnvelopeDtl redEnvelopeDtl,Integer qrCodeStatus);
 
     /**
      * 批量删除红包明细
@@ -57,4 +58,11 @@ public interface IRedEnvelopeDtlService {
      * @return 结果
      */
     public int deleteRedEnvelopeDtlById(Long id);
+
+    /**
+     * 创建二维码内容
+     * @param redEnvelopeDtl
+     * @return
+     */
+    String createQrCodeBaseInfo(RedEnvelopeDtl redEnvelopeDtl);
 }

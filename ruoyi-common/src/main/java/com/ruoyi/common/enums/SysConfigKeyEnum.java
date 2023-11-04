@@ -63,7 +63,17 @@ public enum SysConfigKeyEnum {
     /**
      * 默认图片地址
      */
-    DETAIL_FILE_PATH("detail_file_path", "默认图片地址");
+    DETAIL_FILE_PATH("detail_file_path", "默认图片地址"),
+    /**
+     * 创建二维码私钥
+     */
+    QR_CODE_RSA_PRIVATE_KEY("qr_code_rsa_private_key","创建二维码私钥"),
+    /**
+     * 创建二维码公钥
+     */
+    QR_CODE_RSA_PUBLIC_KEY("qr_code_rsa_private_key","创建二维码公钥"),
+
+    ;
     String code;
     String msg;
 

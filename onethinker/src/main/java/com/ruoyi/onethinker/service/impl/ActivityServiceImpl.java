@@ -70,12 +70,11 @@ public class ActivityServiceImpl implements IActivityService {
     @Transactional(rollbackFor = Exception.class)
     public int insertActivity(ActivityReqDTO reqDTO) {
         // 常规校验
-        Assert.isTrue(StringUtils.isEmpty(reqDTO.getTitle()),"活动标题不能为空");
-        Assert.isTrue(ObjectUtils.isEmpty(reqDTO.getActivityType()),"活动类型有误");
-        ActivityTypeEnum.existsActivityTypeEnumByCode(reqDTO.getActivityType());
+        reqDTO.existsParams();
         Activity activity = new Activity();
         BeanUtils.copyProperties(reqDTO,activity);
         activity.setCreateTime(DateUtils.getNowDate());
+        activity.setWeight(System.currentTimeMillis());
         int i = activityMapper.insertActivity(activity);
         if (i == 0) {
             throw new RuntimeException("活动创建有误，请稍后再试");
@@ -83,7 +82,7 @@ public class ActivityServiceImpl implements IActivityService {
         // 保存活动明细数据
         IActivityDetailService activityDetailService = activityDetailFactory.queryActivityDetailByActivityType(reqDTO.getActivityType());
         int result = activityDetailService.saveEntry(reqDTO);
-        if (result != 0) {
+        if (result == 0) {
             throw new RuntimeException("活动明细创建有误，请稍后再试");
         }
         return result;

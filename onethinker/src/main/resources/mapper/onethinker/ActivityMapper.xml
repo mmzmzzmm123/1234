@@ -15,12 +15,12 @@
             <result property="title" column="title"/>
             <result property="bgUrl" column="bg_url"/>
             <result property="batchNo" column="batch_no"/>
-            <result property="activityTypeId" column="activity_type_id"/>
+            <result property="activityType" column="activity_type"/>
             <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectActivityVo">
-        select id, create_time, update_time, enabled, weight, start_time, end_time, title, bg_url, batch_no, activity_type_id, remark
+        select id, create_time, update_time, enabled, weight, start_time, end_time, title, bg_url, batch_no, activity_type, remark
         from t_activity
     </sql>
 
@@ -48,8 +48,8 @@
                         <if test="batchNo != null  and batchNo != ''">
                             and batch_no = #{batchNo}
                         </if>
-                        <if test="activityTypeId != null ">
-                            and activity_type_id = #{activityTypeId}
+                        <if test="activityType != null ">
+                            and activity_type = #{activityType}
                         </if>
         </where>
     </select>
@@ -82,7 +82,7 @@
                     </if>
                     <if test="batchNo != null and batchNo != ''">batch_no,
                     </if>
-                    <if test="activityTypeId != null">activity_type_id,
+                    <if test="activityType != null">activity_type,
                     </if>
                     <if test="remark != null">remark,
                     </if>
@@ -106,7 +106,7 @@
                     </if>
                     <if test="batchNo != null and batchNo != ''">#{batchNo},
                     </if>
-                    <if test="activityTypeId != null">#{activityTypeId},
+                    <if test="activityType != null">#{activityType},
                     </if>
                     <if test="remark != null">#{remark},
                     </if>
@@ -143,8 +143,8 @@
                     <if test="batchNo != null and batchNo != ''">batch_no =
                         #{batchNo},
                     </if>
-                    <if test="activityTypeId != null">activity_type_id =
-                        #{activityTypeId},
+                    <if test="activityType != null">activity_type =
+                        #{activityType},
                     </if>
                     <if test="remark != null">remark =
                         #{remark},

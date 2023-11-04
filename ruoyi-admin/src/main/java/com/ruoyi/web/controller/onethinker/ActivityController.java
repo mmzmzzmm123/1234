@@ -75,7 +75,7 @@ public class ActivityController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:activity:add')")
     @Log(title = "活动", businessType = BusinessType.INSERT)
-    @PostMapping
+    @PostMapping(value = "/add")
     public AjaxResult add(@RequestBody ActivityReqDTO activity) {
         return toAjax(activityService.insertActivity(activity));
     }
@@ -85,7 +85,7 @@ public class ActivityController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:activity:edit')")
     @Log(title = "活动", businessType = BusinessType.UPDATE)
-    @PutMapping
+    @PutMapping(value = "/update")
     public AjaxResult edit(@RequestBody Activity activity) {
         return toAjax(activityService.updateActivity(activity));
     }
