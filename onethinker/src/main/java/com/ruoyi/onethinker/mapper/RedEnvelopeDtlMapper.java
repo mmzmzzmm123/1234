@@ -1,6 +1,9 @@
 package com.ruoyi.onethinker.mapper;
 
 import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.ruoyi.onethinker.domain.RedEnvelopeDtl;
 
 /**
@@ -63,5 +66,5 @@ public interface RedEnvelopeDtlMapper {
      * @param saveEntitys
      * @return
      */
-    int insertRedEnvelopeDtls(List<RedEnvelopeDtl> saveEntitys);
+    int insertRedEnvelopeDtls(@Param("saveEntitys") List<RedEnvelopeDtl> saveEntitys);
 }

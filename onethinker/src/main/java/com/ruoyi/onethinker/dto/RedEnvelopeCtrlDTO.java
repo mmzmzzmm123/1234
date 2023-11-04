@@ -18,6 +18,8 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class RedEnvelopeCtrlDTO {
 
+    private Long id;
+
     /**
      * 是否可见，0为禁用，1为启用 2：归档 4:删除
      */

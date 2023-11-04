@@ -71,7 +71,7 @@ public enum SysConfigKeyEnum {
     /**
      * 创建二维码公钥
      */
-    QR_CODE_RSA_PUBLIC_KEY("qr_code_rsa_private_key","创建二维码公钥"),
+    QR_CODE_RSA_PUBLIC_KEY("qr_code_rsa_public_key","创建二维码公钥"),
 
     ;
     String code;

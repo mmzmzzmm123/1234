@@ -74,7 +74,7 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
      */
     @Override
     public int insertRedEnvelopeDtl(RedEnvelopeCtrlDTO redEnvelopeDtlDTO) {
-        PageHelper.startPage(0, 1);
+        PageHelper.startPage(1, 1);
         RedEnvelopeDtl reqParams = new RedEnvelopeDtl();
         reqParams.setBatchNo(redEnvelopeDtlDTO.getBatchNo());
         List<RedEnvelopeDtl> redEnvelopeDtls = redEnvelopeDtlMapper.selectRedEnvelopeDtlList(reqParams);
@@ -97,10 +97,11 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
                     redEnvelopeDtl.setEnabled(RedEnvelopeDtl.STATE_TYPE_ENABLED);
                     redEnvelopeDtl.setWeight(System.currentTimeMillis());
                     // 特别内容
-                    redEnvelopeDtl.setBatchNo(redEnvelopeDtl.getBatchNo());
+                    redEnvelopeDtl.setBatchNo(redEnvelopeDtlDTO.getBatchNo());
                     redEnvelopeDtl.setMoney(calculateRedEnvelopeDTO.getBatchMoney());
                     redEnvelopeDtl.setLuckyAwardType(AwardConstants.LUCKY_AWARD_TYPE_NO);
                     redEnvelopeDtl.setBatch(nowBatch + 1);
+                    redEnvelopeDtl.setQrCodeStatus(AwardConstants.CREATE_QR_CODE_STATUS_INIT);
                     saveEntitys.add(redEnvelopeDtl);
                 }
             } else if (AwardConstants.LUCKY_AWARD_TYPE_YES.equals(redEnvelopeDtlDTO.getLuckyAward())) {
@@ -114,7 +115,7 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
                     redEnvelopeDtl.setEnabled(RedEnvelopeCtrl.STATE_TYPE_ENABLED);
                     redEnvelopeDtl.setWeight(System.currentTimeMillis());
                     // 特别内容
-                    redEnvelopeDtl.setBatchNo(redEnvelopeDtl.getBatchNo());
+                    redEnvelopeDtl.setBatchNo(redEnvelopeDtlDTO.getBatchNo());
                     if (luckyAwards.contains(i)) {
                         redEnvelopeDtl.setLuckyAwardType(AwardConstants.LUCKY_AWARD_TYPE_YES);
                         redEnvelopeDtl.setMoney(redEnvelopeDtlDTO.getLuckyAwardMoney());
@@ -123,6 +124,7 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
                         redEnvelopeDtl.setMoney(calculateRedEnvelopeDTO.getBatchMoney());
                     }
                     redEnvelopeDtl.setBatch(nowBatch + 1);
+                    redEnvelopeDtl.setQrCodeStatus(AwardConstants.CREATE_QR_CODE_STATUS_INIT);
 
                     saveEntitys.add(redEnvelopeDtl);
                 }

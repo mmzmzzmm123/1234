@@ -219,62 +219,7 @@
         where id = #{id}
     </update>
     <update id="updateRedEnvelopeCtrlAndStatus">
-        update t_red_envelope_ctrl
-        <trim prefix="SET" suffixOverrides=",">
-            <if test="createTime != null">create_time =
-                #{createTime},
-            </if>
-            update_time = sysdate(),
-            <if test="enabled != null">enabled =
-                #{enabled},
-            </if>
-            <if test="weight != null">weight =
-                #{weight},
-            </if>
-            <if test="batchNo != null and batchNo != ''">batch_no =
-                #{batchNo},
-            </if>
-            <if test="totalMoney != null">total_money =
-                #{totalMoney},
-            </if>
-            <if test="totalSum != null">total_sum =
-                #{totalSum},
-            </if>
-            <if test="type != null">type =
-                #{type},
-            </if>
-            <if test="drawCount != null">draw_count =
-                #{drawCount},
-            </if>
-            <if test="drawMoney != null">draw_money =
-                #{drawMoney},
-            </if>
-            <if test="createUserId != null">create_user_id =
-                #{createUserId},
-            </if>
-            <if test="batchSum != null">batch_sum =
-                #{batchSum},
-            </if>
-            <if test="luckyAward != null">lucky_award =
-                #{luckyAward},
-            </if>
-            <if test="luckyAwardCount != null">lucky_award_count =
-                #{luckyAwardCount},
-            </if>
-            <if test="luckyAwardMoney != null">lucky_award_money =
-                #{luckyAwardMoney},
-            </if>
-            <if test="remark != null">remark =
-                #{remark},
-            </if>
-            <if test="status != null">status =
-                #{status},
-            </if>
-        </trim>
-        <where>
-            id = #{id}
-            <if test="orgStatus != null"> and status = #{orgStatus}</if>
-        </where>
+        update t_red_envelope_ctrl set update_time = sysdate(),status = #{status},remark = #{remark} where id = #{id}  and status = #{orgStatus}
     </update>
 
     <delete id="deleteRedEnvelopeCtrlById" parameterType="Long">

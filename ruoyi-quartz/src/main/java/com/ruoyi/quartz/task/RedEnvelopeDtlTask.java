@@ -52,7 +52,7 @@ public class RedEnvelopeDtlTask {
         RedEnvelopeCtrlDTO redEnvelopeCtrlDTO = new RedEnvelopeCtrlDTO();
         redEnvelopeCtrlDTO.setStatus(AwardConstants.CREATE_QR_CODE_STATUS_INIT);
         // 分页处理
-        PageHelper.startPage(0, 200);
+        PageHelper.startPage(1, 200);
         List<RedEnvelopeCtrlDTO> redEnvelopeCtrlList =  activityDetailService.queryRedEnvelopeCtrlByParams(redEnvelopeCtrlDTO);
         if (redEnvelopeCtrlList.isEmpty()) {
             log.info("暂不需生成红包明细");
@@ -87,7 +87,7 @@ public class RedEnvelopeDtlTask {
     public void createQrCode() {
         log.info("创建二维码数据");
         //  分页处理
-        PageHelper.startPage(0, 200);
+        PageHelper.startPage(1, 200);
         RedEnvelopeDtl params = new RedEnvelopeDtl();
         params.setQrCodeStatus(AwardConstants.CREATE_QR_CODE_STATUS_INIT);
         List<RedEnvelopeDtl> redEnvelopeDtlList =  redEnvelopeDtlService.selectRedEnvelopeDtlList(params);
