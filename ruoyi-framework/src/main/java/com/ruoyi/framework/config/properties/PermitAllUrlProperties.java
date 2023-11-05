@@ -9,14 +9,13 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.RegExUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import com.ruoyi.common.annotation.Anonymous;
+import com.ruoyi.common.utils.spring.SpringUtils;
 
 /**
  * 设置Anonymous注解允许匿名访问的url
@@ -24,11 +23,9 @@ import com.ruoyi.common.annotation.Anonymous;
  * @author ruoyi
  */
 @Configuration
-public class PermitAllUrlProperties implements InitializingBean, ApplicationContextAware
+public class PermitAllUrlProperties implements InitializingBean
 {
     private static final Pattern PATTERN = Pattern.compile("\\{(.*?)\\}");
-
-    private ApplicationContext applicationContext;
 
     private List<String> urls = new ArrayList<>();
 
@@ -37,7 +34,7 @@ public class PermitAllUrlProperties implements InitializingBean, ApplicationCont
     @Override
     public void afterPropertiesSet()
     {
-        RequestMappingHandlerMapping mapping = applicationContext.getBean(RequestMappingHandlerMapping.class);
+        RequestMappingHandlerMapping mapping = SpringUtils.getApplicationContext().getBean(RequestMappingHandlerMapping.class);
         Map<RequestMappingInfo, HandlerMethod> map = mapping.getHandlerMethods();
 
         map.keySet().forEach(info -> {
@@ -53,12 +50,6 @@ public class PermitAllUrlProperties implements InitializingBean, ApplicationCont
             Optional.ofNullable(controller).ifPresent(anonymous -> Objects.requireNonNull(info.getPatternsCondition().getPatterns())
                     .forEach(url -> urls.add(RegExUtils.replaceAll(url, PATTERN, ASTERISK))));
         });
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext context) throws BeansException
-    {
-        this.applicationContext = context;
     }
 
     public List<String> getUrls()
