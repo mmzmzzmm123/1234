@@ -42,7 +42,7 @@
                 and date_format(create_time,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
             </if>
         </where>
-        order by id desc
+        order by job_log_id desc
     </select>
 
     <select id="selectJobLogAll" resultMap="SysJobLogResult">
@@ -91,4 +91,4 @@
         )
     </insert>
 
-</mapper> 
+</mapper>
