@@ -5,6 +5,7 @@ import java.util.List;
 import com.ruoyi.common.enums.ActivityTypeEnum;
 import com.ruoyi.common.utils.DateUtils;
 
+import com.ruoyi.onethinker.dto.RedEnvelopeCtrlDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,8 +46,22 @@ public class ActivityServiceImpl implements IActivityService {
      * @return 活动
      */
     @Override
-    public Activity selectActivityById(Long id) {
-        return activityMapper.selectActivityById(id);
+    public ActivityReqDTO selectActivityById(Long id) {
+        Activity activity = activityMapper.selectActivityById(id);
+        ActivityReqDTO resultDTO = new ActivityReqDTO();
+        BeanUtils.copyProperties(activity,resultDTO);
+        // 获取活动详情内容
+        IActivityDetailService activityDetailService = activityDetailFactory.queryActivityDetailByActivityType(activity.getActivityType());
+        // 查看具体是什么
+        if (ActivityTypeEnum.RED_ENVELOPE.getCode().equals(activity.getActivityType())) {
+            RedEnvelopeCtrlDTO redEnvelopeCtrlDTO = new RedEnvelopeCtrlDTO();
+            redEnvelopeCtrlDTO.setBatchNo(activity.getBatchNo());
+            List<RedEnvelopeCtrlDTO> list = activityDetailService.queryRedEnvelopeCtrlByParams(redEnvelopeCtrlDTO);
+            if (!list.isEmpty()) {
+                resultDTO.setRedEnvelopeCtrlDTO(list.get(0));
+            }
+        }
+        return resultDTO;
     }
 
     /**

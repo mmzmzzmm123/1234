@@ -18,6 +18,9 @@ import lombok.Data;
 @Data
 public class ActivityReqDTO {
 
+    /** id **/
+    private Long id;
+
     /** 权重 */
     private Long weight;
 
@@ -44,6 +47,12 @@ public class ActivityReqDTO {
 
     /** 创建活动用户id **/
     private Long sysUserId;
+
+    /**活动状态 **/
+    private Integer enabled;
+
+    /** 备注 **/
+    private String remark;
 
     public void existsParams() {
         if (ObjectUtils.isEmpty(startTime) || ObjectUtils.isEmpty(endTime)) {

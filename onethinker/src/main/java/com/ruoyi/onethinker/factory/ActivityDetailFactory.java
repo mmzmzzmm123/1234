@@ -22,7 +22,9 @@ public class ActivityDetailFactory {
 
 
     public IActivityDetailService queryActivityDetailByActivityType(Integer activityType) {
-        if (ActivityTypeEnum.RED_ENVELOPE.getCode().equals(activityType)) {
+        if (ActivityTypeEnum.YWKJ.getCode().equals(activityType)) {
+            return null;
+        } else if (ActivityTypeEnum.RED_ENVELOPE.getCode().equals(activityType)) {
             return redEnvelopeCtrlService;
         } else if (ActivityTypeEnum.SIGN_IN.getCode().equals(activityType)) {
             log.warn(activityType + "逻辑暂未实现");

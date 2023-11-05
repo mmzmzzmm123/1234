@@ -126,11 +126,11 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService {
         sysFileInfo.setFileId(UUID.fastUuid().toString());
         sysFileInfo.setFileName(fileName);
         sysFileInfo.setFileType(sysFileInfoReqDTO.getFileType());
-        sysFileInfo.setServerFileId(fileMd5);
+        sysFileInfo.setServerFileId(UUID.fastUuid().toString());
         sysFileInfo.setSource(SysFileInfo.SOURCE_TYPE_LOCALHOST);
         sysFileInfo.setSuffixName(suffixName);
         sysFileInfo.setSize(sysFileInfoReqDTO.getSize());
-        sysFileInfo.setFileUrl("http://" + IpUtils.getHostIp() + ":18081/");
+        sysFileInfo.setFileUrl(sysConfigService.selectConfigByKey(SysConfigKeyEnum.SERVICE_FILE_PUBLIC_URL));
         sysFileInfo.setCreateUserId(SecurityUtils.getUserId());
         sysFileInfo.setCreateTime(new Date());
         sysFileInfoMapper.insertSysFileInfo(sysFileInfo);

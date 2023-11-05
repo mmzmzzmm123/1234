@@ -17,7 +17,7 @@ public interface IActivityService {
      * @param id 活动主键
      * @return 活动
      */
-    public Activity selectActivityById(Long id);
+    public ActivityReqDTO selectActivityById(Long id);
 
     /**
      * 查询活动列表

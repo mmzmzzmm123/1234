@@ -106,7 +106,7 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
         Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getBatchNo()),"添加批次号不能为空");
         // 查询用户信息
         PlatformUser platformUser = platformUserDetailService.queryUserByPhone(reqDTO.getPhone());
-        Assert.isTrue(!ObjectUtils.isEmpty(platformUser),"平台用户有误");
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUser),"用户不存在");
         // 查看活动批次号是否存在
         // 保存明细数据
         PlatformUserIntegralHistory platformUserIntegralHistory = new PlatformUserIntegralHistory();

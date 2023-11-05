@@ -73,7 +73,10 @@ public enum SysConfigKeyEnum {
      */
     QR_CODE_RSA_PUBLIC_KEY("qr_code_rsa_public_key","创建二维码公钥"),
 
-    ;
+    /**
+     * 服务器文件前缀
+     */
+    SERVICE_FILE_PUBLIC_URL("service_file_public_url", "服务器文件前缀");
     String code;
     String msg;
 

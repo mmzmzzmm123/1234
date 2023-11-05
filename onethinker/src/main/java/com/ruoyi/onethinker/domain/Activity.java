@@ -18,7 +18,7 @@ public class Activity extends BaseEntity {
 
     /** 是否可见，0为不可见，1为可见 */
     @Excel(name = "是否可见，0为不可见，1为可见")
-    private Long enabled;
+    private Integer enabled;
 
     /** 权重 */
     @Excel(name = "权重")

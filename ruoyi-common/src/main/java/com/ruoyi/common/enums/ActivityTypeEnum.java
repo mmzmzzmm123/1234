@@ -7,6 +7,11 @@ import java.util.Objects;
  * @date : 2023/11/3 0003 11:49
  */
 public enum ActivityTypeEnum {
+
+    /**
+     * 扬万科技
+     */
+    YWKJ(0, "扬万科技"),
     /**
      * 扫码领红包
      */
@@ -25,7 +30,7 @@ public enum ActivityTypeEnum {
     /**
      * 押大小
      */
-    BET_SIZE(4, "押大小");
+    BET_SIZE(4, "押大小"),;
     Integer code;
     String msg;
 
