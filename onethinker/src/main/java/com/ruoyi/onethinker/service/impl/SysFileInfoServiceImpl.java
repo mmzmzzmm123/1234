@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import com.ruoyi.common.config.RuoYiConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -107,7 +108,7 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService {
     @Override
     public SysFileInfo upload(SysFileInfoReqDTO sysFileInfoReqDTO) {
         // 文件路径
-        String path = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DETAIL_FILE_PATH) + "/" + sysFileInfoReqDTO.getModule();
+        String path = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DETAIL_FILE_PATH) + File.separatorChar + sysFileInfoReqDTO.getModule();
         // 文件名
         String fileName = sysFileInfoReqDTO.getName();
         // 文件MD5
