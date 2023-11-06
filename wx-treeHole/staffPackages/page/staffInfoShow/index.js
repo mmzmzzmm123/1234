@@ -69,6 +69,8 @@ Page({
       num: 1, // 赠送礼物数量
       remark: null, // 备注信息
       payWay: 0, // 支付方式
+      accountServiceProvider: '0', // 绿泡泡账号服务商
+      customNum: null, // 绿泡泡账号
     },
     userInfo: app.globalData.userInfo,// 用户信息
     rewardDrawer: false, // 打赏容器
@@ -76,6 +78,8 @@ Page({
       amount: null, // 最少一元
       remark: null, // 备注信息
       payWay: 0, // 支付方式
+      accountServiceProvider: '0', // 绿泡泡账号服务商
+      customNum: null, // 绿泡泡账号
     },
     appointDrawer: false, // 立即下单容器事件
     appointServiceIndex: -1, // 指定服务下标
@@ -88,7 +92,9 @@ Page({
       accountServiceProvider: '0', // 绿泡泡账号服务商
       customNum: null, // 绿泡泡账号
     },
-    ifHide: app.globalData.hidePrivacy
+    ifHide: app.globalData.hidePrivacy,
+    selectUserAccountIndex: -1, // 选择绿泡泡业务下标
+    shareUserId: -1, // 分享人用户标识
   },
 
   /**
@@ -119,7 +125,8 @@ Page({
     let staffId = options.staffId;
     this.setData({
       ["trendsParams.userId"]: staffId,
-      ["commentParams.staffId"]: staffId
+      ["commentParams.staffId"]: staffId,
+      shareUserId: options.share
     })
     // 开启分享朋友圈
     wx.showShareMenu({
@@ -134,8 +141,6 @@ Page({
     this.loadStaffTrendsData(this.loadStaffTrendsDataOnStart);
     // 加载店员订单评论数据
     this.loadStaffOrderCommentata(this.loadStaffOrderCommentataOnStart);
-
-
     // 全局语音监听暂停事件
     app.globalData.audioContext.onEnded(() => {
       this.stopPreAudioState(null);
@@ -181,8 +186,29 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage() {
-
+  onShareAppMessage(res) {
+    let staffInfo = this.data.staffInfo;
+    let sexTip = staffInfo.sex == '0' ? '小猛男' : staffInfo.sex == '1' ? '小可爱' : "小星星";
+    let userInfo = this.data.userInfo;
+    let userId = userInfo != null ? userInfo.id : '0';
+    return {
+      title: '您的好友向您分享了一位' + sexTip + "-" + staffInfo.nickName,
+      imageUrl: staffInfo.avatarUrl,
+      path: "staffPackages/page/staffInfoShow/index?staffId=" + staffInfo.userId + "&share=" + userId
+    }
+  },
+  /**
+   * 分享朋友圈
+   */
+  onShareTimeline: function () {
+    let staffInfo = this.data.staffInfo;
+    let userInfo = this.data.userInfo;
+    let userId = userInfo != null ? userInfo.id : '0';
+    let data = {
+      query: 'staffId=' + staffInfo.userId + '&share=' + userId
+    }
+    console.log(data);
+    return data
   },
   /**
    * 查询店员已点亮礼物数据
@@ -762,6 +788,15 @@ Page({
     let giftIndex = this.data.giftIndex;
     let form = this.data.giftForm;
     let gift = giftList[giftIndex];
+    // 判断绿泡泡账号是否已选择
+    if (this.data.ifHide == '0' && form.customNum == null) {
+      wx.showToast({
+        title: '亲爱的，请选择绿泡泡哟',
+        icon: "none",
+        duration: 2000
+      })
+      return;
+    }
     // 判断是否余额支付
     if (form.payWay == 1) {
       let userWalletVo = userInfo.userWalletVo;
@@ -782,6 +817,11 @@ Page({
         })
         return;
       }
+    }
+    // 判断是否存在分享者
+    let shareUserId = this.data.shareUserId;
+    if (shareUserId != null && shareUserId != "" && shareUserId > 0) {
+      form.shareUserId = shareUserId;
     }
     wx.showLoading({
       title: '正在提交',
@@ -937,6 +977,20 @@ Page({
         direction: 2000
       })
       return;
+    }
+    // 判断绿泡泡账号是否已选择
+    if (this.data.ifHide == '0' && rewardForm.customNum == null) {
+      wx.showToast({
+        title: '亲爱的，请选择绿泡泡哟',
+        icon: "none",
+        duration: 2000
+      })
+      return;
+    }
+    // 判断是否存在分享者
+    let shareUserId = this.data.shareUserId;
+    if (shareUserId != null && shareUserId != "" && shareUserId > 0) {
+      rewardForm.shareUserId = shareUserId;
     }
     let staffInfo = this.data.staffInfo;
     rewardForm.staffId = staffInfo.userId;
@@ -1146,6 +1200,11 @@ Page({
       })
       return;
     }
+    // 判断是否存在分享者
+    let shareUserId = this.data.shareUserId;
+    if (shareUserId != null && shareUserId != "" && shareUserId > 0) {
+      appointForm.shareUserId = shareUserId;
+    }
     let staffInfo = this.data.staffInfo;
     let serviceList = this.data.serviceList;
     let service = serviceList[appointServiceIndex];
@@ -1265,7 +1324,10 @@ Page({
   /**
    * 选择用户账号信息
    */
-  selectUserAccount: function () {
+  selectUserAccount: function (e) {
+    this.setData({
+      selectUserAccountIndex: e.currentTarget.dataset.index
+    })
     wx.navigateTo({
       url: '../../../userPackages/page/accounts/index?type=1',
     })
@@ -1274,10 +1336,25 @@ Page({
    * 选择用户账号回调事件
    */
   chooseUserAccountCallBack: function (data) {
-    this.setData({
-      ["appointForm.accountServiceProvider"]: data.accountServiceProvider,
-      ["appointForm.customNum"]: data.num
-    })
+    let index = this.data.selectUserAccountIndex;
+    if (index == '0') {
+      this.setData({
+        ["giftForm.accountServiceProvider"]: data.accountServiceProvider,
+        ["giftForm.customNum"]: data.num
+      })
+    }
+    if (index == '1') {
+      this.setData({
+        ["rewardForm.accountServiceProvider"]: data.accountServiceProvider,
+        ["rewardForm.customNum"]: data.num
+      })
+    }
+    if (index == '2') {
+      this.setData({
+        ["appointForm.accountServiceProvider"]: data.accountServiceProvider,
+        ["appointForm.customNum"]: data.num
+      })
+    }
   },
   /**
    * 下拉刷新数据
@@ -1304,7 +1381,7 @@ Page({
   loadNextPageData: function () {
     let index = this.data.currentIndex;
     // 0 加载动态 1 加载评论
-    if(index == 0){
+    if (index == 0) {
       let staffTrendsDataTotal = this.data.staffTrendsDataTotal;
       let params = this.data.trendsParams;
       let loadStaffTrendsStateOfBottom = this.data.loadStaffTrendsStateOfBottom;
@@ -1317,7 +1394,7 @@ Page({
         trendsParams: params
       })
       this.loadStaffTrendsData(null);
-    }else{
+    } else {
       let orderCommentDataTotal = this.data.orderCommentDataTotal;
       let params = this.data.commentParams;
       let loadOrderCommentStateOfBottom = this.data.loadOrderCommentStateOfBottom;
@@ -1335,9 +1412,9 @@ Page({
   /**
    * 查看头像
    */
-  lookAvatar:function(){
+  lookAvatar: function () {
     let staffInfo = this.data.staffInfo;
-    if(staffInfo.avatarUrl != null){
+    if (staffInfo.avatarUrl != null) {
       let imgArr = [staffInfo.avatarUrl];
       wx.previewImage({
         urls: imgArr

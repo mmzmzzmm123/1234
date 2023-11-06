@@ -1,0 +1,51 @@
+@import "../../../wxParse/wxParse.wxss";
+page{
+  background-color: #f8f8f9;
+}
+.scope_view{
+  background-color: #ffffff;
+  padding: 10px 0;
+  border-radius: 10px;
+}
+.amountBigView {
+  border-radius: 20px;
+  overflow: hidden;
+  position: relative;
+}
+.bgImg{
+  width: 100%;
+}
+.amountView{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+}
+.commission{
+  color: #ffffff;
+}
+.commission text{
+  font-size: 36px;
+  font-weight: bold;
+}
+.withdrawBut{
+  border-radius: 10px;
+  padding: 4px 20px;
+  background-color: #ffffff;
+  color: #E94124;
+  font-size: 12px;
+  margin-left: 10px;
+}
+.userAvatar{
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
+  overflow: hidden;
+}
+.wxParseView {
+  overflow: hidden;
+}
+.wxParseView image{
+  width: 100%;
+}

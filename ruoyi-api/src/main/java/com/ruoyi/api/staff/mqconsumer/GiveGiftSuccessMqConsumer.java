@@ -1,6 +1,7 @@
 package com.ruoyi.api.staff.mqconsumer;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.ruoyi.common.enums.MqDelayLevelEnums;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.rocketmq.RocketMqService;
 import com.ruoyi.common.rocketmq.constants.MqConstants;
@@ -76,6 +77,9 @@ public class GiveGiftSuccessMqConsumer implements RocketMQListener<Long> {
 
         // 发送赠送礼物成功通知
         rocketMqService.asyncSend(MqConstants.TOPIC_GIVE_GIFT_SUCCESS_NOTICE, orderId);
+
+        // 发送自动评论mq过期时间，默认两小时后自动评论
+        rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_COMMENT, orderId, MqDelayLevelEnums.level_18);
 
         log.info("mq消费-赠送礼物成功业务处理：完成");
     }

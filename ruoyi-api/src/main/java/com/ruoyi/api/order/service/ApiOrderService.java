@@ -29,6 +29,8 @@ import com.ruoyi.common.weixin.WxService;
 import com.ruoyi.common.weixin.model.dto.UnifiedOrderRequestDto;
 import com.ruoyi.common.weixin.model.dto.WxPayRefundDto;
 import com.ruoyi.common.weixin.model.vo.WxPayResultVo;
+import com.ruoyi.distribution.domain.DistributionRelation;
+import com.ruoyi.distribution.mapper.DistributionRelationMapper;
 import com.ruoyi.order.domain.OrderComment;
 import com.ruoyi.order.domain.OrderDetails;
 import com.ruoyi.order.domain.OrderInfo;
@@ -91,6 +93,7 @@ public class ApiOrderService {
     private final PaymentRefundMapper paymentRefundMapper;
     private final OrderCommentMapper orderCommentMapper;
     private final UserInfoMapper userInfoMapper;
+    private final DistributionRelationMapper distributionRelationMapper;
     private final RedisCache redisCache;
     private final WxService wxService;
     private final RocketMqService rocketMqService;
@@ -124,6 +127,8 @@ public class ApiOrderService {
             log.warn("礼物赠送订单提交：失败，礼物信息/店员等级配置信息为空");
             throw new ServiceException("亲爱的，系统繁忙，请稍后重试", HttpStatus.WARN_WX);
         }
+        // 分销关系绑定
+        apiOrderService.bindDistributionRelation(dto.getShareUserId());
         // 续单首单结果
         Boolean ifContinuous = ifContinuous(TokenUtils.getUserId(), dto.getStaffId());
         // 金额计算
@@ -221,6 +226,8 @@ public class ApiOrderService {
             log.warn("打赏订单提交：失败，无法找到对应店员等级配置信息");
             throw new ServiceException("亲爱的，系统繁忙，请稍后重试", HttpStatus.WARN_WX);
         }
+        // 分销关系绑定
+        apiOrderService.bindDistributionRelation(dto.getShareUserId());
         // 当前用户标识
         Long userId = TokenUtils.getUserId();
         // 自动取消时间
@@ -325,6 +332,8 @@ public class ApiOrderService {
             log.warn("随机单提交：失败，服务子项目对应等级价格信息为空");
             throw new ServiceException("亲爱的，系统繁忙，请稍后重试", HttpStatus.WARN_WX);
         }
+        // 分销关系绑定
+        apiOrderService.bindDistributionRelation(dto.getShareUserId());
         // 自动取消时间
         String autoCancelTime = DateUtils.rollMinute(5, DateUtils.YYYY_MM_DD_HH_MM_SS);
         // 订单金额
@@ -442,6 +451,8 @@ public class ApiOrderService {
             log.warn("指定单提交：失败，订单金额与前台传入不一致，需提醒客户");
             throw new ServiceException("亲爱的用户，当前提交的订单金额与系统计算金额不一致，提交订单金额为：" + dto.getAmount() + "，系统计算金额为：" + orderAmount + "，请刷新重试，或咨询客服进行解决，感谢您的支持！", HttpStatus.WARN_WX);
         }
+        // 分销关系绑定
+        apiOrderService.bindDistributionRelation(dto.getShareUserId());
         // 当前用户标识
         Long userId = TokenUtils.getUserId();
         // 续单首单结果
@@ -517,6 +528,62 @@ public class ApiOrderService {
         }
         log.info("指定单提交：完成，返回数据：{}", vo);
         return vo;
+    }
+
+    /**
+     * 绑定分销关系
+     *
+     * @param shareUserId 分享者
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void bindDistributionRelation(Long shareUserId) {
+        log.info("分销关系绑定：开始，参数：{}", shareUserId);
+        if (ObjectUtil.isNotNull(shareUserId)) {
+            Long userId = TokenUtils.getUserId();
+            if (userId.equals(shareUserId)){
+                log.warn("分销关系绑定：完成，自己不允许绑定自己");
+                return;
+            }
+            // 判断该子用户是否已经绑定关系
+            DistributionRelation selectOneLevel = new DistributionRelation();
+            selectOneLevel.setLevel(Long.parseLong(DistributionLevelEnums.ONE_LEVEL.getCode()))
+                    .setCId(userId);
+            if (ObjectUtil.isNotEmpty(distributionRelationMapper.selectDistributionRelationList(selectOneLevel))) {
+                log.warn("分销关系绑定：完成，该用户已绑定关系");
+                return;
+            }
+            List<Long> userIdList = new ArrayList<>();
+            Date now = DateUtils.getNowDate();
+            // 开始绑定一级分销数据
+            DistributionRelation insertOneLevelDistribution = new DistributionRelation();
+            insertOneLevelDistribution.setPId(shareUserId)
+                    .setCId(userId)
+                    .setLevel(Long.parseLong(DistributionLevelEnums.ONE_LEVEL.getCode()))
+                    .setCreateTime(now);
+            distributionRelationMapper.insertDistributionRelation(insertOneLevelDistribution);
+            userIdList.add(insertOneLevelDistribution.getPId());
+            // 开始处理二级分销数据是否需要绑定
+            DistributionRelation selectTwoLevel = new DistributionRelation();
+            selectTwoLevel.setCId(shareUserId)
+                    .setLevel(Long.parseLong(DistributionLevelEnums.ONE_LEVEL.getCode()));
+            List<DistributionRelation> twoDistributionRelations = distributionRelationMapper.selectDistributionRelationList(selectTwoLevel);
+            if (ObjectUtil.isNotEmpty(twoDistributionRelations)) {
+                DistributionRelation twoDistributionRelation = twoDistributionRelations.get(0);
+                // 开始构建二级分销数据
+                DistributionRelation insertTwoLevelDistribution = new DistributionRelation();
+                insertTwoLevelDistribution.setLevel(Long.parseLong(DistributionLevelEnums.TWO_LEVEL.getCode()))
+                        .setPId(twoDistributionRelation.getPId())
+                        .setCId(userId)
+                        .setCreateTime(now);
+                distributionRelationMapper.insertDistributionRelation(insertTwoLevelDistribution);
+                userIdList.add(insertTwoLevelDistribution.getPId());
+            }
+            // 发送绑定成功通知
+            if (ObjectUtil.isNotEmpty(userIdList)) {
+                rocketMqService.asyncSend(MqConstants.TOPIC_DISTRIBUTION_RELATION_BIND_NOTICE, userIdList);
+            }
+        }
+        log.info("分销关系绑定：完成");
     }
 
     /**
@@ -695,7 +762,8 @@ public class ApiOrderService {
      * @return false 首单， true 续单
      */
     private Boolean ifContinuous(Long userId, Long staffId) {
-        List<Long> orderIdList = orderInfoMapper.selectIdByUserIdAndStaffUserId(OrderStateEnums.FINISH.getCode(), userId, staffId);
+        String[] stateArr = {OrderStateEnums.SERVICE_ING.getCode(), OrderStateEnums.FINISH.getCode()};
+        List<Long> orderIdList = orderInfoMapper.selectIdByUserIdAndStaffUserIdAndStateList(ListUtil.toList(stateArr), userId, staffId);
         return ObjectUtil.isNotEmpty(orderIdList);
     }
 
@@ -960,7 +1028,7 @@ public class ApiOrderService {
         updateOi.setId(orderInfo.getId())
                 .setCommentState(SysYesNoEnums.YES.getCode())
                 .setUpdateTime(now);
-        if (OrderStateEnums.SERVICE_ING.getCode().equals(orderInfo.getOrderState())){
+        if (OrderStateEnums.SERVICE_ING.getCode().equals(orderInfo.getOrderState())) {
             updateOi.setOrderState(OrderStateEnums.FINISH.getCode())
                     .setOrderFinshTime(now);
         }
@@ -1002,7 +1070,7 @@ public class ApiOrderService {
         // 先判断店员是否可以接单
         String[] tempStateArr = {OrderStateEnums.WAIT_SERVICE.getCode(), OrderStateEnums.SERVICE_ING.getCode()};
         List<Long> hasRandomOrderIds = orderInfoMapper.selectIdByStaffIdAndTypeAndStateList(TokenUtils.getUserId(), OrderTypeEnums.RANDOM.getCode(), ListUtil.toList(tempStateArr));
-        if (ObjectUtil.isNotEmpty(hasRandomOrderIds)){
+        if (ObjectUtil.isNotEmpty(hasRandomOrderIds)) {
             log.warn("店员随机单接单：失败，当前还有未完成的随机单");
             throw new ServiceException("亲爱的，您当前有未完成随机单，暂不可接单", HttpStatus.WARN_WX);
         }
@@ -1216,7 +1284,7 @@ public class ApiOrderService {
         params.put("endCreateTime", dto.getEndCreateTime());
         // 用户标识
         Long staffUserId = TokenUtils.getUserId();
-        if (ObjectUtil.isNotNull(dto.getStaffUserId())){
+        if (ObjectUtil.isNotNull(dto.getStaffUserId())) {
             staffUserId = dto.getStaffUserId();
         }
         OrderInfo orderInfo = new OrderInfo();

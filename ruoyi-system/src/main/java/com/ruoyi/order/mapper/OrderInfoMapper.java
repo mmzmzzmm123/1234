@@ -44,15 +44,16 @@ public interface OrderInfoMapper {
      * */
     public List<OrderInfo> selectJoinAll(OrderInfo orderInfo);
 
+
     /**
-     * 根据用户标识和店员标识查询id集合
+     * 根据用户标识和店员标识和状态集合查询id集合
      *
-     * @param state 状态
+     * @param stateList 状态集合
      * @param userId 用户标识
      * @param staffUserId 店员标识
      * @return id集合
      * */
-    public List<Long> selectIdByUserIdAndStaffUserId(@Param("state") String state, @Param("userId") Long userId, @Param("staffUserId") Long staffUserId);
+    public List<Long> selectIdByUserIdAndStaffUserIdAndStateList(@Param("stateList")List<String> stateList, @Param("userId") Long userId, @Param("staffUserId") Long staffUserId);
 
     /**
      * 根据店员标识查询用户标识集合

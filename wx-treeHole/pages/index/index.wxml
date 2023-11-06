@@ -42,7 +42,6 @@
           <image src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/heartbeat.gif" mode="widthFix"></image>
           <view animation="{{animationData}}">{{content}}</view>
         </view>
-        <wux-icon type="ios-arrow-forward" size="22" color="#ffffff"></wux-icon>
       </view>
     </view>
 

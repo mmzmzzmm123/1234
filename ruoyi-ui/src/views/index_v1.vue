@@ -72,16 +72,43 @@ export default {
       this.dateRangeOrderShowType = type;
     },
     /**
-     * 获取本周一到周日日期
-     * */
+     * 获取本周日期
+     */
     getWeekDataList() {
-      let today = new Date();
-      let currentDay = today.getDay();
-      let diff = today.getDate() - currentDay + (currentDay === 0 ? -6 : 1); // Adjust when today is Sunday
-      let currentMonday = new Date(today.setDate(diff));
-      let currentSunday = new Date(today.setDate(diff + 6));
-      this.dateRange = [currentMonday, currentSunday];
-      return this.dateRange;
+      let weekList = [];
+      let date = new Date();
+      //判断本日期是否为周日，获取本周一日期
+      if (date.getDay() === 0) {
+        date.setDate(date.getDate() - 6);
+      } else {
+        date.setDate(date.getDate() - date.getDay() + 1);
+      }
+      let myDate = date.getDate();
+      let myMonth = date.getMonth() + 1;
+      if (date.getDate() < 10) {
+        myDate = '0' + myDate;
+      }
+      if (date.getMonth() + 1 < 10) {
+        myMonth = '0' + myMonth;
+      }
+      weekList.push(new Date(date.getFullYear() + "-" + myMonth + "-" + myDate));
+      // 获取周二以后日期
+      for (let i = 0; i < 6; i++) {
+        date.setDate(date.getDate() + 1);
+        myDate = date.getDate();
+        myMonth = date.getMonth() + 1;
+        if (date.getDate() < 10) {
+          myDate = '0' + myDate;
+        }
+        if (date.getMonth() + 1 < 10) {
+          myMonth = '0' + myMonth;
+        }
+        if (i === 5) {
+          weekList.push(new Date(date.getFullYear() + "-" + myMonth + "-" + myDate));
+        }
+      }
+      this.dateRange = weekList;
+      return weekList;
     },
     /**
      * 时间范围改变时间

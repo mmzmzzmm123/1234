@@ -21,7 +21,9 @@ import com.ruoyi.order.mapper.OrderDetailsMapper;
 import com.ruoyi.order.mapper.OrderInfoMapper;
 import com.ruoyi.staff.domain.StaffInfo;
 import com.ruoyi.staff.mapper.StaffInfoMapper;
+import com.ruoyi.user.domain.UserLevel;
 import com.ruoyi.user.mapper.UserInfoMapper;
+import com.ruoyi.user.mapper.UserLevelMapper;
 import com.ruoyi.user.mapper.UserOfficialAccountMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +57,7 @@ public class RandomOrderSuccessNoticeMqConsumer implements RocketMQListener<Long
     private final WxProperties wxProperties;
     private final StaffInfoMapper staffInfoMapper;
     private final WxMpTemplateMassageService wxMpTemplateMassageService;
+    private final UserLevelMapper userLevelMapper;
 
     @Override
     public void onMessage(Long orderId) {
@@ -82,7 +85,7 @@ public class RandomOrderSuccessNoticeMqConsumer implements RocketMQListener<Long
                 userMessage.setToUser(customUserOpenId);
                 userMessage.setTemplateId(WxMpTemplateIdConstants.PAY_ORDER_SUCCESS);
                 // 模板数据
-                Map<String,String> dataMap = new HashMap<>();
+                Map<String, String> dataMap = new HashMap<>();
                 dataMap.put("number1", orderInfo.getOrderNo());
                 dataMap.put("phrase2", OrderTypeEnums.RANDOM.getDesc());
                 dataMap.put("amount3", orderInfo.getPayAmount().toString());
@@ -97,7 +100,14 @@ public class RandomOrderSuccessNoticeMqConsumer implements RocketMQListener<Long
                 wxMpTemplateMassageService.wxMpSendTemplateMessage(userMessage);
             }
         }
-
+        UserLevel userLevel = userLevelMapper.selectByUserId(orderInfo.getCustomUserId());
+        String remark = OrderTypeEnums.APPOINT.getDesc();
+        if (ObjectUtil.isNotNull(userLevel)) {
+            remark += "-vip" + userLevel.getCurrentLevel();
+        }
+        if (StringUtils.isNotBlank(orderInfo.getRemark())) {
+            remark += "，备注：" + orderInfo.getRemark();
+        }
         // 匹配条件对应的店员进行发送通知
         StaffInfo selectStaff = new StaffInfo();
         selectStaff.setState(StaffStateEnums.NORMAL.getCode())
@@ -119,21 +129,21 @@ public class RandomOrderSuccessNoticeMqConsumer implements RocketMQListener<Long
         if (ObjectUtil.isNotEmpty(matchList)) {
             List<Long> notMatchUserIdList = new ArrayList<>();
             String[] tempStateArr = {OrderStateEnums.WAIT_SERVICE.getCode(), OrderStateEnums.SERVICE_ING.getCode()};
-            for (int i = 0; i < matchList.size(); i++){
+            for (int i = 0; i < matchList.size(); i++) {
                 StaffInfo tempStaffInfo = matchList.get(i);
                 List<Long> orderIds = orderInfoMapper.selectIdByStaffIdAndTypeAndStateList(tempStaffInfo.getUserId(), OrderTypeEnums.RANDOM.getCode(), ListUtil.toList(tempStateArr));
-                if (ObjectUtil.isNotEmpty(orderIds)){
+                if (ObjectUtil.isNotEmpty(orderIds)) {
                     notMatchUserIdList.add(tempStaffInfo.getUserId());
                 }
             }
             // 再判断过滤一下是否存在不可接单的用户id
-            if (ObjectUtil.isNotEmpty(notMatchUserIdList)){
+            if (ObjectUtil.isNotEmpty(notMatchUserIdList)) {
                 matchList = matchList.stream().filter(item -> !notMatchUserIdList.contains(item.getUserId())).collect(Collectors.toList());
             }
             // 最终通过的都是可接单人
-            matchList.forEach(item -> {
+            for (StaffInfo item : matchList) {
                 String staffUnionId = userInfoMapper.getUnionIdById(item.getUserId());
-                if (StringUtils.isNotBlank(staffUnionId)){
+                if (StringUtils.isNotBlank(staffUnionId)) {
                     String staffOpenId = userOfficialAccountMapper.getOpenIdByUnionId(staffUnionId);
                     if (StringUtils.isNotBlank(staffOpenId)) {
                         // 构建消息模板数据
@@ -141,10 +151,10 @@ public class RandomOrderSuccessNoticeMqConsumer implements RocketMQListener<Long
                         staffMessage.setTemplateId(WxMpTemplateIdConstants.NEW_ORDER_TIPS_ID);
                         staffMessage.setToUser(staffOpenId);
                         // 模板数据
-                        Map<String,String> dataMap = new HashMap<>();
+                        Map<String, String> dataMap = new HashMap<>();
                         dataMap.put("character_string2", orderInfo.getOrderNo());
-                        dataMap.put("thing9", StringUtils.overHide_20(OrderTypeEnums.RANDOM.getDesc()+"，备注："+(StringUtils.isNotBlank(orderInfo.getRemark())?orderInfo.getRemark():"无")));
                         dataMap.put("amount3", orderInfo.getPayAmount().toString());
+                        dataMap.put("thing9", StringUtils.overHide_20(remark));
                         dataMap.put("time5", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM, orderInfo.getCreateTime()));
                         List<WxMpTemplateData> wxMpTemplateData = WxMpTemplateMassageService.MapToData(dataMap);
                         staffMessage.setData(wxMpTemplateData);
@@ -156,7 +166,7 @@ public class RandomOrderSuccessNoticeMqConsumer implements RocketMQListener<Long
                         wxMpTemplateMassageService.wxMpSendTemplateMessage(staffMessage);
                     }
                 }
-            });
+            }
         }
         log.info("mq消费-随机单下单完成通知用户与店员：完成");
     }

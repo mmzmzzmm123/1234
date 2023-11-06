@@ -1,6 +1,7 @@
 package com.ruoyi.api.order.mqconsumer;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.ruoyi.api.order.mqconsumer.service.OrderMqService;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.enums.StaffWalletRecordTypeEnums;
 import com.ruoyi.common.exception.ServiceException;
@@ -33,54 +34,33 @@ import java.util.Date;
 public class OrderCommissionSettlementMqConsumer implements RocketMQListener<Long> {
 
     private final OrderInfoMapper orderInfoMapper;
-    private final StaffWalletMapper staffWalletMapper;
     private final StaffWalletRecordMapper staffWalletRecordMapper;
+    private final OrderMqService orderMqService;
 
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void onMessage(Long orderId) {
-        log.info("订单完成后结算店员佣金：开始，参数：{}", orderId);
-        Date now = DateUtils.getNowDate();
-        String sysName = Constants.SYS_NAME;
+        log.info("订单佣金结算业务：开始，参数：{}", orderId);
         // 查询是否已结佣
         StaffWalletRecord selectSwr = new StaffWalletRecord();
         selectSwr.setOrderId(orderId);
         if (ObjectUtil.isNotEmpty(staffWalletRecordMapper.selectStaffWalletRecordList(selectSwr))){
-            log.info("订单完成后结算店员佣金：完成，该订单已完成佣金结算");
+            log.info("订单佣金结算业务：完成，该订单已完成佣金结算");
             return;
         }
         // 查询订单记录
         OrderInfo orderInfo = orderInfoMapper.selectOrderInfoById(orderId);
         if (ObjectUtil.isNull(orderInfo)){
-            log.warn("订单完成后结算店员佣金：失败，订单信息查询为空");
+            log.warn("订单佣金结算业务：失败，订单信息查询为空");
             throw new ServiceException("订单完成后结算店员佣金：失败，订单信息查询为空");
         }
-        // 查询店员钱包数据
-        StaffWallet staffWallet = staffWalletMapper.selectByUserIdForUpdate(orderInfo.getStaffUserId());
-        if (ObjectUtil.isNull(staffWallet)){
-            log.warn("订单完成后结算店员佣金：失败，无法找到店员钱包数据，id:{}", orderInfo.getStaffUserId());
-            throw new ServiceException("订单完成后结算店员佣金：失败，无法找到店员钱包数据");
-        }
-        // 本订单佣金
-        BigDecimal commission = orderInfo.getPayAmount().multiply(orderInfo.getCommissionRatio());
-        // 开始修改店员钱包佣金数据
-        staffWallet.setWaitCommission(staffWallet.getWaitCommission().add(commission))
-                .setTotalOrderPrice(staffWallet.getTotalOrderPrice().add(commission))
-                .setUpdateBy(sysName)
-                .setUpdateTime(now);
-        staffWalletMapper.updateStaffWallet(staffWallet);
-        // 店员钱包记录
-        StaffWalletRecord insetSwr = new StaffWalletRecord();
-        insetSwr.setStaffUserId(orderInfo.getStaffUserId())
-                .setOrderId(orderId)
-                .setStaffWalletRecordType(StaffWalletRecordTypeEnums.ENTRY.getCode())
-                .setAmount(commission)
-                .setCreateBy(sysName)
-                .setUpdateBy(sysName)
-                .setCreateTime(now)
-                .setUpdateTime(now);
-        staffWalletRecordMapper.insertStaffWalletRecord(insetSwr);
-        log.info("订单完成后结算店员佣金：完成");
+        // 店员订单佣金结算
+        orderMqService.staffOrderSettlement(orderInfo);
+        // 分销佣金结算
+        orderMqService.distributionCommissionSettlement(orderInfo);
+        log.info("订单佣金结算业务：完成");
     }
+
+
 }

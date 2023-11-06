@@ -20,6 +20,9 @@ public class ApiRandomOrderFormDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("分销用户标识")
+    private Long shareUserId;
+
     @ApiModelProperty("支付方式")
     @NotBlank(message = "支付方式不能为空")
     private String payWay;

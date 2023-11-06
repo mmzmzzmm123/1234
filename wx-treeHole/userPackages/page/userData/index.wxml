@@ -5,7 +5,8 @@
   <view class="view_box_row_content_symmetry scope_view" bind:tap="chooseImage">
     <span>头像</span>
     <view class="userTx">
-      <image class="view_all_adapt" src="{{userInfo.avatarUrl!=null?userInfo.avatarUrl:'../../../static/images/default_tx.png'}}"></image>
+      <image class="view_all_adapt" src="{{userInfo.avatarUrl!=null?userInfo.avatarUrl:'../../../static/images/default_tx.png'}}" mode="aspectFill" style="border-radius: 56px;"></image>
+      <image wx:if="{{userInfo != null && userLevelData != null && userInfo.hideLevel=='0'}}" src="{{userLevelData.avatarUrl}}" class="avatarFrame"></image>
     </view>
   </view>
   <view class="cut_off_rule_small" style="background-color: #f8f8f9;"></view>

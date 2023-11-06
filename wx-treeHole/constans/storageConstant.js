@@ -16,6 +16,8 @@ module.exports = {
   staffAgreement: "staffAgreement",
   // 用户协议
   userAgreement: "userAgreement",
+  // 分销协议
+  distributionAgreement: "distributionAgreement",
   // 礼物数据
   giftList: "giftList",
   // 充值配置

@@ -109,4 +109,10 @@ public class MqConstants {
      * */
     public static final String TOPIC_ORDER_COMMISSION_SETTLEMENT = "topic_order_commission_settlement";
     public static final String GROUP_ORDER_COMMISSION_SETTLEMENT = "group_order_commission_settlement";
+
+    /**
+     * 分销关系绑定成功通知
+     * */
+    public static final String TOPIC_DISTRIBUTION_RELATION_BIND_NOTICE = "topic_distribution_relation_bind_notice";
+    public static final String GROUP_DISTRIBUTION_RELATION_BIND_NOTICE = "group_distribution_relation_bind_notice";
 }

@@ -142,3 +142,13 @@ page{
 .serviceItem span{
   margin-right: 4px;
 }
+.userAvatarView{
+  position: relative;
+}
+.avatarFrame{
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  left: -10px;
+  top: -7px;
+}

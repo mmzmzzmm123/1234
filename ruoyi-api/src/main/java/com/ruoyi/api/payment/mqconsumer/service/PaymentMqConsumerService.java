@@ -116,6 +116,8 @@ public class PaymentMqConsumerService {
         paymentMqConsumerService.updateOrderInfoAndDetails(orderId, OrderTypeEnums.GIFT.getCode());
         // 发送mq消息处理赠送礼物后的业务
         rocketMqService.asyncSend(MqConstants.TOPIC_GIVE_GIFT_SUCCESS, orderId);
+        // 发送自动评论mq过期时间，默认两小时后自动评论
+        rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_COMMENT, orderId, MqDelayLevelEnums.level_18);
         log.info("礼物订单支付成功回调业务：完成");
     }
 
@@ -130,6 +132,8 @@ public class PaymentMqConsumerService {
         paymentMqConsumerService.updateOrderInfoAndDetails(orderId, OrderTypeEnums.REWARD.getCode());
         // 发送mq消息处理打赏成功后业务
         rocketMqService.asyncSend(MqConstants.TOPIC_REWARD_SUCCESS, orderId);
+        // 发送自动评论mq过期时间，默认两小时后自动评论
+        rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_COMMENT, orderId, MqDelayLevelEnums.level_18);
         log.info("mq消费-支付回调-打赏订单支付成功回调业务：完成");
     }
 

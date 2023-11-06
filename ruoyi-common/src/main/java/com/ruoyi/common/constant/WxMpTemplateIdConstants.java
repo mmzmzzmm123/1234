@@ -61,4 +61,12 @@ public class WxMpTemplateIdConstants {
      * 完成时间 {{time5.DATA}}
      * */
     public static final String ORDER_FINISH = "tGxvl5NRyyLWX_rhCkS65qRq23EWhHc9jjjrbdbi8CI";
+
+    /**
+     * 客户绑定成功通知
+     *
+     * 客户姓名 {{thing1.DATA}}
+     * 绑定时间 {{time2.DATA}}
+     * */
+    public static final String USER_BIND_SUCCESS = "u3uQeYQtbd9cehB6PjBrqXB1TCjr-1TzB8_N2-X5oMY";
 }

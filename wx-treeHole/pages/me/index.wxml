@@ -19,7 +19,10 @@
     <view class="view_box_row bannerView" style="height:{{pHeight * 0.3}}px;">
       <image src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/psc.gif" class="bannerImage view_all_adapt"></image>
       <view class="view_box_common view_box_row" style="position:relative;z-index:888;">
-        <wux-avatar size="large" scale="true" src="{{userInfo != null && userInfo.avatarUrl != null ? userInfo.avatarUrl : '../../../../static/images/default_tx.png'}}"></wux-avatar>
+        <view class="userAvatarView">
+          <wux-avatar size="large" scale="true" src="{{userInfo != null && userInfo.avatarUrl != null ? userInfo.avatarUrl : '../../../../static/images/default_tx.png'}}"></wux-avatar>
+          <image wx:if="{{userInfo != null && userLevelData != null && userInfo.hideLevel=='0'}}" src="{{userLevelData.avatarUrl}}" class="avatarFrame"></image>
+        </view>
         <view class="view_box_column_symmetry" style="width:{{pWidth*0.92-54}}px;height: 80rpx;margin-left: 10px;">
           <!-- 已登录 -->
           <view wx:if="{{userInfo != null}}" bind:tap="toUserData">
@@ -185,6 +188,14 @@
 
       <!-- 可操作区域 -->
       <view class="view_box_common common_fun_box_view" style="padding: 15px 0;margin-top: 10px;">
+        <view class="view_box_common view_box_row_content_symmetry commonFunItem" bind:tap="toDistributionPage">
+          <view class="view_box_row_content">
+            <image src="../../static/ico/disteribution_grey_32.png" mode="widthFix"></image>
+            <text>全民分销赚金额</text>
+          </view>
+          <wux-icon size="18" type="ios-arrow-forward" color="#495060" />
+        </view>
+        <view class="seizeSeat_mini"></view>
         <block wx:if="{{ifHide == '0'}}">
           <view class="view_box_common view_box_row_content_symmetry commonFunItem" bind:tap="toUserAccount">
             <view class="view_box_row_content">

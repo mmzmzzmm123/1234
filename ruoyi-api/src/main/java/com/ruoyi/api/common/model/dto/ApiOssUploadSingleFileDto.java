@@ -24,6 +24,5 @@ public class ApiOssUploadSingleFileDto implements Serializable {
     private MultipartFile file;
 
     @ApiModelProperty(value = "ossKey")
-    @NotBlank(message = "ossKey不能为空")
     private String ossKey;
 }

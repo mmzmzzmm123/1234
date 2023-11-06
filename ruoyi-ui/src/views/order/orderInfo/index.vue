@@ -247,9 +247,19 @@
         </template>
       </el-table-column>
       <el-table-column label="员工标识" align="center" prop="staffUserId" :show-overflow-tooltip="true"/>
+      <el-table-column label="员工姓名" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          {{scope.row.staffInfo.nickName}}
+        </template>
+      </el-table-column>
       <el-table-column label="员工等级" align="center" prop="staffLevel" :show-overflow-tooltip="true"/>
       <el-table-column label="提成比例" align="center" prop="commissionRatio" :show-overflow-tooltip="true"/>
       <el-table-column label="客户标识" align="center" prop="customUserId" :show-overflow-tooltip="true"/>
+      <el-table-column label="客户姓名" align="center" :show-overflow-tooltip="true">
+        <template slot-scope="scope">
+          {{scope.row.userInfo.nickName}}
+        </template>
+      </el-table-column>
       <el-table-column label="账号服务商" align="center" prop="accountServiceProvider" :show-overflow-tooltip="true"
                        width="100px">
         <template slot-scope="scope">
@@ -536,6 +546,7 @@
 <script>
 
 import {
+  listJoinAll,
   listOrderInfo,
   getOrderInfo,
   delOrderInfo,
@@ -644,7 +655,7 @@ export default {
         this.queryParams.params["beginOrderCancelTime"] = this.daterangeOrderCancelTime[0];
         this.queryParams.params["endOrderCancelTime"] = this.daterangeOrderCancelTime[1];
       }
-      listOrderInfo(this.queryParams).then(response => {
+      listJoinAll(this.queryParams).then(response => {
         this.orderInfoList = response.rows;
         this.total = response.total;
         this.loading = false;

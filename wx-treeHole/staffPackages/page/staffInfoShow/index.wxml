@@ -354,7 +354,7 @@
 
         <block wx:if="{{ifHide == '0'}}">
           <view class="seizeSeat_mini"></view>
-          <view class="view_box_common scope_view" bind:tap="selectUserAccount">
+          <view class="view_box_common scope_view" data-index="2"  bind:tap="selectUserAccount">
             <view class="view_box_common view_box_row_content_symmetry">
               <view class="view_box_row_content tempColumn">
                 <image src="../../../static/ico/theme_dot.png"></image>
@@ -473,6 +473,22 @@
           </view>
         </view>
 
+        <block wx:if="{{ifHide == '0'}}">
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_common scope_view" data-index="1" bind:tap="selectUserAccount">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content tempColumn">
+                <image src="../../../static/ico/theme_dot.png"></image>
+                <view>绿泡泡</view>
+              </view>
+              <view class="view_box_row_content scopeTextView">
+                <view>{{rewardForm.customNum!=null?dictsUtil.social_accounts(rewardForm.accountServiceProvider)+"-"+rewardForm.customNum:"请选择您的绿泡泡"}}</view>
+                <wux-icon type="ios-arrow-forward" size="14" color="#80848f"></wux-icon>
+              </view>
+            </view>
+          </view>
+        </block>
+
         <view class="seizeSeat_mini"></view>
         <view class="view_box_common scope_view">
           <column-view title="想对他/她说" outerMargin="0" ifShowIco="-1" moreTitle=""></column-view>
@@ -568,6 +584,22 @@
             <wux-input-number controlled="true" color="royal" slot="footer" min="1" max="99" value="{{giftForm.num}}" bind:change="giftNumChange" />
           </view>
         </view>
+
+        <block wx:if="{{ifHide == '0'}}">
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_common scope_view" data-index="0" bind:tap="selectUserAccount">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content tempColumn">
+                <image src="../../../static/ico/theme_dot.png"></image>
+                <view>绿泡泡</view>
+              </view>
+              <view class="view_box_row_content scopeTextView">
+                <view>{{giftForm.customNum!=null?dictsUtil.social_accounts(giftForm.accountServiceProvider)+"-"+giftForm.customNum:"请选择您的绿泡泡"}}</view>
+                <wux-icon type="ios-arrow-forward" size="14" color="#80848f"></wux-icon>
+              </view>
+            </view>
+          </view>
+        </block>
 
         <view class="seizeSeat_mini"></view>
         <view class="view_box_common scope_view">

@@ -1,4 +1,3 @@
-const app = getApp();
 import orderApi from "../../../apis/order/orderApi";
 import { $wuxDialog } from '../../../components/wux/dist/index';
 Page({

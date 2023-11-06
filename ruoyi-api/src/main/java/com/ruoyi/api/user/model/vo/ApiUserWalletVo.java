@@ -24,9 +24,15 @@ public class ApiUserWalletVo implements Serializable {
     @ApiModelProperty("赠送余额")
     private BigDecimal giftBalance;
 
+    @ApiModelProperty("分销佣金")
+    private BigDecimal distributionCommission;
+
     @ApiModelProperty("消费总额")
     private BigDecimal totalBalance;
 
     @ApiModelProperty("赠送总额")
     private BigDecimal totalGiftBalance;
+
+    @ApiModelProperty("分销佣金总额")
+    private BigDecimal totalDistributionCommission;
 }

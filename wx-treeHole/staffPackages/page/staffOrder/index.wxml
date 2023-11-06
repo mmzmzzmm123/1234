@@ -139,8 +139,8 @@
               <span>￥{{formatUtil.toFixed((operObj.payAmount*operObj.commissionRatio))}}</span>
             </view>
           </block>
-          <!-- 待服务状态显示 -->
-          <block wx:if="{{operObj.orderState == '3' && ifHide == '0'}}">
+          <!-- 待服务状态或礼物订单或打赏订单显示 -->
+          <block wx:if="{{((operObj.orderState=='0' && (operObj.orderType == '2' || operObj.orderType == '3')) || operObj.orderState == '3') && ifHide == '0'}}">
             <!-- <view class="view_box_common orderDetailsItem view_box_row_content_symmetry">
                 <view>账号渠道</view>
                 <span>{{dictsUtil.social_accounts(operObj.accountServiceProvider)}}</span>

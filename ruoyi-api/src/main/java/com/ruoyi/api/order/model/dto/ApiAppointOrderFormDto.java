@@ -21,6 +21,9 @@ public class ApiAppointOrderFormDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("分销用户标识")
+    private Long shareUserId;
+
     @ApiModelProperty("店员标识")
     @NotNull(message = "店员标识不能为空")
     private Long staffId;

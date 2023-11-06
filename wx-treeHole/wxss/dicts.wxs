@@ -85,6 +85,15 @@ staff_state = function(key){
         "未知";
 }
 
+/**
+ * 分销等级
+ */
+distribution_level = function(key){
+  return key == "0" ? "一级分销" :
+  key == "1" ? "二级分销" :
+        "未知";
+}
+
 module.exports = {
   sex: sex,
   social_accounts: social_accounts,
@@ -93,5 +102,6 @@ module.exports = {
   pay_way: pay_way,
   staff_wallet_record_type: staff_wallet_record_type,
   staff_level: staff_level,
-  staff_state: staff_state
+  staff_state: staff_state,
+  distribution_level: distribution_level
 }

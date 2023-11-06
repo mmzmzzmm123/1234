@@ -9,6 +9,14 @@ export function listOrderInfo(query) {
   })
 }
 
+export function listJoinAll(query){
+  return request({
+    url: '/order/orderInfo/listJoinAll',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询订单信息详细
 export function getOrderInfo(id) {
   return request({

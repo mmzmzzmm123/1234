@@ -178,12 +178,15 @@
         where order_no = #{orderNo}
     </select>
 
-    <select id="selectIdByUserIdAndStaffUserId" resultType="Long">
+    <select id="selectIdByUserIdAndStaffUserIdAndStateList" resultType="Long">
         select id
         from bus_order_info
         where custom_user_id = #{userId}
           and staff_user_id = #{staffUserId}
-          and order_state = #{state}
+          and order_state in
+        <foreach collection="stateList" item="state" open="(" close=")" separator="," >
+            #{state}
+        </foreach>
     </select>
 
     <select id="selectUserIdByStaffUserId" parameterType="Long" resultType="Long">

@@ -3,10 +3,10 @@
     "pages/index/index",
     "pages/me/index",
     "pages/select/index",
-    "pages/trends/index",
-    "orderPackages/page/list/index"
+    "pages/trends/index"
   ],
-  "subPackages": [{
+  "subPackages": [
+    {
       "root": "userPackages",
       "name": "用户相关页面",
       "pages": [
@@ -28,10 +28,24 @@
       ]
     },
     {
+      "root": "orderPackages",
+      "name": "订单相关页面",
+      "pages": [
+        "page/list/index"
+      ]
+    },
+    {
       "root": "platformPackages",
       "name": "平台相关页面",
       "pages": [
         "page/recharge/index"
+      ]
+    },
+    {
+      "root": "distributionPackages",
+      "name": "分销相关页面",
+      "pages": [
+        "page/index/index"
       ]
     }
   ],
@@ -57,7 +71,8 @@
     "chooseLocation"
   ],
   "tabBar": {
-    "list": [{
+    "list": [
+      {
         "pagePath": "pages/index/index",
         "text": "首 页",
         "iconPath": "static/menu/home.png",

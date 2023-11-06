@@ -1,0 +1,162 @@
+<wxs src="../../../wxss/dicts.wxs" module="dictsUtiil"></wxs>
+<wxs src="../../../wxss/format.wxs" module="formatUtil"></wxs>
+<import src="../../../wxParse/wxParse.wxml" />
+<view class="bView">
+  <view class="seizeSeat_mini"></view>
+  <view class="view_box_common amountBigView">
+    <image mode="widthFix" class="bgImg" bindload="bgImgLoad" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/banner/2023/11/a7e172cf-bc54-4a00-8938-5a70c4ca47b2.jpg"></image>
+    <view class="view_box_common view_box_row_content amountView" style="height: {{bgImgHeight == 0 ? 200 : bgImgHeight}}px;">
+      <view class="view_box_column_symmetry" style="width:100%;height: 82%;">
+        <view class="view_box_row_content_symmetry">
+          <view></view>
+          <view class="view_box_row" catch:tap="changeDistributionAgreementDrawer">
+            <view style="font-size:14px;color:#FFFFFF;margin-right:10px;">关于分销</view>
+            <wux-icon size="18" type="ios-help-circle" color="#FFFFFF" />
+          </view>
+        </view>
+        <view class="view_box_content_column">
+          <view class="commission">
+            <span>￥</span>
+            <text>{{userInfo != null ? formatUtil.toFixed(userInfo.userWalletVo.distributionCommission) : 0.00}}</text>
+          </view>
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_row">
+            <view style="font-size: 14px; color: #FFFFFF;">当前可提现佣金</view>
+            <view class="withdrawBut" catch:tap="withdraw">立即提现</view>
+          </view>
+        </view>
+        <view class="view_box_common view_box_row_content" style="color: #FFFFFF;font-size: 12px">
+          <view catch:tap="totalDistributionCommission">佣金总额</view>
+          <view style="margin: 0 10px;">|</view>
+          <view catch:tap="lookCommissionRecord">佣金记录</view>
+        </view>
+      </view>
+    </view>
+  </view>
+  <view class="seizeSeat_mini"></view>
+  <view class="view_box_common">
+    <wux-tabs class="wuxTab" theme="positive" controlled current="{{ currentKey }}" bindchange="onTabsChange">
+      <block wx:for="{{ tabs }}" wx:key="key">
+        <wux-tab key="{{ item.key }}" title="{{ item.title }}"></wux-tab>
+      </block>
+    </wux-tabs>
+  </view>
+  <wux-spin nested spinning="{{ dataLoadState }}" tip="加载中">
+    <swiper style="width:{{pWidth}}px;height:{{pHeight-tabHeight-bgImgHeight-40}}px;" current="{{ currentIndex }}" bindchange="onSwiperChange">
+      <block wx:for="{{ tabs }}" wx:key="key">
+        <swiper-item>
+          <scroll-view class="view_box_common" style="background-color: #FFFFFF;height: 100%;" refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{item.refreshState}}" scroll-y="true" bindrefresherrefresh="refresh" bindscrolltolower="loadNextPageData">
+            <block wx:if="{{item.data != null && item.data.length > 0}}">
+              <block wx:for="{{item.data}}" wx:key="id" wx:for-item="dataItem" wx:for-index="dataIndex">
+                <view class="seizeSeat_mini"></view>
+                <view class="scope_view view_box_common view_box_row_content_symmetry">
+                  <image class="userAvatar" src="{{dataItem.childUserVo.avatarUrl != null ? dataItem.childUserVo.avatarUrl : '../../../static/images/default_tx.png'}}" mode="aspectFill"></image>
+                  <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-60}}px;height: 60px;">
+                    <view class="view_box_common view_box_row_content_symmetry">
+                      <view style="font-size: 14px;font-weight: bold;">{{dataItem.childUserVo.nickName}}</view>
+                      <view class="{{dataItem.level=='0'?'badgeLevel_3':'badgeLevel_4'}}" style="font-size: 12px;color: #FFFFFF;padding: 4px 10px;border-radius: 10px;">{{dictsUtiil.distribution_level(dataItem.level)}}</view>
+                    </view>
+                    <view style="font-size: 14px;color: #80848f;">绑定时间：{{dataItem.createTime}}</view>
+                  </view>
+                </view>
+                <block wx:if="{{(dataIndex+1) != item.total}}">
+                  <view class="seizeSeat_mini"></view>
+                  <view class="cut_off_rule_small" style="width: 92%;margin: 0 auto;"></view>
+                </block>
+              </block>
+              <view class="seizeSeat_mini"></view>
+              <i-load-more tip='{{((item.params.pageNum*item.params.pageSize) >= item.total) && item.bottomDataLoadState == false ?"baby 快去拉新吧 没有数据啦":"加载中"}}' loading="{{item.bottomDataLoadState}}"></i-load-more>
+            </block>
+            <block wx:else>
+              <view class="view_all_adapt" style="width: 92%;margin:0 auto;background-color: #FFFFFF;">
+                <mine-null-data width="100%" height="100%" title="暂无分销用户哟，快去拉新吧！！！"></mine-null-data>
+              </view>
+            </block>
+          </scroll-view>
+        </swiper-item>
+      </block>
+    </swiper>
+  </wux-spin>
+</view>
+
+<!-- 协议容器 -->
+<i-drawer mode="right" visible="{{ distributionAgreementDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeDistributionAgreementDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.08}}px;">
+          <view></view>
+          <text>关于分销</text>
+          <wux-icon type="md-close" size="22" bindtap="changeDistributionAgreementDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <scroll-view scroll-y="true" class="drawerBodyView" style="height: {{pHeight*0.65}}px;">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common wxParseView">
+          <template is="wxParse" data="{{wxParseData:distributionAgreement.nodes}}" />
+        </view>
+      </scroll-view>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bind:tap="changeDistributionAgreementDrawer">我知道啦</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+    <view class="cut_off_rule_small"></view>
+  </view>
+</i-drawer>
+
+<!-- 佣金记录容器 -->
+<i-drawer mode="right" visible="{{ commissionRecordDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeCommissionRecordDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.08}}px;">
+          <view></view>
+          <text>分销佣金记录</text>
+          <wux-icon type="md-close" size="22" bindtap="changeCommissionRecordDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+
+      <wux-spin nested spinning="{{ loadCommissionRecordState }}" tip="加载中">
+        <scroll-view scroll-y="true" class="drawerBodyView" style="height: {{pHeight*0.65}}px;" refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{loadCommissionRecordState}}" scroll-y="true" bindrefresherrefresh="commissionRecordRefresh" bindscrolltolower="loadCommissionRecordNextPageData">
+          <block wx:if="{{commissionRecordData != null && commissionRecordData.length > 0}}">
+            <block wx:for="{{commissionRecordData}}" wx:key="id">
+              <view class="seizeSeat_mini"></view>
+              <view class="view_box_common scope_view view_box_row_content_symmetry">
+                <image class="userAvatar" src="{{item.distributionUserInfo.avatarUrl != null ? item.distributionUserInfo.avatarUrl : '../../../static/images/default_tx.png'}}" mode="aspectFill"></image>
+                <view class="view_box_column_symmetry" style="width: {{pWidth*0.92-60}}px;height: 60px;">
+                  <view class="view_box_common view_box_row_content_symmetry">
+                    <view style="font-size: 14px;font-weight: bold;">{{item.distributionUserInfo.nickName}}</view>
+                    <view class="{{item.distributionLevel=='0'?'badgeLevel_3':'badgeLevel_4'}}" style="font-size: 12px;color: #FFFFFF;padding: 4px 10px;border-radius: 10px;">{{dictsUtiil.distribution_level(item.distributionLevel)}}</view>
+                  </view>
+                  <view class="view_box_common view_box_row_content_symmetry">
+                    <view style="font-size: 10px;">
+                      <view>订单金额：<span style="font-size: 12px;font-weight:bold;color: #FA8251;">￥ {{formatUtil.toFixed(item.orderAmount)}}</span></view>
+                      <view>订单佣金：<span style="font-size: 12px;font-weight:bold;color: #FA8251;">￥ {{formatUtil.toFixed(item.distributionCommission)}}</span></view>
+                    </view>
+                    <view style="font-size: 12px;color: #80848f;">{{item.createTime}}</view>
+                  </view>
+                </view>
+
+              </view>
+            </block>
+            <view class="seizeSeat_mini"></view>
+            <i-load-more tip='{{((commissionRecordParams.pageNum*commissionRecordParams.pageSize) >= commissionRecordTotal) && loadCommissionRecordNextPageState == false ?"没有更多的分销佣金记录拉":"加载中"}}' loading="{{loadCommissionRecordNextPageState}}"></i-load-more>
+          </block>
+          <block wx:else>
+            <view class="view_all_adapt" style="width: 92%;margin:0 auto;background-color: #FFFFFF;">
+              <mine-null-data width="100%" height="100%" title="暂无分销佣金记录哟！！！"></mine-null-data>
+            </view>
+          </block>
+        </scroll-view>
+      </wux-spin>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bind:tap="changeCommissionRecordDrawer">关 闭</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+    <view class="cut_off_rule_small"></view>
+  </view>
+</i-drawer>

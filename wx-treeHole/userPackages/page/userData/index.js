@@ -3,6 +3,7 @@ import { $wuxDialog } from '../../../components/wux/dist/index';
 import storage from "../../../utils/storage";
 import storageConstant from "../../../constans/storageConstant";
 import userApi from "../../../apis/user/userApi";
+import userLevelApi from "../../../apis/user/userLevelApi";
 import requestApi from "../../../apis/request";
 Page({
 
@@ -23,7 +24,9 @@ Page({
         "label": "女",
         value: "1"
       }
-    ]
+    ],
+    userLevelConfig: [],
+    userLevelData: null
   },
 
   /**
@@ -37,6 +40,15 @@ Page({
         pHeight: rect[0].height
       })
     }).exec();
+  },
+  onShow(){
+    let userInfo = storage.get(storageConstant.userInfo, null);
+    if(userInfo != null){
+      this.setData({
+        userInfo: userInfo
+      })
+    }
+    this.loadUserLevelConfig();
   },
   /**
    * 名字点击事件
@@ -204,6 +216,66 @@ Page({
       title: res.msg,
       icon: "none",
       duration: 2000
+    })
+  },
+  
+  /**
+   * 加载用户等级配置
+   */
+  loadUserLevelConfig: function () {
+    // 判断当前的数据是否为空
+    let userLevelConfig = app.globalData.userLevelConfig;
+    if (userLevelConfig != null) {
+      this.setData({
+        userLevelConfig: userLevelConfig
+      })
+    }
+    // 加载用户等级配置
+    userLevelApi.selectUserLevelConfig(null, this.loadUserLevelConfigOnSuccess, null);
+  },
+  loadUserLevelConfigOnSuccess: function (res) {
+    app.getUserLevelConfigOnSuccess(res);
+    this.setData({
+      userLevelConfig: res.data
+    })
+    // 处理用户等级数据
+    this.handleUserLevelData();
+  },
+  /**
+   * 处理用户等级相关数据
+   */
+  handleUserLevelData: function () {
+    let userInfo = this.data.userInfo;
+    let userLevelConfig = this.data.userLevelConfig;
+    if (userLevelConfig == null) {
+      return;
+    }
+    let userLevelVo = userInfo.userLevelVo;
+    let currentLevel, nextLevel = null;
+    for (let i = 0; i < userLevelConfig.length; i++) {
+      let temp = userLevelConfig[i];
+      if (temp.id == userLevelVo.levelConfigId) {
+        currentLevel = temp;
+        if (i != userLevelConfig.length - 1) {
+          nextLevel = userLevelConfig[i + 1];
+        } else {
+          nextLevel = temp;
+        }
+      }
+    }
+    if (currentLevel == null || nextLevel == null) {
+      return;
+    }
+    let userLevelData = {
+      avatarUrl: currentLevel.avatarUrl,
+      currLevel: userLevelVo.currentLevel,
+      nextLevel: nextLevel.level,
+      nextThreshold: nextLevel.threshold,
+      upgradationThreshold: (Number(nextLevel.threshold) - Number(userLevelVo.totalPoints)).toFixed(2),
+      upgradationPercent: (Number(userLevelVo.currentPoints) / Number(nextLevel.threshold) * 100)
+    };
+    this.setData({
+      userLevelData: userLevelData
     })
   },
 })

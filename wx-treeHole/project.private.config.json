@@ -11,6 +11,20 @@
     "miniprogram": {
       "list": [
         {
+          "name": "店员资料卡-分享业务",
+          "pathName": "staffPackages/page/staffInfoShow/index",
+          "query": "staffId=179&share=3",
+          "launchMode": "default",
+          "scene": 1007
+        },
+        {
+          "name": "分销首页",
+          "pathName": "distributionPackages/page/index/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
           "name": "店员薪资页",
           "pathName": "staffPackages/page/staffSalary/index",
           "query": "",

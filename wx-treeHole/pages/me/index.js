@@ -208,7 +208,7 @@ Page({
       })
       onStart = null;
     }
-    // 请求服务器加载
+    // 加载用户等级配置
     userLevelApi.selectUserLevelConfig(onStart, this.loadUserLevelConfigOnSuccess, this.loadUserLevelConfigOnFailed);
   },
   loadUserLevelConfigOnStart: function () {
@@ -262,6 +262,7 @@ Page({
       return;
     }
     let userLevelData = {
+      avatarUrl: currentLevel.avatarUrl,
       currLevel: userLevelVo.currentLevel,
       nextLevel: nextLevel.level,
       nextThreshold: nextLevel.threshold,
@@ -278,6 +279,21 @@ Page({
   toUserData: function () {
     wx.navigateTo({
       url: '../../userPackages/page/userData/index',
+    })
+  },
+  /**
+   * 前往全民分销页面
+   */
+  toDistributionPage:function(){
+    if (this.data.userInfo == null) {
+      wx.showToast({
+        title: '亲爱的，先登录哟',
+        icon: "none"
+      })
+      return;
+    }
+    wx.navigateTo({
+      url: '../../distributionPackages/page/index/index',
     })
   },
   /**

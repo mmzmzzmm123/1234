@@ -1,8 +1,8 @@
 import globalCanstanats from "../constans/globalConstant";
 import storage from "../utils/storage";
 import storageConstant from "../constans/storageConstant";
-// let prefix = "https://listen.vipwei.cn/prod-api";
-// let uploadSingleFileUrl = "https://listen.vipwei.cn/prod-api/api/file/uploadSingleFile";
+// let prefix = "http://localhost:8080";
+// let uploadSingleFileUrl = "http://localhost:8080/api/file/uploadSingleFile";
 // let prefix = "http://lamlin.natapp1.cc";
 // let uploadSingleFileUrl = "http://lamlin.natapp1.cc/api/file/uploadSingleFile";
 let prefix = "https://listen.vipwei.cn/prod-api";

@@ -9,38 +9,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="余额" prop="balance">
-        <el-input
-          v-model="queryParams.balance"
-          placeholder="请输入余额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="赠送余额" prop="giftBalance">
-        <el-input
-          v-model="queryParams.giftBalance"
-          placeholder="请输入赠送余额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="消费总额" prop="totalBalance">
-        <el-input
-          v-model="queryParams.totalBalance"
-          placeholder="请输入消费总额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="赠送总额" prop="totalGiftBalance">
-        <el-input
-          v-model="queryParams.totalGiftBalance"
-          placeholder="请输入赠送总额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -98,8 +66,10 @@
       <el-table-column label="用户标识" align="center" prop="userId" :show-overflow-tooltip="true"/>
       <el-table-column label="余额" align="center" prop="balance" :show-overflow-tooltip="true"/>
       <el-table-column label="赠送余额" align="center" prop="giftBalance" :show-overflow-tooltip="true"/>
+      <el-table-column label="分销佣金" align="center" prop="distributionCommission" :show-overflow-tooltip="true"/>
       <el-table-column label="消费总额" align="center" prop="totalBalance" :show-overflow-tooltip="true"/>
       <el-table-column label="赠送总额" align="center" prop="totalGiftBalance" :show-overflow-tooltip="true"/>
+      <el-table-column label="分销佣金总额" align="center" prop="totalDistributionCommission" :show-overflow-tooltip="true"/>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180" :show-overflow-tooltip="true">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -145,11 +115,17 @@
         <el-form-item label="赠送余额" prop="giftBalance">
           <el-input v-model="form.giftBalance" placeholder="请输入赠送余额" />
         </el-form-item>
+        <el-form-item label="分销佣金" prop="distributionCommission">
+          <el-input v-model="form.distributionCommission" placeholder="请输入分销佣金" />
+        </el-form-item>
         <el-form-item label="消费总额" prop="totalBalance">
           <el-input v-model="form.totalBalance" placeholder="请输入消费总额" />
         </el-form-item>
         <el-form-item label="赠送总额" prop="totalGiftBalance">
           <el-input v-model="form.totalGiftBalance" placeholder="请输入赠送总额" />
+        </el-form-item>
+        <el-form-item label="分销佣金总额" prop="totalDistributionCommission">
+          <el-input v-model="form.totalDistributionCommission" placeholder="请输入分销佣金总额" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -192,8 +168,10 @@ export default {
         userId: null,
         balance: null,
         giftBalance: null,
+        distributionCommission: null,
         totalBalance: null,
         totalGiftBalance: null,
+        totalDistributionCommission: null,
       },
       // 表单参数
       form: {},
@@ -227,8 +205,10 @@ export default {
         userId: null,
         balance: null,
         giftBalance: null,
+        distributionCommission: null,
         totalBalance: null,
         totalGiftBalance: null,
+        totalDistributionCommission: null,
         updateTime: null
       };
       this.resetForm("form");

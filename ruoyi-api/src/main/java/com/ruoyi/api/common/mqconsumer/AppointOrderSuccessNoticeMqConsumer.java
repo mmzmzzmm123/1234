@@ -13,7 +13,9 @@ import com.ruoyi.common.weixin.properties.WxProperties;
 import com.ruoyi.common.weixin.service.WechatMsgReplyService;
 import com.ruoyi.order.domain.OrderInfo;
 import com.ruoyi.order.mapper.OrderInfoMapper;
+import com.ruoyi.user.domain.UserLevel;
 import com.ruoyi.user.mapper.UserInfoMapper;
+import com.ruoyi.user.mapper.UserLevelMapper;
 import com.ruoyi.user.mapper.UserOfficialAccountMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,6 +42,7 @@ public class AppointOrderSuccessNoticeMqConsumer implements RocketMQListener<Lon
 
     private final UserOfficialAccountMapper userOfficialAccountMapper;
     private final UserInfoMapper userInfoMapper;
+    private final UserLevelMapper userLevelMapper;
     private final OrderInfoMapper orderInfoMapper;
     private final WxProperties wxProperties;
     private final WxMpTemplateMassageService wxMpTemplateMassageService;
@@ -78,6 +81,14 @@ public class AppointOrderSuccessNoticeMqConsumer implements RocketMQListener<Lon
                 wxMpTemplateMassageService.wxMpSendTemplateMessage(userMessage);
             }
         }
+        UserLevel userLevel = userLevelMapper.selectByUserId(orderInfo.getCustomUserId());
+        String remark = OrderTypeEnums.APPOINT.getDesc();
+        if (ObjectUtil.isNotNull(userLevel)){
+            remark += "-vip"+userLevel.getCurrentLevel();
+        }
+        if (StringUtils.isNotBlank(orderInfo.getRemark())){
+            remark += "，备注："+orderInfo.getRemark();
+        }
         // 店员通知
         String staffUnionId = userInfoMapper.getUnionIdById(orderInfo.getStaffUserId());
         if (StringUtils.isNotBlank(staffUnionId)) {
@@ -95,7 +106,7 @@ public class AppointOrderSuccessNoticeMqConsumer implements RocketMQListener<Lon
                 // 模板数据
                 Map<String,String> dataMap = new HashMap<>();
                 dataMap.put("character_string2", orderInfo.getOrderNo());
-                dataMap.put("thing9", StringUtils.overHide_20(OrderTypeEnums.APPOINT.getDesc()+"，备注："+(StringUtils.isNotBlank(orderInfo.getRemark())?orderInfo.getRemark():"无")));
+                dataMap.put("thing9", StringUtils.overHide_20(remark));
                 dataMap.put("amount3", orderInfo.getPayAmount().toString());
                 dataMap.put("time5", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM, orderInfo.getCreateTime()));
                 List<WxMpTemplateData> wxMpTemplateData = WxMpTemplateMassageService.MapToData(dataMap);

@@ -2,6 +2,8 @@ package com.ruoyi.order.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.order.mapper.OrderInfoMapper;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
@@ -29,6 +31,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 public class OrderInfoController extends BaseController {
 
     private final IOrderInfoService orderInfoService;
+    private final OrderInfoMapper orderInfoMapper;
 
 
     @ApiOperation("查询订单信息列表")
@@ -40,6 +43,15 @@ public class OrderInfoController extends BaseController {
         return getDataTable(list);
     }
 
+
+    @ApiOperation("查询订单信息列表（级联所有关系对象）")
+    @PreAuthorize("@ss.hasPermi('order:orderInfo:list')")
+    @GetMapping("/listJoinAll")
+    public TableDataInfo listJoinAll(OrderInfo orderInfo){
+        startPage();
+        List<OrderInfo> list = orderInfoMapper.selectJoinAll(orderInfo);
+        return getDataTable(list);
+    }
 
     @ApiOperation("导出订单信息列表")
     @PreAuthorize("@ss.hasPermi('order:orderInfo:export')")

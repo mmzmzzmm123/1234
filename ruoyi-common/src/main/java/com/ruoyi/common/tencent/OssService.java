@@ -15,6 +15,7 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.tencent.model.dto.OssUploadSingleFileDto;
 import com.ruoyi.common.tencent.model.vo.OssUploadSingleFileVo;
 import com.ruoyi.common.tencent.properties.OssProperties;
+import com.ruoyi.common.utils.StringUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

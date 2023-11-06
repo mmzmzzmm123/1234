@@ -275,7 +275,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * */
     public static Date getLastMonday() {
         LocalDate today = LocalDate.now();
-        LocalDate lastMonday = today.minusWeeks(1).with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
+        LocalDate lastMonday = today.minusWeeks(1).with(DayOfWeek.MONDAY);
         return java.sql.Date.valueOf(lastMonday);
     }
 
@@ -286,7 +286,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
      * */
     public static Date getLastSunday() {
         LocalDate today = LocalDate.now();
-        LocalDate lastSunday = today.minusWeeks(1).with(TemporalAdjusters.previousOrSame(DayOfWeek.SUNDAY));
+        LocalDate lastSunday = today.minusWeeks(1).with(DayOfWeek.SUNDAY);
         return java.sql.Date.valueOf(lastSunday);
     }
 }

@@ -78,6 +78,11 @@ public class CommonController {
     @PostMapping("/upload")
     public AjaxResult uploadFile(@Valid OssUploadSingleFileDto dto) {
         try {
+            String key = dto.getOssKey();
+            if(StringUtils.isBlank(key)){
+                key = "other";
+            }
+            dto.setOssKey(key);
             OssUploadSingleFileVo ossUploadSingleFileVo = ossService.uploadSingleFile(dto);
             return AjaxResult.success(ossUploadSingleFileVo);
         } catch (Exception e) {

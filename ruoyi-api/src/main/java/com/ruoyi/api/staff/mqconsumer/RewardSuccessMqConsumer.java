@@ -1,5 +1,6 @@
 package com.ruoyi.api.staff.mqconsumer;
 
+import com.ruoyi.common.enums.MqDelayLevelEnums;
 import com.ruoyi.common.rocketmq.RocketMqService;
 import com.ruoyi.common.rocketmq.constants.MqConstants;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,8 @@ public class RewardSuccessMqConsumer implements RocketMQListener<Long> {
         rocketMqService.asyncSend(MqConstants.TOPIC_REWARD_SUCCESS_NOTICE, orderId);
         // 订单佣金结算
         rocketMqService.asyncSend(MqConstants.TOPIC_ORDER_COMMISSION_SETTLEMENT, orderId);
+        // 发送自动评论mq过期时间，默认两小时后自动评论
+        rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_COMMENT, orderId, MqDelayLevelEnums.level_18);
         log.info("mq消费-打赏成功业务处理：完成");
     }
 }

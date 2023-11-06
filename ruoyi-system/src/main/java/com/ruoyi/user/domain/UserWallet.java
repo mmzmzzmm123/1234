@@ -41,6 +41,10 @@ public class UserWallet extends BaseEntity {
     @ApiModelProperty("赠送余额")
     private BigDecimal giftBalance;
 
+    @Excel(name = "分销佣金")
+    @ApiModelProperty("分销佣金")
+    private BigDecimal distributionCommission;
+
     /** 消费总额 */
     @Excel(name = "消费总额")
     @ApiModelProperty("消费总额")
@@ -51,5 +55,8 @@ public class UserWallet extends BaseEntity {
     @ApiModelProperty("赠送总额")
     private BigDecimal totalGiftBalance;
 
+    @Excel(name = "分销佣金总额")
+    @ApiModelProperty("分销佣金总额")
+    private BigDecimal totalDistributionCommission;
 
 }

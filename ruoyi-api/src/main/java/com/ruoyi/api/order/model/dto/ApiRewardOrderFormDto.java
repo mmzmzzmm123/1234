@@ -21,6 +21,9 @@ public class ApiRewardOrderFormDto implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    @ApiModelProperty("分销用户标识")
+    private Long shareUserId;
+
     @ApiModelProperty("店员标识")
     @NotNull(message = "店员标识不能为空")
     private Long staffId;
@@ -32,6 +35,12 @@ public class ApiRewardOrderFormDto implements Serializable {
     @ApiModelProperty("支付方式")
     @NotBlank(message = "支付方式不能为空")
     private String payWay;
+
+    @ApiModelProperty("社交账号服务商")
+    private String accountServiceProvider;
+
+    @ApiModelProperty("客户账号")
+    private String customNum;
 
     @ApiModelProperty("备注")
     private String remark;
