@@ -107,7 +107,7 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService {
     @Override
     public SysFileInfo upload(SysFileInfoReqDTO sysFileInfoReqDTO) {
         // 文件路径
-        String path = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DETAIL_FILE_PATH) + File.pathSeparator + sysFileInfoReqDTO.getModule() + File.pathSeparator;
+        String path = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DETAIL_FILE_PATH) + File.separatorChar + sysFileInfoReqDTO.getModule() + File.separatorChar;
         // 文件名
         String fileName = sysFileInfoReqDTO.getName();
         // 文件MD5
