@@ -41,6 +41,10 @@ Vue.use(uView);
 
 import store from '@/store';
 
+import moment from '@/common/moment.js';
+ 
+Vue.prototype.$moment = moment
+
 // uni.getSystemInfo({
 // 	success(res) {
 // 		if(res.language.indexOf('zh') >= 0){

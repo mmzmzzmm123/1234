@@ -214,7 +214,9 @@
 					startTime: this.$moment().format('YYYY-MM-DD HH:mm:ss')
 				}
 				this.$api.startOrder(params).then(res => {
+					this.$u.toast('操作成功')
 					console.log(order);
+					this.refresh();
 				})
 			},
 			showRenewOrder(order){
