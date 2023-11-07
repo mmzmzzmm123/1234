@@ -3,6 +3,7 @@ package com.ruoyi.onethinker.service;
 import java.util.List;
 import com.ruoyi.onethinker.domain.Activity;
 import com.ruoyi.onethinker.dto.ActivityReqDTO;
+import com.ruoyi.onethinker.dto.ActivityResDTO;
 
 /**
  * 活动Service接口
@@ -17,7 +18,7 @@ public interface IActivityService {
      * @param id 活动主键
      * @return 活动
      */
-    public ActivityReqDTO selectActivityById(Long id);
+    public ActivityResDTO selectActivityById(Long id);
 
     /**
      * 查询活动列表

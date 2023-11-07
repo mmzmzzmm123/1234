@@ -1,11 +1,17 @@
 package com.ruoyi.onethinker.service.impl;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.ruoyi.common.enums.ActivityTypeEnum;
 import com.ruoyi.common.utils.DateUtils;
 
+import com.ruoyi.onethinker.domain.SysFileInfo;
+import com.ruoyi.onethinker.dto.ActivityResDTO;
 import com.ruoyi.onethinker.dto.RedEnvelopeCtrlDTO;
+import com.ruoyi.onethinker.service.ISysFileInfoService;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +45,9 @@ public class ActivityServiceImpl implements IActivityService {
     @Autowired
     private ActivityDetailFactory activityDetailFactory;
 
+    @Autowired
+    private ISysFileInfoService sysFileInfoService;
+
     /**
      * 查询活动
      *
@@ -46,9 +55,9 @@ public class ActivityServiceImpl implements IActivityService {
      * @return 活动
      */
     @Override
-    public ActivityReqDTO selectActivityById(Long id) {
+    public ActivityResDTO selectActivityById(Long id) {
         Activity activity = activityMapper.selectActivityById(id);
-        ActivityReqDTO resultDTO = new ActivityReqDTO();
+        ActivityResDTO resultDTO = new ActivityResDTO();
         BeanUtils.copyProperties(activity,resultDTO);
         // 获取活动详情内容
         IActivityDetailService activityDetailService = activityDetailFactory.queryActivityDetailByActivityType(activity.getActivityType());
@@ -61,6 +70,9 @@ public class ActivityServiceImpl implements IActivityService {
                 resultDTO.setRedEnvelopeCtrlDTO(list.get(0));
             }
         }
+        // 获取文件内容
+        SysFileInfo sysFileInfo = sysFileInfoService.selectSysFileInfoByFileId(activity.getBgUrl());
+        resultDTO.setBgUrlInfo(sysFileInfo);
         return resultDTO;
     }
 
