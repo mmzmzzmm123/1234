@@ -280,6 +280,9 @@ const api = {
 	changeRoom(order){
 		return post('office/roomorder/changeRoom', order)
 	},
+	startOrder(order){
+		return post('office/roomorder/changeTime', order)
+	},
 	renewOrder(order){
 		return post('office/roomorder/charge', order)
 	},
