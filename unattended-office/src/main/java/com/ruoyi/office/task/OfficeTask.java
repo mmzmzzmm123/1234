@@ -60,6 +60,13 @@ public class OfficeTask {
 
 
     /**
+     * 扫描超期未使用的订单 修改状态
+     */
+    public void scanUnusedOrder() {
+        roomOrderService.scanUnusedOrder();
+    }
+
+    /**
      * 扫描最近打开设备，如果是门则进行关闭操作
      * 5-10秒
      */

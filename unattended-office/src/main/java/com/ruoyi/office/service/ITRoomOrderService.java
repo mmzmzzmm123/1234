@@ -112,4 +112,6 @@ public interface ITRoomOrderService {
     public void wxChargeNotify(String orderNo, String openId, WxPayOrderNotifyV3Result.Amount amt, String wxCallback);
 
     void merchantChangeTime4Guest(MerchantOrderChangeTimeReq req);
+
+    void scanUnusedOrder();
 }

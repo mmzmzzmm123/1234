@@ -1219,6 +1219,21 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
 //        System.out.println("订单结束提醒完成");
     }
 
+    @Override
+    public void scanUnusedOrder(){
+        TRoomOrder roomOrder = new TRoomOrder();
+        roomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());
+        List<TRoomOrder> roomOrderList = tRoomOrderMapper.selectTRoomOrderList(roomOrder);
+        for (TRoomOrder order : roomOrderList) {
+            if(order.getEndTime().before(new Date())){
+                TRoomOrder up =new TRoomOrder();
+                up.setId(order.getId());
+                up.setStatus(OfficeEnum.RoomOrderStatus.OVER_TIME.getCode());
+                tRoomOrderMapper.updateTRoomOrder(up);
+            }
+        }
+    }
+
     @Resource
     WxMpService wxMpService;
 
