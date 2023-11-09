@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConfigurationProperties(prefix = "gen")
 @PropertySource(value = { "classpath:generator.yml" })
-public class GenConfig
+public class                                                                                                  GenConfig
 {
     /** 作者 */
     public static String author;

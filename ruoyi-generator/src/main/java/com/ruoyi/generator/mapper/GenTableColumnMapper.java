@@ -57,4 +57,7 @@ public interface GenTableColumnMapper
      * @return 结果
      */
     public int deleteGenTableColumnByIds(Long[] ids);
+   /**
+    *
+    * */
 }
