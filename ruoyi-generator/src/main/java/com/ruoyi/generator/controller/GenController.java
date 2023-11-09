@@ -1,7 +1,6 @@
 package com.ruoyi.generator.controller;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,11 +80,8 @@ public class GenController extends BaseController
     public TableDataInfo dataList(GenTable genTable)
     {
         startPage();
-        List<GenTable> list1 = genTableService.selectDbTableList(genTable);
-        List<GenTable> list2 = genTableService.selectDbSlaveTableList(genTable);
-        list1.addAll(list2);
-        System.out.println(list1.size());
-        return getDataTable(list1);
+        List<GenTable> list = genTableService.selectDbTableList(genTable);
+        return getDataTable(list);
     }
 
     /**

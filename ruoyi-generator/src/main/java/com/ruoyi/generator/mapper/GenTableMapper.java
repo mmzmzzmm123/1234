@@ -1,9 +1,6 @@
 package com.ruoyi.generator.mapper;
 
 import java.util.List;
-
-import com.ruoyi.common.annotation.DataSource;
-import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.generator.domain.GenTable;
 
 /**
@@ -28,10 +25,6 @@ public interface GenTableMapper
      * @return 数据库表集合
      */
     public List<GenTable> selectDbTableList(GenTable genTable);
-
-    @DataSource(value = DataSourceType.SLAVE)
-    public List<GenTable> selectDbSlaveTableList(GenTable genTable);
-
 
     /**
      * 查询据库列表

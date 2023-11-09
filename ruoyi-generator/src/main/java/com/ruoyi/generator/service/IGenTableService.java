@@ -2,9 +2,6 @@ package com.ruoyi.generator.service;
 
 import java.util.List;
 import java.util.Map;
-
-import com.ruoyi.common.annotation.DataSource;
-import com.ruoyi.common.enums.DataSourceType;
 import com.ruoyi.generator.domain.GenTable;
 
 /**
@@ -29,16 +26,6 @@ public interface IGenTableService
      * @return 数据库表集合
      */
     public List<GenTable> selectDbTableList(GenTable genTable);
-
-
-    /**
-     * 查询重数据库列表
-     *
-     * @param genTable 业务信息
-     * @return 数据库表集合
-     */
-    @DataSource(value = DataSourceType.SLAVE)
-    public List<GenTable> selectDbSlaveTableList(GenTable genTable);
 
     /**
      * 查询据库列表

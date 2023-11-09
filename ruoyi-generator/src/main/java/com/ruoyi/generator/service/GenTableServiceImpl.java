@@ -91,12 +91,6 @@ public class GenTableServiceImpl implements IGenTableService
         return genTableMapper.selectDbTableList(genTable);
     }
 
-
-    @Override
-    public List<GenTable> selectDbSlaveTableList(GenTable genTable) {
-        return genTableMapper.selectDbSlaveTableList(genTable);
-    }
-
     /**
      * 查询据库列表
      * 
