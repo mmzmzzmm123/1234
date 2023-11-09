@@ -71,4 +71,9 @@ public class ContentManager {
     public Integer selectCount(){
        return contentMapper.selectCount(new QueryWrapper<ContentEntity>().select("1"));
     }
+
+    public List<ContentEntity>listByGuidList(List<String>guidList){
+        Assert.notNull(guidList,"guidList非空");
+        return contentMapper.listOrderByField(guidList);
+    }
 }

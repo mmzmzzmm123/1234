@@ -1,7 +1,13 @@
 package com.xinyu.idol.common.core.domain;
 
 import java.io.Serializable;
+
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSON;
 import com.xinyu.idol.common.constant.HttpStatus;
+import com.xinyu.idol.common.utils.StringUtils;
 
 /**
  * 响应信息主体
@@ -111,5 +117,16 @@ public class R<T> implements Serializable
     public static <T> Boolean isSuccess(R<T> ret)
     {
         return R.SUCCESS == ret.getCode();
+    }
+
+    public static <T> T wrapData(String jsonStr, Class clazz) {
+        if (StrUtil.isBlankIfStr(jsonStr) || ObjUtil.isEmpty(clazz)) {
+            throw new RuntimeException("warp data param is null");
+        }
+        R r = JSON.parseObject(jsonStr, R.class);
+        Object data1 = r.getData();
+        Object obj = BeanUtil.toBean(data1, clazz);
+        return (T) obj;
+
     }
 }

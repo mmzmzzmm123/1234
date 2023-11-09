@@ -115,6 +115,32 @@ public class ContentEntity implements Serializable {
 
     private Integer sort;
 
+
+    private String osskeyList;
+
+
+    private String osskeyListSha1;
+
+
+
+    public String getOsskeyList() {
+        return osskeyList;
+    }
+
+    public void setOsskeyList(String osskeyList) {
+        this.osskeyList = osskeyList;
+    }
+
+    public String getOsskeyListSha1() {
+        return osskeyListSha1;
+    }
+
+    public void setOsskeyListSha1(String osskeyListSha1) {
+        this.osskeyListSha1 = osskeyListSha1;
+    }
+
+
+
     public String getGeneralTag() {
         return generalTag;
     }
@@ -443,7 +469,7 @@ public class ContentEntity implements Serializable {
     public void generateIdentifier(){
         String identifierStr=fileName+displayName+description+maximumCompatibility+minimumCompatibility
                 +classification1+classification2+classification3+classification4+specialTag+minimumCompatibility+iconOsskey+pakOsskey+
-                isTest+isHide+pakSha1+jsonOsskey+jsonSha1+sort+path;
+                isTest+isHide+pakSha1+jsonOsskey+jsonSha1+sort+path+osskeyList;
         setIdentifier(Md5Utils.hash(identifierStr));
     }
 }

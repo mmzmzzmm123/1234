@@ -1,4 +1,4 @@
-package com.xinyu.idol.pojo.vo;
+package com.xinyu.idol.pojo.dto;
 
 import lombok.*;
 
@@ -10,11 +10,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @ToString
-public class PullResourceFromEnvReq implements Serializable {
-    private String fromEnv;
-
-    //private String targetEnv;
+public class GuidListDto implements Serializable {
 
     private List<String> guidList;
-
 }

@@ -2,6 +2,8 @@ package com.xinyu.idol.service;
 
 import com.aliyuncs.exceptions.ClientException;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.xinyu.idol.pojo.dto.GuidListDto;
+import com.xinyu.idol.pojo.dto.InnerResourceDto;
 import com.xinyu.idol.pojo.entity.ContentEntity;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.xinyu.idol.pojo.vo.*;
@@ -51,6 +53,12 @@ public interface IContentService extends IService<ContentEntity> {
     OriginUploadResp uploadOrigins(List<MultipartFile> multipartFileList) throws  IOException;
 
      void pullResourceFromEnv(PullResourceFromEnvReq pullResourceFromEnvReq);
+
+    /**
+     * 根据guid查询
+     * @param guidListDto
+     */
+    InnerResourceDto listByGuidList(GuidListDto guidListDto);
 
 
 }

@@ -58,6 +58,7 @@ public class ContentWebController {
 
     @RequestMapping(value = "/pull",method = RequestMethod.POST)
     AjaxResult pushToEnv(@RequestBody PullResourceFromEnvReq pullResourceFromEnvReq)  {
+        contentService.pullResourceFromEnv(pullResourceFromEnvReq);
         return AjaxResult.success();
     }
 

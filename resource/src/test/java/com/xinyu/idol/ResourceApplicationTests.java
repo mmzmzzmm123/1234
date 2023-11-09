@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
+import springfox.documentation.spring.web.json.Json;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -115,6 +116,7 @@ class ResourceApplicationTests {
 
                 .type("type1")
                 .path("path/aaa/bb")
+                .osskeyList("{\"android\" :\"aaa\",\"ios\":\"ccc\"}")
 
                 .displayName("disp").fileName("fileN").currentUploadTime("123").pakOsskey("pakOss").jsonOsskey("Json")
         .build();
@@ -122,6 +124,8 @@ class ResourceApplicationTests {
 
         addContentVo.setPath(UUID.randomUUID().toString());
        redisCache.lPush("testKey33",addContentVo);
+
+        System.out.println(JSON.toJSONString(addContentVo));
 
 
 

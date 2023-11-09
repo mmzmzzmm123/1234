@@ -155,7 +155,14 @@ spring:
 
 aliyun:
   oss:
-    bucket: content-resource-dev
+    bucket: idol-stage-dev
     endpoint: oss-cn-beijing.aliyuncs.com
-    domain: https://content-resource-dev.oss-cn-beijing.aliyuncs.com
+    domain: https://idol-stage-dev.oss-cn-beijing.aliyuncs.com
+
+environment-match:
+  domains:
+    dev: http://10.10.0.5:30083
+    test: http://10.10.0.5:30083
+    pre: http://10.10.0.5:30083
+    prod: http://10.10.0.5:30083
 

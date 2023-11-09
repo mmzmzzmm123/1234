@@ -14,7 +14,10 @@ import com.xinyu.idol.common.utils.DateUtils;
 import com.xinyu.idol.common.utils.StringUtils;
 import com.xinyu.idol.common.utils.bean.BeanUtils;
 import com.xinyu.idol.common.utils.sign.Md5Utils;
+import com.xinyu.idol.config.EnvironmentMatchMap;
 import com.xinyu.idol.manager.ContentManager;
+import com.xinyu.idol.pojo.dto.GuidListDto;
+import com.xinyu.idol.pojo.dto.InnerResourceDto;
 import com.xinyu.idol.pojo.entity.ClassificationsEntity;
 import com.xinyu.idol.pojo.entity.ContentEntity;
 import com.xinyu.idol.mapper.ContentMapper;
@@ -27,6 +30,7 @@ import com.xinyu.idol.service.IContentOperLogService;
 import com.xinyu.idol.service.IContentService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xinyu.idol.service.IPakPathIdMapService;
+import com.xinyu.idol.service.remote.ContentResourceRemote;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -71,11 +75,19 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
     @Autowired
     private IClassificationsService classificationsService;
 
+
+
     @Autowired
     private OSS oss;
 
+    @Autowired
+    private EnvironmentMatchMap environmentMatchMap;
+
     @Value("${aliyun.oss.bucket}")
     String bucketName = "content-resource-dev";
+    
+    @Autowired
+    private ContentResourceRemote contentResourceRemote;
 
     public List testList() {
 
@@ -86,7 +98,7 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
         //逐字段校验
         addContentVo.verifyFields();
 
-
+        //用path绑定guid
         PakPathIdMapEntity pakPathIdMapEntity = new PakPathIdMapEntity();
         BeanUtils.copyProperties(addContentVo, pakPathIdMapEntity);
         PakPathIdMapEntity byPath = pakPathIdMapService.getByPath(pakPathIdMapEntity);
@@ -261,13 +273,15 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
         }
 
         if(CollectionUtils.isEmpty(pullResourceFromEnvReq.getGuidList())){
-            throw new RuntimeException("fromEnv异常");
+            throw new RuntimeException("guidList异常");
         }
-
         //获取对应fromEnv的域名
+        String domain = environmentMatchMap.getDomain(pullResourceFromEnvReq.getFromEnv());
 
         //用guidList查询资源列表
+        List<ContentEntity> byGuidList = contentResourceRemote.getByGuidList(pullResourceFromEnvReq.getGuidList(), pullResourceFromEnvReq.getFromEnv());
 
+       //byGuidList.get(0);
         //与本地资源列表进行对比，将特征重复筛选掉
 
         //遍历数组，数组里每个值进行下载和插入db
@@ -276,6 +290,14 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
 
 
 
+
+    }
+
+    @Override
+    public InnerResourceDto listByGuidList(GuidListDto guidListDto) {
+        Assert.notNull(guidListDto,"guidListDto非空");
+        List<ContentEntity> contentEntityList = contentManager.listByGuidList(guidListDto.getGuidList());
+        return InnerResourceDto.builder().contentEntityList(contentEntityList).build();
 
     }
 

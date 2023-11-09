@@ -33,4 +33,16 @@
 <!--        where guid=#{contentEntity.guid}-->
 
 <!--    </update>-->
+    <select id="listOrderByField" resultType="com.xinyu.idol.pojo.entity.ContentEntity">
+        select * from t_content where guid in
+        <foreach collection="guidList" item="guid" separator="," open="(" close=")">
+            #{guid}
+        </foreach>
+            order by field(guid,
+        <foreach collection="guidList" item="guid" separator="," >
+            #{guid}
+        </foreach>
+        )
+
+    </select>
 </mapper>

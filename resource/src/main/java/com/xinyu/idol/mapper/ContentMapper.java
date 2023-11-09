@@ -20,5 +20,7 @@ public interface ContentMapper extends BaseMapper<ContentEntity> {
 
     //void updateByGuid(@Param("contentEntity") ContentEntity contentEntity);
 
+    List<ContentEntity> listOrderByField(@Param("guidList") List<String>guidList);
+
 
 }

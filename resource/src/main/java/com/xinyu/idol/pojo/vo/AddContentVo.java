@@ -92,6 +92,12 @@ public class AddContentVo implements Serializable {
 
     private Integer jsonFileSize;
 
+    private String osskeyList;
+
+
+    private String osskeyListSha1;
+
+
     //字段判空
     public void verifyFields(){
         if(StringUtils.isEmpty(this.getPath())){
