@@ -194,7 +194,7 @@ public class ApiOrderService {
         if (PayWayEnums.AMOUNT_PAY.getCode().equals(orderInfo.getPayWay())) {
             log.info("礼物赠送订单提交：描述，支付类型：余额支付，发送赠送礼物成功消息");
             // 发送mq消息处理赠送礼物后的业务
-            rocketMqService.asyncSend(MqConstants.TOPIC_GIVE_GIFT_SUCCESS, orderInfo.getId());
+            rocketMqService.delayedSend(MqConstants.TOPIC_GIVE_GIFT_SUCCESS, orderInfo.getId(), MqDelayLevelEnums.level_2);
         }
         log.info("礼物赠送订单提交：完成，返回数据：{}", vo);
         return vo;
@@ -285,7 +285,7 @@ public class ApiOrderService {
         if (PayWayEnums.AMOUNT_PAY.getCode().equals(orderInfo.getPayWay())) {
             log.info("打赏订单提交：描述，支付类型：余额支付，发送赠送礼物成功消息");
             // 发送mq消息处理赠送礼物后的业务
-            rocketMqService.asyncSend(MqConstants.TOPIC_REWARD_SUCCESS, orderInfo.getId());
+            rocketMqService.delayedSend(MqConstants.TOPIC_REWARD_SUCCESS, orderInfo.getId(), MqDelayLevelEnums.level_2);
         }
         if (PayWayEnums.WEI_XIN_PAY.getCode().equals(orderInfo.getPayWay())) {
             log.info("打赏订单提交：描述，支付类型：微信支付，发送订单超时自动取消消息");
@@ -389,7 +389,7 @@ public class ApiOrderService {
         if (PayWayEnums.AMOUNT_PAY.getCode().equals(orderInfo.getPayWay())) {
             log.info("随机单提交：描述，支付类型：余额支付，发送指定下单成功消息");
             // 随机单支付成功后通知客户与店员
-            rocketMqService.asyncSend(MqConstants.TOPIC_RANDOM_ORDER_SUCCESS_NOTICE, orderInfo.getId());
+            rocketMqService.delayedSend(MqConstants.TOPIC_RANDOM_ORDER_SUCCESS_NOTICE, orderInfo.getId(), MqDelayLevelEnums.level_2);
             // 发送延时消息自动退单（5分钟）
             rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_CANCEL, orderInfo.getId(), MqDelayLevelEnums.level_9);
         }
@@ -421,6 +421,11 @@ public class ApiOrderService {
         if (ObjectUtil.isNull(staffInfo)) {
             log.warn("指定单提交：失败，无法找到对应的店员信息");
             throw new ServiceException("亲爱的，系统繁忙，请稍后重试", HttpStatus.WARN_WX);
+        }
+        // 判断店员是否离线
+        if(SysYesNoEnums.NO.getCode().equals(staffInfo.getIfOnline())){
+            log.warn("指定单提交：失败，店员离线无法下单");
+            throw new ServiceException("亲爱的，店员离线中，暂无法下单哟", HttpStatus.WARN_WX);
         }
         // 查询店员等级配置信息
         StaffLevelConfig staffLevelConfig = selectStaffLevelInfo(staffInfo.getStaffLevel());
@@ -515,7 +520,7 @@ public class ApiOrderService {
         if (PayWayEnums.AMOUNT_PAY.getCode().equals(orderInfo.getPayWay())) {
             log.info("指定单提交：描述，支付类型：余额支付，发送指定下单成功消息");
             // 发送订阅消息通知客户和店员
-            rocketMqService.asyncSend(MqConstants.TOPIC_APPOINT_ORDER_SUCCESS_NOTICE, orderInfo.getId());
+            rocketMqService.delayedSend(MqConstants.TOPIC_APPOINT_ORDER_SUCCESS_NOTICE, orderInfo.getId(), MqDelayLevelEnums.level_2);
             // 发送延时消息自动退单（5分钟）
             rocketMqService.delayedSend(MqConstants.TOPIC_ORDER_AUTO_CANCEL, orderInfo.getId(), MqDelayLevelEnums.level_9);
         }

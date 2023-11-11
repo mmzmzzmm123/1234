@@ -164,4 +164,14 @@ public class Constants {
      */
     public static final String[] JOB_ERROR_STR = {"java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
             "org.springframework", "org.apache", "com.ruoyi.common.utils.file", "com.ruoyi.common.config"};
+
+    /**
+     * 所有权限标识
+     */
+    public static final String ALL_PERMISSION = "*:*:*";
+
+    /**
+     * 管理员角色权限标识
+     */
+    public static final String SUPER_ADMIN = "admin";
 }
