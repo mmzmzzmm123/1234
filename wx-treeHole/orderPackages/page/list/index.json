@@ -1,0 +1,16 @@
+{
+  "navigationBarTitleText": "我的订单",
+  "usingComponents": {
+    "i-drawer": "../../../components/iview/dist/drawer/index",
+    "i-load-more": "../../../components/iview/dist/load-more/index",
+    "column-view": "../../../components/mine/columnView/index",
+    "wux-icon": "../../../components/wux/dist/icon/index",
+    "wux-row": "../../../components/wux/dist/row/index",
+    "wux-col": "../../../components/wux/dist/col/index",
+    "wux-spin": "../../../components/wux/dist/spin/index",
+    "wux-tabs": "../../../components/wux/dist/tabs/index",
+    "wux-tab": "../../../components/wux/dist/tab/index",
+    "wux-dialog": "../../../components/wux/dist/dialog/index",
+    "mine-null-data": "../../../components/mine/nullDataView/index"
+  }
+}

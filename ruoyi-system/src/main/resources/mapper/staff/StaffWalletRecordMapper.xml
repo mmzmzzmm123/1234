@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.staff.mapper.StaffWalletRecordMapper">
+
+    <resultMap type="StaffWalletRecord" id="StaffWalletRecordResult">
+        <result property="id"    column="id"    />
+        <result property="staffUserId"    column="staff_user_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="staffWalletRecordType"    column="staff_wallet_record_type"    />
+        <result property="amount"    column="amount"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectStaffWalletRecordVo">
+        select id, staff_user_id, order_id, staff_wallet_record_type, amount, remark, create_by, create_time, update_by, update_time from bus_staff_wallet_record
+    </sql>
+
+    <select id="selectStaffWalletRecordList" parameterType="StaffWalletRecord" resultMap="StaffWalletRecordResult">
+        <include refid="selectStaffWalletRecordVo"/>
+        <where>
+            <if test="staffUserId != null "> and staff_user_id = #{staffUserId}</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="staffWalletRecordType != null  and staffWalletRecordType != ''"> and staff_wallet_record_type = #{staffWalletRecordType}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectStaffWalletRecordById" parameterType="Long" resultMap="StaffWalletRecordResult">
+        <include refid="selectStaffWalletRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertStaffWalletRecord" parameterType="StaffWalletRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_staff_wallet_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="staffUserId != null">staff_user_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="staffWalletRecordType != null">staff_wallet_record_type,</if>
+            <if test="amount != null">amount,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="staffUserId != null">#{staffUserId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="staffWalletRecordType != null">#{staffWalletRecordType},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStaffWalletRecord" parameterType="StaffWalletRecord">
+        update bus_staff_wallet_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="staffUserId != null">staff_user_id = #{staffUserId},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="staffWalletRecordType != null">staff_wallet_record_type = #{staffWalletRecordType},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStaffWalletRecordById" parameterType="Long">
+        delete from bus_staff_wallet_record where id = #{id}
+    </delete>
+
+    <delete id="deleteStaffWalletRecordByIds" parameterType="String">
+        delete from bus_staff_wallet_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

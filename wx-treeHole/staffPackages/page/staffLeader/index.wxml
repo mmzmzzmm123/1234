@@ -1,0 +1,171 @@
+<wxs src="../../../wxss/time.wxs" module="timeUtil"></wxs>
+<wxs src="../../../wxss/str.wxs" module="strUtil"></wxs>
+<wxs src="../../../wxss/dicts.wxs" module="dictsUtil"></wxs>
+<view class="bView">
+  <scroll-view scroll-y="true" style="width:{{pWidth}}px;height: {{pHeight}}px;">
+    <block wx:if="{{!loadState}}">
+      <block wx:if="{{staffData != null && staffData.length > 0}}">
+        <block wx:for="{{staffData}}" wx:key="id">
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_common staffItem">
+            <view class="view_all_adapt view_box_common view_box_row_content_symmetry">
+              <view class="staffAvatarView">
+                <!-- 头像 -->
+                <image class="avatarImg" src="{{item.avatarUrl != null ? item.avatarUrl : '../../../static/images/default_tx.png'}}" mode="aspectFill"></image>
+                <!-- 头像框 -->
+                <image class="avatarFrame" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/top_test.gif" mode="widthFix"></image>
+                <!-- 语音条 -->
+                <view class="{{item.sex == 1 ? 'girl_bg_color' : 'boy_bg_color'}} staffVoice view_box_row" data-index="{{index}}" catch:tap="listAudioCli">
+                  <image class="voicePlay" src="../../../static/ico/{{item.audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
+                  <image wx:if="{{item.audioState == -1}}" class="voiceAudioImg" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                  <image wx:if="{{item.audioState == 0}}" class="audioFrequencyGif" src="../../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+                  <view wx:if="{{item.voiceTime != null && item.voiceTime > 0}}" class="voiceSeconds">{{item.voiceTime}}s</view>
+                  <view wx:else class="voiceSeconds">　</view>
+                </view>
+              </view>
+              <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-110}}px;height: 92px;">
+                <view>
+                  <view class="view_box_row_content_symmetry">
+                    <!-- 名字和金牌情况 -->
+                    <view class="view_box_row_content">
+                      <view class="staffName">{{item.nickName}}</view>
+                      <view class="staffBadgeLevel view_box_row_content badgeLevel_{{item.staffLevel}}">
+                        <image src="../../../static/images/badge_level_{{item.staffLevel}}.png" mode="widthFix"></image>
+                        <view>{{strUtil.staffLevelMacth(item.staffLevel,staffLevelConfig)}}</view>
+                      </view>
+                    </view>
+                    <!-- 在线情况 -->
+                    <view class="staffOnLineState view_box_row_content">
+                      <image src="../../../static/ico/{{item.ifOnline == 'Y' ? 'online_32' : 'offline_32'}}.png"></image>
+                      <view>{{item.ifOnline == 'Y' ? '在线' : '离线'}}</view>
+                    </view>
+                  </view>
+                  <!-- 用户基本信息 -->
+                  <view class="view_box_row staffBaseInfo">
+                    <view>{{item.province}}·{{item.city}}</view>
+                    <view>{{item.sex == 1 ? '女' : '男'}}</view>
+                    <view>{{timeUtil.calculateAge(item.birthDate)}}岁</view>
+                  </view>
+                  <!-- 个人介绍 -->
+                  <view class="staffDetails text_ellipsis">
+                    {{item.selfIntroduction}}
+                  </view>
+                </view>
+                <!-- 员工服务 -->
+                <view class="view_box_row_wrap">
+                  <block wx:if="{{item.serviceIdList != null && item.serviceIdList.length > 0}}">
+                    <block wx:for="{{strUtil.matchServiceShortNameByIdArr(item.serviceIdList, serviceList)}}" wx:for-item="serviceLabel" wx:key="index">
+                      <view class="staffService {{item.sex == 1 ? 'girl_bg_color' : 'boy_bg_color'}}">{{serviceLabel}}</view>
+                    </block>
+                  </block>
+                  <view wx:else style="font-size: 12px;color: #80848f;">
+                    亲爱的 暂时不接单哟 很快就回来啦
+                  </view>
+                </view>
+              </view>
+            </view>
+            <view class="seizeSeat_mini"></view>
+            <!-- 员工标签 -->
+            <view wx:if="{{item.selfTags != null && item.selfTags != ''}}" class="view_box_common staffLabel view_box_row_wrap">
+              <block wx:for="{{strUtil.splitToArr(item.selfTags, ',')}}" wx:for-item="selfTag" wx:key="index">
+                <view class="{{item.sex == 1 ? 'girl_edging_color girl_font_color' : 'boy_edging_color boy_font_color'}} staffLabelItem">{{selfTag}}</view>
+              </block>
+            </view>
+            <view class="seizeSeat_mini"></view>
+            <view class="cut_off_rule_small"></view>
+            <view class="seizeSeat_mini"></view>
+            <!-- 操作按钮组 -->
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view style="font-size: 12px;color: #80848f;">店员状态：{{dictsUtil.staff_state(item.state)}}</view>
+              <view class="view_box_row_content">
+                <view class="orderButItem badgeLevel_1" data-userId="{{item.userId}}" bind:tap="toSeeStaffSalary">薪资情况</view>
+                <view class="orderButItem badgeLevel_3" data-index="{{index}}" bind:tap="updateStaffInfo">修改信息</view>
+              </view>
+            </view>
+          </view>
+        </block>
+        <view class="seizeSeat_mini"></view>
+        <view class="seizeSeat_mini"></view>
+        <i-load-more tip='没有更多的组员啦，快去拉新吧' loading="{{false}}"></i-load-more>
+        <view class="seizeSeat_mini"></view>
+        <view class="seizeSeat_mini"></view>
+      </block>
+      <mine-null-data wx:else width="100%" height="100%" title="亲爱的 暂无组员哟，赶紧去招新吧"></mine-null-data>
+    </block>
+    <block wx:else>
+      <view class="seizeSeat_mini"></view>
+      <view class="seizeSeat_mini"></view>
+      <view class="view_box_common">
+        <wux-skeleton active>
+          <wux-skeleton-paragraph rows="16" />
+        </wux-skeleton>
+      </view>
+    </block>
+  </scroll-view>
+</view>
+
+<!-- 修改店员容器 -->
+<i-drawer mode="right" visible="{{ updateStaffInfoDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeUpdateStaffInfoDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.06}}px;">
+          <view></view>
+          <text>更新店员信息</text>
+          <wux-icon type="md-close" size="22" bindtap="changeRewardDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <view class="drawerBodyView">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common scope_view">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../../static/ico/theme_dot.png"></image>
+              <view>在线状态</view>
+            </view>
+            <wux-switch name="light" slot="footer" color="royal" value="{{operObj.ifOnline == 'Y'}}" bindchange="staffOnlineChange" />
+          </view>
+        </view>
+
+        <view class="seizeSeat_mini"></view>
+        <picker header-text="店员等级" mode="selector" range="{{levelList}}" range-key="label" bindchange="levelChange">
+          <view class="view_box_common scope_view">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content tempColumn">
+                <image src="../../../static/ico/theme_dot.png"></image>
+                <view>用户等级</view>
+              </view>
+              <view class="view_box_row_content">
+                <view>{{strUtil.staffLevelMacth(operObj.staffLevel,staffLevelConfig)}}</view>
+                <wux-icon style="margin-left: 10px;" type="ios-arrow-forward" size="14" color="#80848f"></wux-icon>
+              </view>
+            </view>
+          </view>
+        </picker>
+
+        <view class="seizeSeat_mini"></view>
+        <picker header-text="店员状态" mode="selector" range="{{stateList}}" range-key="label" bindchange="stateChange">
+          <view class="view_box_common scope_view">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content tempColumn">
+                <image src="../../../static/ico/theme_dot.png"></image>
+                <view>用户状态</view>
+              </view>
+              <view class="view_box_row_content">
+                <view>{{dictsUtil.staff_state(operObj.state)}}</view>
+                <wux-icon style="margin-left: 10px;" type="ios-arrow-forward" size="14" color="#80848f"></wux-icon>
+              </view>
+            </view>
+          </view>
+        </picker>
+
+        <view class="seizeSeat_mini"></view>
+      </view>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bind:tap="submitUpdate">保存</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+  </view>
+</i-drawer>

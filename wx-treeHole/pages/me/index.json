@@ -1,0 +1,16 @@
+{
+  "navigationStyle": "custom",
+  "navigationBarTextStyle": "white",
+  "usingComponents": {
+    "i-drawer": "../../components/iview/dist/drawer/index",
+    "i-load-more": "../../components/iview/dist/load-more/index",
+    "wux-avatar": "../../components/wux/dist/avatar/index",
+    "column-view": "../../components/mine/columnView/index",
+    "wux-icon": "../../components/wux/dist/icon/index",
+    "wux-badge": "../../components/wux/dist/badge/index",
+    "wux-row": "../../components/wux/dist/row/index",
+    "wux-col": "../../components/wux/dist/col/index",
+    "wux-switch": "../../components/wux/dist/switch/index",
+    "wux-progress": "../../components/wux/dist/progress/index"
+  }
+}

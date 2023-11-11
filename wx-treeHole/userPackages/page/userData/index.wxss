@@ -1,0 +1,40 @@
+.scope_view{
+  width: 82%;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+.scope_view span{
+  color: #1c2438;
+  font-size: 16px;
+  font-weight: bold;
+}
+.scope_view text{
+  font-size: 14px;
+  margin-right: 6px;
+  color: #495060;
+}
+.userTx{
+  width: 56px;
+  height: 56px;
+  border-radius: 56px;
+  position: relative;
+}
+.wx-switch-input{
+  width:82rpx !important;
+  height:40rpx !important;
+}
+.wx-switch-input::before{
+  width:80rpx !important;
+  height: 36rpx !important;
+}
+.wx-switch-input::after{
+  width: 40rpx !important;
+  height: 36rpx !important;
+}
+.avatarFrame{
+  width: 70px;
+  height: 70px;
+  position: absolute;
+  left: -10px;
+  top: -7px;
+}

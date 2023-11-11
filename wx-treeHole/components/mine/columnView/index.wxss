@@ -1,0 +1,29 @@
+.view_box_common{
+  width:92%;
+  margin:0 auto;
+}
+.view_box_row_content{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+/* view横向布局，并垂直居中，左右对称 */
+.view_box_row_content_symmetry{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.titleView image{
+  width: 12px;
+  margin-right: 4px;
+}
+.titleView{
+  font-size: 16px;
+  font-weight: bold;
+}
+.moreView{
+  font-size: 12px;
+}
+.moreView view{
+  margin-right: 6px;
+}

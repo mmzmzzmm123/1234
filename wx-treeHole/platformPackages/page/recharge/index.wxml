@@ -1,0 +1,144 @@
+<wxs src="../../../wxss/format.wxs" module="formatUtil"></wxs>
+<import src="../../../wxParse/wxParse.wxml" />
+<view class="bView">
+  <scroll-view refresher-enabled="true" refresher-background="FFFFFF" refresher-default-style="black" refresher-triggered="{{refreshState}}" bindrefresherrefresh="refresh" scroll-y="true" style="width:{{pWidth}}px;height: {{pHeight}}px;">
+    <!-- 我的枫叶币信息 -->
+    <view class="seizeSeat_mini"></view>
+    <view class="view_box_common scope_view_item" style="color: #ffffff;background: linear-gradient(to right, #4198EF,#78D6F4);position: relative;overflow: hidden;">
+      <image class="userWalletBgImg" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/bot_1.png" mode="widthFix"></image>
+      <view class="view_box_common view_box_row_content_symmetry userWalletView">
+        <view class="view_box_column_symmetry balanceView">
+          <span>我的枫叶币</span>
+          <view>￥{{formatUtil.toFixed(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}</view>
+        </view>
+        <view class="view_box_column_symmetry balanceDetailsView">
+          <view class="view_box_row_content_symmetry">
+            <span>我的等级</span>
+            <text>VIP {{userInfo.userLevelVo.currentLevel}}</text>
+          </view>
+          <view class="view_box_row_content_symmetry">
+            <span>充值总额</span>
+            <text>￥{{formatUtil.toFixed(userInfo.userWalletVo.totalBalance)}}</text>
+          </view>
+          <view class="view_box_row_content_symmetry">
+            <span>赠送总枫叶币</span>
+            <text>￥{{formatUtil.toFixed(userInfo.userWalletVo.totalGiftBalance)}}</text>
+          </view>
+        </view>
+      </view>
+      <view class="view_box_common" style="position: relative;">
+        <view wx:if="{{userLevelData != null}}" class="view_box_row">
+          <view class="level">当前等级 VIP{{userLevelData.currLevel}}</view>
+          <view class="levelProgress">
+            <wux-progress status="progress" percent="{{userLevelData.currLevel != userLevelData.nextLevel?userLevelData.upgradationPercent:100}}" />
+          </view>
+          <view class="level">VIP{{userLevelData.nextLevel}}</view>
+        </view>
+        <view wx:if="{{userLevelData != null}}" class="levelTips">
+          <block wx:if="{{userLevelData.currLevel != userLevelData.nextLevel}}">
+            再充值 {{userLevelData.upgradationThreshold}} 个枫叶币即可升级为 VIP {{userLevelData.nextLevel}}
+          </block>
+          <block wx:else>
+            哇 泰酷辣 有人等级爆啦
+          </block>
+        </view>
+      </view>
+    </view>
+
+    <!-- 充值信息 -->
+    <view class="seizeSeat_mini"></view>
+    <view class="seizeSeat_mini"></view>
+    <column-view title="我要充值" moreTitle="查看 VIP 权益" outerMargin="0px" bind:toPage="changeGradeEquityDrawer"></column-view>
+    <view class="view_box_common">
+      <view class="seizeSeat_mini"></view>
+      <view class="seizeSeat_mini"></view>
+      <view class="customizeRechrageView">
+        <view class="view_box_common view_box_row">
+          <image src="../../../static/ico/money_white_32.png" mode="widthFix"></image>
+          <input type="number" class="customizeInput" placeholder="请输入您要充值的枫叶币数" value="{{rechargeAmount}}" bindinput="rechargeAmountChange" />
+          <view>个</view>
+        </view>
+      </view>
+      <view class="seizeSeat_mini"></view>
+      <wux-row>
+        <block wx:for="{{rechargeData}}" wx:key="id">
+          <wux-col span="4">
+            <view class="rechrageItem view_box_content_column {{index == rechargeConfigIndex ? 'rechrageItem_cli' : ''}}" data-index="{{index}}" bind:tap="chooseRechargeItem">
+              <view>￥{{item.amount}}</view>
+              <span wx:if="{{item.giveAmount > 0}}">赠送 {{item.giveAmount}} 枫叶币</span>
+            </view>
+          </wux-col>
+        </block>
+      </wux-row>
+      <view class="seizeSeat_mini"></view>
+      <view class="seizeSeat_mini"></view>
+      <view class="view_box_row_content">
+        <radio checked="{{ifAgree}}" color="#8978E4" bind:tap="ifAgreeChange" />
+        <view style="font-size: 14px;color:#1c2438;" bind:tap="changeUserAgreementDrawer">勾选表示您接受<span class="boy_font_color">《平台用户协议》</span></view>
+      </view>
+      <view class="seizeSeat_mini"></view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+    <view class="themeBut" style="background: linear-gradient(to right, #4198EF,#78D6F4);" bind:tap="submitRecharge">立即充值</view>
+  </scroll-view>
+</view>
+
+<!-- 用户等级权益 -->
+<i-drawer mode="right" visible="{{ gradeEquityDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeGradeEquityDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.06}}px;">
+          <view></view>
+          <text>用户等级权益</text>
+          <wux-icon type="md-close" size="22" bindtap="changeGradeEquityDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <scroll-view scroll-y="true" class="drawerBodyView" style="height: {{pHeight * 0.6}}px;">
+        <block wx:for="{{userLevelConfigList}}" wx:key="id">
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_common drawerFormView">
+            <view class="view_box_common view_box_row_content_symmetry gradeEquityItem">
+              <span>VIP {{item.level}}</span>
+              <text>获取定制头像框</text>
+              <image src="{{item.avatarUrl}}" mode="widthFix"></image>
+            </view>
+          </view>
+        </block>
+        <view class="seizeSeat_mini"></view>
+      </scroll-view>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bind:tap="changeGradeEquityDrawer">我知道啦</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+  </view>
+</i-drawer>
+
+<!-- 协议容器 -->
+<i-drawer mode="right" visible="{{ userAgreementDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeUserAgreementDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.08}}px;">
+          <view></view>
+          <text>平台用户协议</text>
+          <wux-icon type="md-close" size="22" bindtap="changeUserAgreementDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <scroll-view scroll-y="true" class="drawerBodyView" style="height: {{pHeight*0.65}}px;">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common">
+          <template is="wxParse" data="{{wxParseData:userAgreement.nodes}}" />
+        </view>
+      </scroll-view>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bind:tap="changeUserAgreementDrawer">我知道啦</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+    <view class="cut_off_rule_small"></view>
+  </view>
+</i-drawer>

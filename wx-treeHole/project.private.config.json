@@ -1,0 +1,128 @@
+{
+  "description": "项目私有配置文件。此文件中的内容将覆盖 project.config.json 中的相同字段。项目的改动优先同步到此文件中。详见文档：https://developers.weixin.qq.com/miniprogram/dev/devtools/projectconfig.html",
+  "projectname": "wx-treeHole",
+  "setting": {
+    "compileHotReLoad": true,
+    "urlCheck": false,
+    "preloadBackgroundData": false
+  },
+  "libVersion": "3.1.4",
+  "condition": {
+    "miniprogram": {
+      "list": [
+        {
+          "name": "店员资料卡-分享业务",
+          "pathName": "staffPackages/page/staffInfoShow/index",
+          "query": "staffId=179&share=3",
+          "launchMode": "default",
+          "scene": 1007
+        },
+        {
+          "name": "分销首页",
+          "pathName": "distributionPackages/page/index/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "店员薪资页",
+          "pathName": "staffPackages/page/staffSalary/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "店员管理页",
+          "pathName": "staffPackages/page/staffLeader/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "店员订单列表页",
+          "pathName": "staffPackages/page/staffOrder/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "用户订单列表页",
+          "pathName": "orderPackages/page/list/index",
+          "query": "index=0",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "员工资料卡",
+          "pathName": "staffPackages/page/staffInfoShow/index",
+          "query": "staffId=2",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "选人下单",
+          "pathName": "pages/select/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "动态大厅",
+          "pathName": "pages/trends/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "充值页面",
+          "pathName": "platformPackages/page/recharge/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "店员动态",
+          "pathName": "staffPackages/page/staffTrends/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "店员资料管理页",
+          "pathName": "staffPackages/page/staffInfo/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "我的页面",
+          "pathName": "pages/me/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "申请成为员工页",
+          "pathName": "staffPackages/page/applyStaff/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "账号管理页面",
+          "pathName": "userPackages/page/accounts/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        },
+        {
+          "name": "用户资料页面",
+          "pathName": "userPackages/page/userData/index",
+          "query": "",
+          "launchMode": "default",
+          "scene": null
+        }
+      ]
+    }
+  }
+}

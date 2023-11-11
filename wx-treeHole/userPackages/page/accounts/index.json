@@ -1,0 +1,13 @@
+{
+  "navigationBarTitleText": "绿泡泡管理",
+  "usingComponents": {
+    "i-drawer": "../../../components/iview/dist/drawer/index",
+    "wux-icon": "../../../components/wux/dist/icon/index",
+    "wux-spin": "../../../components/wux/dist/spin/index",
+    "wux-cell-group": "../../../components/wux/dist/cell-group/index",
+    "wux-cell": "../../../components/wux/dist/cell/index",
+    "wux-input": "../../../components/wux/dist/input/index",
+    "wux-switch": "../../../components/wux/dist/switch/index",
+    "mine-null-data": "../../../components/mine/nullDataView/index"
+  }
+}

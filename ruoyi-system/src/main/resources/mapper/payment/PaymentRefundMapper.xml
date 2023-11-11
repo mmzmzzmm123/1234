@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.payment.mapper.PaymentRefundMapper">
+
+    <resultMap type="PaymentRefund" id="PaymentRefundResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="orderDetailsId"    column="order_details_id"    />
+        <result property="refundNo"    column="refund_no"    />
+        <result property="refundRoute"    column="refund_route"    />
+        <result property="start"    column="start"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectPaymentRefundVo">
+        select id, user_id, order_id, order_details_id, refund_no, refund_route, start, remark, create_time from bus_payment_refund
+    </sql>
+
+    <select id="selectPaymentRefundList" parameterType="PaymentRefund" resultMap="PaymentRefundResult">
+        <include refid="selectPaymentRefundVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="orderDetailsId != null "> and order_details_id = #{orderDetailsId}</if>
+            <if test="refundNo != null  and refundNo != ''"> and refund_no = #{refundNo}</if>
+            <if test="refundRoute != null  and refundRoute != ''"> and refund_route = #{refundRoute}</if>
+            <if test="start != null  and start != ''"> and start = #{start}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectPaymentRefundById" parameterType="Long" resultMap="PaymentRefundResult">
+        <include refid="selectPaymentRefundVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectByRefundNo" parameterType="String" resultMap="PaymentRefundResult">
+        <include refid="selectPaymentRefundVo"/>
+        where refund_no = #{refundNo}
+    </select>
+
+    <insert id="insertPaymentRefund" parameterType="PaymentRefund" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_payment_refund
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="orderDetailsId != null">order_details_id,</if>
+            <if test="refundNo != null">refund_no,</if>
+            <if test="refundRoute != null">refund_route,</if>
+            <if test="start != null">start,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="orderDetailsId != null">#{orderDetailsId},</if>
+            <if test="refundNo != null">#{refundNo},</if>
+            <if test="refundRoute != null">#{refundRoute},</if>
+            <if test="start != null">#{start},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePaymentRefund" parameterType="PaymentRefund">
+        update bus_payment_refund
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="orderDetailsId != null">order_details_id = #{orderDetailsId},</if>
+            <if test="refundNo != null">refund_no = #{refundNo},</if>
+            <if test="refundRoute != null">refund_route = #{refundRoute},</if>
+            <if test="start != null">start = #{start},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePaymentRefundById" parameterType="Long">
+        delete from bus_payment_refund where id = #{id}
+    </delete>
+
+    <delete id="deletePaymentRefundByIds" parameterType="String">
+        delete from bus_payment_refund where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

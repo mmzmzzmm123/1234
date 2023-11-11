@@ -1,0 +1,87 @@
+page{
+  background: linear-gradient(to bottom,#d5e4f5,#fce2e6);
+}
+.trendsItemView{
+  background-color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  padding: 10px 0;
+}
+.trendsTxAndNameInfo{
+  height: 40px;
+}
+.trendsTx{
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+  overflow: hidden;
+}
+.trendsName span{
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+.trendsName text{
+  font-size: 12px;
+  color: #80848f;
+}
+.trendsSexAndAge{
+  font-size: 12px;
+  color: #ffffff;
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+.trendsSexAndAge image{
+  width: 14px;
+  margin-right: 2px;
+}
+.trendsContent{
+  font-size: 14px;
+  margin-top: 10px;
+}
+.trendsOperItem{
+  margin-right: 10px;
+  font-size: 14px;
+}
+.trendsOperItem view{
+  margin-left: 4px;
+}
+.trendsSingleImage{
+  border-radius: 10px;
+  margin-top: 10px;
+}
+.trendsImageManyView:after {
+  content: "";
+  width: 32%;
+}
+.trendsImageMany{
+  width: 32%;
+  height: 90px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+.trendsVideo{
+  margin-top: 10px;
+  border-radius: 10px;
+  z-index: 999;
+}
+.audioBut{
+  height: 20px;
+  overflow: hidden;
+  padding: 4px 10px;
+  border-radius: 10px;
+  color: #ffffff;
+  font-size: 14px;
+}
+.audioPlay{
+  width: 16px;
+  margin-right: 10px;
+}
+.audioFrequency{
+  width: 100px;
+  margin-right: 10px;
+}
+.audioFrequencyGif{
+  width: 100px;
+  margin-right: 10px;
+}

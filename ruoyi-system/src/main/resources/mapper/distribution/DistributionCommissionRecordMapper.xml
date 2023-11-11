@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.distribution.mapper.DistributionCommissionRecordMapper">
+
+    <resultMap type="DistributionCommissionRecord" id="DistributionCommissionRecordResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="commissionRecordType" column="commission_record_type" />
+        <result property="orderAmount"    column="order_amount"    />
+        <result property="distributionUserId"    column="distribution_user_id"    />
+        <result property="distributionLevel"    column="distribution_level"    />
+        <result property="distributionRate"    column="distribution_rate"    />
+        <result property="distributionCommission"    column="distribution_commission"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <resultMap id="joinDistributionUserResult" type="DistributionCommissionRecord" extends="DistributionCommissionRecordResult">
+        <association property="distributionUserInfo" column="distribution_user_id" javaType="com.ruoyi.user.domain.UserInfo" select="com.ruoyi.user.mapper.UserInfoMapper.selectUserInfoById"></association>
+    </resultMap>
+
+    <sql id="selectDistributionCommissionRecordVo">
+        select id, user_id, order_id, commission_record_type, order_amount, distribution_user_id, distribution_level, distribution_rate, distribution_commission, create_time from bus_distribution_commission_record
+    </sql>
+
+    <select id="selectDistributionCommissionRecordList" parameterType="DistributionCommissionRecord" resultMap="DistributionCommissionRecordResult">
+        <include refid="selectDistributionCommissionRecordVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="commissionRecordType != null "> and commission_record_type = #{commissionRecordType}</if>
+            <if test="distributionUserId != null "> and distribution_user_id = #{distributionUserId}</if>
+            <if test="distributionLevel != null "> and distribution_level = #{distributionLevel}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectJoinDistributionUser" parameterType="DistributionCommissionRecord" resultMap="joinDistributionUserResult">
+        <include refid="selectDistributionCommissionRecordVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="commissionRecordType != null "> and commission_record_type = #{commissionRecordType}</if>
+            <if test="distributionUserId != null "> and distribution_user_id = #{distributionUserId}</if>
+            <if test="distributionLevel != null "> and distribution_level = #{distributionLevel}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectDistributionCommissionRecordById" parameterType="Long" resultMap="DistributionCommissionRecordResult">
+        <include refid="selectDistributionCommissionRecordVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDistributionCommissionRecord" parameterType="DistributionCommissionRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_distribution_commission_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="commissionRecordType != null">commission_record_type,</if>
+            <if test="orderAmount != null">order_amount,</if>
+            <if test="distributionUserId != null">distribution_user_id,</if>
+            <if test="distributionLevel != null">distribution_level,</if>
+            <if test="distributionRate != null">distribution_rate,</if>
+            <if test="distributionCommission != null">distribution_commission,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="commissionRecordType != null">#{commissionRecordType},</if>
+            <if test="orderAmount != null">#{orderAmount},</if>
+            <if test="distributionUserId != null">#{distributionUserId},</if>
+            <if test="distributionLevel != null">#{distributionLevel},</if>
+            <if test="distributionRate != null">#{distributionRate},</if>
+            <if test="distributionCommission != null">#{distributionCommission},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDistributionCommissionRecord" parameterType="DistributionCommissionRecord">
+        update bus_distribution_commission_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="commissionRecordType != null">commission_record_type = #{commissionRecordType},</if>
+            <if test="orderAmount != null">order_amount = #{orderAmount},</if>
+            <if test="distributionUserId != null">distribution_user_id = #{distributionUserId},</if>
+            <if test="distributionLevel != null">distribution_level = #{distributionLevel},</if>
+            <if test="distributionRate != null">distribution_rate = #{distributionRate},</if>
+            <if test="distributionCommission != null">distribution_commission = #{distributionCommission},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDistributionCommissionRecordById" parameterType="Long">
+        delete from bus_distribution_commission_record where id = #{id}
+    </delete>
+
+    <delete id="deleteDistributionCommissionRecordByIds" parameterType="String">
+        delete from bus_distribution_commission_record where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,190 @@
+<wxs src="../../wxss/time.wxs" module="timeUtil"></wxs>
+<wxs src="../../wxss/str.wxs" module="str"></wxs>
+<view class="bView">
+  <!-- 头部状态栏 -->
+  <view class="stateBarView">
+    <view style="height:{{stateBarHeight}}px;background:{{barThemeColor}};" class="stateBar"></view>
+    <view style="height:{{barHeight}}px;background:{{barThemeColor}};" class="stateBar">
+      <view class="view_box_common titleView" style="height: 100%;">
+        <view class="stateBarIcoView">
+        </view>
+        <text>热 爱</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- body -->
+  <scroll-view scroll-y refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" bindscrolltolower="loadNextPageData" style="width:{{pWidth}}px;height:{{pHeight}}px;" bindscroll="scrollView" bindrefresherrefresh="refresh">
+    <!-- banner -->
+    <wux-spin nested spinning="{{ bannersLoadState }}" tip="加载中">
+      <view class="bannerBgColorView" style="height:{{pHeight * 0.3}}px;background-color:{{banners!=null?banners[bannerCurrent].themeColor:'#0700B6'}};"></view>
+      <view style="width: 100%;height: {{showStateBarHeight+10}}px;"></view>
+      <swiper class="swiperView" style="height:{{pHeight*0.23}}px;background-color:{{banners!=null?banners[bannerCurrent].themeColor:'#0700B6'}};" bindchange="swiperChange" indicator-active-color="#ffffff" indicator-dots="true" autoplay='true' duration='1000' interval='3000'>
+        <block wx:if="{{banners != null}}">
+          <block wx:for="{{banners}}" wx:key="id" wx:for-item="item">
+            <swiper-item data-toLink="{{item.toLink}}">
+              <image class="view_all_adapt" src="{{item.imgUrl}}" />
+            </swiper-item>
+          </block>
+        </block>
+        <block wx:else>
+          <swiper-item>
+            <image class="view_all_adapt" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/banner/2023/10/07/1710575417662853120.png" />
+          </swiper-item>
+        </block>
+      </swiper>
+    </wux-spin>
+
+    <!-- 消息滚动 -->
+    <view class="noticeView view_box_common girl_bg_color">
+      <view class="view_box_common view_box_row_content_symmetry">
+        <view class="view_box_row">
+          <image src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/heartbeat.gif" mode="widthFix"></image>
+          <view animation="{{animationData}}">{{content}}</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 热门推荐 -->
+    <column-view title="新人推荐" moreTitle="查看更多" bind:toPage="goSelectPage"></column-view>
+    <scroll-view scroll-x class="view_box_common" style="overflow-x: hidden;white-space: nowrap;margin-top: -10px;" catchtouchmove="hotScrollViewMove">
+      <block wx:if="{{!newStaffLoadState && newStaffList!=null && newStaffList.length > 0}}">
+        <block wx:for="{{newStaffList}}" wx:key="id">
+          <view class="hotView hotBg_{{index}}" data-staffid="{{item.userId}}" bind:tap="toShowStaffInfo">
+            <!-- 在线信息 -->
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view></view>
+              <view class="hotOnLineView view_box_row_content">
+                <image src="../../static/ico/{{item.ifOnline == 'Y' ? 'online_32' : 'offline_32'}}.png" mode="widthFix"></image>
+                <view>{{item.ifOnline == 'Y' ? '在线' : '离线'}}</view>
+              </view>
+            </view>
+            <view class="seizeSeat_mini"></view>
+            <!-- 头像信息 -->
+            <view class="view_box_common view_box_row_content_symmetry">
+              <image class="hotTx" src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}" mode="aspectFill"></image>
+              <view style="width: {{180*0.92-60}}px;height: 42px;">
+                <view class="hotName text_ellipsis">{{item.nickName}}</view>
+                <view class="hotAddress">{{item.province}}·{{item.city}}</view>
+              </view>
+            </view>
+            <!-- 个人介绍 -->
+            <view class="view_box_common hotStaffDetails text_ellipsis_two">
+              {{item.selfIntroduction}}
+            </view>
+            <view class="seizeSeat_mini"></view>
+            <!-- 语音条 -->
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="hotVoiceView view_box_row" data-source="0" data-index="{{index}}" catchtap="listAudioCli">
+                <image class="voicePlay" src="../../static/ico/{{item.audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
+                <image wx:if="{{item.audioState == '-1'}}" class="voiceAudioImg" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                <image wx:if="{{item.audioState == '0'}}" class="audioFrequencyGif" src="../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+                <view wx:if="{{item.voiceTime != null && item.voiceTime > 0}}" class="voiceSeconds">{{item.voiceTime}}s</view>
+              </view>
+            </view>
+          </view>
+        </block>
+      </block>
+      <block wx:else>
+        <wux-skeleton active>
+          <wux-skeleton-paragraph rows="4" />
+        </wux-skeleton>
+      </block>
+    </scroll-view>
+
+
+    <!-- 排名 -->
+    <column-view title="周榜前三" moreTitle="" bind:toPage="goSelectPage"></column-view>
+    <block wx:if="{{!weeklyRankingTopThreeLoadState}}">
+      <view class="view_box_common rankView">
+        <view class="rankTab view_box_row_content">
+          <view class="{{rankTabIndex == 0 ? 'rankTab_cli' : ''}}" data-index="0" bind:tap="changeRankTab">女神榜</view>
+          <view class="{{rankTabIndex == 1 ? 'rankTab_cli' : ''}}" data-index="1" bind:tap="changeRankTab">男神榜</view>
+        </view>
+        <view class="rankInfo">
+          <image class="rankBg" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/rank_bg.png" mode="widthFix"></image>
+          <view class="staffRankView view_box_content_column" style="top: 65px;left: {{pWidth*0.9*0.5-36}}px;" data-staffid="{{rankTabIndex==0?girlWeeklyRankingTopThree[0].userId:boyWeeklyRankingTopThree[0].userId}}" bind:tap="toShowStaffInfo">
+            <image class="staffRank" src="{{rankTabIndex==0?(girlWeeklyRankingTopThree[0].avatarUrl!=null?girlWeeklyRankingTopThree[0].avatarUrl:'../../static/images/default_tx.png'):(boyWeeklyRankingTopThree[0].avatarUrl != null ? boyWeeklyRankingTopThree[0].avatarUrl : '../../static/images/default_tx.png')}}" mode="aspectFill"></image>
+            <view>{{rankTabIndex==0?girlWeeklyRankingTopThree[0].nickName:boyWeeklyRankingTopThree[0].nickName}}</view>
+            <image class="crownIco" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/avatarFrame100.png" mode="aspectFill"></image>
+          </view>
+          <view class="staffRankView view_box_content_column" style="top: 95px;left: {{pWidth*0.9*0.22-36}}px;" data-staffid="{{rankTabIndex==0?girlWeeklyRankingTopThree[1].userId:boyWeeklyRankingTopThree[1].userId}}" bind:tap="toShowStaffInfo">
+            <image class="staffRank" src="{{rankTabIndex==0?(girlWeeklyRankingTopThree[1].avatarUrl!=null?girlWeeklyRankingTopThree[1].avatarUrl:'../../static/images/default_tx.png'):(boyWeeklyRankingTopThree[1].avatarUrl != null ? boyWeeklyRankingTopThree[1].avatarUrl : '../../static/images/default_tx.png')}}" mode="aspectFill"></image>
+            <view>{{rankTabIndex==0?girlWeeklyRankingTopThree[1].nickName:boyWeeklyRankingTopThree[1].nickName}}</view>
+            <image class="crownIco" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/avatarFrame100.png" mode="aspectFill"></image>
+          </view>
+          <view class="staffRankView view_box_content_column" style="top: 85px;left: {{pWidth*0.9*0.77-26}}px;" data-staffid="{{rankTabIndex==0?girlWeeklyRankingTopThree[2].userId:boyWeeklyRankingTopThree[2].userId}}" bind:tap="toShowStaffInfo">
+            <image class="staffRank" src="{{rankTabIndex==0?(girlWeeklyRankingTopThree[2].avatarUrl!=null?girlWeeklyRankingTopThree[2].avatarUrl:'../../static/images/default_tx.png'):(boyWeeklyRankingTopThree[2].avatarUrl != null ? boyWeeklyRankingTopThree[2].avatarUrl : '../../static/images/default_tx.png')}}" mode="aspectFill"></image>
+            <view>{{rankTabIndex==0?girlWeeklyRankingTopThree[2].nickName:boyWeeklyRankingTopThree[2].nickName}}</view>
+            <image class="crownIco" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/avatarFrame100.png" mode="aspectFill"></image>
+          </view>
+        </view>
+        <!-- 背景点缀 -->
+        <image class="rankLeftDecorate" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/bot_1.png" mode="widthFix"></image>
+        <image class="rankRigheDecorate" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/bot_1.png" mode="widthFix"></image>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="view_box_common">
+        <wux-skeleton active>
+          <wux-skeleton-paragraph rows="6" />
+        </wux-skeleton>
+      </view>
+    </block>
+
+
+    <!-- 员工列表 -->
+    <column-view title="全部店员" moreTitle="查看更多" bind:toPage="goSelectPage"></column-view>
+
+    <block wx:if="{{!staffDataLoadState && staffDataList!=null && staffDataList.length>0}}">
+      <view class="view_box_common view_box_row_content_symmetry_wrap">
+        <block wx:for="{{staffDataList}}" wx:key="id">
+          <view class="staffView" data-staffid="{{item.userId}}" bind:tap="toShowStaffInfo">
+            <view class="staffCover">
+              <image class="cover" src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}" mode="aspectFill"></image>
+              <view class="view_box_common view_all_adapt view_box_column_symmetry">
+                <view class="view_box_row_content_symmetry" style="margin-top: 6px;">
+                  <view class="presence view_box_row_content">
+                    <image src="../../static/ico/{{item.ifOnline == 'Y' ? 'online_32' : 'offline_32'}}.png" mode="widthFix"></image>
+                    <view>{{item.ifOnline == 'Y' ? '在线' : '离线'}}</view>
+                  </view>
+                  <view class="sexAndAgeView view_box_row_content {{item.sex == '1' ? 'girl_bg_color' : 'boy_bg_color'}}">
+                    <image src="../../static/ico/{{item.sex == '1' ? 'girl_white_32' : 'boy_white_32'}}.png"></image>
+                    <view>{{timeUtil.calculateAge(item.birthDate)}}</view>
+                  </view>
+                </view>
+                <view class="view_box_row_content_symmetry">
+                  <view class="voiceView view_box_row_content {{item.sex == '1' ? 'girl_bg_color' : 'boy_bg_color'}}" data-source="1" data-index="{{index}}" catch:tap="listAudioCli">
+                    <view class="view_box_common view_box_row">
+                      <image class="playIco" src="../../static/ico/{{item.audioState == 0 ? 'stop_play.png' : 'play.png'}}"></image>
+                      <image wx:if="{{item.audioState == '-1'}}" class="audioIco" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                      <image wx:if="{{item.audioState == '0'}}" class="audioGif" src="../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+                      <view wx:if="{{item.voiceTime != null && item.voiceTime > 0}}" class="voiceSeconds">{{item.voiceTime}}s</view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+            </view>
+            <view class="view_box_common text_ellipsis staffDetail">{{item.selfIntroduction}}</view>
+            <view class="view_box_common view_box_row_content_symmetry" style="margin-top: 6px;">
+              <view class="staffInfo view_box_row_content">
+                <image src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}" class="staffAvatar"></image>
+                <view class="staffName text_ellipsis">{{item.nickName}}</view>
+              </view>
+              <wux-icon catch:tap="{{str.checkArrIncludeStr(userLikeStaffUserIdList, item.userId) ? 'cancelLikeStaff' : 'likeStaff'}}" data-id="{{item.userId}}" type="md-heart" size="22" color="{{str.checkArrIncludeStr(userLikeStaffUserIdList, item.userId) ? '#ed3f14' : '#80848f'}}"></wux-icon>
+            </view>
+          </view>
+        </block>
+      </view>
+    </block>
+    <block wx:else>
+      <view class="view_box_common">
+        <wux-skeleton active>
+          <wux-skeleton-paragraph rows="4" />
+        </wux-skeleton>
+      </view>
+    </block>
+    <view class="seizeSeat_mini"></view>
+    <i-load-more tip='{{((staffDataParams.pageNum*staffDataParams.pageSize) >= staffDataTotal) && bottomLoadState == false ?"店员正在快马加鞭的上新中":"加载中"}}' loading="{{bottomLoadState}}"></i-load-more>
+  </scroll-view>
+</view>

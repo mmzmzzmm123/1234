@@ -1,0 +1,49 @@
+page{
+  background-color: #f8f8f9;
+}
+.scope_view{
+  background-color: #ffffff;
+  padding: 10px 0;
+  border-radius: 10px;
+}
+.walletItem{
+  font-size: 14px;
+  color: #ed3f14;
+}
+.walletItem span{
+  font-size: 12px;
+}
+.walletItem text{
+  font-size: 16px;
+  font-weight: bold;
+}
+.walletItem .walletTitle{
+  margin-top: 4px;
+  color: #80848f;
+}
+.tempColumn{
+  font-size: 16px;
+  font-weight: bold;
+}
+.tempColumn image{
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+}
+.walletRecotItem{
+  font-size: 14px;
+  padding-bottom: 10px;
+}
+.thisWeekOrderItem{
+  font-size: 14px;
+}
+.thisWeekOrderItem span{
+  color: #80848f;
+}
+.orderNo{
+  font-size: 14px;
+  color: #80848f;
+}
+.orderState{
+  font-size: 12px;
+}

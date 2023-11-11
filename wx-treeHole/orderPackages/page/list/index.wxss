@@ -1,0 +1,56 @@
+page{
+  background-color: #f8f8f9;
+}
+.scope_view{
+  background-color: #ffffff;
+  padding: 10px 0;
+  border-radius: 10px;
+}
+.orderAvatar{
+  width: 80px;
+  height: 80px;
+  border-radius: 10px;
+}
+.orderStaffName{
+  font-size: 14px;
+  font-weight: bold;
+}
+.orderType{
+  font-size: 12px;
+  color: #80848f;
+}
+.orderPrice{
+  color: #F96500;
+}
+.orderPrice text{
+  font-size: 10px;
+}
+.orderPrice span{
+  font-size: 14px;
+  font-weight: bold;
+}
+.orderTime{
+  font-size: 12px;
+  color: #80848f;
+}
+.serviceContent{
+  font-size: 12px;
+}
+.serviceNum{
+  font-size: 12px;
+  color: #80848f;
+}
+.orderButItem{
+  color: #ffffff;
+  font-size: 12px;
+  padding: 4px 10px;
+  margin-left: 10px;
+  border-radius: 10px;
+}
+.orderDetailsItem{
+  margin-top: 10px;
+  font-size: 14px;
+}
+.orderDetailsItem view{
+  color: #80848f;
+}

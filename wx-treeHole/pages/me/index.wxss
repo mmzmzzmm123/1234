@@ -1,0 +1,154 @@
+page{
+  background: linear-gradient(to bottom,#d5e4f5,#fce2e6);
+}
+.stateBarView{
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+}
+.stateBarView .stateBar{
+  width: 100%;
+}
+.stateBarView .titleView{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position: relative;
+  color: #ffffff;
+}
+.stateBarIcoView{
+  position: absolute;
+  left: 0px;
+}
+.bannerView{
+  width: 100%;
+  position: relative;
+  color: white;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+  overflow: hidden;
+}
+.bannerImage{
+  position: absolute;
+  top: 0;
+  z-index: -1;
+}
+.funBigView{
+  width: 100%;
+  position: relative;
+}
+.common_fun_box_view{
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 10px 0;
+}
+.orderStateItemView{
+  padding-bottom: 10px;
+  margin: 0 auto;
+}
+.orderStateItemView view{
+  color: #80848f;
+  font-size: 12px;
+  margin-top: 5px;
+}
+.orderStateItemView image{
+  width: 25px;
+}
+.usedCarNumItem{
+  color: #1c2438;
+  font-size: 12px;
+}
+.usedCarNumItem span{
+  font-weight: bold;
+  font-size: 18px;
+  margin-bottom: 3px;
+}
+.goRechargeBut{
+  padding: 2px 6px;
+  background-color: #1c2438;
+  color: #FFD700;
+  border-radius: 10px;
+  font-size: 10px;
+  margin-left: 4px;
+}
+.level{
+  font-size: 12px;
+  font-weight: bold;
+}
+.levelProgress{
+  width: 50%;
+  margin: 0 4px;
+}
+.userName{
+  font-size: 14px;
+  font-weight: bold;
+}
+.userDataBut{
+  font-size: 12px;
+}
+.levelTips{
+  font-size: 12px;
+  margin-top: 4px;
+}
+.commonFunItem{
+  padding: 4px 0;
+}
+.commonFunItem image{
+  width: 18px;
+  margin-right: 10px;
+}
+.commonFunItem text{
+  font-size: 13px;
+}
+.loginView view{
+  font-size: 16px;
+  font-weight: bold;
+}
+.loginView span{
+  font-size: 12px;
+  margin-top: 4px;
+}
+.funItemView{
+  margin: 10px 0;
+}
+.funItemView view{
+  width: 40px;
+  height: 40px;
+  border-radius: 40px;
+}
+.funItemView image{
+  width: 20px;
+  height: 20px;
+}
+.funItemView text{
+  margin-top: 5px;
+  font-size: 12px;
+  color: #80848f;
+}
+.tempColumn{
+  font-size: 16px;
+  font-weight: bold;
+}
+.tempColumn image{
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+}
+.serviceItem{
+  font-size: 14px;
+  padding-top: 10px;
+}
+.serviceItem span{
+  margin-right: 4px;
+}
+.userAvatarView{
+  position: relative;
+}
+.avatarFrame{
+  width: 60px;
+  height: 60px;
+  position: absolute;
+  left: -10px;
+  top: -7px;
+}

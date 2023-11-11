@@ -1,0 +1,145 @@
+<wxs src="../../../wxss/dicts.wxs" module="dicts"></wxs>
+<import src="../../../wxParse/wxParse.wxml" />
+<view class="bView">
+  <scroll-view scroll-y="true" style="width:{{pWidth}}px;height: {{pHeight}}px;">
+    <view class="view_box_common scope_view">
+      <column-view title="基本信息" outerMargin="0" icoType="ios-arrow-down" moreTitle=""></column-view>
+      <view class="seizeSeat_mini"></view>
+      <wux-cell hover-class="none">
+        <wux-input controlled label="昵称" type="text" placeholder="请输入您的店员昵称" class="inputItem" inputColor="#767b88" maxlength="8" value="{{form.nickName}}" bind:change="nickNameInput"/>
+      </wux-cell>
+      <picker header-text="性别" mode="selector" range="{{sexRange}}" range-key="label" bindchange="sexChange" value="{{form.sex}}">
+        <wux-cell title="性别" style="font-size: 14px;" is-link extra="{{ form.sex == null ? '选择您的性别' : dicts.sex(form.sex) }}"></wux-cell>
+      </picker>
+      <wux-cell hover-class="none" wx:if="{{ifHide == '0'}}">
+        <wux-input controlled label="绿泡泡" type="text" placeholder="请输入您的绿泡泡" class="inputItem" inputColor="#767b88" value="{{form.weChatNum}}" bind:change="weChatNumInput"/>
+      </wux-cell>
+      <wux-cell hover-class="none" wx:if="{{ifHide == '0'}}">
+        <wux-input controlled label="手机号码" type="text" placeholder="请输入您的手机号码" class="inputItem" inputColor="#767b88" maxlength="11" value="{{form.phone}}" bind:change="phoneInput"/>
+      </wux-cell>
+      <picker header-text="出生日期" mode="date" end="2013-12-01" value="{{form.birthDate!=null?form.birthDate:'2013-12-01'}}" bindchange="birthDateChange">
+        <wux-cell title="出生日期" style="font-size: 14px;" is-link extra="{{form.birthDate != null ? form.birthDate : '选择您的出生日期'}}"></wux-cell>
+      </picker>
+      <picker header-text="所在地区" mode="region" bindchange="regionChange">
+        <wux-cell title="所在地区" style="font-size: 14px;" is-link extra="{{form.province != null ? (form.province+'-'+form.city+'-'+form.region) : '选择您的所在地区'}}"></wux-cell>
+      </picker>
+      <wux-cell hover-class="none">
+        <wux-input controlled label="简短自述" type="text" placeholder="请输入您的简短自述" class="inputItem" inputColor="#767b88" maxlength="20" value="{{form.selfIntroduction}}" bind:change="selfIntroductionInput" />
+      </wux-cell>
+      <wux-cell hover-class="none">
+        <wux-input controlled label="留言" type="text" placeholder="可说明您是否有这方面的经验等" class="inputItem" inputColor="#767b88" value="{{form.remark}}" bind:change="remarkInput"  />
+      </wux-cell>
+      <wux-cell hover-class="none">
+        <wux-input controlled label="推荐码" type="text" placeholder="选填-可输入推荐人的推荐码" class="inputItem" inputColor="#767b88" maxlength="8" value="{{form.referralCode}}" bind:change="referralCodeInput" />
+      </wux-cell>
+    </view>
+
+    <view class="view_box_common scope_view">
+      <view class="view_box_common view_box_row_content_symmetry">
+        <view class="view_box_row_content tempColumn">
+          <image src="../../../static/ico/theme_dot.png"></image>
+          <view>录音文件</view>
+        </view>
+        <view class="view_box_row_content">
+          <view class="view_box_row_content switchSoundRecordView" bind:tap="switchSoundRecordType">
+            <image src="../../../static/ico/switch_grey_32.png" mode="widthFix"></image>
+            <span>切换模式</span>
+          </view>
+          <view wx:if="{{uploadSoundRecordType == 0}}" class="soundRecordBut boy_bg_color" bind:tap="soundRecordCli">
+            <block wx:if="{{soundRecordState == 0}}">
+              <view class="view_box_row_content">
+                <image src="../../../static/gif/sound_record.gif" mode="widthFix"></image>
+                <view>点击结束</view>
+              </view>
+            </block>
+            <block wx:else>
+              <view class="view_box_row_content">
+                <image src="../../../static/ico/sound_record_white_32.png" mode="widthFix"></image>
+                <view>点击录音</view>
+              </view>
+            </block>
+          </view>
+          <view wx:if="{{uploadSoundRecordType == 1}}" class="soundRecordBut boy_bg_color" bind:tap="soundRecordUploadCli">
+            <view class="view_box_row_content">
+              <image src="../../../static/ico/upload_white_32.png" mode="widthFix"></image>
+              <view>微信文件</view>
+            </view>
+          </view>
+        </view>
+      </view>
+      <view wx:if="{{form.voiceUrl != null}}" class="view_box_common" bind:tap="audioCli">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_row">
+          <view class="view_box_row_content audioBut boy_bg_color">
+            <image class="audioPlay" src="../../../static/ico/{{audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
+            <image wx:if="{{audioState == '-1'}}" class="audioFrequency" src="../../../static/ico/audio_frequency.png" mode="widthFix"></image>
+            <image wx:if="{{audioState == '0'}}" class="audioFrequencyGif" src="../../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+            <span wx:if="{{form.voiceTime != null && form.voiceTime > 0}}">{{form.voiceTime}}s</span>
+          </view>
+          <text style="font-size: 12px;margin-left: 10px;color: #ed3f14;">注：不满意可直接重新录制覆盖</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="view_box_common scope_view">
+      <column-view title="上传图片" outerMargin="0" icoType="ios-arrow-down" moreTitle="注意：红色框表示上传失败"></column-view>
+      <view class="view_box_common">
+        <view class="seizeSeat_mini"></view>
+        <view class="uploadFileView">
+          <wux-upload controlled fileList="{{photoArr}}" listType="picture-card" formData="{{ fileUploadForm }}" max="6" count="6" url="{{fileUploadUrl}}" bind:success="uploadFileSuccess" bind:fail="uploadFileFail" bind:remove="uploadFileRemove">
+            <image style="width:32px" mode="widthFix" src="../../../static/ico/theme_upload.png"></image>
+          </wux-upload>
+        </view>
+      </view>
+    </view>
+
+    <view class="view_box_common scope_view">
+      <view class="view_box_common">
+        <view class="view_box_row xieyiView">
+          <radio checked="{{ifAgree}}" color="#8978E4" bind:tap="ifAgreeChange" />
+          <view bind:tap="changeStaffAgreementDrawer">勾选表示您接受<span class="boy_font_color">《热爱树洞店员协议》</span></view>
+        </view>
+      </view>
+    </view>
+
+    <view class="view_box_common scope_view">
+      <column-view title="温馨提示" outerMargin="0" icoType="ios-arrow-down" moreTitle=""></column-view>
+      <view class="view_box_common" style="font-size: 14px;text-indent: 2em;margin-top: 6px;">
+        期待您的加入！关于您填写的信息要确保真实性哟，当您提交后我们会尽可能的快审核并与您取得联系，亲爱的耐心等候哟。注：未成年人将视为不符合哟
+      </view>
+    </view>
+
+    <view style="width: 1px;height: 88px;"></view>
+  </scroll-view>
+
+  <view class="submitView">
+    <view class="themeBut" bind:tap="{{staffInfo != null ? 'update' : 'submit'}}">{{staffInfo != null ? '再次申请' : '提交申请'}}</view>
+  </view>
+</view>
+
+<!-- 协议容器 -->
+<i-drawer mode="right" visible="{{ staffAgreementDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeStaffAgreementDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.08}}px;">
+          <view></view>
+          <text>店员协议</text>
+          <wux-icon type="md-close" size="22" bindtap="changeStaffAgreementDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <scroll-view scroll-y="true" class="drawerBodyView" style="height: {{pHeight*0.65}}px;">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common">
+          <template is="wxParse" data="{{wxParseData:staffAgreement.nodes}}" />
+        </view>
+      </scroll-view>
+      <view class="seizeSeat_mini"></view>
+      <view class="themeBut" bind:tap="changeStaffAgreementDrawer">我知道啦</view>
+      <view class="seizeSeat_mini"></view>
+    </view>
+    <view class="cut_off_rule_small"></view>
+  </view>
+</i-drawer>

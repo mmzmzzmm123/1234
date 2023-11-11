@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.staff.mapper.StaffWalletMapper">
+
+    <resultMap type="StaffWallet" id="StaffWalletResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="waitCommission"    column="wait_commission"    />
+        <result property="commissionSettled"    column="commission_settled"    />
+        <result property="totalOrderPrice"    column="total_order_price"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectStaffWalletVo">
+        select id, user_id, wait_commission, commission_settled, total_order_price, create_time, update_by, update_time from bus_staff_wallet
+    </sql>
+
+    <select id="selectStaffWalletList" parameterType="StaffWallet" resultMap="StaffWalletResult">
+        <include refid="selectStaffWalletVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectStaffWalletById" parameterType="Long" resultMap="StaffWalletResult">
+        <include refid="selectStaffWalletVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectStaffWalletByUserId" parameterType="Long" resultMap="StaffWalletResult">
+        <include refid="selectStaffWalletVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <select id="selectByUserIdForUpdate" parameterType="Long" resultMap="StaffWalletResult">
+        <include refid="selectStaffWalletVo"/>
+        where user_id = #{userId} for update
+    </select>
+
+    <select id="selectWaitCommissionGreaterThanZeroForUpdate" resultMap="StaffWalletResult">
+        <include refid="selectStaffWalletVo"/>
+        where wait_commission &gt; 0 for update
+    </select>
+
+    <insert id="insertStaffWallet" parameterType="StaffWallet" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_staff_wallet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="waitCommission != null">wait_commission,</if>
+            <if test="commissionSettled != null">commission_settled,</if>
+            <if test="totalOrderPrice != null">total_order_price,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="waitCommission != null">#{waitCommission},</if>
+            <if test="commissionSettled != null">#{commissionSettled},</if>
+            <if test="totalOrderPrice != null">#{totalOrderPrice},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateStaffWallet" parameterType="StaffWallet">
+        update bus_staff_wallet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="waitCommission != null">wait_commission = #{waitCommission},</if>
+            <if test="commissionSettled != null">commission_settled = #{commissionSettled},</if>
+            <if test="totalOrderPrice != null">total_order_price = #{totalOrderPrice},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteStaffWalletById" parameterType="Long">
+        delete from bus_staff_wallet where id = #{id}
+    </delete>
+
+    <delete id="deleteStaffWalletByIds" parameterType="String">
+        delete from bus_staff_wallet where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

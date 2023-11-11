@@ -1,0 +1,258 @@
+page{
+  background: linear-gradient(to bottom,#d5e4f5,#fce2e6);
+}
+.filterView{
+  padding: 10px 0;
+}
+.filterItem{
+  font-size: 14px;
+}
+.filterItem span{
+  margin-right: 6px;
+}
+.staffItem{
+  padding: 10px 0;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+.staffAvatarView{
+  width: 100px;
+  height: 100px;
+  position: relative;
+}
+.avatarImg{
+  width: 80px;
+  height: 80px;
+  border-radius: 80px;
+}
+.avatarFrame{
+  width: 120px;
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  z-index: 1;
+}
+.staffVoice{
+  height: 16px;
+  overflow: hidden;
+  padding: 3px 10px;
+  position: absolute;
+  bottom: 0;
+  left: -10px;
+  z-index: 5;
+  border-radius: 10px;
+}
+.voicePlay{
+  width: 12px;
+  margin-right: 4px;
+}
+.voiceAudioImg{
+  width: 50px;
+}
+.audioFrequencyGif{
+  width: 50px;
+}
+.voiceSeconds{
+  color: #ffffff;
+  font-size: 10px;
+  margin-left: 4px;
+}
+.staffItem .staffName{
+  font-size: 14px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+.staffBadgeLevel{
+  font-size: 10px;
+  font-weight: bold;
+  color: #ffffff;
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+.staffBadgeLevel image{
+  width: 14px;
+  margin-right: 4px;
+}
+.staffOnLineState{
+  font-size: 12px;
+}
+.staffOnLineState image{
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+}
+.staffBaseInfo{
+  font-size: 12px;
+  margin-top: 2px;
+  color: #80848f;
+}
+.staffBaseInfo view{
+  margin-right: 6px;
+}
+.staffDetails{
+  font-size: 12px;
+  margin-top: 4px;
+}
+.staffLabel{
+  margin-top: 10px;
+}
+.staffLabelItem{
+  font-size: 10px;
+  padding: 2px 4px;
+  border-radius: 10px;
+  margin-right: 8px;
+  margin-top: 4px;
+}
+.staffService{
+  font-size: 10px;
+  color: #ffffff;
+  padding: 2px 10px;
+  border-radius: 10px;
+  margin-right: 4px;
+  margin-top: 6px;
+}
+.verticalLine{
+  width: 1.5px;
+  height: 12px;
+  background-color: #e9eaec;
+}
+.tempColumn{
+  font-size: 16px;
+  font-weight: bold;
+}
+.tempColumn image{
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+}
+.randomSexView{
+  font-size: 12px;
+}
+.randomSexView view{
+  margin-left: 20px;
+  padding: 2px 10px;
+  border-radius: 10px;
+}
+.randomSexView image{
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+}
+.staffLevelItem{
+  width: 80px;
+  text-align: center;
+  font-size: 14px;
+  padding: 4px 0;
+  border-radius: 10px;
+  background-color: #e9eaec;
+  margin-top: 20px;
+}
+.randomChooseLebal{
+  color: #ffffff;
+}
+.scopeLabelView::after{
+  content: '';
+  width: 80px;
+}
+.randomBottomView{
+  width: 100%;
+  height: 50px;
+  background-color: #ffffff;
+  z-index: 999;
+}
+.submitOrderBut{
+  padding: 4px 10px;
+  font-size: 14px;
+  border-radius: 10px;
+  background: linear-gradient(to right,#FF5200,#f18a5a);
+  color: #ffffff;
+}
+.randomPriceView{
+  font-size: 14px;
+  color: #FF5200;
+}
+.randomPriceView view{
+  color: #000000;
+}
+.randomPriceView span{
+  font-size: 12px;
+}
+.randomPriceView text{
+  font-size: 16px;
+  font-weight: bold;
+  margin-left: 4px;
+}
+.scopeTextView view{
+  font-size: 14px;
+  margin-right: 6px;
+}
+.payWayView{
+  margin-top: 16px;
+}
+.payWayView image{
+  width: 20px;
+  margin-right: 10px;
+}
+.payWayView span{
+  font-size: 14px;
+}
+.newPeopleItem{
+  width: 60px;
+  margin-right: 16px;
+  text-align: center;
+}
+.newPeopleItem image{
+  width: 60px;
+  height: 60px;
+  border-radius: 60px;
+}
+.newPeopleItem .newPeopleName{
+  font-size: 14px;
+  margin-top: 4px;
+}
+.newPeopleItem .newPeopleBut{
+  padding: 2px 0;
+  font-size: 12px;
+  border-radius: 10px;
+  margin-top: 6px;
+  color: #ffffff;
+}
+.chooseFilterItem{
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 12px;
+  background-color: #ffffff;
+  position: relative;
+  margin-right: 10px;
+}
+.chooseFilterItem image{
+  width: 12px;
+  position: absolute;
+  top: -2px;
+  right: -4px;
+}
+.nickNameView{
+  padding: 10px 0;
+  background-color: #fafafa;
+  border-radius: 10px;
+  position: relative;
+  overflow: hidden;
+}
+.nickNameView image{
+  width: 22px;
+  margin: 0 10px;
+}
+.nickNameView input{
+  font-size: 14px;
+}
+.nickNameView view{
+  font-size: 14px;
+  padding: 0 20px;
+  height: 45px;
+  line-height: 44px;
+  position: absolute;
+  top: 0;
+  right: 0;
+  color: #ffffff;
+  z-index: 999;
+}

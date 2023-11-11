@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.distribution.mapper.DistributionRelationMapper">
+
+    <resultMap type="DistributionRelation" id="DistributionRelationResult">
+        <result property="id"    column="id"    />
+        <result property="level"    column="level"    />
+        <result property="pId"    column="p_id"    />
+        <result property="cId"    column="c_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <resultMap id="joinChildUserInfoResult" type="DistributionRelation" extends="DistributionRelationResult">
+        <association property="childUserInfo" column="c_id" javaType="com.ruoyi.user.domain.UserInfo" select="com.ruoyi.user.mapper.UserInfoMapper.selectUserInfoById"></association>
+    </resultMap>
+
+    <sql id="selectDistributionRelationVo">
+        select id, level, p_id, c_id, create_time from bus_distribution_relation
+    </sql>
+
+    <select id="selectDistributionRelationList" parameterType="DistributionRelation" resultMap="DistributionRelationResult">
+        <include refid="selectDistributionRelationVo"/>
+        <where>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="pId != null "> and p_id = #{pId}</if>
+            <if test="cId != null "> and c_id = #{cId}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectJoinChildUserInfo" parameterType="DistributionRelation" resultMap="joinChildUserInfoResult">
+        <include refid="selectDistributionRelationVo"/>
+        <where>
+            <if test="level != null "> and level = #{level}</if>
+            <if test="pId != null "> and p_id = #{pId}</if>
+            <if test="cId != null "> and c_id = #{cId}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectDistributionRelationById" parameterType="Long" resultMap="DistributionRelationResult">
+        <include refid="selectDistributionRelationVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertDistributionRelation" parameterType="DistributionRelation" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_distribution_relation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="level != null">level,</if>
+            <if test="pId != null">p_id,</if>
+            <if test="cId != null">c_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="level != null">#{level},</if>
+            <if test="pId != null">#{pId},</if>
+            <if test="cId != null">#{cId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDistributionRelation" parameterType="DistributionRelation">
+        update bus_distribution_relation
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="level != null">level = #{level},</if>
+            <if test="pId != null">p_id = #{pId},</if>
+            <if test="cId != null">c_id = #{cId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDistributionRelationById" parameterType="Long">
+        delete from bus_distribution_relation where id = #{id}
+    </delete>
+
+    <delete id="deleteDistributionRelationByIds" parameterType="String">
+        delete from bus_distribution_relation where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

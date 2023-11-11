@@ -176,13 +176,11 @@ export default {
     },
     handleUploadSuccess(res, file) {
       // 如果上传成功
-      if (res.code == 200) {
-        // 获取富文本组件实例
-        let quill = this.Quill;
+      if (res.code === 200) {
         // 获取光标所在位置
-        let length = quill.getSelection().index;
+        let length = quill.getSelection().index
         // 插入图片  res.url为服务器返回的图片地址
-        quill.insertEmbed(length, "image", process.env.VUE_APP_BASE_API + res.fileName);
+        quill.insertEmbed(length, "image", res.data.fileUrl);
         // 调整光标到最后
         quill.setSelection(length + 1);
       } else {

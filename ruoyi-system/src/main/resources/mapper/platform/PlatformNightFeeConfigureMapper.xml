@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.mapper.PlatformNightFeeConfigureMapper">
+    
+    <resultMap type="PlatformNightFeeConfigure" id="PlatformNightFeeConfigureResult">
+        <result property="id"    column="id"    />
+        <result property="ifOpen"    column="if_open"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="additionalChargeRatio"    column="additional_charge_ratio"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPlatformNightFeeConfigureVo">
+        select id, if_open, start_time, end_time, additional_charge_ratio, create_by, create_time, update_by, update_time from bus_platform_night_fee_configure
+    </sql>
+
+    <select id="selectPlatformNightFeeConfigureList" parameterType="PlatformNightFeeConfigure" resultMap="PlatformNightFeeConfigureResult">
+        <include refid="selectPlatformNightFeeConfigureVo"/>
+        <where>  
+            <if test="ifOpen != null  and ifOpen != ''"> and if_open = #{ifOpen}</if>
+        </where>
+    </select>
+    
+    <select id="selectPlatformNightFeeConfigureById" parameterType="Long" resultMap="PlatformNightFeeConfigureResult">
+        <include refid="selectPlatformNightFeeConfigureVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPlatformNightFeeConfigure" parameterType="PlatformNightFeeConfigure" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_platform_night_fee_configure
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ifOpen != null">if_open,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="additionalChargeRatio != null">additional_charge_ratio,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ifOpen != null">#{ifOpen},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="additionalChargeRatio != null">#{additionalChargeRatio},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePlatformNightFeeConfigure" parameterType="PlatformNightFeeConfigure">
+        update bus_platform_night_fee_configure
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ifOpen != null">if_open = #{ifOpen},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="additionalChargeRatio != null">additional_charge_ratio = #{additionalChargeRatio},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePlatformNightFeeConfigureById" parameterType="Long">
+        delete from bus_platform_night_fee_configure where id = #{id}
+    </delete>
+
+    <delete id="deletePlatformNightFeeConfigureByIds" parameterType="String">
+        delete from bus_platform_night_fee_configure where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

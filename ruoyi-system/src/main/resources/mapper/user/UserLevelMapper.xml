@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.user.mapper.UserLevelMapper">
+
+    <resultMap type="UserLevel" id="UserLevelResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="levelConfigId"    column="level_config_id"    />
+        <result property="currentPoints"    column="current_points"    />
+        <result property="currentLevel"    column="current_level"    />
+        <result property="totalPoints"    column="total_points"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectUserLevelVo">
+        select id, user_id, level_config_id, current_points, current_level, total_points, create_time, update_time from bus_user_level
+    </sql>
+
+    <select id="selectUserLevelList" parameterType="UserLevel" resultMap="UserLevelResult">
+        <include refid="selectUserLevelVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="levelConfigId != null "> and level_config_id = #{levelConfigId}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectUserLevelById" parameterType="Long" resultMap="UserLevelResult">
+        <include refid="selectUserLevelVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="UserLevelResult">
+        <include refid="selectUserLevelVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <insert id="insertUserLevel" parameterType="UserLevel" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_user_level
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="levelConfigId != null">level_config_id,</if>
+            <if test="currentPoints != null">current_points,</if>
+            <if test="currentLevel != null">current_level,</if>
+            <if test="totalPoints != null">total_points,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="levelConfigId != null">#{levelConfigId},</if>
+            <if test="currentPoints != null">#{currentPoints},</if>
+            <if test="currentLevel != null">#{currentLevel},</if>
+            <if test="totalPoints != null">#{totalPoints},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserLevel" parameterType="UserLevel">
+        update bus_user_level
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="levelConfigId != null">level_config_id = #{levelConfigId},</if>
+            <if test="currentPoints != null">current_points = #{currentPoints},</if>
+            <if test="currentLevel != null">current_level = #{currentLevel},</if>
+            <if test="totalPoints != null">total_points = #{totalPoints},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserLevelById" parameterType="Long">
+        delete from bus_user_level where id = #{id}
+    </delete>
+
+    <delete id="deleteUserLevelByIds" parameterType="String">
+        delete from bus_user_level where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

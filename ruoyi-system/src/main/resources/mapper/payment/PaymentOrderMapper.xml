@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.payment.mapper.PaymentOrderMapper">
+
+    <resultMap type="PaymentOrder" id="PaymentOrderResult">
+        <result property="id" column="id"/>
+        <result property="orderType" column="order_type"/>
+        <result property="userId" column="user_id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="outTradeNo" column="out_trade_no"/>
+        <result property="transactionId" column="transaction_id"/>
+        <result property="subject" column="subject"/>
+        <result property="body" column="body"/>
+        <result property="payWay" column="pay_way"/>
+        <result property="amount" column="amount"/>
+        <result property="payState" column="pay_state"/>
+        <result property="userIp" column="user_ip"/>
+        <result property="expireTime" column="expire_time"/>
+        <result property="channelNotifyData" column="channel_notify_data"/>
+        <result property="successTime" column="success_time"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectPaymentOrderVo">
+        select id,
+               order_type,
+               user_id,
+               order_id,
+               out_trade_no,
+               transaction_id,
+               subject,
+               body,
+               pay_way,
+               amount,
+               pay_state,
+               user_ip,
+               expire_time,
+               channel_notify_data,
+               success_time,
+               create_time
+        from bus_payment_order
+    </sql>
+
+    <select id="selectPaymentOrderList" parameterType="PaymentOrder" resultMap="PaymentOrderResult">
+        <include refid="selectPaymentOrderVo"/>
+        <where>
+            <if test="orderType != null  and orderType != ''">and order_type = #{orderType}</if>
+            <if test="userId != null ">and user_id = #{userId}</if>
+            <if test="orderId != null ">and order_id = #{orderId}</if>
+            <if test="outTradeNo != null  and outTradeNo != ''">and out_trade_no = #{outTradeNo}</if>
+            <if test="transactionId != null  and transactionId != ''">and transaction_id = #{transactionId}</if>
+            <if test="payWay != null  and payWay != ''">and pay_way = #{payWay}</if>
+            <if test="payState != null  and payState != ''">and pay_state = #{payState}</if>
+            <if test="params.beginExpireTime != null and params.beginExpireTime != '' and params.endExpireTime != null and params.endExpireTime != ''">
+                and expire_time between #{params.beginExpireTime} and #{params.endExpireTime}
+            </if>
+            <if test="params.beginSuccessTime != null and params.beginSuccessTime != '' and params.endSuccessTime != null and params.endSuccessTime != ''">
+                and success_time between #{params.beginSuccessTime} and #{params.endSuccessTime}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectPaymentOrderById" parameterType="Long" resultMap="PaymentOrderResult">
+        <include refid="selectPaymentOrderVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectByOutTradeNo" parameterType="String" resultMap="PaymentOrderResult">
+        <include refid="selectPaymentOrderVo"/>
+        where out_trade_no = #{outTradeNo}
+    </select>
+
+    <select id="selectBody" resultType="String">
+        SELECT body
+        FROM bus_payment_order
+        WHERE order_type IN (2, 3)
+          AND pay_state = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <insert id="insertPaymentOrder" parameterType="PaymentOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_payment_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderType != null">order_type,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="outTradeNo != null">out_trade_no,</if>
+            <if test="transactionId != null">transaction_id,</if>
+            <if test="subject != null">subject,</if>
+            <if test="body != null">body,</if>
+            <if test="payWay != null">pay_way,</if>
+            <if test="amount != null">amount,</if>
+            <if test="payState != null">pay_state,</if>
+            <if test="userIp != null">user_ip,</if>
+            <if test="expireTime != null">expire_time,</if>
+            <if test="channelNotifyData != null">channel_notify_data,</if>
+            <if test="successTime != null">success_time,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderType != null">#{orderType},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="outTradeNo != null">#{outTradeNo},</if>
+            <if test="transactionId != null">#{transactionId},</if>
+            <if test="subject != null">#{subject},</if>
+            <if test="body != null">#{body},</if>
+            <if test="payWay != null">#{payWay},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="payState != null">#{payState},</if>
+            <if test="userIp != null">#{userIp},</if>
+            <if test="expireTime != null">#{expireTime},</if>
+            <if test="channelNotifyData != null">#{channelNotifyData},</if>
+            <if test="successTime != null">#{successTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updatePaymentOrder" parameterType="PaymentOrder">
+        update bus_payment_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderType != null">order_type = #{orderType},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="outTradeNo != null">out_trade_no = #{outTradeNo},</if>
+            <if test="transactionId != null">transaction_id = #{transactionId},</if>
+            <if test="subject != null">subject = #{subject},</if>
+            <if test="body != null">body = #{body},</if>
+            <if test="payWay != null">pay_way = #{payWay},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="payState != null">pay_state = #{payState},</if>
+            <if test="userIp != null">user_ip = #{userIp},</if>
+            <if test="expireTime != null">expire_time = #{expireTime},</if>
+            <if test="channelNotifyData != null">channel_notify_data = #{channelNotifyData},</if>
+            <if test="successTime != null">success_time = #{successTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateByOrderId" parameterType="PaymentOrder">
+        update bus_payment_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderType != null">order_type = #{orderType},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="outTradeNo != null">out_trade_no = #{outTradeNo},</if>
+            <if test="transactionId != null">transaction_id = #{transactionId},</if>
+            <if test="subject != null">subject = #{subject},</if>
+            <if test="body != null">body = #{body},</if>
+            <if test="payWay != null">pay_way = #{payWay},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="payState != null">pay_state = #{payState},</if>
+            <if test="userIp != null">user_ip = #{userIp},</if>
+            <if test="expireTime != null">expire_time = #{expireTime},</if>
+            <if test="channelNotifyData != null">channel_notify_data = #{channelNotifyData},</if>
+            <if test="successTime != null">success_time = #{successTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where order_id = #{orderId}
+    </update>
+
+    <delete id="deletePaymentOrderById" parameterType="Long">
+        delete
+        from bus_payment_order
+        where id = #{id}
+    </delete>
+
+    <delete id="deletePaymentOrderByIds" parameterType="String">
+        delete from bus_payment_order where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

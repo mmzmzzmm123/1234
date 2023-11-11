@@ -1,0 +1,59 @@
+<wxs src="../../../wxss/dicts.wxs" module="dicts"></wxs>
+<wux-dialog id="wux-dialog" />
+<wux-dialog id="wux-dialog--alert" />
+<view class="bView">
+  <view class="view_box_row_content_symmetry scope_view" bind:tap="chooseImage">
+    <span>头像</span>
+    <view class="userTx">
+      <image class="view_all_adapt" src="{{userInfo.avatarUrl!=null?userInfo.avatarUrl:'../../../static/images/default_tx.png'}}" mode="aspectFill" style="border-radius: 56px;"></image>
+      <image wx:if="{{userInfo != null && userLevelData != null && userInfo.hideLevel=='0'}}" src="{{userLevelData.avatarUrl}}" class="avatarFrame"></image>
+    </view>
+  </view>
+  <view class="cut_off_rule_small" style="background-color: #f8f8f9;"></view>
+  <view class="view_box_row_content_symmetry scope_view" bind:tap="nickNameCli">
+    <span>昵称</span>
+    <view class="view_box_row_content">
+      <text>{{userInfo.nickName}}</text>
+      <wux-icon type="ios-arrow-forward" size="14" color="#495060"></wux-icon>
+    </view>
+  </view>
+  <view class="cut_off_rule_small" style="background-color: #f8f8f9;"></view>
+  <picker header-text="选择性别" mode="selector" range="{{sexArr}}" range-key="label" bindchange="sexChange" value="{{userInfo.sex}}">
+    <view class="view_box_row_content_symmetry scope_view">
+      <span>性别</span>
+      <view class="view_box_row_content">
+        <text>{{dicts.sex(userInfo.sex)}}</text>
+        <wux-icon type="ios-arrow-forward" size="14" color="#495060"></wux-icon>
+      </view>
+    </view>
+  </picker>
+  <view class="cut_off_rule_small" style="background-color: #f8f8f9;"></view>
+  <view class="view_box_row_content_symmetry scope_view" bind:tap="buildReferralCode">
+    <span>邀请码</span>
+    <view class="view_box_row_content">
+      <text>{{userInfo.referralCode != null ? userInfo.referralCode : '点击生成'}}</text>
+      <wux-icon type="ios-arrow-forward" size="14" color="#495060"></wux-icon>
+    </view>
+  </view>
+  <view class="cut_off_rule_small" style="background-color: #f8f8f9;"></view>
+  <view class="view_box_row_content_symmetry scope_view">
+    <span>我的等级</span>
+    <view class="view_box_row_content">
+      <text>VIP{{userInfo.userLevelVo.currentLevel}}</text>
+      <wux-icon type="ios-arrow-forward" size="14" color="#495060"></wux-icon>
+    </view>
+  </view>
+  <view class="cut_off_rule_small" style="background-color: #f8f8f9;"></view>
+  <view class="view_box_row_content_symmetry scope_view">
+    <span>等级展示</span>
+    <view class="view_box_row_content">
+      <wux-switch name="light" slot="footer" color="royal" value="{{userInfo.hideLevel == '0'}}" bind:change="hideLevelChange" />
+    </view>
+  </view>
+
+  <!-- 页尾 -->
+  <view class="seizeSeat_mini"></view>
+  <view class="seizeSeat_mini"></view>
+  <view class="seizeSeat_mini"></view>
+  <i-load-more tip='蓝诚科技提供技术支持' loading="{{false}}"></i-load-more>
+</view>

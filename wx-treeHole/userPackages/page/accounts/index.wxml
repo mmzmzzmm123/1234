@@ -1,0 +1,70 @@
+<wxs src="../../../wxss/dicts.wxs" module="dicts"></wxs>
+<wux-spin nested spinning="{{ loadDataState }}" tip="加载中">
+  <view class="bView">
+    <scroll-view scroll-y="true" style="width: 100%;height: {{pHeight-78}}px;">
+      <block wx:if="{{userAccounts != null && userAccounts.length > 0}}">
+        <block wx:for="{{userAccounts}}" wx:key="id">
+          <view class="seizeSeat_mini"></view>
+          <view class="seizeSeat_mini"></view>
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_common accountItem view_box_row_content_symmetry">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row" bind:tap="updateCli" data-index="{{index}}">
+                <span>{{dicts.social_accounts(item.accountServiceProvider)}}</span>
+                <text>-{{item.num}}</text>
+              </view>
+              <view  bind:tap="updateCli" data-index="{{index}}" style="width: 100px;height: 26px;"></view>
+              <view class="view_box_row_content" style="margin-right: 38px;">
+                <span style="font-size: 12px;margin-right: 10px;" bind:tap="updateCli" data-index="{{index}}">默认</span>
+                <wux-switch name="light" slot="footer" color="royal" value="{{item.ifDefault == 'Y'}}" bind:change="updateDefault" data-id="{{item.id}}" />
+              </view>
+              <image src="../../../static/ico/close_32.png" mode="widthFix" class="closeImg" bind:tap="deleteCli" data-id="{{item.id}}"></image>
+            </view>
+          </view>
+        </block>
+      </block>
+      <block wx:else>
+        <mine-null-data width="100%" height="100%" title="亲爱的，请添加您的绿泡泡哟"></mine-null-data>
+      </block>
+    </scroll-view>
+    <view class="seizeSeat_mini"></view>
+    <view class="seizeSeat_mini"></view>
+    <view class="themeBut" bind:tap="addCli">新增绿泡泡</view>
+  </view>
+</wux-spin>
+
+<!-- 表单容器 -->
+<i-drawer mode="right" visible="{{ formDrawer }}">
+  <view style="width:{{pWidth}}px;height:{{pHeight}}px;position: relative;">
+    <view style="width:100%;height:{{pHeight}}px; position: absolute;" bindtap="changeFormDrawer"></view>
+    <view class="drawerView">
+      <view class="view_box_common">
+        <view class="view_box_row_content_symmetry drawerTitleView" style="height:{{pHeight*0.08}}px;">
+          <view></view>
+          <text>{{account.id!=null?'修改':'新增'}}绿泡泡</text>
+          <wux-icon type="md-close" size="22" bindtap="changeFormDrawer"></wux-icon>
+        </view>
+      </view>
+      <view class="cut_off_rule_small"></view>
+      <view class="drawerBodyView">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common drawerFormView">
+          <wux-cell-group title="绿泡泡信息">
+            <wux-cell hover-class="none">
+              <wux-input controlled label="绿泡泡" type="text" placeholder="请输入您的绿泡泡" class="inputItem" inputColor="#767b88" value="{{account.num}}" bind:change="carNumberInput" />
+            </wux-cell>
+            <wux-cell title="是否默认" style="font-size: 14px;">
+              <wux-switch name="light" slot="footer" color="royal" value="{{account.ifDefault == 'Y'}}" bind:change="ifDefaultChange" />
+            </wux-cell>
+          </wux-cell-group>
+          <view class="view_box_common" style="margin: 10px auto; font-size: 14px;color: red;">
+            温馨提示：亲爱的，如果您不知道绿泡泡可以咨询在线客服哟（关注“热爱树洞”公众号，即可发起提问哟~）
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="themeBut" bind:tap="submit">保存账号</view>
+        <view class="seizeSeat_mini"></view>
+      </view>
+    </view>
+  </view>
+</i-drawer>

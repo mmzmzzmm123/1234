@@ -1,0 +1,255 @@
+page{
+  background: linear-gradient(to bottom,#d5e4f5,#fce2e6);
+}
+.stateBarView{
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 999;
+}
+.stateBarView .stateBar{
+  width: 100%;
+}
+.stateBarView .titleView{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position: relative;
+  color: #ffffff;
+}
+.stateBarIcoView{
+  position: absolute;
+  left: 0px;
+}
+.bannerBgColorView{
+  width: 100%;
+  position: absolute;
+  top: 0;
+  z-index: -999;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.swiperView{
+  width: 92%;
+  margin: 0 auto;
+  z-index: -888;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.noticeView{
+  height: 40px;
+  overflow: hidden;
+  border-radius: 10px;
+  margin-top: 10px;
+  font-size: 14px;
+  color: #ffffff;
+}
+.noticeView image{
+  width: 40px;
+  margin-right: 8px;
+}
+.staffView{
+  width: 48%;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.staffCover{
+  width: 100%;
+  height: 230px;
+  position: relative;
+}
+.staffCover .cover{
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  z-index: -999;
+}
+.staffDetail{
+  font-size: 14px;
+  margin: 10px 0;
+}
+.staffAvatar{
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  overflow: hidden;
+  margin-right: 6px;
+}
+.staffName{
+  font-size: 14px;
+  width: 80px;
+}
+.presence{
+  padding: 2px 10px;
+  background-color: #ffffff;
+  font-size: 10px;
+  border-radius: 10px;
+}
+.presence image{
+  width: 12px; 
+}
+.voiceView{
+  height: 20px;
+  margin-bottom: 6px;
+  padding: 2px 6px;
+  font-size: 12px;
+  color: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.voiceView .playIco{
+  width: 13px;
+  height: 13px; 
+  margin-right: 4px;
+}
+.voiceView .audioGif{
+  width: 60px;
+  margin-right: 10px;
+}
+.voiceView .audioIco{
+  width: 60px;
+  margin-right: 4px;
+}
+.sexAndAgeView{
+  padding: 4px 10px;
+  font-size: 10px;
+  color: #ffffff;
+  border-radius: 10px;
+}
+.sexAndAgeView image{
+  width: 12px;
+  height: 12px;
+  margin-right: 4px;
+}
+.rankView{
+  position: relative;
+  overflow: hidden;
+}
+.rankView .rankLeftDecorate{
+  width: 200px;
+  position: absolute;
+  top: 0;
+  left: -10px;
+  z-index: 1;
+}
+.rankView .rankRigheDecorate{
+  width: 200px;
+  position: absolute;
+  top: 60px;
+  right: -10px;
+  z-index: 1;
+}
+.rankInfo{
+  position: relative;
+}
+.rankInfo .rankBg{
+  width: 100%;
+  border-radius: 10px;
+}
+.rankInfo .staffRank{
+  width: 80px;
+  height: 80px;
+  border-radius: 80px;
+}
+.rankInfo .staffRankView{
+  position: absolute;
+  z-index: 5;
+}
+.rankInfo .staffRankView view{
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+.crownIco{
+  width: 120px;
+  height: 120px;
+  position: absolute;
+  top: -22px;
+}
+.rankTab{
+  width: 160px;
+  height: 28px;
+  background-color: #ffffff;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  z-index: 6;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.rankTab view{
+  width: 50%;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  font-size: 14px;
+}
+.rankTab_cli{
+  background-color: #fa9090;
+  border-radius: 20px;
+  color: #ffffff;
+}
+.hotView{
+  width: 180px;
+  margin-right: 16px;
+  border-radius: 10px;
+  overflow: hidden;
+  display: inline-block;
+  padding: 10px 0;
+}
+.hotOnLineView{
+  background-color: #ffffff;
+  font-size: 10px;
+  padding: 4px 8px;
+  border-radius: 10px;
+}
+.hotOnLineView image{
+  width: 10px;
+}
+.hotTx{
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+}
+.hotAddress{
+  font-size: 12px;
+  margin-top: 4px;
+  color: #80848f;
+}
+.hotStaffDetails{
+  margin-top: 10px;
+  font-size: 14px;
+  white-space:normal;
+  height: 38px;
+}
+.hotVoiceView{
+  height: 20px;
+  overflow: hidden;
+  background-color: black;
+  opacity: 0.5;
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+.voicePlay{
+  width: 12px;
+  margin-right: 4px;
+}
+.voiceAudioImg{
+  width: 60px;
+}
+.audioFrequencyGif{
+  width: 60px;
+}
+.voiceSeconds{
+  color: #ffffff;
+  font-size: 12px;
+  margin-left: 4px;
+}
+.hotName{
+  font-size: 14px;
+}

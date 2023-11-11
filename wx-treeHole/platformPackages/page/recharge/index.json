@@ -1,0 +1,14 @@
+{
+  "navigationBarTitleText": "我的钱包",
+  "backgroundTextStyle": "dark",
+  "navigationBarBackgroundColor": "#ffffff",
+  "navigationBarTextStyle": "black",
+  "usingComponents": {
+    "i-drawer": "../../../components/iview/dist/drawer/index",
+    "column-view": "../../../components/mine/columnView/index",
+    "wux-icon": "../../../components/wux/dist/icon/index",
+    "wux-row": "../../../components/wux/dist/row/index",
+    "wux-col": "../../../components/wux/dist/col/index",
+    "wux-progress": "../../../components/wux/dist/progress/index"
+  }
+}

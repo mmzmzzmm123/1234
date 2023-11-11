@@ -4,11 +4,16 @@ import io.jsonwebtoken.Claims;
 
 /**
  * 通用常量信息
- * 
+ *
  * @author ruoyi
  */
-public class Constants
-{
+public class Constants {
+
+    /**
+     * 默认字符串
+     * */
+    public static final String DEFAULT = "default";
+
     /**
      * UTF-8 字符集
      */
@@ -50,6 +55,16 @@ public class Constants
     public static final String LOGIN_SUCCESS = "Success";
 
     /**
+     * 支付成功标识
+     * */
+    public static final String PAY_SUCCESS = "SUCCESS";
+
+    /**
+     * 成功小写
+     * */
+    public static final String SUCCESS_SMALL_LETTER = "success";
+
+    /**
      * 注销
      */
     public static final String LOGOUT = "Logout";
@@ -63,26 +78,6 @@ public class Constants
      * 登录失败
      */
     public static final String LOGIN_FAIL = "Error";
-
-    /**
-     * 所有权限标识
-     */
-    public static final String ALL_PERMISSION = "*:*:*";
-
-    /**
-     * 管理员角色权限标识
-     */
-    public static final String SUPER_ADMIN = "admin";
-
-    /**
-     * 角色权限分隔符
-     */
-    public static final String ROLE_DELIMETER = ",";
-
-    /**
-     * 权限标识分隔符
-     */
-    public static final String PERMISSION_DELIMETER = ",";
 
     /**
      * 验证码有效期（分钟）
@@ -130,6 +125,11 @@ public class Constants
     public static final String JWT_AUTHORITIES = "authorities";
 
     /**
+     * 系统标识
+     * */
+    public static final String SYS_NAME = "sys";
+
+    /**
      * 资源映射路径 前缀
      */
     public static final String RESOURCE_PREFIX = "/profile";
@@ -152,16 +152,36 @@ public class Constants
     /**
      * 自动识别json对象白名单配置（仅允许解析的包名，范围越小越安全）
      */
-    public static final String[] JSON_WHITELIST_STR = { "org.springframework", "com.ruoyi" };
+    public static final String[] JSON_WHITELIST_STR = {"org.springframework", "com.ruoyi"};
 
     /**
      * 定时任务白名单配置（仅允许访问的包名，如其他需要可以自行添加）
      */
-    public static final String[] JOB_WHITELIST_STR = { "com.ruoyi" };
+    public static final String[] JOB_WHITELIST_STR = {"com.ruoyi"};
 
     /**
      * 定时任务违规的字符
      */
-    public static final String[] JOB_ERROR_STR = { "java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
-            "org.springframework", "org.apache", "com.ruoyi.common.utils.file", "com.ruoyi.common.config" };
+    public static final String[] JOB_ERROR_STR = {"java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
+            "org.springframework", "org.apache", "com.ruoyi.common.utils.file", "com.ruoyi.common.config"};
+
+    /**
+     * 所有权限标识
+     */
+    public static final String ALL_PERMISSION = "*:*:*";
+
+    /**
+     * 管理员角色权限标识
+     */
+    public static final String SUPER_ADMIN = "admin";
+
+    /**
+     * 角色权限分隔符
+     */
+    public static final String ROLE_DELIMETER = ",";
+
+    /**
+     * 权限标识分隔符
+     */
+    public static final String PERMISSION_DELIMETER = ",";
 }

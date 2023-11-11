@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.platform.mapper.PlatformBannerMapper">
+
+    <resultMap type="PlatformBanner" id="PlatformBannerResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="toLink"    column="to_link"    />
+        <result property="imgUrl"    column="img_url"    />
+        <result property="themeColor"    column="theme_color"    />
+        <result property="position"    column="position"    />
+        <result property="state"    column="state"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="sortNum"    column="sort_num"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPlatformBannerVo">
+        select id, name, to_link, img_url, theme_color, position, state, start_time, end_time, sort_num, remark, create_by, create_time, update_by, update_time from bus_platform_banner
+    </sql>
+
+    <select id="selectPlatformBannerList" parameterType="PlatformBanner" resultMap="PlatformBannerResult">
+        <include refid="selectPlatformBannerVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="toLink != null  and toLink != ''"> and to_link like concat('%', #{toLink}, '%')</if>
+            <if test="position != null  and position != ''"> and position = #{position}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+        </where>
+        order by sort_num desc
+    </select>
+
+    <select id="selectPlatformBannerById" parameterType="Long" resultMap="PlatformBannerResult">
+        <include refid="selectPlatformBannerVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPlatformBanner" parameterType="PlatformBanner" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_platform_banner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="toLink != null">to_link,</if>
+            <if test="imgUrl != null">img_url,</if>
+            <if test="themeColor != null">theme_color,</if>
+            <if test="position != null">position,</if>
+            <if test="state != null">state,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="sortNum != null">sort_num,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="toLink != null">#{toLink},</if>
+            <if test="imgUrl != null">#{imgUrl},</if>
+            <if test="themeColor != null">#{themeColor},</if>
+            <if test="position != null">#{position},</if>
+            <if test="state != null">#{state},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="sortNum != null">#{sortNum},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePlatformBanner" parameterType="PlatformBanner">
+        update bus_platform_banner
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="toLink != null">to_link = #{toLink},</if>
+            <if test="imgUrl != null">img_url = #{imgUrl},</if>
+            <if test="themeColor != null">theme_color = #{themeColor},</if>
+            <if test="position != null">position = #{position},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="sortNum != null">sort_num = #{sortNum},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="updateStateByIds">
+        update bus_platform_banner set state = #{state}
+        where ids in
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="deletePlatformBannerById" parameterType="Long">
+        delete from bus_platform_banner where id = #{id}
+    </delete>
+
+    <delete id="deletePlatformBannerByIds" parameterType="String">
+        delete from bus_platform_banner where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

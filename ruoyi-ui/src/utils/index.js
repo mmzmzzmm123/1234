@@ -1,18 +1,49 @@
-import { parseTime } from './ruoyi'
+import {parseTime} from './ruoyi'
 
 /**
- * 表格时间格式化
+ * 表格时间格式化（time）
  */
-export function formatDate(cellValue) {
+export function formatDate_time(cellValue) {
   if (cellValue == null || cellValue == "") return "";
-  var date = new Date(cellValue) 
+  var date = new Date(cellValue)
   var year = date.getFullYear()
   var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
-  var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate() 
-  var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours() 
-  var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes() 
+  var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate()
+  var hours = date.getHours() < 10 ? '0' + date.getHours() : date.getHours()
+  var minutes = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()
   var seconds = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds()
   return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds
+}
+
+/**
+ * 表格时间格式化（date）
+ * */
+export function formatDate_date(date) {
+  let year = date.getFullYear();
+  let month = (date.getMonth() + 1).toString().padStart(2, '0');
+  let day = date.getDate().toString().padStart(2, '0');
+  return year + '-' + month + '-' + day;
+}
+
+/**
+ * 判断指定时间是否在给定的时间范围内
+ *
+ * @param start
+ * @param end
+ * @param inDate
+ * */
+export function inDateBetween(start, end, inDate) {
+  let startDate = new Date(start);
+  let endDate = new Date(end);
+  let touchDate = new Date(inDate);
+  let beginDiff = touchDate.getTime() - startDate.getTime();
+  let beginDayDiff = Math.floor(beginDiff / (24 * 3600 * 1000));
+  let endDiff = endDate.getTime() - touchDate.getTime();
+  let endDayDiff = Math.floor(endDiff / (24 * 3600 * 1000));
+  if (endDayDiff < 0 || beginDayDiff < 0) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -218,7 +249,7 @@ export function getTime(type) {
 export function debounce(func, wait, immediate) {
   let timeout, args, context, timestamp, result
 
-  const later = function() {
+  const later = function () {
     // 据上一次触发时间间隔
     const last = +new Date() - timestamp
 
@@ -235,7 +266,7 @@ export function debounce(func, wait, immediate) {
     }
   }
 
-  return function(...args) {
+  return function (...args) {
     context = this
     timestamp = +new Date()
     const callNow = immediate && !timeout
@@ -330,7 +361,7 @@ export function makeMap(str, expectsLowerCase) {
     ? val => map[val.toLowerCase()]
     : val => map[val]
 }
- 
+
 export const exportDefault = 'export default '
 
 export const beautifierConf = {
@@ -387,4 +418,4 @@ export function camelCase(str) {
 export function isNumberStr(str) {
   return /^[+-]?(0|([1-9]\d*))(\.\d+)?$/g.test(str)
 }
- 
+

@@ -1,0 +1,330 @@
+<wxs src="../../wxss/str.wxs" module="strUtil"></wxs>
+<wxs src="../../wxss/format.wxs" module="formatUtil"></wxs>
+<wxs src="../../wxss/dicts.wxs" module="dictsUtil"></wxs>
+<wxs src="../../wxss/time.wxs" module="timeUtil"></wxs>
+<view class="bView">
+  <wux-tabs class="wuxTab" theme="positive" controlled current="{{ currentKey }}" bindchange="onTabsChange">
+    <block wx:for="{{ tabs }}" wx:key="key">
+      <wux-tab key="{{ item.key }}" title="{{ item.title }}"></wux-tab>
+    </block>
+  </wux-tabs>
+  <swiper style="width:{{pWidth}}px;height:{{pHeight-tabHeight}}px;" current="{{ currentIndex }}" bindchange="swiperChange">
+    <!-- 选人下单 -->
+    <swiper-item>
+      <scroll-view scroll-y="true" class="view_all_adapt" refresher-enabled="true" refresher-background="#555d8c" refresher-default-style="white" refresher-triggered="{{refreshState}}" bindrefresherrefresh="refresh" bindscrolltolower="loadNextPageData">
+
+        <!-- 新人推荐 -->
+        <view class="seizeSeat_mini"></view>
+        <view class="seizeSeat_mini"></view>
+        <column-view title="热门推荐" moreTitle="非常热门哟" ifShowIco="1" outerMargin="0"></column-view>
+        <view class="seizeSeat_mini"></view>
+        <view class="seizeSeat_mini"></view>
+        <scroll-view scroll-x class="view_box_common">
+          <block wx:if="{{!hotLoadState && hotStaffList != null && hotStaffList.length > 0}}">
+            <view class="view_box_row">
+              <block wx:for="{{hotStaffList}}" wx:key="id">
+                <view class="newPeopleItem" data-staffid="{{item.userId}}" bind:tap="toShowStaffInfo">
+                  <image src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}" mode="aspectFill"></image>
+                  <view class="newPeopleName">{{item.nickName}}</view>
+                  <view class="{{item.sex == 1 ? 'girl_bg_color' : 'boy_bg_color'}} newPeopleBut">下单</view>
+                </view>
+              </block>
+            </view>
+          </block>
+          <block wx:else>
+            <wux-skeleton active>
+              <wux-skeleton-paragraph rows="3" />
+            </wux-skeleton>
+          </block>
+        </scroll-view>
+
+        <view class="seizeSeat_mini"></view>
+        <view class="seizeSeat_mini"></view>
+        <!-- 按名称搜索 -->
+        <view class="view_box_common nickNameView view_box_row">
+          <image src="../../static/ico/service_select_grey_32.png" mode="widthFix"></image>
+          <input style="width: {{pWidth*0.92-52}}px;" value="{{params.nickName}}" placeholder="快来查询您想要找的店员吧" bindinput="paramsNickNameInput" />
+          <view class="boy_bg_color" bind:tap="toNickNameLoadData">查询</view>
+        </view>
+
+        <!-- 筛选栏 -->
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common view_box_row_content_symmetry filterView" style="width: 88%;">
+          <picker header-text="性别" mode="selector" range="{{serviceList}}" range-key="name" bindchange="serviceFilterChange">
+            <view class="view_box_row_content filterItem">
+              <span>服务类型</span>
+              <wux-icon type="ios-arrow-down" size="14" color="#80848f"></wux-icon>
+            </view>
+          </picker>
+          <view class="verticalLine"></view>
+          <picker header-text="性别" mode="selector" range="{{sexRange}}" range-key="label" bindchange="sexFilterChange">
+            <view class="view_box_row_content filterItem">
+              <span>性 别</span>
+              <wux-icon type="ios-arrow-down" size="14" color="#80848f"></wux-icon>
+            </view>
+          </picker>
+          <view class="verticalLine"></view>
+          <picker header-text="等级" mode="selector" range="{{staffLevelConfig}}" range-key="name" bindchange="staffLevelFilterChange">
+            <view class="view_box_row_content filterItem">
+              <span>店员等级</span>
+              <wux-icon type="ios-arrow-down" size="14" color="#80848f"></wux-icon>
+            </view>
+          </picker>
+        </view>
+        <!-- 已选条件栏 -->
+        <view class="view_box_common view_box_row_wrap">
+          <view data-index="0" bind:tap="clearFilterItem" class="chooseFilterItem" wx:if="{{params.serviceIdArrStr != null}}">
+            <view>服务类型：{{strUtil.matchServiceNameById(params.serviceIdArrStr, serviceList)}}</view>
+            <image src="../../static/ico/delete_32.png" mode="widthFix"></image>
+          </view>
+          <view data-index="3" bind:tap="clearFilterItem" class="chooseFilterItem" wx:if="{{params.nickName != null}}">
+            <view>昵称：{{params.nickName}}</view>
+            <image src="../../static/ico/delete_32.png" mode="widthFix"></image>
+          </view>
+          <view data-index="1" bind:tap="clearFilterItem" class="chooseFilterItem" wx:if="{{params.sex != null}}">
+            <view>性别：{{params.sex == 0 ? '男' : params.sex == '1' ? '女' : '未知'}}</view>
+            <image src="../../static/ico/delete_32.png" mode="widthFix"></image>
+          </view>
+          <view data-index="2" bind:tap="clearFilterItem" class="chooseFilterItem" wx:if="{{params.staffLevel != null}}">
+            <view>店员等级：{{strUtil.staffLevelMacth(params.staffLevel, staffLevelConfig)}}</view>
+            <image src="../../static/ico/delete_32.png" mode="widthFix"></image>
+          </view>
+        </view>
+
+        <!-- 员工数据 -->
+        <block wx:if="{{!loadState && staffDataList != null}}">
+          <block wx:if="{{staffDataList.length > 0}}">
+            <block wx:for="{{staffDataList}}" wx:key="id">
+              <view class="seizeSeat_mini"></view>
+              <view class="view_box_common staffItem {{item.sex == 1 ? 'girl_business_card_bg_color' : 'boy_business_card_bg_color'}}" data-staffid="{{item.userId}}" bind:tap="toShowStaffInfo">
+                <view class="view_all_adapt view_box_common view_box_row_content_symmetry">
+                  <view class="staffAvatarView">
+                    <!-- 头像 -->
+                    <image class="avatarImg" src="{{item.avatarUrl != null ? item.avatarUrl : '../../static/images/default_tx.png'}}" mode="aspectFill"></image>
+                    <!-- 头像框 -->
+                    <image class="avatarFrame" src="https://tree-hole-1320838256.cos.ap-guangzhou.myqcloud.com/material/top_test.gif" mode="widthFix"></image>
+                    <!-- 语音条 -->
+                    <view class="{{item.sex == 1 ? 'girl_bg_color' : 'boy_bg_color'}} staffVoice view_box_row" data-index="{{index}}" catch:tap="listAudioCli">
+                      <image class="voicePlay" src="../../static/ico/{{item.audioState == 0 ? 'stop_play.png' : 'play.png'}}" mode="widthFix"></image>
+                      <image wx:if="{{item.audioState == -1}}" class="voiceAudioImg" src="../../static/ico/audio_frequency.png" mode="widthFix"></image>
+                      <image wx:if="{{item.audioState == 0}}" class="audioFrequencyGif" src="../../static/gif/audio_frequency.gif" mode="widthFix"></image>
+                      <view wx:if="{{item.voiceTime != null && item.voiceTime > 0}}" class="voiceSeconds">{{item.voiceTime}}s</view>
+                      <view wx:else class="voiceSeconds">　</view>
+                    </view>
+                  </view>
+                  <view class="view_box_column_symmetry" style="width: {{pWidth*0.92*0.92-110}}px;height: 92px;">
+                    <view>
+                      <view class="view_box_row_content_symmetry">
+                        <!-- 名字和金牌情况 -->
+                        <view class="view_box_row_content">
+                          <view class="staffName">{{item.nickName}}</view>
+                          <view class="staffBadgeLevel view_box_row_content badgeLevel_{{item.staffLevel}}">
+                            <image src="../../static/images/badge_level_{{item.staffLevel}}.png" mode="widthFix"></image>
+                            <view>{{strUtil.staffLevelMacth(item.staffLevel,staffLevelConfig)}}</view>
+                          </view>
+                        </view>
+                        <!-- 在线情况 -->
+                        <view class="staffOnLineState view_box_row_content">
+                          <image src="../../static/ico/{{item.ifOnline == 'Y' ? 'online_32' : 'offline_32'}}.png"></image>
+                          <view>{{item.ifOnline == 'Y' ? '在线' : '离线'}}</view>
+                        </view>
+                      </view>
+                      <!-- 用户基本信息 -->
+                      <view class="view_box_row staffBaseInfo">
+                        <view>{{item.province}}·{{item.city}}</view>
+                        <view>{{item.sex == 1 ? '女' : '男'}}</view>
+                        <view>{{timeUtil.calculateAge(item.birthDate)}}岁</view>
+                      </view>
+                      <!-- 个人介绍 -->
+                      <view class="staffDetails text_ellipsis">
+                        {{item.selfIntroduction}}
+                      </view>
+                    </view>
+                    <!-- 员工服务 -->
+                    <view class="view_box_row_wrap">
+                      <block wx:if="{{item.serviceIdList != null && item.serviceIdList.length > 0}}">
+                        <block wx:for="{{strUtil.matchServiceShortNameByIdArr(item.serviceIdList, serviceList)}}" wx:for-item="serviceLabel" wx:key="index">
+                          <view class="staffService {{item.sex == 1 ? 'girl_bg_color' : 'boy_bg_color'}}">{{serviceLabel}}</view>
+                        </block>
+                      </block>
+                      <view wx:else style="font-size: 12px;color: #80848f;">
+                        亲爱的 暂时不接单哟 很快就回来啦
+                      </view>
+                    </view>
+                  </view>
+                </view>
+                <view class="seizeSeat_mini"></view>
+                <!-- 员工标签 -->
+                <view wx:if="{{item.selfTags != null && item.selfTags != ''}}" class="view_box_common staffLabel view_box_row_wrap">
+                  <block wx:for="{{strUtil.splitToArr(item.selfTags, ',')}}" wx:for-item="selfTag" wx:key="index">
+                    <view class="{{item.sex == 1 ? 'girl_edging_color girl_font_color' : 'boy_edging_color boy_font_color'}} staffLabelItem">{{selfTag}}</view>
+                  </block>
+                </view>
+              </view>
+              <view class="seizeSeat_mini"></view>
+            </block>
+          </block>
+          <view wx:else class="view_box_common view_box_row_content">
+            <mine-null-data width="320px" height="320px" title="亲爱的 店员正在快马加鞭的上新中"></mine-null-data>
+          </view>
+        </block>
+        <block wx:else>
+          <view class="seizeSeat_mini"></view>
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_common">
+            <wux-skeleton active>
+              <wux-skeleton-paragraph rows="10" />
+            </wux-skeleton>
+          </view>
+        </block>
+        <view class="seizeSeat_mini"></view>
+        <i-load-more tip='{{((params.pageNum*params.pageSize) >= staffDataTotal) && bottomLoadState == false ?"店员正在快马加鞭的上新中":"加载中"}}' loading="{{bottomLoadState}}"></i-load-more>
+      </scroll-view>
+    </swiper-item>
+
+    <!-- 盲盒下单 -->
+    <swiper-item>
+      <scroll-view scroll-y="true" style="width:{{pWidth}}px;height:{{pHeight-tabHeight-randomBottomViewHeight}}px;">
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../static/ico/theme_dot.png"></image>
+              <view>店员性别与标签</view>
+            </view>
+            <view class="randomSexView view_box_row_content">
+              <view wx:if="{{randomForm.chooseStaffSex == '0'}}" class="view_box_row_content boy_edging_color boy_font_color">
+                <image src="../../static/ico/theme_boy.png"></image>
+                <span>男生</span>
+              </view>
+              <view wx:if="{{randomForm.chooseStaffSex != '0'}}" class="view_box_row_content" data-sex="0" bind:tap="randomChooseSex">
+                <image src="../../static/ico/theme_boy.png"></image>
+                <span>男生</span>
+              </view>
+              <view wx:if="{{randomForm.chooseStaffSex == '1'}}" class="view_box_row_content girl_edging_color girl_font_color">
+                <image src="../../static/ico/theme_girl.png"></image>
+                <span>女生</span>
+              </view>
+              <view wx:if="{{randomForm.chooseStaffSex != '1'}}" class="view_box_row_content" data-sex="1" bind:tap="randomChooseSex">
+                <image src="../../static/ico/theme_girl.png"></image>
+                <span>女生</span>
+              </view>
+            </view>
+          </view>
+          <view class="view_box_common scopeLabelView view_box_row_content_symmetry_wrap">
+            <block wx:for="{{staffCustomizeLabel[randomForm.chooseStaffSex]}}" wx:key="index">
+              <view data-label="{{item}}" bind:tap="chooseRandomStaffLabel" class="staffLevelItem {{strUtil.checkArrIncludeStr(randomForm.chooseLabel, item) ? 'boy_bg_color randomChooseLebal' : ''}}">{{item}}</view>
+            </block>
+          </view>
+          <view class="seizeSeat_mini"></view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <column-view title="店员等级" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common scopeLabelView view_box_row_content_symmetry_wrap">
+            <block wx:for="{{staffLevelConfig}}" wx:key="id">
+              <view class="staffLevelItem {{index == randomForm.staffLevelIndex?'boy_bg_color randomChooseLebal':''}}" bind:tap="randomStaffLevelChoose" data-index="{{index}}">{{item.name}}</view>
+            </block>
+          </view>
+          <view class="seizeSeat_mini"></view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <column-view title="服务类型" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common scopeLabelView view_box_row_content_symmetry_wrap ">
+            <block wx:for="{{serviceList}}" wx:key="id">
+              <view class="staffLevelItem {{index == randomForm.serviceInfoIndex?'boy_bg_color randomChooseLebal':''}}" bind:tap="randomServiceChoose" data-index="{{index}}">{{item.name}}</view>
+            </block>
+          </view>
+          <view class="seizeSeat_mini"></view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <column-view title="服务内容选项" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common scopeLabelView view_box_row_content_symmetry_wrap ">
+            <block wx:for="{{serviceList[randomForm.serviceInfoIndex].serviceItemList}}" wx:key="id">
+              <view class="staffLevelItem {{index == randomForm.serviceInfoItemIndex?'boy_bg_color randomChooseLebal':''}}" bind:tap="randomServiceItemChoose" data-index="{{index}}">{{item.name}}</view>
+            </block>
+          </view>
+        </view>
+        <block wx:if="{{ifHide == '0'}}">
+          <view class="seizeSeat_mini"></view>
+          <view class="view_box_common staffItem" bind:tap="selectUserAccount">
+            <view class="view_box_common view_box_row_content_symmetry">
+              <view class="view_box_row_content tempColumn">
+                <image src="../../static/ico/theme_dot.png"></image>
+                <view>绿泡泡</view>
+              </view>
+              <view class="view_box_row_content scopeTextView">
+                <view>{{randomForm.customNum!=null?dictsUtil.social_accounts(randomForm.accountServiceProvider)+"-"+randomForm.customNum:"请选择您的绿泡泡"}}</view>
+                <wux-icon type="ios-arrow-forward" size="16" color="#80848f"></wux-icon>
+              </view>
+            </view>
+          </view>
+        </block>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../static/ico/theme_dot.png"></image>
+              <view>排除服务过的店员</view>
+            </view>
+            <wux-switch name="light" slot="footer" color="royal" value="{{randomForm.filterServedStaff == 'Y'}}" bind:change="changeIfExclude" />
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <view class="view_box_common view_box_row_content_symmetry">
+            <view class="view_box_row_content tempColumn">
+              <image src="../../static/ico/theme_dot.png"></image>
+              <view>购买数量</view>
+            </view>
+            <wux-input-number controlled="true" color="royal" slot="footer" min="1" max="99" value="{{randomForm.num}}" bind:change="randomBuyNumChange" />
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <column-view title="备注" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common">
+            <view class="seizeSeat_mini"></view>
+            <textarea maxlength="64" auto-height="true" placeholder="可输入您的备注信息哟" style="width: 100%;z-index: 100;" bindinput="randomRemark"></textarea>
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+        <view class="view_box_common staffItem">
+          <column-view title="支付方式" ifShowMore="1" outerMargin="0"></column-view>
+          <view class="view_box_common">
+            <view class="view_box_row_content_symmetry">
+              <view class="payWayView view_box_row_content">
+                <image src="../../static/ico/wx_pay.png" mode="widthFix"></image>
+                <span>微信支付</span>
+              </view>
+              <radio data-pay="0" checked="{{randomForm.payWay == '0'}}" color="#8978E4" bind:tap="payWayChange" />
+            </view>
+            <view class="view_box_row_content_symmetry">
+              <view class="payWayView view_box_row_content">
+                <image src="../../static/ico/wallet.png" mode="widthFix"></image>
+                <span>枫叶支付</span>
+              </view>
+              <view class="view_box_row_content">
+                <view style="font-size: 12px;margin-right: 10px;color: #80848f;">剩余￥{{formatUtil.toFixed(userInfo.userWalletVo.balance+userInfo.userWalletVo.giftBalance)}}</view>
+                <radio data-pay="1" checked="{{randomForm.payWay == '1'}}" color="#8978E4" bind:tap="payWayChange" />
+              </view>
+            </view>
+          </view>
+        </view>
+        <view class="seizeSeat_mini"></view>
+      </scroll-view>
+      <view class="randomBottomView view_box_row_content">
+        <view class="view_box_row_content_symmetry" style="width: {{pWidth*0.92*0.92}}px;margin: 0 auto;">
+          <view class="view_box_row_content randomPriceView">
+            <view>总价：</view>
+            <span>￥</span>
+            <text>{{formatUtil.toFixed(randomForm.price)}}</text>
+          </view>
+          <view class="submitOrderBut" bind:tap="submitRandomOrder">立即下单</view>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+</view>

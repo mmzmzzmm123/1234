@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.user.mapper.UserWalletMapper">
+
+    <resultMap type="UserWallet" id="UserWalletResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="balance"    column="balance"    />
+        <result property="giftBalance"    column="gift_balance"    />
+        <result property="distributionCommission" column="distribution_commission" />
+        <result property="totalBalance"    column="total_balance"    />
+        <result property="totalGiftBalance"    column="total_gift_balance"    />
+        <result property="totalDistributionCommission" column="total_distribution_commission" />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectUserWalletVo">
+        select id, user_id, balance, gift_balance, distribution_commission, total_balance, total_gift_balance, total_distribution_commission, update_time from bus_user_wallet
+    </sql>
+
+    <select id="selectUserWalletList" parameterType="UserWallet" resultMap="UserWalletResult">
+        <include refid="selectUserWalletVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="balance != null "> and balance &gt;= #{balance}</if>
+            <if test="giftBalance != null "> and gift_balance &gt;= #{giftBalance}</if>
+            <if test="distributionCommission != null "> and distribution_commission &gt;= #{distributionCommission}</if>
+            <if test="totalBalance != null "> and total_balance &gt;= #{totalBalance}</if>
+            <if test="totalGiftBalance != null "> and total_gift_balance &gt;= #{totalGiftBalance}</if>
+            <if test="totalDistributionCommission != null "> and total_distribution_commission &gt;= #{totalDistributionCommission}</if>
+        </where>
+        order by update_time desc
+    </select>
+
+    <select id="selectUserWalletById" parameterType="Long" resultMap="UserWalletResult">
+        <include refid="selectUserWalletVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectByUserId" parameterType="Long" resultMap="UserWalletResult">
+        <include refid="selectUserWalletVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <select id="selectByUserIdForUpdate" parameterType="Long" resultMap="UserWalletResult">
+        <include refid="selectUserWalletVo"/>
+        where user_id = #{userId} for update
+    </select>
+
+    <insert id="insertUserWallet" parameterType="UserWallet" useGeneratedKeys="true" keyProperty="id">
+        insert into bus_user_wallet
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="balance != null">balance,</if>
+            <if test="giftBalance != null">gift_balance,</if>
+            <if test="distributionCommission != null">distribution_commission,</if>
+            <if test="totalBalance != null">total_balance,</if>
+            <if test="totalGiftBalance != null">total_gift_balance,</if>
+            <if test="totalDistributionCommission != null">total_distribution_commission,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="balance != null">#{balance},</if>
+            <if test="giftBalance != null">#{giftBalance},</if>
+            <if test="distributionCommission != null">#{distributionCommission},</if>
+            <if test="totalBalance != null">#{totalBalance},</if>
+            <if test="totalGiftBalance != null">#{totalGiftBalance},</if>
+            <if test="totalDistributionCommission != null">#{totalDistributionCommission},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserWallet" parameterType="UserWallet">
+        update bus_user_wallet
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="balance != null">balance = #{balance},</if>
+            <if test="giftBalance != null">gift_balance = #{giftBalance},</if>
+            <if test="distributionCommission != null">distribution_commission = #{distributionCommission},</if>
+            <if test="totalBalance != null">total_balance = #{totalBalance},</if>
+            <if test="totalGiftBalance != null">total_gift_balance = #{totalGiftBalance},</if>
+            <if test="totalDistributionCommission != null">total_distribution_commission = #{totalDistributionCommission},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUserWalletById" parameterType="Long">
+        delete from bus_user_wallet where id = #{id}
+    </delete>
+
+    <delete id="deleteUserWalletByIds" parameterType="String">
+        delete from bus_user_wallet where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
