@@ -174,4 +174,14 @@ public class Constants {
      * 管理员角色权限标识
      */
     public static final String SUPER_ADMIN = "admin";
+
+    /**
+     * 角色权限分隔符
+     */
+    public static final String ROLE_DELIMETER = ",";
+
+    /**
+     * 权限标识分隔符
+     */
+    public static final String PERMISSION_DELIMETER = ",";
 }
