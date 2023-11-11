@@ -86,6 +86,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    if (options.share != null) {
+      app.globalData.shareUserId = options.share;
+    }
     let that = this;
     wx.createSelectorQuery().selectAll('.bView').boundingClientRect(function (rect) {
       let divHeight = rect[0].height;
@@ -174,9 +177,26 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage() {
-
+    let data = {};
+    let userInfo = app.globalData.userInfo;
+    if (userInfo != null) {
+      data.path = "pages/select/index?share=" + userInfo.id;
+    } else {
+      data.path = "pages/select/index";
+    }
+    return data;
   },
-
+  /**
+   * 分享朋友圈
+   */
+  onShareTimeline: function () {
+    let userInfo = app.globalData.userInfo;
+    if (userInfo != null) {
+      return {
+        query: 'share=' + userInfo.id
+      };
+    }
+  },
   /**
    * 昵称查询事件
    */
@@ -613,6 +633,11 @@ Page({
       staffLevel: this.data.staffLevelConfig[randomForm.staffLevelIndex].level,
       serviceId: service.id,
       serviceItemId: serviceItem.id
+    }
+    // 判断是否存在分享者
+    let shareUserId = app.globalData.shareUserId;
+    if (shareUserId != null && shareUserId != "" && shareUserId > 0) {
+      form.shareUserId = shareUserId;
     }
     orderApi.randomOrderSubmit(form, this.randomOrderSubmitOnStart, this.randomOrderSubmitOnSuccess, this.randomOrderSubmitOnFailed, this.randomOrderSubmitOnWarn);
   },

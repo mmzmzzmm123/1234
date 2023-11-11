@@ -69,6 +69,9 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    if (options.share != null) {
+      app.globalData.shareUserId = options.share;
+    }
     let that = this;
     wx.createSelectorQuery().selectAll('.bView').boundingClientRect(function (rect) {
       let divHeight = rect[0].height;
@@ -143,7 +146,25 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage() {
-
+    let data = {};
+    let userInfo = app.globalData.userInfo;
+    if (userInfo != null) {
+      data.path = "pages/trends/index?share=" + userInfo.id;
+    } else {
+      data.path = "pages/trends/index";
+    }
+    return data;
+  },
+  /**
+   * 分享朋友圈
+   */
+  onShareTimeline: function () {
+    let userInfo = app.globalData.userInfo;
+    if (userInfo != null) {
+      return {
+        query: 'share=' + userInfo.id
+      };
+    }
   },
   /**
    * 加载用户点击关注数据

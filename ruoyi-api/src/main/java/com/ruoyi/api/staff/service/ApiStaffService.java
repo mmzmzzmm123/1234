@@ -479,13 +479,17 @@ public class ApiStaffService {
      * 查询我的组员
      *
      * @return 结果
-     * */
+     */
     public List<ApiStaffInfoVo> selectTeamMembers() {
         log.info("查询我的组员：开始");
         List<ApiStaffInfoVo> voList = new ArrayList<>();
         StaffInfo selectSi = new StaffInfo();
         selectSi.setReferralUserId(TokenUtils.getUserId()).setSortType("0");
         List<StaffInfo> staffInfoList = staffInfoMapper.customSelect(selectSi);
+        if (ObjectUtil.isNotEmpty(staffInfoList)) {
+            staffInfoList = staffInfoList.stream().filter(item -> !StaffStateEnums.DISABLE.getCode().equals(item.getState())).collect(Collectors.toList());
+
+        }
         staffInfoList.forEach(item -> {
             ApiStaffInfoVo vo = new ApiStaffInfoVo();
             BeanUtils.copyBeanProp(vo, item);
@@ -500,11 +504,11 @@ public class ApiStaffService {
      *
      * @param dto 数据
      * @return 结果
-     * */
+     */
     public Boolean updateTeamMembersInfo(ApiUpdateTeamMembersInfoDto dto) {
         log.info("组长修改组员数据：开始，参数：{}", dto);
         Long userId = TokenUtils.getUserId();
-        if (ObjectUtil.isNotNull(userId)){
+        if (ObjectUtil.isNotNull(userId)) {
             StaffInfo update = new StaffInfo();
             BeanUtils.copyBeanProp(update, dto);
             staffInfoMapper.updateStaffInfo(update);

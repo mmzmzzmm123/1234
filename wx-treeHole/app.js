@@ -206,7 +206,7 @@ App({
     parserArr: [],
     // 全局音频播放器对象
     audioContext: wx.createInnerAudioContext(), 
-    // 隐藏
-    hidePrivacy: "0"
+    hidePrivacy: "0", // 隐藏
+    shareUserId: null, // 分享人标识
   }
 })

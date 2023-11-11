@@ -76,7 +76,7 @@ public class GiveGiftSuccessNoticeMqConsumer implements RocketMQListener<Long> {
             }
         }
         UserLevel userLevel = userLevelMapper.selectByUserId(orderInfo.getCustomUserId());
-        String remark = OrderTypeEnums.APPOINT.getDesc();
+        String remark = OrderTypeEnums.GIFT.getDesc();
         if (ObjectUtil.isNotNull(userLevel)){
             remark += "-vip"+userLevel.getCurrentLevel();
         }

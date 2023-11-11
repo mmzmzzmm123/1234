@@ -67,7 +67,10 @@ Page({
     rewardPublicityIndex: 0, // 打赏公示下标
   },
 
-  onLoad() {
+  onLoad(options) {
+    if (options.share != null) {
+      app.globalData.shareUserId = options.share;
+    }
     let that = this;
     wx.createSelectorQuery().selectAll('.bView').boundingClientRect(function (rect) {
       let divHeight = rect[0].height;
@@ -168,7 +171,25 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage() {
-
+    let data = {};
+    let userInfo = app.globalData.userInfo;
+    if (userInfo != null) {
+      data.path = "pages/index/index?share=" + userInfo.id;
+    } else {
+      data.path = "pages/index/index";
+    }
+    return data;
+  },
+  /**
+   * 分享朋友圈
+   */
+  onShareTimeline: function () {
+    let userInfo = app.globalData.userInfo;
+    if (userInfo != null) {
+      return {
+        query: 'share=' + userInfo.id
+      };
+    }
   },
   /**
    * 开始打赏公示
@@ -178,9 +199,9 @@ Page({
     setInterval(() => {
       let rewardPublicityData = this.data.rewardPublicityData;
       let index = this.data.rewardPublicityIndex;
-      if(index >= (rewardPublicityData.length-1)){
+      if (index >= (rewardPublicityData.length - 1)) {
         index = 0;
-      }else{
+      } else {
         index += 1;
       }
       that.updateRewardPublicity(rewardPublicityData[index]);

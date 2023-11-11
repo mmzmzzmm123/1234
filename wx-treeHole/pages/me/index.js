@@ -96,12 +96,6 @@ Page({
     })
   },
   /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage() {
-
-  },
-  /**
    * 请求员工信息数据完成
    */
   selectStaffInfoOnSuccess: function (res) {

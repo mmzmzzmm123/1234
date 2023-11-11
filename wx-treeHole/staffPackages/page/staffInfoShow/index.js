@@ -94,13 +94,15 @@ Page({
     },
     ifHide: app.globalData.hidePrivacy,
     selectUserAccountIndex: -1, // 选择绿泡泡业务下标
-    shareUserId: -1, // 分享人用户标识
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad(options) {
+    if (options.share != null) {
+      app.globalData.shareUserId = options.share;
+    }
     let that = this;
     wx.createSelectorQuery().selectAll('.bView').boundingClientRect(function (rect) {
       let divHeight = rect[0].height;
@@ -125,8 +127,7 @@ Page({
     let staffId = options.staffId;
     this.setData({
       ["trendsParams.userId"]: staffId,
-      ["commentParams.staffId"]: staffId,
-      shareUserId: options.share
+      ["commentParams.staffId"]: staffId
     })
     // 开启分享朋友圈
     wx.showShareMenu({
@@ -207,7 +208,6 @@ Page({
     let data = {
       query: 'staffId=' + staffInfo.userId + '&share=' + userId
     }
-    console.log(data);
     return data
   },
   /**
@@ -819,7 +819,7 @@ Page({
       }
     }
     // 判断是否存在分享者
-    let shareUserId = this.data.shareUserId;
+    let shareUserId = app.globalData.shareUserId;
     if (shareUserId != null && shareUserId != "" && shareUserId > 0) {
       form.shareUserId = shareUserId;
     }
@@ -988,7 +988,7 @@ Page({
       return;
     }
     // 判断是否存在分享者
-    let shareUserId = this.data.shareUserId;
+    let shareUserId = app.globalData.shareUserId;
     if (shareUserId != null && shareUserId != "" && shareUserId > 0) {
       rewardForm.shareUserId = shareUserId;
     }
@@ -1201,7 +1201,7 @@ Page({
       return;
     }
     // 判断是否存在分享者
-    let shareUserId = this.data.shareUserId;
+    let shareUserId = app.globalData.shareUserId;
     if (shareUserId != null && shareUserId != "" && shareUserId > 0) {
       appointForm.shareUserId = shareUserId;
     }
