@@ -3,7 +3,9 @@ package com.xinyu.idol.service.remote;
 
 import com.xinyu.idol.config.EnvironmentMatchMap;
 import com.xinyu.idol.pojo.dto.GuidListDto;
+import com.xinyu.idol.pojo.dto.InnerClassificationDto;
 import com.xinyu.idol.pojo.dto.InnerResourceDto;
+import com.xinyu.idol.pojo.entity.ClassificationsEntity;
 import com.xinyu.idol.pojo.entity.ContentEntity;
 import com.xinyu.idol.utils.OkHttpUtil;
 import org.apache.commons.collections4.CollectionUtils;
@@ -23,6 +25,8 @@ public class ContentResourceRemote {
 
     private static String listResourceMapping="/inner/listByGuids";
 
+    private static String listAllClassifications="/inner/listAllClassifications";
+
     public List<ContentEntity> getByGuidList(List<String> guidList,String env){
         if(CollectionUtils.isEmpty(guidList)){
             return new ArrayList<>();
@@ -36,6 +40,22 @@ public class ContentResourceRemote {
         Assert.notNull(innerResourceDto,"innerResourceDto非空");
 
         return innerResourceDto.getContentEntityList();
+
+    }
+
+    public List<ClassificationsEntity> getByClassificationIdList(String dev){
+//        if(CollectionUtils.isEmpty(classificationIdList)){
+//            return new ArrayList<>();
+//        }
+        String domain = environmentMatchMap.getDomain(dev);
+
+        String reqUrl=domain+listAllClassifications;
+
+        InnerClassificationDto innerClassificationDto = OkHttpUtil.<InnerClassificationDto>postJsonAndToBean(reqUrl, null, InnerClassificationDto.class);
+
+        Assert.notNull(innerClassificationDto,"innerClassificationDto非空");
+
+        return innerClassificationDto.getClassificationsEntityList();
 
     }
 }

@@ -1,9 +1,12 @@
 package com.xinyu.idol.service.impl;
 
+import cn.hutool.json.JSON;
+import cn.hutool.json.JSONUtil;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.CredentialsProviderFactory;
 import com.aliyun.oss.common.auth.EnvironmentVariableCredentialsProvider;
+import com.aliyun.oss.model.CopyObjectResult;
 import com.aliyun.oss.model.ObjectMetadata;
 import com.aliyun.oss.model.PutObjectResult;
 import com.aliyuncs.exceptions.ClientException;
@@ -46,10 +49,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -76,7 +77,6 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
     private IClassificationsService classificationsService;
 
 
-
     @Autowired
     private OSS oss;
 
@@ -84,8 +84,12 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
     private EnvironmentMatchMap environmentMatchMap;
 
     @Value("${aliyun.oss.bucket}")
-    String bucketName = "content-resource-dev";
-    
+    String bucketName;
+
+    @Value("${aliyun.oss.last-bucket}")
+    String lastBucket;
+
+
     @Autowired
     private ContentResourceRemote contentResourceRemote;
 
@@ -170,6 +174,9 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
             ClassificationsEntity classification3Entity = longClassificationsEntityMap.getOrDefault(contentEntity.getClassification3(), new ClassificationsEntity());
             BeanUtils.copyProperties(classification3Entity, classificationRow3);
             pageContentResp.setClassification3Row(classificationRow3);
+            pageContentResp.setTestDiff("2");
+            pageContentResp.setPreDiff("2");
+            pageContentResp.setOnlineDiff("2");
 
             pageContentRespList.add(pageContentResp);
         }
@@ -228,65 +235,105 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
         oss.putObject(bucketName, wholePath, multipartFile.getInputStream());
 
 
-        return FileUploadResp.builder().ossKey("/"+wholePath).fileSize(String.valueOf(size)).build();
+        return FileUploadResp.builder().ossKey("/" + wholePath).fileSize(String.valueOf(size)).build();
     }
 
     @Override
-    public OriginUploadResp uploadOrigins(List<MultipartFile> multipartFileList) throws  IOException {
+    public OriginUploadResp uploadOrigins(List<MultipartFile> multipartFileList) throws IOException {
         Assert.notNull(multipartFileList, "multipartFile非空");
 
-        FileUploadResp fileUploadResp=new FileUploadResp();
+        FileUploadResp fileUploadResp = new FileUploadResp();
 
         String rootPath = "origin";
 
-        List<String>ossKeyList=new ArrayList<>();
+        List<String> ossKeyList = new ArrayList<>();
 
-        StringBuffer ossKeyListStr=new StringBuffer();
+        StringBuffer ossKeyListStr = new StringBuffer();
 
-        String timestampStr=String.valueOf(DateUtils.dateTimeNow());
+        String timestampStr = String.valueOf(DateUtils.dateTimeNow());
 
-        for (MultipartFile multipartFile:multipartFileList) {
+        for (MultipartFile multipartFile : multipartFileList) {
 
-            String wholePath=rootPath+"/"+timestampStr+"/"+multipartFile.getOriginalFilename();
+            String wholePath = rootPath + "/" + timestampStr + "/" + multipartFile.getOriginalFilename();
 
             ObjectMetadata metadata = new ObjectMetadata();
             // 指定Content-Type
 
             metadata.setContentType("application/octet-stream");
 
-            oss.putObject(bucketName, wholePath, multipartFile.getInputStream(),metadata);
+            oss.putObject(bucketName, wholePath, multipartFile.getInputStream(), metadata);
 
-            log.info("批量上传oss路径:{}",wholePath);
+            log.info("批量上传oss路径:{}", wholePath);
 
-            ossKeyListStr.append("/"+wholePath+",");
+            ossKeyListStr.append("/" + wholePath + ",");
 
-            ossKeyList.add("/"+wholePath);
+            ossKeyList.add("/" + wholePath);
         }
         return OriginUploadResp.builder().ossKeyListStr(ossKeyListStr.toString()).ossKeyList(ossKeyList).build();
     }
 
     @Override
     public void pullResourceFromEnv(PullResourceFromEnvReq pullResourceFromEnvReq) {
-        Assert.notNull(pullResourceFromEnvReq,"pullResourceFromEnvReq非空");
-        if(StringUtils.isEmpty(pullResourceFromEnvReq.getFromEnv())){
+        Assert.notNull(pullResourceFromEnvReq, "pullResourceFromEnvReq非空");
+        if (StringUtils.isEmpty(pullResourceFromEnvReq.getFromEnv())) {
             throw new RuntimeException("fromEnv异常");
         }
 
-        if(CollectionUtils.isEmpty(pullResourceFromEnvReq.getGuidList())){
+        if (CollectionUtils.isEmpty(pullResourceFromEnvReq.getGuidList())) {
             throw new RuntimeException("guidList异常");
         }
-        //获取对应fromEnv的域名
-        String domain = environmentMatchMap.getDomain(pullResourceFromEnvReq.getFromEnv());
 
         //用guidList查询资源列表
-        List<ContentEntity> byGuidList = contentResourceRemote.getByGuidList(pullResourceFromEnvReq.getGuidList(), pullResourceFromEnvReq.getFromEnv());
+        List<ContentEntity> contentListRemote = contentResourceRemote.getByGuidList(pullResourceFromEnvReq.getGuidList(), pullResourceFromEnvReq.getFromEnv());
 
-       //byGuidList.get(0);
+        //byGuidList.get(0);
         //与本地资源列表进行对比，将特征重复筛选掉
+        List<ContentEntity> contentListLocal = contentManager.listByGuidList(pullResourceFromEnvReq.getGuidList());
+        Map<Long, ContentEntity> localMapByGuid = contentListLocal.stream().collect(Collectors.toMap(ContentEntity::getGuid, it -> it));
 
+        List<ContentEntity> contentListToCopyBucket = new ArrayList<>();
+
+        contentListRemote.forEach(it -> {
+            //存在且identifier相同时跳过处理，其他情况存入contentListToUpdate
+            if (localMapByGuid.containsKey(it.getGuid())) {
+                if (StringUtils.equals(localMapByGuid.get(it.getGuid()).getIdentifier(), it.getIdentifier())) {
+                    return;
+                }
+            }
+            contentListToCopyBucket.add(it);
+        });
+        Set<String>classificationIdSet=new HashSet<>();
         //遍历数组，数组里每个值进行下载和插入db
-
-        //
+        for (ContentEntity contentEntity : contentListToCopyBucket) {
+            String osskeyJson = contentEntity.getOsskeyList();
+            JSON jsonMap = JSONUtil.parse(osskeyJson);
+            //copy android
+            String androidPath = (String) jsonMap.getByPath("android");
+            oss.copyObject(lastBucket, androidPath, bucketName, androidPath);
+            //copy ios
+            String iosPath = (String) jsonMap.getByPath("ios");
+            oss.copyObject(lastBucket, iosPath, bucketName, iosPath);
+            //copy icon
+            String iconOsskey = contentEntity.getIconOsskey();
+            oss.copyObject(lastBucket, iconOsskey, bucketName, iconOsskey);
+            if(oss.doesObjectExist(bucketName,androidPath)&&oss.doesObjectExist(bucketName,iosPath)&&oss.doesObjectExist(bucketName,iconOsskey)){
+                log.info("拷贝oss数据完成");
+            }else{
+                log.error("拷贝oss数据失败");
+                throw new RuntimeException("数据拷贝异常");
+            }
+            //判断哪些数据需要插入，哪些需要更新
+            if(localMapByGuid.containsKey(contentEntity.getGuid())){
+                contentManager.updateByGuid(contentEntity);
+            }else{
+                contentEntity.setId(null);
+                contentEntity.setCreateTime(null);
+                contentEntity.setUpdateTime(null);
+                contentManager.insert(contentEntity);
+            }
+            //远程请求分类表
+            updateAllClassifications();
+        }
 
 
 
@@ -295,9 +342,20 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
 
     @Override
     public InnerResourceDto listByGuidList(GuidListDto guidListDto) {
-        Assert.notNull(guidListDto,"guidListDto非空");
+        Assert.notNull(guidListDto, "guidListDto非空");
         List<ContentEntity> contentEntityList = contentManager.listByGuidList(guidListDto.getGuidList());
         return InnerResourceDto.builder().contentEntityList(contentEntityList).build();
+
+    }
+
+
+
+    public void updateAllClassifications(){
+        List<ClassificationsEntity> classificationList = contentResourceRemote.getByClassificationIdList("dev");
+        classificationsService.updateBatchById(classificationList);
+        classificationsService.insertListSkip(classificationList);
+
+
 
     }
 

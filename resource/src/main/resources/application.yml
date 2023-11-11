@@ -158,10 +158,12 @@ aliyun:
     bucket: idol-stage-dev
     endpoint: oss-cn-beijing.aliyuncs.com
     domain: https://idol-stage-dev.oss-cn-beijing.aliyuncs.com
+    last-bucket:  idol-stage-dev
 
 environment-match:
   domains:
-    dev: http://10.10.0.5:30083
+    dev: http://10.10.0.5:30081
+    #dev: http://127.0.0.1:8081
     test: http://10.10.0.5:30083
     pre: http://10.10.0.5:30083
     prod: http://10.10.0.5:30083

@@ -8,6 +8,7 @@ import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.common.auth.CredentialsProviderFactory;
+import com.aliyun.oss.model.CopyObjectResult;
 import com.aliyun.oss.model.PutObjectRequest;
 import com.aliyun.oss.model.PutObjectResult;
 import com.aliyuncs.auth.EnvironmentVariableCredentialsProvider;
@@ -18,6 +19,8 @@ import com.xinyu.idol.framework.web.service.TokenService;
 import com.xinyu.idol.manager.ContentManager;
 import com.xinyu.idol.pojo.entity.ContentEntity;
 import com.xinyu.idol.pojo.vo.AddContentVo;
+import com.xinyu.idol.service.IClassificationsService;
+import com.xinyu.idol.service.IContentService;
 import org.apache.commons.lang3.ObjectUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,6 +92,9 @@ class ResourceApplicationTests {
     @Autowired
     RedisCache redisCache;
 
+    @Autowired
+    private OSS oss;
+
 
     @Test
     void testRedisQueue(){
@@ -127,9 +133,24 @@ class ResourceApplicationTests {
 
         System.out.println(JSON.toJSONString(addContentVo));
 
+    }
+    @Test
+    void testCopyBucket(){
+        String androidPath = "resource/1112471/fec561c95c0320f1860c0d55a8724cd45e5cc238";
 
+        String bucketName="idol-stage-test";
 
+        String lastBucket="idol-stage-dev";
 
+        CopyObjectResult copyObjectResult = oss.copyObject(lastBucket, androidPath, bucketName, androidPath);
+        copyObjectResult.getETag();
+    }
+
+    @Autowired
+    IContentService contentService;
+    @Test
+    void testUpdateAllClassifications(){
+        contentService.updateAllClassifications();
     }
 
     @Autowired

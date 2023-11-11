@@ -61,4 +61,7 @@ public interface IContentService extends IService<ContentEntity> {
     InnerResourceDto listByGuidList(GuidListDto guidListDto);
 
 
+     void updateAllClassifications();
+
+
 }

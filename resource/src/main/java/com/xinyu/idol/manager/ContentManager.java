@@ -76,4 +76,6 @@ public class ContentManager {
         Assert.notNull(guidList,"guidList非空");
         return contentMapper.listOrderByField(guidList);
     }
+
+
 }

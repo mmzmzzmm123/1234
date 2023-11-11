@@ -3,6 +3,7 @@ package com.xinyu.idol.service.impl;
 import com.xinyu.idol.common.utils.StringUtils;
 import com.xinyu.idol.common.utils.bean.BeanUtils;
 import com.xinyu.idol.manager.ClassificationManager;
+import com.xinyu.idol.pojo.dto.InnerClassificationDto;
 import com.xinyu.idol.pojo.entity.ClassificationsEntity;
 import com.xinyu.idol.mapper.ClassificationsMapper;
 import com.xinyu.idol.pojo.vo.ClassificationsReq;
@@ -87,4 +88,23 @@ public class ClassificationsServiceImpl extends ServiceImpl<ClassificationsMappe
 
         return classificationsEntityMap;
     }
+
+    @Override
+    public void addOrUpdateClassifications(List<ClassificationsEntity> classificationsList) {
+
+    }
+
+    @Override
+    public InnerClassificationDto listAll() {
+        return InnerClassificationDto.builder().classificationsEntityList(classificationManager.selectAllClassifications()).build();
+    }
+
+    @Override
+    public void insertListSkip(List<ClassificationsEntity> classificationsList) {
+        Assert.notNull(classificationsList,"classificationsList非空");
+        classificationManager.insertIgnore(classificationsList);
+
+    }
+
+
 }

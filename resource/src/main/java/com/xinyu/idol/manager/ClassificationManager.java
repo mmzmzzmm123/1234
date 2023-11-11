@@ -8,6 +8,7 @@ import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -34,6 +35,13 @@ public class ClassificationManager {
 
         List<ClassificationsEntity> classificationsEntityList = classificationsMapper.selectList(new QueryWrapper<ClassificationsEntity>());
         return classificationsEntityList;
+    }
+
+    public void insertIgnore(List<ClassificationsEntity>classificationsEntityList) {
+        if (CollectionUtils.isEmpty(classificationsEntityList)) {
+            return;
+        }
+        classificationsMapper.insertListIgnore(classificationsEntityList);
     }
 
 

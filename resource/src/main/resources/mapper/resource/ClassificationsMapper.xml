@@ -2,4 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.xinyu.idol.mapper.ClassificationsMapper">
 
+    <insert id="insertListIgnore" parameterType="java.util.List" >
+        insert ignore  into t_classifications
+        (id, `name`, parent_id, order_num, `status`, `level`, english_name)
+        values
+
+        <foreach collection="classificationsEntityList" item="classification" index="index" separator=",">
+                (
+                 #{classification.id},#{classification.name},
+                 #{classification.parentId},#{classification.orderNum},#{classification.status},#{classification.level},#{classification.englishName}
+            )
+        </foreach>
+    </insert>
 </mapper>
