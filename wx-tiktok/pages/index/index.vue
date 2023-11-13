@@ -1,40 +1,64 @@
 <template>
 	<view>
 		<ad-swiper></ad-swiper>
-		<view class="u-p-h-20">
-			<view class="menu">
-				<navigator class="menu-item" url="../receipt-consume/index">
-					<view class="menu-item_icon">
-						<text class="iconfont icon-meituan"></text>
-					</view>
-					<view class="menu-item_title">美团验券</view>
-				</navigator>
-				<navigator class="menu-item" url="../recharge/shop-list/index">
-					<view class="menu-item_icon">
-						<text class="iconfont icon-huiyuan"></text>
-					</view>
-					<view class="menu-item_title">会员充值</view> 
-				</navigator>
-			</view>
-			<navigator url="/pages/join/index">
-				<image class="join-img" mode="aspectFit" src="https://www.foreverjade.cn/prod-api/profile/upload/2023/09/15/微信图片_20230915105636_20230915105822A013.jpg"></image>
-			</navigator>			
-			<view class="search-bar">
-				<u-input prefix-icon="search" placeholder="搜索门店" v-model="queryParam.keyword" @input="onKeywordInput"></u-input>
-				<view class="search-bar_more" @click="onToShopList">
-					更多门店
-				</view>
-				<u-icon name="arrow-right" size="26rpx" @click="onToShopList"></u-icon>
-			</view>
-			<view>
-				<shop-cell v-for="store in storeList" :key="store.id" :shopInfo="store"></shop-cell>
-			</view>
+		<view class="form">
+			<u-form label-width="auto" :model="model" label-position="top">
+				<u-form-item label="是否已选好场地" prop="placeReady" required :borderBottom="false">
+					<u-radio-group v-model="model.placeReady">
+						<u-radio label="是" name="是"></u-radio>
+						<u-radio label="否" name="否"></u-radio>
+					</u-radio-group>
+				</u-form-item>
+				<u-form-item label="预计开店预算" prop="budget" required :borderBottom="false">
+					<u-radio-group v-model="model.budget">
+						<u-radio label="2-5万" name="2-5万"></u-radio>
+						<u-radio label="5-10万" name="5-10万"></u-radio>
+						<u-radio label="10-20万" name="10-20万"></u-radio>
+						<u-radio label="20-30万" name="20-30万"></u-radio>
+						<u-radio label="30万以上" name="30万以上"></u-radio>
+					</u-radio-group>
+				</u-form-item>
+				<u-form-item label="是否有来十三将体验或考察过" prop="isExperience" required>
+					<u-radio-group v-model="model.isExperience">
+						<u-radio label="是" name="是"></u-radio>
+						<u-radio label="否" name="否"></u-radio>
+					</u-radio-group>
+				</u-form-item>
+				<u-form-item label="希望开展哪些业务" prop="expBusiness" required>
+					<u-radio-group v-model="model.expBusiness">
+						<u-radio label="自助棋牌" name="自助棋牌"></u-radio>
+						<u-radio label="自助台球" name="自助台球"></u-radio>
+						<u-radio label="棋牌+台球" name="棋牌+台球"></u-radio>
+					</u-radio-group>
+				</u-form-item>
+				<u-form-item label="之前是否有联系过其他十三将客服" prop="isContact" required>
+					<u-radio-group v-model="model.isContact">
+						<u-radio label="是" name="是"></u-radio>
+						<u-radio label="否" name="否"></u-radio>
+					</u-radio-group>
+				</u-form-item>
+				<u-form-item label="所在城市" prop="city" required>
+					<u-input v-model="model.city" placeholder="请输入所在城市"></u-input>
+				</u-form-item>
+				<u-form-item label="姓名" prop="name" required>
+					<u-input v-model="model.name" placeholder="请输入姓名"></u-input>
+				</u-form-item>
+				<u-form-item label="联系方式" prop="phone" required>
+					<u-input v-model="model.phone" placeholder="请输入联系方式"></u-input>
+				</u-form-item>
+				<u-form-item label="详细地址" prop="address" required>
+					<u-input v-model="model.address" placeholder="请输入详细地址"></u-input>
+				</u-form-item>
+				<u-form-item label="留言" prop="remark">
+					<u-textarea v-model="model.remark" placeholder="请输入留言"></u-textarea> 
+				</u-form-item>
+			</u-form>
 		</view>
-		<tool-bar :hidden="hiddenToolBar"></tool-bar>
-		<require-authorize></require-authorize>
-		<u-modal :show="showTongzhi" title="公告" @confirm="tongzhiReaded = true" confirmText="我知道了">
-			<rich-text :nodes="tongzhi"></rich-text>
-		</u-modal>
+		<view class="edit-bottom-bar-holder"></view>
+		<view class="edit-bottom-bar">
+			<u-button type="primary" @click="onConfirmClick">确&nbsp;&nbsp;&nbsp;&nbsp;定</u-button>
+			<!-- <u-button type="info" @click="onCancelClick">取消</u-button> -->
+		</view>
 	</view>
 </template>
 
@@ -42,191 +66,34 @@
 	export default {
 		data() {
 			return {
-				hiddenToolBar: false,
-				queryParam: {
-					keyword: '',
-					pageNum: 1,
-					pageSize: 10,
-					lon: 0,
-					lat: 0
+				model: {
+					city:'',
+					name: '',
+					phone: '',
+					remark: '',
 				},
-				storeList: [],
-				total: 0,
-				
-				tongzhiReaded: false
 			}
-		},
-		computed: {
-			hasLogin(){
-				return this.$store.state.hasLogin
-			},
-			loginUser(){
-				return this.$store.state.loginUser
-			},
-			canLocation(){
-				return this.$store.state.canLocation
-			},
-			tongzhi(){
-				const value = this.$store.state.shouyetongzhi
-				return value
-			},
-			showTongzhi(){
-				return this.tongzhi && !this.tongzhiReaded
-			}
-		},
-		// watch: {
-		// 	canLocation(newVal){
-		// 		if(newVal){
-		// 			this.refresh()
-		// 		}
-		// 	}
-		// },
-		onLoad() {
-			this.$store.dispatch("getLocation").then(location=>{
-				this.refresh()
-			})
-		},
-		onShareAppMessage() {
-			return {
-				title: '十三将火热招新，欢迎体验！',
-				path: '/pages/index/index',
-				imageUrl: 'https://lineorder.oss-cn-hangzhou.aliyuncs.com/images/shisanjiang.jpg'
-			}
-		},
-		onPullDownRefresh() {
-			if(this.$store.state.canLocation){
-				this.$store.dispatch("getLocation").then(location=>{
-					this.refresh()
-				})
-			}else{
-				uni.showModal({
-					title: "授权提示",
-					content: "未授权小程序获取定位信息，点击确定手动授权",
-					success: res=>{
-						if(res.confirm){
-							uni.openSetting({
-								success: setRes=>{
-									if(setRes.authSetting['scope.userFuzzyLocation']){
-										this.$store.commit("setCanLocation", true)
-										this.$store.dispatch("getLocation").then(location=>{
-											this.refresh()
-										})
-									}
-								},
-								fail(res) {
-									this.refresh()
-									console.log(res)
-								}
-							})
-						}else{
-							this.refresh()
-						}
-					}
-				})
-			}
-		},
-		onReachBottom() {
-			if(this.storeList.length < this.total){
-				this.refresh(true)
-			}
-		},
-		onPageScroll() {
-			this.$u.throttle(()=>{
-				this.hiddenToolBar = true
-			}, 400, true)
-			this.$u.debounce(()=>{
-				this.hiddenToolBar = false
-			}, 200)
 		},
 		methods: {
-			refresh(nextPage){
-				console.log('refreshShopList')
-				const location = this.$store.state.location
-				if(location){
-					this.queryParam.lat = location.latitude
-					this.queryParam.lon = location.longitude
-				}
-				if(nextPage){
-					this.queryParam.pageNum++
-				}else{
-					this.queryParam.pageNum = 1
-				}
-				this.$api.getStoreList(this.queryParam).then(res=>{
-					uni.stopPullDownRefresh()
-					if(!location){
-						res.rows.forEach(x=>x.meters=null)
-					}
-					if(nextPage){
-						this.storeList.push(...res.rows)
-					}else{
-						this.storeList = res.rows
-					}
-					this.total = res.total
+			onConfirmClick(){
+					this.$api.addJoinUs(this.model).then(this.onSuccess).catch(()=>{
+						this.$u.toast('请完善加盟信息')
 				})
 			},
-			onKeywordInput(keyword){
-				this.$u.debounce(this.refresh, 400)
+			onSuccess(){
+				this.$u.toast('发送成功')
+				// this.getOpenerEventChannel().emit('refresh')
+				uni.navigateBack()
 			},
-			onToShopList(){
-				uni.navigateTo({
-					url: '/pages/shop/shop-list'
-				})
-			}
+			onCancelClick(){
+				uni.navigateBack()
+			},
 		}
 	}
 </script>
 
-<style lang="scss">
-	page{
-		background-color: $u-bg-color;
-	}
-	.menu{
-		display: flex;
-		justify-content: space-between;
-		&-item{
-			display: flex;
-			width: 340rpx;
-			align-items: center;
-			background: #fff;
-			border-radius: 20rpx;
-			margin-top: 20rpx;
-			&_icon{
-				margin: 20rpx;
-				height: 100rpx;
-				width: 100rpx;
-				text-align: center;
-				line-height: 100rpx;
-				background: $u-primary-light;
-				border-radius: 10rpx;
-				.iconfont{
-					font-size: 60rpx;
-					color: $u-bright;
-				}
-			}
-			&_title{
-				flex: 1;
-				color: $u-content-color;
-			}
-		}
-	}
-	.search-bar{
-		display: flex;
-		margin-top: 20rpx;
-		align-items: center;
-		&_more{
-			margin-left: 20rpx;
-			font-size: 26rpx;
-			color: $u-content-color;
-		}
-	}
-	rich-text{
-		max-height: 750rpx;
-		overflow: auto;
-	}
-	.join-img{
-		margin-top: 20rpx;
-		width: 710rpx;
-		border-radius: 20rpx;
-		height: 284rpx;
-	}
+<style>
+.u-form-item{
+	border-bottom: none!important;
+}
 </style>
