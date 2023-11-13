@@ -1,0 +1,92 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 4112013 */
+  src: url('/static/common/css/iconfont.woff2') format('woff2')
+}
+
+.iconfont {
+  position: relative;
+  display: inline-block;
+  font-family: "iconfont" !important;
+  font: normal normal normal 14px/1;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #606266;
+}
+
+.icon-checkbox-blank:before {
+  content: "\e633";
+}
+
+.icon-checkbox:before {
+  content: "\e632";
+}
+
+.icon-fenxiang:before {
+  content: "\e631";
+}
+
+.icon-xufei:before {
+  content: "\e629";
+}
+
+.icon-xushi:before {
+  content: "\e630";
+}
+
+.icon-fuwuxieyi:before {
+  content: "\e628";
+}
+
+.icon-yinsixieyi:before {
+  content: "\e627";
+}
+
+.icon-liwu:before {
+  content: "\e626";
+}
+
+.icon-vip:before {
+  content: "\e625";
+}
+
+.icon-huiyuan:before {
+  content: "\e624";
+}
+
+.icon-meituan:before {
+  content: "\e623";
+}
+
+.icon-dingdan:before {
+  content: "\e622";
+}
+
+.icon-shop:before {
+  content: "\e621";
+}
+
+.icon-geren:before {
+  content: "\e620";
+}
+
+.icon-fuli:before {
+  content: "\e619";
+}
+
+.icon-call:before {
+  content: "\e618";
+}
+
+.icon-kaimen:before {
+  content: "\e617";
+}
+
+.icon-zhuo:before {
+  content: "\e616";
+}
+
+.icon-daohang:before {
+  content: "\e615";
+}
+

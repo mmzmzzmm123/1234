@@ -1,0 +1,15 @@
+.rect{
+	height: 25rpx;
+	width: 25rpx;
+	border-radius: 4rpx;
+	background: #d2e6e3;
+}
+.rect--fill{
+	background: #f40d3f;
+}
+.rect--current{
+	background: $u-success;
+}
+.rect--error{
+	background: $u-warning;
+}
