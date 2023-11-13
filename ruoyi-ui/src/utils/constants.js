@@ -20,7 +20,7 @@ export const categoryType = [ // 1 产品分类，2 附件分类，3 文章分�
 
 export const picModules = ['course','gauge','zx']
 
-export const picTypes = ['class','banner','item','section','avatar','other','column','team','questions']
+export const picTypes = ['class','banner','item','section','avatar','other','column','team','questions','company']
 
 export const wList = [
   { label: '上班', value: '0' },
@@ -103,10 +103,10 @@ export const logName = [
 ]
 
 export const gaugeCompute = [
-  { label: '普通计算', value: 1 },
-  { label: '多维计算', value: 2 },
+  { label: '分数累加', value: 1 },
+  { label: '多维累加', value: 2 },
   { label: 'MBTI', value: 3 },
-  { label: 'SDS', value: 4 },
+  { label: '分数比率换算', value: 4 },
   // { label: 'SAS', value: 5 },
   // { label: 'SCL-90', value: 6 },
   // { label: '儿童智力', value: 7 },

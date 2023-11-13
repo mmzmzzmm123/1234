@@ -592,7 +592,7 @@ export default {
   }
   .info-last-val {
     width: 300upx;
-    color: rgba(255,112,63,1);
+    color: #FF703F;
     font-size: 24upx;
     text-align: left;
   }
@@ -633,7 +633,7 @@ export default {
   width: 281upx;
   height: 33upx;
   overflow-wrap: break-word;
-  color: rgba(255,112,63,1);
+  color: #FF703F;
   font-size: 24upx;
   font-family: PingFangSC-Regular;
   font-weight: normal;
@@ -756,7 +756,7 @@ export default {
   top: 0upx;
   width: 20upx;
   height: 20upx;
-  border: 2px solid rgba(255,112,63,1);
+  border: 2px solid #FF703F;
   display: flex;
   flex-direction: column;
   z-index: 9;

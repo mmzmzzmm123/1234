@@ -39,15 +39,17 @@
         <view class="section-time-group2">
           <text class="section-time-group-text2">预约时间</text>
           <view class="image-text_1">
-            <text class="section-time-group-text3" @tap="open">{{ workName !== '' ? workName : '点击选择预约时间' }} ></text>
+            <text class="section-time-group-text3" @tap="open">{{ workName !== '' ? workName : '点击选择预约时间（非必选）' }} ></text>
           </view>
         </view>
       </view>
       <view class="section-reader">
         <checkbox-group @change="checkboxChange">
-          <checkbox class="section-reader-box" color="#FF703F" value="ok" :checked="checkBox">
+          <label class="block flex align-center">
+            <checkbox class="orange round" value="ok" :class="checkBox === 'ok'?'checked':''"  :checked="checkBox === 'ok'"/>
+<!--            <checkbox class="orange" :class="checkBox === 'ok'?'checked':''"  value="ok" :checked="checkBox === 'ok'"/>-->
             <text class="section-reader-group-text1">我同意</text>
-          </checkbox>
+          </label>
         </checkbox-group>
         <view class="section-reader-group">
           <text class="section-reader-group-text2" @tap="openNotice">《心理咨询服务协议》</text>
@@ -111,7 +113,7 @@ export default {
       workId: 0,
       workName: '',
       flag: false,
-      checkBox: false,
+      checkBox: '',
       notice: {},
       userInfo: {},
       tabs: [],
@@ -565,7 +567,8 @@ export default {
   .section-reader-group-text1 {
     //width: 320upx;
     color: #333333;
-    font-size: 20px;
+    margin-left: 20upx;
+    //font-size: 20px;
     //line-height: 44upx;
   }
   .section-reader-group {

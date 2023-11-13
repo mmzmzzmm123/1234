@@ -255,7 +255,7 @@ export default {
 .tab-active {
   /*width: 64upx;*/
   height: 45upx;
-  color: rgba(255,112,63,1);
+  color: #FF703F;
   font-size: 32upx;
   font-family: PingFangSC-Semibold;
   font-weight: 600;

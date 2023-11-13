@@ -118,8 +118,8 @@ export default {
   border-radius: 25upx;
   height: 50upx;
   line-height: 50upx;
-  border: 1px solid rgba(255,112,63,1);
-  color: rgba(255,112,63,1);
+  border: 1px solid #FF703F;
+  color: #FF703F;
   font-size: 24upx;
   text-align: center;
   position: absolute;

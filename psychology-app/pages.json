@@ -17,6 +17,70 @@
       }
     },
     {
+      "path": "pages/consult/toPartner/start",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "壹加壹心理",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/consult/toPartner/notice",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "壹加壹心理",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/consult/toPartner/compact",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "壹加壹心理",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/consult/toPartner/step1",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "壹加壹心理",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/consult/toPartner/step2",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "壹加壹心理",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/consult/toPartner/step3",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "壹加壹心理",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/consult/toPartner/step4",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "壹加壹心理",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/consult/toPartner/result",
+      "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "壹加壹心理",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
       "path": "pages/evaluation/index",
       "style": {
         "navigationStyle": "custom",

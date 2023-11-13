@@ -263,9 +263,9 @@ export default {
         margin: 1rpx 0 8rpx 16rpx;
       }
       &.selected {
-        background-color: rgba(255,112,63,1);
+        background-color: #FF703F;
         color: #FFFFFF;
-        border: 1px solid rgba(255,112,63,1);
+        border: 1px solid #FF703F;
         .time-item-tag-text,
         .time-item-tag-text2 {
           color: #FFFFFF;
@@ -302,7 +302,7 @@ export default {
       width: 339upx;
     }
     .button_2 {
-      background-color: rgba(255,112,63,1);
+      background-color: #FF703F;
       border-radius: 40upx;
       height: 80upx;
       line-height: 80upx;

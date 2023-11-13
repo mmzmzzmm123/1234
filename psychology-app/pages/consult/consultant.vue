@@ -536,7 +536,7 @@ export default {
   width: 88upx;
   height: 30upx;
   overflow-wrap: break-word;
-  color: rgba(255,112,63,1);
+  color: #FF703F;
   font-size: 22upx;
   
   font-weight: normal;

@@ -162,7 +162,7 @@ export default {
   top: 0upx;
   width: 20upx;
   height: 20upx;
-  border: 2px solid rgba(255,112,63,1);
+  border: 2px solid #FF703F;
   display: block;
   z-index: 9;
   text-align: center;
@@ -220,7 +220,7 @@ export default {
   line-height: 34upx;
   margin: 32upx 0 0 24upx;
   text-align: center;
-  color: rgba(255,112,63,1);
+  color: #FF703F;
   font-size: 22upx;
   font-family: PingFangSC-Regular;
   margin: 16upx;

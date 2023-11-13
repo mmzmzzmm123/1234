@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultPartnerItemMapper">
+    
+    <resultMap type="PsyConsultPartnerItem" id="PsyConsultPartnerItemResult">
+        <result property="id"    column="id"    />
+        <result property="pId"    column="p_id"    />
+        <result property="type"    column="type"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="num"    column="num"    />
+        <result property="param1"    column="param1"    />
+        <result property="param2"    column="param2"    />
+        <result property="param3"    column="param3"    />
+        <result property="img"    column="img"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultPartnerItemVo">
+        select id, p_id, type, start_time, end_time, num, param1, param2, param3, img, create_by, create_time, update_by, update_time, status from psy_consult_partner_item
+    </sql>
+
+    <select id="selectPsyConsultPartnerItemList" parameterType="PsyConsultPartnerItem" resultMap="PsyConsultPartnerItemResult">
+        <include refid="selectPsyConsultPartnerItemVo"/>
+        <where>
+            <if test="pId != null "> and p_id = #{pId}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="num != null "> and num = #{num}</if>
+            <if test="param1 != null  and param1 != ''"> and param1 = #{param1}</if>
+            <if test="param2 != null  and param2 != ''"> and param2 = #{param2}</if>
+            <if test="param3 != null  and param3 != ''"> and param3 = #{param3}</if>
+            <if test="img != null  and img != ''"> and img = #{img}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+
+    <select id="selectPsyConsultPartnerItemById" parameterType="Long" resultMap="PsyConsultPartnerItemResult">
+        <include refid="selectPsyConsultPartnerItemVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertPsyConsultPartnerItem" parameterType="PsyConsultPartnerItem">
+        insert into psy_consult_partner_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="pId != null">p_id,</if>
+            <if test="type != null">type,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="num != null">num,</if>
+            <if test="param1 != null">param1,</if>
+            <if test="param2 != null">param2,</if>
+            <if test="param3 != null">param3,</if>
+            <if test="img != null">img,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="pId != null">#{pId},</if>
+            <if test="type != null">#{type},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="num != null">#{num},</if>
+            <if test="param1 != null">#{param1},</if>
+            <if test="param2 != null">#{param2},</if>
+            <if test="param3 != null">#{param3},</if>
+            <if test="img != null">#{img},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyConsultPartnerItem" parameterType="PsyConsultPartnerItem">
+        update psy_consult_partner_item
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pId != null">p_id = #{pId},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="num != null">num = #{num},</if>
+            <if test="param1 != null">param1 = #{param1},</if>
+            <if test="param2 != null">param2 = #{param2},</if>
+            <if test="param3 != null">param3 = #{param3},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+</mapper>

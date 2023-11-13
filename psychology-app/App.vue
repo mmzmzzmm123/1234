@@ -41,6 +41,9 @@ export default {
 </script>
 
 <style>
+@import "colorui/icon.css";
+@import "colorui/main.css";
+
 page {
   background-color: #F8F8F8;
   font-family: Source Han Sans CN, PingFangSC-Regular, PingFang SC;
@@ -60,5 +63,10 @@ page {
   overflow: hidden;
   -webkit-line-clamp: 2;
   text-overflow: ellipsis;
+}
+.psy-box-upload {
+  padding-left: 25upx;
+  padding-bottom: 20upx;
+  box-sizing: border-box;
 }
 </style>

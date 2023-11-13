@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultPartnerMapper">
+
+    <select id="getInfoByUserId" resultType="com.ruoyi.psychology.dto.PartnerDTO">
+        <include refid="selectPsyConsultPartnerVo"/>
+        where user_id = #{userId}
+    </select>
+
+    <resultMap type="PsyConsultPartner" id="PsyConsultPartnerResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="cId"    column="c_id"    />
+        <result property="step"    column="step"    />
+        <result property="type"    column="type"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="wechat"    column="wechat"    />
+        <result property="qq"    column="qq"    />
+        <result property="phone"    column="phone"    />
+        <result property="email"    column="email"    />
+        <result property="city"    column="city"    />
+        <result property="province"    column="province"    />
+        <result property="lang"    column="lang"    />
+        <result property="workHours"    column="work_hours"    />
+        <result property="genre"    column="genre"    />
+        <result property="extGenre"    column="ext_genre"    />
+        <result property="card"    column="card"    />
+        <result property="cardImg"    column="card_img"    />
+        <result property="extraImg"    column="extra_img"    />
+        <result property="status"    column="status"    />
+        <result property="pay"    column="pay"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultPartnerVo">
+        select id, user_id, c_id, step, type, name, sex, wechat, qq, phone, email, city, province, lang, work_hours, genre, ext_genre, card, card_img, extra_img, status, pay, create_by, create_time, update_by, update_time from psy_consult_partner
+    </sql>
+
+    <select id="selectPsyConsultPartnerList" parameterType="PsyConsultPartner" resultMap="PsyConsultPartnerResult">
+        <include refid="selectPsyConsultPartnerVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="cId != null "> and c_id = #{cId}</if>
+            <if test="step != null  and step != ''"> and step = #{step}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sex != null  and sex != ''"> and sex = #{sex}</if>
+            <if test="wechat != null  and wechat != ''"> and wechat = #{wechat}</if>
+            <if test="qq != null  and qq != ''"> and qq = #{qq}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+            <if test="lang != null  and lang != ''"> and lang = #{lang}</if>
+            <if test="workHours != null  and workHours != ''"> and work_hours = #{workHours}</if>
+            <if test="genre != null  and genre != ''"> and genre = #{genre}</if>
+            <if test="card != null  and card != ''"> and card = #{card}</if>
+            <if test="cardImg != null  and cardImg != ''"> and card_img = #{cardImg}</if>
+            <if test="extraImg != null  and extraImg != ''"> and extra_img = #{extraImg}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="pay != null  and pay != ''"> and pay = #{pay}</if>
+        </where>
+    </select>
+
+    <insert id="insertPsyConsultPartner" parameterType="PsyConsultPartner">
+        insert into psy_consult_partner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="cId != null">c_id,</if>
+            <if test="step != null">step,</if>
+            <if test="type != null">type,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="wechat != null">wechat,</if>
+            <if test="qq != null">qq,</if>
+            <if test="phone != null">phone,</if>
+            <if test="email != null">email,</if>
+            <if test="city != null">city,</if>
+            <if test="province != null">province,</if>
+            <if test="lang != null">lang,</if>
+            <if test="workHours != null and workHours != ''">work_hours,</if>
+            <if test="genre != null">genre,</if>
+            <if test="card != null">card,</if>
+            <if test="cardImg != null">card_img,</if>
+            <if test="extraImg != null">extra_img,</if>
+            <if test="status != null">status,</if>
+            <if test="pay != null">pay,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="cId != null">#{cId},</if>
+            <if test="step != null">#{step},</if>
+            <if test="type != null">#{type},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="wechat != null">#{wechat},</if>
+            <if test="qq != null">#{qq},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="city != null">#{city},</if>
+            <if test="province != null">#{province},</if>
+            <if test="lang != null">#{lang},</if>
+            <if test="workHours != null and workHours != ''">#{workHours},</if>
+            <if test="genre != null">#{genre},</if>
+            <if test="card != null">#{card},</if>
+            <if test="cardImg != null">#{cardImg},</if>
+            <if test="extraImg != null">#{extraImg},</if>
+            <if test="status != null">#{status},</if>
+            <if test="pay != null">#{pay},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyConsultPartner" parameterType="PsyConsultPartner">
+        update psy_consult_partner
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="cId != null">c_id = #{cId},</if>
+            <if test="step != null">step = #{step},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="wechat != null">wechat = #{wechat},</if>
+            <if test="qq != null">qq = #{qq},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="lang != null">lang = #{lang},</if>
+            <if test="workHours != null and workHours != ''">work_hours = #{workHours},</if>
+            <if test="genre != null">genre = #{genre},</if>
+            <if test="card != null">card = #{card},</if>
+            <if test="cardImg != null">card_img = #{cardImg},</if>
+            <if test="extraImg != null">extra_img = #{extraImg},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="pay != null">pay = #{pay},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyConsultPartnerById" parameterType="Long">
+        delete from psy_consult_partner where id = #{id}
+    </delete>
+
+    <delete id="deletePsyConsultPartnerByIds" parameterType="String">
+        delete from psy_consult_partner where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

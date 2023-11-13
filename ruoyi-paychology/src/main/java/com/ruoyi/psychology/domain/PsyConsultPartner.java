@@ -1,0 +1,113 @@
+package com.ruoyi.psychology.domain;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.ruoyi.common.core.domain.BasePlusEntity;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.io.Serializable;
+
+/**
+ * 咨询师入驻申请对象 psy_consult_partner
+ * 
+ * @author ruoyi
+ * @date 2023-11-07
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@TableName("psy_consult_partner")
+public class PsyConsultPartner extends BasePlusEntity implements Serializable
+{
+    private static final long serialVersionUID = 1L;
+
+    /** 主键 */
+    private Long id;
+
+    /** 登录名 */
+    @Excel(name = "登录名")
+    private Integer userId;
+
+    /** 咨询师号 */
+    @Excel(name = "咨询师号")
+    private Long cId;
+
+    /** 步骤1-4 */
+    @Excel(name = "步骤1-4")
+    private Integer step;
+
+    /** 申请类型1-4 */
+    @Excel(name = "申请类型1-4")
+    private Integer type;
+
+    /** 姓名 */
+    @Excel(name = "姓名")
+    private String name;
+
+    /** 用户性别（0男 1女 2未知） */
+    @Excel(name = "用户性别", readConverterExp = "0=男,1=女,2=未知")
+    private Integer sex;
+
+    /** wechat */
+    @Excel(name = "wechat")
+    private String wechat;
+
+    /** qq */
+    @Excel(name = "qq")
+    private String qq;
+
+    /** 手机号码 */
+    @Excel(name = "手机号码")
+    private String phone;
+
+    /** 用户邮箱 */
+    @Excel(name = "用户邮箱")
+    private String email;
+
+    /** 城市 */
+    @Excel(name = "城市")
+    private String city;
+
+    /** 省份 */
+    @Excel(name = "省份")
+    private String province;
+
+    /** 语种 */
+    @Excel(name = "语种")
+    private String lang;
+
+    /** 从业时间 */
+    @Excel(name = "从业时间")
+    private Integer workHours;
+
+    /** 咨询流派 */
+    @Excel(name = "咨询流派")
+    private String genre;
+    private String extGenre;
+
+    /** 证件类型 */
+    @Excel(name = "证件类型")
+    private String card;
+
+    /** 证件照 */
+    @Excel(name = "证件照")
+    private String cardImg;
+
+    /** 资质证明 */
+    @Excel(name = "资质证明")
+    private String extraImg;
+
+    /** 0-草稿,1-审核中,2-审核通过-已开通账号,3-审核通过-未开通账号,4-审核驳回 */
+    @Excel(name = "0-草稿,1-审核中,2-审核通过-已开通账号,3-审核通过-未开通账号,4-审核驳回")
+    private String status;
+
+    /** 0-未缴费,1-已缴费 */
+    @Excel(name = "0-未缴费,1-已缴费")
+    private String pay;
+
+}

@@ -204,7 +204,7 @@ export default {
     //width: 57upx;
     height: 78upx;
 
-    color: rgba(255,112,63,1);
+    color: #FF703F;
     font-size: 56upx;
     font-family: PingFangSC-Semibold;
     font-weight: 600;
@@ -218,7 +218,7 @@ export default {
     line-height: 50upx;
     background: #FFE4DB;
     border-radius: 25upx;
-    color: rgba(255,112,63,1);
+    color: #FF703F;
     font-size: 30upx;
     text-align: center;
     margin-top: 4upx;

@@ -109,6 +109,9 @@ export default {
     }
 
     this.productInfo = await productServer.getProductInfo(this.productId);
+    // #ifdef H5
+    utils.share(this.productInfo.title, '', this.productInfo.listShowPicture)
+    // #endif
     this.payBoxShow = utils.getParam(location.href, "payOrder") == 1;
 
     uni.setNavigationBarTitle({
