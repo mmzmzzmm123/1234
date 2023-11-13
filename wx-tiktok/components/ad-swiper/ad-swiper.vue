@@ -24,7 +24,7 @@
 		},
 		data() {
 			return {
-				adList: null
+				adList: [{img: 'https://foreverjade.cn/prod-api/profile/upload/2023/10/13/%E5%9B%BD%E6%BD%AE%E5%B0%8F_20231013110752A007.jpg'}]
 			}
 		},
 		computed: {
@@ -37,7 +37,7 @@
 			}
 		},
 		created() {
-			this.refresh()
+			//this.refresh()
 		},
 		methods: {
 			refresh(){

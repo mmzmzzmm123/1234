@@ -68,7 +68,9 @@
 	right: 0;
 	padding: 0 0 20rpx 20rpx;
 	background: #fff;
-	.u-button{
+	z-index: 2;
+	&__btn{
+		flex: 1;
 		margin-right: 20rpx;
 	}
 }

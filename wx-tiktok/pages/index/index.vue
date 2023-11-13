@@ -56,7 +56,7 @@
 		</view>
 		<view class="edit-bottom-bar-holder"></view>
 		<view class="edit-bottom-bar">
-			<u-button type="primary" @click="onConfirmClick">确&nbsp;&nbsp;&nbsp;&nbsp;定</u-button>
+			<u-button type="primary" class="edit-bottom-bar__btn" @click="onConfirmClick">确&nbsp;&nbsp;&nbsp;&nbsp;定</u-button>
 			<!-- <u-button type="info" @click="onCancelClick">取消</u-button> -->
 		</view>
 	</view>
@@ -93,6 +93,9 @@
 </script>
 
 <style>
+page{
+	background: #fff;
+}
 .u-form-item{
 	border-bottom: none!important;
 }
