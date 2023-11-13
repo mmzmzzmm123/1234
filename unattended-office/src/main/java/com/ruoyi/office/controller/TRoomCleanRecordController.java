@@ -95,17 +95,19 @@ public class TRoomCleanRecordController extends BaseController {
     /**
      * 保洁主动开始打扫
      */
-    @PreAuthorize("@ss.hasPermi('office:cleanrecord:add')")
+//    @PreAuthorize("@ss.hasPermi('office:cleanrecord:add')")
     @Log(title = "保洁主动开始打扫", businessType = BusinessType.INSERT)
     @PostMapping(value = "/startClean/{id}")
     public AjaxResult startClean(@PathVariable("id") Long id) {
+        //todo
+        //SecurityUtils.getLoginUser().getWxUser()
         return toAjax(tRoomCleanRecordService.insertTRoomCleanRecordByCleaner(id));
     }
 
     /**
      * 保洁主动打扫完毕
      */
-    @PreAuthorize("@ss.hasPermi('office:cleanrecord:add')")
+//    @PreAuthorize("@ss.hasPermi('office:cleanrecord:add')")
     @Log(title = "保洁主动打扫完毕", businessType = BusinessType.INSERT)
     @PostMapping(value = "/finishClean/{id}")
     public AjaxResult finishClean(@PathVariable("id") Long id) {
