@@ -1,11 +1,18 @@
 package com.ruoyi.office.mqtt;
 
+import com.alibaba.fastjson.JSONObject;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.office.domain.TEquipment;
+import com.ruoyi.office.domain.enums.OfficeEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.*;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -68,6 +75,33 @@ public class MqttSendClient {
     /**
      * 发布，默认qos为0，非持久化
      *
+     * @param onOff 开： true 关：false
+     */
+    public void publish(TEquipment equipment, boolean onOff, String pushMessage) {
+        if (StringUtils.isNotEmpty(equipment.getOnOffMsg())) {
+            String[] msgs = equipment.getOnOffMsg().split("," );
+            if (msgs.length != 2) {
+                log.error("设备开关代码配置错误:" + equipment.toString());
+                throw new ServiceException("设备开关代码配置错误" );
+            }
+            Map<String, String> msg = new HashMap<>();
+            if (onOff) {
+                String[] command = msgs[0].split(":");
+                msg.put(command[0], command[1]);
+                publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+            } else {
+                String[] command = msgs[1].split(":");
+                msg.put(command[0], command[1]);
+                publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+            }
+        } else {
+            publish(0, false, equipment.getEquipControl(), pushMessage);
+        }
+    }
+
+    /**
+     * 发布，默认qos为0，非持久化
+     *
      * @param topic       主题名
      * @param pushMessage 消息
      */
@@ -90,17 +124,17 @@ public class MqttSendClient {
         message.setPayload(pushMessage.getBytes());
         MqttTopic mTopic = MqttSendClient.getClient().getTopic(topic);
         if (null == mTopic) {
-            log.error("主题不存在:{}", mTopic);
+            log.error("主题不存在:{}" , mTopic);
         }
         try {
             mTopic.publish(message);
             log.info(topic + "消息发送成功" + pushMessage);
         } catch (MqttException mqttException) {
-            if (mqttException.getMessage().equalsIgnoreCase("Client is not connected")) {
+            if (mqttException.getMessage().equalsIgnoreCase("Client is not connected" )) {
                 connect();
             }
         } catch (Exception e) {
-            log.error("mqtt发送消息异常:", e);
+            log.error("mqtt发送消息异常:" , e);
             log.error(topic + " mqtt发送消息异常 " + pushMessage);
             throw new ServiceException(e.getMessage());
         }

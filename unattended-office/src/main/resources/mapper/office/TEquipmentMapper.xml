@@ -1,42 +1,58 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.office.mapper.TEquipmentMapper">
-    
+
     <resultMap type="TEquipment" id="TEquipmentResult">
-        <result property="id"    column="id"    />
-        <result property="name"    column="name"    />
-        <result property="equipType"    column="equip_type"    />
-        <result property="online"    column="online"    />
-        <result property="onOff"    column="on_off"    />
-        <result property="equipControl"    column="equip_control"    />
-        <result property="recentOpenTime"    column="recent_open_time"    />
-        <result property="status"    column="status"    />
-        <result property="remark"    column="remark"    />
-        <result property="createBy"    column="create_by"    />
-        <result property="createTime"    column="create_time"    />
-        <result property="updateBy"    column="update_by"    />
-        <result property="updateTime"    column="update_time"    />
+        <result property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="equipType" column="equip_type"/>
+        <result property="online" column="online"/>
+        <result property="onOff" column="on_off"/>
+        <result property="onOffMsg" column="on_off_msg"/>
+        <result property="equipControl" column="equip_control"/>
+        <result property="recentOpenTime" column="recent_open_time"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
     </resultMap>
 
     <sql id="selectTEquipmentVo">
-        select id, name, equip_type, online, on_off, equip_control, recent_open_time, status, remark, create_by, create_time, update_by, update_time from t_equipment
+        select id,
+               name,
+               equip_type,
+               online,
+               on_off,
+               on_off_msg,
+               equip_control,
+               recent_open_time,
+               status,
+               remark,
+               create_by,
+               create_time,
+               update_by,
+               update_time
+        from t_equipment
     </sql>
 
     <select id="selectTEquipmentList" parameterType="TEquipment" resultMap="TEquipmentResult">
         <include refid="selectTEquipmentVo"/>
-        <where>  
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="equipType != null  and equipType != ''"> and equip_type = #{equipType}</if>
-            <if test="online != null "> and online = #{online}</if>
-            <if test="onOff != null "> and on_off = #{onOff}</if>
-            <if test="equipControl != null  and equipControl != ''"> and equip_control = #{equipControl}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="createBy != null  and createBy != ''"> and create_by = #{createBy}</if>
+        <where>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="equipType != null  and equipType != ''">and equip_type = #{equipType}</if>
+            <if test="online != null ">and online = #{online}</if>
+            <if test="onOff != null ">and on_off = #{onOff}</if>
+            <if test="onOffMsg != null  and onOffMsg != ''">and on_off_msg = #{onOffMsg}</if>
+            <if test="equipControl != null  and equipControl != ''">and equip_control = #{equipControl}</if>
+            <if test="status != null ">and status = #{status}</if>
+            <if test="createBy != null  and createBy != ''">and create_by = #{createBy}</if>
         </where>
     </select>
-    
+
     <select id="selectTEquipmentById" parameterType="Long" resultMap="TEquipmentResult">
         <include refid="selectTEquipmentVo"/>
         where id = #{id}
@@ -52,6 +68,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="equipType != null and equipType != ''">equip_type,</if>
             <if test="online != null">online,</if>
             <if test="onOff != null">on_off,</if>
+            <if test="onOffMsg != null and onOffMsg != ''">on_off_msg,</if>
             <if test="equipControl != null">equip_control,</if>
             <if test="recentOpenTime != null">recent_open_time,</if>
             <if test="status != null">status,</if>
@@ -60,12 +77,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null and name != ''">#{name},</if>
             <if test="equipType != null and equipType != ''">#{equipType},</if>
             <if test="online != null">#{online},</if>
             <if test="onOff != null">#{onOff},</if>
+            <if test="onOffMsg != null and onOffMsg != ''">#{onOffMsg},</if>
             <if test="equipControl != null">#{equipControl},</if>
             <if test="recentOpenTime != null">#{recentOpenTime},</if>
             <if test="status != null">#{status},</if>
@@ -74,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+        </trim>
     </insert>
 
     <update id="updateTEquipment" parameterType="TEquipment">
@@ -84,6 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="equipType != null and equipType != ''">equip_type = #{equipType},</if>
             <if test="online != null">online = #{online},</if>
             <if test="onOff != null">on_off = #{onOff},</if>
+            <if test="onOffMsg != null and onOffMsg != ''">on_off_msg = #{onOffMsg},</if>
             <if test="equipControl != null">equip_control = #{equipControl},</if>
             <if test="recentOpenTime != null">recent_open_time = #{recentOpenTime},</if>
             <if test="status != null">status = #{status},</if>
@@ -97,11 +116,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </update>
 
     <delete id="deleteTEquipmentById" parameterType="Long">
-        delete from t_equipment where id = #{id}
+        delete
+        from t_equipment
+        where id = #{id}
     </delete>
 
     <delete id="deleteTEquipmentByIds" parameterType="String">
-        delete from t_equipment where id in 
+        delete from t_equipment where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

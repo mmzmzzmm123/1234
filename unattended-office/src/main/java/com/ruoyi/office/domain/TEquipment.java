@@ -40,6 +40,10 @@ public class TEquipment extends BaseEntity
     @Excel(name = "开关状态")
     private String onOff;
 
+    /** 开关消息 */
+    @Excel(name = "开关消息")
+    private String onOffMsg;
+
     /** 设备控制 */
     @Excel(name = "设备控制")
     private String equipControl;

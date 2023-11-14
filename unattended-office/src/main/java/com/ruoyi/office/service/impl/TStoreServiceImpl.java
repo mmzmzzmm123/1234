@@ -167,7 +167,8 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
                 throw new ServiceException("未设置门禁开门代码");
             }
             MqttSendClient sendClient = new MqttSendClient();
-            sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+//            sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+            sendClient.publish(equipment, true, JSONObject.toJSONString(msg));
 
         } else if (equipment.getEquipType().equalsIgnoreCase(OfficeEnum.EquipType.TTLOCK.getCode())) {
             try {
@@ -208,7 +209,9 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
             }
 
             MqttSendClient sendClient = new MqttSendClient();
-            sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+//            sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+            sendClient.publish(equipment, true, JSONObject.toJSONString(msg));
+
         } else if (equipment.getEquipType().equalsIgnoreCase(OfficeEnum.EquipType.TTLOCK.getCode())) {
             try {
                 String username = store.getTtlockUname();

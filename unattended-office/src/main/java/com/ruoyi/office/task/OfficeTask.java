@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
  *
  * @author ruoyi
  */
-@Component("officeTask")
+@Component("officeTask" )
 public class OfficeTask {
 
     @Autowired
@@ -73,23 +73,23 @@ public class OfficeTask {
     public void scanOpenEquipment() {
 
         SysDictData dictData = new SysDictData();
-        dictData.setDictType("equipment_type");
+        dictData.setDictType("equipment_type" );
         Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
 
         SysDictData clooseDoorQry = new SysDictData();
-        clooseDoorQry.setDictLabel("close_door");
+        clooseDoorQry.setDictLabel("close_door" );
         final List<SysDictData> clooseDoor = dictDataService.selectDictDataList(clooseDoorQry);
         int clooseDoorMinute = 15; // 秒
         if (clooseDoor.size() > 0) {
             clooseDoorMinute = Integer.parseInt(clooseDoor.get(0).getDictValue());
         }
 
-        if(clooseDoorMinute==0){
+        if (clooseDoorMinute == 0) {
             return;
         }
 
         TEquipment equipment = new TEquipment();
-        equipment.setOnOff("Y");
+        equipment.setOnOff("Y" );
         final List<TEquipment> equipments = equipmentService.selectTEquipmentList(equipment);
 
         if (equipments.size() == 0)
@@ -101,17 +101,18 @@ public class OfficeTask {
 
                 if (eq.getRecentOpenTime() != null && (new Date().getTime() - eq.getRecentOpenTime().getTime()) > (clooseDoorMinute * 1000)) {
                     Map<String, String> msg = new HashMap<>();
-                    String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[1].split(":");
+                    String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split("," )[1].split(":" );
                     msg.put(command[0], command[1]);
 
                     try {
-                        sendClient.publish(eq.getEquipControl(), JSONObject.toJSONString(msg));
+//                        sendClient.publish(eq.getEquipControl(), JSONObject.toJSONString(msg));
+                        sendClient.publish(eq, false, JSONObject.toJSONString(msg));
                     } catch (Exception e) {
                         continue;
                     }
                     TEquipment up = new TEquipment();
                     up.setId(eq.getId());
-                    up.setOnOff("N");
+                    up.setOnOff("N" );
                     equipmentService.updateTEquipment(up);
                 }
             }
