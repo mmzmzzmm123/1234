@@ -7,6 +7,7 @@ import com.ruoyi.office.domain.TJoinUs;
 import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TRoomOrder;
 import com.ruoyi.office.domain.TStore;
+import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.BusinessAnalysisH5Vo;
 import com.ruoyi.office.mapper.TJoinUsMapper;
 import com.ruoyi.office.service.*;
@@ -19,6 +20,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 我要加盟Service业务层处理
@@ -83,6 +85,7 @@ public class BusinessAnalysisServiceImpl implements IBusinessAnalysisService {
                 TRoomOrder tRoomOrder = new TRoomOrder();
                 tRoomOrder.setRoomId(room.getId());
                 List<TRoomOrder> roomOrderList = itRoomOrderService.selectTRoomOrderList(tRoomOrder);
+                roomOrderList = roomOrderList.stream().filter(x -> !x.getStatus().equals(OfficeEnum.RoomOrderStatus.CANCEL.getCode())).collect(Collectors.toList());
                 BigDecimal totalRoomAmount = roomOrderList.stream().map(TRoomOrder::getTotalAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                 BigDecimal payRoomAmount = roomOrderList.stream().map(TRoomOrder::getPayAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
                 BigDecimal welfareRoomAmount = roomOrderList.stream().map(TRoomOrder::getWelfareAmount).reduce(BigDecimal.ZERO, BigDecimal::add);
