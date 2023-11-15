@@ -44,6 +44,15 @@ public class PsyConsultController extends BaseController
     }
 
     /**
+     * 获取咨询师入驻申请详细信息
+     */
+    @GetMapping(value = "/getAvailableUserName/{name}")
+    public AjaxResult getAvailableUserName(@PathVariable("name") String name)
+    {
+        return AjaxResult.success(psyConsultService.getAvailableUserName(name));
+    }
+
+    /**
      * 查询心理咨询师列表
      */
     @PreAuthorize("@ss.hasPermi('psychology:consult:query')")

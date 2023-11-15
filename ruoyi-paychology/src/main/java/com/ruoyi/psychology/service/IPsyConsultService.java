@@ -38,6 +38,8 @@ public interface IPsyConsultService {
 
     AjaxResult update(PsyConsultVO req);
 
+    String getAvailableUserName(String name);
+
     int deleteAll(Long[] ids);
 
     int delete(Long id);

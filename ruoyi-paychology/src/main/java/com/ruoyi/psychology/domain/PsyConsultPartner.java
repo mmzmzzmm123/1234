@@ -1,5 +1,6 @@
 package com.ruoyi.psychology.domain;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.core.domain.BasePlusEntity;
 import lombok.Getter;
@@ -11,6 +12,8 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 咨询师入驻申请对象 psy_consult_partner
@@ -36,14 +39,18 @@ public class PsyConsultPartner extends BasePlusEntity implements Serializable
     /** 咨询师号 */
     @Excel(name = "咨询师号")
     private Long cId;
+    private String userName;
 
     /** 步骤1-4 */
     @Excel(name = "步骤1-4")
     private Integer step;
 
-    /** 申请类型1-4 */
-    @Excel(name = "申请类型1-4")
+    /** 申请类型 */
     private Integer type;
+
+    @Excel(name = "申请类型")
+    @TableField(exist = false)
+    private String typeName;
 
     /** 姓名 */
     @Excel(name = "姓名")
@@ -103,11 +110,26 @@ public class PsyConsultPartner extends BasePlusEntity implements Serializable
     private String extraImg;
 
     /** 0-草稿,1-审核中,2-审核通过-已开通账号,3-审核通过-未开通账号,4-审核驳回 */
-    @Excel(name = "0-草稿,1-审核中,2-审核通过-已开通账号,3-审核通过-未开通账号,4-审核驳回")
     private String status;
 
-    /** 0-未缴费,1-已缴费 */
-    @Excel(name = "0-未缴费,1-已缴费")
-    private String pay;
+    @Excel(name = "0-草稿,1-审核中,2-审核通过-已开通账号,3-审核通过-未开通账号,4-审核驳回")
+    @TableField(exist = false)
+    private String statusName;
+
+    /** 费用 */
+    @Excel(name = "费用")
+    private BigDecimal money;
+
+    /** 结算比率 */
+    @Excel(name = "结算比率")
+    private BigDecimal ratio;
+
+    /** 说明 */
+    @Excel(name = "说明")
+    private String remark;
+
+    /** 通过时间 */
+    @Excel(name = "通过时间")
+    private Date passTime;
 
 }

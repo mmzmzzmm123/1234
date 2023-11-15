@@ -2,10 +2,12 @@ package com.ruoyi.psychology.service;
 
 import java.util.List;
 
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.psychology.domain.PsyConsultPartner;
 import com.ruoyi.psychology.domain.PsyConsultPartnerItem;
 import com.ruoyi.psychology.dto.PartnerDTO;
 import com.ruoyi.psychology.request.PartnerReq;
+import com.ruoyi.psychology.request.PsyAdminPartnerReq;
 
 /**
  * 咨询师入驻申请Service接口
@@ -31,8 +33,12 @@ public interface IPsyConsultPartnerService {
 
     int save(PsyConsultPartner entity);
 
-    PartnerDTO getInfo(Integer userId);
+    AjaxResult createUser(Long id);
 
-    List<PsyConsultPartner> getList(PsyConsultPartner psyConsultPartner);
+    PartnerDTO getInfoByUserId(Integer userId);
+
+    PartnerDTO getInfoById(Long userId);
+
+    List<PsyConsultPartner> getList(PsyAdminPartnerReq psyConsultPartner);
 
 }

@@ -1,5 +1,13 @@
 import request from '@/utils/request'
 
+// 查询咨询师入驻申请详细
+export function getAvailableUserName(name) {
+  return request({
+    url: '/psychology/consult/getAvailableUserName/' + name,
+    method: 'get'
+  })
+}
+
 // 获取配置
 export function getAttrs(dictTypes) {
   return request({

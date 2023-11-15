@@ -75,7 +75,7 @@ public class AppPsyConsultPartnerController extends BaseController
     public AjaxResult getInfo(HttpServletRequest request)
     {
         Integer userId = appTokenService.getUserId(request);
-        return AjaxResult.success(partnerService.getInfo(userId));
+        return AjaxResult.success(partnerService.getInfoByUserId(userId));
     }
 
 }

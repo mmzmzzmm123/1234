@@ -33,4 +33,24 @@ public class ConsultConstant {
     public static final Integer CONSULT_NO_LIMIT = 0;
     public static final Integer CONSULT_LIMIT = 1;
 
+    // 入驻申请类型
+    public static final Integer PARTNER_TYPE_HZ = 1;
+    public static final String PARTNER_TYPE_HZ_STR = "合作型";
+    public static final Integer PARTNER_TYPE_TT = 2;
+    public static final String PARTNER_TYPE_TT_STR = "签约型（团体督导）";
+    public static final Integer PARTNER_TYPE_GT = 3;
+    public static final String PARTNER_TYPE_GT_STR = "签约型（个体督导）";
+
+    // 入驻审批状态
+    public static final String PARTNER_STATUS_0 = "0";
+    public static final String PARTNER_STATUS_0_STR = "草稿";
+    public static final String PARTNER_STATUS_1 = "1";
+    public static final String PARTNER_STATUS_1_STR = "审核中";
+    public static final String PARTNER_STATUS_2 = "2";
+    public static final String PARTNER_STATUS_2_STR = "审核通过-已开通账号";
+    public static final String PARTNER_STATUS_3 = "3";
+    public static final String PARTNER_STATUS_3_STR = "审核通过-未开通账号";
+    public static final String PARTNER_STATUS_4 = "4";
+    public static final String PARTNER_STATUS_4_STR = "审核驳回";
+
 }

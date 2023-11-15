@@ -7,6 +7,7 @@ import com.ruoyi.psychology.domain.PsyConsultOrderServe;
 import com.ruoyi.psychology.domain.PsyConsultPartner;
 import com.ruoyi.psychology.dto.PartnerDTO;
 import com.ruoyi.psychology.request.PartnerReq;
+import com.ruoyi.psychology.request.PsyAdminPartnerReq;
 
 /**
  * 咨询师入驻申请Mapper接口
@@ -17,31 +18,9 @@ import com.ruoyi.psychology.request.PartnerReq;
 public interface PsyConsultPartnerMapper extends BaseMapper<PsyConsultPartner>
 {
 
-    public PartnerDTO getInfoByUserId(Integer userId);
+    public PartnerDTO getInfo(PsyAdminPartnerReq req);
 
-    /**
-     * 查询咨询师入驻申请列表
-     * 
-     * @param psyConsultPartner 咨询师入驻申请
-     * @return 咨询师入驻申请集合
-     */
-    public List<PsyConsultPartner> selectPsyConsultPartnerList(PsyConsultPartner psyConsultPartner);
-
-    /**
-     * 新增咨询师入驻申请
-     * 
-     * @param psyConsultPartner 咨询师入驻申请
-     * @return 结果
-     */
-    public int insertPsyConsultPartner(PsyConsultPartner psyConsultPartner);
-
-    /**
-     * 修改咨询师入驻申请
-     * 
-     * @param psyConsultPartner 咨询师入驻申请
-     * @return 结果
-     */
-    public int updatePsyConsultPartner(PsyConsultPartner psyConsultPartner);
+    public List<PsyConsultPartner> selectPsyConsultPartnerList(PsyAdminPartnerReq req);
 
     /**
      * 删除咨询师入驻申请

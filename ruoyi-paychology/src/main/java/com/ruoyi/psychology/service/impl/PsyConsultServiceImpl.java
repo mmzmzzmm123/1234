@@ -348,6 +348,27 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
     }
 
     @Override
+    public String getAvailableUserName(String name) {
+        if (UserConstants.UNIQUE.equals(userService.checkUserNameUnique(name)))
+        {
+            return name;
+        }
+
+        // 名称重复，则添加后缀
+        int count = 1;
+        while (UserConstants.NOT_UNIQUE.equals(userService.checkUserNameUnique(name))) {
+            name = name + "_0" + count; // 后缀
+            if (UserConstants.UNIQUE.equals(userService.checkUserNameUnique(name)))
+            {
+                break;
+            }
+            count++;
+        }
+
+        return name;
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
     public int deleteAll(Long[] ids) {
         return psyConsultMapper.tombstonedByIds(ids);
