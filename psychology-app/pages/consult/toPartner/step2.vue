@@ -12,7 +12,7 @@
         <view class="margin-top-xs psy-title-ext">请填写国家认可的教育经历，并提供已经获得的学历证书。</view>
         <view class="margin-top solid-bottom">
           <item-list :type="1" :list="dataList.filter(a => a.type === 1)" @edit="editItem" @del="delItem"/>
-          <view class="cu-btn line-orange round lg btn-submit" @tap="showItem(1)">+ 增加一项</view>
+          <view v-if="!showForm[0]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(1)">+ 增加一项</view>
         </view>
 
         <item-form v-if="showForm[0]" :type="1" :form="form" @add="saveItem" @cancel="hideItem(1)"/>
@@ -24,7 +24,7 @@
         </view>
         <view class="solid-bottom">
           <item-list :type="2" :list="dataList.filter(a => a.type === 2)" @edit="editItem" @del="delItem"/>
-          <view class="cu-btn line-orange round lg btn-submit" @tap="showItem(2)">+ 增加一项</view>
+          <view v-if="!showForm[1]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(2)">+ 增加一项</view>
         </view>
 
         <item-form v-if="showForm[1]" :type="2" :form="form" :picker="picker1" :idx="idx" @modifyIdx="modifyIdx" @add="saveItem" @cancel="hideItem(2)"/>
@@ -36,7 +36,7 @@
         </view>
         <view class="solid-bottom">
           <item-list :type="3" :list="dataList.filter(a => a.type === 3)" @edit="editItem" @del="delItem"/>
-          <view class="cu-btn line-orange round lg btn-submit" @tap="showItem(3)">+ 增加一项</view>
+          <view v-if="!showForm[2]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(3)">+ 增加一项</view>
         </view>
 
         <item-form v-if="showForm[2]" :type="3" :form="form" @add="saveItem" @cancel="hideItem(3)"/>

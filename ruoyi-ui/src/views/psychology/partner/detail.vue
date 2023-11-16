@@ -30,12 +30,12 @@
       <el-descriptions-item/>
       <el-descriptions-item label="证明照片"/>
     </el-descriptions>
-    <image-preview style="margin-right: 25px" v-for="(item,index) in imgs" :src="item" width="150px" height="150px"/>
+    <image-preview style="margin-right: 25px" v-for="(item,index) in imgs" :src="item" width="100px" height="100px"/>
     <el-divider/>
 
-    <el-row :gutter="24">
-      <el-col :span="12">
-        <div class="title">学历背景</div>
+    <el-row>
+      <el-col :span="14">
+        <div class="title" style="margin-top: 0">学历背景</div>
         <el-table border :data="info.items.filter(a => a.type === 1)" size="mini">
           <el-table-column label="时间" align="center" prop="startTime">
             <template slot-scope="scope">
@@ -54,7 +54,7 @@
         </el-table>
       </el-col>
 
-      <el-col :span="12">
+      <el-col :span="14">
         <div class="title">专业资质&专业证书</div>
         <el-table border :data="info.items.filter(a => a.type === 2 || a.type === 3)" size="mini">
           <el-table-column label="资质类型" align="center" prop="type">
@@ -81,7 +81,7 @@
         </el-table>
       </el-col>
 
-      <el-col :span="12">
+      <el-col :span="14">
         <div class="title">受训经历</div>
         <el-table border :data="info.items.filter(a => a.type === 4)" size="mini">
           <el-table-column label="时间" align="center" prop="startTime">
@@ -101,7 +101,7 @@
         </el-table>
       </el-col>
 
-      <el-col :span="12">
+      <el-col :span="14">
         <div class="title">个案咨询经历</div>
         <el-table border :data="info.items.filter(a => a.type === 5)" size="mini">
           <el-table-column label="时间" align="center" prop="startTime">
@@ -122,7 +122,7 @@
         </el-table>
       </el-col>
 
-      <el-col :span="12">
+      <el-col :span="14">
         <div class="title">接受督导经历</div>
         <el-table border :data="info.items.filter(a => a.type === 6)" size="mini">
           <el-table-column label="时间" align="center" prop="startTime">
@@ -143,16 +143,10 @@
         </el-table>
       </el-col>
 
-      <el-col :span="12">
+      <el-col :span="14">
         <div class="title">其他经历</div>
         <el-table border :data="info.items.filter(a => a.type === 7)" size="mini">
           <el-table-column label="说明" align="center" prop="param1"/>
-          <el-table-column label="证明照片" align="center" prop="img">
-            <template slot-scope="scope" v-if="scope.row.img">
-              <image-preview style="margin-right: 10px" v-for="(item,index) in scope.row.img.split(',')" :src="item"
-                             width="150px" height="150px"/>
-            </template>
-          </el-table-column>
         </el-table>
       </el-col>
     </el-row>

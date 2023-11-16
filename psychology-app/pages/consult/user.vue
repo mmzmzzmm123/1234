@@ -217,9 +217,15 @@ export default {
           this.$refs.popupKf.open()
           break
       }
+      // 有草稿就跳填写页
+      // 已经提交 跳审核中
+      //
 
     },
     toApp(item) {
+      if (item.id === 21) {
+        return uni.navigateTo({ url: "/pages/consult/toPartner/start" })
+      }
       if (item.url) {
         return window.location.href = item.url
       }

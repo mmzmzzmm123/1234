@@ -99,9 +99,8 @@ export default {
         if (that.form.status === '4' && !that.form.remark) {
           return that.$modal.msgError("请输入审核说明");
         }
-        if (that.form.status === '3') {
-          that.form.passTime = new Date().getTime()
-        }
+
+        that.form.passTime = that.form.status === '3' ? new Date().getTime() : null
 
         updatePartner(that.form).then(res => {
           if (res.code === 200) {

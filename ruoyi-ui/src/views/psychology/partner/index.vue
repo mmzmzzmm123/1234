@@ -86,7 +86,7 @@
             :disabled="scope.row.status !== '2' && scope.row.status !== '3'"
             @click="openUser(scope.row)"
             v-hasPermi="['psychology:partner:remove']"
-          >{{ scope.row.status !== '2' ? '查看账号' : '开通账号'}}</el-button>
+          >{{ scope.row.status === '2' ? '查看账号' : '开通账号'}}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -210,7 +210,6 @@ export default {
       }).then(() => {
         this.doCreateUser(row.id)
       }).catch(() => {});
-      this.getList();
     },
     doCreateUser(id) {
       createUser(id).then(response => {
@@ -218,6 +217,7 @@ export default {
         if (response.code === 200) {
           this.$refs.formUser.init(response.fm)
         }
+        this.getList();
       });
     },
     /** 审批完成 */

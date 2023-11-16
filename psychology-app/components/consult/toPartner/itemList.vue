@@ -3,7 +3,7 @@
     <view v-for="(item,index) in list" :key="index" class="cu-item">
       <view class="content">
         <view class="text-sm">
-          {{ [2,3].includes(type) ? item.param1 : item.startTime + ' ~ ' + item.endTime }}
+          {{ [2,3,7].includes(type) ? item.param1 : item.startTime + ' ~ ' + item.endTime }}
         </view>
 
         <view class="text-sm" v-if="[1,2,4,5,6].includes(type)">
@@ -46,7 +46,7 @@ export default {
     },
     list: {
       type: Array,
-      default: [],
+      default: () => []
     },
   },
   methods: {

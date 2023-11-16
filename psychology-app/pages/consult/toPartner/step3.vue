@@ -13,7 +13,7 @@
         <view class="margin-top-xs psy-title-ext">2. 培训信息经审核后将在你的个人页面，请确保描述符合平台的建议或要求。</view>
         <view class="margin-top solid-bottom">
           <item-list :type="4" :list="dataList.filter(a => a.type === 4)" @edit="editItem" @del="delItem"/>
-          <view class="cu-btn line-orange round lg btn-submit" @tap="showItem(4)">+ 增加一项</view>
+          <view v-if="!showForm[0]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(4)">+ 增加一项</view>
         </view>
 
         <item-form v-if="showForm[0]" :type="4" :form="form" @add="saveItem" @cancel="hideItem(4)"/>
@@ -26,7 +26,7 @@
         <view class="margin-top-xs psy-title-ext">请按每段经验时间从前到后的顺序填写（正在进行的督导，写预计完成时间）。</view>
         <view class="solid-bottom">
           <item-list :type="5" :list="dataList.filter(a => a.type === 5)" @edit="editItem" @del="delItem"/>
-          <view class="cu-btn line-orange round lg btn-submit" @tap="showItem(5)">+ 增加一项</view>
+          <view v-if="!showForm[1]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(5)">+ 增加一项</view>
         </view>
 
         <item-form v-if="showForm[1]" :type="5" :form="form" :picker="picker1" :idx="idx" @modifyIdx="modifyIdx" @add="saveItem" @cancel="hideItem(5)"/>
@@ -40,7 +40,7 @@
         <view class="margin-top-xs psy-title-ext">2. 督导信息经审核后将在你的个人页面，请确保描述符合平台的建议或要求。</view>
         <view class="solid-bottom">
           <item-list :type="6" :list="dataList.filter(a => a.type === 6)" @edit="editItem" @del="delItem"/>
-          <view class="cu-btn line-orange round lg btn-submit" @tap="showItem(6)">+ 增加一项</view>
+          <view v-if="!showForm[2]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(6)">+ 增加一项</view>
         </view>
 
         <item-form v-if="showForm[2]" :type="6" :form="form" :picker="picker2" :idx="idx" @modifyIdx="modifyIdx" @add="saveItem" @cancel="hideItem(6)"/>
@@ -53,7 +53,7 @@
         <view class="margin-top-xs psy-title-ext">可在这部分补充其他培训经历，申请入驻时，这类培训只作为补充信息，不作为入驻审核条件。</view>
         <view class="solid-bottom">
           <item-list :type="7" :list="dataList.filter(a => a.type === 7)" @edit="editItem" @del="delItem"/>
-          <view class="cu-btn line-orange round lg btn-submit" @tap="showItem(7)">+ 增加一项</view>
+          <view v-if="!showForm[3]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(7)">+ 增加一项</view>
         </view>
 
         <item-form v-if="showForm[3]" :type="7" :form="form" @add="saveItem" @cancel="hideItem(7)"/>
@@ -221,7 +221,7 @@ export default {
       }
 
       uni.navigateTo({
-        url: "/pages/consult/toPartner/step4"
+        url: "/pages/consult/toPartner/step4?type=edit"
       });
     }
   }

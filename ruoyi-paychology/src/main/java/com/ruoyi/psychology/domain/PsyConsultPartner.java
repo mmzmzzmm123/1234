@@ -1,5 +1,6 @@
 package com.ruoyi.psychology.domain;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.core.domain.BasePlusEntity;
@@ -130,6 +131,7 @@ public class PsyConsultPartner extends BasePlusEntity implements Serializable
 
     /** 通过时间 */
     @Excel(name = "通过时间")
+    @TableField(updateStrategy = FieldStrategy.IGNORED)
     private Date passTime;
 
 }

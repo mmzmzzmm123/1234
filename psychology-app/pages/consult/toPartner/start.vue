@@ -54,14 +54,31 @@ export default {
       pageHeight: app.globalData.windowHeight + 'px',
     }
   },
-  onLoad() {
-    // this.getApply()
+  onLoad(options) {
+    console.log(options)
+    if (options && options.type === 'back') {
+
+    } else {
+      this.getApply()
+    }
   },
   methods: {
     async getApply() {
       const res = await serve.getInfo()
       if (res.code === 200 && res.data) {
-        return uni.navigateTo({ url: "/pages/consult/toPartner/step1" })
+        console.log(res.data)
+        switch (res.data.status) {
+          case '0':
+            return uni.navigateTo({ url: "/pages/consult/toPartner/step1" })
+          case '1':
+            // return uni.navigateTo({ url: "/pages/consult/toPartner/result?type=2" })
+          case '2':
+            // return uni.navigateTo({ url: "/pages/consult/toPartner/result?type=4" })
+          case '3':
+            // return uni.navigateTo({ url: "/pages/consult/toPartner/result?type=3" })
+          case '4':
+            return uni.navigateTo({ url: "/pages/consult/toPartner/result" })
+        }
       }
     },
     checkboxChange(e) {

@@ -3,7 +3,7 @@
     <view class="list" v-if="list.length > 0">
       <view class="item" v-for="(item,index) in list">
         <view class="item-icon"></view>
-        <view class="item-tiem">{{ [2,3].includes(type) ? item.param1 : item.startTime + ' ~ ' + item.endTime }}</view>
+        <view class="item-tiem">{{ [2,3,7].includes(type) ? item.param1 : item.startTime + ' ~ ' + item.endTime }}</view>
         <view class="item-info" v-if="[1,2,4,5,6].includes(type)">
           <template v-if="type === 1">
             {{ item.param1 + '|' + item.param2 + '|' + item.param3 }}

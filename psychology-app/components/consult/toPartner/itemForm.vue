@@ -86,7 +86,7 @@ export default {
     },
     picker: {
       type: Array,
-      default: ['喵喵喵', '汪汪汪', '哼唧哼唧']
+      default: () => []
     },
     idx: {
       type: Number,

@@ -27,6 +27,7 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 咨询师入驻申请Service业务层处理
@@ -95,6 +96,7 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
     @Transactional(rollbackFor = Exception.class)
     public AjaxResult createUser(Long id) {
         PsyConsultPartner partner = psyConsultPartnerMapper.selectById(id);
+        List<PsyConsultPartnerItem> items = partnerItemService.getListById(id);
         if (!ConsultConstant.PARTNER_STATUS_2.equals(partner.getStatus()) && !ConsultConstant.PARTNER_STATUS_3.equals(partner.getStatus())) {
             return AjaxResult.error("单据状态异常");
         }
@@ -132,10 +134,13 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
         vo.setCity(partner.getCity());
         vo.setLang(partner.getLang());
         vo.setOpenId(openid);
+        vo.setQualification(items.stream().filter(a -> a.getType() == 2).map(PsyConsultPartnerItem::getParam1).collect(Collectors.joining(",")));
         vo.setGenre(partner.getGenre() + partner.getExtGenre());
         vo.setWorkHours(partner.getWorkHours());
         AjaxResult result = consultService.add(vo);
         result.put("fm", StrUtil.format(fm, userName, pwd));
+
+        // 合约创建
 
         return result;
     }

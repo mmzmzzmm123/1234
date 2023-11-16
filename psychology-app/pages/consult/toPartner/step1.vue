@@ -37,14 +37,6 @@
       <view class="cu-form-group">
         <view class="title">手机号码</view>
         <input type="number" placeholder="请输入" placeholder-class="plaClass" maxlength="11" v-model="form.phone"/>
-        <view class="cu-capsule radius">
-          <view class='cu-tag bg-orange '>
-            +86
-          </view>
-          <view class="cu-tag line-orange">
-            中国大陆
-          </view>
-        </view>
       </view>
       <view class="cu-form-group">
         <view class="title">邮箱</view>
@@ -301,7 +293,7 @@ export default {
     },
     openStep() {
       uni.navigateTo({
-        url: "/pages/consult/toPartner/start"
+        url: "/pages/consult/toPartner/start?type=back"
       });
     },
     /* picker-city start*/
