@@ -55,17 +55,10 @@ public class CourOrderController extends BaseController
      * 根据条件查询课程订单列表
      */
     @PreAuthorize("@ss.hasPermi('course:order:list')")
-    @PostMapping("/query")
-    public TableDataInfo queryOrderList(@RequestBody @NotNull OrderQueryDTO orderQueryDTO) {
+    @GetMapping("/query")
+    public TableDataInfo queryOrderList(OrderQueryDTO orderQueryDTO) {
         startPage();
-        List<OrderQueryVO> list = courOrderService.queryOrderList(orderQueryDTO);
-
-        list = list.stream().filter(item ->
-                !(orderQueryDTO.getLowAmount() != null
-                        && item.getAmount().compareTo(orderQueryDTO.getLowAmount()) < 0
-                        || orderQueryDTO.getHighAmount() != null
-                        && item.getAmount().compareTo(orderQueryDTO.getHighAmount()) > 0)).collect(Collectors.toList());
-        return getDataTable(list);
+        return getDataTable(courOrderService.queryOrderList(orderQueryDTO));
     }
 
     /**

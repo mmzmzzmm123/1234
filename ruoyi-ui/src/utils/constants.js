@@ -67,6 +67,18 @@ export const partnerTypes = [
   { label: '签约型（个体督导）', value: '3' },
 ]
 
+// 1-待签署,2-已撤销,3-逾期未签署,4-待生效,5-生效中,6-已失效,7-终止 */
+export const contractStatus = [
+  { label: '全部', value: '' },
+  { label: '待签署', value: '1' },
+  { label: '已撤销', value: '2' },
+  { label: '逾期未签署', value: '3' },
+  { label: '待生效', value: '4' },
+  { label: '生效中', value: '5' },
+  { label: '已失效', value: '6' },
+  { label: '终止', value: '7' },
+]
+
 export const roleListStatus = [
   { label: '全部', value: '' },
   { label: '显示', value: 1 },

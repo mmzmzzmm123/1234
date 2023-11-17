@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultContractMapper">
+
+    <resultMap type="PsyConsultContract" id="PsyConsultContractResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="consultId"    column="consult_id"    />
+        <result property="consultName"    column="consult_name"    />
+        <result property="type"    column="type"    />
+        <result property="money"    column="money"    />
+        <result property="ratio"    column="ratio"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="memo1"    column="memo1"    />
+        <result property="memo2"    column="memo2"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultContractVo">
+        select id, name, consult_id, consult_name, type, money, ratio, start_time, end_time, memo1, memo2, status, create_by, create_time, update_by, update_time from psy_consult_contract
+    </sql>
+
+    <select id="getList" parameterType="PsyConsultContract" resultMap="PsyConsultContractResult">
+        <include refid="selectPsyConsultContractVo"/>
+        <where>
+            <if test="consultId != null "> and consult_id = #{consultId}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="startTime != null "> and start_time <![CDATA[ >= ]]> #{startTime}</if>
+            <if test="endTime != null "> and end_time <![CDATA[ <= ]]> #{endTime}</if>
+        </where>
+    </select>
+
+    <select id="getOne" parameterType="Long" resultMap="PsyConsultContractResult">
+        <include refid="selectPsyConsultContractVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="countExistContract" resultType="java.lang.Integer">
+        SELECT count(1) FROM psy_consult_contract
+            WHERE consult_id = #{consultId}
+              AND status = #{status}
+              AND (start_time <![CDATA[ >= ]]> #{startTime} or end_time <![CDATA[ <= ]]> #{endTime})
+    </select>
+
+</mapper>

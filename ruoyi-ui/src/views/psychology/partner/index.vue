@@ -78,14 +78,14 @@
             type="text"
             :disabled="scope.row.status !== '1'"
             @click="openApp(scope.row)"
-            v-hasPermi="['psychology:partner:remove']"
+            v-hasPermi="['psychology:partner:edit']"
           >审核</el-button>
           <el-button
             size="mini"
             type="text"
             :disabled="scope.row.status !== '2' && scope.row.status !== '3'"
             @click="openUser(scope.row)"
-            v-hasPermi="['psychology:partner:remove']"
+            v-hasPermi="['psychology:partner:account']"
           >{{ scope.row.status === '2' ? '查看账号' : '开通账号'}}</el-button>
         </template>
       </el-table-column>

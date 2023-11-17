@@ -172,7 +172,8 @@ export default {
     return {
       fileTypes: ["mp4", "avi", "rmvb", "mp3", "wma", "rm", "rmvb", "flv", "mpg", "mov", "mkv"],
       extraData: {
-        module: 'course'
+        module: this.$constants['picModules'][0],
+        type: this.$constants['picTypes'][3]
       },
       drawerOpenLocal: false,
       course: null, // 关联的课程

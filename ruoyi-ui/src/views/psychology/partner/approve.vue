@@ -8,7 +8,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="申请类型" prop="type">
-          <el-select v-model="form.type" placeholder="请选择banner分类" @change="changeType">
+          <el-select v-model="form.type" placeholder="请选择申请类型" @change="changeType">
             <el-option
               v-for="item in types"
               :key="item.value"

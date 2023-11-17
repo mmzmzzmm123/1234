@@ -5,8 +5,8 @@
         申请编号: {{ info.id }} <span style="margin-left: 100px">{{ info.statusName }}</span>
       </template>
       <template slot="extra">
-        <el-button v-if="info.status === '1'" type="primary" size="small" @click="openApp">审批</el-button>
-        <el-button v-else size="small" @click="goBack">返回列表</el-button>
+        <el-button v-hasPermi="['psychology:partner:edit']" v-if="info.status === '1'" type="primary" size="small" @click="openApp" style="margin-right: 20px">审批</el-button>
+        <el-button size="small" @click="goBack">返回列表</el-button>
       </template>
       <el-descriptions-item label="申请时间">{{ info.createTime }}</el-descriptions-item>
       <el-descriptions-item label="入驻费用">{{ info.money }}</el-descriptions-item>

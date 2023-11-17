@@ -7,16 +7,14 @@ import com.ruoyi.common.utils.IDhelper;
 import com.ruoyi.common.utils.NewDateUtil;
 import com.ruoyi.common.vo.DateLimitUtilVO;
 import com.ruoyi.psychology.constant.ConsultConstant;
+import com.ruoyi.psychology.domain.PsyConsultContract;
 import com.ruoyi.psychology.domain.PsyConsultPartner;
 import com.ruoyi.psychology.domain.PsyConsultPartnerItem;
 import com.ruoyi.psychology.domain.PsyUser;
 import com.ruoyi.psychology.dto.PartnerDTO;
 import com.ruoyi.psychology.mapper.PsyConsultPartnerMapper;
 import com.ruoyi.psychology.request.PsyAdminPartnerReq;
-import com.ruoyi.psychology.service.IPsyConsultPartnerItemService;
-import com.ruoyi.psychology.service.IPsyConsultPartnerService;
-import com.ruoyi.psychology.service.IPsyConsultService;
-import com.ruoyi.psychology.service.IPsyUserService;
+import com.ruoyi.psychology.service.*;
 import com.ruoyi.psychology.vo.PsyConsultVO;
 import com.ruoyi.system.service.ISysConfigService;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -47,6 +46,9 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
 
     @Resource
     private IPsyConsultService consultService;
+
+    @Resource
+    private IPsyConsultContractService contractService;
 
     @Resource
     private PsyConsultPartnerMapper psyConsultPartnerMapper;
@@ -141,6 +143,22 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
         result.put("fm", StrUtil.format(fm, userName, pwd));
 
         // 合约创建
+        PsyConsultContract contract = new PsyConsultContract();
+        contract.setId(IDhelper.getNextId());
+        contract.setConsultId(vo.getId());
+        contract.setConsultName(vo.getNickName());
+        contract.setName("壹加壹心理平台入驻协议");
+        contract.setStatus(ConsultConstant.CONTRACT_STATUS_1);
+        contract.setType(partner.getType());
+        contract.setMoney(partner.getMoney());
+        contract.setRatio(partner.getRatio());
+        Date date = new Date();
+        Calendar ca = Calendar.getInstance();
+        ca.setTime(date);
+        ca.add(Calendar.YEAR, 1);
+        contract.setStartTime(date);
+        contract.setEndTime(ca.getTime());
+        contractService.add(contract);
 
         return result;
     }

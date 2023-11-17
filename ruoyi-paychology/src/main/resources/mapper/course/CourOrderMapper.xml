@@ -108,6 +108,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="OrderId != null  and orderId != ''"> and co.order_id like concat('%', #{orderId}, '%')</if>
             <if test="status != null "> and co.status = #{status}</if>
             <if test="userName != null  and userName != '' "> and pu.name like concat('%', #{userName}, '%')</if>
+            <if test="lowAmount != null  and lowAmount != '' "> and po.amount <![CDATA[>=]]> #{lowAmount}</if>
+            <if test="highAmount != null  and highAmount != '' "> and po.amount <![CDATA[<=]]> #{highAmount}</if>
         </where>
     </select>
 

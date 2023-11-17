@@ -20,11 +20,7 @@
 			</view>
 		</view>
 		<view class="class-box index-margin">
-			<view class="item" v-for="item in classList" @tap="
-          () => {
-            item.callback && item.callback();
-          }
-        ">
+			<view class="item" v-for="item in classList" @tap="toPage(item.id)">
 				<img class="class-img" :src="item.classPic" />
 				<view>{{ item.className }}</view>
 			</view>
@@ -84,19 +80,18 @@
 						classPic: "/static/course/user/course.png",
 						className: "我的课程",
 						id: 16,
-						callback: this.toCourseList,
 					},
 					{
 						classPic: "/static/course/user/order.png",
-						className: "我的订单",
+						// className: "我的订单",
+						className: "我的测评",
 						id: 36,
-						callback: this.toOrder,
 					},
 					{
 						classPic: "/static/course/user/customer-service.png",
-						className: "客服帮助",
+						// className: "客服帮助",
+						className: "我的咨询",
 						id: 72,
-            callback: this.toKf,
 					},
 				],
 				courseList: [],
@@ -108,13 +103,12 @@
 		},
 		async mounted() {
       this.userInfo = utils.getUserInfo()
-			if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
+      if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
         this.userInfo = utils.getUserInfo()
-			}
+      }
       if (!await utils.checkLogin()) {
         return this.openLoginConfirm()
       }
-
 			if (this.userInfo) {
 				this.courseList = await userServer.getCourseList(this.userInfo.userId);
 				this.courseList.map(item => {
@@ -151,6 +145,23 @@
           uni.navigateTo({
             url: "/pages/course/order"
           });
+      },
+      toPage(id) {
+			  switch (id) {
+          case 16:
+            this.toCourseList()
+            break;
+          case 36:
+            uni.navigateTo({
+              url: "/pages/evaluation/index"
+            });
+            break;
+          case 72:
+            uni.navigateTo({
+              url: "/pages/consult/index"
+            });
+            break;
+        }
       },
       toKf() {
         this.$refs.popupKf.open()

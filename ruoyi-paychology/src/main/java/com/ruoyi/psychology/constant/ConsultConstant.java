@@ -53,4 +53,13 @@ public class ConsultConstant {
     public static final String PARTNER_STATUS_4 = "4";
     public static final String PARTNER_STATUS_4_STR = "审核驳回";
 
+    // 合同状态 1-待签署,2-已撤销,3-逾期未签署,4-待生效,5-生效中,6-已失效,7-终止
+    public static final String CONTRACT_STATUS_1 = "1";
+    public static final String CONTRACT_STATUS_2 = "2";
+    public static final String CONTRACT_STATUS_3 = "3";
+    public static final String CONTRACT_STATUS_4 = "4";
+    public static final String CONTRACT_STATUS_5 = "5";
+    public static final String CONTRACT_STATUS_6 = "6";
+    public static final String CONTRACT_STATUS_7 = "7";
+
 }

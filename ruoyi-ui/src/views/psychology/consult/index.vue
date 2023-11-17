@@ -167,9 +167,6 @@ export default {
   // dicts: ['consult_sex','consult_type'],
   data() {
     return {
-      extraData: {
-        module: 'consult'
-      },
       // 遮罩层
       loading: true,
       consultId: '',

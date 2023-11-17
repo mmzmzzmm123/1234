@@ -13,8 +13,8 @@ export function listOrder(query) {
 export function queryOrderList(query) {
   return request({
     url: '/course/order/query',
-    method: 'post',
-    data: query
+    method: 'get',
+    params: query
   })
 }
 

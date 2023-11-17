@@ -87,7 +87,7 @@ public class PsyConsultPartnerController extends BaseController
     /**
      * 修改咨询师入驻申请
      */
-    @PreAuthorize("@ss.hasPermi('psychology:partner:edit')")
+    @PreAuthorize("@ss.hasPermi('psychology:partner:account')")
     @Log(title = "咨询师账户开通", businessType = BusinessType.UPDATE)
     @PostMapping("/createUser/{id}")
     public AjaxResult createUser(@PathVariable("id") Long id)
