@@ -119,7 +119,7 @@
             <el-button
               size="mini"
               type="text"
-              @click="tryAgain(scope.row)"
+              @click="relaunch(scope.row)"
               v-hasPermi="['contract:contract:edit']"
             >重新发起</el-button>
           </template>
@@ -270,12 +270,10 @@ export default {
       this.$refs.doForm.init(data)
     },
     /** 重新发起 */
-    tryAgain(row) {
-      const that = this
-      that.$modal.confirm('确认发起合同吗？').then(function() {
-
-      }).then(() => {
-      }).catch(() => {});
+    relaunch(row) {
+      const data = JSON.parse(JSON.stringify(row))
+      data.time = [data.startTime, data.endTime]
+      this.$refs.addForm.initData(data)
     },
     /** 删除按钮操作 */
     handleDelete(row) {

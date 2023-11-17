@@ -43,6 +43,15 @@ export function updateContract(data) {
   })
 }
 
+// 重新发布合同
+export function relaunch(data) {
+  return request({
+    url: '/psychology/contract/relaunch',
+    method: 'post',
+    data: data
+  })
+}
+
 // 删除咨询师合同协议
 export function delContract(id) {
   return request({

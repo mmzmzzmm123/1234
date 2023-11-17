@@ -29,6 +29,8 @@ public interface IPsyConsultContractService
 
     public int countExistContract(PsyConsultContract psyConsultContract);
 
+    public int relaunch(PsyConsultContract psyConsultContract);
+
     /**
      * 新增咨询师合同协议
      * 

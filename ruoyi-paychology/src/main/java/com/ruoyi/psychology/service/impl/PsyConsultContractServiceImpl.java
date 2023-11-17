@@ -2,11 +2,14 @@ package com.ruoyi.psychology.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.IDhelper;
+import com.ruoyi.psychology.constant.ConsultConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.psychology.mapper.PsyConsultContractMapper;
 import com.ruoyi.psychology.domain.PsyConsultContract;
 import com.ruoyi.psychology.service.IPsyConsultContractService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 咨询师合同协议Service业务层处理
@@ -45,8 +48,22 @@ public class PsyConsultContractServiceImpl implements IPsyConsultContractService
     }
 
     @Override
-    public int countExistContract(PsyConsultContract req) {
+    public int countExistContract(PsyConsultContract req)
+    {
         return psyConsultContractMapper.countExistContract(req);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int relaunch(PsyConsultContract entity)
+    {
+        Long id = entity.getId();
+        PsyConsultContract one = getOne(id);
+        one.setStatus(ConsultConstant.CONTRACT_STATUS_2);
+        update(one);
+
+        entity.setId(IDhelper.getNextId());
+        return add(entity);
     }
 
     /**

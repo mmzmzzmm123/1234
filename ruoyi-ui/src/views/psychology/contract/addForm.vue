@@ -5,7 +5,7 @@
         <el-input disabled v-model="form.name" placeholder="请输入合同名称" />
       </el-form-item>
       <el-form-item label="签约人" prop="consultId">
-        <el-select v-model="form.consultId" clearable>
+        <el-select v-model="form.consultId" :disabled="form.id != null" clearable>
           <el-option
             v-for="item in consultList"
             :key="item.id"
@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { exist, addContract } from "@/api/psychology/contract";
+import { exist, addContract, relaunch } from "@/api/psychology/contract";
 
 export default {
   name: "addForm",
@@ -91,12 +91,16 @@ export default {
   },
   methods: {
     init() {
-      this.form = {}
+      this.form = {
+        id: null,
+        name: '壹加壹心理平台入驻协议'
+      }
       this.open = true
       console.log(2222)
     },
     initData(data) {
       this.form = data
+      console.log(this.form)
       this.open = true
     },
     changeType(val) {
@@ -142,11 +146,19 @@ export default {
           }
 
           that.$modal.confirm('确认发起合同吗？').then(function() {
-            addContract(that.form).then(response => {
-              that.$modal.msgSuccess("发起成功");
-              that.cancel()
-              that.$emit('handleOk')
-            });
+            if (that.form.id != null) {
+              relaunch(that.form).then(response => {
+                that.$modal.msgSuccess("发起成功");
+                that.cancel()
+                that.$emit('handleOk')
+              });
+            } else {
+              addContract(that.form).then(response => {
+                that.$modal.msgSuccess("发起成功");
+                that.cancel()
+                that.$emit('handleOk')
+              });
+            }
           }).then(() => {
           }).catch(() => {});
         }

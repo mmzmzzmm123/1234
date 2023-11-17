@@ -100,5 +100,15 @@ public class PsyConsultContractController extends BaseController
     {
         return toAjax(psyConsultContractService.update(entity));
     }
+    /**
+     * 修改咨询师合同协议
+     */
+    @PreAuthorize("@ss.hasPermi('contract:contract:edit')")
+    @Log(title = "咨询师合同协议", businessType = BusinessType.UPDATE)
+    @PostMapping ("/relaunch")
+    public AjaxResult relaunch(@RequestBody PsyConsultContract entity)
+    {
+        return toAjax(psyConsultContractService.relaunch(entity));
+    }
 
 }
