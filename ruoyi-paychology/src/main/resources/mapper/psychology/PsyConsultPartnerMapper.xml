@@ -16,8 +16,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="PsyConsultPartner" id="PsyConsultPartnerResult">
         <result property="id"    column="id"    />
         <result property="userId"    column="user_id"    />
-        <result property="cId"    column="c_id"    />
-        <result property="userName"    column="user_name"    />
+        <result property="consultId"    column="consult_id"    />
+        <result property="consultName"    column="consult_name"    />
         <result property="step"    column="step"    />
         <result property="type"    column="type"    />
         <result property="name"    column="name"    />
@@ -47,15 +47,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyConsultPartnerVo">
-        select id, user_id, c_id, user_name, step, type, name, sex, wechat, qq, phone, email, city, province, lang, work_hours, genre, ext_genre, card, card_img, extra_img, status, create_by, create_time, update_by, update_time, money, ratio, remark, pass_time from psy_consult_partner
+        select id, user_id, consult_id, consult_name, step, type, name, sex, wechat, qq, phone, email, city, province, lang, work_hours, genre, ext_genre, card, card_img, extra_img, status, create_by, create_time, update_by, update_time, money, ratio, remark, pass_time from psy_consult_partner
     </sql>
 
     <select id="selectPsyConsultPartnerList" parameterType="PsyConsultPartner" resultMap="PsyConsultPartnerResult">
         <include refid="selectPsyConsultPartnerVo"/>
-        <where>  
+        <where>
             <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="cId != null "> and c_id = #{cId}</if>
-            <if test="userName != null "> and user_name = #{userName}</if>
+            <if test="consultId != null "> and consult_id = #{consultId}</if>
+            <if test="consultName != null "> and consult_name = #{consultName}</if>
             <if test="step != null  and step != ''"> and step = #{step}</if>
             <if test="type != null  and type != ''"> and type = #{type}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>

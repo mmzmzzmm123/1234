@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import serve from "@/server/consult/toPartner";
 let app = getApp();
 
 export default {

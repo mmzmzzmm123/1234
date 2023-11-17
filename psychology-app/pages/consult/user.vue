@@ -223,9 +223,9 @@ export default {
 
     },
     toApp(item) {
-      if (item.id === 21) {
-        return uni.navigateTo({ url: "/pages/consult/toPartner/start" })
-      }
+      // if (item.id === 21) {
+      //   return uni.navigateTo({ url: "/pages/consult/toPartner/start" })
+      // }
       if (item.url) {
         return window.location.href = item.url
       }

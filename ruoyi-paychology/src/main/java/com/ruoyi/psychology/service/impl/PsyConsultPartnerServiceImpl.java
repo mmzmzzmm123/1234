@@ -106,18 +106,18 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
         String pwd = configService.selectConfigByKey("sys.user.initPassword");
         String fm = "登录地址：http://admin.ssgpsy.com/ \n登录账号：{} \n初始密码：{}";
 
-        if (ConsultConstant.PARTNER_STATUS_2.equals(partner.getStatus()) && partner.getUserName()!= null) {
+        if (ConsultConstant.PARTNER_STATUS_2.equals(partner.getStatus()) && partner.getConsultName()!= null) {
             AjaxResult ajaxResult = AjaxResult.success("账号已开通");
 
-            ajaxResult.put("fm", StrUtil.format(fm, partner.getUserName(), pwd));
+            ajaxResult.put("fm", StrUtil.format(fm, partner.getConsultName(), pwd));
             return ajaxResult;
         }
 
-        Long cId = IDhelper.getNextId();
+        Long consultId = IDhelper.getNextId();
         String userName = consultService.getAvailableUserName(partner.getName());
 
-        partner.setCId(cId);
-        partner.setUserName(userName);
+        partner.setConsultId(consultId);
+        partner.setConsultName(userName);
         partner.setStatus(ConsultConstant.PARTNER_STATUS_2);
         save(partner);
 
@@ -125,7 +125,7 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
         PsyUser user = psyUserService.selectPsyUserById(partner.getUserId());
         String openid = user.getWxOpenid();
 
-        vo.setId(cId);
+        vo.setId(consultId);
         vo.setUserName(userName);
         vo.setStatus("1");
         vo.setSex(partner.getSex() == 1 ? "男" : "女");
@@ -145,7 +145,7 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
         // 合约创建
         PsyConsultContract contract = new PsyConsultContract();
         contract.setId(IDhelper.getNextId());
-        contract.setConsultId(vo.getId());
+        contract.setConsultId(consultId);
         contract.setConsultName(vo.getNickName());
         contract.setName("壹加壹心理平台入驻协议");
         contract.setStatus(ConsultConstant.CONTRACT_STATUS_1);
