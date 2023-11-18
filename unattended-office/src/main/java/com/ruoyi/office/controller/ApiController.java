@@ -144,7 +144,7 @@ public class ApiController extends BaseController {
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         wxPayResult.fluentPut("code", "FAIL");
         wxPayResult.fluentPut("message", "失败");*/
-        return WxPayNotifyResponse.fail("FAIL");;
+        return WxPayNotifyResponse.fail("FAIL");
     }
 
     @Autowired

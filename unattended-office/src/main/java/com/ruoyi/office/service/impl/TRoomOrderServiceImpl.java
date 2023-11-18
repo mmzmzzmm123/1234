@@ -880,6 +880,8 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         update.setId(roomOrder.getId());
         update.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());// 已预约
         update.setRemark(wxCallback);
+        update.setUpdateTime(new Date());
+        update.setUpdateBy("admin");
 
         if (amt.getPayerTotal() != null && amt.getPayerTotal() != 0) {
             BigDecimal payAmt = new BigDecimal(amt.getPayerTotal()).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);
