@@ -229,4 +229,44 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
         equipment.setOnOff("Y");
         equipmentService.updateTEquipment(equipment);
     }
+
+    @Override
+    public void closeStoreByStoreId(Long id) {
+        TStore store = tStoreMapper.selectTStoreById(id);
+        TEquipment equipment = equipmentService.selectTEquipmentById(store.getEquipId());
+
+        if (equipment.getEquipType().equalsIgnoreCase(OfficeEnum.EquipType.DOOR.getCode())) {
+            SysDictData dictData = new SysDictData();
+            dictData.setDictType("equipment_type");
+            Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
+
+            Map<String, String> msg = new HashMap<>();
+            if (equipDict.containsKey(OfficeEnum.EquipType.DOOR.getCode())) {
+                String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
+                msg.put(command[0], command[1]);
+            } else {
+                throw new ServiceException("未找到门禁设备代码,请联系管理员");
+            }
+
+            MqttSendClient sendClient = new MqttSendClient();
+//            sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
+            sendClient.publish(equipment, false, JSONObject.toJSONString(msg));
+
+        } else if (equipment.getEquipType().equalsIgnoreCase(OfficeEnum.EquipType.TTLOCK.getCode())) {
+            try {
+                String username = store.getTtlockUname();
+                String password = store.getTtlockPwd();
+                TtlockTokenRes ttlockTokenRes = TtlockConfig.getTokenTest(username, password);
+                String lockId = equipment.getEquipControl();
+                TtlockGatewayRes res = TtlockConfig.lock(ttlockTokenRes.getAccess_token(), lockId);
+            } catch (Exception e) {
+                throw new ServiceException(e.getMessage());
+            }
+        } else {
+            throw new ServiceException("门店设备类型异常");
+        }
+        equipment.setRecentOpenTime(new Date());
+        equipment.setOnOff("N");
+        equipmentService.updateTEquipment(equipment);
+    }
 }

@@ -66,4 +66,6 @@ public interface ITStoreService
     void openStore(Long id);
 
     void openStoreByStoreId(Long id);
+
+    void closeStoreByStoreId(Long id);
 }

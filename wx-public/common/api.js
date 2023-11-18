@@ -217,6 +217,9 @@ const api = {
 	openStore(storeId){
 		return post('office/api/openStore/'+storeId)
 	},
+	closeStore(storeId){
+		return post('office/api/closeStore/'+storeId)
+	},
 	openRoom(param){
 		return post('office/mapi/roomopenH5',param)
 	},

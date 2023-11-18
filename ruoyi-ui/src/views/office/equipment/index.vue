@@ -77,6 +77,7 @@
         </template>
       </el-table-column>
       <el-table-column label="设备控制" align="center" prop="equipControl" />
+      <el-table-column label="开关码" align="center" prop="onOffMsg" />
       <!-- <el-table-column label="状态" align="center" prop="status" /> -->
       <!-- <el-table-column label="备注" align="center" prop="remark" /> -->
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -116,6 +117,9 @@
         </el-form-item> -->
         <el-form-item label="设备控制" prop="equipControl">
           <el-input v-model="form.equipControl" placeholder="请输入设备控制代码" />
+        </el-form-item>
+        <el-form-item label="开关码" prop="onOffMsg">
+          <el-input v-model="form.onOffMsg" placeholder="请输入设备开关码" />
         </el-form-item>
         <!-- <el-form-item label="备注" prop="remark">
           <el-input v-model="form.remark" placeholder="请输入备注" />

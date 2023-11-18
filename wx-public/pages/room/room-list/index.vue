@@ -45,6 +45,7 @@
 		</view>
 		<u-popup :show="showMore" @close="showMore = false">
 			<view class="more-btn" @click="onOpenStoreClick">开大门</view>
+			<view class="more-btn" @click="onCloseStoreClick">关大门</view>
 			<view class="more-btn" @click="onOpenRoomClick">开包厢</view>
 			<view class="more-btn" @click="onCloseRoomClick">关包厢</view>
 			<!-- <view class="more-btn" @click="showMore = false">开包厢门</view> -->
@@ -142,7 +143,20 @@
 					success: res => {
 						if (res.confirm) {
 							this.$api.openStore(this.currentRoom.storeId).then(() => {
-								this.$u.toast('开门指令已发送成功')
+								this.$u.toast('开大门指令已发送成功')
+							})
+						}
+					}
+				})
+			},
+			onCloseStoreClick() {
+				this.showMore = false
+				uni.showModal({
+					content: "是否关闭大门",
+					success: res => {
+						if (res.confirm) {
+							this.$api.closeStore(this.currentRoom.storeId).then(() => {
+								this.$u.toast('关大门指令已发送成功')
 							})
 						}
 					}

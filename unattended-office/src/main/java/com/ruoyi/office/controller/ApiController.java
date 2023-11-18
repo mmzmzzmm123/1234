@@ -367,7 +367,7 @@ public class ApiController extends BaseController {
     ITEquipmentService equipmentService;
 
     /**
-     * 开门禁
+     * 小程序开大门
      *
      * @param id
      * @return
@@ -386,16 +386,34 @@ public class ApiController extends BaseController {
     }
 
     /**
-     * 开门禁
+     * h5开大门
      *
      * @param id
      * @return
      */
-    @ApiOperation("开门禁")
+    @ApiOperation("开大门")
     @PostMapping("/openStore/{id}")
     public AjaxResult openStoreByStoreId(@PathVariable("id") Long id) {
         try {
             storeService.openStoreByStoreId(id);
+        } catch (Exception e) {
+            throw new ServiceException("操作异常，请联系管理员");
+        }
+
+        return AjaxResult.success();
+    }
+
+    /**
+     * h5关大门
+     *
+     * @param id
+     * @return
+     */
+    @ApiOperation("关大门")
+    @PostMapping("/closeStore/{id}")
+    public AjaxResult closeStoreByStoreId(@PathVariable("id") Long id) {
+        try {
+            storeService.closeStoreByStoreId(id);
         } catch (Exception e) {
             throw new ServiceException("操作异常，请联系管理员");
         }
