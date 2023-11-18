@@ -144,7 +144,7 @@ public class TWxPayServiceImpl extends ServiceImpl<TWxPayMapper, TWxPay> impleme
 //        payConfig.setKeyPath(StringUtils.trimToNull(this.properties.getPrivateKeyPath()));
         //以下是apiv3以及支付分相关
 //        payConfig.setServiceId(StringUtils.trimToNull(this.properties.getServiceId()));
-        payConfig.setPayScoreNotifyUrl("https://foreverjade.cn/office/api/wxnotify/"+wxPay.getUserId());
+        payConfig.setPayScoreNotifyUrl("https://foreverjade.cn/prod-api/office/api/wxnotify/"+wxPay.getUserId());
         payConfig.setPrivateKeyPath(StringUtils.trimToNull(wxPay.getPrivateKeyPath()));
         payConfig.setPrivateCertPath(StringUtils.trimToNull(wxPay.getPrivateCertPath()));
         payConfig.setCertSerialNo(StringUtils.trimToNull(wxPay.getCertSerialNo()));

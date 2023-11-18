@@ -51,7 +51,9 @@
                create_by,
                create_time,
                update_by,
-               update_time, left_minute, random_code
+               update_time,
+               left_minute,
+               random_code
         from t_room_order
     </sql>
 
@@ -74,8 +76,8 @@
             <if test="status != null ">and status = #{status}</if>
             <if test="remark != null and remark != ''">and remark = #{remark}</if>
             <if test="createBy != null  and createBy != ''">and create_by = #{createBy}</if>
-            <if test="leftMinute != null "> and left_minute = #{leftMinute}</if>
-            <if test="randomCode != null  and randomCode != ''"> and random_code = #{randomCode}</if>
+            <if test="leftMinute != null ">and left_minute = #{leftMinute}</if>
+            <if test="randomCode != null  and randomCode != ''">and random_code = #{randomCode}</if>
         </where>
     </select>
 
@@ -280,5 +282,12 @@
             #{id}
         </foreach>
     </delete>
+
+    <update id="cancelRoomOrder" parameterType="String">
+        update t_room_order set status = 9 where status = 1 and id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 
 </mapper>

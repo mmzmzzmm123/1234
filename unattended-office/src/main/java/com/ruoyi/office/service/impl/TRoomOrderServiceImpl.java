@@ -169,12 +169,12 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Autowired
     ITStoreCouponService storeCouponService;
 
-    @Transactional
     @Override
     public WxPayOrderQueryV3Result finish(PrepayResp vo, Long wxuserid) {
         TRoomOrder order = tRoomOrderMapper.selectTRoomOrderById(vo.getOrderId());
-        if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.ORDERED.getCode()))
+        if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.ORDERED.getCode())) {
             return null;
+        }
         //查询支付状态；
         WxPayOrderQueryV3Result v3Result = null;
         try {
@@ -205,8 +205,31 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 }
 
             }
+            updateOrder.setUpdateTime(new Date());
             tRoomOrderMapper.updateTRoomOrder(updateOrder);
 
+
+            try {
+                sendVxMessage(wxuserid, order);
+                TRoom tRoom = roomService.selectTRoomById(order.getRoomId());
+                TStore tStore = storeService.selectTStoreById(tRoom.getStoreId());
+
+                TStoreUser tStoreUser = new TStoreUser();
+                tStoreUser.setStoreId(tStore.getId());
+                List<TStoreUser> tStoreUserList = itStoreUserService.selectTStoreUserList(tStoreUser);
+                for (TStoreUser item : tStoreUserList) {
+                    TWxUser tWxUser = itWxUserService.selectTWxUserById(item.getUserId());
+                    if (tWxUser != null && tWxUser.getMpOpenId() != null && !tWxUser.getMpOpenId().equals("")) {
+                        sendVxOrderMpMessage(tWxUser.getMpOpenId(), tStore, tRoom, order, "");
+                    }
+                }
+//            sendVxOrderMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, order, "已预约");
+//            sendVxOrderMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, order, "已预约");
+//            sendVxOrderMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, order, "已预约");
+            } catch (Exception e) {
+//            throw new ServiceException("消息推送失败");
+                log.error("消息推送失败");
+            }
 
         } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.REFUND)) {
             throw new ServiceException("订单转入退款");
@@ -233,31 +256,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             throw new ServiceException(v3Result.getTradeStateDesc());
         }*/
 
-        try {
-            sendVxMessage(wxuserid, order);
-            TRoom tRoom = roomService.selectTRoomById(order.getRoomId());
-            TStore tStore = storeService.selectTStoreById(tRoom.getStoreId());
-
-            TStoreUser tStoreUser = new TStoreUser();
-            tStoreUser.setStoreId(tStore.getId());
-            List<TStoreUser> tStoreUserList = itStoreUserService.selectTStoreUserList(tStoreUser);
-            for (TStoreUser item : tStoreUserList) {
-                TWxUser tWxUser = itWxUserService.selectTWxUserById(item.getUserId());
-                if (tWxUser != null && tWxUser.getMpOpenId() != null && !tWxUser.getMpOpenId().equals("")) {
-                    sendVxOrderMpMessage(tWxUser.getMpOpenId(), tStore, tRoom, order, "");
-                }
-            }
-//            sendVxOrderMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, order, "已预约");
-//            sendVxOrderMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, order, "已预约");
-//            sendVxOrderMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, order, "已预约");
-        } catch (Exception e) {
-//            throw new ServiceException("消息推送失败");
-            log.error("消息推送失败");
-        }
-
-
         return v3Result;
     }
+
 
     @Autowired
     ITWxUserService wxUserService;
@@ -916,9 +917,9 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             wxMaSubscribeMessage.setData(msgDataList);
             customerWxMaService.getMsgService().sendSubscribeMsg(wxMaSubscribeMessage);
 
-            System.out.println("Message sent successfully!");
+            log.error("Message sent successfully!");
         } catch (Exception e) {
-            System.out.println("Failed to send message: " + e.getMessage());
+            log.error("Failed to send message: " + e.getMessage());
         }
     }
 
@@ -1220,13 +1221,13 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     }
 
     @Override
-    public void scanUnusedOrder(){
+    public void scanUnusedOrder() {
         TRoomOrder roomOrder = new TRoomOrder();
         roomOrder.setStatus(OfficeEnum.RoomOrderStatus.ORDERED.getCode());
         List<TRoomOrder> roomOrderList = tRoomOrderMapper.selectTRoomOrderList(roomOrder);
         for (TRoomOrder order : roomOrderList) {
-            if(order.getEndTime().before(new Date())){
-                TRoomOrder up =new TRoomOrder();
+            if (order.getEndTime().before(new Date())) {
+                TRoomOrder up = new TRoomOrder();
                 up.setId(order.getId());
                 up.setStatus(OfficeEnum.RoomOrderStatus.OVER_TIME.getCode());
                 tRoomOrderMapper.updateTRoomOrder(up);
@@ -1335,7 +1336,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Override
     public void scanToPayOrder() {
         TRoomOrder qry = new TRoomOrder();
-        qry.setStatus(1);//  待支付	1 已预约	2 使用中	3 超时未使用	4 已完成	5 取消	9
+        qry.setStatus(OfficeEnum.RoomOrderStatus.TO_PAY.getCode());//  待支付	1 已预约	2 使用中	3 超时未使用	4 已完成	5 取消	9
         final List<TRoomOrder> roomOrders = tRoomOrderMapper.selectTRoomOrderList(qry);
 
         int closeOrderMinute = 30;
@@ -1345,16 +1346,18 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         if (dictDataList.size() > 0)
             closeOrderMinute = Integer.parseInt(dictDataList.get(0).getDictValue());
 
-
+        List<Long> ids = new ArrayList<>();
         for (TRoomOrder roomOrder : roomOrders) {
             Date cancelTime = DateUtils.addMinutes(roomOrder.getCreateTime(), closeOrderMinute);
-            if (cancelTime.after(new Date())) {
-                TRoomOrder up = new TRoomOrder();
-                up.setId(roomOrder.getId());
-                up.setStatus(9);
-                tRoomOrderMapper.updateTRoomOrder(up);
+            if (cancelTime.before(new Date())) {
+//                TRoomOrder up = new TRoomOrder();
+//                up.setId(roomOrder.getId());
+//                up.setStatus(OfficeEnum.RoomOrderStatus.CANCEL.getCode());
+                ids.add(roomOrder.getId());
             }
         }
+        Long[] sids = ids.toArray(new Long[ids.size()]);
+        tRoomOrderMapper.cancelRoomOrder(sids);
     }
 
     @Autowired

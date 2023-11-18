@@ -74,4 +74,6 @@ public interface TRoomOrderMapper extends BaseMapper<TRoomOrder> {
     List<RoomOrderH5Vo> selectTRoomOrderH5List(RoomOrderH5QryVo tRoomOrder);
 
     List<TRoomOrder> getInUseOrder(TRoomOrder roomOrder);
+
+    int cancelRoomOrder(Long[] idsup);
 }
