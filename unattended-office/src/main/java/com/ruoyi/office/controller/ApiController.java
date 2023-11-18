@@ -106,11 +106,11 @@ public class ApiController extends BaseController {
         if (lock.tryLock()) {
             logger.info("微信支付回调 /wxnotify: " + jsonData);
             // 支付成功结果通知
-            OriginNotifyResponse notifyResponse = JSON.parseObject(jsonData, OriginNotifyResponse.class);
+//            OriginNotifyResponse notifyResponse = JSON.parseObject(jsonData, OriginNotifyResponse.class);
             WxPayOrderNotifyV3Result v3Result = null;
             try {
                 WxPayService wxPayService = payService.getConfigByUserId(userId);
-                v3Result = wxPayService.parseOrderNotifyV3Result(jsonStrSort(notifyResponse), getRequestHeader(request));
+                v3Result = wxPayService.parseOrderNotifyV3Result(jsonData, getRequestHeader(request));
                 logger.info("回调结果解析" + v3Result.toString());
                 //解密后的数据
                 WxPayOrderNotifyV3Result.DecryptNotifyResult result = v3Result.getResult();
