@@ -29,6 +29,7 @@
 							<view>包间: {{room.roomName}}</view>
 							<view>开始时间: {{room.startTime}} </view>
 							<view>结束时间: {{room.endTime}} </view>
+							<view>保洁员: {{room.endTime}} </view>
 						</view>
 						<view class="card__content__footer">
 							<view>打扫时长: {{room.duration}} 分钟</view>
