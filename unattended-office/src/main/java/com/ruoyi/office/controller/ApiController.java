@@ -8,10 +8,7 @@ import cn.hutool.extra.qrcode.QrCodeUtil;
 import cn.hutool.extra.qrcode.QrConfig;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.github.binarywang.wxpay.bean.notify.OriginNotifyResponse;
-import com.github.binarywang.wxpay.bean.notify.SignatureHeader;
-import com.github.binarywang.wxpay.bean.notify.WxPayOrderNotifyV3Result;
-import com.github.binarywang.wxpay.bean.notify.WxPayRefundNotifyV3Result;
+import com.github.binarywang.wxpay.bean.notify.*;
 import com.github.binarywang.wxpay.bean.result.WxPayOrderQueryV3Result;
 import com.github.binarywang.wxpay.config.WxPayConfig;
 import com.github.binarywang.wxpay.constant.WxPayConstants;
@@ -100,7 +97,8 @@ public class ApiController extends BaseController {
     @ApiOperation("支付成功 api 回调")
     @Log(title = "支付成功 api 回调")
     @PostMapping("/wxnotify/{userId}")
-    public JSONObject wxnotify(@PathVariable("userId") Long userId, @RequestBody String jsonData, HttpServletRequest request, HttpServletResponse response) throws WxPayException {
+    public String wxnotify(@PathVariable("userId") Long userId, @RequestBody String jsonData, HttpServletRequest request, HttpServletResponse response) throws WxPayException {
+
         JSONObject wxPayResult = new JSONObject();
         Lock lock = new ReentrantLock();
         if (lock.tryLock()) {
@@ -128,7 +126,8 @@ public class ApiController extends BaseController {
 
                 //通知应答：接收成功：HTTP应答状态码需返回200或204，无需返回应答报文。
                 response.setStatus(HttpServletResponse.SC_OK);
-                return null;
+                log.info("回调处理成功");
+                return WxPayNotifyResponse.success("回调处理成功");
             } catch (WxPayException e) {
                 e.printStackTrace();
                 log.error("支付回调失败：" + e.getLocalizedMessage());
@@ -136,16 +135,16 @@ public class ApiController extends BaseController {
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 wxPayResult.fluentPut("code", "FAIL");
                 wxPayResult.fluentPut("message", e.getMessage());
-                return wxPayResult;
+                return WxPayNotifyResponse.fail(e.getLocalizedMessage());
             } finally {
                 lock.unlock();
             }
         }
-        // 通知应答码：HTTP应答状态码需返回5XX或4XX，同时需返回应答报文
+       /* // 通知应答码：HTTP应答状态码需返回5XX或4XX，同时需返回应答报文
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         wxPayResult.fluentPut("code", "FAIL");
-        wxPayResult.fluentPut("message", "失败");
-        return wxPayResult;
+        wxPayResult.fluentPut("message", "失败");*/
+        return WxPayNotifyResponse.fail("FAIL");;
     }
 
     @Autowired
