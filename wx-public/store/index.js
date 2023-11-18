@@ -122,12 +122,14 @@ const store = new Vuex.Store({
 				const storeList = res.rows ? res.rows : res
 				if(storeList.length){
 					const currentStoreId = state.currentStore ? state.currentStore.id : 0
+					let currentStore
 					if(currentStoreId){
-						state.currentStore = storeList.find(x=>x.id == currentStoreId)
-					}else{
-						state.currentStore = storeList[0]
+						currentStore = storeList.find(x=>x.id == currentStoreId)
 					}
-					lifeData['currentStore'] = state.currentStore
+					if(!currentStore){
+						currentStore = storeList[0]
+					}
+					lifeData['currentStore'] = state.currentStore = currentStore
 					uni.setStorage({
 						key: 'lifeData',
 						data: lifeData
