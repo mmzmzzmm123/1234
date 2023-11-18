@@ -1356,8 +1356,10 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
                 ids.add(roomOrder.getId());
             }
         }
-        Long[] sids = ids.toArray(new Long[ids.size()]);
-        tRoomOrderMapper.cancelRoomOrder(sids);
+        if (ids.size() > 0) {
+            Long[] sids = ids.toArray(new Long[ids.size()]);
+            tRoomOrderMapper.cancelRoomOrder(sids);
+        }
     }
 
     @Autowired
