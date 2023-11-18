@@ -2,13 +2,18 @@ package com.ruoyi.office.service.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.office.domain.TRoom;
+import com.ruoyi.office.domain.TWxUser;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.CleanRecordH5Vo;
 import com.ruoyi.office.service.ITRoomService;
+import com.ruoyi.office.service.ITWxUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -96,15 +101,22 @@ public class TRoomCleanRecordServiceImpl extends ServiceImpl<TRoomCleanRecordMap
     }
 
 
+    @Autowired
+    ITWxUserService wxUserService;
+
     @Override
     public List<CleanRecordH5Vo> selectTRoomCleanRecordH5List(CleanRecordH5Vo tRoomCleanRecord) {
 
         final List<CleanRecordH5Vo> cleanRecordH5Vos = tRoomCleanRecordMapper.selectTRoomCleanRecordH5List(tRoomCleanRecord);
+
+        Map<Long, TWxUser> wxUsers = wxUserService.selectTWxUserList(new TWxUser()).stream().collect(Collectors.toMap(TWxUser::getId, Function.identity()));
         for (CleanRecordH5Vo vo : cleanRecordH5Vos) {
             if (vo.getEndTime() != null && vo.getStartTime() != null) {
                 vo.setDuration((vo.getEndTime().getTime() - vo.getStartTime().getTime()) / 60000);
             }
             vo.setRoomStatus(OfficeEnum.RoomStatus.GetValueByCode(vo.getRoomStatus()).getInfo());
+            TWxUser tempUser = wxUsers.get(vo.getWxUserId());
+            vo.setCleaner(tempUser.getNickName() + "(" + tempUser.getPhone() + ")");
         }
 
         return cleanRecordH5Vos;
