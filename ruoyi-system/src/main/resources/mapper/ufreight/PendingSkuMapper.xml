@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ufreight.mapper.PendingSkuMapper">
+    
+    <resultMap type="PendingSku" id="PendingSkuResult">
+        <result property="pendingId"    column="pending_id"    />
+        <result property="rfidEpc"    column="rfid_epc"    />
+        <result property="partNumber"    column="part_number"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="inDate"    column="in_date"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="coo"    column="coo"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPendingSkuVo">
+        select pending_id, rfid_epc, part_number, serial_number, in_date, quantity, coo, create_by, create_time, update_by, update_time from t_pending_sku
+    </sql>
+
+    <select id="selectPendingSkuList" parameterType="PendingSku" resultMap="PendingSkuResult">
+        <include refid="selectPendingSkuVo"/>
+        <where>  
+            <if test="rfidEpc != null  and rfidEpc != ''"> and rfid_epc = #{rfidEpc}</if>
+            <if test="partNumber != null  and partNumber != ''"> and part_number = #{partNumber}</if>
+            <if test="serialNumber != null  and serialNumber != ''"> and serial_number = #{serialNumber}</if>
+            <if test="inDate != null  and inDate != ''"> and in_date = #{inDate}</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+            <if test="coo != null  and coo != ''"> and coo = #{coo}</if>
+        </where>
+    </select>
+    
+    <select id="selectPendingSkuByPendingId" parameterType="Long" resultMap="PendingSkuResult">
+        <include refid="selectPendingSkuVo"/>
+        where pending_id = #{pendingId}
+    </select>
+        
+    <insert id="insertPendingSku" parameterType="PendingSku" useGeneratedKeys="true" keyProperty="pendingId">
+        insert into t_pending_sku
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rfidEpc != null">rfid_epc,</if>
+            <if test="partNumber != null">part_number,</if>
+            <if test="serialNumber != null">serial_number,</if>
+            <if test="inDate != null">in_date,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="coo != null">coo,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rfidEpc != null">#{rfidEpc},</if>
+            <if test="partNumber != null">#{partNumber},</if>
+            <if test="serialNumber != null">#{serialNumber},</if>
+            <if test="inDate != null">#{inDate},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="coo != null">#{coo},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePendingSku" parameterType="PendingSku">
+        update t_pending_sku
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rfidEpc != null">rfid_epc = #{rfidEpc},</if>
+            <if test="partNumber != null">part_number = #{partNumber},</if>
+            <if test="serialNumber != null">serial_number = #{serialNumber},</if>
+            <if test="inDate != null">in_date = #{inDate},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="coo != null">coo = #{coo},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where pending_id = #{pendingId}
+    </update>
+
+    <delete id="deletePendingSkuByPendingId" parameterType="Long">
+        delete from t_pending_sku where pending_id = #{pendingId}
+    </delete>
+
+    <delete id="deletePendingSkuByPendingIds" parameterType="String">
+        delete from t_pending_sku where pending_id in 
+        <foreach item="pendingId" collection="array" open="(" separator="," close=")">
+            #{pendingId}
+        </foreach>
+    </delete>
+</mapper>
