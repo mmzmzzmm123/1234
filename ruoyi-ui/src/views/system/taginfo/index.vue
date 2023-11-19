@@ -106,6 +106,15 @@
           v-hasPermi="['system:info:export']"
         >导出</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-printer"
+          size="mini"
+          @click="() => batchPrint()"
+        >打印</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -122,6 +131,12 @@
       <el-table-column label="状态" align="center" prop="status" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-printer"
+            @click="handlePrint(scope.row)"
+          >打印</el-button>
           <el-button
             size="mini"
             type="text"
@@ -192,6 +207,8 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      //选中数据
+      selections: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -275,6 +292,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
+      this.selections = selection
       this.ids = selection.map(item => item.tagInfoId)
       this.single = selection.length!==1
       this.multiple = !selection.length
@@ -284,6 +302,42 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加tag信息";
+    },
+    /** 打印按钮操作 */
+    handlePrint(row) {
+      this.batchPrint([
+        {
+          tagId: row.tagInfoId,
+          coo: row.coo,
+          inDate: row.createTime,
+          partNumber: row.partNumber,
+          prodName: row.displayName,
+          quantity: row.quantity,
+          serialNumber: row.serialNumber,
+          epc: row.rfidId,
+        }
+      ])
+    },
+    // 批量打印
+    batchPrint(rows) {
+      rows = (rows || this.selections).map(row => {
+        return {
+          tagId: row.tagInfoId,
+          coo: row.coo,
+          inDate: row.createTime,
+          partNumber: row.partNumber,
+          prodName: row.displayName,
+          quantity: row.quantity,
+          serialNumber: row.serialNumber,
+          epc: row.rfidId,
+        }
+      })
+      this.$socket.send(
+        JSON.stringify({
+          option: 'print',
+          data: rows
+        })
+      );
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
