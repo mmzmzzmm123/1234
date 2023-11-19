@@ -305,18 +305,7 @@ export default {
     },
     /** 打印按钮操作 */
     handlePrint(row) {
-      this.batchPrint([
-        {
-          tagId: row.tagInfoId,
-          coo: row.coo,
-          inDate: row.createTime,
-          partNumber: row.partNumber,
-          prodName: row.displayName,
-          quantity: row.quantity,
-          serialNumber: row.serialNumber,
-          epc: row.rfidId,
-        }
-      ])
+      this.batchPrint([ row ])
     },
     // 批量打印
     batchPrint(rows) {
@@ -332,6 +321,7 @@ export default {
           epc: row.rfidId,
         }
       })
+      console.error(rows)
       this.$socket.send(
         JSON.stringify({
           option: 'print',
