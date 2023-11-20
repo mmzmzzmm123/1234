@@ -42,3 +42,11 @@ export function delSku(pendingId) {
     method: 'delete'
   })
 }
+
+// 打印成功sku
+export function skuPrinted() {
+  return request({
+    url: '/ufreight/sku/printed',
+    method: 'post'
+  })
+}

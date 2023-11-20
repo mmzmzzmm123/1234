@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="RFID EPC" prop="rfidEpc">
+      <el-form-item label-width='120' label="RFID EPC" prop="rfidEpc">
         <el-input
           v-model="queryParams.rfidEpc"
           placeholder="请输入RFID EPC"
@@ -98,6 +98,15 @@
           v-hasPermi="['ufreight:sku:export']"
         >导出</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-printer"
+          size="mini"
+          @click="() => batchPrint()"
+        >打印</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
@@ -112,6 +121,12 @@
       <el-table-column label="原产地证" align="center" prop="coo" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-printer"
+            @click="handlePrint(scope.row)"
+          >打印</el-button>
           <el-button
             size="mini"
             type="text"
@@ -169,8 +184,8 @@
 </template>
 
 <script>
-import { listSku, getSku, delSku, addSku, updateSku } from "@/api/ufreight/sku";
-
+import { listSku, getSku, delSku, addSku, updateSku, skuPrinted } from "@/api/ufreight/sku";
+import { mapState } from "vuex";
 export default {
   name: "Sku",
   data() {
@@ -179,6 +194,8 @@ export default {
       loading: true,
       // 选中数组
       ids: [],
+      //选中数据
+      selections: [],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -210,6 +227,16 @@ export default {
       rules: {
       }
     };
+  },
+  computed: {
+    ...mapState('printer', ['socketTimestamp', 'websocketMessage'])
+  },
+  watch: {
+    socketTimestamp(newVal, old) {
+      if (newVal != old) {
+        this.handleMessage();
+      }
+    }
   },
   created() {
     this.getList();
@@ -258,6 +285,7 @@ export default {
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
+      this.selections = selection
       this.ids = selection.map(item => item.pendingId)
       this.single = selection.length!==1
       this.multiple = !selection.length
@@ -267,6 +295,43 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加待处理sku";
+    },
+        /** 打印按钮操作 */
+    handlePrint(row) {
+      this.batchPrint([ row ])
+    },
+    // 批量打印
+    batchPrint(rows) {
+      rows = (rows || this.selections).map(row => {
+        return {
+          tagId: row.pendingId,
+          coo: row.coo,
+          inDate: row.createTime,
+          partNumber: row.partNumber,
+          prodName: row.displayName,
+          quantity:  Math.min(row.quantity, 20),
+          serialNumber: row.serialNumber,
+          epc: row.rfidId,
+        }
+      })
+      this.$socket.send(
+        JSON.stringify({
+          option: 'print',
+          data: rows
+        })
+      );
+    },
+    handleMessage() {
+      var res = JSON.parse(this.websocketMessage);
+      if (res.option == 'print') {
+        if (res.code != 0) {
+          this.$message.error(res.msg)
+          return;
+        }
+        skuPrinted({ pendingSkuId: res.data.tagId }).then(() => {
+          this.$modal.msgSuccess("打印成功");
+        });
+      }
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
