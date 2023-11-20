@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ufreight.mapper.ShelvesMapper">
+    
+    <resultMap type="Shelves" id="ShelvesResult">
+        <result property="shelfId"    column="shelf_id"    />
+        <result property="barcode"    column="barcode"    />
+        <result property="location"    column="location"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectShelvesVo">
+        select shelf_id, barcode, location, create_by, create_time, update_by, update_time from t_shelves
+    </sql>
+
+    <select id="selectShelvesList" parameterType="Shelves" resultMap="ShelvesResult">
+        <include refid="selectShelvesVo"/>
+        <where>  
+            <if test="barcode != null  and barcode != ''"> and barcode = #{barcode}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
+        </where>
+    </select>
+    
+    <select id="selectShelvesByShelfId" parameterType="Long" resultMap="ShelvesResult">
+        <include refid="selectShelvesVo"/>
+        where shelf_id = #{shelfId}
+    </select>
+        
+    <insert id="insertShelves" parameterType="Shelves" useGeneratedKeys="true" keyProperty="shelfId">
+        insert into t_shelves
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="barcode != null">barcode,</if>
+            <if test="location != null">location,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="barcode != null">#{barcode},</if>
+            <if test="location != null">#{location},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateShelves" parameterType="Shelves">
+        update t_shelves
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="barcode != null">barcode = #{barcode},</if>
+            <if test="location != null">location = #{location},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where shelf_id = #{shelfId}
+    </update>
+
+    <delete id="deleteShelvesByShelfId" parameterType="Long">
+        delete from t_shelves where shelf_id = #{shelfId}
+    </delete>
+
+    <delete id="deleteShelvesByShelfIds" parameterType="String">
+        delete from t_shelves where shelf_id in 
+        <foreach item="shelfId" collection="array" open="(" separator="," close=")">
+            #{shelfId}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ufreight.mapper.InventoryMapper">
+    
+    <resultMap type="Inventory" id="InventoryResult">
+        <result property="inventoryId"    column="inventory_id"    />
+        <result property="partNumber"    column="part_number"    />
+        <result property="shelfBarcode"    column="shelf_barcode"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectInventoryVo">
+        select inventory_id, part_number, shelf_barcode, quantity, create_by, create_time, update_by, update_time from t_inventory
+    </sql>
+
+    <select id="selectInventoryList" parameterType="Inventory" resultMap="InventoryResult">
+        <include refid="selectInventoryVo"/>
+        <where>  
+            <if test="partNumber != null  and partNumber != ''"> and part_number = #{partNumber}</if>
+            <if test="shelfBarcode != null  and shelfBarcode != ''"> and shelf_barcode = #{shelfBarcode}</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+        </where>
+    </select>
+    
+    <select id="selectInventoryByInventoryId" parameterType="Long" resultMap="InventoryResult">
+        <include refid="selectInventoryVo"/>
+        where inventory_id = #{inventoryId}
+    </select>
+        
+    <insert id="insertInventory" parameterType="Inventory" useGeneratedKeys="true" keyProperty="inventoryId">
+        insert into t_inventory
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="partNumber != null">part_number,</if>
+            <if test="shelfBarcode != null">shelf_barcode,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="partNumber != null">#{partNumber},</if>
+            <if test="shelfBarcode != null">#{shelfBarcode},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInventory" parameterType="Inventory">
+        update t_inventory
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="partNumber != null">part_number = #{partNumber},</if>
+            <if test="shelfBarcode != null">shelf_barcode = #{shelfBarcode},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where inventory_id = #{inventoryId}
+    </update>
+
+    <delete id="deleteInventoryByInventoryId" parameterType="Long">
+        delete from t_inventory where inventory_id = #{inventoryId}
+    </delete>
+
+    <delete id="deleteInventoryByInventoryIds" parameterType="String">
+        delete from t_inventory where inventory_id in 
+        <foreach item="inventoryId" collection="array" open="(" separator="," close=")">
+            #{inventoryId}
+        </foreach>
+    </delete>
+</mapper>
