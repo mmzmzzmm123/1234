@@ -311,7 +311,7 @@ export default {
           prodName: row.displayName,
           quantity:  Math.min(row.quantity, 20),
           serialNumber: row.serialNumber,
-          epc: row.rfidId,
+          epc: row.rfidEpc,
         }
       })
       this.$socket.send(
