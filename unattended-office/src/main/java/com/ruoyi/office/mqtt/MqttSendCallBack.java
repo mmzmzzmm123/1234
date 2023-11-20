@@ -1,5 +1,7 @@
 package com.ruoyi.office.mqtt;
 
+import com.ruoyi.office.domain.TMqttMsg;
+import com.ruoyi.office.service.ITMqttMsgService;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -9,10 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 
 @Slf4j
 @Component
 public class MqttSendCallBack implements MqttCallbackExtended {
+
+
+    @Autowired
+    ITMqttMsgService mqttMsgService;
 
     /**
      * 链接EMQ服务器后触发
@@ -44,6 +51,13 @@ public class MqttSendCallBack implements MqttCallbackExtended {
         log.info("【MQTT-发送端】接收消息主题 : " + topic);
         log.info("【MQTT-发送端】接收消息Qos : " + message.getQos());
         log.info("【MQTT-发送端】接收消息内容 : " + new String(message.getPayload()));
+
+        TMqttMsg mqttMsg = new TMqttMsg();
+        mqttMsg.setMsgType("RECV");
+        mqttMsg.setTopic(topic);
+        mqttMsg.setMessage(new String(message.getPayload()));
+        mqttMsg.setCreateTime(new Date());
+        mqttMsgService.insertTMqttMsg(mqttMsg);
     }
 
     /**

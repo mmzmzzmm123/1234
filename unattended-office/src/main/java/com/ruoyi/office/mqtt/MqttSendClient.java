@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
-@Component
+//@Component
 public class MqttSendClient {
 
 
@@ -40,16 +40,26 @@ public class MqttSendClient {
           */
     private final int defaultQos = 1;
 
-    @Autowired
-    private MqttSendCallBack mqttSendCallBack;
-
-    @Autowired
-    private MqttProperties mqttProperties;
-
     private static MqttClient mqttClient;
+    private MqttSendCallBack mqttSendCallBack;
+    private String host;
+    private String username;
+    private String password;
+    private String clientId;
+    private int timeout;
+    private int keepalive;
+
+    public MqttSendClient(MqttProperties properties, MqttSendCallBack callBack) {//String host, String username, String password, String clientId, int timeOut, int keepAlive) {
+        this.host = properties.getHostUrl();
+        this.username = properties.getUsername();
+        this.password = properties.getPassword();
+        this.clientId = properties.getClientId();
+        this.timeout = properties.getTimeout();
+        this.keepalive = properties.getKeepAlive();
+        this.mqttSendCallBack = callBack;
+    }
 
     private static MqttClient getClient() {
-
         return mqttClient;
     }
 
@@ -57,43 +67,36 @@ public class MqttSendClient {
         MqttSendClient.mqttClient = client;
     }
 
-    @Autowired
-    ITMqttMsgService mqttMsgService;
     /**
      * 客户端连接
      *
      * @return
      */
     public void connect() {
-        MqttClient client = null;
-
         try {
+            if (mqttClient == null) {
+                mqttClient = new MqttClient(host, clientId, new MemoryPersistence());
+                mqttClient.setCallback(mqttSendCallBack);
+            }
 
             //String uuid = UUID.randomUUID().toString().replaceAll("-",""); //设置每一个客户端的id
-            client = new MqttClient(mqttProperties.getHostUrl(), mqttProperties.getClientId(), new MemoryPersistence());
             MqttConnectOptions options = new MqttConnectOptions();
-            options.setUserName(mqttProperties.getUsername());
-            options.setPassword(mqttProperties.getPassword().toCharArray());
-            options.setConnectionTimeout(mqttProperties.getTimeout());
-            options.setKeepAliveInterval(mqttProperties.getKeepAlive());
+            options.setUserName(username);
+            options.setPassword(password.toCharArray());
+            options.setConnectionTimeout(timeout);
+            options.setKeepAliveInterval(keepalive);
             options.setCleanSession(true);
             // 自动重连
             options.setAutomaticReconnect(true);
-
-            MqttSendClient.setClient(client);
-            try {
-                // 设置回调
-                client.setCallback(mqttSendCallBack);
-                client.connect(options);
-
-//                sub("chl_xxx");
-            } catch (Exception e) {
-
-                e.printStackTrace();
+            if (!mqttClient.isConnected()) {
+                mqttClient.connect(options);
+            } else {
+                mqttClient.disconnect();
+                mqttClient.connect(options);
             }
         } catch (Exception e) {
-
             e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
@@ -144,8 +147,6 @@ public class MqttSendClient {
      */
     public void publish(int qos, boolean retained, String topic, String pushMessage) {
 
-//        logBeforeSend(qos, retained, topic, pushMessage);
-
         MqttMessage message = new MqttMessage();
         message.setQos(qos);
         message.setRetained(retained);
@@ -155,21 +156,27 @@ public class MqttSendClient {
             log.error("主题不存在:{}", mTopic);
             throw new ServiceException("主题不存在：" + mTopic);
         }
-        try {
-            MqttDeliveryToken token = mTopic.publish(message);
-            sub(topic);
-//            log.info(topic + "消息发送成功" + pushMessage);
-        } catch (MqttException mqttException) {
-//            logAfterSendBack(qos, topic, pushMessage, "mqtt 断开重连");
-            if (mqttException.getMessage().equalsIgnoreCase("Client is not connected")) {
-                connect();
+
+        MqttDeliveryToken token;//Delivery:配送
+        synchronized (this) {//注意：这里一定要同步，否则，在多线程publish的情况下，线程会发生死锁，分析见文章最后补充
+            try {
+                sub(topic);
+                token = mTopic.publish(message);//也是发送到执行队列中，等待执行线程执行，将消息发送到消息中间件
+                token.waitForCompletion(1000L);
+            } catch (MqttPersistenceException e) {
+                log.error(e.getMessage());
+            } catch (MqttException mqttException) {
+                if (mqttException.getMessage().equalsIgnoreCase("Client is not connected")) {
+                    connect();
+                } else {
+                    log.error(mqttException.getMessage());
+                }
+            } catch (Exception e) {
+                log.error(topic + " mqtt发送消息异常 " + pushMessage);
+                throw new ServiceException(e.getMessage());
             }
-        } catch (Exception e) {
-            log.error("mqtt发送消息异常:", e);
-            log.error(topic + " mqtt发送消息异常 " + pushMessage);
-//            logAfterSendBack(qos, topic, pushMessage, e.getMessage());
-            throw new ServiceException(e.getMessage());
         }
+
     }
 
     public void sub(String topic) {

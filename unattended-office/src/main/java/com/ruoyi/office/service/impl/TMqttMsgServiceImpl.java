@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.office.domain.TEquipment;
@@ -94,24 +95,26 @@ public class TMqttMsgServiceImpl extends ServiceImpl<TMqttMsgMapper, TMqttMsg> i
         return tMqttMsgMapper.deleteTMqttMsgById(id);
     }
 
+    @Autowired
+    MqttSendClient sendClient;
+
     @Override
     public void publish(TEquipment qry, boolean onOff, String msg) {
-        MqttSendClient sendClient = new MqttSendClient();
-        logBeforeSend(qry, msg);
+//        MqttSendClient sendClient = new MqttSendClient();
         try {
-            sendClient.publish(qry, onOff, JSONObject.toJSONString(msg));
+            sendClient.publish(qry, onOff, msg);
+            logAfterSend(qry, msg);
         } catch (Exception e) {
             logWhenError(qry, msg, e.getMessage());
         }
     }
 
 
-    private void logBeforeSend(TEquipment equipment, String msg) {
+    private void logAfterSend(TEquipment equipment, String msg) {
         try {
             TMqttMsg mqttMsg = new TMqttMsg();
             mqttMsg.setClientId(equipment.getEquipControl());
             mqttMsg.setTopic(equipment.getEquipControl());
-//            mqttMsg.setQos(qos + "");
             if (StringUtils.isNotEmpty(equipment.getOnOffMsg())) {
                 mqttMsg.setMessage(equipment.getOnOffMsg());
             } else {
@@ -122,6 +125,7 @@ public class TMqttMsgServiceImpl extends ServiceImpl<TMqttMsgMapper, TMqttMsg> i
             insertTMqttMsg(mqttMsg);
         } catch (Exception e) {
             log.error("mqtt发送前记录异常:", e);
+            throw new ServiceException(e.getMessage());
         }
     }
 

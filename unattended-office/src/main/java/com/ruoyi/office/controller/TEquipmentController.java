@@ -12,6 +12,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.entity.SysDictData;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.office.domain.TRoom;
 import com.ruoyi.office.domain.TStore;
 import com.ruoyi.office.domain.enums.OfficeEnum;
@@ -52,7 +53,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * @date 2023-05-29
  */
 @RestController
-@RequestMapping("/office/equipment" )
+@RequestMapping("/office/equipment")
 public class TEquipmentController extends BaseController {
     @Autowired
     private ITEquipmentService tEquipmentService;
@@ -60,11 +61,11 @@ public class TEquipmentController extends BaseController {
     /**
      * 查询设备列表列表
      */
-    @PreAuthorize("@ss.hasPermi('office:equipment:list')" )
-    @GetMapping("/list" )
+    @PreAuthorize("@ss.hasPermi('office:equipment:list')")
+    @GetMapping("/list")
     public TableDataInfo list(TEquipment tEquipment) {
 //        if (!SecurityUtils.getUsername().equalsIgnoreCase("admin"))
-        tEquipment.setCreateBy(SecurityUtils.getUserId() + "" );
+        tEquipment.setCreateBy(SecurityUtils.getUserId() + "");
         startPage();
         List<TEquipment> list = tEquipmentService.selectTEquipmentList(tEquipment);
         return getDataTable(list);
@@ -73,32 +74,32 @@ public class TEquipmentController extends BaseController {
     /**
      * 导出设备列表列表
      */
-    @PreAuthorize("@ss.hasPermi('office:equipment:export')" )
-    @Log(title = "设备列表" , businessType = BusinessType.EXPORT)
-    @PostMapping("/export" )
+    @PreAuthorize("@ss.hasPermi('office:equipment:export')")
+    @Log(title = "设备列表", businessType = BusinessType.EXPORT)
+    @PostMapping("/export")
     public void export(HttpServletResponse response, TEquipment tEquipment) {
         List<TEquipment> list = tEquipmentService.selectTEquipmentList(tEquipment);
         ExcelUtil<TEquipment> util = new ExcelUtil<TEquipment>(TEquipment.class);
-        util.exportExcel(response, list, "设备列表数据" );
+        util.exportExcel(response, list, "设备列表数据");
     }
 
     /**
      * 获取设备列表详细信息
      */
-    @PreAuthorize("@ss.hasPermi('office:equipment:query')" )
-    @GetMapping(value = "/{id}" )
-    public AjaxResult getInfo(@PathVariable("id" ) Long id) {
+    @PreAuthorize("@ss.hasPermi('office:equipment:query')")
+    @GetMapping(value = "/{id}")
+    public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(tEquipmentService.selectTEquipmentById(id));
     }
 
     /**
      * 新增设备列表
      */
-    @PreAuthorize("@ss.hasPermi('office:equipment:add')" )
-    @Log(title = "设备列表" , businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('office:equipment:add')")
+    @Log(title = "设备列表", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TEquipment tEquipment) {
-        tEquipment.setCreateBy(SecurityUtils.getUserId() + "" );
+        tEquipment.setCreateBy(SecurityUtils.getUserId() + "");
 
         return toAjax(tEquipmentService.insertTEquipment(tEquipment));
     }
@@ -106,20 +107,20 @@ public class TEquipmentController extends BaseController {
     /**
      * 修改设备列表
      */
-    @PreAuthorize("@ss.hasPermi('office:equipment:edit')" )
-    @Log(title = "设备列表" , businessType = BusinessType.UPDATE)
+    @PreAuthorize("@ss.hasPermi('office:equipment:edit')")
+    @Log(title = "设备列表", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TEquipment tEquipment) {
-        tEquipment.setUpdateBy(SecurityUtils.getUserId() + "" );
+        tEquipment.setUpdateBy(SecurityUtils.getUserId() + "");
         return toAjax(tEquipmentService.updateTEquipment(tEquipment));
     }
 
     /**
      * 删除设备列表
      */
-    @PreAuthorize("@ss.hasPermi('office:equipment:remove')" )
-    @Log(title = "设备列表" , businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}" )
+    @PreAuthorize("@ss.hasPermi('office:equipment:remove')")
+    @Log(title = "设备列表", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(tEquipmentService.deleteTEquipmentByIds(ids));
     }
@@ -133,28 +134,28 @@ public class TEquipmentController extends BaseController {
     @Autowired
     ITMqttMsgService mqttMsgService;
 
-    @PutMapping("/setting" )
+    @PutMapping("/setting")
     public AjaxResult setDevice(@RequestBody TEquipment tEquipment) {
 
         TEquipment qry = tEquipmentService.selectTEquipmentById(tEquipment.getId());
 
         SysDictData dictData = new SysDictData();
-        dictData.setDictType("equipment_type" );
+        dictData.setDictType("equipment_type");
         Map<String, String> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, SysDictData::getRemark));
         try {
             if ("Y".equalsIgnoreCase(tEquipment.getOnOff())) {
                 Map<String, String> msg = new HashMap<>();
                 if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
-                    String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split("," )[0].split(":" );
+                    String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[0].split(":");
                     msg.put(command[0], command[1]);
                 } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
-                    String[] command = equipDict.get(OfficeEnum.EquipType.LIGHT.getCode()).split("," )[0].split(":" );
+                    String[] command = equipDict.get(OfficeEnum.EquipType.LIGHT.getCode()).split(",")[0].split(":");
                     msg.put(command[0], command[1]);
                 } else if (OfficeEnum.EquipType.AIR_CONDITION.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
-                    String[] command = equipDict.get(OfficeEnum.EquipType.AIR_CONDITION.getCode()).split("," )[0].split(":" );
+                    String[] command = equipDict.get(OfficeEnum.EquipType.AIR_CONDITION.getCode()).split(",")[0].split(":");
                     msg.put(command[0], command[1]);
                 } else if (OfficeEnum.EquipType.MACHINE.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
-                    String[] command = equipDict.get(OfficeEnum.EquipType.MACHINE.getCode()).split("," )[0].split(":" );
+                    String[] command = equipDict.get(OfficeEnum.EquipType.MACHINE.getCode()).split(",")[0].split(":");
                     msg.put(command[0], command[1]);
                 } else if (OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
                     TRoom room = getEquipRoom(qry.getId());
@@ -166,7 +167,7 @@ public class TEquipmentController extends BaseController {
                     TtlockGatewayRes res = TtlockConfig.lock(ttlockTokenRes.getAccess_token(), lockId);
 
                 } else {
-                    return AjaxResult.error("未知类型设备或无需打开关闭设备" );
+                    return AjaxResult.error("未知类型设备或无需打开关闭设备");
                 }
 
 //                sendClient.publish(qry.getEquipControl(), JSONObject.toJSONString(msg));
@@ -176,16 +177,16 @@ public class TEquipmentController extends BaseController {
             } else if ("N".equalsIgnoreCase(tEquipment.getOnOff())) {
                 Map<String, String> msg = new HashMap<>();
                 if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
-                    String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split("," )[1].split(":" );
+                    String[] command = equipDict.get(OfficeEnum.EquipType.DOOR.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
                 } else if (OfficeEnum.EquipType.LIGHT.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
-                    String[] command = equipDict.get(OfficeEnum.EquipType.LIGHT.getCode()).split("," )[1].split(":" );
+                    String[] command = equipDict.get(OfficeEnum.EquipType.LIGHT.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
                 } else if (OfficeEnum.EquipType.AIR_CONDITION.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
-                    String[] command = equipDict.get(OfficeEnum.EquipType.AIR_CONDITION.getCode()).split("," )[1].split(":" );
+                    String[] command = equipDict.get(OfficeEnum.EquipType.AIR_CONDITION.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
                 } else if (OfficeEnum.EquipType.MACHINE.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
-                    String[] command = equipDict.get(OfficeEnum.EquipType.MACHINE.getCode()).split("," )[1].split(":" );
+                    String[] command = equipDict.get(OfficeEnum.EquipType.MACHINE.getCode()).split(",")[1].split(":");
                     msg.put(command[0], command[1]);
                 } else if (OfficeEnum.EquipType.TTLOCK.getCode().equalsIgnoreCase(tEquipment.getEquipType())) {
 
@@ -199,7 +200,7 @@ public class TEquipmentController extends BaseController {
 
                 } else {
 //                    throw new ServiceException("未知类型设备");
-                    return AjaxResult.error("未知类型设备或无需打开关闭设备" );
+                    return AjaxResult.error("未知类型设备或无需打开关闭设备");
                 }
 
 //                sendClient.publish(qry.getEquipControl(), JSONObject.toJSONString(msg));
@@ -211,10 +212,13 @@ public class TEquipmentController extends BaseController {
             return AjaxResult.error("操作失败" + e.getMessage());
         }
         // messageArrived 里面处理 消息发送到接收端时触发；
-        tEquipment.setUpdateBy(SecurityUtils.getUserId() + "" );
+        tEquipment.setUpdateBy(SecurityUtils.getUserId() + "");
 
         return toAjax(tEquipmentService.updateTEquipment(tEquipment));
     }
+
+    @Autowired
+    MqttSendClient mqttSendClient;
 
     @PostConstruct
     /**
@@ -222,20 +226,21 @@ public class TEquipmentController extends BaseController {
      */
     public void scanEquipStatus() {
 //        MqttAcceptClient subClient = new MqttAcceptClient();
-//        List<TEquipment> equipments = tEquipmentService.selectTEquipmentList(new TEquipment());
-//        for (TEquipment equipment : equipments) {
-//            if (StringUtils.isNotEmpty(equipment.getEquipControl()))
-//                subClient.subscribe(equipment.getEquipControl(), 0);
-//        }
+        List<TEquipment> equipments = tEquipmentService.selectTEquipmentList(new TEquipment());
+        for (TEquipment equipment : equipments) {
+            if (StringUtils.isNotEmpty(equipment.getEquipControl())) {
+//                mqttSendClient.sub(equipment.getEquipControl());
+            }
+        }
     }
 
     /**
      * 查询设备列表列表
      */
-    @PreAuthorize("@ss.hasPermi('office:equipment:list')" )
-    @GetMapping("/listAvailable" )
+    @PreAuthorize("@ss.hasPermi('office:equipment:list')")
+    @GetMapping("/listAvailable")
     public TableDataInfo listAvailable(EquipeAvailableQryVo tEquipment) {
-        tEquipment.setCreateBy(SecurityUtils.getUserId() + "" );
+        tEquipment.setCreateBy(SecurityUtils.getUserId() + "");
         List<TEquipment> list = tEquipmentService.selectAvailableEquipmentList(tEquipment);
         return getDataTable(list);
     }
@@ -247,7 +252,7 @@ public class TEquipmentController extends BaseController {
         final List<TRoom> tRooms = roomService.selectTRoomList(new TRoom());
         for (TRoom room : tRooms) {
             String rEquips = room.getTableCode() + ",";
-            if (rEquips.contains(equipId + "," )) {
+            if (rEquips.contains(equipId + ",")) {
                 return room;
             }
         }
