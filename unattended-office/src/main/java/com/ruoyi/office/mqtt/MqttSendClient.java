@@ -18,6 +18,8 @@ import java.util.Map;
 @Component
 public class MqttSendClient {
 
+    private final int defaultQos = 2;
+
     @Autowired
     private MqttSendCallBack mqttSendCallBack;
 
@@ -79,10 +81,10 @@ public class MqttSendClient {
      */
     public void publish(TEquipment equipment, boolean onOff, String pushMessage) {
         if (StringUtils.isNotEmpty(equipment.getOnOffMsg())) {
-            String[] msgs = equipment.getOnOffMsg().split("," );
+            String[] msgs = equipment.getOnOffMsg().split(",");
             if (msgs.length != 2) {
                 log.error("设备开关代码配置错误:" + equipment.toString());
-                throw new ServiceException("设备开关代码配置错误" );
+                throw new ServiceException("设备开关代码配置错误");
             }
             Map<String, String> msg = new HashMap<>();
             if (onOff) {
@@ -95,7 +97,7 @@ public class MqttSendClient {
                 publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
             }
         } else {
-            publish(0, false, equipment.getEquipControl(), pushMessage);
+            publish(defaultQos, false, equipment.getEquipControl(), pushMessage);
         }
     }
 
@@ -106,7 +108,7 @@ public class MqttSendClient {
      * @param pushMessage 消息
      */
     public void publish(String topic, String pushMessage) {
-        publish(0, false, topic, pushMessage);
+        publish(defaultQos, false, topic, pushMessage);
     }
 
     /**
@@ -124,24 +126,24 @@ public class MqttSendClient {
         message.setPayload(pushMessage.getBytes());
         MqttTopic mTopic = MqttSendClient.getClient().getTopic(topic);
         if (null == mTopic) {
-            log.error("主题不存在:{}" , mTopic);
+            log.error("主题不存在:{}", mTopic);
         }
         try {
             mTopic.publish(message);
             log.info(topic + "消息发送成功" + pushMessage);
         } catch (MqttException mqttException) {
-            if (mqttException.getMessage().equalsIgnoreCase("Client is not connected" )) {
+            if (mqttException.getMessage().equalsIgnoreCase("Client is not connected")) {
                 connect();
             }
         } catch (Exception e) {
-            log.error("mqtt发送消息异常:" , e);
+            log.error("mqtt发送消息异常:", e);
             log.error(topic + " mqtt发送消息异常 " + pushMessage);
             throw new ServiceException(e.getMessage());
         }
     }
 
     public void sub(String topic) {
-        sub(topic, 0);
+        sub(topic, defaultQos);
     }
 
     public void sub(String topic, int qos) {
