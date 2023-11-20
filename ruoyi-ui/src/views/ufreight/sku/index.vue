@@ -298,26 +298,33 @@ export default {
     },
         /** 打印按钮操作 */
     handlePrint(row) {
-      this.batchPrint([ row ])
+      this.batchPrint([row])
     },
     // 批量打印
     batchPrint(rows) {
-      rows = (rows || this.selections).map(row => {
-        return {
-          tagId: row.pendingId,
-          coo: row.coo,
-          inDate: row.createTime,
-          partNumber: row.partNumber,
-          prodName: row.displayName,
-          quantity:  Math.min(row.quantity, 20),
-          serialNumber: row.serialNumber,
-          epc: row.rfidEpc,
-        }
-      })
+      rows = rows || this.selections
+      if(rows.length === 0) {
+        return this.$modal.msgError("请先选择一个sku")
+      }
+      const allPrintItems = rows.map(row => {
+        return new Array(row.quantity).fill(null).map(() => {
+          return {
+            tagId: row.pendingId,
+            coo: row.coo,
+            inDate: row.createTime,
+            partNumber: row.partNumber,
+            prodName: row.displayName,
+            quantity: row.quantity,
+            serialNumber: row.serialNumber,
+            epc: row.rfidEpc,
+          }
+        })
+      }).flat(1)
+      console.error(allPrintItems.slice(0, 20))
       this.$socket.send(
         JSON.stringify({
           option: 'print',
-          data: rows
+          data: allPrintItems.slice(0,20)
         })
       );
     },
