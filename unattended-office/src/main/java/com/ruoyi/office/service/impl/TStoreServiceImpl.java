@@ -142,6 +142,9 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
     @Autowired
     private ITRoomService roomService;
 
+    @Autowired
+    private ITMqttMsgService mqttMsgService;
+
     @Override
     public void openStore(Long id) {
 
@@ -166,9 +169,10 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
             } else {
                 throw new ServiceException("未设置门禁开门代码");
             }
-            MqttSendClient sendClient = new MqttSendClient();
+//            MqttSendClient sendClient = new MqttSendClient();
 //            sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
-            sendClient.publish(equipment, true, JSONObject.toJSONString(msg));
+//            sendClient.publish(equipment, true, JSONObject.toJSONString(msg));
+            mqttMsgService.publish(equipment, true, JSONObject.toJSONString(msg));
 
         } else if (equipment.getEquipType().equalsIgnoreCase(OfficeEnum.EquipType.TTLOCK.getCode())) {
             try {
@@ -208,9 +212,10 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
                 throw new ServiceException("未找到门禁设备代码,请联系管理员");
             }
 
-            MqttSendClient sendClient = new MqttSendClient();
+//            MqttSendClient sendClient = new MqttSendClient();
 //            sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
-            sendClient.publish(equipment, true, JSONObject.toJSONString(msg));
+//            sendClient.publish(equipment, true, JSONObject.toJSONString(msg));
+            mqttMsgService.publish(equipment, true, JSONObject.toJSONString(msg));
 
         } else if (equipment.getEquipType().equalsIgnoreCase(OfficeEnum.EquipType.TTLOCK.getCode())) {
             try {
@@ -248,9 +253,10 @@ public class TStoreServiceImpl extends ServiceImpl<TStoreMapper, TStore> impleme
                 throw new ServiceException("未找到门禁设备代码,请联系管理员");
             }
 
-            MqttSendClient sendClient = new MqttSendClient();
+//            MqttSendClient sendClient = new MqttSendClient();
 //            sendClient.publish(equipment.getEquipControl(), JSONObject.toJSONString(msg));
-            sendClient.publish(equipment, false, JSONObject.toJSONString(msg));
+//            sendClient.publish(equipment, false, JSONObject.toJSONString(msg));
+            mqttMsgService.publish(equipment, false, JSONObject.toJSONString(msg));
 
         } else if (equipment.getEquipType().equalsIgnoreCase(OfficeEnum.EquipType.TTLOCK.getCode())) {
             try {

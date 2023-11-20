@@ -20,6 +20,7 @@ import com.ruoyi.office.domain.vo.TtlockGatewayRes;
 import com.ruoyi.office.domain.vo.TtlockTokenRes;
 import com.ruoyi.office.mqtt.MqttAcceptClient;
 import com.ruoyi.office.mqtt.MqttSendClient;
+import com.ruoyi.office.service.ITMqttMsgService;
 import com.ruoyi.office.service.ITRoomService;
 import com.ruoyi.office.service.ITStoreService;
 import com.ruoyi.office.ttlock.TtlockConfig;
@@ -129,9 +130,12 @@ public class TEquipmentController extends BaseController {
     @Autowired
     ITStoreService storeService;
 
+    @Autowired
+    ITMqttMsgService mqttMsgService;
+
     @PutMapping("/setting" )
     public AjaxResult setDevice(@RequestBody TEquipment tEquipment) {
-        MqttSendClient sendClient = new MqttSendClient();
+
         TEquipment qry = tEquipmentService.selectTEquipmentById(tEquipment.getId());
 
         SysDictData dictData = new SysDictData();
@@ -166,7 +170,7 @@ public class TEquipmentController extends BaseController {
                 }
 
 //                sendClient.publish(qry.getEquipControl(), JSONObject.toJSONString(msg));
-                sendClient.publish(qry, true, JSONObject.toJSONString(msg));
+                mqttMsgService.publish(qry, true, JSONObject.toJSONString(msg));
 
                 tEquipment.setRecentOpenTime(new Date());
             } else if ("N".equalsIgnoreCase(tEquipment.getOnOff())) {
@@ -199,10 +203,11 @@ public class TEquipmentController extends BaseController {
                 }
 
 //                sendClient.publish(qry.getEquipControl(), JSONObject.toJSONString(msg));
-                sendClient.publish(qry, false, JSONObject.toJSONString(msg));
+//                sendClient.publish(qry, false, JSONObject.toJSONString(msg));
+                mqttMsgService.publish(qry, false, JSONObject.toJSONString(msg));
+
             }
         } catch (Exception e) {
-//            throw new ServiceException("操作失败" + e.getMessage());
             return AjaxResult.error("操作失败" + e.getMessage());
         }
         // messageArrived 里面处理 消息发送到接收端时触发；
@@ -216,8 +221,8 @@ public class TEquipmentController extends BaseController {
      * 扫描所有设备返回
      */
     public void scanEquipStatus() {
-        MqttAcceptClient subClient = new MqttAcceptClient();
-        List<TEquipment> equipments = tEquipmentService.selectTEquipmentList(new TEquipment());
+//        MqttAcceptClient subClient = new MqttAcceptClient();
+//        List<TEquipment> equipments = tEquipmentService.selectTEquipmentList(new TEquipment());
 //        for (TEquipment equipment : equipments) {
 //            if (StringUtils.isNotEmpty(equipment.getEquipControl()))
 //                subClient.subscribe(equipment.getEquipControl(), 0);

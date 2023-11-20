@@ -19,6 +19,7 @@ import com.ruoyi.office.horn.HornConfig;
 import com.ruoyi.office.mapper.TStoreMapper;
 import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.service.ITEquipmentService;
+import com.ruoyi.office.service.ITMqttMsgService;
 import com.ruoyi.office.service.ITStoreService;
 import com.ruoyi.office.ttlock.TtlockConfig;
 import com.ruoyi.office.util.WxMsgSender;
@@ -117,6 +118,9 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
     @Autowired
     private ISysDictDataService dictDataService;
 
+    @Autowired
+    private ITMqttMsgService mqttMsgService;
+
     @Override
     public String openRoom(Long id) {
         TRoom room = tRoomMapper.selectTRoomById(id);
@@ -134,7 +138,6 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
 
         StringBuilder errMsg = new StringBuilder();
-        MqttSendClient sendClient = new MqttSendClient();
         String equips = room.getTableCode();
         for (String equip : equips.split(",")) {
             TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
@@ -175,7 +178,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                 }
                 try {
 //                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                    sendClient.publish(currentEq, true, JSONObject.toJSONString(msg));
+                    mqttMsgService.publish(currentEq, true, JSONObject.toJSONString(msg));
 
                     currentEq.setRecentOpenTime(new Date());
                     currentEq.setOnOff("Y");
@@ -204,7 +207,6 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
 
         StringBuilder sb = new StringBuilder();
-        MqttSendClient sendClient = new MqttSendClient();
         String equips = room.getTableCode();
         for (String equip : equips.split(",")) {
             TEquipment currentEq = equipmentMap.get(Long.parseLong(equip));
@@ -265,7 +267,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
                     try {
 //                        sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                        sendClient.publish(currentEq, false, JSONObject.toJSONString(msg));
+                        mqttMsgService.publish(currentEq, false, JSONObject.toJSONString(msg));
                     } catch (Exception e) {
                         continue;
                     }
@@ -292,7 +294,6 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         dictData.setDictType("equipment_type");
         Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
 
-        MqttSendClient sendClient = new MqttSendClient();
         String equips = room.getTableCode();
         String hornSn = "";
         for (String equip : equips.split(",")) {
@@ -341,7 +342,8 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
                     try {
 //                        sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                        sendClient.publish(currentEq, true, JSONObject.toJSONString(msg));
+//                        sendClient.publish(currentEq, true, JSONObject.toJSONString(msg));
+                        mqttMsgService.publish(currentEq, true, JSONObject.toJSONString(msg));
 
                         currentEq.setRecentOpenTime(new Date());
                         currentEq.setOnOff("Y");
@@ -377,7 +379,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         dictData.setDictType("equipment_type");
         Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
 
-        MqttSendClient sendClient = new MqttSendClient();
+//        MqttSendClient sendClient = new MqttSendClient();
         String equips = room.getTableCode();
 
         String hornSn = "";
@@ -428,7 +430,8 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
                     try {
 //                        sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                        sendClient.publish(currentEq, false, JSONObject.toJSONString(msg));
+//                        sendClient.publish(currentEq, false, JSONObject.toJSONString(msg));
+                        mqttMsgService.publish(currentEq, false, JSONObject.toJSONString(msg));
                     } catch (Exception e) {
                         continue;
                     }
@@ -466,7 +469,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         dictData.setDictType("equipment_type");
         Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
 
-        MqttSendClient sendClient = new MqttSendClient();
+//        MqttSendClient sendClient = new MqttSendClient();
         String equips = room.getTableCode();
         String hornSn = "";
         for (String equip : equips.split(",")) {
@@ -498,7 +501,8 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
                 try {
 //                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                    sendClient.publish(currentEq, true, JSONObject.toJSONString(msg));
+//                    sendClient.publish(currentEq, true, JSONObject.toJSONString(msg));
+                    mqttMsgService.publish(currentEq, true, JSONObject.toJSONString(msg));
 
                     CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "请开始保洁");
                 } catch (Exception e) {
@@ -523,7 +527,8 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
                 try {
 //                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                    sendClient.publish(currentEq, true, JSONObject.toJSONString(msg));
+//                    sendClient.publish(currentEq, true, JSONObject.toJSONString(msg));
+                    mqttMsgService.publish(currentEq, true, JSONObject.toJSONString(msg));
                 } catch (Exception e) {
                     continue;
                 }
@@ -572,7 +577,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
         dictData.setDictType("equipment_type");
         Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
 
-        MqttSendClient sendClient = new MqttSendClient();
+//        MqttSendClient sendClient = new MqttSendClient();
         String equips = room.getTableCode();
         String hornSn = "";
         for (String equip : equips.split(",")) {
@@ -604,7 +609,8 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
                 try {
 //                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                    sendClient.publish(currentEq, false, JSONObject.toJSONString(msg));
+//                    sendClient.publish(currentEq, false, JSONObject.toJSONString(msg));
+                    mqttMsgService.publish(currentEq, false, JSONObject.toJSONString(msg));
 
                     CloudHornRegResponse resp = HornConfig.hornSend(hornSn, "辛苦您了");
                 } catch (Exception e) {
@@ -629,7 +635,8 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
                 try {
 //                    sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                    sendClient.publish(currentEq, false, JSONObject.toJSONString(msg));
+//                    sendClient.publish(currentEq, false, JSONObject.toJSONString(msg));
+                    mqttMsgService.publish(currentEq, false, JSONObject.toJSONString(msg));
                 } catch (Exception e) {
                     continue;
                 }
@@ -694,7 +701,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
             dictData.setDictType("equipment_type");
             Map<String, SysDictData> equipDict = dictDataService.selectDictDataList(dictData).stream().collect(Collectors.toMap(SysDictData::getDictValue, Function.identity()));
 
-            MqttSendClient sendClient = new MqttSendClient();
+//            MqttSendClient sendClient = new MqttSendClient();
             Map<String, String> msg = new HashMap<>();
             if (equipDict.containsKey(currentEq.getEquipType())) {
                 String[] command = equipDict.get(currentEq.getEquipType()).getRemark().split(",")[0].split(":");
@@ -705,7 +712,8 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
 
             try {
 //                sendClient.publish(currentEq.getEquipControl(), JSONObject.toJSONString(msg));
-                sendClient.publish(currentEq, true, JSONObject.toJSONString(msg));
+//                sendClient.publish(currentEq, true, JSONObject.toJSONString(msg));
+                mqttMsgService.publish(currentEq, true, JSONObject.toJSONString(msg));
 
                 currentEq.setRecentOpenTime(new Date());
                 currentEq.setOnOff("Y");

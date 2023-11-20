@@ -54,7 +54,7 @@ public class MqttSendCallBack implements MqttCallbackExtended {
     @Override
     public void deliveryComplete(IMqttDeliveryToken token) {
 
-        String[] topics = token.getTopics();
+       /* String[] topics = token.getTopics();
 
         if (topics != null && topics.length > 0) {
             for (String topic : topics) {
@@ -75,7 +75,7 @@ public class MqttSendCallBack implements MqttCallbackExtended {
         } catch (UnsupportedEncodingException e) {
 
             e.printStackTrace();
-        }
+        }*/
     }
 }
 

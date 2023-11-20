@@ -25,6 +25,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.ImgUtil;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.office.domain.*;
 import com.ruoyi.office.domain.enums.OfficeEnum;
 import com.ruoyi.office.domain.vo.*;
@@ -335,6 +336,8 @@ public class ApiController extends BaseController {
         return getDataTable(list);
     }
 
+    @Autowired
+    MqttSendClient sendClient;
     /**
      * topic 模式
      *
@@ -343,8 +346,9 @@ public class ApiController extends BaseController {
      */
     @PostMapping("/topic/{msg}")
     public String sendTopic(@PathVariable("msg") String msg) {
-        MqttSendClient sendClient = new MqttSendClient();
-        sendClient.publish("test_queue", msg);
+//        SpringUtils.getBean("")
+//        MqttSendClient sendClient = new MqttSendClient();
+        sendClient.publish("chl_xxx", msg);
         return "success";
     }
 
