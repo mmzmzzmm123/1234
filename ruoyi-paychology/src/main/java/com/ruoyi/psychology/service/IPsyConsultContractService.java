@@ -27,9 +27,13 @@ public interface IPsyConsultContractService
      */
     public List<PsyConsultContract> getList(PsyConsultContract psyConsultContract);
 
+    public PsyConsultContract getListByUserName(String userName);
+
     public int countExistContract(PsyConsultContract psyConsultContract);
 
     public int relaunch(PsyConsultContract psyConsultContract);
+
+    public void doJob();
 
     /**
      * 新增咨询师合同协议

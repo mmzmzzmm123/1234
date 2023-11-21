@@ -9,6 +9,13 @@ export function listContract(query) {
   })
 }
 
+export function getListByUserName() {
+  return request({
+    url: '/psychology/contract/getListByUserName',
+    method: 'get',
+  })
+}
+
 export function exist(query) {
   return request({
     url: '/psychology/contract/exist',

@@ -137,8 +137,7 @@ export default {
           const req = {
             consultId: that.form.consultId,
             startTime: that.form.startTime,
-            endTime: that.form.endTime,
-            status: '5',
+            endTime: that.form.endTime
           }
           const res = await exist(req);
           if (res.code === 200 && res.data > 0) {

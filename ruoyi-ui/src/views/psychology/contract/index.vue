@@ -140,12 +140,16 @@
 
     <do-form ref="doForm" @handleOk="getList"/>
 
+    <info-temp ref="infoTemp"/>
+
   </div>
 </template>
 
 <script>
 import doForm from "./doForm";
 import addForm from "./addForm";
+import infoTemp from "./info";
+
 import { getConsultAll } from "@/api/psychology/consult";
 import { listContract, getContract, delContract } from "@/api/psychology/contract";
 
@@ -154,6 +158,7 @@ export default {
   components: {
     doForm,
     addForm,
+    infoTemp,
   },
   data() {
     return {
@@ -241,13 +246,7 @@ export default {
     },
     /** 查看项目 */
     view(row) {
-      const id = row.id
-      getContract(id).then(response => {
-        // this.form = response.data;
-        // this.open = true;
-        // this.title = "查看合同";
-        console.log(response)
-      });
+      this.$refs.infoTemp.init(row)
     },
     /** 撤销 */
     unDo(row) {

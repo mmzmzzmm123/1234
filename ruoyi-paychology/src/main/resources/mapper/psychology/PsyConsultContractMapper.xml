@@ -38,6 +38,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
+    <select id="getListByUserName" resultType="com.ruoyi.psychology.domain.PsyConsultContract">
+        select a.* from psy_consult_contract a inner join psy_consult b on a.consult_id = b.id
+        where b.user_name = #{userName} and a.status = '1'
+    </select>
+
     <select id="getOne" parameterType="Long" resultMap="PsyConsultContractResult">
         <include refid="selectPsyConsultContractVo"/>
         where id = #{id}
@@ -46,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="countExistContract" resultType="java.lang.Integer">
         SELECT count(1) FROM psy_consult_contract
             WHERE consult_id = #{consultId}
-              AND status = #{status}
+              AND (status = '1' or status = '4' or status = '5')
               AND (start_time <![CDATA[ >= ]]> #{startTime} or end_time <![CDATA[ <= ]]> #{endTime})
     </select>
 

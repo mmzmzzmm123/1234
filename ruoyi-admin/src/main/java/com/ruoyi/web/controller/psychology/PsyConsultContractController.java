@@ -34,10 +34,17 @@ public class PsyConsultContractController extends BaseController
     @Autowired
     private IPsyConsultContractService psyConsultContractService;
 
+    @PreAuthorize("@ss.hasPermi('psychology:contract:list')")
+    @GetMapping("/getListByUserName")
+    public AjaxResult getListByUserName()
+    {
+        return AjaxResult.success(psyConsultContractService.getListByUserName(getUsername()));
+    }
+
     /**
      * 查询咨询师合同协议列表
      */
-    @PreAuthorize("@ss.hasPermi('contract:contract:list')")
+    @PreAuthorize("@ss.hasPermi('psychology:contract:list')")
     @GetMapping("/list")
     public TableDataInfo list(PsyConsultContract req)
     {
@@ -49,7 +56,7 @@ public class PsyConsultContractController extends BaseController
     /**
      * 查询咨询师合同协议列表
      */
-    @PreAuthorize("@ss.hasPermi('contract:contract:list')")
+    @PreAuthorize("@ss.hasPermi('psychology:contract:list')")
     @GetMapping("/exist")
     public AjaxResult exist(PsyConsultContract req)
     {
@@ -59,7 +66,7 @@ public class PsyConsultContractController extends BaseController
     /**
      * 导出咨询师合同协议列表
      */
-    @PreAuthorize("@ss.hasPermi('contract:contract:export')")
+    @PreAuthorize("@ss.hasPermi('psychology:contract:export')")
     @Log(title = "咨询师合同协议", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, PsyConsultContract req)
@@ -72,7 +79,7 @@ public class PsyConsultContractController extends BaseController
     /**
      * 获取咨询师合同协议详细信息
      */
-    @PreAuthorize("@ss.hasPermi('contract:contract:query')")
+    @PreAuthorize("@ss.hasPermi('psychology:contract:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -82,7 +89,7 @@ public class PsyConsultContractController extends BaseController
     /**
      * 新增咨询师合同协议
      */
-    @PreAuthorize("@ss.hasPermi('contract:contract:add')")
+    @PreAuthorize("@ss.hasPermi('psychology:contract:add')")
     @Log(title = "咨询师合同协议", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PsyConsultContract entity)
@@ -93,17 +100,18 @@ public class PsyConsultContractController extends BaseController
     /**
      * 修改咨询师合同协议
      */
-    @PreAuthorize("@ss.hasPermi('contract:contract:edit')")
+    @PreAuthorize("@ss.hasPermi('psychology:contract:edit')")
     @Log(title = "咨询师合同协议", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PsyConsultContract entity)
     {
         return toAjax(psyConsultContractService.update(entity));
     }
+
     /**
      * 修改咨询师合同协议
      */
-    @PreAuthorize("@ss.hasPermi('contract:contract:edit')")
+    @PreAuthorize("@ss.hasPermi('psychology:contract:add')")
     @Log(title = "咨询师合同协议", businessType = BusinessType.UPDATE)
     @PostMapping ("/relaunch")
     public AjaxResult relaunch(@RequestBody PsyConsultContract entity)

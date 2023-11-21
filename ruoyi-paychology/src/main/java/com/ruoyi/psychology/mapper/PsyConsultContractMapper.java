@@ -19,7 +19,7 @@ public interface PsyConsultContractMapper extends BaseMapper<PsyConsultContract>
      * @param id 咨询师合同协议主键
      * @return 咨询师合同协议
      */
-    public PsyConsultContract getOne(Long id);
+    PsyConsultContract getOne(Long id);
 
     /**
      * 查询咨询师合同协议列表
@@ -27,7 +27,9 @@ public interface PsyConsultContractMapper extends BaseMapper<PsyConsultContract>
      * @param psyConsultContract 咨询师合同协议
      * @return 咨询师合同协议集合
      */
-    public List<PsyConsultContract> getList(PsyConsultContract psyConsultContract);
+    List<PsyConsultContract> getList(PsyConsultContract psyConsultContract);
+
+    PsyConsultContract getListByUserName(String userName);
 
     int countExistContract(PsyConsultContract req);
 
