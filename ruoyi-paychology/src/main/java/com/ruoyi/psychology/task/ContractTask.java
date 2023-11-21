@@ -14,6 +14,7 @@ public class ContractTask {
     public void doJob()
     {
         consultContractService.doJob();
+//        consultContractService.initData();
     }
 
 }

@@ -35,6 +35,8 @@ public interface IPsyConsultContractService
 
     public void doJob();
 
+    public void initData();
+
     /**
      * 新增咨询师合同协议
      * 

@@ -3,6 +3,7 @@ package com.ruoyi.psychology.mapper;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.psychology.domain.PsyConsult;
 import com.ruoyi.psychology.domain.PsyConsultContract;
 
 /**
@@ -32,5 +33,7 @@ public interface PsyConsultContractMapper extends BaseMapper<PsyConsultContract>
     PsyConsultContract getListByUserName(String userName);
 
     int countExistContract(PsyConsultContract req);
+
+    List<PsyConsult> getConsultList();
 
 }

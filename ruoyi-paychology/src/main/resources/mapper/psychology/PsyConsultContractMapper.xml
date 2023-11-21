@@ -55,4 +55,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
               AND (start_time <![CDATA[ >= ]]> #{startTime} or end_time <![CDATA[ <= ]]> #{endTime})
     </select>
 
+    <select id="getConsultList" resultType="com.ruoyi.psychology.domain.PsyConsult">
+        SELECT id,user_id,user_name,nick_name FROM psy_consult where status = '0'
+    </select>
+
 </mapper>

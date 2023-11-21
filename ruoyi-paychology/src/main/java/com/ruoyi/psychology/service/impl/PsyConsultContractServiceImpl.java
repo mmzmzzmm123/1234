@@ -1,14 +1,14 @@
 package com.ruoyi.psychology.service.impl;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.IDhelper;
 import com.ruoyi.psychology.constant.ConsultConstant;
+import com.ruoyi.psychology.domain.PsyConsult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.psychology.mapper.PsyConsultContractMapper;
@@ -97,6 +97,34 @@ public class PsyConsultContractServiceImpl extends ServiceImpl<PsyConsultContrac
         });
 
         this.updateBatchById(list);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void initData()
+    {
+        List<PsyConsult> consults = psyConsultContractMapper.getConsultList();
+        List<PsyConsultContract> entities = new ArrayList<>();
+        Date date = new Date();
+        Calendar ca = Calendar.getInstance();
+        ca.setTime(date);
+        ca.add(Calendar.YEAR, 1);
+
+        consults.forEach(item -> {
+            PsyConsultContract contract = new PsyConsultContract();
+            contract.setConsultId(item.getId());
+            contract.setConsultName(item.getNickName());
+            contract.setName("壹加壹心理平台入驻协议");
+            contract.setType(2);
+            contract.setMoney(new BigDecimal("3200"));
+            contract.setRatio(new BigDecimal("70"));
+            contract.setStatus(ConsultConstant.CONTRACT_STATUS_5);
+            contract.setStartTime(date);
+            contract.setEndTime(ca.getTime());
+            entities.add(contract);
+        });
+
+        this.saveBatch(entities);
     }
 
     /**
