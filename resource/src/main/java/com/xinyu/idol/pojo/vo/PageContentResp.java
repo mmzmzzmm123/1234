@@ -112,6 +112,8 @@ public class PageContentResp implements Serializable {
 
     private ClassificationRowResp classification4Row;
 
+    private String osskeyList;
+
 
     @Data
     @NoArgsConstructor

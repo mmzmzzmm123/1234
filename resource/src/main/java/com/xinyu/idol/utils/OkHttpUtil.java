@@ -32,8 +32,8 @@ public class OkHttpUtil {
     public static final MediaType mediaType = MediaType.parse("application/octet-stream");
 
     public final static OkHttpClient okHttpClient = new OkHttpClient.Builder()
-            .connectTimeout(8000, TimeUnit.MILLISECONDS)
-            .readTimeout(8000, TimeUnit.MILLISECONDS)
+            .connectTimeout(15000, TimeUnit.MILLISECONDS)
+            .readTimeout(15000, TimeUnit.MILLISECONDS)
             .build();
 
     /**

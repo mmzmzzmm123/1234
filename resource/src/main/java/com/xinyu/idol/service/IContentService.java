@@ -52,6 +52,10 @@ public interface IContentService extends IService<ContentEntity> {
      */
     OriginUploadResp uploadOrigins(List<MultipartFile> multipartFileList) throws  IOException;
 
+    /**
+     * 同步资源到现环境
+     * @param pullResourceFromEnvReq
+     */
      void pullResourceFromEnv(PullResourceFromEnvReq pullResourceFromEnvReq);
 
     /**
@@ -61,7 +65,15 @@ public interface IContentService extends IService<ContentEntity> {
     InnerResourceDto listByGuidList(GuidListDto guidListDto);
 
 
-     void updateAllClassifications();
+    /**
+     * 根据guid按顺序查询identifier字段，db不存在guid的化返回默认值
+     * @param guidListDto
+     * @return
+     */
+    InnerResourceDto listIdentifier(GuidListDto guidListDto);
+
+
+
 
 
 }

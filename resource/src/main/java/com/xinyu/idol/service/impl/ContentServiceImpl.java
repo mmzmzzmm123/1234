@@ -1,5 +1,6 @@
 package com.xinyu.idol.service.impl;
 
+import cn.hutool.core.math.MathUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
 import com.aliyun.oss.OSS;
@@ -42,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.token.Sha512DigestUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -98,6 +100,7 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
         return contentManager.selectAllTest();
     }
 
+    @Transactional
     public void addContent(AddContentVo addContentVo) {
         //逐字段校验
         addContentVo.verifyFields();
@@ -152,11 +155,23 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
 
         //查询classification并封装map
         Map<String, ClassificationsEntity> longClassificationsEntityMap = classificationsService.mapAllClassifications();
+        //根据guid查询其他环境identifier
+        List<String> guidStrList = contentEntityIPage.getRecords().stream().map(it->it.getGuid().toString()).collect(Collectors.toList());
+
+        List<ContentEntity> contentEntityListTest = contentResourceRemote.listIdentifier(guidStrList, "test");
+
+        List<ContentEntity> contentEntityListPre = contentResourceRemote.listIdentifier(guidStrList, "pre");
+
+        List<ContentEntity> contentEntityListProd = contentResourceRemote.listIdentifier(guidStrList, "prod");
 
         IPage<PageContentResp> iPage = new Page();
         List<PageContentResp> pageContentRespList = new ArrayList<>();
         BeanUtils.copyProperties(contentEntityIPage, iPage);
-        for (ContentEntity contentEntity : contentEntityIPage.getRecords()) {
+       //for (ContentEntity contentEntity : contentEntityIPage.getRecords()) {
+        for (int i=0;i<contentEntityIPage.getRecords().size();i++) {
+
+            ContentEntity contentEntity = contentEntityIPage.getRecords().get(i);
+
             PageContentResp pageContentResp = new PageContentResp();
             BeanUtils.copyProperties(contentEntity, pageContentResp);
             //setClassification1
@@ -174,18 +189,41 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
             ClassificationsEntity classification3Entity = longClassificationsEntityMap.getOrDefault(contentEntity.getClassification3(), new ClassificationsEntity());
             BeanUtils.copyProperties(classification3Entity, classificationRow3);
             pageContentResp.setClassification3Row(classificationRow3);
-            pageContentResp.setTestDiff("2");
-            pageContentResp.setPreDiff("2");
-            pageContentResp.setOnlineDiff("2");
+
+            pageContentResp.setDevDiff("1");
+
+
+            if(contentEntityListTest.size()>i){
+                pageContentResp.setTestDiff(remoteEnvIdentifier(contentEntity,contentEntityListTest.get(i)));
+            }
+            if(contentEntityListPre.size()>i){
+                pageContentResp.setPreDiff(remoteEnvIdentifier(contentEntity,contentEntityListPre.get(i)));
+
+            }
+            if(contentEntityListProd.size()>i){
+                pageContentResp.setOnlineDiff(remoteEnvIdentifier(contentEntity,contentEntityListProd.get(i)));
+
+            }
 
             pageContentRespList.add(pageContentResp);
         }
 
         iPage.setRecords(pageContentRespList);
         return iPage;
-
     }
-
+   private String remoteEnvIdentifier(ContentEntity contentEntityLocal,ContentEntity contentEntityRemote){
+        if(StringUtils.isEmpty(contentEntityRemote.getIdentifier())){
+            return "2";
+        }
+        if(StringUtils.equals(contentEntityLocal.getIdentifier(),contentEntityRemote.getIdentifier()) ){
+            return "1";
+        }
+        if(ObjectUtils.isNotEmpty(contentEntityRemote.getIsHide())&&contentEntityRemote.getIsHide().equals(1)){
+            return "4";
+        }
+        return "3";
+    }
+    @Transactional
     @Override
     public void updateContent(UpdateContentWebListReq updateContentWebListReq) {
         if (ObjectUtils.isEmpty(updateContentWebListReq)) {
@@ -193,19 +231,23 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
         }
         List<ContentEntity> contentEntityList = new ArrayList<>();
         List<UpdateContentWebReq> updateContentWebReqList = updateContentWebListReq.getUpdateContentWebReqList();
+        //遍历调整数据，方便调用自动生成方法
         updateContentWebReqList.forEach(it -> {
             ContentEntity contentEntity = new ContentEntity();
             contentEntity.setPath(null);
             contentEntity.setPakOsskey(null);
+
             BeanUtils.copyProperties(it, contentEntity);
+            contentEntity.generateIdentifier();
             //获取classification字段
-            if (ObjectUtils.isNotEmpty(it.getClassification1Row())) {
+
+            if (ObjectUtils.allNotNull(it.getClassification1Row(),it.getClassification1Row().getId())) {
                 contentEntity.setClassification1(it.getClassification1Row().getId().toString());
             }
-            if (ObjectUtils.isNotEmpty(it.getClassification2Row())) {
+            if (ObjectUtils.allNotNull(it.getClassification2Row(),it.getClassification2Row().getId())) {
                 contentEntity.setClassification2(it.getClassification2Row().getId().toString());
             }
-            if (ObjectUtils.isNotEmpty(it.getClassification3Row())) {
+            if (ObjectUtils.allNotNull(it.getClassification3Row(),it.getClassification3Row().getId())) {
                 contentEntity.setClassification3(it.getClassification3Row().getId().toString());
             }
 
@@ -272,6 +314,7 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
         return OriginUploadResp.builder().ossKeyListStr(ossKeyListStr.toString()).ossKeyList(ossKeyList).build();
     }
 
+    @Transactional
     @Override
     public void pullResourceFromEnv(PullResourceFromEnvReq pullResourceFromEnvReq) {
         Assert.notNull(pullResourceFromEnvReq, "pullResourceFromEnvReq非空");
@@ -287,7 +330,7 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
         List<ContentEntity> contentListRemote = contentResourceRemote.getByGuidList(pullResourceFromEnvReq.getGuidList(), pullResourceFromEnvReq.getFromEnv());
 
         //byGuidList.get(0);
-        //与本地资源列表进行对比，将特征重复筛选掉
+        //与本地资源列表进行对比，将identifier重复筛选掉
         List<ContentEntity> contentListLocal = contentManager.listByGuidList(pullResourceFromEnvReq.getGuidList());
         Map<Long, ContentEntity> localMapByGuid = contentListLocal.stream().collect(Collectors.toMap(ContentEntity::getGuid, it -> it));
 
@@ -307,14 +350,22 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
         for (ContentEntity contentEntity : contentListToCopyBucket) {
             String osskeyJson = contentEntity.getOsskeyList();
             JSON jsonMap = JSONUtil.parse(osskeyJson);
+            log.info("当前bucket:{}",bucketName);
+            log.info("上个bucket:{}",lastBucket);
+
+
             //copy android
             String androidPath = (String) jsonMap.getByPath("android");
+            log.info("安卓androidPath:{}",androidPath);
+
+            //copyObject为null的话，报错bucket已存在
             oss.copyObject(lastBucket, androidPath, bucketName, androidPath);
             //copy ios
             String iosPath = (String) jsonMap.getByPath("ios");
             oss.copyObject(lastBucket, iosPath, bucketName, iosPath);
             //copy icon
             String iconOsskey = contentEntity.getIconOsskey();
+            log.info("拷贝oss参数打印lastbucket:{},androidPath:{},bucketName:{},iconOsskey:{}",lastBucket,iconOsskey,bucketName,iconOsskey);
             oss.copyObject(lastBucket, iconOsskey, bucketName, iconOsskey);
             if(oss.doesObjectExist(bucketName,androidPath)&&oss.doesObjectExist(bucketName,iosPath)&&oss.doesObjectExist(bucketName,iconOsskey)){
                 log.info("拷贝oss数据完成");
@@ -324,15 +375,17 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
             }
             //判断哪些数据需要插入，哪些需要更新
             if(localMapByGuid.containsKey(contentEntity.getGuid())){
+                contentEntity.setCreateTime(null);
+                contentEntity.setUpdateTime(null);
                 contentManager.updateByGuid(contentEntity);
             }else{
-                contentEntity.setId(null);
+
                 contentEntity.setCreateTime(null);
                 contentEntity.setUpdateTime(null);
                 contentManager.insert(contentEntity);
             }
             //远程请求分类表
-            updateAllClassifications();
+            updateAllClassifications(pullResourceFromEnvReq.getFromEnv());
         }
 
 
@@ -348,10 +401,35 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
 
     }
 
+    @Override
+    public InnerResourceDto listIdentifier(GuidListDto guidListDto) {
+        Assert.notNull(guidListDto, "guidListDto非空");
+        if(CollectionUtils.isEmpty(guidListDto.getGuidList())){
+            return InnerResourceDto.builder().build();
+        }
+        List<ContentEntity> listGuidIdentifierInDb = contentManager.listGuidIdentifier(guidListDto.getGuidList());
+        List<ContentEntity> resultList = new ArrayList<>();
+
+        Map<String,ContentEntity>contentEntityMap=listGuidIdentifierInDb.stream().collect(Collectors.toMap(it->it.getGuid().toString(),it->it));
+        guidListDto.getGuidList().forEach(it->{
+            ContentEntity contentEntity=new ContentEntity();
+           if(contentEntityMap.containsKey(it)){
+               contentEntity.setIdentifier(contentEntityMap.get(it).getIdentifier());
+               contentEntity.setIsHide(contentEntityMap.get(it).getIsHide());
+               contentEntity.setGuid(contentEntityMap.get(it).getGuid());
+               resultList.add(contentEntity);
+           }else {
+               resultList.add(ContentEntity.builder().guid(Long.parseLong(it)).build());
+           }
+        });
+
+        return InnerResourceDto.builder().contentEntityList(resultList).build();
+    }
 
 
-    public void updateAllClassifications(){
-        List<ClassificationsEntity> classificationList = contentResourceRemote.getByClassificationIdList("dev");
+    public void updateAllClassifications(String env){
+
+        List<ClassificationsEntity> classificationList = contentResourceRemote.getByClassificationIdList(env);
         classificationsService.updateBatchById(classificationList);
         classificationsService.insertListSkip(classificationList);
 

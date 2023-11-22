@@ -136,22 +136,19 @@ class ResourceApplicationTests {
     }
     @Test
     void testCopyBucket(){
-        String androidPath = "resource/1112471/fec561c95c0320f1860c0d55a8724cd45e5cc238";
+        String androidPath = "resource/27508/ee4b2522781aaae4e5d49c7287fc498cf02d28fa";
 
-        String bucketName="idol-stage-test";
+        String bucketName="idol-stage-pre";
 
         String lastBucket="idol-stage-dev";
 
-        CopyObjectResult copyObjectResult = oss.copyObject(lastBucket, androidPath, bucketName, androidPath);
-        copyObjectResult.getETag();
+         oss.copyObject(lastBucket, androidPath, bucketName, androidPath);
+       //copyObjectResult.getETag();
     }
 
     @Autowired
     IContentService contentService;
-    @Test
-    void testUpdateAllClassifications(){
-        contentService.updateAllClassifications();
-    }
+
 
     @Autowired
     ContentManager contentManager;

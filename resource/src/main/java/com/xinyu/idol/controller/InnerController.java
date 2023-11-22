@@ -38,9 +38,11 @@ public class InnerController {
         return R.ok( classificationsService.listAll());
     }
 
-    @RequestMapping(value = "/updateAllClassifications", method = RequestMethod.GET)
-    public R updateAllClassifications() {
-        contentService.updateAllClassifications();
-        return R.ok();
+
+    @RequestMapping(value = "/listIdentifier", method = RequestMethod.POST)
+    public R listIdentifier(@RequestBody GuidListDto guidListDto) {
+        return R.ok( contentService.listIdentifier(guidListDto));
     }
+
+
 }

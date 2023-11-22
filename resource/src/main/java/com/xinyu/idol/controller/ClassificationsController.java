@@ -1,5 +1,6 @@
 package com.xinyu.idol.controller;
 
+import com.xinyu.idol.common.annotation.Anonymous;
 import com.xinyu.idol.common.core.domain.AjaxResult;
 import com.xinyu.idol.pojo.vo.ClassificationsReq;
 import com.xinyu.idol.service.IClassificationsService;
@@ -22,6 +23,7 @@ public class ClassificationsController {
 
     @Autowired
     private IClassificationsService classificationsService;
+
     @RequestMapping(value = "/web/listClassifications",method = RequestMethod.POST)
     AjaxResult classifications(@RequestBody ClassificationsReq classificationsReq){
         return AjaxResult.success(classificationsService.classifications(classificationsReq));

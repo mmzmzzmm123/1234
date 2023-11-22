@@ -11,6 +11,7 @@ import com.xinyu.idol.pojo.po.PageContentPo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -62,7 +63,6 @@ public class ContentManager {
                                 it -> it.like("guid", po.getIdOrName())
                                         .or().like("display_name", po.getIdOrName())
                                         .or().like("file_name", po.getIdOrName())
-
                         )
                         .last("limit "+(po.getPage()-1)*po.getSize()+","+po.getSize()))
                 ;
@@ -75,6 +75,11 @@ public class ContentManager {
     public List<ContentEntity>listByGuidList(List<String>guidList){
         Assert.notNull(guidList,"guidList非空");
         return contentMapper.listOrderByField(guidList);
+    }
+
+    public List<ContentEntity>listGuidIdentifier(List<String>guidList){
+        Assert.notNull(guidList,"guidList非空");
+        return contentMapper.listOrderByGuid(guidList);
     }
 
 

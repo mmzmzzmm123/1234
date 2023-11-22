@@ -24,5 +24,7 @@ public interface ContentMapper extends BaseMapper<ContentEntity> {
 
     void insertList(@Param("contentList") List<ContentEntity>contentList);
 
+    List<ContentEntity> listOrderByGuid(@Param("guidList") List<String>guidList);
+
 
 }

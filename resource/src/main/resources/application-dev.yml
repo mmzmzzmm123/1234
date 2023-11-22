@@ -73,9 +73,9 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: 192.168.110.190
+    host: 127.0.0.1
     # 端口，默认为6379
-    port: 30379
+    port: 6379
     # 数据库索引
     database: 0
     # 密码
@@ -98,7 +98,7 @@ spring:
     druid:
       # 主库数据源
       master:
-        url: jdbc:mysql://192.168.110.190:30306/idol-stage?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        url: jdbc:mysql://10.10.0.5:30306/idol-stage?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
         username: root
         password: xinyukeji
       # 从库数据源
@@ -155,7 +155,7 @@ spring:
 
 aliyun:
   oss:
-    bucket: content-resource-dev
+    bucket: idol-stage-pre
     endpoint: oss-cn-beijing.aliyuncs.com
-    domain: https://content-resource-dev.oss-cn-beijing.aliyuncs.com
-
+    domain: https://idol-stage-pre.oss-cn-beijing.aliyuncs.com
+    last-bucket:  idol-stage-dev
