@@ -660,7 +660,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             final WxPayConfig config = wxPayService.getConfig();
 
             WxPayUnifiedOrderV3Request.Amount v3Amount = new WxPayUnifiedOrderV3Request.Amount();
-            v3Amount.setTotal(payAMT.intValue() * 100);
+            v3Amount.setTotal(payAMT.multiply(new BigDecimal(100)).intValue());
             WxPayUnifiedOrderV3Request.Payer v3payer = new WxPayUnifiedOrderV3Request.Payer();
             v3payer.setOpenid(wxUser.getOpenId());
 
@@ -1032,7 +1032,10 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     public TRoomOrder continueOrder(Long userId) {
         QueryWrapper<TRoomOrder> qw = new QueryWrapper<>();
         Date now = new Date();
-        qw.lambda().lt(TRoomOrder::getStartTime, now).gt(TRoomOrder::getEndTime, now).eq(TRoomOrder::getStatus, OfficeEnum.RoomOrderStatus.USING.getCode());
+        qw.lambda().lt(TRoomOrder::getStartTime, now)
+                .gt(TRoomOrder::getEndTime, now)
+                .eq(TRoomOrder::getUserId, userId)
+                .eq(TRoomOrder::getStatus, OfficeEnum.RoomOrderStatus.USING.getCode());
         List<TRoomOrder> orderList = tRoomOrderMapper.selectList(qw);
         if (orderList == null || orderList.size() == 0)
             throw new ServiceException("没有找到进行中的订单，请直接预约");
@@ -1695,6 +1698,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         TRoomOrder inusedOrder = new TRoomOrder();
         inusedOrder.setStatus(OfficeEnum.RoomOrderStatus.USING.getCode());
         inusedOrder.setRoomId(req.getRoomId());
+//        inusedOrder.setUserId(wxUserId);
         List<TRoomOrder> roomOrders = tRoomOrderMapper.selectTRoomOrderList(inusedOrder);
         if (roomOrders.size() == 0) {
             throw new ServiceException("该房间没有进行中的订单");
@@ -1732,7 +1736,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         // 计算订单号
         long orderNo = 0l;
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        final String prefix = roomOrder.getRoomId() + sdf.format(new Date());
+        final String prefix = "c" + roomOrder.getRoomId() + sdf.format(new Date());
         Long maxId = orderChargeService.getHourMaxOrder(prefix);
         if (maxId == null)
             orderNo = Long.parseLong(prefix + "00");
