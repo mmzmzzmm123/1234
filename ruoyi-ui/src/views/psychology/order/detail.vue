@@ -64,7 +64,7 @@
       </el-table>
     </template>
 
-    <times ref="formHx" @hxOk="hxOk" />
+    <times ref="formHx" @handleOk="handleOk" />
   </div>
 </template>
 
@@ -153,8 +153,7 @@ export default {
     handleHx() {
       this.$refs.formHx.setForm(this.order)
     },
-    hxOk() {
-      // this.$emit('handleDetail', this.order.id, '2')
+    handleOk() {
       this.handleDetail(this.order.id)
     },
     goBack() {
