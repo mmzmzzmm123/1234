@@ -2003,6 +2003,25 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         orderChargeService.updateTRoomOrderCharge(upChargeOrder);
     }
 
+    /**
+     * H5取消订单
+     *
+     * @param orderId
+     * @return 结果
+     */
+    @Override
+    public int cancelTRoomOrder(Long orderId) {
+        TRoomOrder tRoomOrder = this.selectTRoomOrderById(orderId);
+        if (tRoomOrder.getStatus() != OfficeEnum.RoomOrderStatus.USING.getCode() && tRoomOrder.getStatus() != OfficeEnum.RoomOrderStatus.ORDERED.getCode()) {
+            throw new ServiceException("该订单无法取消");
+        }
+        tRoomOrder.setUpdateTime(DateUtils.getNowDate());
+        tRoomOrder.setStatus(OfficeEnum.RoomOrderStatus.CANCEL.getCode());
+        String remark = tRoomOrder.getRemark() != null ? tRoomOrder.getRemark() : "";
+        tRoomOrder.setRemark("商家取消;" + remark);
+        return tRoomOrderMapper.updateTRoomOrder(tRoomOrder);
+    }
+
     public static void main(String[] args) {
         BigDecimal totalAmt = new BigDecimal("39.9");
         BigDecimal payAmt = new BigDecimal(3990).divide(new BigDecimal(100), 3, RoundingMode.HALF_UP);

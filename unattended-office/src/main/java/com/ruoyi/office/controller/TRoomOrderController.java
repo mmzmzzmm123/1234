@@ -259,4 +259,15 @@ public class TRoomOrderController extends BaseController {
         return AjaxResult.success();
     }
 
+    @ApiOperation("H5商户-取消订单")
+    @Log(title = "H5商户-立即开始订单", businessType = BusinessType.INSERT)
+    @PostMapping("/cancelOrder/{id}")
+    public AjaxResult cancelOrder(@PathVariable("id") Long orderId) {
+        try {
+            tRoomOrderService.cancelTRoomOrder(orderId);
+        } catch (Exception e) {
+            return AjaxResult.error(e.getMessage());
+        }
+        return AjaxResult.success();
+    }
 }
