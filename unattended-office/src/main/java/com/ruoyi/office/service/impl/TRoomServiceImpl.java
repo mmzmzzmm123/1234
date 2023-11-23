@@ -181,6 +181,7 @@ public class TRoomServiceImpl extends ServiceImpl<TRoomMapper, TRoom> implements
                     currentEq.setOnOff("Y");
                     equipmentService.updateTEquipment(currentEq);
                 } catch (Exception e) {
+                    errMsg.append(e.getMessage());
                     log.error(e.getMessage());
                     continue;
                 }

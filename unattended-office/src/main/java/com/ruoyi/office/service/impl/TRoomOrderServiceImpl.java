@@ -172,9 +172,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
     @Override
     public WxPayOrderQueryV3Result finish(PrepayResp vo, Long wxuserid) {
         TRoomOrder order = tRoomOrderMapper.selectTRoomOrderById(vo.getOrderId());
-        if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.ORDERED.getCode())) {
-            return null;
-        }
+
         //查询支付状态；
         WxPayOrderQueryV3Result v3Result = null;
         try {
@@ -188,6 +186,12 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         // 根据业务需要，更新商户平台订单状态
         String tradState = v3Result.getTradeState();
         if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.SUCCESS)) {
+
+            sendGuestAndMerchantMessage(wxuserid, order);
+            if (order.getStatus().equals(OfficeEnum.RoomOrderStatus.ORDERED.getCode())) {
+                return null;
+            }
+
             // 业务需求
             TRoomOrder updateOrder = new TRoomOrder();
             updateOrder.setId(order.getId());
@@ -208,28 +212,6 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
             updateOrder.setUpdateTime(new Date());
             tRoomOrderMapper.updateTRoomOrder(updateOrder);
 
-
-            try {
-                sendVxMessage(wxuserid, order);
-                TRoom tRoom = roomService.selectTRoomById(order.getRoomId());
-                TStore tStore = storeService.selectTStoreById(tRoom.getStoreId());
-
-                TStoreUser tStoreUser = new TStoreUser();
-                tStoreUser.setStoreId(tStore.getId());
-                List<TStoreUser> tStoreUserList = itStoreUserService.selectTStoreUserList(tStoreUser);
-                for (TStoreUser item : tStoreUserList) {
-                    TWxUser tWxUser = itWxUserService.selectTWxUserById(item.getUserId());
-                    if (tWxUser != null && tWxUser.getMpOpenId() != null && !tWxUser.getMpOpenId().equals("")) {
-                        sendVxOrderMpMessage(tWxUser.getMpOpenId(), tStore, tRoom, order, "");
-                    }
-                }
-//            sendVxOrderMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, order, "已预约");
-//            sendVxOrderMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, order, "已预约");
-//            sendVxOrderMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, order, "已预约");
-            } catch (Exception e) {
-//            throw new ServiceException("消息推送失败");
-                log.error("消息推送失败");
-            }
 
         } else if (tradState.equalsIgnoreCase(WxPayConstants.WxpayTradeStatus.REFUND)) {
             throw new ServiceException("订单转入退款");
@@ -257,6 +239,31 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         }*/
 
         return v3Result;
+    }
+
+    private void sendGuestAndMerchantMessage(Long wxuserid, TRoomOrder order) {
+
+        try {
+            sendVxMessage(wxuserid, order);
+            TRoom tRoom = roomService.selectTRoomById(order.getRoomId());
+            TStore tStore = storeService.selectTStoreById(tRoom.getStoreId());
+
+            TStoreUser tStoreUser = new TStoreUser();
+            tStoreUser.setStoreId(tStore.getId());
+            List<TStoreUser> tStoreUserList = itStoreUserService.selectTStoreUserList(tStoreUser);
+            for (TStoreUser item : tStoreUserList) {
+                TWxUser tWxUser = itWxUserService.selectTWxUserById(item.getUserId());
+                if (tWxUser != null && tWxUser.getMpOpenId() != null && !tWxUser.getMpOpenId().equals("")) {
+                    sendVxOrderMpMessage(tWxUser.getMpOpenId(), tStore, tRoom, order, "");
+                }
+            }
+//            sendVxOrderMpMessage("oNosp6pg1nwPpNK0ojVRG3nXMUqM", tStore, tRoom, order, "已预约");
+//            sendVxOrderMpMessage("oNosp6nU4uj40-rGGCG83wkQwdzE", tStore, tRoom, order, "已预约");
+//            sendVxOrderMpMessage("oNosp6o1yVW4UQ2Jh6zS9B-B2SM4", tStore, tRoom, order, "已预约");
+        } catch (Exception e) {
+//            throw new ServiceException("消息推送失败");
+            log.error("消息推送失败");
+        }
     }
 
 
