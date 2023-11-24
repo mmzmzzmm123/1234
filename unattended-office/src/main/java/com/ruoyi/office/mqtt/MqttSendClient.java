@@ -160,7 +160,7 @@ public class MqttSendClient {
         MqttDeliveryToken token;//Delivery:配送
         synchronized (this) {//注意：这里一定要同步，否则，在多线程publish的情况下，线程会发生死锁，分析见文章最后补充
             try {
-                sub(topic);
+//                sub(topic);
                 token = mTopic.publish(message);//也是发送到执行队列中，等待执行线程执行，将消息发送到消息中间件
                 token.waitForCompletion(1000L);
             } catch (MqttPersistenceException e) {
