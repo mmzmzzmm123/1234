@@ -1695,7 +1695,7 @@ public class TRoomOrderServiceImpl extends ServiceImpl<TRoomOrderMapper, TRoomOr
         TRoomOrder inusedOrder = new TRoomOrder();
         inusedOrder.setStatus(OfficeEnum.RoomOrderStatus.USING.getCode());
         inusedOrder.setRoomId(req.getRoomId());
-        inusedOrder.setUserId(wxUserId); // 20190712 当前用户进行中的订单才可以续单
+//        inusedOrder.setUserId(wxUserId); // 20190712 当前用户进行中的订单才可以续单  其他人可以帮忙续单
         List<TRoomOrder> roomOrders = tRoomOrderMapper.selectTRoomOrderList(inusedOrder);
         if (roomOrders.size() == 0) {
             throw new ServiceException("该房间没有进行中的订单");
