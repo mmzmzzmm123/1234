@@ -114,4 +114,6 @@ public interface ITRoomOrderService {
     void merchantChangeTime4Guest(MerchantOrderChangeTimeReq req);
 
     void scanUnusedOrder();
+
+    int cancelTRoomOrder(Long orderId);
 }

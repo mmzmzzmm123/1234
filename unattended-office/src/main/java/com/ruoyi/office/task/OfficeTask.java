@@ -14,6 +14,7 @@ import com.ruoyi.office.domain.vo.CloudHornRegResponse;
 import com.ruoyi.office.horn.HornConfig;
 import com.ruoyi.office.mqtt.MqttSendClient;
 import com.ruoyi.office.service.ITEquipmentService;
+import com.ruoyi.office.service.ITMqttMsgService;
 import com.ruoyi.office.service.ITRoomOrderService;
 import com.ruoyi.office.service.ITRoomService;
 import com.ruoyi.system.service.ISysDictDataService;
@@ -43,6 +44,9 @@ public class OfficeTask {
 
     @Autowired
     ISysDictDataService dictDataService;
+
+    @Autowired
+    ITMqttMsgService mqttMsgService;
 
     /**
      * 扫描快到期的订单,进行语音提醒到期时间
@@ -95,7 +99,7 @@ public class OfficeTask {
         if (equipments.size() == 0)
             return;
 
-        MqttSendClient sendClient = new MqttSendClient();
+//        MqttSendClient sendClient = new MqttSendClient();
         for (TEquipment eq : equipments) {
             if (OfficeEnum.EquipType.DOOR.getCode().equalsIgnoreCase(eq.getEquipType())) {
 
@@ -106,7 +110,8 @@ public class OfficeTask {
 
                     try {
 //                        sendClient.publish(eq.getEquipControl(), JSONObject.toJSONString(msg));
-                        sendClient.publish(eq, false, JSONObject.toJSONString(msg));
+//                        sendClient.publish(eq, false, JSONObject.toJSONString(msg));
+                        mqttMsgService.publish(eq, false, JSONObject.toJSONString(msg));
                     } catch (Exception e) {
                         continue;
                     }
