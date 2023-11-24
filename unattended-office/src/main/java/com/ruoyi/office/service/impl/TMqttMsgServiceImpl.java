@@ -105,7 +105,7 @@ public class TMqttMsgServiceImpl extends ServiceImpl<TMqttMsgMapper, TMqttMsg> i
             sendClient.publish(qry, onOff, msg);
             logAfterSend(qry, msg);
         } catch (Exception e) {
-            logWhenError(qry, msg, e.getMessage());
+            logWhenError(qry, msg, e.toString());
         }
     }
 
