@@ -124,8 +124,8 @@ public class TMqttMsgServiceImpl extends ServiceImpl<TMqttMsgMapper, TMqttMsg> i
             mqttMsg.setMsgType("SEND");
             insertTMqttMsg(mqttMsg);
         } catch (Exception e) {
-            log.error("mqtt发送前记录异常:", e);
-            throw new ServiceException(e.getMessage());
+            log.error("mqtt发送后记录DB异常:", e);
+//            throw new ServiceException(e.getMessage());
         }
     }
 
@@ -145,7 +145,7 @@ public class TMqttMsgServiceImpl extends ServiceImpl<TMqttMsgMapper, TMqttMsg> i
             mqttMsg.setRemark(errMsg);
             insertTMqttMsg(mqttMsg);
         } catch (Exception e) {
-            log.error("mqtt发送前记录异常:", e);
+            log.error("mqtt发送出错记录DB异常:", e);
         }
     }
 
