@@ -193,4 +193,9 @@ public class BaseController
     {
         return getLoginUser().getUsername();
     }
+
+    public boolean isAdmin()
+    {
+        return SecurityUtils.isAdmin(getUserId());
+    }
 }

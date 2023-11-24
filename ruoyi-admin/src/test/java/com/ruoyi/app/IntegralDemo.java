@@ -5,6 +5,8 @@ import com.ruoyi.RuoYiApplication;
 import com.ruoyi.common.constant.IntegralRecordConstants;
 import com.ruoyi.common.event.publish.IntegralPublisher;
 import com.ruoyi.common.utils.IDhelper;
+import com.ruoyi.psychology.service.IPsyConsultBillItemService;
+import com.ruoyi.psychology.service.IPsyConsultBillService;
 import com.ruoyi.user.domain.PsyUserIntegralRecord;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
@@ -23,6 +25,26 @@ public class IntegralDemo {
 
     @Resource
     private IntegralPublisher integralPublisher;
+
+    @Resource
+    private IPsyConsultBillService psyConsultBillService;
+
+    @Resource
+    private IPsyConsultBillItemService psyConsultBillItemService;
+
+    @Test
+    public void initBillItems() {
+        psyConsultBillItemService.batchAdd();
+    }
+
+    @Test
+    public void saveBillItems() {
+        String billTime = "2023-10-20";
+        String startTime = "2023-09-01 00:00:00";
+        String endTime = "2023-09-30 23:59:59";// 07-31 08-31 09-30
+
+        psyConsultBillService.save(billTime, startTime, endTime);
+    }
 
     @Test
     public void doOrderPublish() {

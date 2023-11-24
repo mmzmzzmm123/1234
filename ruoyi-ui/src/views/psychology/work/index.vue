@@ -246,11 +246,12 @@ export default {
       open: false,
       edit: false,
       fromTxt: [],
+      consultId: null,
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        ids: null,
+        ids: [],
         month: ''
       },
       // 表单参数
@@ -427,7 +428,8 @@ export default {
       const res = await getConsultAll()
       this.consultList = res.data
       if (this.consultList.length === 1) {
-        this.queryParams.ids.push(this.consultList[0].id)
+        this.consultId = this.consultList[0].id
+        this.queryParams.ids.push(this.consultId)
       }
     },
     noItems(row, th) {
@@ -526,10 +528,9 @@ export default {
     /** 重置按钮操作 */
     resetQuery() {
       this.setTime()
-      if (this.consultList.length === 1) {
-        this.queryParams.ids.push(this.consultList[0])
-      } else {
-        this.queryParams.ids = []
+      this.queryParams.ids = []
+      if (this.consultId) {
+        this.queryParams.ids.push(this.consultId)
       }
       this.handleQuery();
     },

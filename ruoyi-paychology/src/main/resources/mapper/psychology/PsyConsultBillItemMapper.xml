@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultBillItemMapper">
+
+    <select id="getOrderItems" resultType="com.ruoyi.psychology.domain.PsyConsultBillItem">
+        SELECT
+            a.id,
+            a.order_id  order_id,
+            a.consult_id  consult_id,
+            b.nick_name  consult_name,
+            CASE WHEN c.type = 1 THEN '合作型' WHEN c.type = 2 THEN '签约型-团体督导' ELSE '签约型-个体督导' END type,
+            c.ratio  ratio,
+            d.order_no  order_no,
+            d.create_time  order_time,
+            d.serve_name  serve_name,
+            CASE WHEN e.type = 1 THEN '单次' ELSE '套餐' END serve_type,
+            e.num  order_num,
+            d.num  num,
+            d.nick_name  nick_name,
+            d.pay  order_total,
+            STR_TO_DATE(a.real_time, '%Y-%m-%d %H:%i') use_time,
+            a.create_by  create_by,
+            a.create_time  create_time,
+            a.update_by  update_by,
+            a.update_time  update_time
+        FROM
+            psy_consult_order_item a
+                LEFT JOIN psy_consult_bill_item f on a.id = f.id
+                INNER JOIN psy_consult b on a.consult_id = b.id
+                INNER JOIN psy_consult_contract c on a.consult_id = c.consult_id
+                INNER JOIN psy_consult_order d on a.order_id = d.id
+                INNER JOIN psy_consult_order_serve e on a.order_id = e.order_id
+        WHERE
+            a.`status` = '1' and f.id is null and c.`status` = '5'
+        order by a.order_id asc,a.real_time asc
+    </select>
+
+    <select id="getItemList" resultType="com.ruoyi.psychology.dto.BillItemDTO">
+        SELECT
+        a.use_time,
+        a.consult_name,
+        a.order_no,
+        a.order_time,
+        a.serve_name,
+        a.serve_type,
+--         CONCAT('第', a.buy_num, '次') buy_num,
+        a.buy_num_str,
+        a.order_num,
+        a.num,
+        a.nick_name,
+        CASE WHEN b.`status` = '2' THEN '已完成' ELSE '进行中' END `status`,
+        CASE WHEN a.order_num = COUNT( c.order_id ) THEN '已结算' WHEN COUNT( c.order_id ) > 0 THEN '部分结算' ELSE '未结算' END `bill_status`
+        FROM
+        psy_consult_bill_item a
+        INNER JOIN psy_consult_order b on a.order_id = b.id
+        LEFT JOIN
+        psy_consult_bill_item c ON a.order_id = c.order_id AND c.bill_id > 0
+        <where>
+            <if test="billId != null and billId != ''"> and a.bill_id = #{billId}</if>
+            <if test="consultId != null"> and a.consult_id = #{consultId}</if>
+            <if test="orderNo != null  and orderNo != ''"> and a.order_no = #{orderNo}</if>
+            <if test="startTime != null "> and a.use_time <![CDATA[ >= ]]> #{startTime}</if>
+            <if test="endTime != null "> and a.use_time <![CDATA[ <= ]]> #{endTime}</if>
+        </where>
+        GROUP BY
+        a.id
+        order by a.order_id asc,a.use_time asc
+    </select>
+
+    <select id="getItemListForDetail" resultType="com.ruoyi.psychology.domain.PsyConsultBillItem">
+        SELECT
+        a.bill_time,
+        a.use_time,
+        a.consult_name,
+        a.type,
+        a.ratio,
+        a.order_no,
+        a.order_time,
+        a.serve_name,
+        a.serve_type,
+        a.buy_num_str,
+        a.order_num,
+        a.num,
+        a.nick_name,
+        a.price,
+        a.brokerage,
+        a.order_total,
+        CASE WHEN b.`status` = '2' THEN '已完成' ELSE '进行中' END `status`,
+        CASE WHEN a.order_num = COUNT( c.order_id ) THEN '已结算' WHEN COUNT( c.order_id ) > 0 THEN '部分结算' ELSE '未结算' END `bill_status`,
+        SUM(d.brokerage) total
+        FROM
+        psy_consult_bill_item a
+        INNER JOIN psy_consult_order b on a.order_id = b.id
+        LEFT JOIN psy_consult_bill_item c ON a.order_id = c.order_id AND c.bill_id > 0
+        LEFT JOIN psy_consult_bill_item d ON c.id = d.id AND a.bill_id != d.bill_id
+        <where>
+            a.bill_id = #{billId}
+            <if test="consultId != null"> and a.consult_id = #{consultId}</if>
+            <if test="orderNo != null  and orderNo != ''"> and a.order_no = #{orderNo}</if>
+        </where>
+        GROUP BY
+        a.id
+        order by a.order_id asc,a.use_time asc
+    </select>
+
+    <select id="getBillItems" resultType="com.ruoyi.psychology.domain.PsyConsultBillItem">
+        select * from psy_consult_bill_item
+        where bill_id = 0 and  use_time <![CDATA[ >= ]]> #{startTime} and use_time <![CDATA[ <= ]]> #{endTime}
+    </select>
+</mapper>

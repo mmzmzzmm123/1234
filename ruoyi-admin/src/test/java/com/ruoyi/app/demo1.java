@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -178,5 +179,14 @@ public class demo1 {
         Random random = new Random();
         int num = random.nextInt(8) + 1; // 生成0-7之间的随机数
         System.out.println(num);
+    }
+
+    @Test
+    public void test10() {
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.MONTH, -1);
+        SimpleDateFormat startSdf = new SimpleDateFormat("yyyy-MM-20");
+        String format = startSdf.format(c.getTime());
+        System.out.println(format);
     }
 }

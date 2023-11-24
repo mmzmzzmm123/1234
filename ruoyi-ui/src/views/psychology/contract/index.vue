@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="90px">
-      <el-form-item label="创建时间" prop="dateLimit">
+      <el-form-item label="创建时间" prop="time">
         <el-date-picker
-          v-model="timeVal"
+          v-model="queryParams.time"
           style="width: 280px;"
           size="small"
           value-format="yyyy-MM-dd"
@@ -12,7 +12,6 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          @change="onchangeTime"
         />
       </el-form-item>
       <el-form-item label="所属咨询师" prop="consultId">
@@ -49,7 +48,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['contract:contract:add']"
+          v-hasPermi="['psychology:contract:add']"
         >发起合同</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -104,7 +103,7 @@
               size="mini"
               type="text"
               @click="unDo(scope.row)"
-              v-hasPermi="['contract:contract:edit']"
+              v-hasPermi="['psychology:contract:edit']"
             >撤销</el-button>
           </template>
           <template v-else-if="['4','5'].includes(scope.row.status)">
@@ -112,15 +111,15 @@
               size="mini"
               type="text"
               @click="doStop(scope.row)"
-              v-hasPermi="['contract:contract:edit']"
-            > 终止合同</el-button>
+              v-hasPermi="['psychology:contract:edit']"
+            >终止合同</el-button>
           </template>
           <template v-else>
             <el-button
               size="mini"
               type="text"
               @click="relaunch(scope.row)"
-              v-hasPermi="['contract:contract:edit']"
+              v-hasPermi="['psychology:contract:edit']"
             >重新发起</el-button>
           </template>
         </template>
@@ -177,8 +176,8 @@ export default {
       // 咨询师合同协议表格数据
       contractList: [],
       // 咨询师列表
-      timeVal: [],
       consultList: [],
+      consultId: null,
       types: this.$constants.partnerTypes,
       statusList: this.$constants.contractStatus,
       // 弹出层标题
@@ -202,22 +201,26 @@ export default {
     this.getList();
   },
   methods: {
-    onchangeTime (e) {
-      this.timeVal = e;
-      this.queryParams.dateLimit = e ? this.timeVal.join(',') : ''
-      this.queryParams.pageNum = 1
-      this.getList();
-    },
     async getConsults() {
       const res = await getConsultAll()
       this.consultList = res.data
       if (this.consultList.length === 1) {
-        this.queryParams.consultId = this.consultList[0].id
+        this.consultId = this.consultList[0].id
+        this.queryParams.consultId = this.consultId
       }
     },
     /** 查询咨询师合同协议列表 */
     getList() {
       this.loading = true;
+      if (this.queryParams.time.length > 0) {
+        this.queryParams.startTime = this.queryParams.time[0] + ' 00:00:00'
+        this.queryParams.endTime = this.queryParams.time[1] + ' 23:59:59'
+      } else {
+        this.queryParams.startTime = null
+        this.queryParams.endTime = null
+      }
+
+      this.queryParams.consultId = this.consultId
       listContract(this.queryParams).then(response => {
         this.contractList = response.rows;
         this.total = response.total;
@@ -286,6 +289,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
+      this.queryParams.consultId = this.consultId
       this.download('contract/contract/export', {
         ...this.queryParams
       }, `contract_${new Date().getTime()}.xlsx`)

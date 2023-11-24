@@ -217,6 +217,7 @@ export default {
       // 是否显示弹出层
       open: false,
       openRm: false,
+      consultId: null,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -268,12 +269,15 @@ export default {
       const res = await getConsultAll()
       this.consultList = res.data
       if (this.consultList.length === 1) {
-        this.queryParams.consultId = this.consultList[0].id
+        this.consultId = this.consultList[0].id
+        this.queryParams.consultId = this.consultId
       }
     },
     /** 查询咨询订单列表 */
     getList() {
       this.loading = true;
+
+      this.queryParams.consultId = this.consultId
       listOrder(this.queryParams).then(response => {
         this.orderList = response.rows;
         this.total = response.total;
@@ -294,7 +298,7 @@ export default {
       this.queryParams = {
           orderNo: null,
           nickName: null,
-          consultId: this.consultList.length === 1 ? this.consultList[0] : null ,
+          consultId: this.consultId,
           serveName: null,
           dateLimit: null,
           status: null,
@@ -389,6 +393,8 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
+      this.queryParams.consultId = this.consultId
+
       this.download('psychology/order/export', {
         ...this.queryParams
       }, `order_${new Date().getTime()}.xlsx`)

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultBillMapper">
+
+    <select id="getList" resultType="com.ruoyi.psychology.domain.PsyConsultBill">
+        SELECT
+            a.bill_id id,
+            a.bill_time,
+            count(DISTINCT b.order_id) num,
+            count(DISTINCT a.order_id) order_num,
+            count(DISTINCT a.consult_id) consult_num,
+            sum(b.price) total,
+            sum(b.brokerage) pay,
+            c.remark
+        FROM
+            psy_consult_bill_item a
+                LEFT JOIN psy_consult_bill_item b ON a.id = b.id AND b.bill_id > 0
+                LEFT JOIN psy_consult_bill c ON a.bill_id = c.id
+        <where>
+            a.bill_id > 0
+            <if test="consultId != null"> and a.consult_id = #{consultId}</if>
+            <if test="startTime != null "> and a.bill_time <![CDATA[ >= ]]> #{startTime}</if>
+            <if test="endTime != null "> and a.bill_time <![CDATA[ <= ]]> #{endTime}</if>
+        </where>
+        GROUP BY
+            a.bill_id,
+            a.bill_time,
+            c.remark
+    </select>
+
+    <select id="getBillByBillDate" resultType="com.ruoyi.psychology.domain.PsyConsultBill">
+        select * from psy_consult_bill where bill_time = #{billTime}
+    </select>
+
+</mapper>
