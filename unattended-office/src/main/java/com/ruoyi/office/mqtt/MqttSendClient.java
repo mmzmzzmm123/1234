@@ -38,7 +38,7 @@ public class MqttSendClient {
    标志设置为True是，客户端不需要持久性连接。不管何种原因，当它断开连接时，当前的会话信息和所有的消息将会丢失。
    当cleanSession标志设置为false时，broker会为客户端创建一个持续性连接，所有的会话信息和消息将会被保留，直到下一次客户端将cleanSession标志设置为true。如果客户端将cleanSession标志设置为false且broker已经有了客户端的连接会话，客户端连接时broker会使用已有的会话并将之前排队的信息传递给client。
           */
-    private final int defaultQos = 1;
+    private final int defaultQos = 2;
 
     private static MqttClient mqttClient;
     private MqttSendCallBack mqttSendCallBack;
