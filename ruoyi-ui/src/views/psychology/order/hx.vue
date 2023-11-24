@@ -125,7 +125,10 @@ export default {
         this.queryParams.endTime = null
       }
 
-      this.queryParams.consultId = this.consultId
+      if (this.consultId) {
+        this.queryParams.consultId = this.consultId
+      }
+
       getItemList(this.queryParams).then(response => {
         this.bills = response.rows;
         this.total = response.total;
@@ -145,7 +148,10 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.queryParams.consultId = this.consultId
+      if (this.consultId) {
+        this.queryParams.consultId = this.consultId
+      }
+
       this.download('psychology/bill/exportItems', {
         ...this.queryParams
       }, `核销记录_${new Date().getTime()}.xlsx`)

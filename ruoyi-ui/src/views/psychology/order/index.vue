@@ -277,7 +277,9 @@ export default {
     getList() {
       this.loading = true;
 
-      this.queryParams.consultId = this.consultId
+      if (this.consultId) {
+        this.queryParams.consultId = this.consultId
+      }
       listOrder(this.queryParams).then(response => {
         this.orderList = response.rows;
         this.total = response.total;
@@ -393,7 +395,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.queryParams.consultId = this.consultId
+      if (this.consultId) {
+        this.queryParams.consultId = this.consultId
+      }
 
       this.download('psychology/order/export', {
         ...this.queryParams

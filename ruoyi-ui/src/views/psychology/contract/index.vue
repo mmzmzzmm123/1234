@@ -220,7 +220,9 @@ export default {
         this.queryParams.endTime = null
       }
 
-      this.queryParams.consultId = this.consultId
+      if (this.consultId) {
+        this.queryParams.consultId = this.consultId
+      }
       listContract(this.queryParams).then(response => {
         this.contractList = response.rows;
         this.total = response.total;
@@ -289,7 +291,10 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.queryParams.consultId = this.consultId
+      if (this.consultId) {
+        this.queryParams.consultId = this.consultId
+      }
+
       this.download('contract/contract/export', {
         ...this.queryParams
       }, `contract_${new Date().getTime()}.xlsx`)
