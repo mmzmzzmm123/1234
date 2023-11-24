@@ -8,7 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         SELECT
             a.bill_id id,
             a.bill_time,
-            count(DISTINCT b.order_id) num,
+            count(DISTINCT b.id) num,
             count(DISTINCT a.order_id) order_num,
             count(DISTINCT a.consult_id) consult_num,
             sum(b.price) total,

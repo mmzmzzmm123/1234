@@ -39,13 +39,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="getItemList" resultType="com.ruoyi.psychology.dto.BillItemDTO">
         SELECT
+        a.id,
+        a.order_id,
         a.use_time,
         a.consult_name,
         a.order_no,
         a.order_time,
         a.serve_name,
         a.serve_type,
---         CONCAT('第', a.buy_num, '次') buy_num,
         a.buy_num_str,
         a.order_num,
         a.num,
@@ -71,6 +72,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="getItemListForDetail" resultType="com.ruoyi.psychology.domain.PsyConsultBillItem">
         SELECT
+        a.id,
+        a.order_id,
         a.bill_time,
         a.use_time,
         a.consult_name,
