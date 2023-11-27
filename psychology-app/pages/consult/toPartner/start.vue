@@ -25,7 +25,7 @@
     </view>
 
     <view class="text-center margin">
-      <image src="/static/consult/order/card.png" style="width: 192upx;height: 189upx;" mode="widthFix"></image>
+      <image src="/static/consult/wxKefu.png" style="width: 192upx;height: 189upx;" mode="widthFix"></image>
     </view>
 
     <view class="margin-top">

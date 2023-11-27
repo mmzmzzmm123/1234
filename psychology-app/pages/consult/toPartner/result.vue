@@ -22,10 +22,10 @@
       <view class="margin-top text-bold text-lg">恭喜，您的申请已通过！</view>
       <view class="margin text-gray">平台将在7个工作日内完成审核，请耐心等候。</view>
       <view class="margin padding-sm bg-gray">
-        <view class="text-left margin-bottom-sm">请扫描以下二维码完成缴费，缴费成功后平台工作人员会向您发放管理后台地址、账号密码。</view>
-        <image src="/static/consult/pass.png" class="card-img"></image>
-        <view class="text-left padding-xs">
-          <view>支付金额：¥700.00</view>
+        <view class="text-left margin-bottom-sm">请使用微信扫一扫或长按图片识别以下二维码完成缴费，缴费成功后平台工作人员会向您发放管理后台地址、账号密码。</view>
+        <image src="/static/consult/wePay.png" class="card-img"></image>
+        <view class="text-left padding-xs" v-if="order">
+          <view>支付金额：¥{{ order.money.toFixed(2) }}</view>
           <view class="margin-xs text-right text-sm text-gray">
             费用服务明细请参考
             <text @tap="toPage('4')" class="text-blue">《咨询师入驻协议》</text>
@@ -63,6 +63,7 @@ export default {
   data() {
     return {
       type: '1',
+      order: {},
       pageHeight: app.globalData.windowHeight + 'px',
     }
   },
@@ -78,6 +79,7 @@ export default {
       const res = await serve.getInfo()
       if (res.code === 200 && res.data) {
         console.log(res.data)
+        this.order = res.data
         switch (res.data.status) {
           case '0':
             return uni.navigateTo({ url: "/pages/consult/toPartner/step1" })

@@ -46,6 +46,12 @@
       </el-form-item>
     </el-form>
 
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <span style="color: #C5291B;margin: 0 10px">*每小时更新核销单</span>
+      </el-col>
+    </el-row>
+
     <el-table v-loading="loading" size="mini" style="width: 100%" :data="bills">
       <el-table-column label="核销时间" width="160" align="center" prop="useTime" />
       <el-table-column label="所属咨询师" width="100" align="center" prop="consultName" />

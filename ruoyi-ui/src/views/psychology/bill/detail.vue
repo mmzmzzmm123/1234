@@ -161,9 +161,12 @@ export default {
         this.queryParams.consultId = this.consultId
       }
 
+      const row = this.bills[0]
+      const title = row ? `心理咨询${row.billTime}账单_${new Date().getTime()}.xlsx` : `心理咨询账单_${new Date().getTime()}.xlsx`
+
       this.download('psychology/bill/exportItemsForDetail', {
         ...this.queryParams
-      }, `bill_${new Date().getTime()}.xlsx`)
+      }, title)
     }
   }
 }

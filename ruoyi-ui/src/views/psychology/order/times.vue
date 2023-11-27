@@ -58,9 +58,10 @@ export default {
       order: {},
       pickerOptions: {
         disabledDate(time) {
-          const now = new Date();
-          const monthStart = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0)
-          return time.getTime() > now.getTime() || time.getTime() < monthStart.getTime()
+          // const now = new Date();
+          // const monthStart = new Date(now.getFullYear(), now.getMonth(), 1, 0, 0, 0)
+          // return time.getTime() > now.getTime() || time.getTime() < monthStart.getTime()
+          return time.getTime() > new Date().getTime()
         },
       },
     }

@@ -20,6 +20,7 @@ import com.ruoyi.system.service.ISysConfigService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
@@ -140,6 +141,11 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
         vo.setGenre(partner.getGenre() + partner.getExtGenre());
         vo.setWorkHours(partner.getWorkHours());
         AjaxResult result = consultService.add(vo);
+        if ((int) result.get("code") != 200) {
+            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            return result;
+        }
+
         result.put("fm", StrUtil.format(fm, userName, pwd));
 
         // 合约创建
@@ -183,25 +189,27 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
     private PartnerDTO getPartnerDTO(PsyAdminPartnerReq req) {
         PartnerDTO dto = psyConsultPartnerMapper.getInfo(req);
 
-        if (StringUtils.isNotBlank(dto.getCardImg())) {
-            dto.setCardImgs(Arrays.asList(dto.getCardImg().split(",")));
-        }
-        if (StringUtils.isNotBlank(dto.getExtraImg())) {
-            dto.setExtraImgs(Arrays.asList(dto.getExtraImg().split(",")));
-        }
-        if (StringUtils.isNotBlank(dto.getLang())) {
-            dto.setLangList(Arrays.asList(dto.getLang().split(",")));
-        }
-        if (StringUtils.isNotBlank(dto.getGenre())) {
-            dto.setGenreList(Arrays.asList(dto.getGenre().split(",")));
-        }
+        if (dto != null) {
+            if (StringUtils.isNotBlank(dto.getCardImg())) {
+                dto.setCardImgs(Arrays.asList(dto.getCardImg().split(",")));
+            }
+            if (StringUtils.isNotBlank(dto.getExtraImg())) {
+                dto.setExtraImgs(Arrays.asList(dto.getExtraImg().split(",")));
+            }
+            if (StringUtils.isNotBlank(dto.getLang())) {
+                dto.setLangList(Arrays.asList(dto.getLang().split(",")));
+            }
+            if (StringUtils.isNotBlank(dto.getGenre())) {
+                dto.setGenreList(Arrays.asList(dto.getGenre().split(",")));
+            }
 
-        if (dto.getId() != null) {
-            dto.setItems(partnerItemService.getListById(dto.getId()));
-        }
+            if (dto.getId() != null) {
+                dto.setItems(partnerItemService.getListById(dto.getId()));
+            }
 
-        dto.setTypeName(getTypeName(dto.getType()));
-        dto.setStatusName(getStatusName(dto.getStatus()));
+            dto.setTypeName(getTypeName(dto.getType()));
+            dto.setStatusName(getStatusName(dto.getStatus()));
+        }
 
         return dto;
     }

@@ -263,8 +263,9 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
         }
 
         // 初始化id
-        Long id = IDhelper.getNextId();
-        req.setId(id);
+        if (req.getId() == null) {
+            req.setId(IDhelper.getNextId());
+        }
 
         // 新增用户
         userService.insertUser(user);
