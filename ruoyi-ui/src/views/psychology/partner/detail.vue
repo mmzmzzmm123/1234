@@ -190,7 +190,7 @@ export default {
       })
     },
     goBack() {
-      this.$router.push({ path: '/partner/partner' })
+      this.$router.push({ path: '/partner/partnerList' })
     },
     /** 审批 */
     openApp() {
