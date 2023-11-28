@@ -72,10 +72,6 @@ export default {
   },
   name: "ItemForm",
   props: {
-    form: {
-      type:  Object,
-      default: {}
-    },
     limit: {
       type: Number,
       default: 2
@@ -84,26 +80,38 @@ export default {
       type: Number,
       default: 1
     },
-    picker: {
-      type: Array,
-      default: () => []
-    },
-    idx: {
-      type: Number,
-      default: -1
-    },
   },
   data() {
     return {
+      form: {
+        id: null,
+        type: null,
+        startTime: null,
+        endTime: null,
+        param1: null,
+        param2: null,
+        param3: null,
+        img: '',
+        imgList: [],
+      },
+      picker: [],
+      idx: -1,
       title1: ['学校名称','资质类型','证书名称','培训名称','咨询类型','督导类型','其他经历'],
       title2: ['专业名称','证书编号','','主办机构','负责人姓名','督导姓名',''],
       title3: ['获得学位','','','','机构联系方式','督导取向',''],
     };
   },
   methods: {
+    initData(form, picker = []) {
+      this.form = form
+      this.picker = picker
+    },
+    initIdx(idx) {
+      this.idx = idx
+    },
     pickerChange(e) {
       const idx = e.detail.value
-      this.$emit('modifyIdx', idx)
+      this.idx = idx
       this.form.param1 = this.picker[idx]
     },
     add() {
@@ -152,6 +160,7 @@ export default {
       this.$emit('add', this.form)
     },
     cancel() {
+      this.idx = -1
       this.$emit('cancel')
     },
     result: function(e) {

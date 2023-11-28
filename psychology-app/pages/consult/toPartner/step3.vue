@@ -16,7 +16,7 @@
           <view v-if="!showForm[0]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(4)">+ 增加一项</view>
         </view>
 
-        <item-form v-if="showForm[0]" :type="4" :form="form" @add="saveItem" @cancel="hideItem(4)"/>
+        <item-form ref="itemForm4" v-show="showForm[0]" :type="4" @add="saveItem" @cancel="hideItem(4)"/>
       </view>
 
       <view class="padding-sm margin-sm margin-top-lg bg-white">
@@ -29,7 +29,7 @@
           <view v-if="!showForm[1]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(5)">+ 增加一项</view>
         </view>
 
-        <item-form v-if="showForm[1]" :type="5" :form="form" :picker="picker1" :idx="idx" @modifyIdx="modifyIdx" @add="saveItem" @cancel="hideItem(5)"/>
+        <item-form ref="itemForm5" v-show="showForm[1]" :type="5" @add="saveItem" @cancel="hideItem(5)"/>
       </view>
 
       <view class="padding-sm margin-sm margin-top-lg bg-white">
@@ -43,7 +43,7 @@
           <view v-if="!showForm[2]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(6)">+ 增加一项</view>
         </view>
 
-        <item-form v-if="showForm[2]" :type="6" :form="form" :picker="picker2" :idx="idx" @modifyIdx="modifyIdx" @add="saveItem" @cancel="hideItem(6)"/>
+        <item-form ref="itemForm6" v-show="showForm[2]" :type="6" @add="saveItem" @cancel="hideItem(6)"/>
       </view>
 
       <view class="padding-sm margin-sm margin-top-lg bg-white">
@@ -56,7 +56,7 @@
           <view v-if="!showForm[3]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(7)">+ 增加一项</view>
         </view>
 
-        <item-form v-if="showForm[3]" :type="7" :form="form" @add="saveItem" @cancel="hideItem(7)"/>
+        <item-form ref="itemForm7" v-show="showForm[3]" :type="7" @add="saveItem" @cancel="hideItem(7)"/>
       </view>
 
       <view class="cu-bar foot bg-white tabbar border shop" style="z-index: 99">
@@ -83,21 +83,10 @@ export default {
   components: { psySteps, itemList, itemForm },
   data() {
     return {
-      idx: -1,
       active: 2,
       header: {},
       showForm: [false, false, false, false],
-      form: {
-        id: null,
-        type: null,
-        startTime: null,
-        endTime: null,
-        param1: null,
-        param2: null,
-        param3: null,
-        img: '',
-        imgList: [],
-      },
+      form: {},
       picker1: ['个人', '家庭', '团体', '企业'],
       picker2: ['个体督导', '团体督导'],
       items: [{
@@ -116,9 +105,6 @@ export default {
     this.getApply()
   },
   methods: {
-    modifyIdx(idx) {
-      this.idx = idx
-    },
     async getApply() {
       const res = await serve.getInfo()
       console.log(res)
@@ -140,7 +126,6 @@ export default {
         img: '',
         imgList: [],
       }
-      this.idx = -1
     },
     showItem(type, mode = 'init') {
       if (mode === 'init') {
@@ -148,14 +133,31 @@ export default {
         this.form.type = type
       }
 
+      let idx = -1
       if (this.form.param1) {
-        this.idx = this.form.type === 5 ? this.picker1.findIndex(a => a === this.form.param1) : this.form.type === 6 ? this.picker2.findIndex(a => a === this.form.param1) : -1
+        idx = this.form.type === 5 ? this.picker1.findIndex(a => a === this.form.param1) : this.form.type === 6 ? this.picker2.findIndex(a => a === this.form.param1) : -1
       }
 
       this.form.imgList = this.form.img ? this.form.img.split(',') : []
 
+      switch (type) {
+        case 4:
+          this.$refs.itemForm4.initData(this.form)
+          break;
+        case 5:
+          this.$refs.itemForm5.initData(this.form, this.picker1)
+          this.$refs.itemForm5.initIdx(idx)
+          break;
+        case 6:
+          this.$refs.itemForm6.initData(this.form, this.picker2)
+          this.$refs.itemForm6.initIdx(idx)
+          break;
+        case 7:
+          this.$refs.itemForm7.initData(this.form)
+          break;
+      }
+
       this.$set(this.showForm, type-4, true)
-      console.log(this.showForm)
     },
     editItem(item) {
       this.form = JSON.parse(JSON.stringify(item))

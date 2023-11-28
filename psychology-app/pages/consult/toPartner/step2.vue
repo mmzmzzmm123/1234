@@ -15,7 +15,7 @@
           <view v-if="!showForm[0]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(1)">+ 增加一项</view>
         </view>
 
-        <item-form v-if="showForm[0]" :type="1" :form="form" @add="saveItem" @cancel="hideItem(1)"/>
+        <item-form ref="itemForm1" v-show="showForm[0]" :type="1" @add="saveItem" @cancel="hideItem(1)"/>
       </view>
 
       <view class="padding-sm margin-sm margin-top-lg bg-white">
@@ -27,7 +27,7 @@
           <view v-if="!showForm[1]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(2)">+ 增加一项</view>
         </view>
 
-        <item-form v-if="showForm[1]" :type="2" :form="form" :picker="picker1" :idx="idx" @modifyIdx="modifyIdx" @add="saveItem" @cancel="hideItem(2)"/>
+        <item-form ref="itemForm2" v-show="showForm[1]" :type="2" @add="saveItem" @cancel="hideItem(2)"/>
       </view>
 
       <view class="padding-sm margin-sm margin-top-lg bg-white">
@@ -39,7 +39,7 @@
           <view v-if="!showForm[2]" class="cu-btn line-orange round lg btn-submit" @tap="showItem(3)">+ 增加一项</view>
         </view>
 
-        <item-form v-if="showForm[2]" :type="3" :form="form" @add="saveItem" @cancel="hideItem(3)"/>
+        <item-form ref="itemForm3" v-show="showForm[2]" :type="3" @add="saveItem" @cancel="hideItem(3)"/>
       </view>
 
       <view class="cu-bar foot bg-white tabbar border shop" style="z-index: 99">
@@ -67,21 +67,10 @@ export default {
   components: { psySteps, itemList, itemForm },
   data() {
     return {
-      idx: -1,
       active: 1,
       showForm: [false, false, false],
       header: {},
-      form: {
-        id: null,
-        type: null,
-        startTime: null,
-        endTime: null,
-        param1: null,
-        param2: null,
-        param3: null,
-        img: '',
-        imgList: [],
-      },
+      form: {},
       picker1: [],
       items: [{
         name: '基础资料'
@@ -100,14 +89,10 @@ export default {
     this.getPickers()
   },
   methods: {
-    modifyIdx(idx) {
-      this.idx = idx
-    },
     async getPickers() {
       const res = await indexServer.getConfigByType('consult_qualification');
       if (res.length > 0) {
         this.picker1 = res.map(a => a.name)
-        console.log(this.picker1)
       }
     },
     async getApply() {
@@ -131,7 +116,6 @@ export default {
         img: '',
         imgList: [],
       }
-      this.idx = -1
     },
     showItem(type, mode = 'init') {
       if (mode === 'init') {
@@ -139,8 +123,20 @@ export default {
         this.form.type = type
       }
       this.form.imgList = this.form.img ? this.form.img.split(',') : []
-      if (this.form.param1 && this.form.type === 2) {
-        this.idx = this.picker1.findIndex(a => a === this.form.param1)
+
+      const idx = this.form.param1 ? this.picker1.findIndex(a => a === this.form.param1) : -1
+
+      switch (type) {
+        case 1:
+          this.$refs.itemForm1.initData(this.form)
+          break;
+        case 2:
+          this.$refs.itemForm2.initData(this.form, this.picker1)
+          this.$refs.itemForm2.initIdx(idx)
+          break;
+        case 3:
+          this.$refs.itemForm3.initData(this.form)
+          break;
       }
 
       this.$set(this.showForm, type-1, true)
@@ -155,9 +151,6 @@ export default {
       this.$set(this.showForm, type-1, false)
     },
     async saveItem(item) {
-      console.log(item)
-
-      return false
       item.img = item.imgList.join(',')
       if (item.id) {
         await serve.editItem(item)
