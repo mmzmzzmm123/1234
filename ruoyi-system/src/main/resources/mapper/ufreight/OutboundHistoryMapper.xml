@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ufreight.mapper.OutboundHistoryMapper">
+    
+    <resultMap type="OutboundHistory" id="OutboundHistoryResult">
+        <result property="outboundId"    column="outbound_id"    />
+        <result property="partNumber"    column="part_number"    />
+        <result property="shelfBarcode"    column="shelf_barcode"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectOutboundHistoryVo">
+        select outbound_id, part_number, shelf_barcode, quantity, create_by, create_time, update_by, update_time from t_outbound_history
+    </sql>
+
+    <select id="selectOutboundHistoryList" parameterType="OutboundHistory" resultMap="OutboundHistoryResult">
+        <include refid="selectOutboundHistoryVo"/>
+        <where>  
+            <if test="partNumber != null  and partNumber != ''"> and part_number = #{partNumber}</if>
+            <if test="shelfBarcode != null  and shelfBarcode != ''"> and shelf_barcode = #{shelfBarcode}</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+        </where>
+    </select>
+    
+    <select id="selectOutboundHistoryByOutboundId" parameterType="Long" resultMap="OutboundHistoryResult">
+        <include refid="selectOutboundHistoryVo"/>
+        where outbound_id = #{outboundId}
+    </select>
+        
+    <insert id="insertOutboundHistory" parameterType="OutboundHistory" useGeneratedKeys="true" keyProperty="outboundId">
+        insert into t_outbound_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="partNumber != null">part_number,</if>
+            <if test="shelfBarcode != null">shelf_barcode,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="partNumber != null">#{partNumber},</if>
+            <if test="shelfBarcode != null">#{shelfBarcode},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOutboundHistory" parameterType="OutboundHistory">
+        update t_outbound_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="partNumber != null">part_number = #{partNumber},</if>
+            <if test="shelfBarcode != null">shelf_barcode = #{shelfBarcode},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where outbound_id = #{outboundId}
+    </update>
+
+    <delete id="deleteOutboundHistoryByOutboundId" parameterType="Long">
+        delete from t_outbound_history where outbound_id = #{outboundId}
+    </delete>
+
+    <delete id="deleteOutboundHistoryByOutboundIds" parameterType="String">
+        delete from t_outbound_history where outbound_id in 
+        <foreach item="outboundId" collection="array" open="(" separator="," close=")">
+            #{outboundId}
+        </foreach>
+    </delete>
+</mapper>

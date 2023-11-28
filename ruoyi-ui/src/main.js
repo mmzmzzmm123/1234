@@ -37,6 +37,13 @@ import DictTag from '@/components/DictTag'
 import VueMeta from 'vue-meta'
 // 字典数据组件
 import DictData from '@/components/DictData'
+// 打印websocket
+import websocket from 'vue-native-websocket';
+Vue.use(websocket, 'ws://localhost:12345/', {// 需要连接的服务器地址，端打包后可以填地址（localhost:...）,调试阶段需填写对应开发本地地址(同个局域网，能ping通的地址)或部署的在线服务地址
+  reconnection: true, // (Boolean)是否自动重连，默认false
+  reconnectionAttempts: 5, // 重连次数
+  reconnectionDelay: 3000, // 再次重连等待时常(1000)
+});
 
 // 全局方法挂载
 Vue.prototype.getDicts = getDicts

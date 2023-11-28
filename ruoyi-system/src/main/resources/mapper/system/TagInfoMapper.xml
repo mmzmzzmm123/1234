@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TagInfoMapper">
+    
+    <resultMap type="TagInfo" id="TagInfoResult">
+        <result property="tagInfoId"    column="tag_info_id"    />
+        <result property="rfidId"    column="rfid_id"    />
+        <result property="partNumber"    column="part_number"    />
+        <result property="serialNumber"    column="serial_number"    />
+        <result property="displayDate"    column="display_date"    />
+        <result property="displayName"    column="display_name"    />
+        <result property="quantity"    column="quantity"    />
+        <result property="coo"    column="coo"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTagInfoVo">
+        select tag_info_id, rfid_id, part_number, serial_number, display_date, display_name, quantity, coo, status, create_by, create_time, update_by, update_time from tag_info
+    </sql>
+
+    <select id="selectTagInfoList" parameterType="TagInfo" resultMap="TagInfoResult">
+        <include refid="selectTagInfoVo"/>
+        <where>  
+            <if test="rfidId != null  and rfidId != ''"> and rfid_id = #{rfidId}</if>
+            <if test="partNumber != null  and partNumber != ''"> and part_number = #{partNumber}</if>
+            <if test="serialNumber != null  and serialNumber != ''"> and serial_number = #{serialNumber}</if>
+            <if test="displayDate != null  and displayDate != ''"> and display_date = #{displayDate}</if>
+            <if test="displayName != null  and displayName != ''"> and display_name like concat('%', #{displayName}, '%')</if>
+            <if test="quantity != null "> and quantity = #{quantity}</if>
+            <if test="coo != null  and coo != ''"> and coo = #{coo}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectTagInfoByTagInfoId" parameterType="Long" resultMap="TagInfoResult">
+        <include refid="selectTagInfoVo"/>
+        where tag_info_id = #{tagInfoId}
+    </select>
+        
+    <insert id="insertTagInfo" parameterType="TagInfo" useGeneratedKeys="true" keyProperty="tagInfoId">
+        insert into tag_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="rfidId != null">rfid_id,</if>
+            <if test="partNumber != null">part_number,</if>
+            <if test="serialNumber != null">serial_number,</if>
+            <if test="displayDate != null">display_date,</if>
+            <if test="displayName != null">display_name,</if>
+            <if test="quantity != null">quantity,</if>
+            <if test="coo != null">coo,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="rfidId != null">#{rfidId},</if>
+            <if test="partNumber != null">#{partNumber},</if>
+            <if test="serialNumber != null">#{serialNumber},</if>
+            <if test="displayDate != null">#{displayDate},</if>
+            <if test="displayName != null">#{displayName},</if>
+            <if test="quantity != null">#{quantity},</if>
+            <if test="coo != null">#{coo},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTagInfo" parameterType="TagInfo">
+        update tag_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="rfidId != null">rfid_id = #{rfidId},</if>
+            <if test="partNumber != null">part_number = #{partNumber},</if>
+            <if test="serialNumber != null">serial_number = #{serialNumber},</if>
+            <if test="displayDate != null">display_date = #{displayDate},</if>
+            <if test="displayName != null">display_name = #{displayName},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="coo != null">coo = #{coo},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where tag_info_id = #{tagInfoId}
+    </update>
+
+    <delete id="deleteTagInfoByTagInfoId" parameterType="Long">
+        delete from tag_info where tag_info_id = #{tagInfoId}
+    </delete>
+
+    <delete id="deleteTagInfoByTagInfoIds" parameterType="String">
+        delete from tag_info where tag_info_id in 
+        <foreach item="tagInfoId" collection="array" open="(" separator="," close=")">
+            #{tagInfoId}
+        </foreach>
+    </delete>
+</mapper>
