@@ -190,7 +190,7 @@ export default {
       })
     },
     goBack() {
-      this.$router.push({ path: '/psychology/partner' })
+      this.$router.push({ path: '/partner/partner' })
     },
     /** 审批 */
     openApp() {

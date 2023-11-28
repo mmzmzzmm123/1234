@@ -181,7 +181,7 @@ export default {
     },
     /** 详情页 */
     toDetail(id) {
-      this.$router.push({ path: '/psychology/partnerDetail', query: { id: id }})
+      this.$router.push({ path: '/partner/partnerDetail', query: { id: id }})
     },
     /** 审批 */
     openApp(row) {

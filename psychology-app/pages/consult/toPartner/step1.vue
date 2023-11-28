@@ -184,6 +184,21 @@
     </view>
     <!--picker-view end-->
 
+    <view class="cu-modal" :class="modalName==='Image'?'show':''">
+      <view class="cu-dialog">
+        <view class="bg-img" style="background-image: url('/static/consult/partnerTypes.jpg');min-height:1480upx;width: 680upx">
+          <view class="cu-bar justify-end text-white">
+            <view class="action" @tap="hideModal">
+              <text class="cuIcon-close "></text>
+            </view>
+          </view>
+        </view>
+        <view class="cu-bar bg-white">
+          <view class="action margin-0 flex-sub  solid-left" @tap="hideModal">我知道了</view>
+        </view>
+      </view>
+    </view>
+
     <view class="cu-bar foot bg-white tabbar border shop" style="z-index: 1000">
       <view class="action" @tap="submit(1)">
         <view class="cuIcon-form"></view>存草稿
@@ -292,9 +307,10 @@ export default {
       console.log(this.form)
     },
     openStep() {
-      uni.navigateTo({
-        url: "/pages/consult/toPartner/start?type=back"
-      });
+      this.modalName = 'Image'
+      // uni.navigateTo({
+      //   url: "/pages/consult/toPartner/notice"
+      // });
     },
     /* picker-city start*/
     toArr(object) {
@@ -462,6 +478,8 @@ export default {
 <style lang="scss">
 .page {
   //padding: 0 20upx;
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 100px); /* 兼容 iOS 设备 */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 100px); /* 兼容 iPhone X 及以上设备 */
 
   .psy-title {
     color: #101010;

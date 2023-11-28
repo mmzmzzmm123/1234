@@ -197,7 +197,7 @@ export default {
       }, `心理咨询${row.billTime}账单_${new Date().getTime()}.xlsx`)
     },
     view(row) {
-      this.$router.push({ path: '/psychology/billDetail', query: { id: row.id }})
+      this.$router.push({ path: '/bill/billDetail', query: { id: row.id }})
     },
     /** 备注操作 */
     handleRemark(row) {

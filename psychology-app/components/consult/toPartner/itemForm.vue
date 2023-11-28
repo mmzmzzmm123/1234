@@ -147,6 +147,8 @@ export default {
         });
       }
 
+      console.log('itemFprm')
+      console.log(this.form)
       this.$emit('add', this.form)
     },
     cancel() {

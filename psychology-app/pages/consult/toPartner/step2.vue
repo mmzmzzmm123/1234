@@ -31,7 +31,7 @@
       </view>
 
       <view class="padding-sm margin-sm margin-top-lg bg-white">
-        <view class="psy-title">专业证书证明
+        <view class="psy-title">其他证书证明
           <text class="psy-title-ext">（选填）</text>
         </view>
         <view class="solid-bottom">
@@ -156,6 +156,8 @@ export default {
     },
     async saveItem(item) {
       console.log(item)
+
+      return false
       item.img = item.imgList.join(',')
       if (item.id) {
         await serve.editItem(item)
@@ -220,8 +222,9 @@ export default {
 
 <style lang="scss">
 .page {
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 100px); /* 兼容 iOS 设备 */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 100px); /* 兼容 iPhone X 及以上设备 */
   //padding: 0 20upx;
-  padding-bottom: 100upx;
 
   .psy-title {
     color: #101010;

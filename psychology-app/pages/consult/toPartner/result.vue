@@ -110,7 +110,7 @@ export default {
           uni.navigateTo({url: "/pages/consult/toPartner/step4?type=read"})
           break
         case '4':
-          uni.navigateTo({url: "/pages/consult/toPartner/notice"})
+          uni.navigateTo({url: "/pages/consult/toPartner/compact"})
           break
         case '5':
           uni.navigateTo({url: "/pages/consult/toPartner/step1"})
@@ -125,6 +125,8 @@ export default {
 .page {
   background: #FFF;
   text-align: center;
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 100px); /* 兼容 iOS 设备 */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 100px); /* 兼容 iPhone X 及以上设备 */
 }
 
 .empty-img {

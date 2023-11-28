@@ -166,6 +166,7 @@ export default {
       this.$set(this.showForm, type-4, false)
     },
     async saveItem(item) {
+      console.log('saveItem')
       console.log(item)
       item.img = item.imgList.join(',')
       if (item.id) {
@@ -231,7 +232,8 @@ export default {
 <style lang="scss">
 .page {
   //padding: 0 20upx;
-  padding-bottom: 100upx;
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 100px); /* 兼容 iOS 设备 */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 100px); /* 兼容 iPhone X 及以上设备 */
 
   .psy-title {
     color: #101010;

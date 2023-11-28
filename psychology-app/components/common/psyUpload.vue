@@ -85,7 +85,7 @@ import httprequest from "@/server/httpRequest";
 			//单张图片大小限制 MB 
 			size: {
 				type: Number,
-				default: 4
+				default: 5
 			},
 			//文件对应的key，默认为 file
 			fileKeyName: {

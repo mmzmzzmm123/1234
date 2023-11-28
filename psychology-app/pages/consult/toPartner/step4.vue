@@ -289,7 +289,8 @@ export default {
 <style lang="scss">
 .page {
   //padding: 0 20upx;
-  padding-bottom: 100upx;
+  padding-bottom: calc(constant(safe-area-inset-bottom) + 100px); /* 兼容 iOS 设备 */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 100px); /* 兼容 iPhone X 及以上设备 */
 
   .cu-form-group {
     height: 80upx !important;
