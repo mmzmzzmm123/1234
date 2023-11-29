@@ -20,17 +20,19 @@
     <template v-else-if="type === '3'">
       <image src="/static/consult/pass.png" class="empty-img"></image>
       <view class="margin-top text-bold text-lg">恭喜，您的申请已通过！</view>
-      <view class="margin text-gray">平台将在7个工作日内完成审核，请耐心等候。</view>
+      <view class="margin text-gray">欢迎您加入壹加壹心理服务平台，成为我们的一员。</view>
       <view class="margin padding-sm bg-gray">
         <view class="text-left margin-bottom-sm">请使用微信扫一扫或长按图片识别以下二维码完成缴费，缴费成功后平台工作人员会向您发放管理后台地址、账号密码。</view>
         <image src="/static/consult/wePay.png" class="card-img"></image>
         <view class="text-left padding-xs" v-if="order">
           <view>支付金额：¥{{ order.money.toFixed(2) }}</view>
-          <view class="margin-xs text-right text-sm text-gray">
-            费用服务明细请参考
+          <view>收款方：壹加壹心理服务平台</view>
+          <view>主体：武汉仁心网络科技有限公司</view>
+          <view class="margin-xs text-sm text-gray">
+            缴费成功即表示您同意并接受
             <text @tap="toPage('4')" class="text-blue">《咨询师入驻协议》</text>
+            中的全部条款和相关设置。
           </view>
-          <view>收款方：壹加壹心理咨询</view>
         </view>
       </view>
     </template>
