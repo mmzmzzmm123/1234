@@ -78,9 +78,9 @@
       </view>
       <view class="cu-form-group">
         <view class="title">咨询流派</view>
-        <view @tap="showModal('wayModal')">
+        <view @tap="showWay">
           <template v-if="form.genre">
-            <view class="text-right text-cut" style="width: 200px">{{ form.genre }}{{ form.extGenre ? ','+form.extGenre : ''}}</view>
+            <view class="text-right text-cut" style="width: 200px">{{ form.genre }}</view>
           </template>
           <template v-else>
             <text class="text-grey">请选择咨询流派<text class="margin-left-sm cuIcon-right text-lg text-grey"></text></text>
@@ -111,18 +111,6 @@
       </view>
       <view class="psy-box-upload bg-white">
         <psy-upload :value="form.cardImgs" :limit="2" @complete="result1"></psy-upload>
-      </view>
-
-      <view class="cu-bar bg-white margin-top">
-        <view class="action">
-          相关资质证明
-        </view>
-        <view class="action">
-          {{form.extraImgs.length}}/4
-        </view>
-      </view>
-      <view class="psy-box-upload bg-white">
-        <psy-upload :value="form.extraImgs" :limit="2" @complete="result2"></psy-upload>
       </view>
     </view>
 
@@ -162,26 +150,7 @@
       </view>
     </view>
 
-    <view class="cu-modal" :class="modalName==='wayModal'?'show':''" @tap="hideModal">
-      <view class="cu-dialog bg-white padding" @tap.stop="">
-        <view class="psy-title">咨询流派
-          <text class="psy-title-ext">（1-3项）</text>
-        </view>
-        <view class="grid col-4 padding-sm">
-          <view v-for="(item,index) in ways" class="" :key="index">
-            <view class='cu-tag radius cu-tag-lang margin-xs' :class="form.genreList.includes(item)?'bg-orange':'line-orange'" @tap="wayCheckbox" :data-value="item">{{item}}</view>
-          </view>
-        </view>
-        <view class="cu-form-group solid">
-          <view class="title">其他</view>
-          <input v-model="form.extGenre" maxlength="50" placeholder="请输入" placeholder-class="plaClass" />
-        </view>
-        <view class="flex justify-center margin-top">
-          <view class="cu-btn round bg-white lg margin-right cu-tag-btn" @tap="hideModal">取消</view>
-          <view class="cu-btn bg-orange round lg cu-tag-btn" @tap="setWay">确认</view>
-        </view>
-      </view>
-    </view>
+    <item-way ref="itemWay" @setWay="setWay"/>
     <!--picker-view end-->
 
     <view class="cu-modal" :class="modalName==='Image'?'show':''">
@@ -215,9 +184,10 @@ import cityUtil from "@/utils/pc-city";
 import formValidation from "@/utils/formValidation";
 import psyUpload from "@/components/common/psyUpload";
 import psySteps from "@/components/common/psySteps";
+import itemWay from "@/components/consult/toPartner/itemWay";
 export default {
   name: "ConsultPartnerStep1",
-  components: { psySteps, psyUpload },
+  components: { psySteps, psyUpload, itemWay },
   data() {
     return {
       active: 0,
@@ -233,7 +203,6 @@ export default {
       }],
       picker: ['身份证', '护照', '回乡证（港澳台）'],
       langs: ['普通话', '英语', '日语', '韩语'],
-      ways: ['精神分析', '认知行为', '存在主义', '人本主义','完全疗法', '正念疗法', '叙事疗法', '焦点解决','艺术治疗', '舞动治疗', '躯体治疗', '家庭治疗', '婚姻治疗'],
       form: {
         id: null,
         step: 0,
@@ -251,13 +220,9 @@ export default {
         langList: [],
         workHours: null,
         genre: null,
-        genreList: [],
-        extGenre: '',
         card: null,
         cardImg: '',
         cardImgs: [],
-        extraImg: '',
-        extraImgs: [],
       },
       types: [
         {
@@ -362,9 +327,11 @@ export default {
       this.form.lang = this.form.langList.join(',')
       this.hideModal()
     },
-    setWay() {
-      this.form.genre = this.form.genreList.join(',')
-      this.hideModal()
+    showWay() {
+      this.$refs.itemWay.init(this.form.genre)
+    },
+    setWay(genre) {
+      this.form.genre = genre
     },
     langCheckbox(e) {
       const val = e.currentTarget.dataset.value
@@ -374,16 +341,6 @@ export default {
         this.form.langList.push(val)
       }
       this.form.langList.sort()
-    },
-    wayCheckbox(e) {
-      const val = e.currentTarget.dataset.value
-
-      if (this.form.genreList.includes(val)) {
-        this.form.genreList.splice(this.form.genreList.findIndex(i => val === i), 1)
-      } else if (this.form.genreList.length < 3) {
-        this.form.genreList.push(val)
-      }
-      this.form.genreList.sort()
     },
     typeChange(e) {
       console.log(e.detail.value)
@@ -399,11 +356,6 @@ export default {
       console.log(e)
       this.form.cardImg = e.imgArr.join(',');
       this.form.cardImgs = e.imgArr;
-    },
-    result2: function(e) {
-      console.log(e)
-      this.form.extraImg = e.imgArr.join(',');
-      this.form.extraImgs = e.imgArr;
     },
 
     async submit(type) {
@@ -440,13 +392,6 @@ export default {
           return uni.showToast({
             icon: 'none',
             title: '请上传证件照片'
-          })
-        }
-
-        if (this.form.extraImgs.length === 0) {
-          return uni.showToast({
-            icon: 'none',
-            title: '请上传相关资质证明'
           })
         }
 

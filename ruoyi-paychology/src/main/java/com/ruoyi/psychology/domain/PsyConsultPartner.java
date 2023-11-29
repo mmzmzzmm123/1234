@@ -96,7 +96,6 @@ public class PsyConsultPartner extends BasePlusEntity implements Serializable
     /** 咨询流派 */
     @Excel(name = "咨询流派")
     private String genre;
-    private String extGenre;
 
     /** 证件类型 */
     @Excel(name = "证件类型")
@@ -105,10 +104,6 @@ public class PsyConsultPartner extends BasePlusEntity implements Serializable
     /** 证件照 */
     @Excel(name = "证件照")
     private String cardImg;
-
-    /** 资质证明 */
-    @Excel(name = "资质证明")
-    private String extraImg;
 
     /** 0-草稿,1-审核中,2-审核通过-已开通账号,3-审核通过-未开通账号,4-审核驳回 */
     private String status;

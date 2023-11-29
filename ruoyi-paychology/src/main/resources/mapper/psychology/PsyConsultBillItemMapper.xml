@@ -105,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
         GROUP BY
         a.id
-        order by a.order_id asc,a.use_time asc
+        order by a.consult_name, a.order_id asc,a.use_time asc
     </select>
 
     <select id="getBillItems" resultType="com.ruoyi.psychology.domain.PsyConsultBillItem">

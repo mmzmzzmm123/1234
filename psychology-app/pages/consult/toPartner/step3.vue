@@ -168,8 +168,6 @@ export default {
       this.$set(this.showForm, type-4, false)
     },
     async saveItem(item) {
-      console.log('saveItem')
-      console.log(item)
       item.img = item.imgList.join(',')
       if (item.id) {
         await serve.editItem(item)

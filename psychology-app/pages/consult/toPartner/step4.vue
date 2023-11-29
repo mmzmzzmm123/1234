@@ -62,7 +62,7 @@
       </view>
       <view class="flex justify-between solid-bottom padding-xs">
         <text class="">咨询流派</text>
-        <text>{{ form.genre }}{{ form.extGenre }}</text>
+        <text>{{ form.genre }}</text>
       </view>
       <view class="flex justify-between solid-bottom padding-xs">
         <text class="">证件类型</text>

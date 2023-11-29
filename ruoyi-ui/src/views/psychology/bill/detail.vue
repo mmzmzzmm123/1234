@@ -90,7 +90,7 @@ import { getConsultAll } from "@/api/psychology/consult";
 import { getItemListForDetail } from "@/api/psychology/bill";
 
 export default {
-  name: "OrderHx",
+  name: "BillDetail",
   data() {
     return {
       // 遮罩层

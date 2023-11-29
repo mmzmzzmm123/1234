@@ -9,8 +9,7 @@
         <el-button size="small" @click="goBack">返回列表</el-button>
       </template>
       <el-descriptions-item label="申请时间">{{ info.createTime }}</el-descriptions-item>
-      <el-descriptions-item label="入驻费用">{{ info.money }}</el-descriptions-item>
-      <el-descriptions-item/>
+      <el-descriptions-item label="入驻费用" :span="2">{{ info.money }}</el-descriptions-item>
       <el-descriptions-item label="申请类型">{{ info.typeName }}</el-descriptions-item>
       <el-descriptions-item label="结算比例">{{ info.ratio }}</el-descriptions-item>
     </el-descriptions>
@@ -26,8 +25,7 @@
       <el-descriptions-item label="咨询语种">{{ info.lang }}</el-descriptions-item>
       <el-descriptions-item label="从业年限(年)">{{ info.workHours }}</el-descriptions-item>
       <el-descriptions-item label="证件类型">{{ info.card }}</el-descriptions-item>
-      <el-descriptions-item label="咨询流派">{{ info.genre }},{{ info.extGenre }}</el-descriptions-item>
-      <el-descriptions-item/>
+      <el-descriptions-item label="咨询流派" :span="2">{{ info.genre }}</el-descriptions-item>
       <el-descriptions-item label="证明照片"/>
     </el-descriptions>
     <image-preview style="margin-right: 25px" v-for="(item,index) in imgs" :src="item" width="100px" height="100px"/>
@@ -183,9 +181,6 @@ export default {
         this.info = response.data
         if (this.info.cardImgs.length > 0) {
           this.imgs = this.imgs.concat(this.info.cardImgs)
-        }
-        if (this.info.cardImgs.length > 0) {
-          this.imgs = this.imgs.concat(this.info.extraImgs)
         }
       })
     },

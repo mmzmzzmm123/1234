@@ -36,7 +36,20 @@
     </view>
     <view class="cu-form-group" v-if="[1,5,6].includes(type)">
       <view class="title">{{ title3[type-1] }}</view>
-      <input placeholder="请输入" maxlength="100" placeholder-class="plaClass" v-model="form.param3"/>
+
+      <template v-if="type === 6">
+        <view @tap="showWay">
+          <template v-if="form.param3">
+            <view class="text-right text-cut" style="width: 200px">{{ form.param3 }}</view>
+          </template>
+          <template v-else>
+            <text class="">请选择<text class="margin-left-xs cuIcon-right text-lg text-grey"></text></text>
+          </template>
+        </view>
+      </template>
+      <template v-else>
+        <input placeholder="请输入" maxlength="100" placeholder-class="plaClass" v-model="form.param3"/>
+      </template>
     </view>
     <view class="cu-form-group" v-if="[4,5,6].includes(type)">
       <view class="title">总计小时数</view>
@@ -56,6 +69,8 @@
       </view>
     </template>
 
+    <item-way ref="itemWay" @setWay="setWay"/>
+
     <view class="flex justify-center">
       <view class="cu-btn line-black round lg btn-submit" @tap="cancel">取消</view>
       <view class="cu-btn bg-orange round lg btn-submit" @tap="add">确认</view>
@@ -66,9 +81,12 @@
 <script>
 import formValidation from "@/utils/formValidation";
 import psyUpload from "@/components/common/psyUpload";
+import itemWay from "./itemWay";
+
 export default {
   components: {
-    psyUpload
+    psyUpload,
+    itemWay
   },
   name: "ItemForm",
   props: {
@@ -114,6 +132,12 @@ export default {
       this.idx = idx
       this.form.param1 = this.picker[idx]
     },
+    showWay() {
+      this.$refs.itemWay.init(this.form.param3)
+    },
+    setWay(genre) {
+      this.form.param3 = genre
+    },
     add() {
       // 表单校验
       const title1 = this.title1[this.type - 1]
@@ -148,15 +172,13 @@ export default {
         });
       }
 
-      if (this.type !== 7 && this.form.imgList.length === 0) {
+      if (![5, 7].includes(this.type) && this.form.imgList.length === 0) {
         return uni.showToast({
           title: '请上传证明图片',
           icon: "none"
         });
       }
 
-      console.log('itemFprm')
-      console.log(this.form)
       this.$emit('add', this.form)
     },
     cancel() {
@@ -166,7 +188,7 @@ export default {
     result: function(e) {
       console.log(e)
       this.form.imgList = e.imgArr;
-    }
+    },
   }
 }
 </script>

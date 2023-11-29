@@ -31,10 +31,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="lang"    column="lang"    />
         <result property="workHours"    column="work_hours"    />
         <result property="genre"    column="genre"    />
-        <result property="extGenre"    column="ext_genre"    />
         <result property="card"    column="card"    />
         <result property="cardImg"    column="card_img"    />
-        <result property="extraImg"    column="extra_img"    />
         <result property="status"    column="status"    />
         <result property="createBy"    column="create_by"    />
         <result property="createTime"    column="create_time"    />
@@ -47,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPsyConsultPartnerVo">
-        select id, user_id, consult_id, consult_name, step, type, name, sex, wechat, qq, phone, email, city, province, lang, work_hours, genre, ext_genre, card, card_img, extra_img, status, create_by, create_time, update_by, update_time, money, ratio, remark, pass_time from psy_consult_partner
+        select id, user_id, consult_id, consult_name, step, type, name, sex, wechat, qq, phone, email, city, province, lang, work_hours, genre, card, card_img, status, create_by, create_time, update_by, update_time, money, ratio, remark, pass_time from psy_consult_partner
     </sql>
 
     <select id="selectPsyConsultPartnerList" parameterType="PsyConsultPartner" resultMap="PsyConsultPartnerResult">
@@ -71,7 +69,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="genre != null  and genre != ''"> and genre = #{genre}</if>
             <if test="card != null  and card != ''"> and card = #{card}</if>
             <if test="cardImg != null  and cardImg != ''"> and card_img = #{cardImg}</if>
-            <if test="extraImg != null  and extraImg != ''"> and extra_img = #{extraImg}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
         </where>
     </select>

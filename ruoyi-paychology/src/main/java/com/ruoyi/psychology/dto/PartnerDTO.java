@@ -27,15 +27,10 @@ public class PartnerDTO extends PsyConsultPartner implements Serializable
     private List<PsyConsultPartnerItem> items;
 
     private List<String> langList;
-    private List<String> genreList;
 
     /** 证件照 */
     private String cardImg;
     private List<String> cardImgs;
-
-    /** 资质证明 */
-    private String extraImg;
-    private List<String> extraImgs;
 
     /** 0-草稿,1-审核中,2-审核通过-已开通账号,3-审核通过-未开通账号,4-审核驳回 */
     private String status;

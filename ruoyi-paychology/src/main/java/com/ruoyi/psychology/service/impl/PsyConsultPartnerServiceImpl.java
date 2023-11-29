@@ -138,7 +138,7 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
         vo.setLang(partner.getLang());
         vo.setOpenId(openid);
         vo.setQualification(items.stream().filter(a -> a.getType() == 2).map(PsyConsultPartnerItem::getParam1).collect(Collectors.joining(",")));
-        vo.setGenre(partner.getGenre() + partner.getExtGenre());
+        vo.setGenre(partner.getGenre());
         vo.setWorkHours(partner.getWorkHours());
         AjaxResult result = consultService.add(vo);
         if ((int) result.get("code") != 200) {
@@ -193,14 +193,8 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
             if (StringUtils.isNotBlank(dto.getCardImg())) {
                 dto.setCardImgs(Arrays.asList(dto.getCardImg().split(",")));
             }
-            if (StringUtils.isNotBlank(dto.getExtraImg())) {
-                dto.setExtraImgs(Arrays.asList(dto.getExtraImg().split(",")));
-            }
             if (StringUtils.isNotBlank(dto.getLang())) {
                 dto.setLangList(Arrays.asList(dto.getLang().split(",")));
-            }
-            if (StringUtils.isNotBlank(dto.getGenre())) {
-                dto.setGenreList(Arrays.asList(dto.getGenre().split(",")));
             }
 
             if (dto.getId() != null) {
