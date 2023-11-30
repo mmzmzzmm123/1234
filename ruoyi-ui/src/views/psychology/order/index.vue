@@ -50,7 +50,7 @@
         />
       </el-form-item>
       <el-form-item label="所属咨询师" prop="consultId">
-        <el-select v-model="queryParams.consultId" clearable :disabled="consultList.length === 1">
+        <el-select v-model="queryParams.consultId" clearable filterable :disabled="consultList.length === 1">
           <el-option
             v-for="item in consultList"
             :key="item.id"

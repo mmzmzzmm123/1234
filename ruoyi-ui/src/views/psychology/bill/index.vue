@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="90px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" label-width="90px">
       <el-form-item label="账单日期" prop="times">
         <el-date-picker
           v-model="queryParams.times"
@@ -98,18 +98,10 @@ export default {
     return {
       // 遮罩层
       loading: true,
-      // 显示搜索条件
-      showSearch: true,
       // 总条数
       total: 0,
       // 咨询师合同协议表格数据
       bills: [],
-      // 咨询师列表
-      timeVal: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
       consultId: null,
       // 查询参数
       queryParams: {
@@ -171,7 +163,6 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.timeVal = []
       this.resetForm("queryForm");
       this.handleQuery();
     },

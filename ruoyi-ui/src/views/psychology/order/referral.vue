@@ -11,7 +11,7 @@
         <el-row style="margin-top: 30px;margin-bottom: 30px">
           <el-form ref="form" :model="formRef" :rules="rules" label-width="130px">
             <el-form-item label="转介咨询师" prop="consultId">
-              <el-select v-model="formRef.consultId">
+              <el-select v-model="formRef.consultId" filterable>
                 <el-option
                   v-for="item in consultList"
                   :key="item.consultId"

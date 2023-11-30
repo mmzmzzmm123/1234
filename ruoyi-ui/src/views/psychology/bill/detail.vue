@@ -10,7 +10,7 @@
         />
       </el-form-item>
       <el-form-item label="所属咨询师" prop="consultId">
-        <el-select v-model="queryParams.consultId" clearable :disabled="consultList.length === 1">
+        <el-select v-model="queryParams.consultId" filterable clearable :disabled="consultList.length === 1">
           <el-option
             v-for="item in consultList"
             :key="item.id"
@@ -101,13 +101,13 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      // 分期总结算佣金
       brokerages: 0,
       // 总条数
       total: 0,
       // 咨询师合同协议表格数据
       bills: [],
       // 咨询师列表
-      timeVal: [],
       consultList: [],
       consultId: null,
       billId: null,
@@ -167,7 +167,6 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
-      this.timeVal = []
       this.resetForm("queryForm");
       this.handleQuery();
     },

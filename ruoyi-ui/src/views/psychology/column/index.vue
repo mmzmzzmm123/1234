@@ -10,7 +10,7 @@
         />
       </el-form-item>
       <el-form-item label="咨询师" prop="consultId">
-        <el-select v-model="queryParams.consultId" clearable>
+        <el-select v-model="queryParams.consultId" filterable clearable>
           <el-option
             v-for="item in consultList"
             :key="item.id"
@@ -99,7 +99,7 @@
     <el-dialog :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="咨询师" prop="consultId">
-          <el-select v-model="form.consultId" placeholder="请选择咨询师" clearable>
+          <el-select v-model="form.consultId" filterable placeholder="请选择咨询师" clearable>
             <el-option
               v-for="item in consultList"
               :key="item.id"

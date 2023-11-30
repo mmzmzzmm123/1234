@@ -26,7 +26,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="关联咨询师" prop="cId">
-            <el-select v-model="queryParams.cId" clearable>
+            <el-select v-model="queryParams.cId" clearable filterable>
               <el-option
                 v-for="item in consultList"
                 :key="item.id"

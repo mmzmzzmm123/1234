@@ -58,9 +58,6 @@ public class PsyConsultBillServiceImpl implements IPsyConsultBillService
             bill.setId(IDhelper.getNextId());
             bill.setBillTime(billTime);
             mapper.insert(bill);
-        } else {
-            // 如果上个月账单不为空，则更新账单
-            mapper.updateById(bill);
         }
         Long billId = bill.getId();
 

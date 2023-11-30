@@ -5,7 +5,7 @@
         <el-input disabled v-model="form.name" placeholder="请输入合同名称" />
       </el-form-item>
       <el-form-item label="签约人" prop="consultId">
-        <el-select v-model="form.consultId" :disabled="form.id != null" clearable>
+        <el-select v-model="form.consultId" :disabled="form.id != null" clearable filterable>
           <el-option
             v-for="item in consultList"
             :key="item.id"

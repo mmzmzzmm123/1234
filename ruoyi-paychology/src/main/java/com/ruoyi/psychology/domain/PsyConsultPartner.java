@@ -38,12 +38,11 @@ public class PsyConsultPartner extends BasePlusEntity implements Serializable
     private Integer userId;
 
     /** 咨询师号 */
-    @Excel(name = "咨询师号")
     private Long consultId;
+    @Excel(name = "咨询师")
     private String consultName;
 
     /** 步骤1-4 */
-    @Excel(name = "步骤1-4")
     private Integer step;
 
     /** 申请类型 */
@@ -62,11 +61,11 @@ public class PsyConsultPartner extends BasePlusEntity implements Serializable
     private Integer sex;
 
     /** wechat */
-    @Excel(name = "wechat")
+    @Excel(name = "微信号")
     private String wechat;
 
     /** qq */
-    @Excel(name = "qq")
+    @Excel(name = "qq号")
     private String qq;
 
     /** 手机号码 */

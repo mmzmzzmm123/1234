@@ -116,10 +116,6 @@ export default {
       total: 0,
       // 咨询师入驻申请表格数据
       partnerList: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -130,23 +126,6 @@ export default {
         dateLimit: null
       },
       timeVal: [],
-      // 表单参数
-      form: {},
-      // 表单校验
-      rules: {
-        orderNo: [
-          { required: true, message: "合同单号不能为空", trigger: "blur" }
-        ],
-        userId: [
-          { required: true, message: "登录名不能为空", trigger: "blur" }
-        ],
-        name: [
-          { required: true, message: "姓名不能为空", trigger: "blur" }
-        ],
-        workHours: [
-          { required: true, message: "从业时间不能为空", trigger: "blur" }
-        ],
-      }
     };
   },
   created() {
@@ -214,7 +193,7 @@ export default {
     handleExport() {
       this.download('psychology/partner/export', {
         ...this.queryParams
-      }, `partner_${new Date().getTime()}.xlsx`)
+      }, `入驻合同_${new Date().getTime()}.xlsx`)
     }
   }
 };

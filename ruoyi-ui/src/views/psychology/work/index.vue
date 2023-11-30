@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="78px">
       <el-form-item label="咨询师" prop="ids">
-        <el-select v-model="queryParams.ids" multiple clearable :disabled="consultList.length === 1">
+        <el-select v-model="queryParams.ids" multiple filterable clearable :disabled="consultList.length === 1">
           <el-option
             v-for="item in consultList"
             :key="item.id"
@@ -119,7 +119,7 @@
     <el-dialog title="排班设置" :visible.sync="open" width="800px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="120px">
         <el-form-item label="咨询师姓名" prop="ids">
-          <el-select v-model="form.ids" :disabled="edit" multiple placeholder="请选择咨询师" clearable>
+          <el-select v-model="form.ids" :disabled="edit" multiple placeholder="请选择咨询师" clearable filterable>
             <el-option
               v-for="item in consultList"
               :key="item.id"

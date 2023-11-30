@@ -59,7 +59,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         LEFT JOIN
         psy_consult_bill_item c ON a.order_id = c.order_id AND c.bill_id > 0
         <where>
-            <if test="billId != null and billId != ''"> and a.bill_id = #{billId}</if>
             <if test="consultId != null"> and a.consult_id = #{consultId}</if>
             <if test="orderNo != null  and orderNo != ''"> and a.order_no = #{orderNo}</if>
             <if test="startTime != null "> and a.use_time <![CDATA[ >= ]]> #{startTime}</if>

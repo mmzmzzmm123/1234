@@ -23,7 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endTime != null "> and a.bill_time <![CDATA[ <= ]]> #{endTime}</if>
         </where>
         GROUP BY a.id,a.bill_time,a.remark
-        ORDER BY a.id
+        ORDER BY a.bill_time DESC
     </select>
 
     <select id="getBillByBillDate" resultType="com.ruoyi.psychology.domain.PsyConsultBill">

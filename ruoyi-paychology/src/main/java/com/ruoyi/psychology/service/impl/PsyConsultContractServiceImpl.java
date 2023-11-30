@@ -9,6 +9,7 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.IDhelper;
 import com.ruoyi.psychology.constant.ConsultConstant;
 import com.ruoyi.psychology.domain.PsyConsult;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.psychology.mapper.PsyConsultContractMapper;
@@ -81,22 +82,38 @@ public class PsyConsultContractServiceImpl extends ServiceImpl<PsyConsultContrac
     public void doJob()
     {
         // 1-待签署,2-已撤销,3-逾期未签署,4-待生效,5-生效中,6-已失效,7-终止
-        // 定时任务处理待生效,逾期未签署
         LambdaQueryWrapper<PsyConsultContract> wp = new LambdaQueryWrapper<>();
-        List<String> status = Arrays.asList(ConsultConstant.CONTRACT_STATUS_4, ConsultConstant.CONTRACT_STATUS_1);
+        List<String> status = Arrays.asList(ConsultConstant.CONTRACT_STATUS_5, ConsultConstant.CONTRACT_STATUS_4, ConsultConstant.CONTRACT_STATUS_1);
         Date nowDate = DateUtils.getNowDate();
         wp.in(PsyConsultContract::getStatus, status);
         wp.le(PsyConsultContract::getStartTime, nowDate);
         List<PsyConsultContract> list = psyConsultContractMapper.selectList(wp);
+        List<PsyConsultContract> entityList = new ArrayList<>();
         list.forEach(item -> {
-            if (item.getStatus().equals(ConsultConstant.CONTRACT_STATUS_1)) {
-                item.setStatus(ConsultConstant.CONTRACT_STATUS_3);
-            } else {
-                item.setStatus(item.getEndTime().getTime() > nowDate.getTime() ? ConsultConstant.CONTRACT_STATUS_5 : ConsultConstant.CONTRACT_STATUS_6);
+            switch (item.getStatus()) {
+                case ConsultConstant.CONTRACT_STATUS_1:
+                    // 待签署 -> 逾期未签署
+                    item.setStatus(ConsultConstant.CONTRACT_STATUS_3);
+                    entityList.add(item);
+                    break;
+                case ConsultConstant.CONTRACT_STATUS_4:
+                    // 待生效 -> 生效中 终止
+                    item.setStatus(item.getEndTime().getTime() > nowDate.getTime() ? ConsultConstant.CONTRACT_STATUS_5 : ConsultConstant.CONTRACT_STATUS_6);
+                    entityList.add(item);
+                    break;
+                case ConsultConstant.CONTRACT_STATUS_5:
+                    // 生效中 -> 终止
+                    if (item.getEndTime().getTime() < nowDate.getTime()) {
+                        item.setStatus(ConsultConstant.CONTRACT_STATUS_6);
+                        entityList.add(item);
+                    }
+                    break;
             }
         });
 
-        this.updateBatchById(list);
+        if (CollectionUtils.isNotEmpty(entityList)) {
+            this.updateBatchById(entityList);
+        }
     }
 
     @Override
