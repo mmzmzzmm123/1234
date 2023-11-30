@@ -86,6 +86,13 @@ public class PsyConsultBillController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('psychology:bill:list')")
+    @GetMapping(value = "/getBillItemSum")
+    public AjaxResult getBillItemSum(PsyAdminBillReq req)
+    {
+        return AjaxResult.success(itemService.getBillItemSum(req));
+    }
+
     @PreAuthorize("@ss.hasPermi('psychology:bill:export')")
     @Log(title = "心理咨询账单", businessType = BusinessType.EXPORT)
     @PostMapping("/exportItemsForDetail")

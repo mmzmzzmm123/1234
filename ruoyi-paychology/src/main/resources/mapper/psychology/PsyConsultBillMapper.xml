@@ -6,28 +6,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="getList" resultType="com.ruoyi.psychology.domain.PsyConsultBill">
         SELECT
-            a.bill_id id,
+            a.id,
             a.bill_time,
-            count(DISTINCT b.id) num,
-            count(DISTINCT a.order_id) order_num,
-            count(DISTINCT a.consult_id) consult_num,
-            sum(b.price) total,
-            sum(b.brokerage) pay,
-            c.remark
+            count( DISTINCT b.id ) num,
+            count( DISTINCT b.order_id ) order_num,
+            count( DISTINCT b.consult_id ) consult_num,
+            sum( b.price ) total,
+            sum( b.brokerage ) pay,
+            a.remark
         FROM
-            psy_consult_bill_item a
-                LEFT JOIN psy_consult_bill_item b ON a.id = b.id AND b.bill_id > 0
-                LEFT JOIN psy_consult_bill c ON a.bill_id = c.id
+            psy_consult_bill a
+            LEFT JOIN psy_consult_bill_item b ON a.id = b.bill_id AND b.bill_id > 0
         <where>
-            a.bill_id > 0
-            <if test="consultId != null"> and a.consult_id = #{consultId}</if>
+            <if test="consultId != null"> and b.consult_id = #{consultId}</if>
             <if test="startTime != null "> and a.bill_time <![CDATA[ >= ]]> #{startTime}</if>
             <if test="endTime != null "> and a.bill_time <![CDATA[ <= ]]> #{endTime}</if>
         </where>
-        GROUP BY
-            a.bill_id,
-            a.bill_time,
-            c.remark
+        GROUP BY a.id,a.bill_time,a.remark
+        ORDER BY a.id
     </select>
 
     <select id="getBillByBillDate" resultType="com.ruoyi.psychology.domain.PsyConsultBill">

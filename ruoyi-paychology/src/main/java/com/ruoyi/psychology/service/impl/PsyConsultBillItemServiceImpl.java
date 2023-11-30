@@ -40,6 +40,11 @@ public class PsyConsultBillItemServiceImpl extends ServiceImpl<PsyConsultBillIte
     }
 
     @Override
+    public BigDecimal getBillItemSum(PsyAdminBillReq req) {
+        return mapper.getBillItemSum(req);
+    }
+
+    @Override
     public List<BillItemDTO> getItemList(PsyAdminBillReq req) {
         return mapper.getItemList(req);
     }

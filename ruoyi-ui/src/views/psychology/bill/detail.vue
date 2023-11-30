@@ -33,6 +33,12 @@
       </el-form-item>
     </el-form>
 
+    <el-row :gutter="10" class="mb8">
+      <el-col :span="1.5">
+        <span style="color: #C5291B;margin: 0 10px">分期总结算佣金: {{ brokerages > 0 ? brokerages.toFixed('2') : 0 }}元</span>
+      </el-col>
+    </el-row>
+
     <el-table v-loading="loading" size="mini" style="width: 100%" :data="bills">
       <el-table-column label="账单日期" width="100" align="center" prop="billTime" />
       <el-table-column label="核销时间" width="160" align="center" prop="useTime" />
@@ -55,22 +61,22 @@
       <el-table-column label="用户昵称" align="center" prop="nickName" />
       <el-table-column label="分期结算款项(元）" align="center" prop="price" >
         <template slot-scope="scope">
-          <span>{{ scope.row.price && scope.row.price.toFixed('2') }}</span>
+          <span>{{ scope.row.price ? scope.row.price.toFixed('2') : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="分期结算佣金(元）" align="center" prop="brokerage" >
         <template slot-scope="scope">
-          <span>{{ scope.row.brokerage && scope.row.brokerage.toFixed('2') }}</span>
+          <span>{{ scope.row.brokerage ? scope.row.brokerage.toFixed('2') : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="订单实付金额(元）" align="center" prop="orderTotal" >
         <template slot-scope="scope">
-          <span>{{ scope.row.orderTotal && scope.row.orderTotal.toFixed('2') }}</span>
+          <span>{{ scope.row.orderTotal ? scope.row.orderTotal.toFixed('2') : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="已结算金额(元）" align="center" prop="total" >
         <template slot-scope="scope">
-          <span>{{ scope.row.total && scope.row.total.toFixed('2') }}</span>
+          <span>{{ scope.row.total ? scope.row.total.toFixed('2') : 0 }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -87,7 +93,7 @@
 
 <script>
 import { getConsultAll } from "@/api/psychology/consult";
-import { getItemListForDetail } from "@/api/psychology/bill";
+import { getItemListForDetail, getBillItemSum } from "@/api/psychology/bill";
 
 export default {
   name: "BillDetail",
@@ -95,6 +101,7 @@ export default {
     return {
       // 遮罩层
       loading: true,
+      brokerages: 0,
       // 总条数
       total: 0,
       // 咨询师合同协议表格数据
@@ -142,6 +149,15 @@ export default {
         this.bills = response.rows;
         this.total = response.total;
         this.loading = false;
+
+        const req = {
+          billId: this.queryParams.billId,
+          consultId: this.queryParams.consultId,
+          orderNo: this.queryParams.orderNo,
+        }
+        getBillItemSum(req).then(res => {
+          this.brokerages = res.data
+        });
       });
     },
     /** 搜索按钮操作 */

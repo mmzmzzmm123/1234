@@ -18,6 +18,15 @@ export function getItemListForDetail(query) {
   })
 }
 
+// 获取结算总额
+export function getBillItemSum(query) {
+  return request({
+    url: '/psychology/bill/getBillItemSum',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询咨询师入驻申请列表
 export function listBill(query) {
   return request({

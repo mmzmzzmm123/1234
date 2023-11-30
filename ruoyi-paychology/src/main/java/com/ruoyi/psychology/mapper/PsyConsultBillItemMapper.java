@@ -5,6 +5,7 @@ import com.ruoyi.psychology.domain.PsyConsultBillItem;
 import com.ruoyi.psychology.dto.BillItemDTO;
 import com.ruoyi.psychology.request.PsyAdminBillReq;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface PsyConsultBillItemMapper extends BaseMapper<PsyConsultBillItem>
@@ -17,5 +18,7 @@ public interface PsyConsultBillItemMapper extends BaseMapper<PsyConsultBillItem>
     List<PsyConsultBillItem> getItemListForDetail(PsyAdminBillReq req);
 
     List<PsyConsultBillItem> getBillItems(PsyAdminBillReq req);
+
+    BigDecimal getBillItemSum(PsyAdminBillReq req);
 
 }

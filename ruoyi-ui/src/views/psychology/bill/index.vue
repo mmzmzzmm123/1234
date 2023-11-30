@@ -34,12 +34,12 @@
       <el-table-column label="结算咨询师" width="160" align="center" prop="consultNum" />
       <el-table-column label="分期结算款项(元）" align="center" prop="id" >
         <template slot-scope="scope">
-          <span>{{ scope.row.total.toFixed('2') }}</span>
+          <span>{{ scope.row.total ? scope.row.total.toFixed('2') : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="分期结算佣金(元）" align="center" prop="id" >
         <template slot-scope="scope">
-          <span>{{ scope.row.pay.toFixed('2') }}</span>
+          <span>{{ scope.row.pay ? scope.row.pay.toFixed('2') : 0 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="备注" align="center" prop="remark" />
