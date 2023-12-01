@@ -292,7 +292,7 @@
 
 <script>
 import { listJob, getJob, delJob, addJob, updateJob, runJob, changeJobStatus } from "@/api/monitor/job";
-import Crontab from '@/components/Crontab'
+import Crontab from '@/components/Crontab/index.vue'
 
 export default {
   components: { Crontab },
