@@ -334,7 +334,7 @@
       </el-form>
       <template #footer>
         <div class="dialog-footer">
-          <el-button type="primary" @click="submitForm">确 定</el-button>
+          <el-button type="primary" @click="submitForm" :loading="submitLoading">确 定</el-button>
           <el-button @click="cancel">取 消</el-button>
         </div>
       </template>
@@ -356,6 +356,7 @@ const ${businessName}List = ref([]);
 const ${subclassName}List = ref([]);
 #end
 const open = ref(false);
+const submitLoading = ref(false);
 const loading = ref(true);
 const showSearch = ref(true);
 const ids = ref([]);
@@ -431,6 +432,7 @@ function getList() {
 // 取消按钮
 function cancel() {
   open.value = false;
+  submitLoading.value = false;
   reset();
 }
 
@@ -480,6 +482,7 @@ function handleSelectionChange(selection) {
 function handleAdd() {
   reset();
   open.value = true;
+  submitLoading.value = false;
   title.value = "添加${functionName}";
 }
 
@@ -498,12 +501,14 @@ function handleUpdate(row) {
     ${subclassName}List.value = response.data.${subclassName}List;
 #end
     open.value = true;
+    submitLoading.value = false;
     title.value = "修改${functionName}";
   });
 }
 
 /** 提交按钮 */
 function submitForm() {
+  submitLoading.value = true;
   proxy.#[[$]]#refs["${businessName}Ref"].validate(valid => {
     if (valid) {
 #foreach ($column in $columns)
@@ -518,12 +523,14 @@ function submitForm() {
         update${BusinessName}(form.value).then(response => {
           proxy.#[[$modal]]#.msgSuccess("修改成功");
           open.value = false;
+          submitLoading.value = false;
           getList();
         });
       } else {
         add${BusinessName}(form.value).then(response => {
           proxy.#[[$modal]]#.msgSuccess("新增成功");
           open.value = false;
+          submitLoading.value = false;
           getList();
         });
       }
