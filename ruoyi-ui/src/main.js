@@ -49,6 +49,11 @@ Vue.prototype.selectDictLabels = selectDictLabels
 Vue.prototype.download = download
 Vue.prototype.handleTree = handleTree
 
+//兼容写法,防止以前代码不可用
+Vue.prototype.msgSuccess = Vue.prototype.$modal.msgSuccess
+Vue.prototype.msgError = Vue.prototype.$modal.msgError
+Vue.prototype.msgInfo = Vue.prototype.$modal.msg
+
 // 全局组件挂载
 Vue.component('DictTag', DictTag)
 Vue.component('Pagination', Pagination)
