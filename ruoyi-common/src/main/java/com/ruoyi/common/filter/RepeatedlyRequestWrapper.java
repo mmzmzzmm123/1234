@@ -26,7 +26,6 @@ public class RepeatedlyRequestWrapper extends HttpServletRequestWrapper
         super(request);
         request.setCharacterEncoding(Constants.UTF8);
         response.setCharacterEncoding(Constants.UTF8);
-
         body = HttpHelper.getBodyString(request).getBytes(Constants.UTF8);
     }
 
@@ -63,7 +62,7 @@ public class RepeatedlyRequestWrapper extends HttpServletRequestWrapper
             @Override
             public boolean isReady()
             {
-                return false;
+                return true;
             }
 
             @Override
