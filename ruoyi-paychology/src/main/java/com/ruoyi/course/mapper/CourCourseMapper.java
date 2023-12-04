@@ -2,6 +2,7 @@ package com.ruoyi.course.mapper;
 
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.domain.dto.CourseQueryDTO;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -77,7 +78,7 @@ public interface CourCourseMapper
      * @param courseId 课程ID
      * @return 课程支付数量
      */
-    public int getPaidCourseCount(Integer courseId);
+    public int getPaidCourseCount(@Param("userId") Integer userId, @Param("courseId") Integer courseId);
 
     /**
      * 根据用户ID查询课程列表

@@ -93,7 +93,7 @@ public interface ICourCourseService
      * @param courseId 课程ID
      * @return 课程支付数量
      */
-    public int getPaidCourseCount(Integer courseId);
+    public int getPaidCourseCount(Integer userId, Integer courseId);
 
     /**
      * 根据用户ID查询课程列表

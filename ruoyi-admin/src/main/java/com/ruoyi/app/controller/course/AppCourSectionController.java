@@ -7,11 +7,14 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.course.domain.CourSection;
 import com.ruoyi.course.service.ICourCourseService;
 import com.ruoyi.course.service.ICourSectionService;
+import com.ruoyi.framework.web.service.AppTokenService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -25,6 +28,9 @@ public class AppCourSectionController extends BaseController
     @Autowired
     private ICourCourseService courCourseService;
 
+    @Resource
+    private AppTokenService appTokenService;
+
     /**
      * 查询课程章节列表
      */
@@ -32,13 +38,14 @@ public class AppCourSectionController extends BaseController
     @PostMapping("/list")
     @ApiOperation("查询课程章节列表")
     @RateLimiter
-    public TableDataInfo list(@RequestBody CourSection courSection)
+    public TableDataInfo list(@RequestBody CourSection courSection, HttpServletRequest request)
     {
         startPage();
         List<CourSection> list = courSectionService.selectCourSectionList(courSection);
+        Integer userId = appTokenService.getUserId(request);
 
         // 判断课程是否已经下单支付
-        if (courCourseService.getPaidCourseCount(courSection.getCourseId()) == 0) { // 未下单支付
+        if (courCourseService.getPaidCourseCount(userId, courSection.getCourseId()) == 0) { // 未下单支付
             list.forEach(item -> {
                 if (item.getType() == 0) { // 普通课程禁止学习
                     item.setContentUrl(null);

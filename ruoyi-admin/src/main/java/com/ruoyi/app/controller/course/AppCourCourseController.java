@@ -173,10 +173,10 @@ public class AppCourCourseController extends BaseController
      * 根据课程主键查询课程详情
      */
 //    @PreAuthorize("@ss.hasPermi('course:course:query')")
-    @PostMapping(value = "/detail")
+    @PostMapping(value = "/detail/{userId}/{courseId}")
     @ApiOperation("查询课程详情")
     @RateLimiter
-    public AjaxResult detail(@RequestParam Integer userId, @RequestParam Integer courseId)
+    public AjaxResult detail(@PathVariable("userId") Integer userId, @PathVariable("courseId") Integer courseId)
     {
         CourCourse course = courCourseService.selectCourCourseById(courseId);
         if (course == null) {
@@ -211,7 +211,7 @@ public class AppCourCourseController extends BaseController
             sectionVO.setEndTime(courUserCourseSectionService.findEndTime(userCourseSection));
 
             // 未购买课程的普通章节不返回内容链接
-            if (courCourseService.getPaidCourseCount(courseId) == 0 && sectionVO.getType() == CourConstant.SECTION_NORMAL) {
+            if (courCourseService.getPaidCourseCount(userId, courseId) == 0 && sectionVO.getType() == CourConstant.SECTION_NORMAL) {
                 sectionVO.setContentUrl(null);
             }
 

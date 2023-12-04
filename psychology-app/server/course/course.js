@@ -23,7 +23,7 @@ export default {
   },
     //获取课程详情
     getCourseInfo: async (userId, courseId) => {
-      let res = await httprequest.post(`/app/course/detail?userId=${userId}&courseId=${courseId}`);
+      let res = await httprequest.post(`/app/course/detail/${userId}/${courseId}`);
       if (res.code == 200) {
         return res.data;
       } else {

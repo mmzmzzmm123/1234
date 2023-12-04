@@ -119,7 +119,11 @@ export default {
     // this.share()
   },
   methods: {
-    catalogueItemClick(item) {
+    async catalogueItemClick(item) {
+      if (!await utils.checkLogin()) {
+        this.openLoginConfirm()
+        return
+      }
       if (this.courseInfo.payType === 1 || this.courseInfo.isBuy || item.type==1) {
         // TODO: 跳转到课程学习界面
         //uni.navigateTo({

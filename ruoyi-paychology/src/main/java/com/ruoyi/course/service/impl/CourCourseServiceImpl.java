@@ -169,8 +169,8 @@ public class CourCourseServiceImpl implements ICourCourseService
      * @param courseId 课程ID
      * @return 课程支付数量
      */
-    public int getPaidCourseCount(Integer courseId) {
-        return courCourseMapper.getPaidCourseCount(courseId);
+    public int getPaidCourseCount(Integer userId, Integer courseId) {
+        return courCourseMapper.getPaidCourseCount(userId, courseId);
     }
 
     /**

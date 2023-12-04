@@ -111,7 +111,7 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="章节类型" prop="type">
-                <el-select v-model="form.type" placeholder="请选择章节类型" :disabled="course && course.payType === 1">
+                <el-select v-model="form.type" placeholder="请选择章节类型">
                   <el-option
                     v-for="dict in dict.type.course_section_type"
                     :key="dict.value"
