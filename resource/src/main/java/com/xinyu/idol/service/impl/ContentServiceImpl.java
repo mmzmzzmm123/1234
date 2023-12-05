@@ -1,8 +1,8 @@
 package com.xinyu.idol.service.impl;
 
 import cn.hutool.core.math.MathUtil;
-import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.fastjson2.JSON;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.aliyun.oss.common.auth.CredentialsProviderFactory;
@@ -167,7 +167,7 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
         IPage<PageContentResp> iPage = new Page();
         List<PageContentResp> pageContentRespList = new ArrayList<>();
         BeanUtils.copyProperties(contentEntityIPage, iPage);
-       //for (ContentEntity contentEntity : contentEntityIPage.getRecords()) {
+
         for (int i=0;i<contentEntityIPage.getRecords().size();i++) {
 
             ContentEntity contentEntity = contentEntityIPage.getRecords().get(i);
@@ -277,7 +277,7 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
         oss.putObject(bucketName, wholePath, multipartFile.getInputStream());
 
 
-        return FileUploadResp.builder().ossKey("/" + wholePath).fileSize(String.valueOf(size)).build();
+        return FileUploadResp.builder().ossKey(  wholePath).fileSize(String.valueOf(size)).build();
     }
 
     @Override
@@ -307,9 +307,9 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
 
             log.info("批量上传oss路径:{}", wholePath);
 
-            ossKeyListStr.append("/" + wholePath + ",");
+            ossKeyListStr.append( wholePath + ",");
 
-            ossKeyList.add("/" + wholePath);
+            ossKeyList.add(  wholePath);
         }
         return OriginUploadResp.builder().ossKeyListStr(ossKeyListStr.toString()).ossKeyList(ossKeyList).build();
     }
@@ -345,33 +345,53 @@ public class ContentServiceImpl extends ServiceImpl<ContentMapper, ContentEntity
             }
             contentListToCopyBucket.add(it);
         });
-        Set<String>classificationIdSet=new HashSet<>();
+
         //遍历数组，数组里每个值进行下载和插入db
         for (ContentEntity contentEntity : contentListToCopyBucket) {
+            //测试数据跳过
+            if(contentEntity.getIsTest().equals(1)){
+                throw new RuntimeException("该资源为测试资源，已自动拦截："+contentEntity.getGuid());
+
+            }
             String osskeyJson = contentEntity.getOsskeyList();
-            JSON jsonMap = JSONUtil.parse(osskeyJson);
+            Map<String,String> jsonMap = JSONUtil.toBean(osskeyJson, Map.class);
+
             log.info("当前bucket:{}",bucketName);
             log.info("上个bucket:{}",lastBucket);
 
 
-            //copy android
-            String androidPath = (String) jsonMap.getByPath("android");
-            log.info("安卓androidPath:{}",androidPath);
+//            //copy android
+////            String androidPath = (String) jsonMap.getByPath("android");
+////            log.info("安卓androidPath:{}",androidPath);
+////
+////            //copyObject为null的话，报错bucket已存在
+////            oss.copyObject(lastBucket, androidPath, bucketName, androidPath);
+////            //copy ios
+////            String iosPath = (String) jsonMap.getByPath("ios");
+////            oss.copyObject(lastBucket, iosPath, bucketName, iosPath);
 
-            //copyObject为null的话，报错bucket已存在
-            oss.copyObject(lastBucket, androidPath, bucketName, androidPath);
-            //copy ios
-            String iosPath = (String) jsonMap.getByPath("ios");
-            oss.copyObject(lastBucket, iosPath, bucketName, iosPath);
+            //遍历ossKeyList
+            Set<Map.Entry<String, String>> entries = jsonMap.entrySet();
+            for (Map.Entry<String, String> entry:jsonMap.entrySet()) {
+                if(StringUtils.isEmpty(entry.getValue())){
+                    throw new RuntimeException("ossKey为空");
+                }
+                log.info("当前遍历拷贝ossKey:{},当前mapKey:{}",entry.getValue(),entry.getKey());
+                oss.copyObject(lastBucket, entry.getValue(), bucketName, entry.getValue());
+                if(!oss.doesObjectExist(bucketName,entry.getValue())){
+                    throw new RuntimeException("数据拷贝之后不存在"+entry.getValue());
+                }
+            }
+
             //copy icon
             String iconOsskey = contentEntity.getIconOsskey();
-            log.info("拷贝oss参数打印lastbucket:{},androidPath:{},bucketName:{},iconOsskey:{}",lastBucket,iconOsskey,bucketName,iconOsskey);
+
             oss.copyObject(lastBucket, iconOsskey, bucketName, iconOsskey);
-            if(oss.doesObjectExist(bucketName,androidPath)&&oss.doesObjectExist(bucketName,iosPath)&&oss.doesObjectExist(bucketName,iconOsskey)){
-                log.info("拷贝oss数据完成");
+            if(oss.doesObjectExist(bucketName,iconOsskey)){
+                log.info("拷贝oss_icon数据完成");
             }else{
-                log.error("拷贝oss数据失败");
-                throw new RuntimeException("数据拷贝异常");
+                log.error("拷贝oss_icon数据完成");
+                throw new RuntimeException("拷贝oss_icon数据完成");
             }
             //判断哪些数据需要插入，哪些需要更新
             if(localMapByGuid.containsKey(contentEntity.getGuid())){

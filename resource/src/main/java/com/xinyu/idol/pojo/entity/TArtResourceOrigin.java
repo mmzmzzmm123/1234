@@ -18,6 +18,7 @@ public class TArtResourceOrigin extends BaseEntity implements Serializable
     private static final long serialVersionUID = 1L;
 
     /** $column.columnComment */
+    @Excel(name = "id")
     private String id;
 
     /** 展示名称 */

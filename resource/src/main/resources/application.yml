@@ -157,7 +157,7 @@ aliyun:
   oss:
     bucket: idol-stage-dev
     endpoint: oss-cn-beijing.aliyuncs.com
-    domain: https://idol-stage-dev.oss-cn-beijing.aliyuncs.com
+    domain: https://idol-stage-dev.oss-cn-beijing.aliyuncs.com/
     last-bucket:  idol-stage-dev
 
 environment-match:

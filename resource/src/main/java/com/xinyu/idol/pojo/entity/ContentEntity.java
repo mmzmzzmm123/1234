@@ -128,6 +128,8 @@ public class ContentEntity implements Serializable {
 
     private String osskeyListSha1;
 
+    private String generalTag;
+
 
 
     /**
@@ -136,7 +138,7 @@ public class ContentEntity implements Serializable {
     public void generateIdentifier(){
         String identifierStr=fileName+displayName+description+maximumCompatibility+minimumCompatibility
                 +classification1+classification2+classification3+classification4+specialTag+minimumCompatibility+iconOsskey+pakOsskey+
-                isTest+isHide+pakSha1+jsonOsskey+jsonSha1+sort+path+osskeyList;
+                isTest+isHide+pakSha1+jsonOsskey+jsonSha1+sort+path+osskeyList+generalTag;
        this.identifier= Md5Utils.hash(identifierStr);
     }
 }

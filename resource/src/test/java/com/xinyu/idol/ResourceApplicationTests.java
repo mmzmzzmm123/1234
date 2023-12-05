@@ -33,6 +33,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @SpringBootTest
@@ -144,6 +146,34 @@ class ResourceApplicationTests {
 
          oss.copyObject(lastBucket, androidPath, bucketName, androidPath);
        //copyObjectResult.getETag();
+    }
+
+    public static void main(String[] args) {
+        List<Integer> AList=new ArrayList<>();
+        List<Integer> BList=new ArrayList<>();
+
+
+
+        //双指针
+        int i=0;//指向A
+        int j =0;//指向B
+        while(i<AList.size()&&j<BList.size()){
+               //i指针小的化就 i++
+            if(AList.get(i)<BList.get(j)){
+                i++;
+
+            }else if(AList.get(i)>BList.get(j)){
+                //j指针小的化j++
+                j++;
+            }else {
+                //相同就打印出来
+                System.out.println(AList.get(i));
+                i++;
+                j++;
+            }
+        }
+
+
     }
 
     @Autowired

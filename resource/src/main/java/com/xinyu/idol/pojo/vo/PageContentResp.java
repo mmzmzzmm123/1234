@@ -121,7 +121,7 @@ public class PageContentResp implements Serializable {
     @AllArgsConstructor
     public static class  ClassificationRowResp implements Serializable{
 
-        private Long id;
+        private String id;
 
         private String name;
 
