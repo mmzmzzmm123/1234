@@ -36,6 +36,10 @@ dist/
 nbdist/
 .nb-gradle/
 
+
+#开发环境配置文件
+*.yml
+
 ######################################################################
 # Others
 *.log
@@ -45,3 +49,4 @@ nbdist/
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
+
