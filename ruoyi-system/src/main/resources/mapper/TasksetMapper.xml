@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TasksetMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.Taskset">
+            <id property="tasksetId" column="taskset_id" jdbcType="INTEGER"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="deptId" column="dept_id" jdbcType="INTEGER"/>
+            <result property="configfile" column="configfile" jdbcType="VARCHAR"/>
+            <result property="childsetId" column="childset_id" jdbcType="VARCHAR"/>
+            <result property="parentsetId" column="parentset_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        taskset_id,name,description,
+        dept_id,configfile,childset_id,
+        parentset_id
+    </sql>
+</mapper>
