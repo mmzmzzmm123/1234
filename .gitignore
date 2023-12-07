@@ -38,7 +38,7 @@ nbdist/
 
 
 #开发环境配置文件
-*.yml
+**/resources/config/
 
 ######################################################################
 # Others
@@ -49,4 +49,5 @@ nbdist/
 !*/build/*.java
 !*/build/*.html
 !*/build/*.xml
+
 
