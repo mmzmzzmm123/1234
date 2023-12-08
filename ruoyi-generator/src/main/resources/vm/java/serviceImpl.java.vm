@@ -70,6 +70,7 @@ public class ${ClassName}ServiceImpl implements I${ClassName}Service
 #foreach ($column in $columns)
 #if($column.javaField == 'createTime')
         ${className}.setCreateTime(DateUtils.getNowDate());
+		${className}.setUpdateTime(${className}.getCreateTime());
 #end
 #end
 #if($table.sub)
