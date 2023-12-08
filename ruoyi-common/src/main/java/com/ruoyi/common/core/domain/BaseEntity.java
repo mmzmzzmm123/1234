@@ -37,8 +37,19 @@ public class BaseEntity implements Serializable
 
     /** 备注 */
     private String remark;
+	
+	    /** 删除标志（0代表存在 2代表删除） */
+    private String delFlag;
 
-    /** 请求参数 */
+	public String getDelFlag() {
+		return delFlag;
+	}
+
+	public void setDelFlag(String delFlag) {
+		this.delFlag = delFlag;
+	}
+
+	/** 请求参数 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     private Map<String, Object> params;
 
