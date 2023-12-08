@@ -26,8 +26,19 @@ public class GenConfig
 
     /** 表前缀(类名不会包含表前缀) */
     public static String tablePrefix;
+	
+    public static String moduleName;
 
-    public static String getAuthor()
+	public static String getModuleName() {
+		return moduleName;
+	}
+
+	@Value("${moduleName}")
+	public void setModuleName(String moduleName) {
+		GenConfig.moduleName = moduleName;
+	}
+
+	public static String getAuthor()
     {
         return author;
     }

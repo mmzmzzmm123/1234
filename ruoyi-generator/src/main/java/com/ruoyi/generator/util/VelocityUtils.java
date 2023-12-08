@@ -1,9 +1,12 @@
 package com.ruoyi.generator.util;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.ruoyi.generator.config.GenConfig;
 import org.apache.velocity.VelocityContext;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
@@ -21,10 +24,10 @@ import com.ruoyi.generator.domain.GenTableColumn;
 public class VelocityUtils
 {
     /** 项目空间路径 */
-    private static final String PROJECT_PATH = "main/java";
+    private static final String PROJECT_PATH = "src/main/java";
 
     /** mybatis空间路径 */
-    private static final String MYBATIS_PATH = "main/resources/mapper";
+    private static final String MYBATIS_PATH = "src/main/resources/mapper";
 
     /** 默认上级菜单，系统工具 */
     private static final String DEFAULT_PARENT_MENU_ID = "3";
@@ -175,9 +178,11 @@ public class VelocityUtils
         // 业务名称
         String businessName = genTable.getBusinessName();
 
-        String javaPath = PROJECT_PATH + "/" + StringUtils.replace(packageName, ".", "/");
-        String mybatisPath = MYBATIS_PATH + "/" + moduleName;
-        String vuePath = "vue";
+		// 加上模块名称，默认为ruoyi-admin
+        String javaPath =  GenConfig.getModuleName() +"/" + PROJECT_PATH + "/" + StringUtils.replace(packageName, ".", "/");
+		// 加上模块名称，默认为ruoyi-admin
+        String mybatisPath = GenConfig.getModuleName() +"/" + MYBATIS_PATH + "/" + moduleName;
+        String vuePath = "ruoyi-ui/src";
 
         if (template.contains("domain.java.vm"))
         {
@@ -209,7 +214,7 @@ public class VelocityUtils
         }
         else if (template.contains("sql.vm"))
         {
-            fileName = businessName + "Menu.sql";
+            fileName = businessName + " Menu.sql";
         }
         else if (template.contains("api.js.vm"))
         {

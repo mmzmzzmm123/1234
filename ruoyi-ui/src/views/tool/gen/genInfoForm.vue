@@ -104,7 +104,7 @@
         <el-form-item prop="genPath">
           <span slot="label">
             自定义路径
-            <el-tooltip content="填写磁盘绝对路径，若不填写，则生成到当前Web项目下" placement="top">
+            <el-tooltip content="填写磁盘绝对路径。若使用默认的'/'，则生成到当前Web项目下" placement="top">
               <i class="el-icon-question"></i>
             </el-tooltip>
           </span>
