@@ -62,24 +62,22 @@
 
     <cart-box ref="cartBox" :dateList="dateList" :works="works" @doOk="doOk" @cancel="cancel"/>
 
-    <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
-    </uni-popup>
+    <login ref="loginModel" :isNav="1"></login>
+
   </view>
 </template>
 <script>
-import utils, { clientTypeObj } from "@/utils/common";
-import countdown from "../../components/consult/countdown";
+import countdown from "@/components/consult/countdown";
+import login from "@/components/common/login";
 import indexServer from '@/server/consult/index'
 import orderServer from "@/server/consult/order";
-import loginServer from "@/server/login"
 import formatTime from '@/utils/formatTime.js'
 import cartBox from '@/components/consult/cartBox'
 import { getPaySign, wxPay } from "@/server/wxApi"
-import {getSeconds} from "../../utils/formatTime";
+// import {getSeconds} from "../../utils/formatTime";
 
 export default {
-  components: { cartBox, countdown },
+  components: { login, cartBox, countdown },
   data() {
     return {
       status: 0,
@@ -110,19 +108,18 @@ export default {
           name: "已完成",
           id: 3,
         }
-      ],
-      clientTypeObj: clientTypeObj,
+      ]
     };
   },
   async created() {
-    this.status = parseInt(utils.getParam(location.href, "status"))
+    this.status = parseInt(this.$utils.getParam(location.href, "status"))
   },
   async mounted() {
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
     }
-    if (!await utils.checkLogin()) {
+    if (await this.$utils.checkLogin()) {
       return this.openLoginConfirm()
     }
     await this.getDates()
@@ -130,15 +127,8 @@ export default {
   },
   methods: {
     // 登录
-    async confirmLogin () {
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
-    closeLoginConfirm() {
-      this.$refs.popup.close()
-    },
     openLoginConfirm() {
-      this.$refs.popup.open()
+      this.$refs.loginModel.open()
     },
     async getDates() {
       this.dateList = await indexServer.getDates(7);
@@ -173,7 +163,7 @@ export default {
     },
     // cartBox end
     async doOk(workId, time, workName) {
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 
@@ -315,7 +305,7 @@ export default {
       await this.getOrderList()
     },
     async toDetail(id) {
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 

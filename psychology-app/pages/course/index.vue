@@ -52,27 +52,18 @@
 		</view>
 		<course-tab-bar :currentIndex="0"></course-tab-bar>
 
-		<uni-popup ref="popup" type="dialog">
-			<uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
-				@close="close" @confirm="confirm"></uni-popup-dialog>
-		</uni-popup>
+    <login ref="loginModel"></login>
 	</view>
 </template>
 <script>
 	import courseListCom from '@/components/course/courseList'
 	import indexServer from '@/server/course/index'
-	import loginServer from '@/server/login'
-	import {
-		uniPopup,
-		uniPopupDialog
-	} from '@dcloudio/uni-ui'
-	import utils from "@/utils/common";
+  import login from "@/components/common/login";
   import classServer from '@/server/course/class'
 	export default {
 		components: {
+      login,
 			courseListCom,
-			uniPopup,
-			uniPopupDialog
 		},
 		data() {
 			return {
@@ -87,7 +78,7 @@
 		},
 		async created() {
       // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = utils.getUserInfo()
+      this.userInfo = this.$utils.getUserInfo()
 			this.bannerList = await this.getBanner(0);
 			this.bannerList1 = await this.getBanner(2);
 			this.bannerList2 = await this.getBanner(1);
@@ -96,13 +87,12 @@
       this.classList = classData.slice(0, 8) // 取前8个类别
 		},
 		async mounted() {      
-			if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-        this.userInfo = utils.getUserInfo()
+			if (!this.userInfo && await this.$utils.loginCallback(this.redirectUri)) {
+        this.userInfo = this.$utils.getUserInfo()
 			}
-      // if (!utils.checkLogin()) {
+      // if (!this.$utils.checkLogin()) {
       //   return this.openLoginConfirm()
       // }
-
 		},
 		methods: {
 			async getBanner(type) {
@@ -131,15 +121,8 @@
 					url: "/pages/course/class",
 				});
 			},
-			close() {
-				this.$refs.popup.close()
-			},
-			async confirm() {
-				await loginServer.login();
-				this.$refs.popup.close()
-			},
 			openLoginConfirm() {
-				this.$refs.popup.open();
+				this.$refs.loginModel.open();
 			}
 		},
 	};

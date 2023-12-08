@@ -170,10 +170,13 @@
         <view class="cu-btn bg-orange round lg btn-next" @tap="next(2)">确认提交</view>
       </view>
     </view>
+
+    <login ref="loginModel" :isNav="1"></login>
   </view>
 </template>
 
 <script>
+import login from "@/components/common/login";
 import serve from "@/server/consult/toPartner";
 import psySteps from "@/components/common/psySteps";
 import itemList from "@/components/consult/toPartner/itemList";
@@ -181,7 +184,7 @@ import timeLine from "@/components/consult/toPartner/timeLine";
 import itemForm from "@/components/consult/toPartner/itemForm";
 export default {
   name: "ConsultPartnerStep4",
-  components: { psySteps, itemList, itemForm, timeLine },
+  components: { login, psySteps, itemList, itemForm, timeLine },
   data() {
     return {
       type: 'edit',
@@ -201,13 +204,29 @@ export default {
       dataList: [],
     }
   },
-  onLoad(option) {
+  async onLoad(option) {
+    // #ifdef H5
+    this.$utils.share('壹加壹心理入驻申请', '欢迎入驻壹加壹心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
+    // #endif
+
     if (option && option.type) {
       this.type = option.type
     }
-    this.getApply()
+
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
+    }
+    if (!await this.$utils.checkLogin()) {
+      return this.openLoginConfirm()
+    }
+
+    await this.getApply()
   },
   methods: {
+    openLoginConfirm() {
+      this.$refs.loginModel.open()
+    },
     async getApply() {
       const res = await serve.getInfo()
       if (res.code === 200 && res.data) {
@@ -236,24 +255,35 @@ export default {
         url: "/pages/consult/toPartner/step" + type
       });
     },
-    toPage() {
+    async toPage() {
+      if (!await this.$utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       uni.navigateTo({
         url: "/pages/consult/toPartner/compact"
       });
     },
-    back(type) {
+    async back(type) {
+      if (!await this.$utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       if (type === '2') {
         uni.navigateTo({
           url: "/pages/consult/toPartner/step3"
         });
-      }
-      else if (type === '1') {
+      } else if (type === '1') {
         uni.navigateTo({
           url: "/pages/consult/toPartner/result"
         });
       }
     },
     async next(type) {
+      if (!await this.$utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       if (type === 1) {
         return uni.showToast({
           icon: "success",

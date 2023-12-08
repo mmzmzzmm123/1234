@@ -10,7 +10,7 @@ async function login() {
 	  userInfo = {};//防止为null报错
 	  //添加登录标志,为callback做返回判断
 	  uni.setStorageSync("wxLogining", true);
-	  await utils.loginWx(redirectUri);   
+	  await utils.loginWx(redirectUri);
 	}	
 }
 	

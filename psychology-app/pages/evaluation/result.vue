@@ -41,7 +41,6 @@
     </view>
 </template>
 <script>
-import utils from "@/utils/common";
 import qrcodeServer from '@/server/qrcode'
 import html2canvas from '@/common/html2canvas.min.js'
 export default {
@@ -56,7 +55,7 @@ export default {
     },
     created() {
 		// this.userInfo = uni.getStorageSync("userInfo");
-      this.userInfo = utils.getUserInfo()
+      this.userInfo = this.$utils.getUserInfo()
       this.result = uni.getStorageSync("result");
     },
     methods: {

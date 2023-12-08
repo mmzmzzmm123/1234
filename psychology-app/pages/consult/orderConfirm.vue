@@ -86,9 +86,7 @@
       </view>
     </uni-popup>
 
-    <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
-    </uni-popup>
+    <login ref="loginModel" :isNav="1"></login>
 
     <cart-box ref="cartBox" :dateList="dateList" :works="works" @doOk="doOk" @cancel="cancel"/>
   </view>
@@ -96,17 +94,17 @@
 
 <script>
 
-import utils from "@/utils/common";
 import indexServer from '@/server/consult/index'
 import orderServer from "@/server/consult/order";
-import loginServer from '@/server/login'
 import cartBox from '@/components/consult/cartBox'
+import login from "@/components/common/login";
+
 // #ifdef H5
 import wxJS from "@/server/wxJS.js"
 // #endif
 import { getPaySign, wxPay } from "@/server/wxApi"
 export default {
-  components: { cartBox },
+  components: { cartBox, login },
   data() {
     return {
       time: -1,
@@ -127,23 +125,23 @@ export default {
     };
   },
   async mounted() {
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
     }
 
-    this.serveId = utils.getParam(location.href, "sId")
-    this.consultId = utils.getParam(location.href, "cId")
-    if (utils.get('time') && utils.get('workId') && utils.get('workName')) {
-      this.time = utils.get('time')
-      this.workId = utils.get('workId')
-      this.workName = utils.get('workName')
+    this.serveId = this.$utils.getParam(location.href, "sId")
+    this.consultId = this.$utils.getParam(location.href, "cId")
+    if (this.$utils.get('time') && this.$utils.get('workId') && this.$utils.get('workName')) {
+      this.time = this.$utils.get('time')
+      this.workId = this.$utils.get('workId')
+      this.workName = this.$utils.get('workName')
       this.$refs.cartBox.time = this.time
       this.$refs.cartBox.workId = this.workId
       // cartBox
-      utils.remove('time')
-      utils.remove('workId')
-      utils.remove('workName')
+      this.$utils.remove('time')
+      this.$utils.remove('workId')
+      this.$utils.remove('workName')
     }
 
     this.getNotice()
@@ -195,15 +193,8 @@ export default {
     },
     // cartBox end
     // 登录
-    async confirmLogin () {
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
-    closeLoginConfirm() {
-      this.$refs.popup.close()
-    },
     openLoginConfirm() {
-      this.$refs.popup.open()
+      this.$refs.loginModel.open()
     },
     goHome() {
       uni.redirectTo({
@@ -215,7 +206,7 @@ export default {
       this.checkBox = e.detail.value[0]
     },
     async toBuy() {
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 

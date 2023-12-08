@@ -45,13 +45,8 @@
     <consult-tab-bar :currentIndex="0"></consult-tab-bar>
 
     <!-- 筛选组件 -->
-    <uni-popup ref="popupFilter" type="top" background-color="#fff">
+    <uni-popup ref="popupFilter" type="top" background-color="#fff" style="z-index: 9999">
       <filter-com :filterParams="filterParams"  :attrParams="attrParams" @close="doFilterClose" @submit="submit"/>
-    </uni-popup>
-          
-    <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="close"
-        @confirm="confirm"/>
     </uni-popup>
   </view>
 </template>
@@ -59,19 +54,11 @@
   import consultantList from '@/components/consult/consultantList.vue'
   import filterCom from '@/components/consult/filter.vue'
   import indexServer from '@/server/consult/index'
-  import loginServer from '@/server/login'
-  import {
-    uniPopup,
-    uniPopupDialog
-  } from '@dcloudio/uni-ui'
-  import utils from "@/utils/common";
   import classServer from '@/server/consult/class'
   export default {
     components: {
       consultantList,
       filterCom,
-      uniPopup,
-      uniPopupDialog
     },
     data() {
       return {
@@ -131,10 +118,10 @@
     },
     async mounted() {
       // #ifdef H5
-      utils.share('壹加壹心理', '壹加壹心理')
+      this.$utils.share('壹加壹心理', '壹加壹心理')
       // #endif
 
-      this.userInfo = utils.getUserInfo()
+      this.userInfo = this.$utils.getUserInfo()
 
       this.getCat()
       this.getBanner(0)
@@ -147,13 +134,9 @@
       this.getPrice()
       this.getSex()
       this.getConsultTime()
-      if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-        this.userInfo = utils.getUserInfo()
+      if (!this.userInfo && await this.$utils.loginCallback(this.redirectUri)) {
+        this.userInfo = this.$utils.getUserInfo()
       }
-
-      // if (!utils.checkLogin()) {
-      //   return this.openLoginConfirm()
-      // }
     },
     methods: {
       kefu() {
@@ -344,16 +327,6 @@
       },
       doFilterClose() {
         this.$refs.popupFilter.close()
-      },
-      close() {
-        this.$refs.popup.close()
-      },
-      async confirm() {
-        await loginServer.login();
-        this.$refs.popup.close()
-      },
-      openLoginConfirm() {
-        this.$refs.popup.open();
       },
       async loadMore() {
         if (this.consultantList.length < this.total) {

@@ -138,25 +138,23 @@
 
     <wx-card v-if="showCard" :data="consult" @close="closeWx"/>
 
-    <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
-    </uni-popup>
+    <login ref="loginModel" :isNav="1"></login>
   </view>
 </template>
 <script>
-import utils from "@/utils/common";
-import loginServer from '@/server/login'
 import formatTime from '@/utils/formatTime.js'
 import indexServer from '@/server/consult/index'
 import orderServer from "@/server/consult/order";
 import cartBox from '@/components/consult/cartBox'
 import countdown from "../../components/consult/countdown";
 import wxCard from '@/components/consult/wxCard'
+import login from "@/components/common/login";
+
 // import wxCard from '@/components/consult/wCard'
 import { getPaySign, wxPay } from "@/server/wxApi"
 
 export default {
-  components: { cartBox, wxCard, countdown },
+  components: { cartBox, wxCard, countdown, login },
   data() {
     return {
       showCard: false,
@@ -175,17 +173,17 @@ export default {
     };
   },
   async created() {
-    this.orderId = utils.getParam(location.href, "id")
+    this.orderId = this.$utils.getParam(location.href, "id")
     await this.getOrderDetail()
     await this.getConsultInfoByServe()
     this.getDates()
   },
   async mounted() {
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
     }
-    if (!await utils.checkLogin()) {
+    if (!await this.$utils.checkLogin()) {
       return this.openLoginConfirm()
     }
   },
@@ -255,7 +253,7 @@ export default {
     },
     // cartBox end
     async doOk(workId, time, workName) {
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 
@@ -361,15 +359,8 @@ export default {
   		});
   	},
     // 登录
-    async confirmLogin () {
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
-    closeLoginConfirm() {
-      this.$refs.popup.close()
-    },
     openLoginConfirm() {
-      this.$refs.popup.open()
+      this.$refs.loginModel.open()
     }
   },
 };

@@ -4,8 +4,8 @@
       <view class="item" v-for="item in teamList">
         <image :src="item.img" mode="widthFix" class="item-imgage"></image>
         <view class="item-content" @tap="toDetail(item)">
-          <view class="item-name txt-overflow">{{ item.title }}文章简介啦啦啦啦啦啦啦啦啦啦啦啦啦啦文章简介啦啦啦啦啦啦啦啦啦啦啦啦啦啦</view>
-          <view class="item-info txt-overflow">{{ item.info }}文章简介啦啦啦啦啦啦啦啦啦啦啦啦啦啦文章简介啦啦啦啦啦啦啦啦啦啦啦啦啦啦</view>
+          <view class="item-name txt-overflow">{{ item.title }}</view>
+          <view class="item-info txt-overflow">{{ item.info }}</view>
           <view class="item-time">
             <image src="/static/consult/time.png" class="icon-time"></image>
             <text class="time">{{ item.createTime }}</text>
@@ -20,7 +20,6 @@
 <script>
 import team from '@/components/consult/detail/team.vue'
 import consultServer from "@/server/consult/consult";
-import utils from "@/utils/common";
 let app = getApp();
 
 export default {
@@ -39,7 +38,7 @@ export default {
     }
   },
   onShow() {
-    this.consultId = utils.getParam(location.href, "id")
+    this.consultId = this.$utils.getParam(location.href, "id")
     this.getConsultTeam()
   },
   methods: {

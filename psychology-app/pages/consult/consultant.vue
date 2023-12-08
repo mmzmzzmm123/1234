@@ -121,9 +121,7 @@
       </button>
     </view>
 
-    <uni-popup ref="popup" type="dialog" class="uni-popup-ok">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
-    </uni-popup>
+    <login ref="loginModel"></login>
 
     <uni-popup ref="selectServe" type="bottom" class="uni-popup-serve" background-color="#fff">
       <view class="bottom-serve">
@@ -138,21 +136,21 @@
 </template>
 
 <script>
+import login from "@/components/common/login";
 import timeBox from '@/components/consult/detail/timeBox.vue'
 import course from '@/components/consult/detail/course.vue'
 import team from '@/components/consult/detail/team.vue'
 import column from '@/components/consult/detail/column.vue'
 import consultDesc from '@/components/consult/detail/consultDesc.vue'
 import serveList from '@/components/consult/detail/serveList.vue'
-import utils from "@/utils/common";
 import indexServer from '@/server/consult/index'
 import consultServer from "@/server/consult/consult";
 import userServer from "@/server/consult/user";
 import orderServer from "@/server/consult/order";
-import loginServer from '@/server/login'
+
 let app = getApp();
 export default {
-  components: {timeBox, serveList, course, team, column, consultDesc },
+  components: {timeBox, serveList, course, team, column, consultDesc, login },
   data() {
     return {
       mainCur: 0,
@@ -214,12 +212,12 @@ export default {
     }, 50);
   },
   async mounted() {
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && utils.getParam(window.location.href, "code") && await utils.loginCallback()) {
-      this.consultId = utils.getParam(location.href, "state")
-      this.userInfo = utils.getUserInfo()
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && this.$utils.getParam(window.location.href, "code") && await this.$utils.loginCallback()) {
+      this.consultId = this.$utils.getParam(location.href, "state")
+      this.userInfo = this.$utils.getUserInfo()
     } else {
-      this.consultId = utils.getParam(location.href, "id")
+      this.consultId = this.$utils.getParam(location.href, "id")
     }
 
     if (!this.consultId) {
@@ -325,7 +323,7 @@ export default {
       this.consultInfo.experiences = this.consultInfo.experience && this.consultInfo.experience !== '[]' ? JSON.parse(this.consultInfo.experience) : []
       // #ifdef H5
       console.log('consultInfo: ', this.consultInfo)
-      utils.share('壹加壹心理咨询师：' + this.consultInfo.nickName, this.consultInfo.share ? this.consultInfo.share : '', this.consultInfo.avatar)
+      this.$utils.share('壹加壹心理咨询师：' + this.consultInfo.nickName, this.consultInfo.share ? this.consultInfo.share : '', this.consultInfo.avatar)
       // #endif
     },
     async getConsultCourseByName() {
@@ -350,7 +348,7 @@ export default {
       this.liked = !!res
     },
     async doLike() {
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         this.confirmServe()
         return this.openLoginConfirm()
       }
@@ -369,7 +367,7 @@ export default {
       }
     },
     async cancelLike() {
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         this.confirmServe()
         return this.openLoginConfirm()
       }
@@ -392,9 +390,9 @@ export default {
     },
     setWorkData(workId, time, workName) {
       // 缓存一小时
-      utils.put('time', time, 3600)
-      utils.put('workId', workId, 3600)
-      utils.put('workName', workName, 3600)
+      this.$utils.put('time', time, 3600)
+      this.$utils.put('workId', workId, 3600)
+      this.$utils.put('workName', workName, 3600)
     },
     goHome() {
       uni.redirectTo({
@@ -408,7 +406,7 @@ export default {
       this.$refs.selectServe.open('bottom')
     },
     async toBuy(item) {
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         this.confirmServe()
         return this.openLoginConfirm()
       }
@@ -442,16 +440,9 @@ export default {
       this.$refs.selectServe.close()
     },
     // 登录
-    async confirmLogin () {
-      uni.setStorageSync('redirectState', this.consultId)
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
-    closeLoginConfirm() {
-      this.$refs.popup.close()
-    },
     openLoginConfirm() {
-      this.$refs.popup.open()
+      uni.setStorageSync('redirectState', this.consultId)
+      this.$refs.loginModel.open()
     }
   },
 };

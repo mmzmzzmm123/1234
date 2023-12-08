@@ -3,14 +3,14 @@
     <view class="user-info">
       <view class="info">
         <view class="header" @tap="getUserInfo">
-          <img class="img" :src="userInfo.avatar || '/static/evaluation/header.png'"/>
+          <img class="img" :src="userInfo && userInfo.avatar || '/static/evaluation/header.png'"/>
         </view>
         <view class="txt">
-          <view class="name">{{ userInfo.name }}
+          <view class="name">{{ userInfo && userInfo.name }}
             <img
                 class="img"
                 src="/static/consult/my/load.png"
-                v-show="userInfo.name"
+                v-show="userInfo && userInfo.name"
                 @tap="refreshUser"
             />
           </view>
@@ -18,7 +18,7 @@
             <img
               class="img"
               src="/static/consult/my/phone.png"
-            />{{ userInfo.phone }}
+            />{{ userInfo && userInfo.phone }}
           </view>
         </view>
       </view>
@@ -61,9 +61,8 @@
     </view>
 
     <consult-tab-bar :currentIndex="1"></consult-tab-bar>
-    <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
-    </uni-popup>
+
+    <login ref="loginModel"></login>
 
     <uni-popup ref="popupKf" type="center">
       <view class="box_9">
@@ -74,15 +73,9 @@
   </view>
 </template>
 <script>
-import utils, { clientTypeObj } from "@/utils/common";
-import noData from "@/components/evaluation/noData";
-import {
-  uniPopup,
-  uniPopupDialog
-} from '@dcloudio/uni-ui'
-import loginServer from "@/server/login"
+import login from "@/components/common/login";
 export default {
-  components: { noData,  uniPopup, uniPopupDialog },
+  components: { login },
   data() {
     return {
       userInfo: {},
@@ -155,34 +148,26 @@ export default {
           id: 22,
         }
       ],
-      clientTypeObj: clientTypeObj,
       redirectUri:location.href+"?t="+new Date().getTime()
     };
   },
   async mounted() {
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
     }
-    if (!await utils.checkLogin()) {
+    if (!await this.$utils.checkLogin()) {
       return this.openLoginConfirm()
     }
   },
   methods: {
     // 登录
-    async confirmLogin () {
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
-    closeLoginConfirm() {
-      this.$refs.popup.close()
-    },
     openLoginConfirm() {
-      this.$refs.popup.open()
+      this.$refs.loginModel.open()
     },
     async toPage(id) {
       console.log(id)
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 
@@ -222,7 +207,11 @@ export default {
       //
 
     },
-    toApp(item) {
+    async toApp(item) {
+      if (!await this.$utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       if (item.id === 21) {
         return uni.navigateTo({ url: "/pages/consult/toPartner/start" })
       }
@@ -236,14 +225,14 @@ export default {
     },
     refreshUser(){
       uni.setStorageSync("userInfo", null);
-      utils.loginWx(this.redirectUri);
+      this.$utils.loginWx(this.redirectUri);
       //添加登录标志,为callback做返回判断
       uni.setStorageSync("wxLogining", true);
     },
     // 点击头像
     async getUserInfo() {
-      if (!await utils.checkLogin()) {
-        utils.loginWx(this.redirectUri);
+      if (!await this.$utils.checkLogin()) {
+        await this.$utils.loginWx(this.redirectUri);
         return false;
       }
       return true;

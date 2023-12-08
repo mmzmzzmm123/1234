@@ -40,11 +40,8 @@
     <cartTabBar @cartShow="cartShow" @courseShow="courseShow" :payType="this.courseInfo.payType" :isBuy="this.courseInfo.isBuy"></cartTabBar>
     <cartBox @closeCart="cartShow" v-if="cartBoxShow && this.courseInfo.isBuy == 0" :courseInfo="courseInfo" 
       :redirectUri="redirectUri"></cartBox>
-      
-    <uni-popup ref="popup" type="dialog">
-    	<uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
-    		@close="close" @confirm="confirm"></uni-popup-dialog>
-    </uni-popup>  
+
+    <login ref="loginModel"></login>
     
     <audio-box ref="audioRef" :courseId="courseId" :currentCatalogue="currentCatalogue" v-show="currentCatalogue.contentType == 1 && currentCatalogue.playing"></audio-box>
     <video-box ref="videoRef" :courseId="courseId" :currentCatalogue="currentCatalogue" @fullscreenchange="currentCatalogue.playing = !currentCatalogue.playing" v-show="currentCatalogue.contentType == 0 && currentCatalogue.playing"></video-box>
@@ -52,19 +49,18 @@
 </template>
 
 <script>
-import utils from "@/utils/common";
 import courseServer from "@/server/course/course";
 import cartTabBar from "@/components/course/cartTabBar";
 import cartBox from "@/components/course/cartBox";
+import login from "@/components/common/login";
 import customCatalogueList from "@/components/course/catalogueList";
-import loginServer from '@/server/login'
 import videoBox from "@/components/course/videoBox.vue"
 import audioBox from "@/components/course/audioBox.vue"
 // #ifdef H5
 import wxJS from "@/server/wxJS.js"
 // #endif
 export default {
-  components: { cartTabBar,cartBox,customCatalogueList, videoBox, audioBox },
+  components: { login, cartTabBar,cartBox,customCatalogueList, videoBox, audioBox },
   data() {
     return {
 	  userInfo: {},
@@ -79,12 +75,12 @@ export default {
   },
   async created() {
 
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
-      this.courseId = parseInt(utils.getParam(location.href, "state"));
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
+      this.courseId = parseInt(this.$utils.getParam(location.href, "state"));
     } else {
-      this.courseId = parseInt(utils.getParam(location.href, "courseId") || utils.getParam(location.href, "id"));
+      this.courseId = parseInt(this.$utils.getParam(location.href, "courseId") || this.$utils.getParam(location.href, "id"));
     }
 
     if (!this.courseId) {
@@ -93,7 +89,7 @@ export default {
       })
     }
 
-    if (!await utils.checkLogin()) {
+    if (!await this.$utils.checkLogin()) {
       this.courseInfo = await courseServer.getCourseBaseInfo(this.courseId)||{};
       this.catalogueList = this.courseInfo.sectionList;
       this.courseInfo.totalDuration = 0;
@@ -111,16 +107,16 @@ export default {
     this.catalogueList.forEach(item => {
       this.courseInfo.totalDuration+= item.duration||0;
     });
-    this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;
+    this.cartBoxShow = this.$utils.getParam(location.href, "payOrder") == 1;
     // #ifdef H5
-    utils.share(this.courseInfo.name, '', this.courseInfo.iconUrl)
+    this.$utils.share(this.courseInfo.name, '', this.courseInfo.iconUrl)
     // #endif
     
     // this.share()
   },
   methods: {
     async catalogueItemClick(item) {
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         this.openLoginConfirm()
         return
       }
@@ -144,21 +140,14 @@ export default {
       this.currentItemIndex = 1;
     },
     async cartShow() {
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       this.cartBoxShow = !this.cartBoxShow;
     },
-    close() {
-    	this.$refs.popup.close()
-    },
-    async confirm() {
-      uni.setStorageSync('redirectState', this.courseId)
-    	await loginServer.login();
-    	this.$refs.popup.close()
-    },
     openLoginConfirm() {
-    	this.$refs.popup.open();
+      uni.setStorageSync('redirectState', this.courseId)
+    	this.$refs.loginModel.open();
     },
     share() {
       const title = this.courseInfo.name

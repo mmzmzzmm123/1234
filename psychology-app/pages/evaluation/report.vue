@@ -11,7 +11,6 @@
   </view>
 </template>
 <script>
-  import utils from "@/utils/common";
   import noData from '@/components/evaluation/noData'
   import userServer from '@/server/evaluation/user'
   import questionServer from '@/server/evaluation/question'
@@ -28,7 +27,7 @@
     },
     async created() {
       // this.userInfo = uni.getStorageSync('userInfo')
-      this.userInfo = utils.getUserInfo()
+      this.userInfo = this.$utils.getUserInfo()
       this.reportList = await userServer.getOrderList({
         userId: this.userInfo.userId,
         gaugeStatus: 1

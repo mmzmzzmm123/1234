@@ -53,15 +53,19 @@
         <view class="cu-btn line-orange round lg padding" @tap="toPage('5')">修改资料</view>
       </view>
     </template>
+
+    <login ref="loginModel" :isNav="1"></login>
   </view>
 </template>
 
 <script>
+import login from "@/components/common/login";
 import serve from "@/server/consult/toPartner";
 let app = getApp();
 
 export default {
   name: "ConsultPartnerResult",
+  components: { login },
   data() {
     return {
       type: '1',
@@ -69,14 +73,30 @@ export default {
       pageHeight: app.globalData.windowHeight + 'px',
     }
   },
-  onLoad(option) {
+  async onLoad(option) {
+    // #ifdef H5
+    this.$utils.share('壹加壹心理入驻申请', '欢迎入驻壹加壹心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
+    // #endif
+
+    console.log(options)
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
+    }
+    if (!await this.$utils.checkLogin()) {
+      return this.openLoginConfirm()
+    }
+
     if (option && option.type === '1') {
       this.type = option.type
-    }else {
+    } else {
       this.getApply()
     }
   },
   methods: {
+    openLoginConfirm() {
+      this.$refs.loginModel.open()
+    },
     async getApply() {
       const res = await serve.getInfo()
       if (res.code === 200 && res.data) {
@@ -100,7 +120,11 @@ export default {
         }
       }
     },
-    toPage(type) {
+    async toPage(type) {
+      if (!await this.$utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       switch (type) {
         case '1':
           uni.navigateTo({url: "/pages/consult/index"})

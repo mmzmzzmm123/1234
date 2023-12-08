@@ -42,7 +42,6 @@
 <script>
 import courseListCom from '@/components/course/courseList'
 import classServer from '@/server/course/class'
-import utils from "@/utils/common";
 export default {
   components: { courseListCom },
   data() {
@@ -58,7 +57,7 @@ export default {
     this.classList = [...[{ name: '全部', id: null }], ...await classServer.getClassList()];    
     this.courseList = await classServer.getcourseByClassId(this.classSelectedIndex);
     
-    const classId = parseInt(utils.getParam(location.href, "classId") || 0)
+    const classId = parseInt(this.$utils.getParam(location.href, "classId") || 0)
     if (classId != 0) {
       this.classSelectedIndex = this.classList.findIndex(item => item.id === classId)
       this.courseClassSelected(this.classList[this.classSelectedIndex])

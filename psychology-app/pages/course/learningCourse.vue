@@ -83,7 +83,6 @@
   </view>
 </template>
 <script>
-import utils from "@/utils/common";
 import courseServer from "@/server/course/course";
 import cartTabBar from "@/components/course/cartTabBar";
 import cartBox from "@/components/course/cartBox";
@@ -109,13 +108,13 @@ export default {
   },
   async created() {
     // this.userInfo = uni.getStorageSync("userInfo")
-    this.userInfo = utils.getUserInfo()
+    this.userInfo = this.$utils.getUserInfo()
     this.courseId =
-      utils.getParam(location.href, "courseId") ||
-      utils.getParam(location.href, "id");
+      this.$utils.getParam(location.href, "courseId") ||
+      this.$utils.getParam(location.href, "id");
     this.courseInfo = await courseServer.getCourseInfo(this.userInfo.userId, this.courseId);
     this.catalogueList = this.courseInfo.sectionList;
-    this.cartBoxShow = utils.getParam(location.href, "payOrder") == 1;	
+    this.cartBoxShow = this.$utils.getParam(location.href, "payOrder") == 1;
 	
     this.currentIndex = 0;
     this.currentCatalogue = this.catalogueList[0] || {}

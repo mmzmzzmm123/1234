@@ -3,27 +3,28 @@
     <view class="user-info">
       <view class="info">
         <view class="header" @tap="getUserInfo"
-          ><img
+        ><img
             class="img"
-            :src="userInfo.avatar || '/static/evaluation/header.png'"
-          />
+            :src="userInfo && userInfo.avatar || '/static/evaluation/header.png'"
+        />
         </view>
         <view class="txt">
           <view class="name"
-            >{{ userInfo.name
+          >{{
+              userInfo && userInfo.name
             }}<img
-              class="img"
-              src="/static/icon/refresh.png"
-              v-show="userInfo.name"
-              @tap="refreshUser"
+                class="img"
+                src="/static/icon/refresh.png"
+                v-show="userInfo && userInfo.name"
+                @tap="refreshUser"
             />
           </view>
           <view class="num"
-            ><img
-              v-show="userInfo.phone"
+          ><img
+              v-show="userInfo && userInfo.phone"
               class="img"
               src="/static/evaluation/user/phone.png"
-            />{{ userInfo.phone }}
+          />{{ userInfo && userInfo.phone }}
           </view>
         </view>
       </view>
@@ -40,38 +41,38 @@
     </view>
     <view class="class-box index-margin">
       <view
-        class="item"
-        v-for="item in classList"
-        @tap="
+          class="item"
+          v-for="item in classList"
+          @tap="
           () => {
             item.callback && item.callback();
           }
         "
       >
-        <img class="class-img" :src="item.classPic" />
+        <img class="class-img" :src="item.classPic"/>
         <view>{{ item.className }}</view>
       </view>
     </view>
     <view class="un-test-box">
       <view class="box-title">未完成的测评</view>
       <view
-        class="order-item"
-        v-for="(order, index) in orderList"
-        :key="'order' + index"
+          class="order-item"
+          v-for="(order, index) in orderList"
+          :key="'order' + index"
       >
         <view class="header">
           <view class="title">{{ order.gaugeTitle }}</view>
           <view class="finish-status">{{ finishStatus(order) }}</view>
         </view>
-        
+
         <view class="price">￥{{ order.amount }}</view>
         <view class="buy-time">购买时间：{{ order.createTime }}</view>
         <view class="order-no"
-          >订单编号：{{ order.orderId }}
+        >订单编号：{{ order.orderId }}
           <img
-            class="img"
-            src="/static/evaluation/user/copy.png"
-            @tap="copyOrderNo(order.orderId)"
+              class="img"
+              src="/static/evaluation/user/copy.png"
+              @tap="copyOrderNo(order.orderId)"
           />
         </view>
         <view class="btn" @tap="toTest(order)">去测试</view>
@@ -80,10 +81,8 @@
       <view class="footer" v-else>已经到底了</view>
     </view>
     <evaluation-tab-bar :currentIndex="2"></evaluation-tab-bar>
-		<uni-popup ref="popup" type="dialog">
-			<uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
-				@close="close" @confirm="confirm"></uni-popup-dialog>
-		</uni-popup>
+
+    <login ref="loginModel"></login>
 
     <uni-popup ref="popupKf" type="center">
       <view class="box_9">
@@ -94,16 +93,12 @@
   </view>
 </template>
 <script>
-import utils, { clientTypeObj } from "@/utils/common";
 import noData from "@/components/evaluation/noData";
 import userServer from "@/server/evaluation/user";
-import {
-  uniPopup,
-  uniPopupDialog
-} from '@dcloudio/uni-ui'
-import loginServer from "@/server/login"
+import login from '@/components/common/login'
+
 export default {
-  components: { noData,  uniPopup, uniPopupDialog },
+  components: {noData, login},
   data() {
     return {
       userInfo: {},
@@ -128,8 +123,8 @@ export default {
       ],
       reportNum: 0,
       orderList: [],
-      clientTypeObj: clientTypeObj,
-      redirectUri:location.href+"?t="+new Date().getTime()
+      clientTypeObj: this.$utils.clientTypeObj,
+      redirectUri: location.href + "?t=" + new Date().getTime()
     };
   },
   computed: {
@@ -143,11 +138,11 @@ export default {
     }
   },
   async mounted() {
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-      this.userInfo = utils.getUserInfo()
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback(this.redirectUri)) {
+      this.userInfo = this.$utils.getUserInfo()
     }
-    if (!await utils.checkLogin()) {
+    if (!await this.$utils.checkLogin()) {
       return this.openLoginConfirm()
     }
     if (this.userInfo) {
@@ -159,19 +154,31 @@ export default {
     }
   },
   methods: {
-    refreshUser(){
+    refreshUser() {
       uni.setStorageSync("userInfo", null);
-      utils.loginWx(this.redirectUri);
+      this.$utils.loginWx(this.redirectUri);
       //添加登录标志,为callback做返回判断
       uni.setStorageSync("wxLogining", true);
     },
     async toReport() {
+      // 判断是否已经登录
+      if (!await this.$utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
       uni.navigateTo({url: "/pages/evaluation/report"});
     },
     async toConsult() {
+      // 判断是否已经登录
+      if (!await this.$utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
       uni.navigateTo({url: "/pages/consult/index"});
     },
     async toOrder() {
+      // 判断是否已经登录
+      if (!await this.$utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
       uni.navigateTo({url: "/pages/evaluation/order"});
     },
     toKf() {
@@ -179,7 +186,7 @@ export default {
     },
     async toTest(order) {
       // 判断是否已经登录
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       uni.navigateTo({
@@ -203,21 +210,14 @@ export default {
     },
     // 点击头像
     async getUserInfo() {
-      if (!await utils.checkLogin()) {
-        await utils.loginWx(this.redirectUri);
+      if (!await this.$utils.checkLogin()) {
+        await this.$utils.loginWx(this.redirectUri);
         return false;
       }
       return true;
     },
-    close() {
-      this.$refs.popup.close()
-    },
-    async confirm() {
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
     openLoginConfirm() {
-      this.$refs.popup.open();
+      this.$refs.loginModel.open();
     }
   },
 };
@@ -374,18 +374,19 @@ page {
       margin: 30upx 0;
 
       .header {
-        display: flex;  
+        display: flex;
         justify-content: space-between;
         font-size: 32upx;
         font-weight: 600;
         color: #333333;
+
         .title {
-          
+
           line-height: 45upx;
           margin-bottom: 14upx;
         }
       }
-      
+
 
       .price {
         font-size: 32upx;
@@ -439,15 +440,18 @@ page {
       right: 177upx;
     }
   }
+
   .box_9 {
     text-align: center;
+
     .box_10 {
       width: 200px;
       height: 200px;
     }
+
     .box_11 {
       margin-top: 20upx;
-      font-size: 28rpx;
+      font-size: 28 rpx;
       color: #FFFFFF;
     }
   }

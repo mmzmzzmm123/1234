@@ -195,6 +195,9 @@ export default {
     }
   },
   onLoad() {
+    // #ifdef H5
+    this.$utils.share('壹加壹心理入驻申请', '欢迎入驻壹加壹心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
+    // #endif
     // this.getApply()
   },
   methods: {

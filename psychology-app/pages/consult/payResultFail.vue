@@ -19,23 +19,22 @@
 </template>
 
 <script>
-import utils from "@/utils/common";
 import loginServer from '@/server/login';
 
 export default {
   async mounted() {
     // this.userInfo = uni.getStorageSync("userInfo")
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
     }
-    if (!await utils.checkLogin()) {
+    if (!await this.$utils.checkLogin()) {
       return this.openLoginConfirm()
     }
   },
   methods: {
     async toOrder() {
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 

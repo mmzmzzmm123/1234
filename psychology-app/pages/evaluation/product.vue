@@ -71,21 +71,17 @@
       </view>
     </view>
 
-    <uni-popup ref="popup" type="dialog" class="uni-popup-ok">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
-                        @close="closeLoginConfirm" @confirm="confirmLogin"/>
-    </uni-popup>
+    <login ref="loginModel"></login>
   </view>
 </template>
 
 <script>
-import utils from '@/utils/common'
-import loginServer from '@/server/login'
-import questionServer from '@/server/evaluation/question'
+import login from '@/components/common/login'
 import productServer from '@/server/evaluation/product'
 import {getPaySign, wxPay} from "@/server/wxApi";
 
 export default {
+  components: {login},
   data() {
     return {
       productInfo: {},
@@ -94,12 +90,12 @@ export default {
     }
   },
   async created() {
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && utils.getParam(window.location.href, "code") && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
-      this.productId = parseInt(utils.getParam(location.href, "state"));
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && this.$utils.getParam(window.location.href, "code") && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
+      this.productId = parseInt(this.$utils.getParam(location.href, "state"));
     } else {
-      this.productId = parseInt(utils.getParam(location.href, "id"));
+      this.productId = parseInt(this.$utils.getParam(location.href, "id"));
     }
 
     if (!this.productId) {
@@ -110,9 +106,9 @@ export default {
 
     this.productInfo = await productServer.getProductInfo(this.productId);
     // #ifdef H5
-    utils.share(this.productInfo.title, '', this.productInfo.listShowPicture)
+    this.$utils.share(this.productInfo.title, '', this.productInfo.listShowPicture)
     // #endif
-    this.payBoxShow = utils.getParam(location.href, "payOrder") == 1;
+    this.payBoxShow = this.$utils.getParam(location.href, "payOrder") == 1;
 
     uni.setNavigationBarTitle({
       title: this.productInfo.title
@@ -120,11 +116,11 @@ export default {
   },
   methods: {
     async submitPay() {
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 
-      this.userInfo = utils.getUserInfo()
+      this.userInfo = this.$utils.getUserInfo()
       if (this.userInfo && this.userInfo.userId) {
         let res = await getPaySign(
             this.userInfo.userId,
@@ -174,7 +170,7 @@ export default {
     },
     async startTest() {
       // 判断是否已经登录
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 
@@ -196,16 +192,9 @@ export default {
       });
     },
     // 登录
-    async confirmLogin() {
-      uni.setStorageSync('redirectState', this.productId)
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
-    closeLoginConfirm() {
-      this.$refs.popup.close()
-    },
     openLoginConfirm() {
-      this.$refs.popup.open()
+      uni.setStorageSync('redirectState', this.productId)
+      this.$refs.loginModel.open()
     }
   }
 }
@@ -377,9 +366,11 @@ page {
         margin: 9upx 24upx;
         margin-left: 0;
       }
+
       .start-test {
         width: 300upx;
       }
+
       .start-report {
         width: 300upx;
         background: #FFF2F0;

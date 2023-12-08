@@ -3,18 +3,18 @@
 		<view class="user-info">
 			<view class="info">
 				<view class="header" @tap="getUserInfo"><img class="img"
-						:src="userInfo.avatar || '/static/course/header.png'" />
+						:src="userInfo && userInfo.avatar || '/static/course/header.png'" />
 				</view>
 				<view class="txt">
-					<view class="name">{{ userInfo.name
-            }}<img class="img" src="/static/icon/refresh.png" v-show="userInfo.name" @tap="refreshUser" />
+					<view class="name">{{ userInfo && userInfo.name
+            }}<img class="img" src="/static/icon/refresh.png" v-show="userInfo && userInfo.name" @tap="refreshUser" />
 					</view>
 					<view class="num"
             ><img
-              v-show="userInfo.phone"
+              v-show="userInfo && userInfo.phone"
               class="img"
               src="/static/course/user/phone.png"
-            />{{ userInfo.phone }}
+            />{{ userInfo && userInfo.phone }}
           </view>
 				</view>
 			</view>
@@ -42,10 +42,7 @@
 
 		<course-tab-bar :currentIndex="2"></course-tab-bar>
 
-		<uni-popup ref="popup" type="dialog">
-			<uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
-				@close="close" @confirm="confirm"></uni-popup-dialog>
-		</uni-popup>
+    <login ref="loginModel"></login>
 
     <uni-popup ref="popupKf" type="center">
       <view class="box_9">
@@ -56,22 +53,14 @@
 	</view>
 </template>
 <script>
-	import utils, {
-		clientTypeObj
-	} from "@/utils/common";
 	import noData from "@/components/course/noData";
 	import userServer from "@/server/course/user";
 	import formatTime from "@/utils/formatTime.js"
-	import loginServer from "@/server/login"
-  import {
-  	uniPopup,
-  	uniPopupDialog
-  } from '@dcloudio/uni-ui'
+  import login from "@/components/common/login";
 	export default {
 		components: {
+      login,
 			noData,
-      uniPopup,
-      uniPopupDialog
 		},
 		data() {
 			return {
@@ -96,17 +85,17 @@
 				],
 				courseList: [],
 				clientType: "",
-				clientTypeObj: clientTypeObj,
+				clientTypeObj: this.$utils.clientTypeObj,
 				//回调地址，防止微信登录失败后再次登录将code等参数带过去了
 				redirectUri: location.origin + location.pathname + "?t=" + new Date().getTime(),
 			};
 		},
 		async mounted() {
-      this.userInfo = utils.getUserInfo()
-      if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
-        this.userInfo = utils.getUserInfo()
+      this.userInfo = this.$utils.getUserInfo()
+      if (!this.userInfo && await this.$utils.loginCallback(this.redirectUri)) {
+        this.userInfo = this.$utils.getUserInfo()
       }
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
 			if (this.userInfo) {
@@ -122,13 +111,13 @@
 		methods: {
 			refreshUser() {
 				uni.setStorageSync("userInfo", null);
-				utils.loginWx(this.redirectUri);
+				this.$utils.loginWx(this.redirectUri);
 				//添加登录标志,为callback做返回判断
 				uni.setStorageSync("wxLogining", true);
 			},
 			async toCourseList() {
         // 判断是否已经登录
-        if (!await utils.checkLogin()) {
+        if (!await this.$utils.checkLogin()) {
           return this.openLoginConfirm()
         }
         if (this.getUserInfo())
@@ -138,7 +127,7 @@
       },
 			async toOrder() {
         // 判断是否已经登录
-        if (!await utils.checkLogin()) {
+        if (!await this.$utils.checkLogin()) {
           return this.openLoginConfirm()
         }
         if (this.getUserInfo())
@@ -173,7 +162,7 @@
       },
 			async toLearningCourse(courseId) {
         // 判断是否已经登录
-        if (!await utils.checkLogin()) {
+        if (!await this.$utils.checkLogin()) {
           return this.openLoginConfirm()
         }
         uni.navigateTo({
@@ -197,21 +186,14 @@
 			},
 			// 点击头像
 			async getUserInfo() {
-        if (!await utils.checkLogin()) {
-          await utils.loginWx(this.redirectUri);
+        if (!await this.$utils.checkLogin()) {
+          await this.$utils.loginWx(this.redirectUri);
           return false;
         }
         return true;
       },
-			close() {
-				this.$refs.popup.close()
-			},
-			async confirm() {
-				await loginServer.login();
-				this.$refs.popup.close()
-			},
 			openLoginConfirm() {
-				this.$refs.popup.open();
+				this.$refs.loginModel.open();
 			}
 		},
 	};

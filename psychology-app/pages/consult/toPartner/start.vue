@@ -43,15 +43,20 @@
     <view class="cu-bar foot bg-white tabbar border shop" style="z-index: 1000">
       <view class="bg-orange round submit margin-xs" @tap="apply">申请入驻</view>
     </view>
+
+    <login ref="loginModel" :isNav="1"></login>
   </view>
 </template>
 
 <script>
 
 import serve from "@/server/consult/toPartner";
+import login from "@/components/common/login";
+
 let app = getApp();
 
 export default {
+  components: { login },
   name: "ConsultPartnerStart",
   data() {
     return {
@@ -59,15 +64,31 @@ export default {
       pageHeight: app.globalData.windowHeight + 'px',
     }
   },
-  onLoad(options) {
+  async onLoad(options) {
+    // #ifdef H5
+    this.$utils.share('壹加壹心理入驻申请', '欢迎入驻壹加壹心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
+    // #endif
+
     console.log(options)
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
+    }
+    if (!await this.$utils.checkLogin()) {
+      return this.openLoginConfirm()
+    }
+
     if (options && options.type === 'back') {
 
     } else {
-      this.getApply()
+      await this.getApply()
     }
   },
   methods: {
+    // 登录
+    openLoginConfirm() {
+      this.$refs.loginModel.open()
+    },
     async getApply() {
       const res = await serve.getInfo()
       if (res.code === 200 && res.data) {
@@ -89,7 +110,11 @@ export default {
     checkboxChange(e) {
       this.checkBox = e.detail.value[0]
     },
-    apply() {
+    async apply() {
+      if (!await this.$utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       if (this.checkBox !== 'ok') {
         return uni.showToast({
           icon: 'none',

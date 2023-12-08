@@ -6,18 +6,16 @@
 
     <uni-load-more status="no-more" :content-text="{ contentnomore: '- 已经到底啦 -' }" />
 
-    <uni-popup ref="popup" type="dialog">
-      <uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true" @close="closeLoginConfirm" @confirm="confirmLogin"/>
-    </uni-popup>
+    <login ref="loginModel" :isNav="1"></login>
   </view>
 </template>
 
 <script>
+import login from "@/components/common/login";
 import server from "@/server/consult/user";
-import utils from "@/utils/common";
-import loginServer from "@/server/login"
 
 export default {
+  components: { login },
   data() {
     return {
       list: [],
@@ -31,11 +29,11 @@ export default {
     }
   },
   async mounted() {
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
     }
-    if (!await utils.checkLogin()) {
+    if (!await this.$utils.checkLogin()) {
       return this.openLoginConfirm()
     }
 
@@ -43,15 +41,8 @@ export default {
   },
   methods: {
     // 登录
-    async confirmLogin () {
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
-    closeLoginConfirm() {
-      this.$refs.popup.close()
-    },
     openLoginConfirm() {
-      this.$refs.popup.open()
+      this.$refs.loginModel.open()
     },
     async getLikes() {
       const res = await server.getLikes(this.queryParams)

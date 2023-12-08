@@ -74,8 +74,6 @@
 </template>
 <script>
 import messageCom from '@/components/evaluation/message'
-import {callTimeLoad, clearTimeLoad} from '@/utils/time'
-import utils from '@/utils/common'
 import questionServer from '@/server/evaluation/question'
 
 let app = getApp();
@@ -123,13 +121,13 @@ export default {
   async created() {
     this.ages = Array.from({ length: 200 }, (_, i) => i + 1);
     console.log(this.ages)
-    this.userInfo = utils.getUserInfo()
-    if (!this.userInfo && await utils.loginCallback()) {
-      this.userInfo = utils.getUserInfo()
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
     }
 
-    this.productId = utils.getParam(location.href, "productId");
-    this.orderId = utils.getParam(location.href, "orderId");
+    this.productId = this.$utils.getParam(location.href, "productId");
+    this.orderId = this.$utils.getParam(location.href, "orderId");
     this.order = await questionServer.getOrder(this.orderId)
     this.questionList = await questionServer.getQuestionList(this.productId, this.orderId);
     // 问题维度处理
@@ -338,7 +336,7 @@ export default {
       let result = await questionServer.setResult(this.form);
       if (result.code === 200) {
         this.resetForm()
-        clearTimeLoad();
+        this.$utils.clearTimeLoad();
         uni.navigateTo({
           url: "/pages/evaluation/mResult?orderId=" + this.order.orderId,
         });

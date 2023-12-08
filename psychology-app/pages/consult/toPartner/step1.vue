@@ -168,17 +168,20 @@
       </view>
     </view>
 
-    <view class="cu-bar foot bg-white tabbar border shop" style="z-index: 1000">
+    <view class="cu-bar foot bg-white tabbar border shop" style="z-index: 99">
       <view class="action" @tap="submit(1)">
         <view class="cuIcon-form"></view>存草稿
       </view>
       <view class="bg-orange round submit margin-xs" @tap="submit(2)">下一步</view>
     </view>
+
+    <login ref="loginModel" :isNav="1"></login>
   </view>
 </template>
 
 <script>
 
+import login from "@/components/common/login";
 import serve from "@/server/consult/toPartner";
 import cityUtil from "@/utils/pc-city";
 import formValidation from "@/utils/formValidation";
@@ -187,7 +190,7 @@ import psySteps from "@/components/common/psySteps";
 import itemWay from "@/components/consult/toPartner/itemWay";
 export default {
   name: "ConsultPartnerStep1",
-  components: { psySteps, psyUpload, itemWay },
+  components: { login, psySteps, psyUpload, itemWay },
   data() {
     return {
       active: 0,
@@ -256,11 +259,24 @@ export default {
       cityArr: [],
     }
   },
-  onLoad() {
+  async onLoad() {
+    // #ifdef H5
+    this.$utils.share('壹加壹心理入驻申请', '欢迎入驻壹加壹心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
+    // #endif
+
     // 编辑时替换实际
     this.proviceArr = this.toArr(this.cityData)
     this.cityArr = this.toArr(this.cityData[0].children)
-    this.getApply()
+
+    this.userInfo = this.$utils.getUserInfo()
+    if (!this.userInfo && await this.$utils.loginCallback()) {
+      this.userInfo = this.$utils.getUserInfo()
+    }
+    if (!await this.$utils.checkLogin()) {
+      return this.openLoginConfirm()
+    }
+
+    await this.getApply()
   },
   methods: {
     async getApply() {
@@ -357,8 +373,14 @@ export default {
       this.form.cardImg = e.imgArr.join(',');
       this.form.cardImgs = e.imgArr;
     },
-
+    openLoginConfirm() {
+      this.$refs.loginModel.open()
+    },
     async submit(type) {
+      if (!await this.$utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       console.log(this.form)
       // 下一步
       if (type === 2) {

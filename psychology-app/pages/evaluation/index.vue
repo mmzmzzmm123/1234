@@ -1,7 +1,7 @@
 <template>
   <view class="index">
     <view class="search-box index-margin" @tap="toSearch">
-      <img class="icon" src="/static/icon/search.png" />
+      <img class="icon" src="/static/icon/search.png"/>
       <span class="txt">搜索</span>
     </view>
 
@@ -9,14 +9,14 @@
       <text class="member-txt-1">非会员</text>
       <text>开通会员立享全场免费测特权＞</text>
       <view class="member-no">
-        <img class="member-no-img" src="/static/evaluation/index/member-no.png" />
+        <img class="member-no-img" src="/static/evaluation/index/member-no.png"/>
         <text>开通会员</text>
       </view>
     </view>
 
     <view class="banner-box index-margin">
-			<swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
-       indicator-active-color="#FFFFFF">
+      <swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
+              indicator-active-color="#FFFFFF">
         <swiper-item v-for="(item, index) in bannerList" :key="index">
           <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)"/>
         </swiper-item>
@@ -24,15 +24,15 @@
     </view>
     <view class="class-box index-margin">
       <view class="item" v-for="item in classList" @tap="toClass(item.id)">
-        <img class="class-img" :src="item.url" />
+        <img class="class-img" :src="item.url"/>
         <view>{{ item.name }}</view>
       </view>
     </view>
     <view class="banner-box banner-box1 index-margin">
       <swiper class="ad-swiper" indicator-dots circular indicator-color="rgb(255, 255, 255, .5)"
-       indicator-active-color="#FFFFFF">
+              indicator-active-color="#FFFFFF">
         <swiper-item v-for="(item, index) in bannerList1" :key="index">
-          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />
+          <image class="banner-img" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)"/>
         </swiper-item>
       </swiper>
     </view>
@@ -40,81 +40,74 @@
       <view class="index-title">热门推荐</view>
       <view class="list-box">
         <view class="item" v-for="(item, index) in hotList" @tap="toProduct('/pages/evaluation/product?id=' + item.id)">
-<!--          <view class="ranking" v-if="index < 3">Top{{ index + 1 }}</view>-->
+          <!--          <view class="ranking" v-if="index < 3">Top{{ index + 1 }}</view>-->
           <img class="ranking-img" v-if="index < 3" :src="`/static/evaluation/index/top${index+1}.png`"/>
-          <img class="img" :src="item.listShowPicture" />
+          <img class="img" :src="item.listShowPicture"/>
           <span class="txt txt-overflow txt-overflow-line2">{{
               item.title
-          }}</span>
+            }}</span>
           <span class="price">
             <span class="icon">￥</span>{{ item.price }}
           </span>
         </view>
       </view>
     </view>
-<!--    <view class="img-box index-margin">-->
-<!--      <view class="index-title">-->
-<!--        限时福利-->
-<!--        <span class="more" @tap="toMore">-->
-<!--          更多-->
-<!--          <img class="img" src="/static/icon/more.png" />-->
-<!--        </span>-->
-<!--      </view>-->
-<!--      <view class="img-item-box">-->
-<!--        <view class="left-img" v-show="bannerList2.length > 0"-->
-<!--          @tap="toProduct(bannerList2.length > 0 ? bannerList2[0].linkUrl : '')">-->
-<!--          <img :src="bannerList2.length > 0 ? bannerList2[0].bannerUrl : ''" />-->
-<!--        </view>-->
-<!--        <view class="right-img-box" v-show="bannerList2.length > 2">-->
-<!--          <view class="right-img" @tap="toProduct(bannerList2.length > 1 ? bannerList2[1].linkUrl : '')">-->
-<!--            <img :src="bannerList2.length > 1 ? bannerList2[1].bannerUrl : ''" />-->
-<!--          </view>-->
-<!--          <view class="right-img" @tap="toProduct(bannerList2.length > 2 ? bannerList2[2].linkUrl : '')">-->
-<!--            <img :src="bannerList2.length > 2 ? bannerList2[2].bannerUrl : ''" />-->
-<!--          </view>-->
-<!--        </view>-->
-<!--      </view>-->
-<!--    </view>-->
-<!--    <view class="img-box index-margin">-->
-<!--      <view class="index-title">-->
-<!--        全面评估-->
-<!--        <span class="more" @tap="toMore">-->
-<!--          更多-->
-<!--          <img class="img" src="/static/icon/more.png" />-->
-<!--        </span>-->
-<!--      </view>-->
-<!--      <view class="img-item-box">-->
-<!--        <img class="img" v-for="item in bannerList3" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />-->
-<!--      </view>-->
-<!--    </view>-->
+    <!--    <view class="img-box index-margin">-->
+    <!--      <view class="index-title">-->
+    <!--        限时福利-->
+    <!--        <span class="more" @tap="toMore">-->
+    <!--          更多-->
+    <!--          <img class="img" src="/static/icon/more.png" />-->
+    <!--        </span>-->
+    <!--      </view>-->
+    <!--      <view class="img-item-box">-->
+    <!--        <view class="left-img" v-show="bannerList2.length > 0"-->
+    <!--          @tap="toProduct(bannerList2.length > 0 ? bannerList2[0].linkUrl : '')">-->
+    <!--          <img :src="bannerList2.length > 0 ? bannerList2[0].bannerUrl : ''" />-->
+    <!--        </view>-->
+    <!--        <view class="right-img-box" v-show="bannerList2.length > 2">-->
+    <!--          <view class="right-img" @tap="toProduct(bannerList2.length > 1 ? bannerList2[1].linkUrl : '')">-->
+    <!--            <img :src="bannerList2.length > 1 ? bannerList2[1].bannerUrl : ''" />-->
+    <!--          </view>-->
+    <!--          <view class="right-img" @tap="toProduct(bannerList2.length > 2 ? bannerList2[2].linkUrl : '')">-->
+    <!--            <img :src="bannerList2.length > 2 ? bannerList2[2].bannerUrl : ''" />-->
+    <!--          </view>-->
+    <!--        </view>-->
+    <!--      </view>-->
+    <!--    </view>-->
+    <!--    <view class="img-box index-margin">-->
+    <!--      <view class="index-title">-->
+    <!--        全面评估-->
+    <!--        <span class="more" @tap="toMore">-->
+    <!--          更多-->
+    <!--          <img class="img" src="/static/icon/more.png" />-->
+    <!--        </span>-->
+    <!--      </view>-->
+    <!--      <view class="img-item-box">-->
+    <!--        <img class="img" v-for="item in bannerList3" :src="item.bannerUrl" @tap="toProduct(item.linkUrl)" />-->
+    <!--      </view>-->
+    <!--    </view>-->
     <view class="product-box index-margin">
       <view class="index-title" @tap="toMore">
         精选测评
         <span class="more">
           更多
-          <img class="img" src="/static/icon/more.png" /></span>
+          <img class="img" src="/static/icon/more.png"/></span>
       </view>
       <product-list-com :productList="productList"></product-list-com>
     </view>
     <evaluation-tab-bar :currentIndex="0"></evaluation-tab-bar>
-		<uni-popup ref="popup" type="dialog">
-			<uni-popup-dialog mode="base" content="您尚未登录, 是否使用微信静默登录" :duration="2000" :before-close="true"
-				@close="close" @confirm="confirm"></uni-popup-dialog>
-		</uni-popup>
-    </view>
+    <login ref="loginModel"></login>
+  </view>
 </template>
 <script>
+import login from '@/components/common/login'
 import productListCom from '@/components/evaluation/productList'
 import indexServer from '@/server/evaluation/index'
-import loginServer from "@/server/login"
-	import {
-		uniPopup,
-		uniPopupDialog
-	} from '@dcloudio/uni-ui'
-import utils from "@/utils/common";
 import classServer from '@/server/evaluation/class'
+
 export default {
-  components: { productListCom, uniPopup, uniPopupDialog },
+  components: {login, productListCom},
   data() {
     return {
       bannerList: [],
@@ -129,7 +122,7 @@ export default {
   },
   async created() {
     // this.userInfo = uni.getStorageSync("userInfo")
-    this.userInfo = utils.getUserInfo()
+    this.userInfo = this.$utils.getUserInfo()
     this.bannerList = await this.getBanner(0);
     this.bannerList1 = await this.getBanner(1);
     // this.bannerList2 = await this.getBanner(2);
@@ -139,14 +132,14 @@ export default {
     const classData = await classServer.getClassList()
     this.classList = classData.slice(0, 8) // 取前6个类别
   },
-  async mounted() {      
-    if (!this.userInfo && await utils.loginCallback(this.redirectUri)) {
+  async mounted() {
+    if (!this.userInfo && await this.$utils.loginCallback(this.redirectUri)) {
       // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = utils.getUserInfo()
+      this.userInfo = this.$utils.getUserInfo()
     }
-    if (!await utils.checkLogin()) {
-      return this.openLoginConfirm()
-    }
+    // if (!await this.$utils.checkLogin()) {
+    //   return this.openLoginConfirm()
+    // }
   },
   methods: {
     async getBanner(type) {
@@ -157,7 +150,7 @@ export default {
     },
     async toClass(classId) {
       // 判断是否已经登录
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       uni.navigateTo({
@@ -166,14 +159,14 @@ export default {
     },
     async toProduct(url) {
       // 判断是否已经登录
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       uni.navigateTo({url});
     },
     async toSearch() {
       // 判断是否已经登录
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       uni.navigateTo({
@@ -182,24 +175,17 @@ export default {
     },
     async toMore() {
       // 判断是否已经登录
-      if (!await utils.checkLogin()) {
+      if (!await this.$utils.checkLogin()) {
         return this.openLoginConfirm()
       }
       uni.navigateTo({
         url: "/pages/evaluation/class",
       });
     },
-    close() {
-      this.$refs.popup.close()
-    },
-    async confirm() {
-      await loginServer.login();
-      this.$refs.popup.close()
-    },
     openLoginConfirm() {
-      this.$refs.popup.open();
+      this.$refs.loginModel.open();
     },
-  },  
+  },
 };
 </script>
 <style lang="scss">
@@ -237,16 +223,18 @@ page {
     height: 88upx;
     border-radius: 12upx;
     background: url('/static/evaluation/index/member.png') 100% no-repeat;
-    color: rgba(82,88,110,1);
+    color: rgba(82, 88, 110, 1);
     font-size: 26upx;
     font-family: PingFangSC-Semibold;
     font-weight: 600;
     padding-left: 24upx;
     display: flex;
     align-items: center;
+
     .member-txt-1 {
       margin-right: 24upx;
     }
+
     .member-no {
       position: absolute;
       right: 24upx;
@@ -260,6 +248,7 @@ page {
       font-weight: 500;
       color: #FFFFFF;
       text-align: center;
+
       .member-no-img {
         width: 22upx;
         height: 20upx;
@@ -299,16 +288,17 @@ page {
     font-size: 24upx;
     margin-bottom: 32upx;
     margin-top: 21upx;
-    
+
     .item {
       width: 25%;
       margin-bottom: 10px;
+
       .class-img {
         width: 88upx;
         height: 88upx;
       }
     }
-    
+
   }
 
   .hot-box {
@@ -340,6 +330,7 @@ page {
           font-size: 20upx;
           padding-left: 10upx;
         }
+
         .ranking-img {
           position: absolute;
           top: 0upx;
@@ -422,7 +413,6 @@ page {
       }
     }
   }
-
 
 
 }

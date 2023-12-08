@@ -36,18 +36,24 @@
     <view class="cu-bar foot bg-white tabbar border shop" style="z-index: 1000">
       <view class="bg-orange round submit margin-xs" @tap="apply">申请入驻</view>
     </view>
+
+    <login ref="loginModel" :isNav="1"></login>
   </view>
 </template>
 
 <script>
-
+import login from "@/components/common/login";
 import serve from "@/server/consult/toPartner";
 let app = getApp();
 
 export default {
   name: "ConsultPartnerNotice",
+  components: { login },
   onLoad() {
     // this.getApply()
+    // #ifdef H5
+    this.$utils.share('壹加壹心理入驻申请', '欢迎入驻壹加壹心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
+    // #endif
   },
   data() {
     return {
@@ -55,6 +61,9 @@ export default {
     }
   },
   methods: {
+    openLoginConfirm() {
+      this.$refs.loginModel.open()
+    },
     async getApply() {
       const res = await serve.getInfo()
       if (res.code === 200 && res.data) {
@@ -62,6 +71,10 @@ export default {
       }
     },
     async apply() {
+      if (!await this.$utils.checkLogin()) {
+        return this.openLoginConfirm()
+      }
+
       const res = await serve.draft()
       if (res.code === 200) {
         return uni.navigateTo({ url: "/pages/consult/toPartner/step1" })

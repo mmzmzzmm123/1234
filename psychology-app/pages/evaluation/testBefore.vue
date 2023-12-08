@@ -14,7 +14,6 @@
     </view>
 </template>
 <script>
-import utils from '@/utils/common'
 export default {
     data() {
         return {
@@ -25,8 +24,8 @@ export default {
     },
     created() {
         this.gaugeDes = uni.getStorageSync("gaugeDes");
-        this.productId = utils.getParam(location.href, "productId");
-        this.orderId = utils.getParam(location.href, "orderId");
+        this.productId = this.$utils.getParam(location.href, "productId");
+        this.orderId = this.$utils.getParam(location.href, "orderId");
 
     },
     methods: {

@@ -3,8 +3,11 @@ import App from "./App";
 import evaluationTabBar from '@/components/evaluation/tabBar.vue'
 import courseTabBar from '@/components/course/tabBar.vue'
 import consultTabBar from '@/components/consult/tabBar.vue'
+import utils from "@/utils/common";
+
 // #ifndef VUE3
 import Vue from "vue";
+Vue.prototype.$utils = utils;
 Vue.config.productionTip = false;
 App.mpType = "app";
 

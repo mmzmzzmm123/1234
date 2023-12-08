@@ -19,7 +19,6 @@
 <script>
 import team from '@/components/consult/detail/team.vue'
 import consultServer from "@/server/consult/consult";
-import utils from "@/utils/common";
 let app = getApp();
 
 export default {
@@ -38,7 +37,7 @@ export default {
     }
   },
   onShow() {
-    this.consultId = utils.getParam(location.href, "id")
+    this.consultId = this.$utils.getParam(location.href, "id")
     this.getConsultTeam()
   },
   methods: {

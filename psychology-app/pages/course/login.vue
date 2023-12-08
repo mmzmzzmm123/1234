@@ -24,7 +24,6 @@
     </view>
 </template>
 <script>
-import utils from '@/utils/common'
 import loginServer from '@/server/evaluation/login.js'
 export default {
     data() {
@@ -61,7 +60,7 @@ export default {
             uni.showLoading();
             let res = await loginServer.loginByPhone(this.phone, this.code);
             if (res == 1) {
-                let callbacktype = utils.getParam(location.href, "callbacktype");
+                let callbacktype = this.$utils.getParam(location.href, "callbacktype");
                 switch (callbacktype) {
                     case '1':
                         uni.navigateTo({
@@ -69,7 +68,7 @@ export default {
                         }); break;
                     case '2':
                         uni.navigateTo({
-                            url: "/pages/evaluation/product/index?payOrder=1&id=" + utils.getParam(location.href, "courseId"),
+                            url: "/pages/evaluation/product/index?payOrder=1&id=" + this.$utils.getParam(location.href, "courseId"),
                         }); break;
                     default:
                         uni.navigateTo({

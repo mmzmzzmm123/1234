@@ -37,7 +37,6 @@
   </view>
 </template>
 <script>
-import utils from "@/utils/common";
 import { getPaySign, wxPay } from "@/server/wxApi";
 export default {
   props: ["courseInfo","redirectUri"],
@@ -52,7 +51,7 @@ export default {
     },
     async submitPay() {
       // this.userInfo = uni.getStorageSync("userInfo")
-      this.userInfo = utils.getUserInfo()
+      this.userInfo = this.$utils.getUserInfo()
       if (this.userInfo && this.userInfo.userId) {
 		let res = await getPaySign(
       this.userInfo.userId, 
@@ -84,7 +83,7 @@ export default {
 		}	  
 
       } else {
-        utils.loginWx(this.redirectUri);
+        this.$utils.loginWx(this.redirectUri);
       }
     },
   },

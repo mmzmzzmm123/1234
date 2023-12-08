@@ -63,7 +63,6 @@
   </view>
 </template>
 <script>
-import utils from "@/utils/common";
 import orderServer from "@/server/course/order";
 import formatTime from '@/utils/formatTime.js'
 export default {
@@ -88,7 +87,7 @@ export default {
   	},	  
   },
   async created() {
-    this.orderInfo = await orderServer.getOrderDetail(utils.getParam(location.href, "orderId"));
+    this.orderInfo = await orderServer.getOrderDetail(this.$utils.getParam(location.href, "orderId"));
 	console.log(this.orderInfo)
   },
   methods: {
