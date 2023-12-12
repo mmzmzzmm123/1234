@@ -161,11 +161,14 @@ public class GenUtils
      * @param tableName 表名
      * @return 业务名
      */
-    public static String getBusinessName(String tableName)
-    {
-        int lastIndex = tableName.lastIndexOf("_");
-        int nameLength = tableName.length();
-        return StringUtils.substring(tableName, lastIndex + 1, nameLength);
+    public static String getBusinessName(String tableName) {
+	    String businessName = tableName;
+	    // if (GenConfig.getAutoRemovePre()) {
+	    String tablePrefix = GenConfig.getTablePrefix();
+	    businessName = businessName.replaceFirst(tablePrefix, "");
+	    // }
+	    businessName = StringUtils.toCamelCase(businessName);
+	    return businessName;
     }
 
     /**
