@@ -119,7 +119,7 @@ export default {
     if (!this.userInfo && await this.$utils.loginCallback()) {
       this.userInfo = this.$utils.getUserInfo()
     }
-    if (await this.$utils.checkLogin()) {
+    if (!await this.$utils.checkLogin()) {
       return this.openLoginConfirm()
     }
     await this.getDates()
