@@ -42,6 +42,15 @@ export function addContract(data) {
 }
 
 // 修改咨询师合同协议
+export function editContract(data) {
+  return request({
+    url: '/psychology/contract/save',
+    method: 'post',
+    data: data
+  })
+}
+
+// 修改咨询师合同协议
 export function updateContract(data) {
   return request({
     url: '/psychology/contract',

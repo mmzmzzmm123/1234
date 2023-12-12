@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {getListByUserName, updateContract} from "@/api/psychology/contract";
+import {getListByUserName, editContract} from "@/api/psychology/contract";
 import detail from "./detail";
 
 export default {
@@ -68,7 +68,7 @@ export default {
         this.form.status = '3'
       }
 
-      updateContract(this.form).then(response => {
+      editContract(this.form).then(response => {
         this.$modal.msgSuccess("操作成功");
         this.close()
         this.$emit('handleOk')

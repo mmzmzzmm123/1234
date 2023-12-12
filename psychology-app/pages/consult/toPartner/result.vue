@@ -78,7 +78,7 @@ export default {
     this.$utils.share('壹加壹心理入驻申请', '欢迎入驻壹加壹心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
     // #endif
 
-    console.log(options)
+    console.log(option)
     this.userInfo = this.$utils.getUserInfo()
     if (!this.userInfo && await this.$utils.loginCallback()) {
       this.userInfo = this.$utils.getUserInfo()

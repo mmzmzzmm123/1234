@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.psychology;
 
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -95,6 +96,20 @@ public class PsyConsultContractController extends BaseController
     public AjaxResult add(@RequestBody PsyConsultContract entity)
     {
         return toAjax(psyConsultContractService.add(entity));
+    }
+
+    /**
+     * 修改咨询师合同协议
+     */
+    @Log(title = "咨询师合同协议", businessType = BusinessType.UPDATE)
+    @PostMapping("/save")
+    public AjaxResult save(@RequestBody PsyConsultContract entity)
+    {
+        PsyConsultContract one = psyConsultContractService.getOne(entity.getId());
+        one.setStatus(entity.getStatus());
+        one.setUpdateTime(new Date());
+
+        return toAjax(psyConsultContractService.update(one));
     }
 
     /**
