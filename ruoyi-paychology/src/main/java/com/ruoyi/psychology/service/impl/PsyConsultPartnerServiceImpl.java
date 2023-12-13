@@ -1,6 +1,7 @@
 package com.ruoyi.psychology.service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.IDhelper;
@@ -11,6 +12,7 @@ import com.ruoyi.psychology.domain.PsyConsultContract;
 import com.ruoyi.psychology.domain.PsyConsultPartner;
 import com.ruoyi.psychology.domain.PsyConsultPartnerItem;
 import com.ruoyi.psychology.domain.PsyUser;
+import com.ruoyi.psychology.dto.ExperienceDTO;
 import com.ruoyi.psychology.dto.PartnerDTO;
 import com.ruoyi.psychology.mapper.PsyConsultPartnerMapper;
 import com.ruoyi.psychology.request.PsyAdminPartnerReq;
@@ -23,10 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -123,8 +122,33 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
         save(partner);
 
         PsyConsultVO vo = new PsyConsultVO();
+
+        // 公众号id
         PsyUser user = psyUserService.selectPsyUserById(partner.getUserId());
-        String openid = user.getWxOpenid();
+        if (user != null && StringUtils.isNotBlank(user.getWxOpenid())) {
+            vo.setOpenId(user.getWxOpenid());
+        }
+
+        // 学历/简介
+        List<String> infoList = new ArrayList<>();
+        items.stream().filter(a -> a.getType() == 1).forEach(i -> {
+            infoList.add(i.getParam1() + i.getParam2() + i.getParam3());
+        });
+        vo.setInfo(String.join(",", infoList));
+
+        // 受训经历
+        List<ExperienceDTO> experiences = new ArrayList<>();
+        items.stream().filter(a -> a.getType() == 4).forEach(i -> {
+            ExperienceDTO experience = new ExperienceDTO();
+            List<String> time = new ArrayList<>();
+            experience.setInfo(i.getParam1());
+            time.add(i.getStartTime());
+            time.add(i.getEndTime());
+            experience.setTime(time);
+            experiences.add(experience);
+        });
+        experiences.sort(Comparator.comparing(item -> item.getTime().get(0)));
+        vo.setExperience(JSON.toJSONString(experiences));
 
         vo.setId(consultId);
         vo.setUserName(userName);
@@ -136,7 +160,6 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
         vo.setProvince(partner.getProvince());
         vo.setCity(partner.getCity());
         vo.setLang(partner.getLang());
-        vo.setOpenId(openid);
         vo.setQualification(items.stream().filter(a -> a.getType() == 2).map(PsyConsultPartnerItem::getParam1).collect(Collectors.joining(",")));
         vo.setGenre(partner.getGenre());
         vo.setWorkHours(partner.getWorkHours());
