@@ -80,7 +80,7 @@ export default {
     return false
   },
   share(title, desc, img, link = window.location.href, url = window.location.href) {
-    img = img ? img : 'http://wx.qlogo.cn/mmopen/Q3auHgzwzM7ibjK0zgMSEgozDR40A2CgKLqZxEmcDI9HlQsVD27pM38F5KCDHTEaGeTfh3yWnHVgKPfzf8oKPLLITtib7xWLyMicAd1C3icfE1Q/64'
+    img = img ? img : 'https://zx-1316267898.cos.ap-beijing.myqcloud.com/class_1735258473741991938_logo1.jpg'
 
     wxJS.getConfig(title, desc, link, img, url);
   },

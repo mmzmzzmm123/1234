@@ -3,7 +3,7 @@
     <view class="cu-modal" :class="show==='login'?'show':''">
       <view class="cu-dialog">
         <view class="bg-white padding-xl">
-          <image src="/static/logo.jpeg" class="cu-avatar xl round"/>
+          <image src="/static/logo.jpg" class="cu-avatar xl round"/>
           <view class="text-lg text-black text-bold margin-top">壹加壹心理</view>
           <view class="margin-top-sm">您尚未登录, 是否使用微信静默登录</view>
 
