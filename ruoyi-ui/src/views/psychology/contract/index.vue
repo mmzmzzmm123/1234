@@ -88,7 +88,7 @@
       </el-table-column>
       <el-table-column label="签署时间" align="center" prop="startTime" width="120">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.startTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ ['4','5','6','7'].includes(scope.row.status) ? parseTime(scope.row.startTime, '{y}-{m}-{d}') : '-' }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

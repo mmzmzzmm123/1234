@@ -103,6 +103,9 @@ public class PsyConsultVO extends BaseValObj implements Serializable
     /** 删除标志（0代表存在 1代表删除） */
     private String delFlag;
 
+    /** 移动端（0代表显示 1代表隐藏） */
+    private String isShow;
+
     /** 状态（0正常 1停用） */
     private String status;
 

@@ -20,8 +20,6 @@ public interface PsyConsultMapper extends BaseMapper<PsyConsult>
 
     List<PsyConsult> getList(PsyConsultVO req);
 
-    Long getConsultByUserId(Long userId);
-
     int tombstonedByIds(Long[] ids);
 
 

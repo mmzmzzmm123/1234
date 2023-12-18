@@ -103,7 +103,12 @@
       <!--      <el-table-column v-if="columns[12].visible" label="从业时间(年)" align="center" prop="workHours" />-->
       <el-table-column v-if="columns[13].visible" label="状态" align="center" prop="status">
         <template slot-scope="scope">
-          <el-switch v-model="scope.row.status" @change="handleStatus(scope.row)" active-value="0" inactive-value="1" active-text="启用" inactive-text="禁用"/>
+          <el-switch v-model="scope.row.status" :disabled="!checkPermi(['psychology:consult:serveUpdate'])" @change="handleStatus(scope.row)" active-value="0" inactive-value="1" active-text="启用" inactive-text="禁用"/>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="columns[15].visible" label="是否显示" align="center" prop="isShow">
+        <template slot-scope="scope">
+          <el-switch v-model="scope.row.isShow" :disabled="!checkPermi(['psychology:consult:serveUpdate'])" @change="handleShow(scope.row)" active-value="0" inactive-value="1" active-text="显示" inactive-text="隐藏"/>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -160,6 +165,7 @@ import { refConsultServe, adminListConsult, delConsult, updateConsult } from "@/
 
 import serve from "./serve";
 import serveRef from "./serveRef";
+import { checkPermi } from "@/utils/permission";
 
 export default {
   name: "Consult",
@@ -219,6 +225,7 @@ export default {
         { key: 12, label: `从业时间`, visible: false },
         { key: 13, label: `状态`, visible: true },
         { key: 14, label: `服务数量`, visible: true },
+        { key: 15, label: `是否显示`, visible: true },
       ]
     };
   },
@@ -230,6 +237,7 @@ export default {
     this.getList();
   },
   methods: {
+    checkPermi,
     updateServeForm() {
       if (this.consultId && this.cIds.length > 0) {
         const data = {
@@ -308,12 +316,32 @@ export default {
       this.$confirm(content, '提示', {
         type: type
       }).then(() => {
+        if (row.status === '1') {
+          row.isShow = '1'
+        }
+
         updateConsult(row).then(response => {
           that.$modal.msgSuccess("修改成功");
           that.getList();
         });
       }).catch(() => {
         row.status = row.status === '0' ? '1' : '0'
+      });
+    },
+    handleShow(row) {
+      const that = this
+      const content = row.isShow === '0' ? '确定要显示该咨询师吗？' : '确认隐藏该咨询师吗？'
+      const type = row.isShow === '0' ? 'success' : 'warning'
+
+      this.$confirm(content, '提示', {
+        type: type
+      }).then(() => {
+        updateConsult(row).then(response => {
+          that.$modal.msgSuccess("修改成功");
+          that.getList();
+        });
+      }).catch(() => {
+        row.isShow = row.isShow === '0' ? '1' : '0'
       });
     },
     /** 修改按钮操作 */
