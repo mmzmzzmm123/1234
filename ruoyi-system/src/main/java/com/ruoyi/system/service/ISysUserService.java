@@ -42,6 +42,10 @@ public interface ISysUserService
      */
     public SysUser selectUserByUserName(String userName);
 
+    public String getConsultStatus(String userName);
+
+    public int getContractNumByUserName(String userName);
+
     /**
      * 通过用户ID查询用户
      * 

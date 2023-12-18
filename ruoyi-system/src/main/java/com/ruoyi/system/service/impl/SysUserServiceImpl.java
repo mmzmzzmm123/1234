@@ -112,6 +112,18 @@ public class SysUserServiceImpl implements ISysUserService
         return userMapper.selectUserByUserName(userName);
     }
 
+    @Override
+    public String getConsultStatus(String userName)
+    {
+        return userMapper.getConsultStatus(userName);
+    }
+
+    @Override
+    public int getContractNumByUserName(String userName)
+    {
+        return userMapper.getContractNumByUserName(userName);
+    }
+
     /**
      * 通过用户ID查询用户
      * 

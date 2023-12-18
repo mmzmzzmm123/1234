@@ -51,6 +51,10 @@ public interface SysUserMapper
      */
     public SysUser selectUserById(Long userId);
 
+    public String getConsultStatus(String userName);
+
+    public int getContractNumByUserName(String userName);
+
     /**
      * 新增用户信息
      * 
