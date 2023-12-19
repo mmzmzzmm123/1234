@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hxzh.front.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.hxzh.front.moudle.domain.User">
+            <id property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="username" column="username" jdbcType="VARCHAR"/>
+            <result property="pwd" column="pwd" jdbcType="VARCHAR"/>
+            <result property="nickname" column="nickname" jdbcType="VARCHAR"/>
+            <result property="realName" column="real_name" jdbcType="VARCHAR"/>
+            <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+            <result property="sex" column="sex" jdbcType="TINYINT"/>
+            <result property="birthday" column="birthday" jdbcType="DATE"/>
+            <result property="cardId" column="card_id" jdbcType="VARCHAR"/>
+            <result property="studentId" column="student_id" jdbcType="VARCHAR"/>
+            <result property="phone" column="phone" jdbcType="CHAR"/>
+            <result property="otherInfo" column="other_info" jdbcType="OTHER"/>
+            <result property="mark" column="mark" jdbcType="VARCHAR"/>
+            <result property="lastIp" column="last_ip" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+            <result property="deptId" column="dept_id" jdbcType="INTEGER"/>
+            <result property="lastLoginTime" column="last_login_time" jdbcType="TIMESTAMP"/>
+            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        user_id,username,pwd,
+        nickname,real_name,avatar,
+        sex,birthday,card_id,
+        student_id,phone,other_info,
+        mark,last_ip,create_time,
+        update_time,dept_id,last_login_time,
+        remark
+    </sql>
+</mapper>

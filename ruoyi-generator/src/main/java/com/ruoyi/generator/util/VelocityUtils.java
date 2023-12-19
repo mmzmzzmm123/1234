@@ -179,25 +179,25 @@ public class VelocityUtils
         String mybatisPath = MYBATIS_PATH + "/" + moduleName;
         String vuePath = "vue";
 
-        if (template.contains("domain.java.vm"))
+        if (template.contains("moudle.java.vm"))
         {
-            fileName = StringUtils.format("{}/domain/{}.java", javaPath, className);
+            fileName = StringUtils.format("{}/moudle/{}.java", javaPath, className);
         }
-        if (template.contains("sub-domain.java.vm") && StringUtils.equals(GenConstants.TPL_SUB, genTable.getTplCategory()))
+        if (template.contains("sub-moudle.java.vm") && StringUtils.equals(GenConstants.TPL_SUB, genTable.getTplCategory()))
         {
-            fileName = StringUtils.format("{}/domain/{}.java", javaPath, genTable.getSubTable().getClassName());
+            fileName = StringUtils.format("{}/moudle/{}.java", javaPath, genTable.getSubTable().getClassName());
         }
         else if (template.contains("mapper.java.vm"))
         {
             fileName = StringUtils.format("{}/mapper/{}Mapper.java", javaPath, className);
         }
-        else if (template.contains("service.java.vm"))
+        else if (template.contains("detailservice.java.vm"))
         {
-            fileName = StringUtils.format("{}/service/I{}Service.java", javaPath, className);
+            fileName = StringUtils.format("{}/detailservice/I{}Service.java", javaPath, className);
         }
         else if (template.contains("serviceImpl.java.vm"))
         {
-            fileName = StringUtils.format("{}/service/impl/{}ServiceImpl.java", javaPath, className);
+            fileName = StringUtils.format("{}/detailservice/impl/{}ServiceImpl.java", javaPath, className);
         }
         else if (template.contains("controller.java.vm"))
         {

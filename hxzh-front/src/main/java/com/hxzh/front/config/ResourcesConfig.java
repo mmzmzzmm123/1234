@@ -1,8 +1,8 @@
 package com.hxzh.front.config;
 
-import com.ruoyi.common.config.RuoYiConfig;
-import com.ruoyi.common.constant.Constants;
-import com.ruoyi.framework.interceptor.RepeatSubmitInterceptor;
+
+import com.hxzh.front.common.constant.Constants;
+import com.hxzh.front.interceptor.RepeatSubmitInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 @Configuration
 public class ResourcesConfig implements WebMvcConfigurer
 {
+
     @Autowired
     private RepeatSubmitInterceptor repeatSubmitInterceptor;
 
@@ -32,7 +33,7 @@ public class ResourcesConfig implements WebMvcConfigurer
     {
         /** 本地文件上传路径 */
         registry.addResourceHandler(Constants.RESOURCE_PREFIX + "/**")
-                .addResourceLocations("file:" + RuoYiConfig.getProfile() + "/");
+                .addResourceLocations("file:" + "xxx" + "/");
 
         /** swagger配置 */
         registry.addResourceHandler("/swagger-ui/**")

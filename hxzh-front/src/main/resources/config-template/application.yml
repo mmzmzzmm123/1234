@@ -102,7 +102,7 @@ token:
 # mybatis 配置
 mybatis-plus:
   mapper-locations: classpath*:mapper/*/*Mapper.xml #xml扫描，多个目录用逗号或者分号分隔（告诉 Mapper 所对应的 XML 文件位置）
-  typeAliasesPackage: com.ruoyi.**.domain
+  typeAliasesPackage: com.ruoyi.**.moudle
   # 配置slq打印日志
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

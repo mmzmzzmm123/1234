@@ -1,5 +1,6 @@
 package com.ruoyi.web.config;
 
+import com.ruoyi.framework.web.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -32,7 +33,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
      * 自定义用户认证逻辑
      */
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserDetailsServiceImpl userDetailsServiceImpl;
     
     /**
      * 认证失败处理类
@@ -143,6 +144,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception
     {
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+        auth.userDetailsService(userDetailsServiceImpl).passwordEncoder(bCryptPasswordEncoder());
+
     }
 }

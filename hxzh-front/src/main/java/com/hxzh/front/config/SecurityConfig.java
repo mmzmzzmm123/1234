@@ -1,16 +1,20 @@
 package com.hxzh.front.config;
 
-import com.ruoyi.framework.config.properties.PermitAllUrlProperties;
-import com.ruoyi.framework.security.filter.JwtAuthenticationTokenFilter;
-import com.ruoyi.framework.security.handle.AuthenticationEntryPointImpl;
-import com.ruoyi.framework.security.handle.LogoutSuccessHandlerImpl;
+
+import com.hxzh.front.config.properties.PermitAllUrlProperties;
+import com.hxzh.front.security.handler.AuthenticationEntryPointImpl;
+import com.hxzh.front.security.JwtAuthenticationTokenFilter;
+import com.hxzh.front.security.handler.LogoutSuccessHandlerImpl;
+import com.hxzh.front.security.provider.TaskAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,7 +29,8 @@ import org.springframework.web.filter.CorsFilter;
  * 
  * @author ruoyi
  */
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
+@EnableMethodSecurity
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter
 {
     /**
@@ -57,7 +62,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
      */
     @Autowired
     private CorsFilter corsFilter;
-
+    /**
+     * 任务验证程序
+     */
+    @Autowired
+    private TaskAuthenticationProvider taskAuthenticationProvider;
     /**
      * 允许匿名访问的地址
      */
@@ -111,7 +120,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
-                .antMatchers("/login", "/register", "/captchaImage").permitAll()
+                .antMatchers("/login", "/register", "/captchaImage","/api/front/task/auth").permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
@@ -144,5 +153,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     protected void configure(AuthenticationManagerBuilder auth) throws Exception
     {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
+        auth.authenticationProvider(taskAuthenticationProvider);
     }
 }

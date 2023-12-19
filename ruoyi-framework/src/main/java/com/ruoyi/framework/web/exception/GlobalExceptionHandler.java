@@ -1,8 +1,12 @@
 package com.ruoyi.framework.web.exception;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.ruoyi.common.exception.taskset.ExcelException;
+import com.ruoyi.common.exception.taskset.InputException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -17,9 +21,13 @@ import com.ruoyi.common.exception.DemoModeException;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.StringUtils;
 
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.sql.SQLSyntaxErrorException;
+
 /**
  * 全局异常处理器
- * 
+ *
  * @author ruoyi
  */
 @RestControllerAdvice
@@ -124,6 +132,45 @@ public class GlobalExceptionHandler
     {
         log.error(e.getMessage(), e);
         String message = e.getBindingResult().getFieldError().getDefaultMessage();
+        return AjaxResult.error(message);
+    }
+
+    /**
+     * excel异常
+     */
+    @ExceptionHandler(ExcelException.class)
+    public Object handleExcelException(ExcelException e)
+    {
+        log.error(e.getMessage(), e);
+        String message = e.getDefaultMessage();
+        return AjaxResult.error(message);
+    }
+
+    /**
+     * sql异常
+     */
+    @ExceptionHandler(DataAccessException.class)
+    public Object handleDataAccessException(DataAccessException e) {
+        Throwable rootCause = e.getRootCause();
+        if (rootCause instanceof SQLSyntaxErrorException) {
+            log.error("SQL语法错误: " + rootCause.getMessage(), e);
+        } else if (rootCause instanceof SQLIntegrityConstraintViolationException) {
+            log.error("数据完整性违规：: " + rootCause.getMessage(), e);
+        } else if (rootCause instanceof SQLException) {
+            log.error("数据库错误: " + rootCause.getMessage(), e);
+        } else {
+            log.error("数据库连接错误: " + e.getMessage(), e);
+        }
+        return AjaxResult.error("数据库异常");
+    }
+
+    /**
+     * 输入不合法
+     */
+    @ExceptionHandler(InputException.class)
+    public Object handleInputException(InputException e) {
+        log.error(e.getMessage(), e);
+        String message = e.getDefaultMessage();
         return AjaxResult.error(message);
     }
 

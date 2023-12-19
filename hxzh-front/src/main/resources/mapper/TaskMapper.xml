@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TaskMapper">
+
+    <resultMap id="BaseResultMap" type="com.hxzh.front.moudle.domain.Task">
+            <id property="taskId" column="task_id" jdbcType="BIGINT"/>
+            <result property="tasksetId" column="taskset_id" jdbcType="INTEGER"/>
+            <result property="taskKey" column="task_key" jdbcType="VARCHAR"/>
+            <result property="taskAuthCode" column="task_auth_code" jdbcType="VARCHAR"/>
+            <result property="orderId" column="order_id" jdbcType="BIGINT"/>
+            <result property="otherInfo" column="other_info" jdbcType="OTHER"/>
+            <result property="taskStatus" column="task_status" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        task_id,taskset_id,task_key,
+        task_auth_code,order_id,other_info,
+        task_status
+    </sql>
+    <insert id="insertTask">
+        INSERT INTO task
+        (
+            <include refid="Base_Column_List"/>
+        )
+        VALUES
+        (#{taskId}, #{tasksetId}, #{taskKey},#{taskAuthCode}, #{orderId}, #{otherInfo},#{taskStatus}
+        )
+    </insert>
+    <select id="selectTaskById">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM task
+        WHERE task_id =#{taskId}
+    </select>
+    <delete id="deleteTask">
+        DELETE FROM task
+        WHERE task_id=#{taskId}
+
+    </delete>
+
+    <update id="updateById">
+        UPDATE task
+        SET
+            task_id = #{taskId},
+            taskset_id = #{tasksetId},
+            task_key = #{taskKey},
+            task_auth_code = #{taskAuthCode},
+            order_id =#{orderId},
+            other_info =#{otherInfo},
+            task_status =#{taskStatus}
+        WHERE
+            task_id =#{taskId}
+
+    </update>
+
+    <select id="allTaskList">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM task
+    </select>
+</mapper>

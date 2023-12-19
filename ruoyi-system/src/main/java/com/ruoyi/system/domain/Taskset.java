@@ -8,11 +8,12 @@ import java.io.Serializable;
 import lombok.Data;
 
 /**
- * 
+ *
  * @TableName taskset
  */
 @TableName(value ="taskset")
 @Data
+
 public class Taskset implements Serializable {
     /**
      * 任务集合ID
