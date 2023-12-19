@@ -19,4 +19,45 @@
         task_auth_code,order_id,other_info,
         task_status
     </sql>
+    <insert id="insertTask">
+        INSERT INTO task
+        (
+            <include refid="Base_Column_List"/>
+        )
+        VALUES
+        (#{taskId}, #{tasksetId}, #{taskKey},#{taskAuthCode}, #{orderId}, #{otherInfo},#{taskStatus}
+        )
+    </insert>
+    <select id="selectTaskById">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM task
+        WHERE task_id =#{taskId}
+    </select>
+    <delete id="deleteTask">
+        DELETE FROM task
+        WHERE task_id=#{taskId}
+
+    </delete>
+
+    <update id="updateById">
+        UPDATE task
+        SET
+            task_id = #{taskId},
+            taskset_id = #{tasksetId},
+            task_key = #{taskKey},
+            task_auth_code = #{taskAuthCode},
+            order_id =#{orderId},
+            other_info =#{otherInfo},
+            task_status =#{taskStatus}
+        WHERE
+            task_id =#{taskId}
+
+    </update>
+
+    <select id="allTaskList">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM task
+    </select>
 </mapper>

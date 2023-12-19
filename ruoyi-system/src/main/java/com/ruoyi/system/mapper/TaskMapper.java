@@ -2,6 +2,10 @@ package com.ruoyi.system.mapper;
 
 import com.ruoyi.system.domain.Task;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.system.domain.Taskset;
+import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
 * @author lenovo
@@ -9,8 +13,13 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 * @createDate 2023-12-07 02:55:47
 * @Entity com.ruoyi.system.domain.Task
 */
+@Mapper
 public interface TaskMapper extends BaseMapper<Task> {
-
+    Task selectTaskById(long id);
+    int insertTask(Task task);
+    int deleteTask(Long id);
+    int updateTask(Long id, Task task);
+    List<Task> allTaskList();
 }
 
 

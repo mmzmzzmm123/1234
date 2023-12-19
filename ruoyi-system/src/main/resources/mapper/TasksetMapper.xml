@@ -19,4 +19,46 @@
         dept_id,configfile,childset_id,
         parentset_id
     </sql>
+    <insert id="insertTaskset">
+        INSERT INTO taskset(taskset_id, name, description, dept_id, configfile, childset_id, parentset_id)
+        VALUES (#{tasksetId}, #{name}, #{description}, #{deptId}, #{configfile}, #{childsetId}, #{parentsetId})
+    </insert>
+
+    <select id="selectTasksetById" resultMap="BaseResultMapper">
+        SELECT
+            <include refid="Base_Column_List"/>
+        FROM taskset
+        WHERE taskset_id=#{id}
+    </select>
+
+    <select id="selectAllTaskset" resultMap="BaseResultMapper">
+        SELECT
+            <include refid="Base_Column_LIst"/>
+        FROM taskset
+    </select>
+
+    <update id="updateTasksetById">
+        UPDATE taskset
+        SET
+            name = #{name},
+            description = #{description},
+            dept_id = #{deptId},
+            configfile = #{configfile},
+            childset_id = #{childsetId},
+            parentset_id = #{parentsetId}
+        WHERE taskset_id = #{tasksetId}
+    </update>
+
+    <delete id="deleteTasksetById">
+        DELETE FROM taskset
+        Where taskset_id = #{tasksetId}
+    </delete>
+
+    <select id="selectTasksetIdByName">
+        SELECT
+            taskset_Id
+        FROM taskset
+        WHERE name = #{name}
+    </select>
+
 </mapper>

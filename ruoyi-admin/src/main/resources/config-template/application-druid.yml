@@ -6,16 +6,16 @@ spring:
         druid:
             # 主库数据源
             host: localhost
-            url: jdbc:mysql://${spring.datasource.druid.master.host}:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-            username: root
-            password: pwd
+            url: jdbc:mysql://rm-cn-5yd3ic7et0027f8o.rwlb.cn-chengdu.rds.aliyuncs.com:3306/hxzh?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+            username: test1
+            password: Test123456
             # 从库数据源
             slave:
                 # 从数据源开关/默认关闭
                 enabled: false
-                url: 
-                username: 
-                password: 
+                url:
+                username:
+                password:
             # 初始连接数
             initialSize: 5
             # 最小连接池数量
@@ -39,7 +39,7 @@ spring:
             testWhileIdle: true
             testOnBorrow: false
             testOnReturn: false
-            webStatFilter: 
+            webStatFilter:
                 enabled: true
             statViewServlet:
                 enabled: true
