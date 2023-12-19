@@ -41,6 +41,7 @@ public class PsyConstants {
     public static final String ORDER_LOG_REFUND = "refund"; //退款
     public static final String ORDER_LOG_CHANGE = "change"; //转介
     public static final String ORDER_LOG_CANCEL = "cancel"; //取消
+    public static final String ORDER_LOG_CLOSED = "close"; //关闭
 
     //订单操作类型 -> 消息
     public static final String ORDER_LOG_MESSAGE_CREATE = "订单创建成功";
@@ -51,5 +52,7 @@ public class PsyConstants {
     public static final String ORDER_LOG_MESSAGE_REFUND = "退款给用户{amount}元"; //已虚拟发货
     public static final String ORDER_LOG_MESSAGE_CHANGE = "订单转介,原咨询师：{}, 当前咨询师：{}"; //已虚拟发货
     public static final String ORDER_LOG_MESSAGE_CANCEL = "订单已取消"; //不退款款因
+    public static final String ORDER_LOG_MESSAGE_CLOSED = "订单已关闭"; //关闭
+
 
 }

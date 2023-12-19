@@ -91,8 +91,8 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     /** 删除标志（0代表存在 1代表删除） */
     private String delFlag;
 
-    /** 订单状态0-待付款 1-进行中 2-已完成 3-已取消 */
-    @Excel(name = "订单状态0-待付款 1-进行中 2-已完成 3-已取消")
+    /** 订单状态0-待付款 1-进行中 2-已完成 3-已取消 4-已关闭*/
+    @Excel(name = "订单状态0-待付款 1-进行中 2-已完成 3-已取消 4-已关闭")
     private String status;
 
     /** 支付状态1,未支付 2,支付成功 3,退款中 4,部分退 5,全单退 6,退款失败 */

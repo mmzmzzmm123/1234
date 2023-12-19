@@ -57,6 +57,8 @@ public interface IPsyConsultOrderService
 
     int add(PsyConsultOrderVO req);
 
+    int close(Long orderId);
+
     void cancel(PsyConsultOrder order, String createBy);
 
     int update(PsyConsultOrderVO req);

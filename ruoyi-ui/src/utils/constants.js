@@ -105,7 +105,8 @@ export const orderStatus = [
   { label: '待付款', value: '0' },
   { label: '进行中', value: '1' },
   { label: '已完成', value: '2' },
-  { label: '已取消', value: '3' }
+  { label: '已取消', value: '3' },
+  { label: '已关闭', value: '4' },
 ]
 
 export const payStatus = [
@@ -128,6 +129,7 @@ export const logName = [
   { label: '退款', value: 'refund' },
   { label: '转介', value: 'change' },
   { label: '取消', value: 'cancel' },
+  { label: '关闭', value: 'close' },
 ]
 
 export const gaugeCompute = [

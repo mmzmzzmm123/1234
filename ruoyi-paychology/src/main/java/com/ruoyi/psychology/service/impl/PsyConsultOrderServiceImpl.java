@@ -180,6 +180,9 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
             case ConsultConstant.CONSULT_ORDER_STATUE_CANCELED:
                 entity.setStatusName("已取消");
                 break;
+            case ConsultConstant.CONSULT_ORDER_STATUE_CLOSED:
+                entity.setStatusName("已关闭");
+                break;
         }
 
         switch (entity.getPayStatus()) {
@@ -465,6 +468,16 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
 
         doLog(req.getOrderNo(), PsyConstants.ORDER_LOG_CREATE, req.getNickName(), PsyConstants.ORDER_LOG_MESSAGE_CREATE);
         return psyConsultOrderMapper.insert(BeanUtil.toBean(req, PsyConsultOrder.class));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public int close(Long orderId) {
+        PsyConsultOrderVO order = getOne(orderId);
+        order.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_CLOSED);
+        doLog(order.getOrderNo(), PsyConstants.ORDER_LOG_CLOSED, SecurityUtils.getUsername(), PsyConstants.ORDER_LOG_MESSAGE_CLOSED);
+
+        return update(order);
     }
 
     @Override

@@ -3,11 +3,12 @@ package com.ruoyi.psychology.constant;
 public class ConsultConstant {
     public static final String MODULE_CONSULT= "consult";
 
-    /** 订单状态0-待付款 1-进行中 2-已完成 3-已取消 */
+    /** 订单状态0-待付款 1-进行中 2-已完成 3-已取消 4-已关闭*/
     public static final String CONSULT_ORDER_STATUE_CREATED = "0";
     public static final String CONSULT_ORDER_STATUE_PENDING = "1";
     public static final String CONSULT_ORDER_STATUE_FINISHED = "2";
     public static final String CONSULT_ORDER_STATUE_CANCELED = "3";
+    public static final String CONSULT_ORDER_STATUE_CLOSED = "4";
 
     // 1,未支付 2,支付成功 3,退款中 4,部分退 5,全单退 6,退款失败
     public static final String PAY_STATUE_PENDING = "1";

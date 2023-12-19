@@ -67,6 +67,14 @@ export function addOrder(data) {
   })
 }
 
+// 关闭咨询订单
+export function close(id) {
+  return request({
+    url: '/psychology/order/close/' + id,
+    method: 'post'
+  })
+}
+
 // 修改咨询订单
 export function finish(id) {
   return request({

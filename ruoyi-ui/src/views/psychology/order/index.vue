@@ -111,7 +111,7 @@
       <el-table-column label="支付状态" width="100" align="center" prop="payStatusName" />
       <el-table-column label="订单状态" width="100" align="center" prop="statusName">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === '3'" type="info">{{ scope.row.statusName }}</el-tag>
+          <el-tag v-if="scope.row.status === '3' || scope.row.status === '4'" type="info">{{ scope.row.statusName }}</el-tag>
           <el-tag v-else-if="scope.row.status === '2'" type="success">{{ scope.row.statusName }}</el-tag>
           <el-tag v-else>{{ scope.row.statusName }}</el-tag>
         </template>
@@ -134,6 +134,7 @@
               <el-dropdown-item :disabled="['0', '3'].includes(scope.row.status)" @click.native="handleRemark(scope.row)" v-if="checkPermi(['psychology:order:edit'])">备注</el-dropdown-item>
               <el-dropdown-item :disabled="scope.row.status !== '0'" @click.native="handlePrice(scope.row.id)" v-if="checkPermi(['psychology:order:price'])">改价</el-dropdown-item>
               <el-dropdown-item :disabled="scope.row.status !== '1'" @click.native="handleRefer(scope.row)" v-if="checkPermi(['psychology:order:referral'])">转介</el-dropdown-item>
+              <el-dropdown-item :disabled="scope.row.status !== '1'" @click.native="handleClose(scope.row.id)" v-if="checkPermi(['psychology:order:remove'])">关闭</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -166,6 +167,8 @@
 
     <referral ref="formRefer" @handleOk="handleOk" />
 
+    <close-modal ref="formClose" @handleOk="handleOk" />
+
 <!--    <el-dialog title="订单编辑" :visible.sync="openHx" width="700px" append-to-body>-->
 <!--      <times v-if="openHx" :order="order" />-->
 <!--      <div slot="footer" class="dialog-footer">-->
@@ -183,12 +186,13 @@ import { getConsultAll } from "@/api/psychology/consult";
 import times from "./times";
 import price from "./price";
 import referral from "./referral";
+import closeModal from "./closeModal";
 import { checkPermi } from "@/utils/permission";
 import {mapState} from "vuex"; // 权限判断函数
 
 export default {
   name: "Order",
-  components: { times, price, referral },
+  components: { times, price, referral, closeModal },
   data() {
     return {
       // 遮罩层
@@ -341,6 +345,14 @@ export default {
       getServeRef({ serveId: data.serveId }).then(response => {
         if (response.data) {
           this.$refs.formRefer.setForm(data, response.data.filter(a => a.status === '0'))
+        }
+      })
+    },
+    /** 关闭订单 */
+    handleClose(id) {
+      getOrder(id).then(response => {
+        if (response.data) {
+          this.$refs.formClose.setForm(response.data)
         }
       })
     },
