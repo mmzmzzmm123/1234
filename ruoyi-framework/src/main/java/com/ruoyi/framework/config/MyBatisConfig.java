@@ -32,7 +32,8 @@ import com.ruoyi.common.utils.StringUtils;
  *
  * @author ruoyi
  */
-@Configuration
+@Deprecated
+//@Configuration
 public class MyBatisConfig {
     @Autowired
     private Environment env;

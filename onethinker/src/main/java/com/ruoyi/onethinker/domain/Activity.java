@@ -1,5 +1,6 @@
 package com.ruoyi.onethinker.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.Data;
  * @date 2023-10-31
  */
 @Data
+@TableName("t_activity")
 public class Activity extends BaseEntity {
     private static final long serialVersionUID = 1L;
 

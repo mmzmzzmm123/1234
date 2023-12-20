@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.enums.ActivityTypeEnum;
 import com.ruoyi.common.utils.DateUtils;
 
@@ -38,7 +40,7 @@ import javax.annotation.Resource;
  */
 @Service
 @Log4j2
-public class ActivityServiceImpl implements IActivityService {
+public class ActivityServiceImpl extends ServiceImpl<ActivityMapper,Activity> implements IActivityService {
     @Resource
     private ActivityMapper activityMapper;
 
@@ -148,4 +150,15 @@ public class ActivityServiceImpl implements IActivityService {
     public int deleteActivityById(Long id) {
         return activityMapper.deleteActivityById(id);
     }
+
+    @Override
+    public ActivityResDTO queryActivityMyBatisPuls(Long id) {
+        LambdaQueryWrapper<Activity> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Activity::getId,id);
+        Activity activity = activityMapper.selectOne(queryWrapper);
+        ActivityResDTO activityResDTO = new ActivityResDTO();
+        BeanUtils.copyProperties(activity,activityResDTO);
+        return activityResDTO;
+    }
+
 }

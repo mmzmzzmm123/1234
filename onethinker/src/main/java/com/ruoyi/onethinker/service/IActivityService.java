@@ -59,4 +59,6 @@ public interface IActivityService {
      * @return 结果
      */
     public int deleteActivityById(Long id);
+
+    ActivityResDTO queryActivityMyBatisPuls(Long id);
 }

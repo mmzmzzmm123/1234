@@ -1,6 +1,8 @@
 package com.ruoyi.onethinker.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.onethinker.domain.Activity;
 
 /**
@@ -9,7 +11,7 @@ import com.ruoyi.onethinker.domain.Activity;
  * @author yangyouqi
  * @date 2023-10-31
  */
-public interface ActivityMapper {
+public interface ActivityMapper extends BaseMapper<Activity> {
     /**
      * 查询活动
      *
