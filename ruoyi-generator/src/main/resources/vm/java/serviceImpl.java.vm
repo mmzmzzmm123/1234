@@ -23,6 +23,7 @@ import ${packageName}.domain.${ClassName};
 import ${packageName}.service.I${ClassName}Service;
 import lombok.extern.log4j.Log4j2;
 import javax.annotation.Resource;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 /**
  * ${functionName}Service业务层处理
  *
@@ -31,7 +32,7 @@ import javax.annotation.Resource;
  */
 @Service
 @Log4j2
-public class ${ClassName}ServiceImpl implements I${ClassName}Service {
+public class ${ClassName}ServiceImpl extends ServiceImpl<${ClassName}Mapper,${ClassName}> implements I${ClassName}Service {
     @Resource
     private ${ClassName}Mapper ${className}Mapper;
 
