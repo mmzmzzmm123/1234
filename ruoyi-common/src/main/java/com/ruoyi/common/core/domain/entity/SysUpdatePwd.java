@@ -16,6 +16,9 @@ public class SysUpdatePwd extends BaseEntity {
      */
     private String newPassword;
 
+    public SysUpdatePwd() {
+    }
+
     public SysUpdatePwd(String oldPassword, String newPassword) {
         this.oldPassword = oldPassword;
         this.newPassword = newPassword;
