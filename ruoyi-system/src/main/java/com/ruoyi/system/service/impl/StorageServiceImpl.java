@@ -63,6 +63,7 @@ public class StorageServiceImpl implements IStorageService
     {
         Long userId = SecurityUtils.getUserId();
         storage.setUserId(userId);
+        storage.setEntryDate(new Date());
         return storageMapper.insertStorage(storage);
     }
 

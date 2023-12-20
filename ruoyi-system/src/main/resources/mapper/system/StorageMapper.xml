@@ -18,6 +18,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="stoAttn"    column="sto_attn"    />
         <result property="stoAcce"    column="sto_acce"    />
         <result property="stoStor"    column="sto_stor"    />
+        <result property="attnName"    column="attn_name"    />
+        <result property="acceName"    column="acce_name"    />
+        <result property="storName"    column="stor_name"    />
         <result property="stoDate"    column="sto_date"    />
         <result property="entryDate"    column="entry_date"    />
         <result property="entryId"    column="entry_id"    />
@@ -26,8 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageVo">
-        select id, sto_id, sto_name, sto_type, sto_unit, sto_num, sto_price, sto_money, sto_remark, sto_attn, sto_acce, sto_stor, sto_date, entry_date, entry_id, edit_date, edit_id from storage
-    </sql>
+        select id, sto_id, sto_attn,sto_stor,sto_acce,sto_name, sto_type, sto_unit, sto_num, sto_price, sto_money, sto_remark, (select user_name from sys_user where user_id = sto_attn) as attn_name, (select user_name from sys_user where user_id = sto_acce) as acce_name, (select user_name from sys_user where user_id = sto_stor) as stor_name, sto_date, entry_date, (select user_name from sys_user where user_id = entry_id) as entryName, entry_id, edit_date,  (select user_name from sys_user where user_id = edit_id) as editName,edit_id from `storage`     </sql>
     <select id="getUserList" parameterType="SysUser" resultType="SysUser">
         select user_id as userId,nick_name as nickName from sys_user where user_id in (SELECT user_id from sys_user_post where post_id = #{roleId})
     </select>
@@ -37,19 +39,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stoId != null "> and sto_id = #{stoId}</if>
             <if test="stoName != null  and stoName != ''"> and sto_name like concat('%', #{stoName}, '%')</if>
             <if test="stoType != null  and stoType != ''"> and sto_type = #{stoType}</if>
-            <if test="stoUnit != null  and stoUnit != ''"> and sto_unit = #{stoUnit}</if>
+            <if test="stoUnit != null  and stoUnit != ''"> and sto_unit =
+                like concat('%', #{stoUnit}, '%')</if>
             <if test="stoNum != null "> and sto_num = #{stoNum}</if>
             <if test="stoPrice != null "> and sto_price = #{stoPrice}</if>
             <if test="stoMoney != null "> and sto_money = #{stoMoney}</if>
-            <if test="stoRemark != null  and stoRemark != ''"> and sto_remark = #{stoRemark}</if>
+            <if test="minMoney != null "> and sto_money >= #{minMoney}</if>
+            <if test="maxMoney != null "> and sto_money &lt;= #{maxMoney}</if>
+            <if test="stoRemark != null  and stoRemark != ''"> and sto_remark = like concat('%',#{stoRemark}, '%')</if>
             <if test="stoAttn != null "> and sto_attn = #{stoAttn}</if>
             <if test="stoAcce != null "> and sto_acce = #{stoAcce}</if>
             <if test="stoStor != null "> and sto_stor = #{stoStor}</if>
             <if test="stoDate != null "> and sto_date = #{stoDate}</if>
+            <if test="minDate != null "> and sto_date >= #{minDate}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(sto_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(sto_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="maxDate != null "> and sto_date &lt;= #{maxDate}</if>
             <if test="entryDate != null "> and entry_date = #{entryDate}</if>
             <if test="entryId != null "> and entry_id = #{entryId}</if>
             <if test="editDate != null "> and edit_date = #{editDate}</if>
             <if test="editId != null "> and edit_id = #{editId}</if>
+            <if test="ids != null "> and id in
+                <foreach collection="ids" item="id"  open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            and status = 0
         </where>
         order by sto_date desc
     </select>
@@ -123,14 +142,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <delete id="deleteStorageById" parameterType="Integer">
-        delete from storage where id = #{id}
-    </delete>
-
-    <delete id="deleteStorageByIds" parameterType="String">
-        delete from storage where id in 
+    <update id="deleteStorageById">
+        update storage set status = 1 where id = #{id}
+    </update>
+    <update id="deleteStorageByIds">
+        update storage set status = 1 where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>
-    </delete>
+    </update>
 </mapper>

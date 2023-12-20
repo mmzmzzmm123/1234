@@ -19,6 +19,15 @@ public class Storage extends BaseEntity
     private static final long serialVersionUID = 1L;
     @Excel(name = "入库人")
     private Long userId;
+    private Integer[] ids;
+
+    public Integer[] getIds() {
+        return ids;
+    }
+
+    public void setIds(Integer[] ids) {
+        this.ids = ids;
+    }
 
     public Long getUserId() {
         return userId;
@@ -27,13 +36,49 @@ public class Storage extends BaseEntity
     public void setUserId(Long userId) {
         this.userId = userId;
     }
+    private Double minMoney;
+    private Double maxMoney;
+    private String minDate;
+    private String maxDate;
+
+    public String getMinDate() {
+        return minDate;
+    }
+
+    public void setMinDate(String minDate) {
+        this.minDate = minDate;
+    }
+
+    public String getMaxDate() {
+        return maxDate;
+    }
+
+    public void setMaxDate(String maxDate) {
+        this.maxDate = maxDate;
+    }
+
+    public Double getMinMoney() {
+        return minMoney;
+    }
+
+    public void setMinMoney(Double minMoney) {
+        this.minMoney = minMoney;
+    }
+
+    public Double getMaxMoney() {
+        return maxMoney;
+    }
+
+    public void setMaxMoney(Double maxMoney) {
+        this.maxMoney = maxMoney;
+    }
 
     /** id */
     private Integer id;
 
     /** 入库编码 */
     @Excel(name = "入库编码")
-    private Integer stoId;
+    private String stoId;
 
     /** 名称 */
     @Excel(name = "名称")
@@ -64,16 +109,41 @@ public class Storage extends BaseEntity
     private String stoRemark;
 
     /** 经办人 */
-    @Excel(name = "经办人")
     private Long stoAttn;
-
+    @Excel(name = "经办人")
+    private String attnName;
     /** 验收人 */
-    @Excel(name = "验收人")
     private Long stoAcce;
-
+    @Excel(name = "验收人")
+    private String acceName;
     /** 保管人 */
-    @Excel(name = "保管人")
     private Long stoStor;
+    @Excel(name = "保管人")
+    private String storName;
+
+    public String getAttnName() {
+        return attnName;
+    }
+
+    public void setAttnName(String attnName) {
+        this.attnName = attnName;
+    }
+
+    public String getAcceName() {
+        return acceName;
+    }
+
+    public void setAcceName(String acceName) {
+        this.acceName = acceName;
+    }
+
+    public String getStorName() {
+        return storName;
+    }
+
+    public void setStorName(String storName) {
+        this.storName = storName;
+    }
 
     /** 入库日期 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -86,20 +156,38 @@ public class Storage extends BaseEntity
     private Date entryDate;
 
     /** 录入人 */
-    @Excel(name = "录入人")
     private Long entryId;
 
+    @Excel(name = "录入人")
+    private String entryName;
     /** 修改时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
+//    @Excel(name = "修改时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date editDate;
 
     /** 修改人 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "修改人", width = 30, dateFormat = "yyyy-MM-dd")
     private Long editId;
+//    @Excel(name = "修改人")
+    private String editName;
 
-    public void setId(Integer id) 
+    public String getEntryName() {
+        return entryName;
+    }
+
+    public void setEntryName(String entryName) {
+        this.entryName = entryName;
+    }
+
+    public String getEditName() {
+        return editName;
+    }
+
+    public void setEditName(String editName) {
+        this.editName = editName;
+    }
+
+    public void setId(Integer id)
     {
         this.id = id;
     }
@@ -108,12 +196,12 @@ public class Storage extends BaseEntity
     {
         return id;
     }
-    public void setStoId(Integer stoId) 
+    public void setStoId(String stoId)
     {
         this.stoId = stoId;
     }
 
-    public Integer getStoId() 
+    public String getStoId()
     {
         return stoId;
     }
@@ -262,6 +350,9 @@ public class Storage extends BaseEntity
             .append("stoName", getStoName())
             .append("stoType", getStoType())
             .append("stoUnit", getStoUnit())
+            .append("attnName", getAttnName())
+            .append("acceName", getAcceName())
+            .append("storName", getStoName())
             .append("stoNum", getStoNum())
             .append("stoPrice", getStoPrice())
             .append("stoMoney", getStoMoney())

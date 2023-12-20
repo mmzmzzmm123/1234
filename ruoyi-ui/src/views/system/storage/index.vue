@@ -41,9 +41,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item> -->
-      <el-form-item label="金额" prop="stoMoney">
+      <el-form-item label="金额" prop="minMoney">
         <el-input
-          v-model="queryParams.stoMoney"
+          style="width: 120px"
+          v-model.number="queryParams.minMoney"
+          placeholder="请输入金额"
+          clearable
+          @keyup.enter.native="handleQuery"
+        /><span>&nbsp;&nbsp;&nbsp;~&nbsp;&nbsp;&nbsp;</span><el-input
+          style="width: 125px"
+          v-model.number="queryParams.maxMoney"
           placeholder="请输入金额"
           clearable
           @keyup.enter.native="handleQuery"
@@ -58,38 +65,59 @@
         />  
       </el-form-item>
       <el-form-item label="经办人" prop="stoAttn">
-        <el-input
-          v-model="queryParams.stoAttn"
-          placeholder="请输入经办人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+          <el-select v-model="queryParams.stoAttn" filterable clearable placeholder="请选择经办人">
+            <el-option
+              v-for="Attn in stoAttnAllList"
+              :key="Attn.userId"
+              :label="Attn.nickName"
+              :value="Attn.userId"
+              @keyup.enter.native="handleQuery"
+              >
+            </el-option>
+          </el-select>
       </el-form-item>
       <el-form-item label="验收人" prop="stoAcce">
-        <el-input
-          v-model="queryParams.stoAcce"
-          placeholder="请输入验收人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.stoAcce" filterable clearable placeholder="请选择验收人">
+            <el-option
+              v-for="Attn in stoAcceAllList"
+              :key="Attn.userId"
+              :label="Attn.nickName"
+              :value="Attn.userId"
+              @keyup.enter.native="handleQuery"
+              >
+            </el-option>
+          </el-select>
       </el-form-item>
       <el-form-item label="保管人" prop="stoStor">
-        <el-input
-          v-model="queryParams.stoStor"
-          placeholder="请输入保管人"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.stoStor" filterable clearable placeholder="请选择保管人">
+            <el-option
+              v-for="Attn in stoStorAllList"
+              :key="Attn.userId"
+              :label="Attn.nickName"
+              :value="Attn.userId"
+              @keyup.enter.native="handleQuery"
+              >
+            </el-option>
+          </el-select>
       </el-form-item>
       <el-form-item label="入库日期" prop="stoDate">
-        <el-date-picker clearable
+        <!-- <el-date-picker clearable
           v-model="queryParams.stoDate"
           type="date"
           value-format="yyyy-MM-dd"
           placeholder="请选择入库日期">
-        </el-date-picker>
+        </el-date-picker> -->
+        <el-date-picker
+          v-model="dateRange"
+          style="width: 240px"
+          value-format="yyyy-MM-dd"
+          type="daterange"
+          range-separator="-"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+        ></el-date-picker>
       </el-form-item>
-      <el-form-item label="录入日期" prop="entryDate">
+      <!-- <el-form-item label="录入日期" prop="entryDate">
         <el-date-picker clearable
           v-model="queryParams.entryDate"
           type="date"
@@ -104,7 +132,7 @@
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
+      </el-form-item> -->
       <!-- <el-form-item label="修改时间" prop="editDate">
         <el-date-picker clearable
           v-model="queryParams.editDate"
@@ -177,17 +205,22 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="id" align="center" prop="id" /> -->
       <el-table-column label="入库编码" align="center" prop="stoId" />
+      <el-table-column label="单位" align="center" prop="stoUnit" />
       <el-table-column label="名称" align="center" prop="stoName" />
       <el-table-column label="规格型号" align="center" prop="stoType" />
-      <el-table-column label="单位" align="center" prop="stoUnit" />
-      <el-table-column label="数量" align="center" prop="stoNum" />
-      <el-table-column label="单价" align="center" prop="stoPrice" />
-      <el-table-column label="金额" align="center" prop="stoMoney" />
-      <el-table-column label="备注" align="center" prop="stoRemark" />
-      <el-table-column label="经办人" align="center" prop="stoAttn" />
-      <el-table-column label="验收人" align="center" prop="stoAcce" />
-      <el-table-column label="保管人" align="center" prop="stoStor" />
-      <el-table-column label="入库日期" align="center" prop="stoDate" width="180">
+      <el-table-column label="单价(￥)" align="center" prop="stoPrice" />
+      <el-table-column label="数量(个)" align="center" prop="stoNum" />
+      <el-table-column label="金额(￥)" align="center" prop="stoMoney" />
+      <!-- <el-table-column label="备注" align="center" prop="stoRemark" /> -->
+      <!-- <el-table-column label="备注" align="center" prop="consultType" width="100"/> -->
+      <el-table-column label="备注" align="center" width="230" prop="stoRemark" :show-overflow-tooltip="true"/>
+
+       
+      
+      <el-table-column label="经办人" align="center" prop="attnName" />
+      <el-table-column label="验收人" align="center" prop="acceName" />
+      <el-table-column label="保管人" align="center" prop="storName" />
+      <el-table-column label="入库日期" align="center" prop="stoDate" width="100">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.stoDate, '{y}-{m}-{d}') }}</span>
         </template>
@@ -208,7 +241,7 @@
           <span>{{ parseTime(scope.row.editId, '{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column> -->
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="操作" align="center" class-name="small-padding fixed-width" width="100px">
         <template slot-scope="scope">
           <el-button
             size="mini"
@@ -242,20 +275,20 @@
         <el-form-item label="入库编码" prop="stoId">
           <el-input v-model="form.stoId" placeholder="请输入入库编码" />
         </el-form-item>
-        <el-form-item label="名称" prop="stoName">
-          <el-input v-model="form.stoName" placeholder="请输入名称" />
-        </el-form-item>
         <el-form-item label="单位" prop="stoUnit">
           <el-input v-model="form.stoUnit" placeholder="请输入单位" />
+        </el-form-item>
+        <el-form-item label="名称" prop="stoName">
+          <el-input v-model="form.stoName" placeholder="请输入名称" />
         </el-form-item>
         <el-form-item label="规格型号" prop="stoType">
           <el-input v-model="form.stoType" placeholder="规格型号" />
         </el-form-item>
-        <el-form-item label="数量" prop="stoNum">
-          <el-input v-model.number="form.stoNum" type="number" placeholder="请输入数量" />
-        </el-form-item>
         <el-form-item label="单价" prop="stoPrice">
           <el-input v-model.number="form.stoPrice" type="number" placeholder="请输入单价" />
+        </el-form-item>
+        <el-form-item label="数量" prop="stoNum">
+          <el-input v-model.number="form.stoNum" type="number" placeholder="请输入数量" />
         </el-form-item>
         <el-form-item label="金额" prop="c">
           <el-input v-model="c" disabled=""></el-input>
@@ -358,6 +391,7 @@ export default {
   name: "Storage",
   data() {
     return {
+      dateRange: [],
       // 遮罩层
       loading: true,
       stoAttnAllList:[],
@@ -379,6 +413,10 @@ export default {
       open: false,
       // 查询参数
       queryParams: {
+        maxDate:null,
+        minDate:null,
+        minMoney:null,
+        maxMoney:null,
         roleId:0,
         pageNum: 1,
         pageSize: 10,
@@ -397,7 +435,8 @@ export default {
         entryDate: null,
         entryId: null,
         editDate: null,
-        editId: null
+        editId: null,
+        ids:[]
       },
       // 表单参数
       form: {},
@@ -477,7 +516,7 @@ export default {
     },
     getList() {
       this.loading = true;
-      listStorage(this.queryParams).then(response => {
+      listStorage(this.addDateRange(this.queryParams, this.dateRange)).then(response => {
         this.storageList = response.rows;
         this.total = response.total;
         this.loading = false;
@@ -491,7 +530,13 @@ export default {
     // 表单重置
     reset() {
       this.form = {
-        id: null,
+        maxDate:null,
+        minDate:null,
+        minMoney:null,
+        maxMoney:null,
+        roleId:0,
+        pageNum: 1,
+        pageSize: 10,
         stoId: null,
         stoName: null,
         stoType: null,
@@ -518,6 +563,7 @@ export default {
     },
     /** 重置按钮操作 */
     resetQuery() {
+      this.dateRange=[];
       this.resetForm("queryForm");
       this.handleQuery();
     },
@@ -532,6 +578,9 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加入库单";
+      console.log(this.value2[0]);
+      console.log(this.value2[1]);
+
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
@@ -575,6 +624,11 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
+      if (this.ids.length>0) {
+        this.queryParams.ids=this.ids
+      } else{
+        this.queryParams.ids=null
+      }
       this.download('system/storage/export', {
         ...this.queryParams
       }, `storage_${new Date().getTime()}.xlsx`)
