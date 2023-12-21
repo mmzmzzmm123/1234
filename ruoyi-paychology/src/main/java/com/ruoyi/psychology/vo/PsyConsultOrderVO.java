@@ -76,4 +76,7 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
     private Integer time;
     private Long workId;
 
+    /** 下单方式0,H5 1,MP 2,DY 5,PC */
+    private String source;
+
 }

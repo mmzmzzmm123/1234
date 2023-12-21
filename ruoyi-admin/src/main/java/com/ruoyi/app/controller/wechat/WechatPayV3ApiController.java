@@ -12,6 +12,7 @@ import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.LimitType;
+import com.ruoyi.common.utils.OrderIdUtils;
 import com.ruoyi.course.constant.CourConstant;
 import com.ruoyi.course.domain.CourCourse;
 import com.ruoyi.course.service.ICourCourseService;
@@ -103,18 +104,18 @@ public class WechatPayV3ApiController extends BaseController {
 
         switch (wechatPayDTO.getModule()) {
             case CourConstant.MODULE_COURSE:
-                out_trade_no = createOrderNo(PsyConstants.ORDER_COURSE, userId); //创建商户订单号
+                out_trade_no = OrderIdUtils.createOrderNo(PsyConstants.ORDER_COURSE, userId); //创建商户订单号
                 CourCourse courCourse = iCourCourseService.selectCourCourseById(wechatPayDTO.getCourseId());
                 content = courCourse.getName() + "-" + courCourse.getAuthor();
 
                 break;
             case GaugeConstant.MODULE_GAUGE:
-                out_trade_no = createOrderNo(PsyConstants.ORDER_GAUGE, userId); //创建商户订单号
+                out_trade_no = OrderIdUtils.createOrderNo(PsyConstants.ORDER_GAUGE, userId); //创建商户订单号
                 PsyGauge psyGauge = iPsyGaugeService.selectPsyGaugeById(wechatPayDTO.getGaugeId());
                 content = psyGauge.getTitle();
                 break;
             case ConsultConstant.MODULE_CONSULT:
-                out_trade_no = StringUtils.isNoneBlank(wechatPayDTO.getOutTradeNo()) ? wechatPayDTO.getOutTradeNo() : createOrderNo(PsyConstants.ORDER_CONSULT, userId); //创建商户订单号
+                out_trade_no = StringUtils.isNoneBlank(wechatPayDTO.getOutTradeNo()) ? wechatPayDTO.getOutTradeNo() : OrderIdUtils.createOrderNo(PsyConstants.ORDER_CONSULT, userId); //创建商户订单号
                 content = "预约心理咨询服务";
 
                 // 支付单时需要校验服务库存
@@ -148,7 +149,7 @@ public class WechatPayV3ApiController extends BaseController {
         String openid = user.getWxOpenid();
  
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.MINUTE, calendar.get(Calendar.MINUTE) + 135);// 2小时
+        calendar.add(Calendar.DATE, 1);// 1天
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
  
         JSONObject params = new JSONObject();
@@ -221,7 +222,7 @@ public class WechatPayV3ApiController extends BaseController {
  
         //@TODO 先查询订单是否可退款 将订单修改为退款中等业务处理
  
-        String out_refund_no = createOrderNo(PsyConstants.ORDER_REFUND, userId); //创建商户退款单号
+        String out_refund_no = OrderIdUtils.createOrderNo(PsyConstants.ORDER_REFUND, userId); //创建商户退款单号
         JSONObject params = new JSONObject();
         params.put("transaction_id", transaction_id); //微信支付订单号 也可以传out_trade_no 即发起支付时创建的商户订单号 二选一 transaction_id>out_trade_no
         params.put("out_refund_no", out_refund_no); //商户退款单号
@@ -308,26 +309,6 @@ public class WechatPayV3ApiController extends BaseController {
      */
     public JSONObject refundQuery(String out_refund_no) {
         return wechatPayV3Utils.sendGet(String.format(WechatUrlConstants.PAY_V3_QUERY_REFUND, out_refund_no));
-    }
- 
-     /**
-     * 创建商户订单号
-     * 要求 32个字符内，只能是数字、大小写字母_-|*且在同一个商户号下唯一
-     * 组成 两位前缀 + 17位时间戳 + 9位id补零 + 4位随机数 合计32位
-     *
-     * @param head 例如 商品-SP 订金-DJ 退款-TK 等等
-     * @param id   用户id
-     * @return
-     */
-    public String  createOrderNo(String head, Integer id) {
-//        StringBuilder uid = new StringBuilder(id.toString());
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-//        int length = uid.length();
-//        for (int i = 0; i < 8 - length; i++) {
-//            uid.insert(0, "0");
-//        }
-        return head + sdf.format(date) + (int) ((Math.random() * 9 + 1) * 1000);
     }
  
     /**

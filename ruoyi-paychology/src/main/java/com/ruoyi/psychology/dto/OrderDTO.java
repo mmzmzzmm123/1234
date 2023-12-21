@@ -69,6 +69,9 @@ public class OrderDTO extends BaseValObj implements Serializable
     private String status;
     private String statusName;
 
+    /** 下单方式0,H5 1,MP 2,DY 5,PC */
+    private String source;
+
     private String payStatus;
     private String payStatusName;
 

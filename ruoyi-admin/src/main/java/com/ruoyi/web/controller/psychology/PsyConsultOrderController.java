@@ -126,6 +126,7 @@ public class PsyConsultOrderController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody PsyConsultOrderVO req)
     {
+        req.setSource("5");
         return toAjax(psyConsultOrderService.add(req));
     }
 

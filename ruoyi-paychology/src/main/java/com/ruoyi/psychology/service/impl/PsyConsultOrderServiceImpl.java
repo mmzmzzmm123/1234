@@ -7,7 +7,9 @@ import com.ruoyi.common.constant.NewConstants;
 import com.ruoyi.common.constant.PsyConstants;
 import com.ruoyi.common.domain.PsyOrderLog;
 import com.ruoyi.common.service.IPsyOrderLogService;
+import com.ruoyi.common.utils.IDhelper;
 import com.ruoyi.common.utils.NewDateUtil;
+import com.ruoyi.common.utils.OrderIdUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.vo.DateLimitUtilVO;
 import com.ruoyi.psychology.constant.ConsultConstant;
@@ -212,10 +214,15 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, -num);
         Date time = calendar.getTime();
+
+        calendar.add(Calendar.MINUTE, num);
+        calendar.add(Calendar.DATE, -1);
+        Date time1 = calendar.getTime();
+
         LambdaQueryWrapper<PsyConsultOrder> wp = new LambdaQueryWrapper<>();
         wp.eq(PsyConsultOrder::getStatus, 0);
-        wp.le(PsyConsultOrder::getUpdateTime, time);
         wp.eq(PsyConsultOrder::getDelFlag, "0");
+        wp.and(w1 -> w1.ne(PsyConsultOrder::getSource, "5").le(PsyConsultOrder::getUpdateTime, time).or(w2 -> w2.eq(PsyConsultOrder::getSource, "5").le(PsyConsultOrder::getUpdateTime, time1)));
 
         return psyConsultOrderMapper.selectList(wp);
     }
@@ -450,6 +457,16 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
     public int add(PsyConsultOrderVO req) {
         PsyConsultServeConfigVO serve = psyConsultServeConfigService.getOne(req.getServeId());
         PsyConsultVO consult = psyConsultService.getOne(req.getConsultId());
+
+        // 后台下单
+        if (StringUtils.isNotBlank(req.getSource()) && req.getSource().equals("5")) {
+            req.setId(IDhelper.getNextId());
+            req.setOrderNo(OrderIdUtils.createOrderNo(PsyConstants.ORDER_CONSULT, req.getUserId()));
+            req.setPay(serve.getPrice());
+            req.setAmount(serve.getPrice());
+            req.setWorkId(0L);
+            req.setTime(-1);
+        }
 
         // 新增服务
         psyConsultOrderServeService.add(serve, req.getId());

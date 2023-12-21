@@ -72,6 +72,7 @@
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
+        <el-button type="primary" icon="el-icon-plus" v-hasPermi="['psychology:order:admin']" size="mini" @click="openAdd">创建订单</el-button>
       </el-form-item>
     </el-form>
 
@@ -169,19 +170,60 @@
 
     <close-modal ref="formClose" @handleOk="handleOk" />
 
-<!--    <el-dialog title="订单编辑" :visible.sync="openHx" width="700px" append-to-body>-->
-<!--      <times v-if="openHx" :order="order" />-->
-<!--      <div slot="footer" class="dialog-footer">-->
-<!--        <el-button type="primary" @click="submitHx">确 定</el-button>-->
-<!--        <el-button @click="cancelHx">关 闭</el-button>-->
-<!--      </div>-->
-<!--    </el-dialog>-->
+    <el-dialog title="创建订单" :visible.sync="openAd" width="700px" append-to-body>
+      <el-form ref="formAd" :model="formAd" :rules="rulesAd" label-width="120px">
+        <el-form-item label="下单用户" prop="userId">
+          <el-select v-model="formAd.userId" clearable filterable>
+            <el-option
+              v-for="item in userList"
+              :key="item.id"
+              :label="item.id + '-' + item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="咨询师" prop="consultId">
+          <el-select v-model="formAd.consultId" clearable filterable @change="getServeList">
+            <el-option
+              v-for="item in consults"
+              :key="item.id"
+              :label="item.nickName"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="服务名" prop="serveId">
+          <el-select v-model="formAd.serveId" clearable filterable @change="changeServe">
+            <el-option
+              v-for="item in serveList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="服务次数" prop="num">
+          <el-input-number size="mini" disabled v-model="formAd.num" placeholder="选择服务后显示" />
+        </el-form-item>
+
+        <div style="color:#F56C6C;margin-left: 120px">后台订单创建成功后请提醒用户在24小时内完成支付</div>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="add">确 定</el-button>
+        <el-button @click="closeAdd">关 闭</el-button>
+      </div>
+    </el-dialog>
+
   </div>
 </template>
 
 <script>
-import { listOrder, getOrder, addOrder, updateOrder, doRemark, getInfo } from "@/api/psychology/order";
-import { getServeRef } from "@/api/psychology/serveConfig";
+import { listOrder, getOrder, addOrder, doRemark, getInfo } from "@/api/psychology/order";
+import { getServeRef, listServeConfig } from "@/api/psychology/serveConfig";
+import { listUser } from "@/api/psychology/user";
 import { getConsultAll } from "@/api/psychology/consult";
 import times from "./times";
 import price from "./price";
@@ -216,11 +258,15 @@ export default {
       timeVal: [],
       orderList: [],
       consultList: [],
+      consults: [],
+      serveList: [],
+      userList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
       open: false,
       openRm: false,
+      openAd: false,
       consultId: null,
       // 查询参数
       queryParams: {
@@ -237,10 +283,22 @@ export default {
       // 表单参数
       form: {},
       formRm: {},
+      formAd: {
+        userId: null,
+        nickName: null,
+        serveId: null,
+        consultId: null,
+        num: null,
+      },
       rulesRm: {
         remark: [
           { required: true, message: "备注不能为空", trigger: "blur" }
         ],
+      },
+      rulesAd: {
+        userId: [ { required: true, message: "请选择用户", trigger: "change" } ],
+        serveId: [ { required: true, message: "请选择服务", trigger: "change" } ],
+        consultId: [ { required: true, message: "请选择咨询师", trigger: "change" } ],
       }
     };
   },
@@ -276,6 +334,7 @@ export default {
         this.consultId = this.consultList[0].id
         this.queryParams.consultId = this.consultId
       }
+      this.consults = this.consultList.filter(a => a.status === '0')
     },
     /** 查询咨询订单列表 */
     getList() {
@@ -359,6 +418,72 @@ export default {
     handleOk() {
       this.getList()
     },
+    /** 创建订单 start */
+    openAdd() {
+      if (this.userList.length === 0) {
+        this.getUserList()
+      }
+
+      this.openAd = true
+    },
+    add() {
+      const that = this
+      that.$refs["formAd"].validate(valid => {
+        if (valid) {
+          that.formAd.nickName = that.userList.find(a => a.id === that.formAd.userId).name
+
+          that.$modal.confirm('你确定创建订单吗？').then(function() {
+            addOrder(that.formAd).then(response => {
+              that.$modal.msgSuccess("创建成功");
+              that.closeAdd();
+              that.getList();
+            });
+          }).then(() => {
+            that.cancel()
+          }).catch(() => {});
+        }
+      });
+    },
+    closeAdd() {
+      this.openAd = false
+      this.formAd = {
+        num: null,
+        nickName: null,
+        userId: null,
+        serveId: null,
+        consultId: null
+      }
+      this.serveList = []
+    },
+    getUserList() {
+      const queryParams = {
+        pageNum: 1,
+        pageSize: 9999,
+      }
+      listUser(queryParams).then(response => {
+        this.userList = response.rows
+      })
+    },
+    getServeList(cId) {
+      this.serveList = []
+      this.formAd.num = null
+      this.formAd.serveId = null
+      const queryParams = {
+        pageNum: 1,
+        pageSize: 99,
+        status: '0',
+        orderByColumn: 'z_index',
+        isAsc: 'descending',
+        cId: cId
+      }
+      listServeConfig(queryParams).then(response => {
+        this.serveList = response.rows
+      })
+    },
+    changeServe(serveId) {
+      this.formAd.num = this.serveList.find(a => a.id === serveId).num
+    },
+    /** 创建订单 end */
     cancelRm() {
       this.openRm = false
       this.formRm = {}
@@ -370,26 +495,6 @@ export default {
             doRemark(this.formRm).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.openRm = false;
-              this.getList();
-            });
-          }
-        }
-      });
-    },
-    /** 提交按钮 */
-    submitForm() {
-      this.$refs["form"].validate(valid => {
-        if (valid) {
-          if (this.form.id != null) {
-            updateOrder(this.form).then(response => {
-              this.$modal.msgSuccess("修改成功");
-              this.open = false;
-              this.getList();
-            });
-          } else {
-            addOrder(this.form).then(response => {
-              this.$modal.msgSuccess("新增成功");
-              this.open = false;
               this.getList();
             });
           }

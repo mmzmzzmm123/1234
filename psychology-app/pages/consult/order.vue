@@ -278,21 +278,15 @@ export default {
         list.forEach(i => {
           i.endPay = 0
           if (i.status === '0') {
-            i.endPay = this.remainTime(i.updateTime)
+            i.endPay = this.remainTime(i.updateTime, i.source)
           }
         })
       }
       console.log(list)
       this.orderList = list
     },
-    remainTime(orderTime) {
-      // if (new Date().getTime() < new Date(orderTime).getTime() + 15 * 60 * 1000) {
-      //   // 下单不超过15分钟
-      //   return formatTime.getSeconds(orderTime)
-      // } else {
-      //   return 0
-      // }
-      return formatTime.getSeconds(orderTime)
+    remainTime(orderTime, source) {
+      return source === '5' ? formatTime.getOrderSeconds(orderTime, 86399000) : formatTime.getOrderSeconds(orderTime)
     },
     async toCancel(id) {
       const res = await orderServer.cancel(id);

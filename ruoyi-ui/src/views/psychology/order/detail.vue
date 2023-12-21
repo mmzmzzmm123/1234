@@ -39,7 +39,7 @@
       <el-descriptions-item label="订单实付">{{ order.pay.toFixed(2) }}</el-descriptions-item>
       <el-descriptions-item label="支付时间">{{ order.payTime }}</el-descriptions-item>
       <el-descriptions-item label="优惠券金额">-</el-descriptions-item>
-      <el-descriptions-item label="下单方式">{{ order.createBy === 'system' ? '用户创建' : '后台创建' }}</el-descriptions-item>
+      <el-descriptions-item label="下单方式">{{ order.source === '5' ? '后台创建' : '用户创建' }}</el-descriptions-item>
       <el-descriptions-item label="积分抵扣">-</el-descriptions-item>
       <el-descriptions-item label="订单状态">{{ order.statusName }}</el-descriptions-item>
       <el-descriptions-item label="订单备注">{{ order.remark }}</el-descriptions-item>

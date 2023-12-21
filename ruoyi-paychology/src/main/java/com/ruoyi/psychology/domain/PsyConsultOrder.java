@@ -99,6 +99,10 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     @Excel(name = "支付状态1,未支付 2,支付成功 3,退款中 4,部分退 5,全单退 6,退款失败")
     private String payStatus;
 
+    /** 下单方式0,H5 1,MP 2,DY 5,PC */
+    @Excel(name = "下单方式0,H5 1,MP 2,DY 5,PC")
+    private String source;
+
     @Excel(name = "备注")
     private String remark;
 

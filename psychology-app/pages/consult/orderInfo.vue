@@ -209,17 +209,17 @@ export default {
     async getOrderDetail() {
       this.order = await orderServer.getOrderDetail(this.orderId);
       if (this.order.status === '0') {
-        this.order.endPay = this.remainTime(this.order.updateTime)
+        this.order.endPay = this.remainTime(this.order.updateTime, this.order.source)
       }
     },
-    remainTime(orderTime) {
+    remainTime(orderTime, source) {
       // if (new Date().getTime() < new Date(orderTime).getTime() + 15 * 60 * 1000) {
       //   // 下单不超过15分钟
       //   return formatTime.getMinutes(orderTime)
       // } else {
       //   return 0
       // }
-      return formatTime.getSeconds(orderTime)
+      return source === '5' ? formatTime.getOrderSeconds(orderTime, 86399000) : formatTime.getOrderSeconds(orderTime)
     },
     async getDates() {
       this.dateList = await indexServer.getDates(7);
