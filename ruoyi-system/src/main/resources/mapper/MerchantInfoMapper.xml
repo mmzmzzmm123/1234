@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.MerchantInfoMapper">
 
-    <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.MerchantInfo">
+    <resultMap id="BaseResultMap" type="com.ruoyi.common.core.domain.entity.MerchantInfo">
             <id property="merchantId" column="merchant_id" jdbcType="VARCHAR"/>
             <result property="merchantName" column="merchant_name" jdbcType="VARCHAR"/>
             <result property="merchantType" column="merchant_type" jdbcType="INTEGER"/>
@@ -17,4 +17,45 @@
         merchant_id,merchant_name,merchant_type,
         pl_merchant_id,create_time,modify_time
     </sql>
+
+    <select id="getByUserId" resultType="com.ruoyi.common.core.domain.entity.MerchantInfo">
+        SELECT
+            tmi.merchant_id,
+            tmi.merchant_name,
+            tmi.merchant_type,
+            tmi.pl_merchant_id,
+            tmi.create_time,
+            tmi.modify_time
+        FROM
+            t_user_merchant_ref tumr
+            LEFT JOIN t_merchant_info tmi ON tumr.merchant_id = tmi.merchant_id
+        WHERE
+            tumr.user_id = #{userId}
+    </select>
+
+    <select id="page" resultType="com.ruoyi.common.core.domain.entity.MerchantInfo">
+        SELECT
+        tmi.merchant_id,
+        tmi.merchant_name,
+        tmi.merchant_type,
+        tmi.pl_merchant_id,
+        tmi.create_time,
+        tmi.modify_time
+        FROM
+        t_user_merchant_ref tumr
+        WHERE 1 = 1
+        <if test="dto.plMerchantId != null and dto.plMerchantId != ''">
+            AND tmi.pl_merchant_id = #{dto.plMerchantId}
+        </if>
+        <if test="dto.merchantType != null">
+            AND tmi.merchant_type = #{dto.merchantType}
+        </if>
+        <if test="dto.startTime != null and dto.startTime != ''">
+            AND tmi.create_time &gt;= #{dto.startTime}
+        </if>
+        <if test="dto.endTime != null and dto.endTime != ''">
+            AND tmi.create_time &lt;= #{dto.endTime}
+        </if>
+        order by tmi.merchant_id desc
+    </select>
 </mapper>

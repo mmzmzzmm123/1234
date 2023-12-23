@@ -1,4 +1,4 @@
-package com.ruoyi.system.domain;
+package com.ruoyi.common.core.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -9,12 +9,12 @@ import java.util.Date;
 import lombok.Data;
 
 /**
- * 商家资金表
- * @TableName t_merchant_amount
+ * 商家信息表
+ * @TableName t_merchant_info
  */
-@TableName(value ="t_merchant_amount")
+@TableName(value ="t_merchant_info")
 @Data
-public class MerchantAmount implements Serializable {
+public class MerchantInfo implements Serializable {
     /**
      * 商家ID
      */
@@ -22,19 +22,19 @@ public class MerchantAmount implements Serializable {
     private String merchantId;
 
     /**
-     * 账户总金额
+     * 商家名称
      */
-    private Long totalAmount;
+    private String merchantName;
 
     /**
-     * 可用余额
+     * 商家类型 0-普通 1-代理 2-运营
      */
-    private Long availableAmount;
+    private Integer merchantType;
 
     /**
-     * 锁定金额
+     * 上级商家ID
      */
-    private Long lockAmount;
+    private String plMerchantId;
 
     /**
      * 创建时间

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.MerchantAmountMapper">
 
-    <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.MerchantAmount">
+    <resultMap id="BaseResultMap" type="com.ruoyi.common.core.domain.entity.MerchantAmount">
             <id property="merchantId" column="merchant_id" jdbcType="VARCHAR"/>
             <result property="totalAmount" column="total_amount" jdbcType="BIGINT"/>
             <result property="availableAmount" column="available_amount" jdbcType="BIGINT"/>

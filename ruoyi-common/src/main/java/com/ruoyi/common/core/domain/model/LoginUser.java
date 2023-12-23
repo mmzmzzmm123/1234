@@ -1,6 +1,8 @@
 package com.ruoyi.common.core.domain.model;
 
 import com.alibaba.fastjson2.annotation.JSONField;
+import com.ruoyi.common.core.domain.entity.MerchantAmount;
+import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -70,6 +72,16 @@ public class LoginUser implements UserDetails
      * 用户信息
      */
     private SysUser user;
+
+    /**
+     * 商家信息
+     */
+    private MerchantInfo merchantInfo;
+
+    /**
+     * 商家资金
+     */
+    private MerchantAmount merchantAmount;
 
     public LoginUser()
     {
