@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.MerchantAmountMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.MerchantAmount">
+            <id property="merchantId" column="merchant_id" jdbcType="VARCHAR"/>
+            <result property="totalAmount" column="total_amount" jdbcType="BIGINT"/>
+            <result property="availableAmount" column="available_amount" jdbcType="BIGINT"/>
+            <result property="lockAmount" column="lock_amount" jdbcType="BIGINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        merchant_id,total_amount,available_amount,
+        lock_amount,create_time,modify_time
+    </sql>
+</mapper>

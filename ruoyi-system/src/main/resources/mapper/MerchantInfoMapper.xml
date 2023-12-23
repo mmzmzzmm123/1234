@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.MerchantInfoMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.system.domain.MerchantInfo">
+            <id property="merchantId" column="merchant_id" jdbcType="VARCHAR"/>
+            <result property="merchantName" column="merchant_name" jdbcType="VARCHAR"/>
+            <result property="merchantType" column="merchant_type" jdbcType="INTEGER"/>
+            <result property="plMerchantId" column="pl_merchant_id" jdbcType="VARCHAR"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        merchant_id,merchant_name,merchant_type,
+        pl_merchant_id,create_time,modify_time
+    </sql>
+</mapper>

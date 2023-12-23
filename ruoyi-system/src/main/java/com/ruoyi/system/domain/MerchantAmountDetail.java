@@ -1,0 +1,66 @@
+package com.ruoyi.system.domain;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import java.io.Serializable;
+import java.util.Date;
+import lombok.Data;
+
+/**
+ * 商家资金明细表
+ * @TableName t_merchant_amount_detail
+ */
+@TableName(value ="t_merchant_amount_detail")
+@Data
+public class MerchantAmountDetail implements Serializable {
+    /**
+     * 主键ID
+     */
+    @TableId(type = IdType.AUTO)
+    private Long detailId;
+
+    /**
+     * 商家ID
+     */
+    private String merchantId;
+
+    /**
+     * 操作类型 1-划拨 2-消费 3-退款 4-扣款
+     */
+    private Integer operationType;
+
+    /**
+     * 资金变动前
+     */
+    private Long changeBefore;
+
+    /**
+     * 变动金额
+     */
+    private Long changeAmount;
+
+    /**
+     * 资金变动后
+     */
+    private Long changeAfter;
+
+    /**
+     * 操作说明
+     */
+    private String operationDesc;
+
+    /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 修改时间
+     */
+    private Date modifyTime;
+
+    @TableField(exist = false)
+    private static final long serialVersionUID = 1L;
+}
