@@ -6,7 +6,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Storage" id="StorageResult">
         <result property="id"    column="id"    />
+        <result property="deptId"    column="dept_id"    />
         <result property="stoId"    column="sto_id"    />
+        <result property="kpStatus"    column="kp_status"    />
+        <result property="imgSrc"    column="img_src"    />
         <result property="userId"    column="entryId"    />
         <result property="stoName"    column="sto_name"    />
         <result property="stoType"    column="sto_type"    />
@@ -29,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageVo">
-        select id, sto_id, sto_attn,sto_stor,sto_acce,sto_name, sto_type, sto_unit, sto_num, sto_price, sto_money, sto_remark, (select user_name from sys_user where user_id = sto_attn) as attn_name, (select user_name from sys_user where user_id = sto_acce) as acce_name, (select user_name from sys_user where user_id = sto_stor) as stor_name, sto_date, entry_date, (select user_name from sys_user where user_id = entry_id) as entryName, entry_id, edit_date,  (select user_name from sys_user where user_id = edit_id) as editName,edit_id from `storage`     </sql>
+        select kp_status,img_src,id, sto_id, sto_attn,sto_stor,sto_acce,sto_name, sto_type, sto_unit, sto_num, sto_price, sto_money, sto_remark, (select user_name from sys_user where user_id = sto_attn) as attn_name, (select user_name from sys_user where user_id = sto_acce) as acce_name, (select user_name from sys_user where user_id = sto_stor) as stor_name, sto_date, entry_date, (select user_name from sys_user where user_id = entry_id) as entryName, entry_id, edit_date,  (select user_name from sys_user where user_id = edit_id) as editName,edit_id from `storage`     </sql>
     <select id="getUserList" parameterType="SysUser" resultType="SysUser">
         select user_id as userId,nick_name as nickName from sys_user where user_id in (SELECT user_id from sys_user_post where post_id = #{roleId})
     </select>
@@ -51,6 +54,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="stoAcce != null "> and sto_acce = #{stoAcce}</if>
             <if test="stoStor != null "> and sto_stor = #{stoStor}</if>
             <if test="stoDate != null "> and sto_date = #{stoDate}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
             <if test="minDate != null "> and sto_date >= #{minDate}</if>
             <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
                 AND date_format(sto_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
@@ -98,6 +102,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">entry_id,</if>
             <if test="editDate != null">edit_date,</if>
             <if test="editId != null">edit_id,</if>
+            <if test="deptId != null">dept_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -117,7 +122,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null">#{userId},</if>
             <if test="editDate != null">#{editDate},</if>
             <if test="editId != null">#{editId},</if>
-         </trim>
+            <if test="deptId != null">#{deptId},</if>
+        </trim>
     </insert>
 
     <update id="updateStorage" parameterType="Storage">
@@ -138,6 +144,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="entryDate != null">entry_date = #{entryDate},</if>
             <if test="editDate != null">edit_date = #{editDate},</if>
             <if test="userId != null">edit_id = #{userId},</if>
+            <if test="kpStatus != null">kp_status = #{kpStatus},</if>
+            <if test="imgSrc != null">img_src = #{imgSrc},</if>
         </trim>
         where id = #{id}
     </update>

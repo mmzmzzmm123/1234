@@ -49,6 +49,11 @@ public class StorageServiceImpl implements IStorageService
     @Override
     public List<Storage> selectStorageList(Storage storage)
     {
+        Long userId = SecurityUtils.getUserId();
+        System.out.println("输出userId"+userId);
+        if (userId!=1L&&userId!=100L){
+            storage.setDeptId(SecurityUtils.getDeptId());
+        }
         return storageMapper.selectStorageList(storage);
     }
 
@@ -64,6 +69,7 @@ public class StorageServiceImpl implements IStorageService
         Long userId = SecurityUtils.getUserId();
         storage.setUserId(userId);
         storage.setEntryDate(new Date());
+        storage.setDeptId(SecurityUtils.getDeptId());
         return storageMapper.insertStorage(storage);
     }
 
@@ -76,6 +82,9 @@ public class StorageServiceImpl implements IStorageService
     @Override
     public int updateStorage(Storage storage)
     {
+        if (storage.getKpStatus()==0){
+            storage.setImgSrc("");
+        }
         storage.setEditDate(new Date());
         Long userId = SecurityUtils.getUserId();
         storage.setUserId(userId);

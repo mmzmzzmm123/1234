@@ -17,9 +17,37 @@ import com.ruoyi.common.core.domain.BaseEntity;
 public class Storage extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
-    @Excel(name = "入库人")
+//    @Excel(name = "入库人")
+    private Long deptId;
+
+    public Long getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Long deptId) {
+        this.deptId = deptId;
+    }
+
     private Long userId;
     private Integer[] ids;
+    private String imgSrc;
+    private Integer kpStatus;
+
+    public String getImgSrc() {
+        return imgSrc;
+    }
+
+    public void setImgSrc(String imgSrc) {
+        this.imgSrc = imgSrc;
+    }
+
+    public Integer getKpStatus() {
+        return kpStatus;
+    }
+
+    public void setKpStatus(Integer kpStatus) {
+        this.kpStatus = kpStatus;
+    }
 
     public Integer[] getIds() {
         return ids;

@@ -198,11 +198,23 @@
           v-hasPermi="['system:storage:export']"
         >导出</el-button>
       </el-col>
+      <el-col :span="1.5">
+          <el-button type="primary" icon="el-icon-success" size="mini" @click="kaipiao">开票</el-button>
+      </el-col>
+      <el-col :span="1.5">
+          <el-button type="primary" icon="el-icon-picture" size="mini" @click="checkImg()">查看开票信息</el-button>
+      </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
     <el-table v-loading="loading" :data="storageList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="开票状态" align="center" prop="kpStatus">
+      <template slot-scope="scope">
+          <el-tag v-if="scope.row.kpStatus == 1">已开票</el-tag>
+          <el-tag type="warning" v-if="scope.row.kpStatus == 0">未开票</el-tag>
+        </template>
+      </el-table-column> 
       <!-- <el-table-column label="id" align="center" prop="id" /> -->
       <el-table-column label="入库编码" align="center" prop="stoId" />
       <el-table-column label="单位" align="center" prop="stoUnit" />
@@ -380,7 +392,24 @@
         <el-button type="primary" @click="submitForm">确 定</el-button>
         <el-button @click="cancel">取 消</el-button>
       </div>
+      <el-button v-if="false" :plain="true" @click="open3" >警告</el-button>
     </el-dialog>
+     <el-dialog :title="title" :visible.sync="open1" width="500px" append-to-body>
+      <el-form ref="form1" :model="form1" label-width="80px">
+        <el-form-item label="商品图片">
+              <image-upload :limit="1" v-model="form1.imgSrc"/>
+        </el-form-item>
+        <el-form-item>
+      <el-button type="primary" @click="onSubmit">确认</el-button>
+      <el-button  @click="onSubmit1">取消</el-button>
+    </el-form-item>
+       </el-form>
+     </el-dialog>
+     <el-image-viewer
+        v-if="isShowPics"
+        :on-close="closeViewer"
+        :url-list="srcList"
+      />
   </div>
 </template>
 
@@ -389,9 +418,14 @@ import { stoAttnList,listStorage, getStorage, delStorage, addStorage, updateStor
 
 export default {
   name: "Storage",
+  components:{
+    'el-image-viewer': () => import('element-ui/packages/image/src/image-viewer')
+  },
   data() {
     return {
+      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       dateRange: [],
+      open1:false,
       // 遮罩层
       loading: true,
       stoAttnAllList:[],
@@ -436,10 +470,14 @@ export default {
         entryId: null,
         editDate: null,
         editId: null,
-        ids:[]
+        ids:[],
+        id:null,
       },
       // 表单参数
       form: {},
+      form1:{},
+      srcList:[],
+      isShowPics:false,
       // 表单校验
       rules: {
         stoId: [
@@ -474,7 +512,9 @@ export default {
         ],
       },
       stoAcceAllList:[],
-      stoStorAllList:[]
+      stoStorAllList:[],
+      dialogImageUrl: '',
+        dialogVisible: false
     };
   },
   created() {
@@ -484,6 +524,62 @@ export default {
     this.stoStorList();
   },
   methods: {
+    handlePreview() {
+      this.isShowPics = true
+    },
+    onPreview() {
+      this.isShowPics = true
+    },
+    // 关闭查看器
+    closeViewer() {
+      this.isShowPics = false
+    },
+    checkImg(){
+      if (this.ids.length!=1) {
+        this.open3();
+      } else{
+        this.queryParams.id = this.ids[0]
+        console.log(this.queryParams.id);
+        getStorage(this.queryParams.id).then(response => {
+        this.form1 = response.data;
+        console.log(this.form1);
+        if (this.form1.kpStatus!=1) {
+          this.open4()
+        }else if (this.form1.imgSrc=== 'undefined' || this.form1.imgSrc == null || this.form1.imgSrc == '') {
+          this.open5();
+        }else{
+        this.isShowPics = true
+        this.srcList[0] = 'http://localhost/dev-api'+this.form1.imgSrc;
+      }
+      });
+      }
+    },
+    open3() {
+        this.$message({
+          message: '请选择一条数据',
+          type: 'warning'
+        });
+      },
+      open4() {
+        this.$message({
+          message: '请选择已开票的数据',
+          type: 'warning'
+        });
+      },
+      open5() {
+        this.$message({
+          message: '当前开票下没有上传凭证',
+          type: 'warning'
+        });
+      },
+    kaipiao(){
+      if (this.ids.length!=1) {
+        this.open3();
+      } else{
+        this.open1 = true
+      }
+    },
+    
     /** 查询【入库单】列表 */
     stoAttnList() {
       this.loading = true;
@@ -493,6 +589,26 @@ export default {
         this.loading = false;
       });
     },
+    onSubmit() {
+      this.form1.id = this.ids[0]
+      this.form1.kpStatus = 1;
+       updateStorage(this.form1).then(response => {
+              this.$modal.msgSuccess("开票成功");
+              this.open1 = false;
+              this.getList();
+              this.ids = null;
+            });
+      },
+      onSubmit1(){
+      this.form1.id = this.ids[0]
+      this.form1.kpStatus = 0;
+       updateStorage(this.form1).then(response => {
+              this.$modal.msgWarning("取消开票");
+              this.open1 = false;
+              this.getList();
+              this.ids = null;
+            });
+      },
     sumPrice(){
       this.form.stoMoney = this.form.stoNum*this.form.stoPrice;
       console.log(12312);
@@ -615,7 +731,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除【入库单】编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除编号为"' + ids + '"【入库单】？').then(function() {
         return delStorage(ids);
       }).then(() => {
         this.getList();
