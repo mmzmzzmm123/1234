@@ -40,6 +40,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectStorageVo"/>
         <where>  
             <if test="stoId != null "> and sto_id = #{stoId}</if>
+            <if test="attnName != null "> and (select user_name from sys_user where user_id = sto_attn) like concat('%', #{attnName}, '%')</if>
+            <if test="acceName != null "> and (select user_name from sys_user where user_id = sto_acce) like concat('%', #{acceName}, '%')</if>
+            <if test="storName != null "> and (select user_name from sys_user where user_id = sto_stor) like concat('%', #{storName}, '%')</if>
             <if test="stoName != null  and stoName != ''"> and sto_name like concat('%', #{stoName}, '%')</if>
             <if test="stoType != null  and stoType != ''"> and sto_type = #{stoType}</if>
             <if test="stoUnit != null  and stoUnit != ''"> and sto_unit =

@@ -39,90 +39,11 @@
     </el-row>
     <el-row :gutter="20">
       <el-col :sm="24" :lg="12" style="padding-left: 20px">
-         <h2>赛尔电工</h2> 
-       <!--  <p>
-          一直想做一款后台管理系统，看了很多优秀的开源项目但是发现没有合适自己的。于是利用空闲休息时间开始自己写一套后台系统。如此有了若依管理系统，她可以用于所有的Web应用程序，如网站管理后台，网站会员中心，CMS，CRM，OA等等，当然，您也可以对她进行深度定制，以做出更强系统。所有前端后台代码封装过后十分精简易上手，出错概率低。同时支持移动客户端访问。系统会陆续更新一些实用功能。
-        </p>
-        <p>
-          <b>当前版本:</b> <span>v{{ version }}</span>
-        </p>
-        <p>
-          <el-tag type="danger">&yen;免费开源</el-tag>
-        </p>
-        <p>
-          <el-button
-            type="primary"
-            size="mini"
-            icon="el-icon-cloudy"
-            plain
-            @click="goTarget('https://gitee.com/y_project/RuoYi-Vue')"
-            >访问码云</el-button
-          >
-          <el-button
-            size="mini"
-            icon="el-icon-s-home"
-            plain
-            @click="goTarget('http://ruoyi.vip')"
-            >访问主页</el-button
-          >
-        </p> -->
-      </el-col>
-
-      <el-col :sm="24" :lg="12" style="padding-left: 50px">
-        <el-row>
-          <el-col :span="12">
-            <h2>技术选型</h2>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="6">
-            <h4>后端技术</h4>
-            <ul>
-              <li>SpringBoot</li>
-              <li>Spring Security</li>
-              <li>JWT</li>
-              <li>MyBatis</li>
-              <li>Druid</li>
-              <li>Fastjson</li>
-              <li>...</li>
-            </ul>
-          </el-col>
-          <el-col :span="6">
-            <h4>前端技术</h4>
-            <ul>
-              <li>Vue</li>
-              <li>Vuex</li>
-              <li>Element-ui</li>
-              <li>Axios</li>
-              <li>Sass</li>
-              <li>Quill</li>
-              <li>...</li>
-            </ul>
-          </el-col>
-        </el-row>
+        <h2>赛尔电工</h2>
+         <h3>邢台赛尔电工科技有限公司成立于2020年04月29日，注册地位于河北省邢台市宁晋县康宁街南侧，法定代表人为徐振东。经营范围包括许可项目：输电、供电、受电电力设施的安装、维修和试验；检验检测服务。（依法须经批准的项目，经相关部门批准后方可开展经营活动，具体经营项目以相关部门批准文件或许可证件为准）一般项目：其他输配电及控制设备制造。电缆附件、预制母线、复合屏蔽绝缘母线及附件、铜合金电车线、铜合金绞线、合金材料、接触网配件、圆线同心绞架空导线，生产、销售。电工科技的技术研发、技术服务；智能输配电及控制设备销售；机械电气设备制造；机械电气设备销售。（除依法须经批准的项目外，凭营业执照依法自主开展经营活动）</h3> 
       </el-col>
     </el-row>
     <el-divider />
-    <el-row :gutter="20">
-      <el-col :xs="24" :sm="24" :md="12" :lg="8">
-        <el-card class="update-log">
-         
-        </el-card>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="8">
-        <el-card class="update-log">
-          <div slot="header" class="clearfix">
-            <span></span>
-          </div>
-          <div class="body">
-            
-            <span style="display: inline-block; height: 30px; line-height: 30px"
-              ></span
-            >
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
   </div>
 </template>
 

@@ -64,41 +64,29 @@
           @keyup.enter.native="handleQuery"
         />  
       </el-form-item>
-      <el-form-item label="经办人" prop="stoAttn">
-          <el-select v-model="queryParams.stoAttn" filterable clearable placeholder="请选择经办人">
-            <el-option
-              v-for="Attn in stoAttnAllList"
-              :key="Attn.userId"
-              :label="Attn.nickName"
-              :value="Attn.userId"
-              @keyup.enter.native="handleQuery"
-              >
-            </el-option>
-          </el-select>
+      <el-form-item label="经办人" prop="attnName">
+          <el-input
+          v-model="queryParams.attnName"
+          placeholder="请输入经办人"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
-      <el-form-item label="验收人" prop="stoAcce">
-        <el-select v-model="queryParams.stoAcce" filterable clearable placeholder="请选择验收人">
-            <el-option
-              v-for="Attn in stoAcceAllList"
-              :key="Attn.userId"
-              :label="Attn.nickName"
-              :value="Attn.userId"
-              @keyup.enter.native="handleQuery"
-              >
-            </el-option>
-          </el-select>
+      <el-form-item label="验收人" prop="acceName">
+            <el-input
+          v-model="queryParams.acceName"
+          placeholder="请输入验收人"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
-      <el-form-item label="保管人" prop="stoStor">
-        <el-select v-model="queryParams.stoStor" filterable clearable placeholder="请选择保管人">
-            <el-option
-              v-for="Attn in stoStorAllList"
-              :key="Attn.userId"
-              :label="Attn.nickName"
-              :value="Attn.userId"
-              @keyup.enter.native="handleQuery"
-              >
-            </el-option>
-          </el-select>
+      <el-form-item label="保管人" prop="storName">
+        <el-input
+          v-model="queryParams.storName"
+          placeholder="请输入保管人"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="入库日期" prop="stoDate">
         <!-- <el-date-picker clearable
@@ -311,7 +299,9 @@
           <el-input v-model="form.stoRemark" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item label="经办人" prop="stoAttn">
-          <el-select v-model="form.stoAttn" filterable placeholder="经办人">
+          <el-input v-model="form.stoAttn" placeholder="请输入经办人" />
+
+          <!-- <el-select v-model="form.stoAttn" filterable placeholder="经办人">
             <el-option
               v-for="Attn in stoAttnAllList"
               :key="Attn.userId"
@@ -319,10 +309,12 @@
               :value="Attn.userId"
             >
             </el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
         <el-form-item label="验收人" prop="stoAcce">
-          <el-select v-model="form.stoAcce" filterable placeholder="验收人">
+          <el-input v-model="form.stoAcce" placeholder="请输入验收人" />
+
+          <!-- <el-select v-model="form.stoAcce" filterable placeholder="验收人">
             <el-option
               v-for="Acce in stoAcceAllList"
               :key="Acce.userId"
@@ -330,10 +322,12 @@
               :value="Acce.userId"
             >
             </el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
         <el-form-item label="保管人" prop="stoStor">
-          <el-select v-model="form.stoStor" filterable placeholder="保管人">
+          <el-input v-model="form.stoStor" placeholder="请输入验收人" />
+
+          <!-- <el-select v-model="form.stoStor" filterable placeholder="保管人">
             <el-option
               v-for="Stor in stoStorAllList"
               :key="Stor.userId"
@@ -341,7 +335,7 @@
               :value="Stor.userId"
             >
             </el-option>
-          </el-select>
+          </el-select> -->
         </el-form-item>
         <!-- <el-form-item label="经办人" prop="stoAttn">
           <el-input v-model="form.stoAttn" placeholder="请输入经办人" />
@@ -519,9 +513,9 @@ export default {
   },
   created() {
     this.getList();
-    this.stoAttnList();
-    this.stoAcceList();
-    this.stoStorList();
+    // this.stoAttnList();
+    // this.stoAcceList();
+    // this.stoStorList();
   },
   methods: {
     handlePreview() {
