@@ -93,6 +93,20 @@ export const constantRoutes = [
 // 动态路由，基于用户权限动态去加载
 export const dynamicRoutes = [
   {
+    path: '/system/pay-auth',
+    component: Layout,
+    hidden: true,
+    permissions: ['system:user:edit'],
+    children: [
+      {
+        path: 'role/:id(\\d+)',
+        component: () => import('@/views/system/installmentpayment/authPay'),
+        name: 'authPay',
+        meta: { title: '付款记录', activeMenu: '/system/srchecksheet' }
+      }
+    ]
+  },
+  {
     path: '/system/user-auth',
     component: Layout,
     hidden: true,

@@ -1,12 +1,14 @@
 package com.ruoyi.common.core.domain;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * Entity基类
@@ -25,8 +27,9 @@ public class BaseEntity implements Serializable
     private String createBy;
 
     /** 创建时间 */
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createTime;
+    private Timestamp createTime;
 
     /** 更新者 */
     private String updateBy;
@@ -67,7 +70,7 @@ public class BaseEntity implements Serializable
         return createTime;
     }
 
-    public void setCreateTime(Date createTime)
+    public void setCreateTime(Timestamp createTime)
     {
         this.createTime = createTime;
     }

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.InstallmentpaymentMapper">
+    
+    <resultMap type="Installmentpayment" id="InstallmentpaymentResult">
+        <result property="id"    column="id"    />
+        <result property="payee"    column="payee"    />
+        <result property="payment"    column="payment"    />
+        <result property="amountpaid"    column="amountpaid"    />
+        <result property="paytime"    column="paytime"    />
+        <result property="srchecksheetId"    column="srchecksheet_id"    />
+        <result property="reserve1"    column="reserve1"    />
+        <result property="reserve2"    column="reserve2"    />
+        <result property="reserve3"    column="reserve3"    />
+        <result property="reserve4"    column="reserve4"    />
+    </resultMap>
+
+    <sql id="selectInstallmentpaymentVo">
+        select id, payee, payment, amountpaid, paytime, srchecksheet_id, reserve1, reserve2, reserve3, reserve4 from installmentpayment
+    </sql>
+
+    <select id="selectInstallmentpaymentList" parameterType="Installmentpayment" resultMap="InstallmentpaymentResult">
+        <include refid="selectInstallmentpaymentVo"/>
+        <where>  
+            <if test="payee != null  and payee != ''"> and payee = #{payee}</if>
+            <if test="payment != null  and payment != ''"> and payment = #{payment}</if>
+            <if test="amountpaid != null "> and amountpaid = #{amountpaid}</if>
+            <if test="paytime != null "> and paytime = #{paytime}</if>
+            <if test="srchecksheetId != null "> and srchecksheet_id = #{srchecksheetId}</if>
+        </where>
+    </select>
+    
+    <select id="selectInstallmentpaymentById" parameterType="Long" resultMap="InstallmentpaymentResult">
+        <include refid="selectInstallmentpaymentVo"/>
+        where id = #{id}
+    </select>
+
+
+    <insert id="insertInstallmentpayment" parameterType="Installmentpayment" useGeneratedKeys="true" keyProperty="id">
+        insert into installmentpayment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="payee != null">payee,</if>
+            <if test="payment != null">payment,</if>
+            <if test="amountpaid != null">amountpaid,</if>
+            <if test="paytime != null">paytime,</if>
+            <if test="srchecksheetId != null">srchecksheet_id,</if>
+            <if test="reserve1 != null">reserve1,</if>
+            <if test="reserve2 != null">reserve2,</if>
+            <if test="reserve3 != null">reserve3,</if>
+            <if test="reserve4 != null">reserve4,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="payee != null">#{payee},</if>
+            <if test="payment != null">#{payment},</if>
+            <if test="amountpaid != null">#{amountpaid},</if>
+            <if test="paytime != null">#{paytime},</if>
+            <if test="srchecksheetId != null">#{srchecksheetId},</if>
+            <if test="reserve1 != null">#{reserve1},</if>
+            <if test="reserve2 != null">#{reserve2},</if>
+            <if test="reserve3 != null">#{reserve3},</if>
+            <if test="reserve4 != null">#{reserve4},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInstallmentpayment" parameterType="Installmentpayment">
+        update installmentpayment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="payee != null">payee = #{payee},</if>
+            <if test="payment != null">payment = #{payment},</if>
+            <if test="amountpaid != null">amountpaid = #{amountpaid},</if>
+            <if test="paytime != null">paytime = #{paytime},</if>
+            <if test="srchecksheetId != null">srchecksheet_id = #{srchecksheetId},</if>
+            <if test="reserve1 != null">reserve1 = #{reserve1},</if>
+            <if test="reserve2 != null">reserve2 = #{reserve2},</if>
+            <if test="reserve3 != null">reserve3 = #{reserve3},</if>
+            <if test="reserve4 != null">reserve4 = #{reserve4},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteInstallmentpaymentById" parameterType="Long">
+        delete from installmentpayment where id = #{id}
+    </delete>
+
+    <delete id="deleteInstallmentpaymentByIds" parameterType="String">
+        delete from installmentpayment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectsrchecksheetId" parameterType="string" resultMap="InstallmentpaymentResult">
+        select * from installmentpayment where srchecksheet_id = ${id}
+    </select>
+</mapper>
