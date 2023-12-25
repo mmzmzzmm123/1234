@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.StorageMapper">
+    
+    <resultMap type="Storage" id="StorageResult">
+        <result property="id"    column="id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="stoId"    column="sto_id"    />
+        <result property="kpStatus"    column="kp_status"    />
+        <result property="imgSrc"    column="img_src"    />
+        <result property="userId"    column="entryId"    />
+        <result property="stoName"    column="sto_name"    />
+        <result property="stoType"    column="sto_type"    />
+        <result property="stoUnit"    column="sto_unit"    />
+        <result property="stoNum"    column="sto_num"    />
+        <result property="stoPrice"    column="sto_price"    />
+        <result property="stoMoney"    column="sto_money"    />
+        <result property="stoRemark"    column="sto_remark"    />
+        <result property="stoAttn"    column="sto_attn"    />
+        <result property="stoAcce"    column="sto_acce"    />
+        <result property="stoStor"    column="sto_stor"    />
+        <result property="attnName"    column="attn_name"    />
+        <result property="acceName"    column="acce_name"    />
+        <result property="storName"    column="stor_name"    />
+        <result property="stoDate"    column="sto_date"    />
+        <result property="entryDate"    column="entry_date"    />
+        <result property="entryId"    column="entry_id"    />
+        <result property="editDate"    column="edit_date"    />
+        <result property="editId"    column="edit_id"    />
+    </resultMap>
+
+    <sql id="selectStorageVo">
+        select kp_status,img_src,id, sto_id, sto_attn,sto_stor,sto_acce,sto_name, sto_type, sto_unit, sto_num, sto_price, sto_money, sto_remark, (select user_name from sys_user where user_id = sto_attn) as attn_name, (select user_name from sys_user where user_id = sto_acce) as acce_name, (select user_name from sys_user where user_id = sto_stor) as stor_name, sto_date, entry_date, (select user_name from sys_user where user_id = entry_id) as entryName, entry_id, edit_date,  (select user_name from sys_user where user_id = edit_id) as editName,edit_id from `storage`     </sql>
+    <select id="getUserList" parameterType="SysUser" resultType="SysUser">
+        select user_id as userId,nick_name as nickName from sys_user where user_id in (SELECT user_id from sys_user_post where post_id = #{roleId})
+    </select>
+    <select id="selectStorageList" parameterType="Storage" resultMap="StorageResult">
+        <include refid="selectStorageVo"/>
+        <where>  
+            <if test="stoId != null "> and sto_id = #{stoId}</if>
+            <if test="attnName != null "> and (select user_name from sys_user where user_id = sto_attn) like concat('%', #{attnName}, '%')</if>
+            <if test="acceName != null "> and (select user_name from sys_user where user_id = sto_acce) like concat('%', #{acceName}, '%')</if>
+            <if test="storName != null "> and (select user_name from sys_user where user_id = sto_stor) like concat('%', #{storName}, '%')</if>
+            <if test="stoName != null  and stoName != ''"> and sto_name like concat('%', #{stoName}, '%')</if>
+            <if test="stoType != null  and stoType != ''"> and sto_type = #{stoType}</if>
+            <if test="stoUnit != null  and stoUnit != ''"> and sto_unit =
+                like concat('%', #{stoUnit}, '%')</if>
+            <if test="stoNum != null "> and sto_num = #{stoNum}</if>
+            <if test="stoPrice != null "> and sto_price = #{stoPrice}</if>
+            <if test="stoMoney != null "> and sto_money = #{stoMoney}</if>
+            <if test="minMoney != null "> and sto_money >= #{minMoney}</if>
+            <if test="maxMoney != null "> and sto_money &lt;= #{maxMoney}</if>
+            <if test="stoRemark != null  and stoRemark != ''"> and sto_remark = like concat('%',#{stoRemark}, '%')</if>
+            <if test="stoAttn != null "> and sto_attn = #{stoAttn}</if>
+            <if test="stoAcce != null "> and sto_acce = #{stoAcce}</if>
+            <if test="stoStor != null "> and sto_stor = #{stoStor}</if>
+            <if test="stoDate != null "> and sto_date = #{stoDate}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+            <if test="minDate != null "> and sto_date >= #{minDate}</if>
+            <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+                AND date_format(sto_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+            </if>
+            <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+                AND date_format(sto_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+            </if>
+            <if test="maxDate != null "> and sto_date &lt;= #{maxDate}</if>
+            <if test="entryDate != null "> and entry_date = #{entryDate}</if>
+            <if test="entryId != null "> and entry_id = #{entryId}</if>
+            <if test="editDate != null "> and edit_date = #{editDate}</if>
+            <if test="editId != null "> and edit_id = #{editId}</if>
+            <if test="ids != null "> and id in
+                <foreach collection="ids" item="id"  open="(" close=")" separator=",">
+                    #{id}
+                </foreach>
+            </if>
+            and status = 0
+        </where>
+        order by sto_date desc
+    </select>
+    
+    <select id="selectStorageById" parameterType="Integer" resultMap="StorageResult">
+        <include refid="selectStorageVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertStorage" parameterType="Storage">
+        insert into storage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="stoId != null">sto_id,</if>
+            <if test="stoName != null">sto_name,</if>
+            <if test="stoType != null">sto_type,</if>
+            <if test="stoUnit != null">sto_unit,</if>
+            <if test="stoNum != null">sto_num,</if>
+            <if test="stoPrice != null">sto_price,</if>
+            <if test="stoMoney != null">sto_money,</if>
+            <if test="stoRemark != null">sto_remark,</if>
+            <if test="stoAttn != null">sto_attn,</if>
+            <if test="stoAcce != null">sto_acce,</if>
+            <if test="stoStor != null">sto_stor,</if>
+            <if test="stoDate != null">sto_date,</if>
+            <if test="entryDate != null">entry_date,</if>
+            <if test="userId != null">entry_id,</if>
+            <if test="editDate != null">edit_date,</if>
+            <if test="editId != null">edit_id,</if>
+            <if test="deptId != null">dept_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="stoId != null">#{stoId},</if>
+            <if test="stoName != null">#{stoName},</if>
+            <if test="stoType != null">#{stoType},</if>
+            <if test="stoUnit != null">#{stoUnit},</if>
+            <if test="stoNum != null">#{stoNum},</if>
+            <if test="stoPrice != null">#{stoPrice},</if>
+            <if test="stoMoney != null">#{stoMoney},</if>
+            <if test="stoRemark != null">#{stoRemark},</if>
+            <if test="stoAttn != null">#{stoAttn},</if>
+            <if test="stoAcce != null">#{stoAcce},</if>
+            <if test="stoStor != null">#{stoStor},</if>
+            <if test="stoDate != null">#{stoDate},</if>
+            <if test="entryDate != null">#{entryDate},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="editDate != null">#{editDate},</if>
+            <if test="editId != null">#{editId},</if>
+            <if test="deptId != null">#{deptId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateStorage" parameterType="Storage">
+        update storage
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="stoId != null">sto_id = #{stoId},</if>
+            <if test="stoName != null">sto_name = #{stoName},</if>
+            <if test="stoType != null">sto_type = #{stoType},</if>
+            <if test="stoUnit != null">sto_unit = #{stoUnit},</if>
+            <if test="stoNum != null">sto_num = #{stoNum},</if>
+            <if test="stoPrice != null">sto_price = #{stoPrice},</if>
+            <if test="stoMoney != null">sto_money = #{stoMoney},</if>
+            <if test="stoRemark != null">sto_remark = #{stoRemark},</if>
+            <if test="stoAttn != null">sto_attn = #{stoAttn},</if>
+            <if test="stoAcce != null">sto_acce = #{stoAcce},</if>
+            <if test="stoStor != null">sto_stor = #{stoStor},</if>
+            <if test="stoDate != null">sto_date = #{stoDate},</if>
+            <if test="entryDate != null">entry_date = #{entryDate},</if>
+            <if test="editDate != null">edit_date = #{editDate},</if>
+            <if test="userId != null">edit_id = #{userId},</if>
+            <if test="kpStatus != null">kp_status = #{kpStatus},</if>
+            <if test="imgSrc != null">img_src = #{imgSrc},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <update id="deleteStorageById">
+        update storage set status = 1 where id = #{id}
+    </update>
+    <update id="deleteStorageByIds">
+        update storage set status = 1 where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+</mapper>
