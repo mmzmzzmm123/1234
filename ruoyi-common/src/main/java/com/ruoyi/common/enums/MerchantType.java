@@ -5,7 +5,7 @@ package com.ruoyi.common.enums;
  * @create 2023/12/23/023 16:27
  * @Description : 商家类型
  */
-public enum MerchantTypeEnums {
+public enum MerchantType {
 
     ORDINARY(0,"普通")
     ,AGENT(1,"代理")
@@ -26,7 +26,7 @@ public enum MerchantTypeEnums {
         return name;
     }
 
-    MerchantTypeEnums(int type, String name) {
+    MerchantType(int type, String name) {
         this.type = type;
         this.name = name;
     }

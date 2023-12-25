@@ -18,8 +18,7 @@ public class MerchantAmountDetail implements Serializable {
     /**
      * 主键ID
      */
-    @TableId(type = IdType.AUTO)
-    private Long detailId;
+    private String detailId;
 
     /**
      * 商家ID
@@ -47,9 +46,14 @@ public class MerchantAmountDetail implements Serializable {
     private Long changeAfter;
 
     /**
-     * 操作说明
+     * 订单编号
      */
-    private String operationDesc;
+    private String orderId;
+
+    /**
+     * 描述
+     */
+    private String describe;
 
     /**
      * 创建时间

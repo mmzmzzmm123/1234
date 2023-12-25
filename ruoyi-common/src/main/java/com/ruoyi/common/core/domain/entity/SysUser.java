@@ -3,6 +3,8 @@ package com.ruoyi.common.core.domain.entity;
 import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.*;
+
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -17,6 +19,7 @@ import com.ruoyi.common.xss.Xss;
  * 
  * @author ruoyi
  */
+@Data
 public class SysUser extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -88,6 +91,16 @@ public class SysUser extends BaseEntity
 
     /** 角色ID */
     private Long roleId;
+
+    /**
+     * 创建用户到指定商家下
+     */
+    private String merchantId;
+
+    /**
+     * 用户类型 0-普通 1-代理 2-运营 默认普通用户
+     */
+    private Integer merchantType = 0;
 
     public SysUser()
     {

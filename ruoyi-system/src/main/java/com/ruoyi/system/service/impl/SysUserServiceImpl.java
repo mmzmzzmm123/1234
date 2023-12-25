@@ -2,8 +2,15 @@ package com.ruoyi.system.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.validation.Validator;
+
+import com.ruoyi.common.core.domain.entity.MerchantInfo;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.system.domain.dto.CreateUserMerchantRefDTO;
+import com.ruoyi.system.service.UserMerchantRefService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +67,9 @@ public class SysUserServiceImpl implements ISysUserService
 
     @Autowired
     protected Validator validator;
+
+    @Autowired
+    private UserMerchantRefService userMerchantRefService;
 
     /**
      * 根据条件分页查询用户列表
@@ -253,7 +263,7 @@ public class SysUserServiceImpl implements ISysUserService
      * @return 结果
      */
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public int insertUser(SysUser user)
     {
         // 新增用户信息
@@ -262,6 +272,19 @@ public class SysUserServiceImpl implements ISysUserService
         insertUserPost(user);
         // 新增用户与角色管理
         insertUserRole(user);
+
+        // 创建用户与商家的关联信息
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        String plMerchantId = Optional.ofNullable(loginUser)
+                .map(LoginUser::getMerchantInfo)
+                .map(MerchantInfo::getMerchantId)
+                .orElse(null);
+
+        CreateUserMerchantRefDTO dto = new CreateUserMerchantRefDTO();
+        dto.setUserId(user.getUserId());
+        dto.setUserName(user.getUserName());
+        dto.setPlMerchantId(plMerchantId);
+        userMerchantRefService.createUserMerchantRef(dto);
         return rows;
     }
 

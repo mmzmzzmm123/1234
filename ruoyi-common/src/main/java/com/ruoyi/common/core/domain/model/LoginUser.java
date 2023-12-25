@@ -78,11 +78,6 @@ public class LoginUser implements UserDetails
      */
     private MerchantInfo merchantInfo;
 
-    /**
-     * 商家资金
-     */
-    private MerchantAmount merchantAmount;
-
     public LoginUser()
     {
     }
@@ -268,6 +263,14 @@ public class LoginUser implements UserDetails
     public void setUser(SysUser user)
     {
         this.user = user;
+    }
+
+    public MerchantInfo getMerchantInfo() {
+        return merchantInfo;
+    }
+
+    public void setMerchantInfo(MerchantInfo merchantInfo) {
+        this.merchantInfo = merchantInfo;
     }
 
     @Override

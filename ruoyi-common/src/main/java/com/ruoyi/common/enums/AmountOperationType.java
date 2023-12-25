@@ -5,9 +5,12 @@ package com.ruoyi.common.enums;
  * @create 2023/12/23/023 16:30
  * @Description : 资金操作类型
  */
-public enum AmountOperationTypeEnums {
+public enum AmountOperationType {
 
-    TRANSFER(1, "划拨"), CONSUMPTION(2, "消费"), REFUND(3, "退款"), DEDUCTION(4, "扣款");
+    TRANSFER(1, "划拨")
+    ,CONSUMPTION(2, "消费")
+    ,REFUND(3, "退款")
+    ,DEDUCTION(4, "扣款");
 
 
     int operationType;
@@ -22,13 +25,13 @@ public enum AmountOperationTypeEnums {
         return operationName;
     }
 
-    AmountOperationTypeEnums(int operationType, String operationName) {
+    AmountOperationType(int operationType, String operationName) {
         this.operationType = operationType;
         this.operationName = operationName;
     }
 
-    public AmountOperationTypeEnums findByOperationType(int operationType) {
-        for (AmountOperationTypeEnums operationTypeEnums : AmountOperationTypeEnums.values()) {
+    public AmountOperationType findByOperationType(int operationType) {
+        for (AmountOperationType operationTypeEnums : AmountOperationType.values()) {
             if (operationTypeEnums.getOperationType() == operationType) {
                 return operationTypeEnums;
             }
