@@ -16,10 +16,10 @@ public class OrderRequest {
 	private Date endTime;
 
 	@ApiModelProperty("订单类型 0-拉人入群")
-	private int orderType;
+	private Integer orderType;
 
 	@ApiModelProperty("订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款")
-	private int orderStatus;
+	private Integer orderStatus;
 
 	@ApiModelProperty("page")
 	private int page;
