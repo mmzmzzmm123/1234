@@ -1,11 +1,8 @@
 package com.ruoyi.system.domain.dto;
 
 import com.ruoyi.system.domain.base.PageBaseDTO;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
 
 /**
  * @Author : XGF（徐桂烽）
@@ -16,21 +13,23 @@ import javax.validation.constraints.NotBlank;
 public class QueryMerchantPageDTO extends PageBaseDTO {
 
     /**
-     * 0-普通 1-代理 2-运营
+     *
      */
-    @Max(value = 2)
-    @Min(value = 0)
+    @ApiModelProperty("0-普通 1-代理 2-运营")
     private Integer merchantType;
-
-    /**
-     * 用户ID
-     */
-    private Long userId;
 
     /**
      * 父级商家ID
      */
+    @ApiModelProperty(hidden = true)
     private String plMerchantId;
+
+    @ApiModelProperty("商家ID")
+    private String merchantId;
+
+    @ApiModelProperty("商家名称")
+    private String merchantName;
+
 
     /**
      * 开始时间

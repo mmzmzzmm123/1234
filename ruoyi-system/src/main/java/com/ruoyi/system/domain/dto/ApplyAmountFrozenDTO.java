@@ -18,7 +18,7 @@ public class ApplyAmountFrozenDTO {
     /**
      * 冻结金额
      */
-    private Long frozenAmount;
+    private Long amount;
 
     /**
      * 订单ID
