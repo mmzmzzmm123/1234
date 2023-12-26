@@ -30,6 +30,7 @@ public class MerchantInfoServiceImpl extends ServiceImpl<MerchantInfoMapper, Mer
     @Resource
     private MerchantAmountService merchantAmountService;
 
+
     @Override
     public String createMerchant(CreateMerchantDTO dto) {
         String merchantId = dto.getMerchantId();
@@ -58,14 +59,9 @@ public class MerchantInfoServiceImpl extends ServiceImpl<MerchantInfoMapper, Mer
     @Override
     public Page<MerchantInfo> page(QueryMerchantPageDTO dto) {
         Page<MerchantInfo> page = new Page<>(dto.getPage(), dto.getLimit());
-        MerchantInfo merchantInfo = this.getByUserId(dto.getUserId());
-        String merchantId = Optional.ofNullable(merchantInfo)
-                .map(MerchantInfo::getMerchantId)
-                .orElse(null);
-        if (StringUtils.isEmpty(merchantId)) {
+        if (StringUtils.isEmpty(dto.getPlMerchantId())) {
             return page;
         }
-        dto.setPlMerchantId(merchantId);
         baseMapper.page(page, dto);
 
         return page;

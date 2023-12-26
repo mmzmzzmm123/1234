@@ -3,6 +3,9 @@ package com.ruoyi.common.core.controller;
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
+import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.WebDataBinder;
@@ -183,6 +186,27 @@ public class BaseController
     {
         return getLoginUser().getUserId();
     }
+
+    /**
+     * 获取商家信息
+     * @return
+     */
+    public MerchantInfo getMerchantInfo() {
+        return Optional.ofNullable(getLoginUser())
+                .map(LoginUser::getMerchantInfo)
+                .orElse(null);
+    }
+
+    /**
+     * 获取登录用户商家ID
+     */
+    public String getMerchantId() {
+        return Optional.ofNullable(getMerchantInfo())
+                .map(MerchantInfo::getMerchantId)
+                .orElse(null);
+    }
+
+
 
     /**
      * 获取登录部门id

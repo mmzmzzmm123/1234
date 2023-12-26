@@ -2,7 +2,7 @@ package com.ruoyi.system.service;
 
 import com.ruoyi.common.core.domain.entity.MerchantAmount;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.ruoyi.system.domain.dto.ApplyAmountFrozenDTO;
+import com.ruoyi.system.domain.dto.*;
 
 /**
  *
@@ -24,8 +24,28 @@ public interface MerchantAmountService extends IService<MerchantAmount> {
     String applyAmountFrozen(ApplyAmountFrozenDTO dto);
 
 
+    /**
+     * 资金划拨
+     * A- B+
+     */
+    void amountTransfer(AmountTransferDTO dto);
 
+    /**
+     * 消费
+     * 按冻结单来扣款
+     */
+    void amountConsumption(AmountConsumptionDTO dto);
 
+    /**
+     * 退款
+     * 描述必填
+     */
+    void amountRefund(AmountRefundDTO dto);
 
+    /**
+     * 资金扣款
+     * 直接扣钱 描述必填
+     */
+    void amountDeduction(AmountDeductionDTO dto);
 
 }

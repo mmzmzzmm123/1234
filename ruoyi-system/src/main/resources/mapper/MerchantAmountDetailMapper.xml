@@ -20,7 +20,37 @@
     <sql id="Base_Column_List">
         detail_id,merchant_id,operation_type,
         change_before,change_amount,change_after,
-        order_id,describe,create_time,
+        order_id,`describe`,create_time,
         modify_time
     </sql>
+
+    <select id="page" resultType="com.ruoyi.system.domain.vo.QueryAmountDetailPageVO">
+        SELECT
+            tmad.detail_id,
+            tmad.merchant_id,
+            tmad.operation_type,
+            tmad.change_amount,
+            tmad.order_id,
+            tmad.`describe`,
+            tmad.create_time,
+            tmad.modify_time
+        FROM
+        t_merchant_amount_detail tmad
+        WHERE
+        1 = 1
+        <if test="dto.merchantId != null and dto.merchantId != ''">
+            AND tmad.merchant_id = #{dto.merchantId}
+        </if>
+        <if test="dto.merchantId != null">
+            AND tmad.operation_type = #{dto.operationType}
+        </if>
+        <if test="dto.startTime != null and dto.startTime != ''">
+            AND tmad.create_time &gt;= #{dto.startTime}
+        </if>
+        <if test="dto.endTime != null and dto.endTime != ''">
+            AND tmad.create_time &lt;= #{dto.endTime}
+        </if>
+        order by tmad.create_time desc
+    </select>
+
 </mapper>
