@@ -12,10 +12,16 @@ public class Product {
     @ApiModelProperty(value = "商品id")
     private Long productId;
 
+    /**
+     * {@link com.ruoyi.common.enums.AppType}
+     */
     @ApiModelProperty(value = "平台类型")
     private Integer appType;
 
-    @ApiModelProperty(value = "商品类型 0-拉群")
+    /**
+     * {@link com.ruoyi.common.enums.ProductCategoryType}
+     */
+    @ApiModelProperty(value = "商品类型")
     private Integer categoryId;
 
     @ApiModelProperty(value = "商品名称")
@@ -47,4 +53,7 @@ public class Product {
 
     @ApiModelProperty(value = "展示规格")
     private String skuAttr;
+
+    @ApiModelProperty(value = "创建时间")
+    private String createDate;
 }
