@@ -56,4 +56,10 @@ public class Product {
 
     @ApiModelProperty(value = "创建时间")
     private String createDate;
+
+    @ApiModelProperty(value = "创建人")
+    private String operatorUser;
+
+    @ApiModelProperty(value = "是否删除:0否 1是")
+    private Integer isDel;
 }
