@@ -30,13 +30,13 @@ public class OrderListResponse {
 	private Integer orderStatus;
 
 	@ApiModelProperty("预付金额")
-	private Long price;
+	private long price;
 
 	@ApiModelProperty("实际消费")
-	private Long actualPrice;
+	private long actualPrice;
 
 	@ApiModelProperty("退款金额")
-	private Long refundPrice;
+	private long refundPrice;
 
 	@ApiModelProperty("关联任务")
 	private String taskId;

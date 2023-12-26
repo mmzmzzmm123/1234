@@ -1,5 +1,6 @@
 package com.ruoyi.framework.config;
 
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -14,11 +15,17 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 import com.ruoyi.framework.config.properties.PermitAllUrlProperties;
 import com.ruoyi.framework.security.filter.JwtAuthenticationTokenFilter;
 import com.ruoyi.framework.security.handle.AuthenticationEntryPointImpl;
 import com.ruoyi.framework.security.handle.LogoutSuccessHandlerImpl;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * spring security配置
@@ -102,6 +109,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         httpSecurity
                 // CSRF禁用，因为不使用session
                 .csrf().disable()
+                // 启用跨域请求
+                .cors().configurationSource(configurationSource()).and()
                 // 禁用HTTP响应标头
                 .headers().cacheControl().disable().and()
                 // 认证失败处理类
@@ -145,4 +154,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     {
         auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder());
     }
+
+
+    CorsConfigurationSource configurationSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration();
+//        corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+//        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
+        corsConfiguration.setAllowedOrigins(Arrays.asList("https://blue-print.csbilin.com", "http://blue-print.csbilin.com"));
+        corsConfiguration.setMaxAge(3600L);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", corsConfiguration);
+        return source;
+    }
+
 }

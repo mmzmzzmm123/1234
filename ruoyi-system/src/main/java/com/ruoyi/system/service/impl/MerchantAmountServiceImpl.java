@@ -249,6 +249,34 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
         merchantAmountDetailService.save(detail);
         merchantAmountDetailService.save(targetDetail);
     }
+
+    @Override
+    public void amountRecharge(AmountRechargeDTO dto) {
+        MerchantAmount merchantAmount = super.getById(dto.getMerchantId());
+        if (merchantAmount == null) {
+            this.initMerchantAmount(dto.getMerchantId());
+            merchantAmount = super.getById(dto.getMerchantId());
+        }
+        Assert.notNull(merchantAmount, "商家不存在");
+
+        String describe = String.format("用户%s[%s]充值%s", dto.getCreateBy(), dto.getUserId(), dto.getAmount());
+
+        MerchantAmountDetail detail = new MerchantAmountDetail();
+        detail.setDetailId(IdWorker.getIdStr());
+        detail.setMerchantId(dto.getMerchantId());
+        detail.setOperationType(AmountOperationType.TRANSFER.getOperationType());
+        detail.setDescribe(describe);
+        detail.setChangeBefore(merchantAmount.getAvailableAmount());
+        detail.setChangeAmount(dto.getAmount());
+        detail.setAmountType(2);
+
+        merchantAmount.setTotalAmount(merchantAmount.getTotalAmount() + dto.getAmount());
+        merchantAmount.setAvailableAmount(merchantAmount.getAvailableAmount() + dto.getAmount());
+        super.updateById(merchantAmount);
+        detail.setChangeAfter(merchantAmount.getAvailableAmount());
+        merchantAmountDetailService.save(detail);
+
+    }
 }
 
 

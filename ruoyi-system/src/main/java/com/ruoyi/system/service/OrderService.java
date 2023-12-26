@@ -1,7 +1,5 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
-
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.app.OrderDetailResponse;
@@ -34,5 +32,10 @@ public interface OrderService {
 	 * @return
 	 */
 	PageInfo<OrderListResponse> list(OrderRequest orderRequest);
+
+	/***
+	 * 刷新订单状态
+	 */
+	void refreshOrderStatus();
 
 }
