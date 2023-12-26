@@ -18,6 +18,7 @@ public class MerchantAmountFrozenDetail implements Serializable {
     /**
      * 主键ID
      */
+    @TableId
     private String frozenId;
 
     /**
