@@ -160,7 +160,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         CorsConfiguration corsConfiguration = new CorsConfiguration();
 //        corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
 //        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
-        corsConfiguration.setAllowedOrigins(Arrays.asList("https://blue-print.csbilin.com", "http://blue-print.csbilin.com"));
+//        corsConfiguration.setAllowedOrigins(Arrays.asList("https://blue-print.csbilin.com", "http://blue-print.csbilin.com"));
         corsConfiguration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
