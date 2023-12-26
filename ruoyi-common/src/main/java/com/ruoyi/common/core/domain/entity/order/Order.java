@@ -1,4 +1,4 @@
-package com.ruoyi.system.domain;
+package com.ruoyi.common.core.domain.entity.order;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -12,24 +12,34 @@ import lombok.Data;
  * 
  * @TableName t_merchant_amount_detail
  */
-@TableName(value = "t_order_sku")
+@TableName(value = "t_order")
 @Data
-public class OrderSku implements Serializable {
-
-	/**
-	 * 主键id
-	 */
-	@TableId
-	private String orderSkuId;
+public class Order implements Serializable {
 	/**
 	 * 订单ID
 	 */
+	@TableId
 	private String orderId;
 
 	/**
 	 * 用户ID
 	 */
 	private Long userId;
+	
+	/**
+	 * 订单类型 0-拉人入群
+	 */
+	private Integer orderType ;
+	
+	/**
+	 * 商户id
+	 */
+	private String merchantId;
+	
+	/**
+	 * 冻结单
+	 */
+    private String frozenId;
 
 	/**
 	 * 商品id
@@ -42,19 +52,29 @@ public class OrderSku implements Serializable {
 	private Long price;
 
 	/**
-	 * 购买数量
+	 * 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
 	 */
-	private Integer buyCount;
+	private Integer orderStatus;
 
 	/**
-	 * sku id
+	 * 提交json参数
 	 */
-	private Long skuId;
+	private String params;
+
+	/**
+	 * 备注
+	 */
+	private String remark;
 
 	/**
 	 * 下单时间
 	 */
 	private Date createTime;
+
+	/**
+	 * 修改时间
+	 */
+	private Date modifyTime;
 
 	@TableField(exist = false)
 	private static final long serialVersionUID = 1L;

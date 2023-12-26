@@ -213,4 +213,9 @@ public class AjaxResult extends HashMap<String, Object>
         super.put(key, value);
         return this;
     }
+    
+    
+    public Object data() {
+    	return get(DATA_TAG);
+    }
 }

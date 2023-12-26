@@ -1,4 +1,4 @@
-package com.ruoyi.system.domain;
+package com.ruoyi.common.core.domain.entity.order;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -12,15 +12,15 @@ import lombok.Data;
  * 
  * @TableName t_merchant_amount_detail
  */
-@TableName(value = "t_order_refund")
+@TableName(value = "t_order_sku")
 @Data
-public class OrderRefund implements Serializable {
+public class OrderSku implements Serializable {
 
 	/**
 	 * 主键id
 	 */
 	@TableId
-	private String refundId;
+	private String orderSkuId;
 	/**
 	 * 订单ID
 	 */
@@ -32,16 +32,24 @@ public class OrderRefund implements Serializable {
 	private Long userId;
 
 	/**
-	 * 商家id
+	 * 商品id
 	 */
-	private String merchantId;
+	private Long productId;
 
 	/**
-	 * 退款 金额
+	 * 总价格
 	 */
-	private Long refundPrice;
+	private Long price;
 
-	private String remark;
+	/**
+	 * 购买数量
+	 */
+	private Integer buyCount;
+
+	/**
+	 * sku id
+	 */
+	private Long skuId;
 
 	/**
 	 * 下单时间
