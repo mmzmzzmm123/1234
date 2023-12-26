@@ -12,4 +12,8 @@ public class AmountConsumptionDTO {
 
     private String frozenId;
 
+    // 实际扣款金额  可以不传，按冻结金额来扣
+    private Long amount;
+
+
 }

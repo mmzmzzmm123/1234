@@ -43,7 +43,7 @@ public interface MerchantAmountService extends IService<MerchantAmount> {
     void amountRefund(AmountRefundDTO dto);
 
     /**
-     * 资金扣款
+     * 扣款
      * 直接扣钱 描述必填
      */
     void amountDeduction(AmountDeductionDTO dto);

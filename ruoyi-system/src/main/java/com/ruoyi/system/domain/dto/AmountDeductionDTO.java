@@ -9,4 +9,14 @@ import lombok.Data;
  */
 @Data
 public class AmountDeductionDTO {
+
+    // 退款商家
+    private String merchantId;
+
+    // 退款金额
+    private Long amount;
+
+    // 描述
+    private String describe;
+
 }

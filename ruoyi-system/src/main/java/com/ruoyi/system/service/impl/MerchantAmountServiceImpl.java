@@ -49,9 +49,14 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String applyAmountFrozen(ApplyAmountFrozenDTO dto) {
-
+        Assert.isTrue((dto.getAmount() != null && dto.getAmount() > 0), "冻结金额参数异常");
         MerchantAmount merchantAmount = super.getById(dto.getMerchantId());
-        Assert.notNull(merchantAmount,"");
+        Assert.notNull(merchantAmount, "商家不存在");
+        Assert.isTrue(merchantAmount.getAvailableAmount() >= dto.getAmount(), "商家可用余额不足");
+
+        merchantAmount.setLockAmount(merchantAmount.getLockAmount() + dto.getAmount());
+        merchantAmount.setAvailableAmount(merchantAmount.getTotalAmount() - merchantAmount.getLockAmount());
+        super.updateById(merchantAmount);
 
         String frozenId = IdWorker.getIdStr();
         MerchantAmountFrozenDetail frozenDetail = new MerchantAmountFrozenDetail();
@@ -61,7 +66,7 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
         frozenDetail.setDescribe(dto.getDescribe());
         frozenDetail.setOrderId(dto.getOrderId());
         boolean save = merchantAmountFrozenDetailService.save(frozenDetail);
-        Assert.isTrue(save,"资金冻结失败");
+        Assert.isTrue(save, "资金冻结失败");
         return frozenId;
     }
 
@@ -69,10 +74,10 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
     @Transactional(rollbackFor = Exception.class)
     public void amountTransfer(AmountTransferDTO dto) {
         MerchantAmount merchantAmount = super.getById(dto.getMerchantId());
-        Assert.notNull(merchantAmount,"划拨商家不存在");
-        Assert.isTrue(merchantAmount.getAvailableAmount() > dto.getAmount(),"划拨商家可用资金不足");
+        Assert.notNull(merchantAmount, "划拨商家不存在");
+        Assert.isTrue(merchantAmount.getAvailableAmount() > dto.getAmount(), "划拨商家可用资金不足");
         MerchantAmount targetMerchantAmount = super.getById(dto.getToMerchantId());
-        Assert.notNull(targetMerchantAmount,"接收资金商家不存在");
+        Assert.notNull(targetMerchantAmount, "接收资金商家不存在");
 
         MerchantAmountDetail detail = new MerchantAmountDetail();
         detail.setDetailId(IdWorker.getIdStr());
@@ -105,18 +110,85 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void amountConsumption(AmountConsumptionDTO dto) {
+        MerchantAmountFrozenDetail frozenDetail = merchantAmountFrozenDetailService.getById(dto.getFrozenId());
+        Assert.notNull(frozenDetail, "冻结单不存在");
+        MerchantAmount merchantAmount = super.getById(frozenDetail.getMerchantId());
+        Assert.notNull(merchantAmount, "商家不存在");
+        long amount = frozenDetail.getFrozenAmount();
+        if (dto.getAmount() != null) {
+            Assert.isTrue(dto.getAmount() >= 0L, "实际扣款金额应大于等于0");
+            Assert.isTrue(dto.getAmount() <= frozenDetail.getFrozenAmount(), "实际扣款金额应小于冻结金额");
+            amount = dto.getAmount();
+        }
+        MerchantAmountDetail detail = new MerchantAmountDetail();
+        detail.setDetailId(IdWorker.getIdStr());
+        detail.setMerchantId(frozenDetail.getMerchantId());
+        detail.setOperationType(AmountOperationType.CONSUMPTION.getOperationType());
+        detail.setDescribe(AmountOperationType.CONSUMPTION.getOperationName());
+        detail.setChangeBefore(merchantAmount.getTotalAmount());
+        detail.setChangeAmount(amount);
+        detail.setOrderId(frozenDetail.getOrderId());
+
+        merchantAmount.setTotalAmount(merchantAmount.getTotalAmount() - amount);
+        merchantAmount.setLockAmount(merchantAmount.getLockAmount() - frozenDetail.getFrozenAmount());
+        merchantAmount.setAvailableAmount(merchantAmount.getAvailableAmount() + (frozenDetail.getFrozenAmount() - amount));
+
+        super.updateById(merchantAmount);
+        detail.setChangeAfter(merchantAmount.getTotalAmount());
+        merchantAmountDetailService.save(detail);
 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void amountRefund(AmountRefundDTO dto) {
+        Assert.notNull(dto.getDescribe(),"退款描述必填");
+        Assert.isTrue((dto.getAmount() != null && dto.getAmount() > 0), "退款金额参数异常");
+        MerchantAmount merchantAmount = super.getById(dto.getMerchantId());
+        Assert.notNull(merchantAmount, "商家不存在");
 
+        MerchantAmountDetail detail = new MerchantAmountDetail();
+        detail.setDetailId(IdWorker.getIdStr());
+        detail.setMerchantId(dto.getMerchantId());
+        detail.setOperationType(AmountOperationType.REFUND.getOperationType());
+        detail.setDescribe(dto.getDescribe());
+        detail.setChangeBefore(merchantAmount.getTotalAmount());
+        detail.setChangeAmount(dto.getAmount());
+        detail.setOrderId(dto.getOrderId());
+
+        merchantAmount.setTotalAmount(merchantAmount.getTotalAmount() + dto.getAmount());
+        merchantAmount.setAvailableAmount(merchantAmount.getAvailableAmount() + dto.getAmount());
+
+        super.updateById(merchantAmount);
+        detail.setChangeAfter(merchantAmount.getTotalAmount());
+        merchantAmountDetailService.save(detail);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void amountDeduction(AmountDeductionDTO dto) {
+        Assert.notNull(dto.getDescribe(),"扣款描述必填");
+        Assert.isTrue((dto.getAmount() != null && dto.getAmount() > 0), "扣款金额参数异常");
+        MerchantAmount merchantAmount = super.getById(dto.getMerchantId());
+        Assert.notNull(merchantAmount, "商家不存在");
+        Assert.isTrue(merchantAmount.getAvailableAmount() >= dto.getAmount(), "商家可用余额不足");
 
+        MerchantAmountDetail detail = new MerchantAmountDetail();
+        detail.setDetailId(IdWorker.getIdStr());
+        detail.setMerchantId(dto.getMerchantId());
+        detail.setOperationType(AmountOperationType.DEDUCTION.getOperationType());
+        detail.setDescribe(dto.getDescribe());
+        detail.setChangeBefore(merchantAmount.getTotalAmount());
+        detail.setChangeAmount(dto.getAmount());
+
+        merchantAmount.setTotalAmount(merchantAmount.getTotalAmount() - dto.getAmount());
+        merchantAmount.setAvailableAmount(merchantAmount.getAvailableAmount() - dto.getAmount());
+
+        super.updateById(merchantAmount);
+        detail.setChangeAfter(merchantAmount.getTotalAmount());
+        merchantAmountDetailService.save(detail);
     }
 }
 
