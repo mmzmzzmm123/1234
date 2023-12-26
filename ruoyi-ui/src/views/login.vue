@@ -1,7 +1,7 @@
 <template>
   <div class="login">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form">
-      <h3 class="title">工程管家</h3>
+      <h3 class="title">陕西路桥集团有限公司成本精细化管控系统</h3>
       <el-form-item prop="username">
         <el-input
           v-model="loginForm.username"
@@ -72,8 +72,8 @@ export default {
     return {
       codeUrl: "",
       loginForm: {
-        username: "admin",
-        password: "admin123",
+        username: "", // admin
+        password: "", // admin123
         rememberMe: false,
         code: "",
         uuid: ""
@@ -173,7 +173,7 @@ export default {
 .login-form {
   border-radius: 6px;
   background: #ffffff;
-  width: 400px;
+  width: 410px;
   padding: 25px 25px 5px 25px;
   .el-input {
     height: 38px;
