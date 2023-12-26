@@ -24,6 +24,15 @@ public class Invoice extends BaseEntity
     private Double maxStoMoney;
     private Double minInvoiceMoney;
     private Double maxInvoiceMoney;
+    private Integer isFen;
+
+    public Integer getIsFen() {
+        return isFen;
+    }
+
+    public void setIsFen(Integer isFen) {
+        this.isFen = isFen;
+    }
 
     public Double getMinStoMoney() {
         return minStoMoney;

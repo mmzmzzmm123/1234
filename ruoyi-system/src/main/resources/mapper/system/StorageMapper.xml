@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Storage" id="StorageResult">
         <result property="id"    column="id"    />
+        <result property="isFen"    column="is_fen"    />
         <result property="deptId"    column="dept_id"    />
         <result property="stoId"    column="sto_id"    />
         <result property="kpStatus"    column="kp_status"    />
@@ -32,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStorageVo">
-        select kp_status,img_src,id, sto_id, sto_attn,sto_stor,sto_acce,sto_name, sto_type, sto_unit, sto_num, sto_price, sto_money, sto_remark, (select user_name from sys_user where user_id = sto_attn) as attn_name, (select user_name from sys_user where user_id = sto_acce) as acce_name, (select user_name from sys_user where user_id = sto_stor) as stor_name, sto_date, entry_date, (select user_name from sys_user where user_id = entry_id) as entryName, entry_id, edit_date,  (select user_name from sys_user where user_id = edit_id) as editName,edit_id from `storage`     </sql>
+        select kp_status,img_src,id, sto_id,is_fen, sto_attn,sto_stor,sto_acce,sto_name, sto_type, sto_unit, sto_num, sto_price, sto_money, sto_remark, (select user_name from sys_user where user_id = sto_attn) as attn_name, (select user_name from sys_user where user_id = sto_acce) as acce_name, (select user_name from sys_user where user_id = sto_stor) as stor_name, sto_date, entry_date, (select user_name from sys_user where user_id = entry_id) as entryName, entry_id, edit_date,  (select user_name from sys_user where user_id = edit_id) as editName,edit_id from `storage`     </sql>
     <select id="getUserList" parameterType="SysUser" resultType="SysUser">
         select user_id as userId,nick_name as nickName from sys_user where user_id in (SELECT user_id from sys_user_post where post_id = #{roleId})
     </select>
@@ -106,6 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="editDate != null">edit_date,</if>
             <if test="editId != null">edit_id,</if>
             <if test="deptId != null">dept_id,</if>
+            <if test="isFen != null">is_fen,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -126,6 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="editDate != null">#{editDate},</if>
             <if test="editId != null">#{editId},</if>
             <if test="deptId != null">#{deptId},</if>
+            <if test="isFen != null">#{isFen},</if>
         </trim>
     </insert>
 
@@ -133,6 +136,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update storage
         <trim prefix="SET" suffixOverrides=",">
             <if test="stoId != null">sto_id = #{stoId},</if>
+            <if test="isFen != null">is_fen = #{isFen},</if>
             <if test="stoName != null">sto_name = #{stoName},</if>
             <if test="stoType != null">sto_type = #{stoType},</if>
             <if test="stoUnit != null">sto_unit = #{stoUnit},</if>

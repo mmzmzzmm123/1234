@@ -26,7 +26,7 @@
           end-placeholder="结束日期"
         ></el-date-picker>
       </el-form-item>
-       <el-form-item label="总金额" prop="minStoMoney">
+       <el-form-item label="订单金额" prop="minStoMoney">
         <el-input
           style="width: 135px"
           v-model.number="queryParams.minStoMoney"
@@ -100,6 +100,17 @@
           v-hasPermi="['system:invoice:remove']"
         >取消报账</el-button>
       </el-col>
+      <el-col :span="1.5">
+        <el-button
+          type="warning"
+          plain
+          icon="el-icon-money"
+          size="mini"
+          :disabled="multipleFen"
+          @click="handleFen"
+          v-hasPermi="['system:invoice:remove']"
+        >分期付款</el-button>
+      </el-col>
       <!-- <el-col :span="1.5">
         <el-button
           type="warning"
@@ -115,6 +126,12 @@
 
     <el-table v-loading="loading" :data="invoiceList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="是否分期" align="center" prop="kpStatus">
+      <template slot-scope="scope">
+          <el-tag type="danger" v-if="scope.row.isFen == 1">分期</el-tag>
+          <el-tag type="success" v-if="scope.row.isFen == 0">不分期</el-tag>
+        </template>
+      </el-table-column>  
       <el-table-column label="开票状态" align="center" prop="kpStatus">
       <template slot-scope="scope">    
           <el-tag v-if="scope.row.kpStatus == 1">已开票</el-tag>
@@ -125,7 +142,7 @@
       <el-table-column label="名称" align="center" prop="stoName" />
       <el-table-column label="规格型号" align="center" prop="stoType" />
       <el-table-column label="订单金额" align="center" prop="stoMoney" />
-      <el-table-column label="报账金额" align="center" prop="invoicePrice" />
+      <el-table-column label="已付金额" align="center" prop="invoicePrice" />
       <el-table-column label="报账单类型" align="center" prop="invoiceType">
       <template slot-scope="scope">    
           <el-tag type="danger" v-if="scope.row.invoiceType == 1">现金</el-tag>
@@ -184,9 +201,9 @@
         <el-form-item label="发票号" prop="invoiceId"  v-if="inputStatus">
           <el-input v-model="form.invoiceId" placeholder="请输入发票号" />
         </el-form-item>
-        <el-form-item label="报账金额" prop="invoicePrice" >
+        <!-- <el-form-item label="报账金额" prop="invoicePrice" >
           <el-input v-model.number="form.invoicePrice" type="number" :max="form.stoMoney" placeholder="请输入报账金额" required/>
-        </el-form-item>
+        </el-form-item> -->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">确 定</el-button>
@@ -215,6 +232,7 @@ export default {
       single: true,
       // 非多个禁用
       multiple: true,
+      multipleFen:true,
       // 显示搜索条件
       showSearch: true,
       // 总条数
@@ -242,6 +260,9 @@ export default {
         invoicePrice: null,
         invoiceType: null
       },
+      queryParamsTwo: {
+        stoId: null,
+      },
       checked:{},
       // 表单参数
       form: {},
@@ -256,13 +277,24 @@ export default {
         invoicePrice: [
           { required: true, message: "报账金额不能大于总金额", trigger: "blur" }
         ],
-      }
+      },
+      invoiceFen111: [],
     };
   },
   created() {
     this.getList();
   },
   methods: {
+    handleFen(){
+      this.queryParams.id = this.ids[0];
+      for (var inv in this.invoiceList) {
+        if (this.invoiceList[inv].id == this.ids[0]) {
+          this.invoiceFen111 = this.invoiceList[inv]
+        }
+    }
+    console.log(this.invoiceFen111);
+    
+    },
     xj(){
       this.inputStatus = false
       this.rules.invoiceId[0].required =false
@@ -333,9 +365,22 @@ export default {
     handleSelectionChange(selection) {
       this.checked = selection.map(item => item)
       this.ids = selection.map(item => item.id)
-      this.stoIds = selection.map(item => item.stoId)
+      // this.stoIds = selection.map(item => item.stoId)
       this.single = selection.length!==1
       this.multiple = !selection.length
+      if (this.ids.length>1) {
+        this.multipleFen = true;
+      }
+      if (selection.map(item => item.isFen)[0]==1) {
+        this.multipleFen = false;
+      }else{
+        this.multipleFen = true;
+      }
+      if (selection.map(item => item.invoiceType)[0]==2) {
+        this.multipleFen = false;
+      }else{
+        this.multipleFen = true;
+      }
     },
     open3() {
         this.$message({
@@ -374,6 +419,9 @@ export default {
       if (parseInt(this.form.stoMoney)<parseInt(this.form.invoicePrice)) {
         this.form.invoicePrice = this.form.stoMoney
         alert("报账金额不能大于总金额，已自动更改为总金额。")
+      }
+      if (this.form.invoiceType==1||this.form.invoiceType==3) {
+        this.form.invoicePrice = this.form.stoMoney
       }
       this.form.stoId = this.ids[0]
       this.form.stoMoney = this.checked[0].stoMoney

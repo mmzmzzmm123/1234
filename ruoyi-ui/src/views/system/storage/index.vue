@@ -197,6 +197,12 @@
 
     <el-table v-loading="loading" :data="storageList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
+      <el-table-column label="是否分期" align="center" prop="kpStatus">
+      <template slot-scope="scope">
+          <el-tag type="danger" v-if="scope.row.isFen == 1">分期</el-tag>
+          <el-tag type="success" v-if="scope.row.isFen == 0">不分期</el-tag>
+        </template>
+      </el-table-column> 
       <el-table-column label="开票状态" align="center" prop="kpStatus">
       <template slot-scope="scope">
           <el-tag v-if="scope.row.kpStatus == 1">已开票</el-tag>
@@ -211,15 +217,10 @@
       <el-table-column label="单价(￥)" align="center" prop="stoPrice" />
       <el-table-column label="数量(个)" align="center" prop="stoNum" />
       <el-table-column label="金额(￥)" align="center" prop="stoMoney" />
-      <!-- <el-table-column label="备注" align="center" prop="stoRemark" /> -->
-      <!-- <el-table-column label="备注" align="center" prop="consultType" width="100"/> -->
       <el-table-column label="备注" align="center" width="230" prop="stoRemark" :show-overflow-tooltip="true"/>
-
-       
-      
-      <el-table-column label="经办人" align="center" prop="attnName" />
-      <el-table-column label="验收人" align="center" prop="acceName" />
-      <el-table-column label="保管人" align="center" prop="storName" />
+      <el-table-column label="经办人" align="center" prop="stoAttn" />
+      <el-table-column label="验收人" align="center" prop="stoAcce" />
+      <el-table-column label="保管人" align="center" prop="stoStor" />
       <el-table-column label="入库日期" align="center" prop="stoDate" width="100">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.stoDate, '{y}-{m}-{d}') }}</span>
@@ -293,6 +294,13 @@
         <el-form-item label="金额" prop="c">
           <el-input v-model="c" disabled=""></el-input>
           <!-- <el-input v-model="form.stoMoney" disabled="disabled" placeholder="请输入金额" /> -->
+        </el-form-item>
+        <el-form-item label="分期付款" prop="isFen">
+          <el-switch
+            v-model="value1"
+            active-text="是"
+            inactive-text="否">
+          </el-switch>
         </el-form-item>
         </el-table-column>
         <el-form-item label="备注" prop="stoRemark">
@@ -419,6 +427,7 @@ export default {
     return {
       url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
       dateRange: [],
+      value1: false,
       open1:false,
       // 遮罩层
       loading: true,
@@ -686,6 +695,7 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.form.isFen = false;
       this.reset();
       this.open = true;
       this.title = "添加入库单";
@@ -699,12 +709,22 @@ export default {
       const id = row.id || this.ids
       getStorage(id).then(response => {
         this.form = response.data;
+        if (this.form.isFen ==1) {
+          this.value1 = true
+        }else{
+          this.value1 = false
+        }
         this.open = true;
         this.title = "修改入库单";
       });
     },
     /** 提交按钮 */
     submitForm() {
+      if (this.value1) {
+        this.form.isFen = 1;
+      }else{
+        this.form.isFen = 0;
+      }
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {

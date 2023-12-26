@@ -16,6 +16,16 @@ import com.ruoyi.common.core.domain.BaseEntity;
  */
 public class Storage extends BaseEntity
 {
+    private Integer isFen;
+
+    public Integer getIsFen() {
+        return isFen;
+    }
+
+    public void setIsFen(Integer isFen) {
+        this.isFen = isFen;
+    }
+
     private static final long serialVersionUID = 1L;
 //    @Excel(name = "入库人")
     private Long deptId;
@@ -137,15 +147,15 @@ public class Storage extends BaseEntity
     private String stoRemark;
 
     /** 经办人 */
-    private Long stoAttn;
+    private String stoAttn;
     @Excel(name = "经办人")
     private String attnName;
     /** 验收人 */
-    private Long stoAcce;
+    private String stoAcce;
     @Excel(name = "验收人")
     private String acceName;
     /** 保管人 */
-    private Long stoStor;
+    private String stoStor;
     @Excel(name = "保管人")
     private String storName;
 
@@ -296,30 +306,30 @@ public class Storage extends BaseEntity
     {
         return stoRemark;
     }
-    public void setStoAttn(Long stoAttn) 
+    public void setStoAttn(String stoAttn)
     {
         this.stoAttn = stoAttn;
     }
 
-    public Long getStoAttn() 
+    public String getStoAttn()
     {
         return stoAttn;
     }
-    public void setStoAcce(Long stoAcce) 
+    public void setStoAcce(String stoAcce)
     {
         this.stoAcce = stoAcce;
     }
 
-    public Long getStoAcce() 
+    public String getStoAcce()
     {
         return stoAcce;
     }
-    public void setStoStor(Long stoStor) 
+    public void setStoStor(String stoStor)
     {
         this.stoStor = stoStor;
     }
 
-    public Long getStoStor() 
+    public String getStoStor()
     {
         return stoStor;
     }

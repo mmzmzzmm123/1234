@@ -6,6 +6,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     
     <resultMap type="Invoice" id="InvoiceResult">
         <result property="id"    column="id"    />
+        <result property="isFen"    column="is_fen"    />
         <result property="stoId"    column="sto_id"    />
         <result property="stoName"    column="sto_name"    />
         <result property="stoUnit"    column="sto_unit"    />
@@ -22,13 +23,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectInvoiceVo">
-        select s.sto_name,s.sto_money,s.sto_unit,s.sto_type,s.id, s.sto_id, i.invoice_date, i.invoice_id, i.user_id, i.status,
+        select s.is_fen,s.sto_name,s.sto_money,s.sto_unit,s.sto_type,s.id, s.sto_id, i.invoice_date, i.invoice_id, i.user_id, i.status,
                s.dept_id, s.kp_status, i.invoice_price, i.invoice_type from invoice i
         right join storage s on s.id = i.sto_id where s.kp_status = 1
     </sql>
 
     <select id="selectInvoiceList" parameterType="Invoice" resultMap="InvoiceResult">
         <include refid="selectInvoiceVo"/>
+            <if test="id != null  and id != ''"> and s.id = #{id}</if>
             <if test="stoId != null  and stoId != ''"> and s.sto_id = #{stoId}</if>
             <if test="stoMoney != null "> and s.sto_money = #{stoMoney}</if>
             <if test="minStoMoney != null "> and s.sto_money >= #{minStoMoney}</if>
@@ -48,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
             AND date_format(i.invoice_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
         </if>
+        order by s.sto_date desc
     </select>
     
     <select id="selectInvoiceById" parameterType="Integer" resultMap="InvoiceResult">
