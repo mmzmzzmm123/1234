@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.enums.MerchantType;
 import com.ruoyi.system.domain.dto.CreateMerchantDTO;
 import com.ruoyi.system.domain.dto.QueryMerchantPageDTO;
+import com.ruoyi.system.domain.vo.MerchantInfoVO;
 
 /**
  *
@@ -16,6 +17,6 @@ public interface MerchantInfoService extends IService<MerchantInfo> {
 
     MerchantInfo getByUserId(Long userId);
 
-    Page<MerchantInfo> page(QueryMerchantPageDTO dto);
+    Page<MerchantInfoVO> page(QueryMerchantPageDTO dto);
 
 }

@@ -33,22 +33,31 @@
             tumr.user_id = #{userId}
     </select>
 
-    <select id="page" resultType="com.ruoyi.common.core.domain.entity.MerchantInfo">
+    <select id="page" resultType="com.ruoyi.system.domain.vo.MerchantInfoVO">
         SELECT
-        tmi.merchant_id,
-        tmi.merchant_name,
-        tmi.merchant_type,
-        tmi.pl_merchant_id,
-        tmi.create_time,
-        tmi.modify_time
+            tmi.merchant_id,
+            tmi.merchant_name,
+            tmi.merchant_type,
+            tmi.pl_merchant_id,
+            tmi.create_time,
+            tma.total_amount,
+            tma.available_amount,
+            tma.lock_amount
         FROM
-        t_user_merchant_ref tumr
+            t_merchant_info tmi
+            LEFT JOIN t_merchant_amount tma ON tmi.merchant_id = tma.merchant_id
         WHERE 1 = 1
         <if test="dto.plMerchantId != null and dto.plMerchantId != ''">
             AND tmi.pl_merchant_id = #{dto.plMerchantId}
         </if>
         <if test="dto.merchantType != null">
             AND tmi.merchant_type = #{dto.merchantType}
+        </if>
+        <if test="dto.merchantId != null and dto.merchantId != ''">
+            AND tmi.merchant_id = #{dto.merchantId}
+        </if>
+        <if test="dto.merchantName != null  and dto.merchantName != ''">
+            AND tmi.merchant_name = #{dto.merchantName}
         </if>
         <if test="dto.startTime != null and dto.startTime != ''">
             AND tmi.create_time &gt;= #{dto.startTime}

@@ -18,11 +18,20 @@ public class QueryAmountDetailPageVO {
     @ApiModelProperty("商家ID")
     private String merchantId;
 
-    @ApiModelProperty("操作类型 1-划拨 2-消费 3-退款 4-扣款")
+    @ApiModelProperty("操作类型 1-划拨 2-消费 3-退款 4-扣款 5-回收")
     private Integer operationType;
+
+    @ApiModelProperty("资金变动前")
+    private Long changeBefore;
 
     @ApiModelProperty("变动金额")
     private Long changeAmount;
+
+    @ApiModelProperty("资金变动后")
+    private Long changeAfter;
+
+    @ApiModelProperty("资金类型 1-支出 2-收入")
+    private Integer amountType;
 
     @ApiModelProperty("订单编号")
     private String orderId;

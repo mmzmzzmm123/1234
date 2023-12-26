@@ -3,12 +3,9 @@ package com.ruoyi.web.controller.business;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.entity.MerchantAmount;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
-import com.ruoyi.system.domain.MerchantAmountDetail;
-import com.ruoyi.system.domain.dto.AmountTransferDTO;
-import com.ruoyi.system.domain.dto.QueryAmountDetailPageDTO;
-import com.ruoyi.system.domain.dto.QueryMerchantPageDTO;
+import com.ruoyi.system.domain.dto.*;
+import com.ruoyi.system.domain.vo.MerchantInfoVO;
 import com.ruoyi.system.service.MerchantAmountDetailService;
 import com.ruoyi.system.service.MerchantAmountService;
 import com.ruoyi.system.service.MerchantInfoService;
@@ -55,7 +52,7 @@ public class MerchantController extends BaseController {
         if (merchantType != 2) {
             dto.setPlMerchantId(getMerchantId());
         }
-        Page<MerchantInfo> page = merchantInfoService.page(dto);
+        Page<MerchantInfoVO> page = merchantInfoService.page(dto);
         return AjaxResult.success(page);
     }
 
@@ -80,12 +77,26 @@ public class MerchantController extends BaseController {
     @ApiOperation("资金划拨")
     @PostMapping("amountTransfer")
     public AjaxResult amountTransfer(@Validated @RequestBody AmountTransferDTO dto) {
-        Integer merchantType = Optional.ofNullable(getMerchantInfo())
-                .map(MerchantInfo::getMerchantType)
-                .orElse(-1);
-        Assert.isTrue(merchantType != 0, "商家权限不足,资金划拨失败");
-        dto.setMerchantId(getMerchantId());
+        String merchantId = getMerchantId();
+        MerchantInfo merchantInfo = merchantInfoService.getById(dto.getTargetMerchantId());
+        Assert.notNull(merchantInfo,"划拨商家不存在");
+        Assert.isTrue(StringUtils.equals(merchantInfo.getPlMerchantId(),merchantId),"商家权限不足");
+
+        dto.setMerchantId(merchantId);
         merchantAmountService.amountTransfer(dto);
+        return AjaxResult.success();
+    }
+
+    @ApiOperation("资金回收")
+    @PostMapping("amountRecovery")
+    public AjaxResult amountRecovery(@Validated @RequestBody AmountRecoveryDTO dto) {
+        String merchantId = getMerchantId();
+        MerchantInfo merchantInfo = merchantInfoService.getById(dto.getTargetMerchantId());
+        Assert.notNull(merchantInfo,"回收商家不存在");
+        Assert.isTrue(StringUtils.equals(merchantInfo.getPlMerchantId(),merchantId),"商家权限不足");
+
+        dto.setMerchantId(merchantId);
+        merchantAmountService.amountRecovery(dto);
         return AjaxResult.success();
     }
 

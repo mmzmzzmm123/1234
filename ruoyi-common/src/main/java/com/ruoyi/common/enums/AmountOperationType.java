@@ -10,7 +10,10 @@ public enum AmountOperationType {
     TRANSFER(1, "划拨")
     ,CONSUMPTION(2, "消费")
     ,REFUND(3, "退款")
-    ,DEDUCTION(4, "扣款");
+    ,DEDUCTION(4, "扣款")
+    ,RECOVERY(5, "回收")
+
+    ;
 
 
     int operationType;

@@ -26,7 +26,7 @@ public class MerchantAmountDetail implements Serializable {
     private String merchantId;
 
     /**
-     * 操作类型 1-划拨 2-消费 3-退款 4-扣款
+     * 操作类型 1-划拨 2-消费 3-退款 4-扣款 5-回收
      */
     private Integer operationType;
 
@@ -64,6 +64,12 @@ public class MerchantAmountDetail implements Serializable {
      * 修改时间
      */
     private Date modifyTime;
+
+    /**
+     * 资金类型 1-支出 2-收入
+     */
+	private Integer amountType;
+
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;

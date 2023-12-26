@@ -8,6 +8,7 @@ import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.enums.MerchantType;
 import com.ruoyi.system.domain.dto.CreateMerchantDTO;
 import com.ruoyi.system.domain.dto.QueryMerchantPageDTO;
+import com.ruoyi.system.domain.vo.MerchantInfoVO;
 import com.ruoyi.system.service.MerchantAmountService;
 import com.ruoyi.system.service.MerchantInfoService;
 import com.ruoyi.system.mapper.MerchantInfoMapper;
@@ -57,8 +58,8 @@ public class MerchantInfoServiceImpl extends ServiceImpl<MerchantInfoMapper, Mer
     }
 
     @Override
-    public Page<MerchantInfo> page(QueryMerchantPageDTO dto) {
-        Page<MerchantInfo> page = new Page<>(dto.getPage(), dto.getLimit());
+    public Page<MerchantInfoVO> page(QueryMerchantPageDTO dto) {
+        Page<MerchantInfoVO> page = new Page<>(dto.getPage(), dto.getLimit());
         if (StringUtils.isEmpty(dto.getPlMerchantId())) {
             return page;
         }

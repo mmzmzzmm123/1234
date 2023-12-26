@@ -29,7 +29,10 @@
             tmad.detail_id,
             tmad.merchant_id,
             tmad.operation_type,
+            tmad.change_before,
             tmad.change_amount,
+            tmad.change_after,
+            tmad.amount_type,
             tmad.order_id,
             tmad.`describe`,
             tmad.create_time,
@@ -41,8 +44,11 @@
         <if test="dto.merchantId != null and dto.merchantId != ''">
             AND tmad.merchant_id = #{dto.merchantId}
         </if>
-        <if test="dto.merchantId != null">
+        <if test="dto.operationType != null">
             AND tmad.operation_type = #{dto.operationType}
+        </if>
+        <if test="dto.amountType != null">
+            AND tmad.amount_type = #{dto.amountType}
         </if>
         <if test="dto.startTime != null and dto.startTime != ''">
             AND tmad.create_time &gt;= #{dto.startTime}
