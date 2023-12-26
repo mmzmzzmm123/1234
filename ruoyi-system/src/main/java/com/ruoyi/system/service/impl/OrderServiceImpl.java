@@ -5,7 +5,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +28,8 @@ import com.ruoyi.common.core.domain.entity.order.Order;
 import com.ruoyi.common.core.domain.entity.order.OrderRefund;
 import com.ruoyi.common.core.domain.entity.order.OrderSku;
 import com.ruoyi.common.utils.Ids;
+import com.ruoyi.common.utils.ListTools;
+import com.ruoyi.common.utils.Objects;
 import com.ruoyi.system.components.OrderPriceHandler;
 import com.ruoyi.system.components.OrderTools;
 import com.ruoyi.system.components.ProductTools;
@@ -150,8 +155,59 @@ public class OrderServiceImpl implements OrderService {
 
 	@Override
 	public PageInfo<OrderListResponse> list(OrderRequest orderRequest) {
-		// TODO Auto-generated method stub
-		return null;
+		PageInfo<OrderListResponse> pageInfo = new PageInfo<>();
+		int total = Objects.wrapNull(orderMapper.listCount(orderRequest), 0);
+		pageInfo.setTotal(total);
+		if (total <= 0) {
+			return pageInfo;
+		}
+		final List<Order> orderList = orderMapper.list(orderRequest);
+
+		final List<Long> productIds = ListTools.extract(orderList, f -> f.getProductId());
+		final List<String> orderIds = ListTools.extract(orderList, f -> f.getOrderId());
+		// 批量查询商品
+		List<Product> products = ProductTools.list(productIds);
+		Map<Long, List<Product>> productMap = ListTools.group(products, f -> f.getProductId());
+
+		// 规格
+		List<ProductSku> skuList = ProductTools.listSku(productIds);
+		Map<Long, List<ProductSku>> skuMap = ListTools.group(skuList, f -> f.getProductId());
+
+		// 查询退款
+		List<OrderRefund> refundList = OrderTools.listRefund(orderIds);
+		Map<String, List<OrderRefund>> refundMap = ListTools.group(refundList, f -> f.getOrderId());
+
+		// 查询任务
+		OrderTools.listTask(orderIds);
+
+		List<OrderListResponse> responses = new ArrayList<>();
+		for (Order order : orderList) {
+			OrderListResponse res = new OrderListResponse();
+			BeanUtils.copyProperties(order, res);
+
+			// 商品名称
+			if (!CollectionUtils.isEmpty(productMap.get(order.getProductId()))) {
+				res.setProductName(productMap.get(order.getProductId()).get(0).getName());
+			}
+			// 规格
+			if (!CollectionUtils.isEmpty(skuMap.get(order.getProductId()))) {
+				res.setSkuNameList(Arrays.asList(ProductTools.skuName(skuMap.get(order.getProductId()).get(0))));
+			}
+			// 退款
+			if (!CollectionUtils.isEmpty(refundMap.get(order.getOrderId()))) {
+				// 退款金额
+				res.setRefundPrice(Objects.wrapNull(refundMap.get(order.getOrderId()).get(0).getRefundPrice(), 0L));
+			}
+			res.setActualPrice(res.getPrice() - res.getRefundPrice());
+			responses.add(res);
+		}
+		pageInfo.setList(responses);
+		return pageInfo;
+	}
+
+	@Override
+	public void refreshOrderStatus() {
+
 	}
 
 }
