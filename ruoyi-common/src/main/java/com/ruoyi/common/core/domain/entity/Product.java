@@ -39,10 +39,7 @@ public class Product {
     @ApiModelProperty(value = "价格")
     private Long price;
 
-    @ApiModelProperty(value = "价格单位")
-    private String productUnit;
-
-    @ApiModelProperty(value = "库存数量")
+    @ApiModelProperty(value = "支持量")
     private Integer stock;
 
     @ApiModelProperty(value = "规格:1统一规格 2多规格")

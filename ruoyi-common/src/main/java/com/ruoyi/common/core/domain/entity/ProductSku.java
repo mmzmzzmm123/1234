@@ -18,9 +18,12 @@ public class ProductSku {
     @ApiModelProperty(value = "价格")
     private Long price;
 
+    @ApiModelProperty(value = "价格单位")
+    private String priceUnit;
+
     @ApiModelProperty(value = "支持量")
     private Integer stock;
 
-    @ApiModelProperty(value = "商品销售属性，json格式")
-    private String spData;
+    @ApiModelProperty(value = "国家id")
+    private Integer countyId;
 }

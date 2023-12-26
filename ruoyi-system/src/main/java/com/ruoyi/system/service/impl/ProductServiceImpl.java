@@ -1,18 +1,18 @@
 package com.ruoyi.system.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
-import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.system.domain.dto.ProductParam;
+import com.ruoyi.system.domain.dto.ProductDTO;
 import com.ruoyi.system.domain.dto.ProductQueryParamDTO;
 import com.ruoyi.system.domain.dto.ProductSkuDTO;
-import com.ruoyi.system.mapper.ProductBundleMapper;
+import com.ruoyi.system.domain.dto.SkuAttrDTO;
 import com.ruoyi.system.mapper.ProductMapper;
-import com.ruoyi.system.mapper.ProductSkuMapper;
 import com.ruoyi.system.service.IProductService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -28,15 +28,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Resource
     private ProductSkuServiceImpl productSkuService;
 
-    @Resource
-    private BoundleServiceImpl boundleService;
-
-    @Resource
-    private ProductSkuMapper productSkuMapper;
-
-    @Resource
-    private ProductBundleMapper productBundleMapper;
-
     @Override
     public Page<Product> getPage(ProductQueryParamDTO productQueryParam) {
         Page<Product> page = new Page<>(productQueryParam.getPage().longValue(), productQueryParam.getLimit().longValue());
@@ -45,17 +36,17 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public boolean create(ProductParam productParam) {
+    public boolean create(ProductDTO productDTO) {
         //商品信息
         Product product = new Product();
-        BeanUtils.copyProperties(productParam, product);
+        BeanUtils.copyProperties(productDTO, product);
         long id = IdWorker.getId(product);
         product.setProductId(id);
 
         //sku信息
-        if (!ObjectUtils.isEmpty(productParam.getSkuList())) {
+        if (!ObjectUtils.isEmpty(productDTO.getSkuList())) {
             List<ProductSku> productSkus = new ArrayList<>();
-            for (ProductSkuDTO item : productParam.getSkuList()) {
+            for (ProductSkuDTO item : productDTO.getSkuList()) {
                 ProductSku productSku = new ProductSku();
                 BeanUtils.copyProperties(item, productSku);
                 productSku.setProductId(id);
@@ -64,51 +55,64 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             productSkuService.saveBatch(productSkus);
         }
 
-        //product.setSkuAttr(getSkuAttr(id));
+        product.setSkuAttr(getSkuAttr(id));
         save(product);
 
         return true;
     }
 
-//    private String getSkuAttr(long productId) {
-//        ProductSku productSku = productSkuService.getOne(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, productId).last("limit 1"));
-//
-//    }
+    private String getSkuAttr(long productId) {
+        ProductSku productSku = productSkuService.getOne(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, productId).last("limit 1"));
+        SkuAttrDTO skuAttrDTO = new SkuAttrDTO();
+        BeanUtils.copyProperties(productSku, skuAttrDTO);
+        skuAttrDTO.setSkuId(productSku.getId());
+        return JSON.toJSONString(skuAttrDTO);
+    }
 
     @Override
-    public ProductParam updateInfo(Long id) {
-        ProductParam ret = new ProductParam();
+    public ProductDTO detail(Long id) {
+        ProductDTO ret = new ProductDTO();
 
         //商品详情
         Product product = this.getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
         if (ObjectUtils.isEmpty(product)) {
-            throw new ServiceException("商品不存在");
+            return ret;
         }
-
         BeanUtils.copyProperties(product, ret);
-        //组合信息
-//        if (product.getBoundle() > 0) {
-//            List<BoundleDTO> boundleDTOList = new ArrayList<>();
-//
-//            List<ProductBundle> productBundles = boundleService.list(new LambdaQueryWrapper<ProductBundle>().eq(ProductBundle::getProductId, id));
-//            for (ProductBundle item : productBundles) {
-//                BoundleDTO boundleDTO = new BoundleDTO();
-//                BeanUtils.copyProperties(item, boundleDTO);
-//                boundleDTOList.add(boundleDTO);
-//            }
-//            ret.setBoundleList(boundleDTOList);
-//        }
 
         //商品sku信息
-        List<ProductSkuDTO> skuStockList = new ArrayList<>();
+        List<ProductSkuDTO> skuList = new ArrayList<>();
         List<ProductSku> productSkuList = productSkuService.list(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, id));
         for (ProductSku productSku : productSkuList) {
             ProductSkuDTO productSkuDTO = new ProductSkuDTO();
             BeanUtils.copyProperties(productSku, productSkuDTO);
-            skuStockList.add(productSkuDTO);
+            skuList.add(productSkuDTO);
         }
-        //ret.setSkuStockList(skuStockList);
+        ret.setSkuList(skuList);
 
         return ret;
+    }
+
+    @Override
+    @Transactional(rollbackFor=Exception.class)
+    public boolean update(ProductDTO productDTO) {
+        if (ObjectUtils.isEmpty(productDTO.getProductId())) {
+            return false;
+        }
+
+        LambdaUpdateWrapper<Product> productUpdateWrapper = new LambdaUpdateWrapper<>();
+        productUpdateWrapper.eq(Product::getProductId, productDTO.getProductId());
+        Product product = new Product();
+        BeanUtils.copyProperties(productDTO, product);
+        product.setSkuAttr(JSON.toJSONString(productDTO.getSkuList().get(0)));
+        this.update(product, productUpdateWrapper);
+
+        List<ProductSkuDTO> productSkuDTOList = productDTO.getSkuList();
+        for (ProductSkuDTO productSkuDTO : productSkuDTOList) {
+
+        }
+        //this.saveOrUpdateBatch();
+
+        return true;
     }
 }

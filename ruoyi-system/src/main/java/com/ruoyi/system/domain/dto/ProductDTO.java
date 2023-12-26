@@ -1,32 +1,14 @@
 package com.ruoyi.system.domain.dto;
 
+import com.ruoyi.common.core.domain.entity.Product;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
-public class ProductDTO {
-    private Long productId;
+public class ProductDTO extends Product {
 
-    private Integer categoryId;
-
-    private String name;
-
-    private String subtitle;
-
-    private String detail;
-
-    private Integer skuType;
-
-    private String pic;
-
-    private Long price;
-
-    private String productUnit;
-
-    private Integer stock;
-
-    private String spuSpecs;
-
-    private Integer status;
-
-    private Integer isShow;
+    @ApiModelProperty("规格设置")
+    private List<ProductSkuDTO> skuList;
 }
