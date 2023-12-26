@@ -100,6 +100,8 @@ public class SysUser extends BaseEntity
     /**
      * 用户类型 0-普通 1-代理 2-运营 默认普通用户
      */
+    @Max(2)
+    @Min(0)
     private Integer merchantType = 0;
 
     public SysUser()

@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import com.ruoyi.common.annotation.DataScope;
 import com.ruoyi.common.constant.UserConstants;
@@ -269,7 +270,24 @@ public class SysUserServiceImpl implements ISysUserService
         // 新增用户信息
         int rows = userMapper.insertUser(user);
         // 新增用户岗位关联
-        insertUserPost(user);
+//        insertUserPost(user);
+
+        String configByKey = "";
+        switch (user.getMerchantType()){
+            case 0:
+                configByKey = "merchant:common:roleId";
+                break;
+            case 1:
+                configByKey = "merchant:agent:roleId";
+                break;
+            case 2:
+                configByKey = "merchant:operate:roleId";
+                break;
+        }
+        String roleId = configService.selectConfigByKey(configByKey);
+        Assert.notNull(roleId,"用户类型未配置角色");
+
+        user.setRoleIds(new Long[]{Long.valueOf(roleId)});
         // 新增用户与角色管理
         insertUserRole(user);
 
@@ -280,9 +298,11 @@ public class SysUserServiceImpl implements ISysUserService
                 .map(MerchantInfo::getMerchantId)
                 .orElse(null);
 
+
         CreateUserMerchantRefDTO dto = new CreateUserMerchantRefDTO();
         dto.setUserId(user.getUserId());
         dto.setUserName(user.getUserName());
+        dto.setMerchantId(user.getMerchantId());
         dto.setPlMerchantId(plMerchantId);
         userMerchantRefService.createUserMerchantRef(dto);
         return rows;

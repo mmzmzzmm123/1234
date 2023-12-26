@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  */
 @Service
 public class UserMerchantRefServiceImpl extends ServiceImpl<UserMerchantRefMapper, UserMerchantRef>
-    implements UserMerchantRefService{
+        implements UserMerchantRefService {
 
     @Resource
     private MerchantInfoService merchantInfoService;
@@ -28,11 +28,12 @@ public class UserMerchantRefServiceImpl extends ServiceImpl<UserMerchantRefMappe
 
         // 创建出商家
         CreateMerchantDTO merchantDTO = new CreateMerchantDTO();
-        BeanUtils.copyProperties(dto,merchantDTO);
+        BeanUtils.copyProperties(dto, merchantDTO);
+        merchantDTO.setMerchantName(dto.getUserName());
         String merchantId = merchantInfoService.createMerchant(merchantDTO);
         Assert.notNull(merchantId, "商家创建失败");
 
-        UserMerchantRef ref =new UserMerchantRef();
+        UserMerchantRef ref = new UserMerchantRef();
         ref.setUserId(dto.getUserId());
         ref.setMerchantId(merchantId);
         super.save(ref);
