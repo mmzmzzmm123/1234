@@ -292,18 +292,26 @@ public class SysUserServiceImpl implements ISysUserService
         insertUserRole(user);
 
         // 创建用户与商家的关联信息
-        LoginUser loginUser = SecurityUtils.getLoginUser();
-        String plMerchantId = Optional.ofNullable(loginUser)
+        MerchantInfo merchantInfo = Optional.ofNullable(SecurityUtils.getLoginUser())
                 .map(LoginUser::getMerchantInfo)
-                .map(MerchantInfo::getMerchantId)
                 .orElse(null);
-
 
         CreateUserMerchantRefDTO dto = new CreateUserMerchantRefDTO();
         dto.setUserId(user.getUserId());
         dto.setUserName(user.getUserName());
-        dto.setMerchantId(user.getMerchantId());
-        dto.setPlMerchantId(plMerchantId);
+        dto.setMerchantType(user.getMerchantType());
+        if (merchantInfo != null) {
+            String merchantId = merchantInfo.getMerchantId();
+            Integer merchantType = merchantInfo.getMerchantType();
+            Assert.isTrue(user.getMerchantType() <= merchantType, "用户权限不足");
+            if (merchantInfo.getMerchantType() == 0) {
+                dto.setMerchantId(merchantId);
+            } else if (StringUtils.isNotEmpty(user.getMerchantId())) {
+                dto.setMerchantId(user.getMerchantId());
+            } else {
+                dto.setPlMerchantId(merchantId);
+            }
+        }
         userMerchantRefService.createUserMerchantRef(dto);
         return rows;
     }

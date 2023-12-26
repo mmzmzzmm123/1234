@@ -35,9 +35,11 @@ public class MerchantInfoServiceImpl extends ServiceImpl<MerchantInfoMapper, Mer
     @Override
     public String createMerchant(CreateMerchantDTO dto) {
         String merchantId = dto.getMerchantId();
-        if (StringUtils.isEmpty(merchantId)) {
-            merchantId = IdWorker.getIdStr();
+        // 商家存在  不再新建
+        if (StringUtils.isNotEmpty(merchantId) && super.getById(merchantId) != null) {
+            return merchantId;
         }
+        merchantId = IdWorker.getIdStr();
         MerchantInfo info = new MerchantInfo();
         info.setMerchantId(merchantId);
         info.setMerchantName(dto.getMerchantName());
