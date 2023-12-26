@@ -23,9 +23,9 @@ public class TypeController {
         return AjaxResult.success(typeService.getAppList());
     }
 
-    @ApiOperation("获取所有order类型")
-    @GetMapping( "/order")
+    @ApiOperation("获取所有商品类型")
+    @GetMapping( "/product")
     public AjaxResult getOrderList() {
-        return AjaxResult.success(typeService.getOrderList());
+        return AjaxResult.success(typeService.getProductCategoryList());
     }
 }

@@ -15,8 +15,8 @@ public class Product {
     @ApiModelProperty(value = "平台类型")
     private Integer appType;
 
-    @ApiModelProperty(value = "订单类型 0-拉人入群")
-    private Integer orderType;
+    @ApiModelProperty(value = "商品类型 0-拉群")
+    private Integer categoryId;
 
     @ApiModelProperty(value = "商品名称")
     private String name;

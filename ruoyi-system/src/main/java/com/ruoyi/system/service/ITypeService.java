@@ -7,5 +7,5 @@ import java.util.List;
 public interface ITypeService {
     List<TypeVO> getAppList();
 
-    List<TypeVO> getOrderList();
+    List<TypeVO> getProductCategoryList();
 }

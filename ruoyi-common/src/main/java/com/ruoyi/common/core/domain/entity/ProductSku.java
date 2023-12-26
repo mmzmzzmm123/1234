@@ -18,7 +18,7 @@ public class ProductSku {
     @ApiModelProperty(value = "价格")
     private Long price;
 
-    @ApiModelProperty(value = "库存")
+    @ApiModelProperty(value = "支持量")
     private Integer stock;
 
     @ApiModelProperty(value = "商品销售属性，json格式")

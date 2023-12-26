@@ -49,29 +49,13 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         //商品信息
         Product product = new Product();
         BeanUtils.copyProperties(productParam, product);
-        Long id = IdWorker.getId(product);
+        long id = IdWorker.getId(product);
         product.setProductId(id);
 
-        //组合信息
-//        if (!ObjectUtils.isEmpty(productParam.getBoundle()) && !ObjectUtils.isEmpty(productParam.getBoundleList())) {
-//            product.setBoundle(1);
-//
-//            List<ProductBundle> productBundleList = new ArrayList<>();
-//            for (BoundleDTO boundleDTO : productParam.getBoundleList()) {
-//                ProductBundle productBundle = new ProductBundle();
-//                productBundle.setProductId(id);
-//                productBundle.setBundleId(boundleDTO.getId());
-//                productBundle.setEntityType(boundleDTO.getType());
-//                productBundleList.add(productBundle);
-//            }
-//
-//            boundleService.saveBatch(productBundleList);
-//        }
-
         //sku信息
-        if (!ObjectUtils.isEmpty(productParam.getSkuStockList())) {
+        if (!ObjectUtils.isEmpty(productParam.getSkuList())) {
             List<ProductSku> productSkus = new ArrayList<>();
-            for (ProductSkuDTO item : productParam.getSkuStockList()) {
+            for (ProductSkuDTO item : productParam.getSkuList()) {
                 ProductSku productSku = new ProductSku();
                 BeanUtils.copyProperties(item, productSku);
                 productSku.setProductId(id);
@@ -80,12 +64,16 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             productSkuService.saveBatch(productSkus);
         }
 
-//        ProductSku productSku = productSkuService.getOne(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, id).last("limit 1"));
-//        product.setSkuAttr();
-//        save(product);
+        //product.setSkuAttr(getSkuAttr(id));
+        save(product);
 
         return true;
     }
+
+//    private String getSkuAttr(long productId) {
+//        ProductSku productSku = productSkuService.getOne(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, productId).last("limit 1"));
+//
+//    }
 
     @Override
     public ProductParam updateInfo(Long id) {
@@ -119,7 +107,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             BeanUtils.copyProperties(productSku, productSkuDTO);
             skuStockList.add(productSkuDTO);
         }
-        ret.setSkuStockList(skuStockList);
+        //ret.setSkuStockList(skuStockList);
 
         return ret;
     }

@@ -10,7 +10,7 @@ import java.util.List;
 public class ProductParam extends Product {
 
     @ApiModelProperty("规格设置")
-    private List<ProductSkuDTO> skuStockList;
+    private List<ProductSkuDTO> skuList;
 
     //@ApiModelProperty("商品组合信息")
     //private List<BoundleDTO> boundleList;
