@@ -1,4 +1,4 @@
-package com.ruoyi.web.dto;
+package com.ruoyi.system.domain.dto;
 
 import lombok.Data;
 

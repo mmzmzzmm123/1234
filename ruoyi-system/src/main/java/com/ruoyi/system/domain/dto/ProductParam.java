@@ -1,6 +1,6 @@
-package com.ruoyi.web.dto;
+package com.ruoyi.system.domain.dto;
 
-import com.ruoyi.web.entity.Product;
+import com.ruoyi.common.core.domain.entity.Product;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 

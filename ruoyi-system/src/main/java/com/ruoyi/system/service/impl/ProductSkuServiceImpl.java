@@ -1,9 +1,9 @@
-package com.ruoyi.web.service.impl;
+package com.ruoyi.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.web.entity.ProductSku;
-import com.ruoyi.web.mapper.ProductSkuMapper;
-import com.ruoyi.web.service.IProductSkuService;
+import com.ruoyi.common.core.domain.entity.ProductSku;
+import com.ruoyi.system.mapper.ProductSkuMapper;
+import com.ruoyi.system.service.IProductSkuService;
 import org.springframework.stereotype.Service;
 
 @Service

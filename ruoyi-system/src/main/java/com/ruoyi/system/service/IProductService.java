@@ -1,9 +1,9 @@
-package com.ruoyi.web.service;
+package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ruoyi.web.dto.ProductParam;
-import com.ruoyi.web.dto.ProductQueryParamDTO;
-import com.ruoyi.web.entity.Product;
+import com.ruoyi.common.core.domain.entity.Product;
+import com.ruoyi.system.domain.dto.ProductParam;
+import com.ruoyi.system.domain.dto.ProductQueryParamDTO;
 
 /**
  * 商品管理Service

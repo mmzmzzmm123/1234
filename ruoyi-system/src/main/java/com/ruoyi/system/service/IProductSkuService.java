@@ -1,4 +1,4 @@
-package com.ruoyi.web.service;
+package com.ruoyi.system.service;
 
 public interface IProductSkuService {
 }

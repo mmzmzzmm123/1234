@@ -1,23 +1,21 @@
-package com.ruoyi.web.service.impl;
+package com.ruoyi.system.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.core.domain.entity.Product;
+import com.ruoyi.common.core.domain.entity.ProductBundle;
+import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.web.dto.BoundleDTO;
-import com.ruoyi.web.dto.ProductParam;
-import com.ruoyi.web.dto.ProductQueryParamDTO;
-import com.ruoyi.web.dto.ProductSkuDTO;
-import com.ruoyi.web.entity.Product;
-import com.ruoyi.web.entity.ProductBundle;
-import com.ruoyi.web.entity.ProductSku;
-import com.ruoyi.web.mapper.ProductBundleMapper;
-import com.ruoyi.web.mapper.ProductMapper;
-import com.ruoyi.web.mapper.ProductSkuMapper;
-import com.ruoyi.web.service.IProductService;
+import com.ruoyi.system.mapper.ProductBundleMapper;
+import com.ruoyi.system.mapper.ProductMapper;
+import com.ruoyi.system.mapper.ProductSkuMapper;
+import com.ruoyi.system.service.IProductService;
+import com.ruoyi.system.domain.dto.BoundleDTO;
+import com.ruoyi.system.domain.dto.ProductParam;
+import com.ruoyi.system.domain.dto.ProductQueryParamDTO;
+import com.ruoyi.system.domain.dto.ProductSkuDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,7 +55,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         product.setProductId(id);
 
         //组合信息
-        if (!ObjectUtils.isEmpty(productParam.getBoundleList()) && productParam.getBoundleList().size() > 0) {
+        if (!ObjectUtils.isEmpty(productParam.getBoundleList())) {
             product.setBoundle(1);
 
             List<ProductBundle> productBundleList = new ArrayList<>();
@@ -81,6 +79,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             BeanUtils.copyProperties(item, productSku);
             productSku.setProductId(id);
             productSkus.add(productSku);
+
+            //价格最小的sku
         }
         productSkuService.saveBatch(productSkus);
 

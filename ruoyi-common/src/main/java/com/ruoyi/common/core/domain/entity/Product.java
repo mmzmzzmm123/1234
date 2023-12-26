@@ -1,4 +1,4 @@
-package com.ruoyi.web.entity;
+package com.ruoyi.common.core.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;

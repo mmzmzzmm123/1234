@@ -3,7 +3,7 @@ package com.ruoyi.web.controller.product;
 import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.web.service.IProductAttributeService;
+import com.ruoyi.system.service.IProductAttributeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
