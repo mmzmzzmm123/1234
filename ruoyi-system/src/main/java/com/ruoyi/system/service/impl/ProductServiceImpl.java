@@ -5,17 +5,15 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.entity.Product;
-import com.ruoyi.common.core.domain.entity.ProductBundle;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.system.domain.dto.ProductParam;
+import com.ruoyi.system.domain.dto.ProductQueryParamDTO;
+import com.ruoyi.system.domain.dto.ProductSkuDTO;
 import com.ruoyi.system.mapper.ProductBundleMapper;
 import com.ruoyi.system.mapper.ProductMapper;
 import com.ruoyi.system.mapper.ProductSkuMapper;
 import com.ruoyi.system.service.IProductService;
-import com.ruoyi.system.domain.dto.BoundleDTO;
-import com.ruoyi.system.domain.dto.ProductParam;
-import com.ruoyi.system.domain.dto.ProductQueryParamDTO;
-import com.ruoyi.system.domain.dto.ProductSkuDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,41 +46,43 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     @Transactional(rollbackFor=Exception.class)
     public boolean create(ProductParam productParam) {
-        //保存商品信息
+        //商品信息
         Product product = new Product();
         BeanUtils.copyProperties(productParam, product);
         Long id = IdWorker.getId(product);
         product.setProductId(id);
 
         //组合信息
-        if (!ObjectUtils.isEmpty(productParam.getBoundleList())) {
-            product.setBoundle(1);
+//        if (!ObjectUtils.isEmpty(productParam.getBoundle()) && !ObjectUtils.isEmpty(productParam.getBoundleList())) {
+//            product.setBoundle(1);
+//
+//            List<ProductBundle> productBundleList = new ArrayList<>();
+//            for (BoundleDTO boundleDTO : productParam.getBoundleList()) {
+//                ProductBundle productBundle = new ProductBundle();
+//                productBundle.setProductId(id);
+//                productBundle.setBundleId(boundleDTO.getId());
+//                productBundle.setEntityType(boundleDTO.getType());
+//                productBundleList.add(productBundle);
+//            }
+//
+//            boundleService.saveBatch(productBundleList);
+//        }
 
-            List<ProductBundle> productBundleList = new ArrayList<>();
-            for (BoundleDTO boundleDTO : productParam.getBoundleList()) {
-                ProductBundle productBundle = new ProductBundle();
-                productBundle.setProductId(id);
-                productBundle.setBundleId(boundleDTO.getId());
-                productBundle.setEntityType(boundleDTO.getType());
-                productBundleList.add(productBundle);
+        //sku信息
+        if (!ObjectUtils.isEmpty(productParam.getSkuStockList())) {
+            List<ProductSku> productSkus = new ArrayList<>();
+            for (ProductSkuDTO item : productParam.getSkuStockList()) {
+                ProductSku productSku = new ProductSku();
+                BeanUtils.copyProperties(item, productSku);
+                productSku.setProductId(id);
+                productSkus.add(productSku);
             }
-
-            boundleService.saveBatch(productBundleList);
+            productSkuService.saveBatch(productSkus);
         }
-        save(product);
 
-        //保存sku信息
-        List<ProductSkuDTO> productSkuList = productParam.getSkuStockList();
-        List<ProductSku> productSkus = new ArrayList<>();
-        for (ProductSkuDTO item : productSkuList) {
-            ProductSku productSku = new ProductSku();
-            BeanUtils.copyProperties(item, productSku);
-            productSku.setProductId(id);
-            productSkus.add(productSku);
-
-            //价格最小的sku
-        }
-        productSkuService.saveBatch(productSkus);
+//        ProductSku productSku = productSkuService.getOne(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, id).last("limit 1"));
+//        product.setSkuAttr();
+//        save(product);
 
         return true;
     }
@@ -99,17 +99,17 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
         BeanUtils.copyProperties(product, ret);
         //组合信息
-        if (product.getBoundle() > 0) {
-            List<BoundleDTO> boundleDTOList = new ArrayList<>();
-
-            List<ProductBundle> productBundles = boundleService.list(new LambdaQueryWrapper<ProductBundle>().eq(ProductBundle::getProductId, id));
-            for (ProductBundle item : productBundles) {
-                BoundleDTO boundleDTO = new BoundleDTO();
-                BeanUtils.copyProperties(item, boundleDTO);
-                boundleDTOList.add(boundleDTO);
-            }
-            ret.setBoundleList(boundleDTOList);
-        }
+//        if (product.getBoundle() > 0) {
+//            List<BoundleDTO> boundleDTOList = new ArrayList<>();
+//
+//            List<ProductBundle> productBundles = boundleService.list(new LambdaQueryWrapper<ProductBundle>().eq(ProductBundle::getProductId, id));
+//            for (ProductBundle item : productBundles) {
+//                BoundleDTO boundleDTO = new BoundleDTO();
+//                BeanUtils.copyProperties(item, boundleDTO);
+//                boundleDTOList.add(boundleDTO);
+//            }
+//            ret.setBoundleList(boundleDTOList);
+//        }
 
         //商品sku信息
         List<ProductSkuDTO> skuStockList = new ArrayList<>();

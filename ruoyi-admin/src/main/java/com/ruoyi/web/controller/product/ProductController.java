@@ -1,6 +1,5 @@
 package com.ruoyi.web.controller.product;
 
-import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.domain.dto.ProductParam;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-@Anonymous
 @Api(tags = "商品管理")
 @RestController
 @RequestMapping("/product")

@@ -15,9 +15,6 @@ public class ProductSku {
     @ApiModelProperty(value = "商品id")
     private Long productId;
 
-    @ApiModelProperty(value = "sku名称")
-    private String name;
-
     @ApiModelProperty(value = "价格")
     private Long price;
 
@@ -26,7 +23,4 @@ public class ProductSku {
 
     @ApiModelProperty(value = "商品销售属性，json格式")
     private String spData;
-
-    @ApiModelProperty(value = "状态:1未上架/2已上架/3已下架")
-    private Integer status;
 }
