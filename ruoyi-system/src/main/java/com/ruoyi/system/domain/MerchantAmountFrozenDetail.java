@@ -50,6 +50,11 @@ public class MerchantAmountFrozenDetail implements Serializable {
      */
     private Date modifyTime;
 
+    /**
+     * 冻结状态 1-冻结中 2-已解冻
+     */
+    private Integer frozenState;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

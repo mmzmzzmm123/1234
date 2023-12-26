@@ -12,9 +12,6 @@ import lombok.Data;
 @Data
 public class QueryMerchantPageDTO extends PageBaseDTO {
 
-    /**
-     *
-     */
     @ApiModelProperty("0-普通 1-代理 2-运营")
     private Integer merchantType;
 
@@ -30,15 +27,16 @@ public class QueryMerchantPageDTO extends PageBaseDTO {
     @ApiModelProperty("商家名称")
     private String merchantName;
 
-
     /**
      * 开始时间
      */
+    @ApiModelProperty("开始时间")
     private String startTime;
 
     /**
      * 结束时间
      */
+    @ApiModelProperty("结束时间")
     private String endTime;
 
 }
