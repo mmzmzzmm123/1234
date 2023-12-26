@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.core.domain.entity.order.Order;
 import com.ruoyi.common.core.domain.entity.order.OrderRefund;
 import com.ruoyi.common.core.domain.entity.order.OrderSku;
+import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.Objects;
@@ -42,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class OrderServiceImpl implements OrderService {
+public class OrderServiceImpl implements OrderService,InitializingBean {
 
 	private final OrderPriceHandler orderPriceHandler = new OrderPriceHandler.MultiAssemblyOrderPriceHandler();
 
@@ -54,6 +56,9 @@ public class OrderServiceImpl implements OrderService {
 
 	@Autowired
 	OrderRefundMapper orderRefundMapper;
+	
+	@Autowired
+	RedisLock redisLock;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -208,6 +213,23 @@ public class OrderServiceImpl implements OrderService {
 	@Override
 	public void refreshOrderStatus() {
 
+		try {
+			boolean ret = redisLock.tryLock("ruoyi-admin:refreshOrderStatus", 60*60) ;
+			if(!ret) {
+				return ;
+			}
+			
+			// 刷新 订单 状态
+			
+			
+		} finally {
+			redisLock.unlock("ruoyi-admin:refreshOrderStatus");
+		}
+		
+	}
+	@Override
+	public void afterPropertiesSet() throws Exception {
+		redisLock.unlock("ruoyi-admin:refreshOrderStatus");
 	}
 
 }
