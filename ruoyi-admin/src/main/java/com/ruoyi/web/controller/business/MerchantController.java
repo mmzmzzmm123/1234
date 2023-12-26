@@ -100,4 +100,18 @@ public class MerchantController extends BaseController {
         return AjaxResult.success();
     }
 
+    @ApiOperation("资金充值（仅限运营使用）")
+    @PostMapping("amountRecharge")
+    public AjaxResult amountRecharge(@Validated @RequestBody AmountRechargeDTO dto) {
+        Integer merchantType = Optional.ofNullable(getMerchantInfo())
+                .map(MerchantInfo::getMerchantType)
+                .orElse(-1);
+        Assert.isTrue(merchantType == 2, "商家权限不足");
+        dto.setMerchantId(getMerchantId());
+        dto.setUserId(getUserId());
+        dto.setCreateBy(getUsername());
+        merchantAmountService.amountRecharge(dto);
+        return AjaxResult.success();
+    }
+
 }

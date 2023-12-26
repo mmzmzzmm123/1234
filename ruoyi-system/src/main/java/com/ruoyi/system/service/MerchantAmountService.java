@@ -53,4 +53,11 @@ public interface MerchantAmountService extends IService<MerchantAmount> {
      */
     void amountRecovery(AmountRecoveryDTO dto);
 
+    /**
+     * 充值
+     */
+    void amountRecharge(AmountRechargeDTO dto);
+
+
+
 }
