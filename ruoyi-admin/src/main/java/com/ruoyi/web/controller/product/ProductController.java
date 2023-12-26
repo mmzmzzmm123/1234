@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
-@Api(tags = "商品管理")
+@Api(tags = "后台商品管理")
 @RestController
 @RequestMapping("/product")
 public class ProductController extends BaseController {
@@ -19,7 +19,7 @@ public class ProductController extends BaseController {
     private IProductService productService;
 
     @ApiOperation("商品列表")
-    @GetMapping(value = "/list")
+    @PostMapping(value = "/list")
     public AjaxResult getPage(@RequestBody ProductQueryParamDTO productQueryParam) {
         return success(productService.getPage(productQueryParam));
     }

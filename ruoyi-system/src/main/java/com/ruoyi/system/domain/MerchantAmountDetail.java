@@ -18,6 +18,7 @@ public class MerchantAmountDetail implements Serializable {
     /**
      * 主键ID
      */
+    @TableId
     private String detailId;
 
     /**

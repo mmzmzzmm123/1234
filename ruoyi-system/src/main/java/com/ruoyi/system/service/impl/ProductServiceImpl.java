@@ -4,6 +4,7 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.entity.Product;
@@ -29,9 +30,28 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     private ProductSkuServiceImpl productSkuService;
 
     @Override
-    public Page<Product> getPage(ProductQueryParamDTO productQueryParam) {
-        Page<Product> page = new Page<>(productQueryParam.getPage().longValue(), productQueryParam.getLimit().longValue());
-        return this.page(page);
+    public Page<Product> getPage(ProductQueryParamDTO queryParam) {
+        Page<Product> page = new Page<>(queryParam.getPage().longValue(), queryParam.getLimit().longValue());
+        LambdaQueryWrapper<Product> wrapper = Wrappers.lambdaQuery(Product.class);
+        if (!ObjectUtils.isEmpty(queryParam.getStartDate())) {
+            wrapper.gt(Product::getCreateDate, queryParam.getStartDate());
+        }
+        if (!ObjectUtils.isEmpty(queryParam.getEndDate())) {
+            wrapper.gt(Product::getCreateDate, queryParam.getEndDate());
+        }
+        if (!ObjectUtils.isEmpty(queryParam.getCategoryId())) {
+            wrapper.eq(Product::getCategoryId, queryParam.getCategoryId());
+        }
+        if (!ObjectUtils.isEmpty(queryParam.getStatus())) {
+            wrapper.eq(Product::getStatus, queryParam.getStatus());
+        }
+        if (!ObjectUtils.isEmpty(queryParam.getName())) {
+            wrapper.eq(Product::getName, queryParam.getName());
+        }
+        if (!ObjectUtils.isEmpty(queryParam.getProductId())) {
+            wrapper.eq(Product::getProductId, queryParam.getProductId());
+        }
+        return this.page(page, wrapper);
     }
 
     @Override
@@ -62,7 +82,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     private String getSkuAttr(long productId) {
-        ProductSku productSku = productSkuService.getOne(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, productId).last("limit 1"));
+        ProductSku productSku = productSkuService.getOne(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, productId)
+                .orderByAsc(ProductSku::getPrice).last("limit 1"));
         SkuAttrDTO skuAttrDTO = new SkuAttrDTO();
         BeanUtils.copyProperties(productSku, skuAttrDTO);
         skuAttrDTO.setSkuId(productSku.getId());
@@ -100,19 +121,43 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             return false;
         }
 
+        List<ProductSku> productSkus = getUpdateProductSku(productDTO.getSkuList());
+        productSkuService.saveOrUpdateBatch(productSkus);
+
         LambdaUpdateWrapper<Product> productUpdateWrapper = new LambdaUpdateWrapper<>();
         productUpdateWrapper.eq(Product::getProductId, productDTO.getProductId());
         Product product = new Product();
         BeanUtils.copyProperties(productDTO, product);
-        product.setSkuAttr(JSON.toJSONString(productDTO.getSkuList().get(0)));
+        product.setSkuAttr(getSkuAttr(productDTO.getProductId()));
         this.update(product, productUpdateWrapper);
 
-        List<ProductSkuDTO> productSkuDTOList = productDTO.getSkuList();
-        for (ProductSkuDTO productSkuDTO : productSkuDTOList) {
-
-        }
-        //this.saveOrUpdateBatch();
-
         return true;
+    }
+
+    private List<ProductSku> getUpdateProductSku(List<ProductSkuDTO> skuList) {
+        List<ProductSku> productSkus = new ArrayList<>();
+        for (ProductSkuDTO productSkuDTO : skuList) {
+            if (ObjectUtils.isEmpty(productSkuDTO.getId())) {
+                ProductSku productSku = new ProductSku();
+
+                productSku.setProductId(productSkuDTO.getProductId());
+                productSku.setCountyId(productSkuDTO.getCountyId());
+                productSku.setPrice(productSkuDTO.getPrice());
+                productSku.setPriceUnit(productSkuDTO.getPriceUnit());
+                productSku.setStock(productSkuDTO.getStock());
+                productSkus.add(productSku);
+            } else {
+                ProductSku productSku = productSkuService.getById(productSkuDTO.getId());
+                if (!ObjectUtils.isEmpty(productSku)) {
+                    productSku.setCountyId(productSkuDTO.getCountyId());
+                    productSku.setPrice(productSkuDTO.getPrice());
+                    productSku.setPriceUnit(productSkuDTO.getPriceUnit());
+                    productSku.setStock(productSkuDTO.getStock());
+                    productSkus.add(productSku);
+                }
+            }
+        }
+
+        return productSkus;
     }
 }

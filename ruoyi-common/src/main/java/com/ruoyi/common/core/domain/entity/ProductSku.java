@@ -26,4 +26,7 @@ public class ProductSku {
 
     @ApiModelProperty(value = "国家id")
     private Integer countyId;
+
+    @ApiModelProperty(value = "国家名")
+    private Integer countyName;
 }
