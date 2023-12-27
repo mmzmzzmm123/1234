@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.business;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.system.domain.dto.BatchUpdateProductDTO;
 import com.ruoyi.system.domain.dto.ProductDTO;
 import com.ruoyi.system.domain.dto.ProductQueryParamDTO;
@@ -34,7 +35,7 @@ public class ProductController extends BaseController {
 
     @ApiOperation("添加商品")
     @PostMapping(value = "/create")
-    public R<Boolean> create(@Validated @RequestBody ProductDTO productDTO) {
+    public R<Product> create(@Validated @RequestBody ProductDTO productDTO) {
         productDTO.setOperatorUser(getUsername());
         productDTO.setOperatorUserId(getUserId());
         return R.ok(productService.create(productDTO));
@@ -43,28 +44,28 @@ public class ProductController extends BaseController {
     @ApiOperation("根据商品id获取商品编辑信息")
     @GetMapping(value = "/detail/{id}")
     public R<ProductDTO> detail(@PathVariable Long id) {
-        return R.ok(productService.detail(id));
+        return productService.detail(id);
     }
 
     @ApiOperation("更新商品信息")
     @PostMapping(value = "/update")
     public R<Boolean> update(@Validated @RequestBody ProductDTO productDTO) {
         if (ObjectUtils.isEmpty(productDTO.getProductId())) {
-            return R.ok(Boolean.FALSE);
+            return R.fail("id格式错误");
         }
         return R.ok(productService.update(productDTO));
     }
 
     @ApiOperation("更新商品价格")
     @PostMapping(value = "/updatePrice")
-    public R<Boolean> updatePrice(@RequestBody UpdateProductDTO productDTO) {
-        return R.ok(productService.handleUpdatePrice(productDTO));
+    public R<String> updatePrice(@Validated @RequestBody UpdateProductDTO productDTO) {
+        return productService.handleUpdatePrice(productDTO);
     }
 
     @ApiOperation("批量更新商品状态")
     @PostMapping(value = "/updateStatus")
-    public R<Boolean> updateStatus(@RequestBody BatchUpdateProductDTO productDTO) {
-        return R.ok(productService.batchUpdateStatus(productDTO));
+    public R<String> updateStatus(@RequestBody BatchUpdateProductDTO productDTO) {
+        return productService.batchUpdateStatus(productDTO);
     }
 
     @ApiOperation("批量更新商品显示状态")
