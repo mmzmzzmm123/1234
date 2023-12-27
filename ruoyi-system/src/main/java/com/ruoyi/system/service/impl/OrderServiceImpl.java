@@ -102,7 +102,7 @@ public class OrderServiceImpl implements OrderService,InitializingBean {
 			Set<String> groupSet, long price) {
 		final String orderId = OrderTools.orderId();
 		// 冻结余额
-		String frozenId = OrderTools.frozen(price, request.getLoginUser().getMerchantInfo().getMerchantId(), orderId);
+		String frozenId = OrderTools.doFrozen(price, request.getLoginUser().getMerchantInfo().getMerchantId(), orderId);
 		// 插入订单
 		Order order = new Order();
 		order.setOrderId(orderId);
@@ -212,16 +212,17 @@ public class OrderServiceImpl implements OrderService,InitializingBean {
 
 	@Override
 	public void refreshOrderStatus() {
-
+		// 刷新 订单 状态
 		try {
 			boolean ret = redisLock.tryLock("ruoyi-admin:refreshOrderStatus", 60*60) ;
 			if(!ret) {
 				return ;
 			}
-			
-			// 刷新 订单 状态
-			
-			
+			// 查询未完成，未取消的订单
+			List<Order> orderList = OrderTools.listIncomplete();
+			for(Order order : orderList) {
+				
+			}
 		} finally {
 			redisLock.unlock("ruoyi-admin:refreshOrderStatus");
 		}
@@ -229,7 +230,9 @@ public class OrderServiceImpl implements OrderService,InitializingBean {
 	}
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		redisLock.unlock("ruoyi-admin:refreshOrderStatus");
+		if(redisLock.getRLock("ruoyi-admin:refreshOrderStatus").isLocked()) {
+			redisLock.unlock("ruoyi-admin:refreshOrderStatus");
+		}
 	}
 
 }
