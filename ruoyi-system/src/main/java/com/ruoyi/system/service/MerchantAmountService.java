@@ -34,7 +34,7 @@ public interface MerchantAmountService extends IService<MerchantAmount> {
      * 消费
      * 按冻结单来扣款
      */
-    void amountConsumption(AmountConsumptionDTO dto);
+    Long amountConsumption(AmountConsumptionDTO dto);
 
     /**
      * 退款

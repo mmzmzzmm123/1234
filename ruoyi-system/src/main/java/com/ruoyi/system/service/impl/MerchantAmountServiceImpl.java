@@ -115,7 +115,8 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void amountConsumption(AmountConsumptionDTO dto) {
+    public Long amountConsumption(AmountConsumptionDTO dto) {
+        Long refundAmount = 0L;
         MerchantAmountFrozenDetail frozenDetail = merchantAmountFrozenDetailService.getById(dto.getFrozenId());
         Assert.notNull(frozenDetail, "冻结单不存在");
         Assert.isTrue(frozenDetail.getFrozenState() == 1, "冻结单已解冻");
@@ -139,7 +140,9 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
 
         merchantAmount.setTotalAmount(merchantAmount.getTotalAmount() - amount);
         merchantAmount.setLockAmount(merchantAmount.getLockAmount() - frozenDetail.getFrozenAmount());
-        merchantAmount.setAvailableAmount(merchantAmount.getAvailableAmount() + (frozenDetail.getFrozenAmount() - amount));
+        // 退回金额
+        refundAmount = frozenDetail.getFrozenAmount() - amount;
+        merchantAmount.setAvailableAmount(merchantAmount.getAvailableAmount() + refundAmount);
 
         super.updateById(merchantAmount);
         detail.setChangeAfter(merchantAmount.getAvailableAmount());
@@ -148,6 +151,7 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
         // 资金解冻
         frozenDetail.setFrozenState(2);
         merchantAmountFrozenDetailService.updateById(frozenDetail);
+        return refundAmount;
     }
 
     @Override
