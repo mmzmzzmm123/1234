@@ -110,7 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 // CSRF禁用，因为不使用session
                 .csrf().disable()
                 // 启用跨域请求
-//                .cors().configurationSource(configurationSource()).and()
+                .cors().configurationSource(configurationSource()).and()
                 // 禁用HTTP响应标头
                 .headers().cacheControl().disable().and()
                 // 认证失败处理类
@@ -158,9 +158,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 
     CorsConfigurationSource configurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
-//        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
-        corsConfiguration.setAllowedOrigins(Arrays.asList("https://blue-print.csbilin.com", "http://blue-print.csbilin.com"));
+        corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
+        corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
+        corsConfiguration.setAllowedOrigins(Collections.singletonList("*"));
         corsConfiguration.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfiguration);
