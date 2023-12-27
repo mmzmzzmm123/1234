@@ -62,8 +62,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     /**
      * 跨域过滤器
      */
-    @Autowired
-    private CorsFilter corsFilter;
+//    @Autowired
+//    private CorsFilter corsFilter;
 
     /**
      * 允许匿名访问的地址
