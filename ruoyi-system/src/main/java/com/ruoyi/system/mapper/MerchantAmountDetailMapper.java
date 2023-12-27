@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface MerchantAmountDetailMapper extends BaseMapper<MerchantAmountDetail> {
 
-    List<QueryAmountDetailPageVO> page(Page page, @Param("dto") QueryAmountDetailPageDTO dto);
+    Page<QueryAmountDetailPageVO> page(Page page, @Param("dto") QueryAmountDetailPageDTO dto);
 
 }
 

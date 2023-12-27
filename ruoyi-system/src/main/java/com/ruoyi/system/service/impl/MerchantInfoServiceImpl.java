@@ -62,11 +62,7 @@ public class MerchantInfoServiceImpl extends ServiceImpl<MerchantInfoMapper, Mer
     @Override
     public Page<MerchantInfoVO> page(QueryMerchantPageDTO dto) {
         Page<MerchantInfoVO> page = new Page<>(dto.getPage(), dto.getLimit());
-        if (StringUtils.isEmpty(dto.getPlMerchantId())) {
-            return page;
-        }
         baseMapper.page(page, dto);
-
         return page;
     }
 }

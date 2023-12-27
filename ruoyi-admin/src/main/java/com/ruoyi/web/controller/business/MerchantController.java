@@ -45,12 +45,12 @@ public class MerchantController extends BaseController {
     @ApiOperation("商家列表-分页")
     @PostMapping("page")
     public AjaxResult page(@Validated @RequestBody QueryMerchantPageDTO dto) {
-        Integer merchantType = Optional.ofNullable(getMerchantInfo())
-                .map(MerchantInfo::getMerchantType)
-                .orElse(-1);
-        // 非运营 只能看自己下属商家
-        if (merchantType != 2) {
-            dto.setPlMerchantId(getMerchantId());
+        Integer merchantType = getMerchantType();
+        String merchantId = getMerchantId();
+        if (merchantType == 0) {
+            dto.setMerchantId(merchantId);
+        } else {
+            dto.setPlMerchantId(merchantId);
         }
         Page<MerchantInfoVO> page = merchantInfoService.page(dto);
         return AjaxResult.success(page);

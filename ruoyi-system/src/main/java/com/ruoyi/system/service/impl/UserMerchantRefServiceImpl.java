@@ -36,6 +36,7 @@ public class UserMerchantRefServiceImpl extends ServiceImpl<UserMerchantRefMappe
         UserMerchantRef ref = new UserMerchantRef();
         ref.setUserId(dto.getUserId());
         ref.setMerchantId(merchantId);
+        ref.setUserType(dto.getMerchantType());
         super.save(ref);
     }
 }
