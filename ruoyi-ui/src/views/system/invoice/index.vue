@@ -131,26 +131,26 @@
           <el-tag type="danger" v-if="scope.row.isFen == 1">分期</el-tag>
           <el-tag type="success" v-if="scope.row.isFen == 0">不分期</el-tag>
         </template>
-      </el-table-column>  
+      </el-table-column>
       <el-table-column label="开票状态" align="center" prop="kpStatus">
-      <template slot-scope="scope">    
+      <template slot-scope="scope">
           <el-tag v-if="scope.row.kpStatus == 1">已开票</el-tag>
           <el-tag type="warning" v-if="scope.row.kpStatus == 0">未开票</el-tag>
         </template>
-      </el-table-column>       
+      </el-table-column>
       <el-table-column label="单位" align="center" prop="stoUnit" width="190" />
       <el-table-column label="名称" align="center" prop="stoName" />
       <el-table-column label="规格型号" align="center" prop="stoType" />
       <el-table-column label="订单金额" align="center" prop="stoMoney" />
       <el-table-column label="已付金额" align="center" prop="invoicePrice" />
       <el-table-column label="报账单类型" align="center" prop="invoiceType">
-      <template slot-scope="scope">    
+      <template slot-scope="scope">
           <el-tag type="danger" v-if="scope.row.invoiceType == 1">现金</el-tag>
           <el-tag type="warning" v-if="scope.row.invoiceType == 2">挂账</el-tag>
           <el-tag type="success" v-if="scope.row.invoiceType == 3">电汇</el-tag>
 
         </template>
-      </el-table-column> 
+      </el-table-column>
       <el-table-column label="发票号" align="center" prop="invoiceId" />
       <el-table-column label="报账日期" align="center" prop="invoiceDate" width="180">
         <template slot-scope="scope">
@@ -176,7 +176,7 @@
         </template>
       </el-table-column> -->
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
