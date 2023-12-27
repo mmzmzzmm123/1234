@@ -1,6 +1,7 @@
 package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.app.ProductRequest;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.system.domain.dto.BatchUpdateProductDTO;
@@ -17,30 +18,30 @@ public interface IProductService {
     /**
      * 后台查询商品
      */
-    Page<Product> getPage(ProductQueryParamDTO productQueryParam);
+    Page<ProductDTO> getPage(ProductQueryParamDTO productQueryParam);
 
     /**
      * 新增商品
      */
-    boolean create(ProductDTO pmsProductAttributeParam);
+    Product create(ProductDTO pmsProductAttributeParam);
 
     /**
      * 获取编辑商品信息
      */
-    ProductDTO detail(Long id);
+    R<ProductDTO> detail(Long id);
 
     /**
      * 更新商品
      */
-    boolean update(ProductDTO productDTO);
+    Boolean update(ProductDTO productDTO);
 
-    boolean handleUpdatePrice(UpdateProductDTO productDTO);
+    R<String> handleUpdatePrice(UpdateProductDTO productDTO);
 
-    boolean batchUpdateStatus(BatchUpdateProductDTO productDTO);
+    R<String> batchUpdateStatus(BatchUpdateProductDTO productDTO);
 
-    boolean batchUpdateShowStatus(BatchUpdateProductDTO productDTO);
+    Boolean batchUpdateShowStatus(BatchUpdateProductDTO productDTO);
 
-    boolean batchDeleteProducts(BatchUpdateProductDTO productDTO);
+    Boolean batchDeleteProducts(BatchUpdateProductDTO productDTO);
 
     /**
      * 前台商品列表

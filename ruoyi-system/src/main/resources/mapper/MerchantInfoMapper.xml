@@ -57,7 +57,7 @@
             AND tmi.merchant_id = #{dto.merchantId}
         </if>
         <if test="dto.merchantName != null  and dto.merchantName != ''">
-            AND tmi.merchant_name = #{dto.merchantName}
+            AND tmi.merchant_name like concat('%',#{dto.merchantName},'%')
         </if>
         <if test="dto.startTime != null and dto.startTime != ''">
             AND tmi.create_time &gt;= #{dto.startTime}

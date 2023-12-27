@@ -1,7 +1,9 @@
 package com.ruoyi.web.controller.business;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.system.domain.dto.BatchUpdateProductDTO;
 import com.ruoyi.system.domain.dto.ProductDTO;
 import com.ruoyi.system.domain.dto.ProductQueryParamDTO;
@@ -9,6 +11,7 @@ import com.ruoyi.system.domain.dto.UpdateProductDTO;
 import com.ruoyi.system.service.IProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,51 +29,54 @@ public class ProductController extends BaseController {
 
     @ApiOperation("商品列表")
     @PostMapping(value = "/list")
-    public AjaxResult getPage(@RequestBody ProductQueryParamDTO productQueryParam) {
-        return success(productService.getPage(productQueryParam));
+    public R<Page<ProductDTO>> getPage(@Validated @RequestBody ProductQueryParamDTO productQueryParam) {
+        return R.ok(productService.getPage(productQueryParam));
     }
 
     @ApiOperation("添加商品")
     @PostMapping(value = "/create")
-    public AjaxResult create(@Validated @RequestBody ProductDTO productDTO) {
+    public R<Product> create(@Validated @RequestBody ProductDTO productDTO) {
         productDTO.setOperatorUser(getUsername());
         productDTO.setOperatorUserId(getUserId());
-        return success(productService.create(productDTO));
+        return R.ok(productService.create(productDTO));
     }
 
     @ApiOperation("根据商品id获取商品编辑信息")
     @GetMapping(value = "/detail/{id}")
-    public AjaxResult detail(@PathVariable Long id) {
-        return success(productService.detail(id));
+    public R<ProductDTO> detail(@PathVariable Long id) {
+        return productService.detail(id);
     }
 
     @ApiOperation("更新商品信息")
     @PostMapping(value = "/update")
-    public AjaxResult update(@Validated @RequestBody ProductDTO productDTO) {
-        return success(productService.update(productDTO));
+    public R<Boolean> update(@Validated @RequestBody ProductDTO productDTO) {
+        if (ObjectUtils.isEmpty(productDTO.getProductId())) {
+            return R.fail("id格式错误");
+        }
+        return R.ok(productService.update(productDTO));
     }
 
     @ApiOperation("更新商品价格")
     @PostMapping(value = "/updatePrice")
-    public AjaxResult updatePrice(@RequestBody UpdateProductDTO productDTO) {
-        return success(productService.handleUpdatePrice(productDTO));
+    public R<String> updatePrice(@Validated @RequestBody UpdateProductDTO productDTO) {
+        return productService.handleUpdatePrice(productDTO);
     }
 
     @ApiOperation("批量更新商品状态")
     @PostMapping(value = "/updateStatus")
-    public AjaxResult updateStatus(@RequestBody BatchUpdateProductDTO productDTO) {
-        return success(productService.batchUpdateStatus(productDTO));
+    public R<String> updateStatus(@RequestBody BatchUpdateProductDTO productDTO) {
+        return productService.batchUpdateStatus(productDTO);
     }
 
     @ApiOperation("批量更新商品显示状态")
     @PostMapping(value = "/updateShowStatus")
-    public AjaxResult updateShowStatus(@RequestBody BatchUpdateProductDTO productDTO) {
-        return success(productService.batchUpdateShowStatus(productDTO));
+    public R<Boolean> updateShowStatus(@RequestBody BatchUpdateProductDTO productDTO) {
+        return R.ok(productService.batchUpdateShowStatus(productDTO));
     }
 
     @ApiOperation("批量删除商品")
     @PostMapping(value = "/deleteProducts")
-    public AjaxResult deleteProducts(@RequestBody BatchUpdateProductDTO productDTO) {
-        return success(productService.batchDeleteProducts(productDTO));
+    public R<Boolean> deleteProducts(@RequestBody BatchUpdateProductDTO productDTO) {
+        return R.ok(productService.batchDeleteProducts(productDTO));
     }
 }

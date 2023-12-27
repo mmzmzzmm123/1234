@@ -1,9 +1,12 @@
 package com.ruoyi.web.controller.business;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.app.ProductRequest;
+import com.ruoyi.system.domain.vo.ProductDetailVO;
+import com.ruoyi.system.domain.vo.ProductVO;
 import com.ruoyi.system.service.IProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,13 +27,13 @@ public class HomeProductController extends BaseController {
 
     @ApiOperation("商品首页")
     @PostMapping("/list")
-    public AjaxResult list(@RequestBody ProductRequest dto) {
-        return AjaxResult.success(productService.getNormalList(dto));
+    public R<Page<ProductVO>> list(@RequestBody ProductRequest dto) {
+        return R.ok(productService.getNormalList(dto));
     }
 
     @ApiOperation("商品详情")
     @GetMapping("/detail/{skuId}")
-    public AjaxResult getProductDetailBySkuId(@PathVariable Long skuId) {
-        return AjaxResult.success(productService.getProductDetailBySkuId(skuId));
+    public R<ProductDetailVO> getProductDetailBySkuId(@PathVariable Long skuId) {
+        return R.ok(productService.getProductDetailBySkuId(skuId));
     }
 }

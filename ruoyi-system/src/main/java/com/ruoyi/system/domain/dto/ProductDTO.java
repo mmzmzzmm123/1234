@@ -5,12 +5,18 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Data
 public class ProductDTO {
     @ApiModelProperty(value = "商品id")
     private Long productId;
+
+    @NotBlank(message="服务名称不能为空")
+    @Size(min = 1, max = 64, message = "服务名称长度为1-64字")
+    @ApiModelProperty(value = "服务名称")
+    private String name;
 
     /**
      * {@link com.ruoyi.common.enums.AppType}
@@ -25,10 +31,6 @@ public class ProductDTO {
     @NotNull(message="商品类型不能为空")
     @ApiModelProperty(value = "商品类型")
     private Integer categoryId;
-
-    @NotBlank(message="商品名称不能为空")
-    @ApiModelProperty(value = "商品名称")
-    private String name;
 
     @NotBlank(message="列表图不能为空")
     @ApiModelProperty(value = "列表图")
@@ -53,7 +55,6 @@ public class ProductDTO {
     @ApiModelProperty(value = "规格:1统一规格 2多规格")
     private Integer specsType;
 
-    @ApiModelProperty(value = "默认展示规格")
     private String skuAttr;
 
     @ApiModelProperty(value = "创建时间")

@@ -14,29 +14,29 @@ import java.util.List;
 public class TypeServiceImpl implements ITypeService {
     @Override
     public List<TypeVO> getAppList() {
-        List<TypeVO> appTypeList = new ArrayList<>();
+        List<TypeVO> typeList = new ArrayList<>();
 
         for (AppType appType : EnumSet.allOf(AppType.class)) {
             TypeVO appTypeVO = new TypeVO();
             appTypeVO.setId(appType.getId());
             appTypeVO.setName(appType.getName());
-            appTypeList.add(appTypeVO);
+            typeList.add(appTypeVO);
         }
 
-        return appTypeList;
+        return typeList;
     }
 
     @Override
     public List<TypeVO> getProductCategoryList() {
-        List<TypeVO> appTypeList = new ArrayList<>();
+        List<TypeVO> typeList = new ArrayList<>();
 
         for (ProductCategoryType type : EnumSet.allOf(ProductCategoryType.class)) {
             TypeVO appTypeVO = new TypeVO();
             appTypeVO.setId(type.getId());
             appTypeVO.setName(type.getName());
-            appTypeList.add(appTypeVO);
+            typeList.add(appTypeVO);
         }
 
-        return appTypeList;
+        return typeList;
     }
 }
