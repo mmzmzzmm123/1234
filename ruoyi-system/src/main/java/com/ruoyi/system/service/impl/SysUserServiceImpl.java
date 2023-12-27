@@ -295,6 +295,10 @@ public class SysUserServiceImpl implements ISysUserService
         MerchantInfo merchantInfo = Optional.ofNullable(SecurityUtils.getLoginUser())
                 .map(LoginUser::getMerchantInfo)
                 .orElse(null);
+        // 未指定 默认普通
+        if (user.getMerchantType() == null){
+            user.setMerchantType(0);
+        }
 
         CreateUserMerchantRefDTO dto = new CreateUserMerchantRefDTO();
         dto.setUserId(user.getUserId());
