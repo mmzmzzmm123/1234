@@ -70,6 +70,11 @@ public class Order implements Serializable {
 	 * 下单时间
 	 */
 	private Date createTime;
+	
+	/**
+	 * 订单完成时间
+	 */
+	private Date finishTime;
 
 	/**
 	 * 修改时间

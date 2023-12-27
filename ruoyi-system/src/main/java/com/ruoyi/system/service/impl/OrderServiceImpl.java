@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
@@ -28,6 +31,7 @@ import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.core.domain.entity.order.Order;
 import com.ruoyi.common.core.domain.entity.order.OrderRefund;
 import com.ruoyi.common.core.domain.entity.order.OrderSku;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.ListTools;
@@ -36,6 +40,7 @@ import com.ruoyi.system.components.OrderPriceHandler;
 import com.ruoyi.system.components.OrderTools;
 import com.ruoyi.system.components.ProductTools;
 import com.ruoyi.system.components.UserTools;
+import com.ruoyi.system.configure.RedisConfigure;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.mapper.OrderRefundMapper;
 import com.ruoyi.system.service.OrderService;
@@ -44,7 +49,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class OrderServiceImpl implements OrderService,InitializingBean {
+public class OrderServiceImpl implements OrderService, InitializingBean {
 
 	private final OrderPriceHandler orderPriceHandler = new OrderPriceHandler.MultiAssemblyOrderPriceHandler();
 
@@ -56,9 +61,15 @@ public class OrderServiceImpl implements OrderService,InitializingBean {
 
 	@Autowired
 	OrderRefundMapper orderRefundMapper;
-	
+
 	@Autowired
 	RedisLock redisLock;
+
+	@Autowired
+	RedisCache redisCache;
+
+	@Autowired
+	RedisConfigure redisConfigure;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -210,29 +221,54 @@ public class OrderServiceImpl implements OrderService,InitializingBean {
 		return pageInfo;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void refreshOrderStatus() {
 		// 刷新 订单 状态
 		try {
-			boolean ret = redisLock.tryLock("ruoyi-admin:refreshOrderStatus", 60*60) ;
-			if(!ret) {
-				return ;
+			// 保证 只有一个执行
+			Object lockVal = redisCache.getCacheObject("ruoyi-admin:refreshOrderStatus:lock");
+			if (lockVal != null || !StringUtils.isEmpty(lockVal)) {
+				return;
 			}
+			redisCache.setCacheObject("ruoyi-admin:refreshOrderStatus:lock", "1", 60 * 60, TimeUnit.SECONDS);
 			// 查询未完成，未取消的订单
 			List<Order> orderList = OrderTools.listIncomplete();
-			for(Order order : orderList) {
-				
+			for (Order order : orderList) {
+				// 处理单个订单
+				try {
+					OrderTools.handleOrderStatus(order);
+				} catch (Exception e) {
+					log.error("refreshOrderStatus失败 {}", order, e);
+				}
 			}
+			// 计算 退款
+			Objects.notNullDone(OrderTools.listComplete(), items -> {
+				for (Order order : items) {
+					// 是否达到 退款的条件
+					if (order.getFinishTime() == null) {
+						// 还没有完成
+						continue;
+					}
+					// 完成时间 还没超过指定的 分钟 ， 也不退款
+					if (new Date().getTime() - order.getFinishTime().getTime() < redisConfigure.getRefundTimeOutSec()
+							* 1000) {
+						continue;
+					}
+					// 到了超时时间，结算用户的订单
+					OrderTools.settlementUserMonery(order);
+
+				}
+			});
 		} finally {
-			redisLock.unlock("ruoyi-admin:refreshOrderStatus");
+			redisCache.deleteObject("ruoyi-admin:refreshOrderStatus:lock");
 		}
-		
+
 	}
+
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if(redisLock.getRLock("ruoyi-admin:refreshOrderStatus").isLocked()) {
-			redisLock.unlock("ruoyi-admin:refreshOrderStatus");
-		}
+		redisCache.deleteObject("ruoyi-admin:refreshOrderStatus:lock");
 	}
 
 }
