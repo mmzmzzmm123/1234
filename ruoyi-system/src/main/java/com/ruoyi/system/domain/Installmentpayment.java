@@ -31,7 +31,7 @@ public class Installmentpayment extends BaseEntity
 
     /** 支付金额 */
     @Excel(name = "支付金额")
-    private BigDecimal amountpaid;
+    private Integer amountpaid;
 
     /** 支付时间 */
     @JsonFormat(pattern = "yyyy-MM-dd hh:mm:ss")
@@ -81,12 +81,12 @@ public class Installmentpayment extends BaseEntity
     {
         return payment;
     }
-    public void setAmountpaid(BigDecimal amountpaid) 
+    public void setAmountpaid(Integer amountpaid)
     {
         this.amountpaid = amountpaid;
     }
 
-    public BigDecimal getAmountpaid() 
+    public Integer getAmountpaid()
     {
         return amountpaid;
     }

@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.system;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
@@ -119,8 +120,12 @@ public class InstallmentpaymentController extends BaseController
     public TableDataInfo getInstall(@PathVariable("id") Long id)
     {
         startPage();
-        AjaxResult ajax = AjaxResult.success();
         List<Installmentpayment> install = installmentpaymentService.selectsrchecksheetId(id);
+        double a = 0;
+        for (Installmentpayment installmentpayment : install) {
+            a = a+installmentpayment.getAmountpaid();
+        }
+        install.get(0).setReserve1(String.valueOf(a));
         return getDataTable(install);
     }
 

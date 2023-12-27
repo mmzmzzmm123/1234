@@ -9,7 +9,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:srchecksheet:add']"
+          v-hasPermi="['system:installmentpayment:add']"
         >新增</el-button>
       </el-col>
     </el-row>
@@ -55,17 +55,31 @@
     <!-- 添加或修改报销单数据对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
+        
+        <el-form-item label="总金额">
+          <el-input v-model="stoMoney" placeholder="请输入总金额" />
+        </el-form-item>
+
+        <el-form-item label="已付金额">
+          <el-input v-model="paySum" placeholder="请输入已付金额" />
+        </el-form-item>
+
+        <el-form-item label="未付金额">
+          <el-input v-model="pay" placeholder="请输入未付金额" />
+        </el-form-item>
+
         <el-form-item label="收款人" prop="payee">
           <el-input v-model="form.payee" placeholder="请输入收款人" />
         </el-form-item>
 
         <el-form-item label="支付期限" prop="payment">
-          <el-input v-model="form.payment" placeholder="请输入支付期限" />
+          <el-input v-model="payment" placeholder="请输入支付期限" />
         </el-form-item>
 
         <el-form-item label="支付金额" prop="amountpaid">
           <el-input v-model="form.amountpaid" placeholder="请输入支付金额" />
         </el-form-item>
+        
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submitForm">提 交</el-button>
@@ -83,27 +97,41 @@ export default {
   name: "Installmentpayment",
   data() {
     return {
+      stoMoney:0,
+      paySum:0,
+      pay:0,
+      payment:0,
        // 遮罩层
       loading: true,
       // 报销单数据表格数据
       srchecksheetList: [],
       // 分页信息
       total: 0,
-      pageNum: 1,
-      pageSize: 10,
       // 选中角色编号
       roleIds:[],
       // 角色信息
       roles: [],
       // 用户信息
       form: {},
+      // 显示搜索条件
+      showSearch: true,
+      // 选中数组
+      ids: [],
+      // 非单个禁用
+      single: true,
+      // 非多个禁用
+      multiple: true,
+      // 弹出层标题
+      title: "",
+      // 是否显示弹出层
+      open: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
         id: null,
         payee: null,
-        payment: null,
+        payment: 0,
         amountpaid: null,
         paytime: null,
         srchecksheet_id: null,
@@ -114,10 +142,6 @@ export default {
       },
       // 角色信息
       id: [],
-      // 弹出层标题
-      title: "",
-      // 是否显示弹出层
-      open: false,
       // 表单校验
       rules: {
       },
@@ -127,34 +151,23 @@ export default {
 
   created() {
     const id = this.$route.params && this.$route.params.id;
-    console.log(this.$route.params);
     this.queryParams.id = id;
     listInvoice(this.queryParams).then(response => {
-        this.invoiceList = response.rows;
-        console.log(response.rows);
-        console.log(this.invoiceList);
-      });
-    this.queryParams.srchecksheetId = id;
-    listInstallmentpayment(this.queryParams).then(response => {
-        this.srchecksheetList = response.rows;
-        this.total = response.total;
-        this.loading = false;
-        console.log(this.srchecksheetList);
-      });
-      this.queryParams.id = id;
-    if (id) {
-      this.loading = true;
-      getInstall(id).then((response) => {
-        this.roles = response.rows;
-        this.$nextTick(() => {
-        });
-        this.loading = false;
-      });
-      getSrcheck(id).then((response) => {
-        this.form = response;
-        this.loading = false;
-      });
-    }
+      this.invoiceList = response.rows;
+      this.queryParams.id = null
+    });
+    // this.queryParams.srchecksheet_id = id;
+    // listInstallmentpayment(this.queryParams).then(response => {
+    //   this.srchecksheetList = response.rows;
+    //   this.total = response.total;
+    //   this.loading = false;
+    // });
+    this.queryParams.id = id;
+    getInstall(id).then((response) => {
+      this.srchecksheetList = response.rows;
+      this.total = response.total;
+      this.loading = false;
+    });
   },
   methods: {
     // 表单重置
@@ -171,9 +184,13 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.reset();
       this.open = true;
       this.title = "新增分期付款信息";
-      this.reset();
+      this.stoMoney = this.invoiceList[0].stoMoney;
+      this.paySum = this.srchecksheetList[0].reserve1;
+      this.pay = parseInt(this.stoMoney)-parseInt(this.paySum);
+      this.payment = parseInt(this.total)+1;
     },
     /** 单击选中行数据 */
     clickRow(row) {
@@ -191,6 +208,8 @@ export default {
     },
     /** 提交按钮 */
     submitForm() {
+      this.form.srchecksheetId = this.invoiceList[0].id
+      this.form.payment = this.payment
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
@@ -212,9 +231,9 @@ export default {
     /** 查询报销单数据列表 */
     getList() {
       this.loading = true;
-      listInstallmentpayment(this.queryParams).then(response => {
+      getInstall(this.queryParams).then(response => {
         this.srchecksheetList = response.rows;
-        this.total = response.total;
+          this.total = response.total;
         this.loading = false;
       });
     },

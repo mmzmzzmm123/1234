@@ -292,20 +292,15 @@ export default {
           this.invoiceFen111 = this.invoiceList[inv]
         }
     }
-    console.log(this.invoiceFen111);
     this.$router.push("/system/pay-auth/role/" + this.invoiceFen111.id);
     },
     xj(){
       this.inputStatus = false
       this.rules.invoiceId[0].required =false
-      console.log(this.radio);
-      console.log(parseInt(this.radio));
     },
     gz(){
       this.rules.invoiceId[0].required =true
       this.inputStatus = true
-      console.log(this.radio);
-      console.log(parseInt(this.radio));
     },
     /** 查询【请填写功能名称】列表 */
     getList() {
@@ -365,7 +360,6 @@ export default {
     handleSelectionChange(selection) {
       this.checked = selection.map(item => item)
       this.ids = selection.map(item => item.id)
-      // this.stoIds = selection.map(item => item.stoId)
       this.single = selection.length!==1
       this.multiple = !selection.length
       if (this.ids.length>1) {
@@ -394,7 +388,6 @@ export default {
         this.open3()
       }else{
         this.reset();
-        console.log(this.checked);
         this.radio='1';
         this.rules.invoiceId[0].required =false
         this.inputStatus = false
