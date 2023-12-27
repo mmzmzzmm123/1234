@@ -33,4 +33,6 @@ public class ProductSkuDTO {
     @NotBlank(message="国家名不能为空")
     @ApiModelProperty(value = "国家名")
     private String countyName;
+
+    private String pic;
 }

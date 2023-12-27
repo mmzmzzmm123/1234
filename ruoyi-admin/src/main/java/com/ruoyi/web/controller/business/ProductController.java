@@ -3,7 +3,6 @@ package com.ruoyi.web.controller.business;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.system.domain.dto.BatchUpdateProductDTO;
 import com.ruoyi.system.domain.dto.ProductDTO;
 import com.ruoyi.system.domain.dto.ProductQueryParamDTO;
@@ -11,6 +10,7 @@ import com.ruoyi.system.domain.dto.UpdateProductDTO;
 import com.ruoyi.system.service.IProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,7 +28,7 @@ public class ProductController extends BaseController {
 
     @ApiOperation("商品列表")
     @PostMapping(value = "/list")
-    public R<Page<Product>> getPage(@Validated @RequestBody ProductQueryParamDTO productQueryParam) {
+    public R<Page<ProductDTO>> getPage(@Validated @RequestBody ProductQueryParamDTO productQueryParam) {
         return R.ok(productService.getPage(productQueryParam));
     }
 
@@ -49,6 +49,9 @@ public class ProductController extends BaseController {
     @ApiOperation("更新商品信息")
     @PostMapping(value = "/update")
     public R<Boolean> update(@Validated @RequestBody ProductDTO productDTO) {
+        if (ObjectUtils.isEmpty(productDTO.getProductId())) {
+            return R.ok(Boolean.FALSE);
+        }
         return R.ok(productService.update(productDTO));
     }
 

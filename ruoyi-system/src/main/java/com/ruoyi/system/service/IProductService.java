@@ -2,7 +2,6 @@ package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.app.ProductRequest;
-import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.system.domain.dto.BatchUpdateProductDTO;
 import com.ruoyi.system.domain.dto.ProductDTO;
 import com.ruoyi.system.domain.dto.ProductQueryParamDTO;
@@ -17,7 +16,7 @@ public interface IProductService {
     /**
      * 后台查询商品
      */
-    Page<Product> getPage(ProductQueryParamDTO productQueryParam);
+    Page<ProductDTO> getPage(ProductQueryParamDTO productQueryParam);
 
     /**
      * 新增商品

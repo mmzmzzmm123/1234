@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ProductMapper">
+    <select id="page" resultType="com.ruoyi.system.domain.dto.ProductDTO">
+        SELECT
+        product_id,name,app_type,category_id,album_pics,pic,intro,sku_attr,status,is_del,is_show,create_date,update_date,operator_user
+        FROM t_product
+        WHERE is_del = 0
+        <if test="dto.productId != null and dto.productId != ''">
+            AND product_id = #{dto.productId}
+        </if>
+        <if test="dto.name != null and dto.name != ''">
+            AND name like CONCAT('%', #{dto.name}, '%')
+        </if>
+        <if test="dto.categoryId != null and dto.categoryId != ''">
+            AND category_id = #{dto.categoryId}
+        </if>
+        <if test="dto.status != null and dto.status != ''">
+            AND status = #{dto.status}
+        </if>
+        <if test="dto.startDate != null and dto.startDate != ''">
+            AND create_date &gt;= #{dto.startDate}
+        </if>
+        <if test="dto.endDate != null and dto.endDate != ''">
+            AND create_date &lt;= #{dto.endDate}
+        </if>
+        order by create_date desc
+    </select>
+</mapper>

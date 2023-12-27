@@ -7,10 +7,10 @@ import lombok.Data;
 @Data
 @TableName("t_product")
 public class Product {
-    @TableId
     /**
      * 商品id
      */
+    @TableId
     private Long productId;
 
     /**

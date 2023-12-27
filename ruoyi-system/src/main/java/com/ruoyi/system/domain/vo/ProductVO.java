@@ -1,6 +1,6 @@
 package com.ruoyi.system.domain.vo;
 
-import com.ruoyi.system.domain.dto.SkuAttrDTO;
+import com.ruoyi.system.domain.dto.ProductSkuDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -8,6 +8,9 @@ import lombok.Data;
 public class ProductVO {
     @ApiModelProperty(value = "商品id")
     private Long productId;
+
+    @ApiModelProperty(value = "商品名称")
+    private String name;
 
     /**
      * {@link com.ruoyi.common.enums.AppType}
@@ -21,9 +24,6 @@ public class ProductVO {
     @ApiModelProperty(value = "商品类型")
     private Integer categoryId;
 
-    @ApiModelProperty(value = "商品名称")
-    private String name;
-
     @ApiModelProperty(value = "列表图")
     private String albumPics;
 
@@ -31,7 +31,7 @@ public class ProductVO {
     private String pic;
 
     @ApiModelProperty(value = "默认展示规格")
-    private SkuAttrDTO skuAttr;
+    private ProductSkuDTO skuAttr;
 
     @ApiModelProperty(value = "产品描述信息")
     private String intro;
