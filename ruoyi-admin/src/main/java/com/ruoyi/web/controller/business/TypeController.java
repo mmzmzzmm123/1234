@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.product;
+package com.ruoyi.web.controller.business;
 
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.service.ITypeService;
@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 
+/**
+ * @Author : zengyi
+ */
 @Api(tags = "类型")
 @RestController
 @RequestMapping("/type")
@@ -24,8 +27,8 @@ public class TypeController {
     }
 
     @ApiOperation("获取所有商品类型")
-    @GetMapping( "/product")
-    public AjaxResult getOrderList() {
+    @GetMapping( "/productCategory")
+    public AjaxResult getProductCategoryList() {
         return AjaxResult.success(typeService.getProductCategoryList());
     }
 }

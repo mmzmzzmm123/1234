@@ -42,8 +42,8 @@ public class Product {
     @ApiModelProperty(value = "产品描述信息")
     private String intro;
 
-    @ApiModelProperty(value = "价格")
-    private Long price;
+//    @ApiModelProperty(value = "价格")
+//    private Long price;
 
     @ApiModelProperty(value = "支持量")
     private Integer stock;
@@ -51,7 +51,7 @@ public class Product {
     @ApiModelProperty(value = "规格:1统一规格 2多规格")
     private Integer specsType;
 
-    @ApiModelProperty(value = "展示规格")
+    @ApiModelProperty(value = "默认展示规格")
     private String skuAttr;
 
     @ApiModelProperty(value = "创建时间")

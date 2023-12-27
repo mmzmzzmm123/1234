@@ -24,6 +24,9 @@ public class ProductSku {
     @ApiModelProperty(value = "支持量")
     private Integer stock;
 
+    @ApiModelProperty(value = "暂时未用到 状态:1未上架/2已上架/3已下架")
+    private Integer status;
+
     @ApiModelProperty(value = "国家id")
     private Integer countyId;
 
