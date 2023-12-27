@@ -293,7 +293,7 @@ export default {
         }
     }
     console.log(this.invoiceFen111);
-    
+    this.$router.push("/system/pay-auth/role/" + this.invoiceFen111.id);
     },
     xj(){
       this.inputStatus = false

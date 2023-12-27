@@ -44,23 +44,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payee != null">payee,</if>
             <if test="payment != null">payment,</if>
             <if test="amountpaid != null">amountpaid,</if>
-            <if test="paytime != null">paytime,</if>
             <if test="srchecksheetId != null">srchecksheet_id,</if>
             <if test="reserve1 != null">reserve1,</if>
             <if test="reserve2 != null">reserve2,</if>
             <if test="reserve3 != null">reserve3,</if>
             <if test="reserve4 != null">reserve4,</if>
+            paytime,
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="payee != null">#{payee},</if>
             <if test="payment != null">#{payment},</if>
             <if test="amountpaid != null">#{amountpaid},</if>
-            <if test="paytime != null">#{paytime},</if>
             <if test="srchecksheetId != null">#{srchecksheetId},</if>
             <if test="reserve1 != null">#{reserve1},</if>
             <if test="reserve2 != null">#{reserve2},</if>
             <if test="reserve3 != null">#{reserve3},</if>
             <if test="reserve4 != null">#{reserve4},</if>
+            sysdate()
          </trim>
     </insert>
 
