@@ -63,13 +63,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     @Transactional(rollbackFor=Exception.class)
     public boolean create(ProductDTO productDTO) {
-        //商品信息
         Product product = new Product();
         BeanUtils.copyProperties(productDTO, product);
         long id = IdWorker.getId(product);
         product.setProductId(id);
 
-        //sku信息
         if (!ObjectUtils.isEmpty(productDTO.getSkuList())) {
             List<ProductSku> productSkus = new ArrayList<>();
             for (ProductSkuDTO item : productDTO.getSkuList()) {
@@ -103,8 +101,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
 
         ProductDTO ret = new ProductDTO();
-
-        //商品详情
         Product product = this.getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
         if (ObjectUtils.isEmpty(product)) {
             return ret;
@@ -266,9 +262,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Override
     public Page<ProductVO> getNormalList(ProductRequest request) {
-        Page<Product> productPage = getNormalProductPage(request);
-
         Page<ProductVO> ret = new Page<>(request.getPage().longValue(), request.getLimit().longValue());
+        Page<Product> productPage = getNormalProductPage(request);
+        if (productPage.getRecords().isEmpty()) {
+            return ret;
+        }
+
         List<ProductVO> productVOList = new ArrayList<>();
         BeanUtils.copyProperties(productPage, ret);
         for (Product product : productPage.getRecords()) {
@@ -294,7 +293,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         wrapper.eq(Product::getStatus, ProductStatusConstants.LISTING);
         wrapper.eq(Product::getIsShow, ProductStatusConstants.SHOW);
         wrapper.eq(Product::getIsDel, ProductStatusConstants.NORMAL);
-        wrapper.select(Product::getProductId, Product::getCategoryId, Product::getAppType, Product::getName, Product::getAlbumPics, Product::getPic);
+        wrapper.select(Product::getProductId, Product::getCategoryId, Product::getAppType, Product::getName, Product::getAlbumPics, Product::getPic, Product::getSkuAttr);
         return this.page(page, wrapper);
     }
 
@@ -302,13 +301,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     public ProductDetailVO getProductDetailBySkuId(Long skuId) {
         ProductDetailVO ret = new ProductDetailVO();
 
-        //查询sku信息
         ProductSku productSku = productSkuService.getById(skuId);
         if (ObjectUtils.isEmpty(productSku)) {
             return ret;
         }
 
-        //查询商品信息
         Product product = this.getOne(new LambdaQueryWrapper<Product>()
                 .eq(Product::getProductId, productSku.getProductId())
                 .eq(Product::getStatus, ProductStatusConstants.LISTING)

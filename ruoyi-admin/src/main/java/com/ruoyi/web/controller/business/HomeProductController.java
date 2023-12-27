@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.business;
 
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.app.ProductRequest;
@@ -13,9 +14,10 @@ import javax.annotation.Resource;
 /**
  * @Author : zengyi
  */
+@Anonymous
 @Api(tags = "前台商品")
 @RestController
-@RequestMapping("home/product")
+@RequestMapping("/homeProduct")
 public class HomeProductController extends BaseController {
     @Resource
     private IProductService productService;
@@ -27,7 +29,7 @@ public class HomeProductController extends BaseController {
     }
 
     @ApiOperation("商品详情")
-    @GetMapping("detail/{skuId}")
+    @GetMapping("/detail/{skuId}")
     public AjaxResult getProductDetailBySkuId(@PathVariable Long skuId) {
         return AjaxResult.success(productService.getProductDetailBySkuId(skuId));
     }

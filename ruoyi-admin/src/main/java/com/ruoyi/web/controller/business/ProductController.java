@@ -9,6 +9,7 @@ import com.ruoyi.system.domain.dto.UpdateProductDTO;
 import com.ruoyi.system.service.IProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -29,11 +30,11 @@ public class ProductController extends BaseController {
         return success(productService.getPage(productQueryParam));
     }
 
-    //todo 验证参数
     @ApiOperation("添加商品")
     @PostMapping(value = "/create")
-    public AjaxResult create(@RequestBody ProductDTO productDTO) {
+    public AjaxResult create(@Validated @RequestBody ProductDTO productDTO) {
         productDTO.setOperatorUser(getUsername());
+        productDTO.setOperatorUserId(getUserId());
         return success(productService.create(productDTO));
     }
 
@@ -43,10 +44,9 @@ public class ProductController extends BaseController {
         return success(productService.detail(id));
     }
 
-    //todo 验证参数
     @ApiOperation("更新商品信息")
     @PostMapping(value = "/update")
-    public AjaxResult update(@RequestBody ProductDTO productDTO) {
+    public AjaxResult update(@Validated @RequestBody ProductDTO productDTO) {
         return success(productService.update(productDTO));
     }
 

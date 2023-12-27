@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.business;
 
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.system.service.ITypeService;
 import io.swagger.annotations.Api;
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 /**
  * @Author : zengyi
  */
+@Anonymous
 @Api(tags = "类型")
 @RestController
 @RequestMapping("/type")
