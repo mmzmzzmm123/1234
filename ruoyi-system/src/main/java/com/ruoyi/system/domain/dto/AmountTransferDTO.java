@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * @Author : XGF（徐桂烽）
@@ -22,14 +22,13 @@ public class AmountTransferDTO {
     /**
      * 接收资金商家ID
      */
-    @NotBlank
+    @NotEmpty
     @ApiModelProperty("接收资金商家ID")
     private String targetMerchantId;
 
     /**
      * 划拨金额
      */
-    @NotBlank
     @Min(1)
     @ApiModelProperty("划拨金额")
     private Long amount;
@@ -39,7 +38,6 @@ public class AmountTransferDTO {
      */
     @ApiModelProperty("描述")
     private String describe;
-
 
 
 }

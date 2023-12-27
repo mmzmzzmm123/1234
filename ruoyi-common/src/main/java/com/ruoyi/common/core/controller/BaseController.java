@@ -206,6 +206,15 @@ public class BaseController
                 .orElse(null);
     }
 
+    /**
+     * 获取登录用户商家ID
+     */
+    public Integer getMerchantType() {
+        return Optional.ofNullable(getMerchantInfo())
+                .map(MerchantInfo::getMerchantType)
+                .orElse(0);
+    }
+
 
 
     /**

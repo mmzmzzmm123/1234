@@ -272,6 +272,21 @@ public class SysUserServiceImpl implements ISysUserService
         // 新增用户岗位关联
 //        insertUserPost(user);
 
+        // 未指定 默认普通
+        if (user.getMerchantType() == null){
+            user.setMerchantType(0);
+        }
+        // 创建用户与商家的关联信息
+        MerchantInfo merchantInfo = Optional.ofNullable(SecurityUtils.getLoginUser())
+                .map(LoginUser::getMerchantInfo)
+                .orElse(null);
+        // 员工 在当前登录商家下新增用户
+        if (user.getMerchantType() == 3){
+            Assert.notNull(merchantInfo,"商家信息不存在");
+            user.setMerchantId(merchantInfo.getMerchantId());
+            user.setMerchantType(merchantInfo.getMerchantType());
+        }
+
         String configByKey = "";
         switch (user.getMerchantType()){
             case 0:
@@ -290,15 +305,6 @@ public class SysUserServiceImpl implements ISysUserService
         user.setRoleIds(new Long[]{Long.valueOf(roleId)});
         // 新增用户与角色管理
         insertUserRole(user);
-
-        // 创建用户与商家的关联信息
-        MerchantInfo merchantInfo = Optional.ofNullable(SecurityUtils.getLoginUser())
-                .map(LoginUser::getMerchantInfo)
-                .orElse(null);
-        // 未指定 默认普通
-        if (user.getMerchantType() == null){
-            user.setMerchantType(0);
-        }
 
         CreateUserMerchantRefDTO dto = new CreateUserMerchantRefDTO();
         dto.setUserId(user.getUserId());

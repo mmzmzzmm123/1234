@@ -3,9 +3,12 @@ package com.ruoyi.web.controller.business;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.entity.MerchantAmount;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.MerchantInfoVO;
+import com.ruoyi.system.domain.vo.QueryAmountDetailPageVO;
 import com.ruoyi.system.service.MerchantAmountDetailService;
 import com.ruoyi.system.service.MerchantAmountService;
 import com.ruoyi.system.service.MerchantInfoService;
@@ -44,39 +47,39 @@ public class MerchantController extends BaseController {
 
     @ApiOperation("商家列表-分页")
     @PostMapping("page")
-    public AjaxResult page(@Validated @RequestBody QueryMerchantPageDTO dto) {
-        Integer merchantType = Optional.ofNullable(getMerchantInfo())
-                .map(MerchantInfo::getMerchantType)
-                .orElse(-1);
-        // 非运营 只能看自己下属商家
-        if (merchantType != 2) {
-            dto.setPlMerchantId(getMerchantId());
+    public R<Page<MerchantInfoVO>> page(@Validated @RequestBody QueryMerchantPageDTO dto) {
+        Integer merchantType = getMerchantType();
+        String merchantId = getMerchantId();
+        if (merchantType == 0) {
+            dto.setMerchantId(merchantId);
+        } else {
+            dto.setPlMerchantId(merchantId);
         }
         Page<MerchantInfoVO> page = merchantInfoService.page(dto);
-        return AjaxResult.success(page);
+        return R.ok(page);
     }
 
     @ApiOperation("获取商家资金")
     @PostMapping("getAmount")
-    public AjaxResult getAmount() {
+    public R<MerchantAmount> getAmount() {
         String merchantId = getMerchantId();
         if (StringUtils.isEmpty(merchantId)) {
-            return AjaxResult.error();
+            return R.fail();
         }
-        return AjaxResult.success(merchantAmountService.getById(merchantId));
+        return R.ok(merchantAmountService.getById(merchantId));
     }
 
     @ApiOperation("商家资金明细-分页")
     @PostMapping("amountDetailPage")
-    public AjaxResult amountDetailPage(@Validated @RequestBody QueryAmountDetailPageDTO dto) {
+    public R<Page<QueryAmountDetailPageVO>> amountDetailPage(@Validated @RequestBody QueryAmountDetailPageDTO dto) {
         dto.setMerchantId(getMerchantId());
-        return AjaxResult.success(merchantAmountDetailService.page(dto));
+        return R.ok(merchantAmountDetailService.page(dto));
     }
 
 
     @ApiOperation("资金划拨")
     @PostMapping("amountTransfer")
-    public AjaxResult amountTransfer(@Validated @RequestBody AmountTransferDTO dto) {
+    public R amountTransfer(@Validated @RequestBody AmountTransferDTO dto) {
         String merchantId = getMerchantId();
         MerchantInfo merchantInfo = merchantInfoService.getById(dto.getTargetMerchantId());
         Assert.notNull(merchantInfo,"划拨商家不存在");
@@ -84,12 +87,12 @@ public class MerchantController extends BaseController {
 
         dto.setMerchantId(merchantId);
         merchantAmountService.amountTransfer(dto);
-        return AjaxResult.success();
+        return R.ok();
     }
 
     @ApiOperation("资金回收")
     @PostMapping("amountRecovery")
-    public AjaxResult amountRecovery(@Validated @RequestBody AmountRecoveryDTO dto) {
+    public R amountRecovery(@Validated @RequestBody AmountRecoveryDTO dto) {
         String merchantId = getMerchantId();
         MerchantInfo merchantInfo = merchantInfoService.getById(dto.getTargetMerchantId());
         Assert.notNull(merchantInfo,"回收商家不存在");
@@ -97,12 +100,12 @@ public class MerchantController extends BaseController {
 
         dto.setMerchantId(merchantId);
         merchantAmountService.amountRecovery(dto);
-        return AjaxResult.success();
+        return R.ok();
     }
 
     @ApiOperation("资金充值（仅限运营使用）")
     @PostMapping("amountRecharge")
-    public AjaxResult amountRecharge(@Validated @RequestBody AmountRechargeDTO dto) {
+    public R amountRecharge(@Validated @RequestBody AmountRechargeDTO dto) {
         Integer merchantType = Optional.ofNullable(getMerchantInfo())
                 .map(MerchantInfo::getMerchantType)
                 .orElse(-1);
@@ -111,7 +114,7 @@ public class MerchantController extends BaseController {
         dto.setUserId(getUserId());
         dto.setCreateBy(getUsername());
         merchantAmountService.amountRecharge(dto);
-        return AjaxResult.success();
+        return R.ok();
     }
 
 }

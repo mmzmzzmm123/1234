@@ -1,5 +1,6 @@
 package com.ruoyi.system.components;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.util.CollectionUtils;
@@ -9,7 +10,9 @@ import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
+import com.ruoyi.common.core.domain.entity.order.OrderSku;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.mapper.OrderSkuMapper;
 import com.ruoyi.system.mapper.ProductMapper;
 import com.ruoyi.system.mapper.ProductSkuMapper;
 
@@ -31,6 +34,14 @@ public class ProductTools {
 		final ProductSkuMapper productSkuMapper = SpringUtils.getBean(ProductSkuMapper.class);
 		return productSkuMapper
 				.selectList(new QueryWrapper<ProductSku>().lambda().in(ProductSku::getProductId, productIdList));
+	}
+
+	public static long skuPrice(Long productId) {
+		List<ProductSku> skus = listSku(Arrays.asList(productId));
+		if (CollectionUtils.isEmpty(skus)) {
+			return 0;
+		}
+		return skus.get(0).getPrice();
 	}
 
 	public static AjaxResult checkNormal(Long productId) {

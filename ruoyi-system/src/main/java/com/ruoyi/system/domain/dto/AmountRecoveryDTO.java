@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 
 /**
  * @Author : XGF（徐桂烽）
@@ -22,10 +23,9 @@ public class AmountRecoveryDTO {
     /**
      * 回收商家ID
      */
-    @NotBlank
+    @NotEmpty
     @ApiModelProperty("回收商家商家")
     private String targetMerchantId;
-
 
     @ApiModelProperty("回收资金金额")
     private Long amount;

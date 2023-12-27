@@ -21,12 +21,7 @@ public class MerchantAmountDetailServiceImpl extends ServiceImpl<MerchantAmountD
     @Override
     public Page<QueryAmountDetailPageVO> page(QueryAmountDetailPageDTO dto) {
         Page<QueryAmountDetailPageVO> page = new Page<>(dto.getPage(),dto.getLimit());
-        List<QueryAmountDetailPageVO> records = baseMapper.page(page, dto);
-        page.setRecords(records);
+        baseMapper.page(page, dto);
         return page;
     }
 }
-
-
-
-
