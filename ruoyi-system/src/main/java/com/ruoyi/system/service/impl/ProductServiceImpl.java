@@ -62,7 +62,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public boolean create(ProductDTO productDTO) {
+    public Boolean create(ProductDTO productDTO) {
         Product product = new Product();
         BeanUtils.copyProperties(productDTO, product);
         long id = IdWorker.getId(product);
@@ -82,7 +82,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         product.setSkuAttr(getSkuAttr(id));
         save(product);
 
-        return true;
+        return Boolean.TRUE;
     }
 
     private String getSkuAttr(long productId) {
@@ -122,9 +122,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public boolean update(ProductDTO productDTO) {
+    public Boolean update(ProductDTO productDTO) {
         if (ObjectUtils.isEmpty(productDTO.getProductId())) {
-            return false;
+            return Boolean.FALSE;
         }
 
         List<ProductSku> productSkus = getUpdateProductSku(productDTO.getSkuList());
@@ -137,7 +137,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         product.setSkuAttr(getSkuAttr(productDTO.getProductId()));
         this.update(product, productUpdateWrapper);
 
-        return true;
+        return Boolean.TRUE;
     }
 
     private List<ProductSku> getUpdateProductSku(List<ProductSkuDTO> skuList) {
@@ -171,14 +171,14 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public boolean handleUpdatePrice(UpdateProductDTO productDTO) {
+    public Boolean handleUpdatePrice(UpdateProductDTO productDTO) {
         if (ObjectUtils.isEmpty(productDTO.getProductId()) || ObjectUtils.isEmpty(productDTO.getPrice()) || productDTO.getPrice() < 0) {
-            return false;
+            return Boolean.FALSE;
         }
 
         Product product = this.getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, productDTO.getProductId()).last("limit 1"));
         if (ObjectUtils.isEmpty(product)) {
-            return false;
+            return Boolean.FALSE;
         }
 
         String skuAttr = product.getSkuAttr();
@@ -193,19 +193,19 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             productSkuService.save(productSku);
         }
 
-        return true;
+        return Boolean.TRUE;
     }
 
     @Override
-    public boolean batchUpdateStatus(BatchUpdateProductDTO productDTO) {
+    public Boolean batchUpdateStatus(BatchUpdateProductDTO productDTO) {
         List<Product> productList = new ArrayList<>();
         for (Long id : productDTO.getProductIds()) {
             Product product = this.getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
             if (ObjectUtils.isEmpty(product)) {
-                continue;
+                return Boolean.FALSE;
             }
             if (productDTO.getStatus().equals(product.getStatus())) {
-                continue;
+                return Boolean.FALSE;
             }
             product.setStatus(productDTO.getStatus());
             productList.add(product);
@@ -215,11 +215,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             this.updateBatchById(productList);
         }
 
-        return true;
+        return Boolean.TRUE;
     }
 
     @Override
-    public boolean batchUpdateShowStatus(BatchUpdateProductDTO productDTO) {
+    public Boolean batchUpdateShowStatus(BatchUpdateProductDTO productDTO) {
         List<Product> productList = new ArrayList<>();
         for (Long id : productDTO.getProductIds()) {
             Product product = this.getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
@@ -237,11 +237,11 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             this.updateBatchById(productList);
         }
 
-        return true;
+        return Boolean.TRUE;
     }
 
     @Override
-    public boolean batchDeleteProducts(BatchUpdateProductDTO productDTO) {
+    public Boolean batchDeleteProducts(BatchUpdateProductDTO productDTO) {
         List<Product> productList = new ArrayList<>();
         for (Long id : productDTO.getProductIds()) {
             Product product = this.getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
@@ -257,7 +257,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             this.updateBatchById(productList);
         }
 
-        return true;
+        return Boolean.TRUE;
     }
 
     @Override

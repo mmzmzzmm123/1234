@@ -4,6 +4,8 @@ import com.ruoyi.system.domain.base.PageBaseDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Positive;
+
 @Data
 public class ProductQueryParamDTO extends PageBaseDTO {
     @ApiModelProperty("开始日期")
@@ -21,6 +23,7 @@ public class ProductQueryParamDTO extends PageBaseDTO {
     @ApiModelProperty("服务名称")
     private String name;
 
+    @Positive(message = "服务id必须是正数")
     @ApiModelProperty("服务id")
     private Long productId;
 }

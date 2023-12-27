@@ -22,7 +22,7 @@ public interface IProductService {
     /**
      * 新增商品
      */
-    boolean create(ProductDTO pmsProductAttributeParam);
+    Boolean create(ProductDTO pmsProductAttributeParam);
 
     /**
      * 获取编辑商品信息
@@ -32,15 +32,15 @@ public interface IProductService {
     /**
      * 更新商品
      */
-    boolean update(ProductDTO productDTO);
+    Boolean update(ProductDTO productDTO);
 
-    boolean handleUpdatePrice(UpdateProductDTO productDTO);
+    Boolean handleUpdatePrice(UpdateProductDTO productDTO);
 
-    boolean batchUpdateStatus(BatchUpdateProductDTO productDTO);
+    Boolean batchUpdateStatus(BatchUpdateProductDTO productDTO);
 
-    boolean batchUpdateShowStatus(BatchUpdateProductDTO productDTO);
+    Boolean batchUpdateShowStatus(BatchUpdateProductDTO productDTO);
 
-    boolean batchDeleteProducts(BatchUpdateProductDTO productDTO);
+    Boolean batchDeleteProducts(BatchUpdateProductDTO productDTO);
 
     /**
      * 前台商品列表
