@@ -16,7 +16,6 @@ public class AmountRechargeDTO {
     @ApiModelProperty(value = "商家ID", hidden = true)
     private String merchantId;
 
-    @NotBlank
     @Min(1)
     @ApiModelProperty("充值金额")
     private Long amount;

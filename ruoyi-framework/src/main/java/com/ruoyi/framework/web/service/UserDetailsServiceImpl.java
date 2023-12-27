@@ -1,5 +1,6 @@
 package com.ruoyi.framework.web.service;
 
+import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.system.service.MerchantInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,13 @@ public class UserDetailsServiceImpl implements UserDetailsService
 
     public UserDetails createLoginUser(SysUser user) {
         LoginUser loginUser = new LoginUser(user.getUserId(), user.getDeptId(), user, permissionService.getMenuPermission(user));
-        loginUser.setMerchantInfo(merchantInfoService.getByUserId(user.getUserId()));
+        MerchantInfo merchantInfo = merchantInfoService.getByUserId(user.getUserId());
+        if (merchantInfo != null){
+            loginUser.setMerchantInfo(merchantInfo);
+            user.setMerchantId(merchantInfo.getMerchantId());
+            user.setMerchantType(merchantInfo.getMerchantType());
+            loginUser.setUser(user);
+        }
         return loginUser;
     }
 }

@@ -251,6 +251,7 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void amountRecharge(AmountRechargeDTO dto) {
         MerchantAmount merchantAmount = super.getById(dto.getMerchantId());
         if (merchantAmount == null) {

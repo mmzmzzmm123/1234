@@ -27,9 +27,19 @@ public class MerchantAmountFrozenDetail implements Serializable {
     private String merchantId;
 
     /**
+     * 资金变动前
+     */
+    private Long changeBefore;
+
+    /**
      * 冻结金额
      */
     private Long frozenAmount;
+
+    /**
+     * 资金变动后
+     */
+    private Long changeAfter;
 
     /**
      * 订单编号
@@ -39,6 +49,7 @@ public class MerchantAmountFrozenDetail implements Serializable {
     /**
      * 描述
      */
+    @TableField(value = "`describe`")
     private String describe;
 
     /**

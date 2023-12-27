@@ -54,6 +54,7 @@ public class MerchantAmountDetail implements Serializable {
     /**
      * 描述
      */
+    @TableField(value = "`describe`")
     private String describe;
 
     /**
