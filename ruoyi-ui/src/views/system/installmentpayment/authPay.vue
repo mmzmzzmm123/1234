@@ -20,12 +20,12 @@
       <el-row>
         <el-col :span="8" :offset="2">
           <el-form-item label="供货单位" prop="supplier">
-            <el-input v-model="form.supplier" disabled />
+            <el-input v-model="invoiceList[0].stoUnit" disabled />
           </el-form-item>
         </el-col>
         <el-col :span="8" :offset="2">
           <el-form-item label="票据号" prop="billnumber">
-            <el-input  v-model="form.billnumber" disabled />
+            <el-input  v-model="invoiceList[0].invoiceId" disabled />
           </el-form-item>
         </el-col>
       </el-row>
@@ -77,6 +77,7 @@
 
 <script>
 import { listInstallmentpayment, addInstallmentpayment, getSrcheck, getInstall, getAuthPay, updateAuthRole } from "@/api/system/installmentpayment";
+import { listInvoice,} from "@/api/system/invoice";
 
 export default {
   name: "Installmentpayment",
@@ -119,13 +120,28 @@ export default {
       open: false,
       // 表单校验
       rules: {
-      }
+      },
+      invoiceList:[],
     };
   },
 
   created() {
-    this.getList();
     const id = this.$route.params && this.$route.params.id;
+    console.log(this.$route.params);
+    this.queryParams.id = id;
+    listInvoice(this.queryParams).then(response => {
+        this.invoiceList = response.rows;
+        console.log(response.rows);
+        console.log(this.invoiceList);
+      });
+    this.queryParams.srchecksheetId = id;
+    listInstallmentpayment(this.queryParams).then(response => {
+        this.srchecksheetList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+        console.log(this.srchecksheetList);
+      });
+      this.queryParams.id = id;
     if (id) {
       this.loading = true;
       getInstall(id).then((response) => {
