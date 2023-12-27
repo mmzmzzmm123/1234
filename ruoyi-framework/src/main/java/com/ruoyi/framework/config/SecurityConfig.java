@@ -110,7 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 // CSRF禁用，因为不使用session
                 .csrf().disable()
                 // 启用跨域请求
-                .cors().configurationSource(configurationSource()).and()
+//                .cors().configurationSource(configurationSource()).and()
                 // 禁用HTTP响应标头
                 .headers().cacheControl().disable().and()
                 // 认证失败处理类
