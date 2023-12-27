@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.InvoiceMapper">
+    
+    <resultMap type="Invoice" id="InvoiceResult">
+        <result property="id"    column="id"    />
+        <result property="isFen"    column="is_fen"    />
+        <result property="stoId"    column="sto_id"    />
+        <result property="stoName"    column="sto_name"    />
+        <result property="stoUnit"    column="sto_unit"    />
+        <result property="stoType"    column="sto_type"    />
+        <result property="stoMoney"    column="sto_money"    />
+        <result property="invoiceDate"    column="invoice_date"    />
+        <result property="invoiceId"    column="invoice_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="status"    column="status"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="kpStatus"    column="kp_status"    />
+        <result property="invoicePrice"    column="invoice_price"    />
+        <result property="invoiceType"    column="invoice_type"    />
+    </resultMap>
+
+    <sql id="selectInvoiceVo">
+        select s.is_fen,s.sto_name,s.sto_money,s.sto_unit,s.sto_type,s.id, s.sto_id, i.invoice_date, i.invoice_id, i.user_id, i.status,
+               s.dept_id, s.kp_status, i.invoice_price, i.invoice_type from invoice i
+        right join storage s on s.id = i.sto_id where s.kp_status = 1
+    </sql>
+
+    <select id="selectInvoiceList" parameterType="Invoice" resultMap="InvoiceResult">
+        <include refid="selectInvoiceVo"/>
+            <if test="id != null  and id != ''"> and s.id = #{id}</if>
+            <if test="stoId != null  and stoId != ''"> and s.sto_id = #{stoId}</if>
+            <if test="stoMoney != null "> and s.sto_money = #{stoMoney}</if>
+            <if test="minStoMoney != null "> and s.sto_money >= #{minStoMoney}</if>
+            <if test="maxStoMoney != null "> and s.sto_money &lt;= #{maxStoMoney}</if>
+            <if test="minInvoiceMoney != null "> and i.invoice_price >= #{minInvoiceMoney}</if>
+            <if test="maxInvoiceMoney != null "> and i.invoice_price &lt;= #{maxInvoiceMoney}</if>
+            <if test="invoiceDate != null "> and i.invoice_date = #{invoiceDate}</if>
+            <if test="invoiceId != null "> and i.invoice_id = #{invoiceId}</if>
+            <if test="userId != null "> and s.user_id = #{userId}</if>
+            <if test="status != null "> and i.status = #{status}</if>
+            <if test="deptId != null "> and s.dept_id = #{deptId}</if>
+            <if test="invoicePrice != null "> and i.invoice_price = #{invoicePrice}</if>
+            <if test="invoiceType != null "> and i.invoice_type = #{invoiceType}</if>
+        <if test="params.beginTime != null and params.beginTime != ''"><!-- 开始时间检索 -->
+            AND date_format(i.invoice_date,'%y%m%d') &gt;= date_format(#{params.beginTime},'%y%m%d')
+        </if>
+        <if test="params.endTime != null and params.endTime != ''"><!-- 结束时间检索 -->
+            AND date_format(i.invoice_date,'%y%m%d') &lt;= date_format(#{params.endTime},'%y%m%d')
+        </if>
+        order by s.sto_date desc
+    </select>
+    
+    <select id="selectInvoiceById" parameterType="Integer" resultMap="InvoiceResult">
+        select * from invoice where sto_id = #{stoId}
+    </select>
+        
+    <insert id="insertInvoice" parameterType="Invoice" useGeneratedKeys="true" keyProperty="id">
+        insert into invoice
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="stoId != null and stoId != ''">sto_id,</if>
+            <if test="stoMoney != null">sto_money,</if>
+            <if test="invoiceDate != null">invoice_date,</if>
+            <if test="invoiceId != null">invoice_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="status != null">status,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="invoicePrice != null">invoice_price,</if>
+            <if test="invoiceType != null">invoice_type,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="stoId != null and stoId != ''">#{stoId},</if>
+            <if test="stoMoney != null">#{stoMoney},</if>
+            <if test="stoRemark != null">#{stoRemark},</if>
+            <if test="stoDate != null">#{stoDate},</if>
+            <if test="invoiceDate != null">#{invoiceDate},</if>
+            <if test="invoiceId != null">#{invoiceId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="invoicePrice != null">#{invoicePrice},</if>
+            <if test="invoiceType != null">#{invoiceType},</if>
+         </trim>
+    </insert>
+
+    <update id="updateInvoice" parameterType="Invoice">
+        update invoice
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="invoiceDate != null">invoice_date = #{invoiceDate},</if>
+            invoice_id = #{invoiceId},
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            invoice_price = #{invoicePrice},
+            <if test="invoiceType != null">invoice_type = #{invoiceType},</if>
+        </trim>
+        where sto_id = #{stoId}
+    </update>
+
+    <delete id="deleteInvoiceById" parameterType="Integer">
+        delete from invoice where sto_id = #{id}
+    </delete>
+
+    <delete id="deleteInvoiceByIds" parameterType="String">
+        delete from invoice where sto_id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
