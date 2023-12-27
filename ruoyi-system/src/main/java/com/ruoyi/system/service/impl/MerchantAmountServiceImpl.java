@@ -102,7 +102,7 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
         // 接收商家 增加
         targetMerchantAmount.setTotalAmount(targetMerchantAmount.getTotalAmount() + dto.getAmount());
         targetMerchantAmount.setAvailableAmount(targetMerchantAmount.getAvailableAmount() + dto.getAmount());
-        detail.setAmountType(2);
+        targetDetail.setAmountType(2);
         targetDetail.setChangeAfter(targetMerchantAmount.getAvailableAmount());
         // 修改余额
         super.updateById(merchantAmount);
@@ -243,7 +243,7 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
         // 回收商家扣减
         targetMerchantAmount.setTotalAmount(targetMerchantAmount.getTotalAmount() - recoveryAmount);
         targetMerchantAmount.setAvailableAmount(targetMerchantAmount.getAvailableAmount() - recoveryAmount);
-        detail.setAmountType(1);
+        targetDetail.setAmountType(1);
         targetDetail.setChangeAfter(targetMerchantAmount.getAvailableAmount());
         // 修改余额
         super.updateById(merchantAmount);
