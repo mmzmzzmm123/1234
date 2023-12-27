@@ -9,10 +9,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
-import com.ruoyi.system.domain.dto.ProductDTO;
-import com.ruoyi.system.domain.dto.ProductQueryParamDTO;
-import com.ruoyi.system.domain.dto.ProductSkuDTO;
-import com.ruoyi.system.domain.dto.SkuAttrDTO;
+import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.mapper.ProductMapper;
 import com.ruoyi.system.service.IProductService;
 import org.springframework.beans.BeanUtils;
@@ -32,6 +29,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public Page<Product> getPage(ProductQueryParamDTO queryParam) {
         Page<Product> page = new Page<>(queryParam.getPage().longValue(), queryParam.getLimit().longValue());
+        return this.page(page, getQueryWrapper(queryParam));
+    }
+
+    private LambdaQueryWrapper<Product> getQueryWrapper(ProductQueryParamDTO queryParam) {
         LambdaQueryWrapper<Product> wrapper = Wrappers.lambdaQuery(Product.class);
         if (!ObjectUtils.isEmpty(queryParam.getStartDate())) {
             wrapper.gt(Product::getCreateDate, queryParam.getStartDate());
@@ -51,7 +52,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         if (!ObjectUtils.isEmpty(queryParam.getProductId())) {
             wrapper.eq(Product::getProductId, queryParam.getProductId());
         }
-        return this.page(page, wrapper);
+        return wrapper;
     }
 
     @Override
@@ -92,6 +93,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Override
     public ProductDTO detail(Long id) {
+        if (ObjectUtils.isEmpty(id)) {
+            return null;
+        }
+
         ProductDTO ret = new ProductDTO();
 
         //商品详情
@@ -142,6 +147,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
                 productSku.setProductId(productSkuDTO.getProductId());
                 productSku.setCountyId(productSkuDTO.getCountyId());
+                productSku.setCountyName(productSkuDTO.getCountyName());
                 productSku.setPrice(productSkuDTO.getPrice());
                 productSku.setPriceUnit(productSkuDTO.getPriceUnit());
                 productSku.setStock(productSkuDTO.getStock());
@@ -150,6 +156,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
                 ProductSku productSku = productSkuService.getById(productSkuDTO.getId());
                 if (!ObjectUtils.isEmpty(productSku)) {
                     productSku.setCountyId(productSkuDTO.getCountyId());
+                    productSku.setCountyName(productSkuDTO.getCountyName());
                     productSku.setPrice(productSkuDTO.getPrice());
                     productSku.setPriceUnit(productSkuDTO.getPriceUnit());
                     productSku.setStock(productSkuDTO.getStock());
@@ -159,5 +166,91 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
 
         return productSkus;
+    }
+
+    @Override
+    @Transactional(rollbackFor=Exception.class)
+    public boolean updatePrice(UpdateProductDTO productDTO) {
+        Product product = this.getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, productDTO.getProductId()).last("limit 1"));
+        if (ObjectUtils.isEmpty(product)) {
+            return false;
+        }
+
+        String skuAttr = product.getSkuAttr();
+        SkuAttrDTO skuAttrDTO = JSON.parseObject(skuAttr, SkuAttrDTO.class);
+        product.setPrice(productDTO.getPrice());
+        this.save(product);
+
+        ProductSku productSku = productSkuService.getById(skuAttrDTO.getSkuId());
+        if (!ObjectUtils.isEmpty(productSku)) {
+            productSku.setPrice(productDTO.getPrice());
+            productSkuService.save(productSku);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean updateStatus(BatchUpdateProductDTO productDTO) {
+        List<Product> productList = new ArrayList<>();
+        for (Long id : productDTO.getProductIds()) {
+            Product product = this.getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
+            if (ObjectUtils.isEmpty(product)) {
+                continue;
+            }
+            if (productDTO.getStatus().equals(product.getStatus())) {
+                continue;
+            }
+            product.setStatus(productDTO.getStatus());
+            productList.add(product);
+        }
+
+        if (productList.size() > 0) {
+            this.updateBatchById(productList);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean updateShowStatus(BatchUpdateProductDTO productDTO) {
+        List<Product> productList = new ArrayList<>();
+        for (Long id : productDTO.getProductIds()) {
+            Product product = this.getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
+            if (ObjectUtils.isEmpty(product)) {
+                continue;
+            }
+            if (productDTO.getShowStatus().equals(product.getStatus())) {
+                continue;
+            }
+            product.setIsShow(productDTO.getShowStatus());
+            productList.add(product);
+        }
+
+        if (productList.size() > 0) {
+            this.updateBatchById(productList);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean deleteProducts(BatchUpdateProductDTO productDTO) {
+        List<Product> productList = new ArrayList<>();
+        for (Long id : productDTO.getProductIds()) {
+            Product product = this.getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
+            if (ObjectUtils.isEmpty(product)) {
+                continue;
+            }
+            product.setIsShow(0);
+            product.setIsDel(1);
+            productList.add(product);
+        }
+
+        if (productList.size() > 0) {
+            this.updateBatchById(productList);
+        }
+
+        return true;
     }
 }

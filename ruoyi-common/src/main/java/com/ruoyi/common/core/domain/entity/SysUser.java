@@ -119,6 +119,7 @@ public class SysUser extends BaseEntity
      */
     @Max(2)
     @Min(0)
+    @NotBlank
     @ApiModelProperty("用户类型 0-普通 1-代理 2-运营 默认普通用户")
     private Integer merchantType = 0;
 

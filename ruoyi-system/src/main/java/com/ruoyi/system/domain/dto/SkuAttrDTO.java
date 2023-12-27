@@ -13,4 +13,6 @@ public class SkuAttrDTO {
     private Integer stock;
 
     private Integer countyId;
+
+    private String countyName;
 }
