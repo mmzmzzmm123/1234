@@ -40,6 +40,7 @@ public class InstallmentpaymentServiceImpl implements IInstallmentpaymentService
     @Override
     public List<Installmentpayment> selectInstallmentpaymentList(Installmentpayment installmentpayment)
     {
+        System.out.println(installmentpayment);
         return installmentpaymentMapper.selectInstallmentpaymentList(installmentpayment);
     }
 
