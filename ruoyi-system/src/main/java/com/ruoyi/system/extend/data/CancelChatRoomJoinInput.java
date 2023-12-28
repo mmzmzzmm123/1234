@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class CancelChatRoomJoinInput {
 
-    private String taskID;
+    private String taskId;
 
     private Integer id;
 

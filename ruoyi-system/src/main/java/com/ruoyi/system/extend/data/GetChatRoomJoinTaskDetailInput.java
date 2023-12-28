@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class GetChatRoomJoinTaskDetailInput {
 
-    private long taskID;
+    private long taskId;
 
     private long isCache;
 
