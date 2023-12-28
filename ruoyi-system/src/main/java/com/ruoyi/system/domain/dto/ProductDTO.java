@@ -1,5 +1,7 @@
 package com.ruoyi.system.domain.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -10,6 +12,7 @@ import java.util.List;
 
 @Data
 public class ProductDTO {
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(value = "商品id")
     private Long productId;
 
