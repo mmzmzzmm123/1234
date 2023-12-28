@@ -35,20 +35,12 @@ public class OrderTools {
 
 	public static int getSuccessCountOfTaskDetail(String orderId) {
 		// 获取 任务 详情成功的 个数
-		int taskId = 1;
-		GetChatRoomJoinTaskDetailInfoListInput input = new GetChatRoomJoinTaskDetailInfoListInput();
-		input.setTaskId(taskId);
-		input.setRunStatus(1);
-		input.setPageSize(100000);
-		UtTouchResult<UtTouchPage<GetChatRoomJoinTaskDetailInfoListOutput>> details = UtTouchJoinRoomClient
-				.getChatRoomJoinTaskDetailInfoList(input);
-		log.info("getChatRoomJoinTaskDetailInfoList {} {}", input, details);
-		if (details.getData() != null && !CollectionUtils.isEmpty(details.getData().getDataList())) {
-			if (!CollectionUtils.isEmpty(details.getData().getDataList().get(0).getDetails())) {
-				return details.getData().getDataList().get(0).getDetails().size();
-			}
+		TaskQuery taskQuery = TaskQuery.newQuery(0);
+		List<TaskAdapter> taskAdapters = taskQuery.listByOrder(Arrays.asList(orderId));
+		if (CollectionUtils.isEmpty(taskAdapters)) {
+			return 0;
 		}
-		return 0;
+		return taskQuery.getSuccessCountOfTaskDetail(taskAdapters.get(0).getTaskId());
 	}
 
 	public static String orderId() {
@@ -99,13 +91,13 @@ public class OrderTools {
 
 	public static void handleOrderStatus(Order order) {
 		final OrderMapper mapper = SpringUtils.getBean(OrderMapper.class);
-		List<TaskAdapter> taskAdapters = TaskQuery.getQuery(0).listByOrder(Arrays.asList(order.getOrderId()));
+		List<TaskAdapter> taskAdapters = TaskQuery.newQuery(0).listByOrder(Arrays.asList(order.getOrderId()));
 		if (CollectionUtils.isEmpty(taskAdapters)) {
 			return;
 		}
 		String taskId = taskAdapters.get(0).getTaskId();
 		// 查询任务的状态 -1待执行 0-进行中 1-已完成 2-已取消
-		int taskStatus = TaskQuery.getQuery(0).getStatus(taskId);
+		int taskStatus = TaskQuery.newQuery(0).getStatus(taskId);
 
 		if (taskStatus == 0) {
 			// 如果任务是 进行中， 设置订单为 进行中

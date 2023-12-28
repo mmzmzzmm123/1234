@@ -206,7 +206,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		// 查询任务
 		Map<String, List<TaskAdapter>> taskMap = new HashMap<>();
 		try {
-			List<TaskAdapter> taskAdapters = TaskQuery.getQuery(0).listByOrder(orderIds);
+			List<TaskAdapter> taskAdapters = TaskQuery.newQuery(0).listByOrder(orderIds);
 			taskMap = ListTools.group(taskAdapters, f -> f.getOrderId());
 		} catch (Exception e) {
 		}
@@ -337,9 +337,9 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		SubmitResponse response = new SubmitResponse();
 		response.setOrderId(orderId);
 		response.setParam(JSON.parseObject(order.getParams(), OrderProduceRequest.Params.class));
-		
-		List<TaskAdapter> taskAdapters = TaskQuery.getQuery(0).listByOrder(Arrays.asList(orderId)) ;
-		Objects.notNullDone(taskAdapters, s->response.setTaskName(s.get(0).getTaskName()));
+
+		List<TaskAdapter> taskAdapters = TaskQuery.newQuery(0).listByOrder(Arrays.asList(orderId));
+		Objects.notNullDone(taskAdapters, s -> response.setTaskName(s.get(0).getTaskName()));
 		return response;
 	}
 

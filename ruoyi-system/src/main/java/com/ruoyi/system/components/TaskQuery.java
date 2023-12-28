@@ -12,6 +12,8 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.Task;
 import com.ruoyi.system.extend.UtTouchJoinRoomClient;
 import com.ruoyi.system.extend.UtTouchResult;
+import com.ruoyi.system.extend.data.GetChatRoomJoinTaskDetailInfoListInput;
+import com.ruoyi.system.extend.data.GetChatRoomJoinTaskDetailInfoListOutput;
 import com.ruoyi.system.extend.data.GetChatRoomJoinTaskPageInput;
 import com.ruoyi.system.extend.data.GetChatRoomJoinTaskPageOutput;
 import com.ruoyi.system.extend.data.UtTouchPage;
@@ -29,10 +31,24 @@ public abstract class TaskQuery {
 		INSTANCE_CACHE.put(0, new PullInGroupTaskQuery());
 	}
 
-	public static TaskQuery getQuery(int orderType) {
+	public static TaskQuery newQuery(int orderType) {
 		return INSTANCE_CACHE.get(orderType);
 	}
 
+	/**
+	 * 获取 任务 详情成功的 个数
+	 * 
+	 * @param taskId
+	 * @return
+	 */
+	public abstract int getSuccessCountOfTaskDetail(String taskId);
+
+	/**
+	 * 通过 订单id查询 任务
+	 * 
+	 * @param orderIds
+	 * @return
+	 */
 	public abstract List<TaskAdapter> listByOrder(List<String> orderIds);
 
 	/**
@@ -87,6 +103,23 @@ public abstract class TaskQuery {
 				adapters.add(new TaskAdapter(task.getTaskId(), task.getTaskName(), task.getOrderId()));
 			}
 			return adapters;
+		}
+
+		@Override
+		public int getSuccessCountOfTaskDetail(String taskId) {
+			GetChatRoomJoinTaskDetailInfoListInput input = new GetChatRoomJoinTaskDetailInfoListInput();
+			input.setTaskId(taskId);
+			input.setRunStatus(1);
+			input.setPageSize(100000);
+			UtTouchResult<UtTouchPage<GetChatRoomJoinTaskDetailInfoListOutput>> details = UtTouchJoinRoomClient
+					.getChatRoomJoinTaskDetailInfoList(input);
+			log.info("getChatRoomJoinTaskDetailInfoList {} {}", input, details);
+			if (details.getData() != null && !CollectionUtils.isEmpty(details.getData().getDataList())) {
+				if (!CollectionUtils.isEmpty(details.getData().getDataList().get(0).getDetails())) {
+					return details.getData().getDataList().get(0).getDetails().size();
+				}
+			}
+			return 0;
 		}
 	}
 
