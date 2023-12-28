@@ -4,7 +4,6 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.config.ErrInfoConfig;
@@ -267,7 +266,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public Page<ProductVO> getNormalList(ProductRequest request) {
         Page<ProductVO> ret = new Page<>(request.getPage().longValue(), request.getLimit().longValue());
-        Page<Product> productPage = getNormalProductPage(request);
+        Page<Product> productPage = getNormalProduct(request);
         if (productPage.getRecords().isEmpty()) {
             return ret;
         }
@@ -295,10 +294,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return ret;
     }
 
-    private Page<Product> getNormalProductPage(ProductRequest request) {
+    private Page<Product> getNormalProduct(ProductRequest request) {
         Page<Product> page = new Page<>(request.getPage().longValue(), request.getLimit().longValue());
 
-        LambdaQueryWrapper<Product> wrapper = Wrappers.lambdaQuery(Product.class);
+        LambdaQueryWrapper<Product> wrapper = new LambdaQueryWrapper<>();
         if (!ObjectUtils.isEmpty(request.getCategoryId())) {
             wrapper.eq(Product::getCategoryId, request.getCategoryId());
         }

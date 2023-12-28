@@ -64,9 +64,6 @@ public class ProductDTO {
 
     private Long operatorUserId;
 
-    @ApiModelProperty(value = "是否删除:0否 1是")
-    private Integer isDel;
-
     @ApiModelProperty("规格设置")
     private List<ProductSkuDTO> skuList;
 }
