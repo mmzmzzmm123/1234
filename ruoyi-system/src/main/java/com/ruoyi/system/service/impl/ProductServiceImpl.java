@@ -337,6 +337,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         ProductSkuDTO productSkuDTO = new ProductSkuDTO();
         BeanUtils.copyProperties(productSku, productSkuDTO);
         skuList.add(productSkuDTO);
+
+        List<String> countryCodeList = new ArrayList<>();
+        countryCodeList.add(skuList.get(0).getCountyCode());
+        Map<String, Long> stockEstimateMap = getStockMapByCountyCode(countryCodeList);
+        skuList.forEach(x -> x.setStock(stockEstimateMap.get(x.getCountyCode())));
+
         ret.setSkuList(skuList);
 
         return R.ok(ret);
