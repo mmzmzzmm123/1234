@@ -32,10 +32,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderTools {
 
-	public static void listTask(List<String> orderIds) {
-
-	}
-
 	public static int getSuccessCountOfTaskDetail(String orderId) {
 		// 获取 任务 详情成功的 个数
 		int taskId = 1;
@@ -102,15 +98,13 @@ public class OrderTools {
 
 	public static void handleOrderStatus(Order order) {
 		final OrderMapper mapper = SpringUtils.getBean(OrderMapper.class);
-		
-		String taskId  ;
-		
+
+		String taskId;
+
 		// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
-		
-		
+
 		// 查询任务的状态
-	
-		
+
 		// 如果任务是 进行中， 设置订单为 进行中
 		mapper.updateStatus(order.getOrderId(), 1);
 		log.info("OrderMapper.updateStatus {} {}", order, 1);
