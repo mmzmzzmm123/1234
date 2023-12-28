@@ -105,7 +105,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         ProductDTO ret = new ProductDTO();
         Product product = getOneNormalProductById(id);
         if (ObjectUtils.isEmpty(product)) {
-            return R.fail(ErrInfoConfig.getDynmic(11006));
+            return R.fail(ErrInfoConfig.getDynmic(11008));
         }
 
         BeanUtils.copyProperties(product, ret);
@@ -137,7 +137,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
         Product product = getOneNormalProductById(productDTO.getProductId());
         if (ObjectUtils.isEmpty(product)) {
-            return R.fail(ErrInfoConfig.getDynmic(11006));
+            return R.fail(ErrInfoConfig.getDynmic(11008));
         }
 
         List<ProductSku> productSkus = getUpdateProductSku(productDTO.getProductId(), productDTO.getSkuList());
@@ -182,7 +182,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     public R<String> handleUpdatePrice(UpdateProductDTO productDTO) {
         Product product = getOneNormalProductById(productDTO.getProductId());
         if (ObjectUtils.isEmpty(product)) {
-            return R.fail(ErrInfoConfig.getDynmic(11006));
+            return R.fail(ErrInfoConfig.getDynmic(11008));
         }
 
         ProductSkuDTO skuAttrDTO = JSON.parseObject(product.getSkuAttr(), ProductSkuDTO.class);
@@ -269,7 +269,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
                 .eq(Product::getIsDel, ProductStatusConstants.NORMAL)
                 .last("limit 1"));
         if (ObjectUtils.isEmpty(product)) {
-            return R.fail(ErrInfoConfig.getDynmic(11006));
+            return R.fail(ErrInfoConfig.getDynmic(11008));
         }
         BeanUtils.copyProperties(product, ret);
 

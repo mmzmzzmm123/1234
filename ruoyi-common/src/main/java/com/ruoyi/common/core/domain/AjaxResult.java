@@ -218,4 +218,8 @@ public class AjaxResult extends HashMap<String, Object>
     public Object data() {
     	return get(DATA_TAG);
     }
+    
+    public Object msg() {
+    	return get(MSG_TAG);
+    }
 }

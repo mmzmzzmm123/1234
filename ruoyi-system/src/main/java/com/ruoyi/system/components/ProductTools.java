@@ -36,14 +36,6 @@ public class ProductTools {
 				.selectList(new QueryWrapper<ProductSku>().lambda().in(ProductSku::getProductId, productIdList));
 	}
 
-	public static long skuPrice(Long productId) {
-		List<ProductSku> skus = listSku(Arrays.asList(productId));
-		if (CollectionUtils.isEmpty(skus)) {
-			return 0;
-		}
-		return skus.get(0).getPrice();
-	}
-
 	public static AjaxResult checkNormal(Long productId) {
 		if (productId == null) {
 			return AjaxResult.error(ErrInfoConfig.get(11001));

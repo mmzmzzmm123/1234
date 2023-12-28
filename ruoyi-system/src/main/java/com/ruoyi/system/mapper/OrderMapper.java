@@ -24,6 +24,15 @@ public interface OrderMapper extends BaseMapper<Order> {
 		updateById(entity);
 	}
 
+	public default void updateCancel(String orderId, String cause) {
+		Order entity = new Order();
+		entity.setOrderId(orderId);
+		entity.setModifyTime(new Date());
+		entity.setOrderStatus(3);
+		entity.setRemark(cause);
+		updateById(entity);
+	}
+
 	public default void updateFinish(String orderId) {
 		Order entity = new Order();
 		entity.setOrderId(orderId);

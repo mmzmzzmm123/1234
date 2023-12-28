@@ -104,3 +104,10 @@ token:
   secret: f8a8f0e0-9947-491c-8187-a3258d1e283f
   # 令牌有效期（默认30分钟）
   expireTime: 360
+
+## ut-touch 接口配置
+ut-touch:
+  api-url: http://ut-openapi.tuanzongguan.com
+  merchant-account: bilin2
+  merchant-password: bilin2Ph123
+  touch-merchant-id: 1735486322619314176
