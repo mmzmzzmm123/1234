@@ -28,4 +28,25 @@
         </if>
         order by create_date desc
     </select>
+
+    <update id="batchUpdateStatus">
+        UPDATE t_product SET status=#{status} WHERE product_id IN
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            ${id}
+        </foreach>
+    </update>
+
+    <update id="batchUpdateShowStatus">
+        UPDATE t_product SET is_show=#{status} WHERE product_id IN
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            ${id}
+        </foreach>
+    </update>
+
+    <update id="batchDel">
+        UPDATE t_product SET is_del=1,is_show=0 WHERE product_id IN
+        <foreach item="id" index="index" collection="ids" open="(" separator="," close=")">
+            ${id}
+        </foreach>
+    </update>
 </mapper>
