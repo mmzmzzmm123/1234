@@ -22,9 +22,9 @@ public class OrderRequest {
 	private Integer orderStatus;
 
 	@ApiModelProperty("page")
-	private int page;
+	private int page = 1;
 
 	@ApiModelProperty("limit")
-	private int limit;
+	private int limit = 10;
 
 }

@@ -40,4 +40,10 @@ public class OrderListResponse {
 
 	@ApiModelProperty("关联任务")
 	private String taskId;
+
+	@ApiModelProperty("商家ID")
+	private String merchantId;
+
+	@ApiModelProperty("商家名称")
+	private String merchantName;
 }
