@@ -3,9 +3,12 @@ package com.ruoyi.web.controller.business;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
+import com.ruoyi.system.domain.vo.PhoneNumberFileUrlVO;
+import com.ruoyi.system.domain.vo.PhoneNumbersVO;
 import com.ruoyi.system.extend.data.*;
 import com.ruoyi.system.service.business.UbpmPlusJoinChatRoomService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +42,18 @@ public class UbpmPlusJoinChatRoomController {
     @PostMapping("analysisUploadFile")
     public R<AnalysisUploadPhoneResultVO> analysisUploadFile(MultipartFile file) {
         return R.ok(ubpmPlusJoinChatRoomService.analysisUploadFile(file));
+    }
+
+    @ApiOperation("解析手机号码")
+    @PostMapping("analysisPhoneNumbers")
+    public R<AnalysisUploadPhoneResultVO> analysisPhoneNumbers(@RequestBody PhoneNumbersVO input) {
+        return R.ok(ubpmPlusJoinChatRoomService.analysisPhoneNumbers(input.getPhoneNumbers()));
+    }
+
+    @ApiOperation("解析上传的文件地址")
+    @PostMapping("analysisUploadPhoneFileUrl")
+    public R<AnalysisUploadPhoneResultVO> analysisUploadPhoneFileUrl(@RequestBody PhoneNumberFileUrlVO input) {
+        return R.ok(ubpmPlusJoinChatRoomService.analysisUploadPhoneFileUrl(input.getFilePathUrl()));
     }
 
 

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -80,6 +81,20 @@ public abstract class MultipartFileUtil {
         }
 
         try (InputStream is = file.getInputStream()){
+            @Cleanup BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+            return bufferedReader.lines().distinct().collect(Collectors.toList());
+        } catch (IOException e) {
+            throw new GlobalException("服务繁忙,稍后重试");
+        }
+    }
+
+    public static List<String> analyseTextFile(File file) {
+        String suffixName = MultipartFileUtil.getSuffixName(file);
+        if (!".txt".equals(suffixName)) {
+            throw new IllegalArgumentException("文件不是txt类型");
+        }
+
+        try (InputStream is = Files.newInputStream(file.toPath())){
             @Cleanup BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
             return bufferedReader.lines().distinct().collect(Collectors.toList());
         } catch (IOException e) {
