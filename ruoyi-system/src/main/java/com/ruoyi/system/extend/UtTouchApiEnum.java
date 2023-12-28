@@ -114,6 +114,8 @@ public enum UtTouchApiEnum {
 
     GET_CHAT_ROOM_JOIN_TASK_ROBOT_LIST("获取账号明细", "GetChatRoomJoinTaskRobotList"),
 
+    COUNTRY_BUSINESS_ESTIMATE("获取机器人业务大盘", "/api/PlatformRobot/CountryBusinessEstimate"),
+
     ;
 
     /**

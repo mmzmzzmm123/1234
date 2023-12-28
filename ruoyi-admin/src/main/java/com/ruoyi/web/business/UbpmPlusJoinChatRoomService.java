@@ -1,6 +1,7 @@
 package com.ruoyi.web.business;
 
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.exception.GlobalException;
 import com.ruoyi.common.utils.SecurityUtils;
@@ -8,9 +9,7 @@ import com.ruoyi.system.components.MultipartFileUtil;
 import com.ruoyi.system.components.PageConvertUtil;
 import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
 import com.ruoyi.system.domain.vo.UbpmCountryVO;
-import com.ruoyi.system.extend.UtTouchJoinRoomClient;
-import com.ruoyi.system.extend.UtTouchProperties;
-import com.ruoyi.system.extend.UtTouchResult;
+import com.ruoyi.system.extend.*;
 import com.ruoyi.system.extend.data.*;
 import com.ruoyi.system.service.CountryService;
 import lombok.AllArgsConstructor;
@@ -202,6 +201,11 @@ public class UbpmPlusJoinChatRoomService {
         input.setUserCode(utTouchProperties.getTouchMerchantId());
         UtTouchResult<GetChatRoomJoinTaskDetailStatisticsOutput> result =
                 UtTouchJoinRoomClient.getChatRoomJoinTaskDetailStatistics(input);
+        return result.getDataOrThrow();
+    }
+
+    public CountryBusinessEstimateOutput countryBusinessEstimate(CountryBusinessEstimateInput input) {
+        UtTouchResult<CountryBusinessEstimateOutput> result = UtTouchJoinRoomClient.countryBusinessEstimate(input);
         return result.getDataOrThrow();
     }
 }

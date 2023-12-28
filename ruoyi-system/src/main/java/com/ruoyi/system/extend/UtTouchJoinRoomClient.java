@@ -129,4 +129,10 @@ public abstract class UtTouchJoinRoomClient {
                 JSONObject.from(input),
                 GetChatRoomJoinTaskDetailStatisticsOutput.class);
     }
+
+    public static UtTouchResult<CountryBusinessEstimateOutput> countryBusinessEstimate(CountryBusinessEstimateInput input) {
+        return UtTouchClient.post(UtTouchApiEnum.COUNTRY_BUSINESS_ESTIMATE,
+                JSONObject.from(input),
+                CountryBusinessEstimateOutput.class);
+    }
 }

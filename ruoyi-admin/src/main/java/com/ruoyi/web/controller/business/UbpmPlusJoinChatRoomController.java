@@ -213,4 +213,11 @@ public class UbpmPlusJoinChatRoomController {
     }
 
 
+    @ApiOperation("获取机器人业务大盘")
+    @PostMapping("countryBusinessEstimate")
+    public R<CountryBusinessEstimateOutput> countryBusinessEstimate(CountryBusinessEstimateInput input) {
+        return R.ok(ubpmPlusJoinChatRoomService.countryBusinessEstimate(input));
+    }
+
+
 }
