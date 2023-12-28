@@ -135,4 +135,16 @@ public abstract class UtTouchJoinRoomClient {
                 JSONObject.from(input),
                 CountryBusinessEstimateOutput.class);
     }
+
+    public static UtTouchResult<String> chatRoomChooseRobotExit(ChatRoomChooseRobotExitInput input) {
+        return UtTouchClient.post(UtTouchApiEnum.CHAT_ROOM_CHOOSE_ROBOT_EXIT,
+                JSONObject.from(input),
+                String.class);
+    }
+
+    public static UtTouchResult<String> robotJoinChatRoom(RobotJoinChatRoomInput input) {
+        return UtTouchClient.post(UtTouchApiEnum.ROBOT_JOIN_CHAT_ROOM,
+                JSONObject.from(input),
+                String.class);
+    }
 }

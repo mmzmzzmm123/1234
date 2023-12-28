@@ -220,4 +220,18 @@ public class UbpmPlusJoinChatRoomController {
     }
 
 
+    @ApiOperation("选择退出部分拉手号")
+    @PostMapping("chatRoomChooseRobotExit")
+    public R<Void> chatRoomChooseRobotExit(@RequestBody ChatRoomChooseRobotExitInput input) {
+        ubpmPlusJoinChatRoomService.chatRoomChooseRobotExit(input);
+        return R.ok();
+    }
+
+
+    @ApiOperation("新增拉手号入群")
+    @PostMapping("robotJoinChatRoom")
+    public R<Void> robotJoinChatRoom(@RequestBody RobotJoinChatRoomInput input) {
+        ubpmPlusJoinChatRoomService.robotJoinChatRoom(input);
+        return R.ok();
+    }
 }
