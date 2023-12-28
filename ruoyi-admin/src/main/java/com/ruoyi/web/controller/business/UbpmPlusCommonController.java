@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.business;
 
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.extend.UtTouchClient;
 import com.ruoyi.system.extend.UtTouchResult;
@@ -23,6 +24,8 @@ import java.util.List;
 public class UbpmPlusCommonController {
 
 
+
+    @Anonymous
     @GetMapping("getAllCountries")
     @ApiOperation("获取UT-TOUCH所有国家")
     public R<List<UtTouchCountryData>> getAllCountries() {
