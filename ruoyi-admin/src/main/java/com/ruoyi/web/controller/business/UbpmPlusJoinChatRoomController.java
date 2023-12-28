@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
 import com.ruoyi.system.extend.data.*;
-import com.ruoyi.web.business.UbpmPlusJoinChatRoomService;
+import com.ruoyi.system.service.business.UbpmPlusJoinChatRoomService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
@@ -220,4 +220,18 @@ public class UbpmPlusJoinChatRoomController {
     }
 
 
+    @ApiOperation("选择退出部分拉手号")
+    @PostMapping("chatRoomChooseRobotExit")
+    public R<Void> chatRoomChooseRobotExit(@RequestBody ChatRoomChooseRobotExitInput input) {
+        ubpmPlusJoinChatRoomService.chatRoomChooseRobotExit(input);
+        return R.ok();
+    }
+
+
+    @ApiOperation("新增拉手号入群")
+    @PostMapping("robotJoinChatRoom")
+    public R<Void> robotJoinChatRoom(@RequestBody RobotJoinChatRoomInput input) {
+        ubpmPlusJoinChatRoomService.robotJoinChatRoom(input);
+        return R.ok();
+    }
 }

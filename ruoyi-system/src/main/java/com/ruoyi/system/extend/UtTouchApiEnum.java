@@ -116,6 +116,11 @@ public enum UtTouchApiEnum {
 
     COUNTRY_BUSINESS_ESTIMATE("获取机器人业务大盘", "/api/PlatformRobot/CountryBusinessEstimate"),
 
+
+    ROBOT_JOIN_CHAT_ROOM("新增拉手号入群", "/api/ChatRoomJoinTask/RobotJoinChatRoom"),
+
+    CHAT_ROOM_CHOOSE_ROBOT_EXIT("选择退出部分拉手号", "/api/ChatRoomJoinTask/ChatRoomChooseRobotExit"),
+
     ;
 
     /**

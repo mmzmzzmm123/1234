@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +29,7 @@ import com.ruoyi.common.core.domain.app.OrderListResponse;
 import com.ruoyi.common.core.domain.app.OrderProduceRequest;
 import com.ruoyi.common.core.domain.app.OrderRequest;
 import com.ruoyi.common.core.domain.app.SubmitResponse;
+import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.core.domain.entity.order.Order;
@@ -44,6 +46,7 @@ import com.ruoyi.system.components.OrderTools;
 import com.ruoyi.system.components.ProductTools;
 import com.ruoyi.system.components.UserTools;
 import com.ruoyi.system.configure.RedisConfigure;
+import com.ruoyi.system.mapper.MerchantInfoMapper;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.mapper.OrderRefundMapper;
 import com.ruoyi.system.service.OrderService;
@@ -73,6 +76,9 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 	@Autowired
 	RedisConfigure redisConfigure;
+	
+	@Autowired
+	MerchantInfoMapper merchantInfoMapper;
 
 	@Override
 	@SuppressWarnings("unchecked")
@@ -197,6 +203,14 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 		// 查询任务
 		OrderTools.listTask(orderIds);
+		
+		// 商家名称
+		Map<String, List<MerchantInfo>> merchantMap = new HashMap<>();
+		try {
+			List<MerchantInfo> merchants = merchantInfoMapper.selectBatchIds(new HashSet<>(ListTools.extract(orderList, f->f.getMerchantId())));
+			merchantMap = ListTools.group(merchants, f -> f.getMerchantId()) ;
+		} catch (Exception e) {
+		}
 
 		List<OrderListResponse> responses = new ArrayList<>();
 		for (Order order : orderList) {
@@ -218,6 +232,10 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 						Objects.wrapNull(refundMap.get(order.getOrderId()).get(0).getActualRefundPrice(), 0L));
 			}
 			res.setActualPrice(res.getPrice() - res.getRefundPrice());
+			// 商家名称
+			if (!CollectionUtils.isEmpty(merchantMap.get(order.getMerchantId()))) {
+				res.setMerchantName(merchantMap.get(order.getMerchantId()).get(0).getMerchantName());
+			}
 			responses.add(res);
 		}
 		pageInfo.setList(responses);

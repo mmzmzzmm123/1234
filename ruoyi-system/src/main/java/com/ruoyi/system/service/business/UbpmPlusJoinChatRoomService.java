@@ -1,4 +1,4 @@
-package com.ruoyi.web.business;
+package com.ruoyi.system.service.business;
 
 
 import com.alibaba.fastjson2.JSONObject;
@@ -207,5 +207,14 @@ public class UbpmPlusJoinChatRoomService {
     public CountryBusinessEstimateOutput countryBusinessEstimate(CountryBusinessEstimateInput input) {
         UtTouchResult<CountryBusinessEstimateOutput> result = UtTouchJoinRoomClient.countryBusinessEstimate(input);
         return result.getDataOrThrow();
+    }
+    public void chatRoomChooseRobotExit(ChatRoomChooseRobotExitInput input) {
+        UtTouchResult<String> result = UtTouchJoinRoomClient.chatRoomChooseRobotExit(input);
+        result.failedAndThrow();
+    }
+
+    public void robotJoinChatRoom(RobotJoinChatRoomInput input) {
+        UtTouchResult<String> result = UtTouchJoinRoomClient.robotJoinChatRoom(input);
+        result.failedAndThrow();
     }
 }
