@@ -130,7 +130,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		order.setOrderId(orderId);
 		order.setCreateTime(new Date());
 		order.setFrozenId(frozenId);
-		order.setModifyTime(order.getCreateTime());
+		order.setUpdateTime(order.getCreateTime());
 		// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
 		order.setOrderStatus(0);
 		order.setParams(JSON.toJSONString(request.getParams()));
