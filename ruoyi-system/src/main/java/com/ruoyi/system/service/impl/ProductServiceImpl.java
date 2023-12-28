@@ -2,10 +2,12 @@ package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.constant.ProductStatusConstants;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.app.ProductRequest;
@@ -80,6 +82,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         product.setAlbumPics(productDTO.getAlbumPics());
         product.setStatus(productDTO.getStatus());
         product.setIsShow(productDTO.getIsShow());
+        product.setIntro(productDTO.getIntro());
         product.setSkuAttr(getSkuAttr(id));
         return product;
     }
@@ -96,13 +99,13 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public R<ProductDTO> detail(Long id) {
         if (ObjectUtils.isEmpty(id)) {
-            return R.fail("id参数错误");
+            return R.fail(ErrInfoConfig.getDynmic(11000, "id参数错误"));
         }
 
         ProductDTO ret = new ProductDTO();
-        Product product = getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
+        Product product = getOneNormalProductById(id);
         if (ObjectUtils.isEmpty(product)) {
-            return R.fail("数据不存在");
+            return R.fail(ErrInfoConfig.getDynmic(11006));
         }
 
         BeanUtils.copyProperties(product, ret);
@@ -120,12 +123,21 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return R.ok(ret);
     }
 
+    private Product getOneNormalProductById(long id) {
+        return getOne(new LambdaQueryWrapper<Product>()
+                .eq(Product::getProductId, id).eq(Product::getIsDel, ProductStatusConstants.NORMAL).last("limit 1"));
+    }
+
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public Boolean update(ProductDTO productDTO) {
-        Product product = getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, productDTO.getProductId()).last("limit 1"));
+    public R<String> update(ProductDTO productDTO) {
+        if (ObjectUtils.isEmpty(productDTO.getProductId())) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "id参数错误"));
+        }
+
+        Product product = getOneNormalProductById(productDTO.getProductId());
         if (ObjectUtils.isEmpty(product)) {
-            return Boolean.FALSE;
+            return R.fail(ErrInfoConfig.getDynmic(11006));
         }
 
         List<ProductSku> productSkus = getUpdateProductSku(productDTO.getProductId(), productDTO.getSkuList());
@@ -134,7 +146,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         Product entity = setProductAttr(productDTO, product.getProductId());
         updateById(entity);
 
-        return Boolean.TRUE;
+        return R.ok();
     }
 
     private List<ProductSku> getUpdateProductSku(Long productId, List<ProductSkuDTO> skuList) {
@@ -142,7 +154,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         for (ProductSkuDTO productSkuDTO : skuList) {
             if (ObjectUtils.isEmpty(productSkuDTO.getId())) {
                 ProductSku productSku = new ProductSku();
-
                 productSku.setProductId(productId);
                 productSku.setCountyId(productSkuDTO.getCountyId());
                 productSku.setCountyName(productSkuDTO.getCountyName());
@@ -169,88 +180,40 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     @Transactional(rollbackFor=Exception.class)
     public R<String> handleUpdatePrice(UpdateProductDTO productDTO) {
-        Product product = getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, productDTO.getProductId()).last("limit 1"));
+        Product product = getOneNormalProductById(productDTO.getProductId());
         if (ObjectUtils.isEmpty(product)) {
-            return R.fail("数据不存在");
+            return R.fail(ErrInfoConfig.getDynmic(11006));
         }
 
-        String skuAttr = product.getSkuAttr();
-        ProductSkuDTO skuAttrDTO = JSON.parseObject(skuAttr, ProductSkuDTO.class);
+        ProductSkuDTO skuAttrDTO = JSON.parseObject(product.getSkuAttr(), ProductSkuDTO.class);
         skuAttrDTO.setPrice(productDTO.getPrice());
-        product.setSkuAttr(JSON.toJSONString(skuAttrDTO));
-        updateById(product);
+        UpdateWrapper<Product> updateProduct = new UpdateWrapper<>();
+        updateProduct.eq("product_id", product.getProductId()).set("sku_attr", JSON.toJSONString(skuAttrDTO));
+        update(null, updateProduct);
 
-        ProductSku productSku = productSkuService.getById(skuAttrDTO.getId());
-        if (!ObjectUtils.isEmpty(productSku)) {
-            productSku.setPrice(productDTO.getPrice());
-            productSkuService.updateById(productSku);
-        }
-
-        return R.ok();
-    }
-
-    @Override
-    public R<String> batchUpdateStatus(BatchUpdateProductDTO productDTO) {
-        List<Product> productList = new ArrayList<>();
-        for (Long id : productDTO.getProductIds()) {
-            Product product = getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
-            if (ObjectUtils.isEmpty(product)) {
-                continue;
-            }
-            if (productDTO.getStatus().equals(product.getStatus())) {
-                continue;
-            }
-            product.setStatus(productDTO.getStatus());
-            productList.add(product);
-        }
-
-        if (productList.size() > 0) {
-            updateBatchById(productList);
-        }
+        UpdateWrapper<ProductSku> updateSku = new UpdateWrapper<>();
+        updateSku.eq("id", skuAttrDTO.getId()).set("price", productDTO.getPrice());
+        productSkuService.update(null, updateSku);
 
         return R.ok();
     }
 
     @Override
-    public Boolean batchUpdateShowStatus(BatchUpdateProductDTO productDTO) {
-        List<Product> productList = new ArrayList<>();
-        for (Long id : productDTO.getProductIds()) {
-            Product product = getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
-            if (ObjectUtils.isEmpty(product)) {
-                continue;
-            }
-            if (productDTO.getShowStatus().equals(product.getStatus())) {
-                continue;
-            }
-            product.setIsShow(productDTO.getShowStatus());
-            productList.add(product);
-        }
-
-        if (productList.size() > 0) {
-            updateBatchById(productList);
-        }
-
-        return Boolean.TRUE;
+    public R<String> batchUpdateStatus(BatchUpdateProductStatusDTO productDTO) {
+        baseMapper.batchUpdateStatus(productDTO.getStatus(), productDTO.getProductIds());
+        return R.ok();
     }
 
     @Override
-    public Boolean batchDeleteProducts(BatchUpdateProductDTO productDTO) {
-        List<Product> productList = new ArrayList<>();
-        for (Long id : productDTO.getProductIds()) {
-            Product product = getOne(new LambdaQueryWrapper<Product>().eq(Product::getProductId, id).last("limit 1"));
-            if (ObjectUtils.isEmpty(product)) {
-                continue;
-            }
-            product.setIsShow(ProductStatusConstants.HIDE);
-            product.setIsDel(ProductStatusConstants.DEL);
-            productList.add(product);
-        }
+    public R<String> batchUpdateShowStatus(BatchUpdateProductShowStatusDTO productDTO) {
+        baseMapper.batchUpdateShowStatus(productDTO.getShowStatus(), productDTO.getProductIds());
+        return R.ok();
+    }
 
-        if (productList.size() > 0) {
-            updateBatchById(productList);
-        }
-
-        return Boolean.TRUE;
+    @Override
+    public R<String> batchDeleteProducts(BatchUpdateProductDTO productDTO) {
+        baseMapper.batchDel(productDTO.getProductIds());
+        return R.ok();
     }
 
     @Override
@@ -286,17 +249,17 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         wrapper.eq(Product::getStatus, ProductStatusConstants.LISTING);
         wrapper.eq(Product::getIsShow, ProductStatusConstants.SHOW);
         wrapper.eq(Product::getIsDel, ProductStatusConstants.NORMAL);
-        wrapper.select(Product::getProductId, Product::getCategoryId, Product::getAppType, Product::getName, Product::getAlbumPics, Product::getPic, Product::getSkuAttr);
+        wrapper.select(Product::getProductId, Product::getCategoryId, Product::getAppType, Product::getName, Product::getAlbumPics, Product::getPic, Product::getIntro, Product::getSkuAttr);
         return page(page, wrapper);
     }
 
     @Override
-    public ProductDetailVO getProductDetailBySkuId(Long skuId) {
+    public R<ProductDetailVO> getProductDetailBySkuId(Long skuId) {
         ProductDetailVO ret = new ProductDetailVO();
 
         ProductSku productSku = productSkuService.getById(skuId);
         if (ObjectUtils.isEmpty(productSku)) {
-            return ret;
+            return R.fail(ErrInfoConfig.getDynmic(11007));
         }
 
         Product product = getOne(new LambdaQueryWrapper<Product>()
@@ -306,17 +269,17 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
                 .eq(Product::getIsDel, ProductStatusConstants.NORMAL)
                 .last("limit 1"));
         if (ObjectUtils.isEmpty(product)) {
-            return ret;
+            return R.fail(ErrInfoConfig.getDynmic(11006));
         }
         BeanUtils.copyProperties(product, ret);
 
-        //设置该商品sku, 目前只有一个sku属性 直接使用当前sku
+        //设置该商品sku属性, 目前只有一个属性 直接使用
         List<ProductSkuDTO> skuList = new ArrayList<>();
         ProductSkuDTO productSkuDTO = new ProductSkuDTO();
         BeanUtils.copyProperties(productSku, productSkuDTO);
         skuList.add(productSkuDTO);
         ret.setSkuList(skuList);
 
-        return ret;
+        return R.ok(ret);
     }
 }

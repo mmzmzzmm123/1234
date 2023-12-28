@@ -34,6 +34,6 @@ public class HomeProductController extends BaseController {
     @ApiOperation("商品详情")
     @GetMapping("/detail/{skuId}")
     public R<ProductDetailVO> getProductDetailBySkuId(@PathVariable Long skuId) {
-        return R.ok(productService.getProductDetailBySkuId(skuId));
+        return productService.getProductDetailBySkuId(skuId);
     }
 }

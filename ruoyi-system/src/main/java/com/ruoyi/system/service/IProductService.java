@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.app.ProductRequest;
 import com.ruoyi.common.core.domain.entity.Product;
-import com.ruoyi.system.domain.dto.BatchUpdateProductDTO;
-import com.ruoyi.system.domain.dto.ProductDTO;
-import com.ruoyi.system.domain.dto.ProductQueryParamDTO;
-import com.ruoyi.system.domain.dto.UpdateProductDTO;
+import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.ProductDetailVO;
 import com.ruoyi.system.domain.vo.ProductVO;
 
@@ -33,15 +30,15 @@ public interface IProductService {
     /**
      * 更新商品
      */
-    Boolean update(ProductDTO productDTO);
+    R<String> update(ProductDTO productDTO);
 
     R<String> handleUpdatePrice(UpdateProductDTO productDTO);
 
-    R<String> batchUpdateStatus(BatchUpdateProductDTO productDTO);
+    R<String> batchUpdateStatus(BatchUpdateProductStatusDTO productDTO);
 
-    Boolean batchUpdateShowStatus(BatchUpdateProductDTO productDTO);
+    R<String> batchUpdateShowStatus(BatchUpdateProductShowStatusDTO productDTO);
 
-    Boolean batchDeleteProducts(BatchUpdateProductDTO productDTO);
+    R<String> batchDeleteProducts(BatchUpdateProductDTO productDTO);
 
     /**
      * 前台商品列表
@@ -51,5 +48,5 @@ public interface IProductService {
     /**
      * 前台获取商品详情
      */
-    ProductDetailVO getProductDetailBySkuId(Long skuId);
+    R<ProductDetailVO> getProductDetailBySkuId(Long skuId);
 }

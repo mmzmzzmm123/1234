@@ -15,6 +15,8 @@ public class ErrInfoConfig {
 		err.put(11003, "SKU列表为空");
 		err.put(11004, "SKU价格为空，SKU-ID: %s");
 		err.put(11005, "用户信息为空");
+		err.put(11006, "服务已下架");
+		err.put(11007, "此规格服务已下架");
 
 
 	}

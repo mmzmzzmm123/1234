@@ -22,22 +22,22 @@ public class ProductDTO {
      * {@link com.ruoyi.common.enums.AppType}
      */
     @NotNull(message="平台类型不能为空")
-    @ApiModelProperty(value = "平台类型")
+    @ApiModelProperty(value = "平台类型: 1-TG")
     private Integer appType;
 
     /**
      * {@link com.ruoyi.common.enums.ProductCategoryType}
      */
     @NotNull(message="商品类型不能为空")
-    @ApiModelProperty(value = "商品类型")
+    @ApiModelProperty(value = "商品类型: 0-拉人进群")
     private Integer categoryId;
 
     @NotBlank(message="列表图不能为空")
-    @ApiModelProperty(value = "列表图")
+    @ApiModelProperty(value = "服务列表图")
     private String albumPics;
 
     @NotBlank(message="海报图不能为空")
-    @ApiModelProperty(value = "海报图")
+    @ApiModelProperty(value = "服务海报图")
     private String pic;
 
     @ApiModelProperty(value = "商品状态:1-未上架 2-上架")
@@ -48,9 +48,6 @@ public class ProductDTO {
 
     @ApiModelProperty(value = "产品描述信息")
     private String intro;
-
-    @ApiModelProperty(value = "支持量")
-    private Integer stock;
 
     @ApiModelProperty(value = "规格:1统一规格 2多规格")
     private Integer specsType;
