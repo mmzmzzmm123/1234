@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.business;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.Product;
@@ -8,6 +9,7 @@ import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.service.IProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,6 +34,9 @@ public class ProductController extends BaseController {
     @ApiOperation("添加商品")
     @PostMapping(value = "/create")
     public R<Product> create(@Validated @RequestBody ProductDTO productDTO) {
+        if (ObjectUtils.isEmpty(productDTO.getSkuList())) {
+            return R.fail(ErrInfoConfig.getDynmic(11009));
+        }
         productDTO.setOperatorUser(getUsername());
         productDTO.setOperatorUserId(getUserId());
         return R.ok(productService.create(productDTO));

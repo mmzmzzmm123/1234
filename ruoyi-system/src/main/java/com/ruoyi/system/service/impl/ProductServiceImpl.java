@@ -16,8 +16,13 @@ import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.ProductDetailVO;
 import com.ruoyi.system.domain.vo.ProductVO;
+import com.ruoyi.system.extend.UtTouchJoinRoomClient;
+import com.ruoyi.system.extend.UtTouchResult;
+import com.ruoyi.system.extend.data.CountryBusinessEstimateInput;
+import com.ruoyi.system.extend.data.CountryBusinessEstimateOutput;
 import com.ruoyi.system.mapper.ProductMapper;
 import com.ruoyi.system.service.IProductService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,8 +30,11 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Service
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements IProductService {
     @Resource
@@ -40,12 +48,24 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             return ret;
         }
 
+        List<String> countryCodeList = new ArrayList<>();
         for (ProductDTO productDTO : ret.getRecords()) {
             List<ProductSkuDTO> skuList = new ArrayList<>();
-            skuList.add(JSON.parseObject(productDTO.getSkuAttr(), ProductSkuDTO.class));
+            ProductSkuDTO productSkuDTO = JSON.parseObject(productDTO.getSkuAttr(), ProductSkuDTO.class);
+            skuList.add(productSkuDTO);
             productDTO.setSkuAttr("");
             productDTO.setSkuList(skuList);
+
+            countryCodeList.add(productSkuDTO.getCountyCode());
         }
+
+        Map<String, Long> stockEstimateMap = getStockMapByCountyCode(countryCodeList);
+        for (ProductDTO productDTO : ret.getRecords()) {
+            List<ProductSkuDTO> skuList = productDTO.getSkuList();
+            skuList.forEach(x -> x.setStock(stockEstimateMap.get(x.getCountyCode())));
+            productDTO.setSkuList(skuList);
+        }
+
         return ret;
     }
 
@@ -54,16 +74,14 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     public Product create(ProductDTO productDTO) {
         long id = IdWorker.getId();
 
-        if (!ObjectUtils.isEmpty(productDTO.getSkuList())) {
-            List<ProductSku> productSkus = new ArrayList<>();
-            for (ProductSkuDTO item : productDTO.getSkuList()) {
-                ProductSku productSku = new ProductSku();
-                BeanUtils.copyProperties(item, productSku);
-                productSku.setProductId(id);
-                productSkus.add(productSku);
-            }
-            productSkuService.saveBatch(productSkus);
+        List<ProductSku> productSkus = new ArrayList<>();
+        for (ProductSkuDTO item : productDTO.getSkuList()) {
+            ProductSku productSku = new ProductSku();
+            BeanUtils.copyProperties(item, productSku);
+            productSku.setProductId(id);
+            productSkus.add(productSku);
         }
+        productSkuService.saveBatch(productSkus);
 
         Product product = setProductAttr(productDTO, id);
         product.setOperatorUser(productDTO.getOperatorUser());
@@ -92,7 +110,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
                 .orderByAsc(ProductSku::getPrice).last("limit 1"));
         SkuAttrDTO skuDTO = new SkuAttrDTO();
         BeanUtils.copyProperties(productSku, skuDTO);
-        skuDTO.setId(productSku.getId());
         return JSON.toJSONString(skuDTO);
     }
 
@@ -110,6 +127,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
         BeanUtils.copyProperties(product, ret);
 
+        List<String> countryCodeList = new ArrayList<>();
         //商品sku信息
         List<ProductSkuDTO> skuList = new ArrayList<>();
         List<ProductSku> productSkuList = productSkuService.list(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, id));
@@ -117,10 +135,42 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             ProductSkuDTO productSkuDTO = new ProductSkuDTO();
             BeanUtils.copyProperties(productSku, productSkuDTO);
             skuList.add(productSkuDTO);
+
+            countryCodeList.add(productSku.getCountyCode());
         }
+
+        Map<String, Long> stockEstimateMap = getStockMapByCountyCode(countryCodeList);
+        skuList.forEach(x -> x.setStock(stockEstimateMap.get(x.getCountyCode())));
         ret.setSkuList(skuList);
 
         return R.ok(ret);
+    }
+
+    //获取服务支撑量
+    public Map<String, Long> getStockMapByCountyCode(List<String> countryCodeList) {
+        Map<String, Long> ret = new HashMap<>();
+        for (String countryCode : countryCodeList) {
+            if (!ret.containsKey(countryCode)) {
+                ret.put(countryCode, getCountryBusinessEstimate(countryCode));
+            }
+        }
+        return ret;
+    }
+
+    public long getCountryBusinessEstimate(String countryCode) {
+        try {
+            CountryBusinessEstimateInput input = new CountryBusinessEstimateInput();
+            input.setPriorityOp(0);
+            input.setRobotsCountryCode(new ArrayList<>());
+            input.setVcToCountryCode(countryCode);
+            UtTouchResult<CountryBusinessEstimateOutput> result = UtTouchJoinRoomClient.countryBusinessEstimate(input);
+            if (!ObjectUtils.isEmpty(result.getData())) {
+                return result.getData().getUsersNum();
+            }
+        } catch (Exception e) {
+            log.error("getCountryBusinessEstimate: {}, {}", countryCode, e);
+        }
+        return 0L;
     }
 
     private Product getOneNormalProductById(long id) {
@@ -159,7 +209,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
                 productSku.setCountyName(productSkuDTO.getCountyName());
                 productSku.setPrice(productSkuDTO.getPrice());
                 productSku.setPriceUnit(productSkuDTO.getPriceUnit());
-                productSku.setStock(productSkuDTO.getStock());
                 productSkus.add(productSku);
             } else {
                 ProductSku productSku = productSkuService.getById(productSkuDTO.getId());
@@ -168,7 +217,6 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
                     productSku.setCountyName(productSkuDTO.getCountyName());
                     productSku.setPrice(productSkuDTO.getPrice());
                     productSku.setPriceUnit(productSkuDTO.getPriceUnit());
-                    productSku.setStock(productSkuDTO.getStock());
                     productSkus.add(productSku);
                 }
             }
@@ -224,6 +272,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             return ret;
         }
 
+        List<String> countryCodeList = new ArrayList<>();
         List<ProductVO> productVOList = new ArrayList<>();
         BeanUtils.copyProperties(productPage, ret);
         for (Product product : productPage.getRecords()) {
@@ -231,7 +280,17 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             BeanUtils.copyProperties(product, productVO);
             productVO.setSkuAttr(JSON.parseObject(product.getSkuAttr(), ProductSkuDTO.class));
             productVOList.add(productVO);
+
+            countryCodeList.add(productVO.getSkuAttr().getCountyCode());
         }
+
+        Map<String, Long> stockEstimateMap = getStockMapByCountyCode(countryCodeList);
+        for (ProductVO productVO : productVOList) {
+            ProductSkuDTO skuAttr = productVO.getSkuAttr();
+            skuAttr.setStock(stockEstimateMap.get(skuAttr.getCountyCode()));
+            productVO.setSkuAttr(skuAttr);
+        }
+
         ret.setRecords(productVOList);
         return ret;
     }
@@ -278,6 +337,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         ProductSkuDTO productSkuDTO = new ProductSkuDTO();
         BeanUtils.copyProperties(productSku, productSkuDTO);
         skuList.add(productSkuDTO);
+
+        List<String> countryCodeList = new ArrayList<>();
+        countryCodeList.add(skuList.get(0).getCountyCode());
+        Map<String, Long> stockEstimateMap = getStockMapByCountyCode(countryCodeList);
+        skuList.forEach(x -> x.setStock(stockEstimateMap.get(x.getCountyCode())));
+
         ret.setSkuList(skuList);
 
         return R.ok(ret);

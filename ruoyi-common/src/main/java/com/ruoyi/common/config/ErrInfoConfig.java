@@ -18,6 +18,7 @@ public class ErrInfoConfig {
 		err.put(11006, "订单不存在或状态已完成");
 		err.put(11007, "此规格服务不存在或已下架");
 		err.put(11008, "服务不存在或已下架");
+		err.put(11009, "规格设置不能为空");
 
 	}
 
