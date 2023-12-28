@@ -155,7 +155,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             if (ObjectUtils.isEmpty(productSkuDTO.getId())) {
                 ProductSku productSku = new ProductSku();
                 productSku.setProductId(productId);
-                productSku.setCountyId(productSkuDTO.getCountyId());
+                productSku.setCountyCode(productSkuDTO.getCountyCode());
                 productSku.setCountyName(productSkuDTO.getCountyName());
                 productSku.setPrice(productSkuDTO.getPrice());
                 productSku.setPriceUnit(productSkuDTO.getPriceUnit());
@@ -164,7 +164,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             } else {
                 ProductSku productSku = productSkuService.getById(productSkuDTO.getId());
                 if (!ObjectUtils.isEmpty(productSku)) {
-                    productSku.setCountyId(productSkuDTO.getCountyId());
+                    productSku.setCountyCode(productSkuDTO.getCountyCode());
                     productSku.setCountyName(productSkuDTO.getCountyName());
                     productSku.setPrice(productSkuDTO.getPrice());
                     productSku.setPriceUnit(productSkuDTO.getPriceUnit());

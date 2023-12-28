@@ -32,9 +32,9 @@ public class ProductSku {
     private Integer stock;
 
     /**
-     * 国家id
+     * 国家编码
      */
-    private Integer countyId;
+    private String countyCode;
 
     /**
      * 国家名

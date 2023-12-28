@@ -26,9 +26,9 @@ public class ProductSkuDTO {
     @ApiModelProperty(value = "支撑量")
     private Integer stock;
 
-    @NotNull(message="国家id不能为空")
-    @ApiModelProperty(value = "国家id")
-    private Integer countyId;
+    @NotNull(message="国家编码不能为空")
+    @ApiModelProperty(value = "国家编码")
+    private String countyCode;
 
     @NotBlank(message="国家名不能为空")
     @ApiModelProperty(value = "国家名")
