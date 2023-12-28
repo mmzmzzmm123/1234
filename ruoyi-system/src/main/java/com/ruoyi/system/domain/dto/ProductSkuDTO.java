@@ -26,9 +26,9 @@ public class ProductSkuDTO {
     @ApiModelProperty(value = "价格单位")
     private String priceUnit;
 
-    @Positive(message = "支撑量必须是正数")
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(value = "支撑量")
-    private Integer stock;
+    private Long stock;
 
     @NotNull(message="国家编码不能为空")
     @ApiModelProperty(value = "国家编码")

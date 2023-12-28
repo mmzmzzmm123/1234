@@ -29,7 +29,7 @@ public class ProductSku {
     /**
      * 支持量
      */
-    private Integer stock;
+    private Long stock;
 
     /**
      * 国家编码
