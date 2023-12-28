@@ -18,7 +18,7 @@ public class OrderListResponse {
 	private String orderId;
 
 	@ApiModelProperty("订单类型 0-拉人入群")
-	private String orderType;
+	private Integer orderType;
 
 	@ApiModelProperty("商品名称")
 	private String productName;
@@ -40,4 +40,10 @@ public class OrderListResponse {
 
 	@ApiModelProperty("关联任务")
 	private String taskId;
+
+	@ApiModelProperty("商家ID")
+	private String merchantId;
+
+	@ApiModelProperty("商家名称")
+	private String merchantName;
 }

@@ -212,7 +212,7 @@ public class BaseController
     public Integer getMerchantType() {
         return Optional.ofNullable(getMerchantInfo())
                 .map(MerchantInfo::getMerchantType)
-                .orElse(0);
+                .orElse(null);
     }
 
 

@@ -3,6 +3,9 @@ package com.ruoyi.system.components;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.util.CollectionUtils;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.order.Order;
 import com.ruoyi.common.core.domain.entity.order.OrderRefund;
@@ -12,6 +15,14 @@ import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.dto.AmountConsumptionDTO;
 import com.ruoyi.system.domain.dto.ApplyAmountFrozenDTO;
+import com.ruoyi.system.extend.UtTouchJoinRoomClient;
+import com.ruoyi.system.extend.UtTouchResult;
+import com.ruoyi.system.extend.data.GetChatRoomJoinTaskDetailInfoListInput;
+import com.ruoyi.system.extend.data.GetChatRoomJoinTaskDetailInfoListOutput;
+import com.ruoyi.system.extend.data.GetChatRoomJoinTaskDetailInput;
+import com.ruoyi.system.extend.data.GetChatRoomJoinTaskDetailOutput;
+import com.ruoyi.system.extend.data.GetChatRoomJoinTaskPageInput;
+import com.ruoyi.system.extend.data.UtTouchPage;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.mapper.OrderRefundMapper;
 import com.ruoyi.system.mapper.OrderSkuMapper;
@@ -27,6 +38,19 @@ public class OrderTools {
 
 	public static int getSuccessCountOfTaskDetail(String orderId) {
 		// 获取 任务 详情成功的 个数
+		int taskId = 1;
+		GetChatRoomJoinTaskDetailInfoListInput input = new GetChatRoomJoinTaskDetailInfoListInput();
+		input.setTaskId(taskId);
+		input.setRunStatus(1);
+		input.setPageSize(100000);
+		UtTouchResult<UtTouchPage<GetChatRoomJoinTaskDetailInfoListOutput>> details = UtTouchJoinRoomClient
+				.getChatRoomJoinTaskDetailInfoList(input);
+		log.info("getChatRoomJoinTaskDetailInfoList {} {}", input, details);
+		if (details.getData() != null && !CollectionUtils.isEmpty(details.getData().getDataList())) {
+			if (!CollectionUtils.isEmpty(details.getData().getDataList().get(0).getDetails())) {
+				return details.getData().getDataList().get(0).getDetails().size();
+			}
+		}
 		return 0;
 	}
 
@@ -78,10 +102,15 @@ public class OrderTools {
 
 	public static void handleOrderStatus(Order order) {
 		final OrderMapper mapper = SpringUtils.getBean(OrderMapper.class);
+		
+		String taskId  ;
+		
 		// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
-
+		
+		
 		// 查询任务的状态
-
+	
+		
 		// 如果任务是 进行中， 设置订单为 进行中
 		mapper.updateStatus(order.getOrderId(), 1);
 		log.info("OrderMapper.updateStatus {} {}", order, 1);
@@ -107,7 +136,7 @@ public class OrderTools {
 	 * 
 	 * @param orders
 	 */
-	public static void settlementUserMonery(Order order , String remark) {
+	public static void settlementUserMonery(Order order, String remark) {
 		// 根据订单 查询 实际完成了 多少任务详情
 		int successCount = getSuccessCountOfTaskDetail(order.getOrderId());
 		// sku单价
@@ -119,12 +148,12 @@ public class OrderTools {
 		dto.setAmount(payPrice);
 		dto.setFrozenId(order.getFrozenId());
 		// 实际退款
-		long actualRefundPrice = 0 ;
+		long actualRefundPrice = 0;
 		try {
 			actualRefundPrice = service.amountConsumption(dto);
 			log.info("用户结算 {} {} {}", dto, actualRefundPrice, order);
 		} catch (Exception e) {
-			log.error("MerchantAmountService.amountConsumption {}" ,dto , e);
+			log.error("MerchantAmountService.amountConsumption {}", dto, e);
 		}
 		// 插入退款
 		OrderRefund orderRefund = new OrderRefund();
@@ -135,8 +164,8 @@ public class OrderTools {
 		orderRefund.setOrderId(order.getOrderId());
 		orderRefund.setUserId(order.getUserId());
 		orderRefund.setRemark(remark);
-		SpringUtils.getBean(OrderRefundMapper.class).insert(orderRefund) ;
-		log.info("用户结算完成 {} {}" , order , orderRefund);
+		SpringUtils.getBean(OrderRefundMapper.class).insert(orderRefund);
+		log.info("用户结算完成 {} {}", order, orderRefund);
 	}
 
 }
