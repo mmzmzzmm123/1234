@@ -19,7 +19,7 @@ public interface OrderMapper extends BaseMapper<Order> {
 	public default void updateStatus(String orderId, int orderStatus) {
 		Order entity = new Order();
 		entity.setOrderId(orderId);
-		entity.setModifyTime(new Date());
+		entity.setUpdateTime(new Date());
 		entity.setOrderStatus(orderStatus);
 		updateById(entity);
 	}
@@ -27,7 +27,7 @@ public interface OrderMapper extends BaseMapper<Order> {
 	public default void updateCancel(String orderId, String cause) {
 		Order entity = new Order();
 		entity.setOrderId(orderId);
-		entity.setModifyTime(new Date());
+		entity.setUpdateTime(new Date());
 		entity.setOrderStatus(3);
 		entity.setRemark(cause);
 		updateById(entity);
@@ -38,7 +38,7 @@ public interface OrderMapper extends BaseMapper<Order> {
 		entity.setOrderId(orderId);
 		entity.setFinishTime(new Date());
 		entity.setOrderStatus(2);
-		entity.setModifyTime(new Date());
+		entity.setUpdateTime(new Date());
 		updateById(entity);
 	}
 }

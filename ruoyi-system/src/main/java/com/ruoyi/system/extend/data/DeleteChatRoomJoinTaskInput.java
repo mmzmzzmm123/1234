@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class DeleteChatRoomJoinTaskInput {
-    private String taskID;
+    private String taskId;
     private String userCode;
 }

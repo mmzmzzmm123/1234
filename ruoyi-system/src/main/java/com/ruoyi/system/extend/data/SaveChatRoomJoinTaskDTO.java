@@ -41,6 +41,8 @@ public class SaveChatRoomJoinTaskDTO {
 
     private Integer nIsRobotExit;
 
+    private String orderId;
+
 
     @Data
     public static class TaskRuleData {

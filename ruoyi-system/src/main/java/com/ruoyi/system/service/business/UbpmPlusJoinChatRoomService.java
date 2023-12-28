@@ -3,15 +3,19 @@ package com.ruoyi.system.service.business;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.enums.Platform;
+import com.ruoyi.common.enums.TaskType;
 import com.ruoyi.common.exception.GlobalException;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.components.MultipartFileUtil;
 import com.ruoyi.system.components.PageConvertUtil;
+import com.ruoyi.system.domain.Task;
 import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
 import com.ruoyi.system.domain.vo.UbpmCountryVO;
 import com.ruoyi.system.extend.*;
 import com.ruoyi.system.extend.data.*;
 import com.ruoyi.system.service.CountryService;
+import com.ruoyi.system.service.TaskService;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -34,19 +38,36 @@ public class UbpmPlusJoinChatRoomService {
 
     private final CountryService countryService;
 
+    private final TaskService taskService;
+
+
+
 
     public void saveChatRoomJoinTask(SaveChatRoomJoinTaskDTO input) {
         input.setUserCode(utTouchProperties.getTouchMerchantId());
-        input.setExtendKey(SecurityUtils.getUserId().toString());
-        UtTouchResult<String> result = UtTouchJoinRoomClient.saveChatRoomJoinTask(input);
-        result.failedAndThrow();
+        String merchantUserId = SecurityUtils.getUserId().toString();
+        input.setExtendKey(merchantUserId);
 
-        // todo jing.zhang 这个数据要保存在自己库里面
+        // 调用UT-TOUCH接口创建任务
+        UtTouchResult<String> result = UtTouchJoinRoomClient.saveChatRoomJoinTask(input);
+        String taskId = result.getDataOrThrow();
+
+        // 保存任务数据至自己数据库
+        Task task = new Task();
+        task.setTaskId(taskId);
+        task.setOrderId(input.getOrderId());
+        task.setTaskName(input.getName());
+        task.setMerchantId(merchantUserId);
+        task.setTaskType(TaskType.JOIN_CHAT_ROOM.name());
+        task.setPlatform(Platform.TELEGRAM.getPlatformType());
+        task.setCreateBy(merchantUserId);
+        task.setStatus(0);
+
+        taskService.save(task);
+
     }
 
     public Page<GetChatRoomJoinTaskPageOutput> getChatRoomJoinTaskPage(GetChatRoomJoinTaskPageInput input) {
-        // todo jing.zhang 需要先查自己库 做权限控制
-
         input.setUserCode(utTouchProperties.getTouchMerchantId());
         input.setExtendKey(SecurityUtils.getUserId().toString());
         UtTouchResult<UtTouchPage<GetChatRoomJoinTaskPageOutput>> touchResult =

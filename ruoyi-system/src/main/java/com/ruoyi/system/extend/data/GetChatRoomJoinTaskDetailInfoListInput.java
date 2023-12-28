@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Data
 public class GetChatRoomJoinTaskDetailInfoListInput extends UtTouchQueryPage{
-    private Integer taskId;
+    private String taskId;
     private String vcChatRoomSerialNo;
     private String objName;
     private Integer runStatus;

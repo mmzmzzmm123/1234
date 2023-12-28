@@ -44,6 +44,8 @@ import com.ruoyi.common.utils.Objects;
 import com.ruoyi.system.components.OrderPriceHandler;
 import com.ruoyi.system.components.OrderTools;
 import com.ruoyi.system.components.ProductTools;
+import com.ruoyi.system.components.TaskQuery;
+import com.ruoyi.system.components.TaskQuery.TaskAdapter;
 import com.ruoyi.system.components.UserTools;
 import com.ruoyi.system.configure.RedisConfigure;
 import com.ruoyi.system.mapper.MerchantInfoMapper;
@@ -76,7 +78,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 	@Autowired
 	RedisConfigure redisConfigure;
-	
+
 	@Autowired
 	MerchantInfoMapper merchantInfoMapper;
 
@@ -128,7 +130,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		order.setOrderId(orderId);
 		order.setCreateTime(new Date());
 		order.setFrozenId(frozenId);
-		order.setModifyTime(order.getCreateTime());
+		order.setUpdateTime(order.getCreateTime());
 		// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
 		order.setOrderStatus(0);
 		order.setParams(JSON.toJSONString(request.getParams()));
@@ -202,13 +204,19 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		Map<String, List<OrderRefund>> refundMap = ListTools.group(refundList, f -> f.getOrderId());
 
 		// 查询任务
-		OrderTools.listTask(orderIds);
-		
+		Map<String, List<TaskAdapter>> taskMap = new HashMap<>();
+		try {
+			List<TaskAdapter> taskAdapters = TaskQuery.newQuery(0).listByOrder(orderIds);
+			taskMap = ListTools.group(taskAdapters, f -> f.getOrderId());
+		} catch (Exception e) {
+		}
+
 		// 商家名称
 		Map<String, List<MerchantInfo>> merchantMap = new HashMap<>();
 		try {
-			List<MerchantInfo> merchants = merchantInfoMapper.selectBatchIds(new HashSet<>(ListTools.extract(orderList, f->f.getMerchantId())));
-			merchantMap = ListTools.group(merchants, f -> f.getMerchantId()) ;
+			List<MerchantInfo> merchants = merchantInfoMapper
+					.selectBatchIds(new HashSet<>(ListTools.extract(orderList, f -> f.getMerchantId())));
+			merchantMap = ListTools.group(merchants, f -> f.getMerchantId());
 		} catch (Exception e) {
 		}
 
@@ -235,6 +243,10 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 			// 商家名称
 			if (!CollectionUtils.isEmpty(merchantMap.get(order.getMerchantId()))) {
 				res.setMerchantName(merchantMap.get(order.getMerchantId()).get(0).getMerchantName());
+			}
+			// 任务ID
+			if (!CollectionUtils.isEmpty(taskMap.get(order.getOrderId()))) {
+				res.setTaskId(taskMap.get(order.getOrderId()).get(0).getTaskId());
 			}
 			responses.add(res);
 		}
@@ -325,7 +337,9 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		SubmitResponse response = new SubmitResponse();
 		response.setOrderId(orderId);
 		response.setParam(JSON.parseObject(order.getParams(), OrderProduceRequest.Params.class));
-		response.setTaskName("");
+
+		List<TaskAdapter> taskAdapters = TaskQuery.newQuery(0).listByOrder(Arrays.asList(orderId));
+		Objects.notNullDone(taskAdapters, s -> response.setTaskName(s.get(0).getTaskName()));
 		return response;
 	}
 
