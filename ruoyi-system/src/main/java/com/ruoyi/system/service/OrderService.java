@@ -2,10 +2,12 @@ package com.ruoyi.system.service;
 
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.app.CancelOrderRequest;
 import com.ruoyi.common.core.domain.app.OrderDetailResponse;
 import com.ruoyi.common.core.domain.app.OrderListResponse;
 import com.ruoyi.common.core.domain.app.OrderProduceRequest;
 import com.ruoyi.common.core.domain.app.OrderRequest;
+import com.ruoyi.common.core.domain.app.SubmitResponse;
 
 public interface OrderService {
 
@@ -34,8 +36,22 @@ public interface OrderService {
 	PageInfo<OrderListResponse> list(OrderRequest orderRequest);
 
 	/***
-	 * 刷新订单状态
+	 * job 刷新订单状态
 	 */
 	void refreshOrderStatus();
+
+	/***
+	 * 批量取消订单
+	 * 
+	 * @param orderIds
+	 */
+	void cancel(CancelOrderRequest request);
+
+	/***
+	 * 提交下单拉群
+	 * 
+	 * @param orderId
+	 */
+	SubmitResponse submit(String orderId);
 
 }

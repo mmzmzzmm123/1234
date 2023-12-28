@@ -22,10 +22,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.app.CancelOrderRequest;
 import com.ruoyi.common.core.domain.app.OrderDetailResponse;
 import com.ruoyi.common.core.domain.app.OrderListResponse;
 import com.ruoyi.common.core.domain.app.OrderProduceRequest;
 import com.ruoyi.common.core.domain.app.OrderRequest;
+import com.ruoyi.common.core.domain.app.SubmitResponse;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.core.domain.entity.order.Order;
@@ -33,6 +35,7 @@ import com.ruoyi.common.core.domain.entity.order.OrderRefund;
 import com.ruoyi.common.core.domain.entity.order.OrderSku;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.redis.RedisLock;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.Objects;
@@ -139,8 +142,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 			orderSku.setBuyCount(1);
 			orderSku.setCreateTime(order.getCreateTime());
 			orderSku.setOrderSkuId(Ids.getId());
-			orderSku.setPrice(orderPriceHandler.handle(Arrays.asList(sku), groupSet.size(),
-					request.getParams().getSingleGroupPerson()));
+			orderSku.setPrice(sku.getPrice());
 			orderSku.setProductId(product.getProductId());
 			orderSku.setSkuId(sku.getId());
 			orderSku.setUserId(request.getLoginUser().getUserId());
@@ -212,7 +214,8 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 			// 退款
 			if (!CollectionUtils.isEmpty(refundMap.get(order.getOrderId()))) {
 				// 退款金额
-				res.setRefundPrice(Objects.wrapNull(refundMap.get(order.getOrderId()).get(0).getRefundPrice(), 0L));
+				res.setRefundPrice(
+						Objects.wrapNull(refundMap.get(order.getOrderId()).get(0).getActualRefundPrice(), 0L));
 			}
 			res.setActualPrice(res.getPrice() - res.getRefundPrice());
 			responses.add(res);
@@ -256,8 +259,9 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 						continue;
 					}
 					// 到了超时时间，结算用户的订单
-					OrderTools.settlementUserMonery(order);
-
+					OrderTools.settlementUserMonery(order, "定时结算");
+					// 修改订单为已经退款 // 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
+					orderMapper.updateStatus(order.getOrderId(), 4);
 				}
 			});
 		} finally {
@@ -269,6 +273,42 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 	@Override
 	public void afterPropertiesSet() throws Exception {
 		redisCache.deleteObject("ruoyi-admin:refreshOrderStatus:lock");
+	}
+
+	@Override
+	public void cancel(CancelOrderRequest request) {
+		if (CollectionUtils.isEmpty(request.getOrderIds())) {
+			return;
+		}
+		List<Order> orders = orderMapper.selectBatchIds(request.getOrderIds());
+		if (CollectionUtils.isEmpty(orders)) {
+			return;
+		}
+		for (Order order : orders) {
+			// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
+			if (order.getOrderStatus().intValue() != 0 && order.getOrderStatus().intValue() != 1) {
+				continue;
+			}
+			// 订单结算
+			OrderTools.settlementUserMonery(order, "订单手动取消");
+			// 修改为 已取消
+			orderMapper.updateCancel(order.getOrderId(), request.getCause());
+		}
+	}
+
+	@Override
+	public SubmitResponse submit(String orderId) {
+		// 查询任务
+		Order order = orderMapper.selectById(orderId);
+		// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
+		if (order == null || (order.getOrderStatus().intValue() != 0 && order.getOrderStatus().intValue() != 1)) {
+			throw new ServiceException(ErrInfoConfig.get(11006));
+		}
+		SubmitResponse response = new SubmitResponse();
+		response.setOrderId(orderId);
+		response.setParam(JSON.parseObject(order.getParams(), OrderProduceRequest.Params.class));
+		response.setTaskName("");
+		return response;
 	}
 
 }

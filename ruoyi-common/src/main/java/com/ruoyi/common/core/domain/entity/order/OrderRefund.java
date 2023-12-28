@@ -37,9 +37,14 @@ public class OrderRefund implements Serializable {
 	private String merchantId;
 
 	/**
-	 * 退款 金额
+	 * 计算退款 金额
 	 */
-	private Long refundPrice;
+	private Long calculateRefundPrice;
+
+	/**
+	 * 实际退款金额
+	 */
+	private Long actualRefundPrice;
 
 	private String remark;
 

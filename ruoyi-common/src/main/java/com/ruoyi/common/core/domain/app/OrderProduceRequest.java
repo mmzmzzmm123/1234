@@ -48,6 +48,18 @@ public class OrderProduceRequest {
 		private List<String> targetIds;
 
 		/**
+		 * 格式类型： 1-导入文件 2-手动输入
+		 */
+		@ApiModelProperty("格式类型： 1-导入文件 2-手动输入")
+		private int formatType;
+
+		/**
+		 * 格式类型： 1-导入文件 2-手动输入
+		 */
+		@ApiModelProperty("excel下载链接")
+		private String excelUrl;
+
+		/**
 		 * 群来源 0-自有群 1-平台群
 		 */
 		@ApiModelProperty("群来源 0-自有群")

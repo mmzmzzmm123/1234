@@ -1,10 +1,12 @@
 package com.ruoyi.system.components;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.order.Order;
 import com.ruoyi.common.core.domain.entity.order.OrderRefund;
+import com.ruoyi.common.core.domain.entity.order.OrderSku;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spring.SpringUtils;
@@ -12,6 +14,7 @@ import com.ruoyi.system.domain.dto.AmountConsumptionDTO;
 import com.ruoyi.system.domain.dto.ApplyAmountFrozenDTO;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.mapper.OrderRefundMapper;
+import com.ruoyi.system.mapper.OrderSkuMapper;
 import com.ruoyi.system.service.MerchantAmountService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -86,8 +89,17 @@ public class OrderTools {
 		// 任务是已经完成 , 修改订单完成
 		mapper.updateFinish(order.getOrderId());
 		log.info("OrderMapper.updateFinish {}", order);
-
 		// 订单完成 这里不退计算 退款， 因为看可能回调有延迟，需要延迟计算 退款
+	}
+
+	public static long skuPrice(String orderId) {
+		final OrderSkuMapper mapper = SpringUtils.getBean(OrderSkuMapper.class);
+		OrderSku sku = mapper
+				.selectOne(new QueryWrapper<OrderSku>().lambda().eq(OrderSku::getOrderId, orderId).last(" limit  1 "));
+		if (sku == null) {
+			return 0;
+		}
+		return sku.getPrice();
 	}
 
 	/***
@@ -95,19 +107,36 @@ public class OrderTools {
 	 * 
 	 * @param orders
 	 */
-	public static void settlementUserMonery(Order order) {
+	public static void settlementUserMonery(Order order , String remark) {
 		// 根据订单 查询 实际完成了 多少任务详情
 		int successCount = getSuccessCountOfTaskDetail(order.getOrderId());
 		// sku单价
-		long skuPrice = ProductTools.skuPrice(order.getProductId());
-		// 实际扣除的 钱 = 成功详情数 * sku单价
+		long skuPrice = skuPrice(order.getOrderId());
+		// 实际扣除的钱 = 成功详情数 * sku单价
 		long payPrice = successCount * skuPrice;
 		final MerchantAmountService service = SpringUtils.getBean(MerchantAmountService.class);
 		AmountConsumptionDTO dto = new AmountConsumptionDTO();
 		dto.setAmount(payPrice);
 		dto.setFrozenId(order.getFrozenId());
-		service.amountConsumption(dto);
-		log.info("用户结算 {}", dto);
+		// 实际退款
+		long actualRefundPrice = 0 ;
+		try {
+			actualRefundPrice = service.amountConsumption(dto);
+			log.info("用户结算 {} {} {}", dto, actualRefundPrice, order);
+		} catch (Exception e) {
+			log.error("MerchantAmountService.amountConsumption {}" ,dto , e);
+		}
+		// 插入退款
+		OrderRefund orderRefund = new OrderRefund();
+		orderRefund.setActualRefundPrice(actualRefundPrice);
+		orderRefund.setCalculateRefundPrice(order.getPrice() - payPrice);
+		orderRefund.setCreateTime(new Date());
+		orderRefund.setMerchantId(order.getMerchantId());
+		orderRefund.setOrderId(order.getOrderId());
+		orderRefund.setUserId(order.getUserId());
+		orderRefund.setRemark(remark);
+		SpringUtils.getBean(OrderRefundMapper.class).insert(orderRefund) ;
+		log.info("用户结算完成 {} {}" , order , orderRefund);
 	}
 
 }

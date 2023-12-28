@@ -15,6 +15,7 @@ public class ErrInfoConfig {
 		err.put(11003, "SKU列表为空");
 		err.put(11004, "SKU价格为空，SKU-ID: %s");
 		err.put(11005, "用户信息为空");
+		err.put(11006, "订单不存在或状态已完成");
 
 
 	}
