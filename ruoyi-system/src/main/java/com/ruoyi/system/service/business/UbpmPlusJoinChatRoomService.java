@@ -1,4 +1,4 @@
-package com.ruoyi.web.business;
+package com.ruoyi.system.service.business;
 
 
 import com.alibaba.fastjson2.JSONObject;

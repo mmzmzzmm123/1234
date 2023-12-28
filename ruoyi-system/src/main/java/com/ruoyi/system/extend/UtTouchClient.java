@@ -356,7 +356,7 @@ public abstract class UtTouchClient {
     }
 
     private static String getToken() {
-        String token = redisTemplate.boundValueOps("ut-touch-token-bule").get();
+        String token = redisTemplate.boundValueOps("ut-touch-token-blue").get();
         if (StringUtils.isBlank(token)) {
 
             // 调用接口获取Token
@@ -364,8 +364,8 @@ public abstract class UtTouchClient {
 
             // Redis中缓存Token
             if (StringUtils.isNotBlank(token)) {
-                redisTemplate.boundValueOps("ut-touch-token-bule").set(token);
-                redisTemplate.boundValueOps("ut-touch-token-bule").expire(1, TimeUnit.HOURS);
+                redisTemplate.boundValueOps("ut-touch-token-blue").set(token);
+                redisTemplate.boundValueOps("ut-touch-token-blue").expire(1, TimeUnit.HOURS);
             }
         }
         return token;
