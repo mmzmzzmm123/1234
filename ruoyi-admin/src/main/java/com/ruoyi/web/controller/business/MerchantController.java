@@ -50,10 +50,12 @@ public class MerchantController extends BaseController {
     public R<Page<MerchantInfoVO>> page(@Validated @RequestBody QueryMerchantPageDTO dto) {
         Integer merchantType = getMerchantType();
         String merchantId = getMerchantId();
-        if (merchantType == 0) {
-            dto.setMerchantId(merchantId);
-        } else {
-            dto.setPlMerchantId(merchantId);
+        if (merchantType != null) {
+            if (merchantType == 0) {
+                dto.setMerchantId(merchantId);
+            } else {
+                dto.setPlMerchantId(merchantId);
+            }
         }
         Page<MerchantInfoVO> page = merchantInfoService.page(dto);
         return R.ok(page);
