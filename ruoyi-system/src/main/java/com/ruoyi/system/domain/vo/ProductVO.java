@@ -1,11 +1,14 @@
 package com.ruoyi.system.domain.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.ruoyi.system.domain.dto.ProductSkuDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 @Data
 public class ProductVO {
+    @JsonSerialize(using = ToStringSerializer.class)
     @ApiModelProperty(value = "商品id")
     private Long productId;
 
