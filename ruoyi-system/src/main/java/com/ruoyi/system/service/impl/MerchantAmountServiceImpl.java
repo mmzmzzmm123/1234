@@ -76,7 +76,7 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
     public void amountTransfer(AmountTransferDTO dto) {
         MerchantAmount merchantAmount = super.getById(dto.getMerchantId());
         Assert.notNull(merchantAmount, "划拨商家不存在");
-        Assert.isTrue(merchantAmount.getAvailableAmount() > dto.getAmount(), "划拨商家可用资金不足");
+        Assert.isTrue(merchantAmount.getAvailableAmount() >= dto.getAmount(), "划拨商家可用资金不足");
         MerchantAmount targetMerchantAmount = super.getById(dto.getTargetMerchantId());
         Assert.notNull(targetMerchantAmount, "接收资金商家不存在");
 
