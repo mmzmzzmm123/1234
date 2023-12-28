@@ -18,7 +18,7 @@ public class OrderListResponse {
 	private String orderId;
 
 	@ApiModelProperty("订单类型 0-拉人入群")
-	private String orderType;
+	private Integer orderType;
 
 	@ApiModelProperty("商品名称")
 	private String productName;
