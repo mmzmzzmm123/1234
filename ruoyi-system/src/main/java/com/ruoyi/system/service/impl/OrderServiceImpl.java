@@ -32,6 +32,7 @@ import com.ruoyi.common.core.domain.app.SubmitResponse;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.entity.order.Order;
 import com.ruoyi.common.core.domain.entity.order.OrderRefund;
 import com.ruoyi.common.core.domain.entity.order.OrderSku;
@@ -41,13 +42,16 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.Objects;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.components.OrderPriceHandler;
 import com.ruoyi.system.components.OrderTools;
 import com.ruoyi.system.components.ProductTools;
 import com.ruoyi.system.components.TaskQuery;
+import com.ruoyi.system.components.UrlTools;
 import com.ruoyi.system.components.TaskQuery.TaskAdapter;
 import com.ruoyi.system.components.UserTools;
 import com.ruoyi.system.configure.RedisConfigure;
+import com.ruoyi.system.domain.dto.PhoneExcelDTO;
 import com.ruoyi.system.mapper.MerchantInfoMapper;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.mapper.OrderRefundMapper;
@@ -104,6 +108,25 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		if (result.isError()) {
 			return result;
 		}
+		// 下载excel文件
+		if (!StringUtils.isEmpty(request.getParams().getExcelUrl())) {
+			try {
+				ExcelUtil<PhoneExcelDTO> util = new ExcelUtil<PhoneExcelDTO>(PhoneExcelDTO.class);
+				List<PhoneExcelDTO> ids = util
+						.importExcel(UrlTools.getInputStreamByUrl(request.getParams().getExcelUrl()));
+				if (!StringUtils.isEmpty(request.getParams().getTargetIds())) {
+					if (CollectionUtils.isEmpty(ids)) {
+						return AjaxResult.error(ErrInfoConfig.get(11010));
+					}
+					request.getParams().setTargetIds(
+							new ArrayList<>(new HashSet<String>(ListTools.extract(ids, id -> id.getPhone()))));
+				}
+			} catch (Exception e) {
+				log.error("文件格式错误 {}", request.getParams().getExcelUrl());
+				return AjaxResult.error(ErrInfoConfig.get(11010));
+			}
+		}
+
 		// 校验 商品
 		final Product product = (Product) result.data();
 		// 校验sku
