@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.business;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
@@ -270,6 +271,12 @@ public class UbpmPlusJoinChatRoomController {
         dto.setNeedCount(input.getSingleGroupPerson());
         dto.setContentList(input.getTargetIds());
         dto.setName(input.getOrderId());
+        dto.setAutoCreateChatroomCount(0);
+        dto.setNIsRobotExit(1);
+        dto.setNIsCountryCode(0);
+        if(StrUtil.isNotBlank(input.getCountries())){
+            dto.setNIsCountryCode(1);
+        }
         dto.setCountryCodes(input.getCountries());
         SaveChatRoomJoinTaskDTO.TaskRuleData taskRuleData = new SaveChatRoomJoinTaskDTO.TaskRuleData();
         if(ObjectUtil.isNotEmpty(input.getRule())) {
