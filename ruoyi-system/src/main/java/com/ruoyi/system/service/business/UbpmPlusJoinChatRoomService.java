@@ -59,8 +59,8 @@ public class UbpmPlusJoinChatRoomService {
 
     public void saveChatRoomJoinTask(SaveChatRoomJoinTaskDTO input) {
         input.setUserCode(utTouchProperties.getTouchMerchantId());
-        String merchantUserId = SecurityUtils.getUserId().toString();
-        input.setExtendKey(merchantUserId);
+        final Order order = orderMapper.selectById(input.getOrderId());
+        input.setExtendKey(StrUtil.toString(order.getUserId()));
         if(StrUtil.isBlank(input.getName())){
             //任务名称为空时，用订单ID做名称
             input.setName(input.getOrderId());
@@ -70,17 +70,17 @@ public class UbpmPlusJoinChatRoomService {
         UtTouchResult<String> result = UtTouchJoinRoomClient.saveChatRoomJoinTask(input);
         String taskId = result.getDataOrThrow();
 
+        String merchantUserId = SecurityUtils.getUserId().toString();
         // 保存任务数据至自己数据库
         Task task = new Task();
         task.setTaskId(taskId);
         task.setOrderId(input.getOrderId());
         task.setTaskName(input.getName());
-        task.setMerchantId(merchantUserId);
+        task.setMerchantId(order.getMerchantId());
         task.setTaskType(TaskType.JOIN_CHAT_ROOM.name());
         task.setPlatform(Platform.TELEGRAM.getPlatformType());
         task.setCreateBy(merchantUserId);
         task.setStatus(0);
-        final Order order = orderMapper.selectById(input.getOrderId());
         task.setFreezeBalance(ObjectUtil.isNotEmpty(order)?order.getPrice().intValue():0);
         taskService.save(task);
 
