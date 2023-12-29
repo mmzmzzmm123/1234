@@ -298,7 +298,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 				} catch (Exception e) {
 					log.error("refreshOrderStatus失败 {}", order, e);
 				}
-				log.info("订单状态刷新完成 {}" , order);
+				log.info("订单状态刷新完成 {}", order);
 			}
 			// 计算 退款
 			Objects.notNullDone(OrderTools.listComplete(), items -> {
@@ -317,7 +317,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 					OrderTools.settlementUserMonery(order, "定时结算");
 					// 修改订单为已经退款 // 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
 					orderMapper.updateStatus(order.getOrderId(), 4);
-					log.info("结算完成 {}" , order);
+					log.info("结算完成 {}", order);
 				}
 				log.info("结算完成");
 			});
@@ -334,7 +334,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 	@Override
 	public void cancel(CancelOrderRequest request) {
-		log.info("cancel_order {}" , JSON.toJSONString(request));
+		log.info("cancel_order {}", JSON.toJSONString(request));
 		if (CollectionUtils.isEmpty(request.getOrderIds())) {
 			return;
 		}
@@ -356,7 +356,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 	@Override
 	public SubmitResponse submit(String orderId) {
-		log.info("submit_order {}" , orderId);
+		log.info("submit_order {}", orderId);
 		// 查询任务
 		Order order = orderMapper.selectById(orderId);
 		// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
@@ -369,6 +369,14 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 		List<TaskAdapter> taskAdapters = TaskQuery.newQuery(0).listByOrder(Arrays.asList(orderId));
 		Objects.notNullDone(taskAdapters, s -> response.setTaskName(s.get(0).getTaskName()));
+
+		// 查询商品
+		try {
+			ProductSku sku = ProductTools.listSku(Arrays.asList(order.getProductId())).get(0);
+			response.setCountyCode(sku.getCountyCode());
+			response.setCountyName(sku.getCountyName());
+		} catch (Exception e) {
+		}
 		return response;
 	}
 

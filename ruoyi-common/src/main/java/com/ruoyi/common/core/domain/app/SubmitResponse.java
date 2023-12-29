@@ -14,4 +14,10 @@ public class SubmitResponse {
 
 	@ApiModelProperty("订单ID")
 	private String orderId;
+
+	@ApiModelProperty("国家code")
+	private String countyCode;
+
+	@ApiModelProperty("国家名称")
+	private String countyName;
 }
