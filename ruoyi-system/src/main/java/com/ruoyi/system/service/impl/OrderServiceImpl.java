@@ -89,7 +89,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 	@Override
 	@SuppressWarnings("unchecked")
 	public AjaxResult produce(OrderProduceRequest request) {
-		log.info("OrderServiceImpl.produce {}", request);
+		log.info("OrderServiceImpl.produce {}", JSON.toJSONString(request));
 		if (request.getParams() == null || CollectionUtils.isEmpty(request.getParams().getGroupIds())) {
 			return AjaxResult.error(ErrInfoConfig.getDynmic(11000, "params"));
 		}
@@ -330,6 +330,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 	@Override
 	public void cancel(CancelOrderRequest request) {
+		log.info("cancel_order {}" , JSON.toJSONString(request));
 		if (CollectionUtils.isEmpty(request.getOrderIds())) {
 			return;
 		}
@@ -351,6 +352,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 	@Override
 	public SubmitResponse submit(String orderId) {
+		log.info("submit_order {}" , orderId);
 		// 查询任务
 		Order order = orderMapper.selectById(orderId);
 		// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
