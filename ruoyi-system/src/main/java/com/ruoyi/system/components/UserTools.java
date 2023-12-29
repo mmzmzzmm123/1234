@@ -13,10 +13,10 @@ public class UserTools {
 			return AjaxResult.error(ErrInfoConfig.get(11005));
 		}
 		if (null == loginUser.getMerchantInfo()) {
-			return AjaxResult.error(ErrInfoConfig.get(11005));
+			return AjaxResult.error(ErrInfoConfig.get(11011));
 		}
 		if (StringUtils.isEmpty(loginUser.getMerchantInfo().getMerchantId())) {
-			return AjaxResult.error(ErrInfoConfig.get(11005));
+			return AjaxResult.error(ErrInfoConfig.get(11011));
 		}
 		return AjaxResult.success(loginUser.getMerchantInfo());
 	}
