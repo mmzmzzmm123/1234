@@ -5,6 +5,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
 import com.ruoyi.system.domain.vo.PhoneNumberFileUrlVO;
 import com.ruoyi.system.domain.vo.PhoneNumbersVO;
+import com.ruoyi.system.domain.vo.SaveAndCreateTaskVO;
 import com.ruoyi.system.extend.data.*;
 import com.ruoyi.system.service.business.UbpmPlusJoinChatRoomService;
 import io.swagger.annotations.Api;
@@ -247,6 +248,14 @@ public class UbpmPlusJoinChatRoomController {
     @PostMapping("robotJoinChatRoom")
     public R<Void> robotJoinChatRoom(@RequestBody RobotJoinChatRoomInput input) {
         ubpmPlusJoinChatRoomService.robotJoinChatRoom(input);
+        return R.ok();
+    }
+
+
+    @ApiOperation("通过订单创建任务")
+    @PostMapping("createTaskByOrder")
+    public R<Void> createTaskByOrder(@RequestBody SaveAndCreateTaskVO input) {
+
         return R.ok();
     }
 }
