@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.business;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
@@ -31,6 +32,7 @@ public class ProductController extends BaseController {
         return R.ok(productService.getPage(productQueryParam));
     }
 
+    @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     @ApiOperation("添加商品")
     @PostMapping(value = "/create")
     public R<Product> create(@Validated @RequestBody ProductDTO productDTO) {
@@ -48,12 +50,14 @@ public class ProductController extends BaseController {
         return productService.detail(id);
     }
 
+    @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     @ApiOperation("更新商品信息")
     @PostMapping(value = "/update")
     public R<String> update(@Validated @RequestBody ProductDTO productDTO) {
         return productService.update(productDTO);
     }
 
+    @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     @ApiOperation("更新商品价格")
     @PostMapping(value = "/updatePrice")
     public R<String> updatePrice(@Validated @RequestBody UpdateProductDTO productDTO) {
