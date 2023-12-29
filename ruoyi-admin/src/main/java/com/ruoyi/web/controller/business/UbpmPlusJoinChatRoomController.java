@@ -1,7 +1,11 @@
 package com.ruoyi.web.controller.business;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
 import com.ruoyi.system.domain.vo.PhoneNumberFileUrlVO;
 import com.ruoyi.system.domain.vo.PhoneNumbersVO;
@@ -12,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * @author Jing.Zhang
  */
+@Slf4j
 @Api(tags = {"拉群任务"})
 @RestController
 @AllArgsConstructor
@@ -255,7 +261,23 @@ public class UbpmPlusJoinChatRoomController {
     @ApiOperation("通过订单创建任务")
     @PostMapping("createTaskByOrder")
     public R<Void> createTaskByOrder(@RequestBody SaveAndCreateTaskVO input) {
-
+        log.info("通过订单创建任务input {}", JSON.toJSONString(input));
+        SaveChatRoomJoinTaskDTO dto = new SaveChatRoomJoinTaskDTO();
+        dto.setChatRoomUrls(input.getGroupIds());
+        dto.setNIsOpenChatRoomMemberLimitCount((input.getGroupPersonType()));
+        dto.setChatroomUrlSource(input.getGroupSource());
+        dto.setImportType(input.getInGroupType());
+        dto.setNeedCount(input.getSingleGroupPerson());
+        dto.setContentList(input.getTargetIds());
+        dto.setName(input.getOrderId());
+        dto.setCountryCodes(input.getCountries());
+        SaveChatRoomJoinTaskDTO.TaskRuleData taskRuleData = new SaveChatRoomJoinTaskDTO.TaskRuleData();
+        if(ObjectUtil.isNotEmpty(input.getRule())) {
+            BeanUtils.copyProperties(input.getRule(), taskRuleData);
+        }
+        dto.setTaskRuleData(taskRuleData);
+        log.info("通过订单创建任务dto {}", JSON.toJSONString(dto));
+        ubpmPlusJoinChatRoomService.saveChatRoomJoinTask(dto);
         return R.ok();
     }
 }
