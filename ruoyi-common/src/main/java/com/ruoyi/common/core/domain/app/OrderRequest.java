@@ -11,9 +11,9 @@ public class OrderRequest {
 	@ApiModelProperty("订单ID")
 	private String orderId;
 	@ApiModelProperty("下单开始时间")
-	private Date startTime;
+	private String startTime;
 	@ApiModelProperty("下单结束时间")
-	private Date endTime;
+	private String endTime;
 
 	@ApiModelProperty("订单类型 0-拉人入群")
 	private Integer orderType;
