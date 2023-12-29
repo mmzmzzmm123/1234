@@ -2,7 +2,6 @@ package com.ruoyi.system.domain.vo;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.List;
 
