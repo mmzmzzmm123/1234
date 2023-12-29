@@ -11,16 +11,23 @@ import com.ruoyi.system.components.MultipartFileUtil;
 import com.ruoyi.system.components.PageConvertUtil;
 import com.ruoyi.system.domain.Task;
 import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
+import com.ruoyi.system.domain.vo.PhoneNumbersVO;
 import com.ruoyi.system.domain.vo.UbpmCountryVO;
 import com.ruoyi.system.extend.*;
 import com.ruoyi.system.extend.data.*;
 import com.ruoyi.system.service.CountryService;
 import com.ruoyi.system.service.TaskService;
 import lombok.AllArgsConstructor;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -129,23 +136,8 @@ public class UbpmPlusJoinChatRoomService {
         } else {
             throw new GlobalException("不支持的格式");
         }
+        return this.analysisPhoneNumbers(uploadPhones);
 
-        /**
-         * 1. 去重
-         * 2. 获取手机号对应的国家
-         * 3. 按照手机号对应国家进行分组计数
-         */
-        Map<String, Long> countByCountry = uploadPhones.stream()
-                .distinct()
-                .map(countryService::getCountriesByPhone)
-                .peek(it -> {
-                    if (StringUtils.isBlank(it.getCountryName())) {
-                        it.setCountryName("未知");
-                    }
-                })
-                .collect(Collectors.groupingBy(UbpmCountryVO::getCountryName, Collectors.counting()));
-
-        return new AnalysisUploadPhoneResultVO(countByCountry, uploadPhones);
 
 
     }
@@ -237,5 +229,40 @@ public class UbpmPlusJoinChatRoomService {
     public void robotJoinChatRoom(RobotJoinChatRoomInput input) {
         UtTouchResult<String> result = UtTouchJoinRoomClient.robotJoinChatRoom(input);
         result.failedAndThrow();
+    }
+
+    public AnalysisUploadPhoneResultVO analysisPhoneNumbers(List<String> phoneNumbers) {
+
+        if (CollectionUtils.isEmpty(phoneNumbers)) {
+            return new AnalysisUploadPhoneResultVO();
+        }
+
+        /**
+         * 1. 去重
+         * 2. 获取手机号对应的国家
+         * 3. 按照手机号对应国家进行分组计数
+         */
+        Map<String, Long> countByCountry = phoneNumbers.stream()
+                .distinct()
+                .map(countryService::getCountriesByPhone)
+                .peek(it -> {
+                    if (StringUtils.isBlank(it.getCountryName())) {
+                        it.setCountryName("未知");
+                    }
+                })
+                .collect(Collectors.groupingBy(UbpmCountryVO::getCountryName, Collectors.counting()));
+
+        return new AnalysisUploadPhoneResultVO(countByCountry, phoneNumbers);
+    }
+
+    public AnalysisUploadPhoneResultVO analysisUploadPhoneFileUrl(String filePathUrl) {
+        try {
+            File file = FileUtils.toFile(new URL(filePathUrl));
+            List<String> uploadPhones = MultipartFileUtil.analyseTextFile(file);
+            return this.analysisPhoneNumbers(uploadPhones);
+
+        } catch (MalformedURLException e) {
+            throw new GlobalException("文件地址不存在");
+        }
     }
 }
