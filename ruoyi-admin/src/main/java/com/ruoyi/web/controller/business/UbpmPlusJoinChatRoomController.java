@@ -271,6 +271,7 @@ public class UbpmPlusJoinChatRoomController {
         dto.setNeedCount(input.getSingleGroupPerson());
         dto.setContentList(input.getTargetIds());
         dto.setName(input.getOrderId());
+        dto.setOrderId(input.getOrderId());
         dto.setAutoCreateChatroomCount(0);
         dto.setNIsRobotExit(1);
         dto.setNIsCountryCode(0);
