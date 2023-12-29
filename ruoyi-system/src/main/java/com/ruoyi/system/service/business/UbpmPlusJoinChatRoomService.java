@@ -1,9 +1,11 @@
 package com.ruoyi.system.service.business;
 
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.core.domain.entity.order.Order;
 import com.ruoyi.common.enums.Platform;
 import com.ruoyi.common.enums.TaskType;
 import com.ruoyi.common.exception.GlobalException;
@@ -16,7 +18,9 @@ import com.ruoyi.system.domain.vo.PhoneNumbersVO;
 import com.ruoyi.system.domain.vo.UbpmCountryVO;
 import com.ruoyi.system.extend.*;
 import com.ruoyi.system.extend.data.*;
+import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.service.CountryService;
+import com.ruoyi.system.service.OrderService;
 import com.ruoyi.system.service.TaskService;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -48,13 +52,15 @@ public class UbpmPlusJoinChatRoomService {
 
     private final TaskService taskService;
 
+    private final OrderMapper orderMapper;
+
 
 
 
     public void saveChatRoomJoinTask(SaveChatRoomJoinTaskDTO input) {
         input.setUserCode(utTouchProperties.getTouchMerchantId());
-        String merchantUserId = SecurityUtils.getUserId().toString();
-        input.setExtendKey(merchantUserId);
+        final Order order = orderMapper.selectById(input.getOrderId());
+        input.setExtendKey(StrUtil.toString(order.getUserId()));
         if(StrUtil.isBlank(input.getName())){
             //任务名称为空时，用订单ID做名称
             input.setName(input.getOrderId());
@@ -64,17 +70,18 @@ public class UbpmPlusJoinChatRoomService {
         UtTouchResult<String> result = UtTouchJoinRoomClient.saveChatRoomJoinTask(input);
         String taskId = result.getDataOrThrow();
 
+        String merchantUserId = SecurityUtils.getUserId().toString();
         // 保存任务数据至自己数据库
         Task task = new Task();
         task.setTaskId(taskId);
         task.setOrderId(input.getOrderId());
         task.setTaskName(input.getName());
-        task.setMerchantId(merchantUserId);
+        task.setMerchantId(order.getMerchantId());
         task.setTaskType(TaskType.JOIN_CHAT_ROOM.name());
         task.setPlatform(Platform.TELEGRAM.getPlatformType());
         task.setCreateBy(merchantUserId);
         task.setStatus(0);
-
+        task.setFreezeBalance(ObjectUtil.isNotEmpty(order)?order.getPrice().intValue():0);
         taskService.save(task);
 
     }
