@@ -8,10 +8,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.constant.ProductStatusConstants;
+import com.ruoyi.common.constant.RedisKeyConstans;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.app.ProductRequest;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.ProductDetailVO;
 import com.ruoyi.system.domain.vo.ProductVO;
@@ -32,12 +34,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> implements IProductService {
     @Resource
     private ProductSkuServiceImpl productSkuService;
+
+    @Resource
+    private RedisCache redisCache;
 
     @Override
     public Page<ProductDTO> getPage(ProductQueryParamDTO queryParam) {
@@ -47,6 +54,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             return ret;
         }
 
+        //规格属性
         List<String> countryCodeList = new ArrayList<>();
         for (ProductDTO productDTO : ret.getRecords()) {
             List<ProductSkuDTO> skuList = new ArrayList<>();
@@ -127,7 +135,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         BeanUtils.copyProperties(product, ret);
 
         List<String> countryCodeList = new ArrayList<>();
-        //商品sku信息
+        //设置商品规格信息
         List<ProductSkuDTO> skuList = new ArrayList<>();
         List<ProductSku> productSkuList = productSkuService.list(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, id));
         for (ProductSku productSku : productSkuList) {
@@ -147,6 +155,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     //获取服务支撑量
     public Map<String, Long> getStockMapByCountyCode(List<String> countryCodeList) {
+        countryCodeList = countryCodeList.stream().distinct().collect(Collectors.toList());
         Map<String, Long> ret = new HashMap<>();
         for (String countryCode : countryCodeList) {
             if (!ret.containsKey(countryCode)) {
@@ -157,6 +166,18 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     }
 
     public long getCountryBusinessEstimate(String countryCode) {
+        String key = RedisKeyConstans.COUNTRY_BUSINESS_ESTIMATE + countryCode;
+        Long usersNum = redisCache.getCacheObject(key);
+        if (null != usersNum) {
+            return usersNum;
+        }
+
+        usersNum = getCountryBusinessEstimateByClient(countryCode);
+        redisCache.setCacheObject(key, usersNum, 1, TimeUnit.MINUTES);
+        return usersNum;
+    }
+
+    private long getCountryBusinessEstimateByClient(String countryCode) {
         try {
             CountryBusinessEstimateInput input = new CountryBusinessEstimateInput();
             input.setPriorityOp(0);
