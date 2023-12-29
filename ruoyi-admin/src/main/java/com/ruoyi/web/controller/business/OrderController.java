@@ -1,16 +1,12 @@
 package com.ruoyi.web.controller.business;
 
 import com.github.pagehelper.PageInfo;
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.domain.app.CancelOrderRequest;
-import com.ruoyi.common.core.domain.app.OrderDetailResponse;
-import com.ruoyi.common.core.domain.app.OrderListResponse;
-import com.ruoyi.common.core.domain.app.OrderProduceRequest;
-import com.ruoyi.common.core.domain.app.OrderRequest;
-import com.ruoyi.common.core.domain.app.SubmitResponse;
+import com.ruoyi.common.core.domain.app.*;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.system.service.OrderService;
@@ -21,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import javax.annotation.Resource;
 
 /**
@@ -37,6 +34,7 @@ public class OrderController extends BaseController {
 	@Resource
 	private OrderService orderService;
 
+	@RepeatSubmit(interval = 1000, message = "请求过于频繁")
 	@ApiOperation("下单(返回订单id)")
 	@PostMapping("produce")
 	public R<String> produce(@RequestBody OrderProduceRequest dto) {
