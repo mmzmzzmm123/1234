@@ -16,7 +16,6 @@ import java.util.List;
 /**
  * @Author : zengyi
  */
-@Anonymous
 @Api(tags = "类型")
 @RestController
 @RequestMapping("/type")
@@ -24,12 +23,14 @@ public class TypeController {
     @Resource
     private ITypeService typeService;
 
+    @Anonymous
     @ApiOperation("获取所有app类型")
     @GetMapping( "/app")
     public R<List<TypeVO>> getAppList() {
         return R.ok(typeService.getAppList());
     }
 
+    @Anonymous
     @ApiOperation("获取所有商品类型")
     @GetMapping( "/productCategory")
     public R<List<TypeVO>> getProductCategoryList() {
