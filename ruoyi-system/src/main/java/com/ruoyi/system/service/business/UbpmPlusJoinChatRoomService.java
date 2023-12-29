@@ -88,7 +88,11 @@ public class UbpmPlusJoinChatRoomService {
 
     public Page<GetChatRoomJoinTaskPageOutput> getChatRoomJoinTaskPage(GetChatRoomJoinTaskPageInput input) {
         input.setUserCode(utTouchProperties.getTouchMerchantId());
-        input.setExtendKey(SecurityUtils.getUserId().toString());
+        final Integer merchantType = SecurityUtils.getLoginUser().getUser().getMerchantType();
+        //todo 这里代理查询会有问题
+        if(merchantType.compareTo(0) == 0) {
+            input.setExtendKey(SecurityUtils.getUserId().toString());
+        }
         UtTouchResult<UtTouchPage<GetChatRoomJoinTaskPageOutput>> touchResult =
                 UtTouchJoinRoomClient.getChatRoomJoinTaskPage(input);
         return Optional.of(touchResult)
