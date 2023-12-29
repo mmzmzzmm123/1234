@@ -280,6 +280,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void refreshOrderStatus() {
+		log.info("refreshOrderStatus");
 		// 刷新 订单 状态
 		try {
 			// 保证 只有一个执行
@@ -297,6 +298,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 				} catch (Exception e) {
 					log.error("refreshOrderStatus失败 {}", order, e);
 				}
+				log.info("订单状态刷新完成 {}" , order);
 			}
 			// 计算 退款
 			Objects.notNullDone(OrderTools.listComplete(), items -> {
@@ -315,7 +317,9 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 					OrderTools.settlementUserMonery(order, "定时结算");
 					// 修改订单为已经退款 // 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
 					orderMapper.updateStatus(order.getOrderId(), 4);
+					log.info("结算完成 {}" , order);
 				}
+				log.info("结算完成");
 			});
 		} finally {
 			redisCache.deleteObject("ruoyi-admin:refreshOrderStatus:lock");
