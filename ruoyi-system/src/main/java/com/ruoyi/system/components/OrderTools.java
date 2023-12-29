@@ -97,8 +97,7 @@ public class OrderTools {
 		}
 		String taskId = taskAdapters.get(0).getTaskId();
 		// 查询任务的状态 -1待执行 0-进行中 1-已完成 2-已取消
-//		int taskStatus = TaskQuery.newQuery(0).getStatus(taskId);
-		int taskStatus = 1;
+		int taskStatus = TaskQuery.newQuery(0).getStatus(taskId);
 		if (taskStatus == 0) {
 			// 如果任务是 进行中， 设置订单为 进行中
 			mapper.updateStatus(order.getOrderId(), 1);
