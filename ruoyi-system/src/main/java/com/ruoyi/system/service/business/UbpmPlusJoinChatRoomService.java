@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.business;
 
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.enums.Platform;
@@ -54,6 +55,10 @@ public class UbpmPlusJoinChatRoomService {
         input.setUserCode(utTouchProperties.getTouchMerchantId());
         String merchantUserId = SecurityUtils.getUserId().toString();
         input.setExtendKey(merchantUserId);
+        if(StrUtil.isBlank(input.getName())){
+            //任务名称为空时，用订单ID做名称
+            input.setName(input.getOrderId());
+        }
 
         // 调用UT-TOUCH接口创建任务
         UtTouchResult<String> result = UtTouchJoinRoomClient.saveChatRoomJoinTask(input);
