@@ -332,10 +332,10 @@ public abstract class UtTouchClient {
 
     private static String login() {
         String lockKey = "ubpm-plus-login";
-        RedisLock redisLock = SpringUtils.getBean(RedisLock.class);
-        RLock lock = redisLock.lock(lockKey);
+//        RedisLock redisLock = SpringUtils.getBean(RedisLock.class);
+//        RLock lock = redisLock.lock(lockKey);
         try {
-            if (lock.isLocked()) {
+//            if (lock.isLocked()) {
                 String merchantAccount = SpringUtils.getBean(UtTouchProperties.class).getMerchantAccount();
                 String merchantPassword = SpringUtils.getBean(UtTouchProperties.class).getMerchantPassword();
 
@@ -347,11 +347,11 @@ public abstract class UtTouchClient {
                         .map(UtTouchResult::getData)
                         .map(MerchantLoginResult::getToken)
                         .orElseThrow(() -> new GlobalException("调用UT-TOUCH登录发生错误"));
-            } else {
-                return null;
-            }
+//            } else {
+//                return null;
+//            }
         } finally {
-            redisLock.unlock(lock);
+//            redisLock.unlock(lock);
         }
     }
 
