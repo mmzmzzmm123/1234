@@ -11,6 +11,7 @@ import com.ruoyi.common.core.domain.app.OrderListResponse;
 import com.ruoyi.common.core.domain.app.OrderProduceRequest;
 import com.ruoyi.common.core.domain.app.OrderRequest;
 import com.ruoyi.common.core.domain.app.SubmitResponse;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.system.service.OrderService;
 import io.swagger.annotations.Api;
@@ -46,7 +47,9 @@ public class OrderController extends BaseController {
 				return R.ok((String) r.data());
 			}
 			return R.fail(-1, r.msg() + "");
-		} catch (Exception e) {
+		}catch (ServiceException e) {
+			return R.fail(e.getMessage());
+		}catch (Exception e) {
 			String id = Ids.getId();
 			log.error("OrderController.produce {} {}", id, dto, e);
 			return R.fail(ErrInfoConfig.getDynmic(10000, id));

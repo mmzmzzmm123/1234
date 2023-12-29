@@ -73,7 +73,7 @@ public class OrderTools {
 		} catch (Throwable e) {
 			String trace = Ids.getId();
 			log.error("MerchantAmountService.applyAmountFrozen_error {} {}", trace, dto, e);
-			throw new ServiceException("冻结用户资金失败 trace: " + trace);
+			throw new ServiceException(e.getMessage());
 		}
 	}
 
