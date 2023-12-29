@@ -17,7 +17,6 @@ import javax.annotation.Resource;
 /**
  * @Author : zengyi
  */
-@Anonymous
 @Api(tags = "前台商品")
 @RestController
 @RequestMapping("/homeProduct")
@@ -25,12 +24,14 @@ public class HomeProductController extends BaseController {
     @Resource
     private IProductService productService;
 
+    @Anonymous
     @ApiOperation("商品首页")
     @PostMapping("/list")
     public R<Page<ProductVO>> list(@RequestBody ProductRequest dto) {
         return R.ok(productService.getNormalList(dto));
     }
 
+    @Anonymous
     @ApiOperation("商品详情")
     @GetMapping("/detail/{skuId}")
     public R<ProductDetailVO> getProductDetailBySkuId(@PathVariable Long skuId) {

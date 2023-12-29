@@ -82,14 +82,14 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
         productSkuService.saveBatch(productSkus);
 
-        Product product = setProductAttr(productDTO, id);
+        Product product = setProduct(productDTO, id);
         product.setOperatorUser(productDTO.getOperatorUser());
         product.setOperatorUserId(productDTO.getOperatorUserId());
         save(product);
         return product;
     }
 
-    private Product setProductAttr(ProductDTO productDTO, long id) {
+    private Product setProduct(ProductDTO productDTO, long id) {
         Product product = new Product();
         product.setProductId(id);
         product.setName(productDTO.getName());
@@ -192,7 +192,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         List<ProductSku> productSkus = getUpdateProductSku(productDTO.getProductId(), productDTO.getSkuList());
         productSkuService.saveOrUpdateBatch(productSkus);
 
-        Product entity = setProductAttr(productDTO, product.getProductId());
+        Product entity = setProduct(productDTO, product.getProductId());
         updateById(entity);
 
         return R.ok();
