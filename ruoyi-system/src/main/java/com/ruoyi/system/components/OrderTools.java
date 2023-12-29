@@ -97,8 +97,8 @@ public class OrderTools {
 		}
 		String taskId = taskAdapters.get(0).getTaskId();
 		// 查询任务的状态 -1待执行 0-进行中 1-已完成 2-已取消
-		int taskStatus = TaskQuery.newQuery(0).getStatus(taskId);
-
+//		int taskStatus = TaskQuery.newQuery(0).getStatus(taskId);
+		int taskStatus = 1;
 		if (taskStatus == 0) {
 			// 如果任务是 进行中， 设置订单为 进行中
 			mapper.updateStatus(order.getOrderId(), 1);
@@ -161,6 +161,10 @@ public class OrderTools {
 		orderRefund.setOrderId(order.getOrderId());
 		orderRefund.setUserId(order.getUserId());
 		orderRefund.setRemark(remark);
+		try {
+			orderRefund.setTaskId(TaskQuery.newQuery(0).listByOrder(Arrays.asList(order.getOrderId())).get(0).getTaskId());
+		} catch (Exception e) {
+		}
 		SpringUtils.getBean(OrderRefundMapper.class).insert(orderRefund);
 		log.info("用户结算完成 {} {}", order, orderRefund);
 	}

@@ -52,6 +52,11 @@ public class OrderRefund implements Serializable {
 	 * 下单时间
 	 */
 	private Date createTime;
+	
+	/**
+	 * 任务名称
+	 */
+	private String taskId;
 
 	@TableField(exist = false)
 	private static final long serialVersionUID = 1L;

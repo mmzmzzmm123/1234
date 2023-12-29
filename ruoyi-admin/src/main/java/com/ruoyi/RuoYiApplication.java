@@ -4,6 +4,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import com.ruoyi.common.config.dymic.EnableRedisConfigure;
+import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.service.OrderService;
 
 /**
  * 启动程序

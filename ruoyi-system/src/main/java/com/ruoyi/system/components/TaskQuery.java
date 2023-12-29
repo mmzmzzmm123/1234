@@ -14,9 +14,12 @@ import com.ruoyi.system.extend.UtTouchJoinRoomClient;
 import com.ruoyi.system.extend.UtTouchResult;
 import com.ruoyi.system.extend.data.GetChatRoomJoinTaskDetailInfoListInput;
 import com.ruoyi.system.extend.data.GetChatRoomJoinTaskDetailInfoListOutput;
+import com.ruoyi.system.extend.data.GetChatRoomJoinTaskDetailInput;
+import com.ruoyi.system.extend.data.GetChatRoomJoinTaskDetailOutput;
 import com.ruoyi.system.extend.data.GetChatRoomJoinTaskPageInput;
 import com.ruoyi.system.extend.data.GetChatRoomJoinTaskPageOutput;
 import com.ruoyi.system.extend.data.UtTouchPage;
+import com.ruoyi.system.extend.data.GetChatRoomJoinTaskDetailOutput.ChatRoomJoinList;
 import com.ruoyi.system.mapper.TaskMapper;
 
 import lombok.Data;
@@ -107,19 +110,20 @@ public abstract class TaskQuery {
 
 		@Override
 		public int getSuccessCountOfTaskDetail(String taskId) {
-			GetChatRoomJoinTaskDetailInfoListInput input = new GetChatRoomJoinTaskDetailInfoListInput();
-			input.setTaskId(taskId);
-			input.setRunStatus(1);
-			input.setPageSize(100000);
-			UtTouchResult<UtTouchPage<GetChatRoomJoinTaskDetailInfoListOutput>> details = UtTouchJoinRoomClient
-					.getChatRoomJoinTaskDetailInfoList(input);
-			log.info("getChatRoomJoinTaskDetailInfoList {} {}", input, details);
-			if (details.getData() != null && !CollectionUtils.isEmpty(details.getData().getDataList())) {
-				if (!CollectionUtils.isEmpty(details.getData().getDataList().get(0).getDetails())) {
-					return details.getData().getDataList().get(0).getDetails().size();
+			GetChatRoomJoinTaskDetailInput input = new GetChatRoomJoinTaskDetailInput();
+			input.setTaskId(Long.parseLong(taskId));
+			UtTouchResult<GetChatRoomJoinTaskDetailOutput> details = UtTouchJoinRoomClient
+					.getChatRoomJoinTaskDetail(input);
+			log.info("getChatRoomJoinTaskDetail {} {}", input, details);
+			int successTotal = 0;
+			if (details.getData() != null
+					&& !CollectionUtils.isEmpty(details.getData().getChatRoomJoinCompleteList())) {
+				for (ChatRoomJoinList chatRoomJoinList : details.getData().getChatRoomJoinCompleteList()) {
+					// 进群成功数
+					successTotal += chatRoomJoinList.getJoinSuccessCount();
 				}
 			}
-			return 0;
+			return successTotal;
 		}
 	}
 
