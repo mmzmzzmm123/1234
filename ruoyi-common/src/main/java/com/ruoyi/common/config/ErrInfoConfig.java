@@ -20,6 +20,7 @@ public class ErrInfoConfig {
 		err.put(11008, "服务不存在或已下架");
 		err.put(11009, "规格设置不能为空");
 		err.put(11010, "导入手机号为空");
+		err.put(11011, "当前账号无权限");
 	}
 
 	public static String get(int code) {
