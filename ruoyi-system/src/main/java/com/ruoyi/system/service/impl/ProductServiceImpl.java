@@ -277,14 +277,14 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         if (ObjectUtils.isEmpty(product)) {
             return R.fail(ErrInfoConfig.getDynmic(11008));
         }
+        long price = BigDecimal.valueOf(productDTO.getPrice()).multiply(BigDecimal.valueOf(100L)).longValue();
 
         ProductSkuDTO skuAttrDTO = JSON.parseObject(product.getSkuAttr(), ProductSkuDTO.class);
-        skuAttrDTO.setPrice(productDTO.getPrice());
+        skuAttrDTO.setPrice((double) price);
         UpdateWrapper<Product> updateProduct = new UpdateWrapper<>();
         updateProduct.eq("product_id", product.getProductId()).set("sku_attr", JSON.toJSONString(skuAttrDTO));
         update(null, updateProduct);
 
-        long price = BigDecimal.valueOf(productDTO.getPrice()).multiply(BigDecimal.valueOf(100L)).longValue();
 
         UpdateWrapper<ProductSku> updateSku = new UpdateWrapper<>();
         updateSku.eq("id", skuAttrDTO.getId()).set("price", price);
