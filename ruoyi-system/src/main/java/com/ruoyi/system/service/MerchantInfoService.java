@@ -8,6 +8,8 @@ import com.ruoyi.system.domain.dto.CreateMerchantDTO;
 import com.ruoyi.system.domain.dto.QueryMerchantPageDTO;
 import com.ruoyi.system.domain.vo.MerchantInfoVO;
 
+import java.util.List;
+
 /**
  *
  */
@@ -18,5 +20,7 @@ public interface MerchantInfoService extends IService<MerchantInfo> {
     MerchantInfo getByUserId(Long userId);
 
     Page<MerchantInfoVO> page(QueryMerchantPageDTO dto);
+
+    List<String> selectChildMerchantIds(String merchantId);
 
 }

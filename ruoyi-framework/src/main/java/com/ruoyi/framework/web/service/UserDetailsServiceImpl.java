@@ -70,6 +70,7 @@ public class UserDetailsServiceImpl implements UserDetailsService
         if (merchantInfo != null){
             loginUser.setMerchantInfo(merchantInfo);
             user.setMerchantId(merchantInfo.getMerchantId());
+            user.setMerchantName(merchantInfo.getMerchantName());
             user.setMerchantType(merchantInfo.getMerchantType());
             loginUser.setUser(user);
         }

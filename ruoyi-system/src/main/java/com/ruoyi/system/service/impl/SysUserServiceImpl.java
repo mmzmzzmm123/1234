@@ -10,6 +10,7 @@ import javax.validation.Validator;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.system.domain.dto.CreateUserMerchantRefDTO;
+import com.ruoyi.system.service.MerchantInfoService;
 import com.ruoyi.system.service.UserMerchantRefService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,6 +73,9 @@ public class SysUserServiceImpl implements ISysUserService
     @Autowired
     private UserMerchantRefService userMerchantRefService;
 
+    @Autowired
+    private MerchantInfoService merchantInfoService;
+
     /**
      * 根据条件分页查询用户列表
      * 
@@ -82,6 +86,17 @@ public class SysUserServiceImpl implements ISysUserService
     @DataScope(deptAlias = "d", userAlias = "u")
     public List<SysUser> selectUserList(SysUser user)
     {
+        MerchantInfo merchantInfo = SecurityUtils.getLoginUser().getMerchantInfo();
+        String merchantId = Optional.ofNullable(merchantInfo)
+                        .map(MerchantInfo::getMerchantId)
+                                .orElse(null);
+        if (StringUtils.isNotEmpty(merchantId)){
+            List<String> merchantIds = new ArrayList<>();
+            merchantIds.add(merchantId);
+            // 获取当前登录商家的下级商家
+            merchantIds.addAll(merchantInfoService.selectChildMerchantIds(merchantId));
+            user.setMerchantIds(merchantIds);
+        }
         return userMapper.selectUserList(user);
     }
 

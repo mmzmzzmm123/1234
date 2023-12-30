@@ -18,6 +18,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.IdGenerator;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +65,17 @@ public class MerchantInfoServiceImpl extends ServiceImpl<MerchantInfoMapper, Mer
         Page<MerchantInfoVO> page = new Page<>(dto.getPage(), dto.getLimit());
         baseMapper.page(page, dto);
         return page;
+    }
+
+    @Override
+    public List<String> selectChildMerchantIds(String merchantId) {
+        if (StringUtils.isEmpty(merchantId)) {
+            return new ArrayList<>();
+        }
+        LambdaQueryWrapper<MerchantInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(MerchantInfo::getPlMerchantId, merchantId);
+        lambdaQueryWrapper.select(MerchantInfo::getMerchantId);
+        return (List) super.listObjs(lambdaQueryWrapper);
     }
 }
 

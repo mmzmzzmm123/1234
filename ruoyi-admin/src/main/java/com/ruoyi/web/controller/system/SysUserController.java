@@ -67,7 +67,6 @@ public class SysUserController extends BaseController
     public TableDataInfo list(SysUser user)
     {
         startPage();
-        user.setMerchantId(getMerchantId());
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);
     }

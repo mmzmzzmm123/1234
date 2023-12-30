@@ -111,14 +111,20 @@ public class SysUser extends BaseEntity
     /**
      * 创建用户到指定商家下
      */
-    @ApiModelProperty("创建用户到指定商家下")
+    @ApiModelProperty("商家ID")
     private String merchantId;
 
+    @ApiModelProperty("商家ID集合")
+    private List<String> merchantIds;
+
     /**
-     * 用户类型 0-普通 1-代理 2-运营 默认普通用户
+     * 商家类型 0-普通 1-代理 2-运营 3-员工 默认普通用户
      */
-    @ApiModelProperty("用户类型 0-普通(默认) 1-代理 2-运营 3-员工")
+    @ApiModelProperty("商家类型 0-普通(默认) 1-代理 2-运营 3-员工")
     private Integer merchantType;
+
+    @ApiModelProperty("商户名称")
+    private String merchantName;
 
     public SysUser()
     {
