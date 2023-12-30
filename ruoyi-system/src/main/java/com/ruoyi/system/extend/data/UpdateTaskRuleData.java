@@ -14,4 +14,5 @@ public class UpdateTaskRuleData {
     private Integer nContactsEnterRoomIntervalMin;
     private Integer nContactsEnterRoomIntervalMax;
     private Integer nAllowCountryCount;
+    private Integer nChatRoomRobotCount;
 }
