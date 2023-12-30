@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.constraints.*;
 
 import com.alibaba.fastjson2.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -127,6 +128,10 @@ public class SysUser extends BaseEntity
     @ApiModelProperty("商户名称")
     private String merchantName;
 
+    @TableField(exist = false)
+    @ApiModelProperty("是否管理员")
+    private boolean admin;
+
     public SysUser()
     {
 
@@ -147,7 +152,6 @@ public class SysUser extends BaseEntity
         this.userId = userId;
     }
 
-    @JSONField(name = "admin")
     public boolean isAdmin()
     {
         return isAdmin(this.userId);
@@ -166,6 +170,14 @@ public class SysUser extends BaseEntity
     public void setDeptId(Long deptId)
     {
         this.deptId = deptId;
+    }
+
+    public void setAdmin() {
+        this.admin = userId != null && 1L == userId;
+    }
+
+    public boolean getAdmin() {
+        return this.admin;
     }
 
     @Xss(message = "用户昵称不能包含脚本字符")
