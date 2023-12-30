@@ -20,7 +20,7 @@ public interface IProductService {
     /**
      * 新增商品
      */
-    Product create(ProductDTO pmsProductAttributeParam);
+    R<Product> create(ProductDTO pmsProductAttributeParam);
 
     /**
      * 获取编辑商品信息

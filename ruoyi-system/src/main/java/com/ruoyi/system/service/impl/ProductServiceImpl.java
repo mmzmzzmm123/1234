@@ -78,9 +78,13 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public Product create(ProductDTO productDTO) {
-        long id = IdWorker.getId();
+    public R<Product> create(ProductDTO productDTO) {
+        long count = count(new LambdaQueryWrapper<Product>().eq(Product::getName, productDTO.getName()));
+        if (count > 0) {
+            return R.fail(ErrInfoConfig.getDynmic(11012));
+        }
 
+        long id = IdWorker.getId();
         List<ProductSku> productSkus = new ArrayList<>();
         for (ProductSkuDTO item : productDTO.getSkuList()) {
             ProductSku productSku = new ProductSku();
@@ -94,7 +98,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         product.setOperatorUser(productDTO.getOperatorUser());
         product.setOperatorUserId(productDTO.getOperatorUserId());
         save(product);
-        return product;
+
+        return R.ok(product);
     }
 
     private Product setProduct(ProductDTO productDTO, long id) {
@@ -203,6 +208,12 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     public R<String> update(ProductDTO productDTO) {
         if (ObjectUtils.isEmpty(productDTO.getProductId())) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "id参数错误"));
+        }
+
+        long count = count(new LambdaQueryWrapper<Product>().eq(Product::getName, productDTO.getName())
+                .ne(Product::getProductId, productDTO.getProductId()));
+        if (count > 0) {
+            return R.fail(ErrInfoConfig.getDynmic(11012));
         }
 
         Product product = getOneNormalProductById(productDTO.getProductId());
