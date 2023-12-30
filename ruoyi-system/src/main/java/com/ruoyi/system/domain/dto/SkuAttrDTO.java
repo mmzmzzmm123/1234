@@ -6,6 +6,8 @@ import lombok.Data;
 public class SkuAttrDTO {
     private Long id;
 
+    private Long productId;
+
     private Long price;
 
     private String priceUnit;
