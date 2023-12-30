@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.app.CancelOrderRequest;
 import com.ruoyi.common.core.domain.app.OrderDetailResponse;
 import com.ruoyi.common.core.domain.app.OrderListResponse;
@@ -52,6 +53,6 @@ public interface OrderService {
 	 * 
 	 * @param orderId
 	 */
-	SubmitResponse submit(String orderId);
+	R<SubmitResponse> submit(String orderId);
 
 }
