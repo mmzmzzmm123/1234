@@ -74,12 +74,11 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 	@SuppressWarnings("unchecked")
 	public AjaxResult produce(OrderProduceRequest request) {
 		log.info("OrderServiceImpl.produce {}", JSON.toJSONString(request));
-		if (!verifyGroupUrl(request.getParams().getGroupIds())) {
-			return AjaxResult.error(ErrInfoConfig.getDynmic(11000, "群来源有不合规则数据"));
-		}
-
 		if (request.getParams() == null || CollectionUtils.isEmpty(request.getParams().getGroupIds())) {
 			return AjaxResult.error(ErrInfoConfig.getDynmic(11000, "params"));
+		}
+		if (!verifyGroupUrl(request.getParams().getGroupIds())) {
+			return AjaxResult.error(ErrInfoConfig.getDynmic(11000, "群来源有不合规则数据"));
 		}
 		// 校验商家
 		if (UserTools.checkMerchantInfo(request.getLoginUser()).isError()) {
