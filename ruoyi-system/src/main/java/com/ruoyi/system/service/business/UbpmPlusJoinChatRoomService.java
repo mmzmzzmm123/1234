@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.entity.order.Order;
 import com.ruoyi.common.enums.Platform;
 import com.ruoyi.common.enums.TaskType;
@@ -89,7 +90,7 @@ public class UbpmPlusJoinChatRoomService {
     public Page<GetChatRoomJoinTaskPageOutput> getChatRoomJoinTaskPage(GetChatRoomJoinTaskPageInput input) {
         input.setUserCode(utTouchProperties.getTouchMerchantId());
         final Integer merchantType = SecurityUtils.getLoginUser().getUser().getMerchantType();
-        final String merchantId =  SecurityUtils.getLoginUser().getMerchantInfo().getMerchantId();
+        String merchantId = Optional.ofNullable(SecurityUtils.getLoginUser().getMerchantInfo()).map(MerchantInfo::getMerchantId).orElse(null);
 
         // 商家查自己的
         if(ObjectUtil.isNotEmpty(merchantType) && merchantType.compareTo(0) == 0) {
