@@ -5,6 +5,6 @@ package com.ruoyi.system.extend.data;
  */
 @lombok.Data
 public class RobotJoinChatRoomInput {
-    private long taskChatRoomId;
+    private String taskChatRoomId;
     private long robotCount;
 }

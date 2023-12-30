@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class UpdateTaskRuleData {
-    private Integer nTaskId;
+    private String nTaskId;
     private Integer nDifferentEnterRoomIntervalMin;
     private Integer nDifferentEnterRoomIntervalMax;
     private Integer nDifferentRobotIntervalMin;

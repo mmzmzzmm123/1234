@@ -7,7 +7,7 @@ public class CancelChatRoomJoinInput {
 
     private String taskId;
 
-    private Integer id;
+    private String id;
 
     private String userCode;
 }

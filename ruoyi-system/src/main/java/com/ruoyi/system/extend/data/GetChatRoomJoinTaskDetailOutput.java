@@ -49,7 +49,7 @@ public class GetChatRoomJoinTaskDetailOutput {
         private Integer chatRoomNo;
         private String targetOwnerUserName;
         private Integer targetOwnerStatus;
-        private String headImgURL;
+        private String headImgUrl;
     }
 }
 

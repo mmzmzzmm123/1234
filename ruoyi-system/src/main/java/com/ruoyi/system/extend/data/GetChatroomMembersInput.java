@@ -8,7 +8,7 @@ public class GetChatroomMembersInput {
     private Integer pageSize;
     private String sortName;
     private Integer sortOrder;
-    private Integer taskId;
+    private String taskId;
     private String chatroomSerialNo;
     private String keyword;
     private String userCode;

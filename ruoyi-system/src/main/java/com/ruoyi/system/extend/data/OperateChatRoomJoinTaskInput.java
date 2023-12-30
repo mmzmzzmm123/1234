@@ -7,7 +7,7 @@ import java.util.List;
 @Data
 public class OperateChatRoomJoinTaskInput {
 
-    private List<Long> taskIdList;
+    private List<String> taskIdList;
 
     private String userCode;
 
