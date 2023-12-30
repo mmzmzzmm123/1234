@@ -1,11 +1,11 @@
 package com.ruoyi.common.core.domain.app;
 
-import java.util.Date;
-import java.util.List;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Date;
+import java.util.List;
 
 @Data
 @ApiModel
@@ -46,4 +46,7 @@ public class OrderListResponse {
 
 	@ApiModelProperty("商家名称")
 	private String merchantName;
+
+	@ApiModelProperty("备注")
+	private String remark;
 }
