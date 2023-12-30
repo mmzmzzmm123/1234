@@ -142,10 +142,10 @@ public class UbpmPlusJoinChatRoomController {
     }
 
 
+    @Anonymous
     @ApiOperation("修改拉人规则")
     @PostMapping("updateChatRoomTaskInviteRule")
-    public R<Void> updateChatRoomTaskInviteRule(
-            @RequestBody UpdateTaskRuleData input) {
+    public R<Void> updateChatRoomTaskInviteRule(@RequestBody UpdateTaskRuleData input) {
         ubpmPlusJoinChatRoomService.updateChatRoomTaskInviteRule(input);
         return R.ok();
     }
