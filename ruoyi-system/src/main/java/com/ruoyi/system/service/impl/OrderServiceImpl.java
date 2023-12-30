@@ -24,33 +24,22 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.domain.app.CancelOrderRequest;
-import com.ruoyi.common.core.domain.app.OrderDetailResponse;
-import com.ruoyi.common.core.domain.app.OrderListResponse;
-import com.ruoyi.common.core.domain.app.OrderProduceRequest;
-import com.ruoyi.common.core.domain.app.OrderRequest;
-import com.ruoyi.common.core.domain.app.SubmitResponse;
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.app.*;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
-import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.entity.order.Order;
 import com.ruoyi.common.core.domain.entity.order.OrderRefund;
 import com.ruoyi.common.core.domain.entity.order.OrderSku;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.redis.RedisLock;
-import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.Objects;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.system.components.OrderPriceHandler;
-import com.ruoyi.system.components.OrderTools;
-import com.ruoyi.system.components.ProductTools;
-import com.ruoyi.system.components.TaskQuery;
-import com.ruoyi.system.components.UrlTools;
+import com.ruoyi.system.components.*;
 import com.ruoyi.system.components.TaskQuery.TaskAdapter;
-import com.ruoyi.system.components.UserTools;
 import com.ruoyi.system.configure.RedisConfigure;
 import com.ruoyi.system.domain.dto.PhoneExcelDTO;
 import com.ruoyi.system.mapper.MerchantInfoMapper;
@@ -59,6 +48,16 @@ import com.ruoyi.system.mapper.OrderRefundMapper;
 import com.ruoyi.system.service.OrderService;
 import com.ruoyi.system.service.OrderSkuService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -356,13 +355,13 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 	}
 
 	@Override
-	public SubmitResponse submit(String orderId) {
+	public R<SubmitResponse> submit(String orderId) {
 		log.info("submit_order {}", orderId);
 		// 查询任务
 		Order order = orderMapper.selectById(orderId);
 		// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
 		if (order == null || (order.getOrderStatus().intValue() != 0 && order.getOrderStatus().intValue() != 1)) {
-			throw new ServiceException(ErrInfoConfig.get(11006));
+			return R.fail(ErrInfoConfig.get(11006));
 		}
 		SubmitResponse response = new SubmitResponse();
 		response.setOrderId(orderId);
@@ -378,7 +377,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 			response.setCountyName(sku.getCountyName());
 		} catch (Exception e) {
 		}
-		return response;
+		return R.ok(response);
 	}
 
 }

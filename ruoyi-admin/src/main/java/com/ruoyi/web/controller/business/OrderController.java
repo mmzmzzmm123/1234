@@ -98,8 +98,7 @@ public class OrderController extends BaseController {
 	@PostMapping("submit")
 	public R<SubmitResponse> submit(@RequestBody OrderRequest dto) {
 		try {
-			SubmitResponse res = orderService.submit(dto.getOrderId());
-			return R.ok(res);
+			return orderService.submit(dto.getOrderId());
 		} catch (Exception e) {
 			String id = Ids.getId();
 			log.error("OrderController.submit {} {}", id, dto, e);
