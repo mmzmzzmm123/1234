@@ -60,7 +60,7 @@ public class UbpmPlusJoinChatRoomService {
     public void saveChatRoomJoinTask(SaveChatRoomJoinTaskDTO input) {
         input.setUserCode(utTouchProperties.getTouchMerchantId());
         final Order order = orderMapper.selectById(input.getOrderId());
-        input.setExtendKey(StrUtil.toString(order.getUserId()));
+        input.setExtendKey(StrUtil.toString(order.getMerchantId()));
         if(StrUtil.isBlank(input.getName())){
             //任务名称为空时，用订单ID做名称
             input.setName(input.getOrderId());
@@ -91,7 +91,7 @@ public class UbpmPlusJoinChatRoomService {
         final Integer merchantType = SecurityUtils.getLoginUser().getUser().getMerchantType();
         //todo 这里代理查询会有问题
         if(ObjectUtil.isNotEmpty(merchantType) && merchantType.compareTo(0) == 0) {
-            input.setExtendKey(SecurityUtils.getUserId().toString());
+            input.setExtendKey(SecurityUtils.getLoginUser().getMerchantInfo().getMerchantId());
         }
         UtTouchResult<UtTouchPage<GetChatRoomJoinTaskPageOutput>> touchResult =
                 UtTouchJoinRoomClient.getChatRoomJoinTaskPage(input);
