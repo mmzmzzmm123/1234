@@ -146,6 +146,15 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 			return AjaxResult.error(ErrInfoConfig.get(11013));
 		}
 
+		// 校验导入号数和购买数量
+		final int targetSize = request.getParams().getTargetIds().size();
+
+		int groupIdSize = request.getParams().getGroupIds().size();
+		int buyQuantity = singlePullPersonCount * groupIdSize;
+		if (targetSize > buyQuantity) {
+			return AjaxResult.error(ErrInfoConfig.get(11014));
+		}
+
 		// 计算价格
 		long price = orderPriceHandler.handle(skuList, groupSet.size(), singlePullPersonCount);
 
