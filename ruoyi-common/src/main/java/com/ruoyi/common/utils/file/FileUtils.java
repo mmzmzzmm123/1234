@@ -1,21 +1,22 @@
 package com.ruoyi.common.utils.file;
 
+import com.ruoyi.common.config.RuoYiConfig;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.UrlTools;
+import com.ruoyi.common.utils.uuid.IdUtils;
+import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ArrayUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.common.utils.UrlTools;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
-import com.ruoyi.common.config.RuoYiConfig;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.uuid.IdUtils;
-import org.apache.commons.io.FilenameUtils;
+import java.util.stream.Collectors;
 
 /**
  * 文件处理工具类
@@ -293,23 +294,12 @@ public class FileUtils
         if(inputStream == null){
             return list;
         }
-        try {
-            byte[] buffer = new byte[4096];
-            int bytesRead;
 
-            // 使用 read 方法读取数据，并将读取的字节数存储在 bytesRead 中
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                // 将读取的数据转换为字符串并打印出来
-                list.add(new String(buffer, 0, bytesRead));
-            }
-
-            // 关闭 InputStream
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        list = reader.lines().distinct().collect(Collectors.toList());
+        try{
             inputStream.close();
-        } catch (IOException e) {
-            // 处理可能的异常
-            e.printStackTrace();
-        }
-
+        } catch (Exception ex){}
         return list;
     }
 }
