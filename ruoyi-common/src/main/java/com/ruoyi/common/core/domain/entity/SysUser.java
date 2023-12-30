@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import javax.validation.constraints.*;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -146,6 +147,7 @@ public class SysUser extends BaseEntity
         this.userId = userId;
     }
 
+    @JSONField(name = "admin")
     public boolean isAdmin()
     {
         return isAdmin(this.userId);
