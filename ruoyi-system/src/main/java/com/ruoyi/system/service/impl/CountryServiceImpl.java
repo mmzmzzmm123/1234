@@ -70,7 +70,7 @@ public class CountryServiceImpl extends ServiceImpl<CountryMapper, Country>
                 return new UbpmCountryVO().init(ubpmCountries);
             }
         }
-        return null;
+        return new UbpmCountryVO();
     }
 
 
