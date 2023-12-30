@@ -32,12 +32,12 @@ public class OrderRefundVO {
     /**
      * 计算退款 金额
      */
-    private Long calculateRefundPrice;
+    private Double calculateRefundPrice;
 
     /**
      * 实际退款金额
      */
-    private Long actualRefundPrice;
+    private Double actualRefundPrice;
 
     private String remark;
 
@@ -50,20 +50,4 @@ public class OrderRefundVO {
      * 任务名称
      */
     private String taskId;
-
-    public Double getCalculateRefundPrice() {
-        if (null == calculateRefundPrice) {
-            return 0d;
-        }
-        return BigDecimal.valueOf(calculateRefundPrice).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
-
-    }
-
-    public Double getActualRefundPrice() {
-        if (null == actualRefundPrice) {
-            return 0d;
-        }
-        return BigDecimal.valueOf(actualRefundPrice).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
-
-    }
 }

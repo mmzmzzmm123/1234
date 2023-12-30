@@ -30,32 +30,33 @@ public class MerchantInfoVO {
     private Date createTime;
 
     @ApiModelProperty("账户总金额")
-    private Long totalAmount;
+    private Double totalAmount;
 
     @ApiModelProperty("可用余额")
-    private Long availableAmount;
+    private Double availableAmount;
 
     @ApiModelProperty("锁定金额")
-    private Long lockAmount;
+    private Double lockAmount;
 
-    public Double getTotalAmount() {
-        if (null == totalAmount) {
-            return 0d;
+    public void setTotalAmount(Double totalAmount) {
+        if (totalAmount == null) {
+            this.totalAmount = 0d;
+            return;
         }
-        return BigDecimal.valueOf(totalAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.totalAmount =  BigDecimal.valueOf(totalAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
     }
-
-    public Double getAvailableAmount() {
-        if (null == availableAmount) {
-            return 0d;
+    public void setAvailableAmount(Double availableAmount) {
+        if (availableAmount == null) {
+            this.availableAmount = 0d;
+            return;
         }
-        return BigDecimal.valueOf(availableAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.availableAmount =  BigDecimal.valueOf(availableAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
     }
-
-    public Double getLockAmount() {
-        if (null == lockAmount) {
-            return 0d;
+    public void setLockAmount(Double lockAmount) {
+        if (lockAmount == null) {
+            this.lockAmount = 0d;
+            return;
         }
-        return BigDecimal.valueOf(lockAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.lockAmount =  BigDecimal.valueOf(lockAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
     }
 }

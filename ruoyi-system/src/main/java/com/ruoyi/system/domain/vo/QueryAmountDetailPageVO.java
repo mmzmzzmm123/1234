@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain.vo;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -47,24 +48,28 @@ public class QueryAmountDetailPageVO {
     @ApiModelProperty("修改时间")
     private Date modifyTime;
 
-    public Double getChangeBefore() {
+    public void setChangeBefore(Double changeBefore) {
         if (changeBefore == null) {
-            return 0d;
+            this.changeBefore = 0d;
+            return;
         }
-        return BigDecimal.valueOf(changeBefore).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.changeBefore =  BigDecimal.valueOf(changeBefore).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
     }
 
-    public Double getChangeAmount() {
+    public void setChangeAmount(Double changeAmount) {
+        this.changeAmount = changeAmount;
         if (changeAmount == null) {
-            return 0d;
+            this.changeAmount = 0d;
+            return;
         }
-        return BigDecimal.valueOf(changeAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.changeAmount = BigDecimal.valueOf(changeAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
     }
 
-    public Double getChangeAfter() {
+    public void setChangeAfter(Double changeAfter) {
         if (changeAfter == null) {
-            return 0d;
+            this.changeAfter = 0d;
+            return;
         }
-        return BigDecimal.valueOf(changeAfter).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.changeAfter = BigDecimal.valueOf(changeAfter).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
     }
 }
