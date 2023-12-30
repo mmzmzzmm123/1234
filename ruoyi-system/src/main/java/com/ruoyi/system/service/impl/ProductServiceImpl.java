@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
@@ -93,7 +94,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         List<ProductSku> productSkus = new ArrayList<>();
         for (ProductSkuDTO item : productDTO.getSkuList()) {
             ProductSku productSku = new ProductSku();
-            BeanUtils.copyProperties(item, productSku);
+            BeanUtil.copyProperties(item, productSku);
+            productSku.setPrice(BigDecimal.valueOf(item.getPrice()).multiply(BigDecimal.valueOf(100L)).longValue());
             productSku.setProductId(id);
             productSkus.add(productSku);
         }
