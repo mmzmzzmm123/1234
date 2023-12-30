@@ -3,7 +3,6 @@ package com.ruoyi.system.domain.dto;
 import com.ruoyi.system.domain.base.PageBaseDTO;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
@@ -26,8 +25,8 @@ public class ProductQueryParamDTO extends PageBaseDTO {
     @ApiModelProperty("服务名称")
     private String name;
 
-    @Range(max=9223372036854775807L, message="服务id不合规则")
     @Positive(message = "服务id必须是正数")
+    @Size(min = 0, max = 20, message="服务id不合规则")
     @ApiModelProperty("服务id")
     private String productId;
 }
