@@ -19,7 +19,7 @@ public class AmountRechargeDTO {
 
     @Min(1)
     @ApiModelProperty("充值金额")
-    private Long amount;
+    private Double amount;
 
     @ApiModelProperty(value = "创建人Id", hidden = true)
     private Long userId;

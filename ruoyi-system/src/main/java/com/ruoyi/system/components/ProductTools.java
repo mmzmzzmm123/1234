@@ -1,5 +1,7 @@
 package com.ruoyi.system.components;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class ProductTools {
 		if (sku == null) {
 			return "";
 		}
-		return sku.getCountyName() + " " + sku.getPriceUnit() + " " + sku.getPrice();
+		return sku.getCountyName() + " " + sku.getPriceUnit() + " " + BigDecimal.valueOf(sku.getPrice()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP);
 	}
 
 	public static List<Product> list(List<Long> ids) {
