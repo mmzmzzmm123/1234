@@ -71,7 +71,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         Map<String, Long> stockEstimateMap = getStockMapByCountyCode(countryCodeList);
         for (ProductDTO productDTO : ret.getRecords()) {
             List<ProductSkuDTO> skuList = productDTO.getSkuList();
-            skuList.forEach(x -> x.setStock(stockEstimateMap.get(x.getCountyCode())));
+            skuList.forEach(x -> {
+                x.setStock(stockEstimateMap.get(x.getCountyCode()));
+                x.setPrice(BigDecimal.valueOf(x.getPrice()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue());
+            });
             productDTO.setSkuList(skuList);
         }
 
