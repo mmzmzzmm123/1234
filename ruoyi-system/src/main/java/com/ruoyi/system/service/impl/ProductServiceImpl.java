@@ -183,17 +183,21 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
 
         usersNum = getCountryBusinessEstimateByClient(countryCode);
-        redisCache.setCacheObject(key, usersNum, 1, TimeUnit.MINUTES);
+        redisCache.setCacheObject(key, usersNum, 10, TimeUnit.MINUTES);
         return usersNum;
     }
 
     private long getCountryBusinessEstimateByClient(String countryCode) {
+        long startTime = System.currentTimeMillis();
+
+        CountryBusinessEstimateInput input = new CountryBusinessEstimateInput();
+        input.setPriorityOp(0);
+        input.setRobotsCountryCode(new ArrayList<>());
+        input.setVcToCountryCode(countryCode);
         try {
-            CountryBusinessEstimateInput input = new CountryBusinessEstimateInput();
-            input.setPriorityOp(0);
-            input.setRobotsCountryCode(new ArrayList<>());
-            input.setVcToCountryCode(countryCode);
             UtTouchResult<CountryBusinessEstimateOutput> result = UtTouchJoinRoomClient.countryBusinessEstimate(input);
+
+            log.info("getCountryBusinessEstimate-ByClient-运行时间: {}}", (System.currentTimeMillis() - startTime) / 1000);
             if (!ObjectUtils.isEmpty(result.getData())) {
                 return result.getData().getUsersNum();
             }
