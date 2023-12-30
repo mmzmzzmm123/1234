@@ -37,27 +37,15 @@ import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.Objects;
-import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.components.*;
 import com.ruoyi.system.components.TaskQuery.TaskAdapter;
 import com.ruoyi.system.configure.RedisConfigure;
-import com.ruoyi.system.domain.dto.PhoneExcelDTO;
 import com.ruoyi.system.mapper.MerchantInfoMapper;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.mapper.OrderRefundMapper;
 import com.ruoyi.system.service.OrderService;
 import com.ruoyi.system.service.OrderSkuService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
-import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
