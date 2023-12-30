@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import com.ruoyi.common.utils.file.FileUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -111,15 +112,15 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		// 下载excel文件
 		if (!StringUtils.isEmpty(request.getParams().getExcelUrl())) {
 			try {
-				ExcelUtil<PhoneExcelDTO> util = new ExcelUtil<PhoneExcelDTO>(PhoneExcelDTO.class);
-				List<PhoneExcelDTO> ids = util
-						.importExcel(UrlTools.getInputStreamByUrl(request.getParams().getExcelUrl()));
+//				ExcelUtil<PhoneExcelDTO> util = new ExcelUtil<PhoneExcelDTO>(PhoneExcelDTO.class);
+//				List<PhoneExcelDTO> ids = util
+//						.importExcel(UrlTools.getInputStreamByUrl(request.getParams().getExcelUrl()));
+				final List<String> ids = FileUtils.getTextListByFilePath(request.getParams().getExcelUrl());
 				if (!StringUtils.isEmpty(request.getParams().getTargetIds())) {
 					if (CollectionUtils.isEmpty(ids)) {
 						return AjaxResult.error(ErrInfoConfig.get(11010));
 					}
-					request.getParams().setTargetIds(
-							new ArrayList<>(new HashSet<String>(ListTools.extract(ids, id -> id.getPhone()))));
+					request.getParams().setTargetIds(ids);
 				}
 			} catch (Exception e) {
 				log.error("文件格式错误 {}", request.getParams().getExcelUrl());

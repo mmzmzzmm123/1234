@@ -1,16 +1,14 @@
 package com.ruoyi.common.utils.file;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.UrlTools;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import com.ruoyi.common.config.RuoYiConfig;
@@ -287,5 +285,31 @@ public class FileUtils
         }
         String baseName = FilenameUtils.getBaseName(fileName);
         return baseName;
+    }
+
+    public static List<String> getTextListByFilePath(String filePath) {
+        final InputStream inputStream = UrlTools.getInputStreamByUrl(filePath);
+        List<String> list = new ArrayList<>();
+        if(inputStream == null){
+            return list;
+        }
+        try {
+            byte[] buffer = new byte[4096];
+            int bytesRead;
+
+            // 使用 read 方法读取数据，并将读取的字节数存储在 bytesRead 中
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                // 将读取的数据转换为字符串并打印出来
+                list.add(new String(buffer, 0, bytesRead));
+            }
+
+            // 关闭 InputStream
+            inputStream.close();
+        } catch (IOException e) {
+            // 处理可能的异常
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }
