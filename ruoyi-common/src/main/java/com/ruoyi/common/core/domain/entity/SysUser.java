@@ -109,7 +109,7 @@ public class SysUser extends BaseEntity
     private Long roleId;
 
     /**
-     * 创建用户到指定商家下
+     * 商家ID
      */
     @ApiModelProperty("商家ID")
     private String merchantId;

@@ -115,6 +115,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				#{merchantId}
 			</foreach>
 		</if>
+		<if test="merchantId != null and merchantId != ''">
+			AND tmi.merchant_id = #{merchantId}
+		</if>
+		<if test="merchantType != null">
+			AND tmi.merchant_type = #{merchantType}
+		</if>
+		<if test="merchantName != null and merchantName != ''">
+			AND tmi.merchant_name like concat('%',#{merchantName},'%')
+		</if>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 		order by u.user_id desc
