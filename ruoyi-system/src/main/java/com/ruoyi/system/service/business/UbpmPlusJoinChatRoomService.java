@@ -20,6 +20,7 @@ import com.ruoyi.system.extend.*;
 import com.ruoyi.system.extend.data.*;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.service.CountryService;
+import com.ruoyi.system.service.MerchantInfoService;
 import com.ruoyi.system.service.OrderService;
 import com.ruoyi.system.service.TaskService;
 import lombok.AllArgsConstructor;
@@ -33,10 +34,7 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -54,13 +52,15 @@ public class UbpmPlusJoinChatRoomService {
 
     private final OrderMapper orderMapper;
 
+    private final MerchantInfoService merchantInfoService;
+
 
 
 
     public void saveChatRoomJoinTask(SaveChatRoomJoinTaskDTO input) {
         input.setUserCode(utTouchProperties.getTouchMerchantId());
         final Order order = orderMapper.selectById(input.getOrderId());
-        input.setExtendKey(StrUtil.toString(order.getMerchantId()));
+        input.setExtendKey(order.getMerchantId());
         if(StrUtil.isBlank(input.getName())){
             //任务名称为空时，用订单ID做名称
             input.setName(input.getOrderId());
@@ -89,10 +89,19 @@ public class UbpmPlusJoinChatRoomService {
     public Page<GetChatRoomJoinTaskPageOutput> getChatRoomJoinTaskPage(GetChatRoomJoinTaskPageInput input) {
         input.setUserCode(utTouchProperties.getTouchMerchantId());
         final Integer merchantType = SecurityUtils.getLoginUser().getUser().getMerchantType();
-        //todo 这里代理查询会有问题
+        final String merchantId =  SecurityUtils.getLoginUser().getMerchantInfo().getMerchantId();
+
+        // 商家查自己的
         if(ObjectUtil.isNotEmpty(merchantType) && merchantType.compareTo(0) == 0) {
-            input.setExtendKey(SecurityUtils.getLoginUser().getMerchantInfo().getMerchantId());
+            input.setExtendKey(Collections.singletonList(merchantId));
         }
+
+        // 代理查所有子商家的
+        if (ObjectUtil.isNotEmpty(merchantType) && merchantType.compareTo(1) == 0) {
+            List<String> childMerchantIds = merchantInfoService.selectChildMerchantIds(merchantId);
+            input.setExtendKey(childMerchantIds);
+        }
+
         UtTouchResult<UtTouchPage<GetChatRoomJoinTaskPageOutput>> touchResult =
                 UtTouchJoinRoomClient.getChatRoomJoinTaskPage(input);
         return Optional.of(touchResult)

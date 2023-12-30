@@ -1,6 +1,7 @@
 package com.ruoyi.system.extend.data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @lombok.Data
 public class GetChatRoomJoinTaskPageInput extends UtTouchQueryPage {
@@ -19,5 +20,5 @@ public class GetChatRoomJoinTaskPageInput extends UtTouchQueryPage {
 
     private String userCode;
 
-    private String extendKey;
+    private List<String> extendKey;
 }
