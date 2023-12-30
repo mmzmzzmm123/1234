@@ -18,6 +18,7 @@ import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.Objects;
+import com.ruoyi.common.utils.UrlValidator;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.*;
@@ -73,6 +74,10 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 	@SuppressWarnings("unchecked")
 	public AjaxResult produce(OrderProduceRequest request) {
 		log.info("OrderServiceImpl.produce {}", JSON.toJSONString(request));
+		if (!verifyGroupUrl(request.getParams().getGroupIds())) {
+			return AjaxResult.error(ErrInfoConfig.getDynmic(11000, "群来源数据有不合规则数据"));
+		}
+
 		if (request.getParams() == null || CollectionUtils.isEmpty(request.getParams().getGroupIds())) {
 			return AjaxResult.error(ErrInfoConfig.getDynmic(11000, "params"));
 		}
@@ -143,6 +148,15 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 		final String orderId = orderStorage(request, product, skuList, groupSet, price).getOrderId();
 		return AjaxResult.success(orderId);
+	}
+
+	private boolean verifyGroupUrl(List<String> urlList) {
+		for (String url : urlList) {
+			if (!UrlValidator.validateUrl(url)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Transactional
