@@ -272,13 +272,10 @@ public class UbpmPlusJoinChatRoomService {
     }
 
     public AnalysisUploadPhoneResultVO analysisUploadPhoneFileUrl(String filePathUrl) {
-        try {
-            File file = FileUtils.toFile(new URL(filePathUrl));
-            List<String> uploadPhones = MultipartFileUtil.analyseTextFile(file);
-            return this.analysisPhoneNumbers(uploadPhones);
+        //            File file = FileUtils.toFile(new URL(filePathUrl));
+//            List<String> uploadPhones = MultipartFileUtil.analyseTextFile(file);
+        final List<String> uploadPhones = com.ruoyi.common.utils.file.FileUtils.getTextListByFilePath(filePathUrl);
+        return this.analysisPhoneNumbers(uploadPhones);
 
-        } catch (MalformedURLException e) {
-            throw new GlobalException("文件地址不存在");
-        }
     }
 }
