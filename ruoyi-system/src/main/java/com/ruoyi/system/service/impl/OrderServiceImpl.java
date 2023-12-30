@@ -154,7 +154,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 	private boolean verifyGroupUrl(List<String> urlList) {
 		for (String url : urlList) {
-			if (!UrlValidator.validateUrl(url)) {
+			if (!UrlValidator.validate(url)) {
 				return false;
 			}
 		}

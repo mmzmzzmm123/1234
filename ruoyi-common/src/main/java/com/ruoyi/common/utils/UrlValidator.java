@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
  * 验证url格式
  */
 public class UrlValidator {
-    public static boolean validateUrl(String url) {
+    public static boolean validate(String url) {
         String regex = "^(http|https):\\/\\/.+";
 
         Pattern pattern = Pattern.compile(regex);
