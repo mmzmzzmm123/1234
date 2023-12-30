@@ -3,12 +3,7 @@ package com.ruoyi.system.service;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.domain.app.CancelOrderRequest;
-import com.ruoyi.common.core.domain.app.OrderDetailResponse;
-import com.ruoyi.common.core.domain.app.OrderListResponse;
-import com.ruoyi.common.core.domain.app.OrderProduceRequest;
-import com.ruoyi.common.core.domain.app.OrderRequest;
-import com.ruoyi.common.core.domain.app.SubmitResponse;
+import com.ruoyi.common.core.domain.app.*;
 
 public interface OrderService {
 
@@ -34,7 +29,7 @@ public interface OrderService {
 	 * @param orderRequest
 	 * @return
 	 */
-	PageInfo<OrderListResponse> list(OrderRequest orderRequest);
+	PageInfo<OrderListResponseVO> list(OrderRequest orderRequest);
 
 	/***
 	 * job 刷新订单状态

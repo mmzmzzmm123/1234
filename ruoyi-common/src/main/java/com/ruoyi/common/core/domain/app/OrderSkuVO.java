@@ -32,7 +32,7 @@ public class OrderSkuVO {
     /**
      * 总价格
      */
-    private Long price;
+    private Double price;
 
     /**
      * 购买数量
@@ -49,8 +49,11 @@ public class OrderSkuVO {
      */
     private Date createTime;
 
-
-    public Double getPrice() {
-        return BigDecimal.valueOf(price).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+    public void setPrice(Double price) {
+        if (price == null) {
+            this.price = 0d;
+            return;
+        }
+        this.price =  BigDecimal.valueOf(price).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
     }
 }

@@ -227,8 +227,8 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 	}
 
 	@Override
-	public PageInfo<OrderListResponse> list(OrderRequest orderRequest) {
-		PageInfo<OrderListResponse> pageInfo = new PageInfo<>();
+	public PageInfo<OrderListResponseVO> list(OrderRequest orderRequest) {
+		PageInfo<OrderListResponseVO> pageInfo = new PageInfo<>();
 		int total = Objects.wrapNull(orderMapper.listCount(orderRequest), 0);
 		pageInfo.setTotal(total);
 		if (total <= 0) {
@@ -267,7 +267,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		} catch (Exception e) {
 		}
 
-		List<OrderListResponse> responses = new ArrayList<>();
+		List<OrderListResponseVO> responses = new ArrayList<>();
 		for (Order order : orderList) {
 			OrderListResponse res = new OrderListResponse();
 			BeanUtils.copyProperties(order, res);
@@ -286,7 +286,9 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 				res.setRefundPrice(
 						Objects.wrapNull(refundMap.get(order.getOrderId()).get(0).getActualRefundPrice(), 0L));
 			}
-			res.setActualPrice(res.getPriceLong() - res.getRefundPriceLong());
+			res.setActualPrice(res.getPrice() - res.getRefundPrice());
+
+
 			// 商家名称
 			if (!CollectionUtils.isEmpty(merchantMap.get(order.getMerchantId()))) {
 				res.setMerchantName(merchantMap.get(order.getMerchantId()).get(0).getMerchantName());
@@ -295,11 +297,13 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 			if (!CollectionUtils.isEmpty(taskMap.get(order.getOrderId()))) {
 				res.setTaskId(taskMap.get(order.getOrderId()).get(0).getTaskId());
 			}
-			responses.add(res);
+			OrderListResponseVO response = BeanUtil.copyProperties(res, OrderListResponseVO.class);
+			responses.add(response);
 		}
 		pageInfo.setList(responses);
 		return pageInfo;
 	}
+
 
 	@SuppressWarnings("deprecation")
 	@Override

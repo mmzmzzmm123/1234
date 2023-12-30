@@ -11,7 +11,7 @@ import java.util.List;
 
 @Data
 @ApiModel
-public class OrderListResponse {
+public class OrderListResponseVO {
 
 	@ApiModelProperty("下单时间")
 	private Date createTime;
@@ -32,13 +32,13 @@ public class OrderListResponse {
 	private Integer orderStatus;
 
 	@ApiModelProperty("预付金额")
-	private long price;
+	private Double price;
 
 	@ApiModelProperty("实际消费")
-	private long actualPrice;
+	private Double actualPrice;
 
 	@ApiModelProperty("退款金额")
-	private long refundPrice;
+	private Double refundPrice;
 
 	@ApiModelProperty("关联任务")
 	private String taskId;
@@ -52,4 +52,27 @@ public class OrderListResponse {
 	@ApiModelProperty("备注")
 	private String remark;
 
+	public void setPrice(Double price) {
+		if (price == null) {
+			this.price = 0d;
+			return;
+		}
+		this.price = BigDecimal.valueOf(price).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+	}
+
+	public void setActualPrice(Double actualPrice) {
+		if (actualPrice == null) {
+			this.actualPrice = 0d;
+			return;
+		}
+		this.actualPrice = BigDecimal.valueOf(actualPrice).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+	}
+
+	public void setRefundPrice(Double refundPrice) {
+		if (refundPrice == null) {
+			this.refundPrice = 0d;
+			return;
+		}
+		this.refundPrice = BigDecimal.valueOf(refundPrice).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+	}
 }
