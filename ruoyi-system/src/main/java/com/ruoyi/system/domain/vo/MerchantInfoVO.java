@@ -3,6 +3,8 @@ package com.ruoyi.system.domain.vo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 /**
@@ -35,6 +37,25 @@ public class MerchantInfoVO {
 
     @ApiModelProperty("锁定金额")
     private Long lockAmount;
-    
 
+    public Double getTotalAmount() {
+        if (null == totalAmount) {
+            return 0d;
+        }
+        return BigDecimal.valueOf(totalAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public Double getAvailableAmount() {
+        if (null == availableAmount) {
+            return 0d;
+        }
+        return BigDecimal.valueOf(availableAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public Double getLockAmount() {
+        if (null == lockAmount) {
+            return 0d;
+        }
+        return BigDecimal.valueOf(lockAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+    }
 }
