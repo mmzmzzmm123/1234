@@ -177,6 +177,7 @@ public class SysUser extends BaseEntity
     }
 
     public boolean getAdmin() {
+        this.admin = userId != null && 1L == userId;
         return this.admin;
     }
 
