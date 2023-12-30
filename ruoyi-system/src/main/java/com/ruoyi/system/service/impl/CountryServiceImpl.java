@@ -61,7 +61,7 @@ public class CountryServiceImpl extends ServiceImpl<CountryMapper, Country>
     public UbpmCountryVO getCountriesByPhone(String phone) {
         int checkLen = 4;
         if (StringUtils.isEmpty(phone) || phone.length() <= checkLen) {
-            return null;
+            return new UbpmCountryVO();
         }
         int i = checkLen + 1;
         while (i-- > 0) {
