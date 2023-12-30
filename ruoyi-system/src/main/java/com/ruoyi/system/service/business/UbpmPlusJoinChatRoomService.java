@@ -94,13 +94,13 @@ public class UbpmPlusJoinChatRoomService {
 
         // 商家查自己的
         if(ObjectUtil.isNotEmpty(merchantType) && merchantType.compareTo(0) == 0) {
-            input.setExtendKey(Collections.singletonList(merchantId));
+            input.setExtendKeys(Collections.singletonList(merchantId));
         }
 
         // 代理查所有子商家的
         if (ObjectUtil.isNotEmpty(merchantType) && merchantType.compareTo(1) == 0) {
             List<String> childMerchantIds = merchantInfoService.selectChildMerchantIds(merchantId);
-            input.setExtendKey(childMerchantIds);
+            input.setExtendKeys(childMerchantIds);
         }
 
         UtTouchResult<UtTouchPage<GetChatRoomJoinTaskPageOutput>> touchResult =

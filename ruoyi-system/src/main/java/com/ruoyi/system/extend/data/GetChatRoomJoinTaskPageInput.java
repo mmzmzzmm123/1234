@@ -20,5 +20,5 @@ public class GetChatRoomJoinTaskPageInput extends UtTouchQueryPage {
 
     private String userCode;
 
-    private List<String> extendKey;
+    private List<String> extendKeys;
 }
