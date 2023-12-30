@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
@@ -141,10 +142,10 @@ public class UbpmPlusJoinChatRoomController {
     }
 
 
+    @Anonymous
     @ApiOperation("修改拉人规则")
     @PostMapping("updateChatRoomTaskInviteRule")
-    public R<Void> updateChatRoomTaskInviteRule(
-            @RequestBody UpdateTaskRuleData input) {
+    public R<Void> updateChatRoomTaskInviteRule(@RequestBody UpdateTaskRuleData input) {
         ubpmPlusJoinChatRoomService.updateChatRoomTaskInviteRule(input);
         return R.ok();
     }

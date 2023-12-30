@@ -19,14 +19,17 @@ import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.Objects;
 import com.ruoyi.common.utils.file.FileUtils;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.*;
 import com.ruoyi.system.components.TaskQuery.TaskAdapter;
 import com.ruoyi.system.configure.RedisConfigure;
+import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
 import com.ruoyi.system.mapper.MerchantInfoMapper;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.mapper.OrderRefundMapper;
 import com.ruoyi.system.service.OrderService;
 import com.ruoyi.system.service.OrderSkuService;
+import com.ruoyi.system.service.business.UbpmPlusJoinChatRoomService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.InitializingBean;
@@ -109,12 +112,32 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 		// 校验 商品
 		final Product product = (Product) result.data();
+
 		// 校验sku
 		result = ProductTools.checkSkuList(request.getSkuList());
 		if (result.isError()) {
 			return result;
 		}
+
 		final List<ProductSku> skuList = (List<ProductSku>) result.data();
+
+		// 校验手机号码归属国家是否和商品一致
+		List<String> targetIds = request.getParams().getTargetIds();
+		AnalysisUploadPhoneResultVO analysisResult =
+				SpringUtils.getBean(UbpmPlusJoinChatRoomService.class).analysisPhoneNumbers(targetIds);
+
+		// 手机号归属国家
+		Map<String, Long> phoneOwnership = analysisResult.getPhoneOwnership();
+		if (phoneOwnership.keySet().size() > 1) {
+			return AjaxResult.error(ErrInfoConfig.get(11013));
+		}
+
+		// warning 后续可能存在多SKU
+		ProductSku productSku = skuList.get(0);
+		if (!phoneOwnership.containsKey(productSku.getCountyName())) {
+			return AjaxResult.error(ErrInfoConfig.get(11013));
+		}
+
 		// 计算价格
 		long price = orderPriceHandler.handle(skuList, groupSet.size(), singlePullPersonCount);
 

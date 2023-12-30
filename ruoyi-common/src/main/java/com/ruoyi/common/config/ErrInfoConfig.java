@@ -22,6 +22,7 @@ public class ErrInfoConfig {
 		err.put(11010, "导入手机号为空");
 		err.put(11011, "当前账号无权限");
 		err.put(11012, "已存在此服务名");
+		err.put(11013, "手机号码所属国家与商品不一致");
 	}
 
 	public static String get(int code) {
