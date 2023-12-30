@@ -339,6 +339,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         wrapper.eq(Product::getStatus, ProductStatusConstants.LISTING);
         wrapper.eq(Product::getIsShow, ProductStatusConstants.SHOW);
         wrapper.eq(Product::getIsDel, ProductStatusConstants.NORMAL);
+        wrapper.orderByDesc(Product::getCreateDate);
         wrapper.select(Product::getProductId, Product::getCategoryId, Product::getAppType, Product::getName, Product::getAlbumPics, Product::getPic, Product::getIntro, Product::getSkuAttr);
         return page(page, wrapper);
     }
