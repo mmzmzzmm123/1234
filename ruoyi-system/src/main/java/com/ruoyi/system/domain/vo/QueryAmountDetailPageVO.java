@@ -3,6 +3,8 @@ package com.ruoyi.system.domain.vo;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 
 /**
@@ -22,13 +24,13 @@ public class QueryAmountDetailPageVO {
     private Integer operationType;
 
     @ApiModelProperty("资金变动前")
-    private Long changeBefore;
+    private Double changeBefore;
 
     @ApiModelProperty("变动金额")
-    private Long changeAmount;
+    private Double changeAmount;
 
     @ApiModelProperty("资金变动后")
-    private Long changeAfter;
+    private Double changeAfter;
 
     @ApiModelProperty("资金类型 1-支出 2-收入")
     private Integer amountType;
@@ -44,4 +46,25 @@ public class QueryAmountDetailPageVO {
 
     @ApiModelProperty("修改时间")
     private Date modifyTime;
+
+    public Double getChangeBefore() {
+        if (changeBefore == null) {
+            return 0d;
+        }
+        return BigDecimal.valueOf(changeBefore).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public Double getChangeAmount() {
+        if (changeAmount == null) {
+            return 0d;
+        }
+        return BigDecimal.valueOf(changeAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+    }
+
+    public Double getChangeAfter() {
+        if (changeAfter == null) {
+            return 0d;
+        }
+        return BigDecimal.valueOf(changeAfter).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+    }
 }

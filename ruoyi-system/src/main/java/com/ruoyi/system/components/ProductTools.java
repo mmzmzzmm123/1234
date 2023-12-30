@@ -66,7 +66,7 @@ public class ProductTools {
 		}
 		// 监测sku价格为0
 		for (ProductSku sku : skuList) {
-			if (sku.getPrice() == null || sku.getPrice().longValue() < 0) {
+			if (sku.getPrice() == null || sku.getPrice() < 0) {
 				return AjaxResult.error(ErrInfoConfig.getDynmic(11004, sku.getId() + ""));
 			}
 		}

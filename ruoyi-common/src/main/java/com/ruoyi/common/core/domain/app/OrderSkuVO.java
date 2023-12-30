@@ -1,0 +1,56 @@
+package com.ruoyi.common.core.domain.app;
+
+import com.baomidou.mybatisplus.annotation.TableId;
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.Date;
+
+/**
+ * @author Jing.Zhang
+ */
+@Data
+public class OrderSkuVO {
+
+    private String orderSkuId;
+    /**
+     * 订单ID
+     */
+    private String orderId;
+
+    /**
+     * 用户ID
+     */
+    private Long userId;
+
+    /**
+     * 商品id
+     */
+    private Long productId;
+
+    /**
+     * 总价格
+     */
+    private Long price;
+
+    /**
+     * 购买数量
+     */
+    private Integer buyCount;
+
+    /**
+     * sku id
+     */
+    private Long skuId;
+
+    /**
+     * 下单时间
+     */
+    private Date createTime;
+
+
+    public Double getPrice() {
+        return BigDecimal.valueOf(price).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+    }
+}

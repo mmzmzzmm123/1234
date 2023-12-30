@@ -17,7 +17,7 @@ public class ProductSku {
     private Long productId;
 
     /**
-     * 价格
+     * 价格 单位 分
      */
     private Long price;
 

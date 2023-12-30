@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
@@ -49,4 +51,28 @@ public class OrderListResponse {
 
 	@ApiModelProperty("备注")
 	private String remark;
+
+	public long getPriceLong() {
+		return price;
+	}
+
+	public long getActualPriceLong() {
+		return actualPrice;
+	}
+
+	public long getRefundPriceLong() {
+		return refundPrice;
+	}
+
+	public Double getPrice() {
+		return BigDecimal.valueOf(price).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+	}
+
+	public Double getActualPrice() {
+		return BigDecimal.valueOf(actualPrice).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+	}
+
+	public Double getRefundPrice() {
+		return BigDecimal.valueOf(refundPrice).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+	}
 }

@@ -1,5 +1,7 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
@@ -212,11 +214,15 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		// 查询详细
 		List<OrderSku> skuList = orderSkuService.getBaseMapper()
 				.selectList(new QueryWrapper<OrderSku>().lambda().eq(OrderSku::getOrderId, order.getOrderId()));
-		response.setOrderSkuList(skuList);
+
+		List<OrderSkuVO> orderSkuVos = BeanUtil.copyToList(skuList, OrderSkuVO.class);
+		response.setOrderSkuList(orderSkuVos);
+
 		// 查询退款
 		OrderRefund orderRefund = orderRefundMapper.selectOne(new QueryWrapper<OrderRefund>().lambda()
 				.eq(OrderRefund::getOrderId, order.getOrderId()).last(" limit 1"));
-		response.setOrderRefund(orderRefund);
+		OrderRefundVO orderRefundVO = BeanUtil.copyProperties(orderRefund, OrderRefundVO.class);
+		response.setOrderRefund(orderRefundVO);
 		return response;
 	}
 
@@ -280,7 +286,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 				res.setRefundPrice(
 						Objects.wrapNull(refundMap.get(order.getOrderId()).get(0).getActualRefundPrice(), 0L));
 			}
-			res.setActualPrice(res.getPrice() - res.getRefundPrice());
+			res.setActualPrice(res.getPriceLong() - res.getRefundPriceLong());
 			// 商家名称
 			if (!CollectionUtils.isEmpty(merchantMap.get(order.getMerchantId()))) {
 				res.setMerchantName(merchantMap.get(order.getMerchantId()).get(0).getMerchantName());

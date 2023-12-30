@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.math.BigDecimal;
 
 /**
  * @Author : XGF（徐桂烽）
@@ -28,7 +29,13 @@ public class AmountRecoveryDTO {
     private String targetMerchantId;
 
     @ApiModelProperty("回收资金金额")
-    private Long amount;
+    private Double amount;
+
+    public Long getAmount() {
+        return BigDecimal.valueOf(amount).multiply(BigDecimal.valueOf(100L)).longValue();
+    }
+
+
 
 
 

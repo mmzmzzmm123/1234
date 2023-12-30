@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import java.math.BigDecimal;
 
 /**
  * @Author : XGF（徐桂烽）
@@ -38,6 +39,10 @@ public class AmountTransferDTO {
      */
     @ApiModelProperty("描述")
     private String describe;
+
+    public Long getAmount() {
+        return BigDecimal.valueOf(amount).multiply(BigDecimal.valueOf(100L)).longValue();
+    }
 
 
 }

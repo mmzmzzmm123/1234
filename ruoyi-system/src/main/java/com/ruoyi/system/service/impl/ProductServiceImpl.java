@@ -30,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -146,6 +148,9 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         for (ProductSku productSku : productSkuList) {
             ProductSkuDTO productSkuDTO = new ProductSkuDTO();
             BeanUtils.copyProperties(productSku, productSkuDTO);
+
+            double price = BigDecimal.valueOf(productSku.getPrice()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+            productSkuDTO.setPrice(price);
             skuList.add(productSkuDTO);
 
             countryCodeList.add(productSku.getCountyCode());
@@ -233,12 +238,14 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     private List<ProductSku> getUpdateProductSku(Long productId, List<ProductSkuDTO> skuList) {
         List<ProductSku> productSkus = new ArrayList<>();
         for (ProductSkuDTO productSkuDTO : skuList) {
+
+            long price = BigDecimal.valueOf(productSkuDTO.getPrice()).multiply(BigDecimal.valueOf(100L)).longValue();
             if (ObjectUtils.isEmpty(productSkuDTO.getId())) {
                 ProductSku productSku = new ProductSku();
                 productSku.setProductId(productId);
                 productSku.setCountyCode(productSkuDTO.getCountyCode());
                 productSku.setCountyName(productSkuDTO.getCountyName());
-                productSku.setPrice(productSkuDTO.getPrice());
+                productSku.setPrice(price);
                 productSku.setPriceUnit(productSkuDTO.getPriceUnit());
                 productSkus.add(productSku);
             } else {
@@ -246,7 +253,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
                 if (!ObjectUtils.isEmpty(productSku)) {
                     productSku.setCountyCode(productSkuDTO.getCountyCode());
                     productSku.setCountyName(productSkuDTO.getCountyName());
-                    productSku.setPrice(productSkuDTO.getPrice());
+                    productSku.setPrice(price);
                     productSku.setPriceUnit(productSkuDTO.getPriceUnit());
                     productSkus.add(productSku);
                 }
@@ -270,8 +277,10 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         updateProduct.eq("product_id", product.getProductId()).set("sku_attr", JSON.toJSONString(skuAttrDTO));
         update(null, updateProduct);
 
+        long price = BigDecimal.valueOf(productDTO.getPrice()).multiply(BigDecimal.valueOf(100L)).longValue();
+
         UpdateWrapper<ProductSku> updateSku = new UpdateWrapper<>();
-        updateSku.eq("id", skuAttrDTO.getId()).set("price", productDTO.getPrice());
+        updateSku.eq("id", skuAttrDTO.getId()).set("price", price);
         productSkuService.update(null, updateSku);
 
         return R.ok();
@@ -368,6 +377,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         List<ProductSkuDTO> skuList = new ArrayList<>();
         ProductSkuDTO productSkuDTO = new ProductSkuDTO();
         BeanUtils.copyProperties(productSku, productSkuDTO);
+        double price = BigDecimal.valueOf(productSku.getPrice()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        productSkuDTO.setPrice(price);
         skuList.add(productSkuDTO);
 
         List<String> countryCodeList = new ArrayList<>();

@@ -18,9 +18,9 @@ public class OrderDetailResponse {
 	private Order order;
 
 	@ApiModelProperty("订单关联sku")
-	private List<OrderSku> orderSkuList;
+	private List<OrderSkuVO> orderSkuList;
 
 	@ApiModelProperty("订单退款")
-	private OrderRefund orderRefund;
+	private OrderRefundVO orderRefund;
 
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.math.BigDecimal;
 
 /**
  * @Author : XGF（徐桂烽）
@@ -25,6 +26,10 @@ public class AmountRechargeDTO {
 
     @ApiModelProperty(value = "创建人", hidden = true)
     private String createBy;
+
+    public Long getAmount() {
+        return BigDecimal.valueOf(amount).multiply(BigDecimal.valueOf(100L)).longValue();
+    }
 
 
 }
