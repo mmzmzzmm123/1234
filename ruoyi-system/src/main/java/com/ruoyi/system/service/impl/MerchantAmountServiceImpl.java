@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 /**
  *
@@ -264,7 +266,7 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
         }
         Assert.notNull(merchantAmount, "商家不存在");
 
-        String describe = String.format("用户%s[%s]充值%s", dto.getCreateBy(), dto.getUserId(), dto.getAmount());
+        String describe = String.format("用户%s[%s]充值%s", dto.getCreateBy(), dto.getUserId(), BigDecimal.valueOf(dto.getAmount()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue());
 
         MerchantAmountDetail detail = new MerchantAmountDetail();
         detail.setDetailId(IdWorker.getIdStr());
