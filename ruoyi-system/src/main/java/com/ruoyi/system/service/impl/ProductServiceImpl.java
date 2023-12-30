@@ -337,6 +337,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         for (ProductVO productVO : productVOList) {
             ProductSkuDTO skuAttr = productVO.getSkuAttr();
             skuAttr.setStock(stockEstimateMap.get(skuAttr.getCountyCode()));
+            skuAttr.setPrice(BigDecimal.valueOf(skuAttr.getPrice()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue());
             productVO.setSkuAttr(skuAttr);
         }
 

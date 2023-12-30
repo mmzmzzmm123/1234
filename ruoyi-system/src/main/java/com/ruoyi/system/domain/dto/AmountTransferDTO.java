@@ -32,7 +32,7 @@ public class AmountTransferDTO {
      */
     @Min(1)
     @ApiModelProperty("划拨金额")
-    private Long amount;
+    private Double amount;
 
     /**
      * 描述
