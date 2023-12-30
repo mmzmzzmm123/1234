@@ -1,27 +1,5 @@
 package com.ruoyi.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import com.ruoyi.common.utils.file.FileUtils;
-import com.ruoyi.common.utils.spring.SpringUtils;
-import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
-import com.ruoyi.system.service.business.UbpmPlusJoinChatRoomService;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
-
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
@@ -40,15 +18,29 @@ import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.Objects;
+import com.ruoyi.common.utils.file.FileUtils;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.*;
 import com.ruoyi.system.components.TaskQuery.TaskAdapter;
 import com.ruoyi.system.configure.RedisConfigure;
+import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
 import com.ruoyi.system.mapper.MerchantInfoMapper;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.mapper.OrderRefundMapper;
 import com.ruoyi.system.service.OrderService;
 import com.ruoyi.system.service.OrderSkuService;
+import com.ruoyi.system.service.business.UbpmPlusJoinChatRoomService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service

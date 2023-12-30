@@ -71,6 +71,8 @@ public class OrderController extends BaseController {
 	@ApiOperation("订单列表")
 	@PostMapping("list")
 	public R<PageInfo<OrderListResponse>> list(@RequestBody OrderRequest dto) {
+		dto.setMerchantType(getMerchantType());
+		dto.setMerchantId(getMerchantId());
 		try {
 			PageInfo<OrderListResponse> res = orderService.list(dto);
 			return R.ok(res);

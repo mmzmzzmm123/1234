@@ -1,6 +1,5 @@
 package com.ruoyi.common.core.domain.app;
 
-import java.util.Date;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -26,5 +25,8 @@ public class OrderRequest {
 
 	@ApiModelProperty("limit")
 	private int limit = 10;
+
+	private Integer merchantType;
+	private String merchantId;
 
 }
