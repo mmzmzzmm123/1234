@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.business;
 
+import cn.hutool.core.util.StrUtil;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.config.ErrInfoConfig;
@@ -102,7 +103,7 @@ public class OrderController extends BaseController {
 		} catch (Exception e) {
 			String id = Ids.getId();
 			log.error("OrderController.submit {} {}", id, dto, e);
-			return R.fail(ErrInfoConfig.getDynmic(10000, id));
+			return R.fail(ErrInfoConfig.getDynmic(10000, StrUtil.format("{} {}", id, e.getMessage())));
 		}
 	}
 
