@@ -117,8 +117,8 @@ public abstract class TaskQuery {
 			log.info("getChatRoomJoinTaskDetail {} {}", input, details);
 			int successTotal = 0;
 			if (details.getData() != null
-					&& !CollectionUtils.isEmpty(details.getData().getChatRoomJoinCompleteList())) {
-				for (ChatRoomJoinList chatRoomJoinList : details.getData().getChatRoomJoinCompleteList()) {
+					&& !CollectionUtils.isEmpty(details.getData().getChatRoomJoinAllList())) {
+				for (ChatRoomJoinList chatRoomJoinList : details.getData().getChatRoomJoinAllList()) {
 					// 进群成功数
 					successTotal += chatRoomJoinList.getJoinSuccessCount();
 				}
