@@ -76,4 +76,20 @@ public class ProductController extends BaseController {
     public R<String> deleteProducts(@RequestBody BatchUpdateProductDTO productDTO) {
         return productService.batchDeleteProducts(productDTO);
     }
+
+
+    @ApiOperation(value = "同步库存", hidden = true)
+    @PostMapping("syncStocks/{countryCode}")
+    public R<Void> syncStocks(@PathVariable String countryCode) {
+        productService.syncStocks(countryCode);
+        return R.ok();
+    }
+
+    @ApiOperation(value = "同步库存", hidden = true)
+    @PostMapping("syncAllStocks")
+    public R<Void> syncAllStocks() {
+        productService.syncAllStocks();
+        return R.ok();
+    }
+
 }

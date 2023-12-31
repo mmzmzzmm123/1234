@@ -25,6 +25,7 @@ import com.ruoyi.system.extend.data.CountryBusinessEstimateOutput;
 import com.ruoyi.system.mapper.ProductMapper;
 import com.ruoyi.system.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,10 +34,8 @@ import org.springframework.util.ObjectUtils;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -60,11 +59,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         //规格属性
         List<String> countryCodeList = new ArrayList<>();
         for (ProductDTO productDTO : ret.getRecords()) {
-            List<ProductSkuDTO> skuList = new ArrayList<>();
             ProductSkuDTO productSkuDTO = JSON.parseObject(productDTO.getSkuAttr(), ProductSkuDTO.class);
-            skuList.add(productSkuDTO);
-            productDTO.setSkuAttr("");
-            productDTO.setSkuList(skuList);
+            productDTO.setSkuList(Collections.singletonList(productSkuDTO));
 
             countryCodeList.add(productSkuDTO.getCountyCode());
         }
@@ -188,6 +184,14 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }
 
         usersNum = getCountryBusinessEstimateByClient(countryCode);
+        redisCache.setCacheObject(key, usersNum, 10, TimeUnit.MINUTES);
+        return usersNum;
+    }
+
+    public long getCountryBusinessEstimateWithoutCache(String countryCode) {
+        String key = RedisKeyConstans.COUNTRY_BUSINESS_ESTIMATE + countryCode;
+
+        long usersNum = getCountryBusinessEstimateByClient(countryCode);
         redisCache.setCacheObject(key, usersNum, 10, TimeUnit.MINUTES);
         return usersNum;
     }
@@ -399,5 +403,40 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         ret.setSkuList(skuList);
 
         return R.ok(ret);
+    }
+
+
+    @Override
+    public void syncStocks(String countryCode) {
+        this.getCountryBusinessEstimateWithoutCache(countryCode);
+    }
+
+
+    @Override
+    public List<Product> queryEnableProduct() {
+        LambdaQueryWrapper<Product> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Product::getIsDel, 0);
+        return this.list(queryWrapper);
+    }
+
+    @Override
+    public void syncAllStocks() {
+        log.info("同步商品支撑量开始");
+        List<Product> products = this.queryEnableProduct();
+
+        // 获取所有商品的国家
+        List<String> productCountryCodes = products.stream()
+                .map(Product::getProductSku)
+                .filter(Objects::nonNull)
+                .map(ProductSku::getCountyCode)
+                .distinct()
+                .collect(Collectors.toList());
+        log.info("待同步商品支撑量国家列表 {}", JSON.toJSONString(productCountryCodes));
+
+        // 查询商品国家的库存(支撑量)信息 - 异步操作
+        CollectionUtils.emptyIfNull(productCountryCodes).forEach(it ->
+                CompletableFuture.runAsync(() -> this.getCountryBusinessEstimateWithoutCache(it))
+        );
+        log.info("同步商品支撑量完成");
     }
 }

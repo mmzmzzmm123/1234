@@ -8,6 +8,8 @@ import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.ProductDetailVO;
 import com.ruoyi.system.domain.vo.ProductVO;
 
+import java.util.List;
+
 /**
  * 商品管理Service
  */
@@ -49,4 +51,12 @@ public interface IProductService {
      * 前台获取商品详情
      */
     R<ProductDetailVO> getProductDetailBySkuId(Long skuId);
+
+
+    List<Product> queryEnableProduct();
+
+    void syncStocks(String countryCode);
+
+    void syncAllStocks();
+
 }

@@ -1,8 +1,11 @@
 package com.ruoyi.common.core.domain.entity;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
 
 @Data
 @TableName("t_product")
@@ -89,4 +92,11 @@ public class Product {
      * 是否删除:0否 1是
      */
     private Integer isDel;
+
+    public ProductSku getProductSku() {
+        if (StringUtils.isBlank(this.skuAttr)) {
+            return null;
+        }
+        return JSONObject.parseObject(this.skuAttr, ProductSku.class);
+    }
 }
