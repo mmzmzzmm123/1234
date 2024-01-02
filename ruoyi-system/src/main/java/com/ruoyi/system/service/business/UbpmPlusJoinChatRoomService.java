@@ -3,7 +3,6 @@ package com.ruoyi.system.service.business;
 
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
-import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.entity.order.Order;
@@ -15,26 +14,24 @@ import com.ruoyi.system.components.MultipartFileUtil;
 import com.ruoyi.system.components.PageConvertUtil;
 import com.ruoyi.system.domain.Task;
 import com.ruoyi.system.domain.vo.AnalysisUploadPhoneResultVO;
-import com.ruoyi.system.domain.vo.PhoneNumbersVO;
 import com.ruoyi.system.domain.vo.UbpmCountryVO;
-import com.ruoyi.system.extend.*;
+import com.ruoyi.system.extend.UtTouchJoinRoomClient;
+import com.ruoyi.system.extend.UtTouchProperties;
+import com.ruoyi.system.extend.UtTouchResult;
 import com.ruoyi.system.extend.data.*;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.service.CountryService;
 import com.ruoyi.system.service.MerchantInfoService;
-import com.ruoyi.system.service.OrderService;
 import com.ruoyi.system.service.TaskService;
+import com.ruoyi.system.service.impl.OrderServiceImpl;
 import lombok.AllArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Files;
+import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -55,9 +52,11 @@ public class UbpmPlusJoinChatRoomService {
 
     private final MerchantInfoService merchantInfoService;
 
+    @Resource
+    private OrderServiceImpl orderService;
 
 
-
+    @Transactional(rollbackFor = Exception.class)
     public void saveChatRoomJoinTask(SaveChatRoomJoinTaskDTO input) {
         input.setUserCode(utTouchProperties.getTouchMerchantId());
         final Order order = orderMapper.selectById(input.getOrderId());
@@ -85,6 +84,7 @@ public class UbpmPlusJoinChatRoomService {
         task.setFreezeBalance(ObjectUtil.isNotEmpty(order)?order.getPrice().intValue():0);
         taskService.save(task);
 
+        orderService.updateNameById(input.getOrderId(), input.getName());
     }
 
     public Page<GetChatRoomJoinTaskPageOutput> getChatRoomJoinTaskPage(GetChatRoomJoinTaskPageInput input) {

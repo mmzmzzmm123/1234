@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -412,4 +413,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		return R.ok(response);
 	}
 
+	public void updateNameById(String orderId, String taskName) {
+		orderMapper.update(null, new LambdaUpdateWrapper<Order>().set(Order::getTaskName, taskName).eq(Order::getOrderId, orderId));
+	}
 }
