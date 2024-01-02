@@ -121,6 +121,24 @@ public enum UtTouchApiEnum {
 
     CHAT_ROOM_CHOOSE_ROBOT_EXIT("选择退出部分拉手号", "/api/ChatRoomJoinTask/ChatRoomChooseRobotExit"),
 
+    GET_CHAT_ROOM_JOIN_TASK_DETAIL_STATISTICS_REPORT("获取拉群任务明细数据任务结果", "/api/ChatRoomJoinTask/GetChatRoomJoinTaskDetailStatisticsReport"),
+
+    GET_CHAT_ROOM_REPORT("结果群列表报表", "/api/ChatRoomJoinTask/GetChatRoomReport"),
+
+    GET_CHAT_ROOM_SUCCESS_REPORT("拉群成功列表报表", "/api/ChatRoomJoinTask/GetChatRoomSuccessReport"),
+
+    GET_CHAT_ROOM_FAIL_REPORT("拉群失败列表报表", "/api/ChatRoomJoinTask/GetChatRoomFailReport"),
+
+    GET_CHAT_ROOM_SET_PRIVITE_REPORT("拉群目标隐私列表报表", "/api/ChatRoomJoinTask/GetChatRoomSetPriviteReport"),
+
+    GET_CHAT_ROOM_NOT_USE_REPORT("拉群未使用列表报表", "/api/ChatRoomJoinTask/GetChatRoomNotUseReport"),
+
+    GET_CHAT_ROOM_NOT_RUN_REPORT("拉群未执行列表报表", "/api/ChatRoomJoinTask/GetChatRoomNotRunReport"),
+
+    GET_CHAT_ROOM_RUNNING_REPORT("拉群进行中列表报表", "/api/ChatRoomJoinTask/GetChatRoomRunningReport"),
+
+    EXPORT_BATCH_PRIVATE_MESSAGE("拉群任务结束统计结果导出", "/api/ChatRoomJoinTask/ExportBatchPrivateMessage")
+
     ;
 
     /**
