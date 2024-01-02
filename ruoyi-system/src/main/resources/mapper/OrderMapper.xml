@@ -37,7 +37,7 @@
             AND o.order_status = #{orderStatus}
         </if>
         <if test="taskName != null and taskName != ''">
-            AND o.task_name = #{taskName}
+            AND o.task_name like concat('%', #{taskName}, '%')
         </if>
         order by o.create_time desc , o.order_id desc
         LIMIT ${(page-1)*limit},${limit}
@@ -77,7 +77,7 @@
             AND o.order_status = #{orderStatus}
         </if>
        <if test="taskName != null and taskName != ''">
-           AND o.task_name = #{taskName}
+           AND o.task_name like concat('%', #{taskName}, '%')
        </if>
     </select>
 </mapper>
