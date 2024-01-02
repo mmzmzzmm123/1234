@@ -3,9 +3,10 @@ package com.ruoyi.common.core.domain.entity.order;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.Date;
-import lombok.Data;
 
 /**
  * 商家资金明细表
@@ -20,6 +21,11 @@ public class Order implements Serializable {
 	 */
 	@TableId
 	private String orderId;
+
+	/**
+	 * 任务名称
+	 */
+	private String taskName;
 
 	/**
 	 * 用户ID

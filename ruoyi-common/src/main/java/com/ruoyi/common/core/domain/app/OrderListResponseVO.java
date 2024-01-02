@@ -12,6 +12,8 @@ import java.util.List;
 @Data
 @ApiModel
 public class OrderListResponseVO {
+	@ApiModelProperty("任务名称")
+	private String taskName;
 
 	@ApiModelProperty("下单时间")
 	private Date createTime;

@@ -1,14 +1,15 @@
 package com.ruoyi.common.core.domain.app;
 
-import java.util.List;
-
 import com.ruoyi.common.core.domain.model.LoginUser;
-
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class OrderProduceRequest {
+	@ApiModelProperty("任务名称")
+	private String taskName;
 
 	/**
 	 * 商品id
