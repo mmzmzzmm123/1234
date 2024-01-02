@@ -14,6 +14,8 @@ import java.util.List;
 @Data
 @ApiModel("保存并创建任务")
 public class SaveAndCreateTaskVO {
+    @ApiModelProperty("任务名称")
+    private String name;
 
     @ApiModelProperty("群ID")
     private List<String> groupIds;
