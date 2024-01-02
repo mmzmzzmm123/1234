@@ -395,8 +395,12 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		response.setOrderId(orderId);
 		response.setParam(JSON.parseObject(order.getParams(), OrderProduceRequest.Params.class));
 
-		List<TaskAdapter> taskAdapters = TaskQuery.newQuery(0).listByOrder(Arrays.asList(orderId));
-		Objects.notNullDone(taskAdapters, s -> response.setTaskName(s.get(0).getTaskName()));
+		if (StringUtils.isEmpty(order.getTaskName())) {
+			List<TaskAdapter> taskAdapters = TaskQuery.newQuery(0).listByOrder(Collections.singletonList(orderId));
+			Objects.notNullDone(taskAdapters, s -> response.setTaskName(s.get(0).getTaskName()));
+		} else {
+			response.setTaskName(order.getTaskName());
+		}
 
 		// 查询商品
 		try {
