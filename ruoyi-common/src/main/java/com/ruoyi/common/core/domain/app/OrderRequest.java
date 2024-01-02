@@ -29,4 +29,7 @@ public class OrderRequest {
 	private Integer merchantType;
 	private String merchantId;
 
+	@ApiModelProperty("任务名称")
+	private String taskName;
+
 }

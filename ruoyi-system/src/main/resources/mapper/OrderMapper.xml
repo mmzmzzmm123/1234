@@ -36,6 +36,9 @@
         <if test="orderStatus != null">
             AND o.order_status = #{orderStatus}
         </if>
+        <if test="taskName != null and taskName != ''">
+            AND o.task_name = #{taskName}
+        </if>
         order by o.create_time desc , o.order_id desc
         LIMIT ${(page-1)*limit},${limit}
     </select>
@@ -73,5 +76,8 @@
         <if test="orderStatus != null">
             AND o.order_status = #{orderStatus}
         </if>
+       <if test="taskName != null and taskName != ''">
+           AND o.task_name = #{taskName}
+       </if>
     </select>
 </mapper>
