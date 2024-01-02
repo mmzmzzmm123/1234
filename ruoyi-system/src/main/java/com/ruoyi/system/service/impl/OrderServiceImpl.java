@@ -1,7 +1,6 @@
 package com.ruoyi.system.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageInfo;
@@ -171,6 +170,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		// 插入订单
 		Order order = new Order();
 		order.setOrderId(orderId);
+		order.setTaskName(request.getTaskName());
 		order.setCreateTime(new Date());
 		order.setFrozenId(frozenId);
 		order.setUpdateTime(order.getCreateTime());

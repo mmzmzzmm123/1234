@@ -4,8 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 
@@ -51,5 +49,8 @@ public class OrderListResponse {
 
 	@ApiModelProperty("备注")
 	private String remark;
+
+	@ApiModelProperty("任务名称")
+	private String taskName;
 
 }
