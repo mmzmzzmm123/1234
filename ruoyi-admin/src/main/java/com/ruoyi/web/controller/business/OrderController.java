@@ -45,6 +45,9 @@ public class OrderController extends BaseController {
 		if (ObjectUtils.isEmpty(loginUser.getMerchantInfo()) || loginUser.getMerchantInfo().getMerchantType() != 0) {
 			return R.fail(ErrInfoConfig.getDynmic(11011));
 		}
+		if (dto.getTaskName().length() > 255) {
+			return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过255字"));
+		}
 
 		dto.setLoginUser(loginUser);
 		try {
