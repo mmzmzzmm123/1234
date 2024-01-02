@@ -123,6 +123,8 @@ public enum UtTouchApiEnum {
 
     GET_CHAT_ROOM_JOIN_TASK_DETAIL_STATISTICS_REPORT("获取拉群任务明细数据任务结果", "/api/ChatRoomJoinTask/GetChatRoomJoinTaskDetailStatisticsReport"),
 
+    GET_CHAT_ROOM_NOT_OPEN_REPORT("拉群未开通列表报表", "/api/ChatRoomJoinTask/GetChatRoomNotOpenReport"),
+
     GET_CHAT_ROOM_REPORT("结果群列表报表", "/api/ChatRoomJoinTask/GetChatRoomReport"),
 
     GET_CHAT_ROOM_SUCCESS_REPORT("拉群成功列表报表", "/api/ChatRoomJoinTask/GetChatRoomSuccessReport"),
