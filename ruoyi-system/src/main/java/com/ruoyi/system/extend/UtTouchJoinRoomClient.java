@@ -147,4 +147,10 @@ public abstract class UtTouchJoinRoomClient {
                 JSONObject.from(input),
                 String.class);
     }
+
+    public static UtTouchResult<PriorityTarget> countryBusinessPriorityCountryRule(CountryBusinessPriorityRuleReq input) {
+        return UtTouchClient.post(UtTouchApiEnum.COUNTRY_BUSINESS_PRIORITY_COUNTRY_RULE,
+                JSONObject.from(input),
+                PriorityTarget.class);
+    }
 }

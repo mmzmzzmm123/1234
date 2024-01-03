@@ -139,7 +139,9 @@ public enum UtTouchApiEnum {
 
     GET_CHAT_ROOM_RUNNING_REPORT("拉群进行中列表报表", "/api/ChatRoomJoinTask/GetChatRoomRunningReport"),
 
-    EXPORT_BATCH_PRIVATE_MESSAGE("拉群任务结束统计结果导出", "/api/ChatRoomJoinTask/ExportBatchPrivateMessage")
+    EXPORT_BATCH_PRIVATE_MESSAGE("拉群任务结束统计结果导出", "/api/ChatRoomJoinTask/ExportBatchPrivateMessage"),
+
+    COUNTRY_BUSINESS_PRIORITY_COUNTRY_RULE("获取国家优先规则", "/api/PlatformRobot/CountryBusinessPriorityCountryRule"),
 
     ;
 

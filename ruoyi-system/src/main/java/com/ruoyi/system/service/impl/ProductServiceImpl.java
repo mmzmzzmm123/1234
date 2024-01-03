@@ -20,8 +20,7 @@ import com.ruoyi.system.domain.vo.ProductDetailVO;
 import com.ruoyi.system.domain.vo.ProductVO;
 import com.ruoyi.system.extend.UtTouchJoinRoomClient;
 import com.ruoyi.system.extend.UtTouchResult;
-import com.ruoyi.system.extend.data.CountryBusinessEstimateInput;
-import com.ruoyi.system.extend.data.CountryBusinessEstimateOutput;
+import com.ruoyi.system.extend.data.*;
 import com.ruoyi.system.mapper.ProductMapper;
 import com.ruoyi.system.service.IProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -181,20 +180,25 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         return usersNum;
     }
 
-    public long getCountryBusinessEstimateWithoutCache(String countryCode) {
+    public long getCountryBusinessEstimateWithoutCache(String countryCode, List<String> robotsCountryCodes) {
         String key = RedisKeyConstans.COUNTRY_BUSINESS_ESTIMATE + countryCode;
 
-        long usersNum = getCountryBusinessEstimateByClient(countryCode);
+        long usersNum = getCountryBusinessEstimateByClient(countryCode, robotsCountryCodes);
         redisCache.setCacheObject(key, usersNum, 10, TimeUnit.MINUTES);
         return usersNum;
     }
 
     private long getCountryBusinessEstimateByClient(String countryCode) {
+        return getCountryBusinessEstimateByClient(countryCode, new ArrayList<>());
+    }
+
+
+    private long getCountryBusinessEstimateByClient(String countryCode, List<String> robotsCountryCodes) {
         long startTime = System.currentTimeMillis();
 
         CountryBusinessEstimateInput input = new CountryBusinessEstimateInput();
         input.setPriorityOp(0);
-        input.setRobotsCountryCode(new ArrayList<>());
+        input.setRobotsCountryCode(robotsCountryCodes);
         input.setVcToCountryCode(countryCode);
         try {
             UtTouchResult<CountryBusinessEstimateOutput> result = UtTouchJoinRoomClient.countryBusinessEstimate(input);
@@ -395,7 +399,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Override
     public void syncStocks(String countryCode) {
-        this.getCountryBusinessEstimateWithoutCache(countryCode);
+        this.getCountryBusinessEstimateWithoutCache(countryCode, new ArrayList<>());
     }
 
 
@@ -420,9 +424,24 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
                 .collect(Collectors.toList());
         log.info("待同步商品支撑量国家列表 {}", JSON.toJSONString(productCountryCodes));
 
+        log.info("获取优先国家列表");
+        List<UtTouchCountryData> targetCountries =
+                CollectionUtils.emptyIfNull(productCountryCodes).stream()
+                        .map(UtTouchCountryData::new)
+                        .collect(Collectors.toList());
+        CountryBusinessPriorityRuleReq input = new CountryBusinessPriorityRuleReq();
+        input.setPriorityRobots(1);
+        input.setRobotsCountryList(targetCountries);
+        UtTouchResult<PriorityTarget> result = UtTouchJoinRoomClient.countryBusinessPriorityCountryRule(input);
+        log.info("获取优先国家列表完成 {} {}", JSON.toJSONString(input), JSON.toJSONString(result));
+
+        // 将响应结果封装成Map
+        final Map<String, List<String>> countryPriorities = Optional.of(result).map(UtTouchResult::getData).map(PriorityTarget::getTargetList).orElse(new ArrayList<>())
+                .stream().collect(Collectors.toMap(PriorityTarget.TargetList::getCountryCode, PriorityTarget.TargetList::getPriorityRobots, (x, y) -> x));
+
         // 查询商品国家的库存(支撑量)信息 - 异步操作
         CollectionUtils.emptyIfNull(productCountryCodes).forEach(it ->
-                CompletableFuture.runAsync(() -> this.getCountryBusinessEstimateWithoutCache(it))
+                CompletableFuture.runAsync(() -> this.getCountryBusinessEstimateWithoutCache(it, countryPriorities.getOrDefault(it, new ArrayList<>())))
         );
         log.info("同步商品支撑量完成");
     }
