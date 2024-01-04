@@ -14,6 +14,9 @@ import java.util.List;
 @Data
 @ApiModel("保存并创建任务")
 public class SaveAndCreateTaskVO {
+    @ApiModelProperty("拉手是否退群:0否 1是")
+    private Integer nIsRobotExit;
+
     @ApiModelProperty("任务名称")
     private String taskName;
 

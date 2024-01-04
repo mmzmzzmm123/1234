@@ -84,7 +84,7 @@ public class UbpmPlusJoinChatRoomService {
         task.setFreezeBalance(ObjectUtil.isNotEmpty(order)?order.getPrice().intValue():0);
         taskService.save(task);
 
-        orderService.updateNameById(input.getOrderId(), input.getName());
+        orderService.updateDataByTask(input.getOrderId(), input.getName(), input.getNIsRobotExit());
     }
 
     public Page<GetChatRoomJoinTaskPageOutput> getChatRoomJoinTaskPage(GetChatRoomJoinTaskPageInput input) {
