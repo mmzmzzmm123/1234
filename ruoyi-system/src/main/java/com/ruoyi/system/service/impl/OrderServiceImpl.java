@@ -413,7 +413,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		return R.ok(response);
 	}
 
-	public void updateDataByTask(String orderId, String taskName, Integer nIsRobotExit) {
+	public void updateDataByTask(String orderId, String taskName, Integer robotExitStatus) {
 		Order order = orderMapper.selectById(orderId);
 		if (null == order) {
 			return;
@@ -421,7 +421,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 		order.setTaskName(taskName);
 		OrderProduceRequest.Params params = JSON.parseObject(order.getParams(), OrderProduceRequest.Params.class);
-		params.setNIsRobotExit(nIsRobotExit);
+		params.setRobotExitStatus(robotExitStatus);
 
 		LambdaUpdateWrapper<Order> updateWrapper = new LambdaUpdateWrapper<>();
 		updateWrapper.eq(Order::getOrderId, orderId).set(Order::getTaskName, taskName).set(Order::getParams, JSON.toJSONString(params));

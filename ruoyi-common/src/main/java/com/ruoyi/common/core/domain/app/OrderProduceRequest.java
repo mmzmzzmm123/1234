@@ -85,7 +85,7 @@ public class OrderProduceRequest {
 		private int singleGroupPerson;
 
 		@ApiModelProperty("拉手是否退群:0否 1是")
-		private Integer nIsRobotExit;
+		private int robotExitStatus;
 	}
 
 }
