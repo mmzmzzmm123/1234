@@ -184,6 +184,8 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		order.setUserId(request.getLoginUser().getUserId());
 		order.setOrderType(product.getCategoryId());
 		order.setMerchantId(request.getLoginUser().getMerchantInfo().getMerchantId());
+		//todo 调试日志
+		log.info("submit_order:{}", order);
 		orderMapper.insert(order);
 
 		// 插入订单sku明细
@@ -388,6 +390,8 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		log.info("submit_order {}", orderId);
 		// 查询任务
 		Order order = orderMapper.selectById(orderId);
+		//todo 调试日志
+		log.info("submit_order: {}", order);
 		// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
 		if (order == null || (order.getOrderStatus().intValue() != 0 && order.getOrderStatus().intValue() != 1)) {
 			return R.fail(ErrInfoConfig.get(11006));
