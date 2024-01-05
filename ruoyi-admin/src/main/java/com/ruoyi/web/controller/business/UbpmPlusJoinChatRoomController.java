@@ -270,7 +270,7 @@ public class UbpmPlusJoinChatRoomController {
         dto.setName(input.getTaskName());
         dto.setOrderId(input.getOrderId());
         dto.setAutoCreateChatroomCount(0);
-        dto.setNIsRobotExit(1);
+        dto.setNIsRobotExit(input.getRobotExitStatus());
         dto.setNIsCountryCode(0);
         if(StrUtil.isNotBlank(input.getCountries())){
             dto.setNIsCountryCode(1);

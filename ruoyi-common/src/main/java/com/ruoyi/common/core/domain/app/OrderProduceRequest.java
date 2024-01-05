@@ -84,6 +84,8 @@ public class OrderProduceRequest {
 		@ApiModelProperty("单群拉人数")
 		private int singleGroupPerson;
 
+		@ApiModelProperty("拉手是否退群:0否 1是")
+		private int robotExitStatus;
 	}
 
 }

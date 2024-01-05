@@ -413,7 +413,18 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		return R.ok(response);
 	}
 
-	public void updateNameById(String orderId, String taskName) {
-		orderMapper.update(null, new LambdaUpdateWrapper<Order>().set(Order::getTaskName, taskName).eq(Order::getOrderId, orderId));
+	public void updateDataByTask(String orderId, String taskName, Integer robotExitStatus) {
+		Order order = orderMapper.selectById(orderId);
+		if (null == order) {
+			return;
+		}
+
+		order.setTaskName(taskName);
+		OrderProduceRequest.Params params = JSON.parseObject(order.getParams(), OrderProduceRequest.Params.class);
+		params.setRobotExitStatus(robotExitStatus);
+
+		LambdaUpdateWrapper<Order> updateWrapper = new LambdaUpdateWrapper<>();
+		updateWrapper.eq(Order::getOrderId, orderId).set(Order::getTaskName, taskName).set(Order::getParams, JSON.toJSONString(params));
+		orderMapper.update(null, updateWrapper);
 	}
 }
