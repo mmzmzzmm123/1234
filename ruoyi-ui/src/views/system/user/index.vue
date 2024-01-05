@@ -426,7 +426,12 @@ export default {
       rules: {
         userName: [
           { required: true, message: "用户名称不能为空", trigger: "blur" },
-          { min: 2, max: 20, message: '用户名称长度必须介于 2 和 20 之间', trigger: 'blur' }
+          { min: 2, max: 20, message: '用户名称长度必须介于 2 和 20 之间', trigger: 'blur' },
+          {
+            pattern: /^[0-9a-zA-Z]{2,20}$/,
+            message: '登录名称必须为字母或数字组合',
+            trigger: 'blur'
+          }
         ],
         nickName: [
           { required: true, message: "用户昵称不能为空", trigger: "blur" }
