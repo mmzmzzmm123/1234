@@ -141,7 +141,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		// warning 后续可能存在多SKU
 		ProductSku productSku = skuList.get(0);
 		String ownership = phoneOwnership.keySet().stream().findFirst().orElse("未知国家");
-		if (!ownership.contains(productSku.getCountyName())) {
+		if (!ownership.contains(productSku.getCountyName()) || !productSku.getCountyName().contains(ownership)) {
 			log.info("订单提交国家校验不通过 {} {}", ownership, productSku.getCountyName());
 			return AjaxResult.error(ErrInfoConfig.get(11013));
 		}
