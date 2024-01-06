@@ -17,8 +17,8 @@ import com.ruoyi.common.core.domain.entity.order.OrderRefund;
 import com.ruoyi.common.core.domain.entity.order.OrderSku;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.redis.RedisLock;
-import com.ruoyi.common.utils.*;
 import com.ruoyi.common.utils.Objects;
+import com.ruoyi.common.utils.*;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.*;
@@ -426,7 +426,10 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		params.setRobotExitStatus(robotExitStatus);
 
 		LambdaUpdateWrapper<Order> updateWrapper = new LambdaUpdateWrapper<>();
-		updateWrapper.eq(Order::getOrderId, orderId).set(Order::getTaskName, taskName).set(Order::getParams, JSON.toJSONString(params));
+		updateWrapper.eq(Order::getOrderId, orderId)
+				.set(Order::getOrderStatus, 1)
+				.set(Order::getTaskName, taskName)
+				.set(Order::getParams, JSON.toJSONString(params));
 		orderMapper.update(null, updateWrapper);
 	}
 
