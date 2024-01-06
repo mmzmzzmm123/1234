@@ -50,4 +50,11 @@ public interface OrderService {
 	 */
 	R<SubmitResponse> submit(String orderId);
 
+	/**
+	 * 根据更新时间查询订单列表
+	 *
+	 * @param orderRequest
+	 * @return
+	 */
+	PageInfo<OrderListResponseVO> getListByUpdateTime(SelectOrderDTO orderRequest);
 }

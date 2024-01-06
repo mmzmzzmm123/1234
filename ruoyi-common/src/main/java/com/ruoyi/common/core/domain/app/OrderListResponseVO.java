@@ -54,6 +54,8 @@ public class OrderListResponseVO {
 	@ApiModelProperty("备注")
 	private String remark;
 
+	private Date updateTime;
+
 	public void setPrice(Double price) {
 		if (price == null) {
 			this.price = 0d;

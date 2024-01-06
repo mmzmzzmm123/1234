@@ -1,11 +1,12 @@
 package com.ruoyi.system.mapper;
 
-import java.util.Date;
-import java.util.List;
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.common.core.domain.app.OrderRequest;
+import com.ruoyi.common.core.domain.app.SelectOrderDTO;
 import com.ruoyi.common.core.domain.entity.order.Order;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @Entity com.ruoyi.system.domain.MerchantAmountDetail
@@ -41,4 +42,8 @@ public interface OrderMapper extends BaseMapper<Order> {
 		entity.setUpdateTime(new Date());
 		updateById(entity);
 	}
+
+	Integer listCountByUpdateTime(SelectOrderDTO orderRequest);
+
+	List<Order> listByUpdateTime(SelectOrderDTO orderRequest);
 }

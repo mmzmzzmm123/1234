@@ -80,4 +80,44 @@
            AND o.task_name like concat('%', #{taskName}, '%')
        </if>
     </select>
+
+    <select id="listCountByUpdateTime" parameterType="com.ruoyi.common.core.domain.app.SelectOrderDTO" resultType="java.lang.Integer">
+        SELECT
+        count(o.order_id)
+        FROM
+        t_order as o
+        <if test="merchantType != null and merchantType == 1">
+            left join t_merchant_info as mi on mi.merchant_id = o.merchant_id
+        </if>
+        WHERE o.update_time &gt;= #{updateTime}
+        <if test="merchantType != null">
+            <if test="merchantType == 0">
+                AND o.merchant_id = #{merchantId}
+            </if>
+            <if test="merchantType == 1">
+                AND mi.pl_merchant_id = #{merchantId}
+            </if>
+        </if>
+    </select>
+
+    <select id="listByUpdateTime" parameterType="com.ruoyi.common.core.domain.app.SelectOrderDTO" resultType="com.ruoyi.common.core.domain.entity.order.Order">
+        SELECT
+        o.*
+        FROM
+        t_order as o
+        <if test="merchantType != null and merchantType == 1">
+            left join t_merchant_info as mi on mi.merchant_id = o.merchant_id
+        </if>
+        WHERE o.update_time &gt;= #{updateTime}
+        <if test="merchantType != null">
+            <if test="merchantType == 0">
+                AND o.merchant_id = #{merchantId}
+            </if>
+            <if test="merchantType == 1">
+                AND mi.pl_merchant_id = #{merchantId}
+            </if>
+        </if>
+        order by o.update_time desc
+        LIMIT ${(page-1)*limit},${limit}
+    </select>
 </mapper>

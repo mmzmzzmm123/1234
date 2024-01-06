@@ -128,4 +128,17 @@ public class OrderController extends BaseController {
 		}
 	}
 
+	@ApiOperation("根据更新时间查询订单列表")
+	@PostMapping("/new/list")
+	public R<PageInfo<OrderListResponseVO>> getListByUpdateTime(@RequestBody SelectOrderDTO dto) {
+		dto.setMerchantType(getMerchantType());
+		dto.setMerchantId(getMerchantId());
+		try {
+			return R.ok(orderService.getListByUpdateTime(dto));
+		} catch (Exception e) {
+			String id = Ids.getId();
+			log.error("OrderController.listByUpdate {} {}", id, dto, e);
+			return R.fail(ErrInfoConfig.getDynmic(10000, id));
+		}
+	}
 }

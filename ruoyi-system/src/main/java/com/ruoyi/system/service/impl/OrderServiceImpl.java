@@ -17,10 +17,8 @@ import com.ruoyi.common.core.domain.entity.order.OrderRefund;
 import com.ruoyi.common.core.domain.entity.order.OrderSku;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.redis.RedisLock;
-import com.ruoyi.common.utils.Ids;
-import com.ruoyi.common.utils.ListTools;
+import com.ruoyi.common.utils.*;
 import com.ruoyi.common.utils.Objects;
-import com.ruoyi.common.utils.UrlValidator;
 import com.ruoyi.common.utils.file.FileUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.*;
@@ -237,6 +235,11 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		}
 		final List<Order> orderList = orderMapper.list(orderRequest);
 
+		pageInfo.setList(handleOrderList(orderList));
+		return pageInfo;
+	}
+
+	private List<OrderListResponseVO> handleOrderList(List<Order> orderList) {
 		final List<Long> productIds = ListTools.extract(orderList, f -> f.getProductId());
 		final List<String> orderIds = ListTools.extract(orderList, f -> f.getOrderId());
 		// 批量查询商品
@@ -301,8 +304,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 			OrderListResponseVO response = BeanUtil.copyProperties(res, OrderListResponseVO.class);
 			responses.add(response);
 		}
-		pageInfo.setList(responses);
-		return pageInfo;
+		return responses;
 	}
 
 
@@ -426,5 +428,21 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		LambdaUpdateWrapper<Order> updateWrapper = new LambdaUpdateWrapper<>();
 		updateWrapper.eq(Order::getOrderId, orderId).set(Order::getTaskName, taskName).set(Order::getParams, JSON.toJSONString(params));
 		orderMapper.update(null, updateWrapper);
+	}
+
+	@Override
+	public PageInfo<OrderListResponseVO> getListByUpdateTime(SelectOrderDTO orderRequest) {
+		orderRequest.setUpdateTime(DateUtils.getMinuteAgoTime(-30));
+
+		PageInfo<OrderListResponseVO> pageInfo = new PageInfo<>();
+		int total = Objects.wrapNull(orderMapper.listCountByUpdateTime(orderRequest), 0);
+		pageInfo.setTotal(total);
+		if (total <= 0) {
+			return pageInfo;
+		}
+
+		List<Order> orderList = orderMapper.listByUpdateTime(orderRequest);
+		pageInfo.setList(handleOrderList(orderList));
+		return pageInfo;
 	}
 }
