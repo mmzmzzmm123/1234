@@ -134,17 +134,17 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 		// 手机号归属国家
 		Map<String, Long> phoneOwnership = analysisResult.getPhoneOwnership();
-		if (phoneOwnership.keySet().size() > 1) {
-			return AjaxResult.error(ErrInfoConfig.get(11013));
-		}
+//		if (phoneOwnership.keySet().size() > 1) {
+//			return AjaxResult.error(ErrInfoConfig.get(11013));
+//		}
 
 		// warning 后续可能存在多SKU
 		ProductSku productSku = skuList.get(0);
 		String ownership = phoneOwnership.keySet().stream().findFirst().orElse("未知国家");
-		if (!ownership.contains(productSku.getCountyName()) && !productSku.getCountyName().contains(ownership)) {
-			log.info("订单提交国家校验不通过 {} {}", ownership, productSku.getCountyName());
-			return AjaxResult.error(ErrInfoConfig.get(11013));
-		}
+//		if (!ownership.contains(productSku.getCountyName()) && !productSku.getCountyName().contains(ownership)) {
+//			log.info("订单提交国家校验不通过 {} {}", ownership, productSku.getCountyName());
+//			return AjaxResult.error(ErrInfoConfig.get(11013));
+//		}
 
 		// 计算价格
 		long price = orderPriceHandler.handle(skuList, groupSet.size(), singlePullPersonCount);
