@@ -89,7 +89,10 @@
         <if test="merchantType != null and merchantType == 1">
             left join t_merchant_info as mi on mi.merchant_id = o.merchant_id
         </if>
-        WHERE o.update_time &gt;= #{updateTime}
+        WHERE 1=1
+        <if test="updateTime != null">
+            and o.update_time &gt;= DATE_SUB(now(),INTERVAL 30 SECOND)
+        </if>
         <if test="merchantType != null">
             <if test="merchantType == 0">
                 AND o.merchant_id = #{merchantId}
@@ -108,7 +111,10 @@
         <if test="merchantType != null and merchantType == 1">
             left join t_merchant_info as mi on mi.merchant_id = o.merchant_id
         </if>
-        WHERE o.update_time &gt;= #{updateTime}
+        WHERE 1=1
+        <if test="updateTime != null">
+            and o.update_time &gt;= DATE_SUB(now(),INTERVAL 30 SECOND)
+        </if>
         <if test="merchantType != null">
             <if test="merchantType == 0">
                 AND o.merchant_id = #{merchantId}
