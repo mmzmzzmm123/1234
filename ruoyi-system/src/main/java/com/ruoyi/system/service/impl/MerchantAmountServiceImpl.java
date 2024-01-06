@@ -20,6 +20,7 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.NumberFormat;
 
 /**
  *
@@ -266,7 +267,10 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
         }
         Assert.notNull(merchantAmount, "商家不存在");
 
-        String describe = String.format("用户%s[%s]充值%s", dto.getCreateBy(), dto.getUserId(), BigDecimal.valueOf(dto.getAmount()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue());
+        double amount = BigDecimal.valueOf(dto.getAmount()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        NumberFormat instance = NumberFormat.getInstance();
+        instance.setGroupingUsed(false);
+        String describe = String.format("用户%s[%s]充值%s", dto.getCreateBy(), dto.getUserId(), instance.format(amount));
 
         MerchantAmountDetail detail = new MerchantAmountDetail();
         detail.setDetailId(IdWorker.getIdStr());
