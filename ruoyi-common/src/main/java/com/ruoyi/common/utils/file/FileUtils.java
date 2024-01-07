@@ -296,7 +296,10 @@ public class FileUtils
         }
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        list = reader.lines().distinct().collect(Collectors.toList());
+        list = reader.lines()
+                .map(it -> it.replaceAll("\uFEFF", ""))
+                .map(it -> it.replaceAll("\\D", ""))
+                .distinct().collect(Collectors.toList());
         try{
             inputStream.close();
         } catch (Exception ex){}
