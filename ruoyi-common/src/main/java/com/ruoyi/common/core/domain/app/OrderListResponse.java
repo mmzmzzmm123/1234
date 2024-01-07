@@ -53,4 +53,5 @@ public class OrderListResponse {
 	@ApiModelProperty("任务名称")
 	private String taskName;
 
+	private Date updateTime;
 }

@@ -435,9 +435,8 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 	@Override
 	public PageInfo<OrderListResponseVO> getListByUpdateTime(SelectOrderDTO orderRequest) {
-		orderRequest.setUpdateTime(DateUtils.getMinuteAgoTime(-30));
-
 		PageInfo<OrderListResponseVO> pageInfo = new PageInfo<>();
+
 		int total = Objects.wrapNull(orderMapper.listCountByUpdateTime(orderRequest), 0);
 		pageInfo.setTotal(total);
 		if (total <= 0) {

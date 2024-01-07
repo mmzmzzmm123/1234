@@ -194,4 +194,33 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils
         calendar.add(Calendar.MINUTE, amount);
         return new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss").format(calendar.getTime());
     }
+
+    /**
+     * 获取某个时间，n 年/月/周/日/时/分/秒前或者后的时间
+     * n为正时代表时间戳后的某个时间，n为负时代表时间戳前的某个时间，
+     */
+    public static String getStrDateAfterTime(String dateStr, int time, int timeType) {
+        try {
+            SimpleDateFormat df = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(df.parse(dateStr));
+            cal.add(timeType, time);
+            return new SimpleDateFormat( YYYY_MM_DD_HH_MM_SS).format(cal.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static String getDateAfterTime(Date date, int time, int timeType) {
+        try {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.add(timeType, time);
+            return new SimpleDateFormat( YYYY_MM_DD_HH_MM_SS).format(cal.getTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }
