@@ -8,6 +8,9 @@ import java.util.regex.Pattern;
  */
 public class UrlValidator {
     public static boolean validate(String url) {
+        if (StringUtils.isBlank(url)) {
+            return false;
+        }
         String regex = "^http(s)?\\:\\/\\/t\\.me\\/[a-zA-Z+\\-0-9\\_]+$";
 
         Pattern pattern = Pattern.compile(regex);

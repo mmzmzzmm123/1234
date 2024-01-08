@@ -42,6 +42,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -80,6 +81,14 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		if (!verifyGroupUrl(request.getParams().getGroupIds())) {
 			return AjaxResult.error(ErrInfoConfig.getDynmic(11000, "群来源有不合规则数据"));
 		}
+
+		// 去除群ID中的空格
+		List<String> groupIds = request.getParams().getGroupIds()
+				.stream()
+				.map(StringUtils::trimAllWhitespace)
+				.collect(Collectors.toList());
+		request.getParams().setGroupIds(groupIds);
+
 		// 校验商家
 		if (UserTools.checkMerchantInfo(request.getLoginUser()).isError()) {
 			return UserTools.checkMerchantInfo(request.getLoginUser());
