@@ -78,9 +78,6 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		if (request.getParams() == null || CollectionUtils.isEmpty(request.getParams().getGroupIds())) {
 			return AjaxResult.error(ErrInfoConfig.getDynmic(11000, "params"));
 		}
-		if (!verifyGroupUrl(request.getParams().getGroupIds())) {
-			return AjaxResult.error(ErrInfoConfig.getDynmic(11000, "群来源有不合规则数据"));
-		}
 
 		// 去除群ID中的空格
 		List<String> groupIds = request.getParams().getGroupIds()
@@ -88,6 +85,10 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 				.map(StringUtils::trimAllWhitespace)
 				.collect(Collectors.toList());
 		request.getParams().setGroupIds(groupIds);
+
+		if (!verifyGroupUrl(request.getParams().getGroupIds())) {
+			return AjaxResult.error(ErrInfoConfig.getDynmic(11000, "群来源有不合规则数据"));
+		}
 
 		// 校验商家
 		if (UserTools.checkMerchantInfo(request.getLoginUser()).isError()) {
