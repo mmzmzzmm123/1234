@@ -137,6 +137,11 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 		// 校验手机号码归属国家是否和商品一致
 		List<String> targetIds = request.getParams().getTargetIds();
+		targetIds = targetIds.stream().filter(com.ruoyi.common.utils.StringUtils::isNotBlank)
+				.map(it -> it.replaceAll("\uFEFF", ""))
+				.map(it -> it.replaceAll("\\D", "")).collect(Collectors.toList());
+
+		request.getParams().setTargetIds(targetIds);
 		AnalysisUploadPhoneResultVO analysisResult =
 				SpringUtils.getBean(UbpmPlusJoinChatRoomService.class).analysisPhoneNumbers(targetIds);
 
