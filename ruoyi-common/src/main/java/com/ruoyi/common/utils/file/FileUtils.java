@@ -297,6 +297,7 @@ public class FileUtils
 
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         list = reader.lines()
+                .filter(StringUtils::isNotBlank)
                 .map(it -> it.replaceAll("\uFEFF", ""))
                 .map(it -> it.replaceAll("\\D", ""))
                 .distinct().collect(Collectors.toList());
