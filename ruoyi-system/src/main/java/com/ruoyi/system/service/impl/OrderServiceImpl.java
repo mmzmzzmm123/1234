@@ -123,6 +123,11 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 				return AjaxResult.error(ErrInfoConfig.get(11010));
 			}
 		}
+		
+		if(request.getParams().getGroupIds().size() > request.getParams().getTargetIds().size()) {
+			// 群数大于目标 数
+			return AjaxResult.error(ErrInfoConfig.get(11015));
+		}
 
 		// 校验 商品
 		final Product product = (Product) result.data();
