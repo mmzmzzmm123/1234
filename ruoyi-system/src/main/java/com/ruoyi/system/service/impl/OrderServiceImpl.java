@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.config.ErrInfoConfig;
+import com.ruoyi.common.constant.MerchantType;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.app.*;
@@ -248,6 +249,12 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 	@Override
 	public PageInfo<OrderListResponseVO> list(OrderRequest orderRequest) {
 		PageInfo<OrderListResponseVO> pageInfo = new PageInfo<>();
+
+		if (!checkSearchMerchantId(orderRequest)) {
+			pageInfo.setTotal(0);
+			return pageInfo;
+		}
+
 		int total = Objects.wrapNull(orderMapper.listCount(orderRequest), 0);
 		pageInfo.setTotal(total);
 		if (total <= 0) {
@@ -257,6 +264,23 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 		pageInfo.setList(handleOrderList(orderList));
 		return pageInfo;
+	}
+
+	//搜索商家id时验证
+	private boolean checkSearchMerchantId(OrderRequest orderRequest) {
+		if (orderRequest.getMerchantType() == null) {
+			return true;
+		}
+		if (orderRequest.getMerchantType() != MerchantType.ORDINARY) {
+			return true;
+		}
+		if (StringUtils.isEmpty(orderRequest.getMerchantId())) {
+			return true;
+		}
+		if (orderRequest.getMerchantId().equals(orderRequest.getCurrMerchantId())) {
+			return true;
+		}
+		return false;
 	}
 
 	private List<OrderListResponseVO> handleOrderList(List<Order> orderList) {

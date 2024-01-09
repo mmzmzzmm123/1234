@@ -82,7 +82,7 @@ public class OrderController extends BaseController {
 	@PostMapping("list")
 	public R<PageInfo<OrderListResponseVO>> list(@RequestBody OrderRequest dto) {
 		dto.setMerchantType(getMerchantType());
-		dto.setMerchantId(getMerchantId());
+		dto.setCurrMerchantId(getMerchantId());
 		try {
 			PageInfo<OrderListResponseVO> res = orderService.list(dto);
 			return R.ok(res);

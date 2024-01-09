@@ -27,7 +27,13 @@ public class OrderRequest {
 	private int limit = 10;
 
 	private Integer merchantType;
+	private String currMerchantId;
+
+	@ApiModelProperty("商家id")
 	private String merchantId;
+
+	@ApiModelProperty("商家名称")
+	private String merchantName;
 
 	@ApiModelProperty("任务名称")
 	private String taskName;
