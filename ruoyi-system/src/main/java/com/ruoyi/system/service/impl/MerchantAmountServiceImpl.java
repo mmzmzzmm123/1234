@@ -57,9 +57,24 @@ public class MerchantAmountServiceImpl extends ServiceImpl<MerchantAmountMapper,
         Assert.notNull(merchantAmount, "商家不存在");
         Assert.isTrue(merchantAmount.getAvailableAmount() >= dto.getAmount(), "商家可用余额不足");
 
+        MerchantAmountDetail detail = new MerchantAmountDetail();
+        detail.setDetailId(IdWorker.getIdStr());
+        detail.setMerchantId(dto.getMerchantId());
+        detail.setOperationType(AmountOperationType.FREEZE.getOperationType());
+        detail.setDescribe(AmountOperationType.FREEZE.getOperationName());
+        detail.setChangeBefore(merchantAmount.getAvailableAmount());
+        detail.setChangeAmount(dto.getAmount());
+        detail.setAmountType(1);
+
         merchantAmount.setLockAmount(merchantAmount.getLockAmount() + dto.getAmount());
         merchantAmount.setAvailableAmount(merchantAmount.getTotalAmount() - merchantAmount.getLockAmount());
         super.updateById(merchantAmount);
+
+        // 记录冻结详情
+        detail.setChangeAfter(merchantAmount.getAvailableAmount());
+        detail.setOrderId(dto.getOrderId());
+        merchantAmountDetailService.save(detail);
+
         // 保存冻结资金记录
         String frozenId = IdWorker.getIdStr();
         MerchantAmountFrozenDetail frozenDetail = new MerchantAmountFrozenDetail();

@@ -12,6 +12,7 @@ public enum AmountOperationType {
     ,REFUND(3, "退款")
     ,DEDUCTION(4, "扣款")
     ,RECOVERY(5, "回收")
+    ,FREEZE(6, "冻结")
 
     ;
 
