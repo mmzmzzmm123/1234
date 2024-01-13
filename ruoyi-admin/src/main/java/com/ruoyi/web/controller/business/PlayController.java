@@ -1,7 +1,6 @@
 package com.ruoyi.web.controller.business;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
@@ -24,8 +23,6 @@ import java.util.List;
 /**
  * @Author : zengyi
  */
-//todo 调试用，上线前去除
-@Anonymous
 @Api(tags = "炒群任务")
 @RestController
 @RequestMapping("/play")
