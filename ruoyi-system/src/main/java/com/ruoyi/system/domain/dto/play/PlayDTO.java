@@ -16,8 +16,23 @@ public class PlayDTO {
     @ApiModelProperty(value = "群来源：0-平台提供 1-外部群")
     private Integer source;
 
-    @ApiModelProperty(value = "提交群信息参数")
-    private HypeGroupParams groupParams;
+    @ApiModelProperty("群需求数量")
+    private Integer groupNum;
+
+    @ApiModelProperty("群注册天数")
+    private Integer groupDay;
+
+    @ApiModelProperty("炒群条件：0-人数 1-时间")
+    private Integer groupCondition;
+
+    @ApiModelProperty("群人数")
+    private Integer userNum;
+
+    @ApiModelProperty("时间条件开始类型：0-立即开始 1定时开始")
+    private Integer startType;
+
+    @ApiModelProperty("群邀请链接")
+    private List<String> groupUrlList;
 
     @ApiModelProperty(value = "群消息包装")
     private List<GroupPack> groupPackList;

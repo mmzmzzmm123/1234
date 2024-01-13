@@ -21,10 +21,7 @@ public class VibeRuleServiceImpl implements IVibeRuleService {
     public R<VibeRuleDTO> info(Integer id) {
         VibeRuleDTO ret = new VibeRuleDTO();
         ret.setId(1);
-
-        VibeRuleDTO.ComprehensiveParam comprehensiveParam = new VibeRuleDTO.ComprehensiveParam();
-        comprehensiveParam.setGroupNum(1);
-        ret.setDispatch(comprehensiveParam);
+        ret.setGroupNum(1);
         return R.ok(ret);
     }
 }
