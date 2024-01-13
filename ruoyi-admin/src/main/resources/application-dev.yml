@@ -100,6 +100,12 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+  data:
+    mongodb:
+      host: 172.19.93.120
+      port: 27017
+      database: ut-blueprint
+      authentication-database: none
 
 # token配置
 token:

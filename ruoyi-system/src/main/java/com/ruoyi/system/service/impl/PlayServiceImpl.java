@@ -1,9 +1,12 @@
 package com.ruoyi.system.service.impl;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.system.domain.dto.play.PlayDTO;
+import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
+import com.ruoyi.system.domain.vo.play.QueryPlayVO;
 import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.service.IPlayService;
 import org.springframework.stereotype.Service;
@@ -45,5 +48,12 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         PlayDTO playDTO = new PlayDTO();
         playDTO.setId("1");
         return R.ok(playDTO);
+    }
+
+    @Override
+    public Page<QueryPlayVO> page(QueryPlayDTO dto) {
+        Page<QueryPlayVO> page = new Page<>(dto.getPage(),dto.getLimit());
+
+        return page;
     }
 }
