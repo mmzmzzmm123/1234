@@ -64,4 +64,9 @@ public class Play {
      * 接粉号池
      */
     private String urlPool;
+
+    /**
+     * 操作员id
+     */
+    private String sysUserId;
 }

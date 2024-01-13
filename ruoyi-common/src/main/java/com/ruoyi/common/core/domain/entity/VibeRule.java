@@ -116,4 +116,9 @@ public class VibeRule {
      * 根据内容目标国优选群和水军（全局）
      */
     private String targetParams;
+
+    /**
+     * 操作员id
+     */
+    private String sysUserId;
 }
