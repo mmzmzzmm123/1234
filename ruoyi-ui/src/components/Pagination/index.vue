@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { scrollTo } from '@/utils/scroll-to'
+import {scrollTo} from '@/utils/scroll-to'
 
 export default {
   name: 'Pagination',
@@ -36,7 +36,7 @@ export default {
     pageSizes: {
       type: Array,
       default() {
-        return [10, 20, 30, 50]
+        return [5, 10, 20, 30, 50]
       }
     },
     // 移动端页码按钮的数量端默认值5
@@ -62,8 +62,7 @@ export default {
     }
   },
   data() {
-    return {
-    };
+    return {};
   },
   computed: {
     currentPage: {
@@ -88,13 +87,13 @@ export default {
       if (this.currentPage * val > this.total) {
         this.currentPage = 1
       }
-      this.$emit('pagination', { page: this.currentPage, limit: val })
+      this.$emit('pagination', {page: this.currentPage, limit: val})
       if (this.autoScroll) {
         scrollTo(0, 800)
       }
     },
     handleCurrentChange(val) {
-      this.$emit('pagination', { page: val, limit: this.pageSize })
+      this.$emit('pagination', {page: val, limit: this.pageSize})
       if (this.autoScroll) {
         scrollTo(0, 800)
       }
@@ -108,6 +107,7 @@ export default {
   background: #fff;
   padding: 32px 16px;
 }
+
 .pagination-container.hidden {
   display: none;
 }
