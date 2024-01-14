@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.common.mapper.SdhcircuitMapper">
+    <resultMap type="Sdhcircuit" id="SdhcircuitResult">
+        <result property="id" column="id"/>
+        <result property="circity" column="circity"/>
+        <result property="ciroperator" column="ciroperator"/>
+        <result property="cirproject" column="cirproject"/>
+        <result property="cirname" column="cirname"/>
+        <result property="circode" column="circode"/>
+        <result property="cirtype" column="cirtype"/>
+        <result property="cirbandwidth" column="cirbandwidth"/>
+        <result property="cirinfo" column="cirinfo"/>
+        <result property="manageinfo" column="manageinfo"/>
+        <result property="ainfo" column="ainfo"/>
+        <result property="aaddress" column="aaddress"/>
+        <result property="zinfo" column="zinfo"/>
+        <result property="zaddress" column="zaddress"/>
+        <result property="projectname" column="projectname"/>
+        <result property="updatetime" column="updatetime"/>
+        <result property="status" column="status"/>
+        <result property="operator" column="operator"/>
+        <result property="updateoperator" column="updateoperator"/>
+        <result property="south" column="south"/>
+    </resultMap>
+
+    <sql id="selectSdhcircuitVo">
+        select id,
+               circity,
+               ciroperator,
+               cirproject,
+               cirname,
+               circode,
+               cirtype,
+               cirbandwidth,
+               cirinfo,
+               manageinfo,
+               ainfo,
+               aaddress,
+               zinfo,
+               zaddress,
+               projectname,
+               updatetime,
+               status,
+               operator,
+               updateoperator,
+               south
+        from sdhcircuit
+    </sql>
+
+    <select id="selectSdhcircuitList" parameterType="Sdhcircuit" resultMap="SdhcircuitResult">
+        <include refid="selectSdhcircuitVo"/>
+        <where>
+            <if test="circity != null  and circity != ''">
+                and circity like concat('%', #{circity}, '%')
+            </if>
+            <if test="ciroperator != null  and ciroperator != ''">
+                and ciroperator like concat('%', #{ciroperator}, '%')
+            </if>
+            <if test="cirproject != null  and cirproject != ''">
+                and cirproject like concat('%', #{cirproject}, '%')
+            </if>
+            <if test="cirname != null  and cirname != ''">
+                and cirname like concat('%', #{cirname}, '%')
+            </if>
+            <if test="circode != null  and circode != ''">
+                and circode like concat('%', #{circode}, '%')
+            </if>
+            <if test="cirtype != null  and cirtype != ''">
+                and cirtype like concat('%', #{cirtype}, '%')
+            </if>
+            <if test="cirbandwidth != null  and cirbandwidth != ''">
+                and cirbandwidth like concat('%', #{cirbandwidth}, '%')
+            </if>
+            <if test="cirinfo != null  and cirinfo != ''">
+                and cirinfo like concat('%', #{cirinfo}, '%')
+            </if>
+            <if test="manageinfo != null  and manageinfo != ''">
+                and manageinfo like concat('%', #{manageinfo}, '%')
+            </if>
+            <if test="ainfo != null  and ainfo != ''">
+                and ainfo like concat('%', #{ainfo}, '%')
+            </if>
+            <if test="aaddress != null  and aaddress != ''">
+                and aaddress like concat('%', #{aaddress}, '%')
+            </if>
+            <if test="zinfo != null  and zinfo != ''">
+                and zinfo like concat('%', #{zinfo}, '%')
+            </if>
+            <if test="zaddress != null  and zaddress != ''">
+                and zaddress like concat('%', #{zaddress}, '%')
+            </if>
+            <if test="projectname != null  and projectname != ''">
+                and projectname like concat('%', #{projectname}, '%')
+            </if>
+            <if test="updatetime != null ">
+                and updatetime like concat('%', #{updatetime}, '%')
+            </if>
+            <if test="status != null  and status != ''">
+                and status like concat('%', #{status}, '%')
+            </if>
+            <if test="operator != null  and operator != ''">
+                and operator like concat('%', #{operator}, '%')
+            </if>
+            <if test="updateoperator != null  and updateoperator != ''">
+                and updateoperator like concat('%', #{updateoperator}, '%')
+            </if>
+            <if test="south != null  and south != ''">
+                and south like concat('%', #{south}, '%')
+            </if>
+        </where>
+    </select>
+    <select id="exportSdhcircuitList" parameterType="Sdhcircuit" resultMap="SdhcircuitResult">
+        select id,
+        circity,
+        b.dict_label ciroperator,
+        cirproject,
+        cirname,
+        circode,
+        d.dict_label cirtype,
+        cirbandwidth,
+        cirinfo,
+        manageinfo,
+        ainfo,
+        aaddress,
+        zinfo,
+        zaddress,
+        projectname,
+        updatetime,
+        c.dict_label status,
+        operator,
+        updateoperator,
+        e.dict_label south
+        from sdhcircuit a ,
+        (select * from sys_dict_data where dict_type='yys')b,
+        (select * from sys_dict_data where dict_type='dlzt')c,
+        (select * from sys_dict_data where dict_type='cirtype')d,
+        (select * from sys_dict_data where dict_type='zt')e
+        where a.ciroperator=b.dict_value
+        and a.status=c.dict_value
+        and a.cirtype=d.dict_value
+        and a.south=e.dict_value
+        <!--        <where>-->
+        <if test="circity != null  and circity != ''">
+            and a.circity like concat('%', #{circity}, '%')
+        </if>
+        <if test="ciroperator != null  and ciroperator != ''">
+            and a.ciroperator like concat('%', #{ciroperator}, '%')
+        </if>
+        <if test="cirproject != null  and cirproject != ''">
+            and a.cirproject like concat('%', #{cirproject}, '%')
+        </if>
+        <if test="cirname != null  and cirname != ''">
+            and a.cirname like concat('%', #{cirname}, '%')
+        </if>
+        <if test="circode != null  and circode != ''">
+            and a.circode like concat('%', #{circode}, '%')
+        </if>
+        <if test="cirtype != null  and cirtype != ''">
+            and a.cirtype like concat('%', #{cirtype}, '%')
+        </if>
+        <if test="cirbandwidth != null  and cirbandwidth != ''">
+            and a.cirbandwidth like concat('%', #{cirbandwidth}, '%')
+        </if>
+        <if test="cirinfo != null  and cirinfo != ''">
+            and a.cirinfo like concat('%', #{cirinfo}, '%')
+        </if>
+        <if test="manageinfo != null  and manageinfo != ''">
+            and a.manageinfo like concat('%', #{manageinfo}, '%')
+        </if>
+        <if test="ainfo != null  and ainfo != ''">
+            and a.ainfo like concat('%', #{ainfo}, '%')
+        </if>
+        <if test="aaddress != null  and aaddress != ''">
+            and a.aaddress like concat('%', #{aaddress}, '%')
+        </if>
+        <if test="zinfo != null  and zinfo != ''">
+            and a.zinfo like concat('%', #{zinfo}, '%')
+        </if>
+        <if test="zaddress != null  and zaddress != ''">
+            and a.zaddress like concat('%', #{zaddress}, '%')
+        </if>
+        <if test="projectname != null  and projectname != ''">
+            and a.projectname like concat('%', #{projectname}, '%')
+        </if>
+        <if test="updatetime != null ">
+            and a.updatetime like concat('%', #{updatetime}, '%')
+        </if>
+        <if test="status != null  and status != ''">
+            and a.status like concat('%', #{status}, '%')
+        </if>
+        <if test="operator != null  and operator != ''">
+            and a.operator like concat('%', #{operator}, '%')
+        </if>
+        <if test="updateoperator != null  and updateoperator != ''">
+            and a.updateoperator like concat('%', #{updateoperator}, '%')
+        </if>
+        <if test="south != null  and south != ''">
+            and a.south like concat('%', #{south}, '%')
+        </if>
+        <!--        </where>-->
+    </select>
+
+    <select id="selectSdhcircuitById" parameterType="Long" resultMap="SdhcircuitResult">
+        <include refid="selectSdhcircuitVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertSdhcircuit" parameterType="Sdhcircuit" useGeneratedKeys="true" keyProperty="id">
+        insert into sdhcircuit
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="circity != null and circity != ''">
+                circity,
+            </if>
+            <if test="ciroperator != null and ciroperator != ''">
+                ciroperator,
+            </if>
+            <if test="cirproject != null and cirproject != ''">
+                cirproject,
+            </if>
+            <if test="cirname != null and cirname != ''">
+                cirname,
+            </if>
+            <if test="circode != null and circode != ''">
+                circode,
+            </if>
+            <if test="cirtype != null and cirtype != ''">
+                cirtype,
+            </if>
+            <if test="cirbandwidth != null and cirbandwidth != ''">
+                cirbandwidth,
+            </if>
+            <if test="cirinfo != null and cirinfo != ''">
+                cirinfo,
+            </if>
+            <if test="manageinfo != null and manageinfo != ''">
+                manageinfo,
+            </if>
+            <if test="ainfo != null and ainfo != ''">
+                ainfo,
+            </if>
+            <if test="aaddress != null and aaddress != ''">
+                aaddress,
+            </if>
+            <if test="zinfo != null and zinfo != ''">
+                zinfo,
+            </if>
+            <if test="zaddress != null and zaddress != ''">
+                zaddress,
+            </if>
+            <if test="projectname != null and projectname != ''">
+                projectname,
+            </if>
+            <if test="updatetime != null">
+                updatetime,
+            </if>
+            <if test="status != null and status != ''">
+                status,
+            </if>
+            <if test="operator != null and operator != ''">
+                operator,
+            </if>
+            <if test="updateoperator != null and updateoperator != ''">
+                updateoperator,
+            </if>
+            <if test="south != null and south != ''">
+                south,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="circity != null and circity != ''">
+                #{circity},
+            </if>
+            <if test="ciroperator != null and ciroperator != ''">
+                #{ciroperator},
+            </if>
+            <if test="cirproject != null and cirproject != ''">
+                #{cirproject},
+            </if>
+            <if test="cirname != null and cirname != ''">
+                #{cirname},
+            </if>
+            <if test="circode != null and circode != ''">
+                #{circode},
+            </if>
+            <if test="cirtype != null and cirtype != ''">
+                #{cirtype},
+            </if>
+            <if test="cirbandwidth != null and cirbandwidth != ''">
+                #{cirbandwidth},
+            </if>
+            <if test="cirinfo != null and cirinfo != ''">
+                #{cirinfo},
+            </if>
+            <if test="manageinfo != null and manageinfo != ''">
+                #{manageinfo},
+            </if>
+            <if test="ainfo != null and ainfo != ''">
+                #{ainfo},
+            </if>
+            <if test="aaddress != null and aaddress != ''">
+                #{aaddress},
+            </if>
+            <if test="zinfo != null and zinfo != ''">
+                #{zinfo},
+            </if>
+            <if test="zaddress != null and zaddress != ''">
+                #{zaddress},
+            </if>
+            <if test="projectname != null and projectname != ''">
+                #{projectname},
+            </if>
+            <if test="updatetime != null">
+                #{updatetime},
+            </if>
+            <if test="status != null and status != ''">
+                #{status},
+            </if>
+            <if test="operator != null and operator != ''">
+                #{operator},
+            </if>
+            <if test="updateoperator != null and updateoperator != ''">
+                #{updateoperator},
+            </if>
+            <if test="south != null and south != ''">
+                #{south},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="updateSdhcircuit" parameterType="Sdhcircuit">
+        update sdhcircuit
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="circity != null and circity != ''">
+                circity = #{circity},
+            </if>
+            <if test="ciroperator != null and ciroperator != ''">
+                ciroperator = #{ciroperator},
+            </if>
+            <if test="cirproject != null and cirproject != ''">
+                cirproject = #{cirproject},
+            </if>
+            <if test="cirname != null and cirname != ''">
+                cirname = #{cirname},
+            </if>
+            <if test="circode != null and circode != ''">
+                circode = #{circode},
+            </if>
+            <if test="cirtype != null and cirtype != ''">
+                cirtype = #{cirtype},
+            </if>
+            <if test="cirbandwidth != null and cirbandwidth != ''">
+                cirbandwidth = #{cirbandwidth},
+            </if>
+            <if test="cirinfo != null and cirinfo != ''">
+                cirinfo = #{cirinfo},
+            </if>
+            <if test="manageinfo != null and manageinfo != ''">
+                manageinfo = #{manageinfo},
+            </if>
+            <if test="ainfo != null and ainfo != ''">
+                ainfo = #{ainfo},
+            </if>
+            <if test="aaddress != null and aaddress != ''">
+                aaddress = #{aaddress},
+            </if>
+            <if test="zinfo != null and zinfo != ''">
+                zinfo = #{zinfo},
+            </if>
+            <if test="zaddress != null and zaddress != ''">
+                zaddress = #{zaddress},
+            </if>
+            <if test="projectname != null and projectname != ''">
+                projectname = #{projectname},
+            </if>
+            <!--            <if test="updatetime != null">updatetime = #{updatetime},</if>-->
+
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+            <if test="operator != null and operator != ''">
+                operator = #{operator},
+            </if>
+            <!--            <if test="updateoperator != null and updateoperator != ''">updateoperator = #{updateoperator},</if>-->
+            <if test="south != null and south != ''">
+                south = #{south},
+            </if>
+            updatetime = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSdhcircuitById" parameterType="Long">
+        delete
+        from sdhcircuit
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteSdhcircuitByIds" parameterType="String">
+        delete from sdhcircuit where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
