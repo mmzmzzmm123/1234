@@ -6,9 +6,7 @@ import lombok.experimental.Accessors;
 
 import java.util.Objects;
 
-/**
- * @author Jing.Zhang
- */
+
 @Data
 @Accessors(chain = true)
 public class OpenApiResult<T> {
