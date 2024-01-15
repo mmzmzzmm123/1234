@@ -2,7 +2,7 @@ package com.ruoyi.web.controller.business;
 
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.system.domain.dto.play.VibeRuleDTO;
+import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
 import com.ruoyi.system.service.IVibeRuleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
