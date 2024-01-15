@@ -38,7 +38,7 @@ public class PlayDTO {
     private List<GroupPack> groupPackList;
 
     @ApiModelProperty(value = "每个群演员数")
-    private Integer performerNum;
+    private Integer robotNum;
 
     @ApiModelProperty(value = "演员信息")
     private List<Performer> performerList;
@@ -60,4 +60,6 @@ public class PlayDTO {
 
     @ApiModelProperty(value = "粉号池")
     private String urlPool;
+
+    private String merchantId;
 }

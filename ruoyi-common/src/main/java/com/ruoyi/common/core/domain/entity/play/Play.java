@@ -107,6 +107,11 @@ public class Play {
      */
     private BigDecimal speed;
 
+    /**
+     * 剧本执行进度：0未开始 1入群 2混淆中 3号分配 4人设包装 5剧本发送
+     */
+    private Integer scanProgress;
+
     public SendMechanism getSendMechanism() {
         if (StringUtils.isBlank(this.sendMechanism)) {
             return null;

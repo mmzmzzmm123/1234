@@ -69,6 +69,16 @@ public class PlayMessagePush {
      */
     private Integer createType;
 
+    /**
+     * 人设包装进度:0未开始 1成功 2失败
+     */
+    private Integer robotPackFlag;
+
+    /**
+     * 号分配进度:0未分配 1成功 2失败
+     */
+    private Integer robotAllocationFlag;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }

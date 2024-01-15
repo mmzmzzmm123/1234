@@ -17,7 +17,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     public R<String> create(PlayDTO dto) {
         //t_play_info
 
-        //剧本内容，根据label将演员和剧本对应
+        //t_play_message
 
         //判断混淆状态 t_play_message_confound
 

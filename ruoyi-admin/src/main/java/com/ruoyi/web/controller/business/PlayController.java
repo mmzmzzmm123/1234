@@ -40,7 +40,8 @@ public class PlayController extends BaseController {
     @ApiOperation("创建炒群任务")
     @PostMapping(value = "/create")
     public R<String> create(@RequestBody PlayDTO dto) {
-       return playService.create(dto);
+       dto.setMerchantId(getMerchantId());
+        return playService.create(dto);
     }
 
     @ApiOperation("修改炒群任务")
