@@ -12,12 +12,15 @@ import com.ruoyi.common.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.components.RandomListPicker;
+import com.ruoyi.system.domain.dto.GroupQueryDTO;
 import com.ruoyi.system.domain.dto.play.PlayIntoGroupTask;
 import com.ruoyi.system.domain.dto.robot.GetRobotDTO;
+import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.robot.GetRobotVO;
 import com.ruoyi.system.mapper.PlayIntoGroupTaskMapper;
 import com.ruoyi.system.service.IVibeRuleService;
 import com.ruoyi.system.service.RobotStatisticsService;
+import com.ruoyi.system.service.business.GroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,11 +46,12 @@ public class IntoGroupService {
     @Autowired
     private RobotStatisticsService robotStatisticsService;
 
+    @Autowired
+    private GroupService groupService;
+
 
 
     public void  into(PlayDTO playDTO){
-        //获取入群的机器人
-        List robotList = new ArrayList();
         //获取需要的机器人数量
         List<Performer> performers = playDTO.getPerformerList();
         //统计需要管理员权限的机器人
@@ -75,20 +79,24 @@ public class IntoGroupService {
         GetRobotDTO adminDTO = new GetRobotDTO();
         //获取可以被设置管理员的机器人
         adminDTO.setCount(adminNum);
+        /**------未完成-------**/
         adminDTO.setCountryCode(new ArrayList<>());
         //调用获取机器人接口
         List<GetRobotVO> robotAdminVOS =  robotStatisticsService.getRobot(adminDTO);
-        robotList.addAll(robotAdminVOS);
         //获取可以不需要设置成管理员的机器人
         GetRobotDTO robotDTO = new GetRobotDTO();
         robotDTO.setCount(robotNum);
+        /**------未完成-------**/
         robotDTO.setCountryCode(new ArrayList<>());
         List<GetRobotVO> robotVOS = robotStatisticsService.getRobot(robotDTO);
-        robotList.addAll(robotVOS);
         //判定是否是平台提供群
         if (playDTO.getGroupSource() == 0){
+            GroupQueryDTO groupQueryDTO = new GroupQueryDTO();
+            groupQueryDTO.setGroupNum(playDTO.getGroupNum());
+            groupQueryDTO.setRegistrationDay(playDTO.getGroupDay());
+            groupQueryDTO.setCountryCode(new ArrayList<>());
             //从波少那边获取足够的群
-            List groupList = new ArrayList<>();
+            List<GroupInfoVO> groupList = groupService.queryGroup(groupQueryDTO);
             //拆分入群任务
             for (int i=0;i< playDTO.getRobotNum();i++){
                 PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
@@ -127,9 +135,9 @@ public class IntoGroupService {
                     personIntoGroupTask.setModifyTime(new Date());
                     personIntoGroupTask.setMerchantId(playDTO.getMerchantId());
                     personIntoGroupTask.setIntoType(1);
-                    int index = RandomListPicker.pickRandom(robotList);
-                    personIntoGroupTask.setPersonId(robotList.get(index));
-                    robotList.remove(index);
+//                    int index = RandomListPicker.pickRandom(robotList);
+//                    personIntoGroupTask.setPersonId(robotList.get(index));
+//                    robotList.remove(index);
                     personIntoGroupTask.setTaskState(1);
                     personIntoGroupTasks.add(personIntoGroupTask);
                 }
