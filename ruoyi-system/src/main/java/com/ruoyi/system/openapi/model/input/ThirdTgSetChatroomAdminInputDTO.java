@@ -1,4 +1,4 @@
-package com.ruoyi.common.openapi.model.input;
+package com.ruoyi.system.openapi.model.input;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

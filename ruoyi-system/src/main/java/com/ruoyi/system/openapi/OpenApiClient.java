@@ -1,14 +1,15 @@
-package com.ruoyi.common.openapi;
+package com.ruoyi.system.openapi;
 
 import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
 import com.ruoyi.common.openapi.model.input.*;
-import com.ruoyi.common.openapi.model.output.ExtTgBatchRobotSimpInfoData;
-import com.ruoyi.common.openapi.model.output.TgBaseOutputDTO;
+import com.ruoyi.system.openapi.model.output.ExtTgBatchRobotSimpInfoData;
+import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.openapi.model.input.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;

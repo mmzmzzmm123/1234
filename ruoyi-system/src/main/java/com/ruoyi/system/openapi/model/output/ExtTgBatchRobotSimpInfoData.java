@@ -1,4 +1,4 @@
-package com.ruoyi.common.openapi.model.output;
+package com.ruoyi.system.openapi.model.output;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

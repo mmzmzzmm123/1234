@@ -1,4 +1,4 @@
-package com.ruoyi.common.openapi;
+package com.ruoyi.system.openapi;
 
 import com.ruoyi.common.exception.GlobalException;
 import lombok.Data;
