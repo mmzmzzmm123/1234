@@ -10,11 +10,15 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.entity.SourceMixtureResolve;
 
+import com.ruoyi.entity.SourceZeroBill;
 import com.ruoyi.excel.listener.MixtureResolveListener;
 import com.ruoyi.excel.bo.MixtureResolveExcel;
 import com.ruoyi.mapper.SourceMixtureResolveMapper;
+import com.ruoyi.req.SourcePageQeq;
 import com.ruoyi.service.ISourceMixtureResolveService;
+import com.ruoyi.vo.SourceMixtureResolveVO;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +27,8 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -94,11 +100,31 @@ public class SourceMixtureResolveServiceImpl extends ServiceImpl<SourceMixtureRe
     }
 
     @Override
-    public Page<SourceMixtureResolve> dataList(PageDto pageDto) {
-        Page<SourceMixtureResolve> page = new Page<>(pageDto.getPageNum(),pageDto.getPageSize());
-        return lambdaQuery().eq(SourceMixtureResolve::getProjectNo,124)
-                .eq(SourceMixtureResolve::getDeleted,true)
-                .page(page);
+    public List<SourceMixtureResolveVO> dataList(SourcePageQeq req) {
+        List<SourceMixtureResolve> list = lambdaQuery().eq(SourceMixtureResolve::getProjectNo, 124)
+                .eq(SourceMixtureResolve::getDeleted, true)
+                .like(SourceMixtureResolve::getItemNum,req.getItemNum())
+                .like(SourceMixtureResolve::getItemName,req.getItemName())
+                .list();
+        if (CollectionUtils.isEmpty(list)){
+            return new ArrayList<>();
+        }
+        Map<String, List<SourceMixtureResolve>> mixtureResolveMap = list.stream().collect(Collectors.groupingBy(SourceMixtureResolve::getItemNum));
+        List<SourceMixtureResolveVO> sourceMixtureResolveVOS = new ArrayList<>();
+        for (SourceMixtureResolve sourceMixtureResolve : list) {
+            SourceMixtureResolveVO sourceMixtureResolveVO = new SourceMixtureResolveVO();
+            List<SourceMixtureResolveVO.mixtureResolveVOBean> mixtureResolveVOBeans = new ArrayList<>();
+            BeanUtils.copyProperties(sourceMixtureResolve,sourceMixtureResolveVO);
+            List<SourceMixtureResolve> sourceMixtureResolves = mixtureResolveMap.get(sourceMixtureResolve.getItemNum());
+            for (SourceMixtureResolve mixtureResolve : sourceMixtureResolves) {
+                SourceMixtureResolveVO.mixtureResolveVOBean mixtureResolveVOBean = new SourceMixtureResolveVO.mixtureResolveVOBean();
+                BeanUtils.copyProperties(mixtureResolve,mixtureResolveVOBean);
+                mixtureResolveVOBeans.add(mixtureResolveVOBean);
+            }
+            sourceMixtureResolveVO.setSourceMixtureResolveVOBeanList(mixtureResolveVOBeans);
+            sourceMixtureResolveVOS.add(sourceMixtureResolveVO);
+        }
+        return sourceMixtureResolveVOS;
     }
 
     @Override

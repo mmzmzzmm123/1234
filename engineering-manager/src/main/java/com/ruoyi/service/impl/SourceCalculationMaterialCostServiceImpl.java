@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * <p>
@@ -57,10 +58,9 @@ public class SourceCalculationMaterialCostServiceImpl extends ServiceImpl<Source
     }
 
     @Override
-    public Page<SourceCalculationMaterialCost> dataList(PageDto pageDto) {
-        Page<SourceCalculationMaterialCost> page = new Page<>(pageDto.getPageNum(),pageDto.getPageSize());
+    public List<SourceCalculationMaterialCost> dataList() {
         return lambdaQuery().eq(SourceCalculationMaterialCost::getProjectNo,124)
                 .eq(SourceCalculationMaterialCost::getDeleted,true)
-                .page(page);
+                .list();
     }
 }

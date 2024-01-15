@@ -1,9 +1,11 @@
 package com.ruoyi.web.controller.source;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ruoyi.common.PageDto;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.entity.SourceZeroBill;
+import com.ruoyi.req.SourcePageQeq;
 import com.ruoyi.service.ISourceZeroBillService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * <p>
@@ -24,35 +27,38 @@ import java.io.IOException;
 @Api(tags = "源数据---0号台账")
 @RestController
 @RequestMapping("/source/zeroBill")
-public class SourceZeroBillController {
+public class SourceZeroBillController extends BaseController {
     @Autowired
     private ISourceZeroBillService sourceZeroBillService;
 
     @ApiOperation("0号台账列表导入")
     @PostMapping("/import")
-    public R importZeroBill(@RequestPart("file") MultipartFile file) throws IOException {
+    public AjaxResult importZeroBill(@RequestPart("file") MultipartFile file) throws IOException {
         sourceZeroBillService.importData(file);
-        return R.ok("导入成功。。。");
+        return success("导入成功。。。");
     }
 
     @ApiOperation("0号台账新增编辑")
     @PostMapping("/saveOrUpdate")
-    public R saveOrUpdate(@RequestBody SourceZeroBill sourceZeroBill) {
+    public AjaxResult saveOrUpdate(@RequestBody SourceZeroBill sourceZeroBill) {
         sourceZeroBillService.saveOrUpdateData(sourceZeroBill);
-        return R.ok();
+        return success();
     }
 
     @ApiOperation("0号台账删除")
     @DeleteMapping("delete/{id}")
-    public R delete(@PathVariable("id") Integer id) {
+    public AjaxResult delete(@PathVariable("id") Integer id) {
         sourceZeroBillService.removeById(id);
-        return R.ok();
+        return success();
     }
 
     @ApiOperation("0号台账列表")
     @GetMapping("list")
-    public R<Page<SourceZeroBill>> list(PageDto pageDto) {
-        return R.ok(sourceZeroBillService.dataList(pageDto));
+    public TableDataInfo list(SourcePageQeq req) {
+        startPage();
+        List<SourceZeroBill> list = sourceZeroBillService.dataList(req);
+        return getDataTable(list);
     }
+
 
 }
