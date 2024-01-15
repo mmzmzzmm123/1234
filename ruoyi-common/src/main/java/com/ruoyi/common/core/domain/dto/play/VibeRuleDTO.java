@@ -1,5 +1,6 @@
 package com.ruoyi.common.core.domain.dto.play;
 
+import com.ruoyi.common.core.domain.dto.VibeRuleTargetParam;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -70,22 +71,7 @@ public class VibeRuleDTO {
     private Integer joinGroupEnd;
 
     @ApiModelProperty(value = "根据内容目标国优选群和水军（全局）")
-    private List<TargetParam> targetParams;
-
-    @Data
-    public static class TargetParam {
-        @ApiModelProperty(value = "内容目标国编码")
-        private String countryCode;
-
-        @ApiModelProperty(value = "内容目标国名称")
-        private String countryName;
-
-        @ApiModelProperty(value = "优选群主号和水军国编码")
-        private List<String> preferenceCodes;
-
-        @ApiModelProperty(value = "优选群主号和水军国名称")
-        private List<String> preferenceNames;
-    }
+    private List<VibeRuleTargetParam> targetParams;
 
     private String sysUserId;
 }

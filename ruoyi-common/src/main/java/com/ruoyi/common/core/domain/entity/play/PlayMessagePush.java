@@ -55,11 +55,6 @@ public class PlayMessagePush {
     private Integer pushState;
 
     /**
-     * 推送时间
-     */
-    private Date pushTime;
-
-    /**
      * 0正常 1删除
      */
     private Integer isDelete;

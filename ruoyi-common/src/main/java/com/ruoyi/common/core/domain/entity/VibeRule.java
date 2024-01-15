@@ -1,9 +1,14 @@
 package com.ruoyi.common.core.domain.entity;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ruoyi.common.core.domain.dto.VibeRuleTargetParam;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 
 @Data
@@ -120,5 +125,17 @@ public class VibeRule {
     /**
      * 操作员id
      */
-    private String sysUserId;
+    private String merchantId;
+
+    /**
+     * 状态：1正常 0删除
+     */
+    private Integer status;
+
+    public List<VibeRuleTargetParam> getTargetParams() {
+        if (StringUtils.isBlank(this.targetParams)) {
+            return null;
+        }
+        return JSONArray.parseArray(this.targetParams, VibeRuleTargetParam.class);
+    }
 }
