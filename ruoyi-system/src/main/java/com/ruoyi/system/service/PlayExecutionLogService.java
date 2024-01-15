@@ -21,10 +21,10 @@ public interface PlayExecutionLogService {
 
     /**
      * 保存日志
-     * @param playId
-     * @param content
+     *
+     * @param executionLog
      */
-    void saveLog(String playId, String content);
+    void saveLog(PlayExecutionLog log);
 
 
 }
