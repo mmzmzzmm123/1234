@@ -68,6 +68,7 @@ spring:
   # redis 配置
   redis:
     # 地址
+    # host: localhost
     host: bigroc.cn
     # 端口，默认为6379
     port: 32771
@@ -93,7 +94,7 @@ token:
   # 令牌自定义标识
   header: Authorization
   # 令牌密钥
-  secret: abcdefghijklmnopqrstuvwxyz
+  secret: 9eccc00115234df8a9a796d2f4b9565c
   # 令牌有效期（默认30分钟）
   expireTime: 30
 
