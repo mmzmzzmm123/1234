@@ -9,7 +9,7 @@ ruoyi:
   # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
   profile: D:/ruoyi/uploadPath
   # 获取ip地址开关
-  addressEnabled: false
+  addressEnabled: true
   # 验证码类型 math 数字计算 char 字符验证
   captchaType: math
 
@@ -68,37 +68,43 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: localhost
+    # host: localhost
+    host: bigroc.cn
     # 端口，默认为6379
-    port: 6379
+    port: 32771
     # 数据库索引
     database: 0
     # 密码
-    password:
+    password: a51ae35af332
     # 连接超时时间
-    timeout: 10s
+    timeout: 15s
     lettuce:
       pool:
         # 连接池中的最小空闲连接
-        min-idle: 0
+        min-idle: 8
         # 连接池中的最大空闲连接
         max-idle: 8
         # 连接池的最大数据库连接数
         max-active: 8
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
+      client-options:
+        health-check:
+          enabled: true
+          remote-address: bigroc.cn:32771
+
 
 # token配置
 token:
   # 令牌自定义标识
   header: Authorization
   # 令牌密钥
-  secret: abcdefghijklmnopqrstuvwxyz
+  secret: 9eccc00115234df8a9a796d2f4b9565c
   # 令牌有效期（默认30分钟）
   expireTime: 30
 
 # MyBatis配置
-mybatis:
+mybatis-plus:
   # 搜索指定包别名
   typeAliasesPackage: com.ruoyi.**.domain
   # 配置mapper的扫描，找到所有的mapper.xml映射文件
@@ -116,8 +122,8 @@ pagehelper:
 swagger:
   # 是否开启swagger
   enabled: true
-  # 请求前缀
-  pathMapping: /dev-api
+#  # 请求前缀
+#  pathMapping: /dev-api
 
 # 防止XSS攻击
 xss:
