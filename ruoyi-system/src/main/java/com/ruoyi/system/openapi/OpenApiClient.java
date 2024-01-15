@@ -4,7 +4,6 @@ import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
-import com.ruoyi.common.openapi.model.input.*;
 import com.ruoyi.system.openapi.model.output.ExtTgBatchRobotSimpInfoData;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.common.utils.Ids;

@@ -41,53 +41,77 @@ public class TgRobotProcessor {
 
     }
 
-    /***
-     * 缓存登录成功结果
-     */
-    @Type(value = 1100910001, parameterClass = Called1100910001DTO.class)
-    public void called1100910001(Called1100910001DTO dto) {
-
-    }
 
     /**
-     * 缓存登录 失败结果
+     * TG修改群头像
+     * @param dto
      */
-    @Type(value = 1100910002, parameterClass = Called1100910002DTO.class)
-    public void called1100910002(Called1100910002DTO dto) {
+    @Type(value = 1100910049, parameterClass = CalledEmptyDTO.class)
+    public void called1100910049(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
 
+    /**
+     * TG设置群管理员
+     * @param dto
+     */
+    @Type(value = 1100910053, parameterClass = Called1100910053DTO.class)
+    public void called1100910053(Called1100910053DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
 
+    /**
+     * TG通过群链接入群
+     * @param dto
+     */
+    @Type(value = 1100910039, parameterClass = Called1100910039DTO.class)
+    public void called1100910039(Called1100910039DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG退出群
+     * @param dto
+     */
+    @Type(value = 1100910024, parameterClass = CalledEmptyDTO.class)
+    public void called1100910024(Called1100910039DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG获取群成员列表
+     * @param dto
+     */
+    @Type(value = 1100910113, parameterClass = Called1100910113DTO.class)
+    public void called1100910113(Called1100910113DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG修改号头像
+     * @param dto
+     */
     @Type(value = 1100910016, parameterClass = CalledEmptyDTO.class)
     public void called1100910016(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
 
-    @Type(value = 1100910009, parameterClass = CalledEmptyDTO.class)
-    public void called1100910009(CalledEmptyDTO dto) {
-        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-    }
-
+    /**
+     * TG修改号姓氏和名字
+     * @param dto
+     */
     @Type(value = 1100910033, parameterClass = CalledEmptyDTO.class)
     public void called1100910033(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
 
-    @Type(value = 1100910083, parameterClass = CalledEmptyDTO.class)
-    public void called1100910083(CalledEmptyDTO dto) {
+    /**
+     * TG设置用户名接口
+     * @param dto
+     */
+    @Type(value = 1100910009, parameterClass = CalledEmptyDTO.class)
+    public void called1100910009(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-    }
-
-    @Type(value = 1100910101, parameterClass = Called1100910101DTO.class)
-    public void called1100910101(Called1100910101DTO dto) {
-        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-    }
-
-
-    @Type(value = 1100850508, parameterClass = Called1100850508DTO.class)
-    public void called1100850508(Called1100850508DTO dto) {
-        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        String optSerNo = root.getOptSerNo();
     }
 
 }
