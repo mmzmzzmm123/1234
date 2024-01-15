@@ -18,6 +18,9 @@ public class PlayRobotGroupRelation {
     @ApiModelProperty("商家Id")
     private String merchantId;
 
+    @ApiModelProperty("是否可以被设置管理员 0否 1是")
+    private Integer isAdmin;
+
     @ApiModelProperty("水军ID")
     private String robotId;
 
