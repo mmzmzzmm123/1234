@@ -1,4 +1,4 @@
-package com.ruoyi.system.domain.dto.play;
+package com.ruoyi.common.core.domain.dto.play;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -25,26 +25,26 @@ public class PlayDTO {
     @ApiModelProperty("炒群条件：0-人数 1-时间")
     private Integer groupCondition;
 
-    @ApiModelProperty("群人数")
+    @ApiModelProperty("炒群条件-群人数")
     private Integer userNum;
 
-    @ApiModelProperty("时间条件开始类型：0-立即开始 1定时开始")
+    @ApiModelProperty("炒群时间条件类型：0-立即开始 1定时开始")
     private Integer startType;
 
-    @ApiModelProperty("群邀请链接")
-    private List<String> groupUrlList;
+    @ApiModelProperty("外部群邀请链接")
+    private List<String> groupUrls;
 
     @ApiModelProperty(value = "群消息包装")
-    private List<GroupPack> groupPackList;
+    private GroupPack groupPack;
 
     @ApiModelProperty(value = "每个群演员数")
-    private Integer performerNum;
+    private Integer robotNum;
 
     @ApiModelProperty(value = "演员信息")
     private List<Performer> performerList;
 
     @ApiModelProperty(value = "剧本内容")
-    private List<PlayMessage> playMessageList;
+    private List<PlayMessageDTO> playMessageList;
 
     @ApiModelProperty(value = "剧本是否混淆：0-否 1-是")
     private Integer isConfound;
@@ -60,4 +60,6 @@ public class PlayDTO {
 
     @ApiModelProperty(value = "粉号池")
     private String urlPool;
+
+    private String merchantId;
 }

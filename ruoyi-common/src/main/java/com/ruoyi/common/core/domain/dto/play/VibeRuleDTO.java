@@ -1,4 +1,4 @@
-package com.ruoyi.system.domain.dto.play;
+package com.ruoyi.common.core.domain.dto.play;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

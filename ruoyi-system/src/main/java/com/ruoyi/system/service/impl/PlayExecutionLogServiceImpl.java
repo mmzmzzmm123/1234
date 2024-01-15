@@ -39,15 +39,22 @@ public class PlayExecutionLogServiceImpl implements PlayExecutionLogService {
     }
 
     @Override
-    public void saveLog(String playId, String content) {
-        if (StringUtils.isEmpty(playId) || StringUtils.isEmpty(content)) {
+    public void saveLog(PlayExecutionLog log) {
+        if (log == null){
             return;
         }
-        PlayExecutionLog log = new PlayExecutionLog();
-        log.setId(IdWorker.getIdStr());
-        log.setPlayId(playId);
-        log.setContent(content);
+        if (log.getType() == null){
+            return;
+        }
+        if (StringUtils.isEmpty(log.getPlayId()) || StringUtils.isEmpty(log.getContent())){
+            return;
+        }
+
+        if (StringUtils.isEmpty(log.getId())){
+            log.setId(IdWorker.getIdStr());
+        }
         log.setCreateTime(new Date());
         mongoTemplate.save(log);
     }
+
 }

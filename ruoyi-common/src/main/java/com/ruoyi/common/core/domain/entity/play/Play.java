@@ -1,8 +1,15 @@
 package com.ruoyi.common.core.domain.entity.play;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ruoyi.common.core.domain.dto.play.AdMoitor;
+import com.ruoyi.common.core.domain.dto.play.PlayExt;
+import com.ruoyi.common.core.domain.dto.play.SendMechanism;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
+
+import java.math.BigDecimal;
 
 @Data
 @TableName("t_play_info")
@@ -21,9 +28,29 @@ public class Play {
     private Integer groupSource;
 
     /**
-     * 群配置信息
+     * 群注册天数
      */
-    private String groupParams;
+    private Integer groupDay;
+
+    /**
+     * 炒群条件：0-人数 1-时间
+     */
+    private Integer groupCondition;
+
+    /**
+     * 炒群条件 群人数
+     */
+    private Integer userNum;
+
+    /**
+     * 炒群条件 时间类型：0-立即开始 1定时开始
+     */
+    private Integer startType;
+
+    /**
+     * 群邀请链接
+     */
+    private String groupUrls;
 
     /**
      * 群需求数量
@@ -68,5 +95,41 @@ public class Play {
     /**
      * 操作员id
      */
-    private String sysUserId;
+    private String merchantId;
+
+    /**
+     * 是否删除: 0否 1是
+     */
+    private Integer isDelete;
+
+    /**
+     * 速度
+     */
+    private BigDecimal speed;
+
+    /**
+     * 剧本执行进度：0未开始 1入群 2混淆中 3号分配 4人设包装 5剧本发送
+     */
+    private Integer scanProgress;
+
+    public SendMechanism getSendMechanism() {
+        if (StringUtils.isBlank(this.sendMechanism)) {
+            return null;
+        }
+        return JSONObject.parseObject(this.sendMechanism, SendMechanism.class);
+    }
+
+    public AdMoitor getAdMonitor() {
+        if (StringUtils.isBlank(this.adMonitor)) {
+            return null;
+        }
+        return JSONObject.parseObject(this.adMonitor, AdMoitor.class);
+    }
+
+    public PlayExt getPlayExt() {
+        if (StringUtils.isBlank(this.playExt)) {
+            return null;
+        }
+        return JSONObject.parseObject(this.playExt, PlayExt.class);
+    }
 }

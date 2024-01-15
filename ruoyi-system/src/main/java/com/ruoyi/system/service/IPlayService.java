@@ -2,7 +2,7 @@ package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.system.domain.dto.play.PlayDTO;
+import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.vo.play.QueryPlayVO;
 

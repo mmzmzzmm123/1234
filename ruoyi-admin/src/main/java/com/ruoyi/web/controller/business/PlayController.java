@@ -5,10 +5,11 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
-import com.ruoyi.system.domain.dto.play.PlayDTO;
+import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.QueryConfoundLogVO;
+import com.ruoyi.system.domain.vo.play.PlayTaskProgressVO;
 import com.ruoyi.system.domain.vo.play.QueryPlayVO;
 import com.ruoyi.system.service.IPlayService;
 import com.ruoyi.system.service.PlayExecutionLogService;
@@ -39,7 +40,8 @@ public class PlayController extends BaseController {
     @ApiOperation("创建炒群任务")
     @PostMapping(value = "/create")
     public R<String> create(@RequestBody PlayDTO dto) {
-       return playService.create(dto);
+       dto.setMerchantId(getMerchantId());
+        return playService.create(dto);
     }
 
     @ApiOperation("修改炒群任务")
@@ -55,10 +57,26 @@ public class PlayController extends BaseController {
     }
 
 
-    @ApiOperation("任务列表")
+    @ApiOperation("炒群任务列表")
     @PostMapping("page")
     public R<Page<QueryPlayVO>> executionLogList(@RequestBody QueryPlayDTO dto) {
         return R.ok(playService.page(dto));
+    }
+
+
+    @ApiOperation("任务进度")
+    @PostMapping("taskProgress/{playId}")
+    public R<PlayTaskProgressVO> taskProgress(@PathVariable String playId) {
+
+        return R.ok();
+    }
+
+
+    @ApiOperation("炒群进度")
+    @PostMapping("groupProgress/{playId}")
+    public R<PlayTaskProgressVO> groupProgress(@PathVariable String playId) {
+
+        return R.ok();
     }
 
     @ApiOperation("剧本执行日志")
