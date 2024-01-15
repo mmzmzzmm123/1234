@@ -14,10 +14,12 @@ import com.ruoyi.excel.listener.MixtureResolveListener;
 import com.ruoyi.excel.bo.MixtureResolveExcel;
 import com.ruoyi.mapper.SourceMixtureResolveMapper;
 import com.ruoyi.service.ISourceMixtureResolveService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,13 +32,22 @@ import java.util.List;
  * @author HH
  * @since 2024-01-13
  */
+@Slf4j
 @Service
 public class SourceMixtureResolveServiceImpl extends ServiceImpl<SourceMixtureResolveMapper, SourceMixtureResolve> implements ISourceMixtureResolveService {
 
     @Override
-    public void importData(MultipartFile file) throws IOException {
+    public void importData(MultipartFile file)  {
         MixtureResolveListener listener = new MixtureResolveListener();
-        EasyExcel.read(file.getInputStream(), MixtureResolveExcel.class,listener).sheet().doRead();
+        InputStream inputStream = null;
+        try {
+            inputStream = file.getInputStream();
+        } catch (IOException e) {
+            log.error("获取文件信息异常，异常信息:{}",e.getMessage(),e);
+            throw new RuntimeException("获取文件信息异常");
+
+        }
+        EasyExcel.read(inputStream, MixtureResolveExcel.class,listener).sheet().doRead();
         List<MixtureResolveExcel> cachedDataList = listener.getCachedDataList();
         System.out.println("end----");
         System.out.println(cachedDataList.size());

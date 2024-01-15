@@ -19,7 +19,7 @@ public interface ISourceCalculationDirectCostService extends IService<SourceCalc
 
     void importData(MultipartFile file);
 
-    void saveOrUpdateData(SourceZeroBill sourceZeroBill);
+    void saveOrUpdateData(SourceCalculationDirectCost sourceCalculationDirectCost);
 
     Page<SourceCalculationDirectCost> dataList(PageDto pageDto);
 }

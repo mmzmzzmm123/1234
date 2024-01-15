@@ -3,12 +3,17 @@ package com.ruoyi.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.PageDto;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.entity.SourceCalculationDirectCost;
+import com.ruoyi.entity.SourceCalculationMaterialCost;
 import com.ruoyi.entity.SourceZeroBill;
 import com.ruoyi.mapper.SourceCalculationDirectCostMapper;
 import com.ruoyi.service.ISourceCalculationDirectCostService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -27,12 +32,36 @@ public class SourceCalculationDirectCostServiceImpl extends ServiceImpl<SourceCa
     }
 
     @Override
-    public void saveOrUpdateData(SourceZeroBill sourceZeroBill) {
+    public void saveOrUpdateData(SourceCalculationDirectCost sourceCalculationDirectCost) {
+        LocalDateTime localDateTime = LocalDateTime.now();
+        // 获取当前的用户
+        LoginUser loginUser = SecurityUtils.getLoginUser();
+        if (null == loginUser){
+            throw new RuntimeException("获取用户信息异常");
+        }
 
+        if (null == sourceCalculationDirectCost.getId()){
+            // 新增
+            sourceCalculationDirectCost.setCreateTime(localDateTime);
+            sourceCalculationDirectCost.setUpdateTime(localDateTime);
+            sourceCalculationDirectCost.setCreateUser(loginUser.getUserId().toString());
+            sourceCalculationDirectCost.setUpdateUser(loginUser.getUserId().toString());
+            sourceCalculationDirectCost.setDeleted(Boolean.TRUE);
+            save(sourceCalculationDirectCost);
+        }else {
+            // 编辑
+            sourceCalculationDirectCost.setUpdateTime(localDateTime);
+            sourceCalculationDirectCost.setUpdateUser(loginUser.getUserId().toString());
+            sourceCalculationDirectCost.setDeleted(Boolean.TRUE);
+            updateById(sourceCalculationDirectCost);
+        }
     }
 
     @Override
     public Page<SourceCalculationDirectCost> dataList(PageDto pageDto) {
-        return null;
+        Page<SourceCalculationDirectCost> page = new Page<>(pageDto.getPageNum(),pageDto.getPageSize());
+        return lambdaQuery().eq(SourceCalculationDirectCost::getProjectNo,124)
+                .eq(SourceCalculationDirectCost::getDeleted,true)
+                .page(page);
     }
 }

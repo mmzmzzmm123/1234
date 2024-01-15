@@ -39,8 +39,8 @@ public class SourceCalculationDirectCostController {
 
     @ApiOperation("新增编辑")
     @PostMapping("/saveOrUpdate")
-    public R saveOrUpdate(@RequestBody SourceZeroBill sourceZeroBill) {
-        sourceCalculationDirectCostService.saveOrUpdateData(sourceZeroBill);
+    public R saveOrUpdate(@RequestBody SourceCalculationDirectCost sourceCalculationDirectCost) {
+        sourceCalculationDirectCostService.saveOrUpdateData(sourceCalculationDirectCost);
         return R.ok();
     }
 

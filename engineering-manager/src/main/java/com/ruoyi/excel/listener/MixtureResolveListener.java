@@ -31,7 +31,7 @@ public class MixtureResolveListener extends AnalysisEventListener<MixtureResolve
 
 
     @Override
-    public void onException(Exception exception, AnalysisContext context) throws Exception {
+    public void onException(Exception exception, AnalysisContext context) {
         if (exception instanceof ExcelDataConvertException) {
             Integer columnIndex = ((ExcelDataConvertException) exception).getColumnIndex() + 1;
             Integer rowIndex = ((ExcelDataConvertException) exception).getRowIndex() + 1;
