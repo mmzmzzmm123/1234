@@ -89,6 +89,9 @@ public class Robot {
     @ApiModelProperty("回收状态,0-未回收,1-已回收")
     private Integer recycleStatus;
 
+    @ApiModelProperty("是否清除,0-未清除,1-已清除")
+    private Integer deleteStatus;
+
     @ApiModelProperty(value = "创建时间")
     private String createTime;
 
