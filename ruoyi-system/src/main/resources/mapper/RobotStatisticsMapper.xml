@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.RobotStatisticsMapper">
+
+    <select id="selectRobotByRule" resultType="String">
+        select
+            tri.robot_serial_no
+        from t_robot_info tri
+            left join t_robot_statistics trs on tri.robot_serial_no = trs.robot_serial_no
+        where 1=1
+        <if test="dto.countryCode != null and dto.countryCode.size > 0">
+            and tri.country_code in
+              <foreach collection="dto.countryCode" item="item" separator="," open="(" close=")">
+                  #{item}
+              </foreach>
+        </if>
+        <if test="dto.oneDayJoinGroupCount != null">
+            and #{dto.oneDayJoinGroupCount} > trs.one_day_join_group_count
+        </if>
+        <if test="dto.totalJoinGroupCount != null">
+            and #{dto.totalJoinGroupCount} > trs.total_join_group_count
+        </if>
+        <if test="dto.groupCount != null">
+            and #{dto.groupCount} > trs.group_count
+        </if>
+        <if test="dto.isSetAdmin == 1">
+            and #{dto.oneDaySetAdminCount} > trs.one_day_set_admin_count
+            and #{dto.totalSetAdminCount} > trs.total_set_admin_count
+        </if>
+        <if test="dto.ipType == 1">
+            group by tri.vpn_ip_b
+        </if>
+        <if test="dto.ipType == 2">
+            group by tri.vpn_ip_c
+        </if>
+        limit 1,#{dto.count}
+
+    </select>
+
+</mapper>
