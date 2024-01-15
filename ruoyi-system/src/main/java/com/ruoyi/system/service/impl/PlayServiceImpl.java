@@ -10,6 +10,7 @@ import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.dto.play.PlayMessageDTO;
 import com.ruoyi.common.core.domain.dto.play.SendMechanism;
 import com.ruoyi.common.core.domain.entity.play.Play;
+import com.ruoyi.common.core.domain.entity.play.PlayGroupPack;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
@@ -45,7 +46,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         String playId = IdWorker.getIdStr();
 
         //t_play_info
-        savePlay(dto, playId);
+        //savePlay(dto, playId);
 
         //t_play_group_pack
         //t_play_robot_pack
@@ -95,13 +96,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         return random.nextInt((max - min) + 1) + min;
     }
 
-    private void saveGroupPack(List<GroupPack> groupPack) {
-//        for (GroupPack groupPack : groupPack) {
-//            PlayGroupPack playGroupPack = new PlayGroupPack();
-//            BeanUtils.copyProperties(groupPack, playGroupPack);
-//        }
-//
-//        playGroupPackMapper.b
+    private void saveGroupPack(GroupPack groupPack, String payId) {
+        PlayGroupPack playGroupPack = new PlayGroupPack();
+        playGroupPack.setPlayId(payId);
+        playGroupPack.setName(String.join(",", groupPack.getName()));
     }
 
     private void savePlay(PlayDTO dto, String id) {
