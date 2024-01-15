@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.GroupInfoMapper">
+
+    <select id="page" resultType="com.ruoyi.system.domain.vo.GroupPageInfoVO">
+        select tgi.group_id,
+               tgi.group_serial_no,
+               tgi.group_name,
+               tgi.group_invite_link,
+               tgmi.bot_check,
+               tgs.group_status,
+               tgs.group_used,
+               (select count(1) from t_play_robot_group_relation where group_id = tgi.group_id and state = 1) robot_num,
+               if(tgmi.member_count > 0, tgi.member_count, tgi.member_count)                                  member_count,
+               tgc.cluster_name,
+               tgi.group_type,
+               tgs.leader_robot,
+               concat(robot.first_name, if(robot.last_name != '', ' ', ''), robot.last_name)                                    full_name,
+               robot.phone,
+               robot.robot_serial_no,
+               robot.heartbeat_status,
+               robot.seal_status,
+               tgi.create_time,
+               tgs.used_time
+        from t_group_info tgi
+                 join t_group_cluster_ref tgcr on tgi.group_id
+                 join t_group_cluster tgc on tgcr.cluster_id = tgc.cluster_id
+                 left join t_group_state tgs on tgcr.group_id = tgs.group_id
+                 left join t_group_monitor_info tgmi on tgs.group_id = tgmi.group_id
+                 left join t_group_robot tgr on tgmi.group_id = tgr.group_id and tgr.member_type = 1
+                 left join t_robot_info robot on robot.robot_serial_no = tgr.robot_id
+        <where>
+            <if test="dto.clusterId != null and dto.clusterId != ''">
+                AND tgc.cluster_id = #{dto.clusterId}
+            </if>
+            <if test="dto.createTimeStart != null ">
+                AND tgi.create_time <![CDATA[ >= ]]> #{dto.createTimeStart}
+            </if>
+            <if test="dto.createTimeEnd != null ">
+                AND tgi.create_time <![CDATA[ <= ]]> #{dto.createTimeStart}
+            </if>
+            <if test="dto.usedTimeStart != null ">
+                AND tgs.used_time <![CDATA[ >= ]]> #{dto.usedTimeStart}
+            </if>
+            <if test="dto.usedTimeEnd != null ">
+                AND tgs.used_time <![CDATA[ <= ]]> #{dto.usedTimeEnd}
+            </if>
+            <if test="dto.createType != null ">
+                AND tgi.create_type = #{dto.createType}
+            </if>
+            <if test="dto.groupType != null ">
+                AND tgi.group_type = #{dto.groupType}
+            </if>
+            <if test="dto.leaderRobot != null ">
+                AND tgs.leader_robot = #{dto.leaderRobot}
+            </if>
+            <if test="dto.heartbeatStatus != null ">
+                AND robot.heartbeat_status = #{dto.heartbeatStatus}
+            </if>
+            <if test="dto.sealStatus != null ">
+                AND robot.seal_status = #{dto.sealStatus}
+            </if>
+            <if test="dto.robotIn != null ">
+                AND
+                <choose>
+                    <when test="dto.robotIn == 0">
+                        NOT
+                    </when>
+                </choose>
+                exists(select  1 from t_play_robot_group_relation where group_id = tgi.group_id and state = 1)
+            </if>
+            <if test="dto.recycle != null ">
+                AND robot.recycle_status = #{dto.recycle}
+            </if>
+            <if test="dto.groupUsed != null ">
+                AND tgs.group_used = #{dto.groupUsed}
+            </if>
+            <if test="dto.botCheck != null ">
+                AND tgmi.bot_check = #{dto.botCheck}
+            </if>
+            <if test="dto.groupName != null and dto.groupName != ''">
+                AND tgi.group_name like CONCAT('%', #{dto.groupName}, '%')
+            </if>
+            <if test="dto.groupId != null and dto.groupId != ''">
+                AND tgi.group_id = #{dto.groupId}
+            </if>
+            <if test="dto.groupSerialNo != null and dto.groupSerialNo != ''">
+                AND tgi.group_serial_no = #{dto.groupSerialNo}
+            </if>
+            <if test="dto.groupInviteLink != null and dto.groupInviteLink != ''">
+                AND tgi.group_invite_link = #{dto.groupInviteLink}
+            </if>
+            <if test="dto.groupSerialNos != null and  dto.groupSerialNos.size > 0 ">
+                AND tgi.group_serial_no in
+                <foreach collection="dto.groupSerialNos" item="id" open="(" separator="," close=")">
+                    #{id}
+                </foreach>
+            </if>
+            <if test="dto.fullName != null and dto.fullName != ''">
+                AND concat(robot.first_name, if(robot.last_name != '', ' ', ''), robot.last_name) like CONCAT('%', #{dto.fullName}, '%')
+            </if>
+            <if test="dto.phone != null and dto.phone != ''">
+                AND robot.phone like CONCAT('%', #{dto.phone}, '%')
+            </if>
+            <if test="dto.robotSerialNo != null and dto.robotSerialNo != ''">
+                AND robot.robot_serial_no like CONCAT('%', #{dto.robotSerialNo}, '%')
+            </if>
+        </where>
+        order by tgi.create_time desc
+
+    </select>
+</mapper>
