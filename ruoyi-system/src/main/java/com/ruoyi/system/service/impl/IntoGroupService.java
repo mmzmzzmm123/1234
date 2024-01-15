@@ -96,7 +96,7 @@ public class IntoGroupService {
             groupQueryDTO.setRegistrationDay(playDTO.getGroupDay());
             groupQueryDTO.setCountryCode(new ArrayList<>());
             //从波少那边获取足够的群
-            List<GroupInfoVO> groupList = groupService.queryGroup(groupQueryDTO);
+            R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
             //拆分入群任务
             for (int i=0;i< playDTO.getRobotNum();i++){
                 PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
