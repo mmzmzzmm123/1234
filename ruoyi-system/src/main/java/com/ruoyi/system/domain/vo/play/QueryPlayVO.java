@@ -22,7 +22,7 @@ public class QueryPlayVO {
     private String name;
 
     @ApiModelProperty(value = "群来源：0-平台提供 1-外部群")
-    private Integer source;
+    private Integer groupSource;
 
     @ApiModelProperty("剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成")
     private Integer state;

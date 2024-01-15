@@ -3,12 +3,15 @@ package com.ruoyi.web.controller.business;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.entity.MerchantInfo;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.QueryConfoundLogVO;
+import com.ruoyi.system.domain.vo.play.PlayGroupProgressVO;
 import com.ruoyi.system.domain.vo.play.PlayTaskProgressVO;
 import com.ruoyi.system.domain.vo.play.QueryPlayVO;
 import com.ruoyi.system.service.IPlayService;
@@ -59,24 +62,23 @@ public class PlayController extends BaseController {
 
     @ApiOperation("炒群任务列表")
     @PostMapping("page")
-    public R<Page<QueryPlayVO>> executionLogList(@RequestBody QueryPlayDTO dto) {
+    public R<Page<QueryPlayVO>> page(@RequestBody QueryPlayDTO dto) {
+        LoginUser loginUser = getLoginUser();
+        MerchantInfo merchantInfo = loginUser.getMerchantInfo();
         return R.ok(playService.page(dto));
     }
-
 
     @ApiOperation("任务进度")
     @PostMapping("taskProgress/{playId}")
     public R<PlayTaskProgressVO> taskProgress(@PathVariable String playId) {
-
-        return R.ok();
+        return R.ok(playService.taskProgress(playId));
     }
 
 
     @ApiOperation("炒群进度")
     @PostMapping("groupProgress/{playId}")
-    public R<PlayTaskProgressVO> groupProgress(@PathVariable String playId) {
-
-        return R.ok();
+    public R<PlayGroupProgressVO> groupProgress(@PathVariable String playId) {
+        return R.ok(playService.groupProgress(playId));
     }
 
     @ApiOperation("剧本执行日志")
@@ -84,6 +86,14 @@ public class PlayController extends BaseController {
     public R<List<PlayExecutionLog>> executionLogList(@PathVariable String playId) {
         return R.ok(playExecutionLogService.listByPlayId(playId));
     }
+
+    @ApiOperation("任务明细查询")
+    @PostMapping("taskDetailPage")
+    public R<Page<PlayExecutionLog>> taskDetailPage(@RequestBody QueryConfoundLogDTO dto) {
+
+        return R.ok();
+    }
+
 
     @ApiOperation("混淆日志查询")
     @PostMapping("confoundLogPage")
@@ -97,4 +107,13 @@ public class PlayController extends BaseController {
         playMessageConfoundLogService.retry(dto);
         return R.ok();
     }
+
+    @ApiOperation("账号明细")
+    @PostMapping("robotDetailPage")
+    public R<Void> robotDetailPage() {
+
+        return R.ok();
+    }
+
+
 }
