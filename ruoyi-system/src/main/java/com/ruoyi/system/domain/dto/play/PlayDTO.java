@@ -32,7 +32,7 @@ public class PlayDTO {
     private Integer startType;
 
     @ApiModelProperty("群邀请链接")
-    private List<String> groupUrlList;
+    private List<String> groupUrls;
 
     @ApiModelProperty(value = "群消息包装")
     private List<GroupPack> groupPackList;

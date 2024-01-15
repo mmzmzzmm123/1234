@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @TableName("t_play_info")
 public class Play {
@@ -21,9 +23,29 @@ public class Play {
     private Integer groupSource;
 
     /**
-     * 群配置信息
+     * 群注册天数
      */
-    private String groupParams;
+    private Integer groupDay;
+
+    /**
+     * 炒群条件：0-人数 1-时间
+     */
+    private Integer groupCondition;
+
+    /**
+     * 群人数
+     */
+    private Integer userNum;
+
+    /**
+     * 时间条件开始类型：0-立即开始 1定时开始
+     */
+    private Integer startType;
+
+    /**
+     * 群邀请链接
+     */
+    private String groupUrls;
 
     /**
      * 群需求数量
@@ -69,4 +91,6 @@ public class Play {
      * 操作员id
      */
     private String sysUserId;
+
+    private BigDecimal speed;
 }
