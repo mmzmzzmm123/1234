@@ -47,6 +47,6 @@ export function importTable(data) {
   return request({
     url: '/source/zeroBill/import',
     method: 'post',
-    params: data
+    data: data
   })
 }
