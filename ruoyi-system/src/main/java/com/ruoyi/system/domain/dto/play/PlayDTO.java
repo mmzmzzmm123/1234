@@ -32,7 +32,7 @@ public class PlayDTO {
     private Integer startType;
 
     @ApiModelProperty("群邀请链接")
-    private List<String> groupUrlList;
+    private List<String> groupUrls;
 
     @ApiModelProperty(value = "群消息包装")
     private List<GroupPack> groupPackList;
@@ -44,7 +44,7 @@ public class PlayDTO {
     private List<Performer> performerList;
 
     @ApiModelProperty(value = "剧本内容")
-    private List<PlayMessage> playMessageList;
+    private List<PlayMessageDTO> playMessageList;
 
     @ApiModelProperty(value = "剧本是否混淆：0-否 1-是")
     private Integer isConfound;
