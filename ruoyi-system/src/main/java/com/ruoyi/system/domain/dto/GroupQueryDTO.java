@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author 朱少波
  * @date 2024/1/15/015 16:01
@@ -19,5 +21,5 @@ public class GroupQueryDTO {
     private Integer groupNum;
 
     @ApiModelProperty(value = "群主机器人优先国家")
-    private String countryCode;
+    private List<String> countryCode;
 }
