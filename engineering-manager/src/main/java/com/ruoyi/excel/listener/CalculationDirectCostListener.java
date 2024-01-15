@@ -1,16 +1,21 @@
-package com.ruoyi.listener;
+package com.ruoyi.excel.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.exception.ExcelDataConvertException;
 import com.alibaba.excel.util.ListUtils;
-import com.ruoyi.listener.entity.MixtureResolveExcel;
+import com.ruoyi.excel.bo.CalculationDirectCostExcel;
 import lombok.Data;
 
 import java.util.List;
 
+/**
+ * @author HEHAO
+ * @date 2024/1/15 15:33
+ */
 @Data
-public class MixtureResolveListener extends AnalysisEventListener<MixtureResolveExcel> {
+public class CalculationDirectCostListener extends AnalysisEventListener<CalculationDirectCostExcel> {
+
     /**
      * 每隔5条存储数据库，实际使用中可以100条，然后清理list ，方便内存回收
      */
@@ -18,15 +23,15 @@ public class MixtureResolveListener extends AnalysisEventListener<MixtureResolve
     /**
      * 缓存的数据
      */
-    private List<MixtureResolveExcel> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+    private List<CalculationDirectCostExcel> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
     /**
      * 假设这个是一个DAO，当然有业务逻辑这个也可以是一个service。当然如果不用存储这个对象没用。
      */
-    private MixtureResolveExcel mixtureResolveExcel;
+    private CalculationDirectCostExcel calculationDirectCostExcel;
 
-    public MixtureResolveListener() {
+    public CalculationDirectCostListener() {
         // 这里是demo，所以随便new一个。实际使用如果到了spring,请使用下面的有参构造函数
-        mixtureResolveExcel = new MixtureResolveExcel();
+        calculationDirectCostExcel = new CalculationDirectCostExcel();
     }
 
 
@@ -46,7 +51,7 @@ public class MixtureResolveListener extends AnalysisEventListener<MixtureResolve
     }
 
     @Override
-    public void invoke(MixtureResolveExcel data, AnalysisContext analysisContext) {
+    public void invoke(CalculationDirectCostExcel data, AnalysisContext analysisContext) {
         System.out.println("解析到一条数据:{}" + data);
         cachedDataList.add(data);
         // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM

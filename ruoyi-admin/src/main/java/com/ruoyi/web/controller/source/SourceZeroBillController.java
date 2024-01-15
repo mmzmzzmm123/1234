@@ -23,21 +23,21 @@ import java.io.IOException;
  */
 @Api(tags = "源数据---0号台账")
 @RestController
-@RequestMapping("sourceZeroBill")
+@RequestMapping("/source/zeroBill")
 public class SourceZeroBillController {
     @Autowired
     private ISourceZeroBillService sourceZeroBillService;
 
     @ApiOperation("0号台账列表导入")
-    @PostMapping("import")
-    public R test1(@RequestPart("file") MultipartFile file) throws IOException {
+    @PostMapping("/import")
+    public R importZeroBill(@RequestPart("file") MultipartFile file) throws IOException {
         sourceZeroBillService.importData(file);
         return R.ok("导入成功。。。");
     }
 
     @ApiOperation("0号台账新增编辑")
-    @PostMapping("saveOrUpdate")
-    public R saveOrUpdate(SourceZeroBill sourceZeroBill) {
+    @PostMapping("/saveOrUpdate")
+    public R saveOrUpdate(@RequestBody SourceZeroBill sourceZeroBill) {
         sourceZeroBillService.saveOrUpdateData(sourceZeroBill);
         return R.ok();
     }
@@ -51,7 +51,7 @@ public class SourceZeroBillController {
 
     @ApiOperation("0号台账列表")
     @GetMapping("list")
-    public R<Page<SourceZeroBill>> list(@RequestBody PageDto pageDto) {
+    public R<Page<SourceZeroBill>> list(PageDto pageDto) {
         return R.ok(sourceZeroBillService.dataList(pageDto));
     }
 

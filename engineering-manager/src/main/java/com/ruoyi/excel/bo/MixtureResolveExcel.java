@@ -1,4 +1,4 @@
-package com.ruoyi.listener.entity;
+package com.ruoyi.excel.bo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import lombok.Data;

@@ -1,16 +1,22 @@
-package com.ruoyi.listener;
+package com.ruoyi.excel.listener;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.exception.ExcelDataConvertException;
 import com.alibaba.excel.util.ListUtils;
-import com.ruoyi.listener.entity.ZeroBillExcel;
+import com.ruoyi.excel.bo.CalculationDirectCostExcel;
+import com.ruoyi.excel.bo.CalculationMaterialCostExcel;
 import lombok.Data;
 
 import java.util.List;
 
+/**
+ * @author HEHAO
+ * @date 2024/1/15 15:53
+ */
 @Data
-public class ZeroBillListener extends AnalysisEventListener<ZeroBillExcel> {
+public class CalculationMaterialCostListener extends AnalysisEventListener<CalculationMaterialCostExcel> {
+
     /**
      * 每隔5条存储数据库，实际使用中可以100条，然后清理list ，方便内存回收
      */
@@ -18,15 +24,15 @@ public class ZeroBillListener extends AnalysisEventListener<ZeroBillExcel> {
     /**
      * 缓存的数据
      */
-    private List<ZeroBillExcel> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
+    private List<CalculationMaterialCostExcel> cachedDataList = ListUtils.newArrayListWithExpectedSize(BATCH_COUNT);
     /**
      * 假设这个是一个DAO，当然有业务逻辑这个也可以是一个service。当然如果不用存储这个对象没用。
      */
-    private ZeroBillExcel zeroBillExcel;
+    private CalculationMaterialCostExcel calculationMaterialCostExcel;
 
-    public ZeroBillListener() {
+    public CalculationMaterialCostListener() {
         // 这里是demo，所以随便new一个。实际使用如果到了spring,请使用下面的有参构造函数
-        zeroBillExcel = new ZeroBillExcel();
+        calculationMaterialCostExcel = new CalculationMaterialCostExcel();
     }
 
 
@@ -46,8 +52,8 @@ public class ZeroBillListener extends AnalysisEventListener<ZeroBillExcel> {
     }
 
     @Override
-    public void invoke(ZeroBillExcel data, AnalysisContext analysisContext) {
-        System.out.println("解析到一条数据:{}"+data);
+    public void invoke(CalculationMaterialCostExcel data, AnalysisContext analysisContext) {
+        System.out.println("解析到一条数据:{}" + data);
         cachedDataList.add(data);
         // 达到BATCH_COUNT了，需要去存储一次数据库，防止数据几万条数据在内存，容易OOM
         if (cachedDataList.size() >= BATCH_COUNT) {
@@ -68,9 +74,8 @@ public class ZeroBillListener extends AnalysisEventListener<ZeroBillExcel> {
      * 加上存储数据库
      */
     private void saveData() {
-        System.out.println("{}条数据，开始存储数据库！"+ cachedDataList.size());
+        System.out.println("{}条数据，开始存储数据库！" + cachedDataList.size());
 //        demoDAO.save(cachedDataList);
         System.out.println("存储数据库成功！");
     }
-
 }

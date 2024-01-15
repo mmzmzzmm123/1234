@@ -1,7 +1,6 @@
 package com.ruoyi.service.impl;
 
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.PageDto;
@@ -11,14 +10,13 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.entity.SourceMixtureResolve;
 
-import com.ruoyi.listener.MixtureResolveListener;
-import com.ruoyi.listener.entity.MixtureResolveExcel;
+import com.ruoyi.excel.listener.MixtureResolveListener;
+import com.ruoyi.excel.bo.MixtureResolveExcel;
 import com.ruoyi.mapper.SourceMixtureResolveMapper;
 import com.ruoyi.service.ISourceMixtureResolveService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -37,9 +35,8 @@ public class SourceMixtureResolveServiceImpl extends ServiceImpl<SourceMixtureRe
 
     @Override
     public void importData(MultipartFile file) throws IOException {
-        String path = "D:\\java-product\\gcgj\\aa.xlsx";
         MixtureResolveListener listener = new MixtureResolveListener();
-        EasyExcel.read(new FileInputStream(path), MixtureResolveExcel.class, listener).extraRead(CellExtraTypeEnum.MERGE).sheet().doRead();
+        EasyExcel.read(file.getInputStream(), MixtureResolveExcel.class,listener).sheet().doRead();
         List<MixtureResolveExcel> cachedDataList = listener.getCachedDataList();
         System.out.println("end----");
         System.out.println(cachedDataList.size());

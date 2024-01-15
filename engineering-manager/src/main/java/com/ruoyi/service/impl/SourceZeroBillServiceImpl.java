@@ -8,14 +8,13 @@ import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.entity.SourceZeroBill;
-import com.ruoyi.listener.ZeroBillListener;
-import com.ruoyi.listener.entity.ZeroBillExcel;
+import com.ruoyi.excel.bo.ZeroBillExcel;
+import com.ruoyi.excel.listener.ZeroBillListener;
 import com.ruoyi.mapper.SourceZeroBillMapper;
 import com.ruoyi.service.ISourceZeroBillService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -34,11 +33,8 @@ public class SourceZeroBillServiceImpl extends ServiceImpl<SourceZeroBillMapper,
 
     @Override
     public void importData(MultipartFile file) throws IOException {
-//        ZeroBillListener listener = new ZeroBillListener();
-//        EasyExcel.read(file.getInputStream(),ZeroBillExcel.class,listener).sheet().doRead();
-        String path = "D:\\java-product\\gcgj\\aa.xlsx";
         ZeroBillListener listener = new ZeroBillListener();
-        EasyExcel.read(new FileInputStream(path), ZeroBillExcel.class,listener).sheet().doRead();
+        EasyExcel.read(file.getInputStream(), ZeroBillExcel.class,listener).sheet().doRead();
         List<ZeroBillExcel> cachedDataList = listener.getCachedDataList();
         System.out.println("end----");
         System.out.println(cachedDataList.size());

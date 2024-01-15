@@ -1,9 +1,10 @@
-package com.ruoyi.listener;
+package com.ruoyi.excel;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.enums.CellExtraTypeEnum;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.listener.entity.MixtureResolveExcel;
+import com.ruoyi.excel.bo.MixtureResolveExcel;
+import com.ruoyi.excel.listener.MixtureResolveListener;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -14,6 +15,7 @@ public class Test {
 
 
         String path = "D:\\java-product\\gcgj\\aa.xlsx";
+        MixtureResolveListener mixtureResolveListener = new MixtureResolveListener();
         MixtureResolveListener listener = new MixtureResolveListener();
         EasyExcel.read(new FileInputStream(path), MixtureResolveExcel.class,listener).extraRead(CellExtraTypeEnum.MERGE).sheet().doRead();
         List<MixtureResolveExcel> cachedDataList = listener.getCachedDataList();

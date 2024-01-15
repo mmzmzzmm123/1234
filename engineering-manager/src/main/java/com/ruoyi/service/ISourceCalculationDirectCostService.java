@@ -1,7 +1,11 @@
 package com.ruoyi.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.common.PageDto;
 import com.ruoyi.entity.SourceCalculationDirectCost;
+import com.ruoyi.entity.SourceZeroBill;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * <p>
@@ -13,4 +17,9 @@ import com.ruoyi.entity.SourceCalculationDirectCost;
  */
 public interface ISourceCalculationDirectCostService extends IService<SourceCalculationDirectCost> {
 
+    void importData(MultipartFile file);
+
+    void saveOrUpdateData(SourceZeroBill sourceZeroBill);
+
+    Page<SourceCalculationDirectCost> dataList(PageDto pageDto);
 }

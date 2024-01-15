@@ -24,35 +24,35 @@ import java.io.IOException;
  */
 @Api(tags = "源数据---混合料分解")
 @Controller
-@RequestMapping("/sourceMixtureResolve")
+@RequestMapping("/source/mixtureResolve")
 public class SourceMixtureResolveController {
 
     @Autowired
     private ISourceMixtureResolveService sourceMixtureResolveService;
 
-    @ApiOperation("混合料分解列表导入")
-    @PostMapping("import")
-    public R test1(MultipartFile file) throws IOException {
+    @ApiOperation("导入")
+    @PostMapping("/import")
+    public R importMultipartFile(MultipartFile file) throws IOException {
         sourceMixtureResolveService.importData(file);
         return R.ok("导入成功。。。");
     }
 
-    @ApiOperation("混合料分解新增编辑")
-    @PostMapping("saveOrUpdate")
-    public R saveOrUpdate(SourceMixtureResolve sourceMixtureResolve) {
+    @ApiOperation("新增编辑")
+    @PostMapping("/saveOrUpdate")
+    public R saveOrUpdate(@RequestBody SourceMixtureResolve sourceMixtureResolve) {
         sourceMixtureResolveService.saveOrUpdateData(sourceMixtureResolve);
         return R.ok();
     }
 
-    @ApiOperation("混合料分解删除")
-    @DeleteMapping("delete/{id}")
+    @ApiOperation("删除")
+    @DeleteMapping("/delete/{id}")
     public R delete(@PathVariable("id") Integer id) {
         sourceMixtureResolveService.removeById(id);
         return R.ok();
     }
 
-    @ApiOperation("混合料分解列表")
-    @GetMapping("list")
+    @ApiOperation("列表")
+    @GetMapping("/list")
     public R<Page<SourceMixtureResolve>> list(@RequestBody PageDto pageDto) {
         return R.ok(sourceMixtureResolveService.dataList(pageDto));
     }
