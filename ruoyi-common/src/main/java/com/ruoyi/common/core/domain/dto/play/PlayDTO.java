@@ -14,7 +14,7 @@ public class PlayDTO {
     private String name;
 
     @ApiModelProperty(value = "群来源：0-平台提供 1-外部群")
-    private Integer source;
+    private Integer groupSource;
 
     @ApiModelProperty("群需求数量")
     private Integer groupNum;
@@ -38,7 +38,7 @@ public class PlayDTO {
     private List<String> groupUrls;
 
     @ApiModelProperty(value = "群消息包装")
-    private GroupPack groupPack;
+    private List<GroupPack> groupPack;
 
     @ApiModelProperty(value = "每个群演员数")
     private Integer robotNum;
@@ -52,6 +52,12 @@ public class PlayDTO {
     @ApiModelProperty(value = "剧本是否混淆：0-否 1-是")
     private Integer isConfound;
 
+    @ApiModelProperty(value = "内容目标国编码")
+    private String targetCountyCode;
+
+    @ApiModelProperty(value = "内容目标国名称")
+    private String targetCountyName;
+
     @ApiModelProperty(value = "发送机制配置")
     private SendMechanism sendMechanism;
 
@@ -63,12 +69,6 @@ public class PlayDTO {
 
     @ApiModelProperty(value = "粉号池")
     private String urlPool;
-
-    @ApiModelProperty(value = "内容目标国编码")
-    private String targetCountyCode;
-
-    @ApiModelProperty(value = "内容目标国名称")
-    private String targetCountyName;
 
     private String merchantId;
 }
