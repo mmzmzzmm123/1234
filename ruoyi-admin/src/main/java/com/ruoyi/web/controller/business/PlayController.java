@@ -1,10 +1,13 @@
 package com.ruoyi.web.controller.business;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.config.ErrInfoConfig;
+import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
@@ -43,8 +46,19 @@ public class PlayController extends BaseController {
     @ApiOperation("创建炒群任务")
     @PostMapping(value = "/create")
     public R<String> create(@RequestBody PlayDTO dto) {
-       dto.setMerchantId(getMerchantId());
+        dto.setMerchantId(getMerchantId());
+        R<String> checkPlayParamsRet = checkPlayParams(dto);
+        if (checkPlayParamsRet.getCode() != HttpStatus.SUCCESS) {
+
+        }
         return playService.create(dto);
+    }
+
+    private R<String> checkPlayParams(PlayDTO dto) {
+        if (StringUtils.isNotEmpty(dto.getName())) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过100字"));
+        }
+        return R.ok();
     }
 
     @ApiOperation("修改炒群任务")
