@@ -11,9 +11,6 @@ import java.io.Serializable;
 public class ContentJson implements Serializable {
     private static final long serialVersionUID = -6434841971083561503L;
 
-    @ApiModelProperty(value = "uuid",hidden = true)
-    private String uuid;
-
     @ApiModelProperty("消息内容")
     private String sMateContent;
 

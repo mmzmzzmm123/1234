@@ -12,6 +12,11 @@ public class PlayRobotPack {
     private Integer id;
 
     /**
+     * 发言人昵称
+     */
+    private String robotNickname;
+
+    /**
      * 炒群任务id
      */
     private String playId;
