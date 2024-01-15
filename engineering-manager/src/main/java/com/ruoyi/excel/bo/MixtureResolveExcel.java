@@ -31,11 +31,11 @@ public class MixtureResolveExcel {
     @ExcelProperty(value = "理论数量", index = 7)
     private BigDecimal theoryCount;
 
-    @ExcelProperty(value = "水泥型号", index = 8)
+    @ExcelProperty(value = "水泥型号32.5R", index = 8)
     private String cement325R;
     @ExcelProperty(value = "水泥型号42.5R", index = 9)
     private String cement425R;
-    @ExcelProperty(value = "水泥型号430R", index = 10)
+    @ExcelProperty(value = "水泥型号43.0R", index = 10)
     private String cement430R;
     @ExcelProperty(value = "减水剂", index = 15)
     private Integer waterReducer;

@@ -2,8 +2,12 @@ package com.ruoyi.web.controller.source;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.PageDto;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.entity.SourceMixtureResolve;
+import com.ruoyi.entity.SourceZeroBill;
 import com.ruoyi.service.ISourceMixtureResolveService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+
+import static com.ruoyi.common.utils.PageUtils.startPage;
 
 /**
  * <p>
@@ -25,35 +32,37 @@ import java.io.IOException;
 @Api(tags = "源数据---混合料分解")
 @Controller
 @RequestMapping("/source/mixtureResolve")
-public class SourceMixtureResolveController {
+public class SourceMixtureResolveController extends BaseController {
 
     @Autowired
     private ISourceMixtureResolveService sourceMixtureResolveService;
 
     @ApiOperation("导入")
     @PostMapping("/import")
-    public R importMultipartFile(MultipartFile file) throws IOException {
+    public AjaxResult importMultipartFile(MultipartFile file) throws IOException {
         sourceMixtureResolveService.importData(file);
-        return R.ok("导入成功。。。");
+        return success("导入成功。。。");
     }
 
     @ApiOperation("新增编辑")
     @PostMapping("/saveOrUpdate")
-    public R saveOrUpdate(@RequestBody SourceMixtureResolve sourceMixtureResolve) {
+    public AjaxResult saveOrUpdate(@RequestBody SourceMixtureResolve sourceMixtureResolve) {
         sourceMixtureResolveService.saveOrUpdateData(sourceMixtureResolve);
-        return R.ok();
+        return success();
     }
 
     @ApiOperation("删除")
     @DeleteMapping("/delete/{id}")
-    public R delete(@PathVariable("id") Integer id) {
+    public AjaxResult delete(@PathVariable("id") Integer id) {
         sourceMixtureResolveService.removeById(id);
-        return R.ok();
+        return success();
     }
 
     @ApiOperation("列表")
     @GetMapping("/list")
-    public R<Page<SourceMixtureResolve>> list(@RequestBody PageDto pageDto) {
-        return R.ok(sourceMixtureResolveService.dataList(pageDto));
+    public TableDataInfo list() {
+        startPage();
+        List<SourceMixtureResolve> list = sourceMixtureResolveService.dataList();
+        return getDataTable(list);
     }
 }
