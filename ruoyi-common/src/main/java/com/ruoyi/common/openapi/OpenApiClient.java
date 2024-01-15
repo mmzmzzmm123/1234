@@ -192,4 +192,13 @@ public class OpenApiClient {
         });
     }
 
+    /**
+     * 比邻第三方(开平TG)：-获取群成员列表
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> searchMemberByThirdKpTg(ThirdTgSearchMemberInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SEARCH_MEMBER, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
 }
