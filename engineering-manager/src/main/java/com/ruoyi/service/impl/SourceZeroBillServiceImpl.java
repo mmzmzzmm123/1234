@@ -4,6 +4,7 @@ import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.entity.SourceZeroBill;
 import com.ruoyi.excel.bo.ZeroBillExcel;
@@ -63,8 +64,8 @@ public class SourceZeroBillServiceImpl extends ServiceImpl<SourceZeroBillMapper,
     public List<SourceZeroBill> dataList(SourcePageQeq req) {
         return lambdaQuery().eq(SourceZeroBill::getProjectNo,124)
                 .eq(SourceZeroBill::getDeleted,true)
-                .like(SourceZeroBill::getItemNum,req.getItemNum())
-                .like(SourceZeroBill::getItemName,req.getItemName())
+                .like(StringUtils.isNotEmpty(req.getItemNum()),SourceZeroBill::getItemNum,req.getItemNum())
+                .like(StringUtils.isNotEmpty(req.getItemName()),SourceZeroBill::getItemName,req.getItemName())
                 .list();
     }
 
