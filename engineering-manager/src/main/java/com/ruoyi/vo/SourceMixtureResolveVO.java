@@ -59,10 +59,8 @@ public class SourceMixtureResolveVO implements Serializable {
 
     @ApiModelProperty("混合料数量")
     private BigDecimal sumQuantity;
-
-
+    @ApiModelProperty("配合比-每方混合料材料费测算")
     private List<mixtureResolveVOBean> sourceMixtureResolveVOBeanList;
-
 
     @ExcelProperty(value = "水泥型号32.5R", index = 8)
     private String cement325R;

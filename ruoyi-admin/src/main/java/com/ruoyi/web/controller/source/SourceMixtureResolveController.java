@@ -8,7 +8,9 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.entity.SourceMixtureResolve;
 import com.ruoyi.entity.SourceZeroBill;
+import com.ruoyi.req.SourcePageQeq;
 import com.ruoyi.service.ISourceMixtureResolveService;
+import com.ruoyi.vo.SourceMixtureResolveVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,9 +62,9 @@ public class SourceMixtureResolveController extends BaseController {
 
     @ApiOperation("列表")
     @GetMapping("/list")
-    public TableDataInfo list() {
+    public TableDataInfo list(SourcePageQeq req) {
         startPage();
-        List<SourceMixtureResolve> list = sourceMixtureResolveService.dataList();
+        List<SourceMixtureResolveVO> list = sourceMixtureResolveService.dataList(req);
         return getDataTable(list);
     }
 }

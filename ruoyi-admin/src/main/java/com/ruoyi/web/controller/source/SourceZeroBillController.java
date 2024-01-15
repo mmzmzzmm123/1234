@@ -5,6 +5,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.entity.SourceZeroBill;
+import com.ruoyi.req.SourcePageQeq;
 import com.ruoyi.service.ISourceZeroBillService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,10 +54,11 @@ public class SourceZeroBillController extends BaseController {
 
     @ApiOperation("0号台账列表")
     @GetMapping("list")
-    public TableDataInfo list() {
+    public TableDataInfo list(SourcePageQeq req) {
         startPage();
-        List<SourceZeroBill> list = sourceZeroBillService.dataList();
+        List<SourceZeroBill> list = sourceZeroBillService.dataList(req);
         return getDataTable(list);
     }
+
 
 }
