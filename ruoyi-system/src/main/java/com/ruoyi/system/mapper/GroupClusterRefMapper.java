@@ -2,7 +2,11 @@ package com.ruoyi.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.system.domain.GroupClusterRef;
+import com.ruoyi.system.domain.dto.IdCountDTO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * 群分组关联表(GroupClusterRef)表数据库访问层
@@ -13,4 +17,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupClusterRefMapper extends BaseMapper<GroupClusterRef> {
 
+    List<IdCountDTO> getClusterCount(@Param("clusterIds") List<String> clusterIds);
 }

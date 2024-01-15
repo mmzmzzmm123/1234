@@ -1,7 +1,11 @@
 package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.system.domain.GroupCluster;
 import com.ruoyi.system.domain.GroupClusterRef;
+import com.ruoyi.system.domain.vo.GroupClusterCountVO;
+
+import java.util.List;
 
 /**
  * 群分组关联表(GroupClusterRef)表服务接口
@@ -11,4 +15,5 @@ import com.ruoyi.system.domain.GroupClusterRef;
  */
 public interface GroupClusterRefService extends IService<GroupClusterRef> {
 
+    List<GroupClusterCountVO> fillCount(List<GroupCluster> list);
 }

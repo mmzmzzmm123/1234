@@ -91,7 +91,7 @@ public class GroupPageInfoVO {
     private LocalDateTime createTime;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
-    @Excel(name = "入库时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "最后一次使用时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "最后一次使用时间")
     private LocalDateTime usedTime;
 
