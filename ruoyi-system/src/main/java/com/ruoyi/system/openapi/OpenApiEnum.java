@@ -16,12 +16,21 @@ public enum OpenApiEnum {
     THIRD_KP_TG_EXIT_CHATROOML("kpTg-退出群", "/thirdparty/tgGroup/exitChatroom", 1100910024),
     THIRD_KP_TG_SEARCH_MEMBER("kpTg-获取群成员列表", "/thirdparty/tgGroup/searchMember", 1100910113),
 
+    THIRD_KP_TG_GET_CHATROOM_INFO("kpTg-获取群信息", "/thirdparty/tgGroup/getChatroomInfo", 1100910018),
+
+    THIRD_KP_TG_SET_CHATROOM_TYPE("kpTg-设置群类型", "/thirdparty/tgGroup/setChatroomType", 1100910056),
+
+    THIRD_KP_TG_SEARCH_KEYWORD("kpTg-搜索群、用户、频道", "/thirdparty/tgGroup/searchKeyword", 1100910017),
+
+    THIRD_KP_TG_INVITE_JOIN_CHATROOM("kpTg-邀请加入群组", "/thirdparty/tgGroup/inviteJoinChatroom", 1100910015),
+
 
     // 开平号接口
     THIRD_KP_TG_MODIFY_ROBOT_HEAD_IMG("kpTg-修改号头像", "/thirdparty/tgRobot/modifyRobotHeadImg", 1100910016),
     THIRD_KP_TG_MODIFY_NAME("kpTg-修改号姓氏和名字", "/thirdparty/tgRobot/modifyName", 1100910033),
     THIRD_KP_TG_MODIFY_USERNAME("kpTg-设置用户名接口", "/thirdparty/tgRobot/modifyUserName", 1100910009),
     THIRD_KP_TG_BATCH_ROBOT_SIMPINFO("kpTg-获取hw账号基础信息", "/thirdparty/tgModule/batchRobotSimpInfo", null),
+    THIRD_KP_TG_JOIN_USER("kpTg-应用机器人加入通讯录", "/thirdparty/tgRobot/joinUser", 1100910026),
 
 
     // utchat接口
