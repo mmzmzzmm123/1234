@@ -1,4 +1,4 @@
-package com.ruoyi.system.domain.dto.play;
+package com.ruoyi.common.core.domain.dto.play;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -8,8 +8,8 @@ import lombok.Data;
  */
 @Data
 public class Performer {
-    @ApiModelProperty(value = "发言人标识")
-    private String label;
+    @ApiModelProperty("发言人昵称")
+    private String robotNickname;
 
     @ApiModelProperty(value = "发言顺序")
     private Integer messageSort;

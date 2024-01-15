@@ -6,8 +6,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 @Data
-@TableName("t_play_group")
-public class PlayGroup {
+@TableName("t_play_group_pack")
+public class PlayGroupPack {
     @TableId(type = IdType.AUTO)
     private Integer id;
 

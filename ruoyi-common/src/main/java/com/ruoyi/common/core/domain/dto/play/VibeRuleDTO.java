@@ -1,4 +1,4 @@
-package com.ruoyi.system.domain.dto.play;
+package com.ruoyi.common.core.domain.dto.play;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -81,9 +81,11 @@ public class VibeRuleDTO {
         private String countryName;
 
         @ApiModelProperty(value = "优选群主号和水军国编码")
-        private List<String> preferenceCode;
+        private List<String> preferenceCodes;
 
         @ApiModelProperty(value = "优选群主号和水军国名称")
-        private List<String> preferenceName;
+        private List<String> preferenceNames;
     }
+
+    private String sysUserId;
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PlayMapper">
+
+    <select id="selectPage" resultType="com.ruoyi.system.domain.vo.play.QueryPlayVO">
+        SELECT
+        id,
+        `name`,
+        group_source,
+        `state`,
+        create_time
+        FROM
+        t_play_info tpi
+        WHERE
+        1 = 1
+        <if test="dto.merchantId != null and dto.merchantId != ''">
+            AND tpi.merchant_id = #{dto.merchantId}
+        </if>
+        <if test="dto.startTime != null and dto.startTime != ''">
+            AND tpi.create_time >= #{dto.startTime}
+        </if>
+        <if test="dto.endTime != null and dto.endTime != ''">
+            AND tpi.create_time &lt;= #{dto.endTime}
+        </if>
+        <if test="dto.state != null">
+            AND tpi.state = #{dto.state}
+        </if>
+        <if test="dto.queryType != null and dto.queryValue != null and and dto.queryValue != ''">
+            <choose>
+                <when test="dto.queryType == 1">
+                    AND tpi.name = #{dto.queryValue}
+                </when>
+                <when test="dto.queryType == 2">
+                    AND tpi.id liek concat('%',#{dto.queryValue},'%')
+                </when>
+            </choose>
+        </if>
+        order by tpi.create_time desc
+    </select>
+
+    <select id="selectTaskProgress" resultType="com.ruoyi.system.domain.vo.play.PlayTaskProgressVO">
+        SELECT
+            tpmp.play_id,
+            count( 1 ) AS totalNum,
+            sum( IF ( tpmpd.send_state > 0, 1, 0 ) ) AS currentNum,
+            sum( IF ( tpmpd.send_state = 1, 1, 0 ) ) AS sendSuccessNum,
+            sum( IF ( tpmpd.send_state = 2, 1, 0 ) ) AS sendFailNum,
+            sum( IF ( tgs.group_status = 1, 1, 0 ) ) AS groupFailNum
+        FROM
+            t_play_message_push tpmp
+            LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
+            LEFT JOIN t_group_state tgs ON tpmp.group_id = tgs.group_id
+        WHERE
+            tpmp.play_id IN
+            <foreach collection="ids" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        GROUP BY
+            tpmp.play_id
+    </select>
+
+</mapper>
