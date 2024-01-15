@@ -8,9 +8,6 @@ import lombok.Data;
  */
 @Data
 public class Performer {
-    @ApiModelProperty(value = "发言人标识")
-    private String label;
-
     @ApiModelProperty(value = "发言顺序")
     private Integer messageSort;
 
