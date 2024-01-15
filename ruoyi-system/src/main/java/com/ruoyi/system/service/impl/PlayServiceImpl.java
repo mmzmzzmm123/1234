@@ -1,16 +1,25 @@
 package com.ruoyi.system.service.impl;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
+import com.ruoyi.common.core.domain.dto.play.PlayMessageDTO;
+import com.ruoyi.common.core.domain.dto.play.SendMechanism;
 import com.ruoyi.common.core.domain.entity.play.Play;
+import com.ruoyi.common.core.domain.entity.play.PlayMessage;
+import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.vo.play.QueryPlayVO;
 import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.service.IPlayService;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 @Service
 public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IPlayService {
@@ -30,6 +39,49 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         //判断混淆状态 t_play_message_confound
 
         return R.ok();
+    }
+
+    //插入剧本消息表 数据
+    private List<PlayMessage> getPlayMessageData(String playId, List<PlayMessageDTO> playMessageList, SendMechanism sendMechanism) {
+        String nick = null;
+        int playTime = 0;
+
+        List<PlayMessage> ret = new ArrayList<>();
+        for (PlayMessageDTO messageDTO : playMessageList) {
+            PlayMessage playMessage = new PlayMessage();
+            BeanUtils.copyProperties(messageDTO, playMessage);
+
+            playMessage.setPlayId(playId);
+            if (nick == null) {
+                nick = messageDTO.getRobotNickname();
+            } else {
+                if (nick.equals(messageDTO.getRobotNickname())) {
+                    // 同一个发言人
+                    playMessage.setIntervalTime(
+                            generateRandomNumber(sendMechanism.getMsgSepStart(), sendMechanism.getMsgSepEnd()));
+                } else {
+                    // 不同的发言人
+                    playMessage.setIntervalTime(
+                            generateRandomNumber(sendMechanism.getPerformerSepStart(), sendMechanism.getPerformerSepEnd()));
+                }
+                playTime += playMessage.getIntervalTime();
+                nick = playMessage.getRobotNickname();
+            }
+            playMessage.setIntervalTime(generateRandomNumber(sendMechanism.getMsgSepStart(), sendMechanism.getMsgSepEnd()));
+            playMessage.setPlayErrorType(sendMechanism.getSendErrorType());
+            playMessage.setMessageContent(JSONObject.toJSONString(messageDTO.getMessageContent()));
+            ret.add(playMessage);
+        }
+        return ret;
+    }
+
+    private static int generateRandomNumber(int min, int max) {
+        if (min >= max) {
+            throw new IllegalArgumentException("最小值必须小于最大值");
+        }
+
+        Random random = new Random();
+        return random.nextInt((max - min) + 1) + min;
     }
 
     private void setPlay(PlayDTO dto) {

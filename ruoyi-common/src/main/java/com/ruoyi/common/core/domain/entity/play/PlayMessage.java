@@ -75,6 +75,11 @@ public class PlayMessage implements Serializable {
     @ApiModelProperty("@发言人昵称 没有传空")
     private String callRobotNickname;
 
+    /**
+     * 单条消息推送失败后状态：1.继续推送  2.终止推送
+     */
+    private Integer playErrorType;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }
