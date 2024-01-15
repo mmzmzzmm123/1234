@@ -38,12 +38,12 @@ public class Play {
     private Integer groupCondition;
 
     /**
-     * 群人数
+     * 炒群条件 群人数
      */
     private Integer userNum;
 
     /**
-     * 时间条件开始类型：0-立即开始 1定时开始
+     * 炒群条件 时间类型：0-立即开始 1定时开始
      */
     private Integer startType;
 
