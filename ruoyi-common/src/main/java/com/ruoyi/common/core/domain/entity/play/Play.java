@@ -10,6 +10,7 @@ import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 @Data
 @TableName("t_play_info")
@@ -46,6 +47,11 @@ public class Play {
      * 炒群条件 时间类型：0-立即开始 1定时开始
      */
     private Integer startType;
+
+    /**
+     * 定时开始炒群时间
+     */
+    private Date startGroupDate;
 
     /**
      * 群邀请链接
@@ -111,6 +117,16 @@ public class Play {
      * 剧本执行进度：0未开始 1入群 2混淆中 3号分配 4人设包装 5剧本发送
      */
     private Integer scanProgress;
+
+    /**
+     * 内容目标国编码
+     */
+    private String targetCountyCode;
+
+    /**
+     * 内容目标国名称
+     */
+    private String targetCountyName;
 
     public SendMechanism getSendMechanism() {
         if (StringUtils.isBlank(this.sendMechanism)) {
