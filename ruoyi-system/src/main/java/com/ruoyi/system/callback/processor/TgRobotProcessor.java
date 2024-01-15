@@ -114,4 +114,48 @@ public class TgRobotProcessor {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
 
+    /**
+     * TG获取群信息
+     * @param dto
+     */
+    @Type(value = 1100910018, parameterClass = Called1100910018DTO.class)
+    public void called1100910018(Called1100910018DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG设置群类型
+     * @param dto
+     */
+    @Type(value = 1100910056, parameterClass = Called1100910056DTO.class)
+    public void called1100910056(Called1100910056DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG应用机器人加入通讯录
+     * @param dto
+     */
+    @Type(value = 1100910026, parameterClass = CalledEmptyDTO.class)
+    public void called1100910026(CalledEmptyDTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG搜索群、用户、频道
+     * @param dto
+     */
+    @Type(value = 1100910017, parameterClass = Called1100910017DTO.class)
+    public void called1100910017(Called1100910017DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG邀请加入群组
+     * @param dto
+     */
+    @Type(value = 1100910015, parameterClass = Called1100910015DTO.class)
+    public void called1100910015(Called1100910015DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
 }
