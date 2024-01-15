@@ -1,16 +1,16 @@
 package com.ruoyi.service.impl;
 
 import com.alibaba.excel.EasyExcel;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.common.PageDto;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.entity.SourceZeroBill;
 import com.ruoyi.excel.bo.ZeroBillExcel;
 import com.ruoyi.excel.listener.ZeroBillListener;
 import com.ruoyi.mapper.SourceZeroBillMapper;
+import com.ruoyi.req.SourcePageQeq;
 import com.ruoyi.service.ISourceZeroBillService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -45,7 +45,6 @@ public class SourceZeroBillServiceImpl extends ServiceImpl<SourceZeroBillMapper,
         Integer companyNo = 456;
         List<SourceZeroBill> sourceZeroBills = new ArrayList<>();
         for (ZeroBillExcel zeroBillExcel : cachedDataList) {
-
             SourceZeroBill sourceZeroBill = new SourceZeroBill();
             BeanUtils.copyProperties(zeroBillExcel,sourceZeroBill);
             sourceZeroBill.setCompanyNo(companyNo);
@@ -62,11 +61,12 @@ public class SourceZeroBillServiceImpl extends ServiceImpl<SourceZeroBillMapper,
     }
 
     @Override
-    public Page<SourceZeroBill> dataList(PageDto pageDto) {
-        Page<SourceZeroBill> page = new Page<>(pageDto.getPageNum(),pageDto.getPageSize());
+    public List<SourceZeroBill> dataList(SourcePageQeq req) {
         return lambdaQuery().eq(SourceZeroBill::getProjectNo,124)
                 .eq(SourceZeroBill::getDeleted,true)
-                .page(page);
+                .like(StringUtils.isNotEmpty(req.getItemNum()),SourceZeroBill::getItemNum,req.getItemNum())
+                .like(StringUtils.isNotEmpty(req.getItemName()),SourceZeroBill::getItemName,req.getItemName())
+                .list();
     }
 
     @Override

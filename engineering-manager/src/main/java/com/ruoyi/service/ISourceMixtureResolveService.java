@@ -4,9 +4,12 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.PageDto;
 import com.ruoyi.entity.SourceMixtureResolve;
+import com.ruoyi.req.SourcePageQeq;
+import com.ruoyi.vo.SourceMixtureResolveVO;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * <p>
@@ -19,7 +22,7 @@ import java.io.IOException;
 public interface ISourceMixtureResolveService extends IService<SourceMixtureResolve> {
     void importData(MultipartFile file) throws IOException;
 
-    Page<SourceMixtureResolve> dataList(PageDto pageDto);
+    List<SourceMixtureResolveVO> dataList(SourcePageQeq req);
 
     void saveOrUpdateData(SourceMixtureResolve sourceMixtureResolve);
 }

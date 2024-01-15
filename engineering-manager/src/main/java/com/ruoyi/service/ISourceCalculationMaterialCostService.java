@@ -7,6 +7,8 @@ import com.ruoyi.entity.SourceCalculationMaterialCost;
 import com.ruoyi.entity.SourceMixtureResolve;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * <p>
  * 成本测算---材料费 服务类
@@ -21,6 +23,6 @@ public interface ISourceCalculationMaterialCostService extends IService<SourceCa
 
     void saveOrUpdateData(SourceCalculationMaterialCost sourceCalculationMaterialCost);
 
-    Page<SourceCalculationMaterialCost> dataList(PageDto pageDto);
+    List<SourceCalculationMaterialCost> dataList();
 
 }
