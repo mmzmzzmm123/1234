@@ -17,4 +17,7 @@ public class GroupQueryDTO {
 
     @ApiModelProperty(value = "群数")
     private Integer groupNum;
+
+    @ApiModelProperty(value = "群主机器人优先国家")
+    private String countryCode;
 }
