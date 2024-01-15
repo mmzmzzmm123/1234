@@ -94,11 +94,10 @@ public class SourceMixtureResolveServiceImpl extends ServiceImpl<SourceMixtureRe
     }
 
     @Override
-    public Page<SourceMixtureResolve> dataList(PageDto pageDto) {
-        Page<SourceMixtureResolve> page = new Page<>(pageDto.getPageNum(),pageDto.getPageSize());
+    public List<SourceMixtureResolve> dataList() {
         return lambdaQuery().eq(SourceMixtureResolve::getProjectNo,124)
                 .eq(SourceMixtureResolve::getDeleted,true)
-                .page(page);
+                .list();
     }
 
     @Override

@@ -45,7 +45,6 @@ public class SourceZeroBillServiceImpl extends ServiceImpl<SourceZeroBillMapper,
         Integer companyNo = 456;
         List<SourceZeroBill> sourceZeroBills = new ArrayList<>();
         for (ZeroBillExcel zeroBillExcel : cachedDataList) {
-
             SourceZeroBill sourceZeroBill = new SourceZeroBill();
             BeanUtils.copyProperties(zeroBillExcel,sourceZeroBill);
             sourceZeroBill.setCompanyNo(companyNo);
@@ -62,11 +61,10 @@ public class SourceZeroBillServiceImpl extends ServiceImpl<SourceZeroBillMapper,
     }
 
     @Override
-    public Page<SourceZeroBill> dataList(PageDto pageDto) {
-        Page<SourceZeroBill> page = new Page<>(pageDto.getPageNum(),pageDto.getPageSize());
+    public List<SourceZeroBill> dataList() {
         return lambdaQuery().eq(SourceZeroBill::getProjectNo,124)
                 .eq(SourceZeroBill::getDeleted,true)
-                .page(page);
+                .list();
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.ruoyi.entity.SourceZeroBill;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * <p>
@@ -20,7 +21,7 @@ public interface ISourceZeroBillService extends IService<SourceZeroBill> {
 
     void importData(MultipartFile file) throws IOException;
 
-    Page<SourceZeroBill> dataList(PageDto pageDto);
+    List<SourceZeroBill> dataList();
 
     void saveOrUpdateData(SourceZeroBill sourceZeroBill);
 

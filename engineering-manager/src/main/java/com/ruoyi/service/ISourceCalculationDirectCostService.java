@@ -7,6 +7,8 @@ import com.ruoyi.entity.SourceCalculationDirectCost;
 import com.ruoyi.entity.SourceZeroBill;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 /**
  * <p>
  * 成本测算导入（直接费） 服务类
@@ -21,5 +23,5 @@ public interface ISourceCalculationDirectCostService extends IService<SourceCalc
 
     void saveOrUpdateData(SourceCalculationDirectCost sourceCalculationDirectCost);
 
-    Page<SourceCalculationDirectCost> dataList(PageDto pageDto);
+    List<SourceCalculationDirectCost> dataList();
 }
