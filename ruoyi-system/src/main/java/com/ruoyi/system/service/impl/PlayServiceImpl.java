@@ -5,24 +5,25 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.domain.dto.play.Performer;
+import com.ruoyi.common.core.domain.dto.play.GroupPack;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.dto.play.PlayMessageDTO;
 import com.ruoyi.common.core.domain.dto.play.SendMechanism;
 import com.ruoyi.common.core.domain.entity.play.Play;
-import com.ruoyi.common.core.domain.entity.play.PlayGroupPack;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.vo.play.PlayGroupProgressVO;
 import com.ruoyi.system.domain.vo.play.PlayTaskProgressVO;
 import com.ruoyi.system.domain.vo.play.QueryPlayVO;
+import com.ruoyi.system.mapper.PlayGroupPackMapper;
 import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.service.IPlayService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,7 +33,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IPlayService {
-
+    @Resource
+    private PlayGroupPackMapper playGroupPackMapper;
 
     @Override
     @Transactional(rollbackFor=Exception.class)
@@ -93,9 +95,13 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         return random.nextInt((max - min) + 1) + min;
     }
 
-    private void saveGroupPack(List<Performer> performerList) {
-        PlayGroupPack playGroupPack = new PlayGroupPack();
-
+    private void saveGroupPack(List<GroupPack> groupPack) {
+//        for (GroupPack groupPack : groupPack) {
+//            PlayGroupPack playGroupPack = new PlayGroupPack();
+//            BeanUtils.copyProperties(groupPack, playGroupPack);
+//        }
+//
+//        playGroupPackMapper.b
     }
 
     private void savePlay(PlayDTO dto, String id) {
