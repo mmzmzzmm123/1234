@@ -34,8 +34,8 @@ public class VibeRuleController extends BaseController {
     }
 
     @ApiOperation("获取详情")
-    @GetMapping(value = "/{id}")
-    public R<VibeRuleDTO> info(@PathVariable Integer id) {
-        return vibeRuleService.info(id);
+    @GetMapping(value = "info")
+    public R<VibeRuleDTO> getOne() {
+        return R.ok(vibeRuleService.getOne());
     }
 }
