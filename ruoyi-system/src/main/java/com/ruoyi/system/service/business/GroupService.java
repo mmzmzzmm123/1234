@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.business;
 
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.dto.GroupQueryDTO;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
 import lombok.AllArgsConstructor;
@@ -22,8 +23,8 @@ public class GroupService {
      * @param dto 选群条件
      * @return 满足条件群
      */
-    public List<GroupInfoVO> queryGroup(GroupQueryDTO dto) {
-        return new ArrayList<>();
+    public R<List<GroupInfoVO>> queryGroup(GroupQueryDTO dto) {
+        return R.ok();
     }
 
     /**
