@@ -95,7 +95,7 @@ public class Play {
     /**
      * 操作员id
      */
-    private String sysUserId;
+    private String merchantId;
 
     /**
      * 是否删除: 0否 1是
