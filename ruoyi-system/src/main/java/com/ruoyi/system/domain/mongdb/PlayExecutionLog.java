@@ -30,6 +30,11 @@ public class PlayExecutionLog {
     @ApiModelProperty("剧本ID")
     private String playId;
 
+    /**
+     * 日志类型
+     */
+    @ApiModelProperty("日志类型")
+    private Integer type;
 
     /**
      * 执行内容
@@ -37,6 +42,11 @@ public class PlayExecutionLog {
     @ApiModelProperty("执行内容")
     private String content;
 
+    /**
+     * 状态 0-成功（默认） 1-失败
+     */
+    @ApiModelProperty("状态 0-成功（默认） 1-失败")
+    private Integer state = 0;
 
     /**
      * 创建时间
