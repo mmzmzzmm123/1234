@@ -29,4 +29,7 @@ public class QueryPlayDTO extends PageBaseDTO {
     @ApiModelProperty("查询值")
     private String queryValue;
 
+    @ApiModelProperty(value = "商家ID", hidden = true)
+    private String merchantId;
+
 }
