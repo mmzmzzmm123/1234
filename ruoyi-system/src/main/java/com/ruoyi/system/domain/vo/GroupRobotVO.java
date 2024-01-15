@@ -13,24 +13,21 @@ import lombok.Data;
 @ApiModel("群内机器人信息VO")
 public class GroupRobotVO {
     /**
-     * 机器人Id
+     * 机器人编号
      */
-    @ApiModelProperty(value = "机器人Id")
-    @TableField("robot_id")
+    @ApiModelProperty(value = "机器人编号")
     private String robotId;
 
     /**
      * 是否是bot 0-否 1-是
      */
     @ApiModelProperty(value = "是否是bot 0-否 1-是")
-    @TableField("bot_type")
     private Integer botType;
 
     /**
      * 成员身份 0普通 1群主 2管理员
      */
     @ApiModelProperty(value = "成员身份 0普通 1群主 2管理员")
-    @TableField("member_type")
     private Integer memberType;
 
 }
