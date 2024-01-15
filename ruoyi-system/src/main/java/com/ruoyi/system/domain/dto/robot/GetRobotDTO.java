@@ -13,4 +13,8 @@ public class GetRobotDTO {
     private Integer count;
     @ApiModelProperty(value = "国家编码")
     private List<String> countryCode;
+    @ApiModelProperty(value = "是否需要设置管理员,0-否,1-是")
+    private Integer isSetAdmin;
+    @ApiModelProperty(value = "是否需要离散,0-否,1-B段离散,2-C段离散")
+    private Integer ipType;
 }

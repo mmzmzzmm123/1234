@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain.dto;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.system.domain.base.PageBaseDTO;
@@ -21,15 +22,19 @@ public class GroupPageQueryDTO extends PageBaseDTO {
     @ApiModelProperty(value = "分组Id")
     private String clusterId;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "入库时间-开始")
     private LocalDateTime createTimeStart;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "入库时间-结束")
     private LocalDateTime createTimeEnd;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "最后一次使用时间-开始")
     private LocalDateTime usedTimeStart;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "最后一次使用时间-结束")
     private LocalDateTime usedTimeEnd;
 

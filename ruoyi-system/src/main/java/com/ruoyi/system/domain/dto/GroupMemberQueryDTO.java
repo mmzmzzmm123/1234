@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain.dto;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.ruoyi.system.domain.base.PageBaseDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -27,9 +28,11 @@ public class GroupMemberQueryDTO extends PageBaseDTO {
     @ApiModelProperty(value = "手机号")
     private String phone;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "最后在线时间-开始")
     private LocalDateTime wasOnlineStart;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "最后在线时间-结束")
     private LocalDateTime wasOnlineEnd;
 

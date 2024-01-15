@@ -59,6 +59,12 @@ public class Robot {
     @ApiModelProperty(value = "vpn登陆ip")
     private String vpnIp;
 
+    @ApiModelProperty(value = "vpn登陆B段ip")
+    private String vpnIpB;
+
+    @ApiModelProperty(value = "vpn登陆C段ip")
+    private String vpnIpC;
+
     @ApiModelProperty(value = "禁用启用状态,0-禁用,1-启用")
     private Integer enableType;
 

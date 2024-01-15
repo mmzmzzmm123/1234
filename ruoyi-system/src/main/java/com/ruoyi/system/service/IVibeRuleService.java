@@ -8,5 +8,5 @@ public interface IVibeRuleService {
 
     R<String> update(VibeRuleDTO dto);
 
-    R<VibeRuleDTO> info(Integer id);
+    VibeRuleDTO getOne();
 }

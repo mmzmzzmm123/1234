@@ -38,7 +38,7 @@ public class PlayDTO {
     private List<String> groupUrls;
 
     @ApiModelProperty(value = "群消息包装")
-    private List<GroupPack> groupPack;
+    private GroupPack groupPack;
 
     @ApiModelProperty(value = "每个群演员数")
     private Integer robotNum;

@@ -1,5 +1,7 @@
 package com.ruoyi.system.domain.vo;
 
+import com.alibaba.fastjson2.annotation.JSONField;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.ruoyi.common.annotation.Excel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -47,6 +49,10 @@ public class GroupPageInfoVO {
     @ApiModelProperty(value = "占用水军数")
     private Integer robotNum;
 
+    @Excel(name = "总人数")
+    @ApiModelProperty(value = "总人数")
+    private Integer memberCount;
+
     @Excel(name = "分组")
     @ApiModelProperty(value = "分组")
     private String clusterName;
@@ -79,11 +85,12 @@ public class GroupPageInfoVO {
     @ApiModelProperty(value = "封号状态 10:未封号 20:疑似封号 30:封号离线")
     private Integer sealStatus;
 
-
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "入库时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "入库时间")
     private LocalDateTime createTime;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "入库时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "最后一次使用时间")
     private LocalDateTime usedTime;
