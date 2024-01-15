@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IPlayService {
     @Override
     public R<String> create(PlayDTO dto) {
-        //更新基础信息表
+        //t_play_info
 
         //剧本内容，根据label将演员和剧本对应
 

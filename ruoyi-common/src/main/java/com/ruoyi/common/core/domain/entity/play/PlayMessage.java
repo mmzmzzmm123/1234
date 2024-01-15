@@ -26,7 +26,7 @@ public class PlayMessage implements Serializable {
      * 剧本ID
      */
     @ApiModelProperty(value = "剧本ID",hidden = true)
-    private Integer playId;
+    private String playId;
 
     /**
      * 发言人昵称
