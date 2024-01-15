@@ -4,7 +4,9 @@ import cn.hutool.http.*;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.system.openapi.model.output.ExtTgBatchRobotSimpInfoData;
+import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotByMerchantVO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spring.SpringUtils;
@@ -199,6 +201,18 @@ public class OpenApiClient {
      */
     public static OpenApiResult<TgBaseOutputDTO> searchMemberByThirdKpTg(ThirdTgSearchMemberInputDTO data) {
         return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SEARCH_MEMBER, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
+    /**
+     * 比邻第三方(UtchatTG)：-查询分组下的机器号
+     *
+     * @return
+     */
+    public static OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> selectRobotListByRadioByThirdUtchatTg(ThirdTgSelectRobotListByRadioDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SELECT_ROBOT_LIST_BY_RADIO,
+                JSONObject.from(data),
+                new TypeReference<Page<ExtTgSelectRobotByMerchantVO>>(ExtTgSelectRobotByMerchantVO.class) {
+        });
     }
 
 }
