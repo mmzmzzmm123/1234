@@ -44,7 +44,7 @@ public class PlayDTO {
     private List<Performer> performerList;
 
     @ApiModelProperty(value = "剧本内容")
-    private List<PlayMessage> playMessageList;
+    private List<PlayMessageDTO> playMessageList;
 
     @ApiModelProperty(value = "剧本是否混淆：0-否 1-是")
     private Integer isConfound;

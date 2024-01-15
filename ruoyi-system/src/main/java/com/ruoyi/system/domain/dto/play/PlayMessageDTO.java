@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class PlayMessage {
+public class PlayMessageDTO {
     @ApiModelProperty(value = "发言人标识")
     private String label;
 
