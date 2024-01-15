@@ -92,5 +92,13 @@ public class Play {
      */
     private String sysUserId;
 
+    /**
+     * 是否删除: 0否 1是
+     */
+    private Integer isDelete;
+
+    /**
+     * 速度
+     */
     private BigDecimal speed;
 }

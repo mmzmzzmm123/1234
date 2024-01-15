@@ -48,6 +48,9 @@ public class PlayMessage implements Serializable {
     @TableField(exist = false)
     private List<ContentJson> messageContentList;
 
+    @ApiModelProperty("与上条消息间隔时间 单位秒")
+    private Integer intervalTime;
+
     /**
      * 0正常 1删除
      */
