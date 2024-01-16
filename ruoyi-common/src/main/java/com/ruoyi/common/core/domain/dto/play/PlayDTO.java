@@ -74,7 +74,4 @@ public class PlayDTO {
     private String urlPool;
 
     private String merchantId;
-
-    @ApiModelProperty(value = "word文件链接")
-    private String wordUrl;
 }
