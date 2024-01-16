@@ -4,6 +4,7 @@ import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.Country;
 import com.ruoyi.system.service.CountryService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ public class CountryController {
     @Resource
     private CountryService countryService;
 
+    @ApiOperation("获取所有国家")
     @Anonymous
     @GetMapping("/all")
     public R<List<Country>> all() {
