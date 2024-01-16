@@ -350,11 +350,21 @@ public class IntoGroupService {
                     }
                 }
                 for (GroupInfoVO groupInfoVO:infoVOS){
-                    List<String> robotVOS= getRobot(playDTO,vibeRule,performers);
+                    List<GetRobotVO> robotVOS= getRobot(playDTO,vibeRule,performers);
                     if (robotVOS == null){
                         playDTO.setState(3);
                         playDTO.setFailReason("无剧本所需足够的机器人！");
                         continue;
+                    }
+                    //拆分机器人列表
+                    List<GetRobotVO> adminList = new ArrayList<>();
+                    List<GetRobotVO> robotList = new ArrayList<>();
+                    for (GetRobotVO getRobotVO:robotVOS){
+                        if (getRobotVO.getIsSetAdmin() == 1){
+                            adminList.add(getRobotVO);
+                        }else {
+                            robotList.add(getRobotVO);
+                        }
                     }
                     //拆分入群任务
                     for (PlayRobotPack performer:performers){
@@ -367,13 +377,13 @@ public class IntoGroupService {
                         playIntoGroupTask.setPlayId(playDTO.getId());
                         playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
                         if (performer.getIsAdmin() == 1){
-                            int index = RandomListPicker.pickRandom(robotVOS);
-                            playIntoGroupTask.setPersonId(robotVOS.get(index));
+                            int index = RandomListPicker.pickRandom(adminList);
+                            playIntoGroupTask.setPersonId(adminList.get(index).getRobotSerialNo());
                             robotVOS.remove(index);
                             playIntoGroupTask.setTaskState(1);
                         }else {
-                            int index = RandomListPicker.pickRandom(robotVOS);
-                            playIntoGroupTask.setPersonId(robotVOS.get(index));
+                            int index = RandomListPicker.pickRandom(robotList);
+                            playIntoGroupTask.setPersonId(robotList.get(index).getRobotSerialNo());
                             robotVOS.remove(index);
                             playIntoGroupTask.setTaskState(1);
                         }
@@ -384,7 +394,17 @@ public class IntoGroupService {
                 //群链接入群
                 List<String> groupUrls =Arrays.asList(playDTO.getGroupUrls().split(","));
                 for (String group : groupUrls) {
-                    List<String> robotVOS= getRobot(playDTO,vibeRule,performers);
+                    List<GetRobotVO> robotVOS= getRobot(playDTO,vibeRule,performers);
+                    //拆分机器人列表
+                    List<GetRobotVO> adminList = new ArrayList<>();
+                    List<GetRobotVO> robotList = new ArrayList<>();
+                    for (GetRobotVO getRobotVO:robotVOS){
+                        if (getRobotVO.getIsSetAdmin() == 1){
+                            adminList.add(getRobotVO);
+                        }else {
+                            robotList.add(getRobotVO);
+                        }
+                    }
                     if (robotVOS == null){
                         playDTO.setState(3);
                         playDTO.setFailReason("无剧本所需足够的机器人！");
@@ -401,13 +421,13 @@ public class IntoGroupService {
                         playIntoGroupTask.setPlayId(playDTO.getId());
                         playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
                         if (performer.getIsAdmin() == 1){
-                            int index = RandomListPicker.pickRandom(robotVOS);
-                            playIntoGroupTask.setPersonId(robotVOS.get(index));
+                            int index = RandomListPicker.pickRandom(adminList);
+                            playIntoGroupTask.setPersonId(adminList.get(index).getRobotSerialNo());
                             robotVOS.remove(index);
                             playIntoGroupTask.setTaskState(1);
                         }else {
-                            int index = RandomListPicker.pickRandom(robotVOS);
-                            playIntoGroupTask.setPersonId(robotVOS.get(index));
+                            int index = RandomListPicker.pickRandom(robotList);
+                            playIntoGroupTask.setPersonId(robotList.get(index).getRobotSerialNo());
                             robotVOS.remove(index);
                             playIntoGroupTask.setTaskState(1);
                         }
@@ -420,7 +440,7 @@ public class IntoGroupService {
         }
     }
 
-    public List<String> getRobot(Play playDTO,VibeRuleDTO vibeRule,List<PlayRobotPack> performers){
+    public List<GetRobotVO> getRobot(Play playDTO,VibeRuleDTO vibeRule,List<PlayRobotPack> performers){
         //获取需要的机器人数量
         //统计需要管理员权限的机器人
         Integer adminNum = 0,robotNum = 0;
@@ -474,7 +494,7 @@ public class IntoGroupService {
         adminDTO.setSetAdminCount(adminNum);
         adminDTO.setIpType(ipType);
         //调用获取机器人接口
-        R<List<String>> robotAdminVOS =  robotStatisticsService.getRobot(adminDTO);
+        R<List<GetRobotVO>> robotAdminVOS =  robotStatisticsService.getRobot(adminDTO);
         if (robotAdminVOS.getCode() != 0){
             return null;
         }
