@@ -113,7 +113,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/register",
                         "/captchaImage",
                         "/onethinker/platformUser/login",
-                        "/onethinker/platformUser/register"
+                        "/onethinker/platformUser/register",
+                        "/onethinker/platformUser/getCodeForForgetPassword"
                 ).permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()

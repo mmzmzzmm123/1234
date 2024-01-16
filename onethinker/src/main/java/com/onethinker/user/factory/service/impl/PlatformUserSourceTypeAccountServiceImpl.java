@@ -1,5 +1,9 @@
 package com.onethinker.user.factory.service.impl;
 
+import com.onethinker.bk.domain.WebInfo;
+import com.onethinker.mail.service.IMailService;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
 import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.utils.PhoneUtils;
 import com.ruoyi.framework.web.service.SysLoginService;
@@ -20,8 +24,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 平台用户Service业务层处理
@@ -44,6 +52,12 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
 
     @Autowired
     private SysLoginService loginService;
+
+    @Autowired
+    private RedisCache redisCache;
+
+    @Autowired
+    private IMailService mailService;
 
     private Logger logger = LoggerFactory.getLogger(PlatformUserSourceTypeAccountServiceImpl.class);
 
@@ -81,7 +95,17 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
     }
 
     @Override
-    public void getCodeForForgetPassword(String place, Integer flag) {
-
+    public void getCodeForForgetPassword(String place, String flag) {
+        // 随机数
+        int code = new Random().nextInt(900000) + 100000;
+        if (PlatformUserReqDTO.PHONE_CODE.equals(flag)) {
+            log.info(place + "---" + "手机验证码---" + code);
+        } else if (PlatformUserReqDTO.EMAIL_CODE.equals(flag)){
+            log.info(place + "---" + "邮箱验证码---" + code);
+            // 发送邮箱验证码处理
+            mailService.sendMailCode(place,code);
+        }
+        // 保存5分钟
+        redisCache.setCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + place + "_" + flag, Integer.valueOf(code), 5, TimeUnit.MINUTES);
     }
 }

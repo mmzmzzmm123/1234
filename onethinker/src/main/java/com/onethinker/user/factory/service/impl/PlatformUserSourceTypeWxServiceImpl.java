@@ -93,7 +93,7 @@ public class PlatformUserSourceTypeWxServiceImpl implements IPlatformUserService
     }
 
     @Override
-    public void getCodeForForgetPassword(String place, Integer flag) {
+    public void getCodeForForgetPassword(String place, String flag) {
         throw new RuntimeException("暂不支持");
     }
 }

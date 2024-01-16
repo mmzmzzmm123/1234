@@ -76,7 +76,19 @@ public enum SysConfigKeyEnum {
     /**
      * 服务器文件前缀
      */
-    SERVICE_FILE_PUBLIC_URL("service_file_public_url", "服务器文件前缀");
+    SERVICE_FILE_PUBLIC_URL("service_file_public_url", "服务器文件前缀"),
+    /**
+     * 验证码发送次数
+     */
+    CODE_MAIL_COUNT("code_mail_count","验证码发送次数" ),
+    /**
+     * 验证码内容：【扬万科技】%s为本次验证的验证码，请在5分钟内完成验证。为保证账号安全，请勿泄漏此验证码。
+     */
+    CODE_MAIL_FORMAT("code_mail_format", "验证码内容"),
+    /**
+     * 发送人
+     */
+    SEND_MAILER("send_mailer", "邮箱发送人");
     String code;
     String msg;
 

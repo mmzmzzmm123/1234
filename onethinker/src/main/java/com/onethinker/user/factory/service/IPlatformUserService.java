@@ -28,5 +28,5 @@ public interface IPlatformUserService {
      * @param place
      * @param flag
      */
-    void getCodeForForgetPassword(String place, Integer flag);
+    void getCodeForForgetPassword(String place, String flag);
 }

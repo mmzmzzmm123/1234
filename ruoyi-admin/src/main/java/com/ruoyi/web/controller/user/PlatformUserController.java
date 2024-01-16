@@ -48,6 +48,22 @@ public class PlatformUserController extends BaseController {
         return AjaxResult.success("注册成功");
     }
 
+    /**
+     * 忘记密码 获取验证码
+     * <p>
+     * 1 手机号
+     * 2 邮箱
+     */
+    @GetMapping("/getCodeForForgetPassword")
+    public AjaxResult getCodeForForgetPassword(@RequestParam("place") String place, @RequestParam("flag") String flag) {
+        /**
+         * 这里只有网页版才有
+         */
+        IPlatformUserService platformUserService = platformUserFactory.queryPlatformUserServiceBySourceType(PlatformUserReqDTO.SOURCE_TYPE_ACCOUNT);
+        platformUserService.getCodeForForgetPassword(place, flag);
+        return AjaxResult.success();
+    }
+
     @PostMapping(value = "/update")
     public AjaxResult platformUserUpdate(@RequestBody PlatformUserDetail platformUserDetail) {
         PlatformUserDetail resDTO = platformUserDetailService.queryLoginUserInfo();

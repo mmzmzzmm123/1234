@@ -19,6 +19,16 @@ public class PlatformUserReqDTO {
     public static final String SOURCE_TYPE_ACCOUNT = "2";
 
     /**
+     * 手机验证码
+     */
+    public static final String PHONE_CODE = "1";
+
+    /**
+     * 邮箱验证码
+     */
+    public static final String EMAIL_CODE = "2";
+
+    /**
      * 平台用户来源 1：微信平台登录 2：账户密码登录
      */
     private String sourceType;
