@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @ApiModel("GetRobotDTO")
 public class GetRobotDTO {
-    @ApiModelProperty(value = "需要的号数量")
+    @ApiModelProperty(value = "需要的普通号数量")
     private Integer count = 0;
     @ApiModelProperty(value = "需要的设置管理员的号数量")
     private Integer setAdminCount = 0;
