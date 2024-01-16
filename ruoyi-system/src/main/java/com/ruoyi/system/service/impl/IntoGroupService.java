@@ -6,6 +6,7 @@ import com.ruoyi.common.core.domain.dto.play.Performer;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
 import com.ruoyi.common.core.domain.entity.VibeRule;
+import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.callback.dto.Called1100910039DTO;
@@ -14,11 +15,13 @@ import com.ruoyi.system.components.RandomListPicker;
 import com.ruoyi.system.domain.dto.GroupQueryDTO;
 import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
 import com.ruoyi.system.domain.dto.play.PlayIntoGroupTask;
+import com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation;
 import com.ruoyi.system.domain.dto.robot.GetRobotDTO;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.robot.GetRobotVO;
 import com.ruoyi.system.mapper.PlayGroupInfoMapper;
 import com.ruoyi.system.mapper.PlayIntoGroupTaskMapper;
+import com.ruoyi.system.mapper.PlayRobotGroupRelationMapper;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.ThirdTgJoinChatroomByUrlInputDTO;
@@ -28,6 +31,7 @@ import com.ruoyi.system.service.RobotStatisticsService;
 import com.ruoyi.system.service.business.GroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -57,25 +61,13 @@ public class IntoGroupService {
     @Autowired
     PlayGroupInfoMapper playGroupInfoMapper;
 
+    @Autowired
+    PlayRobotGroupRelationMapper playRobotGroupRelationMapper;
+
 
     public void  into(PlayDTO playDTO){
-        //获取需要的机器人数量
-        List<Performer> performers = playDTO.getPerformerList();
-        //统计需要管理员权限的机器人
-        Integer adminNum = 0,robotNum = 0;
-        for (Performer performer:performers){
-            if (performer.getIsAdmin() == 1){
-                adminNum++;
-            }else {
-                robotNum++;
-            }
-        }
+        List<PlayIntoGroupTask> playIntoGroupTasks = new ArrayList<>();
         VibeRuleDTO vibeRule = vibeRuleService.getOne();
-        //备用号逻辑
-        if (playDTO.getPlayExt().getStandbyState() == 1){
-            //获取备用号规则
-            adminNum = adminNum+(adminNum*vibeRule.getStandbyNum());
-        }
         List<String> countys = new ArrayList<>();
         //是否设置目标国
         if (StringUtils.isNotEmpty(playDTO.getTargetCountyCode())&& vibeRule.getTargetParams() != null){
@@ -83,35 +75,20 @@ public class IntoGroupService {
             List<String>  preferenceCodes = new ArrayList<>();
             for (VibeRuleTargetParam param:vibeRule.getTargetParams()){
                 if (param.getAllState() == 1){
-                  allList = param.getPreferenceCodes();
-                  continue;
+                    allList = param.getPreferenceCodes();
+                    continue;
                 }
                 if (playDTO.getTargetCountyCode().equals(param.getCountryCode())){
                     preferenceCodes = param.getPreferenceCodes();
                 }
             }
-            if (performers.size() != 0){
+            if (preferenceCodes.size() != 0){
                 countys = preferenceCodes;
             }else {
                 countys = allList;
             }
         }
-        //获取需要入群的群数
-        adminNum = adminNum * playDTO.getGroupNum();
-        robotNum = robotNum * playDTO.getGroupNum();
-        GetRobotDTO adminDTO = new GetRobotDTO();
-        //获取可以被设置管理员的机器人
-        adminDTO.setCount(adminNum);
-        adminDTO.setCountryCode(countys);
-        //调用获取机器人接口
-        R<List<String>> robotAdminVOS =  robotStatisticsService.getRobot(adminDTO);
-        //获取可以不需要设置成管理员的机器人
-        GetRobotDTO robotDTO = new GetRobotDTO();
-        robotDTO.setCount(robotNum);
-        robotDTO.setCountryCode(countys);
-        R<List<String>> robotVOS = robotStatisticsService.getRobot(robotDTO);
-
-        List<PlayIntoGroupTask> playIntoGroupTasks = new ArrayList<>();
+        List<Performer> performers = playDTO.getPerformerList();
         //判定是否是平台提供群
         if (playDTO.getGroupSource() == 0){
             GroupQueryDTO groupQueryDTO = new GroupQueryDTO();
@@ -125,6 +102,7 @@ public class IntoGroupService {
                 return;
             }
             for (GroupInfoVO groupInfoVO:groupList.getData()){
+                List<String> robotVOS= getRobot(playDTO,vibeRule);
                 //拆分入群任务
                     for (Performer performer:performers){
                     PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
@@ -137,14 +115,14 @@ public class IntoGroupService {
                     playIntoGroupTask.setPlayId(playDTO.getId());
                     playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
                     if (performer.getIsAdmin() == 1){
-                        int index = RandomListPicker.pickRandom(robotAdminVOS.getData());
-                        playIntoGroupTask.setPersonId(robotAdminVOS.getData().get(index));
-                        robotAdminVOS.getData().remove(index);
+                        int index = RandomListPicker.pickRandom(robotVOS);
+                        playIntoGroupTask.setPersonId(robotVOS.get(index));
+                        robotVOS.remove(index);
                         playIntoGroupTask.setTaskState(1);
                     }else {
-                        int index = RandomListPicker.pickRandom(robotVOS.getData());
-                        playIntoGroupTask.setPersonId(robotVOS.getData().get(index));
-                        robotVOS.getData().remove(index);
+                        int index = RandomListPicker.pickRandom(robotVOS);
+                        playIntoGroupTask.setPersonId(robotVOS.get(index));
+                        robotVOS.remove(index);
                         playIntoGroupTask.setTaskState(1);
                     }
                     playIntoGroupTasks.add(playIntoGroupTask);
@@ -153,7 +131,7 @@ public class IntoGroupService {
         }else {
             //群链接入群
             List<String> groupUrls = playDTO.getGroupUrls();
-            List<PlayIntoGroupTask> personIntoGroupTasks = new ArrayList<>();
+            List<String> robotVOS= getRobot(playDTO,vibeRule);
             for (String group : groupUrls) {
                 // 循环插入计划表
                 for (Performer performer:performers){
@@ -166,22 +144,83 @@ public class IntoGroupService {
                     playIntoGroupTask.setPlayId(playDTO.getId());
                     playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
                     if (performer.getIsAdmin() == 1){
-                        int index = RandomListPicker.pickRandom(robotAdminVOS.getData());
-                        playIntoGroupTask.setPersonId(robotAdminVOS.getData().get(index));
-                        robotAdminVOS.getData().remove(index);
+                        int index = RandomListPicker.pickRandom(robotVOS);
+                        playIntoGroupTask.setPersonId(robotVOS.get(index));
+                        robotVOS.remove(index);
                         playIntoGroupTask.setTaskState(1);
                     }else {
-                        int index = RandomListPicker.pickRandom(robotVOS.getData());
-                        playIntoGroupTask.setPersonId(robotVOS.getData().get(index));
-                        robotVOS.getData().remove(index);
+                        int index = RandomListPicker.pickRandom(robotVOS);
+                        playIntoGroupTask.setPersonId(robotVOS.get(index));
+                        robotVOS.remove(index);
                         playIntoGroupTask.setTaskState(1);
                     }
                     playIntoGroupTask.setTaskState(1);
-                    personIntoGroupTasks.add(playIntoGroupTask);
+                    playIntoGroupTasks.add(playIntoGroupTask);
                 }
-                playIntoGroupTaskMapper.batchInsert(personIntoGroupTasks);
             }
         }
+        playIntoGroupTaskMapper.batchInsert(playIntoGroupTasks);
+    }
+
+    public List<String> getRobot(PlayDTO playDTO,VibeRuleDTO vibeRule){
+        //获取需要的机器人数量
+        List<Performer> performers = playDTO.getPerformerList();
+        //统计需要管理员权限的机器人
+        Integer adminNum = 0,robotNum = 0;
+        for (Performer performer:performers){
+            if (performer.getIsAdmin() == 1){
+                adminNum++;
+            }else {
+                robotNum++;
+            }
+        }
+        //备用号逻辑
+        if (playDTO.getPlayExt().getStandbyState() == 1){
+            //获取备用号规则
+            adminNum = adminNum+(adminNum*vibeRule.getStandbyNum());
+        }
+        List<String> countys = new ArrayList<>();
+        //是否设置目标国
+        if (StringUtils.isNotEmpty(playDTO.getTargetCountyCode())&& vibeRule.getTargetParams() != null){
+            List<String> allList = new ArrayList<>();
+            List<String>  preferenceCodes = new ArrayList<>();
+            for (VibeRuleTargetParam param:vibeRule.getTargetParams()){
+                if (param.getAllState() == 1){
+                    allList = param.getPreferenceCodes();
+                    continue;
+                }
+                if (playDTO.getTargetCountyCode().equals(param.getCountryCode())){
+                    preferenceCodes = param.getPreferenceCodes();
+                }
+            }
+            if (performers.size() != 0){
+                countys = preferenceCodes;
+            }else {
+                countys = allList;
+            }
+        }
+        Integer ipType = 0;
+        //是否需要做IP离散
+        if (vibeRule.getPeriodByIp() == 1){
+            if (vibeRule.getPeriodByC() == 1){
+                ipType = 2;
+            }
+            if (vibeRule.getPeriodByB() == 1){
+                ipType = 1;
+            }
+        }
+        GetRobotDTO adminDTO = new GetRobotDTO();
+        //获取可以被设置管理员的机器人
+        adminDTO.setCount(robotNum);
+        adminDTO.setCountryCode(countys);
+        adminDTO.setSetAdminCount(adminNum);
+        adminDTO.setIpType(ipType);
+        //调用获取机器人接口
+        R<List<String>> robotAdminVOS =  robotStatisticsService.getRobot(adminDTO);
+        if (robotAdminVOS.getCode() != 0){
+            return null;
+        }
+        return robotAdminVOS.getData();
     }
 
 
@@ -245,50 +284,44 @@ public class IntoGroupService {
         //入群成功 查询群信息
         //添加等待锁
 //        ClusterLock.ofAwait().lock("linkmaster:atmosphere:waitLock:intoGroupCallback" + dto.getGroupId(), 60);
-//        try {
-//            PlayGroupInfo groupInfo = playGroupInfoMapper.selectGroupInfoById(dto.getChatroomSerialNo());
-//            if (groupInfo == null) {
-//                //创建群信息
-//                groupInfo = getGroupInfo(dto, task);
-//                groupInfoMapper.insert(groupInfo);
-//            } else {
-//                groupInfo.setGroupImageUrl(dto.getHeadImageUrl());
-//                groupInfo.setTgGroupName(dto.getGroupName());
-//                groupInfo.setMemberCount(dto.getMemberCount());
-//                groupInfo.setGroupType(dto.getGroupType());
-//                groupInfoMapper.updateById(groupInfo);
-//            }
-//            //查询当前机器人是否已和群做绑定
-//            Integer count = robotGroupRelationMapper.selectRobotGroup(dto.getGroupId(), task.getPersonId());
-//            if (count == 0) {
-//                //绑定机器人和群信息记录表
-//                RobotGroupRelation robotGroupRelation = new RobotGroupRelation();
-//                robotGroupRelation.setRobotGroupRelationId(IdGenerator.getIdStr());
-//                robotGroupRelation.setMerchantId(task.getMerchantId());
-//                robotGroupRelation.setRobotId(task.getPersonId());
-//                robotGroupRelation.setGroupId(dto.getGroupId());
-//                robotGroupRelation.setState(1);
-//                robotGroupRelation.setIsDelete(0);
-//                robotGroupRelationMapper.insert(robotGroupRelation);
-//            }
-//            //查询群内机器人数量
-//            Integer robotCount = robotGroupRelationMapper.selectRobotGroupCount(dto.getGroupId());
-//            groupInfo.setRobotCount(robotCount);
+        try {
+            PlayGroupInfo groupInfo = playGroupInfoMapper.selectGroupInfoById(dto.getChatroomSerialNo());
+            if (groupInfo == null) {
+                //创建群信息
+                groupInfo = getGroupInfo(dto,task);
+                playGroupInfoMapper.insert(groupInfo);
+            }
+            //查询当前机器人是否已和群做绑定
+            Integer count = playRobotGroupRelationMapper.selectRobotGroup(dto.getChatroomSerialNo(), task.getPersonId());
+            if (count == 0) {
+                //绑定机器人和群信息记录表
+                PlayRobotGroupRelation robotGroupRelation = new PlayRobotGroupRelation();
+                robotGroupRelation.setPlayRobotGroupRelationId(IdUtils.fastUUID());
+                robotGroupRelation.setMerchantId(task.getMerchantId());
+                robotGroupRelation.setRobotId(task.getPersonId());
+                robotGroupRelation.setGroupId(dto.getChatroomSerialNo());
+                robotGroupRelation.setState(1);
+                robotGroupRelation.setIsDelete(0);
+                playRobotGroupRelationMapper.insert(robotGroupRelation);
+            }
+            //查询群内机器人数量
+//            Integer robotCount = playRobotGroupRelationMapper.selectRobotGroupCount(dto.getChatroomSerialNo());
+//            groupInfo.set(robotCount);
 //            groupInfoMapper.updateById(groupInfo);
-//            //修改入群任务状态
-//            task.setTaskState(3);
-//            task.setGroupName(dto.getGroupName());
-//            task.setGroupId(dto.getGroupId());
-//            personIntoGroupTaskMapper.updateById(task);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
+            //修改入群任务状态
+            task.setTaskState(3);
+            task.setGroupName(dto.getChatroomName());
+            task.setGroupId(dto.getChatroomName());
+            playIntoGroupTaskMapper.updateById(task);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
 //            ClusterLock.ofAwait().unLock("linkmaster:atmosphere:waitLock:intoGroupCallback" + dto.getGroupId());
-//        }
+        }
 
     }
 
-    public PlayGroupInfo getGroupInfo(Called1100910039DTO dto,PlayGroupInfo task) {
+    public PlayGroupInfo getGroupInfo(Called1100910039DTO dto,PlayIntoGroupTask task) {
         PlayGroupInfo groupInfo = new PlayGroupInfo();
         groupInfo.setGroupId(IdUtils.fastUUID());
         groupInfo.setMerchantId(task.getMerchantId());

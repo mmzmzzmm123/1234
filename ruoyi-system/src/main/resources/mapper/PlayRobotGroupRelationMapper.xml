@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PlayRobotGroupRelationMapper">
+    <select id="selectRobotGroup" resultType="java.lang.Integer">
+        select count(*) from t_robot_group_relation where robot_id = #{robotId} AND group_id = #{groupId} AND state = 1 AND is_delete = 0
+    </select>
+
+    <select id="selectRobotGroupCount" resultType="java.lang.Integer">
+        select count(*) from t_robot_group_relation where  group_id = #{groupId} AND state = 1 AND is_delete = 0
+    </select>
+
+    <select id="selectRobotByGroup" resultType="com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation">
+        select * from t_robot_group_relation where state = 1 and is_delete = 0 and  group_id = #{groupId}
+    </select>
+
+    <update id="removeRobotByGroup">
+        update t_robot_group_relation set state = 2 where group_id = #{groupId} and robot_id in
+        <foreach collection="list" item="robotId" separator="," open="(" close=")">
+            #{robotId}
+        </foreach>
+    </update>
+
+
+
+
+</mapper>

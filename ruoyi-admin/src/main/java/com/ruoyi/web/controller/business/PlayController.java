@@ -13,6 +13,7 @@ import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
+import com.ruoyi.system.domain.dto.play.SetSpeedDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.QueryConfoundLogVO;
 import com.ruoyi.system.domain.vo.play.*;
@@ -84,6 +85,13 @@ public class PlayController extends BaseController {
     @PostMapping(value = "/{playId}/ad")
     public R<String> updateAdInfo(@PathVariable String playId, @RequestBody AdMonitor dto) {
         return playService.updateAdInfo(playId, dto);
+    }
+
+    @ApiOperation("设置炒群速度")
+    @PostMapping("setSpeed")
+    public R<Void> setSpeed(@Validated @RequestBody SetSpeedDTO dto) {
+        playService.setSpeed(dto);
+        return R.ok();
     }
 
     @ApiOperation("炒群任务列表")

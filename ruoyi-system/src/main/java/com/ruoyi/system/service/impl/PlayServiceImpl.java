@@ -18,11 +18,8 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
-import com.ruoyi.system.domain.vo.play.PlayGroupProgressVO;
-import com.ruoyi.system.domain.vo.play.PlayTaskProgressVO;
-import com.ruoyi.system.domain.vo.play.PlayVO;
-import com.ruoyi.system.domain.vo.play.QueryPlayVO;
-import com.ruoyi.system.domain.vo.play.QueryPushDetailVO;
+import com.ruoyi.system.domain.dto.play.SetSpeedDTO;
+import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.mapper.PlayGroupPackMapper;
 import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.mapper.PlayMessageMapper;
@@ -31,6 +28,7 @@ import com.ruoyi.system.service.IPlayService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -298,5 +296,11 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         return page;
     }
 
-
+    @Override
+    public void setSpeed(SetSpeedDTO dto) {
+        Play play = super.getById(dto.getPlayId());
+        Assert.notNull(play, "炒群任务不存在");
+        play.setSpeed(dto.getSpeed());
+        super.updateById(play);
+    }
 }
