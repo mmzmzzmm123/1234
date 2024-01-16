@@ -57,4 +57,9 @@ public interface ISortService {
      * @return 结果
      */
     public int deleteSortById(Long id);
+
+    /**
+     * 获取分类标签信息
+     */
+    List<Sort> getSortInfo();
 }

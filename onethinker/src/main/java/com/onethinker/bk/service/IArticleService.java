@@ -1,7 +1,10 @@
 package com.onethinker.bk.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.onethinker.bk.domain.Article;
+import com.onethinker.bk.vo.BaseRequestVO;
 
 /**
  * 文章Service接口
@@ -57,4 +60,17 @@ public interface IArticleService {
      * @return 结果
      */
     public int deleteArticleById(Long id);
+
+    /**
+     * 查询文章List
+     * @param baseRequestVO
+     * @return
+     */
+    List<Article> listArticle(BaseRequestVO baseRequestVO);
+
+    /**
+     * 查询分类文章List
+     * @return
+     */
+    Map<Integer, List<Article>> listSortArticle();
 }

@@ -1,6 +1,11 @@
 package com.onethinker.bk.service.impl;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.onethinker.bk.mapper.SortMapper;
@@ -20,6 +25,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISortService {
     @Resource
     private SortMapper sortMapper;
+
+    @Autowired
+    private RedisCache redisCache;
 
     /**
      * 查询分类
@@ -85,5 +93,20 @@ public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISo
     @Override
     public int deleteSortById(Long id) {
         return sortMapper.deleteSortById(id);
+    }
+
+    @Override
+    public List<Sort> getSortInfo() {
+        String redisKey = CacheEnum.WEB_INFO + "sort";
+        if (redisCache.hasKey(redisKey)) {
+            return redisCache.getCacheList(redisKey);
+        }
+        List<Sort> sorts = sortMapper.selectSortList(new Sort());
+        if (sorts.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        redisCache.setCacheList(redisKey,sorts);
+        redisCache.expire(redisKey,30, TimeUnit.DAYS);
+        return sorts;
     }
 }

@@ -1,7 +1,10 @@
 package com.onethinker.bk.service.impl;
 
 import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
+import java.util.Map;
+
+import com.onethinker.bk.vo.BaseRequestVO;
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.onethinker.bk.mapper.ArticleMapper;
@@ -88,5 +91,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper,Article> imple
     @Override
     public int deleteArticleById(Long id) {
         return articleMapper.deleteArticleById(id);
+    }
+
+    @Override
+    public List<Article> listArticle(BaseRequestVO baseRequestVO) {
+        return null;
+    }
+
+    @Override
+    public Map<Integer, List<Article>> listSortArticle() {
+        return null;
     }
 }
