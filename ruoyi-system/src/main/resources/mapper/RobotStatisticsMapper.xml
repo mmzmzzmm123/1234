@@ -7,7 +7,13 @@
     <select id="selectRobotByRule" resultType="com.ruoyi.system.domain.vo.robot.SelectRobotByRuleVO">
         select
             tri.robot_serial_no,
-            trs.id
+            trs.id,
+        <if test="dto.ipType == 1">
+            tri.vpn_ip_b as ip
+        </if>
+        <if test="dto.ipType == 2">
+            tri.vpn_ip_c as ip
+        </if>
         from t_robot_info tri
             left join t_robot_statistics trs on tri.robot_serial_no = trs.robot_serial_no
         where 1=1
@@ -30,14 +36,19 @@
             and #{dto.oneDaySetAdminCount} > trs.one_day_set_admin_count
             and #{dto.totalSetAdminCount} > trs.total_set_admin_count
         </if>
+        <if test="dto.ips != null and dto.ips.size > 0">
+            and tri.vpn_ip_b not in
+        <foreach collection="dto.ips" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        </if>
         <if test="dto.ipType == 1">
             group by tri.vpn_ip_b
         </if>
         <if test="dto.ipType == 2">
             group by tri.vpn_ip_c
         </if>
-        limit 1,#{dto.count}
-
+        limit 1,#{dto.limit}
     </select>
     <update id="addCount">
         update t_robot_statistics

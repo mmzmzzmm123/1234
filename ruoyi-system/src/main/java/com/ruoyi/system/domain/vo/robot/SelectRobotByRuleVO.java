@@ -8,4 +8,5 @@ import lombok.Data;
 public class SelectRobotByRuleVO {
     private String id;
     private String robotSerialNo;
+    private String ip;
 }
