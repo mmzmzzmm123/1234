@@ -43,7 +43,7 @@ public class OpenApiClient {
         try {
             String jsonBody = JSON.toJSONString(body);
             log.info("调用openapi相关接口 {} {} {} {} {}", traceId, requestUrl, jsonBody, token, api.name());
-            HttpRequest request = HttpUtil.createPost(requestUrl).header("Authorization", token).body(jsonBody, ContentType.JSON.toString());
+            HttpRequest request = HttpUtil.createPost(requestUrl).header("Authorization", "Bearer " + token).body(jsonBody, ContentType.JSON.toString());
             HttpResponse execute = request.execute();
             response = execute.body();
             log.info("调用openapi相关接口获得响应 {} {}", traceId, response);
