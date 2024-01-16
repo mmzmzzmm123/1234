@@ -44,4 +44,11 @@ public class PlayGroupInfo {
 
     @ApiModelProperty("修改时间")
     private Date modifyTime;
+
+    @ApiModelProperty("炒群状态 0-待执行 1-炒群中 2-已完成 3-已暂停 4-已取消")
+    private Integer state;
+
+    @ApiModelProperty("提示")
+    private String tip;
+
 }

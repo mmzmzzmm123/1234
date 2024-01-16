@@ -13,15 +13,19 @@ import lombok.Data;
 @ApiModel("炒群进度VO")
 public class PlayGroupProgressVO {
 
+    @ApiModelProperty("主键ID")
+    private String id;
+
     @ApiModelProperty("剧本ID")
     private String playId;
 
-    @ApiModelProperty("炒群状态")
+    @ApiModelProperty("炒群状态 0-待执行 1-炒群中 2-已完成 3-已暂停 4-已取消")
     private Integer state;
-
 
     @ApiModelProperty("群Id")
     private String groupId;
+    @ApiModelProperty("群编号")
+    private String groupSerialNo;
     @ApiModelProperty("群名称")
     private String groupName;
     @ApiModelProperty("群备注")
@@ -33,20 +37,26 @@ public class PlayGroupProgressVO {
     @ApiModelProperty("群私密链接")
     private String groupPrivateLink;
     @ApiModelProperty("群类型 10私密群 20公开群")
-    private String groupType;
-    @ApiModelProperty("群是否是频道 0-不是 1-是")
-    private String isChannel;
+    private Integer groupType;
+
     @ApiModelProperty("群成员数")
-    private String memberCount;
-    @ApiModelProperty("被踢人数")
-    private String kickedCount;
-    @ApiModelProperty("封号数")
-    private String bannedCount;
+    private Integer memberCount;
+    @ApiModelProperty("进群数")
+    private Integer joinCount;
+    @ApiModelProperty("退群数")
+    private Integer exitCount;
+    @ApiModelProperty("链接进群人数(拉手号)")
+    private Integer linkJoinCount;
+    @ApiModelProperty("水军号")
+    private Integer navyCount;
+
 
     @ApiModelProperty("总进度数量")
     private Integer totalNum;
-
     @ApiModelProperty("当前进度数量")
     private Integer currentNum;
+
+    @ApiModelProperty("提示")
+    private String tip;
 
 }
