@@ -215,4 +215,50 @@ public class OpenApiClient {
         });
     }
 
+
+    /**
+     * 比邻第三方(开平TG)：-获取群信息
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> getChatroomInfoByThirdKpTg(ThirdTgGetChatroomInfoInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_CHATROOM_INFO, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
+    /**
+     * 比邻第三方(开平TG)：-设置群类型
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> setChatroomTypeByThirdKpTg(ThirdTgSetChatroomTypeInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SET_CHATROOM_TYPE, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
+    /**
+     * 比邻第三方(开平TG)：-应用机器人加入通讯录
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> joinUserByThirdKpTg(ThirdTgJoinUserInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_JOIN_USER, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
+    /**
+     * 比邻第三方(开平TG)：-搜索群、用户、频道
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> searchKeywordByThirdKpTg(ThirdTgSearchKeywordInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SEARCH_KEYWORD, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
+    /**
+     * 比邻第三方(开平TG)：-邀请加入群组
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> inviteJoinChatroomByThirdKpTg(ThirdTgInviteJoinChatroomInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_INVITE_JOIN_CHATROOM, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
 }
