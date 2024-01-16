@@ -9,4 +9,8 @@ import java.util.List;
 public interface RobotStatisticsService {
 
     R<List<GetRobotVO>> getRobot(GetRobotDTO dto);
+
+    boolean checkAndAddLeaderCount(String robotSerialNo, Integer count, Integer checkCount);
+
+    void restoreQuantity(String robotSerialNo, Integer count);
 }

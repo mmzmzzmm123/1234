@@ -61,7 +61,11 @@ public class GroupActionLog {
     @ApiModelProperty(value = "设置状态 0-请求开平中 1-请求失败 2-请求成功")
     @TableField("set_status")
     private Integer setStatus;
-    
+
+    private String failMsg;
+
+    private String changeValue;
+
     /**
     * 创建时间
     */

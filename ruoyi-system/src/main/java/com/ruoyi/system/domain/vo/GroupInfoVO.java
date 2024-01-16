@@ -36,6 +36,9 @@ public class GroupInfoVO {
     @ApiModelProperty(value = "总人数")
     private Integer memberCount;
 
+    @ApiModelProperty(value = "群主编号")
+    private String leaderId;
+
     @ApiModelProperty(value = "群内机器人")
     private List<GroupRobotVO> robots;
 

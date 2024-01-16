@@ -29,4 +29,7 @@ public class RobotStatistics {
     private Date createTime;
     @ApiModelProperty(value = "修改时间")
     private Date updateTime;
+    @ApiModelProperty(value = "群主号已设置管理员数")
+    private Integer totalLeaderSetAdminCount;
+
 }

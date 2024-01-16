@@ -207,8 +207,10 @@ public class GroupController {
     @PostMapping("/updateInfo")
     public R<Void> updateInfo(@RequestBody GroupUpdateInfoDTO dto) {
         try {
-
+            groupService.updateInfo(dto);
             return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
             log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(dto), e);
@@ -239,7 +241,7 @@ public class GroupController {
     public R<Void> invitingBotJoin(@RequestBody GroupIdsDTO dto) {
         try {
             Assert.notEmpty(dto.getGroupIds(), "群不能为空");
-            groupService.invitingBotJoin(groupInfoService.listByIds(dto.getGroupIds()), false);
+            Assert.isTrue(groupService.invitingBotJoin(dto.getGroupIds()) <= 0, "无满足条件的群");
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
@@ -271,7 +273,8 @@ public class GroupController {
     @PostMapping("/setType")
     public R<Void> setType(@RequestBody GroupTypeSetDTO dto) {
         try {
-
+            Assert.notEmpty(dto.getGroupIds(), "设置群类型的群不能为空");
+            groupService.setType(dto.getGroupIds(),dto.getGroupType());
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
@@ -317,7 +320,7 @@ public class GroupController {
     @ApiOperation(value = "设置管理员")
     @PostMapping("/setAdmin")
     public R<Void> setAdmin(@RequestBody GroupAdminSetDTO dto) {
-        //todo openApi接口 以ut身份请求数据
+        groupService.setAdmin(dto);
         return R.ok();
     }
 }

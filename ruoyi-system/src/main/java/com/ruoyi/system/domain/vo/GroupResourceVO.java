@@ -23,7 +23,4 @@ public class GroupResourceVO {
     @Excel(name = "群注册时间")
     private LocalDateTime registrationTime;
 
-
-    private GroupInfo groupInfo;
-
 }
