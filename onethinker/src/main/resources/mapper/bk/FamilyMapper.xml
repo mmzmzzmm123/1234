@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bk.mapper.FamilyMapper">
+
+    <resultMap type="Family" id="FamilyResult">
+            <result property="id" column="id"/>
+            <result property="userId" column="user_id"/>
+            <result property="bgCover" column="bg_cover"/>
+            <result property="manCover" column="man_cover"/>
+            <result property="womanCover" column="woman_cover"/>
+            <result property="manName" column="man_name"/>
+            <result property="womanName" column="woman_name"/>
+            <result property="timing" column="timing"/>
+            <result property="countdownTitle" column="countdown_title"/>
+            <result property="countdownTime" column="countdown_time"/>
+            <result property="status" column="status"/>
+            <result property="familyInfo" column="family_info"/>
+            <result property="likeCount" column="like_count"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectFamilyVo">
+        select id, user_id, bg_cover, man_cover, woman_cover, man_name, woman_name, timing, countdown_title, countdown_time, status, family_info, like_count, create_time, update_time
+        from bk_family
+    </sql>
+
+    <select id="selectFamilyList" parameterType="Family" resultMap="FamilyResult">
+        <include refid="selectFamilyVo"/>
+        <where>
+                        <if test="userId != null ">
+                            and user_id = #{userId}
+                        </if>
+                        <if test="bgCover != null  and bgCover != ''">
+                            and bg_cover = #{bgCover}
+                        </if>
+                        <if test="manCover != null  and manCover != ''">
+                            and man_cover = #{manCover}
+                        </if>
+                        <if test="womanCover != null  and womanCover != ''">
+                            and woman_cover = #{womanCover}
+                        </if>
+                        <if test="manName != null  and manName != ''">
+                            and man_name like concat('%', #{manName}, '%')
+                        </if>
+                        <if test="womanName != null  and womanName != ''">
+                            and woman_name like concat('%', #{womanName}, '%')
+                        </if>
+                        <if test="timing != null  and timing != ''">
+                            and timing = #{timing}
+                        </if>
+                        <if test="countdownTitle != null  and countdownTitle != ''">
+                            and countdown_title = #{countdownTitle}
+                        </if>
+                        <if test="countdownTime != null  and countdownTime != ''">
+                            and countdown_time = #{countdownTime}
+                        </if>
+                        <if test="status != null ">
+                            and status = #{status}
+                        </if>
+                        <if test="familyInfo != null  and familyInfo != ''">
+                            and family_info = #{familyInfo}
+                        </if>
+                        <if test="likeCount != null ">
+                            and like_count = #{likeCount}
+                        </if>
+        </where>
+    </select>
+
+    <select id="selectFamilyById" parameterType="Long"
+            resultMap="FamilyResult">
+            <include refid="selectFamilyVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertFamily" parameterType="Family" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bk_family
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="userId != null">user_id,
+                    </if>
+                    <if test="bgCover != null and bgCover != ''">bg_cover,
+                    </if>
+                    <if test="manCover != null and manCover != ''">man_cover,
+                    </if>
+                    <if test="womanCover != null and womanCover != ''">woman_cover,
+                    </if>
+                    <if test="manName != null and manName != ''">man_name,
+                    </if>
+                    <if test="womanName != null and womanName != ''">woman_name,
+                    </if>
+                    <if test="timing != null and timing != ''">timing,
+                    </if>
+                    <if test="countdownTitle != null">countdown_title,
+                    </if>
+                    <if test="countdownTime != null">countdown_time,
+                    </if>
+                    <if test="status != null">status,
+                    </if>
+                    <if test="familyInfo != null">family_info,
+                    </if>
+                    <if test="likeCount != null">like_count,
+                    </if>
+                    <if test="createTime != null">create_time,
+                    </if>
+                    <if test="updateTime != null">update_time,
+                    </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="userId != null">#{userId},
+                    </if>
+                    <if test="bgCover != null and bgCover != ''">#{bgCover},
+                    </if>
+                    <if test="manCover != null and manCover != ''">#{manCover},
+                    </if>
+                    <if test="womanCover != null and womanCover != ''">#{womanCover},
+                    </if>
+                    <if test="manName != null and manName != ''">#{manName},
+                    </if>
+                    <if test="womanName != null and womanName != ''">#{womanName},
+                    </if>
+                    <if test="timing != null and timing != ''">#{timing},
+                    </if>
+                    <if test="countdownTitle != null">#{countdownTitle},
+                    </if>
+                    <if test="countdownTime != null">#{countdownTime},
+                    </if>
+                    <if test="status != null">#{status},
+                    </if>
+                    <if test="familyInfo != null">#{familyInfo},
+                    </if>
+                    <if test="likeCount != null">#{likeCount},
+                    </if>
+                    <if test="createTime != null">#{createTime},
+                    </if>
+                    <if test="updateTime != null">#{updateTime},
+                    </if>
+        </trim>
+    </insert>
+
+    <update id="updateFamily" parameterType="Family">
+        update bk_family
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="userId != null">user_id =
+                        #{userId},
+                    </if>
+                    <if test="bgCover != null and bgCover != ''">bg_cover =
+                        #{bgCover},
+                    </if>
+                    <if test="manCover != null and manCover != ''">man_cover =
+                        #{manCover},
+                    </if>
+                    <if test="womanCover != null and womanCover != ''">woman_cover =
+                        #{womanCover},
+                    </if>
+                    <if test="manName != null and manName != ''">man_name =
+                        #{manName},
+                    </if>
+                    <if test="womanName != null and womanName != ''">woman_name =
+                        #{womanName},
+                    </if>
+                    <if test="timing != null and timing != ''">timing =
+                        #{timing},
+                    </if>
+                    <if test="countdownTitle != null">countdown_title =
+                        #{countdownTitle},
+                    </if>
+                    <if test="countdownTime != null">countdown_time =
+                        #{countdownTime},
+                    </if>
+                    <if test="status != null">status =
+                        #{status},
+                    </if>
+                    <if test="familyInfo != null">family_info =
+                        #{familyInfo},
+                    </if>
+                    <if test="likeCount != null">like_count =
+                        #{likeCount},
+                    </if>
+                    <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                    <if test="updateTime != null">update_time =
+                        #{updateTime},
+                    </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFamilyById" parameterType="Long">
+        delete from bk_family where id = #{id}
+    </delete>
+
+    <delete id="deleteFamilyByIds" parameterType="String">
+        delete from bk_family where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

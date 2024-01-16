@@ -51,7 +51,13 @@ public enum CacheEnum {
     /**
      * 平台用户信息
      */
-    QUERY_USER_PHONE_KEY("pu_user_info:","平台用户信息");
+    QUERY_USER_PHONE_KEY("pu_user_info:","平台用户信息"),
+
+    /**
+     * 订阅消息
+     */
+    SUBSCRIBE_MSG_KEY("subscribe_msg:","订阅消息");
+
 
     private String code;
     private String msg;

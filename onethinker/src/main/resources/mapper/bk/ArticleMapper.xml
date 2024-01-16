@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bk.mapper.ArticleMapper">
+
+    <resultMap type="Article" id="ArticleResult">
+            <result property="id" column="id"/>
+            <result property="userId" column="user_id"/>
+            <result property="sortId" column="sort_id"/>
+            <result property="labelId" column="label_id"/>
+            <result property="articleCover" column="article_cover"/>
+            <result property="articleTitle" column="article_title"/>
+            <result property="articleContent" column="article_content"/>
+            <result property="videoUrl" column="video_url"/>
+            <result property="viewCount" column="view_count"/>
+            <result property="likeCount" column="like_count"/>
+            <result property="viewStatus" column="view_status"/>
+            <result property="password" column="password"/>
+            <result property="tips" column="tips"/>
+            <result property="recommendStatus" column="recommend_status"/>
+            <result property="commentStatus" column="comment_status"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="updateBy" column="update_by"/>
+            <result property="deleted" column="deleted"/>
+    </resultMap>
+
+    <sql id="selectArticleVo">
+        select id, user_id, sort_id, label_id, article_cover, article_title, article_content, video_url, view_count, like_count, view_status, password, tips, recommend_status, comment_status, create_time, update_time, update_by, deleted
+        from bk_article
+    </sql>
+
+    <select id="selectArticleList" parameterType="Article" resultMap="ArticleResult">
+        <include refid="selectArticleVo"/>
+        <where>
+                        <if test="userId != null ">
+                            and user_id = #{userId}
+                        </if>
+                        <if test="sortId != null ">
+                            and sort_id = #{sortId}
+                        </if>
+                        <if test="labelId != null ">
+                            and label_id = #{labelId}
+                        </if>
+                        <if test="articleCover != null  and articleCover != ''">
+                            and article_cover = #{articleCover}
+                        </if>
+                        <if test="articleTitle != null  and articleTitle != ''">
+                            and article_title = #{articleTitle}
+                        </if>
+                        <if test="articleContent != null  and articleContent != ''">
+                            and article_content = #{articleContent}
+                        </if>
+                        <if test="videoUrl != null  and videoUrl != ''">
+                            and video_url = #{videoUrl}
+                        </if>
+                        <if test="viewCount != null ">
+                            and view_count = #{viewCount}
+                        </if>
+                        <if test="likeCount != null ">
+                            and like_count = #{likeCount}
+                        </if>
+                        <if test="viewStatus != null ">
+                            and view_status = #{viewStatus}
+                        </if>
+                        <if test="password != null  and password != ''">
+                            and password = #{password}
+                        </if>
+                        <if test="tips != null  and tips != ''">
+                            and tips = #{tips}
+                        </if>
+                        <if test="recommendStatus != null ">
+                            and recommend_status = #{recommendStatus}
+                        </if>
+                        <if test="commentStatus != null ">
+                            and comment_status = #{commentStatus}
+                        </if>
+                        <if test="deleted != null ">
+                            and deleted = #{deleted}
+                        </if>
+        </where>
+    </select>
+
+    <select id="selectArticleById" parameterType="Long"
+            resultMap="ArticleResult">
+            <include refid="selectArticleVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertArticle" parameterType="Article" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bk_article
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="userId != null">user_id,
+                    </if>
+                    <if test="sortId != null">sort_id,
+                    </if>
+                    <if test="labelId != null">label_id,
+                    </if>
+                    <if test="articleCover != null">article_cover,
+                    </if>
+                    <if test="articleTitle != null and articleTitle != ''">article_title,
+                    </if>
+                    <if test="articleContent != null and articleContent != ''">article_content,
+                    </if>
+                    <if test="videoUrl != null">video_url,
+                    </if>
+                    <if test="viewCount != null">view_count,
+                    </if>
+                    <if test="likeCount != null">like_count,
+                    </if>
+                    <if test="viewStatus != null">view_status,
+                    </if>
+                    <if test="password != null">password,
+                    </if>
+                    <if test="tips != null">tips,
+                    </if>
+                    <if test="recommendStatus != null">recommend_status,
+                    </if>
+                    <if test="commentStatus != null">comment_status,
+                    </if>
+                    <if test="createTime != null">create_time,
+                    </if>
+                    <if test="updateTime != null">update_time,
+                    </if>
+                    <if test="updateBy != null">update_by,
+                    </if>
+                    <if test="deleted != null">deleted,
+                    </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="userId != null">#{userId},
+                    </if>
+                    <if test="sortId != null">#{sortId},
+                    </if>
+                    <if test="labelId != null">#{labelId},
+                    </if>
+                    <if test="articleCover != null">#{articleCover},
+                    </if>
+                    <if test="articleTitle != null and articleTitle != ''">#{articleTitle},
+                    </if>
+                    <if test="articleContent != null and articleContent != ''">#{articleContent},
+                    </if>
+                    <if test="videoUrl != null">#{videoUrl},
+                    </if>
+                    <if test="viewCount != null">#{viewCount},
+                    </if>
+                    <if test="likeCount != null">#{likeCount},
+                    </if>
+                    <if test="viewStatus != null">#{viewStatus},
+                    </if>
+                    <if test="password != null">#{password},
+                    </if>
+                    <if test="tips != null">#{tips},
+                    </if>
+                    <if test="recommendStatus != null">#{recommendStatus},
+                    </if>
+                    <if test="commentStatus != null">#{commentStatus},
+                    </if>
+                    <if test="createTime != null">#{createTime},
+                    </if>
+                    <if test="updateTime != null">#{updateTime},
+                    </if>
+                    <if test="updateBy != null">#{updateBy},
+                    </if>
+                    <if test="deleted != null">#{deleted},
+                    </if>
+        </trim>
+    </insert>
+
+    <update id="updateArticle" parameterType="Article">
+        update bk_article
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="userId != null">user_id =
+                        #{userId},
+                    </if>
+                    <if test="sortId != null">sort_id =
+                        #{sortId},
+                    </if>
+                    <if test="labelId != null">label_id =
+                        #{labelId},
+                    </if>
+                    <if test="articleCover != null">article_cover =
+                        #{articleCover},
+                    </if>
+                    <if test="articleTitle != null and articleTitle != ''">article_title =
+                        #{articleTitle},
+                    </if>
+                    <if test="articleContent != null and articleContent != ''">article_content =
+                        #{articleContent},
+                    </if>
+                    <if test="videoUrl != null">video_url =
+                        #{videoUrl},
+                    </if>
+                    <if test="viewCount != null">view_count =
+                        #{viewCount},
+                    </if>
+                    <if test="likeCount != null">like_count =
+                        #{likeCount},
+                    </if>
+                    <if test="viewStatus != null">view_status =
+                        #{viewStatus},
+                    </if>
+                    <if test="password != null">password =
+                        #{password},
+                    </if>
+                    <if test="tips != null">tips =
+                        #{tips},
+                    </if>
+                    <if test="recommendStatus != null">recommend_status =
+                        #{recommendStatus},
+                    </if>
+                    <if test="commentStatus != null">comment_status =
+                        #{commentStatus},
+                    </if>
+                    <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                    <if test="updateTime != null">update_time =
+                        #{updateTime},
+                    </if>
+                    <if test="updateBy != null">update_by =
+                        #{updateBy},
+                    </if>
+                    <if test="deleted != null">deleted =
+                        #{deleted},
+                    </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteArticleById" parameterType="Long">
+        delete from bk_article where id = #{id}
+    </delete>
+
+    <delete id="deleteArticleByIds" parameterType="String">
+        delete from bk_article where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

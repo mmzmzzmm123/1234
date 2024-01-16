@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bk.mapper.LabelMapper">
+
+    <resultMap type="Label" id="LabelResult">
+            <result property="id" column="id"/>
+            <result property="sortId" column="sort_id"/>
+            <result property="labelName" column="label_name"/>
+            <result property="labelDescription" column="label_description"/>
+    </resultMap>
+
+    <sql id="selectLabelVo">
+        select id, sort_id, label_name, label_description
+        from bk_label
+    </sql>
+
+    <select id="selectLabelList" parameterType="Label" resultMap="LabelResult">
+        <include refid="selectLabelVo"/>
+        <where>
+                        <if test="sortId != null ">
+                            and sort_id = #{sortId}
+                        </if>
+                        <if test="labelName != null  and labelName != ''">
+                            and label_name like concat('%', #{labelName}, '%')
+                        </if>
+                        <if test="labelDescription != null  and labelDescription != ''">
+                            and label_description = #{labelDescription}
+                        </if>
+        </where>
+    </select>
+
+    <select id="selectLabelById" parameterType="Long"
+            resultMap="LabelResult">
+            <include refid="selectLabelVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertLabel" parameterType="Label" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bk_label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="sortId != null">sort_id,
+                    </if>
+                    <if test="labelName != null and labelName != ''">label_name,
+                    </if>
+                    <if test="labelDescription != null and labelDescription != ''">label_description,
+                    </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="sortId != null">#{sortId},
+                    </if>
+                    <if test="labelName != null and labelName != ''">#{labelName},
+                    </if>
+                    <if test="labelDescription != null and labelDescription != ''">#{labelDescription},
+                    </if>
+        </trim>
+    </insert>
+
+    <update id="updateLabel" parameterType="Label">
+        update bk_label
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="sortId != null">sort_id =
+                        #{sortId},
+                    </if>
+                    <if test="labelName != null and labelName != ''">label_name =
+                        #{labelName},
+                    </if>
+                    <if test="labelDescription != null and labelDescription != ''">label_description =
+                        #{labelDescription},
+                    </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteLabelById" parameterType="Long">
+        delete from bk_label where id = #{id}
+    </delete>
+
+    <delete id="deleteLabelByIds" parameterType="String">
+        delete from bk_label where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

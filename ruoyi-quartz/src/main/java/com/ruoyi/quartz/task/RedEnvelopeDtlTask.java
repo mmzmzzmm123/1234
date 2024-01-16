@@ -46,7 +46,7 @@ public class RedEnvelopeDtlTask {
      * 创建红包明细数据
      */
     public void createRedEnvelopDtlTask() {
-        log.info("------开始执行生成红包明细记录------");
+//        log.info("------开始执行生成红包明细记录------");
         IActivityDetailService<RedEnvelopeCtrlDTO> activityDetailService = activityDetailFactory.queryActivityDetailByActivityType(ActivityTypeEnum.RED_ENVELOPE.getCode());
 
         RedEnvelopeCtrlDTO redEnvelopeCtrlDTO = new RedEnvelopeCtrlDTO();
@@ -55,9 +55,10 @@ public class RedEnvelopeDtlTask {
         PageHelper.startPage(1, 200);
         List<RedEnvelopeCtrlDTO> redEnvelopeCtrlList =  activityDetailService.queryRedEnvelopeCtrlByParams(redEnvelopeCtrlDTO);
         if (redEnvelopeCtrlList.isEmpty()) {
-            log.info("暂不需生成红包明细");
+//            log.info("暂不需生成红包明细");
             return;
         }
+        log.info("开始生成红包明细，生成数量：{}",redEnvelopeCtrlList.size());
         for (RedEnvelopeCtrlDTO reqDTO : redEnvelopeCtrlList) {
             try {
                 // 更新成生成中状态
@@ -85,7 +86,7 @@ public class RedEnvelopeDtlTask {
      * 创建二维码数据
      */
     public void createQrCode() {
-        log.info("创建二维码数据");
+//        log.info("创建二维码数据");
         //  分页处理
         PageHelper.startPage(1, 200);
         RedEnvelopeDtl params = new RedEnvelopeDtl();
@@ -93,10 +94,10 @@ public class RedEnvelopeDtlTask {
         List<RedEnvelopeDtl> redEnvelopeDtlList =  redEnvelopeDtlService.selectRedEnvelopeDtlList(params);
 
         if (redEnvelopeDtlList.isEmpty()) {
-            log.warn("暂不需要执行生成二维码操作");
+//            log.warn("暂不需要执行生成二维码操作");
             return;
         }
-
+        log.info("开始执行生成二维码处理，生成数量：{}",redEnvelopeDtlList.size());
         for (RedEnvelopeDtl redEnvelopeDtl : redEnvelopeDtlList) {
             try {
                 // 更新红包明细状态

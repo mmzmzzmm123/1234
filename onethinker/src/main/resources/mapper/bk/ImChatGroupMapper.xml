@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.bk.mapper.ImChatGroupMapper">
+
+    <resultMap type="ImChatGroup" id="ImChatGroupResult">
+            <result property="id" column="id"/>
+            <result property="groupName" column="group_name"/>
+            <result property="masterUserId" column="master_user_id"/>
+            <result property="avatar" column="avatar"/>
+            <result property="introduction" column="introduction"/>
+            <result property="notice" column="notice"/>
+            <result property="inType" column="in_type"/>
+            <result property="groupType" column="group_type"/>
+            <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectImChatGroupVo">
+        select id, group_name, master_user_id, avatar, introduction, notice, in_type, group_type, create_time
+        from bk_im_chat_group
+    </sql>
+
+    <select id="selectImChatGroupList" parameterType="ImChatGroup" resultMap="ImChatGroupResult">
+        <include refid="selectImChatGroupVo"/>
+        <where>
+                        <if test="groupName != null  and groupName != ''">
+                            and group_name like concat('%', #{groupName}, '%')
+                        </if>
+                        <if test="masterUserId != null ">
+                            and master_user_id = #{masterUserId}
+                        </if>
+                        <if test="avatar != null  and avatar != ''">
+                            and avatar = #{avatar}
+                        </if>
+                        <if test="introduction != null  and introduction != ''">
+                            and introduction = #{introduction}
+                        </if>
+                        <if test="notice != null  and notice != ''">
+                            and notice = #{notice}
+                        </if>
+                        <if test="inType != null ">
+                            and in_type = #{inType}
+                        </if>
+                        <if test="groupType != null ">
+                            and group_type = #{groupType}
+                        </if>
+        </where>
+    </select>
+
+    <select id="selectImChatGroupById" parameterType="Long"
+            resultMap="ImChatGroupResult">
+            <include refid="selectImChatGroupVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertImChatGroup" parameterType="ImChatGroup" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bk_im_chat_group
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="groupName != null and groupName != ''">group_name,
+                    </if>
+                    <if test="masterUserId != null">master_user_id,
+                    </if>
+                    <if test="avatar != null">avatar,
+                    </if>
+                    <if test="introduction != null">introduction,
+                    </if>
+                    <if test="notice != null">notice,
+                    </if>
+                    <if test="inType != null">in_type,
+                    </if>
+                    <if test="groupType != null">group_type,
+                    </if>
+                    <if test="createTime != null">create_time,
+                    </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="groupName != null and groupName != ''">#{groupName},
+                    </if>
+                    <if test="masterUserId != null">#{masterUserId},
+                    </if>
+                    <if test="avatar != null">#{avatar},
+                    </if>
+                    <if test="introduction != null">#{introduction},
+                    </if>
+                    <if test="notice != null">#{notice},
+                    </if>
+                    <if test="inType != null">#{inType},
+                    </if>
+                    <if test="groupType != null">#{groupType},
+                    </if>
+                    <if test="createTime != null">#{createTime},
+                    </if>
+        </trim>
+    </insert>
+
+    <update id="updateImChatGroup" parameterType="ImChatGroup">
+        update bk_im_chat_group
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="groupName != null and groupName != ''">group_name =
+                        #{groupName},
+                    </if>
+                    <if test="masterUserId != null">master_user_id =
+                        #{masterUserId},
+                    </if>
+                    <if test="avatar != null">avatar =
+                        #{avatar},
+                    </if>
+                    <if test="introduction != null">introduction =
+                        #{introduction},
+                    </if>
+                    <if test="notice != null">notice =
+                        #{notice},
+                    </if>
+                    <if test="inType != null">in_type =
+                        #{inType},
+                    </if>
+                    <if test="groupType != null">group_type =
+                        #{groupType},
+                    </if>
+                    <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteImChatGroupById" parameterType="Long">
+        delete from bk_im_chat_group where id = #{id}
+    </delete>
+
+    <delete id="deleteImChatGroupByIds" parameterType="String">
+        delete from bk_im_chat_group where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

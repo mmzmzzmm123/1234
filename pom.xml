@@ -36,6 +36,7 @@
         <google.version>19.0</google.version>
         <hutool.version>5.3.1</hutool.version>
         <core.version>3.3.3</core.version>
+        <wechat.version>4.6.0</wechat.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -201,6 +202,13 @@
                 <groupId>com.google.zxing</groupId>
                 <artifactId>core</artifactId>
                 <version>${core.version}</version>
+            </dependency>
+
+            <!--集成微信能力SDK-->
+            <dependency>
+                <groupId>com.github.binarywang</groupId>
+                <artifactId>weixin-java-miniapp</artifactId>
+                <version>${wechat.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

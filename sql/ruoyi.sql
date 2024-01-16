@@ -1050,3 +1050,37 @@ CREATE TABLE `t_red_envelope_dtl`  (
 -- ----------------------------
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+DROP TABLE IF EXISTS `t_subscribe_msg_ctrl`;
+CREATE TABLE `t_subscribe_msg_ctrl`  (
+    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '表主键',
+    `create_time` datetime NULL DEFAULT NULL COMMENT '添加时间',
+    `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+    `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
+    `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
+    `enabled` int(11) NULL DEFAULT 1 COMMENT '是否可见，0不可用，1为可用',
+    `weight` bigint(20) NULL DEFAULT 0 COMMENT '权重',
+    `template_id` varchar(100) NOT NULL DEFAULT '' COMMENT '小程序模版id',
+    `page` varchar(256) NULL DEFAULT '' COMMENT '模版消息跳转链接',
+    `miniprogram_state` varchar(10) NOT NULL DEFAULT '' COMMENT '跳转小程序类型 跳转小程序类型：developer为开发版；trial为体验版；formal为正式版；默认为正式版',
+    `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '备注',
+    `data` varchar(255) NOT NULL DEFAULT '' COMMENT '模板内容，不填则下发空模板,模版格式化遵循{key:{value:"xxxx"}}格式',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4098 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订阅消息控制表' ROW_FORMAT = Dynamic;
+
+DROP TABLE IF EXISTS `t_subscribe_msg_send_result`;
+CREATE TABLE `t_subscribe_msg_send_result`  (
+    `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '表主键',
+    `create_time` datetime NULL DEFAULT NULL COMMENT '添加时间',
+    `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+    `create_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '创建者',
+    `update_by` varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '更新者',
+    `enabled` int(11) NULL DEFAULT 1 COMMENT '是否可见，0发送失败，1发送成功',
+    `weight` bigint(20) NULL DEFAULT 0 COMMENT '权重',
+    `template_id` varchar(100) NOT NULL DEFAULT '' COMMENT '小程序模版id',
+    `pu_user_id` bigint(20) NOT NULL DEFAULT 0 COMMENT '平台用户',
+    `send_msg` varchar(255) NOT NULL DEFAULT '' COMMENT '请求内容',
+    `send_result` varchar(256) NOT NULL DEFAULT '' COMMENT '请求结果',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 4098 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订阅消息发送结果' ROW_FORMAT = Dynamic;

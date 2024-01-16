@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.onethinker.mapper.SubscribeMsgSendResultMapper">
+
+    <resultMap type="SubscribeMsgSendResult" id="SubscribeMsgSendResultResult">
+            <result property="id" column="id"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="enabled" column="enabled"/>
+            <result property="weight" column="weight"/>
+            <result property="templateId" column="template_id"/>
+            <result property="puUserId" column="pu_user_id"/>
+            <result property="sendMsg" column="send_msg"/>
+            <result property="sendResult" column="send_result"/>
+    </resultMap>
+
+    <sql id="selectSubscribeMsgSendResultVo">
+        select id, create_time, update_time, enabled, weight, template_id, pu_user_id, send_msg, send_result
+        from t_subscribe_msg_send_result
+    </sql>
+
+    <select id="selectSubscribeMsgSendResultList" parameterType="SubscribeMsgSendResult" resultMap="SubscribeMsgSendResultResult">
+        <include refid="selectSubscribeMsgSendResultVo"/>
+        <where>
+                        <if test="enabled != null ">
+                            and enabled = #{enabled}
+                        </if>
+                        <if test="weight != null ">
+                            and weight = #{weight}
+                        </if>
+                        <if test="templateId != null  and templateId != ''">
+                            and template_id = #{templateId}
+                        </if>
+                        <if test="puUserId != null ">
+                            and pu_user_id = #{puUserId}
+                        </if>
+                        <if test="sendMsg != null  and sendMsg != ''">
+                            and send_msg = #{sendMsg}
+                        </if>
+                        <if test="sendResult != null  and sendResult != ''">
+                            and send_result = #{sendResult}
+                        </if>
+        </where>
+    </select>
+
+    <select id="selectSubscribeMsgSendResultById" parameterType="Long"
+            resultMap="SubscribeMsgSendResultResult">
+            <include refid="selectSubscribeMsgSendResultVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertSubscribeMsgSendResult" parameterType="SubscribeMsgSendResult" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_subscribe_msg_send_result
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="createTime != null">create_time,
+                    </if>
+                    <if test="updateTime != null">update_time,
+                    </if>
+                    <if test="enabled != null">enabled,
+                    </if>
+                    <if test="weight != null">weight,
+                    </if>
+                    <if test="templateId != null and templateId != ''">template_id,
+                    </if>
+                    <if test="puUserId != null">pu_user_id,
+                    </if>
+                    <if test="sendMsg != null and sendMsg != ''">send_msg,
+                    </if>
+                    <if test="sendResult != null and sendResult != ''">send_result,
+                    </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="createTime != null">#{createTime},
+                    </if>
+                    <if test="updateTime != null">#{updateTime},
+                    </if>
+                    <if test="enabled != null">#{enabled},
+                    </if>
+                    <if test="weight != null">#{weight},
+                    </if>
+                    <if test="templateId != null and templateId != ''">#{templateId},
+                    </if>
+                    <if test="puUserId != null">#{puUserId},
+                    </if>
+                    <if test="sendMsg != null and sendMsg != ''">#{sendMsg},
+                    </if>
+                    <if test="sendResult != null and sendResult != ''">#{sendResult},
+                    </if>
+        </trim>
+    </insert>
+
+    <update id="updateSubscribeMsgSendResult" parameterType="SubscribeMsgSendResult">
+        update t_subscribe_msg_send_result
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                    <if test="updateTime != null">update_time =
+                        #{updateTime},
+                    </if>
+                    <if test="enabled != null">enabled =
+                        #{enabled},
+                    </if>
+                    <if test="weight != null">weight =
+                        #{weight},
+                    </if>
+                    <if test="templateId != null and templateId != ''">template_id =
+                        #{templateId},
+                    </if>
+                    <if test="puUserId != null">pu_user_id =
+                        #{puUserId},
+                    </if>
+                    <if test="sendMsg != null and sendMsg != ''">send_msg =
+                        #{sendMsg},
+                    </if>
+                    <if test="sendResult != null and sendResult != ''">send_result =
+                        #{sendResult},
+                    </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSubscribeMsgSendResultById" parameterType="Long">
+        delete from t_subscribe_msg_send_result where id = #{id}
+    </delete>
+
+    <delete id="deleteSubscribeMsgSendResultByIds" parameterType="String">
+        delete from t_subscribe_msg_send_result where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
