@@ -16,7 +16,7 @@ public enum OpenApiEnum {
     THIRD_KP_TG_EXIT_CHATROOML("kpTg-退出群", "/thirdparty/tgGroup/exitChatroom", 1100910024),
     THIRD_KP_TG_SEARCH_MEMBER("kpTg-获取群成员列表", "/thirdparty/tgGroup/searchMember", 1100910113),
 
-    THIRD_KP_TG_GET_CHATROOM_INFO("kpTg-获取群信息", "/thirdparty/tgGroup/getChatroomInfo", 1100910018),
+//    THIRD_KP_TG_GET_CHATROOM_INFO("kpTg-获取群信息", "/thirdparty/tgGroup/getChatroomInfo", 1100910018),
 
     THIRD_KP_TG_SET_CHATROOM_TYPE("kpTg-设置群类型", "/thirdparty/tgGroup/setChatroomType", 1100910056),
 
@@ -24,6 +24,11 @@ public enum OpenApiEnum {
 
     THIRD_KP_TG_INVITE_JOIN_CHATROOM("kpTg-邀请加入群组", "/thirdparty/tgGroup/inviteJoinChatroom", 1100910015),
 
+    THIRD_KP_TG_DISPERSE_IMAGE("kpTg-获取离散图片", "/thirdparty/tgCharacter/disperseImage", 1100850508),
+
+    THIRD_KP_TG_GET_APPOINT_GRADE_TEXT_LIST("kpTg-获取离散文字", "/thirdparty/tgCharacter/getAppointGradeTextList", 1100850405),
+
+    THIRD_KP_TG_INSERT_EVENT("kpTg-生成域名接口", "/thirdparty/tgModule/insertEvent", null),
 
     // 开平号接口
     THIRD_KP_TG_MODIFY_ROBOT_HEAD_IMG("kpTg-修改号头像", "/thirdparty/tgRobot/modifyRobotHeadImg", 1100910016),
