@@ -4,9 +4,13 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
+import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.GroupPageInfoVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 群基础信息(GroupInfo)表数据库访问层
@@ -18,4 +22,9 @@ import org.springframework.stereotype.Repository;
 public interface GroupInfoMapper extends BaseMapper<GroupInfo> {
 
     Page<GroupPageInfoVO> page(Page page,@Param("dto") GroupPageQueryDTO dto);
+
+
+    List<GroupInfoVO> selectGroup(@Param("registrationDay") LocalDateTime registrationDay,
+                                  @Param("groupNum") Integer groupNum,
+                                  @Param("countryCode") List<String> countryCode,List<String> excludeGroupId);
 }

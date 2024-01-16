@@ -4,6 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.RobotStatisticsMapper">
 
+
     <select id="selectRobotByRule" resultType="com.ruoyi.system.domain.vo.robot.SelectRobotByRuleVO">
         select
             tri.robot_serial_no,
@@ -65,5 +66,13 @@
             #{item}
         </foreach>
     </update>
+
+
+    <insert id="addLeaderCount">
+        update t_robot_statistics
+        set
+      total_leader_set_admin_count = total_leader_set_admin_count + ${count}
+        where robot_serial_no  = #{robotSerialNo}
+    </insert>
 
 </mapper>

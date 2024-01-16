@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.VibeRule;
 import com.ruoyi.common.core.domain.entity.robot.RobotStatistics;
+import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.dto.robot.AddCountDTO;
 import com.ruoyi.system.domain.dto.robot.GetRobotDTO;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -35,6 +37,9 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
     private VibeRuleMapper vibeRuleMapper;
     @Autowired
     private SqlSessionTemplate sqlSessionTemplate;
+    @Autowired
+    private RedisLock redisLock;
+
     @Override
     public R<List<String>> getRobot(GetRobotDTO dto) {
         VibeRule vibeRule = vibeRuleMapper.selectOne(new LambdaQueryWrapper<VibeRule>().last("limit 1"));
@@ -112,4 +117,44 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         }
         return R.ok(robotSerialNos);
     }
+
+    @Override
+    public boolean checkAndAddLeaderCount(String robotSerialNo, Integer count, Integer checkCount) {
+        String key = "robotStatistics:leaderCount:" + robotSerialNo;
+        //等待锁 等待10秒
+        if (!redisLock.tryLock(key, 10, 5, TimeUnit.SECONDS)) {
+            return false;
+        }
+        try {
+            RobotStatistics robotStatistics = baseMapper.selectById(robotSerialNo);
+            if(robotStatistics == null){
+                return false;
+            }
+            if(robotStatistics.getTotalLeaderSetAdminCount() + count > checkCount){
+                return false;
+            }
+            baseMapper.addLeaderCount(robotSerialNo, count);
+            return true;
+        } finally {
+            redisLock.unlock(key);
+        }
+    }
+
+    @Override
+    public void restoreQuantity(String robotSerialNo, Integer count) {
+        String key = "robotStatistics:leaderCount:" + robotSerialNo;
+        //等待锁 等待10秒
+        if (redisLock.tryLock(key, 10, 5, TimeUnit.SECONDS)) {
+            //加锁失败直接相减
+            baseMapper.addLeaderCount(robotSerialNo, -count);
+            return ;
+        }
+        try {
+            baseMapper.addLeaderCount(robotSerialNo, count);
+        } finally {
+            redisLock.unlock(key);
+        }
+    }
+
+
 }
