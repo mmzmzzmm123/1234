@@ -114,7 +114,7 @@ public class Play {
     private BigDecimal speed;
 
     /**
-     * 剧本执行进度：0未开始 1入群 2混淆中 3号分配 4人设包装 5剧本发送
+     * 剧本执行进度：0未开始 1调度修改群人设中 2 调用入群中 3混淆中 4号分配 5人设包装 6剧本发送
      */
     private Integer scanProgress;
 

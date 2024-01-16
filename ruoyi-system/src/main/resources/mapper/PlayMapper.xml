@@ -179,4 +179,13 @@
         </choose>
     </select>
 
+    <select id="selectIntoGroupList" resultType="com.ruoyi.common.core.domain.entity.play.Play">
+        select * from t_play_info where state = #{state} and scan_progress = #{progress} and is_delete = 0 and group_source = 0
+    </select>
+
+    <select id="selectPlayById" resultType="com.ruoyi.common.core.domain.entity.play.Play">
+     select * from t_play_info where id = #{playId}
+    </select>
+
+
 </mapper>

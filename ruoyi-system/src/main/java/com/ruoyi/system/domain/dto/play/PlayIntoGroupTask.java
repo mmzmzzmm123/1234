@@ -1,6 +1,7 @@
 package com.ruoyi.system.domain.dto.play;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -8,6 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Data
+@TableName("t_play_into_group_task")
 public class PlayIntoGroupTask implements Serializable {
 
     @TableId

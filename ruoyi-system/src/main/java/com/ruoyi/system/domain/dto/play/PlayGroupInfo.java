@@ -1,6 +1,7 @@
 package com.ruoyi.system.domain.dto.play;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Data
 @ApiModel("剧本群信息表")
+@TableName("t_play_group_info")
 public class PlayGroupInfo {
 
     @ApiModelProperty("主键")

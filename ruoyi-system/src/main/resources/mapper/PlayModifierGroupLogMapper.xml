@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PlayModifierGroupLogMapper">
+
+   <select id="selectGroupLogByPlayId" resultType="com.ruoyi.system.domain.dto.play.PlayModifierGroupLog">
+       select * from t_play_modifier_group_log where play_id = #{playId} AND state = 2
+   </select>
+
+    <select id="selectGroupLogByCode" resultType="com.ruoyi.system.domain.dto.play.PlayModifierGroupLog">
+        select * from t_play_modifier_group_log where opt_ser_no = #{optSerNo} limit 1
+    </select>
+
+    <select id="selectGroupLogByPlayIdAll" resultType="com.ruoyi.system.domain.dto.play.PlayModifierGroupLog">
+       select * from t_play_modifier_group_log where play_id = #{playId}
+   </select>
+</mapper>

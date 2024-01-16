@@ -24,4 +24,7 @@ public interface PlayMapper extends BaseMapper<Play> {
 
     Page<QueryPushDetailVO> selectPushDetailPage(Page page, @Param("dto") QueryPushDetailDTO dto);
 
+    List<Play> selectIntoGroupList(@Param("state")Integer state,@Param("progress")Integer progress);
+
+    Play selectPlayById(@Param("playId")String playId);
 }
