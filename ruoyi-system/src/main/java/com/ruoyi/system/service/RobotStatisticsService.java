@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface RobotStatisticsService {
 
-    R<List<String>> getRobot(GetRobotDTO dto);
+    R<List<GetRobotVO>> getRobot(GetRobotDTO dto);
 }
