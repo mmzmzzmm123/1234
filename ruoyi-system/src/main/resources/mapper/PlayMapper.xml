@@ -54,11 +54,129 @@
             LEFT JOIN t_group_state tgs ON tpmp.group_id = tgs.group_id
         WHERE
             tpmp.play_id IN
-            <foreach collection="ids" item="id" open="(" separator="," close=")">
-                #{id}
+            <foreach collection="playIds" item="playId" open="(" separator="," close=")">
+                #{playId}
             </foreach>
         GROUP BY
             tpmp.play_id
+    </select>
+
+    <select id="selectGroupProgress" resultType="com.ruoyi.system.domain.vo.play.PlayGroupProgressVO">
+        SELECT
+            tpgi.group_id AS id,
+            tpgi.play_id,
+            tpgi.state,
+            tgi.group_id,
+            tgi.group_serial_no,
+            tgi.group_name,
+            tgi.group_remark,
+            tgi.group_about,
+            tgi.group_link,
+            tgi.group_private_link,
+            tgi.group_type,
+            tgmi.member_count,
+            tgmi.join_count,
+            tgmi.link_join_count,
+            sum( IF ( tprgr.state = 1 AND tprgr.is_delete = 0, 1, 0 ) ) AS navyCount,
+            count( tpmpd.id ) AS totalNum,
+            sum( IF ( tpmpd.send_state > 0, 1, 0 ) ) AS currentNum
+        FROM
+            t_play_group_info tpgi
+            LEFT JOIN t_group_info tgi ON tpgi.tg_group_id = tgi.group_id
+            LEFT JOIN t_group_monitor_info tgmi ON tgi.group_id = tgmi.group_id
+            LEFT JOIN t_play_message_push tpmp ON tpgi.play_id = tpgi.play_id
+            AND tpgi.group_id = tpmp.group_id
+            LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
+            LEFT JOIN t_play_robot_group_relation tprgr ON tgi.group_id = tprgr.group_id
+        WHERE
+            1 = 1
+          AND tpgi.play_id = #{playId}
+        order by tpgi.create_time desc
+    </select>
+
+    <select id="selectPushDetailPage" resultType="com.ruoyi.system.domain.vo.play.QueryPushDetailVO">
+        SELECT
+            tpmp.group_id,
+            tgi.group_serial_no,
+            tpmp.group_name,
+            tpmpd.spokesman_nickname,
+            tpmpd.robot_id,
+            tpmpd.robot_nickname,
+            tpmpd.robot_img_url,
+            tpmpd.robot_acct,
+            tpmpd.message_content,
+            tpmpd.message_sort,
+            tpmpd.send_state,
+            tpmpd.send_time,
+            tpmpd.create_time,
+            tpmpd.push_fail_reason
+        FROM
+            t_play_message_push tpmp
+            LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
+            LEFT JOIN t_group_info tgi ON tpmp.group_id = tgi.group_id
+        WHERE
+            1 = 1
+          AND tpmp.play_id = #{dto.playId}
+        <choose>
+            <when test="timeType != null and timeType == 2">
+                <if test="dto.startTime != null and dto.startTime != ''">
+                    and tpmpd.send_time >= #{dto.startTime}
+                </if>
+                <if test="dto.endTime != null and dto.endTime != ''">
+                    and tpmpd.send_time &lt;= #{dto.endTime}
+                </if>
+            </when>
+            <otherwise>
+                <if test="dto.startTime != null and dto.startTime != ''">
+                    and tpmpd.create_time >= #{dto.startTime}
+                </if>
+                <if test="dto.endTime != null and dto.endTime != ''">
+                    and tpmpd.create_time &lt;= #{dto.endTime}
+                </if>
+            </otherwise>
+        </choose>
+        <if test="dto.sendState != null">
+            and tpmpd.send_state = #{dto.sendState}
+        </if>
+
+        <if test="dto.robotId != null and dto.robotId != ''">
+            and tpmpd.robot_id = #{dto.robotId}
+        </if>
+        <if test="dto.robotAcct != null and dto.robotAcct != ''">
+            and tpmpd.robot_acct = #{dto.robotAcct}
+        </if>
+        <if test="dto.robotNickname != null and dto.robotNickname != ''">
+            and tpmpd.robot_nickname = #{dto.robotNickname}
+        </if>
+
+
+        <if test="dto.groupId != null and dto.groupId != ''">
+            and tpmp.group_id = #{dto.groupId}
+        </if>
+        <if test="dto.groupName != null and dto.groupName != ''">
+            and tpmp.group_name = #{dto.groupName}
+        </if>
+        <if test="dto.groupSerialNo != null and dto.groupSerialNo != ''">
+            and tgi.group_serial_no = #{dto.groupSerialNo}
+        </if>
+
+        ORDER BY
+        <choose>
+            <when test="dto.sortField != null and dto.sortField == 2">
+                tpmpd.send_time
+            </when>
+            <otherwise>
+                tpmpd.create_time
+            </otherwise>
+        </choose>
+        <choose>
+            <when test="dto.sort != null and dto.sort == 1">
+                ASC
+            </when>
+            <otherwise>
+                DESC
+            </otherwise>
+        </choose>
     </select>
 
 </mapper>

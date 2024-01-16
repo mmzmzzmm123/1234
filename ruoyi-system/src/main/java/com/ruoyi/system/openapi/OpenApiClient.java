@@ -5,6 +5,8 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.exception.GlobalException;
+import com.ruoyi.system.openapi.model.output.ApiClientVO;
 import com.ruoyi.system.openapi.model.output.ExtTgBatchRobotSimpInfoData;
 import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotByMerchantVO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
@@ -41,7 +43,7 @@ public class OpenApiClient {
         try {
             String jsonBody = JSON.toJSONString(body);
             log.info("调用openapi相关接口 {} {} {} {} {}", traceId, requestUrl, jsonBody, token, api.name());
-            HttpRequest request = HttpUtil.createPost(requestUrl).header("Authorization", token).body(jsonBody, ContentType.JSON.toString());
+            HttpRequest request = HttpUtil.createPost(requestUrl).header("Authorization", "Bearer " + token).body(jsonBody, ContentType.JSON.toString());
             HttpResponse execute = request.execute();
             response = execute.body();
             log.info("调用openapi相关接口获得响应 {} {}", traceId, response);
@@ -74,18 +76,17 @@ public class OpenApiClient {
     }
 
     private static String login() {
-        //String merchantAccount = SpringUtils.getBean(UtTouchProperties.class).getMerchantAccount();
-        //String merchantPassword = SpringUtils.getBean(UtTouchProperties.class).getMerchantPassword();
+        String openApiKey = SpringUtils.getBean(OpenApiProperties.class).getOpenApiKey();
+        String openApiSecret = SpringUtils.getBean(OpenApiProperties.class).getOpenApiSecret();
+        ApiClientDTO dto = new ApiClientDTO();
+        dto.setClientId(openApiKey);
+        dto.setClientSecret(openApiSecret);
 
-//        MerchantLoginData data = new MerchantLoginData();
-//        data.setMerchantAccount(merchantAccount)
-//                .setMerchantPwd(merchantPassword);
-//        UtTouchResult<MerchantLoginResult> result = UtTouchClient.merchantLogin(data);
-//        return Optional.ofNullable(result)
-//                .map(UtTouchResult::getData)
-//                .map(MerchantLoginResult::getToken)
-//                .orElseThrow(() -> new GlobalException("调用UT-TOUCH登录发生错误"));
-        return "";
+        OpenApiResult<ApiClientVO> result = userLoginClientByThird(dto);
+        return Optional.ofNullable(result)
+                .map(OpenApiResult::getData)
+                .map(ApiClientVO::getValue)
+                .orElseThrow(() -> new GlobalException("调用比邻第三方登录发生错误"));
     }
 
     private static String getToken() {
@@ -109,6 +110,9 @@ public class OpenApiClient {
         return "ut-buleprint-backend:OpenApiToken";
     }
 
+    public static OpenApiResult<ApiClientVO> userLoginClientByThird(ApiClientDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_USER_LOGIN_CLIENT, JSONObject.from(data), ApiClientVO.class);
+    }
 
     /**
      * 比邻第三方(开平TG)：-修改群头像
@@ -216,14 +220,14 @@ public class OpenApiClient {
     }
 
 
-    /**
-     * 比邻第三方(开平TG)：-获取群信息
-     *
-     * @return
-     */
-    public static OpenApiResult<TgBaseOutputDTO> getChatroomInfoByThirdKpTg(ThirdTgGetChatroomInfoInputDTO data) {
-        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_CHATROOM_INFO, JSONObject.from(data), TgBaseOutputDTO.class);
-    }
+//    /**
+//     * 比邻第三方(开平TG)：-获取群信息
+//     *
+//     * @return
+//     */
+//    public static OpenApiResult<TgBaseOutputDTO> getChatroomInfoByThirdKpTg(ThirdTgGetChatroomInfoInputDTO data) {
+//        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_CHATROOM_INFO, JSONObject.from(data), TgBaseOutputDTO.class);
+//    }
 
     /**
      * 比邻第三方(开平TG)：-设置群类型
@@ -261,4 +265,30 @@ public class OpenApiClient {
         return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_INVITE_JOIN_CHATROOM, JSONObject.from(data), TgBaseOutputDTO.class);
     }
 
+    /**
+     * 比邻第三方(开平TG)：-获取离散图片
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> disperseImageByThirdKpTg(ThirdTgDisperseImageInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_DISPERSE_IMAGE, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
+    /**
+     * 比邻第三方(开平TG)：-获取离散文字
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> getAppointGradeTextListByThirdKpTg(ThirdTgAppointGradeTextListInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_APPOINT_GRADE_TEXT_LIST, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
+    /**
+     * 比邻第三方(开平TG)：-生成域名接口(同步)
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> insertEventByThirdKpTg(ThirdTgInsertEventInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_INSERT_EVENT, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
 }

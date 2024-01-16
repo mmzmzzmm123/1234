@@ -1,45 +1,31 @@
 package com.ruoyi.common.utils;
 
-import com.ruoyi.common.core.domain.dto.play.PlayMessageDTO;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class WordUtil {
     private static final Logger log = LoggerFactory.getLogger(WordUtil.class);
 
-    private static final String REGEX = "<ms.*>(.*)</ms>";
-
-
-    public static List<String> readWordDocument(String wordPath) {
-        List<PlayMessageDTO> playMessageList = new ArrayList<>();
+    public static List<String> readWordDocumentByUrl(String wordPath) {
         List<String> list = new ArrayList<>();
+        final InputStream inputStream = UrlTools.getInputStreamByUrl(wordPath);
+        if (inputStream == null) {
+            return list;
+        }
+
         try {
-            FileInputStream fis = new FileInputStream(wordPath);
-            XWPFDocument document = new XWPFDocument(fis);
+            XWPFDocument document = new XWPFDocument(inputStream);
             // 读取段落
             List<XWPFParagraph> paragraphs = document.getParagraphs();
             for (XWPFParagraph paragraph : paragraphs) {
-                if (StringUtils.isEmpty(paragraph.getText())) {
-                    continue;
-                }
-
-                System.out.println(paragraph.getText());
-                Pattern pattern = Pattern.compile(REGEX);
-                Matcher matcher = pattern.matcher(paragraph.getText());
-                if (matcher.find()) {
-                    System.out.println(matcher.group(1));
-                }
-
                 list.add(paragraph.getText());
 
                 // 处理段落中的图片
@@ -59,29 +45,11 @@ public class WordUtil {
                 });
             }
 
-            fis.close();
+            inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
         return list;
-    }
-
-    public static void main(String[] args) {
-//        final List<String> strings = readWordDocument("C:\\Users\\Administrator\\Desktop\\Cinema XXI OKE (2).docx");
-//        System.out.println(strings);
-
-        String reg = "<ms[^>]*?>[\\s\\S]*?<\\/ms>";
-        Pattern regExStyle = Pattern.compile(reg);
-
-        String text = "<ms>Fake 1</ms>: group ap min\n" +
-                "Fake 2: bisa jelaskan group apa ??\n" +
-                "Fake 3: kenapa saya masuk sini\n" +
-                "Fake 4: mana admin ??";
-        Matcher m = regExStyle.matcher(text);
-        if (m.find()) {
-            System.out.println(m.group(0));
-            System.out.println(m.group(0).length());
-        }
     }
 }

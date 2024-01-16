@@ -1,6 +1,5 @@
 package com.ruoyi.common.core.domain.dto.play;
 
-import com.alibaba.fastjson2.JSONObject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -22,6 +21,9 @@ public class PlayDTO {
 
     @ApiModelProperty("群注册天数")
     private Integer groupDay;
+
+    @ApiModelProperty("剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成")
+    private Integer state;
 
     @ApiModelProperty("炒群条件：0-人数 1-时间")
     private Integer groupCondition;
@@ -72,19 +74,4 @@ public class PlayDTO {
     private String urlPool;
 
     private String merchantId;
-
-    @ApiModelProperty(value = "word文件链接")
-    private String wordUrl;
-
-    public SendMechanism convertSendMechanismStr(String sendMechanism) {
-        return JSONObject.parseObject(sendMechanism, SendMechanism.class);
-    }
-
-    public AdMonitor convertAdMonitorStr(String adMonitor) {
-        return JSONObject.parseObject(adMonitor, AdMonitor.class);
-    }
-
-    public PlayExt convertPlayExtStr(String playExt) {
-        return JSONObject.parseObject(playExt, PlayExt.class);
-    }
 }

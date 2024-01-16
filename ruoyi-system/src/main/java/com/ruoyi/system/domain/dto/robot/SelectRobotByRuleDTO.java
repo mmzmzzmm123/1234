@@ -19,4 +19,9 @@ public class SelectRobotByRuleDTO extends GetRobotDTO{
     private Integer totalSetAdminCount;
     @ApiModelProperty(value = "号带群数")
     private Integer groupCount;
+    @ApiModelProperty(value = "是否需要设置管理员,0-否,1-是")
+    private Integer isSetAdmin = 0;
+    @ApiModelProperty(value = "要排除的ip")
+    private List<String> ips;
+    private Integer limit;
 }

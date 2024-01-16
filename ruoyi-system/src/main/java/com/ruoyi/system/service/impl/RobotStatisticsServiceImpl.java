@@ -15,11 +15,13 @@ import com.ruoyi.system.mapper.VibeRuleMapper;
 import com.ruoyi.system.service.RobotStatisticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.compress.utils.Lists;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,30 +47,63 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         selectRobotByRuleDTO.setTotalJoinGroupCount(vibeRule.getJoinLimitByTotal());
         selectRobotByRuleDTO.setOneDaySetAdminCount(vibeRule.getSetManageLimitByDay());
         selectRobotByRuleDTO.setTotalSetAdminCount(vibeRule.getSetManageLimitByTotal());
-        selectRobotByRuleDTO.setCount(dto.getCount());
+        Boolean adminFlag = false;
+        //如果需要设置管理员的号,先获取设置管理员的号
+        if(dto.getSetAdminCount() > 0){
+            selectRobotByRuleDTO.setLimit(dto.getSetAdminCount());
+            selectRobotByRuleDTO.setIsSetAdmin(1);
+            adminFlag = true;
+        }else{
+            selectRobotByRuleDTO.setLimit(dto.getCount());
+        }
         selectRobotByRuleDTO.setCountryCode(dto.getCountryCode());
-        selectRobotByRuleDTO.setIsSetAdmin(dto.getIsSetAdmin());
+        selectRobotByRuleDTO.setSetAdminCount(dto.getSetAdminCount());
         selectRobotByRuleDTO.setIpType(dto.getIpType());
         List<SelectRobotByRuleVO> selectRobotByRuleVOS = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
-        if(CollectionUtils.isEmpty(selectRobotByRuleVOS) || selectRobotByRuleVOS.size() < dto.getCount()){
+        if(CollectionUtils.isEmpty(selectRobotByRuleVOS)){
             return R.fail("号资源不足");
         }
-        List<String> robotSerialNos = selectRobotByRuleVOS.stream().map(SelectRobotByRuleVO::getRobotSerialNo).collect(Collectors.toList());
-        List<String> ids = selectRobotByRuleVOS.stream().filter(f-> StringUtils.isNotEmpty(f.getId())).map(SelectRobotByRuleVO::getId).collect(Collectors.toList());
-        if(CollectionUtils.isEmpty(ids)){
-            AddCountDTO addCountDTO = new AddCountDTO();
-            addCountDTO.setRobotSerialNos(robotSerialNos);
-            addCountDTO.setIsSetAdmin(dto.getIsSetAdmin());
-            robotStatisticsMapper.addCount(addCountDTO);
-            return R.ok(robotSerialNos);
+        if(adminFlag){
+            if(selectRobotByRuleVOS.size() < dto.getSetAdminCount()){
+                return R.fail("号资源不足");
+            }
+        }else{
+            if(selectRobotByRuleVOS.size() < dto.getCount()){
+                return R.fail("号资源不足");
+            }
         }
+
+        List<SelectRobotByRuleVO> selectRobotByRuleVOSTotal = new ArrayList<>();
+        //如果有需要设置管理员号的,需要再次获取其他号
+        if(adminFlag && dto.getCount() > 0){
+            List<String> ips = selectRobotByRuleVOS.stream().map(SelectRobotByRuleVO::getIp).collect(Collectors.toList());
+            selectRobotByRuleDTO.setIps(ips);
+            selectRobotByRuleDTO.setIsSetAdmin(0);
+            selectRobotByRuleDTO.setLimit(dto.getCount());
+            List<SelectRobotByRuleVO> selectRobotByRuleVOS1 = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
+            if(CollectionUtils.isEmpty(selectRobotByRuleVOS1) || selectRobotByRuleVOS1.size() < dto.getCount()){
+                return R.fail("号资源不足");
+            }
+            selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS);
+            selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS1);
+        }
+        List<String> robotSerialNos = selectRobotByRuleVOSTotal.stream().map(SelectRobotByRuleVO::getRobotSerialNo).collect(Collectors.toList());
+        List<String> ids = selectRobotByRuleVOSTotal.stream().filter(f-> StringUtils.isNotEmpty(f.getId())).map(SelectRobotByRuleVO::getId).collect(Collectors.toList());
         SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession();
         try {
             robotStatisticsMapper.selectList(new LambdaQueryWrapper<RobotStatistics>().in(RobotStatistics::getId,ids).last(" for update"));
-            AddCountDTO addCountDTO = new AddCountDTO();
-            addCountDTO.setRobotSerialNos(robotSerialNos);
-            addCountDTO.setIsSetAdmin(dto.getIsSetAdmin());
-            robotStatisticsMapper.addCount(addCountDTO);
+            if(adminFlag){
+                AddCountDTO addCountDTO = new AddCountDTO();
+                addCountDTO.setRobotSerialNos(robotSerialNos);
+                addCountDTO.setIsSetAdmin(1);
+                robotStatisticsMapper.addCount(addCountDTO);
+            }
+            if(dto.getCount() > 0){
+                AddCountDTO addCountDTO = new AddCountDTO();
+                addCountDTO.setRobotSerialNos(robotSerialNos);
+                addCountDTO.setIsSetAdmin(0);
+                robotStatisticsMapper.addCount(addCountDTO);
+            }
             sqlSession.commit();
         }catch (Exception e){
             log.error("getRobot 计数失败",e);

@@ -2,18 +2,28 @@ package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
+import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
 import com.ruoyi.system.domain.vo.play.PlayGroupProgressVO;
 import com.ruoyi.system.domain.vo.play.PlayTaskProgressVO;
+import com.ruoyi.system.domain.vo.play.PlayVO;
 import com.ruoyi.system.domain.vo.play.QueryPlayVO;
+import com.ruoyi.system.domain.vo.play.QueryPushDetailVO;
+
+import java.util.List;
 
 public interface IPlayService {
     R<String>  create(PlayDTO dto);
 
     R<String> updatePlay(PlayDTO dto);
 
-    R<PlayDTO> info(String id);
+    R<PlayVO> info(String playId);
+
+    AdMonitor adInfo(String playId);
+
+    R<String> updateAdInfo(String playId, AdMonitor id);
 
     /**
      * 炒群任务分页列表
@@ -34,6 +44,13 @@ public interface IPlayService {
      * @param playId
      * @return
      */
-    PlayGroupProgressVO groupProgress(String playId);
+    List<PlayGroupProgressVO> groupProgress(String playId);
+
+    /**
+     * 任务推送明细查询
+     * @param dto
+     * @return
+     */
+    Page<QueryPushDetailVO> pushDetailPage(QueryPushDetailDTO dto);
 
 }
