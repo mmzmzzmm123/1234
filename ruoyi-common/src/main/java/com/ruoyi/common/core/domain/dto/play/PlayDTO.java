@@ -74,4 +74,6 @@ public class PlayDTO {
     private List<String> urlPool;
 
     private String merchantId;
+
+    private String fileId;
 }

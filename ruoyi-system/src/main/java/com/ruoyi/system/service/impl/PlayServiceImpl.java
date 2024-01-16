@@ -27,6 +27,8 @@ import com.ruoyi.system.mapper.PlayMessageMapper;
 import com.ruoyi.system.mapper.PlayRobotPackMapper;
 import com.ruoyi.system.service.IPlayService;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -35,6 +37,8 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.ruoyi.common.constant.RedisKeyConstans.PLAY_FILE_CONTENT;
 
 @Service
 public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IPlayService {
@@ -53,6 +57,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Resource
     private PlayMessageService playMessageService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @Override
     @Transactional(rollbackFor=Exception.class)
     public R<String> create(PlayDTO dto) {
@@ -66,6 +73,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         savePlayMessage(playId, dto.getPlayMessageList(), dto.getSendMechanism());
 
         //todo 混淆处理
+
+        redisTemplate.delete(PLAY_FILE_CONTENT + dto.getFileId());
 
         return R.ok(playId);
     }

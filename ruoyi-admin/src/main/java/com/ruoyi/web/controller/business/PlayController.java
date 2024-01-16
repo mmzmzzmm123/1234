@@ -50,7 +50,6 @@ public class PlayController extends BaseController {
     @PostMapping(value = "/create")
     public R<String> create(@RequestBody PlayDTO dto) {
         dto.setMerchantId(getMerchantId());
-        //todo 验证参数
         R<String> checkPlayParamsRet = checkAddPlayParams(dto);
         if (checkPlayParamsRet.getCode() != HttpStatus.SUCCESS) {
             return checkPlayParamsRet;
