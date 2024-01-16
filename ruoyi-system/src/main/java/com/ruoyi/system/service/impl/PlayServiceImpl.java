@@ -158,10 +158,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
 
-        if (StringUtils.isNotEmpty(dto.getWordUrl())) {
-            //更新发言人包装
-        }
-
         play.setName(dto.getName());
         play.setUrlPool(dto.getUrlPool());
         play.setTargetCountyCode(dto.getTargetCountyCode());
