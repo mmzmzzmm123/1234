@@ -3,8 +3,10 @@ package com.ruoyi.system.callback.processor;
 import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
 
+import com.ruoyi.system.service.impl.IntoGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -13,6 +15,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TgRobotProcessor {
 
+    @Autowired
+    IntoGroupService intoGroupService;
 
     /***
      *
@@ -67,6 +71,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910039, parameterClass = Called1100910039DTO.class)
     public void called1100910039(Called1100910039DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        intoGroupService.intoGroupCallback(dto,root);
     }
 
     /**

@@ -8,12 +8,16 @@ import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
 import com.ruoyi.common.core.domain.entity.VibeRule;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.system.callback.dto.Called1100910039DTO;
+import com.ruoyi.system.callback.dto.CalledDTO;
 import com.ruoyi.system.components.RandomListPicker;
 import com.ruoyi.system.domain.dto.GroupQueryDTO;
+import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
 import com.ruoyi.system.domain.dto.play.PlayIntoGroupTask;
 import com.ruoyi.system.domain.dto.robot.GetRobotDTO;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.robot.GetRobotVO;
+import com.ruoyi.system.mapper.PlayGroupInfoMapper;
 import com.ruoyi.system.mapper.PlayIntoGroupTaskMapper;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
@@ -49,6 +53,9 @@ public class IntoGroupService {
 
     @Autowired
     private GroupService groupService;
+
+    @Autowired
+    PlayGroupInfoMapper playGroupInfoMapper;
 
 
     public void  into(PlayDTO playDTO){
@@ -217,8 +224,80 @@ public class IntoGroupService {
     }
 
     //入群回调处理方法
-    public void intoGroupCallback(){
+    public void intoGroupCallback(Called1100910039DTO dto,CalledDTO calledDTO){
+        log.info("入群回调{}", calledDTO);
+        if (StringUtils.isEmpty(calledDTO.getOptSerNo())) {
+            return;
+        }
+        //根据操作编码查询入群记录
+        PlayIntoGroupTask task = playIntoGroupTaskMapper.selectTaskByCode(calledDTO.getOptSerNo());
+        if (task == null) {
+            log.info("操作编码不存在{}", calledDTO.getOptSerNo());
+            return;
+        }
+        //返回入群失败
+        if (calledDTO.getResultCode() != 0) {
+            task.setTaskState(4);
+            task.setFailCause(calledDTO.getResultMsg());
+            playIntoGroupTaskMapper.updateById(task);
+            return;
+        }
+        //入群成功 查询群信息
+        //添加等待锁
+//        ClusterLock.ofAwait().lock("linkmaster:atmosphere:waitLock:intoGroupCallback" + dto.getGroupId(), 60);
+//        try {
+//            PlayGroupInfo groupInfo = playGroupInfoMapper.selectGroupInfoById(dto.getChatroomSerialNo());
+//            if (groupInfo == null) {
+//                //创建群信息
+//                groupInfo = getGroupInfo(dto, task);
+//                groupInfoMapper.insert(groupInfo);
+//            } else {
+//                groupInfo.setGroupImageUrl(dto.getHeadImageUrl());
+//                groupInfo.setTgGroupName(dto.getGroupName());
+//                groupInfo.setMemberCount(dto.getMemberCount());
+//                groupInfo.setGroupType(dto.getGroupType());
+//                groupInfoMapper.updateById(groupInfo);
+//            }
+//            //查询当前机器人是否已和群做绑定
+//            Integer count = robotGroupRelationMapper.selectRobotGroup(dto.getGroupId(), task.getPersonId());
+//            if (count == 0) {
+//                //绑定机器人和群信息记录表
+//                RobotGroupRelation robotGroupRelation = new RobotGroupRelation();
+//                robotGroupRelation.setRobotGroupRelationId(IdGenerator.getIdStr());
+//                robotGroupRelation.setMerchantId(task.getMerchantId());
+//                robotGroupRelation.setRobotId(task.getPersonId());
+//                robotGroupRelation.setGroupId(dto.getGroupId());
+//                robotGroupRelation.setState(1);
+//                robotGroupRelation.setIsDelete(0);
+//                robotGroupRelationMapper.insert(robotGroupRelation);
+//            }
+//            //查询群内机器人数量
+//            Integer robotCount = robotGroupRelationMapper.selectRobotGroupCount(dto.getGroupId());
+//            groupInfo.setRobotCount(robotCount);
+//            groupInfoMapper.updateById(groupInfo);
+//            //修改入群任务状态
+//            task.setTaskState(3);
+//            task.setGroupName(dto.getGroupName());
+//            task.setGroupId(dto.getGroupId());
+//            personIntoGroupTaskMapper.updateById(task);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        } finally {
+//            ClusterLock.ofAwait().unLock("linkmaster:atmosphere:waitLock:intoGroupCallback" + dto.getGroupId());
+//        }
 
+    }
+
+    public PlayGroupInfo getGroupInfo(Called1100910039DTO dto,PlayGroupInfo task) {
+        PlayGroupInfo groupInfo = new PlayGroupInfo();
+        groupInfo.setGroupId(IdUtils.fastUUID());
+        groupInfo.setMerchantId(task.getMerchantId());
+        groupInfo.setGroupUrl(task.getGroupUrl());
+        groupInfo.setTgGroupId(dto.getChatroomSerialNo());
+        groupInfo.setTgGroupName(dto.getChatroomName());
+//        groupInfo.set(1);
+        groupInfo.setIsDelete(0);
+        return groupInfo;
     }
 
 
