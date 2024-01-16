@@ -1,6 +1,6 @@
 package com.ruoyi.system.components.movie.spi.impl;
 
-import com.luo.delayqueue.context.FastDelayQueueContext;
+import com.ruoyi.common.core.delayqueue.context.FastDelayQueueContext;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spi.SPI;
@@ -9,7 +9,6 @@ import com.ruoyi.system.components.movie.DelayQueueInvoker;
 import com.ruoyi.system.components.movie.GlobalIndexContext;
 import com.ruoyi.system.components.movie.PlaybackContext;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
-
 import lombok.extern.slf4j.Slf4j;
 
 @SPI

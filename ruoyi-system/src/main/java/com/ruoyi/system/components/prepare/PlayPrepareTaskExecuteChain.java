@@ -1,8 +1,10 @@
 package com.ruoyi.system.components.prepare;
 
 import java.util.LinkedList;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.utils.spi.ServiceLoader;
+import com.ruoyi.system.components.multipack.OnPackMonitor;
 import com.ruoyi.system.components.prepare.spi.ComplateTask;
 import com.ruoyi.system.components.prepare.spi.TaskExecution;
 
@@ -13,7 +15,7 @@ import com.ruoyi.system.components.prepare.spi.TaskExecution;
  *
  */
 @Component
-public class PlayPrepareTaskExecuteChain implements ChainManager {
+public class PlayPrepareTaskExecuteChain implements ChainManager{
 
 	private final LinkedList<TaskExecution> chain = new LinkedList<>();
 
@@ -58,5 +60,29 @@ public class PlayPrepareTaskExecuteChain implements ChainManager {
 		}
 		// 等待回调
 	}
+
+//	@Override
+//	public void onPackSucceed(Pack pack) {
+//		// 单个 回调 执行 成功
+//
+//	}
+//
+//	@Override
+//	public void onPackFailed(Pack pack, String error) {
+//		// 单个回调执行失败
+//
+//	}
+//
+//	@Override
+//	public void onRadioPackSucceed(List<Pack> packList) {
+//		// 一组 回调 完成
+//
+//	}
+//
+//	@Override
+//	public void onRadioPackFailed(Pack pack, String failMsg) {
+//		// 一组回调失败（只要有一个回调失败就是失败的）
+//
+//	}
 
 }
