@@ -21,7 +21,7 @@ public interface IPlatformUserService {
     /**
      * 注册
      */
-    void register(PlatformUserReqDTO reqDTO);
+    PlatformUserResDTO register(PlatformUserReqDTO reqDTO);
 
     /**
      * 忘记密码，获取验证码

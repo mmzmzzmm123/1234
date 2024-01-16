@@ -1,6 +1,8 @@
 package com.onethinker.user.dto;
 
 import lombok.Data;
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * @author : yangyouqi
@@ -43,4 +45,25 @@ public class PlatformUserReqDTO {
     private String avatarUrl;
 
     private String nickName;
+
+    private String email;
+
+    private String serviceType;
+
+    private String dataId;
+
+    /**
+     * 参数有效性校验
+     */
+    public void existsParams() {
+        String regex = "\\d{11}";
+        Assert.isTrue(!userName.matches(regex),"用户名不能为11位数字！");
+        Assert.isTrue(!userName.contains("@"),"用户名不能包含@！");
+        if (StringUtils.hasText(phone) && StringUtils.hasText(email)) {
+            throw new RuntimeException("手机号与邮箱只能选择其中一个！");
+        }
+        if (StringUtils.isEmpty(phone) && StringUtils.isEmpty(email)) {
+            throw new RuntimeException("手机号与邮箱不能同时为空");
+        }
+    }
 }

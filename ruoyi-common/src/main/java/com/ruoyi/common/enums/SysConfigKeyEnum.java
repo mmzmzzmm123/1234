@@ -88,7 +88,11 @@ public enum SysConfigKeyEnum {
     /**
      * 发送人
      */
-    SEND_MAILER("send_mailer", "邮箱发送人");
+    SEND_MAILER("send_mailer", "邮箱发送人"),
+    /**
+     * 管理员id
+     */
+    ADMIN_USER_ID("admin_user_id", "管理员id");
     String code;
     String msg;
 

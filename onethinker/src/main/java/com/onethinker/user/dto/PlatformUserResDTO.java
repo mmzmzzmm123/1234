@@ -15,14 +15,14 @@ public class PlatformUserResDTO {
 
     private String avatarUrl;
 
-    private String openId;
+    private String dataId;
 
     public static PlatformUserResDTO foramtResponse(String token, PlatformUserDetail platformUserDetail) {
         PlatformUserResDTO platformUserResDTO = new PlatformUserResDTO();
         platformUserResDTO.setToken(token);
         platformUserResDTO.setNickName(platformUserDetail.getNickName());
         platformUserResDTO.setAvatarUrl(platformUserDetail.getAvatarUrl());
-        platformUserResDTO.setOpenId(platformUserDetail.getDataId());
+        platformUserResDTO.setDataId(platformUserDetail.getDataId());
         return platformUserResDTO;
     }
 }

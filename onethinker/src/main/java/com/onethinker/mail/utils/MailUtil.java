@@ -113,7 +113,7 @@ public class MailUtil {
         log.info("发送邮件===================");
         log.info("to：{}", JSONObject.toJSONString(to));
         log.info("subject：{}", subject);
-        log.info("text：{}", text);
+//        log.info("text：{}", text);
         try {
             //true代表支持复杂的类型
             MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mailSender.createMimeMessage(), true);

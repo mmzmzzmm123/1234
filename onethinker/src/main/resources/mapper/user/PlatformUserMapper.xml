@@ -11,13 +11,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="enabled"    column="enabled"    />
         <result property="weight"    column="weight"    />
         <result property="nickName"    column="nick_name"    />
-        <result property="phone"    column="phone"    />
+        <result property="dataId"    column="data_id"    />
         <result property="avatarUrl"    column="avatar_url"    />
         <result property="remark"    column="remark"    />
     </resultMap>
 
     <sql id="selectPlatformUserVo">
-        select id, create_time, update_time, enabled, weight, nick_name, phone, avatar_url, remark from t_platform_user
+        select id, create_time, update_time, enabled, weight, nick_name, data_id, avatar_url, remark from t_platform_user
     </sql>
 
     <select id="selectPlatformUserList" parameterType="PlatformUser" resultMap="PlatformUserResult">
@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="enabled != null "> and enabled = #{enabled}</if>
             <if test="weight != null "> and weight = #{weight}</if>
             <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
-            <if test="phone != null "> and phone = #{phone}</if>
+            <if test="dataId != null "> and data_id = #{dataId}</if>
             <if test="avatarUrl != null  and avatarUrl != ''"> and avatar_url = #{avatarUrl}</if>
         </where>
     </select>
@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="enabled != null">enabled,</if>
             <if test="weight != null">weight,</if>
             <if test="nickName != null">nick_name,</if>
-            <if test="phone != null">phone,</if>
+            <if test="dataId != null">data_id,</if>
             <if test="avatarUrl != null">avatar_url,</if>
             <if test="remark != null">remark,</if>
          </trim>
@@ -61,7 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="enabled != null">#{enabled},</if>
             <if test="weight != null">#{weight},</if>
             <if test="nickName != null">#{nickName},</if>
-            <if test="phone != null">#{phone},</if>
+            <if test="dataId != null">#{dataId},</if>
             <if test="avatarUrl != null">#{avatarUrl},</if>
             <if test="remark != null">#{remark},</if>
          </trim>
@@ -75,7 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="enabled != null">enabled = #{enabled},</if>
             <if test="weight != null">weight = #{weight},</if>
             <if test="nickName != null">nick_name = #{nickName},</if>
-            <if test="phone != null">phone = #{phone},</if>
+            <if test="dataId != null">data_id = #{dataId},</if>
             <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
             <if test="remark != null">remark = #{remark},</if>
         </trim>

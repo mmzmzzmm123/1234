@@ -1,7 +1,11 @@
 package com.onethinker.bk.service.impl;
 
 import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
+
+import com.onethinker.im.websocket.ImConfigConst;
+import com.ruoyi.common.enums.SysConfigKeyEnum;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.onethinker.bk.mapper.ImChatUserFriendMapper;
@@ -22,6 +26,8 @@ public class ImChatUserFriendServiceImpl extends ServiceImpl<ImChatUserFriendMap
     @Resource
     private ImChatUserFriendMapper imChatUserFriendMapper;
 
+    @Autowired
+    private ISysConfigService sysConfigService;
     /**
      * 查询好友
      *
@@ -87,5 +93,21 @@ public class ImChatUserFriendServiceImpl extends ServiceImpl<ImChatUserFriendMap
     @Override
     public int deleteImChatUserFriendById(Long id) {
         return imChatUserFriendMapper.deleteImChatUserFriendById(id);
+    }
+
+    @Override
+    public void insertImChatUserFriendByPlUserId(Long plUserId) {
+        ImChatUserFriend imChatUser = new ImChatUserFriend();
+        imChatUser.setUserId(plUserId);
+        imChatUser.setFriendId(Long.parseLong(sysConfigService.selectConfigByKey(SysConfigKeyEnum.ADMIN_USER_ID)));
+        imChatUser.setRemark("站长");
+        imChatUser.setFriendStatus(ImConfigConst.FRIEND_STATUS_PASS);
+        imChatUserFriendMapper.insertImChatUserFriend(imChatUser);
+
+        ImChatUserFriend imChatFriend = new ImChatUserFriend();
+        imChatFriend.setUserId(Long.parseLong(sysConfigService.selectConfigByKey(SysConfigKeyEnum.ADMIN_USER_ID)));
+        imChatFriend.setFriendId(plUserId);
+        imChatFriend.setFriendStatus(ImConfigConst.FRIEND_STATUS_PASS);
+        imChatUserFriendMapper.insertImChatUserFriend(imChatFriend);
     }
 }

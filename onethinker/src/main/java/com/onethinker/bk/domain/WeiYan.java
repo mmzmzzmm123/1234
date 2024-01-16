@@ -17,6 +17,13 @@ import lombok.Data;
 public class WeiYan extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 微言
+     */
+    public static final String WEIYAN_TYPE_FRIEND = "friend";
+
+    public static final String WEIYAN_TYPE_NEWS = "news";
+
     /** id */
     private Long id;
 
@@ -42,7 +49,7 @@ public class WeiYan extends BaseEntity {
 
     /** 是否公开[0:仅自己可见，1:所有人可见] */
     @Excel(name = "是否公开[0:仅自己可见，1:所有人可见]")
-    private Integer isPublic;
+    private Boolean isPublic;
 
 
 }

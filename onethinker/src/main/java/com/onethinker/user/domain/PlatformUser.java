@@ -48,10 +48,10 @@ public class PlatformUser extends BaseEntity {
     private String nickName;
 
     /**
-     * 电话
+     * 抽象id： 可能是电话，也有可能是邮箱,但肯定是唯一
      */
-    @Excel(name = "电话")
-    private String phone;
+    @Excel(name = "抽象id： 可能是电话，也有可能是邮箱,但肯定是唯一")
+    private String dataId;
 
     /**
      * 用户头像

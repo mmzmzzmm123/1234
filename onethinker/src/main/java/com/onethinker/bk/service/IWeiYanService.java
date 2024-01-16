@@ -57,4 +57,10 @@ public interface IWeiYanService {
      * @return 结果
      */
     public int deleteWeiYanById(Long id);
+
+    /**
+     * 根据用户平台id更新数据
+     * @param id
+     */
+    void insertWeiYanByDataId(Long puUserId);
 }

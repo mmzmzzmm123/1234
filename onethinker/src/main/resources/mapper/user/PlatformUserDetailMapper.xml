@@ -10,7 +10,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateTime"    column="update_time"    />
         <result property="enabled"    column="enabled"    />
         <result property="weight"    column="weight"    />
-        <result property="phone"    column="phone"    />
         <result property="avatarUrl"    column="avatar_url"    />
         <result property="type"    column="type"    />
         <result property="dataId"    column="data_id"    />
@@ -22,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectPlatformUserDetailVo">
-        select id, create_time, update_time, enabled, weight, phone, avatar_url, type, data_id, login_end_time, remark, username, password,nick_name from t_platform_user_detail
+        select id, create_time, update_time, enabled, weight, avatar_url, type, data_id, login_end_time, remark, username, password,nick_name from t_platform_user_detail
     </sql>
 
     <select id="selectPlatformUserDetailList" parameterType="PlatformUserDetail" resultMap="PlatformUserDetailResult">
@@ -30,7 +29,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>
             <if test="enabled != null "> and enabled = #{enabled}</if>
             <if test="weight != null "> and weight = #{weight}</if>
-            <if test="phone != null "> and phone = #{phone}</if>
             <if test="avatarUrl != null  and avatarUrl != ''"> and avatar_url = #{avatarUrl}</if>
             <if test="type != null "> and type = #{type}</if>
             <if test="dataId != null "> and data_id = #{dataId}</if>
@@ -53,7 +51,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
             <if test="enabled != null">enabled,</if>
             <if test="weight != null">weight,</if>
-            <if test="phone != null">phone,</if>
             <if test="avatarUrl != null">avatar_url,</if>
             <if test="type != null">type,</if>
             <if test="dataId != null">data_id,</if>
@@ -68,7 +65,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="enabled != null">#{enabled},</if>
             <if test="weight != null">#{weight},</if>
-            <if test="phone != null">#{phone},</if>
             <if test="avatarUrl != null">#{avatarUrl},</if>
             <if test="type != null">#{type},</if>
             <if test="dataId != null">#{dataId},</if>
@@ -87,7 +83,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="enabled != null">enabled = #{enabled},</if>
             <if test="weight != null">weight = #{weight},</if>
-            <if test="phone != null">phone = #{phone},</if>
             <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
             <if test="type != null">type = #{type},</if>
             <if test="dataId != null">data_id = #{dataId},</if>

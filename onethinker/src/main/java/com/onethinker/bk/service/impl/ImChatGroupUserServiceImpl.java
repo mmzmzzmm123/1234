@@ -1,7 +1,9 @@
 package com.onethinker.bk.service.impl;
 
 import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
+
+import com.onethinker.im.websocket.ImConfigConst;
+import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.onethinker.bk.mapper.ImChatGroupUserMapper;
@@ -87,5 +89,14 @@ public class ImChatGroupUserServiceImpl extends ServiceImpl<ImChatGroupUserMappe
     @Override
     public int deleteImChatGroupUserById(Long id) {
         return imChatGroupUserMapper.deleteImChatGroupUserById(id);
+    }
+
+    @Override
+    public void insertImChatGroupByPlUserId(Long plUserId) {
+        ImChatGroupUser imChatGroupUser = new ImChatGroupUser();
+        imChatGroupUser.setGroupId(ImConfigConst.DEFAULT_GROUP_ID);
+        imChatGroupUser.setUserId(plUserId);
+        imChatGroupUser.setUserStatus(ImConfigConst.GROUP_USER_STATUS_PASS);
+        imChatGroupUserMapper.insertImChatGroupUser(imChatGroupUser);
     }
 }

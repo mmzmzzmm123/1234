@@ -44,8 +44,7 @@ public class PlatformUserController extends BaseController {
     @PostMapping(value = "/register")
     public AjaxResult platformUserRegister(@RequestBody PlatformUserReqDTO reqDTO) {
         IPlatformUserService platformUserService = platformUserFactory.queryPlatformUserServiceBySourceType(reqDTO.getSourceType());
-        platformUserService.register(reqDTO);
-        return AjaxResult.success("注册成功");
+        return AjaxResult.success(platformUserService.register(reqDTO));
     }
 
     /**

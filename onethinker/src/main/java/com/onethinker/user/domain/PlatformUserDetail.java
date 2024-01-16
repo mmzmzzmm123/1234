@@ -34,12 +34,6 @@ public class PlatformUserDetail extends BaseEntity {
     private Long weight;
 
     /**
-     * 电话
-     */
-    @Excel(name = "电话")
-    private String phone;
-
-    /**
      * 用户头像
      */
     @Excel(name = "用户头像")

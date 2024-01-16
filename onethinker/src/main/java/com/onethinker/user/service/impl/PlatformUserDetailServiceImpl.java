@@ -1,11 +1,14 @@
 package com.onethinker.user.service.impl;
 
+import cn.hutool.crypto.SecureUtil;
+import com.alibaba.fastjson2.JSON;
 import com.google.common.collect.Maps;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.CacheEnum;
 import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysConfigService;
 import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.domain.PlatformUserDetail;
@@ -20,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -60,16 +64,28 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
     }
 
     @Override
-    public PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser) {
+    public PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser,PlatformUserReqDTO reqDTO) {
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
         platformUserDetail.setAvatarUrl(platformUser.getAvatarUrl());
         platformUserDetail.setEnabled(PlatformUserDetail.STATE_TYPE_ENABLED);
         platformUserDetail.setType(PlatformUserReqDTO.SOURCE_TYPE_ACCOUNT);
-        platformUserDetail.setPhone(platformUser.getPhone());
-        platformUserDetail.setUsername(platformUser.getPhone());
+        if (StringUtils.isNotEmpty(reqDTO.getUserName())) {
+            platformUserDetail.setUsername(reqDTO.getUserName());
+        } else {
+            platformUserDetail.setUsername(platformUser.getDataId());
+        }
+        String password = "";
+        if (StringUtils.isNotEmpty(reqDTO.getPassword())) {
+//            platformUserDetail.setPassword(reqDTO.getPassword());
+            password = reqDTO.getPassword();
+        } else {
+            password = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_PASSWORD);
+//            platformUserDetail.setPassword(sysConfigService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_PASSWORD));
+        }
+//        platformUserDetail.setPassword(new String(SecureUtil.aes("ONETHINKER".getBytes(StandardCharsets.UTF_8)).decrypt(password)));
+        platformUserDetail.setPassword(password);
         platformUserDetail.setNickName(platformUser.getNickName());
-        platformUserDetail.setPassword(sysConfigService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_PASSWORD));
-        platformUserDetail.setDataId(platformUser.getPhone());
+        platformUserDetail.setDataId(platformUser.getDataId());
         platformUserDetail.setWeight(System.currentTimeMillis());
         platformUserDetail.setCreateTime(new Date());
         platformUserDetailMapper.insertPlatformUserDetail(platformUserDetail);
@@ -81,7 +97,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + reqDTO.getOpenId();
 
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
-        platformUserDetail.setDataId(reqDTO.getOpenId());
+        platformUserDetail.setDataId(reqDTO.getDataId());
         platformUserDetail.setType(PlatformUserReqDTO.SOURCE_TYPE_WX);
         List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
         if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
@@ -90,8 +106,8 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
             platformUserDetail.setNickName(ObjectUtils.isEmpty(reqDTO.getNickName()) ? platformUser.getNickName() : reqDTO.getNickName());
             platformUserDetail.setEnabled(PlatformUserDetail.STATE_TYPE_ENABLED);
             platformUserDetail.setType(PlatformUserReqDTO.SOURCE_TYPE_WX);
-            platformUserDetail.setPhone(platformUser.getPhone());
-            platformUserDetail.setDataId(reqDTO.getOpenId());
+            platformUserDetail.setDataId(platformUser.getDataId());
+            platformUserDetail.setDataId(reqDTO.getDataId());
             platformUserDetail.setWeight(System.currentTimeMillis());
             platformUserDetail.setCreateTime(new Date());
             platformUserDetail.setLoginEndTime(System.currentTimeMillis());
@@ -99,10 +115,10 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         } else {
             // 更新手机号
             platformUserDetail = platformUserDetails.get(0);
-            if (!ObjectUtils.isEmpty(platformUserDetail.getPhone()) && !platformUserDetail.getPhone().equals(platformUser.getPhone())) {
+            if (!ObjectUtils.isEmpty(platformUserDetail.getDataId()) && !platformUserDetail.getDataId().equals(platformUser.getDataId())) {
                 throw new RuntimeException("该微信号已绑定手机号");
             }
-            platformUserDetail.setPhone(platformUser.getPhone());
+            platformUserDetail.setDataId(platformUser.getDataId());
             platformUserDetail.setUpdateTime(new Date());
             platformUserDetailMapper.updatePlatformUserDetail(platformUserDetail);
         }
@@ -113,7 +129,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
     @Override
     public void existsWxRegister(String openId, String phone) {
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
-        platformUserDetail.setPhone(phone);
+        platformUserDetail.setDataId(phone);
         platformUserDetail.setType(PlatformUserReqDTO.SOURCE_TYPE_WX);
         List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
         if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
@@ -131,7 +147,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + dataId;
 
         if (redisCache.hasKey(redisKey)) {
-            return redisCache.getCacheObject(redisKey);
+            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(),PlatformUserDetail.class);
         }
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
         platformUserDetail.setDataId(dataId);
@@ -155,10 +171,10 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         String redisKey = CacheEnum.QUERY_USER_PHONE_KEY.getCode() + phone;
 
         if (redisCache.hasKey(redisKey)) {
-            return redisCache.getCacheObject(redisKey);
+            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(),PlatformUser.class);
         }
         PlatformUser platformUser = new PlatformUser();
-        platformUser.setPhone(phone);
+        platformUser.setDataId(phone);
         List<PlatformUser> platformUsers = platformUserMapper.selectPlatformUserList(platformUser);
         if (ObjectUtils.isEmpty(platformUsers) || platformUsers.isEmpty()) {
             return null;
@@ -174,6 +190,6 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         if (ObjectUtils.isEmpty(platformUsers)) {
             return Maps.newHashMap();
         }
-        return platformUsers.stream().collect(Collectors.toMap(PlatformUser::getId, PlatformUser::getPhone));
+        return platformUsers.stream().collect(Collectors.toMap(PlatformUser::getId, PlatformUser::getDataId));
     }
 }

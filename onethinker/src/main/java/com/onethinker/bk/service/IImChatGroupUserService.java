@@ -57,4 +57,10 @@ public interface IImChatGroupUserService {
      * @return 结果
      */
     public int deleteImChatGroupUserById(Long id);
+
+    /**
+     * 新增聊天群成员信息
+     * @param plUserId
+     */
+    void insertImChatGroupByPlUserId(Long id);
 }

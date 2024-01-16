@@ -52,26 +52,26 @@ public class PlatformUserSourceTypeWxServiceImpl implements IPlatformUserService
         logger.info("微信登录~" + reqDTO.getCode());
         // 进行访问
         WxMaJscode2SessionResult sessionInfo = IMinWechatService.getSessionInfo(reqDTO.getCode());
-        reqDTO.setOpenId(sessionInfo.getOpenid());
-        PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(reqDTO.getOpenId());
+        reqDTO.setDataId(sessionInfo.getOpenid());
+        PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
         if (ObjectUtils.isEmpty(platformUserDetail)) {
             // 微信登录保存相关信息
             platformUserDetail = platformUserDetailService.saveEntryUserDetailByWx(new PlatformUser(),reqDTO);
         }
         // 获取权限内容
-        String token = loginService.loginFe(reqDTO.getOpenId(),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
+        String token = loginService.loginFe(reqDTO.getDataId(),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
         return PlatformUserResDTO.foramtResponse(token,platformUserDetail);
     }
 
     @Override
-    public void register(PlatformUserReqDTO reqDTO) {
+    public PlatformUserResDTO register(PlatformUserReqDTO reqDTO) {
         // 微信登录注册
         Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getOpenId()),"用户凭证不能为空");
         Assert.isTrue(PhoneUtils.isMobiPhoneNum(reqDTO.getPhone()),"手机号有误");
         // 校验手机号是否被绑定
         platformUserDetailService.existsWxRegister(reqDTO.getOpenId(),reqDTO.getPhone());
         PlatformUser platformUserParams = new PlatformUser();
-        platformUserParams.setPhone(reqDTO.getPhone());
+        platformUserParams.setDataId(reqDTO.getPhone());
         List<PlatformUser> platformUsers = platformUserMapper.selectPlatformUserList(platformUserParams);
         PlatformUser platformUser = new PlatformUser();
         if (!ObjectUtils.isEmpty(platformUsers) && !platformUsers.isEmpty()) {
@@ -80,16 +80,19 @@ public class PlatformUserSourceTypeWxServiceImpl implements IPlatformUserService
             platformUserMapper.updatePlatformUser(platformUser);
         } else {
             platformUser.setEnabled(PlatformUser.STATE_TYPE_ENABLED);
-            platformUser.setPhone(reqDTO.getPhone());
+            platformUser.setDataId(reqDTO.getPhone());
             platformUser.setWeight(System.currentTimeMillis());
             platformUser.setCreateTime(new Date());
             platformUser.setAvatarUrl(ObjectUtils.isEmpty(reqDTO.getAvatarUrl()) ? configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_AVATAR_URL) : reqDTO.getAvatarUrl());
             platformUser.setNickName(ObjectUtils.isEmpty(reqDTO.getNickName()) ? configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_NICK_NAME) + System.currentTimeMillis() : reqDTO.getNickName());
             platformUserMapper.insertPlatformUser(platformUser);
             // 另外保存一份网页端账号信息
-            platformUserDetailService.saveEntryUserDetailByAccount(platformUser);
+            platformUserDetailService.saveEntryUserDetailByAccount(platformUser,reqDTO);
         }
-        platformUserDetailService.saveEntryUserDetailByWx(platformUser,reqDTO);
+        PlatformUserDetail platformUserDetail = platformUserDetailService.saveEntryUserDetailByWx(platformUser, reqDTO);
+        // 获取权限内容
+        String token = loginService.loginFe(platformUser.getDataId(),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
+        return PlatformUserResDTO.foramtResponse(token,platformUserDetail);
     }
 
     @Override

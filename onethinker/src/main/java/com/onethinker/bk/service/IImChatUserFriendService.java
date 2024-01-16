@@ -57,4 +57,10 @@ public interface IImChatUserFriendService {
      * @return 结果
      */
     public int deleteImChatUserFriendById(Long id);
+
+    /**
+     * 新增好友信息
+     * @param id
+     */
+    void insertImChatUserFriendByPlUserId(Long id);
 }

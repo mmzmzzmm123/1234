@@ -2,6 +2,7 @@ package com.onethinker.bk.service.impl;
 
 import java.util.List;
         import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.framework.web.domain.server.Sys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.onethinker.bk.mapper.WeiYanMapper;
@@ -87,5 +88,15 @@ public class WeiYanServiceImpl extends ServiceImpl<WeiYanMapper,WeiYan> implemen
     @Override
     public int deleteWeiYanById(Long id) {
         return weiYanMapper.deleteWeiYanById(id);
+    }
+
+    @Override
+    public void insertWeiYanByDataId(Long puUserId) {
+        WeiYan weiYan = new WeiYan();
+        weiYan.setUserId(puUserId);
+        weiYan.setContent("到此一游");
+        weiYan.setType(WeiYan.WEIYAN_TYPE_FRIEND);
+        weiYan.setIsPublic(Boolean.TRUE);
+        weiYanMapper.insertWeiYan(weiYan);
     }
 }

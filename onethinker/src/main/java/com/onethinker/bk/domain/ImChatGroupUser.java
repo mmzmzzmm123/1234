@@ -22,7 +22,7 @@ public class ImChatGroupUser extends BaseEntity {
 
     /** 群ID */
     @Excel(name = "群ID")
-    private Long groupId;
+    private Integer groupId;
 
     /** 用户ID */
     @Excel(name = "用户ID")

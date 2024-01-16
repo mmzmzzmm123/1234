@@ -27,7 +27,7 @@ public interface IPlatformUserDetailService {
      * @param platformUser
      * @return
      */
-    PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser);
+    PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser,PlatformUserReqDTO reqDTO);
 
     /**
      * 保存用户详情信息，平台来自微信登录补全手机号

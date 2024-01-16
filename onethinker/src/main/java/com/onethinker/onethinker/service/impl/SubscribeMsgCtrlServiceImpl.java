@@ -3,6 +3,7 @@ package com.onethinker.onethinker.service.impl;
 import java.util.List;
 import java.util.Objects;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.CacheEnum;
@@ -105,7 +106,7 @@ public class SubscribeMsgCtrlServiceImpl extends ServiceImpl<SubscribeMsgCtrlMap
         Assert.isTrue(!StringUtils.isEmpty(templateId),"模版id不能为空");
         String redisKey = CacheEnum.SUBSCRIBE_MSG_KEY.getCode() + templateId;
         if (redisCache.hasKey(redisKey)) {
-            return redisCache.getCacheObject(redisKey);
+            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(),SubscribeMsgCtrl.class);
         }
         LambdaQueryWrapper<SubscribeMsgCtrl> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(SubscribeMsgCtrl::getTemplateId,templateId).eq(SubscribeMsgCtrl::getEnabled,SubscribeMsgCtrl.STATE_TYPE_ENABLED);
