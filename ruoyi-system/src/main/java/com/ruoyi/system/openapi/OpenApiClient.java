@@ -14,6 +14,7 @@ import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.openapi.model.input.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -174,6 +175,15 @@ public class OpenApiClient {
      * @return
      */
     public static OpenApiResult<TgBaseOutputDTO> modifyNameByThirdKpTg(ThirdTgModifyNameInputDTO data) {
+        if (StringUtils.isNotEmpty(data.getFirstNameBase64())) {
+            data.setFirstNameBase64(Base64.encodeBase64String(data.getFirstNameBase64().getBytes()));
+        }
+        if (StringUtils.isNotEmpty(data.getLastNameBase64())) {
+            data.setLastNameBase64(Base64.encodeBase64String(data.getLastNameBase64().getBytes()));
+        }
+        if (StringUtils.isNotEmpty(data.getBriefIntroBase64())) {
+            data.setBriefIntroBase64(Base64.encodeBase64String(data.getBriefIntroBase64().getBytes()));
+        }
         return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_MODIFY_NAME, JSONObject.from(data), TgBaseOutputDTO.class);
     }
 
