@@ -191,9 +191,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         PlayVO ret = new PlayVO();
         BeanUtils.copyProperties(play, ret);
-        ret.setSendMechanism(play.convertSendMechanismStr(play.getSendMechanism()));
-        ret.setAdMonitor(play.convertAdMonitorStr(play.getAdMonitor()));
-        ret.setPlayExt(play.convertPlayExtStr(play.getPlayExt()));
+        ret.setSendMechanism(play.convertSendMechanismStr());
+        ret.setAdMonitor(play.convertAdMonitorStr());
+        ret.setPlayExt(play.convertPlayExtStr());
 
         PlayGroupPack playGroupPack = playGroupPackMapper.selectOne(new LambdaQueryWrapper<PlayGroupPack>()
                 .eq(PlayGroupPack::getPlayId, playId).last(" limit  1 "));
@@ -243,7 +243,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return null;
         }
 
-        return play.convertAdMonitorStr(play.getAdMonitor());
+        return play.convertAdMonitorStr();
     }
 
     @Override
