@@ -27,13 +27,6 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-http</artifactId>
         </dependency>
-        
-        <dependency>
-			<groupId>com.hadluo.queue</groupId>
-			<artifactId>redisson-delay-queue</artifactId>
-			<version>0.0.7</version>
-		</dependency>
-
     </dependencies>
 
 </project>

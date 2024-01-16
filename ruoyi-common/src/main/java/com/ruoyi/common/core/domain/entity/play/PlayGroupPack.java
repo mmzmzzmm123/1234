@@ -17,12 +17,12 @@ public class PlayGroupPack {
     private String playId;
 
     /**
-     * 群名称
+     * 群名称(多个,拼接)
      */
     private String name;
 
     /**
-     * 群头像
+     * 群头像(多个,拼接)
      */
     private String pic;
 }

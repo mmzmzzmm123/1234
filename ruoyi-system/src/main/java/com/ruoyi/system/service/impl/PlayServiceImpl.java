@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -57,8 +58,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     public R<String> create(PlayDTO dto) {
         String playId = IdWorker.getIdStr();
 
-        //todo 调用接口获取群
-
         savePlay(dto, playId);
         saveGroupPack(playId, dto.getGroupPack());
         saveRobotPack(playId, dto.getPerformerList());
@@ -66,12 +65,17 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         //插入剧本消息表
         savePlayMessage(playId, dto.getPlayMessageList(), dto.getSendMechanism());
 
+        //todo 混淆处理
+
         return R.ok(playId);
     }
 
     private void savePlayMessage(String playId, List<PlayMessageDTO> playMessageList, SendMechanism sendMechanism) {
-        List<PlayMessage> saveData = new ArrayList<>();
+        if (playMessageList.isEmpty()) {
+            return;
+        }
 
+        List<PlayMessage> saveData = new ArrayList<>();
         String nick = null;
         for (PlayMessageDTO messageDTO : playMessageList) {
             PlayMessage playMessage = new PlayMessage();
@@ -88,7 +92,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                     playMessage.setIntervalTime(generateRandomNumber(sendMechanism.getPerformerSepStart(), sendMechanism.getPerformerSepEnd()));
                 }
 
-                nick = playMessage.getRobotNickname();
+                nick = messageDTO.getRobotNickname();
             }
 
             playMessage.setPlayId(playId);
@@ -116,6 +120,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     private void saveRobotPack(String playId, List<Performer> performerList) {
+        if (performerList.isEmpty()) {
+            return;
+        }
+
         List<PlayRobotPack> playRobotPackList = new ArrayList<>();
         for (Performer performer : performerList) {
             PlayRobotPack playRobotPack = new PlayRobotPack();
@@ -127,6 +135,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     private void saveGroupPack(String playId, GroupPack groupPack) {
+        if (StringUtils.isEmpty(groupPack.getName()) && StringUtils.isEmpty(groupPack.getPic())) {
+            return;
+        }
+
         PlayGroupPack playGroupPack = new PlayGroupPack();
         playGroupPack.setPlayId(playId);
         playGroupPack.setName(String.join(",", groupPack.getName()));
@@ -141,7 +153,11 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         play.setSendMechanism(JSON.toJSONString(dto.getSendMechanism()));
         play.setAdMonitor(JSON.toJSONString(dto.getAdMonitor()));
         play.setPlayExt(JSON.toJSONString(dto.getPlayExt()));
-        save(play);
+        play.setUrlPool(String.join(",", dto.getUrlPool()));
+        if (dto.getGroupSource() == 1) {
+            play.setGroupNum(dto.getGroupUrls().size());
+        }
+        super.save(play);
     }
 
     @Override
@@ -151,13 +167,13 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
 
-        Play play = getById(dto.getId());
+        Play play = super.getById(dto.getId());
         if (null == play) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
 
         play.setName(dto.getName());
-        play.setUrlPool(dto.getUrlPool());
+        play.setUrlPool(String.join(",", dto.getUrlPool()));
         play.setTargetCountyCode(dto.getTargetCountyCode());
         play.setTargetCountyName(dto.getTargetCountyName());
 
@@ -180,7 +196,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
 
-        Play play = getById(playId);
+        Play play = super.getById(playId);
         if (null == play) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
@@ -190,14 +206,19 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         ret.setSendMechanism(play.convertSendMechanismStr());
         ret.setAdMonitor(play.convertAdMonitorStr());
         ret.setPlayExt(play.convertPlayExtStr());
+        ret.setUrlPool(Arrays.asList(play.getUrlPool().split(",")));
 
         PlayGroupPack playGroupPack = playGroupPackMapper.selectOne(new LambdaQueryWrapper<PlayGroupPack>()
                 .eq(PlayGroupPack::getPlayId, playId).last(" limit 1 "));
         if (null != playGroupPack) {
-            ret.setGroupPack(new GroupPack()
-                    .setName(Arrays.asList(playGroupPack.getName(), ","))
-                    .setPic(Arrays.asList(playGroupPack.getPic(), ","))
-            );
+            GroupPack groupPack = new GroupPack();
+            if (StringUtils.isNotEmpty(playGroupPack.getName())) {
+                groupPack.setName(Arrays.asList(playGroupPack.getName().split(",")));
+            }
+            if (StringUtils.isNotEmpty(playGroupPack.getPic())) {
+                groupPack.setPic(Arrays.asList(playGroupPack.getPic().split(",")));
+            }
+            ret.setGroupPack(groupPack);
         }
 
         List<PlayRobotPack> robotPackList = playRobotPackMapper.selectList(new QueryWrapper<PlayRobotPack>()
@@ -219,6 +240,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             for (PlayMessage playMessage : playMessageList) {
                 PlayMessageDTO playMessageDTO = new PlayMessageDTO();
                 BeanUtils.copyProperties(playMessage, playMessageDTO);
+                playMessageDTO.setMessageContent(JSONArray.parseArray(playMessage.getMessageContent(), ContentJson.class));
                 playMessageDTOList.add(playMessageDTO);
             }
             ret.setPlayMessageList(playMessageDTOList);
@@ -229,12 +251,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
     @Override
     public AdMonitor adInfo(String playId) {
-        Play play = this.getOne(new QueryWrapper<Play>().lambda().select(Play::getAdMonitor)
-                .eq(Play::getId,playId)
-                .eq(Play::getIsDelete, 0)
-                .last(" limit 1 ")
-        );
-
+        Play play = super.getOne(new QueryWrapper<Play>().lambda().select(Play::getAdMonitor)
+                .eq(Play::getId,playId).last(" limit 1 "));
         if (null == play || StringUtils.isEmpty(play.getAdMonitor())) {
             return null;
         }
@@ -245,7 +263,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     public R<String> updateAdInfo(String playId, AdMonitor dto) {
         //todo 验证剧本状态
-        update(null, new LambdaUpdateWrapper<Play>().eq(Play::getId, playId)
+        super.update(null, new LambdaUpdateWrapper<Play>().eq(Play::getId, playId)
                 .set(Play::getAdMonitor, JSON.toJSONString(dto)));
 
         return R.ok();

@@ -1,5 +1,7 @@
 package com.ruoyi.system.components.multipack;
 
+import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
+
 public interface OnPackMonitor {
 
 	/**
@@ -7,7 +9,7 @@ public interface OnPackMonitor {
 	 * 
 	 * @param pack
 	 */
-	void onPackSucceed(Pack pack);
+	void onPackSucceed(PlayRobotPackLog log);
 
 	/**
 	 * 单个回调执行失败
@@ -15,5 +17,5 @@ public interface OnPackMonitor {
 	 * @param pack
 	 * @param error
 	 */
-	void onPackFailed(Pack pack, String error);
+	void onPackFailed(PlayRobotPackLog log, String error);
 }

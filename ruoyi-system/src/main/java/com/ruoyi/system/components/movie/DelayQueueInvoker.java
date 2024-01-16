@@ -1,8 +1,7 @@
 package com.ruoyi.system.components.movie;
 
-import com.luo.delayqueue.DelayTrigger;
-import com.luo.delayqueue.RedissonFastDelayQueueClient;
-
+import com.ruoyi.common.core.delayqueue.DelayTrigger;
+import com.ruoyi.common.core.delayqueue.RedissonFastDelayQueueClient;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
