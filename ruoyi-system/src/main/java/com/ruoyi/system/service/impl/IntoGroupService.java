@@ -1,7 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import cn.hutool.core.codec.Base64;
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.VibeRuleTargetParam;
 import com.ruoyi.common.core.domain.dto.play.Performer;
@@ -313,8 +313,12 @@ public class IntoGroupService {
         if (playList == null || playList.size() == 0){
             return;
         }
+        Boolean isTrue = false;
         VibeRuleDTO vibeRule = vibeRuleService.getOne();
         for (Play playDTO:playList){
+            //修改剧本状态为入群等待中
+            playDTO.setScanProgress(3);
+            playMapper.updateById(playDTO);
             List<PlayIntoGroupTask> playIntoGroupTasks = new ArrayList<>();
             List<PlayRobotPack> performers = playRobotPackMapper.selectPackByPlayId(playDTO.getId());
             //判定是否是平台提供群
@@ -345,9 +349,13 @@ public class IntoGroupService {
                         infoVOS.add(groupInfoVO);
                     }
                 }
-
                 for (GroupInfoVO groupInfoVO:infoVOS){
                     List<String> robotVOS= getRobot(playDTO,vibeRule,performers);
+                    if (robotVOS == null){
+                        playDTO.setState(3);
+                        playDTO.setFailReason("无剧本所需足够的机器人！");
+                        continue;
+                    }
                     //拆分入群任务
                     for (PlayRobotPack performer:performers){
                         PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
@@ -375,8 +383,13 @@ public class IntoGroupService {
             }else {
                 //群链接入群
                 List<String> groupUrls =Arrays.asList(playDTO.getGroupUrls().split(","));
-                List<String> robotVOS= getRobot(playDTO,vibeRule,performers);
                 for (String group : groupUrls) {
+                    List<String> robotVOS= getRobot(playDTO,vibeRule,performers);
+                    if (robotVOS == null){
+                        playDTO.setState(3);
+                        playDTO.setFailReason("无剧本所需足够的机器人！");
+                        continue;
+                    }
                     // 循环插入计划表
                     for (PlayRobotPack performer:performers){
                         // 插入计划表
@@ -524,6 +537,8 @@ public class IntoGroupService {
             task.setTaskState(4);
             task.setFailCause(calledDTO.getResultMsg());
             playIntoGroupTaskMapper.updateById(task);
+            //入群失败要做重试逻辑
+
             return;
         }
         //入群成功 查询群信息
@@ -573,7 +588,6 @@ public class IntoGroupService {
         groupInfo.setGroupUrl(task.getGroupUrl());
         groupInfo.setTgGroupId(dto.getChatroomSerialNo());
         groupInfo.setTgGroupName(dto.getChatroomName());
-//        groupInfo.set(1);
         groupInfo.setIsDelete(0);
         return groupInfo;
     }
