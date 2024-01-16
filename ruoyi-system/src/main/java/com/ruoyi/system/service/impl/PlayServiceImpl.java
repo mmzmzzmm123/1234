@@ -1,8 +1,10 @@
 package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -18,6 +20,7 @@ import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.vo.play.PlayGroupProgressVO;
 import com.ruoyi.system.domain.vo.play.PlayTaskProgressVO;
+import com.ruoyi.system.domain.vo.play.PlayVO;
 import com.ruoyi.system.domain.vo.play.QueryPlayVO;
 import com.ruoyi.system.mapper.PlayGroupPackMapper;
 import com.ruoyi.system.mapper.PlayMapper;
@@ -54,6 +57,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Transactional(rollbackFor=Exception.class)
     public R<String> create(PlayDTO dto) {
         String playId = IdWorker.getIdStr();
+
+        //todo 调用接口获取群
 
         savePlay(dto, playId);
         saveGroupPack(playId, dto.getGroupPack());
@@ -175,7 +180,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     @Override
-    public R<PlayDTO> info(String playId) {
+    public R<PlayVO> info(String playId) {
         if (StringUtils.isEmpty(playId)) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
@@ -185,11 +190,11 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
 
-        PlayDTO ret = new PlayDTO();
+        PlayVO ret = new PlayVO();
         BeanUtils.copyProperties(play, ret);
-        ret.setSendMechanism(ret.convertSendMechanismStr(play.getSendMechanism()));
-        ret.setAdMonitor(ret.convertAdMonitorStr(play.getAdMonitor()));
-        ret.setPlayExt(ret.convertPlayExtStr(play.getPlayExt()));
+        ret.setSendMechanism(convertSendMechanismStr(play.getSendMechanism()));
+        ret.setAdMonitor(convertAdMonitorStr(play.getAdMonitor()));
+        ret.setPlayExt(convertPlayExtStr(play.getPlayExt()));
 
         PlayGroupPack playGroupPack = playGroupPackMapper.selectOne(new LambdaQueryWrapper<PlayGroupPack>()
                 .eq(PlayGroupPack::getPlayId, playId).last(" limit  1 "));
@@ -225,6 +230,42 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         }
 
         return R.ok(ret);
+    }
+
+    @Override
+    public AdMonitor adInfo(String playId) {
+        Play play = this.getOne(new QueryWrapper<Play>().lambda().select(Play::getAdMonitor)
+                .eq(Play::getId,playId)
+                .eq(Play::getIsDelete, 0)
+                .last(" limit 1 ")
+        );
+
+        if (null == play || StringUtils.isEmpty(play.getAdMonitor())) {
+            return null;
+        }
+
+        return convertAdMonitorStr(play.getAdMonitor());
+    }
+
+    @Override
+    public R<String> updateAdInfo(String playId, AdMonitor dto) {
+        //todo 验证剧本状态
+        update(null, new LambdaUpdateWrapper<Play>().eq(Play::getId, playId)
+                .set(Play::getAdMonitor, JSON.toJSONString(dto)));
+
+        return R.ok();
+    }
+
+    public SendMechanism convertSendMechanismStr(String sendMechanism) {
+        return JSONObject.parseObject(sendMechanism, SendMechanism.class);
+    }
+
+    public AdMonitor convertAdMonitorStr(String adMonitor) {
+        return JSONObject.parseObject(adMonitor, AdMonitor.class);
+    }
+
+    public PlayExt convertPlayExtStr(String playExt) {
+        return JSONObject.parseObject(playExt, PlayExt.class);
     }
 
     @Override

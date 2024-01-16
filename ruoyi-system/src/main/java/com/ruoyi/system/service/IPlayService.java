@@ -2,10 +2,12 @@ package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.vo.play.PlayGroupProgressVO;
 import com.ruoyi.system.domain.vo.play.PlayTaskProgressVO;
+import com.ruoyi.system.domain.vo.play.PlayVO;
 import com.ruoyi.system.domain.vo.play.QueryPlayVO;
 
 public interface IPlayService {
@@ -13,7 +15,11 @@ public interface IPlayService {
 
     R<String> updatePlay(PlayDTO dto);
 
-    R<PlayDTO> info(String id);
+    R<PlayVO> info(String playId);
+
+    AdMonitor adInfo(String playId);
+
+    R<String> updateAdInfo(String playId, AdMonitor id);
 
     /**
      * 炒群任务分页列表

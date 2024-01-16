@@ -122,25 +122,4 @@ public class Play {
      * 内容目标国名称
      */
     private String targetCountyName;
-
-//    public SendMechanism getSendMechanism() {
-//        if (StringUtils.isBlank(this.sendMechanism)) {
-//            return null;
-//        }
-//        return JSONObject.parseObject(this.sendMechanism, SendMechanism.class);
-//    }
-//
-//    public AdMoitor getAdMonitor() {
-//        if (StringUtils.isBlank(this.adMonitor)) {
-//            return null;
-//        }
-//        return JSONObject.parseObject(this.adMonitor, AdMoitor.class);
-//    }
-//
-//    public PlayExt getPlayExt() {
-//        if (StringUtils.isBlank(this.playExt)) {
-//            return null;
-//        }
-//        return JSONObject.parseObject(this.playExt, PlayExt.class);
-//    }
 }
