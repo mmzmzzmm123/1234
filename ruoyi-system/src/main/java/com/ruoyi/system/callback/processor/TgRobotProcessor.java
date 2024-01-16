@@ -5,6 +5,7 @@ import com.ruoyi.system.callback.dto.*;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -156,6 +157,24 @@ public class TgRobotProcessor {
      */
     @Type(value = 1100910015, parameterClass = Called1100910015DTO.class)
     public void called1100910015(Called1100910015DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG获取离散图片
+     * @param dto
+     */
+    @Type(value = 1100850508, parameterClass = Called1100850508DTO.class)
+    public void called1100850508(Called1100850508DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG获取离散文案
+     * @param dto
+     */
+    @Type(value = 1100850405, parameterClass = Called1100850405DTO.class)
+    public void called1100850405(Called1100850405DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
 }
