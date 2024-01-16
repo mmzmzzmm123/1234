@@ -4,4 +4,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 
 public interface PlayMessagePushMapper extends BaseMapper<PlayMessagePush> {
+
+	void updateFailure(String playId, String chatroomId, String msg);
+
+	void updateStarted(String playId, String chatroomId);
+
+	void updateSuccess(String playId, String chatroomId);
 }
