@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.dto.VibeRuleTargetParam;
 import com.ruoyi.common.core.domain.dto.play.Performer;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
@@ -69,82 +70,108 @@ public class IntoGroupService {
             //获取备用号规则
             adminNum = adminNum+(adminNum*vibeRule.getStandbyNum());
         }
+        List<String> countys = new ArrayList<>();
         //是否设置目标国
-        if (StringUtils.isNotEmpty(playDTO.getTargetCountyCode())){
-
+        if (StringUtils.isNotEmpty(playDTO.getTargetCountyCode())&& vibeRule.getTargetParams() != null){
+            List<String> allList = new ArrayList<>();
+            List<String>  preferenceCodes = new ArrayList<>();
+            for (VibeRuleTargetParam param:vibeRule.getTargetParams()){
+                if (param.getAllState() == 1){
+                  allList = param.getPreferenceCodes();
+                  continue;
+                }
+                if (playDTO.getTargetCountyCode().equals(param.getCountryCode())){
+                    preferenceCodes = param.getPreferenceCodes();
+                }
+            }
+            if (performers.size() != 0){
+                countys = preferenceCodes;
+            }else {
+                countys = allList;
+            }
         }
         //获取需要入群的群数
         adminNum = adminNum * playDTO.getGroupNum();
-        robotNum = robotNum * playDTO.getRobotNum();
+        robotNum = robotNum * playDTO.getGroupNum();
         GetRobotDTO adminDTO = new GetRobotDTO();
         //获取可以被设置管理员的机器人
         adminDTO.setCount(adminNum);
-        /**------未完成-------**/
-        adminDTO.setCountryCode(new ArrayList<>());
+        adminDTO.setCountryCode(countys);
         //调用获取机器人接口
         List<GetRobotVO> robotAdminVOS =  robotStatisticsService.getRobot(adminDTO);
         //获取可以不需要设置成管理员的机器人
         GetRobotDTO robotDTO = new GetRobotDTO();
         robotDTO.setCount(robotNum);
-        /**------未完成-------**/
-        robotDTO.setCountryCode(new ArrayList<>());
+        robotDTO.setCountryCode(countys);
         List<GetRobotVO> robotVOS = robotStatisticsService.getRobot(robotDTO);
+
+        List<PlayIntoGroupTask> playIntoGroupTasks = new ArrayList<>();
         //判定是否是平台提供群
         if (playDTO.getGroupSource() == 0){
             GroupQueryDTO groupQueryDTO = new GroupQueryDTO();
             groupQueryDTO.setGroupNum(playDTO.getGroupNum());
             groupQueryDTO.setRegistrationDay(playDTO.getGroupDay());
-            groupQueryDTO.setCountryCode(new ArrayList<>());
+            groupQueryDTO.setCountryCode(countys);
             //从波少那边获取足够的群
             R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
-            //拆分入群任务
-            for (int i=0;i< playDTO.getRobotNum();i++){
-                PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
-//                // 插入计划表
-//                playIntoGroupTask.setId(IdUtils.fastUUID());
-//                playIntoGroupTask.setGroupUrl(null);
-//                playIntoGroupTask.setCreateTime(new Date());
-//                playIntoGroupTask.setModifyTime(new Date());
-//                playIntoGroupTask.setMerchantId("");
-//                playIntoGroupTask.setIntoType(1);
-//                if (robotList.size() == 0) {
-//                    playIntoGroupTask.setPersonId("");
-//                    playIntoGroupTask.setTaskState(4);
-//                    playIntoGroupTask.setFailCause("无可用的号");
-//                } else {
-//                    int index = RandomListPicker.pickRandom(robotList);
-//                    playIntoGroupTask.setPersonId(robotList.get(index));
-//                    robotList.remove(index);
-//                    playIntoGroupTask.setTaskState(1);
-//                }
-//                personIntoGroupTasks.add(playIntoGroupTask);
+            if (groupList.getCode() != 0){
+                //设置错误
+                return;
             }
-
+            for (GroupInfoVO groupInfoVO:groupList.getData()){
+                //拆分入群任务
+                    for (Performer performer:performers){
+                    PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
+                    // 插入计划表
+                    playIntoGroupTask.setId(IdUtils.fastUUID());
+                    playIntoGroupTask.setGroupUrl(groupInfoVO.getGroupInviteLink());
+                    playIntoGroupTask.setGroupName(groupInfoVO.getGroupName());
+                    playIntoGroupTask.setCreateTime(new Date());
+                    playIntoGroupTask.setModifyTime(new Date());
+                    playIntoGroupTask.setPlayId(playDTO.getId());
+                    playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
+                    if (performer.getIsAdmin() == 1){
+                        int index = RandomListPicker.pickRandom(robotAdminVOS);
+                        playIntoGroupTask.setPersonId(robotAdminVOS.get(index).getRobotSerialNo());
+                        robotAdminVOS.remove(index);
+                        playIntoGroupTask.setTaskState(1);
+                    }else {
+                        int index = RandomListPicker.pickRandom(robotVOS);
+                        playIntoGroupTask.setPersonId(robotVOS.get(index).getRobotSerialNo());
+                        robotVOS.remove(index);
+                        playIntoGroupTask.setTaskState(1);
+                    }
+                    playIntoGroupTasks.add(playIntoGroupTask);
+                }
+            }
         }else {
             //群链接入群
             List<String> groupUrls = playDTO.getGroupUrls();
             List<PlayIntoGroupTask> personIntoGroupTasks = new ArrayList<>();
             for (String group : groupUrls) {
                 // 循环插入计划表
-                for (int i = 0; i < playDTO.getRobotNum(); i++) {
+                for (Performer performer:performers){
                     // 插入计划表
-                    PlayIntoGroupTask personIntoGroupTask = new PlayIntoGroupTask();
-                    personIntoGroupTask.setId(IdUtils.fastUUID());
-                    personIntoGroupTask.setGroupUrl(group);
-                    personIntoGroupTask.setCreateTime(new Date());
-                    personIntoGroupTask.setModifyTime(new Date());
-                    personIntoGroupTask.setMerchantId(playDTO.getMerchantId());
-                    personIntoGroupTask.setIntoType(1);
-//                    int index = RandomListPicker.pickRandom(robotList);
-//                    personIntoGroupTask.setPersonId(robotList.get(index));
-//                    robotList.remove(index);
-                    personIntoGroupTask.setTaskState(1);
-                    personIntoGroupTasks.add(personIntoGroupTask);
+                    PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
+                    playIntoGroupTask.setId(IdUtils.fastUUID());
+                    playIntoGroupTask.setGroupUrl(group);
+                    playIntoGroupTask.setCreateTime(new Date());
+                    playIntoGroupTask.setModifyTime(new Date());
+                    playIntoGroupTask.setPlayId(playDTO.getId());
+                    playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
+                    if (performer.getIsAdmin() == 1){
+                        int index = RandomListPicker.pickRandom(robotAdminVOS);
+                        playIntoGroupTask.setPersonId(robotAdminVOS.get(index).getRobotSerialNo());
+                        robotAdminVOS.remove(index);
+                    }else {
+                        int index = RandomListPicker.pickRandom(robotVOS);
+                        playIntoGroupTask.setPersonId(robotVOS.get(index).getRobotSerialNo());
+                        robotVOS.remove(index);
+                    }
+                    playIntoGroupTask.setTaskState(1);
+                    personIntoGroupTasks.add(playIntoGroupTask);
                 }
                 playIntoGroupTaskMapper.batchInsert(personIntoGroupTasks);
-                //插入机器人调用记录
-
-
             }
         }
     }
