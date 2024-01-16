@@ -5,6 +5,8 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.exception.GlobalException;
+import com.ruoyi.system.openapi.model.output.ApiClientVO;
 import com.ruoyi.system.openapi.model.output.ExtTgBatchRobotSimpInfoData;
 import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotByMerchantVO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
@@ -74,18 +76,17 @@ public class OpenApiClient {
     }
 
     private static String login() {
-        //String merchantAccount = SpringUtils.getBean(UtTouchProperties.class).getMerchantAccount();
-        //String merchantPassword = SpringUtils.getBean(UtTouchProperties.class).getMerchantPassword();
+        String openApiKey = SpringUtils.getBean(OpenApiProperties.class).getOpenApiKey();
+        String openApiSecret = SpringUtils.getBean(OpenApiProperties.class).getOpenApiSecret();
+        ApiClientDTO dto = new ApiClientDTO();
+        dto.setClientId(openApiKey);
+        dto.setClientSecret(openApiSecret);
 
-//        MerchantLoginData data = new MerchantLoginData();
-//        data.setMerchantAccount(merchantAccount)
-//                .setMerchantPwd(merchantPassword);
-//        UtTouchResult<MerchantLoginResult> result = UtTouchClient.merchantLogin(data);
-//        return Optional.ofNullable(result)
-//                .map(UtTouchResult::getData)
-//                .map(MerchantLoginResult::getToken)
-//                .orElseThrow(() -> new GlobalException("调用UT-TOUCH登录发生错误"));
-        return "";
+        OpenApiResult<ApiClientVO> result = userLoginClientByThird(dto);
+        return Optional.ofNullable(result)
+                .map(OpenApiResult::getData)
+                .map(ApiClientVO::getValue)
+                .orElseThrow(() -> new GlobalException("调用比邻第三方登录发生错误"));
     }
 
     private static String getToken() {
@@ -109,6 +110,9 @@ public class OpenApiClient {
         return "ut-buleprint-backend:OpenApiToken";
     }
 
+    public static OpenApiResult<ApiClientVO> userLoginClientByThird(ApiClientDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_MODIFY_CHATROOM_HEAD_IMAGE, JSONObject.from(data), ApiClientVO.class);
+    }
 
     /**
      * 比邻第三方(开平TG)：-修改群头像
