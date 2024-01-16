@@ -16,9 +16,9 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.onethinker.domain.SysFileInfo;
-import com.ruoyi.onethinker.dto.SysFileInfoReqDTO;
-import com.ruoyi.onethinker.service.ISysFileInfoService;
+import com.onethinker.onethinker.domain.SysFileInfo;
+import com.onethinker.onethinker.dto.SysFileInfoReqDTO;
+import com.onethinker.onethinker.service.ISysFileInfoService;
 
 /**
  * 文件信息Controller

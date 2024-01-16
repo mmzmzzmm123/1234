@@ -14,13 +14,13 @@ import com.github.pagehelper.PageHelper;
 import com.ruoyi.common.constant.AwardConstants;
 import com.ruoyi.common.enums.ActivityTypeEnum;
 import com.ruoyi.common.utils.bean.BeanUtils;
-import com.ruoyi.onethinker.domain.RedEnvelopeCtrl;
-import com.ruoyi.onethinker.domain.RedEnvelopeDtl;
-import com.ruoyi.onethinker.dto.ActivityReqDTO;
-import com.ruoyi.onethinker.dto.RedEnvelopeCtrlDTO;
-import com.ruoyi.onethinker.factory.ActivityDetailFactory;
-import com.ruoyi.onethinker.factory.service.IActivityDetailService;
-import com.ruoyi.onethinker.service.IRedEnvelopeDtlService;
+import com.onethinker.onethinker.domain.RedEnvelopeCtrl;
+import com.onethinker.onethinker.domain.RedEnvelopeDtl;
+import com.onethinker.onethinker.dto.ActivityReqDTO;
+import com.onethinker.onethinker.dto.RedEnvelopeCtrlDTO;
+import com.onethinker.onethinker.factory.ActivityDetailFactory;
+import com.onethinker.onethinker.factory.service.IActivityDetailService;
+import com.onethinker.onethinker.service.IRedEnvelopeDtlService;
 import lombok.extern.log4j.Log4j2;
 
 

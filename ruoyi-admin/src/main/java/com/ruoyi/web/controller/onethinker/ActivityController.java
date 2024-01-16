@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.onethinker;
 
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,9 +14,9 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 
-import com.ruoyi.onethinker.domain.Activity;
-import com.ruoyi.onethinker.dto.ActivityReqDTO;
-import com.ruoyi.onethinker.service.IActivityService;
+import com.onethinker.onethinker.domain.Activity;
+import com.onethinker.onethinker.dto.ActivityReqDTO;
+import com.onethinker.onethinker.service.IActivityService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -28,7 +29,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RestController
 @RequestMapping("/onethinker/activity")
 public class ActivityController extends BaseController {
-    @Autowired
+    @Resource
     private IActivityService activityService;
 
     /**

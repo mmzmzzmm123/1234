@@ -109,7 +109,7 @@ token:
 #  configLocation: classpath:mybatis/mybatis-config.xml
 
 mybatis-plus:
-  type-aliases-package: com.ruoyi.**.domain
+  type-aliases-package: com.**.**.domain
   mapper-locations: classpath*:mapper/**/*Mapper.xml
   config-location: classpath:mybatis/mybatis-config.xml
 

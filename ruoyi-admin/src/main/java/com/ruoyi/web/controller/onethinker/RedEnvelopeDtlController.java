@@ -20,8 +20,8 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 
-import com.ruoyi.onethinker.domain.RedEnvelopeDtl;
-import com.ruoyi.onethinker.service.IRedEnvelopeDtlService;
+import com.onethinker.onethinker.domain.RedEnvelopeDtl;
+import com.onethinker.onethinker.service.IRedEnvelopeDtlService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 

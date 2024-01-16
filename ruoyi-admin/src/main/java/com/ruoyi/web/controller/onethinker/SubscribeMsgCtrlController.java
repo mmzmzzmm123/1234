@@ -20,8 +20,8 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
 
-import com.ruoyi.onethinker.domain.SubscribeMsgCtrl;
-import com.ruoyi.onethinker.service.ISubscribeMsgCtrlService;
+import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
+import com.onethinker.onethinker.service.ISubscribeMsgCtrlService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 

@@ -12,7 +12,10 @@ import org.springframework.context.annotation.Configuration;
  */
 
 @Configuration
-@MapperScan("com.ruoyi.**.mapper")
+/**
+ * 这里由于自定义了包路径，所以需要添加对应路径扫描，不然会加载不到对应的bean导致启动失败
+ */
+@MapperScan(value = {"com.ruoyi.**.mapper","com.onethinker.**.mapper"})
 public class MybatisPlusConfig {
 
     /**

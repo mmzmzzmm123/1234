@@ -3,12 +3,12 @@ package com.ruoyi.web.controller.onethinker;
 import cn.binarywang.wx.miniapp.bean.WxMaSubscribeMessage;
 import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
+import com.onethinker.wechat.service.IMinWechatService;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.onethinker.domain.SubscribeMsgCtrl;
-import com.ruoyi.onethinker.service.ISubscribeMsgCtrlService;
-import com.ruoyi.wechat.service.IMinWechatService;
+import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
+import com.onethinker.onethinker.service.ISubscribeMsgCtrlService;
 import io.jsonwebtoken.lang.Assert;
 import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.ObjectUtils;
@@ -29,7 +29,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/onethinker")
-public class MinWechatController  extends BaseController {
+public class MinWechatController extends BaseController {
     @Autowired
     private IMinWechatService wechatService;
     @Autowired
@@ -41,7 +41,7 @@ public class MinWechatController  extends BaseController {
     @GetMapping(value = "/sendSubscribeMsgTest")
     public AjaxResult myBatisTest(@RequestParam String templateId) {
         SubscribeMsgCtrl subscribeMsgCtrl = subscribeMsgCtrlService.findEntryByTemplateId(templateId);
-        Assert.isTrue(ObjectUtils.isNotEmpty(subscribeMsgCtrl),"模版信息不存在");
+        Assert.isTrue(ObjectUtils.isNotEmpty(subscribeMsgCtrl), "模版信息不存在");
         WxMaSubscribeMessage subscribeMessage = new WxMaSubscribeMessage();
         subscribeMessage.setToUser("oA-3y5HRX4ENAF9yJhTdua7lxH9U");
         subscribeMessage.setTemplateId(subscribeMsgCtrl.getTemplateId());
