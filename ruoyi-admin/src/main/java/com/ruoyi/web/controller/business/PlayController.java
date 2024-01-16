@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.business;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.controller.BaseController;
@@ -44,25 +45,45 @@ public class PlayController extends BaseController {
     @Resource
     private PlayMessageConfoundLogService playMessageConfoundLogService;
 
+    @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     @ApiOperation("创建炒群任务")
     @PostMapping(value = "/create")
     public R<String> create(@RequestBody PlayDTO dto) {
         dto.setMerchantId(getMerchantId());
         //todo 验证参数
-        R<String> checkPlayParamsRet = checkPlayParams(dto);
+        R<String> checkPlayParamsRet = checkAddPlayParams(dto);
         if (checkPlayParamsRet.getCode() != HttpStatus.SUCCESS) {
-
+            return checkPlayParamsRet;
         }
         return playService.create(dto);
     }
 
-    private R<String> checkPlayParams(PlayDTO dto) {
-        if (StringUtils.isNotEmpty(dto.getName())) {
+    private R<String> checkAddPlayParams(PlayDTO dto) {
+        if (StringUtils.isEmpty(dto.getName())) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能为空"));
+        }
+        if (dto.getName().length() > 100) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过100字"));
+        }
+        if (null == dto.getGroupSource()) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "请选择群来源"));
+        }
+        if (dto.getGroupSource() == 0 && dto.getGroupNum() == null) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "请配置群需求数量"));
+        }
+        if (dto.getGroupSource() == 1 && dto.getGroupUrls().isEmpty()) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
+        }
+        if (null == dto.getRobotNum()) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "请配置每个群演员数"));
+        }
+        if (dto.getUrlPool().isEmpty()) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "请配置接粉号池"));
         }
         return R.ok();
     }
 
+    @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     @ApiOperation("修改炒群任务")
     @PostMapping(value = "/update")
     public R<String> update(@RequestBody PlayDTO dto) {

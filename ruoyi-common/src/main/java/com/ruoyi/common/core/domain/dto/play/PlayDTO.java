@@ -70,8 +70,8 @@ public class PlayDTO {
     @ApiModelProperty(value = "其它配置")
     private PlayExt playExt;
 
-    @ApiModelProperty(value = "粉号池")
-    private String urlPool;
+    @ApiModelProperty(value = "接粉号池")
+    private List<String> urlPool;
 
     private String merchantId;
 }
