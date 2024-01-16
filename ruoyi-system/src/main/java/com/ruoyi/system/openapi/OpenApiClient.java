@@ -111,7 +111,7 @@ public class OpenApiClient {
     }
 
     public static OpenApiResult<ApiClientVO> userLoginClientByThird(ApiClientDTO data) {
-        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_MODIFY_CHATROOM_HEAD_IMAGE, JSONObject.from(data), ApiClientVO.class);
+        return OpenApiClient.post(OpenApiEnum.THIRD_USER_LOGIN_CLIENT, JSONObject.from(data), ApiClientVO.class);
     }
 
     /**
