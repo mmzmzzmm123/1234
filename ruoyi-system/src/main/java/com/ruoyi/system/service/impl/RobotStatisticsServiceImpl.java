@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.VibeRule;
@@ -17,7 +18,6 @@ import com.ruoyi.system.mapper.VibeRuleMapper;
 import com.ruoyi.system.service.RobotStatisticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.compress.utils.Lists;
 import org.apache.ibatis.session.SqlSession;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +127,10 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
                     vo.setRobotSerialNo(robotSerialNo);
                     resultData.add(vo);
                 }
+            }
+            //将号标记为锁定状态
+            if(dto.getIsLock() == 1){
+                this.update(new LambdaUpdateWrapper<RobotStatistics>().in(RobotStatistics::getId,ids).set(RobotStatistics::getIsLock,1));
             }
             sqlSession.commit();
         }catch (Exception e){

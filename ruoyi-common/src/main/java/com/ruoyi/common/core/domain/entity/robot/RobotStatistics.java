@@ -25,6 +25,8 @@ public class RobotStatistics {
     private Integer totalSetAdminCount;
     @ApiModelProperty(value = "号带群数")
     private Integer groupCount;
+    @ApiModelProperty(value = "是否锁定号,0-否,1-是")
+    private Integer isLock;
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
     @ApiModelProperty(value = "修改时间")

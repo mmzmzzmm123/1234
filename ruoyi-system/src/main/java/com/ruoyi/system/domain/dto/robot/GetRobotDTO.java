@@ -17,4 +17,6 @@ public class GetRobotDTO {
     private List<String> countryCode;
     @ApiModelProperty(value = "是否需要离散,0-否,1-B段离散,2-C段离散")
     private Integer ipType;
+    @ApiModelProperty(value = "是否锁定号,0-否,1-是")
+    private Integer isLock;
 }
