@@ -6,10 +6,6 @@ import com.ruoyi.common.core.domain.dto.play.Performer;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
 import com.ruoyi.common.core.domain.entity.VibeRule;
-import com.ruoyi.common.openapi.OpenApiClient;
-import com.ruoyi.common.openapi.OpenApiResult;
-import com.ruoyi.common.openapi.model.input.ThirdTgJoinChatroomByUrlInputDTO;
-import com.ruoyi.common.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.components.RandomListPicker;
@@ -19,6 +15,10 @@ import com.ruoyi.system.domain.dto.robot.GetRobotDTO;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.robot.GetRobotVO;
 import com.ruoyi.system.mapper.PlayIntoGroupTaskMapper;
+import com.ruoyi.system.openapi.OpenApiClient;
+import com.ruoyi.system.openapi.OpenApiResult;
+import com.ruoyi.system.openapi.model.input.ThirdTgJoinChatroomByUrlInputDTO;
+import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.system.service.IVibeRuleService;
 import com.ruoyi.system.service.RobotStatisticsService;
 import com.ruoyi.system.service.business.GroupService;
@@ -49,7 +49,6 @@ public class IntoGroupService {
 
     @Autowired
     private GroupService groupService;
-
 
 
     public void  into(PlayDTO playDTO){
@@ -98,12 +97,12 @@ public class IntoGroupService {
         adminDTO.setCount(adminNum);
         adminDTO.setCountryCode(countys);
         //调用获取机器人接口
-        List<GetRobotVO> robotAdminVOS =  robotStatisticsService.getRobot(adminDTO);
+        R<List<String>> robotAdminVOS =  robotStatisticsService.getRobot(adminDTO);
         //获取可以不需要设置成管理员的机器人
         GetRobotDTO robotDTO = new GetRobotDTO();
         robotDTO.setCount(robotNum);
         robotDTO.setCountryCode(countys);
-        List<GetRobotVO> robotVOS = robotStatisticsService.getRobot(robotDTO);
+        R<List<String>> robotVOS = robotStatisticsService.getRobot(robotDTO);
 
         List<PlayIntoGroupTask> playIntoGroupTasks = new ArrayList<>();
         //判定是否是平台提供群
@@ -131,14 +130,14 @@ public class IntoGroupService {
                     playIntoGroupTask.setPlayId(playDTO.getId());
                     playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
                     if (performer.getIsAdmin() == 1){
-                        int index = RandomListPicker.pickRandom(robotAdminVOS);
-                        playIntoGroupTask.setPersonId(robotAdminVOS.get(index).getRobotSerialNo());
-                        robotAdminVOS.remove(index);
+                        int index = RandomListPicker.pickRandom(robotAdminVOS.getData());
+                        playIntoGroupTask.setPersonId(robotAdminVOS.getData().get(index));
+                        robotAdminVOS.getData().remove(index);
                         playIntoGroupTask.setTaskState(1);
                     }else {
-                        int index = RandomListPicker.pickRandom(robotVOS);
-                        playIntoGroupTask.setPersonId(robotVOS.get(index).getRobotSerialNo());
-                        robotVOS.remove(index);
+                        int index = RandomListPicker.pickRandom(robotVOS.getData());
+                        playIntoGroupTask.setPersonId(robotVOS.getData().get(index));
+                        robotVOS.getData().remove(index);
                         playIntoGroupTask.setTaskState(1);
                     }
                     playIntoGroupTasks.add(playIntoGroupTask);
@@ -160,13 +159,15 @@ public class IntoGroupService {
                     playIntoGroupTask.setPlayId(playDTO.getId());
                     playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
                     if (performer.getIsAdmin() == 1){
-                        int index = RandomListPicker.pickRandom(robotAdminVOS);
-                        playIntoGroupTask.setPersonId(robotAdminVOS.get(index).getRobotSerialNo());
-                        robotAdminVOS.remove(index);
+                        int index = RandomListPicker.pickRandom(robotAdminVOS.getData());
+                        playIntoGroupTask.setPersonId(robotAdminVOS.getData().get(index));
+                        robotAdminVOS.getData().remove(index);
+                        playIntoGroupTask.setTaskState(1);
                     }else {
-                        int index = RandomListPicker.pickRandom(robotVOS);
-                        playIntoGroupTask.setPersonId(robotVOS.get(index).getRobotSerialNo());
-                        robotVOS.remove(index);
+                        int index = RandomListPicker.pickRandom(robotVOS.getData());
+                        playIntoGroupTask.setPersonId(robotVOS.getData().get(index));
+                        robotVOS.getData().remove(index);
+                        playIntoGroupTask.setTaskState(1);
                     }
                     playIntoGroupTask.setTaskState(1);
                     personIntoGroupTasks.add(playIntoGroupTask);

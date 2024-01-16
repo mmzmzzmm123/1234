@@ -1,7 +1,11 @@
 package com.ruoyi.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.system.domain.GroupInfo;
+import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
+import com.ruoyi.system.domain.vo.GroupPageInfoVO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,4 +17,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupInfoMapper extends BaseMapper<GroupInfo> {
 
+    Page<GroupPageInfoVO> page(Page page,@Param("dto") GroupPageQueryDTO dto);
 }

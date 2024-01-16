@@ -1,17 +1,19 @@
 package com.ruoyi.system.service.impl;
 
-import com.alibaba.fastjson2.JSONObject;
+import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.domain.dto.play.GroupPack;
-import com.ruoyi.common.core.domain.dto.play.PlayDTO;
-import com.ruoyi.common.core.domain.dto.play.PlayMessageDTO;
-import com.ruoyi.common.core.domain.dto.play.SendMechanism;
+import com.ruoyi.common.core.domain.dto.play.*;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayGroupPack;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
+import com.ruoyi.common.core.domain.entity.play.PlayRobotPack;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.vo.play.PlayGroupProgressVO;
@@ -19,16 +21,15 @@ import com.ruoyi.system.domain.vo.play.PlayTaskProgressVO;
 import com.ruoyi.system.domain.vo.play.QueryPlayVO;
 import com.ruoyi.system.mapper.PlayGroupPackMapper;
 import com.ruoyi.system.mapper.PlayMapper;
+import com.ruoyi.system.mapper.PlayMessageMapper;
+import com.ruoyi.system.mapper.PlayRobotPackMapper;
 import com.ruoyi.system.service.IPlayService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -37,54 +38,68 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Resource
     private PlayGroupPackMapper playGroupPackMapper;
 
+    @Resource
+    private PlayRobotPackMapper playRobotPackMapper;
+
+    @Resource
+    private PlayMessageMapper playMessageMapper;
+
+    @Resource
+    private PlayRobotPackService playRobotPackService;
+
+    @Resource
+    private PlayMessageService playMessageService;
+
     @Override
     @Transactional(rollbackFor=Exception.class)
     public R<String> create(PlayDTO dto) {
-        //todo 验证参数
-        checkPlayParams(dto);
-
         String playId = IdWorker.getIdStr();
 
-        //t_play_info
-        //savePlay(dto, playId);
+        savePlay(dto, playId);
+        saveGroupPack(playId, dto.getGroupPack());
+        saveRobotPack(playId, dto.getPerformerList());
 
-        //t_play_group_pack
-        //t_play_robot_pack
+        //插入剧本消息表
+        savePlayMessage(playId, dto.getPlayMessageList(), dto.getSendMechanism());
 
-        //t_play_message
-
-        //判断混淆状态 t_play_message_confound
-
-        return R.ok();
+        return R.ok(playId);
     }
 
-    //插入剧本消息表 数据
-    private List<PlayMessage> getPlayMessageData(String playId, List<PlayMessageDTO> playMessageList, SendMechanism sendMechanism) {
-        List<PlayMessage> ret = new ArrayList<>();
+    private void savePlayMessage(String playId, List<PlayMessageDTO> playMessageList, SendMechanism sendMechanism) {
+        List<PlayMessage> saveData = new ArrayList<>();
 
-//        String nick = null;
-//        int playTime = 0;
-//        for (PlayMessage message : request.getMessages()) {
-//            if (nick == null) {
-//                nick = message.getRobotNickname();
-//            } else {
-//                if (nick.equals(message.getRobotNickname())) {
-//                    // 同一个发言人 ，
-//                    message.setIntervalTime(
-//                            generateRandomNumber(request.getMsgRuleSepStart(), request.getMsgRuleSepEnd()));
-//                } else {
-//                    // 不同的发言人
-//                    message.setIntervalTime(
-//                            generateRandomNumber(request.getSendRuleSepStart(), request.getSendRuleSepEnd()));
-//                }
-//                playTime += message.getIntervalTime();
-//                nick = message.getRobotNickname();
-//            }
-//            message.setIntervalTime(generateRandomNumber(request.getMsgRuleSepStart(), request.getMsgRuleSepEnd()));
-//            message.setPlayErrorType(request.getPlayErrorType());
-//        }
+        String nick = null;
+        for (PlayMessageDTO messageDTO : playMessageList) {
+            PlayMessage playMessage = new PlayMessage();
 
-        return ret;
+            if (nick == null) {
+                nick = messageDTO.getRobotNickname();
+                playMessage.setIntervalTime(0);
+            } else {
+                if (nick.equals(messageDTO.getRobotNickname())) {
+                    // 同一个发言人
+                    playMessage.setIntervalTime(generateRandomNumber(sendMechanism.getMsgSepStart(), sendMechanism.getMsgSepEnd()));
+                } else {
+                    // 不同的发言人
+                    playMessage.setIntervalTime(generateRandomNumber(sendMechanism.getPerformerSepStart(), sendMechanism.getPerformerSepEnd()));
+                }
+
+                nick = playMessage.getRobotNickname();
+            }
+
+            playMessage.setPlayId(playId);
+            playMessage.setRobotNickname(messageDTO.getRobotNickname());
+            if (StringUtils.isNotEmpty(messageDTO.getCallRobotNickname())) {
+                playMessage.setCallRobotNickname(messageDTO.getCallRobotNickname());
+            }
+            playMessage.setMessageSort(messageDTO.getMessageSort());
+            playMessage.setMessageContent(JSON.toJSONString(messageDTO.getMessageContent()));
+            playMessage.setPlayErrorType(sendMechanism.getSendErrorType());
+
+            saveData.add(playMessage);
+        }
+
+        playMessageService.saveBatch(saveData);
     }
 
     private static int generateRandomNumber(int min, int max) {
@@ -96,46 +111,120 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         return random.nextInt((max - min) + 1) + min;
     }
 
-    private void saveGroupPack(GroupPack groupPack, String payId) {
+    private void saveRobotPack(String playId, List<Performer> performerList) {
+        List<PlayRobotPack> playRobotPackList = new ArrayList<>();
+        for (Performer performer : performerList) {
+            PlayRobotPack playRobotPack = new PlayRobotPack();
+            BeanUtils.copyProperties(performer, playRobotPack);
+            playRobotPack.setPlayId(playId);
+            playRobotPackList.add(playRobotPack);
+        }
+        playRobotPackService.saveBatch(playRobotPackList);
+    }
+
+    private void saveGroupPack(String playId, GroupPack groupPack) {
         PlayGroupPack playGroupPack = new PlayGroupPack();
-        playGroupPack.setPlayId(payId);
+        playGroupPack.setPlayId(playId);
         playGroupPack.setName(String.join(",", groupPack.getName()));
+        playGroupPack.setPic(String.join(",", groupPack.getPic()));
+        playGroupPackMapper.insert(playGroupPack);
     }
 
     private void savePlay(PlayDTO dto, String id) {
         Play play = new Play();
         BeanUtils.copyProperties(dto, play);
         play.setId(id);
-        play.setSendMechanism(JSONObject.toJSONString(dto.getSendMechanism()));
-        play.setAdMonitor(JSONObject.toJSONString(dto.getAdMoitor()));
-        play.setPlayExt(JSONObject.toJSONString(dto.getPlayExt()));
-        this.save(play);
-    }
-
-    private boolean checkPlayParams(PlayDTO dto) {
-        return true;
+        play.setSendMechanism(JSON.toJSONString(dto.getSendMechanism()));
+        play.setAdMonitor(JSON.toJSONString(dto.getAdMonitor()));
+        play.setPlayExt(JSON.toJSONString(dto.getPlayExt()));
+        save(play);
     }
 
     @Override
-    public R<String> update(PlayDTO dto) {
-        //判断状态，不同状态限制修改字段
+    @Transactional(rollbackFor=Exception.class)
+    public R<String> updatePlay(PlayDTO dto) {
+        if (StringUtils.isEmpty(dto.getId())) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
+        }
 
-        //更新基础信息表
+        Play play = getById(dto.getId());
+        if (null == play) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
+        }
 
-        //删除人设包装
+        if (StringUtils.isNotEmpty(dto.getWordUrl())) {
+            //更新发言人包装
+        }
 
-        //保存人设包装
+        play.setName(dto.getName());
+        play.setUrlPool(dto.getUrlPool());
+        play.setTargetCountyCode(dto.getTargetCountyCode());
+        play.setTargetCountyName(dto.getTargetCountyName());
 
-        //判断混淆状态 t_play_message_confound
+        //todo 判断状态，不同状态限制修改字段
+        play.setSendMechanism(JSON.toJSONString(dto.getSendMechanism()));
+        play.setAdMonitor(JSON.toJSONString(dto.getAdMonitor()));
+        play.setPlayExt(JSON.toJSONString(dto.getPlayExt()));
+        updateById(play);
+
+        //剧本内容
+        playMessageMapper.delete(new LambdaQueryWrapper<PlayMessage>().eq(PlayMessage::getPlayId, dto.getId()));
+        savePlayMessage(dto.getId(), dto.getPlayMessageList(), dto.getSendMechanism());
 
         return R.ok();
     }
 
     @Override
-    public R<PlayDTO> info(String id) {
-        PlayDTO playDTO = new PlayDTO();
-        playDTO.setId("1");
-        return R.ok(playDTO);
+    public R<PlayDTO> info(String playId) {
+        if (StringUtils.isEmpty(playId)) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
+        }
+
+        Play play = getById(playId);
+        if (null == play) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
+        }
+
+        PlayDTO ret = new PlayDTO();
+        BeanUtils.copyProperties(play, ret);
+        ret.setSendMechanism(ret.convertSendMechanismStr(play.getSendMechanism()));
+        ret.setAdMonitor(ret.convertAdMonitorStr(play.getAdMonitor()));
+        ret.setPlayExt(ret.convertPlayExtStr(play.getPlayExt()));
+
+        PlayGroupPack playGroupPack = playGroupPackMapper.selectOne(new LambdaQueryWrapper<PlayGroupPack>()
+                .eq(PlayGroupPack::getPlayId, playId).last(" limit  1 "));
+        if (null != playGroupPack) {
+            ret.setGroupPack(new GroupPack()
+                    .setName(Arrays.asList(playGroupPack.getName(), ","))
+                    .setPic(Arrays.asList(playGroupPack.getPic(), ","))
+            );
+        }
+
+        List<PlayRobotPack> robotPackList = playRobotPackMapper.selectList(new QueryWrapper<PlayRobotPack>()
+                .lambda().eq(PlayRobotPack::getPlayId, playId));
+        if (!robotPackList.isEmpty()) {
+            List<Performer> performerList = new ArrayList<>();
+            for (PlayRobotPack robotPack : robotPackList) {
+                Performer performer = new Performer();
+                BeanUtils.copyProperties(robotPack, performer);
+                performerList.add(performer);
+            }
+            ret.setPerformerList(performerList);
+        }
+
+        List<PlayMessage> playMessageList = playMessageMapper.selectList(new QueryWrapper<PlayMessage>()
+                .lambda().eq(PlayMessage::getPlayId, playId));
+        if (!playMessageList.isEmpty()) {
+            List<PlayMessageDTO> playMessageDTOList = new ArrayList<>();
+            for (PlayMessage playMessage : playMessageList) {
+                PlayMessageDTO playMessageDTO = new PlayMessageDTO();
+                BeanUtils.copyProperties(playMessage, playMessageDTO);
+                playMessageDTOList.add(playMessageDTO);
+            }
+            ret.setPlayMessageList(playMessageDTOList);
+        }
+
+        return R.ok(ret);
     }
 
     @Override

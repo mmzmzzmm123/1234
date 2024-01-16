@@ -44,6 +44,11 @@ public class PlayMessagePushDetail implements Serializable {
     private String robotImgUrl;
 
     /**
+     * 机器人账号
+     */
+    private String robotAcct;
+
+    /**
      * 账号来源:1.水军 2.个人号
      */
     private Integer accSource;
