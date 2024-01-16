@@ -301,4 +301,15 @@ public class OpenApiClient {
     public static OpenApiResult<TgBaseOutputDTO> insertEventByThirdKpTg(ThirdTgInsertEventInputDTO data) {
         return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_INSERT_EVENT, JSONObject.from(data), TgBaseOutputDTO.class);
     }
+
+    /**
+     * 比邻第三方(开平TG)：-SQL执行接口
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> sqlTaskSubmitByThirdKpTg(ThirdTgSqlTaskSubmitInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SQL_TASK_SUBMIT, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
+
 }
