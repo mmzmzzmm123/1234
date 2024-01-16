@@ -109,6 +109,11 @@ public class PlayMessagePushDetail implements Serializable {
      */
     private String optSerialNo;
 
+    /**
+     * 备用号(,拼接)
+     */
+    private String spareRobot;
+
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
 }
