@@ -1,7 +1,7 @@
 package com.ruoyi.common.constant;
 
 /**
- * 群任务状态
+ * 剧本状态
  */
 public class PlayStatusConstants {
     /**

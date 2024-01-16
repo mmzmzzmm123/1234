@@ -8,22 +8,20 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
-import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
+import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.QueryConfoundLogVO;
-import com.ruoyi.system.domain.vo.play.PlayGroupProgressVO;
-import com.ruoyi.system.domain.vo.play.PlayTaskProgressVO;
-import com.ruoyi.system.domain.vo.play.PlayVO;
-import com.ruoyi.system.domain.vo.play.QueryPlayVO;
+import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.service.IPlayService;
 import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.PlayMessageConfoundLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -91,8 +89,12 @@ public class PlayController extends BaseController {
     @ApiOperation("炒群任务列表")
     @PostMapping("page")
     public R<Page<QueryPlayVO>> page(@RequestBody QueryPlayDTO dto) {
-        LoginUser loginUser = getLoginUser();
-        MerchantInfo merchantInfo = loginUser.getMerchantInfo();
+        MerchantInfo merchantInfo = getMerchantInfo();
+        if (merchantInfo != null) {
+            if (!merchantInfo.getMerchantType().equals(2)) {
+                dto.setMerchantId(merchantInfo.getMerchantId());
+            }
+        }
         return R.ok(playService.page(dto));
     }
 
@@ -102,10 +104,9 @@ public class PlayController extends BaseController {
         return R.ok(playService.taskProgress(playId));
     }
 
-
     @ApiOperation("炒群进度")
     @PostMapping("groupProgress/{playId}")
-    public R<PlayGroupProgressVO> groupProgress(@PathVariable String playId) {
+    public R<List<PlayGroupProgressVO>> groupProgress(@PathVariable String playId) {
         return R.ok(playService.groupProgress(playId));
     }
 
@@ -115,11 +116,10 @@ public class PlayController extends BaseController {
         return R.ok(playExecutionLogService.listByPlayId(playId));
     }
 
-    @ApiOperation("任务明细查询")
-    @PostMapping("taskDetailPage")
-    public R<Page<PlayExecutionLog>> taskDetailPage(@RequestBody QueryConfoundLogDTO dto) {
-
-        return R.ok();
+    @ApiOperation("任务推送明细查询")
+    @PostMapping("pushDetailPage")
+    public R<Page<QueryPushDetailVO>> pushDetailPage(@Validated @RequestBody QueryPushDetailDTO dto) {
+        return R.ok(playService.pushDetailPage(dto));
     }
 
 

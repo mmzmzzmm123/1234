@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.PlayExt;
 import com.ruoyi.common.core.domain.dto.play.SendMechanism;
+import com.ruoyi.common.utils.StringUtils;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -127,16 +128,24 @@ public class Play {
      */
     private String targetCountyName;
 
-    public SendMechanism convertSendMechanismStr(String sendMechanism) {
-        return JSONObject.parseObject(sendMechanism, SendMechanism.class);
+    public SendMechanism convertSendMechanismStr() {
+        if (StringUtils.isEmpty(this.sendMechanism)) {
+            return null;
+        }
+        return JSONObject.parseObject(this.sendMechanism, SendMechanism.class);
     }
 
-    public AdMonitor convertAdMonitorStr(String adMonitor) {
-        return JSONObject.parseObject(adMonitor, AdMonitor.class);
+    public AdMonitor convertAdMonitorStr() {
+        if (StringUtils.isEmpty(this.adMonitor)) {
+            return null;
+        }
+        return JSONObject.parseObject(this.adMonitor, AdMonitor.class);
     }
 
-    public PlayExt convertPlayExtStr(String playExt) {
-        return JSONObject.parseObject(playExt, PlayExt.class);
+    public PlayExt convertPlayExtStr() {
+        if (StringUtils.isEmpty(this.playExt)) {
+            return null;
+        }
+        return JSONObject.parseObject(this.playExt, PlayExt.class);
     }
-
 }

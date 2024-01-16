@@ -119,14 +119,14 @@ public class TgRobotProcessor {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
 
-    /**
-     * TG获取群信息
-     * @param dto
-     */
-    @Type(value = 1100910018, parameterClass = Called1100910018DTO.class)
-    public void called1100910018(Called1100910018DTO dto) {
-        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-    }
+//    /**
+//     * TG获取群信息
+//     * @param dto
+//     */
+//    @Type(value = 1100910018, parameterClass = Called1100910018DTO.class)
+//    public void called1100910018(Called1100910018DTO dto) {
+//        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+//    }
 
     /**
      * TG设置群类型
@@ -161,6 +161,24 @@ public class TgRobotProcessor {
      */
     @Type(value = 1100910015, parameterClass = Called1100910015DTO.class)
     public void called1100910015(Called1100910015DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG获取离散图片
+     * @param dto
+     */
+    @Type(value = 1100850508, parameterClass = Called1100850508DTO.class)
+    public void called1100850508(Called1100850508DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG获取离散文案
+     * @param dto
+     */
+    @Type(value = 1100850405, parameterClass = Called1100850405DTO.class)
+    public void called1100850405(Called1100850405DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
 }

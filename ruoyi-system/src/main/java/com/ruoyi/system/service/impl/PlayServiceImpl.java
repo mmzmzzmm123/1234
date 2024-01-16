@@ -17,10 +17,12 @@ import com.ruoyi.common.core.domain.entity.play.PlayRobotPack;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
+import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
 import com.ruoyi.system.domain.vo.play.PlayGroupProgressVO;
 import com.ruoyi.system.domain.vo.play.PlayTaskProgressVO;
 import com.ruoyi.system.domain.vo.play.PlayVO;
 import com.ruoyi.system.domain.vo.play.QueryPlayVO;
+import com.ruoyi.system.domain.vo.play.QueryPushDetailVO;
 import com.ruoyi.system.mapper.PlayGroupPackMapper;
 import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.mapper.PlayMessageMapper;
@@ -191,9 +193,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         PlayVO ret = new PlayVO();
         BeanUtils.copyProperties(play, ret);
-        ret.setSendMechanism(play.convertSendMechanismStr(play.getSendMechanism()));
-        ret.setAdMonitor(play.convertAdMonitorStr(play.getAdMonitor()));
-        ret.setPlayExt(play.convertPlayExtStr(play.getPlayExt()));
+        ret.setSendMechanism(play.convertSendMechanismStr());
+        ret.setAdMonitor(play.convertAdMonitorStr());
+        ret.setPlayExt(play.convertPlayExtStr());
 
         PlayGroupPack playGroupPack = playGroupPackMapper.selectOne(new LambdaQueryWrapper<PlayGroupPack>()
                 .eq(PlayGroupPack::getPlayId, playId).last(" limit  1 "));
@@ -243,7 +245,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return null;
         }
 
-        return play.convertAdMonitorStr(play.getAdMonitor());
+        return play.convertAdMonitorStr();
     }
 
     @Override
@@ -257,9 +259,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
     @Override
     public Page<QueryPlayVO> page(QueryPlayDTO dto) {
-        Page<QueryPlayVO> page = new Page<>(dto.getPage(),dto.getLimit());
+        Page<QueryPlayVO> page = new Page<>(dto.getPage(), dto.getLimit());
         baseMapper.selectPage(page, dto);
-        if (CollectionUtils.isEmpty(page.getRecords())){
+        if (CollectionUtils.isEmpty(page.getRecords())) {
             return page;
         }
         List<String> ids = page.getRecords().stream()
@@ -277,11 +279,28 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
     @Override
     public PlayTaskProgressVO taskProgress(String playId) {
-        return null;
+        if (StringUtils.isEmpty(playId)) {
+            return null;
+        }
+        List<PlayTaskProgressVO> taskProgressList = baseMapper.selectTaskProgress(Arrays.asList(playId));
+        return CollectionUtils.isEmpty(taskProgressList) ? null : taskProgressList.get(0);
     }
 
     @Override
-    public PlayGroupProgressVO groupProgress(String playId) {
-        return null;
+    public List<PlayGroupProgressVO> groupProgress(String playId) {
+        if (StringUtils.isEmpty(playId)) {
+            return null;
+        }
+        List<PlayGroupProgressVO> taskProgressList = baseMapper.selectGroupProgress(playId);
+        return taskProgressList;
     }
+
+    @Override
+    public Page<QueryPushDetailVO> pushDetailPage(QueryPushDetailDTO dto) {
+        Page<QueryPushDetailVO> page = new Page<>(dto.getPage(), dto.getLimit());
+        baseMapper.selectPushDetailPage(page, dto);
+        return page;
+    }
+
+
 }
