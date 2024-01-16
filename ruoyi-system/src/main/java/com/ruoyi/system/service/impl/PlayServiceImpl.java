@@ -194,7 +194,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         ret.setPlayExt(play.convertPlayExtStr());
 
         PlayGroupPack playGroupPack = playGroupPackMapper.selectOne(new LambdaQueryWrapper<PlayGroupPack>()
-                .eq(PlayGroupPack::getPlayId, playId).last(" limit  1 "));
+                .eq(PlayGroupPack::getPlayId, playId).last(" limit 1 "));
         if (null != playGroupPack) {
             ret.setGroupPack(new GroupPack()
                     .setName(Arrays.asList(playGroupPack.getName(), ","))

@@ -1,4 +1,4 @@
-package com.ruoyi.web.controller.business;
+package com.ruoyi.web.controller.callback;
 
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.dto.GroupCallPlayDTO;
