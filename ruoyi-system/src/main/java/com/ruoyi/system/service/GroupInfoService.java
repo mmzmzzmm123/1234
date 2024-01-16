@@ -5,6 +5,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
 import com.ruoyi.system.domain.vo.GroupPageInfoVO;
+import com.ruoyi.system.domain.vo.GroupResourceVO;
+
+import java.util.List;
 
 /**
  * 群基础信息(GroupInfo)表服务接口
@@ -14,5 +17,10 @@ import com.ruoyi.system.domain.vo.GroupPageInfoVO;
  */
 public interface GroupInfoService extends IService<GroupInfo> {
 
+     List<String> existGroup(List<String> groupSerialNos);
+
      Page<GroupPageInfoVO> groupPage(GroupPageQueryDTO dto);
+
+     List<GroupInfo> saveImportGroup(List<GroupResourceVO> resourceList);
+
 }

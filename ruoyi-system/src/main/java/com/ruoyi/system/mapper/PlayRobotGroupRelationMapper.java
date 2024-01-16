@@ -24,4 +24,5 @@ public interface PlayRobotGroupRelationMapper extends BaseMapper<PlayRobotGroupR
 
     public  Integer removeRobotByGroup(@Param("groupId")String groupId,@Param("list")List<String> robots);
 
+
 }

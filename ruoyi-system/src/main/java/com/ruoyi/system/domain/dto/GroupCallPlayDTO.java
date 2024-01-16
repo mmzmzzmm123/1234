@@ -1,9 +1,11 @@
 package com.ruoyi.system.domain.dto;
 
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 
+@Data
 public class GroupCallPlayDTO implements Serializable {
     private static final long serialVersionUID = -6720475873307726186L;
 

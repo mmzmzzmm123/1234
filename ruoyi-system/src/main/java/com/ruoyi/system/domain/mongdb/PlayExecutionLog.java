@@ -3,8 +3,12 @@ package com.ruoyi.system.domain.mongdb;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.experimental.Accessors;
+
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.ruoyi.common.enums.PlayLogTyper;
 
 import java.util.Date;
 
@@ -16,6 +20,7 @@ import java.util.Date;
 @Data
 @Document(collection = "t_play_execution_log")
 @ApiModel("剧本执行日志")
+@Accessors(chain = true)
 public class PlayExecutionLog {
     /**
      * 主键ID
@@ -34,7 +39,7 @@ public class PlayExecutionLog {
      * 日志类型
      */
     @ApiModelProperty("日志类型")
-    private Integer type;
+    private PlayLogTyper type;
 
     /**
      * 执行内容
@@ -53,4 +58,7 @@ public class PlayExecutionLog {
      */
     @ApiModelProperty("创建时间")
     private Date createTime;
+    
+    @ApiModelProperty(value = "群id" , hidden = true)
+    private String groupId;
 }

@@ -16,6 +16,4 @@ public class OpenApiProperties {
 
     private String openApiHost = "https://gateway.test.csbilin.com";
 
-    private String openApiClientLogin = "/thirdparty/user/login/client";
-
 }

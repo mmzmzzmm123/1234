@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.business;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -16,6 +17,7 @@ import com.ruoyi.system.domain.vo.GroupPageInfoVO;
 import com.ruoyi.system.service.GroupClusterRefService;
 import com.ruoyi.system.service.GroupClusterService;
 import com.ruoyi.system.service.GroupInfoService;
+import com.ruoyi.system.service.GroupStateService;
 import com.ruoyi.system.service.business.GroupService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,6 +47,9 @@ public class GroupController {
 
     @Resource
     private GroupClusterRefService groupClusterRefService;
+
+    @Resource
+    private GroupStateService groupStateService;
 
     @Resource
     private GroupService groupService;
@@ -116,7 +121,10 @@ public class GroupController {
     @PostMapping("/deleteCluster/{clusterId}")
     public R<Void> deleteCluster(@PathVariable String clusterId) {
         try {
+            //删除分组
             groupClusterService.delete(clusterId);
+            //分组上的群移至默认分组
+            groupClusterRefService.moving(clusterId, groupClusterService.getClusterDefault(""));
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
@@ -168,8 +176,11 @@ public class GroupController {
     @PostMapping("/syncInfo")
     public R<Void> syncInfo(@RequestBody GroupIdsDTO dto) {
         try {
-
+            Assert.notEmpty(dto.getGroupIds(), "群不能为空");
+            groupService.syncInfo(groupInfoService.listByIds(dto.getGroupIds()));
             return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
             log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(dto), e);
@@ -182,7 +193,7 @@ public class GroupController {
     public R<Void> importResource(@RequestParam(value = "file") @ApiParam("群资源文件") MultipartFile file,
                                   @RequestParam(value = "clusterId") @ApiParam("分组号") String clusterId) {
         try {
-
+            groupService.importResource(groupService.analysisExcelInfo(file), clusterId);
             return R.ok();
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
@@ -210,8 +221,12 @@ public class GroupController {
     @PostMapping("/changeCluster")
     public R<Void> changeCluster(@RequestBody ChangeGroupClusterDTO dto) {
         try {
-
+            Assert.notEmpty(dto.getGroupIds(), "修改分组的群不能为空");
+            Assert.notEmpty(dto.getClusterId(), "新的分组不能为空");
+            groupClusterRefService.moving(dto.getGroupIds(), dto.getClusterId());
             return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
             log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(dto), e);
@@ -223,8 +238,11 @@ public class GroupController {
     @PostMapping("/invitingBotJoin")
     public R<Void> invitingBotJoin(@RequestBody GroupIdsDTO dto) {
         try {
-
+            Assert.notEmpty(dto.getGroupIds(), "群不能为空");
+            groupService.invitingBotJoin(groupInfoService.listByIds(dto.getGroupIds()), false);
             return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
             log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(dto), e);
@@ -237,8 +255,11 @@ public class GroupController {
     @PostMapping("/markUsedFlag")
     public R<Void> markUsedFlag(@RequestBody GroupMarkUsedDTO dto) {
         try {
-
+            Assert.notEmpty(dto.getGroupIds(), "标记的群不能为空");
+            groupStateService.markUsed(dto.getGroupIds(), dto.getGroupUsed());
             return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
             log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(dto), e);
@@ -252,6 +273,8 @@ public class GroupController {
         try {
 
             return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
             log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(dto), e);
@@ -263,25 +286,38 @@ public class GroupController {
     @ApiOperation(value = "注销群")
     @PostMapping("/delete")
     public R<Void> delete(@RequestBody GroupIdsDTO dto) {
-        return R.ok();
+        try {
+            Assert.notEmpty(dto.getGroupIds(), "注销的群不能为空");
+            groupClusterRefService.deleteGroup(dto.getGroupIds());
+            return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
+        } catch (Exception e) {
+            String idWork = IdWorker.getIdStr();
+            log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(dto), e);
+            return R.fail("未知异常！ trace:" + idWork);
+        }
     }
 
 
     @ApiOperation(value = "查询群内成员")
     @PostMapping("/queryMember")
     public R<Page<GroupMemberInfoVO>> queryMember(@RequestBody GroupMemberQueryDTO dto) {
+        //todo openApi接口 调用ut数据
         return R.ok();
     }
 
     @ApiOperation(value = "同步群内成员")
     @PostMapping("/syncMember/{groupId}")
     public R<Void> syncMember(@PathVariable String groupId) {
+        //todo openApi接口 以ut身份请求数据
         return R.ok();
     }
 
     @ApiOperation(value = "设置管理员")
     @PostMapping("/setAdmin")
     public R<Void> setAdmin(@RequestBody GroupAdminSetDTO dto) {
+        //todo openApi接口 以ut身份请求数据
         return R.ok();
     }
 }

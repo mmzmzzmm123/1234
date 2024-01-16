@@ -3,6 +3,8 @@ package com.ruoyi.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.domain.GroupMonitorInfo;
 
+import java.util.List;
+
 /**
  * 群bot监控返回信息(GroupMonitorInfo)表服务接口
  *
@@ -11,4 +13,5 @@ import com.ruoyi.system.domain.GroupMonitorInfo;
  */
 public interface GroupMonitorInfoService extends IService<GroupMonitorInfo> {
 
+    void add(List<String> groupIds);
 }

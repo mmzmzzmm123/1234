@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.util.Date;
 
 @Data
 @TableName("t_play_message_push")
+@Accessors(chain = true)
 public class PlayMessagePush {
     @TableId(type = IdType.AUTO)
     private Integer id;
