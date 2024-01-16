@@ -216,14 +216,14 @@ public class OpenApiClient {
     }
 
 
-    /**
-     * 比邻第三方(开平TG)：-获取群信息
-     *
-     * @return
-     */
-    public static OpenApiResult<TgBaseOutputDTO> getChatroomInfoByThirdKpTg(ThirdTgGetChatroomInfoInputDTO data) {
-        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_CHATROOM_INFO, JSONObject.from(data), TgBaseOutputDTO.class);
-    }
+//    /**
+//     * 比邻第三方(开平TG)：-获取群信息
+//     *
+//     * @return
+//     */
+//    public static OpenApiResult<TgBaseOutputDTO> getChatroomInfoByThirdKpTg(ThirdTgGetChatroomInfoInputDTO data) {
+//        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_CHATROOM_INFO, JSONObject.from(data), TgBaseOutputDTO.class);
+//    }
 
     /**
      * 比邻第三方(开平TG)：-设置群类型
@@ -261,4 +261,30 @@ public class OpenApiClient {
         return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_INVITE_JOIN_CHATROOM, JSONObject.from(data), TgBaseOutputDTO.class);
     }
 
+    /**
+     * 比邻第三方(开平TG)：-获取离散图片
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> disperseImageByThirdKpTg(ThirdTgDisperseImageInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_DISPERSE_IMAGE, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
+    /**
+     * 比邻第三方(开平TG)：-获取离散文字
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> getAppointGradeTextListByThirdKpTg(ThirdTgAppointGradeTextListInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_APPOINT_GRADE_TEXT_LIST, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
+    /**
+     * 比邻第三方(开平TG)：-生成域名接口(同步)
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> insertEventByThirdKpTg(ThirdTgInsertEventInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_INSERT_EVENT, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
 }
