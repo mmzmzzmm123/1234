@@ -57,4 +57,10 @@ public interface IWebInfoService {
      * @return 结果
      */
     public int deleteWebInfoById(Long id);
+
+    /**
+     * 获取Web网站记录
+     * @return
+     */
+    WebInfo getWebInfo();
 }

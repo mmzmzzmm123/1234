@@ -46,7 +46,7 @@ public class SysUserOnlineController extends BaseController {
         Collection<String> keys = redisCache.keys(CacheEnum.LOGIN_TOKEN_KEY.getCode() + "*");
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
         for (String key : keys) {
-            LoginUser user = JSON.parseObject(redisCache.getCacheObject(key).toString(),LoginUser.class);
+            LoginUser user = redisCache.getCacheObject(key);
             if (StringUtils.isNotEmpty(ipaddr) && StringUtils.isNotEmpty(userName)) {
                 userOnlineList.add(userOnlineService.selectOnlineByInfo(ipaddr, userName, user));
             } else if (StringUtils.isNotEmpty(ipaddr)) {

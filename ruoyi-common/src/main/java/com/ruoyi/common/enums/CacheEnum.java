@@ -56,8 +56,12 @@ public enum CacheEnum {
     /**
      * 订阅消息
      */
-    SUBSCRIBE_MSG_KEY("subscribe_msg:","订阅消息");
+    SUBSCRIBE_MSG_KEY("subscribe_msg:","订阅消息"),
 
+    /**
+     * 网站基础信息
+     */
+    WEB_INFO("bk_web_info:","网站基础信息");
 
     private String code;
     private String msg;
