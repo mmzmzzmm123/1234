@@ -49,9 +49,6 @@ public class PlayIntoGroupTask implements Serializable {
     @ApiModelProperty("失败原因")
     private String failCause;
 
-    @ApiModelProperty("入群类型 1链接入群")
-    private Integer intoType;
-
     @ApiModelProperty("群ID")
     private String groupId;
 }

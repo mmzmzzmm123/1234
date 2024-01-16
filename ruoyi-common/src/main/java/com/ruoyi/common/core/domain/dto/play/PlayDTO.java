@@ -22,6 +22,9 @@ public class PlayDTO {
     @ApiModelProperty("群注册天数")
     private Integer groupDay;
 
+    @ApiModelProperty("剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成")
+    private Integer state;
+
     @ApiModelProperty("炒群条件：0-人数 1-时间")
     private Integer groupCondition;
 
