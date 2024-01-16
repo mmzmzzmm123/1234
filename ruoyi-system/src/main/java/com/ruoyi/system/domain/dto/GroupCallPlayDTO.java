@@ -12,23 +12,20 @@ public class GroupCallPlayDTO implements Serializable {
     @ApiModelProperty(value = "群唯一标识")
     private String groupIdent;
 
-    @ApiModelProperty(value = "群状态: 0私密 1公开")
-    private Integer status;
-
-    @ApiModelProperty(value = "群名称")
-    private String groupName;
-
-    @ApiModelProperty(value = "群url")
-    private String groupUrl;
-
     @ApiModelProperty(value = "群成员数量")
     private Integer memberCount;
+
+    @ApiModelProperty(value = "进群数")
+    private Integer joinQuantity;
 
     @ApiModelProperty(value = "用户自行进群数")
     private Integer userJoin;
 
-    @ApiModelProperty(value = "管理员拉进群数")
+    @ApiModelProperty(value = "邀请进群数")
     private Integer adminHandleJoin;
+
+    @ApiModelProperty(value = "退群数")
+    private Integer leaveQuantity;
 
     @ApiModelProperty(value = "用户自行退群数")
     private Integer userQuit;
