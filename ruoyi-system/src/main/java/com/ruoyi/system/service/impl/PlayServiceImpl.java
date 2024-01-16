@@ -1,7 +1,6 @@
 package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -192,9 +191,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         PlayVO ret = new PlayVO();
         BeanUtils.copyProperties(play, ret);
-        ret.setSendMechanism(convertSendMechanismStr(play.getSendMechanism()));
-        ret.setAdMonitor(convertAdMonitorStr(play.getAdMonitor()));
-        ret.setPlayExt(convertPlayExtStr(play.getPlayExt()));
+        ret.setSendMechanism(play.convertSendMechanismStr(play.getSendMechanism()));
+        ret.setAdMonitor(play.convertAdMonitorStr(play.getAdMonitor()));
+        ret.setPlayExt(play.convertPlayExtStr(play.getPlayExt()));
 
         PlayGroupPack playGroupPack = playGroupPackMapper.selectOne(new LambdaQueryWrapper<PlayGroupPack>()
                 .eq(PlayGroupPack::getPlayId, playId).last(" limit  1 "));
@@ -244,7 +243,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return null;
         }
 
-        return convertAdMonitorStr(play.getAdMonitor());
+        return play.convertAdMonitorStr(play.getAdMonitor());
     }
 
     @Override
@@ -254,18 +253,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 .set(Play::getAdMonitor, JSON.toJSONString(dto)));
 
         return R.ok();
-    }
-
-    public SendMechanism convertSendMechanismStr(String sendMechanism) {
-        return JSONObject.parseObject(sendMechanism, SendMechanism.class);
-    }
-
-    public AdMonitor convertAdMonitorStr(String adMonitor) {
-        return JSONObject.parseObject(adMonitor, AdMonitor.class);
-    }
-
-    public PlayExt convertPlayExtStr(String playExt) {
-        return JSONObject.parseObject(playExt, PlayExt.class);
     }
 
     @Override
