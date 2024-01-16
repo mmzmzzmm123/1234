@@ -3,11 +3,11 @@ package com.ruoyi.common.core.domain.entity.play;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.ruoyi.common.core.domain.dto.play.AdMoitor;
+import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.PlayExt;
 import com.ruoyi.common.core.domain.dto.play.SendMechanism;
+import com.ruoyi.common.utils.StringUtils;
 import lombok.Data;
-import org.apache.commons.lang3.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -128,22 +128,22 @@ public class Play {
      */
     private String targetCountyName;
 
-    public SendMechanism getSendMechanism() {
-        if (StringUtils.isBlank(this.sendMechanism)) {
+    public SendMechanism convertSendMechanismStr() {
+        if (StringUtils.isEmpty(this.sendMechanism)) {
             return null;
         }
         return JSONObject.parseObject(this.sendMechanism, SendMechanism.class);
     }
 
-    public AdMoitor getAdMonitor() {
-        if (StringUtils.isBlank(this.adMonitor)) {
+    public AdMonitor convertAdMonitorStr() {
+        if (StringUtils.isEmpty(this.adMonitor)) {
             return null;
         }
-        return JSONObject.parseObject(this.adMonitor, AdMoitor.class);
+        return JSONObject.parseObject(this.adMonitor, AdMonitor.class);
     }
 
-    public PlayExt getPlayExt() {
-        if (StringUtils.isBlank(this.playExt)) {
+    public PlayExt convertPlayExtStr() {
+        if (StringUtils.isEmpty(this.playExt)) {
             return null;
         }
         return JSONObject.parseObject(this.playExt, PlayExt.class);
