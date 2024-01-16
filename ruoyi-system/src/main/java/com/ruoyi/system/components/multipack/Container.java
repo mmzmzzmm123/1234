@@ -28,7 +28,7 @@ public class Container implements InitializingBean, DisposableBean {
 	@Autowired
 	RedisLock redisLock;
 
-	@Autowired
+	@Autowired(required = false)
 	List<OnPackMonitor> onPackMonitors;
 //
 //	@Autowired
