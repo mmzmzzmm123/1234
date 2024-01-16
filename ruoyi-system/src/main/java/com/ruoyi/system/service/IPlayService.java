@@ -11,7 +11,7 @@ import com.ruoyi.system.domain.vo.play.QueryPlayVO;
 public interface IPlayService {
     R<String>  create(PlayDTO dto);
 
-    R<String> update(PlayDTO dto);
+    R<String> updatePlay(PlayDTO dto);
 
     R<PlayDTO> info(String id);
 

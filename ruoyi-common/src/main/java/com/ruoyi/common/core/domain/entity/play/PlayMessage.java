@@ -1,9 +1,6 @@
 package com.ruoyi.common.core.domain.entity.play;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.ruoyi.common.core.domain.dto.play.ContentJson;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

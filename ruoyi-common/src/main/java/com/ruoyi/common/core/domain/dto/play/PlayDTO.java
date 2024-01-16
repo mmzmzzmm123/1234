@@ -1,5 +1,6 @@
 package com.ruoyi.common.core.domain.dto.play;
 
+import com.alibaba.fastjson2.JSONObject;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -62,7 +63,7 @@ public class PlayDTO {
     private SendMechanism sendMechanism;
 
     @ApiModelProperty(value = "广告监控配置")
-    private AdMoitor adMoitor;
+    private AdMonitor adMonitor;
 
     @ApiModelProperty(value = "其它配置")
     private PlayExt playExt;
@@ -71,4 +72,19 @@ public class PlayDTO {
     private String urlPool;
 
     private String merchantId;
+
+    @ApiModelProperty(value = "word文件链接")
+    private String wordUrl;
+
+    public SendMechanism convertSendMechanismStr(String sendMechanism) {
+        return JSONObject.parseObject(sendMechanism, SendMechanism.class);
+    }
+
+    public AdMonitor convertAdMonitorStr(String adMonitor) {
+        return JSONObject.parseObject(adMonitor, AdMonitor.class);
+    }
+
+    public PlayExt convertPlayExtStr(String playExt) {
+        return JSONObject.parseObject(playExt, PlayExt.class);
+    }
 }

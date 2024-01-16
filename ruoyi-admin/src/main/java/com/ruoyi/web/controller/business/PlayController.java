@@ -64,7 +64,7 @@ public class PlayController extends BaseController {
     @ApiOperation("修改炒群任务")
     @PostMapping(value = "/update")
     public R<String> update(@RequestBody PlayDTO dto) {
-        return playService.update(dto);
+        return playService.updatePlay(dto);
     }
 
     @ApiOperation("获取炒群任务详情")

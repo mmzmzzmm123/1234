@@ -9,7 +9,7 @@ import java.util.List;
  * 广告监控
  */
 @Data
-public class AdMoitor {
+public class AdMonitor {
     @ApiModelProperty(value = "监控类型 多个,连接：1-发图片 2-发视频 3-发链接")
     private String types;
 
