@@ -179,5 +179,13 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         }
     }
 
+    @Override
+    public boolean unLockRobot(List<String> robotSerialNos) {
+        if(this.update(new LambdaUpdateWrapper<RobotStatistics>().in(RobotStatistics::getRobotSerialNo,robotSerialNos).set(RobotStatistics::getIsLock,0))){
+            return true;
+        }
+        return false;
+    }
+
 
 }

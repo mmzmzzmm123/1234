@@ -13,4 +13,6 @@ public interface RobotStatisticsService {
     boolean checkAndAddLeaderCount(String robotSerialNo, Integer count, Integer checkCount);
 
     void restoreQuantity(String robotSerialNo, Integer count);
+
+    boolean unLockRobot(List<String> robotSerialNos);
 }
