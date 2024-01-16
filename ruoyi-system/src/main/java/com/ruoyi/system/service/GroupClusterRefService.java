@@ -16,4 +16,12 @@ import java.util.List;
 public interface GroupClusterRefService extends IService<GroupClusterRef> {
 
     List<GroupClusterCountVO> fillCount(List<GroupCluster> list);
+
+    void moving(String oldClusterId, String newClusterId);
+
+    void moving(List<String> groupIds, String newClusterId);
+
+    void add(List<String> groupIds, String newClusterId);
+
+    void deleteGroup(List<String> groupIds);
 }
