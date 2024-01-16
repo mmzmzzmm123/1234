@@ -1,6 +1,7 @@
 package com.ruoyi.system.domain.dto.play;
 
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -9,6 +10,7 @@ import java.util.Date;
 
 @Data
 @ApiModel("水军群关系")
+@TableName("t_play_robot_group_relation")
 public class PlayRobotGroupRelation {
 
     @ApiModelProperty("自增主键")

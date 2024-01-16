@@ -12,4 +12,6 @@ import java.util.List;
 public interface RobotStatisticsMapper extends BaseMapper<RobotStatistics> {
     List<SelectRobotByRuleVO> selectRobotByRule(@Param("dto") SelectRobotByRuleDTO dto);
     void addCount(@Param("dto") AddCountDTO dto);
+
+    void addLeaderCount(@Param("robotSerialNo") String robotSerialNo,@Param("count") Integer count);
 }

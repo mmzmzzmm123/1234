@@ -20,8 +20,18 @@ public interface PlayMapper extends BaseMapper<Play> {
 
     List<PlayTaskProgressVO> selectTaskProgress(@Param("playIds") List<String> playIds);
 
+    /**
+     * 获取任务 群维度的统计数据
+     * @param playIds
+     * @return
+     */
+    List<PlayTaskProgressVO> selectTaskGroupProgress(@Param("playIds") List<String> playIds);
+
     List<PlayGroupProgressVO> selectGroupProgress(@Param("playId") String playId);
 
     Page<QueryPushDetailVO> selectPushDetailPage(Page page, @Param("dto") QueryPushDetailDTO dto);
 
+    List<Play> selectIntoGroupList(@Param("state")Integer state,@Param("progress")Integer progress);
+
+    Play selectPlayById(@Param("playId")String playId);
 }

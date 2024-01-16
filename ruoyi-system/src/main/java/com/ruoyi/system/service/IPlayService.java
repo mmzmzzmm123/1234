@@ -1,9 +1,11 @@
 package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
+import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
 import com.ruoyi.system.domain.dto.play.SetSpeedDTO;
@@ -11,7 +13,7 @@ import com.ruoyi.system.domain.vo.play.*;
 
 import java.util.List;
 
-public interface IPlayService {
+public interface IPlayService extends IService<Play> {
     R<String> create(PlayDTO dto);
 
     R<String> updatePlay(PlayDTO dto);

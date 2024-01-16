@@ -53,6 +53,8 @@ public class TgRobotProcessor {
     @Type(value = 1100910049, parameterClass = CalledEmptyDTO.class)
     public void called1100910049(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        intoGroupService.updateImageCallBack(root);
+
     }
 
     /**
@@ -179,6 +181,15 @@ public class TgRobotProcessor {
      */
     @Type(value = 1100850405, parameterClass = Called1100850405DTO.class)
     public void called1100850405(Called1100850405DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG SQL执行接口
+     * @param dto
+     */
+    @Type(value = 1100860002, parameterClass = Called1100860002DTO.class)
+    public void called1100860002(Called1100860002DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
 }
