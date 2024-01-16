@@ -2,6 +2,7 @@ package com.ruoyi.common.core.domain.entity.play;
 
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.PlayExt;
@@ -54,9 +55,14 @@ public class Play {
     private Date startGroupDate;
 
     /**
-     * 群邀请链接
+     * 外包群邀请链接
      */
     private String groupUrls;
+
+    /**
+     * 外包群邀请链接数量
+     */
+    private String groupUrlNum;
 
     /**
      * 群需求数量
@@ -106,6 +112,7 @@ public class Play {
     /**
      * 是否删除: 0否 1是
      */
+    @TableLogic(value = "0", delval = "1")
     private Integer isDelete;
 
     /**
@@ -114,7 +121,7 @@ public class Play {
     private BigDecimal speed;
 
     /**
-     * 剧本执行进度：0未开始 1入群 2混淆中 3号分配 4人设包装 5剧本发送
+     * 剧本执行进度：0未开始 1调度修改群人设中 2 调用入群中 3混淆中 4号分配 5人设包装 6剧本发送
      */
     private Integer scanProgress;
 

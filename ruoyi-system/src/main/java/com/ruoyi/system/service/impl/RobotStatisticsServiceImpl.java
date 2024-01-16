@@ -10,6 +10,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.dto.robot.AddCountDTO;
 import com.ruoyi.system.domain.dto.robot.GetRobotDTO;
 import com.ruoyi.system.domain.dto.robot.SelectRobotByRuleDTO;
+import com.ruoyi.system.domain.vo.robot.GetRobotVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotByRuleVO;
 import com.ruoyi.system.mapper.RobotStatisticsMapper;
 import com.ruoyi.system.mapper.VibeRuleMapper;
@@ -41,7 +42,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
     private RedisLock redisLock;
 
     @Override
-    public R<List<String>> getRobot(GetRobotDTO dto) {
+    public R<List<GetRobotVO>> getRobot(GetRobotDTO dto) {
         VibeRule vibeRule = vibeRuleMapper.selectOne(new LambdaQueryWrapper<VibeRule>().last("limit 1"));
         if(vibeRule == null){
             return R.fail("查询不到规则表数据");
@@ -79,35 +80,53 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         }
 
         List<SelectRobotByRuleVO> selectRobotByRuleVOSTotal = new ArrayList<>();
+        List<SelectRobotByRuleVO> selectRobotByRuleVOS1 = new ArrayList<>();
         //如果有需要设置管理员号的,需要再次获取其他号
         if(adminFlag && dto.getCount() > 0){
             List<String> ips = selectRobotByRuleVOS.stream().map(SelectRobotByRuleVO::getIp).collect(Collectors.toList());
             selectRobotByRuleDTO.setIps(ips);
             selectRobotByRuleDTO.setIsSetAdmin(0);
             selectRobotByRuleDTO.setLimit(dto.getCount());
-            List<SelectRobotByRuleVO> selectRobotByRuleVOS1 = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
+            selectRobotByRuleVOS1 = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
             if(CollectionUtils.isEmpty(selectRobotByRuleVOS1) || selectRobotByRuleVOS1.size() < dto.getCount()){
                 return R.fail("号资源不足");
             }
             selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS);
             selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS1);
         }
-        List<String> robotSerialNos = selectRobotByRuleVOSTotal.stream().map(SelectRobotByRuleVO::getRobotSerialNo).collect(Collectors.toList());
+
         List<String> ids = selectRobotByRuleVOSTotal.stream().filter(f-> StringUtils.isNotEmpty(f.getId())).map(SelectRobotByRuleVO::getId).collect(Collectors.toList());
+        List<GetRobotVO> resultData = new ArrayList<>();
         SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession();
         try {
             robotStatisticsMapper.selectList(new LambdaQueryWrapper<RobotStatistics>().in(RobotStatistics::getId,ids).last(" for update"));
             if(adminFlag){
+                //增加设置管理员号的计数
+                List<String> adminRobotSerialNos = selectRobotByRuleVOS.stream().map(SelectRobotByRuleVO::getRobotSerialNo).collect(Collectors.toList());
                 AddCountDTO addCountDTO = new AddCountDTO();
-                addCountDTO.setRobotSerialNos(robotSerialNos);
+                addCountDTO.setRobotSerialNos(adminRobotSerialNos);
                 addCountDTO.setIsSetAdmin(1);
                 robotStatisticsMapper.addCount(addCountDTO);
+                for (String robotSerialNo : adminRobotSerialNos) {
+                    GetRobotVO vo = new GetRobotVO();
+                    vo.setIsSetAdmin(1);
+                    vo.setRobotSerialNo(robotSerialNo);
+                    resultData.add(vo);
+                }
             }
             if(dto.getCount() > 0){
+                //增加号的计数
+                List<String> robotSerialNos = selectRobotByRuleVOS1.stream().map(SelectRobotByRuleVO::getRobotSerialNo).collect(Collectors.toList());
                 AddCountDTO addCountDTO = new AddCountDTO();
                 addCountDTO.setRobotSerialNos(robotSerialNos);
                 addCountDTO.setIsSetAdmin(0);
                 robotStatisticsMapper.addCount(addCountDTO);
+                for (String robotSerialNo : robotSerialNos) {
+                    GetRobotVO vo = new GetRobotVO();
+                    vo.setIsSetAdmin(0);
+                    vo.setRobotSerialNo(robotSerialNo);
+                    resultData.add(vo);
+                }
             }
             sqlSession.commit();
         }catch (Exception e){
@@ -115,7 +134,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             sqlSession.rollback();
             return R.fail("计数失败");
         }
-        return R.ok(robotSerialNos);
+        return R.ok(resultData);
     }
 
     @Override

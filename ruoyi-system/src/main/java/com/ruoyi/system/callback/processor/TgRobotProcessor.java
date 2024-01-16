@@ -53,6 +53,8 @@ public class TgRobotProcessor {
     @Type(value = 1100910049, parameterClass = CalledEmptyDTO.class)
     public void called1100910049(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        intoGroupService.updateImageCallBack(root);
+
     }
 
     /**
