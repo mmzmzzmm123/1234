@@ -87,6 +87,12 @@ public class PlayController extends BaseController {
     @ApiOperation("修改炒群任务")
     @PostMapping(value = "/update")
     public R<String> update(@RequestBody PlayDTO dto) {
+        if (StringUtils.isEmpty(dto.getName())) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能为空"));
+        }
+        if (dto.getName().length() > 100) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过100字"));
+        }
         return playService.updatePlay(dto);
     }
 

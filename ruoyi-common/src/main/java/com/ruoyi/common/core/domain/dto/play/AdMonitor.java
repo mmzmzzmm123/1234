@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Data
 public class AdMonitor {
-    @ApiModelProperty(value = "监控类型 多个,连接：1-发图片 2-发视频 3-发链接")
+    @ApiModelProperty(value = "监控类型(多个,连接)：1-发图片 2-发视频 3-发链接")
     private String types;
 
     @ApiModelProperty(value = "监控关键词")
@@ -25,7 +25,7 @@ public class AdMonitor {
     @ApiModelProperty(value = "刷屏监测时间单位: 1-秒 2-分")
     private Integer spammingTimeUnit;
 
-    @ApiModelProperty(value = "触发监控处理方式 多个,连接：0-禁言 1踢出群 2踢出群并删除消息")
+    @ApiModelProperty(value = "触发监控处理方式(多个,连接)：0-禁言 1踢出群 2踢出群并删除消息")
     private String disposalType;
 
     @ApiModelProperty(value = "是否删掉除水军外的其他成员发言: 0否 1是")

@@ -116,8 +116,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         }
 
         Random random = new Random();
-        int ret = random.nextInt((max - min) + 1) + min;
-        return ret;
+        return random.nextInt((max - min) + 1) + min;
     }
 
     private void saveRobotPack(String playId, List<Performer> performerList) {
@@ -158,7 +157,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         if (dto.getGroupSource() == 1) {
             play.setGroupNum(dto.getGroupUrls().size());
         }
-        save(play);
+        super.save(play);
     }
 
     @Override
@@ -168,7 +167,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
 
-        Play play = getById(dto.getId());
+        Play play = super.getById(dto.getId());
         if (null == play) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
@@ -197,7 +196,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
 
-        Play play = getById(playId);
+        Play play = super.getById(playId);
         if (null == play) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
@@ -252,10 +251,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
     @Override
     public AdMonitor adInfo(String playId) {
-        Play play = this.getOne(new QueryWrapper<Play>().lambda().select(Play::getAdMonitor)
-                .eq(Play::getId,playId).last(" limit 1 ")
-        );
-
+        Play play = super.getOne(new QueryWrapper<Play>().lambda().select(Play::getAdMonitor)
+                .eq(Play::getId,playId).last(" limit 1 "));
         if (null == play || StringUtils.isEmpty(play.getAdMonitor())) {
             return null;
         }
@@ -266,7 +263,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     public R<String> updateAdInfo(String playId, AdMonitor dto) {
         //todo 验证剧本状态
-        update(null, new LambdaUpdateWrapper<Play>().eq(Play::getId, playId)
+        super.update(null, new LambdaUpdateWrapper<Play>().eq(Play::getId, playId)
                 .set(Play::getAdMonitor, JSON.toJSONString(dto)));
 
         return R.ok();

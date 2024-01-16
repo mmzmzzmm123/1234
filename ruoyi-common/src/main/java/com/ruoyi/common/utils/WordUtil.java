@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.poi.xwpf.usermodel.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,14 +15,12 @@ import java.util.stream.Collectors;
 public class WordUtil {
     private static final Logger log = LoggerFactory.getLogger(WordUtil.class);
 
-    public static List<String> readWordDocumentByUrl(String wordPath) {
+    public static List<String> readWordDocumentByUrl(MultipartFile file) {
         List<String> list = new ArrayList<>();
-        final InputStream inputStream = UrlTools.getInputStreamByUrl(wordPath);
-        if (inputStream == null) {
-            return list;
-        }
 
         try {
+            InputStream inputStream = file.getInputStream();
+
             XWPFDocument document = new XWPFDocument(inputStream);
             // 读取段落
             List<XWPFParagraph> paragraphs = document.getParagraphs();
@@ -47,8 +46,7 @@ public class WordUtil {
 
             inputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
+            log.error("readWordDocumentByUrl:{}", e);
         }
         return list;
     }
