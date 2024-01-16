@@ -108,6 +108,10 @@ public class GroupClusterServiceImpl extends ServiceImpl<GroupClusterMapper, Gro
 
     @Override
     public String getClusterDefault(String clusterId) {
+        if(StrUtil.isBlank(clusterId)){
+            return "1001";
+        }
+
         GroupCluster old = baseMapper.selectById(clusterId);
         if (old != null) {
             return old.getClusterId();

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PlayGroupInfoMapper">
+
+    <select id="selectGroupInfoById" resultType="com.ruoyi.system.domain.dto.play.PlayGroupInfo">
+        select * from t_play_group_info where tg_group_id = #{tgGroupId}  and state = 1  and is_delete = 0 limit 1
+    </select>
+
+
+
+</mapper>
