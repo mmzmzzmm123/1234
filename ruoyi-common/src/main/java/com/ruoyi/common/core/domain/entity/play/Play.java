@@ -128,6 +128,11 @@ public class Play {
      */
     private String targetCountyName;
 
+    /**
+     * 失败原因
+     */
+    private String failReason;
+
     public SendMechanism convertSendMechanismStr() {
         if (StringUtils.isEmpty(this.sendMechanism)) {
             return null;
