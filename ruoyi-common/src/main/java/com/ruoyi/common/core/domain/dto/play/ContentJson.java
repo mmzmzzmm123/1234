@@ -30,4 +30,6 @@ public class ContentJson implements Serializable {
     private String sMateId ;
     private String sMateTitle ;
     private String title ;
+
+    private String uuid;
 }
