@@ -11,7 +11,7 @@
                tgs.group_status,
                tgs.group_used,
                (select count(1) from t_play_robot_group_relation where group_id = tgi.group_id and state = 1) robot_num,
-               if(tgmi.member_count > 0, tgi.member_count, tgi.member_count)                                  member_count,
+               if(tgmi.member_count > 0 and tgmi.bot_check = 1, tgi.member_count, tgi.member_count)                                  member_count,
                tgc.cluster_name,
                tgi.group_type,
                tgs.leader_robot,
@@ -23,7 +23,7 @@
                tgi.create_time,
                tgs.used_time
         from t_group_info tgi
-                 join t_group_cluster_ref tgcr on tgi.group_id
+                 join t_group_cluster_ref tgcr on tgi.group_id = tgcr.group_id
                  join t_group_cluster tgc on tgcr.cluster_id = tgc.cluster_id
                  left join t_group_state tgs on tgcr.group_id = tgs.group_id
                  left join t_group_monitor_info tgmi on tgs.group_id = tgmi.group_id
@@ -108,5 +108,42 @@
         </where>
         order by tgi.create_time desc
 
+    </select>
+
+
+    <select id="selectGroup" resultType="com.ruoyi.system.domain.vo.GroupInfoVO">
+        select tgi.group_id,
+        tgi.group_serial_no,
+        tgi.group_name,
+        tgi.group_invite_link,
+        tgi.group_type,
+        tgr.robot_id leader_id,
+        if(tgmi.member_count > 0 and tgmi.bot_check = 1, tgi.member_count, tgi.member_count)                                  member_count
+        from t_group_info tgi
+        join t_group_cluster_ref tgcr on tgi.group_id = tgcr.group_id
+         join t_group_state tgs on tgi.group_id = tgs.group_id
+         join t_group_monitor_info tgmi on tgi.group_id = tgmi.group_id
+        join t_group_robot tgr on tgi.group_id = tgr.group_id and tgr.member_type = 1
+        join t_robot_info robot on tgr.robot_id = robot.robot_serial_no
+        where tgi.create_type = 10
+           and tgs.group_status = 0
+           and tgs.group_used = 0
+           and tgmi.bot_check = 1
+        <if test="registrationDay != null ">
+            AND tgi.registration_time <![CDATA[ <= ]]>  #{registrationDay}
+        </if>
+        <if test="countryCode != null and  countryCode.size > 0 ">
+            AND robot.country_code in
+            <foreach collection="countryCode" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        <if test="excludeGroupId != null and  excludeGroupId.size > 0 ">
+            AND tgi.group_id not in
+            <foreach collection="excludeGroupId" item="id" open="(" separator="," close=")">
+                #{id}
+            </foreach>
+        </if>
+        limit ${groupNum}
     </select>
 </mapper>

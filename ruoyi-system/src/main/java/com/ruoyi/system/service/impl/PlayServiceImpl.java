@@ -32,6 +32,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -279,7 +281,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         List<String> ids = page.getRecords().stream()
                 .map(QueryPlayVO::getId)
                 .collect(Collectors.toList());
-        List<PlayTaskProgressVO> taskProgressList = baseMapper.selectTaskProgress(ids);
+        List<PlayTaskProgressVO> taskProgressList = this.selectTaskProgress(ids);
         Map<String, PlayTaskProgressVO> map = taskProgressList.stream()
                 .collect(Collectors.toMap(PlayTaskProgressVO::getPlayId, Function.identity(), (k1, k2) -> k2));
         for (QueryPlayVO record : page.getRecords()) {
@@ -294,9 +296,62 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         if (StringUtils.isEmpty(playId)) {
             return null;
         }
-        List<PlayTaskProgressVO> taskProgressList = baseMapper.selectTaskProgress(Arrays.asList(playId));
+        List<PlayTaskProgressVO> taskProgressList = this.selectTaskProgress(Arrays.asList(playId));
         return CollectionUtils.isEmpty(taskProgressList) ? null : taskProgressList.get(0);
     }
+
+    private List<PlayTaskProgressVO> selectTaskProgress(List<String> playIds) {
+        List<PlayTaskProgressVO> voList = baseMapper.selectTaskProgress(playIds);
+        // 查询群维度的统计数据
+        List<PlayTaskProgressVO> groupList = baseMapper.selectTaskGroupProgress(playIds);
+        Map<String, PlayTaskProgressVO> map = groupList.stream()
+                .collect(Collectors.toMap(PlayTaskProgressVO::getPlayId, Function.identity(), (k1, k2) -> k2));
+        for (PlayTaskProgressVO vo : voList) {
+            PlayTaskProgressVO groupVO = map.get(vo.getPlayId());
+            if (groupVO == null) {
+                continue;
+            }
+            vo.setGroupTotalNum(groupVO.getGroupTotalNum());
+            vo.setGroupCurrentNum(groupVO.getGroupCurrentNum());
+
+            vo.setPackTotalNum(groupVO.getPackTotalNum());
+            vo.setPackCurrentNum(groupVO.getPackCurrentNum());
+
+            vo.setJoinGroupTotalNum(groupVO.getJoinGroupTotalNum());
+            vo.setJoinGroupCurrentNum(groupVO.getJoinGroupCurrentNum());
+
+            vo.setGroupProgress(calculate(vo.getGroupTotalNum(), vo.getGroupCurrentNum()));
+            vo.setPackProgress(calculate(vo.getPackTotalNum(), vo.getPackCurrentNum()));
+            vo.setJoinGroupProgress(calculate(vo.getJoinGroupTotalNum(), vo.getJoinGroupCurrentNum()));
+        }
+        return voList;
+    }
+
+    /**
+     * 计算百分比
+     * @param totalNum
+     * @param currentNum
+     * @return
+     */
+    private BigDecimal calculate(Integer totalNum, Integer currentNum) {
+        BigDecimal bigDecimal = new BigDecimal("0");
+        bigDecimal.setScale(2);
+        if (totalNum == null || totalNum.equals(0)) {
+            return bigDecimal;
+        }
+        if (currentNum == null || currentNum.equals(0)) {
+            return bigDecimal;
+        }
+        if (currentNum > totalNum) {
+            bigDecimal = new BigDecimal("100");
+            return bigDecimal;
+        }
+        BigDecimal totalBigDecimal = new BigDecimal(totalNum);
+        BigDecimal currentBigDecimal = new BigDecimal(currentNum);
+        bigDecimal = currentBigDecimal.divide(totalBigDecimal, 2, RoundingMode.HALF_UP);
+        return bigDecimal;
+    }
+
 
     @Override
     public List<PlayGroupProgressVO> groupProgress(String playId) {

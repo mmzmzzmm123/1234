@@ -20,6 +20,9 @@ public class GroupQueryDTO {
     @ApiModelProperty(value = "群数")
     private Integer groupNum;
 
+    @ApiModelProperty(value = "需要群主设置的管理员数")
+    private Integer setAdminCount;
+
     @ApiModelProperty(value = "群主机器人优先国家")
     private List<String> countryCode;
 }

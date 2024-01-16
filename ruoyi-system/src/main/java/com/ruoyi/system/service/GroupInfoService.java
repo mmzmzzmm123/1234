@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
+import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.GroupPageInfoVO;
 import com.ruoyi.system.domain.vo.GroupResourceVO;
 
@@ -17,10 +18,13 @@ import java.util.List;
  */
 public interface GroupInfoService extends IService<GroupInfo> {
 
-     List<String> existGroup(List<String> groupSerialNos);
+    List<String> existGroup(List<String> groupSerialNos);
 
-     Page<GroupPageInfoVO> groupPage(GroupPageQueryDTO dto);
+    Page<GroupPageInfoVO> groupPage(GroupPageQueryDTO dto);
 
-     List<GroupInfo> saveImportGroup(List<GroupResourceVO> resourceList);
+    List<GroupInfo> saveImportGroup(List<GroupResourceVO> resourceList);
+
+
+    List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode, List<String> excludeGroupId);
 
 }
