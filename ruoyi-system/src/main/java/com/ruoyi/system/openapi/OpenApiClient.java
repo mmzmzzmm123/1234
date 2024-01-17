@@ -341,4 +341,24 @@ public class OpenApiClient {
                 });
     }
 
+    /**
+     * 比邻第三方(UtchatTG)：-查询全量黑群主信息
+     *
+     * @return
+     */
+    public static OpenApiResult<List<ExtTgTelegramDetChatroomAdminDistr>> selectChatroomAdminDistrAllByThirdUtchatTg() {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SELECT_CHATROOM_ADMIN_DISTR_ALL,
+                JSONObject.from(new Object()),
+                new TypeReference<List<ExtTgTelegramDetChatroomAdminDistr>>(ExtTgTelegramDetChatroomAdminDistr.class) {
+                });
+    }
+
+    /**
+     * 比邻第三方(UtchatTG)：-同步全量黑群主信息
+     *
+     * @return
+     */
+    public static OpenApiResult<Void> syncChatroomAdminDistrAllByThirdUtchatTg() {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SYNC_CHATROOM_ADMIN_DISTR_ALL, JSONObject.from(new Object()), Void.class);
+    }
 }

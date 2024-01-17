@@ -50,6 +50,10 @@ public enum OpenApiEnum {
 
     THIRD_UTCHAT_TG_SELECT_GROUP_MEMBER_LIST("utchatTg-查询群成员", "/thirdparty/tgUtChat/selectGroupMemberList", null),
 
+    THIRD_UTCHAT_TG_SELECT_CHATROOM_ADMIN_DISTR_ALL("utchatTg-查询全量黑群主信息", "/thirdparty/tgUtChat/selectChatroomAdminDistrAll", null),
+
+    THIRD_UTCHAT_TG_SYNC_CHATROOM_ADMIN_DISTR_ALL("utchatTg-同步全量黑群主信息", "/thirdparty/tgUtChat/syncChatroomAdminDistrAll", null),
+
     ;
 
     /**
