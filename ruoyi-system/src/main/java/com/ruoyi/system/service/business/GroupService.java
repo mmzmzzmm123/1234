@@ -667,8 +667,8 @@ public class GroupService {
 
     public GroupInfo handleRobotIn(Called1100910039DTO dto) {
         GroupInfo groupInfo = groupInfoService.getGroupBySerialNo(dto.getChatroomSerialNo());
-        if(groupInfo == null) {
-            groupInfoService.saveExternalGroup(dto);
+        if (groupInfo == null) {
+            groupInfo = groupInfoService.saveExternalGroup(dto);
         }
         //todo 添加群内机器人逻辑
         return groupInfo;
