@@ -17,4 +17,6 @@ public interface GroupMonitorInfoService extends IService<GroupMonitorInfo> {
 
 
     void robotCheck(String groupId);
+
+    void updateRobotSerialNo(String groupId, String botSerialNo);
 }

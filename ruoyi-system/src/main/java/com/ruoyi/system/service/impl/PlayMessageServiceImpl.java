@@ -18,7 +18,7 @@ public class PlayMessageServiceImpl extends ServiceImpl<PlayMessageMapper, PlayM
         implements PlayMessageService {
 
     @Override
-    public List<PlayMessage> listByPlayId(Integer playId) {
+    public List<PlayMessage> listByPlayId(String playId) {
         if (playId == null) {
             return new ArrayList<>();
         }
@@ -29,7 +29,7 @@ public class PlayMessageServiceImpl extends ServiceImpl<PlayMessageMapper, PlayM
     }
 
     @Override
-    public void deleteByPlayId(Integer playId) {
+    public void deleteByPlayId(String playId) {
         if (playId == null) {
             return;
         }

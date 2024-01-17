@@ -39,4 +39,12 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
         groupInfo.setBotCheck(1);
         baseMapper.updateById(groupInfo);
     }
+
+    @Override
+    public void updateRobotSerialNo(String groupId, String botSerialNo) {
+        GroupMonitorInfo groupInfo = new GroupMonitorInfo();
+        groupInfo.setGroupId(groupId);
+        groupInfo.setBotSerialNo(botSerialNo);
+        baseMapper.updateById(groupInfo);
+    }
 }
