@@ -361,4 +361,16 @@ public class OpenApiClient {
     public static OpenApiResult<Void> syncChatroomAdminDistrAllByThirdUtchatTg() {
         return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SYNC_CHATROOM_ADMIN_DISTR_ALL, JSONObject.from(new Object()), Void.class);
     }
+
+    /**
+     * 比邻第三方(UtchatTG)：-查询号信息
+     *
+     * @return
+     */
+    public static OpenApiResult<List<ExtTgSelectRobotInfoListVO>> selectRobotInfoListByThirdUtchatTg(ThirdTgSelectRobotInfoListDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SELECT_ROBOT_INFO_LIST,
+                JSONObject.from(data),
+                new TypeReference<List<ExtTgSelectRobotInfoListVO>>(ExtTgSelectRobotInfoListVO.class) {
+                });
+    }
 }

@@ -52,6 +52,7 @@ public enum OpenApiEnum {
 
     THIRD_UTCHAT_TG_SYNC_CHATROOM_ADMIN_DISTR_ALL("utchatTg-同步全量黑群主信息", "/thirdparty/tgUtChat/syncChatroomAdminDistrAll", null),
 
+    THIRD_UTCHAT_TG_SELECT_ROBOT_INFO_LIST("utchatTg-查询号信息", "/thirdparty/tgUtChat/selectRobotInfoList", null),
     ;
 
     /**
