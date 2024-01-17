@@ -37,13 +37,18 @@ public enum OpenApiEnum {
     THIRD_KP_TG_BATCH_ROBOT_SIMPINFO("kpTg-获取hw账号基础信息", "/thirdparty/tgModule/batchRobotSimpInfo", null),
     THIRD_KP_TG_JOIN_USER("kpTg-应用机器人加入通讯录", "/thirdparty/tgRobot/joinUser", 1100910026),
 
-
+    //
     THIRD_KP_TG_SQL_TASK_SUBMIT("kpTg-SQL执行接口", "/thirdparty/tgModule/sqlTaskSubmit", null),
-
 
 
     // utchat接口
     THIRD_UTCHAT_TG_SELECT_ROBOT_LIST_BY_RADIO("utchatTg-查询分组下的机器号", "/thirdparty/tgUtChat/selectRobotListByRadio", null),
+
+    THIRD_UTCHAT_TG_SYNC_GROUP_MEMBER("utchatTg-查询分组下的机器号", "/thirdparty/tgUtChat/syncGroupMember", null),
+
+    THIRD_UTCHAT_TG_SELECT_GROUP_LIST("utchatTg-查询商家(机器号)的群", "/thirdparty/tgUtChat/selectGroupList", null),
+
+    THIRD_UTCHAT_TG_SELECT_GROUP_MEMBER_LIST("utchatTg-查询群成员", "/thirdparty/tgUtChat/selectGroupMemberList", null),
 
     ;
 

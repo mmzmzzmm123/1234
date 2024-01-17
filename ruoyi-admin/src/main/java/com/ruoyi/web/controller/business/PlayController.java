@@ -14,6 +14,7 @@ import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
+import com.ruoyi.system.domain.dto.play.QueryTaskProgressDTO;
 import com.ruoyi.system.domain.dto.play.SetSpeedDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.QueryConfoundLogVO;
@@ -133,9 +134,9 @@ public class PlayController extends BaseController {
     }
 
     @ApiOperation("任务进度")
-    @PostMapping("taskProgress/{playId}")
-    public R<PlayTaskProgressVO> taskProgress(@PathVariable String playId) {
-        return R.ok(playService.taskProgress(playId));
+    @PostMapping("taskProgress")
+    public R<PlayTaskProgressVO> taskProgress(@RequestBody QueryTaskProgressDTO dto) {
+        return R.ok(playService.taskProgress(dto));
     }
 
     @ApiOperation("炒群进度")
