@@ -217,6 +217,11 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         playMessageMapper.delete(new LambdaQueryWrapper<PlayMessage>().eq(PlayMessage::getPlayId, dto.getId()));
         savePlayMessage(dto.getId(), dto.getPlayMessageList(), dto.getSendMechanism());
 
+        //删除上传word文件缓存
+        if (StringUtils.isNotEmpty(dto.getFileId())) {
+            redisTemplate.delete(PLAY_FILE_CONTENT + dto.getFileId());
+        }
+
         return R.ok();
     }
 
