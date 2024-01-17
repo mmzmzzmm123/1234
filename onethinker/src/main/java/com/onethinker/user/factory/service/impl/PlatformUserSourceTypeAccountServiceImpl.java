@@ -12,6 +12,7 @@ import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.CacheEnum;
 import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.utils.PhoneUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.framework.web.service.SysLoginService;
 import com.ruoyi.system.service.ISysConfigService;
 import com.onethinker.user.domain.PlatformUser;
@@ -73,6 +74,9 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
 
     @Autowired
     private IImChatUserFriendService imChatUserFriendService;
+
+    @Autowired
+    private SysLoginService sysLoginService;
 
     private Logger logger = LoggerFactory.getLogger(PlatformUserSourceTypeAccountServiceImpl.class);
 
@@ -154,5 +158,10 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
         }
         // 保存5分钟
         redisCache.setCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + place + "_" + flag, String.valueOf(code), 5, TimeUnit.MINUTES);
+    }
+
+    @Override
+    public void logout() {
+        SecurityUtils.getUserId();
     }
 }

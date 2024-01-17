@@ -170,7 +170,7 @@ public class SysLoginService {
      * @return
      */
     public String loginFe(String dataId,String username,String password) {
-// 登录前置校验
+        // 登录前置校验
         loginPreCheck(username, password);
         // 用户验证
         Authentication authentication = null;

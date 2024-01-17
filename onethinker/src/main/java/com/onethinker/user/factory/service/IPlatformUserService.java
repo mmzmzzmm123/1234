@@ -29,4 +29,9 @@ public interface IPlatformUserService {
      * @param flag
      */
     void getCodeForForgetPassword(String place, String flag);
+
+    /**
+     * 退出登录
+     */
+    void logout();
 }

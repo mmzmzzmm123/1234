@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2024-01-16
  */
 @RestController
-@RequestMapping("/bk/weiInfo")
+@RequestMapping("/bk/webInfo")
 public class WebInfoController extends BaseController {
     @Autowired
     private IWebInfoService webInfoService;

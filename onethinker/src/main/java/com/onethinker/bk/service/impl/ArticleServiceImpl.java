@@ -2,9 +2,12 @@ package com.onethinker.bk.service.impl;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.onethinker.bk.vo.BaseRequestVO;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.onethinker.bk.mapper.ArticleMapper;
@@ -13,6 +16,8 @@ import com.onethinker.bk.service.IArticleService;
 import lombok.extern.log4j.Log4j2;
 import javax.annotation.Resource;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.util.ObjectUtils;
+
 /**
  * 文章Service业务层处理
  *
@@ -95,7 +100,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper,Article> imple
 
     @Override
     public List<Article> listArticle(BaseRequestVO baseRequestVO) {
-        return null;
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Objects.nonNull(baseRequestVO.getSearchKey()),Article::getArticleTitle,baseRequestVO.getSearchKey())
+                .eq(baseRequestVO.getStatus(),Article::getCommentStatus,baseRequestVO.getStatus())
+                .eq(Objects.nonNull(baseRequestVO.getLabelId()),Article::getLabelId,baseRequestVO.getLabelId())
+                .eq(Objects.nonNull(baseRequestVO.getSortId()),Article::getSortId,baseRequestVO.getSortId())
+                .orderByDesc(Article::getCreateTime);
+
+        List<Article> articles = articleMapper.selectList(queryWrapper);
+
+        return articles;
     }
 
     @Override
