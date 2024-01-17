@@ -96,16 +96,16 @@ public class Called1100910017DTO {
         private String userSerialNo;
 
         /**
-         * 姓氏
+         * 用户名
          */
         @JSONField(name = "first_name")
         private String firstName;
 
         /**
-         * 名字
+         * 用户姓氏
          */
-        @JSONField(name = "last_name")
-        private String lastName;
+        @JSONField(name = "user_name")
+        private String userName;
     }
 
 }
