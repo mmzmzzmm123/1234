@@ -17,7 +17,8 @@ import java.util.Collections;
 @Service
 public class RedisLuaWarningRobotLimiter implements InitializingBean, WarningRobotLimitService {
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    //private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate redisTemplate;
 
     DefaultRedisScript<Long> script;
 
@@ -33,9 +34,11 @@ public class RedisLuaWarningRobotLimiter implements InitializingBean, WarningRob
     @Override
     public Long getWarningRobotLimit(String key,Integer interval,Integer limitCount) {
         if (StringUtils.isEmpty(key) ) {
-            return 0l;
+            //return 0l;
+            return 0L;
         }
-        return redisTemplate.execute(script, Collections.singletonList(key),interval+"",limitCount+"");
+        //return redisTemplate.execute(script, Collections.singletonList(key),interval+"",limitCount+"");
+        return (Long) redisTemplate.execute(script, Collections.singletonList(key),interval+"",limitCount+"");
     }
 
 
