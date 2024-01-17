@@ -34,8 +34,5 @@ public class RuoYiApplication
                 " |  | \\ `'   /|   `-'  /           \n" +
                 " |  |  \\    /  \\      /           \n" +
                 " ''-'   `'-'    `-..-'              ");
-
-        SpringUtils.getBean(OpenApiClient.class).syncChatroomAdminDistrAllByThirdUtchatTg();
-
     }
 }
