@@ -14,7 +14,7 @@ public class ContentJson implements Serializable {
     @ApiModelProperty("消息内容")
     private String sMateContent;
 
-    @ApiModelProperty("消息类型: 2001 文字 2002 图片 2003 语音(只支持amr格式) 2004 视频 2005 链接 2006 好友名片 2010 文件 2013 小程序 2016 音乐 201姓名")
+    @ApiModelProperty("消息类型: 2001 文字 2002 图片 2003 语音(只支持amr格式) 2004 视频 2005 链接 2006 好友名片 2010 文件 2013 小程序 2016 音乐 201姓名 2017接粉号 2018自定义")
     private Integer momentTypeId;
 
     @ApiModelProperty("图片消息url ")

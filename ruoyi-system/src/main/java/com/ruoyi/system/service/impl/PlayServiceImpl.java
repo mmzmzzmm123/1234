@@ -69,13 +69,21 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         String playId = IdWorker.getIdStr();
 
         savePlay(dto, playId);
-        saveGroupPack(playId, dto.getGroupPack());
-        saveRobotPack(playId, dto.getPerformerList());
+
+        //外部群不能设置人设包装
+        if (dto.getGroupSource() == 0) {
+            saveGroupPack(playId, dto.getGroupPack());
+            saveRobotPack(playId, dto.getPerformerList());
+        }
 
         //插入剧本消息表
         savePlayMessage(playId, dto.getPlayMessageList(), dto.getSendMechanism());
 
         //todo 混淆处理
+
+        //todo 自定义不混淆消息, 从接粉号池随机取一个, 类型变为2017
+
+        //删除上传word文件缓存
         if (StringUtils.isNotEmpty(dto.getFileId())) {
             redisTemplate.delete(PLAY_FILE_CONTENT + dto.getFileId());
         }
@@ -278,7 +286,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         //todo 验证剧本状态
         super.update(null, new LambdaUpdateWrapper<Play>().eq(Play::getId, playId)
                 .set(Play::getAdMonitor, JSON.toJSONString(dto)));
-
+        //todo 调用接口同步配置 t_play_group_info by playId
         return R.ok();
     }
 
