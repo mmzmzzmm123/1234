@@ -56,7 +56,6 @@ public class TaskExecuteChainGroup {
 							.eq(PlayMessagePushDetail::getPlayMsgPushId, push.getId()));
 			executeChain.doExecute(new ExecutionParamContext(play, chatroomId, push, details, robotPackList));
 		}
-
 	}
 
 }

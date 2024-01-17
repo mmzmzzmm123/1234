@@ -5,11 +5,6 @@ import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPack;
-import com.ruoyi.common.enums.PlayLogTyper;
-import com.ruoyi.common.utils.spring.SpringUtils;
-import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
-import com.ruoyi.system.service.PlayExecutionLogService;
-
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -28,27 +23,4 @@ public class ExecutionParamContext {
 //	private final List<PlayGroupPack> playGroupPackList;
 
 	private final List<PlayRobotPack> playRobotPackList;
-
-	public void log(ExecutionParamContext context, PlayLogTyper logTyper, boolean success, String content , String robotId) {
-		PlayExecutionLog log = new PlayExecutionLog();
-		log.setGroupId(context.getChatroomId());
-		log.setPlayId(context.getMessagePush().getPlayId());
-		log.setState(success ? 0 : 1);
-		log.setType(logTyper);
-		log.setRobotId(robotId);
-		log.setContent(content);
-		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
-	}
-
-	public static void log(String playId, String groupId, PlayLogTyper logTyper, boolean success, String content, String robotId) {
-		PlayExecutionLog log = new PlayExecutionLog();
-		log.setGroupId(groupId);
-		log.setPlayId(playId);
-		log.setState(success ? 0 : 1);
-		log.setType(logTyper);
-		log.setContent(content);
-		log.setRobotId(robotId);
-		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
-	}
-
 }

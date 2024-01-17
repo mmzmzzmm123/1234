@@ -2,6 +2,9 @@ package com.ruoyi.system.components.prepare.multipack;
 
 import java.util.List;
 import java.util.Map;
+
+import org.springframework.util.CollectionUtils;
+
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
@@ -12,6 +15,8 @@ import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer.CallV
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer.CallValueStore;
 import com.ruoyi.system.mapper.PlayRobotPackLogMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * 处理 状态变动
  * 
@@ -19,6 +24,7 @@ import com.ruoyi.system.mapper.PlayRobotPackLogMapper;
  *
  */
 @SPI("StateJobProcessor")
+@Slf4j
 public class StateJobProcessor implements LogJobProcessor {
 
 	@Override
@@ -62,34 +68,37 @@ public class StateJobProcessor implements LogJobProcessor {
 			// 单个回调 失败
 			onPackMonitor.onPackFailed(data, ret.toString());
 		}
+		// 是否执行完成 刷新
+		datas = robotPackLogMapper
+				.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getIsFinish, 0));
 		// 分组
 		Map<String, List<PlayRobotPackLog>> group = ListTools.group(datas, f -> f.getRadioId());
 		for (String radioId : group.keySet()) {
 			List<PlayRobotPackLog> logs = group.get(radioId);
 			if (logs.size() < logs.get(0).getTotal().intValue()) {
-				// 还没有满
+				// 数据还没有插满
 				continue;
 			}
-			// 判断是否都完成
-			if (!PlayRobotPackLog.finished(logs)) {
-				// 还有没有回调的，继续等待
+			if (PlayRobotPackLog.unFinished(logs)) {
+				// 如果有一个 还在进行中（没有达到最大重试次数） 则 就还没有完成
 				continue;
 			}
 			// 回调完成
-			PlayRobotPackLog data = PlayRobotPackLog.findError(logs);
-			if (data == null) {
-				// 回调 成功
+			// 把这一组 都更新完成
+			PlayRobotPackLog update = new PlayRobotPackLog();
+			update.setIsFinish(1);
+			UpdateWrapper<PlayRobotPackLog> wrapper = new UpdateWrapper<>();
+			wrapper.lambda().eq(PlayRobotPackLog::getRadioId, radioId);
+			robotPackLogMapper.update(update, wrapper);
+			log.info("PlayRobotPackLog_更新完成 {}", radioId);
+			List<PlayRobotPackLog> failList = PlayRobotPackLog.listByError(logs);
+			if (CollectionUtils.isEmpty(failList)) {
+				// 全部都是成功， 代表成功
 				onRadioPackMonitor.onRadioPackSucceed(logs);
-				// 把这一组 都更新完成
-				PlayRobotPackLog update = new PlayRobotPackLog();
-				update.setIsFinish(1);
-				UpdateWrapper<PlayRobotPackLog> wrapper = new UpdateWrapper<>();
-				wrapper.lambda().eq(PlayRobotPackLog::getRadioId, radioId);
-				robotPackLogMapper.update(update, wrapper);
 				continue;
 			}
 			// 回调错误
-			onRadioPackMonitor.onRadioPackFailed(data);
+			onRadioPackMonitor.onRadioPackFailed(logs);
 		}
 
 	}

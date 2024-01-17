@@ -22,6 +22,8 @@ import com.ruoyi.system.components.prepare.ExecutionParamContext;
 import com.ruoyi.system.components.prepare.ExecutionResultContext;
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.components.spi.Settings;
+import com.ruoyi.system.service.PlayExecutionLogService;
+
 import lombok.extern.slf4j.Slf4j;
 
 @SPI("ManualPackingTask")
@@ -41,8 +43,10 @@ public class ManualPackingTask implements TaskExecution {
 
 	private R<String> packRobot(ExecutionParamContext context) {
 		if (CollectionUtils.isEmpty(context.getPlayRobotPackList())) {
-			return R.ok("设置无需包装");
+			return null;
 		}
+		final String playId = context.getPlay().getId() ;
+		
 		final Settings tgRobotImgSettings = ServiceLoader.load(Settings.class, "TgRobotImgSettings");
 
 		final Settings tgRobotNameSettings = ServiceLoader.load(Settings.class, "TgRobotNameSettings");
@@ -91,11 +95,9 @@ public class ManualPackingTask implements TaskExecution {
 				if (!StringUtils.isEmpty(robotPck.getPic())) {
 					PlayRobotPackLog ret = tgRobotImgSettings.set(param);
 					if (StringUtils.isEmpty(ret.getOpt())) {
-						context.log(context, PlayLogTyper.Robot_Settings, false, "[发言人包装-头像] 群("
-								+ context.getChatroomId() + ") 号(" + robot + ")同步请求失败, 原因:" + ret.getErrMsg() , robot);
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "头像", true);
 					} else {
-						context.log(context, PlayLogTyper.Robot_Settings, false, "[发言人包装-头像] 群("
-								+ context.getChatroomId() + ") 号(" + robot + ")请求成功，等待回调，操作码:" + ret.getOpt(), robot);
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(), "头像", true);
 					}
 					submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
 				}
@@ -104,24 +106,20 @@ public class ManualPackingTask implements TaskExecution {
 				if (!StringUtils.isEmpty(robotPck.getName()) || !StringUtils.isEmpty(robotPck.getSurname())) {
 					PlayRobotPackLog ret = tgRobotNameSettings.set(param);
 					if (StringUtils.isEmpty(ret.getOpt())) {
-						context.log(context, PlayLogTyper.Robot_Settings, false, "[发言人包装-姓名] 群("
-								+ context.getChatroomId() + ") 号(" + robot + ")同步请求失败, 原因:" + ret.getErrMsg(), robot);
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "姓名", true);
 					} else {
-						context.log(context, PlayLogTyper.Robot_Settings, false, "[发言人包装-姓名] 群("
-								+ context.getChatroomId() + ") 号(" + robot + ")请求成功，等待回调，操作码:" + ret.getOpt(), robot);
-						submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(), "姓名", true);
 					}
+					submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
 				}
 
 				// 设置 hash值 + 管理员
 				if (robotPck.getIsAdmin() != null && robotPck.getIsAdmin().intValue() == 1) {
 					PlayRobotPackLog ret = tgGroupHashSettings.set(param);
 					if (StringUtils.isEmpty(ret.getOpt())) {
-						context.log(context, PlayLogTyper.Robot_Settings, false, "[发言人包装-管理员（获取hash值）] 群("
-								+ context.getChatroomId() + ") 号(" + robot + ")同步请求失败, 原因:" + ret.getErrMsg(), robot);
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "管理员（获取hash值）", true);
 					} else {
-						context.log(context, PlayLogTyper.Robot_Settings, false, "[发言人包装-管理员（获取hash值）] 群("
-								+ context.getChatroomId() + ") 号(" + robot + ")请求成功，等待回调，操作码:" + ret.getOpt(), robot);
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(), "管理员（获取hash值）", true);
 					}
 					final String opt = ret.wrapOpt().getOpt();
 					submitList.add(ret.wrapRadio(radioId).wrapPushDetailId(detail.getId()));
@@ -163,6 +161,11 @@ public class ManualPackingTask implements TaskExecution {
 			}
 		}
 		return null;
+	}
+
+	public static void main(String[] args) {
+		String g = String.format("【发言人包装-头像】 群%s 号%s 同步请求失败，原因：%s", "ASDSAD","ASDASD","AA");
+		System.err.println(g);
 	}
 
 }

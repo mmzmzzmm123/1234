@@ -10,7 +10,7 @@ public interface OnRadioPackMonitor {
 	 * 
 	 * @param pack
 	 */
-	void onRadioPackSucceed(List<PlayRobotPackLog> dataList);
+	void onRadioPackSucceed(List<PlayRobotPackLog> succesList);
 
 	/**
 	 * 一组回调失败（只要有一个回调失败就是失败的）
@@ -18,5 +18,5 @@ public interface OnRadioPackMonitor {
 	 * @param pack
 	 * @param error
 	 */
-	void onRadioPackFailed(PlayRobotPackLog data);
+	void onRadioPackFailed(List<PlayRobotPackLog> failList);
 }
