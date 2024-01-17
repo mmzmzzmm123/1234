@@ -19,6 +19,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
+import com.ruoyi.system.domain.dto.play.QueryTaskProgressDTO;
 import com.ruoyi.system.domain.dto.play.SetSpeedDTO;
 import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.mapper.PlayGroupPackMapper;
@@ -303,37 +304,36 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
 
     @Override
-    public PlayTaskProgressVO taskProgress(String playId) {
-        if (StringUtils.isEmpty(playId)) {
+    public PlayTaskProgressVO taskProgress(QueryTaskProgressDTO dto) {
+        if (CollectionUtils.isEmpty(dto.getPlayIds())) {
             return null;
         }
-        List<PlayTaskProgressVO> taskProgressList = this.selectTaskProgress(Arrays.asList(playId));
+        List<PlayTaskProgressVO> taskProgressList = this.selectTaskProgress(dto.getPlayIds());
         return CollectionUtils.isEmpty(taskProgressList) ? null : taskProgressList.get(0);
     }
 
     private List<PlayTaskProgressVO> selectTaskProgress(List<String> playIds) {
-        List<PlayTaskProgressVO> voList = baseMapper.selectTaskProgress(playIds);
         // 查询群维度的统计数据
-        List<PlayTaskProgressVO> groupList = baseMapper.selectTaskGroupProgress(playIds);
-        Map<String, PlayTaskProgressVO> map = groupList.stream()
+        List<PlayTaskProgressVO> voList = baseMapper.selectTaskGroupProgress(playIds);
+        // 再查询群消息维度的数据
+        List<PlayTaskProgressVO> messageList = baseMapper.selectTaskProgress(playIds);
+        Map<String, PlayTaskProgressVO> messageMap = messageList.stream()
                 .collect(Collectors.toMap(PlayTaskProgressVO::getPlayId, Function.identity(), (k1, k2) -> k2));
+
         for (PlayTaskProgressVO vo : voList) {
-            PlayTaskProgressVO groupVO = map.get(vo.getPlayId());
-            if (groupVO == null) {
+            PlayTaskProgressVO messageVO = messageMap.get(vo.getPlayId());
+            if (messageVO == null) {
                 continue;
             }
-            vo.setGroupTotalNum(groupVO.getGroupTotalNum());
-            vo.setGroupCurrentNum(groupVO.getGroupCurrentNum());
+            vo.setTotalNum(messageVO.getTotalNum());
+            vo.setCurrentNum(messageVO.getCurrentNum());
+            vo.setSendSuccessNum(messageVO.getSendSuccessNum());
+            vo.setSendFailNum(messageVO.getSendFailNum());
 
-            vo.setPackTotalNum(groupVO.getPackTotalNum());
-            vo.setPackCurrentNum(groupVO.getPackCurrentNum());
-
-            vo.setJoinGroupTotalNum(groupVO.getJoinGroupTotalNum());
-            vo.setJoinGroupCurrentNum(groupVO.getJoinGroupCurrentNum());
-
-            vo.setGroupProgress(calculate(vo.getGroupTotalNum(), vo.getGroupCurrentNum()));
-            vo.setPackProgress(calculate(vo.getPackTotalNum(), vo.getPackCurrentNum()));
-            vo.setJoinGroupProgress(calculate(vo.getJoinGroupTotalNum(), vo.getJoinGroupCurrentNum()));
+            vo.setTotalProgress(this.calculate(vo.getTotalNum(), vo.getCurrentNum()));
+            vo.setGroupProgress(this.calculate(vo.getGroupTotalNum(), vo.getGroupCurrentNum()));
+            vo.setPackProgress(this.calculate(vo.getPackTotalNum(), vo.getPackCurrentNum()));
+            vo.setJoinGroupProgress(this.calculate(vo.getJoinGroupTotalNum(), vo.getJoinGroupCurrentNum()));
         }
         return voList;
     }

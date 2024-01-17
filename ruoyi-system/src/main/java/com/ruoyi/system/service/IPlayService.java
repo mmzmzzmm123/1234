@@ -8,6 +8,7 @@ import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
+import com.ruoyi.system.domain.dto.play.QueryTaskProgressDTO;
 import com.ruoyi.system.domain.dto.play.SetSpeedDTO;
 import com.ruoyi.system.domain.vo.play.*;
 
@@ -35,10 +36,10 @@ public interface IPlayService extends IService<Play> {
     /**
      * 任务进度
      *
-     * @param playId
+     * @param dto
      * @return
      */
-    PlayTaskProgressVO taskProgress(String playId);
+    PlayTaskProgressVO taskProgress(QueryTaskProgressDTO dto);
 
     /**
      * 炒群进度
