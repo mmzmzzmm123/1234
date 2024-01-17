@@ -50,6 +50,9 @@ public class PlayGroupInfo {
     @ApiModelProperty("炒群状态 0-待执行 1-炒群中 2-已完成 3-已暂停 4-已取消")
     private Integer state;
 
+    @ApiModelProperty("1入群中 2入群完成 3入群失败")
+    private Integer intoStatus;
+
     @ApiModelProperty("提示")
     private String tip;
 

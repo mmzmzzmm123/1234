@@ -8,4 +8,7 @@ public interface PlayGroupInfoMapper  extends BaseMapper<PlayGroupInfo> {
 
     public PlayGroupInfo selectGroupInfoById(@Param("tgGroupId")String tgGroupId);
 
+
+    public Integer selectSuccessGroupCount(@Param("playId")String playId);
+
 }
