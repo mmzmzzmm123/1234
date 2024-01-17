@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.dto.robot.*;
+import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 
 import java.util.List;
@@ -25,5 +26,13 @@ public interface IRobotService {
      * @return
      */
     R<Void> setGroupOwner(List<String> robotSerialNos);
+
+
+    /**
+     * 统计这些机器人的状态
+     * @param robotIds
+     * @return
+     */
+    RobotStatisticsVO getRobotStatisticsVO(List<String> robotIds);
 
 }

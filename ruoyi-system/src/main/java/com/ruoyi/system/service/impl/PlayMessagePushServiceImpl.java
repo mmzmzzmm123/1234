@@ -13,6 +13,9 @@ import com.ruoyi.common.enums.play.PushStateEnum;
 import com.ruoyi.system.components.RandomListPicker;
 import com.ruoyi.system.domain.PlayMessageConfoundLog;
 import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
+import com.ruoyi.system.domain.dto.play.QueryRobotDetailDTO;
+import com.ruoyi.system.domain.vo.play.QueryRobotDetailVO;
+import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.mapper.PlayMessageConfoundLogMapper;
 import com.ruoyi.system.mapper.PlayMessageMapper;
 import com.ruoyi.system.mapper.PlayMessagePushMapper;
@@ -275,6 +278,18 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         this.insertPushDetailConfound(playId, pushIds);
     }
 
+    @Override
+    public RobotStatisticsVO getRobotStatisticsVO(String playId) {
+        if (StringUtils.isEmpty(playId)){
+            return null;
+        }
+        return baseMapper.getRobotStatisticsVO(playId);
+    }
+
+    @Override
+    public List<QueryRobotDetailVO> robotDetails(QueryRobotDetailDTO dto) {
+        return baseMapper.robotDetails(dto);
+    }
 }
 
 

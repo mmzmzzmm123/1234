@@ -12,6 +12,7 @@ import com.ruoyi.common.core.domain.entity.robot.RobotStatistics;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.robot.*;
+import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 import com.ruoyi.system.mapper.GroupRobotMapper;
 import com.ruoyi.system.mapper.RobotMapper;
@@ -344,5 +345,13 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         }
         this.update(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo,robotSerialNos).set(Robot::getGroupOwner,1));
         return R.ok();
+    }
+
+    @Override
+    public RobotStatisticsVO getRobotStatisticsVO(List<String> robotIds) {
+        if (org.apache.commons.collections4.CollectionUtils.isEmpty(robotIds)){
+            return new RobotStatisticsVO();
+        }
+        return robotMapper.getRobotStatisticsVO(robotIds);
     }
 }

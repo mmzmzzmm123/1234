@@ -58,4 +58,17 @@
 
     </select>
 
+    <select id="getRobotStatisticsVO" resultType="com.ruoyi.system.domain.vo.play.RobotStatisticsVO">
+        SELECT
+            SUM( IF ( t1.seal_status = 30, 1, 0 ) ) AS robotClosureNum,
+            SUM( IF ( t1.bidirectional_type = 1, 1, 0 ) ) AS bidirectionalRobotNum
+        FROM
+            t_robot_info t1
+        WHERE
+            t1.robot_serial_no IN
+        <foreach collection="robotIds" item="robotId" open="(" separator="," close=")">
+            #{robotId}
+        </foreach>
+    </select>
+
 </mapper>
