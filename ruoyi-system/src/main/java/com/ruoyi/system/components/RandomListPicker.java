@@ -19,4 +19,10 @@ public class RandomListPicker {
         int index = random.nextInt(20);
         return index+10;
     }
+
+    public static  Integer getRandom(int start,int end){
+        Random random = new Random();
+        int index = random.nextInt(end-start);
+        return index+start;
+    }
 }

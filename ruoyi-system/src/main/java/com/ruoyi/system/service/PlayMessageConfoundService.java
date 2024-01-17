@@ -16,7 +16,7 @@ public interface PlayMessageConfoundService extends IService<PlayMessageConfound
      * 按剧本ID创建剧本消息混淆
      * @param playId
      */
-    void clearAndCreateConfound(Integer playId);
+    void clearAndCreateConfound(String playId);
 
     /**
      * 创建剧本消息混淆

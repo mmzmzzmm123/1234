@@ -25,4 +25,11 @@ public interface PlayRobotGroupRelationMapper extends BaseMapper<PlayRobotGroupR
     public  Integer removeRobotByGroup(@Param("groupId")String groupId,@Param("list")List<String> robots);
 
 
+    Integer updateRobotState(@Param("groupId")String groupId);
+
+    List<PlayRobotGroupRelation> selectWaitOutGroup();
+
+    Integer updateRobotOutState(@Param("groupId")String groupId,@Param("robotId")String robotId,@Param("state")Integer state);
+
+
 }

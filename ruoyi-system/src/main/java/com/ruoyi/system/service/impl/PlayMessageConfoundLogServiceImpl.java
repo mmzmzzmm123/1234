@@ -8,12 +8,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.constant.PlayConstants;
 import com.ruoyi.common.tools.UrlReplaceTools;
 import com.ruoyi.common.utils.ListTools;
+import com.ruoyi.system.callback.dto.Called1100850405DTO;
+import com.ruoyi.system.callback.dto.Called1100850508DTO;
 import com.ruoyi.system.callback.dto.CalledDTO;
 import com.ruoyi.system.domain.PlayMessageConfound;
 import com.ruoyi.system.domain.PlayMessageConfoundLog;
-import com.ruoyi.system.domain.data.Callback1100850405DATA;
-import com.ruoyi.system.domain.data.Callback1100850508DATA;
-import com.ruoyi.system.domain.data.InsertEventOutputDTO;
+import com.ruoyi.system.domain.dto.out.InsertEventOutputDTO;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
 import com.ruoyi.system.domain.vo.QueryConfoundLogVO;
@@ -147,15 +147,15 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             log.info("handleConfoundText confoundLog is null {}", inputDTO.getOptSerNo());
             return;
         }
-        Callback1100850405DATA data = JSONObject.parseObject(inputDTO.getData().toString(), Callback1100850405DATA.class);
-        if (data == null || CollectionUtils.isEmpty(data.getDiscrete_list())) {
+        Called1100850405DTO data = JSONObject.parseObject(inputDTO.getData().toString(), Called1100850405DTO.class);
+        if (data == null || CollectionUtils.isEmpty(data.getDiscreteList())) {
             confoundLog.setState(2);
             confoundLog.setFailMessage("回调无结果");
         } else {
             confoundLog.setState(1);
             confoundLog.setFailMessage("");
             String joiningRegex = PlayConstants.joiningRegex;
-            String resultContent = data.getDiscrete_list().stream()
+            String resultContent = data.getDiscreteList().stream()
                     .collect(Collectors.joining(joiningRegex));
             confoundLog.setResultContent(resultContent);
         }
@@ -170,8 +170,8 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             log.info("handleConfoundImg confoundLog is null {}", inputDTO.getOptSerNo());
             return;
         }
-        Callback1100850508DATA data = JSONObject.parseObject(inputDTO.getData().toString(), Callback1100850508DATA.class);
-        if (data == null || CollectionUtils.isEmpty(data.getDiscrete_list())) {
+        Called1100850508DTO data = JSONObject.parseObject(inputDTO.getData().toString(), Called1100850508DTO.class);
+        if (data == null || CollectionUtils.isEmpty(data.getDiscreteList())) {
             confoundLog.setState(2);
             confoundLog.setFailMessage("回调无结果");
         } else {
@@ -180,7 +180,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             String joiningRegex = PlayConstants.joiningRegex;
             List<String> contentList = new ArrayList<>();
 
-            for (String discrete : data.getDiscrete_list()) {
+            for (String discrete : data.getDiscreteList()) {
                 String replace = "";
                 int batchNum = 0;
                 do {
@@ -367,7 +367,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
                 }
                 confoundMap.put(confound.getId(), confound);
             }
-//            this.retryingConfusion(confoundLog, confound);
+            this.retryingConfusion(confoundLog, confound);
         }
     }
 }

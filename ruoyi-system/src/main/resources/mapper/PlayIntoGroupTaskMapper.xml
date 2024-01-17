@@ -4,13 +4,12 @@
 
 
     <insert id="batchInsert" parameterType="list">
-        insert into t_person_into_group_task (`id`,`group_url`, `into_type`, `person_id`, `task_state`, `create_time`,
-        `modify_time`,`fail_cause`,`merchant_id`,`group_id`,`user_name`,`phone`,`play_id`)
+        insert into t_person_into_group_task (`id`,`group_url`, `person_id`, `task_state`, `create_time`,
+        `modify_time`,`fail_cause`,`merchant_id`,`group_id`,`play_id`,`is_admin`,`is_error`)
         values
         <foreach item="item" collection="list" separator=",">
             (#{item.id},
             #{item.groupUrl},
-            #{item.intoType},
             #{item.personId},
             #{item.taskState},
             #{item.createTime},
@@ -18,9 +17,9 @@
             #{item.failCause},
             #{item.merchantId},
             #{item.groupId},
-            #{item.userName},
-            #{item.phone},
-            #{item.playId}
+            #{item.playId},
+            #{item.isAdmin},
+            #{item.isError}
             )
         </foreach>
     </insert>
@@ -96,4 +95,12 @@
     <update id="updateTaskByOutTime" >
         update t_person_into_group_task set task_state = 4,fail_cause = #{failCause} where task_state = 2 and  #{outTime} > modify_time
     </update>
-</mapper>
+
+    <select id="selectTaskByRetCount" resultType="java.lang.Integer">
+        select count(*) from t_person_into_group_task where retry_id = #{retId}
+    </select>
+    
+    <select id="selectIsErrorCount" resultType="java.lang.Integer">
+        select count(*) from t_person_into_group_task where group_url = #{groupUrl} and isError = 1
+    </select>
+ </mapper>

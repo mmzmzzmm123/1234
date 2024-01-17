@@ -12,15 +12,14 @@ import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
-import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
-import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
-import com.ruoyi.system.domain.dto.play.SetSpeedDTO;
+import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.QueryConfoundLogVO;
 import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.service.IPlayService;
 import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.PlayMessageConfoundLogService;
+import com.ruoyi.system.service.PlayMessagePushService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.validation.annotation.Validated;
@@ -44,6 +43,10 @@ public class PlayController extends BaseController {
 
     @Resource
     private PlayMessageConfoundLogService playMessageConfoundLogService;
+
+    @Resource
+    private PlayMessagePushService playMessagePushService;
+
 
     @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     @ApiOperation("创建炒群任务")
@@ -133,9 +136,9 @@ public class PlayController extends BaseController {
     }
 
     @ApiOperation("任务进度")
-    @PostMapping("taskProgress/{playId}")
-    public R<PlayTaskProgressVO> taskProgress(@PathVariable String playId) {
-        return R.ok(playService.taskProgress(playId));
+    @PostMapping("taskProgress")
+    public R<PlayTaskProgressVO> taskProgress(@RequestBody QueryTaskProgressDTO dto) {
+        return R.ok(playService.taskProgress(dto));
     }
 
     @ApiOperation("炒群进度")
@@ -170,11 +173,16 @@ public class PlayController extends BaseController {
         return R.ok();
     }
 
-    @ApiOperation("账号明细")
-    @PostMapping("robotDetailPage")
-    public R<Void> robotDetailPage() {
+    @ApiOperation("账号明细统计")
+    @PostMapping("robotStatistics/{playId}")
+    public R<RobotStatisticsVO> robotStatistics(@PathVariable String playId) {
+        return R.ok(playService.robotStatistics(playId));
+    }
 
-        return R.ok();
+    @ApiOperation("账号明细列表")
+    @PostMapping("robotDetails")
+    public R<List<QueryRobotDetailVO>> robotDetails(@RequestBody QueryRobotDetailDTO dto) {
+        return R.ok(playMessagePushService.robotDetails(dto));
     }
 
 

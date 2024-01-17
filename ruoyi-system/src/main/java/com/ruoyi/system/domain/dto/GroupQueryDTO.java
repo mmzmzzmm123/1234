@@ -20,6 +20,9 @@ public class GroupQueryDTO {
     @ApiModelProperty(value = "群数")
     private Integer groupNum;
 
+    @ApiModelProperty(value = "剧本id")
+    private String payId;
+
     @ApiModelProperty(value = "需要群主设置的管理员数")
     private Integer setAdminCount;
 

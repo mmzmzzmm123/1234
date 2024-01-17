@@ -12,12 +12,14 @@ import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.GroupPageInfoVO;
 import com.ruoyi.system.domain.vo.GroupResourceVO;
 import com.ruoyi.system.mapper.GroupInfoMapper;
+import com.ruoyi.system.openapi.model.output.ExtTgSelectGroupVO;
 import com.ruoyi.system.service.GroupInfoService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -81,8 +83,55 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
     }
 
     @Override
-    public List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode,List<String> excludeGroupId) {
+    public List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode, List<String> excludeGroupId) {
         return baseMapper.selectGroup(registrationDay == null ? null :
-                LocalDateTime.now().plusDays(-registrationDay), groupNum, countryCode,excludeGroupId);
+                LocalDateTime.now().plusDays(-registrationDay), groupNum, countryCode, excludeGroupId);
+    }
+
+    @Override
+    public void syncGroupInfo(List<GroupInfo> groupInfoList, List<ExtTgSelectGroupVO> utInfos) {
+        if (CollUtil.isEmpty(utInfos)) {
+            return;
+        }
+        Map<String, ExtTgSelectGroupVO> utInfoMap =
+                utInfos.stream().collect(Collectors.toMap(ExtTgSelectGroupVO::getChatroomSerialNo, p -> p));
+        groupInfoList.stream().filter(p -> utInfoMap.containsKey(p.getGroupSerialNo()))
+                .map(p -> {
+                    ExtTgSelectGroupVO vo = utInfoMap.get(p.getGroupSerialNo());
+                    GroupInfo update = new GroupInfo();
+                    update.setGroupId(p.getGroupId());
+                    update.setGroupInviteLink(vo.getInviteLink());
+                    update.setUpdateTime(LocalDateTime.now());
+                    return update;
+                }).collect(Collectors.toList());
+
+    }
+
+    @Override
+    public GroupInfo saveExternalGroup(String groupSerialNo, String groupName) {
+        GroupInfo groupInfo = new GroupInfo();
+        groupInfo.setGroupId(IdWorker.getIdStr());
+        groupInfo.setGroupSerialNo(groupSerialNo);
+        groupInfo.setGroupName(groupName);
+        groupInfo.setCreateType(20);
+        groupInfo.setCreateTime(LocalDateTime.now());
+        return groupInfo;
+    }
+
+    @Override
+    public GroupInfo getGroupBySerialNo(String serialNo) {
+        return baseMapper.selectOne(new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo, serialNo).last(" limit 1"));
+    }
+
+    @Override
+    public void changeGroupSerialNo(String oldGroupSerialNo, String newGroupSerialNo) {
+        GroupInfo groupBySerialNo = getGroupBySerialNo(oldGroupSerialNo);
+        if (groupBySerialNo == null) {
+            return;
+        }
+        GroupInfo groupInfo = new GroupInfo();
+        groupInfo.setGroupId(groupBySerialNo.getGroupId());
+        groupInfo.setGroupSerialNo(newGroupSerialNo);
+        baseMapper.updateById(groupInfo);
     }
 }

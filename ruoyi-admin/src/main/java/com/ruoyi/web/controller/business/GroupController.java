@@ -177,7 +177,7 @@ public class GroupController {
     public R<Void> syncInfo(@RequestBody GroupIdsDTO dto) {
         try {
             Assert.notEmpty(dto.getGroupIds(), "群不能为空");
-            groupService.syncInfo(groupInfoService.listByIds(dto.getGroupIds()));
+            groupService.syncInfo(groupInfoService.listByIds(dto.getGroupIds()), null);
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
@@ -274,7 +274,7 @@ public class GroupController {
     public R<Void> setType(@RequestBody GroupTypeSetDTO dto) {
         try {
             Assert.notEmpty(dto.getGroupIds(), "设置群类型的群不能为空");
-            groupService.setType(dto.getGroupIds(),dto.getGroupType());
+            groupService.setType(dto);
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
@@ -306,21 +306,44 @@ public class GroupController {
     @ApiOperation(value = "查询群内成员")
     @PostMapping("/queryMember")
     public R<Page<GroupMemberInfoVO>> queryMember(@RequestBody GroupMemberQueryDTO dto) {
-        //todo openApi接口 调用ut数据
-        return R.ok();
+        try {
+            return R.ok(groupService.queryMember(dto));
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
+        } catch (Exception e) {
+            String idWork = IdWorker.getIdStr();
+            log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(dto), e);
+            return R.fail("未知异常！ trace:" + idWork);
+        }
     }
 
     @ApiOperation(value = "同步群内成员")
     @PostMapping("/syncMember/{groupId}")
     public R<Void> syncMember(@PathVariable String groupId) {
-        //todo openApi接口 以ut身份请求数据
-        return R.ok();
+        try {
+            groupService.syncMember(groupId);
+            return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
+        } catch (Exception e) {
+            String idWork = IdWorker.getIdStr();
+            log.error("未知异常={},{} ", idWork, groupId, e);
+            return R.fail("未知异常！ trace:" + idWork);
+        }
     }
 
     @ApiOperation(value = "设置管理员")
     @PostMapping("/setAdmin")
     public R<Void> setAdmin(@RequestBody GroupAdminSetDTO dto) {
-        groupService.setAdmin(dto);
-        return R.ok();
+        try {
+            groupService.setAdmin(dto);
+            return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
+        } catch (Exception e) {
+            String idWork = IdWorker.getIdStr();
+            log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(dto), e);
+            return R.fail("未知异常！ trace:" + idWork);
+        }
     }
 }

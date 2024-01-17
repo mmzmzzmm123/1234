@@ -6,6 +6,16 @@
         select * from t_play_group_info where tg_group_id = #{tgGroupId}  and state = 1  and is_delete = 0 limit 1
     </select>
 
+    <select id="selectSuccessGroupCount" resultType="java.lang.Integer">
+        select * from t_play_group_info where play_id = #{playId} AND is_delete = 0 AND state = 0 AND into_status = 2
+    </select>
+
+    <select id="selectGroupInfoByPlayId" resultType="com.ruoyi.system.domain.dto.play.PlayGroupInfo">
+        select * from t_play_group_info where play_id = #{playId} AND is_delete = 0
+    </select>
 
 
+    <update id="updateGroupState" >
+        UPDATE t_play_group_info set is_delete = 1 where play_id = #{playId}
+    </update>
 </mapper>

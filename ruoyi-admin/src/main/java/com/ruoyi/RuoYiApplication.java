@@ -1,6 +1,7 @@
 package com.ruoyi;
 
 import com.alibaba.fastjson2.support.spring.http.converter.FastJsonHttpMessageConverter;
+import com.ruoyi.system.openapi.OpenApiClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;

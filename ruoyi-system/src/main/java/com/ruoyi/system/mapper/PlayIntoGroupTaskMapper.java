@@ -31,4 +31,9 @@ public interface PlayIntoGroupTaskMapper extends BaseMapper<PlayIntoGroupTask> {
 
     Integer updateTaskByOutTime(@Param("outTime") Date outTime, @Param("failCause")String failCause);
 
+
+    public Integer selectTaskByRetCount(@Param("retId")String retId);
+
+    public Integer selectIsErrorCount(@Param("groupUrl")String groupUrl);
+
 }

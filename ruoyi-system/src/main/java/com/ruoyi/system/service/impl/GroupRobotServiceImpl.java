@@ -44,12 +44,65 @@ public class GroupRobotServiceImpl extends ServiceImpl<GroupRobotMapper, GroupRo
     }
 
     @Override
-    public GroupRobot getRobot(String groupId) {
+    public void add(String robotSerialNo, String groupId) {
+        GroupRobot groupRobot = getGroupRobot(robotSerialNo, groupId);
+        if (groupRobot == null) {
+            GroupRobot add = new GroupRobot();
+            add.setId(IdWorker.getIdStr());
+            add.setGroupId(groupId);
+            add.setRobotId(robotSerialNo);
+            add.setBotType(0);
+            add.setMemberType(0);
+            baseMapper.insert(add);
+        }
+    }
+
+    private GroupRobot getGroupRobot(String robotSerialNo, String groupId) {
+        GroupRobot groupRobot = baseMapper.selectOne(new LambdaQueryWrapper<GroupRobot>()
+                .eq(GroupRobot::getGroupId, groupId)
+                .eq(GroupRobot::getRobotId, robotSerialNo)
+                .last(" limit 1"));
+        return groupRobot;
+    }
+
+    @Override
+    public void del(String robotSerialNo, String groupId) {
+        GroupRobot groupRobot = getGroupRobot(robotSerialNo, groupId);
+        if (groupRobot != null) {
+            baseMapper.deleteById(groupRobot.getId());
+        }
+    }
+
+
+    @Override
+    public GroupRobot getAdminRobot(String groupId) {
         return baseMapper.selectOne(new LambdaQueryWrapper<GroupRobot>()
                 .eq(GroupRobot::getGroupId, groupId)
                 .eq(GroupRobot::getBotType, 0)
                 .in(GroupRobot::getMemberType, 1, 2)
                 .orderByAsc(GroupRobot::getMemberType)
+                .last(" limit 1"));
+    }
+
+    @Override
+    public GroupRobot getAnyRobot(String groupId) {
+
+        GroupRobot adminRobot = getAdminRobot(groupId);
+        if (adminRobot != null) {
+            return adminRobot;
+        }
+        return baseMapper.selectOne(new LambdaQueryWrapper<GroupRobot>()
+                .eq(GroupRobot::getGroupId, groupId)
+                .eq(GroupRobot::getBotType, 0)
+                .eq(GroupRobot::getMemberType, 0)
+                .last(" limit 1"));
+    }
+
+    @Override
+    public GroupRobot getRobot(String groupId, String robotId) {
+        return baseMapper.selectOne(new LambdaQueryWrapper<GroupRobot>()
+                .eq(GroupRobot::getGroupId, groupId)
+                .eq(GroupRobot::getRobotId, robotId)
                 .last(" limit 1"));
     }
 }

@@ -6,10 +6,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.exception.GlobalException;
-import com.ruoyi.system.openapi.model.output.ApiClientVO;
-import com.ruoyi.system.openapi.model.output.ExtTgBatchRobotSimpInfoData;
-import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotByMerchantVO;
-import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
+import com.ruoyi.system.openapi.model.output.*;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.openapi.model.input.*;
@@ -230,14 +227,14 @@ public class OpenApiClient {
     }
 
 
-//    /**
-//     * 比邻第三方(开平TG)：-获取群信息
-//     *
-//     * @return
-//     */
-//    public static OpenApiResult<TgBaseOutputDTO> getChatroomInfoByThirdKpTg(ThirdTgGetChatroomInfoInputDTO data) {
-//        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_CHATROOM_INFO, JSONObject.from(data), TgBaseOutputDTO.class);
-//    }
+    /**
+     * 比邻第三方(开平TG)：-获取群信息
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> getChatroomInfoByThirdKpTg(ThirdTgGetChatroomInfoInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_CHATROOM_INFO, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
 
     /**
      * 比邻第三方(开平TG)：-设置群类型
@@ -311,5 +308,69 @@ public class OpenApiClient {
         return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SQL_TASK_SUBMIT, JSONObject.from(data), TgBaseOutputDTO.class);
     }
 
+    /**
+     * 比邻第三方(Utchat)：-同步群成员
+     *
+     * @return
+     */
+    public static OpenApiResult<Void> syncGroupMemberByThirdUtchatTg(ThirdTgSyncGroupMemberDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SYNC_GROUP_MEMBER, JSONObject.from(data), Void.class);
+    }
 
+    /**
+     * 比邻第三方(UtchatTG)：-查询群信息
+     *
+     * @return
+     */
+    public static OpenApiResult<List<ExtTgSelectGroupVO>> selectGroupListByThirdUtchatTg(ThirdTgSelectGroupListDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SELECT_GROUP_LIST,
+                JSONObject.from(data),
+                new TypeReference<List<ExtTgSelectGroupVO>>(ExtTgSelectGroupVO.class) {
+                });
+    }
+
+    /**
+     * 比邻第三方(UtchatTG)：-查询群成员
+     *
+     * @return
+     */
+    public static OpenApiResult<Page<ExtTgSelectGroupMemberVO>> selectGroupMemberListByThirdUtchatTg(ThirdTgSelectGroupMemberDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SELECT_GROUP_MEMBER_LIST,
+                JSONObject.from(data),
+                new TypeReference<Page<ExtTgSelectGroupMemberVO>>(ExtTgSelectGroupMemberVO.class) {
+                });
+    }
+
+    /**
+     * 比邻第三方(UtchatTG)：-查询全量黑群主信息
+     *
+     * @return
+     */
+    public static OpenApiResult<List<ExtTgTelegramDetChatroomAdminDistr>> selectChatroomAdminDistrAllByThirdUtchatTg() {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SELECT_CHATROOM_ADMIN_DISTR_ALL,
+                JSONObject.from(new Object()),
+                new TypeReference<List<ExtTgTelegramDetChatroomAdminDistr>>(ExtTgTelegramDetChatroomAdminDistr.class) {
+                });
+    }
+
+    /**
+     * 比邻第三方(UtchatTG)：-同步全量黑群主信息
+     *
+     * @return
+     */
+    public static OpenApiResult<Void> syncChatroomAdminDistrAllByThirdUtchatTg() {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SYNC_CHATROOM_ADMIN_DISTR_ALL, JSONObject.from(new Object()), Void.class);
+    }
+
+    /**
+     * 比邻第三方(UtchatTG)：-查询号信息
+     *
+     * @return
+     */
+    public static OpenApiResult<List<ExtTgSelectRobotInfoListVO>> selectRobotInfoListByThirdUtchatTg(ThirdTgSelectRobotInfoListDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SELECT_ROBOT_INFO_LIST,
+                JSONObject.from(data),
+                new TypeReference<List<ExtTgSelectRobotInfoListVO>>(ExtTgSelectRobotInfoListVO.class) {
+                });
+    }
 }

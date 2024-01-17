@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author 朱少波
@@ -15,6 +16,9 @@ import java.time.LocalDateTime;
 @Data
 @ApiModel("群内成员查询DTO")
 public class GroupMemberQueryDTO extends PageBaseDTO {
+
+    @ApiModelProperty(value = "群id")
+    private String groupId;
 
     @ApiModelProperty(value = "名称")
     private String fullName;
@@ -25,16 +29,13 @@ public class GroupMemberQueryDTO extends PageBaseDTO {
     @ApiModelProperty(value = "成员编号")
     private String memberId;
 
-    @ApiModelProperty(value = "手机号")
-    private String phone;
-
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "最后在线时间-开始")
-    private LocalDateTime wasOnlineStart;
+    private Date wasOnlineStart;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "最后在线时间-结束")
-    private LocalDateTime wasOnlineEnd;
+    private Date wasOnlineEnd;
 
     @ApiModelProperty(value = "成员身份 0普通 1群主 2管理员 9-bot")
     private Integer memberType;

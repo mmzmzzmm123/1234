@@ -61,9 +61,22 @@ public class GroupPageInfoVO {
     @ApiModelProperty(value = "群类型 10私密群 20公开群")
     private Integer groupType;
 
+    @Excel(name = "群类型", readConverterExp = "10=开平导入群,20=外部自建群")
+    @ApiModelProperty(value = "来源 10-开平导入群  20-外部自建群")
+    private Integer createType;
+
+    @Excel(name = "任务编号")
+    @ApiModelProperty(value = "任务编号")
+    private Integer playId;
+
+
     @Excel(name = "群主是否机器人", readConverterExp = "0=否,1=是")
     @ApiModelProperty(value = "群主是否机器人 0-否 1-是")
     private Integer leaderRobot;
+
+    @Excel(name = "是否黑群主", readConverterExp = "0=否,1=是")
+    @ApiModelProperty(value = "是否黑群主 0-否 1-是")
+    private Integer blackLeader;
 
     @Excel(name = "所属机器人-名字")
     @ApiModelProperty(value = "所属机器人-名字")

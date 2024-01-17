@@ -18,68 +18,102 @@ import lombok.Data;
 @TableName("t_group_monitor_info")
 @Data
 public class GroupMonitorInfo {
-    
+
     /**
-    * 群Id
-    */
+     * 群Id
+     */
     @ApiModelProperty(value = "群Id")
     @TableId
     private String groupId;
-    
+
     /**
-    * 检测bot id
-    */
+     * 检测bot id
+     */
     @ApiModelProperty(value = "检测bot id")
     @TableField("bot_id")
     private String botId;
-    
+
     /**
-    * 是否有bot检测 0-无 1-已有bot检测
-    */
-    @ApiModelProperty(value = "是否有bot检测 0-无 1-已有bot检测")
+     * 检测bot 用户名
+     */
+    @ApiModelProperty(value = "检测bot 用户名")
+    @TableField("bot_username")
+    private String botUsername;
+
+    /**
+     * 检测bot 机器人serial_no 开平编号
+     */
+    @ApiModelProperty(value = "检测bot 机器人serial_no 开平编号")
+    @TableField("bot_serial_no")
+    private String botSerialNo;
+
+    /**
+     * 是否有bot进群检查 0-否 1-有
+     */
+    @ApiModelProperty(value = "是否有bot进群检查 0-否 1-有")
     @TableField("bot_check")
     private Integer botCheck;
-    
+
     /**
-    * 原始官方群Id
-    */
+     * 邀请bot入群的机器人id
+     */
+    @ApiModelProperty(value = "邀请bot入群的机器人id")
+    @TableField("robot_id")
+    private String robotId;
+
+    /**
+     * 群配置的剧本id
+     */
+    @ApiModelProperty(value = "群配置的剧本id")
+    @TableField("bot_play_id")
+    private String botPlayId;
+
+    /**
+     * 是否设置广告监控 0-否 1-有
+     */
+    @ApiModelProperty(value = "是否设置广告监控 0-否 1-有")
+    @TableField("bot_ad_monitor")
+    private Integer botAdMonitor;
+
+    /**
+     * 原始官方群Id
+     */
     @ApiModelProperty(value = "原始官方群Id")
     @TableField("original_group_id")
     private String originalGroupId;
-    
+
     /**
-    * 群成员数
-    */
+     * 群成员数
+     */
     @ApiModelProperty(value = "群成员数")
     @TableField("member_count")
     private Integer memberCount;
-    
+
     /**
-    * 进群人数
-    */
+     * 进群人数
+     */
     @ApiModelProperty(value = "进群人数")
     @TableField("join_count")
     private Integer joinCount;
-    
+
     /**
-    * 退群人数
-    */
+     * 退群人数
+     */
     @ApiModelProperty(value = "退群人数")
     @TableField("exit_count")
     private Integer exitCount;
-    
+
     /**
-    * 链接进群人数
-    */
+     * 链接进群人数
+     */
     @ApiModelProperty(value = "链接进群人数")
     @TableField("link_join_count")
     private Integer linkJoinCount;
-    
+
     /**
-    * 群状态 0-正常 1-封群
-    */
+     * 群状态 0-正常 1-封群
+     */
     @ApiModelProperty(value = "群状态 0-正常 1-封群")
     @TableField("group_status")
     private Integer groupStatus;
-    
 }
