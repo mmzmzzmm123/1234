@@ -27,13 +27,13 @@
         <if test="dto.state != null">
             AND tpi.state = #{dto.state}
         </if>
-        <if test="dto.queryType != null and dto.queryValue != null and and dto.queryValue != ''">
+        <if test="dto.queryType != null and dto.queryValue != null and dto.queryValue != ''">
             <choose>
                 <when test="dto.queryType == 1">
-                    AND tpi.name = #{dto.queryValue}
+                    AND tpi.name liek concat('%',#{dto.queryValue},'%')
                 </when>
                 <when test="dto.queryType == 2">
-                    AND tpi.id liek concat('%',#{dto.queryValue},'%')
+                    AND tpi.id = #{dto.queryValue}
                 </when>
             </choose>
         </if>
