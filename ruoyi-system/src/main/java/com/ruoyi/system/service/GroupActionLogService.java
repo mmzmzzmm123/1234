@@ -11,4 +11,5 @@ import com.ruoyi.system.domain.GroupActionLog;
  */
 public interface GroupActionLogService extends IService<GroupActionLog> {
 
+    void handleActionResult(String id,  String optNo, boolean success, String msg);
 }

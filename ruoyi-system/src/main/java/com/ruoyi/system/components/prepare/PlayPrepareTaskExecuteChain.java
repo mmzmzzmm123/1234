@@ -1,10 +1,10 @@
 package com.ruoyi.system.components.prepare;
 
 import java.util.LinkedList;
-import java.util.List;
 import org.springframework.stereotype.Component;
+import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
 import com.ruoyi.common.utils.spi.ServiceLoader;
-import com.ruoyi.system.components.multipack.OnPackMonitor;
+import com.ruoyi.system.components.prepare.multipack.OnPackMonitor;
 import com.ruoyi.system.components.prepare.spi.ComplateTask;
 import com.ruoyi.system.components.prepare.spi.TaskExecution;
 
@@ -15,7 +15,7 @@ import com.ruoyi.system.components.prepare.spi.TaskExecution;
  *
  */
 @Component
-public class PlayPrepareTaskExecuteChain implements ChainManager{
+public class PlayPrepareTaskExecuteChain implements OnPackMonitor {
 
 	private final LinkedList<TaskExecution> chain = new LinkedList<>();
 
@@ -40,8 +40,7 @@ public class PlayPrepareTaskExecuteChain implements ChainManager{
 		return null;
 	}
 
-	@Override
-	public void moveNext(ExecutionParamContext context) {
+	public void doExecute(ExecutionParamContext context) {
 		if (!chain.isEmpty()) {
 			return;
 		}
@@ -55,10 +54,25 @@ public class PlayPrepareTaskExecuteChain implements ChainManager{
 		}
 		if (ctx.continued()) {
 			// 链条 继续 执行
-			moveNext(context);
+			doExecute(context);
 			return;
 		}
 		// 等待回调
+	}
+
+	@Override
+	public void onPackSucceed(PlayRobotPackLog log) {
+		// 单个 回调 执行 成功
+		if (log.getOp().intValue() == 1) {
+			// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群管理员
+//			ExecutionParamContext.log(playId, groupId, logTyper, success, content);
+		}
+	}
+
+	@Override
+	public void onPackFailed(PlayRobotPackLog log, String error) {
+		// TODO Auto-generated method stub
+
 	}
 
 //	@Override
