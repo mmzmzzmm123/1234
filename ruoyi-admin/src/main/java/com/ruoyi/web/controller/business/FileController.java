@@ -21,12 +21,20 @@ public class FileController {
     @ApiOperation(value = "解析剧本word文件内容")
     @PostMapping("/analysis/playWord")
     public R<WordPageDTO> analysisPlayWord(@RequestParam(value = "file") MultipartFile file) {
-        return R.ok(analysisFileService.analysisPlayWord(file));
+        try {
+            return R.ok(analysisFileService.analysisPlayWord(file));
+        } catch (Exception e) {
+            return R.fail(e.getMessage());
+        }
     }
 
     @ApiOperation(value = "获取上传的剧本word文件内容")
     @PostMapping("/playWord")
     public R<AnalysisPlayFileVO> playWordContentList(@RequestBody WordPageDTO dto) {
-        return R.ok(analysisFileService.playWordContentList(dto));
+        try {
+            return R.ok(analysisFileService.playWordContentList(dto));
+        } catch (Exception e) {
+            return R.fail(e.getMessage());
+        }
     }
 }
