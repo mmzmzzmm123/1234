@@ -1,41 +1,39 @@
 package com.ruoyi.system.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.dto.play.WordPageDTO;
+import com.ruoyi.common.core.domain.entity.play.PlayFile;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.WordUtil;
 import com.ruoyi.system.domain.vo.AnalysisPlayFileVO;
+import com.ruoyi.system.mapper.PlayFileMapper;
+import com.ruoyi.system.service.impl.PlayFileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataAccessException;
-import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.SessionCallback;
-import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
-import static com.ruoyi.common.constant.RedisKeyConstans.PLAY_FILE_CONTENT;
 
 @Slf4j
 @Service
 public class AnalysisFileService {
+    //@Autowired
+    //private RedisTeplate redisTemplate;
+
     @Autowired
-    private RedisTemplate redisTemplate;
+    private PlayFileService playFileService;
+
+    @Autowired
+    private PlayFileMapper playFileMapper;
 
     /**
      * 解析剧本文件,返回id
      */
     public WordPageDTO analysisPlayWord(MultipartFile file) {
-        long time = System.currentTimeMillis();
-
         WordPageDTO pageDTO = new WordPageDTO();
-
         List<String> tmpData = WordUtil.readWordDocument(file);
         if (tmpData.isEmpty()) {
             pageDTO.setPage(0);
@@ -44,71 +42,107 @@ public class AnalysisFileService {
         }
 
         //合并发言
-        List<List<String>> playFileContent = new ArrayList<>();
-        int index = 0;
-        for (String item : tmpData) {
-            List<String> tmp;
-            if (item.startsWith(WordUtil.spokesman_regex)) {
-                tmp = new ArrayList<>();
-                tmp.add(item);
-                playFileContent.add(index++, tmp);
-            } else {
-                if (playFileContent.isEmpty()) {
-                    tmp = new ArrayList<>();
-                    tmp.add(item);
-                    playFileContent.add(index++, tmp);
+//        List<List<String>> playFileContent = new ArrayList<>();
+//        int index = 0;
+//        for (String item : tmpData) {
+//            List<String> tmp;
+//            if (item.startsWith(WordUtil.spokesman_regex)) {
+//                tmp = new ArrayList<>();
+//                tmp.add(item);
+//                playFileContent.add(index++, tmp);
+//            } else {
+//                if (playFileContent.isEmpty()) {
+//                    tmp = new ArrayList<>();
+//                    tmp.add(item);
+//                    playFileContent.add(index++, tmp);
+//                    continue;
+//                }
+//                //上一个发言人的数据
+//                index--;
+//                tmp = playFileContent.get(index);
+//                tmp.add(item);
+//                playFileContent.set(index++, tmp);
+//            }
+//        }
+
+        String fileId = Ids.getId();
+        List<PlayFile> playFileList = new ArrayList<>();
+        long time = System.currentTimeMillis();
+        try {
+            int no = 0;
+            for (String item : tmpData) {
+                item = item.trim();
+                if (item.isEmpty()) {
                     continue;
                 }
-                //上一个发言人的数据
-                index--;
-                tmp = playFileContent.get(index);
-                tmp.add(item);
-                playFileContent.set(index++, tmp);
+
+                // todo 判断是否另一个发言人
+                if (item.startsWith(WordUtil.spokesman_regex)) {
+                    no++;
+                }
+
+                PlayFile playFile = new PlayFile();
+                playFile.setFileId(fileId);
+                playFile.setContent(item);
+                playFile.setContentNo(no);
+                playFileList.add(playFile);
             }
+
+            playFileService.saveBatch(playFileList);
+        } catch (Exception e) {
+            log.error("analysisPlayWord");
         }
 
-        long time1 = System.currentTimeMillis();
-        pageDTO.setRedaFileTime(time1 - time);
-
-        String id = Ids.getId();
-        saveAnalysisPlayFile(id, playFileContent);
-        pageDTO.setSaveFileTime(System.currentTimeMillis() - time1);
+        pageDTO.setSaveFileTime(System.currentTimeMillis() - time);
 
         //分页计算, 每页小于1m
         int page = (int) ((file.getSize() / 1024 / 512) + 1);
         int size = tmpData.size() / page;
 
-        pageDTO.setFileId(id);
+        pageDTO.setFileId(fileId);
+        pageDTO.setStartIndex(0);
         pageDTO.setPage(page);
         pageDTO.setPageSize(size);
         return pageDTO;
     }
 
     private void saveAnalysisPlayFile(String id, List<List<String>> playFileContent) {
-        try {
-            SessionCallback sessionCallback = new SessionCallback() {
-                @Override
-                public Object execute(RedisOperations redisOperations) throws DataAccessException {
-                    redisOperations.multi();
-
-                    int no = 0;
-                    for (List<String> items : playFileContent) {
-                        for (String item : items) {
-                            redisTemplate.opsForZSet().add(PLAY_FILE_CONTENT + id, item, no);
-                        }
-                        no++;
-                    }
-
-                    return redisOperations.exec();
-                }
-            };
-
-            redisTemplate.multi();
-            Object obj = redisTemplate.execute(sessionCallback);
-            System.out.println(obj);
-        } catch (Exception e) {
-            log.error("analysisPlayWord:{}", e.getMessage());
-        }
+//        try {
+//            int no = 0;
+//            for (List<String> items : playFileContent) {
+//                for (String item : items) {
+//                    item = item.trim();
+//                    if (item.isEmpty()) {
+//                        continue;
+//                    }
+//                    Boolean r = redisTemplate.opsForZSet().add(PLAY_FILE_CONTENT + id, item, no);
+//                    if (r == false) {
+//                        System.out.println(r);
+//                    }
+//                }
+//                no++;
+//            }
+//            redisTemplate.multi();
+//            Object obj = redisTemplate.execute(new SessionCallback() {
+//                @Override
+//                public Object execute(RedisOperations redisOperations) throws DataAccessException {
+//                    redisOperations.multi();
+//
+//                    int no = 0;
+//                    for (List<String> items : playFileContent) {
+//                        for (String item : items) {
+//                            redisTemplate.opsForZSet().add(PLAY_FILE_CONTENT + id, item, no);
+//                        }
+//                        no++;
+//                    }
+//
+//                    return redisOperations.exec();
+//                }
+//            });
+//            System.out.println(obj);
+//        } catch (Exception e) {
+//            log.error("analysisPlayWord:{}", e.getMessage());
+//        }
     }
 
     public AnalysisPlayFileVO playWordContentList(WordPageDTO pageDTO) {
@@ -116,27 +150,45 @@ public class AnalysisFileService {
 
         ret.setFileId(pageDTO.getFileId());
         ret.setPageSize(pageDTO.getPageSize());
+        ret.setStartIndex(-1);
         if (StringUtils.isEmpty(pageDTO.getFileId())) {
-            ret.setContentInfoList(new ArrayList<>());
-            return ret;
-        }
-
-        long start = (long) (pageDTO.getPage() - 1) * pageDTO.getPageSize();
-        long end = (long) pageDTO.getPage() * pageDTO.getPageSize() - 1;
-        Set<ZSetOperations.TypedTuple<Object>> stringSet = redisTemplate.opsForZSet().rangeWithScores(PLAY_FILE_CONTENT + pageDTO.getFileId(), start, end);
-        if (null == stringSet) {
-            ret.setContentInfoList(new ArrayList<>());
             return ret;
         }
 
         List<AnalysisPlayFileVO.ContentInfo> contentInfoList = new ArrayList<>();
-        for (ZSetOperations.TypedTuple<Object> item : stringSet) {
+
+//        long start = (long) (pageDTO.getPage() - 1) * pageDTO.getPageSize();
+//        long end = (long) pageDTO.getPage() * pageDTO.getPageSize() - 1;
+//        Set<ZSetOperations.TypedTuple<Object>> stringSet = redisTemplate.opsForZSet().rangeWithScores(PLAY_FILE_CONTENT + pageDTO.getFileId(), start, end);
+//        if (null == stringSet) {
+//            ret.setContentInfoList(new ArrayList<>());
+//            return ret;
+//        }
+//
+//
+//        for (ZSetOperations.TypedTuple<Object> item : stringSet) {
+//            AnalysisPlayFileVO.ContentInfo contentInfo = new AnalysisPlayFileVO.ContentInfo();
+//            contentInfo.setNo(Objects.requireNonNull(item.getScore()).intValue());
+//            contentInfo.setContent(Objects.requireNonNull(item.getValue()).toString());
+//            contentInfoList.add(contentInfo);
+//        }
+
+        List<PlayFile> playFileList = playFileMapper.selectList(new QueryWrapper<PlayFile>().lambda()
+                .eq(PlayFile::getFileId, pageDTO.getFileId())
+                .gt(PlayFile::getId, pageDTO.getStartIndex())
+                .last(" limit " + pageDTO.getPageSize()));
+        if (null == playFileList || playFileList.isEmpty()) {
+            return ret;
+        }
+
+        for (PlayFile playFile : playFileList) {
             AnalysisPlayFileVO.ContentInfo contentInfo = new AnalysisPlayFileVO.ContentInfo();
-            contentInfo.setNo(Objects.requireNonNull(item.getScore()).intValue());
-            contentInfo.setContent(Objects.requireNonNull(item.getValue()).toString());
+            contentInfo.setContent(playFile.getContent());
+            contentInfo.setNo(playFile.getContentNo());
             contentInfoList.add(contentInfo);
         }
 
+        ret.setStartIndex(playFileList.get(playFileList.size()-1).getId());
         ret.setContentInfoList(contentInfoList);
         return ret;
     }
