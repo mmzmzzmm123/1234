@@ -8,7 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class ExtTgSelectGroupByMerchantVO {
+public class ExtTgSelectGroupVO {
 
     @ApiModelProperty("群编号")
     private String chatroomSerialNo;
@@ -24,18 +24,6 @@ public class ExtTgSelectGroupByMerchantVO {
     private Date updateTime;
     @ApiModelProperty("头像")
     private String headImgUrl;
-    private String robotSerialNo;
-    @ApiModelProperty("机器人信息列表")
-    private List<ExtTgEasyRobotInfo> robots = Lists.newArrayList();
-
-    @Data
-    public static class ExtTgEasyRobotInfo {
-        @ApiModelProperty("机器人编号")
-        private String robotSerialNo;
-        @ApiModelProperty("名字")
-        private String firstName;
-        @ApiModelProperty("姓氏")
-        private String lastName;
-        private String chatroomSerialNo;
-    }
+    @ApiModelProperty("邀请链接")
+    private String inviteLink;
 }

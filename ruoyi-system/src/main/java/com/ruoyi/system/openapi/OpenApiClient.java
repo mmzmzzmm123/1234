@@ -318,14 +318,14 @@ public class OpenApiClient {
     }
 
     /**
-     * 比邻第三方(UtchatTG)：-查询商家(机器号)的群
+     * 比邻第三方(UtchatTG)：-查询群信息
      *
      * @return
      */
-    public static OpenApiResult<Page<ExtTgSelectGroupByMerchantVO>> selectGroupListByThirdUtchatTg(ThirdTgSelectGroupByMerchantDTO data) {
+    public static OpenApiResult<List<ExtTgSelectGroupVO>> selectGroupListByThirdUtchatTg(ThirdTgSelectGroupListDTO data) {
         return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SELECT_GROUP_LIST,
                 JSONObject.from(data),
-                new TypeReference<Page<ExtTgSelectGroupByMerchantVO>>(ExtTgSelectGroupByMerchantVO.class) {
+                new TypeReference<List<ExtTgSelectGroupVO>>(ExtTgSelectGroupVO.class) {
                 });
     }
 
