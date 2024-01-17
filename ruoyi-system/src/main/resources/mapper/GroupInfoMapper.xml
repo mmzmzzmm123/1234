@@ -129,6 +129,8 @@
            and tgs.group_status = 0
            and tgs.group_used = 0
            and tgmi.bot_check = 1
+           and robot.enable_type = 1
+           and robot.recycle_status =0
         <if test="registrationDay != null ">
             AND tgi.registration_time <![CDATA[ <= ]]>  #{registrationDay}
         </if>

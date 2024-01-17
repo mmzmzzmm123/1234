@@ -11,11 +11,10 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
 import com.ruoyi.common.core.redis.RedisLock;
+import com.ruoyi.common.enums.GroupAction;
+import com.ruoyi.common.enums.InviteBotAction;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.system.domain.GroupActionLog;
-import com.ruoyi.system.domain.GroupInfo;
-import com.ruoyi.system.domain.GroupMonitorInfo;
-import com.ruoyi.system.domain.GroupRobot;
+import com.ruoyi.system.domain.*;
 import com.ruoyi.system.domain.dto.GroupAdminSetDTO;
 import com.ruoyi.system.domain.dto.GroupQueryDTO;
 import com.ruoyi.system.domain.dto.GroupUpdateInfoDTO;
@@ -23,10 +22,7 @@ import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.GroupResourceVO;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
-import com.ruoyi.system.openapi.model.input.ThirdTgModifyChatroomHeadImageInputDTO;
-import com.ruoyi.system.openapi.model.input.ThirdTgModifyChatroomNameInputDTO;
-import com.ruoyi.system.openapi.model.input.ThirdTgSetChatroomAdminInputDTO;
-import com.ruoyi.system.openapi.model.input.ThirdTgSetChatroomTypeInputDTO;
+import com.ruoyi.system.openapi.model.input.*;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.system.service.*;
 import lombok.AllArgsConstructor;
@@ -36,13 +32,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -72,6 +68,8 @@ public class GroupService {
     private final RobotStatisticsService robotStatisticsService;
 
     private final GroupActionLogService groupActionLogService;
+
+    private final GroupBatchActionService groupBatchActionService;
 
     /**
      * 选群
@@ -215,11 +213,156 @@ public class GroupService {
         return count;
     }
 
+
+    public void handleActionResult(String id, String optNo, boolean success, String msg, Object data) {
+        if (StrUtil.isBlank(id)) {
+            return;
+        }
+        handleActionResult(groupActionLogService.getById(optNo), optNo, success, msg, data);
+    }
+
+    public void handleActionResult(GroupActionLog groupActionLog, String optNo, boolean success, String msg, Object data) {
+        if (groupActionLog == null) {
+            return;
+        }
+        groupActionLogService.handleActionResult(groupActionLog.getId(), optNo, success, msg);
+        //无操作动作记录 或者无批量id 直接返回
+        if (StrUtil.isBlank(groupActionLog.getBatchId())) {
+            return;
+        }
+        if (success) {
+            GroupBatchAction groupBatch = groupBatchActionService.getById(groupActionLog.getBatchId());
+            if (ObjectUtil.equal(0, groupBatch.getSetType())) {
+                doNextInvitingBotJoinAction(groupBatch, groupActionLog, data);
+            } else {
+                groupBatchActionService.updateStatus(groupActionLog.getBatchId(), 2);
+            }
+        } else {
+            groupBatchActionService.updateStatus(groupActionLog.getBatchId(), 1);
+        }
+    }
+
+    public void doNextInvitingBotJoinAction(GroupBatchAction groupBatch, GroupActionLog groupActionLog, Object data) {
+
+    }
+
+
     public boolean invitingBotJoin(GroupInfo groupInfo, GroupRobot groupRobot) {
+        if (groupRobot == null) {
+            return false;
+        }
+
         //todo 邀请bot进群逻辑
+        String key = "invitingBotJoin:" + groupInfo.getGroupId();
+        RLock lock = redisLock.lock(key);
+        if (!lock.isLocked()) {
+            return false;
+        }
+        try {
+            //当前是否有批次任务执行邀请bot进群检测
+            GroupBatchAction batchAction = groupBatchActionService.getBatchAction(groupInfo.getGroupId(), 0);
+            if (batchAction != null) {
+                //上次邀请bot进群动作 已超过10分钟没结果  认为是失败
+                if (Duration.between(batchAction.getLastActionTime(), LocalDateTime.now()).toMinutes() > 10) {
+                    groupBatchActionService.updateStatus(batchAction.getBatchId(), 1);
+                } else {
+                    return false;
+                }
+            }
+
+            //todo  获取bot
+
+            InviteBotAction inviteBotAction = InviteBotAction.getAction(0);
+
+            //初始化批量任务动作
+            GroupBatchAction action = new GroupBatchAction();
+            action.setBatchId(IdWorker.getIdStr());
+            action.setSetType(inviteBotAction.getCode());
+            action.setActionProgress(0);
+            action.setRetryCount(0);
+            action.setGroupId(groupInfo.getGroupId());
+            action.setLastActionTime(LocalDateTime.now());
+            action.setCreateTime(LocalDateTime.now());
+            action.setBatchStatus(0);
+            groupBatchActionService.save(action);
+
+            //执行搜索BOT操作
+            setAction(inviteBotAction.getAction(), groupInfo, groupRobot, action.getBatchId(), "", actionId -> {
+                        ThirdTgSearchKeywordInputDTO input = new ThirdTgSearchKeywordInputDTO();
+                        input.setKeyword("");
+                        input.setTgRobotId(groupRobot.getRobotId());
+                        input.setExtend(actionId);
+                        return input;
+                    },
+                    OpenApiClient::searchKeywordByThirdKpTg);
+
+        } finally {
+            lock.unlock();
+        }
+        return true;
+    }
+
+    public void BindInvitingBotAction(InviteBotAction inviteBotAction,
+                                      GroupActionLog lastActionLog, Object actionCallbackData,
+                                      GroupInfo groupInfo, GroupRobot groupRobot) {
 
 
-        return false;
+    }
+
+    public void runAction(String batchId, GroupAction action, GroupInfo groupInfo, GroupRobot groupRobot, String value) {
+        switch (action) {
+            case SEARCH_BOT:
+                setAction(action, groupInfo, groupRobot, batchId, "", actionId -> {
+                            ThirdTgSearchKeywordInputDTO input = new ThirdTgSearchKeywordInputDTO();
+                            input.setKeyword(value);
+                            input.setTgRobotId(groupRobot.getRobotId());
+                            input.setExtend(actionId);
+                            return input;
+                        },
+                        OpenApiClient::searchKeywordByThirdKpTg);
+                break;
+            case ADD_BOT:
+                setAction(action, groupInfo, groupRobot, batchId, "", actionId -> {
+                            ThirdTgJoinUserInputDTO input = new ThirdTgJoinUserInputDTO();
+                            input.setFriendSerialNo(value);
+                            input.setTgRobotId(groupRobot.getRobotId());
+                            input.setExtend(actionId);
+                            return input;
+                        },
+                        OpenApiClient::joinUserByThirdKpTg);
+                break;
+            case INVITE_BOT_JOIN_GROUP:
+                setAction(action, groupInfo, groupRobot, batchId, "", actionId -> {
+                            ThirdTgInviteJoinChatroomInputDTO input = new ThirdTgInviteJoinChatroomInputDTO();
+                            input.setMemberSerialNo(value);
+                            input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+                            input.setTgRobotId(groupRobot.getRobotId());
+                            input.setExtend(actionId);
+                            return input;
+                        },
+                        OpenApiClient::inviteJoinChatroomByThirdKpTg);
+                break;
+            case SET_GROUP_ADMIN:
+                setAction(action, groupInfo, groupRobot, batchId, "", actionId -> {
+                            ThirdTgSetChatroomAdminInputDTO input = new ThirdTgSetChatroomAdminInputDTO();
+                            input.setTgRobotId(groupRobot.getRobotId());
+                            input.setExtend(actionId);
+                            input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+                            input.setMemberSerialNo(value);
+                            input.setIsAll(true);
+                            input.setChangeInfo(true);
+                            input.setDeleteMessages(true);
+                            input.setBanUsers(true);
+                            input.setInviteUsers(true);
+                            input.setPinMessages(true);
+                            input.setManageCall(true);
+                            input.setAnonymous(true);
+                            input.setAddAdmins(true);
+                            return input;
+                        },
+                        OpenApiClient::setChatroomAdminByThirdKpTg);
+                break;
+        }
     }
 
     public List<GroupResourceVO> analysisExcelInfo(MultipartFile file) {
@@ -262,11 +405,12 @@ public class GroupService {
                     nameIndex = 0;
                 }
                 String name = dto.getImageUrls().get(nameIndex++);
-                setAction(1, groupInfo, robot, "", name, () -> {
+                setAction(GroupAction.SET_GROUP_NAME, groupInfo, robot, "", name, actionId -> {
                             ThirdTgModifyChatroomNameInputDTO input = new ThirdTgModifyChatroomNameInputDTO();
                             input.setTgRobotId(robot.getRobotId());
                             input.setChatroomSerialNo("");
                             input.setChatroomNameBase64(Base64.encode(name));
+                            input.setExtend(actionId);
                             return input;
                         },
                         OpenApiClient::modifyChatroomNameByThirdKpTg);
@@ -277,11 +421,12 @@ public class GroupService {
                     imageIndex = 0;
                 }
                 String url = dto.getImageUrls().get(imageIndex++);
-                setAction(0, groupInfo, robot, "", url, () -> {
+                setAction(GroupAction.SET_GROUP_IMAGE, groupInfo, robot, "", url, actionId -> {
                             ThirdTgModifyChatroomHeadImageInputDTO input = new ThirdTgModifyChatroomHeadImageInputDTO();
                             input.setTgRobotId(robot.getRobotId());
                             input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
                             input.setUrl(url);
+                            input.setExtend(actionId);
                             return input;
                         },
                         OpenApiClient::modifyChatroomHeadImageByThirdKpTg);
@@ -299,12 +444,13 @@ public class GroupService {
         Assert.notEmpty(groupInfos, "群类型无法更改");
         for (GroupInfo groupInfo : groupInfos) {
             GroupRobot robot = groupRobotService.getRobot(groupInfo.getGroupId());
-            setAction(2, groupInfo, robot, "", groupType + "", () -> {
+            setAction(GroupAction.SET_GROUP_TYPE, groupInfo, robot, "", groupType + "", actionId -> {
                         ThirdTgSetChatroomTypeInputDTO input = new ThirdTgSetChatroomTypeInputDTO();
                         input.setTgRobotId(robot.getRobotId());
                         input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
                         input.setUsername(RandomUtil.randomString(32));
                         input.setChatroomType(groupType);
+                        input.setExtend(actionId);
                         return input;
                     },
                     OpenApiClient::setChatroomTypeByThirdKpTg);
@@ -312,41 +458,50 @@ public class GroupService {
     }
 
 
-    public <T> void setAction(Integer type,
+    public <T> void setAction(GroupAction action,
                               GroupInfo groupInfo,
                               GroupRobot robot,
                               String batchId,
                               String value,
-                              Supplier<T> buildInput,
+                              Function<String, T> buildInput,
                               Function<T, OpenApiResult<TgBaseOutputDTO>> requestFuc) {
+        boolean success = true;
+        String msg = "";
+        String optNo = "";
 
-
-        GroupActionLog log = new GroupActionLog();
-        log.setId(IdWorker.getIdStr());
-        log.setSetType(type);
-        log.setGroupId(groupInfo.getGroupId());
-        log.setBatchId(batchId);
-        log.setChangeValue(value);
+        GroupActionLog actionLog = new GroupActionLog();
+        actionLog.setId(IdWorker.getIdStr());
+        actionLog.setSetType(action.getCode());
+        actionLog.setGroupId(groupInfo.getGroupId());
+        actionLog.setBatchId(batchId);
+        actionLog.setChangeValue(value);
+        actionLog.setSetStatus(0);
+        actionLog.setCreateTime(LocalDateTime.now());
         if (robot == null) {
-            log.setPara(null);
-            log.setSetStatus(1);
-            log.setFailMsg("群内无机器人");
-            log.setId(IdWorker.getIdStr());
+            success = false;
+            msg = "群内无机器人";
+            actionLog.setPara(null);
+            groupActionLogService.save(actionLog);
         } else {
-            T input = buildInput.get();
-            log.setPara(JSON.toJSONString(input));
-            OpenApiResult<TgBaseOutputDTO> apply = requestFuc.apply(input);
-            if (apply.isSuccess()) {
-                log.setSetStatus(0);
-                log.setId(IdWorker.getIdStr());
-            } else {
-                log.setSetStatus(1);
-                log.setFailMsg(apply.getMessage());
-                log.setId(apply.getData().getOptSerNo());
+            T input = buildInput.apply(actionLog.getId());
+            actionLog.setPara(JSON.toJSONString(input));
+            groupActionLogService.save(actionLog);
+            try {
+                OpenApiResult<TgBaseOutputDTO> apply = requestFuc.apply(input);
+                log.info("groupAction={},{},{}", action.getName(), JSON.toJSONString(input), JSON.toJSONString(apply));
+                optNo = apply.getData().getOptSerNo();
+                if (!apply.isSuccess()) {
+                    success = false;
+                    msg = apply.getMessage();
+                }
+            } catch (Exception e) {
+                log.info("groupAction.error={},{}", action.getName(), JSON.toJSONString(input), e);
             }
         }
-        log.setCreateTime(LocalDateTime.now());
-        groupActionLogService.save(log);
+        //如果失败 获取无回调 直接返回结果
+        if (!success || !action.isCallBack()) {
+            handleActionResult(actionLog, optNo, success, msg, null);
+        }
     }
 
     public void setAdmin(GroupAdminSetDTO dto) {
@@ -356,7 +511,7 @@ public class GroupService {
         Assert.notNull(groupInfo, "群不存在");
         for (String memberId : dto.getMemberIds()) {
             GroupRobot robot = groupRobotService.getRobot(dto.getGroupId());
-            setAction(2, groupInfo, robot, "", "memberId", () -> {
+            setAction(GroupAction.SET_GROUP_ADMIN, groupInfo, robot, "", memberId, actionId -> {
                         ThirdTgSetChatroomAdminInputDTO input = new ThirdTgSetChatroomAdminInputDTO();
                         input.setTgRobotId(robot.getRobotId());
                         input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
@@ -370,6 +525,7 @@ public class GroupService {
                         input.setManageCall(dto.getManageCall());
                         input.setAnonymous(dto.getAnonymous());
                         input.setAddAdmins(dto.getAddAdmins());
+                        input.setExtend(actionId);
                         return input;
                     },
                     OpenApiClient::setChatroomAdminByThirdKpTg);
