@@ -10,6 +10,17 @@ import java.util.List;
 public class ThirdTgSelectGroupMemberDTO {
 
     @ApiModelProperty(
+            value = "页码",
+            example = "1"
+    )
+    private Integer page = 1;
+    @ApiModelProperty(
+            value = "每页显示记录数",
+            example = "10"
+    )
+    private Integer limit = 10;
+
+    @ApiModelProperty(
             value = "群编",
             required = true
     )
