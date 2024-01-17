@@ -11,10 +11,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.*;
-import com.ruoyi.common.core.domain.entity.play.Play;
-import com.ruoyi.common.core.domain.entity.play.PlayGroupPack;
-import com.ruoyi.common.core.domain.entity.play.PlayMessage;
-import com.ruoyi.common.core.domain.entity.play.PlayRobotPack;
+import com.ruoyi.common.core.domain.entity.play.*;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
@@ -26,8 +23,7 @@ import com.ruoyi.system.mapper.PlayGroupPackMapper;
 import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.mapper.PlayMessageMapper;
 import com.ruoyi.system.mapper.PlayRobotPackMapper;
-import com.ruoyi.system.service.IPlayService;
-import com.ruoyi.system.service.PlayMessageService;
+import com.ruoyi.system.service.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -60,6 +56,18 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
     @Resource
     private PlayMessageService playMessageService;
+
+    @Resource
+    private PlayMessagePushService playMessagePushService;
+
+    @Resource
+    private PlayMessagePushDetailService playMessagePushDetailService;
+
+    @Resource
+    private GroupStateService groupStateService;
+
+    @Resource
+    private IRobotService robotService;
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -386,5 +394,51 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         Assert.notNull(play, "炒群任务不存在");
         play.setSpeed(dto.getSpeed());
         super.updateById(play);
+    }
+
+    @Override
+    public RobotStatisticsVO robotStatistics(String playId) {
+        RobotStatisticsVO vo = new RobotStatisticsVO();
+        if (StringUtils.isNotEmpty(playId)){
+            return vo;
+        }
+        RobotStatisticsVO groupStatisticsVO = playMessagePushService.getRobotStatisticsVO(playId);
+        // 统计群维度数据
+        if (groupStatisticsVO != null) {
+            vo.setGroupNum(groupStatisticsVO.getGroupNum());
+            vo.setGroupClosureNum(groupStatisticsVO.getGroupClosureNum());
+            vo.setJoinGroupFailNum(groupStatisticsVO.getJoinGroupFailNum());
+        } else {
+            vo.setGroupNum(0);
+            vo.setGroupClosureNum(0);
+            vo.setJoinGroupFailNum(0);
+        }
+
+        // 统计号维度数据
+        List<PlayMessagePushDetail> pushDetails = playMessagePushDetailService.listByPlayIdStatistics(playId);
+        List<String> navyRobotIds = new ArrayList<>();// 水军号
+        List<String> spareRobotIds = new ArrayList<>();// 备用号
+        for (PlayMessagePushDetail pushDetail : pushDetails) {
+            String robotId = pushDetail.getRobotId();
+            if (StringUtils.isNotEmpty(robotId)){
+                navyRobotIds.add(robotId);
+            }
+            String spareRobot = pushDetail.getSpareRobot();
+            if (StringUtils.isNotEmpty(spareRobot)){
+                String[] split = spareRobot.split(",");
+                spareRobotIds.addAll(Arrays.asList(split));
+            }
+        }
+        vo.setNavyRobotNum(navyRobotIds.size());
+        vo.setSpareRobotNum(spareRobotIds.size());
+
+        // 统计号的双向、封号数
+        navyRobotIds.addAll(spareRobotIds);
+        RobotStatisticsVO robotStatisticsVO = robotService.getRobotStatisticsVO(navyRobotIds);
+        if (robotStatisticsVO != null) {
+            vo.setRobotClosureNum(robotStatisticsVO.getRobotClosureNum());
+            vo.setBidirectionalRobotNum(robotStatisticsVO.getBidirectionalRobotNum());
+        }
+        return vo;
     }
 }

@@ -367,7 +367,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
                 }
                 confoundMap.put(confound.getId(), confound);
             }
-//            this.retryingConfusion(confoundLog, confound);
+            this.retryingConfusion(confoundLog, confound);
         }
     }
 }

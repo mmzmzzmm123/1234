@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PlayMessagePushDetailMapper">
+
+
+    <select id="listByPlayIdStatistics"
+            resultType="com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail">
+        SELECT
+            t2.id,
+            t2.robot_id,
+            t2.spare_robot
+        FROM
+            t_play_message_push t1
+            LEFT JOIN t_play_message_push_detail t2 ON t1.id = t2.play_msg_push_id
+        WHERE
+            t1.play_id = #{playId}
+    </select>
+</mapper>
