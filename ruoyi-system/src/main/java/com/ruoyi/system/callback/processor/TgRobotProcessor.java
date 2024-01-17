@@ -238,4 +238,14 @@ public class TgRobotProcessor {
     public void called1100860002(Called1100860002DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
+
+    /**
+     * TG 群编号变动回调
+     *
+     * @param dto
+     */
+    @Type(value = 1100910112, parameterClass = Called1100910112DTO.class)
+    public void called1100910112(Called1100910112DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
 }
