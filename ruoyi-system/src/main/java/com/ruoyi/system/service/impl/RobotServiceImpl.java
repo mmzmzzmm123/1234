@@ -19,6 +19,7 @@ import com.ruoyi.system.mapper.RobotMapper;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.ThirdTgBatchRobotSimpInfoInputDTO;
+import com.ruoyi.system.openapi.model.input.ThirdTgModifyRobotHeadImgInputDTO;
 import com.ruoyi.system.openapi.model.input.ThirdTgSelectRobotListByRadioDTO;
 import com.ruoyi.system.openapi.model.output.ExtTgBatchRobotSimpInfoData;
 import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotByMerchantVO;
@@ -57,6 +58,8 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
         robotDTO.setLimit(1000);
         robotDTO.setPage(1);
+        robotDTO.setRadioId("");
+        robotDTO.setMerchantId("");
         OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
         log.info("pullApiRobotDataList robotListResult:{}",JSON.toJSONString(robotListResult));
         if(robotListResult.isSuccess()){
@@ -290,11 +293,27 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
 
     @Override
     public R<Void> setHeadImg(SetHeadImgDTO dto) {
-        return null;
+        if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
+            return R.fail("号编号不能为空");
+        }
+        if(CollectionUtils.isEmpty(dto.getHeadImgUrls())){
+            return R.fail("头像地址不能为空");
+        }
+        for (int i = 0; i < dto.getRobotSerialNos().size(); i++) {
+            ThirdTgModifyRobotHeadImgInputDTO inputDTO = new ThirdTgModifyRobotHeadImgInputDTO();
+            inputDTO.setTgRobotId(dto.getRobotSerialNos().get(i));
+            inputDTO.setHeadimgUrl(dto.getHeadImgUrls().get(i%dto.getHeadImgUrls().size()));
+            OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.modifyRobotHeadImgByThirdKpTg(inputDTO);
+            log.info("setHeadImg inputDTO:{},vo:{}",inputDTO,vo);
+        }
+        return R.ok();
     }
 
+
+
     @Override
-    public R<Void> setName(List<SetNameInfoDTO> dto) {
+    public R<Void> setName(SetNameInfoDTO dto) {
+
         return null;
     }
 

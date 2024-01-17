@@ -12,7 +12,7 @@ public interface IRobotService {
     R<Page<SelectRobotListVO>> selectRobotPageList(SelectRobotListDTO dto);
     R<Void> syncRobot();
     R<Void> setHeadImg(SetHeadImgDTO dto);
-    R<Void> setName(List<SetNameInfoDTO> dto);
+    R<Void> setName(SetNameInfoDTO dto);
     R<Void> setUserName(SetUserNameDTO dto);
     R<Void> setPrivatePhone(SetPrivatePhoneDTO dto);
     R<Void> updateEnableType(UpdateEnableTypeDTO dto);

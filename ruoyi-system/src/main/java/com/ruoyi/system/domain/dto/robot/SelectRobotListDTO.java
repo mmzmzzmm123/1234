@@ -16,6 +16,8 @@ public class SelectRobotListDTO extends PageBaseDTO {
     private String endTime;
     @ApiModelProperty(value = "机器人类型10-平台号 20-托管号")
     private Integer type;
+    @ApiModelProperty(value = "协议类型：2-iPhone 4-Android 16-云机 17-工作机")
+    private Integer protocolType;
     @ApiModelProperty(value = "app版本")
     private String tgAppVersion;
     @ApiModelProperty(value = "20 在线 10 离线")
