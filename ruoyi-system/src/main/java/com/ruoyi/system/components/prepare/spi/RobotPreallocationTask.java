@@ -14,7 +14,6 @@ import com.ruoyi.common.core.domain.dto.play.PlayExt;
 import com.ruoyi.common.core.domain.entity.VibeRule;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
-import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spi.ServiceLoader;
@@ -25,9 +24,9 @@ import com.ruoyi.system.components.prepare.ExecutionResultContext;
 import com.ruoyi.system.components.spi.RobotInfoQuery;
 import com.ruoyi.system.components.spi.RobotInfoQuery.RobotInfoVO;
 import com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation;
-import com.ruoyi.system.mapper.PlayMessagePushMapper;
 import com.ruoyi.system.mapper.PlayRobotGroupRelationMapper;
 import com.ruoyi.system.mapper.VibeRuleMapper;
+import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.PlayMessagePushDetailService;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +43,6 @@ public class RobotPreallocationTask implements TaskExecution {
 	@Override
 	public ExecutionResultContext doExecute(ExecutionParamContext context) {
 		final PlayMessagePush messagePush = context.getMessagePush();
-
 		// 查询群内机器人
 		final LambdaQueryWrapper<PlayRobotGroupRelation> queryWrapper = new QueryWrapper<PlayRobotGroupRelation>()
 				.lambda();
@@ -55,8 +53,8 @@ public class RobotPreallocationTask implements TaskExecution {
 
 		if (CollectionUtils.isEmpty(relationList)) {
 			// 群内 查询 不到 演员
-			SpringUtils.getBean(PlayMessagePushMapper.class).updateById(messagePush.setRobotAllocationFlag(2));
-			context.log(context, PlayLogTyper.Robot_Pre_Alloc, false, "[号预分配] 群(" + context.getChatroomId() + ")内无演员" , null);
+			PlayExecutionLogService.robotPackLog(context.getPlay().getId(), context.getChatroomId(), null,
+					"【号预分配】 群" + context.getChatroomId() + " 内无演员", "群内无演员");
 			return ExecutionResultContext.buildError(context, "群内无演员");
 		}
 		final Map<String, RobotInfoVO> map = new HashMap<>();
@@ -122,9 +120,7 @@ public class RobotPreallocationTask implements TaskExecution {
 		}
 		// 批量更新
 		SpringUtils.getBean(PlayMessagePushDetailService.class).updateBatchById(details);
-		// 更新进度
-		SpringUtils.getBean(PlayMessagePushMapper.class).updateById(messagePush.setRobotAllocationFlag(1));
-		context.log(context, PlayLogTyper.Robot_Pre_Alloc, false, "[号预分配] 群(" + context.getChatroomId() + ")分配成功" , null);
+		PlayExecutionLogService.robotPackLog(context.getPlay().getId(), context.getChatroomId(), null,  "【号预分配】 群" + context.getChatroomId() + " 分配成功", null);
 		return ExecutionResultContext.buildSync(context);
 	}
 

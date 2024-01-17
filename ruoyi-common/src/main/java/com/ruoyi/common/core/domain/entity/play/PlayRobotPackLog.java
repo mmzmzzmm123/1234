@@ -1,14 +1,12 @@
 package com.ruoyi.common.core.domain.entity.play;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
-
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.ruoyi.common.utils.Ids;
-
 import lombok.Data;
 
 @Data
@@ -42,6 +40,11 @@ public class PlayRobotPackLog {
 	private Integer retryCount;
 
 	/**
+	 * 重试最大次数也失败了，最终就是失败 0-未达到最大重试次数 1-已经达到最大次数
+	 */
+	private Integer retryMaxFlag;
+
+	/**
 	 * 是否是备用号 0-主号 1-备用号
 	 */
 	private Integer isBackup;
@@ -60,25 +63,28 @@ public class PlayRobotPackLog {
 	 * 回调附加的值
 	 */
 	private String attchContent;
-	
+
 	private Integer pushDetailId;
 
-	public static boolean finished(List<PlayRobotPackLog> datas) {
+	public static boolean unFinished(List<PlayRobotPackLog> datas) {
 		for (PlayRobotPackLog data : datas) {
-			if (data.getStatus().intValue() == 0 || data.getStatus().intValue() == -1) {
-				return false;
+			if (data.getRetryMaxFlag().intValue() == 0 || data.getStatus().intValue() == -1
+					|| data.getStatus().intValue() == 0) {
+				return true;
 			}
 		}
-		return true;
+		return false;
 	}
 
-	public static PlayRobotPackLog findError(List<PlayRobotPackLog> datas) {
+	public static List<PlayRobotPackLog> listByError(List<PlayRobotPackLog> datas) {
+		final List<PlayRobotPackLog> failList = new ArrayList<PlayRobotPackLog>();
 		for (PlayRobotPackLog data : datas) {
-			if (data.getStatus().intValue() == 2) {
-				return data;
+			if (data.getStatus().intValue() == 2 && data.getRetryMaxFlag().intValue() == 1) {
+				// -1等待前置调度完成 0-请求中 1-成功 2-失败
+				failList.add(data);
 			}
 		}
-		return null;
+		return failList;
 	}
 
 	public PlayRobotPackLog wrapOpt() {

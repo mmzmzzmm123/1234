@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 @TableName("t_robot_info")
 public class Robot {
@@ -35,7 +37,7 @@ public class Robot {
     @ApiModelProperty(value = "头像")
     private String headImgUrl;
 
-    @ApiModelProperty(value = "是否是群主,0-否,1-是")
+    @ApiModelProperty(value = "是否是群主号,0-否,1-是")
     private Integer groupOwner;
 
     @ApiModelProperty(value = "机器人类型10-平台号 20-托管号")
@@ -71,26 +73,21 @@ public class Robot {
     @ApiModelProperty(value = "水军占用状态,0-未占用,1-已占用")
     private Integer occupyType;
 
-    @ApiModelProperty(value = "今日带群数")
-    private Integer groupToDayNum;
-
-    @ApiModelProperty(value = "累计带群数")
-    private Integer groupTotalNum;
 
     @ApiModelProperty(value = "双向状态,0-未被限制,1-已被限制")
     private Integer bidirectionalType;
 
     @ApiModelProperty(value = "双向状态-解除限制时间")
-    private String bidirectionalUnfreezeTime;
+    private Date bidirectionalUnfreezeTime;
 
     @ApiModelProperty(value = "添加时间")
-    private String addTime;
+    private Date addTime;
 
     @ApiModelProperty(value = "封号时间")
-    private String sealTime;
+    private Date sealTime;
 
     @ApiModelProperty(value = "双向时间")
-    private String bidirectionalTime;
+    private Date bidirectionalTime;
 
     @ApiModelProperty("回收状态,0-未回收,1-已回收")
     private Integer recycleStatus;
@@ -99,9 +96,9 @@ public class Robot {
     private Integer deleteStatus;
 
     @ApiModelProperty(value = "创建时间")
-    private String createTime;
+    private Date createTime;
 
     @ApiModelProperty(value = "修改时间")
-    private String updateTime;
+    private Date updateTime;
 
 }
