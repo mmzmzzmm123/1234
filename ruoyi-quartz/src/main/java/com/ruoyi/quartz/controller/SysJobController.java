@@ -2,6 +2,10 @@ package com.ruoyi.quartz.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.service.IRobotService;
+import com.ruoyi.system.service.TelegramDetChatroomAdminDistrService;
+import io.swagger.annotations.ApiOperation;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,6 +42,12 @@ public class SysJobController extends BaseController
 {
     @Autowired
     private ISysJobService jobService;
+
+    @Autowired
+    private IRobotService robotService;
+
+    @Autowired
+    private TelegramDetChatroomAdminDistrService telegramDetChatroomAdminDistrService;
 
     /**
      * 查询定时任务列表
@@ -182,4 +192,17 @@ public class SysJobController extends BaseController
         jobService.deleteJobByIds(jobIds);
         return success();
     }
+
+    @ApiOperation("同步号列表")
+    @PostMapping("/syncRobotList")
+    public void syncRobotList(){
+        robotService.syncRobot();
+    }
+
+    @ApiOperation("同步黑群主列表")
+    @PostMapping("/syncChatroomAdminDistr")
+    public void syncChatroomAdminDistr(){
+        telegramDetChatroomAdminDistrService.syncChatroomAdminDistr();
+    }
+
 }

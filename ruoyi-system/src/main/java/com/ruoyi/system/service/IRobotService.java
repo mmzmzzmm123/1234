@@ -18,4 +18,12 @@ public interface IRobotService {
     R<Void> clearSealData();
     R<Void> removeRobot(RemoveRobotDTO dto);
     R<Void> releaseOccupyRobot();
+
+    /**
+     * 设置群主号
+     * @param robotSerialNos
+     * @return
+     */
+    R<Void> setGroupOwner(List<String> robotSerialNos);
+
 }
