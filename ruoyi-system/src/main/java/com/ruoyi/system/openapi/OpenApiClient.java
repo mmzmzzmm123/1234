@@ -6,10 +6,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.exception.GlobalException;
-import com.ruoyi.system.openapi.model.output.ApiClientVO;
-import com.ruoyi.system.openapi.model.output.ExtTgBatchRobotSimpInfoData;
-import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotByMerchantVO;
-import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
+import com.ruoyi.system.openapi.model.output.*;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.openapi.model.input.*;
@@ -311,5 +308,37 @@ public class OpenApiClient {
         return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SQL_TASK_SUBMIT, JSONObject.from(data), TgBaseOutputDTO.class);
     }
 
+    /**
+     * 比邻第三方(Utchat)：-同步群成员
+     *
+     * @return
+     */
+    public static OpenApiResult<Void> syncGroupMemberByThirdUtchatTg(ThirdTgSyncGroupMemberDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SYNC_GROUP_MEMBER, JSONObject.from(data), Void.class);
+    }
+
+    /**
+     * 比邻第三方(UtchatTG)：-查询商家(机器号)的群
+     *
+     * @return
+     */
+    public static OpenApiResult<Page<ExtTgSelectGroupByMerchantVO>> selectGroupListByThirdUtchatTg(ThirdTgSelectGroupByMerchantDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SELECT_GROUP_LIST,
+                JSONObject.from(data),
+                new TypeReference<Page<ExtTgSelectGroupByMerchantVO>>(ExtTgSelectGroupByMerchantVO.class) {
+                });
+    }
+
+    /**
+     * 比邻第三方(UtchatTG)：-查询群成员
+     *
+     * @return
+     */
+    public static OpenApiResult<Page<ExtTgSelectGroupMemberVO>> selectGroupMemberListByThirdUtchatTg(ThirdTgSelectGroupMemberDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SELECT_GROUP_MEMBER_LIST,
+                JSONObject.from(data),
+                new TypeReference<Page<ExtTgSelectGroupMemberVO>>(ExtTgSelectGroupMemberVO.class) {
+                });
+    }
 
 }
