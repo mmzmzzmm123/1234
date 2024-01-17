@@ -14,6 +14,9 @@ public class WordPageDTO {
     @ApiModelProperty(value = "每页获取数")
     private Integer pageSize;
 
+    @ApiModelProperty(value = "开始id")
+    private Integer startIndex;
+
     private Long redaFileTime;
     private Long saveFileTime;
 }
