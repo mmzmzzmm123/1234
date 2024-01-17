@@ -1,6 +1,8 @@
 package com.onethinker.bk.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.onethinker.bk.domain.Sort;
 
 /**
@@ -62,4 +64,10 @@ public interface ISortService {
      * 获取分类标签信息
      */
     List<Sort> getSortInfo();
+
+    /**
+     * 获取分类表情信息
+     * @return
+     */
+    Map<String,Object> listSortAndLabel();
 }

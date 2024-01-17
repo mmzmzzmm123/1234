@@ -1,8 +1,12 @@
 package com.onethinker.bk.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.onethinker.bk.service.ILabelService;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.CacheEnum;
 import org.apache.commons.compress.utils.Lists;
@@ -28,6 +32,9 @@ public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISo
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private ILabelService labelService;
 
     /**
      * 查询分类
@@ -108,5 +115,13 @@ public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISo
         redisCache.setCacheList(redisKey,sorts);
         redisCache.expire(redisKey,30, TimeUnit.DAYS);
         return sorts;
+    }
+
+    @Override
+    public Map<String, Object> listSortAndLabel() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("sorts", getSortInfo());
+        map.put("labels", labelService.getLabelInfo());
+        return map;
     }
 }

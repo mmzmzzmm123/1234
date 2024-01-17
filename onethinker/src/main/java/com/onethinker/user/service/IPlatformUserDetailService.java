@@ -69,4 +69,11 @@ public interface IPlatformUserDetailService {
      * @return
      */
     Map<Long, String> selectUserPhoneByUserIds(List<Long> puUserIds);
+
+    /**
+     * 通过用户id查询用户信息
+     * @param aLong
+     * @return
+     */
+    PlatformUserDetail getPlatFormUserDetailByUserId(Long userId);
 }

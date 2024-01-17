@@ -1,6 +1,12 @@
 package com.onethinker.bk.service.impl;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import com.onethinker.bk.domain.Sort;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.onethinker.bk.mapper.LabelMapper;
@@ -20,6 +26,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 public class LabelServiceImpl extends ServiceImpl<LabelMapper,Label> implements ILabelService {
     @Resource
     private LabelMapper labelMapper;
+
+    @Autowired
+    private RedisCache redisCache;
 
     /**
      * 查询标签
@@ -85,5 +94,20 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper,Label> implements 
     @Override
     public int deleteLabelById(Long id) {
         return labelMapper.deleteLabelById(id);
+    }
+
+    @Override
+    public List<Label> getLabelInfo() {
+        String redisKey = CacheEnum.WEB_INFO + "label";
+        if (redisCache.hasKey(redisKey)) {
+            return redisCache.getCacheList(redisKey);
+        }
+        List<Label> labels = labelMapper.selectLabelList(new Label());
+        if (labels.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        redisCache.setCacheList(redisKey,labels);
+        redisCache.expire(redisKey,30, TimeUnit.DAYS);
+        return labels;
     }
 }

@@ -20,7 +20,7 @@ import java.util.Map;
  * @date 2024-01-16
  */
 @RestController
-@RequestMapping("/article")
+@RequestMapping("/bk/article")
 public class ArticleController extends BaseController {
 
     @Autowired

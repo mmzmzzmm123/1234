@@ -1,6 +1,9 @@
 package com.onethinker.bk.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+
 import com.onethinker.bk.domain.HistoryInfo;
 
 /**
@@ -57,4 +60,10 @@ public interface IHistoryInfoService {
      * @return 结果
      */
     public int deleteHistoryInfoById(Long id);
+
+    /**
+     * 获取统计记录
+     * @return
+     */
+    Map<String, Object> getHistoryInfo();
 }

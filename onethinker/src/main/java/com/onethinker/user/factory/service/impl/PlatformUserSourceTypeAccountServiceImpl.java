@@ -83,9 +83,9 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
     @Override
     public PlatformUserResDTO login(PlatformUserReqDTO reqDTO) {
         // 根据来源不同实例化不同具体实例
-        logger.info("账户密码登录{}",reqDTO.getDataId());
-        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getDataId()),"凭证不能为空");
-        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPassword()),"密码证不能为空");
+        logger.info("手机/账户/邮箱登录{}",reqDTO.getDataId());
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getDataId()),"凭证信息不能为空");
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPassword()),"密码信息不能为空");
         PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
         Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail),"账号不存在");
         Assert.isTrue(Objects.equals(reqDTO.getPassword(),platformUserDetail.getPassword()),"账户密码有误");

@@ -57,4 +57,10 @@ public interface ILabelService {
      * @return 结果
      */
     public int deleteLabelById(Long id);
+
+    /**
+     * 获取所有标签信息
+     * @return
+     */
+    List<Label> getLabelInfo();
 }

@@ -102,7 +102,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper,Article> imple
     public List<Article> listArticle(BaseRequestVO baseRequestVO) {
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(Objects.nonNull(baseRequestVO.getSearchKey()),Article::getArticleTitle,baseRequestVO.getSearchKey())
-                .eq(baseRequestVO.getStatus(),Article::getCommentStatus,baseRequestVO.getStatus())
+                .eq(baseRequestVO.getStatus() != null && baseRequestVO.getStatus(),Article::getCommentStatus,baseRequestVO.getStatus())
                 .eq(Objects.nonNull(baseRequestVO.getLabelId()),Article::getLabelId,baseRequestVO.getLabelId())
                 .eq(Objects.nonNull(baseRequestVO.getSortId()),Article::getSortId,baseRequestVO.getSortId())
                 .orderByDesc(Article::getCreateTime);

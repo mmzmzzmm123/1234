@@ -2,7 +2,10 @@ package com.onethinker.user.service.impl;
 
 import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.google.common.collect.Maps;
+import com.onethinker.bk.service.IFamilyService;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.CacheEnum;
 import com.ruoyi.common.enums.SysConfigKeyEnum;
@@ -153,7 +156,13 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         platformUserDetail.setDataId(dataId);
         List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
         if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
-            return null;
+            // 如果是空的情况下看看是否是账号信息保存
+            platformUserDetail = new PlatformUserDetail();
+            platformUserDetail.setUsername(dataId);
+            platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
+            if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
+                return null;
+            }
         }
         redisCache.setCacheObject(redisKey,platformUserDetails.get(0),1, TimeUnit.DAYS);
         return platformUserDetails.get(0);
@@ -191,5 +200,17 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
             return Maps.newHashMap();
         }
         return platformUsers.stream().collect(Collectors.toMap(PlatformUser::getId, PlatformUser::getDataId));
+    }
+
+    @Override
+    public PlatformUserDetail getPlatFormUserDetailByUserId(Long userId) {
+        String redisKey = CacheEnum.QUERY_USER_PHONE_KEY.getCode() + "_id:" + userId;
+        if (redisCache.hasKey(redisKey)) {
+            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(),PlatformUserDetail.class);
+        }
+        PlatformUserDetail platformUserDetail = platformUserDetailMapper.selectPlatformUserDetailById(userId);
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail),"用户信息不存在");
+        redisCache.setCacheObject(redisKey,platformUserDetail,30,TimeUnit.DAYS);
+        return platformUserDetail;
     }
 }
