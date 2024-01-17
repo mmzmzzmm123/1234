@@ -30,7 +30,7 @@ public class PlayMessageConfound implements Serializable {
     /**
      * 剧本ID
      */
-    private Integer playId;
+    private String playId;
 
     /**
      * 群数量

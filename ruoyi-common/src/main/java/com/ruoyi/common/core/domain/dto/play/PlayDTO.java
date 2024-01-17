@@ -3,6 +3,7 @@ package com.ruoyi.common.core.domain.dto.play;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Data
@@ -74,4 +75,9 @@ public class PlayDTO {
     private List<String> urlPool;
 
     private String merchantId;
+
+    private String fileId;
+
+    @ApiModelProperty(value = "速度")
+    private BigDecimal speed;
 }
