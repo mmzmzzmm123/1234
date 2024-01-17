@@ -227,14 +227,14 @@ public class OpenApiClient {
     }
 
 
-//    /**
-//     * 比邻第三方(开平TG)：-获取群信息
-//     *
-//     * @return
-//     */
-//    public static OpenApiResult<TgBaseOutputDTO> getChatroomInfoByThirdKpTg(ThirdTgGetChatroomInfoInputDTO data) {
-//        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_CHATROOM_INFO, JSONObject.from(data), TgBaseOutputDTO.class);
-//    }
+    /**
+     * 比邻第三方(开平TG)：-获取群信息
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> getChatroomInfoByThirdKpTg(ThirdTgGetChatroomInfoInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_CHATROOM_INFO, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
 
     /**
      * 比邻第三方(开平TG)：-设置群类型
