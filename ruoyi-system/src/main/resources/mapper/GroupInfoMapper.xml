@@ -125,12 +125,14 @@
          join t_group_monitor_info tgmi on tgi.group_id = tgmi.group_id
         join t_group_robot tgr on tgi.group_id = tgr.group_id and tgr.member_type = 1
         join t_robot_info robot on tgr.robot_id = robot.robot_serial_no
+        left join t_telegram_det_chatroom_admin_distr ttdcad on ttdcad.admin_serial_no = robot.robot_serial_no
         where tgi.create_type = 10
            and tgs.group_status = 0
            and tgs.group_used = 0
            and tgmi.bot_check = 1
            and robot.enable_type = 1
            and robot.recycle_status =0
+           and ttdcad.admin_serial_no is null
         <if test="registrationDay != null ">
             AND tgi.registration_time <![CDATA[ <= ]]>  #{registrationDay}
         </if>

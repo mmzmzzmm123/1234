@@ -28,7 +28,7 @@ public enum InviteBotAction {
     private final int retryCount;
 
 
-    public static InviteBotAction getAction(Integer code) {
+    public static InviteBotAction of(Integer code) {
         if (code == null) {
             return null;
         }
@@ -39,10 +39,7 @@ public enum InviteBotAction {
                 .orElse(null);
     }
 
-    public InviteBotAction getNextAction(Integer retryCount) {
-        if (this.retryCount > retryCount) {
-            return this;
-        }
+    public InviteBotAction getNextAction() {
         return EnumSet.allOf(InviteBotAction.class)
                 .stream()
                 .filter(p -> p.getCode() == code + 1)

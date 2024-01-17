@@ -14,4 +14,7 @@ import java.util.List;
 public interface GroupMonitorInfoService extends IService<GroupMonitorInfo> {
 
     void add(List<String> groupIds);
+
+
+    void robotCheck(String groupId);
 }

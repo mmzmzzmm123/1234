@@ -7,6 +7,8 @@ import com.ruoyi.system.mapper.GroupBatchActionMapper;
 import com.ruoyi.system.service.GroupBatchActionService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 /**
  * 群批量操作记录表(GroupBatchAction)表服务实现类
  *
@@ -30,6 +32,15 @@ public class GroupBatchActionServiceImpl extends ServiceImpl<GroupBatchActionMap
         GroupBatchAction action = new GroupBatchAction();
         action.setBatchId(id);
         action.setBatchStatus(status);
+        baseMapper.updateById(action);
+    }
+
+    @Override
+    public void doNextAction(String id, Integer count) {
+        GroupBatchAction action = new GroupBatchAction();
+        action.setBatchId(id);
+        action.setRetryCount(count);
+        action.setLastActionTime(LocalDateTime.now());
         baseMapper.updateById(action);
     }
 }

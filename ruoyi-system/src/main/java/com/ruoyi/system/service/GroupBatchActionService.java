@@ -13,4 +13,6 @@ public interface GroupBatchActionService extends IService<GroupBatchAction> {
     GroupBatchAction getBatchAction(String groupId,Integer type);
 
     void updateStatus(String id, Integer status);
+
+    void doNextAction(String id,Integer retryCount);
 }

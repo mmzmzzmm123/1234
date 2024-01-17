@@ -230,20 +230,40 @@ public class GroupService {
         if (StrUtil.isBlank(groupActionLog.getBatchId())) {
             return;
         }
-        if (success) {
-            GroupBatchAction groupBatch = groupBatchActionService.getById(groupActionLog.getBatchId());
-            if (ObjectUtil.equal(0, groupBatch.getSetType())) {
-                doNextInvitingBotJoinAction(groupBatch, groupActionLog, data);
-            } else {
-                groupBatchActionService.updateStatus(groupActionLog.getBatchId(), 2);
-            }
+
+        GroupBatchAction groupBatch = groupBatchActionService.getById(groupActionLog.getBatchId());
+        if (ObjectUtil.equal(0, groupBatch.getSetType())) {
+            doNextInvitingBotJoinAction(groupBatch, groupActionLog, success, data);
         } else {
-            groupBatchActionService.updateStatus(groupActionLog.getBatchId(), 1);
+            groupBatchActionService.updateStatus(groupActionLog.getBatchId(), success ? 2 : 1);
         }
+
     }
 
-    public void doNextInvitingBotJoinAction(GroupBatchAction groupBatch, GroupActionLog groupActionLog, Object data) {
-
+    public void doNextInvitingBotJoinAction(GroupBatchAction groupBatch, GroupActionLog groupActionLog, boolean success, Object data) {
+        InviteBotAction botAction = InviteBotAction.of(groupBatch.getActionProgress());
+        if (botAction == null) {
+            groupBatchActionService.updateStatus(groupBatch.getBatchId(), success ? 2 : 1);
+            return;
+        }
+        if (success) {
+            InviteBotAction nextAction = botAction.getNextAction();
+            if (nextAction == null) {
+                groupMonitorInfoService.robotCheck(groupBatch.getGroupId());
+                groupBatchActionService.updateStatus(groupBatch.getBatchId(), 2);
+                return;
+            }
+            runAction(groupBatch.getBatchId(), nextAction.getAction(), groupInfoService.getById(groupBatch.getGroupId()),
+                    groupRobotService.getRobot(groupBatch.getGroupId()), data == null ? groupActionLog.getChangeValue() : String.valueOf(data));
+        } else {
+            if (groupBatch.getRetryCount() < botAction.getRetryCount()) {
+                groupBatchActionService.doNextAction(groupBatch.getBatchId(), groupBatch.getRetryCount() + 1);
+                runAction(groupBatch.getBatchId(), botAction.getAction(), groupInfoService.getById(groupBatch.getGroupId()),
+                        groupRobotService.getRobot(groupBatch.getGroupId()), groupActionLog.getChangeValue());
+            } else {
+                groupBatchActionService.updateStatus(groupBatch.getBatchId(), 1);
+            }
+        }
     }
 
 
@@ -269,11 +289,9 @@ public class GroupService {
                     return false;
                 }
             }
-
+            InviteBotAction inviteBotAction = InviteBotAction.of(0);
+            String botUserName = "";
             //todo  获取bot
-
-            InviteBotAction inviteBotAction = InviteBotAction.getAction(0);
-
             //初始化批量任务动作
             GroupBatchAction action = new GroupBatchAction();
             action.setBatchId(IdWorker.getIdStr());
@@ -286,15 +304,7 @@ public class GroupService {
             action.setBatchStatus(0);
             groupBatchActionService.save(action);
 
-            //执行搜索BOT操作
-            setAction(inviteBotAction.getAction(), groupInfo, groupRobot, action.getBatchId(), "", actionId -> {
-                        ThirdTgSearchKeywordInputDTO input = new ThirdTgSearchKeywordInputDTO();
-                        input.setKeyword("");
-                        input.setTgRobotId(groupRobot.getRobotId());
-                        input.setExtend(actionId);
-                        return input;
-                    },
-                    OpenApiClient::searchKeywordByThirdKpTg);
+            runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, groupRobot, botUserName);
 
         } finally {
             lock.unlock();
@@ -302,17 +312,11 @@ public class GroupService {
         return true;
     }
 
-    public void BindInvitingBotAction(InviteBotAction inviteBotAction,
-                                      GroupActionLog lastActionLog, Object actionCallbackData,
-                                      GroupInfo groupInfo, GroupRobot groupRobot) {
-
-
-    }
 
     public void runAction(String batchId, GroupAction action, GroupInfo groupInfo, GroupRobot groupRobot, String value) {
         switch (action) {
             case SEARCH_BOT:
-                setAction(action, groupInfo, groupRobot, batchId, "", actionId -> {
+                setAction(action, groupInfo, groupRobot, batchId, value, actionId -> {
                             ThirdTgSearchKeywordInputDTO input = new ThirdTgSearchKeywordInputDTO();
                             input.setKeyword(value);
                             input.setTgRobotId(groupRobot.getRobotId());
@@ -322,7 +326,7 @@ public class GroupService {
                         OpenApiClient::searchKeywordByThirdKpTg);
                 break;
             case ADD_BOT:
-                setAction(action, groupInfo, groupRobot, batchId, "", actionId -> {
+                setAction(action, groupInfo, groupRobot, batchId, value, actionId -> {
                             ThirdTgJoinUserInputDTO input = new ThirdTgJoinUserInputDTO();
                             input.setFriendSerialNo(value);
                             input.setTgRobotId(groupRobot.getRobotId());
@@ -332,7 +336,7 @@ public class GroupService {
                         OpenApiClient::joinUserByThirdKpTg);
                 break;
             case INVITE_BOT_JOIN_GROUP:
-                setAction(action, groupInfo, groupRobot, batchId, "", actionId -> {
+                setAction(action, groupInfo, groupRobot, batchId, value, actionId -> {
                             ThirdTgInviteJoinChatroomInputDTO input = new ThirdTgInviteJoinChatroomInputDTO();
                             input.setMemberSerialNo(value);
                             input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
@@ -343,7 +347,7 @@ public class GroupService {
                         OpenApiClient::inviteJoinChatroomByThirdKpTg);
                 break;
             case SET_GROUP_ADMIN:
-                setAction(action, groupInfo, groupRobot, batchId, "", actionId -> {
+                setAction(action, groupInfo, groupRobot, batchId, value, actionId -> {
                             ThirdTgSetChatroomAdminInputDTO input = new ThirdTgSetChatroomAdminInputDTO();
                             input.setTgRobotId(groupRobot.getRobotId());
                             input.setExtend(actionId);
