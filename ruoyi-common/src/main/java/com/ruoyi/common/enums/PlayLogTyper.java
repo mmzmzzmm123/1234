@@ -8,7 +8,7 @@ public enum PlayLogTyper {
 	Robot_Pre_Alloc,
 
 	/**
-	 * 设置群人设
+	 * 设置号人设
 	 */
 	Group_Settings,
 
@@ -24,6 +24,7 @@ public enum PlayLogTyper {
 	/**
 	 * 机器人入群中
 	 */
-	Group_into;
+	Group_into,
+	Robot_Settings;
 
 }

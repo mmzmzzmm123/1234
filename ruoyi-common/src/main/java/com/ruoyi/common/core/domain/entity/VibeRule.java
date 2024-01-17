@@ -132,7 +132,7 @@ public class VibeRule {
      */
     private Integer status;
 
-    public List<VibeRuleTargetParam> getTargetParams() {
+    public List<VibeRuleTargetParam> covertTargetParams() {
         if (StringUtils.isBlank(this.targetParams)) {
             return null;
         }

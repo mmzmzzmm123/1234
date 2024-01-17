@@ -3,11 +3,16 @@ package com.ruoyi.system.callback.processor;
 import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
 
+import com.ruoyi.system.service.PlayMessageConfoundLogService;
+import com.ruoyi.system.service.business.GroupService;
 import com.ruoyi.system.service.impl.IntoGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+
 import java.util.List;
 
 @Component
@@ -17,6 +22,12 @@ public class TgRobotProcessor {
 
     @Autowired
     IntoGroupService intoGroupService;
+
+    @Resource
+    private PlayMessageConfoundLogService playMessageConfoundLogService;
+
+    @Autowired
+    GroupService groupService;
 
     /***
      *
@@ -48,45 +59,53 @@ public class TgRobotProcessor {
 
     /**
      * TG修改群头像
+     *
      * @param dto
      */
     @Type(value = 1100910049, parameterClass = CalledEmptyDTO.class)
     public void called1100910049(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         intoGroupService.updateImageCallBack(root);
-
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
     }
 
     /**
      * TG设置群管理员
+     *
      * @param dto
      */
     @Type(value = 1100910053, parameterClass = Called1100910053DTO.class)
     public void called1100910053(Called1100910053DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        //todo 更新群内机器人状态
     }
 
     /**
      * TG通过群链接入群
+     *
      * @param dto
      */
     @Type(value = 1100910039, parameterClass = Called1100910039DTO.class)
     public void called1100910039(Called1100910039DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        intoGroupService.intoGroupCallback(dto,root);
+        intoGroupService.intoGroupCallback(dto, root);
+        //todo 新增群内机器人
     }
 
     /**
      * TG退出群
+     *
      * @param dto
      */
     @Type(value = 1100910024, parameterClass = CalledEmptyDTO.class)
     public void called1100910024(Called1100910039DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        //todo 移除群内机器人
     }
 
     /**
      * TG获取群成员列表
+     *
      * @param dto
      */
     @Type(value = 1100910113, parameterClass = Called1100910113DTO.class)
@@ -96,6 +115,7 @@ public class TgRobotProcessor {
 
     /**
      * TG修改号头像
+     *
      * @param dto
      */
     @Type(value = 1100910016, parameterClass = CalledEmptyDTO.class)
@@ -105,6 +125,7 @@ public class TgRobotProcessor {
 
     /**
      * TG修改号姓氏和名字
+     *
      * @param dto
      */
     @Type(value = 1100910033, parameterClass = CalledEmptyDTO.class)
@@ -114,6 +135,7 @@ public class TgRobotProcessor {
 
     /**
      * TG设置用户名接口
+     *
      * @param dto
      */
     @Type(value = 1100910009, parameterClass = CalledEmptyDTO.class)
@@ -132,55 +154,79 @@ public class TgRobotProcessor {
 
     /**
      * TG设置群类型
+     *
      * @param dto
      */
     @Type(value = 1100910056, parameterClass = Called1100910056DTO.class)
     public void called1100910056(Called1100910056DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
     }
 
     /**
      * TG应用机器人加入通讯录
+     *
      * @param dto
      */
     @Type(value = 1100910026, parameterClass = CalledEmptyDTO.class)
     public void called1100910026(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
     }
 
     /**
      * TG搜索群、用户、频道
+     *
      * @param dto
      */
     @Type(value = 1100910017, parameterClass = Called1100910017DTO.class)
     public void called1100910017(Called1100910017DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(),
+                root.isSuccess() ? dto.getUserList() : null);
+
     }
 
     /**
      * TG邀请加入群组
+     *
      * @param dto
      */
     @Type(value = 1100910015, parameterClass = Called1100910015DTO.class)
     public void called1100910015(Called1100910015DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
     }
 
     /**
      * TG获取离散图片
+     *
      * @param dto
      */
     @Type(value = 1100850508, parameterClass = Called1100850508DTO.class)
     public void called1100850508(Called1100850508DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        playMessageConfoundLogService.handleConfoundImg(root);
     }
 
     /**
      * TG获取离散文案
+     *
      * @param dto
      */
     @Type(value = 1100850405, parameterClass = Called1100850405DTO.class)
     public void called1100850405(Called1100850405DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        playMessageConfoundLogService.handleConfoundText(root);
+    }
+
+    /**
+     * TG SQL执行接口
+     *
+     * @param dto
+     */
+    @Type(value = 1100860002, parameterClass = Called1100860002DTO.class)
+    public void called1100860002(Called1100860002DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
 }

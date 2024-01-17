@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PlayMessageMapper">
+
+    <resultMap id="BaseResultMap" type="com.ruoyi.common.core.domain.entity.play.PlayMessage">
+            <id property="playMessageId" column="play_message_id" jdbcType="INTEGER"/>
+            <result property="playId" column="play_id" jdbcType="VARCHAR"/>
+            <result property="robotNickname" column="robot_nickname" jdbcType="VARCHAR"/>
+            <result property="messageSort" column="message_sort" jdbcType="INTEGER"/>
+            <result property="messageContent" column="message_content" jdbcType="VARCHAR"/>
+            <result property="intervalTime" column="interval_time" jdbcType="INTEGER"/>
+            <result property="playErrorType" column="play_error_type" jdbcType="TINYINT"/>
+            <result property="isDelete" column="is_delete" jdbcType="TINYINT"/>
+            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+            <result property="modifyTime" column="modify_time" jdbcType="TIMESTAMP"/>
+            <result property="callRobotNickname" column="call_robot_nickname" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        play_message_id,play_id,robot_nickname,
+        message_sort,message_content,interval_time,
+        play_error_type,call_all,is_delete,
+        create_time,modify_time,call_robot_nickname
+    </sql>
+
+    <select id="selectListByPlayId" resultType="com.ruoyi.common.core.domain.entity.play.PlayMessage">
+        select
+        <include refid="Base_Column_List" />
+        from t_play_message
+        where play_id = #{playId}
+    </select>
+</mapper>

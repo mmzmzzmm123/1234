@@ -24,12 +24,6 @@ public enum OpenApiEnum {
 
     THIRD_KP_TG_INVITE_JOIN_CHATROOM("kpTg-邀请加入群组", "/thirdparty/tgGroup/inviteJoinChatroom", 1100910015),
 
-    THIRD_KP_TG_DISPERSE_IMAGE("kpTg-获取离散图片", "/thirdparty/tgCharacter/disperseImage", 1100850508),
-
-    THIRD_KP_TG_GET_APPOINT_GRADE_TEXT_LIST("kpTg-获取离散文字", "/thirdparty/tgCharacter/getAppointGradeTextList", 1100850405),
-
-    THIRD_KP_TG_INSERT_EVENT("kpTg-生成域名接口", "/thirdparty/tgModule/insertEvent", null),
-
     // 开平号接口
     THIRD_KP_TG_MODIFY_ROBOT_HEAD_IMG("kpTg-修改号头像", "/thirdparty/tgRobot/modifyRobotHeadImg", 1100910016),
     THIRD_KP_TG_MODIFY_NAME("kpTg-修改号姓氏和名字", "/thirdparty/tgRobot/modifyName", 1100910033),
@@ -37,13 +31,26 @@ public enum OpenApiEnum {
     THIRD_KP_TG_BATCH_ROBOT_SIMPINFO("kpTg-获取hw账号基础信息", "/thirdparty/tgModule/batchRobotSimpInfo", null),
     THIRD_KP_TG_JOIN_USER("kpTg-应用机器人加入通讯录", "/thirdparty/tgRobot/joinUser", 1100910026),
 
-
+    // kp
     THIRD_KP_TG_SQL_TASK_SUBMIT("kpTg-SQL执行接口", "/thirdparty/tgModule/sqlTaskSubmit", null),
+    THIRD_KP_TG_DISPERSE_IMAGE("kpTg-获取离散图片", "/thirdparty/tgCharacter/disperseImage", 1100850508),
 
+    THIRD_KP_TG_GET_APPOINT_GRADE_TEXT_LIST("kpTg-获取离散文字", "/thirdparty/tgCharacter/getAppointGradeTextList", 1100850405),
 
+    THIRD_KP_TG_INSERT_EVENT("kpTg-生成域名接口", "/thirdparty/tgModule/insertEvent", null),
 
     // utchat接口
     THIRD_UTCHAT_TG_SELECT_ROBOT_LIST_BY_RADIO("utchatTg-查询分组下的机器号", "/thirdparty/tgUtChat/selectRobotListByRadio", null),
+
+    THIRD_UTCHAT_TG_SYNC_GROUP_MEMBER("utchatTg-同步群成员", "/thirdparty/tgUtChat/syncGroupMember", null),
+
+    THIRD_UTCHAT_TG_SELECT_GROUP_LIST("utchatTg-查询商家(机器号)的群", "/thirdparty/tgUtChat/selectGroupList", null),
+
+    THIRD_UTCHAT_TG_SELECT_GROUP_MEMBER_LIST("utchatTg-查询群成员", "/thirdparty/tgUtChat/selectGroupMemberList", null),
+
+    THIRD_UTCHAT_TG_SELECT_CHATROOM_ADMIN_DISTR_ALL("utchatTg-查询全量黑群主信息", "/thirdparty/tgUtChat/selectChatroomAdminDistrAll", null),
+
+    THIRD_UTCHAT_TG_SYNC_CHATROOM_ADMIN_DISTR_ALL("utchatTg-同步全量黑群主信息", "/thirdparty/tgUtChat/syncChatroomAdminDistrAll", null),
 
     ;
 

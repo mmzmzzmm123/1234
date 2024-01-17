@@ -18,6 +18,9 @@ public class PlayTaskProgressVO {
     @ApiModelProperty("剧本ID")
     private String playId;
 
+    @ApiModelProperty("剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成")
+    private Integer state;
+
     @ApiModelProperty("群出库进度")
     private BigDecimal groupProgress;
     @ApiModelProperty("群出库总数量")
@@ -39,10 +42,10 @@ public class PlayTaskProgressVO {
     @ApiModelProperty("拉人入群当前数量")
     private Integer joinGroupCurrentNum;
 
-
+    @ApiModelProperty("总进度")
+    private BigDecimal totalProgress;
     @ApiModelProperty("总进度数量")
     private Integer totalNum;
-
     @ApiModelProperty("当前进度数量")
     private Integer currentNum;
 

@@ -52,7 +52,7 @@ public class VibeRuleServiceImpl implements IVibeRuleService {
 
         VibeRuleDTO ret = new VibeRuleDTO();
         BeanUtils.copyProperties(vibeRule, ret);
-        ret.setTargetParams(vibeRule.getTargetParams());
+        ret.setTargetParams(vibeRule.covertTargetParams());
         return ret;
     }
 }

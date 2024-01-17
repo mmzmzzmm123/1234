@@ -90,43 +90,22 @@ public class Called1100910017DTO {
     public static class Called1100910017UserDTO {
 
         /**
-         * 群成员编号
+         * 用户编号
          */
-        @JSONField(name = "member_serial_no")
-        private String memberSerialNo;
+        @JSONField(name = "user_serial_no")
+        private String userSerialNo;
 
         /**
-         * 姓氏
+         * 用户名
          */
         @JSONField(name = "first_name")
         private String firstName;
 
         /**
-         * 名字
-         */
-        @JSONField(name = "last_name")
-        private String lastName;
-
-        /**
-         * 用户名
+         * 用户姓氏
          */
         @JSONField(name = "user_name")
         private String userName;
-
-        /**
-         * 手机号
-         */
-        @JSONField(name = "phone")
-        private String phone;
-
-        /**
-         * 是否管理员
-         */
-        @JSONField(name = "is_admin")
-        private Boolean isAdmin;
-
-        @JSONField(name = "invite_serial_no")
-        private String inviteSerialNo;
     }
 
 }
