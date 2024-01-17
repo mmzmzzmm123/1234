@@ -1,6 +1,5 @@
 package com.ruoyi.web.controller.business;
 
-import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.WordPageDTO;
@@ -18,7 +17,6 @@ public class FileController {
     @Resource
     private AnalysisFileService analysisFileService;
 
-    @Anonymous
     @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     @ApiOperation(value = "解析剧本word文件内容")
     @PostMapping("/analysis/playWord")
@@ -26,7 +24,6 @@ public class FileController {
         return R.ok(analysisFileService.analysisPlayWord(file));
     }
 
-    @Anonymous
     @ApiOperation(value = "获取上传的剧本word文件内容")
     @PostMapping("/playWord")
     public R<AnalysisPlayFileVO> playWordContentList(@RequestBody WordPageDTO dto) {
