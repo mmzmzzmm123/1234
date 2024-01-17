@@ -682,4 +682,21 @@ public class GroupService {
         //todo 添加群内机器人逻辑
         //todo 执行bot检测
     }
+
+    /**
+     * 设置bot广告规则
+     * @param groupId
+     */
+    public void setBotAdMonitor(String groupId){
+
+    }
+
+    /**
+     * 设置bot广告规则
+     * @param groupId
+     */
+    public void setBotAdMonitor(String groupId,String adMonitor){
+
+    }
+
 }
