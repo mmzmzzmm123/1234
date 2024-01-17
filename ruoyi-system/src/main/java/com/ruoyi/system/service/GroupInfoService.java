@@ -2,11 +2,13 @@ package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.system.callback.dto.Called1100910039DTO;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.GroupPageInfoVO;
 import com.ruoyi.system.domain.vo.GroupResourceVO;
+import com.ruoyi.system.openapi.model.output.ExtTgSelectGroupVO;
 
 import java.util.List;
 
@@ -27,4 +29,9 @@ public interface GroupInfoService extends IService<GroupInfo> {
 
     List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode, List<String> excludeGroupId);
 
+    void syncGroupInfo(List<GroupInfo> groupInfoList, List<ExtTgSelectGroupVO> utInfos);
+
+    GroupInfo  saveExternalGroup(Called1100910039DTO dto);
+
+    GroupInfo getGroupBySerialNo(String groupId);
 }

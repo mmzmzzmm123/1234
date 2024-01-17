@@ -3,6 +3,8 @@ package com.ruoyi.system.callback.processor;
 import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
 
+import com.ruoyi.system.domain.GroupInfo;
+import com.ruoyi.system.service.GroupInfoService;
 import com.ruoyi.system.service.PlayMessageConfoundLogService;
 import com.ruoyi.system.service.business.GroupService;
 import com.ruoyi.system.service.impl.IntoGroupService;
@@ -28,6 +30,9 @@ public class TgRobotProcessor {
 
     @Autowired
     GroupService groupService;
+
+    @Autowired
+    GroupInfoService groupInfoService;
 
     /***
      *
@@ -88,8 +93,12 @@ public class TgRobotProcessor {
     @Type(value = 1100910039, parameterClass = Called1100910039DTO.class)
     public void called1100910039(Called1100910039DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        GroupInfo groupInfo = null;
+        if(root.isSuccess()) {
+            groupInfo = groupService.handleRobotIn(dto);
+        }
         intoGroupService.intoGroupCallback(dto, root);
-        //todo 新增群内机器人
+
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain.vo;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.ruoyi.common.annotation.Excel;
 import io.swagger.annotations.ApiModel;
@@ -7,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * @author 朱少波
@@ -28,8 +30,9 @@ public class GroupMemberInfoVO {
     @ApiModelProperty(value = "手机号")
     private String phone;
 
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "最后在线时间")
-    private LocalDateTime wasOnline;
+    private Date wasOnline;
 
 
     @ApiModelProperty(value = "成员身份 0普通 1群主 2管理员")

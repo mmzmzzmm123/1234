@@ -17,4 +17,13 @@ public class GroupTypeSetDTO extends GroupIdsDTO {
     @ApiModelProperty(value = "群类型  10私密群 20公开群")
     private Integer groupType;
 
+    @ApiModelProperty(value = "群链接")
+    private String groupLink;
+
+    @ApiModelProperty(value = "开始编号")
+    private Integer start;
+
+
+    @ApiModelProperty(value = "结束编号")
+    private Integer end;
 }

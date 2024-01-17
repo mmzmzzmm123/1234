@@ -4,10 +4,10 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
 import com.ruoyi.common.core.redis.RedisLock;
@@ -15,15 +15,17 @@ import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.enums.InviteBotAction;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.callback.dto.Called1100910017DTO;
+import com.ruoyi.system.callback.dto.Called1100910039DTO;
 import com.ruoyi.system.domain.*;
-import com.ruoyi.system.domain.dto.GroupAdminSetDTO;
-import com.ruoyi.system.domain.dto.GroupQueryDTO;
-import com.ruoyi.system.domain.dto.GroupUpdateInfoDTO;
+import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
+import com.ruoyi.system.domain.vo.GroupMemberInfoVO;
 import com.ruoyi.system.domain.vo.GroupResourceVO;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.*;
+import com.ruoyi.system.openapi.model.output.ExtTgSelectGroupMemberVO;
+import com.ruoyi.system.openapi.model.output.ExtTgSelectGroupVO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.system.service.*;
 import lombok.AllArgsConstructor;
@@ -168,7 +170,7 @@ public class GroupService {
         //新增bot监控表
         groupMonitorInfoService.add(groupIds);
         //同步群信息
-        syncInfo(groupInfos);
+        syncInfo(groupInfos, robotMap);
         //执行邀请bot进群
         invitingBotJoin(groupInfos, robotMap::get, true);
     }
@@ -181,8 +183,37 @@ public class GroupService {
     }
 
 
-    public void syncInfo(List<GroupInfo> groupInfos) {
-        //todo openApi接口 获取ut群信息
+    public void syncInfo(List<GroupInfo> groupInfos, Map<String, GroupRobot> robotMap) {
+        for (GroupInfo groupInfo : groupInfos) {
+            try {
+                GroupRobot robot = robotMap == null ? groupRobotService.getRobot(groupInfo.getGroupId()) : robotMap.get(groupInfo.getGroupId());
+                if (robot == null) {
+                    continue;
+                }
+
+                ThirdTgGetChatroomInfoInputDTO data = new ThirdTgGetChatroomInfoInputDTO();
+                data.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+                data.setTgRobotId(robot.getRobotId());
+                OpenApiResult<TgBaseOutputDTO> pageOpenApiResult = OpenApiClient.getChatroomInfoByThirdKpTg(data);
+                log.info("getChatroomInfoByThirdKpTg={},{}", JSON.toJSONString(data), JSON.toJSONString(pageOpenApiResult));
+            } catch (Exception e) {
+                log.info("getChatroomInfoByThirdKpTg.error={}", groupInfos, e);
+            }
+        }
+
+        try {
+            ThirdTgSelectGroupListDTO data = new ThirdTgSelectGroupListDTO();
+
+            data.setChatroomSerialNos(groupInfos.stream().map(GroupInfo::getGroupSerialNo).collect(Collectors.toList()));
+            OpenApiResult<List<ExtTgSelectGroupVO>> pageOpenApiResult = OpenApiClient.selectGroupListByThirdUtchatTg(data);
+            log.info("selectGroupListByThirdUtchatTg={},{}", JSON.toJSONString(data), JSON.toJSONString(pageOpenApiResult));
+            if (pageOpenApiResult.isSuccess()) {
+                groupInfoService.syncGroupInfo(groupInfos, pageOpenApiResult.getData());
+            }
+        } catch (Exception e) {
+            log.info("syncInfo.error={}", groupInfos, e);
+        }
+
     }
 
     public int invitingBotJoin(List<String> groupIds) {
@@ -299,7 +330,6 @@ public class GroupService {
             return false;
         }
 
-        //todo 邀请bot进群逻辑
         String key = "invitingBotJoin:" + groupInfo.getGroupId();
         RLock lock = redisLock.lock(key);
         if (!lock.isLocked()) {
@@ -413,7 +443,7 @@ public class GroupService {
         Assert.notEmpty(dto.getGroupIds(), "群不能为空");
         List<GroupInfo> groupInfos = groupInfoService.listByIds(dto.getGroupIds());
         Assert.notEmpty(groupInfos, "群不存在");
-        Assert.isTrue(CollUtil.isEmpty(dto.getImageUrls()) && StrUtil.isEmpty(dto.getGroupName()), "头像或者群名不能都为空");
+        Assert.isTrue(CollUtil.isNotEmpty(dto.getImageUrls()) && StrUtil.isNotEmpty(dto.getGroupName()), "头像或者群名不能都为空");
         int imageIndex = 0;
         int nameIndex = 0;
         List<String> groupNames = new ArrayList<>();
@@ -421,7 +451,7 @@ public class GroupService {
             if ((dto.getNameStart() == null || dto.getNameEnd() == null)) {
                 groupNames = Collections.singletonList(dto.getGroupName());
             } else {
-                Assert.isTrue(dto.getNameStart() > dto.getNameEnd(), "开始编号不能大于结束编号");
+                Assert.isTrue(dto.getNameStart() <= dto.getNameEnd(), "开始编号不能大于结束编号");
                 groupNames = Stream.iterate(dto.getNameStart(), d -> d + 1)
                         .limit(dto.getNameEnd() - dto.getNameStart() + 1)
                         .map(p -> dto.getGroupName() + p).collect(Collectors.toList());
@@ -466,21 +496,41 @@ public class GroupService {
 
     }
 
-    public void setType(List<String> groupIds, Integer groupType) {
-        Assert.notEmpty(groupIds, "群不能为空");
-        Assert.notNull(groupType, "群类型不能为空");
-        List<GroupInfo> groupInfos = groupInfoService.listByIds(groupIds);
+    public void setType(GroupTypeSetDTO dto) {
+        Assert.notEmpty(dto.getGroupIds(), "群不能为空");
+        Assert.notNull(dto.getGroupType(), "群类型不能为空");
+        List<GroupInfo> groupInfos = groupInfoService.listByIds(dto.getGroupIds());
         Assert.notEmpty(groupInfos, "群不存在");
-        groupInfos = groupInfos.stream().filter(p -> ObjectUtil.equal(p.getGroupType(), groupType)).collect(Collectors.toList());
-        Assert.notEmpty(groupInfos, "群类型无法更改");
+        groupInfos = groupInfos.stream().filter(p -> ObjectUtil.equal(p.getGroupType(), dto.getGroupType())).collect(Collectors.toList());
+        Assert.notEmpty(groupInfos, "群类型无法更改成相同类型");
+        List<String> groupLinks = new ArrayList<>();
+        int index = 0;
+
+        if (ObjectUtil.equal(dto.getGroupType(), 20)) {
+            Assert.notEmpty(dto.getGroupLink(), "公开群的群链接不能为空");
+            if ((dto.getStart() == null || dto.getEnd() == null)) {
+                groupLinks = Collections.singletonList(dto.getGroupLink());
+            } else {
+                Assert.isTrue(dto.getStart() <= dto.getEnd(), "开始编号不能大于结束编号");
+                groupLinks = Stream.iterate(dto.getStart(), d -> d + 1)
+                        .limit(dto.getEnd() - dto.getStart() + 1)
+                        .map(p -> dto.getGroupLink() + p).collect(Collectors.toList());
+            }
+
+        }
+
         for (GroupInfo groupInfo : groupInfos) {
+            if (index > 0 && index >= groupLinks.size()) {
+                index = 0;
+            }
+            String url = ObjectUtil.equal(dto.getGroupType(), 20) ? groupLinks.get(index++) : null;
             GroupRobot robot = groupRobotService.getRobot(groupInfo.getGroupId());
-            setAction(GroupAction.SET_GROUP_TYPE, groupInfo, robot, "", groupType + "", actionId -> {
+            setAction(GroupAction.SET_GROUP_TYPE, groupInfo, robot, "", dto.getGroupType() + "", actionId -> {
                         ThirdTgSetChatroomTypeInputDTO input = new ThirdTgSetChatroomTypeInputDTO();
                         input.setTgRobotId(robot.getRobotId());
                         input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
-                        input.setUsername(RandomUtil.randomString(32));
-                        input.setChatroomType(groupType);
+                        input.setUsername(url);
+                        input.setChatroomType(dto.getGroupType());
                         input.setExtend(actionId);
                         return input;
                     },
@@ -561,5 +611,66 @@ public class GroupService {
                     },
                     OpenApiClient::setChatroomAdminByThirdKpTg);
         }
+    }
+
+    public void syncMember(String groupId) {
+        GroupInfo groupInfo = groupInfoService.getById(groupId);
+        Assert.notNull(groupInfo, "群不存在");
+        ThirdTgSyncGroupMemberDTO input = new ThirdTgSyncGroupMemberDTO();
+        input.setChatroomSerialNos(Collections.singletonList(groupInfo.getGroupSerialNo()));
+        OpenApiResult<Void> voidOpenApiResult = OpenApiClient.syncGroupMemberByThirdUtchatTg(input);
+        log.info("syncGroupMemberByThirdUtchatTg={},{}", JSON.toJSONString(input), JSON.toJSONString(voidOpenApiResult));
+    }
+
+    public Page<GroupMemberInfoVO> queryMember(GroupMemberQueryDTO dto) {
+        Assert.notBlank(dto.getGroupId(), "群id不能为空");
+        GroupInfo groupInfo = groupInfoService.getById(dto.getGroupId());
+        Assert.notNull(groupInfo, "群不存在");
+        ThirdTgSelectGroupMemberDTO input = new ThirdTgSelectGroupMemberDTO();
+        input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+        if (StrUtil.isNotBlank(dto.getMemberId())) {
+            input.setMemberSerialNos(Collections.singletonList(dto.getMemberId()));
+        }
+        input.setStartTime(dto.getWasOnlineStart());
+        input.setEndTime(dto.getWasOnlineEnd());
+        input.setMemberType(dto.getMemberType());
+        input.setName(dto.getFullName());
+        input.setUserName(dto.getUserName());
+        input.setPage(dto.getPage());
+        input.setLimit(dto.getLimit());
+
+        OpenApiResult<Page<ExtTgSelectGroupMemberVO>> result = OpenApiClient.selectGroupMemberListByThirdUtchatTg(input);
+        Assert.isTrue(result.isSuccess(), "查询成员失败");
+        return convertRecord(result.getData(), p -> {
+            GroupMemberInfoVO vo = new GroupMemberInfoVO();
+            vo.setFullName(p.getName());
+            vo.setUserName(p.getUserName());
+            vo.setMemberId(p.getMemberSerialNo());
+            vo.setPhone(p.getPhone());
+            vo.setWasOnline(p.getWasOnline());
+            vo.setMemberType(p.getMemberType());
+            return vo;
+        });
+
+    }
+
+    public <T, R> Page<T> convertRecord(Page<R> page, Function<R, T> function) {
+        Page<T> result = new Page<>();
+        if (CollUtil.isNotEmpty(page.getRecords())) {
+            result.setRecords(page.getRecords().stream().map(function).collect(Collectors.toList()));
+        }
+        result.setTotal(page.getTotal());
+        result.setPages(page.getPages());
+        result.setSize(page.getSize());
+        return result;
+    }
+
+    public GroupInfo handleRobotIn(Called1100910039DTO dto) {
+        GroupInfo groupInfo = groupInfoService.getGroupBySerialNo(dto.getChatroomSerialNo());
+        if(groupInfo == null) {
+            groupInfoService.saveExternalGroup(dto);
+        }
+        //todo 添加群内机器人逻辑
+        return groupInfo;
     }
 }
