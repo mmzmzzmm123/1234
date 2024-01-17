@@ -42,7 +42,7 @@ public enum OpenApiEnum {
     // utchat接口
     THIRD_UTCHAT_TG_SELECT_ROBOT_LIST_BY_RADIO("utchatTg-查询分组下的机器号", "/thirdparty/tgUtChat/selectRobotListByRadio", null),
 
-    THIRD_UTCHAT_TG_SYNC_GROUP_MEMBER("utchatTg-查询分组下的机器号", "/thirdparty/tgUtChat/syncGroupMember", null),
+    THIRD_UTCHAT_TG_SYNC_GROUP_MEMBER("utchatTg-同步群成员", "/thirdparty/tgUtChat/syncGroupMember", null),
 
     THIRD_UTCHAT_TG_SELECT_GROUP_LIST("utchatTg-查询商家(机器号)的群", "/thirdparty/tgUtChat/selectGroupList", null),
 
