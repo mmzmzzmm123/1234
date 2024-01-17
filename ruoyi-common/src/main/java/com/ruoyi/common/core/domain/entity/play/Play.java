@@ -80,6 +80,11 @@ public class Play {
     private Integer isConfound;
 
     /**
+     * 混淆状态 0-未混淆 1-已混淆
+     */
+    private Integer confoundState;
+
+    /**
      * 剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成
      */
     private Integer state;

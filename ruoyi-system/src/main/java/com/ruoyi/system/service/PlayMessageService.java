@@ -10,8 +10,8 @@ import java.util.List;
  */
 public interface PlayMessageService extends IService<PlayMessage> {
 
-    List<PlayMessage> listByPlayId(Integer playId);
+    List<PlayMessage> listByPlayId(String playId);
 
-    void deleteByPlayId(Integer playId);
+    void deleteByPlayId(String playId);
 
 }

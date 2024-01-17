@@ -43,7 +43,7 @@ public class PlayMessageConfoundServiceImpl extends ServiceImpl<PlayMessageConfo
     private PlayMessageConfoundLogService playMessageConfoundLogService;
 
     @Override
-    public void clearAndCreateConfound(Integer playId) {
+    public void clearAndCreateConfound(String playId) {
         if (playId == null) {
             return;
         }

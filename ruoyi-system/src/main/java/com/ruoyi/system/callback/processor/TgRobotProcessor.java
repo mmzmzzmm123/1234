@@ -3,11 +3,14 @@ package com.ruoyi.system.callback.processor;
 import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
 
+import com.ruoyi.system.service.PlayMessageConfoundLogService;
 import com.ruoyi.system.service.impl.IntoGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 import java.util.List;
 
 @Component
@@ -17,6 +20,9 @@ public class TgRobotProcessor {
 
     @Autowired
     IntoGroupService intoGroupService;
+
+    @Resource
+    private PlayMessageConfoundLogService playMessageConfoundLogService;
 
     /***
      *
@@ -173,6 +179,7 @@ public class TgRobotProcessor {
     @Type(value = 1100850508, parameterClass = Called1100850508DTO.class)
     public void called1100850508(Called1100850508DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        playMessageConfoundLogService.handleConfoundImg(root);
     }
 
     /**
@@ -182,6 +189,7 @@ public class TgRobotProcessor {
     @Type(value = 1100850405, parameterClass = Called1100850405DTO.class)
     public void called1100850405(Called1100850405DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        playMessageConfoundLogService.handleConfoundText(root);
     }
 
     /**
