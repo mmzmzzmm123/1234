@@ -16,7 +16,7 @@ public enum OpenApiEnum {
     THIRD_KP_TG_EXIT_CHATROOML("kpTg-退出群", "/thirdparty/tgGroup/exitChatroom", 1100910024),
     THIRD_KP_TG_SEARCH_MEMBER("kpTg-获取群成员列表", "/thirdparty/tgGroup/searchMember", 1100910113),
 
-//    THIRD_KP_TG_GET_CHATROOM_INFO("kpTg-获取群信息", "/thirdparty/tgGroup/getChatroomInfo", 1100910018),
+    THIRD_KP_TG_GET_CHATROOM_INFO("kpTg-获取群信息", "/thirdparty/tgGroup/getChatroomInfo", 1100910018),
 
     THIRD_KP_TG_SET_CHATROOM_TYPE("kpTg-设置群类型", "/thirdparty/tgGroup/setChatroomType", 1100910056),
 
