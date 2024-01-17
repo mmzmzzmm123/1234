@@ -25,6 +25,9 @@ public class PlayIntoGroupTask implements Serializable {
     @ApiModelProperty("机器人ID")
     private String personId;
 
+    @ApiModelProperty("重试ID")
+    private String retryId;
+
     @ApiModelProperty("机器人名称")
     private String userName;
 
@@ -33,6 +36,9 @@ public class PlayIntoGroupTask implements Serializable {
 
     @ApiModelProperty("剧本ID")
     private String playId;
+
+    @ApiModelProperty("是否可被设置管理员 0否 1可以")
+    private Integer isAdmin;
 
     @ApiModelProperty("任务状态: 1:待处理 2.处理中 3:已完成 4 已失败")
     private Integer taskState;
@@ -53,4 +59,7 @@ public class PlayIntoGroupTask implements Serializable {
 
     @ApiModelProperty("群ID")
     private String groupId;
+
+    @ApiModelProperty("0 还能重试 1无法重试")
+    private Integer isError;
 }
