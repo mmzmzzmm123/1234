@@ -159,9 +159,4 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
         // 保存5分钟
         redisCache.setCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + place + "_" + flag, String.valueOf(code), 5, TimeUnit.MINUTES);
     }
-
-    @Override
-    public void logout() {
-        SecurityUtils.getUserId();
-    }
 }
