@@ -12,5 +12,7 @@ public class SelectRobotListVO extends Robot {
     private Integer groupToDayNum;
     @ApiModelProperty(value = "累计带群数")
     private Integer groupTotalNum;
+    @ApiModelProperty(value = "水军占用状态,0-未占用,1-已占用")
+    private Integer occupyType;
 
 }
