@@ -30,7 +30,7 @@ public class ExtTgBatchRobotSimpInfoData {
     private String phoneModel;
     @ApiModelProperty(value = "设备机型")
     private String deviceModel;
-    @ApiModelProperty(value = "协议类型：2 iPhone 4 Android")
+    @ApiModelProperty(value = "协议类型：2 iPhone 4 Android 16云机 17工作机")
     private Integer protocolType;
     @ApiModelProperty(value = "注册设备网络类型")
     private String networkType;
