@@ -3,13 +3,17 @@ package com.ruoyi.system.service.impl;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.robot.Robot;
+import com.ruoyi.common.core.domain.entity.robot.RobotStatistics;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
+import com.ruoyi.system.mapper.GroupRobotMapper;
 import com.ruoyi.system.mapper.RobotMapper;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
@@ -19,6 +23,7 @@ import com.ruoyi.system.openapi.model.output.ExtTgBatchRobotSimpInfoData;
 import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotByMerchantVO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.system.service.IRobotService;
+import com.ruoyi.system.service.RobotStatisticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.stereotype.Service;
@@ -33,7 +38,11 @@ import java.util.stream.Collectors;
 public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements IRobotService {
     @Resource
     private RobotMapper robotMapper;
+    @Resource
+    private GroupRobotMapper groupRobotMapper;
 
+    @Resource
+    private RobotStatisticsService robotStatisticsService;
     @Override
     public R<Page<SelectRobotListVO>> selectRobotPageList(SelectRobotListDTO dto) {
         Page<SelectRobotListVO> page = new Page<>(dto.getPage(),dto.getLimit());
@@ -103,7 +112,8 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         List<String> newRobotSerialNos = newRobotList.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
         List<Robot> oldRobotList = robotMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, newRobotSerialNos));
         if(CollectionUtils.isEmpty(oldRobotList)){
-            this.saveBatch(newRobotList);
+            this.saveBatch(this.compensateSetGroupOwnerRobot(newRobotList));
+            this.insertRobotStatistics(newRobotList);
             return;
         }
         List<Robot> saveRobotList = Lists.newArrayList();
@@ -189,12 +199,63 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             }
         }
         if(!CollectionUtils.isEmpty(saveRobotList)){
-            this.saveBatch(saveRobotList);
+            this.saveBatch(this.compensateSetGroupOwnerRobot(saveRobotList));
+            this.insertRobotStatistics(saveRobotList);
         }
         if(!CollectionUtils.isEmpty(updateRobotList)){
             this.updateBatchById(updateRobotList);
         }
     }
+
+    /**
+     * 生成机器人统计数据
+     * @param saveRobotList
+     */
+    private void insertRobotStatistics(List<Robot> saveRobotList){
+        List<RobotStatistics> saveRobotStatistics = Lists.newArrayList();
+        for (Robot robot : saveRobotList) {
+            RobotStatistics robotStatistics = new RobotStatistics();
+            robotStatistics.setId(IdWorker.getIdStr());
+            robotStatistics.setRobotSerialNo(robot.getRobotSerialNo());
+            robotStatistics.setCreateTime(new Date());
+            robotStatistics.setUpdateTime(new Date());
+            robotStatistics.setOneDayJoinGroupCount(0);
+            robotStatistics.setTotalJoinGroupCount(0);
+            robotStatistics.setOneDaySetAdminCount(0);
+            robotStatistics.setTotalSetAdminCount(0);
+            robotStatistics.setGroupCount(0);
+            robotStatistics.setIsLock(0);
+            robotStatistics.setTotalLeaderSetAdminCount(0);
+            saveRobotStatistics.add(robotStatistics);
+        }
+        robotStatisticsService.saveBatch(saveRobotStatistics);
+
+    }
+
+    /**
+     * 补充机器号是否是群主
+     * @param saveRobotList
+     */
+    private List<Robot> compensateSetGroupOwnerRobot(List<Robot> saveRobotList){
+        List<String> robotSerialNos = saveRobotList.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
+        List<GroupRobot> groupRobots = groupRobotMapper.selectList(new LambdaUpdateWrapper<GroupRobot>()
+                .in(GroupRobot::getRobotId, robotSerialNos)
+                .eq(GroupRobot::getMemberType, 1));
+        if(CollectionUtils.isEmpty(groupRobots)){
+            return saveRobotList;
+        }
+        Map<String,GroupRobot> map = new HashMap<>();
+        groupRobots.forEach(item->map.put(item.getRobotId(),item));
+        List<Robot> updateRobotList = Lists.newArrayList();
+        for (Robot robot : saveRobotList) {
+            if(map.containsKey(robot.getRobotSerialNo())){
+                robot.setGroupOwner(1);
+            }
+        }
+        return saveRobotList;
+
+    }
+
 
     private Boolean modify(Object oldData,Object newData){
         if(ObjectUtil.isEmpty(oldData) && ObjectUtil.isEmpty(newData)){
