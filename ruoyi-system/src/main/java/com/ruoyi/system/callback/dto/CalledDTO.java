@@ -31,6 +31,10 @@ public class CalledDTO {
 
     private String resultMsg;
 
+    public boolean isSuccess() {
+        return  resultCode != null && 0 == resultCode;
+    }
+
     public static boolean isSucceeded(CalledDTO callbackData) {
         return null != callbackData && callbackData.getResultCode() != null && 0 == callbackData.getResultCode();
     }

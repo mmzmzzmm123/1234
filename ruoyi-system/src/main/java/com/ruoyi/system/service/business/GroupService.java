@@ -14,6 +14,7 @@ import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.enums.InviteBotAction;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.callback.dto.Called1100910017DTO;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.domain.dto.GroupAdminSetDTO;
 import com.ruoyi.system.domain.dto.GroupQueryDTO;
@@ -240,29 +241,55 @@ public class GroupService {
 
     }
 
+
     public void doNextInvitingBotJoinAction(GroupBatchAction groupBatch, GroupActionLog groupActionLog, boolean success, Object data) {
+        //当前bot动作
         InviteBotAction botAction = InviteBotAction.of(groupBatch.getActionProgress());
         if (botAction == null) {
             groupBatchActionService.updateStatus(groupBatch.getBatchId(), success ? 2 : 1);
             return;
         }
-        if (success) {
-            InviteBotAction nextAction = botAction.getNextAction();
-            if (nextAction == null) {
-                groupMonitorInfoService.robotCheck(groupBatch.getGroupId());
-                groupBatchActionService.updateStatus(groupBatch.getBatchId(), 2);
-                return;
-            }
-            runAction(groupBatch.getBatchId(), nextAction.getAction(), groupInfoService.getById(groupBatch.getGroupId()),
-                    groupRobotService.getRobot(groupBatch.getGroupId()), data == null ? groupActionLog.getChangeValue() : String.valueOf(data));
-        } else {
-            if (groupBatch.getRetryCount() < botAction.getRetryCount()) {
-                groupBatchActionService.doNextAction(groupBatch.getBatchId(), groupBatch.getRetryCount() + 1);
-                runAction(groupBatch.getBatchId(), botAction.getAction(), groupInfoService.getById(groupBatch.getGroupId()),
-                        groupRobotService.getRobot(groupBatch.getGroupId()), groupActionLog.getChangeValue());
+        try {
+            if (success) {
+                InviteBotAction nextAction = botAction.getNextAction();
+                if (nextAction == null) {
+                    //所有动作完成 标记bot已进群检查
+                    groupMonitorInfoService.robotCheck(groupBatch.getGroupId());
+                    //批次动作完成
+                    groupBatchActionService.updateStatus(groupBatch.getBatchId(), 2);
+                    return;
+                }
+                String value;
+                //当前动作是搜索bot  对比username 获取是bot的数据
+                if (botAction == InviteBotAction.SEARCH_BOT) {
+                    List<Called1100910017DTO.Called1100910017UserDTO> userList = (List<Called1100910017DTO.Called1100910017UserDTO>) data;
+                    Assert.notEmpty(userList, "搜索bot失败");
+                    value = userList.stream().filter(p -> ObjectUtil.equal(p.getUserName(), groupActionLog.getChangeValue()))
+                            .findFirst().map(Called1100910017DTO.Called1100910017UserDTO::getUserSerialNo).orElse("");
+                    Assert.notBlank(value, "搜索bot失败");
+                    //更新bot的用户编号
+                    groupMonitorInfoService.updateRobotSerialNo(groupBatch.getGroupId(), value);
+                } else {
+                    //其他的动作 都传bot的用户编号
+                    value = groupActionLog.getChangeValue();
+                }
+                //执行动作
+                runAction(groupBatch.getBatchId(), nextAction.getAction(), groupInfoService.getById(groupBatch.getGroupId()),
+                        groupRobotService.getRobot(groupBatch.getGroupId()), value);
             } else {
-                groupBatchActionService.updateStatus(groupBatch.getBatchId(), 1);
+                //如果需要重试 则当前动作重复操作
+                if (groupBatch.getRetryCount() < botAction.getRetryCount()) {
+                    groupBatchActionService.doNextAction(groupBatch.getBatchId(), groupBatch.getRetryCount() + 1);
+                    runAction(groupBatch.getBatchId(), botAction.getAction(), groupInfoService.getById(groupBatch.getGroupId()),
+                            groupRobotService.getRobot(groupBatch.getGroupId()), groupActionLog.getChangeValue());
+                } else {
+                    //不满足重试条件  直接标记失败
+                    groupBatchActionService.updateStatus(groupBatch.getBatchId(), 1);
+                }
             }
+        } catch (Exception e) {
+            log.info("doNextInvitingBotJoinAction.error={}", groupActionLog, e);
+            groupBatchActionService.updateStatus(groupBatch.getBatchId(), 1);
         }
     }
 
