@@ -281,7 +281,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         if(CollectionUtils.isEmpty(robotSerialNos)){
             return R.ok();
         }
-        this.update(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo,robotSerialNos).set(Robot::getGroupOwner,1))
+        this.update(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo,robotSerialNos).set(Robot::getGroupOwner,1));
         return R.ok();
     }
 }
