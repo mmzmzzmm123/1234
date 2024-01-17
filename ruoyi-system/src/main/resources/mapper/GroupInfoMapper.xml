@@ -15,13 +15,16 @@
                tgc.cluster_name,
                tgi.group_type,
                tgs.leader_robot,
+               if(ttdcad.admin_serial_no is null,0,1)             black_leader,
                concat(robot.first_name, if(robot.last_name != '', ' ', ''), robot.last_name)                                    full_name,
                robot.phone,
                robot.robot_serial_no,
                robot.heartbeat_status,
                robot.seal_status,
                tgi.create_time,
-               tgs.used_time
+               tgs.used_time,
+               tgi.create_type,
+               tgmi.bot_play_id play_id
         from t_group_info tgi
                  join t_group_cluster_ref tgcr on tgi.group_id = tgcr.group_id
                  join t_group_cluster tgc on tgcr.cluster_id = tgc.cluster_id
@@ -29,6 +32,7 @@
                  left join t_group_monitor_info tgmi on tgs.group_id = tgmi.group_id
                  left join t_group_robot tgr on tgmi.group_id = tgr.group_id and tgr.member_type = 1
                  left join t_robot_info robot on robot.robot_serial_no = tgr.robot_id
+                left join t_telegram_det_chatroom_admin_distr ttdcad on ttdcad.admin_serial_no = robot.robot_serial_no
         <where>
             <if test="dto.clusterId != null and dto.clusterId != ''">
                 AND tgc.cluster_id = #{dto.clusterId}
@@ -60,6 +64,16 @@
             <if test="dto.sealStatus != null ">
                 AND robot.seal_status = #{dto.sealStatus}
             </if>
+            <if test="dto.blackLeader != null ">
+                <choose>
+                    <when test="dto.blackLeader == 0">
+                        AND ttdcad.admin_serial_no is null
+                    </when>
+                    <when test="dto.blackLeader == 1">
+                        AND ttdcad.admin_serial_no is not null
+                    </when>
+                </choose>
+            </if>
             <if test="dto.robotIn != null ">
                 AND
                 <choose>
@@ -84,6 +98,10 @@
             <if test="dto.groupId != null and dto.groupId != ''">
                 AND tgi.group_id = #{dto.groupId}
             </if>
+            <if test="dto.playId != null and dto.playId != ''">
+                AND tgmi.bot_play_id = #{dto.playId}
+            </if>
+
             <if test="dto.groupSerialNo != null and dto.groupSerialNo != ''">
                 AND tgi.group_serial_no = #{dto.groupSerialNo}
             </if>

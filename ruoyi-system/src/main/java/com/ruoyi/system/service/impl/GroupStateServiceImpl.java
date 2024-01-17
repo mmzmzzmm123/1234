@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.system.domain.GroupState;
@@ -36,6 +37,20 @@ public class GroupStateServiceImpl extends ServiceImpl<GroupStateMapper, GroupSt
             groupState.setLeaderRobot(1);
             return groupState;
         }).collect(Collectors.toList()));
+    }
+
+    @Override
+    public void addExternal(String groupId) {
+        if (StrUtil.isBlank(groupId)) {
+            return;
+        }
+        GroupState groupState = new GroupState();
+        groupState.setGroupId(groupId);
+        groupState.setGroupUsed(1);
+        groupState.setGroupStatus(0);
+        groupState.setUsedTime(LocalDateTime.now());
+        groupState.setLeaderRobot(0);
+        baseMapper.insert(groupState);
     }
 
     @Override

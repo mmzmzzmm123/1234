@@ -101,7 +101,7 @@ public class TgRobotProcessor {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         GroupInfo groupInfo = null;
         if (root.isSuccess()) {
-            groupInfo = groupService.handleRobotIn(dto);
+            groupInfo = groupService.handleRobotIn(dto,root.getRobotId());
         }
         intoGroupService.intoGroupCallback(groupInfo,root);
 
@@ -115,6 +115,10 @@ public class TgRobotProcessor {
     @Type(value = 1100910024, parameterClass = CalledEmptyDTO.class)
     public void called1100910024(Called1100910039DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        GroupInfo groupInfo = null;
+        if (root.isSuccess()) {
+            groupInfo =  groupService.handleRobotOut(dto,root.getRobotId());
+        }
         intoGroupService.outGroupCallback(root,dto);
     }
 
@@ -175,6 +179,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910018, parameterClass = Called1100910018DTO.class)
     public void called1100910018(Called1100910018DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        //todo 修改群基础信息
     }
 
     /**
@@ -268,5 +273,8 @@ public class TgRobotProcessor {
     @Type(value = 1100910112, parameterClass = Called1100910112DTO.class)
     public void called1100910112(Called1100910112DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()){
+            groupInfoService.changeGroupSerialNo(dto.getOld_chatroom_serial_no(),dto.getNew_chatroom_serial_no());
+        }
     }
 }

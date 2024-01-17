@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.system.callback.dto.Called1100910039DTO;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
 import com.ruoyi.system.domain.dto.GroupPageQueryExportDTO;
@@ -84,20 +83,20 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
     }
 
     @Override
-    public List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode,List<String> excludeGroupId) {
+    public List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode, List<String> excludeGroupId) {
         return baseMapper.selectGroup(registrationDay == null ? null :
-                LocalDateTime.now().plusDays(-registrationDay), groupNum, countryCode,excludeGroupId);
+                LocalDateTime.now().plusDays(-registrationDay), groupNum, countryCode, excludeGroupId);
     }
 
     @Override
     public void syncGroupInfo(List<GroupInfo> groupInfoList, List<ExtTgSelectGroupVO> utInfos) {
-        if(CollUtil.isEmpty(utInfos)){
+        if (CollUtil.isEmpty(utInfos)) {
             return;
         }
-        Map<String,ExtTgSelectGroupVO> utInfoMap =
+        Map<String, ExtTgSelectGroupVO> utInfoMap =
                 utInfos.stream().collect(Collectors.toMap(ExtTgSelectGroupVO::getChatroomSerialNo, p -> p));
         groupInfoList.stream().filter(p -> utInfoMap.containsKey(p.getGroupSerialNo()))
-                .map(p->{
+                .map(p -> {
                     ExtTgSelectGroupVO vo = utInfoMap.get(p.getGroupSerialNo());
                     GroupInfo update = new GroupInfo();
                     update.setGroupId(p.getGroupId());
@@ -109,7 +108,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
     }
 
     @Override
-    public GroupInfo saveExternalGroup(String groupSerialNo,String groupName) {
+    public GroupInfo saveExternalGroup(String groupSerialNo, String groupName) {
         GroupInfo groupInfo = new GroupInfo();
         groupInfo.setGroupId(IdWorker.getIdStr());
         groupInfo.setGroupSerialNo(groupSerialNo);
@@ -121,6 +120,18 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
 
     @Override
     public GroupInfo getGroupBySerialNo(String serialNo) {
-        return baseMapper.selectOne(new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo,serialNo).last(" limit 1"));
+        return baseMapper.selectOne(new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo, serialNo).last(" limit 1"));
+    }
+
+    @Override
+    public void changeGroupSerialNo(String oldGroupSerialNo, String newGroupSerialNo) {
+        GroupInfo groupBySerialNo = getGroupBySerialNo(oldGroupSerialNo);
+        if (groupBySerialNo == null) {
+            return;
+        }
+        GroupInfo groupInfo = new GroupInfo();
+        groupInfo.setGroupId(groupBySerialNo.getGroupId());
+        groupInfo.setGroupSerialNo(newGroupSerialNo);
+        baseMapper.updateById(groupInfo);
     }
 }

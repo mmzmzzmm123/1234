@@ -15,6 +15,8 @@ public interface GroupStateService extends IService<GroupState> {
 
     void addImportGroup(List<String> groupIds);
 
+    void addExternal(String groupId);
+
     void addExternalGroup(List<String> groupIds);
 
     void markUsed(List<String> groupIds,Integer groupUsed);

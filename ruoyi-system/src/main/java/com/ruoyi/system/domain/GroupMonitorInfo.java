@@ -55,6 +55,27 @@ public class GroupMonitorInfo {
     private Integer botCheck;
 
     /**
+     * 邀请bot入群的机器人id
+     */
+    @ApiModelProperty(value = "邀请bot入群的机器人id")
+    @TableField("robot_id")
+    private String robotId;
+
+    /**
+     * 群配置的剧本id
+     */
+    @ApiModelProperty(value = "群配置的剧本id")
+    @TableField("bot_play_id")
+    private String botPlayId;
+
+    /**
+     * 是否设置广告监控 0-否 1-有
+     */
+    @ApiModelProperty(value = "是否设置广告监控 0-否 1-有")
+    @TableField("bot_ad_monitor")
+    private Integer botAdMonitor;
+
+    /**
      * 原始官方群Id
      */
     @ApiModelProperty(value = "原始官方群Id")

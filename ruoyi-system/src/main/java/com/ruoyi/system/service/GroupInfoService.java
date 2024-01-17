@@ -20,6 +20,7 @@ import java.util.List;
  */
 public interface GroupInfoService extends IService<GroupInfo> {
 
+
     List<String> existGroup(List<String> groupSerialNos);
 
     Page<GroupPageInfoVO> groupPage(GroupPageQueryDTO dto);
@@ -33,5 +34,7 @@ public interface GroupInfoService extends IService<GroupInfo> {
 
     GroupInfo  saveExternalGroup(String groupSerialNo,String groupName);
 
-    GroupInfo getGroupBySerialNo(String groupId);
+    GroupInfo getGroupBySerialNo(String groupSerialNo);
+
+    void changeGroupSerialNo(String oldGroupSerialNo,String newGroupSerialNo);
 }

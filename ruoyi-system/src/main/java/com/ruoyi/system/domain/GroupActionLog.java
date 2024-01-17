@@ -48,6 +48,14 @@ public class GroupActionLog {
     @TableField("group_id")
     private String groupId;
 
+
+    /**
+     * 机器人id
+     */
+    @ApiModelProperty(value = "机器人id")
+    @TableField("robot_id")
+    private String robotId;
+
     /**
      * 批次id
      */

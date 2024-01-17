@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
+import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.enums.InviteBotAction;
@@ -58,6 +59,8 @@ public class GroupService {
 
     private final GroupClusterRefService groupClusterRefService;
 
+    private final GroupClusterService groupClusterService;
+
     private final GroupStateService groupStateService;
 
     private final GroupMonitorInfoService groupMonitorInfoService;
@@ -73,6 +76,10 @@ public class GroupService {
     private final GroupActionLogService groupActionLogService;
 
     private final GroupBatchActionService groupBatchActionService;
+
+    private final IRobotService iRobotService;
+
+    private final IPlayService playbackService;
 
     /**
      * 选群
@@ -127,7 +134,9 @@ public class GroupService {
             }
             //满足条件的数据
             if (groupInfoList.size() >= dto.getGroupNum()) {
-                groupStateService.markUsed(groupInfoList.stream().map(GroupInfoVO::getGroupId).collect(Collectors.toList()), 1);
+                List<String> groupIds = groupInfoList.stream().map(GroupInfoVO::getGroupId).collect(Collectors.toList());
+                groupStateService.markUsed(groupIds, 1);
+                groupMonitorInfoService.setPlayId(groupIds, dto.getPayId());
                 return R.ok(groupInfoList);
             } else {
                 if (CollUtil.isNotEmpty(groupInfoList) && dto.getSetAdminCount() != null) {
@@ -163,6 +172,8 @@ public class GroupService {
         List<String> groupIds = groupInfos.stream().map(GroupInfo::getGroupId).collect(Collectors.toList());
         //默认保存群主信息
         Map<String, GroupRobot> robotMap = groupRobotService.addGroupLeader(groupInfos, getRobotMap(groupInfos, resourceList));
+        //设置号为群主号
+        iRobotService.setGroupOwner(robotMap.values().stream().map(GroupRobot::getRobotId).collect(Collectors.toList()));
         //保存群组关联
         groupClusterRefService.add(groupIds, newClusterId);
         //保存群状态
@@ -186,7 +197,7 @@ public class GroupService {
     public void syncInfo(List<GroupInfo> groupInfos, Map<String, GroupRobot> robotMap) {
         for (GroupInfo groupInfo : groupInfos) {
             try {
-                GroupRobot robot = robotMap == null ? groupRobotService.getRobot(groupInfo.getGroupId()) : robotMap.get(groupInfo.getGroupId());
+                GroupRobot robot = robotMap == null ? groupRobotService.getAdminRobot(groupInfo.getGroupId()) : robotMap.get(groupInfo.getGroupId());
                 if (robot == null) {
                     continue;
                 }
@@ -217,11 +228,7 @@ public class GroupService {
     }
 
     public int invitingBotJoin(List<String> groupIds) {
-        return invitingBotJoin(groupInfoService.listByIds(groupIds), groupRobotService::getRobot, false);
-    }
-
-    public int invitingBotJoin(GroupInfo groupInfo) {
-        return invitingBotJoin(Collections.singletonList(groupInfo), groupRobotService::getRobot, false);
+        return invitingBotJoin(groupInfoService.listByIds(groupIds), groupRobotService::getAdminRobot, false);
     }
 
     public int invitingBotJoin(List<GroupInfo> groupInfos, Function<String, GroupRobot> getGroupRobotFuc, boolean newGroup) {
@@ -294,6 +301,8 @@ public class GroupService {
                     groupBatchActionService.updateStatus(groupBatch.getBatchId(), 2);
                     return;
                 }
+                GroupInfo groupInfo = groupInfoService.getById(groupBatch.getGroupId());
+
                 String value;
                 //当前动作是搜索bot  对比username 获取是bot的数据
                 if (botAction == InviteBotAction.SEARCH_BOT) {
@@ -303,20 +312,29 @@ public class GroupService {
                             .findFirst().map(Called1100910017DTO.Called1100910017UserDTO::getUserSerialNo).orElse("");
                     Assert.notBlank(value, "搜索bot失败");
                     //更新bot的用户编号
-                    groupMonitorInfoService.updateRobotSerialNo(groupBatch.getGroupId(), value);
+                    groupMonitorInfoService.updateRobotSerialNo(groupBatch.getGroupId(), value, groupActionLog.getRobotId());
+                } else if (botAction == InviteBotAction.SET_BOT_ADMIN && ObjectUtil.equal(groupInfo.getCreateType(), 20)) {
+                    //外部群 不设置管理员
+                    //所有动作完成 标记bot已进群检查
+                    groupMonitorInfoService.robotCheck(groupBatch.getGroupId());
+                    //批次动作完成
+                    groupBatchActionService.updateStatus(groupBatch.getBatchId(), 2);
+                    //设置剧本广告监控
+                    setBotAdMonitor(groupInfo.getGroupId());
+                    return;
                 } else {
                     //其他的动作 都传bot的用户编号
                     value = groupActionLog.getChangeValue();
                 }
                 //执行动作
-                runAction(groupBatch.getBatchId(), nextAction.getAction(), groupInfoService.getById(groupBatch.getGroupId()),
-                        groupRobotService.getRobot(groupBatch.getGroupId()), value);
+                runAction(groupBatch.getBatchId(), nextAction.getAction(), groupInfo,
+                        groupRobotService.getRobot(groupBatch.getGroupId(), groupActionLog.getRobotId()), value);
             } else {
                 //如果需要重试 则当前动作重复操作
                 if (groupBatch.getRetryCount() < botAction.getRetryCount()) {
                     groupBatchActionService.doNextAction(groupBatch.getBatchId(), groupBatch.getRetryCount() + 1);
                     runAction(groupBatch.getBatchId(), botAction.getAction(), groupInfoService.getById(groupBatch.getGroupId()),
-                            groupRobotService.getRobot(groupBatch.getGroupId()), groupActionLog.getChangeValue());
+                            groupRobotService.getRobot(groupBatch.getGroupId(), groupActionLog.getRobotId()), groupActionLog.getChangeValue());
                 } else {
                     //不满足重试条件  直接标记失败
                     groupBatchActionService.updateStatus(groupBatch.getBatchId(), 1);
@@ -333,10 +351,12 @@ public class GroupService {
         if (groupRobot == null) {
             return false;
         }
+        log.info("邀请bot入群检查={},{}", JSON.toJSONString(groupInfo), JSON.toJSONString(groupRobot));
 
         String key = "invitingBotJoin:" + groupInfo.getGroupId();
         RLock lock = redisLock.lock(key);
         if (!lock.isLocked()) {
+            log.info("邀请bot入群检查 加锁失败={}", JSON.toJSONString(groupInfo));
             return false;
         }
         try {
@@ -464,7 +484,7 @@ public class GroupService {
 
 
         for (GroupInfo groupInfo : groupInfos) {
-            GroupRobot robot = groupRobotService.getRobot(groupInfo.getGroupId());
+            GroupRobot robot = groupRobotService.getAdminRobot(groupInfo.getGroupId());
             if (CollUtil.isEmpty(groupNames)) {
                 if (nameIndex >= groupNames.size()) {
                     nameIndex = 0;
@@ -528,7 +548,7 @@ public class GroupService {
                 index = 0;
             }
             String url = ObjectUtil.equal(dto.getGroupType(), 20) ? groupLinks.get(index++) : null;
-            GroupRobot robot = groupRobotService.getRobot(groupInfo.getGroupId());
+            GroupRobot robot = groupRobotService.getAdminRobot(groupInfo.getGroupId());
             setAction(GroupAction.SET_GROUP_TYPE, groupInfo, robot, "", dto.getGroupType() + "", actionId -> {
                         ThirdTgSetChatroomTypeInputDTO input = new ThirdTgSetChatroomTypeInputDTO();
                         input.setTgRobotId(robot.getRobotId());
@@ -569,6 +589,7 @@ public class GroupService {
             groupActionLogService.save(actionLog);
         } else {
             T input = buildInput.apply(actionLog.getId());
+            actionLog.setRobotId(robot.getRobotId());
             actionLog.setPara(JSON.toJSONString(input));
             groupActionLogService.save(actionLog);
             try {
@@ -595,7 +616,7 @@ public class GroupService {
         GroupInfo groupInfo = groupInfoService.getById(dto.getGroupId());
         Assert.notNull(groupInfo, "群不存在");
         for (String memberId : dto.getMemberIds()) {
-            GroupRobot robot = groupRobotService.getRobot(dto.getGroupId());
+            GroupRobot robot = groupRobotService.getAdminRobot(dto.getGroupId());
             setAction(GroupAction.SET_GROUP_ADMIN, groupInfo, robot, "", memberId, actionId -> {
                         ThirdTgSetChatroomAdminInputDTO input = new ThirdTgSetChatroomAdminInputDTO();
                         input.setTgRobotId(robot.getRobotId());
@@ -669,34 +690,63 @@ public class GroupService {
         return result;
     }
 
-    public GroupInfo handleRobotIn(Called1100910039DTO dto) {
+    public GroupInfo handleRobotIn(Called1100910039DTO dto, String robotId) {
         GroupInfo groupInfo = groupInfoService.getGroupBySerialNo(dto.getChatroomSerialNo());
         if (groupInfo == null) {
             groupInfo = groupInfoService.saveExternalGroup(dto.getChatroomSerialNo(), dto.getChatroomSerialNo());
         }
-        //todo 添加群内机器人逻辑
+        groupRobotService.add(groupInfo.getGroupId(), robotId);
+        return groupInfo;
+    }
+
+    public GroupInfo handleRobotOut(Called1100910039DTO dto, String robotId) {
+        GroupInfo groupInfo = groupInfoService.getGroupBySerialNo(dto.getChatroomSerialNo());
+        if (groupInfo == null) {
+            return null;
+        }
+        groupRobotService.del(groupInfo.getGroupId(), robotId);
         return groupInfo;
     }
 
     public void saveAndInviteBot(GroupInfo groupInfo) {
-        //todo 添加群内机器人逻辑
-        //todo 执行bot检测
+        //保存群组 到默认组
+        groupClusterRefService.add(Collections.singletonList(groupInfo.getGroupId()), groupClusterService.getClusterDefault(""));
+        //保存群状态
+        groupStateService.addExternal(groupInfo.getGroupId());
+        //新增bot监控表
+        groupMonitorInfoService.add(Collections.singletonList(groupInfo.getGroupId()));
+        //同步群信息
+        //syncInfo(Collections.singletonList(groupInfo.getGroupId()), null);
+        //执行bot检测
+        invitingBotJoin(groupInfo, groupRobotService.getAnyRobot(groupInfo.getGroupId()));
     }
 
     /**
      * 设置bot广告规则
+     *
      * @param groupId
      */
-    public void setBotAdMonitor(String groupId){
-
+    public void setBotAdMonitor(String groupId) {
+        GroupMonitorInfo groupMonitorInfo = groupMonitorInfoService.getById(groupId);
+        if (groupMonitorInfo == null || StrUtil.isBlank(groupMonitorInfo.getBotPlayId())) {
+            log.info("配置的剧本id为空={}", groupId);
+            return;
+        }
+        Play play = playbackService.getById(groupMonitorInfo.getBotPlayId());
+        if (play == null || StrUtil.isBlank(play.getAdMonitor())) {
+            log.info("配置的剧本广告监控为空={}", groupId);
+            return;
+        }
+        setBotAdMonitor(groupId, play.getAdMonitor());
     }
 
     /**
      * 设置bot广告规则
+     *
      * @param groupId
      */
-    public void setBotAdMonitor(String groupId,String adMonitor){
-
+    public void setBotAdMonitor(String groupId, String adMonitor) {
+        //todo 设置bot广告规则
     }
 
 }
