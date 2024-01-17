@@ -109,11 +109,11 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
     }
 
     @Override
-    public GroupInfo saveExternalGroup(Called1100910039DTO dto) {
+    public GroupInfo saveExternalGroup(String groupSerialNo,String groupName) {
         GroupInfo groupInfo = new GroupInfo();
         groupInfo.setGroupId(IdWorker.getIdStr());
-        groupInfo.setGroupSerialNo(dto.getChatroomSerialNo());
-        groupInfo.setGroupName(dto.getChatroomSerialNo());
+        groupInfo.setGroupSerialNo(groupSerialNo);
+        groupInfo.setGroupName(groupName);
         groupInfo.setCreateType(20);
         groupInfo.setCreateTime(LocalDateTime.now());
         return groupInfo;

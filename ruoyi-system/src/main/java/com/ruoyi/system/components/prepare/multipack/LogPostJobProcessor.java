@@ -7,15 +7,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
-import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.Objects;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
-import com.ruoyi.system.components.prepare.ExecutionParamContext;
 import com.ruoyi.system.components.spi.Settings;
 import com.ruoyi.system.mapper.PlayRobotPackLogMapper;
+import com.ruoyi.system.service.PlayExecutionLogService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -82,9 +81,7 @@ public class LogPostJobProcessor implements LogJobProcessor {
 			PlayRobotPackLog ret = settings.set(param);
 
 			if (StringUtils.isEmpty(ret.getOpt())) {
-				ExecutionParamContext.log(data.getPlayId(), data.getChatroomId(), PlayLogTyper.Robot_Settings, false,
-						"[发言人包装-管理员] 群(" + data.getChatroomId() + ") 号(" + data.getRobotId() + ")同步请求失败, 原因:"
-								+ ret.getErrMsg() , data.getRobotId());
+				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(),  data.getRobotId(), ret.getErrMsg(), null, "管理员", true);
 				// 更新 状态
 				PlayRobotPackLog update = new PlayRobotPackLog();
 				update.setStatus(ret.getStatus());
@@ -93,9 +90,7 @@ public class LogPostJobProcessor implements LogJobProcessor {
 				robotPackLogMapper.updateById(update);
 				log.info("robotPackLogMapper.updateById {}", data);
 			} else {
-				ExecutionParamContext.log(data.getPlayId(), data.getChatroomId(), PlayLogTyper.Robot_Settings, false,
-						"[发言人包装-管理员] 群(" + data.getChatroomId() + ") 号(" + data.getRobotId() + ")请求成功，等待回调，操作码:"
-								+ ret.getOpt() , data.getRobotId());
+				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(),  data.getRobotId(), null, ret.getOpt(), "管理员", true);
 				// 删除之前的
 				robotPackLogMapper.deleteById(data);
 				// 新增当前的

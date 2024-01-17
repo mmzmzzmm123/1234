@@ -220,6 +220,10 @@ public class GroupService {
         return invitingBotJoin(groupInfoService.listByIds(groupIds), groupRobotService::getRobot, false);
     }
 
+    public int invitingBotJoin(GroupInfo groupInfo) {
+        return invitingBotJoin(Collections.singletonList(groupInfo), groupRobotService::getRobot, false);
+    }
+
     public int invitingBotJoin(List<GroupInfo> groupInfos, Function<String, GroupRobot> getGroupRobotFuc, boolean newGroup) {
         int count = 0;
         if (CollUtil.isEmpty(groupInfos)) {
@@ -668,9 +672,31 @@ public class GroupService {
     public GroupInfo handleRobotIn(Called1100910039DTO dto) {
         GroupInfo groupInfo = groupInfoService.getGroupBySerialNo(dto.getChatroomSerialNo());
         if (groupInfo == null) {
-            groupInfo = groupInfoService.saveExternalGroup(dto);
+            groupInfo = groupInfoService.saveExternalGroup(dto.getChatroomSerialNo(), dto.getChatroomSerialNo());
         }
         //todo 添加群内机器人逻辑
         return groupInfo;
     }
+
+    public void saveAndInviteBot(GroupInfo groupInfo) {
+        //todo 添加群内机器人逻辑
+        //todo 执行bot检测
+    }
+
+    /**
+     * 设置bot广告规则
+     * @param groupId
+     */
+    public void setBotAdMonitor(String groupId){
+
+    }
+
+    /**
+     * 设置bot广告规则
+     * @param groupId
+     */
+    public void setBotAdMonitor(String groupId,String adMonitor){
+
+    }
+
 }

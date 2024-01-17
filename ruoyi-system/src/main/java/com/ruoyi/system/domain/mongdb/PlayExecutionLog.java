@@ -64,4 +64,7 @@ public class PlayExecutionLog {
     
     @ApiModelProperty(value = "号id" , hidden = true)
     private String robotId;
+    
+    @ApiModelProperty(value = "操作码" , hidden = true)
+    private String opt;
 }

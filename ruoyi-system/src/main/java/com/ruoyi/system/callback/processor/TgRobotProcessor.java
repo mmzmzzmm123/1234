@@ -1,8 +1,9 @@
 package com.ruoyi.system.callback.processor;
 
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
-
+import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.service.GroupInfoService;
 import com.ruoyi.system.service.PlayMessageConfoundLogService;
@@ -83,6 +84,11 @@ public class TgRobotProcessor {
     public void called1100910053(Called1100910053DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         //todo 更新群内机器人状态
+        if(root.isSuccess()) {
+        	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
+        	return ;
+        }
+    	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
     }
 
     /**
@@ -94,9 +100,10 @@ public class TgRobotProcessor {
     public void called1100910039(Called1100910039DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         GroupInfo groupInfo = null;
-        if(root.isSuccess()) {
+        if (root.isSuccess()) {
             groupInfo = groupService.handleRobotIn(dto);
         }
+
         intoGroupService.intoGroupCallback(dto, root);
 
     }
@@ -130,6 +137,11 @@ public class TgRobotProcessor {
     @Type(value = 1100910016, parameterClass = CalledEmptyDTO.class)
     public void called1100910016(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()) {
+        	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
+        	return ;
+        }
+    	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
     }
 
     /**
@@ -140,6 +152,11 @@ public class TgRobotProcessor {
     @Type(value = 1100910033, parameterClass = CalledEmptyDTO.class)
     public void called1100910033(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()) {
+        	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
+        	return ;
+        }
+    	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
     }
 
     /**
@@ -237,6 +254,11 @@ public class TgRobotProcessor {
     @Type(value = 1100860002, parameterClass = Called1100860002DTO.class)
     public void called1100860002(Called1100860002DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()) {
+        	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), dto.getAccessHash());
+        	return ;
+        }
+    	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
     }
 
     /**

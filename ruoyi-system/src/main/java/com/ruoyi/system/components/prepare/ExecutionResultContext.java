@@ -32,6 +32,12 @@ public class ExecutionResultContext {
 		return ctx;
 	}
 
+	/**
+	 * 异步，需要等待
+	 * 
+	 * @param paramContext
+	 * @return
+	 */
 	public static ExecutionResultContext buildAsync(ExecutionParamContext paramContext) {
 		ExecutionResultContext ctx = new ExecutionResultContext(paramContext);
 		ctx.setSucceed(true);
@@ -43,6 +49,7 @@ public class ExecutionResultContext {
 		ExecutionResultContext ctx = new ExecutionResultContext(paramContext);
 		ctx.setSucceed(false);
 		ctx.setErrMsg(errMsg);
+		ctx.setNeedWait(false);
 		return ctx;
 	}
 

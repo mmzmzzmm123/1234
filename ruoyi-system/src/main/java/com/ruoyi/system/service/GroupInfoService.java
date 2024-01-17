@@ -31,7 +31,7 @@ public interface GroupInfoService extends IService<GroupInfo> {
 
     void syncGroupInfo(List<GroupInfo> groupInfoList, List<ExtTgSelectGroupVO> utInfos);
 
-    GroupInfo  saveExternalGroup(Called1100910039DTO dto);
+    GroupInfo  saveExternalGroup(String groupSerialNo,String groupName);
 
     GroupInfo getGroupBySerialNo(String groupId);
 }
