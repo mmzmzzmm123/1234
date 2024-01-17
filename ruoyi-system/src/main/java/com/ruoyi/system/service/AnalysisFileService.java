@@ -32,7 +32,7 @@ public class AnalysisFileService {
      * 解析剧本文件,返回id
      */
     public WordPageDTO analysisPlayWord(MultipartFile file) {
-        Long time = System.currentTimeMillis();
+        long time = System.currentTimeMillis();
 
         WordPageDTO pageDTO = new WordPageDTO();
 
@@ -53,6 +53,12 @@ public class AnalysisFileService {
                 tmp.add(item);
                 playFileContent.add(index++, tmp);
             } else {
+                if (playFileContent.isEmpty()) {
+                    tmp = new ArrayList<>();
+                    tmp.add(item);
+                    playFileContent.add(index++, tmp);
+                    continue;
+                }
                 //上一个发言人的数据
                 index--;
                 tmp = playFileContent.get(index);
@@ -98,7 +104,8 @@ public class AnalysisFileService {
             };
 
             redisTemplate.multi();
-            redisTemplate.execute(sessionCallback);
+            Object obj = redisTemplate.execute(sessionCallback);
+            System.out.println(obj);
         } catch (Exception e) {
             log.error("analysisPlayWord:{}", e.getMessage());
         }
