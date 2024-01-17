@@ -94,9 +94,10 @@ public class TgRobotProcessor {
     public void called1100910039(Called1100910039DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         GroupInfo groupInfo = null;
-        if(root.isSuccess()) {
+        if (root.isSuccess()) {
             groupInfo = groupService.handleRobotIn(dto);
         }
+
         intoGroupService.intoGroupCallback(dto, root);
 
     }
