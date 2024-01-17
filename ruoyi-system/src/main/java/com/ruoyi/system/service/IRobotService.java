@@ -49,9 +49,15 @@ public interface IRobotService {
      * 一键清除封号数据
      * @return
      */
-    R<Void> clearSealData();
+    R<Void> clearSealData(ClearSealDataDTO dto);
     R<Void> removeRobot(RemoveRobotDTO dto);
-    R<Void> releaseOccupyRobot();
+
+    /**
+     * 一键释放占用水军
+     * @param dto
+     * @return
+     */
+    R<Void> releaseOccupyRobot(ReleaseOccupyRobotDTO dto);
 
     /**
      * 设置群主号

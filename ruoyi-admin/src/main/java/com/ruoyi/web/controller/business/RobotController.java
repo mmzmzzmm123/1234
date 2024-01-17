@@ -68,8 +68,8 @@ public class RobotController {
 
     @ApiOperation("一键清除封号数据")
     @PostMapping("/clearSealData")
-    public R<Void> clearSealData(){
-        return robotService.clearSealData();
+    public R<Void> clearSealData(@RequestBody ClearSealDataDTO dto){
+        return robotService.clearSealData(dto);
     }
 
     @ApiOperation("移除号池")
@@ -80,8 +80,8 @@ public class RobotController {
 
     @ApiOperation("一键释放占用水军")
     @PostMapping("/releaseOccupyRobot")
-    public R<Void> releaseOccupyRobot(){
-        return R.ok();
+    public R<Void> releaseOccupyRobot(@RequestBody ReleaseOccupyRobotDTO dto){
+        return robotService.releaseOccupyRobot(dto);
     }
 
 }

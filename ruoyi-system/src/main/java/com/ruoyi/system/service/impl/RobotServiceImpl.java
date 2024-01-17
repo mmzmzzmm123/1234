@@ -369,8 +369,11 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public R<Void> clearSealData() {
-        this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getSealStatus,30).set(Robot::getDeleteStatus,1));
+    public R<Void> clearSealData(ClearSealDataDTO dto) {
+        if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
+            return R.fail("号编号不能为空");
+        }
+        this.update(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo,dto.getRobotSerialNos()).set(Robot::getDeleteStatus,1));
         return R.ok();
     }
 
@@ -380,8 +383,14 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public R<Void> releaseOccupyRobot() {
-        return null;
+    public R<Void> releaseOccupyRobot(ReleaseOccupyRobotDTO dto) {
+        if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
+            return R.fail("号编号不能为空");
+        }
+        robotStatisticsService.update(new LambdaUpdateWrapper<RobotStatistics>()
+                .in(RobotStatistics::getRobotSerialNo,dto.getRobotSerialNos())
+                .set(RobotStatistics::getIsLock,0));
+        return R.ok();
     }
 
     @Override
