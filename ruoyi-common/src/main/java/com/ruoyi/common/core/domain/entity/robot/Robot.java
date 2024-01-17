@@ -70,10 +70,6 @@ public class Robot {
     @ApiModelProperty(value = "禁用启用状态,0-禁用,1-启用")
     private Integer enableType;
 
-    @ApiModelProperty(value = "水军占用状态,0-未占用,1-已占用")
-    private Integer occupyType;
-
-
     @ApiModelProperty(value = "双向状态,0-未被限制,1-已被限制")
     private Integer bidirectionalType;
 

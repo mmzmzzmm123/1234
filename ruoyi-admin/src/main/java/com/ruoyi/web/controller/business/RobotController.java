@@ -62,6 +62,7 @@ public class RobotController {
     @ApiOperation("修改禁用启用状态")
     @PostMapping("/updateEnableType")
     public R<Void> updateEnableType(@RequestBody UpdateEnableTypeDTO dto){
+        robotService.updateEnableType(dto);
         return R.ok();
     }
 

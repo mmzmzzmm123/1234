@@ -56,7 +56,6 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
         robotDTO.setLimit(1000);
         robotDTO.setPage(1);
-        robotDTO.setRadioId("");
         robotDTO.setMerchantId("");
         OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
         log.info("pullApiRobotDataList robotListResult:{}",JSON.toJSONString(robotListResult));
