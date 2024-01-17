@@ -20,6 +20,17 @@
         </foreach>
     </update>
 
+    <update id="updateRobotState" >
+        update t_robot_group_relation set state = 3 where group_id = #{groupId} and state = 1
+    </update>
+
+    <select id="selectWaitOutGroup" resultType="com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation">
+        select * from t_robot_group_relation where state = 3 and is_delete = 0
+    </select>
+
+    <update id="updateRobotOutState">
+        update t_robot_group_relation set state = #{state} where group_id = #{groupId} and robot_id = #{robotId}
+    </update>
 
 
 

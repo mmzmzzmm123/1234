@@ -97,8 +97,7 @@ public class TgRobotProcessor {
         if (root.isSuccess()) {
             groupInfo = groupService.handleRobotIn(dto);
         }
-
-        intoGroupService.intoGroupCallback(dto, root);
+        intoGroupService.intoGroupCallback(groupInfo,root);
 
     }
 
@@ -110,7 +109,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910024, parameterClass = CalledEmptyDTO.class)
     public void called1100910024(Called1100910039DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        //todo 移除群内机器人
+        intoGroupService.outGroupCallback(root,dto);
     }
 
     /**

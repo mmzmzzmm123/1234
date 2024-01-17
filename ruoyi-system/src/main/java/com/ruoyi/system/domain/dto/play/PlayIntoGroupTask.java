@@ -28,12 +28,6 @@ public class PlayIntoGroupTask implements Serializable {
     @ApiModelProperty("重试ID")
     private String retryId;
 
-    @ApiModelProperty("机器人名称")
-    private String userName;
-
-    @ApiModelProperty("机器人手机号")
-    private String phone;
-
     @ApiModelProperty("剧本ID")
     private String playId;
 

@@ -24,6 +24,7 @@ import com.ruoyi.system.callback.dto.CalledDTO;
 import com.ruoyi.system.callback.dto.CalledEmptyDTO;
 import com.ruoyi.system.components.Beans;
 import com.ruoyi.system.components.RandomListPicker;
+import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.dto.GroupQueryDTO;
 import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
 import com.ruoyi.system.domain.dto.play.PlayIntoGroupTask;
@@ -37,6 +38,7 @@ import com.ruoyi.system.domain.vo.robot.GetRobotVO;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
+import com.ruoyi.system.openapi.model.input.ThirdTgExitChatroomInputDTO;
 import com.ruoyi.system.openapi.model.input.ThirdTgJoinChatroomByUrlInputDTO;
 import com.ruoyi.system.openapi.model.input.ThirdTgModifyChatroomHeadImageInputDTO;
 import com.ruoyi.system.openapi.model.input.ThirdTgModifyChatroomNameInputDTO;
@@ -96,6 +98,9 @@ public class IntoGroupService {
     @Autowired
     WarningRobotLimitService warningRobotLimitService;
 
+    @Autowired
+    GroupInfoMapper groupInfoMapper;
+
     public void optionGroup() {
         //扫描剧本状态为调用中 未开始的剧本
         RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:optionGroup");
@@ -133,6 +138,7 @@ public class IntoGroupService {
                 groupQueryDTO.setGroupNum(play.getGroupNum());
                 groupQueryDTO.setRegistrationDay(play.getGroupDay());
                 groupQueryDTO.setCountryCode(getCountys(play));
+                groupQueryDTO.setPayId(play.getId());
                 //从波少那边获取足够的群
                 R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
                 if (groupList.getCode() != 0) {
@@ -240,7 +246,6 @@ public class IntoGroupService {
     }
 
     public void modifierGroup() {
-
         //扫描剧本状态为调用中 未开始的剧本
         RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:modifierGroup");
         if (lock.isLocked()) {
@@ -292,6 +297,7 @@ public class IntoGroupService {
                     groupQueryDTO.setGroupNum(1);
                     groupQueryDTO.setRegistrationDay(play.getGroupDay());
                     groupQueryDTO.setCountryCode(getCountys(play));
+                    groupQueryDTO.setPayId(play.getId());
                     //从波少那边获取足够的群
                     R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
                     if (groupList.getCode() != 0) {
@@ -408,6 +414,7 @@ public class IntoGroupService {
                         groupQueryDTO.setGroupNum(playDTO.getGroupNum());
                         groupQueryDTO.setRegistrationDay(playDTO.getGroupDay());
                         groupQueryDTO.setCountryCode(getCountys(playDTO));
+                        groupQueryDTO.setPayId(playDTO.getId());
                         //从波少那边获取足够的群
                         R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
                         if (groupList.getCode() != 0) {
@@ -517,7 +524,6 @@ public class IntoGroupService {
                                 robotVOS.remove(index);
                                 playIntoGroupTask.setTaskState(1);
                             }
-                            playIntoGroupTask.setTaskState(1);
                             playIntoGroupTasks.add(playIntoGroupTask);
                         }
                         setLog(playDTO.getId(), "群" + group + "机器人调度入群任务分配成功！", 0, PlayLogTyper.Group_into, null);
@@ -525,7 +531,6 @@ public class IntoGroupService {
                 }
                 playIntoGroupTaskMapper.batchInsert(playIntoGroupTasks);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -544,9 +549,9 @@ public class IntoGroupService {
                 robotNum++;
             }
         }
-        PlayExt PlayDTO = JSONObject.parseObject(playDTO.getPlayExt(), PlayExt.class);
+        PlayExt playExt = JSONObject.parseObject(playDTO.getPlayExt(), PlayExt.class);
         //备用号逻辑
-        if (PlayDTO.getStandbyState() == 1) {
+        if (playExt.getStandbyState() == 1) {
             //获取备用号规则
             adminNum = adminNum + (adminNum * vibeRule.getStandbyNum());
             robotNum = robotNum + (robotNum * vibeRule.getStandbyNum());
@@ -661,8 +666,8 @@ public class IntoGroupService {
     }
 
     //入群回调处理方法
-    public void intoGroupCallback(Called1100910039DTO dto, CalledDTO calledDTO) {
-        log.info("入群回调{}", calledDTO);
+    public void intoGroupCallback(GroupInfo group, CalledDTO calledDTO) {
+        log.info("入群回调{}{}", calledDTO, group);
         if (StringUtils.isEmpty(calledDTO.getOptSerNo())) {
             return;
         }
@@ -747,36 +752,41 @@ public class IntoGroupService {
         }
         //入群成功 查询群信息
         //添加等待锁
-        SpringUtils.getBean(RedisLock.class).waitLock("ruoyi:wait:groupCallback" + dto.getChatroomSerialNo(), 60);
+        SpringUtils.getBean(RedisLock.class).waitLock("ruoyi:wait:groupCallback" + group.getGroupId(), 60);
         try {
-            PlayGroupInfo groupInfo = playGroupInfoMapper.selectGroupInfoById(dto.getChatroomSerialNo());
+            PlayGroupInfo groupInfo = playGroupInfoMapper.selectGroupInfoById(group.getGroupId());
             if (groupInfo == null) {
                 //创建群信息
-                groupInfo = getGroupInfo(dto, task);
+                groupInfo = getGroupInfo(group, task);
                 setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "已绑定成功！" + "机器人" + task.getPersonId() + "成功入群！", 0, PlayLogTyper.Group_into, null);
                 playGroupInfoMapper.insert(groupInfo);
+                //判断是不是外部群
+                if (play.getGroupSource() == 1) {
+                    //添加bot
+                    groupService.saveAndInviteBot(group);
+                }
             }
             //查询当前机器人是否已和群做绑定
-            Integer count = playRobotGroupRelationMapper.selectRobotGroup(dto.getChatroomSerialNo(), task.getPersonId());
+            Integer count = playRobotGroupRelationMapper.selectRobotGroup(group.getGroupId(), task.getPersonId());
             if (count == 0) {
                 //绑定机器人和群信息记录表
                 PlayRobotGroupRelation robotGroupRelation = new PlayRobotGroupRelation();
                 robotGroupRelation.setPlayRobotGroupRelationId(IdUtils.fastUUID());
                 robotGroupRelation.setMerchantId(task.getMerchantId());
                 robotGroupRelation.setRobotId(task.getPersonId());
-                robotGroupRelation.setGroupId(dto.getChatroomSerialNo());
+                robotGroupRelation.setGroupId(group.getGroupId());
                 robotGroupRelation.setState(1);
                 robotGroupRelation.setIsDelete(0);
                 playRobotGroupRelationMapper.insert(robotGroupRelation);
             }
             //查询群内机器人数量
-            Integer robotCount = playRobotGroupRelationMapper.selectRobotGroupCount(dto.getChatroomSerialNo());
+            Integer robotCount = playRobotGroupRelationMapper.selectRobotGroupCount(group.getGroupId());
             //根据剧本计算所需的群人数
             Integer groupNum = play.getRobotNum();
-            PlayExt PlayDTO = JSONObject.parseObject(play.getPlayExt(), PlayExt.class);
+            PlayExt playExt = JSONObject.parseObject(play.getPlayExt(), PlayExt.class);
             Integer groupAllCount = groupNum;
             //备用号逻辑
-            if (PlayDTO.getStandbyState() == 1) {
+            if (playExt.getStandbyState() == 1) {
                 //获取备用号规则
                 groupAllCount = groupNum + (groupNum * vibeRule.getStandbyNum());
             }
@@ -786,6 +796,10 @@ public class IntoGroupService {
             if (robotCount + errorCount >= groupAllCount) {
                 if (robotCount >= groupNum) {
                     groupInfo.setIntoStatus(2);
+                    //判断是不是已有群
+                    if (play.getGroupSource() == 0) {
+                        groupService.setBotAdMonitor(groupInfo.getTgGroupId(), play.getAdMonitor());
+                    }
                     setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "已满足剧本所需发言人数，入群完成", 0, PlayLogTyper.Group_into, null);
                 } else {
                     groupInfo.setIntoStatus(3);
@@ -797,24 +811,24 @@ public class IntoGroupService {
             }
             //修改入群任务状态
             task.setTaskState(3);
-            task.setGroupName(dto.getChatroomName());
-            task.setGroupId(dto.getChatroomSerialNo());
+            task.setGroupName(group.getGroupName());
+            task.setGroupId(group.getGroupId());
             playIntoGroupTaskMapper.updateById(task);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            SpringUtils.getBean(RedisLock.class).unWaitLock("ruoyi:wait:groupCallback" + dto.getChatroomSerialNo());
+            SpringUtils.getBean(RedisLock.class).unWaitLock("ruoyi:wait:groupCallback" + group.getGroupId());
         }
 
     }
 
-    public PlayGroupInfo getGroupInfo(Called1100910039DTO dto, PlayIntoGroupTask task) {
+    public PlayGroupInfo getGroupInfo(GroupInfo dto, PlayIntoGroupTask task) {
         PlayGroupInfo groupInfo = new PlayGroupInfo();
         groupInfo.setGroupId(IdUtils.fastUUID());
         groupInfo.setMerchantId(task.getMerchantId());
         groupInfo.setGroupUrl(task.getGroupUrl());
-        groupInfo.setTgGroupId(dto.getChatroomSerialNo());
-        groupInfo.setTgGroupName(dto.getChatroomName());
+        groupInfo.setTgGroupId(dto.getGroupId());
+        groupInfo.setTgGroupName(dto.getGroupName());
         groupInfo.setIsDelete(0);
         groupInfo.setState(0);
         groupInfo.setIntoStatus(1);
@@ -854,8 +868,67 @@ public class IntoGroupService {
     }
 
     //退群处理
-    public void outGroup() {
+    public void outGroup(Play play) {
+        //根据剧本查询所有的群
+        List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(play.getId());
+        PlayExt playExt = JSONObject.parseObject(play.getPlayExt(), PlayExt.class);
+        if (playExt.getQuitState() == 1) {
+            //将所有水军变成等待退群
+            for (PlayGroupInfo playGroupInfo : playGroupInfos) {
+                playRobotGroupRelationMapper.updateRobotState(playGroupInfo.getTgGroupId());
+            }
+            //将群全部设置为删除
+            playGroupInfoMapper.updateGroupState(play.getId());
+        }
+    }
 
+    public void outGroupJob() {
+        log.info("执行入群任务{}");
+        RLock lockJob = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:outGroupJob");
+        if (lockJob.isLocked()) {
+            return;
+        }
+        try {
+            //扫描群内等待退群的机器人记录
+            List<PlayRobotGroupRelation> robotGroupRelations = playRobotGroupRelationMapper.selectWaitOutGroup();
+            VibeRuleDTO vibeRule = vibeRuleService.getOne();
+            for (PlayRobotGroupRelation robotGroupRelation : robotGroupRelations) {
+                RLock lock = SpringUtils.getBean(RedisLock.class).lock("ruoyi:wait:outGroupJob" + robotGroupRelation.getGroupId());
+                if (lock.isLocked()) {
+                    continue;
+                }
+                RLock robotLock = SpringUtils.getBean(RedisLock.class).lock("ruoyi:wait:outGroupJob" + robotGroupRelation.getRobotId());
+                if (robotLock.isLocked()) {
+                    continue;
+                }
+                try {
+                    robotLock.lock(RandomListPicker.getRandom(vibeRule.getRobotIntervalStart(), vibeRule.getRobotIntervalEnd()), TimeUnit.SECONDS);
+                    lock.lock(RandomListPicker.getRandom(vibeRule.getDiffRobotIntervalStart(), vibeRule.getDiffRobotIntervalEnd()), TimeUnit.SECONDS);
+                    //操作机器人退群
+                    ThirdTgExitChatroomInputDTO dto = new ThirdTgExitChatroomInputDTO();
+                    dto.setTgRobotId(robotGroupRelation.getRobotId());
+                    GroupInfo groupInfo = groupInfoMapper.selectById(robotGroupRelation.getGroupId());
+                    dto.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+                    OpenApiResult<TgBaseOutputDTO> openApiResult = OpenApiClient.exitChatroomByThirdKpTg(dto);
+                    if (openApiResult.getCode() != 0) {
+                        log.info("退群失败" + JSONObject.toJSONString(dto));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            lockJob.unlock();
+        }
+    }
+
+    public void outGroupCallback(CalledDTO calledDTO, Called1100910039DTO dto) {
+        if (calledDTO.getResultCode() != 0) {
+            log.info("退群失败：" + JSONObject.toJSONString(calledDTO));
+        }
+        playRobotGroupRelationMapper.updateRobotOutState(dto.getChatroomSerialNo(), calledDTO.getRobotId(), 2);
     }
 
 }
