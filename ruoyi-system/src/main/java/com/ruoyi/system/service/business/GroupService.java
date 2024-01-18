@@ -754,14 +754,13 @@ public class GroupService {
      *
      * @param groupId
      */
-    public void setBotAdMonitor(String groupId, String playId, String adMonitor) {
+    public boolean setBotAdMonitor(String groupId, String playId, String adMonitor) {
         //todo 设置bot广告规则
         AdMonitor adMonitorInfo = JSON.parseObject(adMonitor, AdMonitor.class);
         GroupMonitorInfo groupInfo = groupMonitorInfoService.getById(groupId);
 
         AdMonitorDTO dto = new AdMonitorDTO();
         dto.setConfigId(playId);
-
         dto.setDealFunction(Arrays.stream(adMonitorInfo.getDisposalType().split(",")).filter(
                         p -> Arrays.asList("1", "2").contains(p))
                 .map(p -> p.equals("1") ? "RESTRICT" : "KICK_OUT").collect(Collectors.toList()));
@@ -775,7 +774,7 @@ public class GroupService {
         dto.setRestrictMember(adMonitorInfo.getIsTabooMemberMsg());
         dto.setDeleteOtherStatement(adMonitorInfo.getIsDelMemberMsg());
         dto.setTimeUnit(ObjectUtil.equal(adMonitorInfo.getSpammingTimeUnit(), 2) ? "MINUTES" : "SECONDS");
-        ApiResult<String> stringApiResult = ApiClient.setBotAdMonitor(dto);
+        return ApiClient.setBotAdMonitor(dto).isSuccess();
     }
 
 }

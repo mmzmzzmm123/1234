@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.callback;
 
 import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.system.callback.BotCallBackService;
 import com.ruoyi.system.service.impl.GroupCalledService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +19,10 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/groupCall")
 public class GroupCalledController {
+
+
     @Resource
-    private GroupCalledService groupCalledService;
+    private BotCallBackService botCallBackService;
 
     /**
      * 群成员变动
@@ -28,6 +31,8 @@ public class GroupCalledController {
     @PostMapping( "/member")
     public R<Boolean> updateMember(@RequestBody String str) {
         log.info("GroupCalledController:{}", str);
+        botCallBackService.callback(str);
         return R.ok();
     }
+
 }
