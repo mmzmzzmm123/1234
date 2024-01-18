@@ -81,10 +81,45 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
                 this.resumeGroupPush(dto.getPushId());
                 break;
             case 2:
+                this.cancelGroupPush(dto.getPushId());
                 break;
             case 3:
+                this.forceStartGroupPush(dto.getPushId());
                 break;
         }
+    }
+
+    /**
+     * 取消
+     * @param pushId
+     */
+    public void cancelGroupPush(Integer pushId) {
+        PlayMessagePush playMessagePush = super.getById(pushId);
+        this.cancelGroupPush(playMessagePush);
+    }
+    public void cancelGroupPush(PlayMessagePush playMessagePush) {
+        if (playMessagePush == null) {
+            return;
+        }
+        playMessagePush.setPushState(PushStateEnum.CANCEL.getKey());
+        super.updateById(playMessagePush);
+    }
+
+    /**
+     * 强制开炒
+     * @param pushId
+     */
+    public void forceStartGroupPush(Integer pushId) {
+        PlayMessagePush playMessagePush = super.getById(pushId);
+        this.forceStartGroupPush(playMessagePush);
+    }
+    public void forceStartGroupPush(PlayMessagePush playMessagePush) {
+        if (playMessagePush == null) {
+            return;
+        }
+        Assert.isTrue(playMessagePush.getPushState().equals(1),"非待发送无法强制开炒");
+        playMessagePush.setPushState(PushStateEnum.ING.getKey());
+        super.updateById(playMessagePush);
     }
 
     /**

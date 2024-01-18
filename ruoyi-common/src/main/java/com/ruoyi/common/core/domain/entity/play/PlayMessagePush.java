@@ -52,7 +52,7 @@ public class PlayMessagePush {
     private Date modifyTime;
 
     /**
-     * 推送状态:1:待发送 2:进行中 3:已结束 4:人工暂停 5:推送失败 6:系统暂停
+     * 推送状态:1:待发送 2:进行中 3:已结束 4:人工暂停 5:推送失败 6:系统暂停 7:取消
      */
     private Integer pushState;
 
