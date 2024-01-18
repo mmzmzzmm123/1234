@@ -287,7 +287,7 @@ public class TgRobotProcessor {
      * @param dto
      */
     @Type(value = 1100860002, parameterClass = Called1100860002DTO.class)
-    public void called1100860002(Called1100860002DTO dto) {
+    public void called1100860002(List<Called1100860002DTO> dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         if(root.isSuccess()) {
         	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), dto.getAccessHash());
