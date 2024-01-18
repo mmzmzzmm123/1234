@@ -2,38 +2,38 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.PlayRobotGroupRelationMapper">
     <select id="selectRobotGroup" resultType="java.lang.Integer">
-        select count(*) from t_robot_group_relation where robot_id = #{robotId} AND group_id = #{groupId} AND state = 1 AND is_delete = 0
+        select count(*) from t_play_robot_group_relation where robot_id = #{robotId} AND group_id = #{groupId} AND state = 1 AND is_delete = 0
     </select>
 
     <select id="selectRobotGroupCount" resultType="java.lang.Integer">
-        select count(*) from t_robot_group_relation where  group_id = #{groupId} AND state = 1 AND is_delete = 0
+        select count(*) from t_play_robot_group_relation where  group_id = #{groupId} AND state = 1 AND is_delete = 0
     </select>
 
     <select id="selectRobotByGroup" resultType="com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation">
-        select * from t_robot_group_relation where state = 1 and is_delete = 0 and  group_id = #{groupId}
+        select * from t_play_robot_group_relation where state = 1 and is_delete = 0 and  group_id = #{groupId}
     </select>
 
     <update id="removeRobotByGroup">
-        update t_robot_group_relation set state = 2 where group_id = #{groupId} and robot_id in
+        update t_play_robot_group_relation set state = 2 where group_id = #{groupId} and robot_id in
         <foreach collection="list" item="robotId" separator="," open="(" close=")">
             #{robotId}
         </foreach>
     </update>
 
     <update id="updateRobotState" >
-        update t_robot_group_relation set state = 3 where group_id = #{groupId} and state = 1
+        update t_play_robot_group_relation set state = 3 where group_id = #{groupId} and state = 1
     </update>
 
     <select id="selectWaitOutGroup" resultType="com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation">
-        select * from t_robot_group_relation where state = 3 and is_delete = 0
+        select * from t_play_robot_group_relation where state = 3 and is_delete = 0
     </select>
 
     <update id="updateRobotOutState">
-        update t_robot_group_relation set state = #{state} where group_id = #{groupId} and robot_id = #{robotId}
+        update t_play_robot_group_relation set state = #{state} where group_id = #{groupId} and robot_id = #{robotId}
     </update>
 
     <select id="selectWaitOutGroupByGroupIds" resultType="com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation">
-        select * from t_robot_group_relation where state = 3 and is_delete = 0 and group_id in
+        select * from t_play_robot_group_relation where state = 3 and is_delete = 0 and group_id in
         <foreach collection="groupIds" item="groupId" open="(" separator="," close=")">
             #{groupId}
         </foreach>

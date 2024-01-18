@@ -812,7 +812,7 @@ public class IntoGroupService {
         }
         //入群成功 查询群信息
         //添加等待锁
-        SpringUtils.getBean(RedisLock.class).waitLock("ruoyi:wait:groupCallback" + group.getGroupId(), 60);
+//        SpringUtils.getBean(RedisLock.class).waitLock("ruoyi:wait:groupCallback" + group.getGroupId(), 60);
         try {
             PlayGroupInfo groupInfo = playGroupInfoMapper.selectGroupInfoById(group.getGroupId());
             log.info("入群成功获取群信息："+JSONObject.toJSONString(groupInfo));
