@@ -97,12 +97,7 @@ spring:
             multi-statement-allow: true
   data:
     mongodb:
-      host: 116.205.231.237
-      port: 8635
-      database: neighbour-resource
-      authentication-database: neighbour-resource
-      username: nsuser
-      password: YdRijOnbo#UxXVMgiLSaA
+      uri: mongodb://nsuser:YdRijOnbo#UxXVMgiLSaA@192.168.10.156:8635,192.168.10.155:8635/neighbour-resource?authSource=neighbour-resource&connect=replicaSet&readPreference=secondaryPreferred&safe=true&authMechanism=SCRAM-SHA-1
 
 # token配置
 token:
