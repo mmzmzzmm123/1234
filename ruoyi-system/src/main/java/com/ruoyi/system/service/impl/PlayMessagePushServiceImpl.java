@@ -73,7 +73,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
             return;
         }
         //操作类型 0-暂停 1-继续 2-取消 3-强制开炒
-        switch (dto.getOp()){
+        switch (dto.getOp()) {
             case 0:
                 this.pauseGroupPush(dto.getPushId());
                 break;
@@ -91,33 +91,46 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
 
     /**
      * 取消
+     *
      * @param pushId
      */
     public void cancelGroupPush(Integer pushId) {
         PlayMessagePush playMessagePush = super.getById(pushId);
         this.cancelGroupPush(playMessagePush);
     }
+
     public void cancelGroupPush(PlayMessagePush playMessagePush) {
         if (playMessagePush == null) {
             return;
         }
+        Integer pushState = playMessagePush.getPushState();
+        boolean isTrue = pushState.equals(PushStateEnum.WAIT_SEND.getKey())
+                || pushState.equals(PushStateEnum.ING.getKey())
+                || pushState.equals(PushStateEnum.FINISH.getKey());
+        Assert.isTrue(isTrue,"当前状态无法取消");
         playMessagePush.setPushState(PushStateEnum.CANCEL.getKey());
         super.updateById(playMessagePush);
     }
 
     /**
      * 强制开炒
+     *
      * @param pushId
      */
     public void forceStartGroupPush(Integer pushId) {
         PlayMessagePush playMessagePush = super.getById(pushId);
         this.forceStartGroupPush(playMessagePush);
     }
+
     public void forceStartGroupPush(PlayMessagePush playMessagePush) {
         if (playMessagePush == null) {
             return;
         }
-        Assert.isTrue(playMessagePush.getPushState().equals(1),"非待发送无法强制开炒");
+        // 状态校验
+        Assert.isTrue(playMessagePush.getRobotAllocationFlag().equals(1), "号未分配无法强制开炒");
+        Assert.isTrue(playMessagePush.getRobotPackFlag().equals(1), "人设未包装无法强制开炒");
+        Assert.isTrue(playMessagePush.getPushState().equals(PushStateEnum.WAIT_SEND.getKey()), "非待执行状态无法强制开炒");
+
         playMessagePush.setPushState(PushStateEnum.ING.getKey());
         super.updateById(playMessagePush);
     }
@@ -138,10 +151,9 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         if (playMessagePush == null) {
             return;
         }
-        if (playMessagePush.getPushState() != PushStateEnum.ING.getKey() &&
-                playMessagePush.getPushState() != PushStateEnum.WAIT_SEND.getKey()) {
-            return;
-        }
+        Integer pushState = playMessagePush.getPushState();
+        boolean isTrue = pushState.equals(PushStateEnum.ING.getKey());
+        Assert.isTrue(isTrue,"当前状态无法暂停");
 //        PlayDirector.getInstanceOfLK().pause(playMessagePush.getPlayId(), playMessagePush.getGroupId());
         //修改推送记录表
         playMessagePush.setPushState(PushStateEnum.USER_STOP.getKey());
@@ -161,11 +173,12 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
 
     @Override
     public void resumeGroupPush(PlayMessagePush playMessagePush) {
-        if (playMessagePush == null ||
-                (playMessagePush.getPushState() != PushStateEnum.USER_STOP.getKey()
-                        && playMessagePush.getPushState() != PushStateEnum.SYSTEM_STOP.getKey())) {
+        if (playMessagePush == null ) {
             return;
         }
+        Integer pushState = playMessagePush.getPushState();
+        boolean isTrue = pushState.equals(PushStateEnum.USER_STOP.getKey()) || pushState.equals(PushStateEnum.SYSTEM_STOP.getKey());
+        Assert.isTrue(isTrue,"当前状态无法开启");
         //继续推送
 //        PlayDirector.getInstanceOfLK().resume(playMessagePush.getPlayId(), playMessagePush.getGroupId());
 //        //修改推送记录表
@@ -181,7 +194,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
             log.info("createPush start {}", JSON.toJSONString(playInfo));
 
             List<PlayGroupInfo> playGroupInfoList = playGroupInfoService.listByPlayId(playId);
-            Assert.isTrue(CollectionUtils.isNotEmpty(playGroupInfoList), "剧本对应群为找到");
+            Assert.isTrue(CollectionUtils.isNotEmpty(playGroupInfoList), "剧本对应群未找到");
 
             //需要推送的群集合构造
             List<PlayMessagePush> playMessagePushList = new ArrayList<>();
@@ -207,7 +220,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
                 // 混淆逻辑
                 playMessageConfoundService.clearAndCreateConfound(playInfo.getId());
             } else {
-                insertPushDetail(playInfo.getId(), playMessagePushList.stream().map(e -> e.getId()).collect(Collectors.toList()));
+                insertPushDetail(playInfo, playMessagePushList.stream().map(e -> e.getId()).collect(Collectors.toList()));
             }
         } catch (Exception e) {
             log.info("createPush 程序内部错误", e);
@@ -230,7 +243,8 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
     }
 
     //插入推送详情信息
-    private void insertPushDetail(String playId, List<Integer> pushIds) {
+    private void insertPushDetail(Play playInfo, List<Integer> pushIds) {
+        String playId = playInfo.getId();
         //查询剧本对应的消息
         List<PlayMessage> playMessageList = playMessageMapper.selectListByPlayId(playId);
         Assert.isTrue(CollectionUtils.isNotEmpty(playMessageList), "找不到对应的剧本消息,playId:" + playId);
@@ -251,10 +265,16 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
             }
         }
         playMessagePushDetailService.saveBatch(pushDetailList);
+        // 不要混淆的剧本 标记到 5-号分配
+        playInfo.setScanProgress(5);
+        playInfo.setConfoundState(1);
+        playInfoService.updateById(playInfo);
+
     }
 
     //插入推送详情信息
-    private void insertPushDetailConfound(String playId, List<Integer> pushIds) {
+    private void insertPushDetailConfound(Play playInfo, List<Integer> pushIds) {
+        String playId = playInfo.getId();
         //查询剧本对应的消息
         List<PlayMessage> playMessageList = playMessageMapper.selectListByPlayId(playId);
         Assert.isTrue(CollectionUtils.isEmpty(playMessageList), "找不到对应的剧本消息,playId:" + playId);
@@ -306,6 +326,9 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
             }
         }
         playMessagePushDetailService.saveBatch(pushDetailList);
+        // 混淆完成 标记到 5-号分配
+        playInfo.setScanProgress(5);
+        playInfoService.updateById(playInfo);
     }
 
 
@@ -319,12 +342,12 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         lambdaQueryWrapper.select(PlayMessagePush::getId);
         List<PlayMessagePush> list = list(lambdaQueryWrapper);
         List<Integer> pushIds = list.stream().map(PlayMessagePush::getId).collect(Collectors.toList());
-        this.insertPushDetailConfound(playId, pushIds);
+        this.insertPushDetailConfound(playInfo, pushIds);
     }
 
     @Override
     public RobotStatisticsVO getRobotStatisticsVO(String playId) {
-        if (StringUtils.isEmpty(playId)){
+        if (StringUtils.isEmpty(playId)) {
             return null;
         }
         return baseMapper.getRobotStatisticsVO(playId);

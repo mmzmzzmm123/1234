@@ -25,6 +25,7 @@ public class GroupPageInfoVO {
     @ApiModelProperty(value = "群Id")
     private String groupId;
 
+    @Excel(name = "群编号")
     @ApiModelProperty(value = "群编号")
     private String groupSerialNo;
 

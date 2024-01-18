@@ -31,6 +31,8 @@ public class CalledDTO {
 
     private String resultMsg;
 
+    private String requestPara;
+
     public boolean isSuccess() {
         return  resultCode != null && 0 == resultCode;
     }

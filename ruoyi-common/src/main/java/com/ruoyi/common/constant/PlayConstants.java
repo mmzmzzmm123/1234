@@ -10,6 +10,8 @@ import java.util.List;
  */
 public class PlayConstants {
 
+    public static String serviceName = "ruoyi-admin";
+
     // 切割字符
     public static String splitRegex = "\\[-#@-\\]";
     // 拼接字符

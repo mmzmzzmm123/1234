@@ -1,14 +1,11 @@
 package com.ruoyi.common.utils.poi;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.LocalDate;
@@ -561,12 +558,17 @@ public class ExcelUtil<T>
      * @param title 标题
      * @return 结果
      */
-    public void exportExcel(HttpServletResponse response, List<T> list, String sheetName, String title)
-    {
-        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-        response.setCharacterEncoding("utf-8");
-        this.init(list, sheetName, title, Type.EXPORT);
-        exportExcel(response);
+    public void exportExcel(HttpServletResponse response, List<T> list, String sheetName, String title)  {
+        try {
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(sheetName + ".xlsx", "UTF-8"));
+
+            response.setCharacterEncoding("utf-8");
+            this.init(list, sheetName, title, Type.EXPORT);
+            exportExcel(response);
+        } catch (Exception e) {
+            log.error("导出Excel异常{}", e.getMessage());
+        }
     }
 
     /**

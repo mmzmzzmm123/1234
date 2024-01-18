@@ -36,7 +36,7 @@ public interface IPlayService extends IService<Play> {
      * @param dto
      * @return
      */
-    PlayTaskProgressVO taskProgress(QueryTaskProgressDTO dto);
+    List<PlayTaskProgressVO> taskProgress(QueryTaskProgressDTO dto);
 
     /**
      * 炒群进度
@@ -64,5 +64,9 @@ public interface IPlayService extends IService<Play> {
      */
     RobotStatisticsVO robotStatistics(String playId);
 
-
+    /**
+     * 设置重复炒群
+     * @return
+     */
+    R<String> repeatPlay(String playId);
 }

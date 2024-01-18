@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public interface GroupRobotService extends IService<GroupRobot> {
 
-    Map<String,GroupRobot>  addGroupLeader(List<GroupInfo> groupInfos, Map<String,String> robotMap);
+    Map<String,GroupRobot>  addGroupLeader(List<String> groupInfos, Map<String,String> robotMap);
 
     void add(String robotSerialNo, String groupId);
 
@@ -26,4 +26,8 @@ public interface GroupRobotService extends IService<GroupRobot> {
     GroupRobot getAnyRobot(String groupId);
 
     GroupRobot getRobot(String groupId, String robotId);
+
+    void setAdmin(String groupId,String robotId);
+
+    void addBot(String groupId, String changeValue);
 }

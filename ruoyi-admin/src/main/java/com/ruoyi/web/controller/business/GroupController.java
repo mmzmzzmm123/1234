@@ -151,7 +151,7 @@ public class GroupController {
 
     @ApiOperation(value = "导出群信息")
     @PostMapping("/export")
-    public R<Page<GroupPageInfoVO>> export(@RequestBody GroupPageQueryExportDTO dto, HttpServletResponse response) {
+    public void export(@RequestBody GroupPageQueryExportDTO dto, HttpServletResponse response) {
         List<GroupPageInfoVO> list = new ArrayList<>();
         int page = 1;
         int limit = 500;
@@ -170,7 +170,6 @@ public class GroupController {
         }
         ExcelUtil<GroupPageInfoVO> util = new ExcelUtil<>(GroupPageInfoVO.class);
         util.exportExcel(response, list, "群列表");
-        return R.ok();
     }
 
 
@@ -197,6 +196,8 @@ public class GroupController {
         try {
             groupService.importResource(groupService.analysisExcelInfo(file), clusterId);
             return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
             log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(clusterId), e);

@@ -25,6 +25,8 @@ public enum BotEventEnum {
      */
     BOT_JOIN_NEW_GROUP,
 
+    BOT_LEFT_GROUP,
+
     /**
      * 群聊升级
      */

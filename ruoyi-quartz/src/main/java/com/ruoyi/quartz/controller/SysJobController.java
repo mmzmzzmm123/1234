@@ -43,11 +43,11 @@ public class SysJobController extends BaseController
     @Autowired
     private ISysJobService jobService;
 
-    @Autowired
-    private IRobotService robotService;
-
-    @Autowired
-    private TelegramDetChatroomAdminDistrService telegramDetChatroomAdminDistrService;
+//    @Autowired
+//    private IRobotService robotService;
+//
+//    @Autowired
+//    private TelegramDetChatroomAdminDistrService telegramDetChatroomAdminDistrService;
 
     /**
      * 查询定时任务列表
@@ -193,16 +193,16 @@ public class SysJobController extends BaseController
         return success();
     }
 
-    @ApiOperation("同步号列表")
-    @PostMapping("/syncRobotList")
-    public void syncRobotList(){
-        robotService.syncRobot();
-    }
-
-    @ApiOperation("同步黑群主列表")
-    @PostMapping("/syncChatroomAdminDistr")
-    public void syncChatroomAdminDistr(){
-        telegramDetChatroomAdminDistrService.syncChatroomAdminDistr();
-    }
+//    @ApiOperation("同步号列表")
+//    @PostMapping("/syncRobotList")
+//    public void syncRobotList(){
+//        robotService.syncRobot();
+//    }
+//
+//    @ApiOperation("同步黑群主列表")
+//    @PostMapping("/syncChatroomAdminDistr")
+//    public void syncChatroomAdminDistr(){
+//        telegramDetChatroomAdminDistrService.syncChatroomAdminDistr();
+//    }
 
 }

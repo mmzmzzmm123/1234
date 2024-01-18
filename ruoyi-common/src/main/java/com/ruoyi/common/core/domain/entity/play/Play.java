@@ -80,7 +80,7 @@ public class Play {
     private Integer isConfound;
 
     /**
-     * 混淆状态 0-未混淆 1-已混淆
+     * 混淆状态 0-未混淆 1-已混淆 2-混淆失败
      */
     private Integer confoundState;
 
@@ -110,9 +110,14 @@ public class Play {
     private String urlPool;
 
     /**
-     * 操作员id
+     * 商家id
      */
     private String merchantId;
+
+    /**
+     * 用户id
+     */
+    private Long userId;
 
     /**
      * 是否删除: 0否 1是
@@ -126,7 +131,7 @@ public class Play {
     private BigDecimal speed;
 
     /**
-     * 剧本执行进度：0未开始 1调度修改群人设中 2 调用入群中 3 入群等待中 4混淆中 5号分配 6人设包装 7剧本发送
+     * TITLE : 剧本执行进度：0未开始 1调度修改群人设中 2 调用入群中 3 入群等待中 4 混淆 5 号分配,人设 6等待超群条件 7发剧本
      */
     private Integer scanProgress;
 
@@ -144,6 +149,8 @@ public class Play {
      * 失败原因
      */
     private String failReason;
+
+    private Long productId;
 
     public SendMechanism convertSendMechanismStr() {
         if (StringUtils.isEmpty(this.sendMechanism)) {

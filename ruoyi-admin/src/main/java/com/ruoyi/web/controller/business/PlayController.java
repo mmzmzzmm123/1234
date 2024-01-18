@@ -22,6 +22,7 @@ import com.ruoyi.system.service.PlayMessageConfoundLogService;
 import com.ruoyi.system.service.PlayMessagePushService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -52,7 +53,7 @@ public class PlayController extends BaseController {
     @ApiOperation("创建炒群任务")
     @PostMapping(value = "/create")
     public R<String> create(@RequestBody PlayDTO dto) {
-        dto.setMerchantId(getMerchantId());
+        dto.setLoginUser(getLoginUser());
         R<String> checkPlayParamsRet = checkAddPlayParams(dto);
         if (checkPlayParamsRet.getCode() != HttpStatus.SUCCESS) {
             return checkPlayParamsRet;
@@ -61,11 +62,14 @@ public class PlayController extends BaseController {
     }
 
     private R<String> checkAddPlayParams(PlayDTO dto) {
+        if (ObjectUtils.isEmpty(dto.getLoginUser().getMerchantInfo()) || dto.getLoginUser().getMerchantInfo().getMerchantType() != 0) {
+            return R.fail(ErrInfoConfig.getDynmic(11011));
+        }
         if (StringUtils.isEmpty(dto.getName())) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能为空"));
         }
-        if (dto.getName().length() > 100) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过100字"));
+        if (dto.getName().length() > 64) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过64字"));
         }
         if (null == dto.getGroupSource()) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "请选择群来源"));
@@ -137,7 +141,7 @@ public class PlayController extends BaseController {
 
     @ApiOperation("任务进度")
     @PostMapping("taskProgress")
-    public R<PlayTaskProgressVO> taskProgress(@RequestBody QueryTaskProgressDTO dto) {
+    public R<List<PlayTaskProgressVO>> taskProgress(@RequestBody QueryTaskProgressDTO dto) {
         return R.ok(playService.taskProgress(dto));
     }
 
@@ -192,5 +196,10 @@ public class PlayController extends BaseController {
         return R.ok();
     }
 
+    @ApiOperation("重复炒群")
+    @PostMapping("repeat/{playId}")
+    public R<String> repeatPlay(@PathVariable String playId) {
+        return playService.repeatPlay(playId);
+    }
 
 }

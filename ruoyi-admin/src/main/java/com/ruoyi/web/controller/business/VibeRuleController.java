@@ -23,7 +23,7 @@ public class VibeRuleController extends BaseController {
     @ApiOperation("创建")
     @PostMapping(value = "/create")
     public R<String> create(@RequestBody VibeRuleDTO dto) {
-        dto.setMerchantId(getMerchantId());
+        dto.setUserId(getUserId());
         return vibeRuleService.create(dto);
     }
 

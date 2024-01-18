@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.system.callback.dto.Called1100910018DTO;
 import com.ruoyi.system.callback.dto.Called1100910039DTO;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
@@ -21,7 +22,7 @@ import java.util.List;
 public interface GroupInfoService extends IService<GroupInfo> {
 
 
-    List<String> existGroup(List<String> groupSerialNos);
+
 
     Page<GroupPageInfoVO> groupPage(GroupPageQueryDTO dto);
 
@@ -36,5 +37,9 @@ public interface GroupInfoService extends IService<GroupInfo> {
 
     GroupInfo getGroupBySerialNo(String groupSerialNo);
 
-    void changeGroupSerialNo(String oldGroupSerialNo,String newGroupSerialNo);
+     GroupInfo getGroupBySerialNo(String oldSerialNo, String newSerialNo);
+
+    GroupInfo changeGroupSerialNo(String oldGroupSerialNo,String newGroupSerialNo);
+
+    void updateGroupInfo(Called1100910018DTO.Called1100910018ChatroomInfoDTO update);
 }

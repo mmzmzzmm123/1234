@@ -68,7 +68,7 @@ public class PlayRobotPackLog {
 
 	public static boolean unFinished(List<PlayRobotPackLog> datas) {
 		for (PlayRobotPackLog data : datas) {
-			if (data.getRetryMaxFlag().intValue() == 0 || data.getStatus().intValue() == -1
+			if ((data.getRetryMaxFlag().intValue() == 0 && data.getStatus().intValue() != 1) || data.getStatus().intValue() == -1
 					|| data.getStatus().intValue() == 0) {
 				return true;
 			}

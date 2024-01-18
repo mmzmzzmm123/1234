@@ -18,6 +18,7 @@ import com.ruoyi.common.core.domain.entity.order.OrderRefund;
 import com.ruoyi.common.core.domain.entity.order.OrderSku;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.redis.RedisLock;
+import com.ruoyi.common.enums.ProductCategoryType;
 import com.ruoyi.common.utils.Objects;
 import com.ruoyi.common.utils.*;
 import com.ruoyi.common.utils.file.FileUtils;
@@ -168,7 +169,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		// 计算价格
 		long price = orderPriceHandler.handle(skuList, groupSet.size(), singlePullPersonCount);
 
-		final String orderId = orderStorage(request, product, skuList, groupSet, price).getOrderId();
+		final String orderId = orderStorage(request, product, skuList, groupSet, price, 0).getOrderId();
 		return AjaxResult.success(orderId);
 	}
 
@@ -183,10 +184,14 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 
 	@Transactional
 	public Order orderStorage(OrderProduceRequest request, Product product, List<ProductSku> skuList,
-			Set<String> groupSet, long price) {
+			Set<String> groupSet, long price, Integer orderStatus) {
 		final String orderId = OrderTools.orderId();
 		// 冻结余额
-		String frozenId = OrderTools.doFrozen(price, request.getLoginUser().getMerchantInfo().getMerchantId(), orderId);
+		String frozenId = "";
+		if (product.getCategoryId() != ProductCategoryType.PLAY.getId()) {
+			OrderTools.doFrozen(price, request.getLoginUser().getMerchantInfo().getMerchantId(), orderId);
+		}
+
 		// 插入订单
 		Order order = new Order();
 		order.setOrderId(orderId);
@@ -195,7 +200,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		order.setFrozenId(frozenId);
 		order.setUpdateTime(order.getCreateTime());
 		// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
-		order.setOrderStatus(0);
+		order.setOrderStatus(orderStatus);
 		order.setParams(JSON.toJSONString(request.getParams()));
 		order.setPrice(price);
 		order.setProductId(product.getProductId());

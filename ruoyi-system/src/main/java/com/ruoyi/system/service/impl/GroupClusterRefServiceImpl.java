@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.system.domain.GroupCluster;
 import com.ruoyi.system.domain.GroupClusterRef;
+import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.dto.IdCountDTO;
 import com.ruoyi.system.domain.vo.GroupClusterCountVO;
 import com.ruoyi.system.mapper.GroupClusterRefMapper;
@@ -61,19 +62,32 @@ public class GroupClusterRefServiceImpl extends ServiceImpl<GroupClusterRefMappe
         baseMapper.update(update, new LambdaQueryWrapper<GroupClusterRef>().in(GroupClusterRef::getGroupId, groupIds));
     }
 
+    public List<String> existGroup(List<String> groupIds) {
+        return  (ArrayList)baseMapper.selectObjs(
+                new LambdaQueryWrapper<GroupClusterRef>()
+                        .in(GroupClusterRef::getGroupId, groupIds)
+                        .select(GroupClusterRef::getGroupId));
+    }
+
     @Override
-    public void add(List<String> groupIds, String newClusterId) {
+    public List<String> add(List<String> groupIds, String newClusterId) {
         if (CollUtil.isEmpty(groupIds)) {
-            return;
+            return new ArrayList<>();
         }
-        saveBatch(groupIds.stream().map(groupId -> {
-            GroupClusterRef ref = new GroupClusterRef();
-            ref.setRefId(IdWorker.getIdStr());
-            ref.setClusterId(newClusterId);
-            ref.setGroupId(groupId);
-            ref.setCreateTime(LocalDateTime.now());
-            return ref;
-        }).collect(Collectors.toList()));
+        List<String> existGroup = existGroup(groupIds);
+        groupIds = groupIds.stream().filter(groupId -> !existGroup.contains(groupId)).collect(Collectors.toList());
+
+        if(CollUtil.isNotEmpty(groupIds)) {
+            saveBatch(groupIds.stream().map(groupId -> {
+                GroupClusterRef ref = new GroupClusterRef();
+                ref.setRefId(IdWorker.getIdStr());
+                ref.setClusterId(newClusterId);
+                ref.setGroupId(groupId);
+                ref.setCreateTime(LocalDateTime.now());
+                return ref;
+            }).collect(Collectors.toList()));
+        }
+        return groupIds;
     }
 
     @Override

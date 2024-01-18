@@ -35,6 +35,10 @@ public class LogPostJobProcessor implements LogJobProcessor {
 		List<PlayRobotPackLog> datas = robotPackLogMapper.selectList(new QueryWrapper<PlayRobotPackLog>().lambda()
 				.eq(PlayRobotPackLog::getIsFinish, 0).eq(PlayRobotPackLog::getStatus, -1).eq(PlayRobotPackLog::getPlayId, play.getId()));
 
+		if(CollectionUtils.isEmpty(datas)) {
+			return ;
+		}
+		
 		// 找出等待条件的log
 		List<PlayRobotPackLog> waitList = robotPackLogMapper
 				.selectBatchIds(ListTools.extract(datas, f -> f.getWaitOpt()));

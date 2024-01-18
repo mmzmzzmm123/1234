@@ -38,8 +38,8 @@ public class OpenApiClient {
         String traceId = Ids.getId();
 
         String response = null;
+        String jsonBody = JSON.toJSONString(body);
         try {
-            String jsonBody = JSON.toJSONString(body);
             log.info("调用openapi相关接口 {} {} {} {} {}", traceId, requestUrl, jsonBody, token, api.name());
             HttpRequest request = HttpUtil.createPost(requestUrl).header("Authorization", "Bearer " + token).body(jsonBody, ContentType.JSON.toString());
             HttpResponse execute = request.execute();
@@ -51,6 +51,14 @@ public class OpenApiClient {
         }
         OpenApiResult<T> result = JSON.parseObject(response, new TypeReference<OpenApiResult<T>>(responseClass) {
         });
+
+        try {
+            if (result.isSuccess() && result.getData() instanceof TgBaseOutputDTO) {
+                OpenApiRequestCache.cache(((TgBaseOutputDTO) result.getData()).getOptSerNo(), jsonBody);
+            }
+        } catch (Exception e) {
+            log.info("缓存请求参数失败={},{}", jsonBody, api);
+        }
 
         return result;
     }

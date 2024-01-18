@@ -24,19 +24,19 @@ public class GroupPageQueryDTO extends PageBaseDTO {
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "入库时间-开始")
-    private LocalDateTime createTimeStart;
+    private String createTimeStart;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "入库时间-结束")
-    private LocalDateTime createTimeEnd;
+    private String createTimeEnd;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "最后一次使用时间-开始")
-    private LocalDateTime usedTimeStart;
+    private String usedTimeStart;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "最后一次使用时间-结束")
-    private LocalDateTime usedTimeEnd;
+    private String usedTimeEnd;
 
     @ApiModelProperty(value = "来源 10-开平导入群  20-外部自建群")
     private Integer createType;
@@ -77,10 +77,10 @@ public class GroupPageQueryDTO extends PageBaseDTO {
     private Integer groupStatus;
 
     @ApiModelProperty(value = "封群时间-开始")
-    private LocalDateTime groupStatusTimeStart;
+    private String groupStatusTimeStart;
 
     @ApiModelProperty(value = "封群时间-结束")
-    private LocalDateTime groupStatusTimeEnd;
+    private String groupStatusTimeEnd;
 
     @ApiModelProperty(value = "群名称")
     private String groupName;

@@ -54,6 +54,11 @@ public class GroupMonitorInfo {
     @TableField("bot_check")
     private Integer botCheck;
 
+    @ApiModelProperty(value = "bot是否是admin 0-否 1-有")
+    @TableField("bot_admin")
+    private Integer botAdmin;
+
+
     /**
      * 邀请bot入群的机器人id
      */

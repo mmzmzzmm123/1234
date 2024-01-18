@@ -14,6 +14,7 @@ import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.redis.RedisLock;
+import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.enums.InviteBotAction;
 import com.ruoyi.common.exception.GlobalException;
@@ -23,6 +24,7 @@ import com.ruoyi.system.bot.mode.input.AdMonitorDTO;
 import com.ruoyi.system.bot.mode.output.BotInfoVO;
 import com.ruoyi.system.callback.dto.Called1100910017DTO;
 import com.ruoyi.system.callback.dto.Called1100910039DTO;
+import com.ruoyi.system.callback.dto.Called1100910053DTO;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
@@ -172,21 +174,23 @@ public class GroupService {
         //1.保存群机器信息
         List<GroupInfo> groupInfos = groupInfoService.saveImportGroup(resourceList);
         Assert.notEmpty(groupInfos, "群已存在,请勿重复添加");
-        List<String> groupIds = groupInfos.stream().map(GroupInfo::getGroupId).collect(Collectors.toList());
+        //保存群组关联
+        List<String> groupIds = groupClusterRefService.add(groupInfos.stream().map(GroupInfo::getGroupId).collect(Collectors.toList()), newClusterId);
+        Assert.notEmpty(groupIds, "群已存在,请勿重复添加");
+        groupInfos = groupInfos.stream().filter(p -> groupIds.contains(p.getGroupId())).collect(Collectors.toList());
         //默认保存群主信息
-        Map<String, GroupRobot> robotMap = groupRobotService.addGroupLeader(groupInfos, getRobotMap(groupInfos, resourceList));
+        Map<String, GroupRobot> robotMap = groupRobotService.addGroupLeader(groupIds, getRobotMap(groupInfos, resourceList));
         //设置号为群主号
         iRobotService.setGroupOwner(robotMap.values().stream().map(GroupRobot::getRobotId).collect(Collectors.toList()));
-        //保存群组关联
-        groupClusterRefService.add(groupIds, newClusterId);
         //保存群状态
         groupStateService.addImportGroup(groupIds);
         //新增bot监控表
         groupMonitorInfoService.add(groupIds);
         //同步群信息
-        syncInfo(groupInfos, robotMap);
+        List<GroupInfo> finalGroupInfos = groupInfos;
+        AsyncTask.execute(() -> syncInfo(finalGroupInfos, robotMap));
         //执行邀请bot进群
-        invitingBotJoin(groupInfos, robotMap::get, true);
+        AsyncTask.execute(() -> invitingBotJoin(finalGroupInfos, robotMap::get, true));
     }
 
 
@@ -306,6 +310,13 @@ public class GroupService {
                 }
                 GroupInfo groupInfo = groupInfoService.getById(groupBatch.getGroupId());
 
+                if(botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP){
+                    groupRobotService.addBot(groupInfo.getGroupId(),groupActionLog.getChangeValue());
+                }
+
+                if (nextAction == InviteBotAction.SET_BOT_ADMIN) {
+                    groupMonitorInfoService.setBotAdmin(groupBatch.getGroupId());
+                }
                 String value;
                 //当前动作是搜索bot  对比username 获取是bot的数据
                 if (botAction == InviteBotAction.SEARCH_BOT) {
@@ -329,6 +340,7 @@ public class GroupService {
                     //其他的动作 都传bot的用户编号
                     value = groupActionLog.getChangeValue();
                 }
+
                 //执行动作
                 runAction(groupBatch.getBatchId(), nextAction.getAction(), groupInfo,
                         groupRobotService.getRobot(groupBatch.getGroupId(), groupActionLog.getRobotId()), value);
@@ -394,7 +406,7 @@ public class GroupService {
             action.setBatchStatus(0);
             groupBatchActionService.save(action);
 
-            runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, groupRobot, botUserName);
+            AsyncTask.execute(()-> runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, groupRobot, botUserName));
 
         } catch (Exception e) {
             log.error("邀请bot进群异常={}", groupInfo, e);
@@ -505,7 +517,7 @@ public class GroupService {
                 setAction(GroupAction.SET_GROUP_NAME, groupInfo, robot, "", name, actionId -> {
                             ThirdTgModifyChatroomNameInputDTO input = new ThirdTgModifyChatroomNameInputDTO();
                             input.setTgRobotId(robot.getRobotId());
-                            input.setChatroomSerialNo("");
+                            input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
                             input.setChatroomNameBase64(Base64.encode(name));
                             input.setExtend(actionId);
                             return input;
@@ -764,7 +776,6 @@ public class GroupService {
      * @param groupId
      */
     public boolean setBotAdMonitor(String groupId, String playId, String adMonitor) {
-        //todo 设置bot广告规则
         AdMonitor adMonitorInfo = JSON.parseObject(adMonitor, AdMonitor.class);
         GroupMonitorInfo groupInfo = groupMonitorInfoService.getById(groupId);
 
@@ -783,7 +794,26 @@ public class GroupService {
         dto.setRestrictMember(adMonitorInfo.getIsTabooMemberMsg());
         dto.setDeleteOtherStatement(adMonitorInfo.getIsDelMemberMsg());
         dto.setTimeUnit(ObjectUtil.equal(adMonitorInfo.getSpammingTimeUnit(), 2) ? "MINUTES" : "SECONDS");
-        return ApiClient.setBotAdMonitor(dto).isSuccess();
+        boolean success = ApiClient.setBotAdMonitor(dto).isSuccess();
+        if(success){
+            groupMonitorInfoService.setBotAdMonitor(groupId);
+        }
+        return success;
     }
 
+
+    public void handlerNewAdmin(ThirdTgSetChatroomAdminInputDTO request, Called1100910053DTO dto) {
+        try {
+            if (request == null) {
+                return;
+            }
+            GroupInfo groupInfo = groupInfoService.changeGroupSerialNo(request.getChatroomSerialNo(), dto.getNewChatroomSerialNo());
+            if (groupInfo != null) {
+                groupRobotService.setAdmin(groupInfo.getGroupId(), request.getMemberSerialNo());
+            }
+        } catch (Exception e) {
+            log.info("handlerNewAdmin.error={},{}", request, dto, e);
+        }
+
+    }
 }

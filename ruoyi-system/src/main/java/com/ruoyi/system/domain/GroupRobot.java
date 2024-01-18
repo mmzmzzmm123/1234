@@ -1,12 +1,14 @@
 package com.ruoyi.system.domain;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.ruoyi.common.utils.MD5Utils;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+
+import java.util.Optional;
 
 /**
  * 群内机器人信息(GroupRobot)表实体类
@@ -54,5 +56,9 @@ public class GroupRobot {
     @TableField("member_type")
     private Integer memberType;
 
+
+    public void setMd5Id() {
+        id = MD5Utils.getMD5( Optional.ofNullable(groupId).orElse("") + "-" + Optional.ofNullable(robotId).orElse(""), "UTF-8").toUpperCase();
+    }
 
 }
