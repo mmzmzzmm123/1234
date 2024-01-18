@@ -65,7 +65,8 @@ public class MultipackLogContainer implements InitializingBean {
 		final LogJobProcessor stateJobProcessor = ServiceLoader.load(LogJobProcessor.class, "StateJobProcessor");
 		final LogJobProcessor retryJobProcessor = ServiceLoader.load(LogJobProcessor.class, "RetryJobProcessor");
 		final LogJobProcessor logPostJobProcessor = ServiceLoader.load(LogJobProcessor.class, "LogPostJobProcessor");
-		final LogJobProcessor sendConditionJobProcessor = ServiceLoader.load(LogJobProcessor.class, "SendConditionJobProcessor");
+		final LogJobProcessor sendConditionJobProcessor = ServiceLoader.load(LogJobProcessor.class,
+				"SendConditionJobProcessor");
 		final LogJobProcessor sendPlayJobProcessor = ServiceLoader.load(LogJobProcessor.class, "SendPlayJobProcessor");
 
 		try {
@@ -74,7 +75,7 @@ public class MultipackLogContainer implements InitializingBean {
 			List<Play> datas = playMapper.selectList(new QueryWrapper<Play>().lambda()
 					.in(Play::getScanProgress,
 							Arrays.asList(ScanProgressEnum.Robot.getVal(), ScanProgressEnum.Send_Wait.getVal()))
-					.eq(Play::getIsDelete, 0));
+					.eq(Play::getIsDelete, 0).in(Play::getState, Arrays.asList(1, 2, 3)));
 			if (CollectionUtils.isEmpty(datas)) {
 				return;
 			}

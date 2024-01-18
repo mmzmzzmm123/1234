@@ -1,10 +1,14 @@
 package com.ruoyi.system.components.movie.spi.impl;
 
+import java.util.List;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
+import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.movie.spi.PlayRunner;
+import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.mapper.PlayMessageMapper;
 import com.ruoyi.system.mapper.PlayMessagePushDetailMapper;
 import com.ruoyi.system.mapper.PlayMessagePushMapper;
@@ -65,11 +69,43 @@ public class DefaultPlayRunner implements PlayRunner {
 		log.info("DefaultPlayRunner_onFinish {} {}", playId, chatroomId);
 //		App.getBean(PlayInfoMapper.class).updateFinish(playId);
 		SpringUtils.getBean(PlayMessagePushMapper.class).updateSuccess(playId, chatroomId);
+
+		// 剧本完成
+		boolean finishFlag = true;
+		List<PlayMessagePush> groups = SpringUtils.getBean(PlayMessagePushMapper.class)
+				.selectList(new QueryWrapper<PlayMessagePush>().lambda().eq(PlayMessagePush::getPlayId, playId)
+						.select(PlayMessagePush::getPushState));
+		for (PlayMessagePush push : groups) {
+			if (push.getPushState().intValue() == 1 || push.getPushState().intValue() == 2) {
+				// 推送状态:1:待发送 2:进行中 3:已结束 4:人工暂停 5:推送失败 6:系统暂停 7:取消
+				finishFlag = false;
+				break;
+			}
+		}
+		if (!finishFlag) {
+			return;
+		}
+		// 更新剧本完成
+		Play play = SpringUtils.getBean(PlayMapper.class).selectById(playId);
+		if (play != null && play.getState().intValue() == 2) {
+			Play update = new Play();
+			update.setState(5);
+			update.setId(playId);
+			SpringUtils.getBean(PlayMapper.class).updateById(update);
+		}
 	}
 
 	@Override
 	public void onStart(String playId) {
 		log.info("DefaultPlayRunner_onStart {}", playId);
+		Play play = SpringUtils.getBean(PlayMapper.class).selectById(playId);
+		if (play != null && play.getState().intValue() == 1) {
+			// 改成 炒群中
+			Play update = new Play();
+			update.setState(2);
+			update.setId(playId);
+			SpringUtils.getBean(PlayMapper.class).updateById(update);
+		}
 	}
 
 	private boolean finished(String playId, int curSort) {
