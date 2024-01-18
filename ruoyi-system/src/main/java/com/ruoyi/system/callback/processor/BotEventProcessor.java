@@ -26,12 +26,12 @@ public class BotEventProcessor {
     }
 
     @BotEvent(value = BotEventEnum.LEAVE_GROUP, parameterClass = LeaveGroupDTO.class)
-    public void joinGroup(LeaveGroupDTO dto) {
+    public void leaveGroup(LeaveGroupDTO dto) {
 
     }
 
     @BotEvent(value = BotEventEnum.BOT_JOIN_NEW_GROUP, parameterClass = BotJoinNewGroupDTO.class)
-    public void joinGroup(BotJoinNewGroupDTO dto) {
+    public void botJoinNewGroup(BotJoinNewGroupDTO dto) {
 
     }
 }
