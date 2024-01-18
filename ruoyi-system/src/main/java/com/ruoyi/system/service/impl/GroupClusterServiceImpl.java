@@ -81,10 +81,10 @@ public class GroupClusterServiceImpl extends ServiceImpl<GroupClusterMapper, Gro
 
     @Override
     public void update(GroupClusterNameUpdateDTO dto) {
-        Assert.isNull(dto.getClusterId(), "分组id不能为空");
+        Assert.notBlank(dto.getClusterId(), "分组id不能为空");
         Assert.notBlank(dto.getClusterName(), "分组名不能为空");
         GroupCluster old = baseMapper.selectById(dto.getClusterId());
-        Assert.isNull(old, "分组不存在");
+        Assert.notNull(old, "分组不存在");
         if (ObjectUtil.equal(dto.getClusterName(), old.getClusterName())) {
             return;
         }
@@ -99,9 +99,9 @@ public class GroupClusterServiceImpl extends ServiceImpl<GroupClusterMapper, Gro
 
     @Override
     public void delete(String clusterId) {
-        Assert.isNull(clusterId, "分组id不能为空");
+        Assert.notEmpty(clusterId, "分组id不能为空");
         GroupCluster old = baseMapper.selectById(clusterId);
-        Assert.isNull(old, "分组不存在");
+        Assert.notNull(old, "分组不存在");
         Assert.isFalse(ObjectUtil.equal(old.getClusterType(), 1), "默认分组不允许删除");
         baseMapper.deleteById(clusterId);
     }
