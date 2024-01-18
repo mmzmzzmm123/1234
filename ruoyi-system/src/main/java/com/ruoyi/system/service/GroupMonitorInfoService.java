@@ -1,6 +1,7 @@
 package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.system.bot.mode.output.BotInfoVO;
 import com.ruoyi.system.domain.GroupMonitorInfo;
 
 import java.util.List;
@@ -20,4 +21,6 @@ public interface GroupMonitorInfoService extends IService<GroupMonitorInfo> {
     void robotCheck(String groupId);
 
     void updateRobotSerialNo(String groupId, String botSerialNo,String robotSerialNo);
+
+    void setBotInfo(String groupId, BotInfoVO bo);
 }

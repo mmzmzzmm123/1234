@@ -798,7 +798,7 @@ public class IntoGroupService {
                     groupInfo.setIntoStatus(2);
                     //判断是不是已有群
                     if (play.getGroupSource() == 0) {
-                        groupService.setBotAdMonitor(groupInfo.getTgGroupId(), play.getAdMonitor());
+                        groupService.setBotAdMonitor(groupInfo.getTgGroupId(),play.getId(), play.getAdMonitor());
                     }
                     setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "已满足剧本所需发言人数，入群完成", 0, PlayLogTyper.Group_into, null);
                 } else {
