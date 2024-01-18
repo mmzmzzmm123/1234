@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
+import com.ruoyi.common.enums.ScanProgressEnum;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.prepare.multipack.OnPackMonitor;
@@ -99,7 +100,7 @@ public class PlayPrepareTaskExecuteChain implements OnPackMonitor, OnRadioPackMo
 		Play updatePlay = new Play();
 		updatePlay.setId(playId);
 		// TITLE : 剧本执行进度：0未开始 1调度修改群人设中 2 调用入群中 3 入群等待中 4 混淆 5 号分配,人设 6等待超群条件 7发剧本
-		updatePlay.setScanProgress(6);
+		updatePlay.setScanProgress(ScanProgressEnum.Send_Wait.getVal());
 		SpringUtils.getBean(PlayMapper.class).updateById(updatePlay);
 		log.info("更新剧本内部扫描条件 {}", updatePlay);
 	}

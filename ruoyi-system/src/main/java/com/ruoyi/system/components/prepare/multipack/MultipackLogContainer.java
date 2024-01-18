@@ -18,6 +18,7 @@ import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
 import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.core.thread.AsyncTask;
+import com.ruoyi.common.enums.ScanProgressEnum;
 import com.ruoyi.common.utils.DelayAcquireTools;
 import com.ruoyi.common.utils.Strings;
 import com.ruoyi.common.utils.spi.ServiceLoader;
@@ -45,6 +46,10 @@ public class MultipackLogContainer implements InitializingBean {
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
+		try {
+			RedisTemplateTools.get().delete("ruoyi:MultipackLogContainerLock");
+		} catch (Exception e) {
+		}
 	}
 
 	/**
@@ -60,18 +65,40 @@ public class MultipackLogContainer implements InitializingBean {
 		final LogJobProcessor stateJobProcessor = ServiceLoader.load(LogJobProcessor.class, "StateJobProcessor");
 		final LogJobProcessor retryJobProcessor = ServiceLoader.load(LogJobProcessor.class, "RetryJobProcessor");
 		final LogJobProcessor logPostJobProcessor = ServiceLoader.load(LogJobProcessor.class, "LogPostJobProcessor");
+		final LogJobProcessor sendConditionJobProcessor = ServiceLoader.load(LogJobProcessor.class, "SendConditionJobProcessor");
+		final LogJobProcessor sendPlayJobProcessor = ServiceLoader.load(LogJobProcessor.class, "SendPlayJobProcessor");
 
 		try {
-			lock.lock(5, TimeUnit.SECONDS);
+			lock.lock(60 * 10, TimeUnit.SECONDS);
 			// 0未开始 1调度修改群人设中 2 调用入群中 3 入群等待中 4 混淆 5 号分配,人设 6等待超群条件 7发剧本
-			List<Play> datas = playMapper.selectList(
-					new QueryWrapper<Play>().lambda().eq(Play::getScanProgress, 5).eq(Play::getIsDelete, 0));
+			List<Play> datas = playMapper.selectList(new QueryWrapper<Play>().lambda()
+					.in(Play::getScanProgress,
+							Arrays.asList(ScanProgressEnum.Robot.getVal(), ScanProgressEnum.Send_Wait.getVal()))
+					.eq(Play::getIsDelete, 0));
 			if (CollectionUtils.isEmpty(datas)) {
 				return;
 			}
 			AsyncTask.newMultiTasker().map(datas, 5, curs -> {
 				for (Play play : curs) {
-					// 各个 定时器 执行
+					if (play.getScanProgress().intValue() == ScanProgressEnum.Send_Wait.getVal()) {
+						// 炒群条件
+						try {
+							long s = System.currentTimeMillis();
+							sendConditionJobProcessor.handle(play);
+							log.info("sendConditionJobProcessor执行 {} {}", (System.currentTimeMillis() - s), play);
+						} catch (Exception e) {
+							log.error("sendConditionJobProcessor执行异常 {}", play, e);
+						}
+						try {
+							long s = System.currentTimeMillis();
+							sendPlayJobProcessor.handle(play);
+							log.info("sendPlayJobProcessor执行 {} {}", (System.currentTimeMillis() - s), play);
+						} catch (Exception e) {
+							log.error("sendPlayJobProcessor执行异常 {}", play, e);
+						}
+						continue;
+					}
+					// 号人设的 job处理
 					try {
 						long s = System.currentTimeMillis();
 						stateJobProcessor.handle(play);
@@ -95,7 +122,6 @@ public class MultipackLogContainer implements InitializingBean {
 					} catch (Exception e) {
 						log.error("logPostJobProcessor执行异常 {}", play, e);
 					}
-
 				}
 			});
 		} finally {
@@ -112,7 +138,8 @@ public class MultipackLogContainer implements InitializingBean {
 			return;
 		}
 		// 数据是否存在， 存在则删除重新提交
-		robotPackLogService.remove(new UpdateWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getPlayId, pckList.get(0).getPlayId())
+		robotPackLogService.remove(new UpdateWrapper<PlayRobotPackLog>().lambda()
+				.eq(PlayRobotPackLog::getPlayId, pckList.get(0).getPlayId())
 				.eq(PlayRobotPackLog::getChatroomId, pckList.get(0).getChatroomId()));
 		for (PlayRobotPackLog item : pckList) {
 			item.setCreateTime(new Date());
