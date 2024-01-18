@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 public class ThirdTgMessageDTO {
-    @ApiModelProperty("消息类型（文字：2001）")
+    @ApiModelProperty("消息类型（2001 文本消息, 2002 图片 2003 语音（目前仅支持.ogg和 .mp3文件后缀） 2004 视频 2005 2007 emoji表情 链接 2010 文件 2015 贴图消息 2034 超文本链接 2035 postbot消息）")
     private Integer msgType;
     @ApiModelProperty("消息序号")
     private Integer msgNum;
