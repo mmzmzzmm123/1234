@@ -45,6 +45,11 @@ public class PlayGroupProgressVO {
     @ApiModelProperty("群类型 10私密群 20公开群")
     private Integer groupType;
 
+    @ApiModelProperty("群状态 0-正常 1-封群")
+    private Integer groupStatus;
+    @ApiModelProperty("群状态变化时间(封群时间)")
+    private Integer groupStatusTime;
+
     @ApiModelProperty("群成员数")
     private Integer memberCount;
     @ApiModelProperty("进群数")
