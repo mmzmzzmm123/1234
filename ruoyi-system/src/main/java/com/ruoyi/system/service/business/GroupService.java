@@ -513,7 +513,7 @@ public class GroupService {
                 if (nameIndex >= groupNames.size()) {
                     nameIndex = 0;
                 }
-                String name = dto.getImageUrls().get(nameIndex++);
+                String name = groupNames.get(nameIndex++);
                 setAction(GroupAction.SET_GROUP_NAME, groupInfo, robot, "", name, actionId -> {
                             ThirdTgModifyChatroomNameInputDTO input = new ThirdTgModifyChatroomNameInputDTO();
                             input.setTgRobotId(robot.getRobotId());

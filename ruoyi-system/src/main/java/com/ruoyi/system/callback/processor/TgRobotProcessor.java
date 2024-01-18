@@ -338,6 +338,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910043, parameterClass = CalledEmptyDTO.class)
     public void called1100910043(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
     }
 
 
