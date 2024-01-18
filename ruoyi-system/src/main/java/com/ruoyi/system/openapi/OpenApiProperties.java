@@ -10,10 +10,10 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "openapi")
 public class OpenApiProperties {
 
-    private String openApiKey = "yriWvNH7Bt83mCvTQYHMLkMbuh7Ll32z";
+    private String openApiKey = "U89dduMpQ2bdUDwQe6Q7uYD1Qmar7t1k";
 
-    private String openApiSecret = "TNRlS8MebxpBYvpbpWEwByzBAhw5TAfg";
+    private String openApiSecret = "ZVULlqavc8uVYeDEOwvPMXlT2QdrxfY7";
 
-    private String openApiHost = "https://gateway.test.csbilin.com";
+    private String openApiHost = "https://gateway.bilinl.com";
 
 }

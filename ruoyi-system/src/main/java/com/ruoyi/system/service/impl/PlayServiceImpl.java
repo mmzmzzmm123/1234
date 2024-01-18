@@ -19,6 +19,7 @@ import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.core.domain.entity.play.*;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.enums.ProductCategoryType;
 import com.ruoyi.common.enums.play.PushStateEnum;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
@@ -87,16 +88,23 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Transactional(rollbackFor=Exception.class)
     public R<String> create(PlayDTO dto) {
         //设置订单数据
-        AjaxResult result = ProductTools.checkNormal(dto.getProductId());
+        Long productId = dto.getProductId();
+        if (null == productId || productId < 0) {
+            Product product = SpringUtils.getBean(ProductMapper.class).selectOne(new LambdaQueryWrapper<Product>()
+                            .select(Product::getProductId)
+                    .eq(Product::getCategoryId, ProductCategoryType.PLAY.getId()));
+            productId = product.getProductId();
+        }
+        AjaxResult result = ProductTools.checkNormal(productId);
         if (result.isError()) {
             return R.fail(ErrInfoConfig.getDynmic(11001, "未获取到商品信息"));
         }
-        handleOrder(dto.getProductId(), (Product) result.data(), dto.getName(), dto.getLoginUser());
+        handleOrder(productId, (Product) result.data(), dto.getName(), dto.getLoginUser());
 
         //todo 混淆处理?
 
         String playId = IdWorker.getIdStr();
-        savePlay(dto, playId);
+        savePlay(dto, playId, productId);
 
         //外部群不能设置群包装
         if (dto.getGroupSource() == 0) {
@@ -220,10 +228,11 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         playGroupPackMapper.insert(playGroupPack);
     }
 
-    private void savePlay(PlayDTO dto, String id) {
+    private void savePlay(PlayDTO dto, String id, Long productId) {
         Play play = new Play();
         BeanUtils.copyProperties(dto, play);
         play.setId(id);
+        play.setProductId(productId);
         play.setSendMechanism(JSON.toJSONString(dto.getSendMechanism()));
         play.setAdMonitor(JSON.toJSONString(dto.getAdMonitor()));
         play.setPlayExt(JSON.toJSONString(dto.getPlayExt()));

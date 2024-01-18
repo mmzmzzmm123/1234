@@ -285,6 +285,7 @@ public class GroupService {
     public void handleActionResult(String id, String optNo, boolean success, String msg, Object data) {
         if (StrUtil.isBlank(id)) {
             id = redisCache.getCacheObject("ruoyi-admin:action:" + optNo);
+            log.info("getActionId={},{}",optNo,id);
         }
         if (StrUtil.isBlank(id)) {
             return;
@@ -679,6 +680,7 @@ public class GroupService {
                 } else if (saveOpt) {
                     redisCache.setCacheObject("ruoyi-admin:action:" + optNo
                             , actionLog.getId(), 30 * 60 * 60, TimeUnit.SECONDS);
+                    log.info("setActionId={},{}", optNo, actionLog.getId());
                 }
             } catch (GlobalException e) {
                 log.info("groupAction.error={},{},{}", action.getName(), JSON.toJSONString(input), e.getMessage());
