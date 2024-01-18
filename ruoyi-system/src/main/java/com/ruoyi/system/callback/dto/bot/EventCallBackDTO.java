@@ -1,4 +1,4 @@
-package com.ruoyi.system.callback.dto;
+package com.ruoyi.system.callback.dto.bot;
 
 import com.ruoyi.common.enums.BotEventEnum;
 import lombok.Data;

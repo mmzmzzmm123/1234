@@ -2,9 +2,9 @@ package com.ruoyi.system.callback.processor;
 
 import com.ruoyi.common.enums.BotEventEnum;
 import com.ruoyi.system.callback.BotEvent;
-import com.ruoyi.system.callback.dto.Called50005004DTO;
-import com.ruoyi.system.callback.dto.JoinGroupDTO;
-import com.ruoyi.system.callback.dto.LeaveGroupDTO;
+import com.ruoyi.system.callback.dto.bot.BotJoinNewGroupDTO;
+import com.ruoyi.system.callback.dto.bot.JoinGroupDTO;
+import com.ruoyi.system.callback.dto.bot.LeaveGroupDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -27,6 +27,11 @@ public class BotEventProcessor {
 
     @BotEvent(value = BotEventEnum.LEAVE_GROUP, parameterClass = LeaveGroupDTO.class)
     public void joinGroup(LeaveGroupDTO dto) {
+
+    }
+
+    @BotEvent(value = BotEventEnum.BOT_JOIN_NEW_GROUP, parameterClass = BotJoinNewGroupDTO.class)
+    public void joinGroup(BotJoinNewGroupDTO dto) {
 
     }
 }

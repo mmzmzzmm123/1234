@@ -1,4 +1,4 @@
-package com.ruoyi.system.callback.dto;
+package com.ruoyi.system.callback.dto.bot;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,21 +7,20 @@ import lombok.NoArgsConstructor;
  * @author 朱少波
  * @date 2024/1/18/018 9:52
  */
-@NoArgsConstructor
 @Data
-public class LeaveGroupDTO {
+public class JoinGroupDTO {
 
-
+    private String botUserId;
     private String chatId;
     private String createTime;
     private String fullName;
     private String id;
+    private String inviteFullName;
+    private String inviteUserId;
+    private String inviteUsername;
     private Integer isDeletedMessage;
-    private String leaveTime;
+    private String joinTime;
     private String messageId;
-    private String operateFullName;
-    private String operateUserId;
-    private String operateUsername;
     private String userId;
     private String username;
 }
