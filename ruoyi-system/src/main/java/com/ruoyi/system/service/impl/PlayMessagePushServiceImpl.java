@@ -103,6 +103,11 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         if (playMessagePush == null) {
             return;
         }
+        Integer pushState = playMessagePush.getPushState();
+        boolean isTrue = pushState.equals(PushStateEnum.WAIT_SEND.getKey())
+                || pushState.equals(PushStateEnum.ING.getKey())
+                || pushState.equals(PushStateEnum.FINISH.getKey());
+        Assert.isTrue(isTrue,"当前状态无法取消");
         playMessagePush.setPushState(PushStateEnum.CANCEL.getKey());
         super.updateById(playMessagePush);
     }
@@ -121,7 +126,11 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         if (playMessagePush == null) {
             return;
         }
-        Assert.isTrue(playMessagePush.getPushState().equals(1), "非待发送无法强制开炒");
+        // 状态校验
+        Assert.isTrue(playMessagePush.getRobotAllocationFlag().equals(1), "号未分配无法强制开炒");
+        Assert.isTrue(playMessagePush.getRobotPackFlag().equals(1), "人设未包装无法强制开炒");
+        Assert.isTrue(playMessagePush.getPushState().equals(PushStateEnum.WAIT_SEND.getKey()), "非待执行状态无法强制开炒");
+
         playMessagePush.setPushState(PushStateEnum.ING.getKey());
         super.updateById(playMessagePush);
     }
@@ -142,10 +151,9 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         if (playMessagePush == null) {
             return;
         }
-        if (playMessagePush.getPushState() != PushStateEnum.ING.getKey() &&
-                playMessagePush.getPushState() != PushStateEnum.WAIT_SEND.getKey()) {
-            return;
-        }
+        Integer pushState = playMessagePush.getPushState();
+        boolean isTrue = pushState.equals(PushStateEnum.ING.getKey());
+        Assert.isTrue(isTrue,"当前状态无法暂停");
 //        PlayDirector.getInstanceOfLK().pause(playMessagePush.getPlayId(), playMessagePush.getGroupId());
         //修改推送记录表
         playMessagePush.setPushState(PushStateEnum.USER_STOP.getKey());
@@ -165,11 +173,12 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
 
     @Override
     public void resumeGroupPush(PlayMessagePush playMessagePush) {
-        if (playMessagePush == null ||
-                (playMessagePush.getPushState() != PushStateEnum.USER_STOP.getKey()
-                        && playMessagePush.getPushState() != PushStateEnum.SYSTEM_STOP.getKey())) {
+        if (playMessagePush == null ) {
             return;
         }
+        Integer pushState = playMessagePush.getPushState();
+        boolean isTrue = pushState.equals(PushStateEnum.USER_STOP.getKey()) || pushState.equals(PushStateEnum.SYSTEM_STOP.getKey());
+        Assert.isTrue(isTrue,"当前状态无法开启");
         //继续推送
 //        PlayDirector.getInstanceOfLK().resume(playMessagePush.getPlayId(), playMessagePush.getGroupId());
 //        //修改推送记录表
