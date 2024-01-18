@@ -54,36 +54,38 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         selectRobotByRuleDTO.setOneDaySetAdminCount(vibeRule.getSetManageLimitByDay());
         selectRobotByRuleDTO.setTotalSetAdminCount(vibeRule.getSetManageLimitByTotal());
         Boolean adminFlag = false;
+        List<SelectRobotByRuleVO> selectRobotByRuleVOS = new ArrayList<>();
         //如果需要设置管理员的号,先获取设置管理员的号
         if(dto.getSetAdminCount() > 0){
             selectRobotByRuleDTO.setLimit(dto.getSetAdminCount());
             selectRobotByRuleDTO.setIsSetAdmin(1);
             adminFlag = true;
-        }else{
-            selectRobotByRuleDTO.setLimit(dto.getCount());
-        }
-        selectRobotByRuleDTO.setCountryCode(dto.getCountryCode());
-        selectRobotByRuleDTO.setSetAdminCount(dto.getSetAdminCount());
-        selectRobotByRuleDTO.setIpType(dto.getIpType());
-        List<SelectRobotByRuleVO> selectRobotByRuleVOS = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
-        if(CollectionUtils.isEmpty(selectRobotByRuleVOS)){
-            return R.fail("号资源不足");
-        }
-        if(adminFlag){
+            selectRobotByRuleDTO.setCountryCode(dto.getCountryCode());
+            selectRobotByRuleDTO.setSetAdminCount(dto.getSetAdminCount());
+            selectRobotByRuleDTO.setIpType(dto.getIpType());
+            selectRobotByRuleVOS = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
+            if(CollectionUtils.isEmpty(selectRobotByRuleVOS)){
+                return R.fail("号资源不足");
+            }
             if(selectRobotByRuleVOS.size() < dto.getSetAdminCount()){
                 return R.fail("号资源不足");
             }
-        }else{
-            if(selectRobotByRuleVOS.size() < dto.getCount()){
-                return R.fail("号资源不足");
-            }
         }
+//        if(adminFlag){
+//            if(selectRobotByRuleVOS.size() < dto.getSetAdminCount()){
+//                return R.fail("号资源不足");
+//            }
+//        }else{
+//            if(selectRobotByRuleVOS.size() < dto.getCount()){
+//                return R.fail("号资源不足");
+//            }
+//        }
 
         List<SelectRobotByRuleVO> selectRobotByRuleVOSTotal = new ArrayList<>();
         selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS);
         List<SelectRobotByRuleVO> selectRobotByRuleVOS1 = new ArrayList<>();
         //如果有需要设置管理员号的,需要再次获取其他号
-        if(adminFlag && dto.getCount() > 0){
+        if(dto.getCount() > 0){
             List<String> ips = selectRobotByRuleVOS.stream().map(SelectRobotByRuleVO::getIp).collect(Collectors.toList());
             selectRobotByRuleDTO.setIps(ips);
             selectRobotByRuleDTO.setIsSetAdmin(0);
@@ -97,9 +99,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         List<String> ids = selectRobotByRuleVOSTotal.stream().filter(f-> StringUtils.isNotEmpty(f.getId())).map(SelectRobotByRuleVO::getId).collect(Collectors.toList());
         log.info("selectRobotByRuleVOSTotal:{},ids:{}",selectRobotByRuleVOSTotal,ids);
         List<GetRobotVO> resultData = new ArrayList<>();
-        SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession();
         try {
-            robotStatisticsMapper.selectList(new LambdaQueryWrapper<RobotStatistics>().in(RobotStatistics::getId,ids).last(" for update"));
             if(adminFlag){
                 //增加设置管理员号的计数
                 List<String> adminRobotSerialNos = selectRobotByRuleVOS.stream().map(SelectRobotByRuleVO::getRobotSerialNo).collect(Collectors.toList());
@@ -132,10 +132,8 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             if(dto.getIsLock() == 1){
                 this.update(new LambdaUpdateWrapper<RobotStatistics>().in(RobotStatistics::getId,ids).set(RobotStatistics::getIsLock,1));
             }
-            sqlSession.commit();
         }catch (Exception e){
             log.error("getRobot 计数失败",e);
-            sqlSession.rollback();
             return R.fail("计数失败");
         }
         return R.ok(resultData);

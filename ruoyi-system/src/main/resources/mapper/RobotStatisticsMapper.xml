@@ -67,7 +67,7 @@
                 ,total_set_admin_count = total_set_admin_count+1
             </if>
         where robot_serial_no in
-        <foreach collection="dto.robotSerialNos != null and dto.robotSerialNos.size > 0" item="item" separator="," open="(" close=")">
+        <foreach collection="dto.robotSerialNos" item="item" separator="," open="(" close=")">
             #{item}
         </foreach>
     </update>
