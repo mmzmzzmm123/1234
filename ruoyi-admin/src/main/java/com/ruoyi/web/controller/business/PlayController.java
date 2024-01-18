@@ -63,7 +63,7 @@ public class PlayController extends BaseController {
 
     private R<String> checkAddPlayParams(PlayDTO dto) {
         if (ObjectUtils.isEmpty(dto.getLoginUser().getMerchantInfo()) || dto.getLoginUser().getMerchantInfo().getMerchantType() != 0) {
-            return R.fail(ErrInfoConfig.getDynmic(11011));
+            //return R.fail(ErrInfoConfig.getDynmic(11011));
         }
         if (StringUtils.isEmpty(dto.getName())) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能为空"));
@@ -77,7 +77,7 @@ public class PlayController extends BaseController {
         if (dto.getGroupSource() == 0 && dto.getGroupNum() == null) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "请配置群需求数量"));
         }
-        if (dto.getGroupSource() == 1 && dto.getGroupUrls().isEmpty()) {
+        if (dto.getGroupSource() == 1 && null == dto.getGroupUrls() || dto.getGroupUrls().isEmpty()) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
         }
         if (null == dto.getRobotNum()) {

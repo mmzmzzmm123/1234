@@ -232,7 +232,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         if (dto.getStartType() == 0) {
             play.setStartGroupDate(new Date());
         }
-        //System.out.println(play);
         super.save(play);
     }
 
