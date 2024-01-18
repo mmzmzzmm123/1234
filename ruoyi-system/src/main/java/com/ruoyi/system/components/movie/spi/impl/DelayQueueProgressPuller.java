@@ -39,4 +39,28 @@ public class DelayQueueProgressPuller implements ProgressPuller {
 		log.info("延时队列生产 {} {} ", e, delayTime);
 	}
 
+	@Override
+	public void continuePull(PlayMessage message, String chatroomId) {
+		log.info("continuePull {} {}", chatroomId, message);
+
+		// 剧本被暂停了
+		if (PlaybackContext.isPause(message.getPlayId(), chatroomId)) {
+			// 剧本被暂停了.
+			log.info("剧本暂停了 {} {}", message, chatroomId);
+			return;
+		}
+		// 剧本被删除了
+		if (PlayInfoTools.isDeleted(message.getPlayId())) {
+			log.info("剧本删除了 {} {}", message, chatroomId);
+			return;
+		}
+		Integer delayTime = message.getIntervalTime();
+		// 先移动游标 ，
+		DelayQueueInvoker.Entry e = new DelayQueueInvoker.Entry(chatroomId, message.getPlayId(), Ids.getId());
+		// 放到延时队列里面继续发消息
+		FastDelayQueueContext.send(DelayQueueInvoker.class, e, delayTime);
+		log.info("延时队列生产 {} {} ", e, delayTime);
+
+	}
+
 }

@@ -6,4 +6,5 @@ public interface ProgressPuller {
 
 	public void nextPull(PlayMessage message, String chatroomId);
 
+	public void continuePull(PlayMessage message, String chatroomId);
 }
