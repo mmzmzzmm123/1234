@@ -70,7 +70,7 @@ public class GroupPageQueryDTO extends PageBaseDTO {
     private Integer blackLeader;
 
     @ApiModelProperty(value = "任务编号")
-    private Integer playId;
+    private String playId;
 
 
     @ApiModelProperty(value = "群状态 0-正常 1-封群")
