@@ -382,4 +382,13 @@ public class OpenApiClient {
         return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SEND_GROUP_MESSAGE, JSONObject.from(data), TgBaseOutputDTO.class);
     }
 
+    /**
+     * 比邻第三方(开平TG)：-设置隐私手机号码谁可见接口
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> setPhoneVisibilityByThirdKpTg(ThirdTgSetPhoneVisibilityInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SET_PHONE_VISIBILITY, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
 }
