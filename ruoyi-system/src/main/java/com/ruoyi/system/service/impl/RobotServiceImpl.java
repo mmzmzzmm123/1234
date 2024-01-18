@@ -99,17 +99,17 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             Robot robot = JSON.parseObject(JSON.toJSONString(vo), Robot.class);
             robot.setPhone(vo.getAccount());
             robot.setId(vo.getRobotId());
+            robot.setVpnIp(vo.getIp());
+            if(StringUtils.isNotEmpty(vo.getIp())){
+                String[] split = vo.getIp().split(".");
+                robot.setVpnIpB(split[0]+"."+split[1]);
+                robot.setVpnIpB(split[0]+"."+split[1]+"."+split[2]);
+            }
             if(simpMap.containsKey(robot.getRobotSerialNo())){
                 ExtTgBatchRobotSimpInfoData mapData = simpMap.get(robot.getRobotSerialNo());
                 robot.setTgAppVersion(mapData.getTgAppVersion());
                 robot.setProtocolType(mapData.getProtocolType());
                 robot.setProxyType(mapData.getProxyType());
-                robot.setVpnIp(mapData.getSenderProxyIp());
-                if(StringUtils.isNotEmpty(mapData.getSenderProxyIp())){
-                    String[] split = mapData.getSenderProxyIp().split(".");
-                    robot.setVpnIpB(split[0]+"."+split[1]);
-                    robot.setVpnIpB(split[0]+"."+split[1]+"."+split[2]);
-                }
             }
             robotList.add(robot);
         }
