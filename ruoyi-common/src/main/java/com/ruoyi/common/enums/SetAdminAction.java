@@ -11,17 +11,12 @@ import java.util.EnumSet;
  */
 @AllArgsConstructor
 @Getter
-public enum InviteBotAction {
+public enum SetAdminAction {
 
-    SEARCH_BOT(0, GroupAction.SEARCH_BOT, 0),
 
-    ADD_BOT(1, GroupAction.ADD_BOT, 0),
+    QUERY_HASH(1, GroupAction.QUERY_HASH, 5),
 
-    INVITE_BOT_JOIN_GROUP(2, GroupAction.INVITE_BOT_JOIN_GROUP, 0),
-
-    QUERY_HASH(3, GroupAction.QUERY_HASH, 5),
-
-    SET_BOT_ADMIN(4, GroupAction.SET_GROUP_ADMIN, 0);
+    SET_BOT_ADMIN(2, GroupAction.SET_GROUP_ADMIN, 0);
 
     private final int code;
 
@@ -30,19 +25,19 @@ public enum InviteBotAction {
     private final int retryCount;
 
 
-    public static InviteBotAction of(Integer code) {
+    public static SetAdminAction of(Integer code) {
         if (code == null) {
             return null;
         }
-        return EnumSet.allOf(InviteBotAction.class)
+        return EnumSet.allOf(SetAdminAction.class)
                 .stream()
                 .filter(p -> p.getCode() == code)
                 .findAny()
                 .orElse(null);
     }
 
-    public InviteBotAction getNextAction() {
-        return EnumSet.allOf(InviteBotAction.class)
+    public SetAdminAction getNextAction() {
+        return EnumSet.allOf(SetAdminAction.class)
                 .stream()
                 .filter(p -> p.getCode() == code + 1)
                 .findAny()

@@ -1,12 +1,15 @@
 package com.ruoyi.system.components.movie;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.redisson.api.RLock;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
+import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
 import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.DelayAcquireTools;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.PlayInfoTools;
@@ -14,6 +17,9 @@ import com.ruoyi.system.components.movie.SendMsgOptTempRedis.SendMsgOptTempEntry
 import com.ruoyi.system.components.movie.spi.PlayRunner;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
 import com.ruoyi.system.mapper.PlayMessageMapper;
+import com.ruoyi.system.mapper.PlayMessagePushDetailMapper;
+import com.ruoyi.system.mapper.PlayMessagePushDetailTrackMapper;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,13 +36,12 @@ public class PlayDirector implements CallBackProcessor {
 	private PlayDirector(String alias) {
 		this.alias = alias;
 	}
-	
+
 	public ManualExecutivePlayer getManualExecutivePlayer(Play play) {
 		PlayBookFactory factory = ServiceLoader.load(PlayBookFactory.class, alias);
 		final PlayBook playBook = factory.newInstance(alias, play);
-		return new ManualExecutivePlayer(playBook) ;
+		return new ManualExecutivePlayer(playBook);
 	}
-	
 
 	/**
 	 * 开始定时剧本
@@ -52,12 +57,12 @@ public class PlayDirector implements CallBackProcessor {
 	}
 
 	/**
-	 * 继续 演下一条
+	 * 继续 发消息
 	 * 
 	 * @param playId
 	 * @param chatroomId
 	 */
-	public void callNext(String playId, String chatroomId) {
+	public void callMessage(String playId, String chatroomId) {
 		PlayBookFactory factory = ServiceLoader.load(PlayBookFactory.class, alias);
 		// 构建 电影 本子
 		final PlayBook playBook = factory.newInstance(alias, playId);
@@ -94,12 +99,34 @@ public class PlayDirector implements CallBackProcessor {
 
 	void fail0(SendMsgOptTempEntry entry, String opt, String errMsg) {
 		final PlayRunner playRunner = ServiceLoader.load(PlayRunner.class);
+
+		// 如果启用了 备用号， 则需要重试发送这条消息
+		PlayMessagePushDetail detail = SpringUtils.getBean(PlayMessagePushDetailMapper.class).getOne(entry.getPlayId(),
+				entry.getChatroomId(), entry.getMsgSort());
+		if (!StringUtils.isEmpty(detail.getSpareRobot())) {
+			// 有备用号
+			// 有发过消息的号
+			List<String> sendRobotList = SpringUtils.getBean(PlayMessagePushDetailTrackMapper.class)
+					.getOne(entry.getPlayId(), entry.getChatroomId(), entry.getMsgSort());
+			for (String backRobot : org.apache.commons.lang3.StringUtils.split(detail.getSpareRobot(), ",")) {
+				if (sendRobotList.contains(backRobot)) {
+					// 有发过的
+					continue;
+				}
+				// 直接取这个号继续发送
+				PlayMessage playMsg = SpringUtils.getBean(PlayMessageMapper.class).getBySort(entry.getMsgSort(),
+						entry.getPlayId());
+				ServiceLoader.load(ProgressPuller.class).continuePull(playMsg, entry.getChatroomId());
+				log.info("切换备用号发送 {} {}" , entry , opt);
+				return;
+			}
+		}
+		// 备用号 都用完了 , 直接失败
 		playRunner.onItemFailure(opt, entry.getPlayId(), errMsg, entry.getChatroomId(), entry.getRobotId(),
 				entry.getMsgSort(), null);
 		// 查询下一个消息的配置
 		PlayMessage playMsg = SpringUtils.getBean(PlayMessageMapper.class).getBySort(entry.getMsgSort() + 1,
 				entry.getPlayId());
-
 		if (playMsg == null) {
 			// 没有下一个消息了 ， 剧本完成
 			playRunner.onFinish(entry.getPlayId(), entry.getChatroomId());

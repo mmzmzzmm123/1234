@@ -71,7 +71,7 @@ public class GroupPageInfoVO {
 
     @Excel(name = "任务编号")
     @ApiModelProperty(value = "任务编号")
-    private Integer playId;
+    private String playId;
 
 
     @Excel(name = "群主是否机器人", readConverterExp = "0=否,1=是")

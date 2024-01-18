@@ -1,14 +1,18 @@
 package com.ruoyi.system.components.movie;
 
+import java.util.Date;
 import org.springframework.util.StringUtils;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
+import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetailTrack;
 import com.ruoyi.common.utils.spi.ServiceLoader;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.PlayInfoTools;
 import com.ruoyi.system.components.movie.spi.MessageSupport;
 import com.ruoyi.system.components.movie.spi.PlayRunner;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
 import com.ruoyi.system.components.movie.spi.RobotSpeakAllocator;
+import com.ruoyi.system.mapper.PlayMessagePushDetailTrackMapper;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -61,6 +65,14 @@ public abstract class AbstractPlayer implements Player {
 				}
 				opt = ret.getData();
 				isFail = false;
+				// 插入 发送轨迹
+				PlayMessagePushDetailTrack track = new PlayMessagePushDetailTrack();
+				track.setCreateTime(new Date());
+				track.setGroupId(chatroomId);
+				track.setMessageSort(currentIndex);
+				track.setPlayId(playId);
+				track.setRobotId(robotId);
+				SpringUtils.getBean(PlayMessagePushDetailTrackMapper.class).insert(track);
 			}
 		} catch (Exception e) {
 			playRunner.onItemFailure(opt, playId, "发送消息失败", chatroomId, robotId, currentIndex, e);

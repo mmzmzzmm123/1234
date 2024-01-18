@@ -151,4 +151,26 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
         groupInfo.setGroupId(groupId);
         baseMapper.updateById(groupInfo);
     }
+
+    @Override
+    public List<String> updateBanned(String originalGroupId) {
+
+        List<String> groupIds = (ArrayList) baseMapper.selectObjs(
+                new LambdaQueryWrapper<GroupMonitorInfo>()
+                        .eq(GroupMonitorInfo::getOriginalGroupId, originalGroupId));
+        if (CollUtil.isNotEmpty(groupIds)) {
+            GroupMonitorInfo groupInfo = new GroupMonitorInfo();
+            groupInfo.setGroupStatus(1);
+            baseMapper.update(groupInfo, new LambdaQueryWrapper<GroupMonitorInfo>().in(GroupMonitorInfo::getGroupId, groupIds));
+        }
+        return groupIds;
+    }
+
+    @Override
+    public void updateBannedById(String groupId) {
+        GroupMonitorInfo groupInfo = new GroupMonitorInfo();
+        groupInfo.setGroupStatus(1);
+        groupInfo.setGroupId(groupId);
+        baseMapper.updateById(groupInfo);
+    }
 }

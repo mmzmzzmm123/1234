@@ -30,7 +30,7 @@
         <if test="dto.queryType != null and dto.queryValue != null and dto.queryValue != ''">
             <choose>
                 <when test="dto.queryType == 1">
-                    AND tpi.name liek concat('%',#{dto.queryValue},'%')
+                    AND tpi.name like concat('%',#{dto.queryValue},'%')
                 </when>
                 <when test="dto.queryType == 2">
                     AND tpi.id = #{dto.queryValue}
@@ -123,7 +123,7 @@
             LEFT JOIN t_group_monitor_info tgmi ON tgi.group_id = tgmi.group_id
             LEFT JOIN t_group_state tgs on tgi.group_id = tgs.group_id
             LEFT JOIN t_play_message_push tpmp ON tpgi.play_id = tpgi.play_id
-            AND tpgi.group_id = tpmp.group_id
+            AND tpgi.tg_group_id = tpmp.group_id
             LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
         WHERE
             1 = 1
@@ -158,7 +158,7 @@
             1 = 1
           AND tpmp.play_id = #{dto.playId}
         <choose>
-            <when test="timeType != null and timeType == 2">
+            <when test="dto.timeType != null and dto.timeType == 2">
                 <if test="dto.startTime != null and dto.startTime != ''">
                     and tpmpd.send_time >= #{dto.startTime}
                 </if>
@@ -250,7 +250,7 @@
     <select id="selectConfusionList" resultType="com.ruoyi.common.core.domain.entity.play.Play">
         SELECT
             tpi.id,
-            tpi.NAME,
+            tpi.name,
             tpi.state,
             tpi.scan_progress
         FROM
@@ -260,6 +260,7 @@
           AND tpi.is_delete = 0
           AND tpi.state = 1
           AND scan_progress = 4
+          AND confound_state = 0
           AND tpi.create_time > ADDDATE( NOW( ),- 3 )
         GROUP BY
             tpi.id

@@ -15,7 +15,7 @@ import lombok.Data;
 public class QueryConfoundLogDTO extends PageBaseDTO {
 
     @ApiModelProperty("剧本ID")
-    private Integer playId;
+    private String playId;
 
     @ApiModelProperty("开始时间")
     private String startTime;

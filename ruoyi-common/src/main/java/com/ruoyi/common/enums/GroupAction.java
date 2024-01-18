@@ -23,7 +23,9 @@ public enum GroupAction {
 
     INVITE_BOT_JOIN_GROUP(5, "邀请bot进入群聊", true),
 
-    SET_GROUP_ADMIN(6, "设置管理员", true);
+    SET_GROUP_ADMIN(6, "设置管理员", true),
+
+    QUERY_HASH(7,"查询成员hash", true);
 
     private final int code;
 

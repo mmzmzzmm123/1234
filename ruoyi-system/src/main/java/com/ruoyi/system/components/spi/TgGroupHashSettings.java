@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @SPI("TgGroupHashSettings")
 @Slf4j
 public class TgGroupHashSettings implements Settings {
-	private static String getSql(String chatroomSerialNo, String robotSerialNo, List<String> memberSerialNolist) {
+	public static String getSql(String chatroomSerialNo, String robotSerialNo, List<String> memberSerialNolist) {
 		StringBuffer sqlBuffer = new StringBuffer("SELECT * FROM telegram_det_group_member_info where ");
 		sqlBuffer.append("robot_code = '");
 		sqlBuffer.append(robotSerialNo);

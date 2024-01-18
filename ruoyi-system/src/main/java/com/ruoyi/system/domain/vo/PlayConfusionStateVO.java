@@ -10,7 +10,7 @@ import lombok.Data;
 @Data
 public class PlayConfusionStateVO {
 
-    private Integer playId;
+    private String playId;
 
     private Integer total;
 

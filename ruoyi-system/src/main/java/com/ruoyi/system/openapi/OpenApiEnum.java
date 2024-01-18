@@ -26,6 +26,9 @@ public enum OpenApiEnum {
 
     THIRD_KP_TG_SEND_GROUP_MESSAGE("kpTg-发送群聊消息", "/thirdparty/tgGroup/sendGroupMessage", 1100910011),
 
+    THIRD_KP_TG_GET_GROUP_MEMBER("kpTg-获取群成员", "/thirdparty/tgGroup/getGroupMember", null),
+
+
     // 开平号接口
     THIRD_KP_TG_MODIFY_ROBOT_HEAD_IMG("kpTg-修改号头像", "/thirdparty/tgRobot/modifyRobotHeadImg", 1100910016),
     THIRD_KP_TG_MODIFY_NAME("kpTg-修改号姓氏和名字", "/thirdparty/tgRobot/modifyName", 1100910033),

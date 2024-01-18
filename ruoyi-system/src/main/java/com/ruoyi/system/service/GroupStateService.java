@@ -21,4 +21,6 @@ public interface GroupStateService extends IService<GroupState> {
 
     void markUsed(List<String> groupIds,Integer groupUsed);
 
+    void banned(List<String> groupIds);
+
 }

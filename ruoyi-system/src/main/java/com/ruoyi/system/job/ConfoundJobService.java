@@ -179,7 +179,8 @@ public class ConfoundJobService {
             List<Play> playList = playInfoMapper.selectConfusionList();
             for (Play play : playList) {
                 String playLockKey = PlayConstants.serviceName + ":playConfusion:" + play.getId();
-                boolean playLock = redisLock.tryLock(playLockKey, 60 * 10, TimeUnit.SECONDS);
+                // 1个小时内不能再次触发
+                boolean playLock = redisLock.tryLock(playLockKey, 1, TimeUnit.HOURS);
                 if (!playLock) {
                     log.info("playConfusionJob lock playLock {}", play.getId());
                     continue;

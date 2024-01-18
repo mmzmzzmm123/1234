@@ -25,7 +25,7 @@ public class DelayQueueInvoker {
 		log.info("延时队列消费数据 {}", entry);
 		// 导演 开始下一场
 		try {
-			PlayDirector.tgInstance().callNext(entry.getPlayId(), entry.getChatroomId());
+			PlayDirector.tgInstance().callMessage(entry.getPlayId(), entry.getChatroomId());
 		} catch (Exception e) {
 			log.error("延时队列消费数据错误 {} ", entry, e);
 		}

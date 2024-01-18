@@ -104,7 +104,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             if(StringUtils.isNotEmpty(vo.getIp())){
                 String[] split = vo.getIp().split(".");
                 robot.setVpnIpB(split[0]+"."+split[1]);
-                robot.setVpnIpB(split[0]+"."+split[1]+"."+split[2]);
+                robot.setVpnIpC(split[0]+"."+split[1]+"."+split[2]);
             }
             if(simpMap.containsKey(robot.getRobotSerialNo())){
                 ExtTgBatchRobotSimpInfoData mapData = simpMap.get(robot.getRobotSerialNo());
@@ -118,9 +118,11 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     private void storyRobot(List<Robot> newRobotList){
+        log.info("storyRobot开始入库");
         List<String> newRobotSerialNos = newRobotList.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
         List<Robot> oldRobotList = robotMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, newRobotSerialNos));
         if(CollectionUtils.isEmpty(oldRobotList)){
+            log.info("storyRobot全部入库");
             this.saveBatch(this.compensateSetGroupOwnerRobot(newRobotList));
             this.insertRobotStatistics(newRobotList);
             return;
@@ -214,6 +216,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         if(!CollectionUtils.isEmpty(updateRobotList)){
             this.updateBatchById(updateRobotList);
         }
+
     }
 
     /**
@@ -246,6 +249,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
      * @param saveRobotList
      */
     private List<Robot> compensateSetGroupOwnerRobot(List<Robot> saveRobotList){
+        log.info("compensateSetGroupOwnerRobot补充是否是群主号");
         List<String> robotSerialNos = saveRobotList.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
         List<GroupRobot> groupRobots = groupRobotMapper.selectList(new LambdaUpdateWrapper<GroupRobot>()
                 .in(GroupRobot::getRobotId, robotSerialNos)

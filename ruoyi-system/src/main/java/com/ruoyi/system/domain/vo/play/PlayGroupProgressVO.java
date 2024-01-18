@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @Author : XGF（徐桂烽）
  * @create 2024/1/15/015 9:10
@@ -25,7 +27,7 @@ public class PlayGroupProgressVO {
     @ApiModelProperty("推送ID")
     private Integer pushId;
 
-    @ApiModelProperty("推送状态 1:待发送 2:进行中 3:已结束 4:人工暂停 5:推送失败 6:系统暂停")
+    @ApiModelProperty("推送状态 1:待发送 2:进行中 3:已结束 4:人工暂停 5:推送失败 6:取消")
     private Integer pushState;
 
     @ApiModelProperty("群Id")
@@ -48,7 +50,7 @@ public class PlayGroupProgressVO {
     @ApiModelProperty("群状态 0-正常 1-封群")
     private Integer groupStatus;
     @ApiModelProperty("群状态变化时间(封群时间)")
-    private Integer groupStatusTime;
+    private Date groupStatusTime;
 
     @ApiModelProperty("群成员数")
     private Integer memberCount;

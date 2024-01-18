@@ -30,8 +30,8 @@ public class SendConditionJobProcessor implements LogJobProcessor {
 	public void handle(Play play) {
 		final PlayMessagePushMapper messagePushMapper = SpringUtils.getBean(PlayMessagePushMapper.class);
 		// 查询所有的群
-		List<PlayMessagePush> groups = messagePushMapper
-				.selectList(new QueryWrapper<PlayMessagePush>().lambda().eq(PlayMessagePush::getPlayId, play.getId()));
+		List<PlayMessagePush> groups = messagePushMapper.selectList(new QueryWrapper<PlayMessagePush>().lambda()
+				.eq(PlayMessagePush::getPlayId, play.getId()).eq(PlayMessagePush::getSendFlag, 0));
 		if (CollectionUtils.isEmpty(groups)) {
 			return;
 		}

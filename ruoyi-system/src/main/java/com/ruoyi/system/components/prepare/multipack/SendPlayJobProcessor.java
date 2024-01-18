@@ -26,6 +26,10 @@ public class SendPlayJobProcessor implements LogJobProcessor {
 
 	@Override
 	public void handle(Play play) {
+		if (play.getState().intValue() != 1) {
+			// 剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成
+			return;
+		}
 		// 查询达到 炒群条件的 群
 		final PlayMessagePushMapper messagePushMapper = SpringUtils.getBean(PlayMessagePushMapper.class);
 		List<PlayMessagePush> datas = messagePushMapper

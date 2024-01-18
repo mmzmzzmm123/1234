@@ -162,6 +162,7 @@
            and tgmi.bot_check = 1
            and robot.enable_type = 1
            and robot.recycle_status =0
+           and tgi.group_invite_link != ''
            and ttdcad.admin_serial_no is null
         <if test="registrationDay != null ">
             AND tgi.registration_time <![CDATA[ <= ]]>  #{registrationDay}

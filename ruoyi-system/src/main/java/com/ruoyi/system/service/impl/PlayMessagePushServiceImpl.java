@@ -177,7 +177,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
             return;
         }
         Integer pushState = playMessagePush.getPushState();
-        boolean isTrue = pushState.equals(PushStateEnum.USER_STOP.getKey()) || pushState.equals(PushStateEnum.SYSTEM_STOP.getKey());
+        boolean isTrue = pushState.equals(PushStateEnum.USER_STOP.getKey());
         Assert.isTrue(isTrue,"当前状态无法开启");
         //继续推送
 //        PlayDirector.getInstanceOfLK().resume(playMessagePush.getPlayId(), playMessagePush.getGroupId());
@@ -277,7 +277,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         String playId = playInfo.getId();
         //查询剧本对应的消息
         List<PlayMessage> playMessageList = playMessageMapper.selectListByPlayId(playId);
-        Assert.isTrue(CollectionUtils.isEmpty(playMessageList), "找不到对应的剧本消息,playId:" + playId);
+        Assert.isTrue(CollectionUtils.isNotEmpty(playMessageList), "找不到对应的剧本消息,playId:" + playId);
 
         log.info("insertPushDetailConfound {} {} {}", playId, pushIds, playMessageList.size());
         List<PlayMessagePushDetail> pushDetailList = new ArrayList<>();
