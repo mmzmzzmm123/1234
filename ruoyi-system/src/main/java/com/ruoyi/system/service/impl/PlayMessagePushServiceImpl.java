@@ -177,7 +177,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
             return;
         }
         Integer pushState = playMessagePush.getPushState();
-        boolean isTrue = pushState.equals(PushStateEnum.USER_STOP.getKey()) || pushState.equals(PushStateEnum.SYSTEM_STOP.getKey());
+        boolean isTrue = pushState.equals(PushStateEnum.USER_STOP.getKey());
         Assert.isTrue(isTrue,"当前状态无法开启");
         //继续推送
 //        PlayDirector.getInstanceOfLK().resume(playMessagePush.getPlayId(), playMessagePush.getGroupId());
