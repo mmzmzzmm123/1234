@@ -95,6 +95,14 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+  data:
+    mongodb:
+      host: 116.205.231.237
+      port: 27017
+      database: neighbour-resource
+      authentication-database: neighbour-resource
+      username: nsuser
+      password: YdRijOnbo#UxXVMgiLSaA
 
 # token配置
 token:
