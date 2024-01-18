@@ -14,6 +14,7 @@ import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.redis.RedisLock;
+import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.enums.InviteBotAction;
 import com.ruoyi.common.exception.GlobalException;
@@ -173,21 +174,23 @@ public class GroupService {
         //1.保存群机器信息
         List<GroupInfo> groupInfos = groupInfoService.saveImportGroup(resourceList);
         Assert.notEmpty(groupInfos, "群已存在,请勿重复添加");
-        List<String> groupIds = groupInfos.stream().map(GroupInfo::getGroupId).collect(Collectors.toList());
+        //保存群组关联
+        List<String> groupIds = groupClusterRefService.add(groupInfos.stream().map(GroupInfo::getGroupId).collect(Collectors.toList()), newClusterId);
+        Assert.notEmpty(groupIds, "群已存在,请勿重复添加");
+        groupInfos = groupInfos.stream().filter(p -> groupIds.contains(p.getGroupId())).collect(Collectors.toList());
         //默认保存群主信息
-        Map<String, GroupRobot> robotMap = groupRobotService.addGroupLeader(groupInfos, getRobotMap(groupInfos, resourceList));
+        Map<String, GroupRobot> robotMap = groupRobotService.addGroupLeader(groupIds, getRobotMap(groupInfos, resourceList));
         //设置号为群主号
         iRobotService.setGroupOwner(robotMap.values().stream().map(GroupRobot::getRobotId).collect(Collectors.toList()));
-        //保存群组关联
-        groupClusterRefService.add(groupIds, newClusterId);
         //保存群状态
         groupStateService.addImportGroup(groupIds);
         //新增bot监控表
         groupMonitorInfoService.add(groupIds);
         //同步群信息
-        syncInfo(groupInfos, robotMap);
+        List<GroupInfo> finalGroupInfos = groupInfos;
+        AsyncTask.execute(() -> syncInfo(finalGroupInfos, robotMap));
         //执行邀请bot进群
-        invitingBotJoin(groupInfos, robotMap::get, true);
+        AsyncTask.execute(() -> invitingBotJoin(finalGroupInfos, robotMap::get, true));
     }
 
 
@@ -395,7 +398,7 @@ public class GroupService {
             action.setBatchStatus(0);
             groupBatchActionService.save(action);
 
-            runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, groupRobot, botUserName);
+            AsyncTask.execute(()-> runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, groupRobot, botUserName));
 
         } catch (Exception e) {
             log.error("邀请bot进群异常={}", groupInfo, e);
@@ -765,7 +768,6 @@ public class GroupService {
      * @param groupId
      */
     public boolean setBotAdMonitor(String groupId, String playId, String adMonitor) {
-        //todo 设置bot广告规则
         AdMonitor adMonitorInfo = JSON.parseObject(adMonitor, AdMonitor.class);
         GroupMonitorInfo groupInfo = groupMonitorInfoService.getById(groupId);
 

@@ -73,5 +73,5 @@ public class VibeRuleDTO {
     @ApiModelProperty(value = "根据内容目标国优选群和水军（全局）")
     private List<VibeRuleTargetParam> targetParams;
 
-    private String merchantId;
+    private Long userId;
 }

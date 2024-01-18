@@ -28,7 +28,7 @@ public class GroupStateServiceImpl extends ServiceImpl<GroupStateMapper, GroupSt
         if (CollUtil.isEmpty(groupIds)) {
             return;
         }
-        saveBatch(groupIds.stream().map(groupId -> {
+        saveOrUpdateBatch(groupIds.stream().map(groupId -> {
             GroupState groupState = new GroupState();
             groupState.setGroupId(groupId);
             groupState.setGroupUsed(0);

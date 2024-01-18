@@ -36,7 +36,7 @@ public class ProductController extends BaseController {
     public R<Product> create(@Validated @RequestBody ProductDTO productDTO) {
         productDTO.setOperatorUser(getUsername());
         productDTO.setOperatorUserId(getUserId());
-        return productService.create(productDTO);
+        return R.ok(productService.create(productDTO));
     }
 
     @ApiOperation("根据商品id获取商品编辑信息")
