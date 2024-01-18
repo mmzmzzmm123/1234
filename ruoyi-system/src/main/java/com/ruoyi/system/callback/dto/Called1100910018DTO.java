@@ -9,6 +9,7 @@ public class Called1100910018DTO {
     @JSONField(name = "chatroom_info")
     private Called1100910018ChatroomInfoDTO chatroomInfo;
 
+    @Data
     public static class Called1100910018ChatroomInfoDTO {
 
         /**
@@ -36,25 +37,25 @@ public class Called1100910018DTO {
          * 总人数
          */
         @JSONField(name = "member_count")
-        private String memberCount;
+        private Integer memberCount;
 
         /**
          * 被踢人数
          */
         @JSONField(name = "kicked_count")
-        private String kickedCount;
+        private Integer kickedCount;
 
         /**
          * 封号数
          */
         @JSONField(name = "banned_count")
-        private String bannedCount;
+        private Integer bannedCount;
 
         /**
          * 在线人数
          */
         @JSONField(name = "online_member_count")
-        private String onlineMemberCount;
+        private Integer onlineMemberCount;
 
         /**
          * 群简介
@@ -81,7 +82,7 @@ public class Called1100910018DTO {
          * 群类型：10私密群 20公开群
          */
         @JSONField(name = "type")
-        private String type;
+        private Integer type;
     }
 
 }

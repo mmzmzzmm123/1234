@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.system.callback.dto.Called1100910018DTO;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
 import com.ruoyi.system.domain.dto.GroupPageQueryExportDTO;
@@ -32,7 +33,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
 
 
     public List<GroupInfo> existGroup(List<String> groupSerialNos) {
-        return  baseMapper.selectList(
+        return baseMapper.selectList(
                 new LambdaQueryWrapper<GroupInfo>()
                         .in(GroupInfo::getGroupSerialNo, groupSerialNos));
     }
@@ -54,15 +55,15 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         List<GroupInfo> existingGroups = existGroup(resourceList.stream().map(GroupResourceVO::getGroupSerialNo)
                 .collect(Collectors.toList()));
 
-        Map<String,GroupInfo> map = CollUtil.isNotEmpty(existingGroups)?
-                existingGroups.stream().collect(Collectors.toMap(GroupInfo::getGroupSerialNo, Function.identity(),(v1,v2)->v1))
-                        :new HashMap<>();
+        Map<String, GroupInfo> map = CollUtil.isNotEmpty(existingGroups) ?
+                existingGroups.stream().collect(Collectors.toMap(GroupInfo::getGroupSerialNo, Function.identity(), (v1, v2) -> v1))
+                : new HashMap<>();
 
         List<GroupInfo> result = new ArrayList<>();
         List<GroupInfo> adds = new ArrayList<>();
         List<String> newGroupSerialNos = new ArrayList<>();
         for (GroupResourceVO groupResourceVO : resourceList) {
-            if(map.containsKey(groupResourceVO.getGroupSerialNo())){
+            if (map.containsKey(groupResourceVO.getGroupSerialNo())) {
                 result.add(map.get(groupResourceVO.getGroupSerialNo()));
                 continue;
             }
@@ -82,7 +83,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
             result.add(groupInfo);
             adds.add(groupInfo);
         }
-        if(CollUtil.isNotEmpty(adds)) {
+        if (CollUtil.isNotEmpty(adds)) {
             saveBatch(adds);
         }
         return result;
@@ -147,5 +148,27 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         groupInfo.setGroupSerialNo(newGroupSerialNo);
         baseMapper.updateById(groupInfo);
         return groupBySerialNo;
+    }
+
+    @Override
+    public void updateGroupInfo(Called1100910018DTO.Called1100910018ChatroomInfoDTO dto) {
+        if (dto == null) {
+            return;
+        }
+
+        GroupInfo groupInfo = new GroupInfo();
+        groupInfo.setGroupName(dto.getChatroomName());
+        groupInfo.setGroupRemark(dto.getRemark());
+        groupInfo.setGroupAbout(dto.getAbout());
+        groupInfo.setGroupLink(dto.getLink());
+        groupInfo.setGroupPrivateLink(dto.getPrivateLink());
+        groupInfo.setGroupType(dto.getType());
+        groupInfo.setIsChannel(dto.getIsChannel() == null ? null : dto.getIsChannel() ? 1 : 0);
+        groupInfo.setMemberCount(dto.getMemberCount());
+        groupInfo.setKickedCount(dto.getKickedCount());
+        groupInfo.setBannedCount(dto.getBannedCount());
+        groupInfo.setOnlineMemberCount(dto.getOnlineMemberCount());
+        groupInfo.setUpdateTime(LocalDateTime.now());
+        baseMapper.update(groupInfo,new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo,dto.getChatroomSerialNo()));
     }
 }
