@@ -21,7 +21,7 @@ public interface GroupClusterRefService extends IService<GroupClusterRef> {
 
     void moving(List<String> groupIds, String newClusterId);
 
-    void add(List<String> groupIds, String newClusterId);
+    List<String> add(List<String> groupIds, String newClusterId);
 
     void deleteGroup(List<String> groupIds);
 }

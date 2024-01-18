@@ -21,7 +21,7 @@ import java.util.List;
 public interface GroupInfoService extends IService<GroupInfo> {
 
 
-    List<String> existGroup(List<String> groupSerialNos);
+
 
     Page<GroupPageInfoVO> groupPage(GroupPageQueryDTO dto);
 

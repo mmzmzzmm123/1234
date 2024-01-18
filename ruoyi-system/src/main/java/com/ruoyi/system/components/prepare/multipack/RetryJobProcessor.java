@@ -51,14 +51,15 @@ public class RetryJobProcessor implements LogJobProcessor {
 		// 查询 一直在等回调 且 超过了 4分钟的 数据
 		List<PlayRobotPackLog> datas = SpringUtils.getBean(PlayRobotPackLogMapper.class)
 				.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getStatus, 0)
+						.eq(PlayRobotPackLog::getIsFinish, 0)
 						.le(PlayRobotPackLog::getCreateTime, Times.getSecond(new Date(), -timeoutSecond))
 						.le(PlayRobotPackLog::getRetryCount, MaxRetryCount).eq(PlayRobotPackLog::getRetryMaxFlag, 0)
 						.eq(PlayRobotPackLog::getPlayId, play.getId()));
 
-		if(CollectionUtils.isEmpty(datas)) {
-			return ;
+		if (CollectionUtils.isEmpty(datas)) {
+			return;
 		}
-		
+
 		for (PlayRobotPackLog data : datas) {
 			// 再次调用
 			try {
@@ -190,9 +191,9 @@ public class RetryJobProcessor implements LogJobProcessor {
 				// 修改后置opt
 				PlayRobotPackLog condition = robotPackLogMapper.selectOne(new QueryWrapper<PlayRobotPackLog>().lambda()
 						.eq(PlayRobotPackLog::getWaitOpt, data.getOpt()).last(" limit 1 "));
-				if(condition != null) {
+				if (condition != null) {
 					condition.setWaitOpt(ret.getOpt());
-					robotPackLogMapper.updateById(condition) ;
+					robotPackLogMapper.updateById(condition);
 				}
 				// 删除之前的操作码
 				robotPackLogMapper.deleteById(data.getOpt());

@@ -92,7 +92,7 @@ public class TgRobotProcessor {
     public void called1100910053(Called1100910053DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         //处理tg设置管理员
-        if(root.isSuccess()) {
+        if(root.isSuccess() && !StringUtils.isEmpty(root.getRequestPara())) {
             groupService.handlerNewAdmin(JSON.parseObject(root.getRequestPara(), ThirdTgSetChatroomAdminInputDTO.class), dto);
         }
 

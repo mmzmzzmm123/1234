@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.system.bot.mode.output.BotInfoVO;
 import com.ruoyi.system.domain.GroupMonitorInfo;
@@ -8,6 +9,7 @@ import com.ruoyi.system.mapper.GroupMonitorInfoMapper;
 import com.ruoyi.system.service.GroupMonitorInfoService;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,26 +22,37 @@ import java.util.stream.Collectors;
 @Service("groupMonitorInfoService")
 public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMapper, GroupMonitorInfo> implements GroupMonitorInfoService {
 
+    public List<String> existGroup(List<String> groupIds) {
+        return (ArrayList) baseMapper.selectObjs(
+                new LambdaQueryWrapper<GroupMonitorInfo>()
+                        .in(GroupMonitorInfo::getGroupId, groupIds)
+                        .select(GroupMonitorInfo::getGroupId));
+    }
+
     @Override
     public void add(List<String> groupIds) {
         if (CollUtil.isEmpty(groupIds)) {
             return;
         }
-        saveBatch(groupIds.stream().map(groupId -> {
-            GroupMonitorInfo groupInfo = new GroupMonitorInfo();
-            groupInfo.setGroupId(groupId);
-            groupInfo.setBotCheck(0);
-            groupInfo.setBotAdmin(0);
-            return groupInfo;
-        }).collect(Collectors.toList()));
+        List<String> existGroup = existGroup(groupIds);
+        groupIds = groupIds.stream().filter(groupId -> !existGroup.contains(groupId)).collect(Collectors.toList());
+        if (CollUtil.isNotEmpty(groupIds)) {
+            saveBatch(groupIds.stream().map(groupId -> {
+                GroupMonitorInfo groupInfo = new GroupMonitorInfo();
+                groupInfo.setGroupId(groupId);
+                groupInfo.setBotCheck(0);
+                groupInfo.setBotAdmin(0);
+                return groupInfo;
+            }).collect(Collectors.toList()));
+        }
     }
 
     @Override
-    public void setPlayId(List<String> groupIds,String playId) {
+    public void setPlayId(List<String> groupIds, String playId) {
         if (CollUtil.isEmpty(groupIds)) {
             return;
         }
-        saveBatch(groupIds.stream().map(groupId -> {
+        updateBatchById(groupIds.stream().map(groupId -> {
             GroupMonitorInfo groupInfo = new GroupMonitorInfo();
             groupInfo.setGroupId(groupId);
             groupInfo.setBotPlayId(playId);
@@ -56,7 +69,7 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
     }
 
     @Override
-    public void updateRobotSerialNo(String groupId, String botSerialNo,String robotSerialNo) {
+    public void updateRobotSerialNo(String groupId, String botSerialNo, String robotSerialNo) {
         GroupMonitorInfo groupInfo = new GroupMonitorInfo();
         groupInfo.setGroupId(groupId);
         groupInfo.setBotSerialNo(botSerialNo);
