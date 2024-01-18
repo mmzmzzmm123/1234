@@ -412,12 +412,12 @@ public class IntoGroupService {
     @Scheduled(cron = "0/20 * * * * ?")
     public void into() {
         log.info("扫描已修改好人设的剧本任务");
-//        RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:into");
-//        if (lock.isLocked()) {
-//            return;
-//        }
+        RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:into");
+        if (lock.isLocked()) {
+            return;
+        }
         try {
-//            lock.lock(60 * 60, TimeUnit.SECONDS);
+            lock.lock(60 * 60, TimeUnit.SECONDS);
             //扫描剧本状态为调用中 未开始的剧本
             List<Play> playList = playMapper.selectIntoGroupList(1, 2);
             log.info("扫描已修改好人设的剧本任务信息："+JSONObject.toJSONString(playList));
@@ -584,7 +584,7 @@ public class IntoGroupService {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-//            lock.unlock();
+            lock.unlock();
         }
     }
 
@@ -905,28 +905,41 @@ public class IntoGroupService {
     }
 
     //扫码群状态
+    @Scheduled(cron = "0/20 * * * * ?")
     public void scanGroupState() {
         log.info("扫描群状态！");
-        //获取入群中状态的剧本
-        //扫描剧本状态为调用中 未开始的剧本
-        List<Play> playList = playMapper.selectIntoGroupList(1, 3);
-        log.info("获取入群状态中的剧本:"+JSONObject.toJSONString(playList));
-        if (playList == null || playList.size() == 0) {
+        RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:scanGroupState");
+        if (lock.isLocked()) {
             return;
         }
-        for (Play play : playList) {
-            //查询剧本已完成调度群数
-            log.info("入群中的剧本:"+JSONObject.toJSONString(play));
-            Integer count = playGroupInfoMapper.selectSuccessGroupCount(play.getId());
-            log.info("剧本已完成调度的群数："+count);
-            if (count >= play.getGroupNum()) {
-                //修改剧本状态
-                play.setScanProgress(4);
-                log.info("已修改剧本状态"+JSONObject.toJSONString(count));
-                setLog(play.getId(), "所有群已完成入群调度！", 0, PlayLogTyper.Group_into, null);
-                playMapper.updateById(play);
+        try {
+            lock.lock(60 * 60, TimeUnit.SECONDS);
+            //获取入群中状态的剧本
+            //扫描剧本状态为调用中 未开始的剧本
+            List<Play> playList = playMapper.selectIntoGroupList(1, 3);
+            log.info("获取入群状态中的剧本:"+JSONObject.toJSONString(playList));
+            if (playList == null || playList.size() == 0) {
+                return;
             }
+            for (Play play : playList) {
+                //查询剧本已完成调度群数
+                log.info("入群中的剧本:"+JSONObject.toJSONString(play));
+                Integer count = playGroupInfoMapper.selectSuccessGroupCount(play.getId());
+                log.info("剧本已完成调度的群数："+count);
+                if (count >= play.getGroupNum()) {
+                    //修改剧本状态
+                    play.setScanProgress(4);
+                    log.info("已修改剧本状态"+JSONObject.toJSONString(count));
+                    setLog(play.getId(), "所有群已完成入群调度！", 0, PlayLogTyper.Group_into, null);
+                    playMapper.updateById(play);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            lock.unlock();
         }
+
     }
 
     public void setLog(String playId, String content, Integer state, PlayLogTyper typer, String groupId) {
