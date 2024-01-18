@@ -1,5 +1,6 @@
 package com.ruoyi.common.core.domain.dto.play;
 
+import com.ruoyi.common.core.domain.model.LoginUser;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -74,10 +75,11 @@ public class PlayDTO {
     @ApiModelProperty(value = "接粉号池")
     private List<String> urlPool;
 
-    private String merchantId;
-
+    @ApiModelProperty(value = "上传的文件id")
     private String fileId;
 
     @ApiModelProperty(value = "速度")
     private BigDecimal speed;
+
+    private LoginUser loginUser;
 }

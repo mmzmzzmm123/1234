@@ -36,11 +36,9 @@ public class ProductDTO {
     @ApiModelProperty(value = "商品类型: 0-拉人进群")
     private Integer categoryId;
 
-    @NotBlank(message="列表图不能为空")
     @ApiModelProperty(value = "服务列表图")
     private String albumPics;
 
-    @NotBlank(message="海报图不能为空")
     @ApiModelProperty(value = "服务海报图")
     private String pic;
 
