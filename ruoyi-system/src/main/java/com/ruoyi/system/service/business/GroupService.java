@@ -19,6 +19,7 @@ import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.enums.InviteBotAction;
 import com.ruoyi.common.exception.GlobalException;
+import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.bot.ApiClient;
 import com.ruoyi.system.bot.mode.input.AdMonitorDTO;
@@ -26,6 +27,7 @@ import com.ruoyi.system.bot.mode.output.BotInfoVO;
 import com.ruoyi.system.callback.dto.Called1100910017DTO;
 import com.ruoyi.system.callback.dto.Called1100910039DTO;
 import com.ruoyi.system.callback.dto.Called1100910053DTO;
+import com.ruoyi.system.components.spi.TgGroupHashSettings;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
@@ -138,7 +140,7 @@ public class GroupService {
                         continue;
                     }
                     List<GroupRobot> adminRobots = groupRobotService.getAdminRobots(groupInfoVO.getGroupId());
-                    if(CollUtil.isNotEmpty(adminRobots)){
+                    if(CollUtil.isEmpty(adminRobots)){
                         failGroupId.add(groupInfoVO.getGroupId());
                         continue;
                     }
@@ -485,6 +487,15 @@ public class GroupService {
                         },
                         OpenApiClient::setChatroomAdminByThirdKpTg);
                 break;
+            case QUERY_HASH:
+                setAction(action, groupInfo, groupRobot, batchId, value, actionId -> {
+                            ThirdTgSqlTaskSubmitInputDTO input = new ThirdTgSqlTaskSubmitInputDTO();
+                            input.setDbSource("kfpt-doris-ed");
+                            input.setSql(TgGroupHashSettings.getSql(groupInfo.getGroupSerialNo(), groupRobot.getRobotId(),
+                                    ListTools.newArrayList(groupRobot.getRobotId())));
+                            return input;
+                        },
+                        OpenApiClient:: sqlTaskSubmitByThirdKpTg);
         }
     }
 
