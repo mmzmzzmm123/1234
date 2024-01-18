@@ -250,7 +250,7 @@
     <select id="selectConfusionList" resultType="com.ruoyi.common.core.domain.entity.play.Play">
         SELECT
             tpi.id,
-            tpi.NAME,
+            tpi.name,
             tpi.state,
             tpi.scan_progress
         FROM
@@ -260,6 +260,7 @@
           AND tpi.is_delete = 0
           AND tpi.state = 1
           AND scan_progress = 4
+          AND confound_state = 0
           AND tpi.create_time > ADDDATE( NOW( ),- 3 )
         GROUP BY
             tpi.id

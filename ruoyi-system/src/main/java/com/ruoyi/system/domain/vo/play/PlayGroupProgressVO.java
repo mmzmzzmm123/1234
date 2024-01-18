@@ -4,6 +4,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @Author : XGF（徐桂烽）
  * @create 2024/1/15/015 9:10
@@ -48,7 +50,7 @@ public class PlayGroupProgressVO {
     @ApiModelProperty("群状态 0-正常 1-封群")
     private Integer groupStatus;
     @ApiModelProperty("群状态变化时间(封群时间)")
-    private Integer groupStatusTime;
+    private Date groupStatusTime;
 
     @ApiModelProperty("群成员数")
     private Integer memberCount;
