@@ -25,7 +25,9 @@ public enum GroupAction {
 
     SET_GROUP_ADMIN(6, "设置管理员", true),
 
-    QUERY_HASH(7,"查询成员hash", true);
+    QUERY_HASH(7,"查询成员hash", true),
+
+    QUERY_GROUP_MEMBER(8,"查询群成员",true);
 
     private final int code;
 

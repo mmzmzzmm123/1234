@@ -504,6 +504,17 @@ public class GroupService {
                             return input;
                         },
                         OpenApiClient::sqlTaskSubmitByThirdKpTg, true);
+                break;
+            case QUERY_GROUP_MEMBER:
+                setAction(action, groupInfo, groupRobot, batchId, lastValue, actionId -> {
+                            ThirdTgGetGroupMemberInputDTO input = new ThirdTgGetGroupMemberInputDTO();
+                            input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+                            input.setTgRobotId(groupRobot.getRobotId());
+                            input.setExtend(actionId);
+                            return input;
+                        },
+                        OpenApiClient::getGroupMemberByThirdKpTg);
+                break;
         }
     }
 

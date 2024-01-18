@@ -348,5 +348,15 @@ public class TgRobotProcessor {
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
     }
 
+    /**
+     * TG 获取群成员
+     *
+     * @param dto
+     */
+    @Type(value = 1100910006, parameterClass = Called1100910006DTO.class)
+    public void called1100910006(Called1100910006DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
+    }
 
 }
