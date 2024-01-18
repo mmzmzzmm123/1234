@@ -122,7 +122,7 @@ public class VibeRule {
      */
     private String targetParams;
 
-    private String userId;
+    private Long userId;
 
     /**
      * 状态：1正常 0删除
