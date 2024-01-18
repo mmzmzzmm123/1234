@@ -551,7 +551,7 @@ public class GroupService {
         Assert.notNull(dto.getGroupType(), "群类型不能为空");
         List<GroupInfo> groupInfos = groupInfoService.listByIds(dto.getGroupIds());
         Assert.notEmpty(groupInfos, "群不存在");
-        groupInfos = groupInfos.stream().filter(p -> ObjectUtil.equal(p.getGroupType(), dto.getGroupType())).collect(Collectors.toList());
+        groupInfos = groupInfos.stream().filter(p -> ObjectUtil.notEqual(p.getGroupType(), dto.getGroupType())).collect(Collectors.toList());
         Assert.notEmpty(groupInfos, "群类型无法更改成相同类型");
         List<String> groupLinks = new ArrayList<>();
         int index = 0;
