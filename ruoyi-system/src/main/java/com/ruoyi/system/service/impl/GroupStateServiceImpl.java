@@ -33,6 +33,7 @@ public class GroupStateServiceImpl extends ServiceImpl<GroupStateMapper, GroupSt
             groupState.setGroupId(groupId);
             groupState.setGroupUsed(0);
             groupState.setGroupStatus(0);
+            groupState.setGroupStatusTime(LocalDateTime.now());
             groupState.setUsedTime(null);
             groupState.setLeaderRobot(1);
             return groupState;
@@ -48,6 +49,7 @@ public class GroupStateServiceImpl extends ServiceImpl<GroupStateMapper, GroupSt
         groupState.setGroupId(groupId);
         groupState.setGroupUsed(1);
         groupState.setGroupStatus(0);
+        groupState.setGroupStatusTime(LocalDateTime.now());
         groupState.setUsedTime(LocalDateTime.now());
         groupState.setLeaderRobot(0);
         baseMapper.insert(groupState);
@@ -63,6 +65,7 @@ public class GroupStateServiceImpl extends ServiceImpl<GroupStateMapper, GroupSt
             groupState.setGroupId(groupId);
             groupState.setGroupUsed(1);
             groupState.setGroupStatus(0);
+            groupState.setGroupStatusTime(LocalDateTime.now());
             groupState.setUsedTime(LocalDateTime.now());
             groupState.setLeaderRobot(0);
             return groupState;

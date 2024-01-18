@@ -10,8 +10,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -451,6 +454,18 @@ public class ExcelUtil<T>
                         else if (val instanceof Double)
                         {
                             val = DateUtil.getJavaDate((Double) val);
+                        }
+                    }
+                    else if (LocalDateTime.class == fieldType){
+                        if(val instanceof Date){
+                            val = LocalDateTime.ofInstant(((Date) val).toInstant(), ZoneId.systemDefault());
+                        }else if (val instanceof String)
+                        {
+                            val = LocalDateTime.parse(val.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                        }
+                        else if (val instanceof Long)
+                        {
+                            val = LocalDateTime.ofInstant(Instant.ofEpochSecond((Long)val), ZoneId.systemDefault());
                         }
                     }
                     else if (Boolean.TYPE == fieldType || Boolean.class == fieldType)
