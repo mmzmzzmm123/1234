@@ -314,9 +314,13 @@ public class GroupService {
                     groupRobotService.addBot(groupInfo.getGroupId(),groupActionLog.getChangeValue());
                 }
 
-                if (nextAction == InviteBotAction.SET_BOT_ADMIN) {
+                if (botAction == InviteBotAction.SET_BOT_ADMIN) {
                     groupMonitorInfoService.setBotAdmin(groupBatch.getGroupId());
                 }
+                if(botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP){
+                    groupMonitorInfoService.robotCheck(groupBatch.getGroupId());
+                }
+
                 String value;
                 //当前动作是搜索bot  对比username 获取是bot的数据
                 if (botAction == InviteBotAction.SEARCH_BOT) {
@@ -327,10 +331,7 @@ public class GroupService {
                     Assert.notBlank(value, "搜索bot失败");
                     //更新bot的用户编号
                     groupMonitorInfoService.updateRobotSerialNo(groupBatch.getGroupId(), value, groupActionLog.getRobotId());
-                } else if (botAction == InviteBotAction.SET_BOT_ADMIN && ObjectUtil.equal(groupInfo.getCreateType(), 20)) {
-                    //外部群 不设置管理员
-                    //所有动作完成 标记bot已进群检查
-                    groupMonitorInfoService.robotCheck(groupBatch.getGroupId());
+                } else if (botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP && ObjectUtil.equal(groupInfo.getCreateType(), 20)) {
                     //批次动作完成
                     groupBatchActionService.updateStatus(groupBatch.getBatchId(), 2);
                     //设置剧本广告监控
