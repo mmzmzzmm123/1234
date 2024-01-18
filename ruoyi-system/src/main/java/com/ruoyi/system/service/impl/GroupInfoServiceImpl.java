@@ -17,10 +17,8 @@ import com.ruoyi.system.service.GroupInfoService;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -32,12 +30,11 @@ import java.util.stream.Collectors;
 @Service("groupInfoService")
 public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo> implements GroupInfoService {
 
-    @Override
-    public List<String> existGroup(List<String> groupSerialNos) {
-        return (ArrayList) baseMapper.selectObjs(
+
+    public List<GroupInfo> existGroup(List<String> groupSerialNos) {
+        return  baseMapper.selectList(
                 new LambdaQueryWrapper<GroupInfo>()
-                        .eq(GroupInfo::getGroupSerialNo, groupSerialNos)
-                        .select(GroupInfo::getGroupSerialNo));
+                        .in(GroupInfo::getGroupSerialNo, groupSerialNos));
     }
 
     @Override
@@ -54,17 +51,22 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         if (CollUtil.isEmpty(resourceList)) {
             return new ArrayList<>();
         }
-        List<String> groupSerialNos = existGroup(resourceList.stream().map(GroupResourceVO::getGroupSerialNo)
+        List<GroupInfo> existingGroups = existGroup(resourceList.stream().map(GroupResourceVO::getGroupSerialNo)
                 .collect(Collectors.toList()));
-        if (CollUtil.isNotEmpty(groupSerialNos)) {
-            resourceList = resourceList.stream().filter(p -> !groupSerialNos.contains(p.getGroupSerialNo())).collect(Collectors.toList());
-            if (CollUtil.isEmpty(resourceList)) {
-                return new ArrayList<>();
-            }
-        }
+
+        Map<String,GroupInfo> map = CollUtil.isNotEmpty(existingGroups)?
+                existingGroups.stream().collect(Collectors.toMap(GroupInfo::getGroupSerialNo, Function.identity(),(v1,v2)->v1))
+                        :new HashMap<>();
+
         List<GroupInfo> result = new ArrayList<>();
+        List<GroupInfo> adds = new ArrayList<>();
         List<String> newGroupSerialNos = new ArrayList<>();
         for (GroupResourceVO groupResourceVO : resourceList) {
+            if(map.containsKey(groupResourceVO.getGroupSerialNo())){
+                result.add(map.get(groupResourceVO.getGroupSerialNo()));
+                continue;
+            }
+
             GroupInfo groupInfo = new GroupInfo();
             groupInfo.setGroupId(IdWorker.getIdStr());
             groupInfo.setGroupSerialNo(groupResourceVO.getGroupSerialNo());
@@ -78,8 +80,11 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
             }
             newGroupSerialNos.add(groupResourceVO.getGroupSerialNo());
             result.add(groupInfo);
+            adds.add(groupInfo);
         }
-        saveBatch(result);
+        if(CollUtil.isNotEmpty(adds)) {
+            saveBatch(adds);
+        }
         return result;
     }
 

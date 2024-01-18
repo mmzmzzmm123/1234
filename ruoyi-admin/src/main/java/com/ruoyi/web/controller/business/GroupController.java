@@ -197,6 +197,8 @@ public class GroupController {
         try {
             groupService.importResource(groupService.analysisExcelInfo(file), clusterId);
             return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
             log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(clusterId), e);

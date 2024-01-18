@@ -5,7 +5,6 @@ import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.mapper.GroupRobotMapper;
 import com.ruoyi.system.service.GroupRobotService;
@@ -26,19 +25,22 @@ import java.util.stream.Collectors;
 public class GroupRobotServiceImpl extends ServiceImpl<GroupRobotMapper, GroupRobot> implements GroupRobotService {
 
     @Override
-    public Map<String, GroupRobot> addGroupLeader(List<GroupInfo> groupInfos, Map<String, String> robotMap) {
-        if (CollUtil.isEmpty(groupInfos)) {
+    public Map<String, GroupRobot> addGroupLeader(List<String> groupIds, Map<String, String> robotMap) {
+        if (CollUtil.isEmpty(groupIds)) {
             return new HashMap<>();
         }
+        baseMapper.delete(new LambdaQueryWrapper<GroupRobot>()
+                .in(GroupRobot::getGroupId, groupIds).eq(GroupRobot::getMemberType, 1));
+
         Map<String, GroupRobot> result = new HashMap<>();
-        saveBatch(groupInfos.stream().map(p -> {
+        saveOrUpdateBatch(groupIds.stream().map(groupId -> {
             GroupRobot groupRobot = new GroupRobot();
-            groupRobot.setId(IdWorker.getIdStr());
-            groupRobot.setGroupId(p.getGroupId());
-            groupRobot.setRobotId(robotMap.get(p.getGroupId()));
+            groupRobot.setGroupId(groupId);
+            groupRobot.setRobotId(robotMap.get(groupId));
+            groupRobot.setMd5Id();
             groupRobot.setBotType(0);
             groupRobot.setMemberType(1);
-            result.put(p.getGroupId(), groupRobot);
+            result.put(groupId, groupRobot);
             return groupRobot;
         }).collect(Collectors.toList()));
         return result;
@@ -52,9 +54,10 @@ public class GroupRobotServiceImpl extends ServiceImpl<GroupRobotMapper, GroupRo
             add.setId(IdWorker.getIdStr());
             add.setGroupId(groupId);
             add.setRobotId(robotSerialNo);
+            groupRobot.setMd5Id();
             add.setBotType(0);
             add.setMemberType(0);
-            baseMapper.insert(add);
+            saveOrUpdate(add);
         }
     }
 
