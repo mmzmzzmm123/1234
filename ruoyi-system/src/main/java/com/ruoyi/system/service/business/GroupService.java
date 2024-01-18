@@ -446,7 +446,7 @@ public class GroupService {
             case SEARCH_BOT:
                 setAction(action, groupInfo, groupRobot, batchId, value, actionId -> {
                             ThirdTgSearchKeywordInputDTO input = new ThirdTgSearchKeywordInputDTO();
-                            input.setKeyword(lastValue);
+                            input.setKeyword(value);
                             input.setTgRobotId(groupRobot.getRobotId());
                             input.setExtend(actionId);
                             return input;
@@ -464,7 +464,7 @@ public class GroupService {
                         OpenApiClient::joinUserByThirdKpTg);
                 break;
             case INVITE_BOT_JOIN_GROUP:
-                setAction(action, groupInfo, groupRobot, batchId, value, actionId -> {
+                setAction(action, groupInfo, groupRobot, batchId, lastValue, actionId -> {
                             ThirdTgInviteJoinChatroomInputDTO input = new ThirdTgInviteJoinChatroomInputDTO();
                             input.setMemberSerialNo(lastValue);
                             input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
@@ -496,7 +496,7 @@ public class GroupService {
                         OpenApiClient::setChatroomAdminByThirdKpTg);
                 break;
             case QUERY_HASH:
-                setAction(action, groupInfo, groupRobot, batchId, value, actionId -> {
+                setAction(action, groupInfo, groupRobot, batchId, lastValue, actionId -> {
                             ThirdTgSqlTaskSubmitInputDTO input = new ThirdTgSqlTaskSubmitInputDTO();
                             input.setDbSource("kfpt-doris-ed");
                             input.setSql(TgGroupHashSettings.getSql(groupInfo.getGroupSerialNo(), groupRobot.getRobotId(),
