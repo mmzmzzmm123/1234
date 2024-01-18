@@ -185,5 +185,12 @@ public class PlayController extends BaseController {
         return R.ok(playMessagePushService.robotDetails(dto));
     }
 
+    @ApiOperation("炒群状态操作")
+    @PostMapping("pushOperation")
+    public R<Void> pushOperation(@Validated @RequestBody PushOperationDTO dto) {
+        playMessagePushService.operation(dto);
+        return R.ok();
+    }
+
 
 }
