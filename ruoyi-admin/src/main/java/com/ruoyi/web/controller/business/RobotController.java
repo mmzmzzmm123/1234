@@ -8,6 +8,7 @@ import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import com.ruoyi.system.service.IRobotService;
+import com.ruoyi.system.service.TelegramDetChatroomAdminDistrService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -26,6 +27,9 @@ import java.util.List;
 public class RobotController {
     @Autowired
     private IRobotService robotService;
+
+    @Autowired
+    private TelegramDetChatroomAdminDistrService telegramDetChatroomAdminDistrService;
     @ApiOperation("查询号列表")
     @PostMapping("/selectRobotPageList")
     public R<Page<SelectRobotListVO>> selectRobotPageList(@RequestBody SelectRobotListDTO dto){
@@ -112,4 +116,15 @@ public class RobotController {
         return robotService.releaseOccupyRobot(dto);
     }
 
+    @ApiOperation("定时同步号列表")
+    @PostMapping("/syncRobotList")
+    public void syncRobotList(){
+        robotService.syncRobot();
+    }
+
+    @ApiOperation("定时同步黑群主列表")
+    @PostMapping("/syncChatroomAdminDistr")
+    public void syncChatroomAdminDistr(){
+        telegramDetChatroomAdminDistrService.syncChatroomAdminDistr();
+    }
 }
