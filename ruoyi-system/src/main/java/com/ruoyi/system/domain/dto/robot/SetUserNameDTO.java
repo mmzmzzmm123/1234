@@ -13,6 +13,8 @@ public class SetUserNameDTO {
     private List<String> robotSerialNos;
     @ApiModelProperty(value = "用户名")
     private String userName;
-    @ApiModelProperty(value = "编号")
-    private List<String> code;
+    @ApiModelProperty(value = "开始数字")
+    private Integer startNum;
+    @ApiModelProperty(value = "结束数字")
+    private Integer endNum;
 }
