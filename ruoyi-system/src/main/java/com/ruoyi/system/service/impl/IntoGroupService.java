@@ -58,7 +58,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-@Service
+@Service("intoGroupService")
 @Slf4j
 public class IntoGroupService {
 
