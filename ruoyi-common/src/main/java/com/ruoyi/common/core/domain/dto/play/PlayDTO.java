@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -37,7 +38,7 @@ public class PlayDTO {
     private Integer startType;
 
     @ApiModelProperty("定时开始炒群时间")
-    private String startGroupDate;
+    private Date startGroupDate;
 
     @ApiModelProperty("外部群邀请链接")
     private List<String> groupUrls;

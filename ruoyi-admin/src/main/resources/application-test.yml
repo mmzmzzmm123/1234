@@ -123,6 +123,11 @@ ut-touch:
   merchant-password: bilin123
   touch-merchant-id: 1735130303135006720
 
+openapi:
+  openApiKey: yriWvNH7Bt83mCvTQYHMLkMbuh7Ll32z
+  openApiSecret: TNRlS8MebxpBYvpbpWEwByzBAhw5TAfg
+  openApiHost: https://gateway.test.csbilin.com
+
 # Swagger配置
 swagger:
   # 是否开启swagger
