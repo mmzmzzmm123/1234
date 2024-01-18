@@ -36,7 +36,7 @@ public interface IPlayService extends IService<Play> {
      * @param dto
      * @return
      */
-    PlayTaskProgressVO taskProgress(QueryTaskProgressDTO dto);
+    List<PlayTaskProgressVO> taskProgress(QueryTaskProgressDTO dto);
 
     /**
      * 炒群进度

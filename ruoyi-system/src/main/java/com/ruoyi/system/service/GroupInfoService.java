@@ -37,6 +37,8 @@ public interface GroupInfoService extends IService<GroupInfo> {
 
     GroupInfo getGroupBySerialNo(String groupSerialNo);
 
+     GroupInfo getGroupBySerialNo(String oldSerialNo, String newSerialNo);
+
     GroupInfo changeGroupSerialNo(String oldGroupSerialNo,String newGroupSerialNo);
 
     void updateGroupInfo(Called1100910018DTO.Called1100910018ChatroomInfoDTO update);

@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.common.core.domain.entity.robot.RobotStatistics;
+import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.GroupRobot;
@@ -35,6 +36,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -56,29 +58,32 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
 
     @Override
     public R<Void> syncRobot() {
-        ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
-        robotDTO.setLimit(1000);
-        robotDTO.setPage(1);
-        robotDTO.setMerchantId("1241985555798124192");
-        OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
-        log.info("pullApiRobotDataList robotListResult:{}",JSON.toJSONString(robotListResult));
-        if(robotListResult.isSuccess()){
-            Page<ExtTgSelectRobotByMerchantVO> data = robotListResult.getData();
-            this.pullRobotDataList(data.getRecords());
-            long count = data.getTotal()/robotDTO.getLimit() - 1;
-            if(count > 0){
-                for (long i = 0; i < count; i++) {
-                    robotDTO.setPage(robotDTO.getPage()+1);
-                    OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> pageOpenApiResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
-                    log.info("pullApiRobotDataList pageOpenApiResult:{}",JSON.toJSONString(pageOpenApiResult));
-                    if(pageOpenApiResult.isSuccess()){
-                        Page<ExtTgSelectRobotByMerchantVO> pageData = pageOpenApiResult.getData();
-                        this.pullRobotDataList(pageData.getRecords());
-                    }
+        AsyncTask.execute(()->{
+            ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
+            robotDTO.setLimit(1000);
+            robotDTO.setPage(1);//1747887445714726912
+            robotDTO.setMerchantId("1241985555798124192");
+            OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
+            log.info("pullApiRobotDataList robotListResult:{}",JSON.toJSONString(robotListResult));
+            if(robotListResult.isSuccess()){
+                Page<ExtTgSelectRobotByMerchantVO> data = robotListResult.getData();
+                this.pullRobotDataList(data.getRecords());
+                long count = data.getTotal()/robotDTO.getLimit() - 1;
+                if(count > 0){
+                    for (long i = 0; i < count; i++) {
+                        robotDTO.setPage(robotDTO.getPage()+1);
+                        OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> pageOpenApiResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
+                        log.info("pullApiRobotDataList pageOpenApiResult:{}",JSON.toJSONString(pageOpenApiResult));
+                        if(pageOpenApiResult.isSuccess()){
+                            Page<ExtTgSelectRobotByMerchantVO> pageData = pageOpenApiResult.getData();
+                            this.pullRobotDataList(pageData.getRecords());
+                        }
 
+                    }
                 }
             }
-        }
+        });
+
         return R.ok();
     }
 
@@ -95,17 +100,17 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             Robot robot = JSON.parseObject(JSON.toJSONString(vo), Robot.class);
             robot.setPhone(vo.getAccount());
             robot.setId(vo.getRobotId());
+            robot.setVpnIp(vo.getIp());
+            if(StringUtils.isNotEmpty(vo.getIp())){
+                String[] split = vo.getIp().split(".");
+                robot.setVpnIpB(split[0]+"."+split[1]);
+                robot.setVpnIpB(split[0]+"."+split[1]+"."+split[2]);
+            }
             if(simpMap.containsKey(robot.getRobotSerialNo())){
                 ExtTgBatchRobotSimpInfoData mapData = simpMap.get(robot.getRobotSerialNo());
                 robot.setTgAppVersion(mapData.getTgAppVersion());
                 robot.setProtocolType(mapData.getProtocolType());
                 robot.setProxyType(mapData.getProxyType());
-                robot.setVpnIp(mapData.getSenderProxyIp());
-                if(StringUtils.isNotEmpty(mapData.getSenderProxyIp())){
-                    String[] split = mapData.getSenderProxyIp().split(".");
-                    robot.setVpnIpB(split[0]+"."+split[1]);
-                    robot.setVpnIpB(split[0]+"."+split[1]+"."+split[2]);
-                }
             }
             robotList.add(robot);
         }
@@ -353,14 +358,16 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
             return R.fail("号编号不能为空");
         }
-        List<String> userNameList = Lists.newArrayList();
-        for (String code : dto.getCode()) {
-            userNameList.add(dto.getUserName()+code);
-        }
+        ThreadLocalRandom random = ThreadLocalRandom.current();
         for (int i = 0; i < dto.getRobotSerialNos().size(); i++) {
             ThirdTgModifyUserNameInputDTO inputDTO = new ThirdTgModifyUserNameInputDTO();
             inputDTO.setTgRobotId(dto.getRobotSerialNos().get(i));
-            String userName = userNameList.get(i % userNameList.size());
+            String userName = "";
+            if(dto.getStartNum() != null && dto.getEndNum()  != null){
+                userName =dto.getUserName() + random.nextInt(dto.getStartNum(), dto.getEndNum());
+            }else{
+                userName = dto.getUserName();
+            }
             inputDTO.setUserName(userName);
             inputDTO.setExtend(userName);
             OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.modifyUserNameByThirdKpTg(inputDTO);

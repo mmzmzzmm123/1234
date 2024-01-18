@@ -58,7 +58,7 @@ public class GroupRobot {
 
 
     public void setMd5Id() {
-        id = MD5Utils.getMD5( Optional.ofNullable(groupId).orElse("") + "-" + Optional.ofNullable(robotId).orElse(""), "UTF-8");
+        id = MD5Utils.getMD5( Optional.ofNullable(groupId).orElse("") + "-" + Optional.ofNullable(robotId).orElse(""), "UTF-8").toUpperCase();
     }
 
 }

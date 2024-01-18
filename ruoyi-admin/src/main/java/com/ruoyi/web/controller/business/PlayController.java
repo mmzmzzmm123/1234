@@ -151,7 +151,7 @@ public class PlayController extends BaseController {
 
     @ApiOperation("任务进度")
     @PostMapping("taskProgress")
-    public R<PlayTaskProgressVO> taskProgress(@RequestBody QueryTaskProgressDTO dto) {
+    public R<List<PlayTaskProgressVO>> taskProgress(@RequestBody QueryTaskProgressDTO dto) {
         return R.ok(playService.taskProgress(dto));
     }
 

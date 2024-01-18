@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 public class MemberQuantityDTO {
 
-    private String chatId;
+    private Long chatId;
 
     private Integer memberQuantity;
 

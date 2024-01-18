@@ -39,7 +39,7 @@
             and trs.is_lock = #{dto.occupyType}
         </if>
         <if test="dto.enableType != null">
-            and tri.enable_type = #{dto.enableType]}
+            and tri.enable_type = #{dto.enableType}
         </if>
         <if test="dto.groupOwner != null">
             and tri.group_owner = #{dto.groupOwner}

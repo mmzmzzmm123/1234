@@ -389,12 +389,11 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
 
     @Override
-    public PlayTaskProgressVO taskProgress(QueryTaskProgressDTO dto) {
+    public List<PlayTaskProgressVO> taskProgress(QueryTaskProgressDTO dto) {
         if (CollectionUtils.isEmpty(dto.getPlayIds())) {
             return null;
         }
-        List<PlayTaskProgressVO> taskProgressList = this.selectTaskProgress(dto.getPlayIds());
-        return CollectionUtils.isEmpty(taskProgressList) ? null : taskProgressList.get(0);
+        return this.selectTaskProgress(dto.getPlayIds());
     }
 
     private List<PlayTaskProgressVO> selectTaskProgress(List<String> playIds) {

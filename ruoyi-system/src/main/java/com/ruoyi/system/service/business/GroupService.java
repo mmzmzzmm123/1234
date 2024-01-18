@@ -268,7 +268,7 @@ public class GroupService {
         if (StrUtil.isBlank(id)) {
             return;
         }
-        handleActionResult(groupActionLogService.getById(optNo), optNo, success, msg, data);
+        handleActionResult(groupActionLogService.getById(id), optNo, success, msg, data);
     }
 
     public void handleActionResult(GroupActionLog groupActionLog, String optNo, boolean success, String msg, Object data) {
@@ -310,6 +310,13 @@ public class GroupService {
                 }
                 GroupInfo groupInfo = groupInfoService.getById(groupBatch.getGroupId());
 
+                if(botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP){
+                    groupRobotService.addBot(groupInfo.getGroupId(),groupActionLog.getChangeValue());
+                }
+
+                if (nextAction == InviteBotAction.SET_BOT_ADMIN) {
+                    groupMonitorInfoService.setBotAdmin(groupBatch.getGroupId());
+                }
                 String value;
                 //当前动作是搜索bot  对比username 获取是bot的数据
                 if (botAction == InviteBotAction.SEARCH_BOT) {
@@ -333,13 +340,15 @@ public class GroupService {
                     //其他的动作 都传bot的用户编号
                     value = groupActionLog.getChangeValue();
                 }
+                groupBatchActionService.doNextAction(groupBatch.getBatchId(),nextAction.getCode(), 0);
+
                 //执行动作
                 runAction(groupBatch.getBatchId(), nextAction.getAction(), groupInfo,
                         groupRobotService.getRobot(groupBatch.getGroupId(), groupActionLog.getRobotId()), value);
             } else {
                 //如果需要重试 则当前动作重复操作
                 if (groupBatch.getRetryCount() < botAction.getRetryCount()) {
-                    groupBatchActionService.doNextAction(groupBatch.getBatchId(), groupBatch.getRetryCount() + 1);
+                    groupBatchActionService.doNextAction(groupBatch.getBatchId(),botAction.getCode(), groupBatch.getRetryCount() + 1);
                     runAction(groupBatch.getBatchId(), botAction.getAction(), groupInfoService.getById(groupBatch.getGroupId()),
                             groupRobotService.getRobot(groupBatch.getGroupId(), groupActionLog.getRobotId()), groupActionLog.getChangeValue());
                 } else {
@@ -505,7 +514,7 @@ public class GroupService {
                 if (nameIndex >= groupNames.size()) {
                     nameIndex = 0;
                 }
-                String name = dto.getImageUrls().get(nameIndex++);
+                String name = groupNames.get(nameIndex++);
                 setAction(GroupAction.SET_GROUP_NAME, groupInfo, robot, "", name, actionId -> {
                             ThirdTgModifyChatroomNameInputDTO input = new ThirdTgModifyChatroomNameInputDTO();
                             input.setTgRobotId(robot.getRobotId());
@@ -786,7 +795,11 @@ public class GroupService {
         dto.setRestrictMember(adMonitorInfo.getIsTabooMemberMsg());
         dto.setDeleteOtherStatement(adMonitorInfo.getIsDelMemberMsg());
         dto.setTimeUnit(ObjectUtil.equal(adMonitorInfo.getSpammingTimeUnit(), 2) ? "MINUTES" : "SECONDS");
-        return ApiClient.setBotAdMonitor(dto).isSuccess();
+        boolean success = ApiClient.setBotAdMonitor(dto).isSuccess();
+        if(success){
+            groupMonitorInfoService.setBotAdMonitor(groupId);
+        }
+        return success;
     }
 
 

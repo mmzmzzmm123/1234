@@ -133,4 +133,4 @@ swagger:
 
 ## ut-touch 接口配置
 bot:
-  api-url: http://172.29.18.208:28088
+  api-url: https://30q623450x.vicp.fun

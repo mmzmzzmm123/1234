@@ -58,7 +58,7 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
-@Service
+@Service("intoGroupService")
 @Slf4j
 public class IntoGroupService {
 
@@ -102,6 +102,7 @@ public class IntoGroupService {
     GroupInfoMapper groupInfoMapper;
 
     public void optionGroup() {
+        log.info("扫描未开始的剧本");
         //扫描剧本状态为调用中 未开始的剧本
         RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:optionGroup");
         if (lock.isLocked()) {
@@ -110,6 +111,7 @@ public class IntoGroupService {
         try {
             lock.lock(60 * 60, TimeUnit.SECONDS);
             List<Play> playList = playMapper.selectIntoGroupList(1, 0);
+            log.info("未开始的剧本打印："+JSONObject.toJSONString(playList));
             if (playList == null || playList.size() == 0) {
                 return;
             }
@@ -119,6 +121,7 @@ public class IntoGroupService {
                     //修改剧本状态为入群中
                     play.setScanProgress(2);
                     playMapper.updateById(play);
+                    log.info("外部群不修改群人设："+JSONObject.toJSONString(play));
                     setLog(play.getId(), "外部群不需要修改群人设", 0, PlayLogTyper.Group_img_name, null);
                     continue;
                 }
@@ -128,6 +131,7 @@ public class IntoGroupService {
                 if (playGroupPack == null) {
                     play.setScanProgress(2);
                     playMapper.updateById(play);
+                    log.info("内部群没有设置群人设："+JSONObject.toJSONString(play));
                     setLog(play.getId(), "内部群没有设置修改群人设", 0, PlayLogTyper.Group_img_name, null);
                     continue;
                 }
@@ -140,7 +144,9 @@ public class IntoGroupService {
                 groupQueryDTO.setCountryCode(getCountys(play));
                 groupQueryDTO.setPayId(play.getId());
                 //从波少那边获取足够的群
+                log.info("获取群入参："+JSONObject.toJSONString(groupQueryDTO));
                 R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
+                log.info("获取群返回："+JSONObject.toJSONString(groupList));
                 if (groupList.getCode() != 0) {
                     play.setState(3);
                     play.setFailReason("无剧本所需足够的群！");
@@ -170,7 +176,9 @@ public class IntoGroupService {
                     inputDTO.setChatroomNameBase64(Base64.encode(names.get(index).getBytes()));
                     inputDTO.setChatroomSerialNo(groupInfoVO.getGroupSerialNo());
                     inputDTO.setTgRobotId(tgRobotId);
+                    log.info("修改群名称入参："+JSONObject.toJSONString(inputDTO));
                     OpenApiResult<TgBaseOutputDTO> openApiResult = OpenApiClient.modifyChatroomNameByThirdKpTg(inputDTO);
+                    log.info("修改群名称返回："+JSONObject.toJSONString(openApiResult));
                     if (openApiResult.getCode() != 0) {
                         String optSerNo = null;
                         if (openApiResult.getData() != null) {
@@ -182,7 +190,9 @@ public class IntoGroupService {
                         continue;
                     }
                     setLog(play.getId(), "群" + groupInfoVO.getGroupName() + ",ID为：" + groupInfoVO.getGroupSerialNo() + "修改群名称为:" + names.get(index) + "成功！", 0, PlayLogTyper.Group_img_name, groupInfoVO.getGroupId());
+                    log.info("修改群头像入参："+JSONObject.toJSONString(dto));
                     OpenApiResult<TgBaseOutputDTO> dtoOpenApiResult = OpenApiClient.modifyChatroomHeadImageByThirdKpTg(dto);
+                    log.info("修改群头像返回："+JSONObject.toJSONString(dtoOpenApiResult));
                     String optSerNo = null;
                     if (dtoOpenApiResult.getData() != null) {
                         optSerNo = dtoOpenApiResult.getData().getOptSerNo();
@@ -246,6 +256,7 @@ public class IntoGroupService {
     }
 
     public void modifierGroup() {
+        log.info("扫描修改群人设的剧本！");
         //扫描剧本状态为调用中 未开始的剧本
         RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:modifierGroup");
         if (lock.isLocked()) {
@@ -255,6 +266,7 @@ public class IntoGroupService {
             lock.lock(60 * 60, TimeUnit.SECONDS);
             //查询剧本状态为调度中 修改群信息状态的剧本
             List<Play> playList = playMapper.selectIntoGroupList(1, 1);
+            log.info("获取修改群人设的剧本信息:"+JSONObject.toJSONString(playList));
             if (playList == null || playList.size() == 0) {
                 return;
             }
@@ -266,6 +278,7 @@ public class IntoGroupService {
                 Integer groupNum = play.getGroupNum();
                 //扫描群已设置成功的数据
                 List<PlayModifierGroupLog> playModifierGroupLogs = playModifierGroupLogMapper.selectGroupLogByPlayId(play.getId());
+                log.info("获取已设置成功的群信息:"+JSONObject.toJSONString(playModifierGroupLogs));
                 if (playModifierGroupLogs == null) {
                     continue;
                 }
@@ -278,6 +291,7 @@ public class IntoGroupService {
                 }
                 //查询剧本对应的所有记录
                 List<PlayModifierGroupLog> logs = playModifierGroupLogMapper.selectGroupLogByPlayIdAll(play.getId());
+                log.info("获取所有修改人设的群信息:"+JSONObject.toJSONString(logs));
                 Boolean isError = true;
                 //判断是否有失败的群
                 for (PlayModifierGroupLog log : logs) {
@@ -298,14 +312,16 @@ public class IntoGroupService {
                     groupQueryDTO.setRegistrationDay(play.getGroupDay());
                     groupQueryDTO.setCountryCode(getCountys(play));
                     groupQueryDTO.setPayId(play.getId());
+                    log.info("重试获取群信息入参:"+JSONObject.toJSONString(groupQueryDTO));
                     //从波少那边获取足够的群
                     R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
+                    log.info("重试获取群信息返回:"+JSONObject.toJSONString(groupList));
                     if (groupList.getCode() != 0) {
                         play.setState(3);
                         play.setFailReason("无剧本所需足够的群！");
                         setLog(play.getId(), "无剧本所需足够的群数", 1, PlayLogTyper.Group_out, null);
                         playMapper.updateById(play);
-                        return;
+                        continue;
                     }
                     PlayGroupPack playGroupPack = playGroupPackMapper.selectGroupPackByPlayId(play.getId());
                     List<String> imgs = Arrays.asList(playGroupPack.getPic().split(","));
@@ -329,7 +345,9 @@ public class IntoGroupService {
                     inputDTO.setChatroomNameBase64(Base64.encode(names.get(index).getBytes()));
                     inputDTO.setChatroomSerialNo(groupInfoVO.getGroupSerialNo());
                     inputDTO.setTgRobotId(tgRobotId);
+                    log.info("重试修改群名称入参:"+JSONObject.toJSONString(inputDTO));
                     OpenApiResult<TgBaseOutputDTO> openApiResult = OpenApiClient.modifyChatroomNameByThirdKpTg(inputDTO);
+                    log.info("重试修改群名称返回:"+JSONObject.toJSONString(openApiResult));
                     if (openApiResult.getCode() != 0) {
                         String optSerNo = null;
                         if (openApiResult.getData() != null) {
@@ -338,10 +356,12 @@ public class IntoGroupService {
                         //修改群名称失败 需要换群
                         getLog(groupInfoVO, play, tgRobotId, optSerNo, 3);
                         setLog(play.getId(), "群" + groupInfoVO.getGroupName() + ",ID为：" + groupInfoVO.getGroupSerialNo() + "修改群名称为:" + names.get(index) + "失败！需要换群", 1, PlayLogTyper.Group_img_name, groupInfoVO.getGroupId());
-                        return;
+                        continue;
                     }
                     setLog(play.getId(), "群" + groupInfoVO.getGroupName() + ",ID为：" + groupInfoVO.getGroupSerialNo() + "修改群名称为:" + names.get(index) + "成功！", 0, PlayLogTyper.Group_img_name, groupInfoVO.getGroupId());
+                    log.info("重试修改群头像入参:"+JSONObject.toJSONString(inputDTO));
                     OpenApiResult<TgBaseOutputDTO> dtoOpenApiResult = OpenApiClient.modifyChatroomHeadImageByThirdKpTg(dto);
+                    log.info("重试修改群头像返回:"+JSONObject.toJSONString(inputDTO));
                     String optSerNo = null;
                     if (dtoOpenApiResult.getData() != null) {
                         optSerNo = dtoOpenApiResult.getData().getOptSerNo();
@@ -366,6 +386,7 @@ public class IntoGroupService {
 
 
     public void updateImageCallBack(CalledDTO calledDTO) {
+        log.info("修改群头像回调:"+JSONObject.toJSONString(calledDTO));
         //根据操作编码去表里查询数据
         PlayModifierGroupLog log = playModifierGroupLogMapper.selectGroupLogByCode(calledDTO.getOptSerNo());
         if (log == null) {
@@ -385,6 +406,7 @@ public class IntoGroupService {
 
 
     public void into() {
+        log.info("扫描已修改好人设的剧本任务");
         RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:into");
         if (lock.isLocked()) {
             return;
@@ -393,6 +415,7 @@ public class IntoGroupService {
             lock.lock(60 * 60, TimeUnit.SECONDS);
             //扫描剧本状态为调用中 未开始的剧本
             List<Play> playList = playMapper.selectIntoGroupList(1, 2);
+            log.info("扫描已修改好人设的剧本任务信息："+JSONObject.toJSONString(playList));
             if (playList == null || playList.size() == 0) {
                 return;
             }
@@ -415,8 +438,10 @@ public class IntoGroupService {
                         groupQueryDTO.setRegistrationDay(playDTO.getGroupDay());
                         groupQueryDTO.setCountryCode(getCountys(playDTO));
                         groupQueryDTO.setPayId(playDTO.getId());
+                        log.info("不需要修改人设的群获取入参："+JSONObject.toJSONString(groupQueryDTO));
                         //从波少那边获取足够的群
                         R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
+                        log.info("不需要修改人设的群获取返回："+JSONObject.toJSONString(groupList));
                         if (groupList.getCode() != 0) {
                             //设置错误
                             playDTO.setState(3);
@@ -426,6 +451,7 @@ public class IntoGroupService {
                         infoVOS.addAll(groupList.getData());
                     } else {
                         List<PlayModifierGroupLog> playModifierGroupLogs = playModifierGroupLogMapper.selectGroupLogByPlayId(playDTO.getId());
+                        log.info("修改人设的群获取返回："+JSONObject.toJSONString(playModifierGroupLogs));
                         for (PlayModifierGroupLog log : playModifierGroupLogs) {
                             GroupInfoVO groupInfoVO = new GroupInfoVO();
                             groupInfoVO.setGroupId(log.getGroupId());
@@ -592,8 +618,10 @@ public class IntoGroupService {
         adminDTO.setCountryCode(countys);
         adminDTO.setSetAdminCount(adminNum);
         adminDTO.setIpType(ipType);
+        log.info("获取机器人入参："+JSONObject.toJSONString(adminDTO));
         //调用获取机器人接口
         R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
+        log.info("获取机器人返回："+JSONObject.toJSONString(robotAdminVOS));
         if (robotAdminVOS.getCode() != 0) {
             return null;
         }
@@ -611,6 +639,7 @@ public class IntoGroupService {
             lock.lock(60 * 60, TimeUnit.SECONDS);
             // 查询待执行的计划
             List<PlayIntoGroupTask> personIntoGroupTasks = playIntoGroupTaskMapper.selectTaskList();
+            log.info("获取执行入群执行计划"+JSONObject.toJSONString(personIntoGroupTasks));
             if (personIntoGroupTasks == null || personIntoGroupTasks.size() == 0) {
                 return R.ok();
             }
@@ -620,6 +649,7 @@ public class IntoGroupService {
                 // 判定当前机器人是否可以入群（风控）
                 String limit = RedisHandler.get("intoGroup:task:limit:" + task.getGroupUrl());
                 if (limit != null) {
+                    log.info("当前机器人无法进群，群风控"+JSONObject.toJSONString(task));
                     //当前群已被限制入群
                     continue;
                 }
@@ -630,6 +660,7 @@ public class IntoGroupService {
                         RedisHandler.set("intoGroup:task:limit" + task.getGroupUrl(), "intoGroup:task:limit");
                         RedisHandler.expire("intoGroup:task:limit" + task.getGroupUrl(), RandomListPicker.getRandom(vibeRule.getDiffRobotIntervalStart().intValue(), vibeRule.getDiffRobotIntervalEnd().intValue()));
                     }
+                    log.info("当前机器人无法进群，群批量风控"+JSONObject.toJSONString(task));
                     continue;
                 }
                 // 调用执行入群接口
@@ -673,6 +704,7 @@ public class IntoGroupService {
         }
         //根据操作编码查询入群记录
         PlayIntoGroupTask task = playIntoGroupTaskMapper.selectTaskByCode(calledDTO.getOptSerNo());
+        log.info("查询操作编码："+JSONObject.toJSONString(task));
         if (task == null) {
             log.info("操作编码不存在{}", calledDTO.getOptSerNo());
             return;
@@ -722,7 +754,9 @@ public class IntoGroupService {
                 adminDTO.setSetAdminCount(adminNum);
                 adminDTO.setIpType(ipType);
                 //调用获取机器人接口
+                log.info("入群失败重试获取号："+JSONObject.toJSONString(adminDTO));
                 R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
+                log.info("入群失败重试获取号结果："+JSONObject.toJSONString(robotAdminVOS));
                 PlayIntoGroupTask playIntoGroupTask = Beans.toView(task, PlayIntoGroupTask.class);
                 if (robotAdminVOS.getCode() != 0) {
                     playIntoGroupTask.setPersonId(null);
@@ -744,6 +778,7 @@ public class IntoGroupService {
                 }
                 playIntoGroupTaskMapper.insert(playIntoGroupTask);
             } else {
+                log.info("入群失败已满重试次数："+JSONObject.toJSONString(task));
                 task.setIsError(1);
                 setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "该发言人入群已失败3次，不再进行重试！", 1, PlayLogTyper.Group_into, null);
                 playIntoGroupTaskMapper.updateById(task);
@@ -755,6 +790,7 @@ public class IntoGroupService {
         SpringUtils.getBean(RedisLock.class).waitLock("ruoyi:wait:groupCallback" + group.getGroupId(), 60);
         try {
             PlayGroupInfo groupInfo = playGroupInfoMapper.selectGroupInfoById(group.getGroupId());
+            log.info("入群成功获取群信息："+JSONObject.toJSONString(groupInfo));
             if (groupInfo == null) {
                 //创建群信息
                 groupInfo = getGroupInfo(group, task);
@@ -763,6 +799,7 @@ public class IntoGroupService {
                 //判断是不是外部群
                 if (play.getGroupSource() == 1) {
                     //添加bot
+                    log.info("外部群添加BOT入群："+JSONObject.toJSONString(group));
                     groupService.saveAndInviteBot(group);
                 }
             }
@@ -793,15 +830,22 @@ public class IntoGroupService {
             //查询任务表无法重试的机器人数量
             Integer errorCount = playIntoGroupTaskMapper.selectIsErrorCount(task.getGroupUrl());
             setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "群内水军数量为：" + robotCount + ",剧本所需目标数为：" + groupAllCount + ",重试3次后失败数量" + errorCount, 0, PlayLogTyper.Group_into, null);
+            log.info("群内机器人数量："+robotCount);
+            log.info("剧本所需目标数为："+groupAllCount);
+            log.info("重试3次后失败的数量："+errorCount);
+            log.info("剧本最低发言人数："+groupNum);
             if (robotCount + errorCount >= groupAllCount) {
                 if (robotCount >= groupNum) {
                     groupInfo.setIntoStatus(2);
                     //判断是不是已有群
                     if (play.getGroupSource() == 0) {
+                        log.info("满足群要求后通知Bot监控规则");
                         groupService.setBotAdMonitor(groupInfo.getTgGroupId(),play.getId(), play.getAdMonitor());
                     }
+                    log.info("满足群要求后入群完成");
                     setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "已满足剧本所需发言人数，入群完成", 0, PlayLogTyper.Group_into, null);
                 } else {
+                    log.info("群入群失败！");
                     groupInfo.setIntoStatus(3);
                     groupInfo.setState(3);
                     groupInfo.setTip("入群失败！");
@@ -837,18 +881,23 @@ public class IntoGroupService {
 
     //扫码群状态
     public void scanGroupState() {
+        log.info("扫描群状态！");
         //获取入群中状态的剧本
         //扫描剧本状态为调用中 未开始的剧本
         List<Play> playList = playMapper.selectIntoGroupList(1, 3);
+        log.info("获取入群状态中的剧本:"+JSONObject.toJSONString(playList));
         if (playList == null || playList.size() == 0) {
             return;
         }
         for (Play play : playList) {
             //查询剧本已完成调度群数
+            log.info("入群中的剧本:"+JSONObject.toJSONString(play));
             Integer count = playGroupInfoMapper.selectSuccessGroupCount(play.getId());
+            log.info("剧本已完成调度的群数："+count);
             if (count >= play.getGroupNum()) {
                 //修改剧本状态
                 play.setScanProgress(4);
+                log.info("已修改剧本状态"+JSONObject.toJSONString(count));
                 setLog(play.getId(), "所有群已完成入群调度！", 0, PlayLogTyper.Group_into, null);
                 playMapper.updateById(play);
             }
@@ -883,7 +932,7 @@ public class IntoGroupService {
     }
 
     public void outGroupJob() {
-        log.info("执行入群任务{}");
+        log.info("执行退群任务{}");
         RLock lockJob = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:outGroupJob");
         if (lockJob.isLocked()) {
             return;

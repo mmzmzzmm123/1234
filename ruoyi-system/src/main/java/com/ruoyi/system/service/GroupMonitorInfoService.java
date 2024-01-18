@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.bot.mode.output.BotInfoVO;
+import com.ruoyi.system.callback.dto.bot.MemberQuantityDTO;
 import com.ruoyi.system.domain.GroupMonitorInfo;
 
 import java.util.List;
@@ -23,4 +24,19 @@ public interface GroupMonitorInfoService extends IService<GroupMonitorInfo> {
     void updateRobotSerialNo(String groupId, String botSerialNo,String robotSerialNo);
 
     void setBotInfo(String groupId, BotInfoVO bo);
+
+    void updateOriginalGroupId(String groupId, String originalGroupId);
+
+    void updateOriginalGroupId(String botId, String robotId, String originalGroupId);
+
+
+    int originalGroupIdChange(String botId, String oldGroupId, String newGroupId);
+
+    int updateInfo(MemberQuantityDTO dto);
+
+    void updateInfo(String id, MemberQuantityDTO dto);
+
+    void setBotAdmin(String groupId);
+
+    void setBotAdMonitor(String groupId);
 }

@@ -3,7 +3,6 @@ package com.ruoyi.system.service.impl;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.mapper.GroupRobotMapper;
@@ -48,17 +47,13 @@ public class GroupRobotServiceImpl extends ServiceImpl<GroupRobotMapper, GroupRo
 
     @Override
     public void add(String robotSerialNo, String groupId) {
-        GroupRobot groupRobot = getGroupRobot(robotSerialNo, groupId);
-        if (groupRobot == null) {
-            GroupRobot add = new GroupRobot();
-            add.setId(IdWorker.getIdStr());
-            add.setGroupId(groupId);
-            add.setRobotId(robotSerialNo);
-            groupRobot.setMd5Id();
-            add.setBotType(0);
-            add.setMemberType(0);
-            saveOrUpdate(add);
-        }
+        GroupRobot add = new GroupRobot();
+        add.setGroupId(groupId);
+        add.setRobotId(robotSerialNo);
+        add.setMd5Id();
+        add.setBotType(0);
+        add.setMemberType(0);
+        saveOrUpdate(add);
     }
 
     private GroupRobot getGroupRobot(String robotSerialNo, String groupId) {
@@ -116,5 +111,16 @@ public class GroupRobotServiceImpl extends ServiceImpl<GroupRobotMapper, GroupRo
         if (groupRobot != null && ObjectUtil.notEqual(groupRobot.getMemberType(), 1)) {
 
         }
+    }
+
+    @Override
+    public void addBot(String groupId, String changeValue) {
+        GroupRobot add = new GroupRobot();
+        add.setGroupId(groupId);
+        add.setRobotId(changeValue);
+        add.setMd5Id();
+        add.setBotType(1);
+        add.setMemberType(0);
+        saveOrUpdate(add);
     }
 }
