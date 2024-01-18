@@ -24,6 +24,7 @@ public class FileController {
         try {
             return R.ok(analysisFileService.analysisPlayWord(file));
         } catch (Exception e) {
+            e.printStackTrace();
             return R.fail(e.getMessage());
         }
     }
@@ -34,6 +35,7 @@ public class FileController {
         try {
             return R.ok(analysisFileService.playWordContentList(dto));
         } catch (Exception e) {
+            e.printStackTrace();
             return R.fail(e.getMessage());
         }
     }

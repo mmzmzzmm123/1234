@@ -8,6 +8,8 @@ import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.spi.SPI;
+import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.mapper.GroupInfoMapper;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.ThirdTgSqlTaskSubmitInputDTO;
@@ -41,10 +43,11 @@ public class TgGroupHashSettings implements Settings {
 
 	@Override
 	public PlayRobotPackLog set(Map<String, Object> param) {
+		final String groupId = SpringUtils.getBean(GroupInfoMapper.class).selectById(param.get(Settings.Key_GroupId).toString()).getGroupSerialNo();
 		final String robotId = param.get(Settings.Key_RobotId).toString();
 		ThirdTgSqlTaskSubmitInputDTO dto = new ThirdTgSqlTaskSubmitInputDTO();
 		dto.setDbSource("kfpt-doris-ed");
-		dto.setSql(getSql(param.get(Settings.Key_GroupId).toString(), robotId, ListTools.newArrayList(robotId)));
+		dto.setSql(getSql(groupId, robotId, ListTools.newArrayList(robotId)));
 		@SuppressWarnings("rawtypes")
 		OpenApiResult<TgBaseOutputDTO> ret = null;
 		try {

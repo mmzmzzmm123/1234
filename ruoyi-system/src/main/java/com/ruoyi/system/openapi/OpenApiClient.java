@@ -49,7 +49,6 @@ public class OpenApiClient {
             log.info("调用openapi相关接口发生异常 {} {}", traceId, e.getMessage(), e);
             return OpenApiResult.failed("系统繁忙,请稍后重试" + traceId);
         }
-
         OpenApiResult<T> result = JSON.parseObject(response, new TypeReference<OpenApiResult<T>>(responseClass) {
         });
 

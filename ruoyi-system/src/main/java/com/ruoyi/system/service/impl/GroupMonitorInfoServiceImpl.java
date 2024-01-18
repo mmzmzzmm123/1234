@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.system.bot.mode.output.BotInfoVO;
 import com.ruoyi.system.domain.GroupMonitorInfo;
 import com.ruoyi.system.mapper.GroupMonitorInfoMapper;
 import com.ruoyi.system.service.GroupMonitorInfoService;
@@ -59,6 +60,15 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
         groupInfo.setGroupId(groupId);
         groupInfo.setBotSerialNo(botSerialNo);
         groupInfo.setRobotId(robotSerialNo);
+        baseMapper.updateById(groupInfo);
+    }
+
+    @Override
+    public void setBotInfo(String groupId, BotInfoVO bo) {
+        GroupMonitorInfo groupInfo = new GroupMonitorInfo();
+        groupInfo.setGroupId(groupId);
+        groupInfo.setBotId(bo.getBotUserId());
+        groupInfo.setBotUsername(bo.getBotUsername());
         baseMapper.updateById(groupInfo);
     }
 }

@@ -7,6 +7,7 @@ import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.spi.SPI;
@@ -28,13 +29,14 @@ import lombok.extern.slf4j.Slf4j;
 public class StateJobProcessor implements LogJobProcessor {
 
 	@Override
-	public void handle() {
+	public void handle(Play play) {
 		final PlayRobotPackLogMapper robotPackLogMapper = SpringUtils.getBean(PlayRobotPackLogMapper.class);
 		final OnPackMonitor onPackMonitor = SpringUtils.getBean(OnPackMonitor.class);
 		final OnRadioPackMonitor onRadioPackMonitor = SpringUtils.getBean(OnRadioPackMonitor.class);
 
-		List<PlayRobotPackLog> datas = robotPackLogMapper.selectList(new QueryWrapper<PlayRobotPackLog>().lambda()
-				.eq(PlayRobotPackLog::getIsFinish, 0).eq(PlayRobotPackLog::getStatus, 0));
+		List<PlayRobotPackLog> datas = robotPackLogMapper
+				.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getIsFinish, 0)
+						.eq(PlayRobotPackLog::getStatus, 0).eq(PlayRobotPackLog::getPlayId, play.getId()));
 		for (PlayRobotPackLog data : datas) {
 			CallValue ret = CallValueStore.get(data.getOpt());
 

@@ -8,6 +8,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPack;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
@@ -44,13 +45,14 @@ public class RetryJobProcessor implements LogJobProcessor {
 	private static final int timeoutSecond = 60 * 4;
 
 	@Override
-	public void handle() {
+	public void handle(Play play) {
 		final PlayMessagePushDetailMapper mapper = SpringUtils.getBean(PlayMessagePushDetailMapper.class);
 		// 查询 一直在等回调 且 超过了 4分钟的 数据
 		List<PlayRobotPackLog> datas = SpringUtils.getBean(PlayRobotPackLogMapper.class)
 				.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getStatus, 0)
 						.le(PlayRobotPackLog::getCreateTime, Times.getSecond(new Date(), -timeoutSecond))
-						.le(PlayRobotPackLog::getRetryCount, MaxRetryCount).eq(PlayRobotPackLog::getRetryMaxFlag, 0));
+						.le(PlayRobotPackLog::getRetryCount, MaxRetryCount).eq(PlayRobotPackLog::getRetryMaxFlag, 0)
+						.eq(PlayRobotPackLog::getPlayId, play.getId()));
 
 		for (PlayRobotPackLog data : datas) {
 			// 再次调用

@@ -13,6 +13,9 @@ public class AnalysisPlayFileVO {
     @ApiModelProperty(value = "每次获取数量")
     private Integer pageSize;
 
+    @ApiModelProperty(value = "开始id")
+    private Integer startIndex;
+
     private List<ContentInfo> contentInfoList;
 
     @Data

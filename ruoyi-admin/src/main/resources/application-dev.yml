@@ -129,3 +129,8 @@ swagger:
   enabled: true
   # 请求前缀
   pathMapping: /
+
+
+## ut-touch 接口配置
+bot:
+  api-url: http://172.29.18.208:28088

@@ -4,6 +4,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.system.components.movie.spi.MessageSupport;
+import com.ruoyi.system.openapi.OpenApiClient;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,6 +21,12 @@ public class TgMessageSupport implements MessageSupport {
 	@SuppressWarnings("unchecked")
 	@Override
 	public R<String> sendChatroomMessage(String chatroomId, String robotId, PlayMessage message, int msgSort) {
+//		
+//		
+//		OpenApiClient.batchRobotSimpInfoByThirdKpTg(data)
+		
+		
+		
 		return null;
 
 //		final RobotSendPrivateMessageDTO dto = new RobotSendPrivateMessageDTO();

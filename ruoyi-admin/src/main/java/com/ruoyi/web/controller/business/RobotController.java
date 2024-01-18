@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
+import com.ruoyi.system.service.IRobotService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,22 +18,24 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("/robot")
 public class RobotController {
 
+    @Autowired
+    private IRobotService robotService;
     @ApiOperation("查询号列表")
     @PostMapping("/selectRobotPageList")
     public R<Page<SelectRobotListVO>> selectRobotPageList(@RequestBody SelectRobotListDTO dto){
-        return R.ok();
+        return robotService.selectRobotPageList(dto);
     }
 
     @ApiOperation("同步账号")
     @PostMapping("/syncRobot")
     public R<Void> syncRobot(){
-        return R.ok();
+        return robotService.syncRobot();
     }
 
     @ApiOperation("设置头像")
     @PostMapping("/setHeadImg")
     public R<Void> setHeadImg(@RequestBody SetHeadImgDTO dto){
-        return R.ok();
+        return robotService.setHeadImg(dto);
     }
 
     @ApiOperation("设置名字姓氏简介")
@@ -46,10 +50,10 @@ public class RobotController {
     @ApiOperation("设置用户名")
     @PostMapping("/setUserName")
     public R<Void> setUserName(@RequestBody SetUserNameDTO dto){
-        return R.ok();
+        return robotService.setUserName(dto);
     }
 
-    @ApiOperation("设置用户名")
+    @ApiOperation("设置手机号隐私")
     @PostMapping("/setPrivatePhone")
     public R<Void> setPrivatePhone(@RequestBody SetPrivatePhoneDTO dto){
         return R.ok();
@@ -58,13 +62,14 @@ public class RobotController {
     @ApiOperation("修改禁用启用状态")
     @PostMapping("/updateEnableType")
     public R<Void> updateEnableType(@RequestBody UpdateEnableTypeDTO dto){
+        robotService.updateEnableType(dto);
         return R.ok();
     }
 
     @ApiOperation("一键清除封号数据")
     @PostMapping("/clearSealData")
-    public R<Void> clearSealData(){
-        return R.ok();
+    public R<Void> clearSealData(@RequestBody ClearSealDataDTO dto){
+        return robotService.clearSealData(dto);
     }
 
     @ApiOperation("移除号池")
@@ -75,8 +80,8 @@ public class RobotController {
 
     @ApiOperation("一键释放占用水军")
     @PostMapping("/releaseOccupyRobot")
-    public R<Void> releaseOccupyRobot(){
-        return R.ok();
+    public R<Void> releaseOccupyRobot(@RequestBody ReleaseOccupyRobotDTO dto){
+        return robotService.releaseOccupyRobot(dto);
     }
 
 }

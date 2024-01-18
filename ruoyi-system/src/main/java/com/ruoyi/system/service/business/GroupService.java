@@ -4,17 +4,23 @@ import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.enums.InviteBotAction;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.bot.ApiClient;
+import com.ruoyi.system.bot.ApiResult;
+import com.ruoyi.system.bot.mode.input.AdMonitorDTO;
+import com.ruoyi.system.bot.mode.output.BotInfoVO;
 import com.ruoyi.system.callback.dto.Called1100910017DTO;
 import com.ruoyi.system.callback.dto.Called1100910039DTO;
 import com.ruoyi.system.domain.*;
@@ -38,10 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -371,8 +374,14 @@ public class GroupService {
                 }
             }
             InviteBotAction inviteBotAction = InviteBotAction.of(0);
-            String botUserName = "";
-            //todo  获取bot
+            List<BotInfoVO> botList = ApiClient.getBot(10);
+            if (CollUtil.isEmpty(botList)) {
+                return false;
+            }
+            BotInfoVO bo = botList.get(RandomUtil.randomInt(0, botList.size() + 1));
+            groupMonitorInfoService.setBotInfo(groupInfo.getGroupId(), bo);
+            String botUserName = bo.getBotUsername();
+
             //初始化批量任务动作
             GroupBatchAction action = new GroupBatchAction();
             action.setBatchId(IdWorker.getIdStr());
@@ -737,7 +746,7 @@ public class GroupService {
             log.info("配置的剧本广告监控为空={}", groupId);
             return;
         }
-        setBotAdMonitor(groupId, play.getAdMonitor());
+        setBotAdMonitor(groupId, play.getId(), play.getAdMonitor());
     }
 
     /**
@@ -745,8 +754,27 @@ public class GroupService {
      *
      * @param groupId
      */
-    public void setBotAdMonitor(String groupId, String adMonitor) {
+    public boolean setBotAdMonitor(String groupId, String playId, String adMonitor) {
         //todo 设置bot广告规则
+        AdMonitor adMonitorInfo = JSON.parseObject(adMonitor, AdMonitor.class);
+        GroupMonitorInfo groupInfo = groupMonitorInfoService.getById(groupId);
+
+        AdMonitorDTO dto = new AdMonitorDTO();
+        dto.setConfigId(playId);
+        dto.setDealFunction(Arrays.stream(adMonitorInfo.getDisposalType().split(",")).filter(
+                        p -> Arrays.asList("1", "2").contains(p))
+                .map(p -> p.equals("1") ? "RESTRICT" : "KICK_OUT").collect(Collectors.toList()));
+        dto.setGroupIds(Collections.singletonList(groupInfo.getOriginalGroupId()));
+        dto.setKeywords(adMonitorInfo.getKeywordRule());
+        dto.setMonitorFrequency(0);
+        dto.setMonitorTarget(Arrays.stream(adMonitorInfo.getTypes().split(",")).filter(
+                        p -> Arrays.asList("1", "2", "3").contains(p))
+                .map(p -> p.equals("3") ? 4 : p.equals("2") ? 2 : 1).collect(Collectors.toList()));
+        dto.setMonitorTime(adMonitorInfo.getSpammingTime());
+        dto.setRestrictMember(adMonitorInfo.getIsTabooMemberMsg());
+        dto.setDeleteOtherStatement(adMonitorInfo.getIsDelMemberMsg());
+        dto.setTimeUnit(ObjectUtil.equal(adMonitorInfo.getSpammingTimeUnit(), 2) ? "MINUTES" : "SECONDS");
+        return ApiClient.setBotAdMonitor(dto).isSuccess();
     }
 
 }

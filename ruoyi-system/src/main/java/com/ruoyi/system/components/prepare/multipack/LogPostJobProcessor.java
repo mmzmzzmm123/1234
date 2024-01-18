@@ -6,6 +6,7 @@ import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.Objects;
@@ -28,11 +29,11 @@ import lombok.extern.slf4j.Slf4j;
 public class LogPostJobProcessor implements LogJobProcessor {
 
 	@Override
-	public void handle() {
+	public void handle(Play play) {
 		final PlayRobotPackLogMapper robotPackLogMapper = SpringUtils.getBean(PlayRobotPackLogMapper.class);
 
 		List<PlayRobotPackLog> datas = robotPackLogMapper.selectList(new QueryWrapper<PlayRobotPackLog>().lambda()
-				.eq(PlayRobotPackLog::getIsFinish, 0).eq(PlayRobotPackLog::getStatus, -1));
+				.eq(PlayRobotPackLog::getIsFinish, 0).eq(PlayRobotPackLog::getStatus, -1).eq(PlayRobotPackLog::getPlayId, play.getId()));
 
 		// 找出等待条件的log
 		List<PlayRobotPackLog> waitList = robotPackLogMapper

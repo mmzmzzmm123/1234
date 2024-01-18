@@ -18,9 +18,7 @@ import com.ruoyi.system.mapper.GroupRobotMapper;
 import com.ruoyi.system.mapper.RobotMapper;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
-import com.ruoyi.system.openapi.model.input.ThirdTgBatchRobotSimpInfoInputDTO;
-import com.ruoyi.system.openapi.model.input.ThirdTgModifyRobotHeadImgInputDTO;
-import com.ruoyi.system.openapi.model.input.ThirdTgSelectRobotListByRadioDTO;
+import com.ruoyi.system.openapi.model.input.*;
 import com.ruoyi.system.openapi.model.output.ExtTgBatchRobotSimpInfoData;
 import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotByMerchantVO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
@@ -58,7 +56,6 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
         robotDTO.setLimit(1000);
         robotDTO.setPage(1);
-        robotDTO.setRadioId("");
         robotDTO.setMerchantId("");
         OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
         log.info("pullApiRobotDataList robotListResult:{}",JSON.toJSONString(robotListResult));
@@ -250,7 +247,6 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         }
         Map<String,GroupRobot> map = new HashMap<>();
         groupRobots.forEach(item->map.put(item.getRobotId(),item));
-        List<Robot> updateRobotList = Lists.newArrayList();
         for (Robot robot : saveRobotList) {
             if(map.containsKey(robot.getRobotSerialNo())){
                 robot.setGroupOwner(1);
@@ -309,17 +305,47 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         return R.ok();
     }
 
-
-
     @Override
     public R<Void> setName(SetNameInfoDTO dto) {
-
-        return null;
+        if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
+            return R.fail("号编号不能为空");
+        }
+        if(CollectionUtils.isEmpty(dto.getInfos())){
+            return R.fail("名称信息不能为空");
+        }
+        for (int i = 0; i < dto.getRobotSerialNos().size(); i++) {
+            ThirdTgModifyNameInputDTO inputDTO = new ThirdTgModifyNameInputDTO();
+            inputDTO.setTgRobotId(dto.getRobotSerialNos().get(i));
+            SetNameInfoDTO.Info info = dto.getInfos().get(i % dto.getInfos().size());
+            inputDTO.setLastNameBase64(info.getLastName());
+            inputDTO.setFirstNameBase64(info.getFirstName());
+            inputDTO.setBriefIntroBase64(info.getBriefIntro());
+            OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.modifyNameByThirdKpTg(inputDTO);
+            log.info("setName inputDTO:{},vo:{}",inputDTO,vo);
+        }
+        return R.ok();
     }
 
     @Override
     public R<Void> setUserName(SetUserNameDTO dto) {
-        return null;
+        if(StringUtils.isEmpty(dto.getUserName())){
+            return R.fail("用户名不能为空");
+        }
+        if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
+            return R.fail("号编号不能为空");
+        }
+        List<String> userNameList = Lists.newArrayList();
+        for (String code : dto.getCode()) {
+            userNameList.add(dto.getUserName()+code);
+        }
+        for (int i = 0; i < dto.getRobotSerialNos().size(); i++) {
+            ThirdTgModifyUserNameInputDTO inputDTO = new ThirdTgModifyUserNameInputDTO();
+            inputDTO.setTgRobotId(dto.getRobotSerialNos().get(i));
+            inputDTO.setUserName(userNameList.get(i%userNameList.size()));
+            OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.modifyUserNameByThirdKpTg(inputDTO);
+            log.info("setUserName inputDTO:{},vo:{}",inputDTO,vo);
+        }
+        return R.ok();
     }
 
     @Override
@@ -343,8 +369,12 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public R<Void> clearSealData() {
-        return null;
+    public R<Void> clearSealData(ClearSealDataDTO dto) {
+        if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
+            return R.fail("号编号不能为空");
+        }
+        this.update(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo,dto.getRobotSerialNos()).set(Robot::getDeleteStatus,1));
+        return R.ok();
     }
 
     @Override
@@ -353,8 +383,14 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public R<Void> releaseOccupyRobot() {
-        return null;
+    public R<Void> releaseOccupyRobot(ReleaseOccupyRobotDTO dto) {
+        if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
+            return R.fail("号编号不能为空");
+        }
+        robotStatisticsService.update(new LambdaUpdateWrapper<RobotStatistics>()
+                .in(RobotStatistics::getRobotSerialNo,dto.getRobotSerialNos())
+                .set(RobotStatistics::getIsLock,0));
+        return R.ok();
     }
 
     @Override
