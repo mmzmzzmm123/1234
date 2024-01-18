@@ -32,6 +32,11 @@
         update t_robot_group_relation set state = #{state} where group_id = #{groupId} and robot_id = #{robotId}
     </update>
 
-
+    <select id="selectWaitOutGroupByGroupIds" resultType="com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation">
+        select * from t_robot_group_relation where state = 3 and is_delete = 0 and group_id in
+        <foreach collection="groupIds" item="groupId" open="(" separator="," close=")">
+            #{groupId}
+        </foreach>
+    </select>
 
 </mapper>
