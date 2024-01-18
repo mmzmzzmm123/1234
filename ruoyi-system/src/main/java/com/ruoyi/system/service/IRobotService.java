@@ -5,6 +5,8 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
+import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -29,6 +31,7 @@ public interface IRobotService {
      */
     R<Void> setHeadImg(SetHeadImgDTO dto);
     R<Void> setName(SetNameInfoDTO dto);
+    List<SetNameResourceVO> analysisExcelInfo(MultipartFile file);
 
     /**
      * 设置用户名

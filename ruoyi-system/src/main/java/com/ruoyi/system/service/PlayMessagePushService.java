@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
+import com.ruoyi.system.domain.dto.play.PushOperationDTO;
 import com.ruoyi.system.domain.dto.play.QueryRobotDetailDTO;
 import com.ruoyi.system.domain.vo.play.QueryRobotDetailVO;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
@@ -16,7 +17,7 @@ public interface PlayMessagePushService extends IService<PlayMessagePush> {
 
     List<PlayMessagePush> listByPlayId(Integer playId);
 
-    void operation(Integer pushId, Integer op);
+    void operation(PushOperationDTO dto);
 
     /**
      * 暂停群推送

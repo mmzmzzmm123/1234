@@ -2,15 +2,21 @@ package com.ruoyi.web.controller.business;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
+import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import com.ruoyi.system.service.IRobotService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Api(tags = "氛围号池")
@@ -43,8 +49,23 @@ public class RobotController {
     public R<Void> setName(@RequestParam("file") MultipartFile file,
                            @ApiParam(value = "名字")@RequestParam(value = "firstName")String firstName,
                            @ApiParam(value = "姓氏")@RequestParam(value = "lastName")String lastName,
-                           @ApiParam(value = "个人简介")@RequestParam(value = "briefIntro")String briefIntro){
-        return R.ok();
+                           @ApiParam(value = "个人简介")@RequestParam(value = "briefIntro")String briefIntro,
+                           @ApiParam(value = "机器人编号")@RequestParam(value = "robotSerialNos")List<String> robotSerialNos){
+        SetNameInfoDTO setNameInfoDTO = new SetNameInfoDTO();
+        setNameInfoDTO.setRobotSerialNos(robotSerialNos);
+        if(StringUtils.isEmpty(firstName) && StringUtils.isEmpty(lastName) && StringUtils.isEmpty(briefIntro)){
+            List<SetNameResourceVO> setNameResourceVOS = robotService.analysisExcelInfo(file);
+            setNameInfoDTO.setInfos(setNameResourceVOS);
+        }else{
+            List<SetNameResourceVO> list = new ArrayList<>();
+            SetNameResourceVO setNameResourceVO = new SetNameResourceVO();
+            setNameResourceVO.setLastName(lastName);
+            setNameResourceVO.setFirstName(firstName);
+            setNameResourceVO.setBriefIntro(briefIntro);
+            list.add(setNameResourceVO);
+            setNameInfoDTO.setInfos(list);
+        }
+        return robotService.setName(setNameInfoDTO);
     }
 
     @ApiOperation("设置用户名")
