@@ -76,17 +76,15 @@ public class BotCallBackService implements BeanPostProcessor {
     }
 
 
-
     /**
      * 回调分发处理
-     *
      */
     public void callback(String msg) {
 
         EventCallBackDTO dto;
         try {
             dto = JSON.parseObject(msg, EventCallBackDTO.class);
-            if(dto.getEventType()== null){
+            if (dto.getEventType() == null) {
                 log.info("未配置枚举类型={}", msg);
                 return;
             }
@@ -101,6 +99,7 @@ public class BotCallBackService implements BeanPostProcessor {
             log.info("未找到对应的type处理器 {}", dto);
             return;
         }
+        log.info("收到BOT监控回调={}", msg);
 
         try {
             deal(invoker, dto.getData());

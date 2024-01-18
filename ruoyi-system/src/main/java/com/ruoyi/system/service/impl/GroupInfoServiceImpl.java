@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -127,9 +128,14 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
 
     @Override
     public GroupInfo getGroupBySerialNo(String serialNo) {
+        if(StrUtil.isBlank(serialNo)){
+            return null;
+        }
+
         return baseMapper.selectOne(new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo, serialNo).last(" limit 1"));
     }
 
+    @Override
     public GroupInfo getGroupBySerialNo(String oldSerialNo, String newSerialNo) {
         return baseMapper.selectOne(new LambdaQueryWrapper<GroupInfo>()
                 .in(GroupInfo::getGroupSerialNo, Optional.ofNullable(oldSerialNo).orElse(""),
