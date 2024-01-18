@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.common.core.domain.entity.robot.RobotStatistics;
+import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.GroupRobot;
@@ -56,29 +57,32 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
 
     @Override
     public R<Void> syncRobot() {
-        ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
-        robotDTO.setLimit(1000);
-        robotDTO.setPage(1);
-        robotDTO.setMerchantId("1241985555798124192");
-        OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
-        log.info("pullApiRobotDataList robotListResult:{}",JSON.toJSONString(robotListResult));
-        if(robotListResult.isSuccess()){
-            Page<ExtTgSelectRobotByMerchantVO> data = robotListResult.getData();
-            this.pullRobotDataList(data.getRecords());
-            long count = data.getTotal()/robotDTO.getLimit() - 1;
-            if(count > 0){
-                for (long i = 0; i < count; i++) {
-                    robotDTO.setPage(robotDTO.getPage()+1);
-                    OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> pageOpenApiResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
-                    log.info("pullApiRobotDataList pageOpenApiResult:{}",JSON.toJSONString(pageOpenApiResult));
-                    if(pageOpenApiResult.isSuccess()){
-                        Page<ExtTgSelectRobotByMerchantVO> pageData = pageOpenApiResult.getData();
-                        this.pullRobotDataList(pageData.getRecords());
-                    }
+        AsyncTask.execute(()->{
+            ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
+            robotDTO.setLimit(1000);
+            robotDTO.setPage(1);//1747887445714726912
+            robotDTO.setMerchantId("1241985555798124192");
+            OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
+            log.info("pullApiRobotDataList robotListResult:{}",JSON.toJSONString(robotListResult));
+            if(robotListResult.isSuccess()){
+                Page<ExtTgSelectRobotByMerchantVO> data = robotListResult.getData();
+                this.pullRobotDataList(data.getRecords());
+                long count = data.getTotal()/robotDTO.getLimit() - 1;
+                if(count > 0){
+                    for (long i = 0; i < count; i++) {
+                        robotDTO.setPage(robotDTO.getPage()+1);
+                        OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> pageOpenApiResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
+                        log.info("pullApiRobotDataList pageOpenApiResult:{}",JSON.toJSONString(pageOpenApiResult));
+                        if(pageOpenApiResult.isSuccess()){
+                            Page<ExtTgSelectRobotByMerchantVO> pageData = pageOpenApiResult.getData();
+                            this.pullRobotDataList(pageData.getRecords());
+                        }
 
+                    }
                 }
             }
-        }
+        });
+
         return R.ok();
     }
 
@@ -126,6 +130,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         oldRobotList.forEach(item->oldMap.put(item.getRobotSerialNo(),item));
         for (Robot newRobot : newRobotList) {
             if(!oldMap.containsKey(newRobot.getRobotSerialNo())){
+                newRobot.setEnableType(1);
                 newRobot.setUpdateTime(new Date());
                 newRobot.setCreateTime(new Date());
                 saveRobotList.add(newRobot);
