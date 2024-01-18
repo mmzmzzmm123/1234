@@ -429,7 +429,7 @@ public class GroupService {
             action.setBatchStatus(0);
             groupBatchActionService.save(action);
 
-            AsyncTask.execute(() -> runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, groupRobot, botUserName, ""));
+            AsyncTask.execute(() -> runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, groupRobot, "", botUserName));
 
         } catch (Exception e) {
             log.error("邀请bot进群异常={}", groupInfo, e);
