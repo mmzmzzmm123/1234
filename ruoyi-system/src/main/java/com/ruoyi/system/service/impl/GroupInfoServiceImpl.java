@@ -74,6 +74,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
             groupInfo.setGroupSerialNo(groupResourceVO.getGroupSerialNo());
             groupInfo.setCreateType(10);
             groupInfo.setRegistrationTime(groupResourceVO.getRegistrationTime());
+            groupInfo.setGroupInviteLink(groupResourceVO.getGroupInviteLink());
             groupInfo.setCreateTime(LocalDateTime.now());
             groupInfo.setUpdateTime(LocalDateTime.now());
             //防止导入的群数据重复

@@ -14,6 +14,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
 import com.ruoyi.common.core.domain.entity.play.Play;
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.enums.GroupAction;
@@ -51,6 +52,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -77,6 +79,8 @@ public class GroupService {
     private final GroupRobotService groupRobotService;
 
     private final RedisLock redisLock;
+
+    private final RedisCache redisCache;
 
     private final IVibeRuleService ibiRuleService;
 
@@ -140,12 +144,12 @@ public class GroupService {
                         continue;
                     }
                     List<GroupRobot> adminRobots = groupRobotService.getAdminRobots(groupInfoVO.getGroupId());
-                    if(CollUtil.isEmpty(adminRobots)){
+                    if (CollUtil.isEmpty(adminRobots)) {
                         failGroupId.add(groupInfoVO.getGroupId());
                         continue;
                     }
 
-                    groupInfoVO.setRobots(adminRobots.stream().map(p-> BeanUtil.copyProperties(p, GroupRobotVO.class)).collect(Collectors.toList()));
+                    groupInfoVO.setRobots(adminRobots.stream().map(p -> BeanUtil.copyProperties(p, GroupRobotVO.class)).collect(Collectors.toList()));
 
                     groupInfoList.add(groupInfoVO);
                 }
@@ -280,6 +284,9 @@ public class GroupService {
 
     public void handleActionResult(String id, String optNo, boolean success, String msg, Object data) {
         if (StrUtil.isBlank(id)) {
+            id = redisCache.getCacheObject("ruoyi-admin:action:" + optNo);
+        }
+        if (StrUtil.isBlank(id)) {
             return;
         }
         handleActionResult(groupActionLogService.getById(id), optNo, success, msg, data);
@@ -324,19 +331,19 @@ public class GroupService {
                 }
                 GroupInfo groupInfo = groupInfoService.getById(groupBatch.getGroupId());
 
-                if(botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP){
-                    groupRobotService.addBot(groupInfo.getGroupId(),groupActionLog.getChangeValue());
+                if (botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP) {
+                    groupRobotService.addBot(groupInfo.getGroupId(), groupActionLog.getChangeValue());
                 }
-
+                String value = "";
                 if (botAction == InviteBotAction.SET_BOT_ADMIN) {
                     groupMonitorInfoService.setBotAdmin(groupBatch.getGroupId());
                 }
-                if(botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP){
+                if (botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP) {
                     groupMonitorInfoService.robotCheck(groupBatch.getGroupId());
                 }
-
-                String value;
-                //当前动作是搜索bot  对比username 获取是bot的数据
+                if (botAction == InviteBotAction.QUERY_HASH) {
+                    value = (String) data;
+                }
                 if (botAction == InviteBotAction.SEARCH_BOT) {
                     List<Called1100910017DTO.Called1100910017UserDTO> userList = (List<Called1100910017DTO.Called1100910017UserDTO>) data;
                     Assert.notEmpty(userList, "搜索bot失败");
@@ -345,27 +352,27 @@ public class GroupService {
                     Assert.notBlank(value, "搜索bot失败");
                     //更新bot的用户编号
                     groupMonitorInfoService.updateRobotSerialNo(groupBatch.getGroupId(), value, groupActionLog.getRobotId());
-                } else if (botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP && ObjectUtil.equal(groupInfo.getCreateType(), 20)) {
+                }
+
+                //当前动作是搜索bot  对比username 获取是bot的数据
+                if (botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP && ObjectUtil.equal(groupInfo.getCreateType(), 20)) {
                     //批次动作完成
                     groupBatchActionService.updateStatus(groupBatch.getBatchId(), 2);
                     //设置剧本广告监控
                     setBotAdMonitor(groupInfo.getGroupId());
                     return;
-                } else {
-                    //其他的动作 都传bot的用户编号
-                    value = groupActionLog.getChangeValue();
                 }
-                groupBatchActionService.doNextAction(groupBatch.getBatchId(),nextAction.getCode(), 0);
+                groupBatchActionService.doNextAction(groupBatch.getBatchId(), nextAction.getCode(), 0);
 
                 //执行动作
                 runAction(groupBatch.getBatchId(), nextAction.getAction(), groupInfo,
-                        groupRobotService.getRobot(groupBatch.getGroupId(), groupActionLog.getRobotId()), value);
+                        groupRobotService.getRobot(groupBatch.getGroupId(), groupActionLog.getRobotId()), groupActionLog.getChangeValue(), value);
             } else {
                 //如果需要重试 则当前动作重复操作
                 if (groupBatch.getRetryCount() < botAction.getRetryCount()) {
-                    groupBatchActionService.doNextAction(groupBatch.getBatchId(),botAction.getCode(), groupBatch.getRetryCount() + 1);
+                    groupBatchActionService.doNextAction(groupBatch.getBatchId(), botAction.getCode(), groupBatch.getRetryCount() + 1);
                     runAction(groupBatch.getBatchId(), botAction.getAction(), groupInfoService.getById(groupBatch.getGroupId()),
-                            groupRobotService.getRobot(groupBatch.getGroupId(), groupActionLog.getRobotId()), groupActionLog.getChangeValue());
+                            groupRobotService.getRobot(groupBatch.getGroupId(), groupActionLog.getRobotId()), groupActionLog.getChangeValue(), "");
                 } else {
                     //不满足重试条件  直接标记失败
                     groupBatchActionService.updateStatus(groupBatch.getBatchId(), 1);
@@ -422,7 +429,7 @@ public class GroupService {
             action.setBatchStatus(0);
             groupBatchActionService.save(action);
 
-            AsyncTask.execute(()-> runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, groupRobot, botUserName));
+            AsyncTask.execute(() -> runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, groupRobot, "", botUserName));
 
         } catch (Exception e) {
             log.error("邀请bot进群异常={}", groupInfo, e);
@@ -434,7 +441,7 @@ public class GroupService {
     }
 
 
-    public void runAction(String batchId, GroupAction action, GroupInfo groupInfo, GroupRobot groupRobot, String value) {
+    public void runAction(String batchId, GroupAction action, GroupInfo groupInfo, GroupRobot groupRobot, String lastValue, String value) {
         switch (action) {
             case SEARCH_BOT:
                 setAction(action, groupInfo, groupRobot, batchId, value, actionId -> {
@@ -457,9 +464,9 @@ public class GroupService {
                         OpenApiClient::joinUserByThirdKpTg);
                 break;
             case INVITE_BOT_JOIN_GROUP:
-                setAction(action, groupInfo, groupRobot, batchId, value, actionId -> {
+                setAction(action, groupInfo, groupRobot, batchId, lastValue, actionId -> {
                             ThirdTgInviteJoinChatroomInputDTO input = new ThirdTgInviteJoinChatroomInputDTO();
-                            input.setMemberSerialNo(value);
+                            input.setMemberSerialNo(lastValue);
                             input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
                             input.setTgRobotId(groupRobot.getRobotId());
                             input.setExtend(actionId);
@@ -473,7 +480,7 @@ public class GroupService {
                             input.setTgRobotId(groupRobot.getRobotId());
                             input.setExtend(actionId);
                             input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
-                            input.setMemberSerialNo(value);
+                            input.setMemberSerialNo(lastValue);
                             input.setIsAll(true);
                             input.setChangeInfo(true);
                             input.setDeleteMessages(true);
@@ -483,19 +490,20 @@ public class GroupService {
                             input.setManageCall(true);
                             input.setAnonymous(true);
                             input.setAddAdmins(true);
+                            input.setMemberUserAccessHash(value);
                             return input;
                         },
                         OpenApiClient::setChatroomAdminByThirdKpTg);
                 break;
             case QUERY_HASH:
-                setAction(action, groupInfo, groupRobot, batchId, value, actionId -> {
+                setAction(action, groupInfo, groupRobot, batchId, lastValue, actionId -> {
                             ThirdTgSqlTaskSubmitInputDTO input = new ThirdTgSqlTaskSubmitInputDTO();
                             input.setDbSource("kfpt-doris-ed");
                             input.setSql(TgGroupHashSettings.getSql(groupInfo.getGroupSerialNo(), groupRobot.getRobotId(),
                                     ListTools.newArrayList(groupRobot.getRobotId())));
                             return input;
                         },
-                        OpenApiClient:: sqlTaskSubmitByThirdKpTg);
+                        OpenApiClient::sqlTaskSubmitByThirdKpTg, true);
         }
     }
 
@@ -611,7 +619,6 @@ public class GroupService {
         }
     }
 
-
     public <T> void setAction(GroupAction action,
                               GroupInfo groupInfo,
                               GroupRobot robot,
@@ -619,6 +626,16 @@ public class GroupService {
                               String value,
                               Function<String, T> buildInput,
                               Function<T, OpenApiResult<TgBaseOutputDTO>> requestFuc) {
+        setAction(action, groupInfo, robot, batchId, value, buildInput, requestFuc, false);
+    }
+
+    public <T> void setAction(GroupAction action,
+                              GroupInfo groupInfo,
+                              GroupRobot robot,
+                              String batchId,
+                              String value,
+                              Function<String, T> buildInput,
+                              Function<T, OpenApiResult<TgBaseOutputDTO>> requestFuc, boolean saveOpt) {
         boolean success = true;
         String msg = "";
         String optNo = "";
@@ -648,6 +665,9 @@ public class GroupService {
                 if (!apply.isSuccess()) {
                     success = false;
                     msg = apply.getMessage();
+                } else if (saveOpt) {
+                    redisCache.setCacheObject("ruoyi-admin:action:" + optNo
+                            , actionLog.getId(), 30 * 60 * 60, TimeUnit.SECONDS);
                 }
             } catch (GlobalException e) {
                 log.info("groupAction.error={},{},{}", action.getName(), JSON.toJSONString(input), e.getMessage());
@@ -820,7 +840,7 @@ public class GroupService {
         dto.setDeleteOtherStatement(adMonitorInfo.getIsDelMemberMsg());
         dto.setTimeUnit(ObjectUtil.equal(adMonitorInfo.getSpammingTimeUnit(), 2) ? "MINUTES" : "SECONDS");
         boolean success = ApiClient.setBotAdMonitor(dto).isSuccess();
-        if(success){
+        if (success) {
             groupMonitorInfoService.setBotAdMonitor(groupId);
         }
         return success;

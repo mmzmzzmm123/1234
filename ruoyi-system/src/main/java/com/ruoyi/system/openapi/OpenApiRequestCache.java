@@ -18,7 +18,7 @@ public class OpenApiRequestCache {
     public static void cache(String optNo, String json) {
         try {
             SpringUtils.getBean(RedisCache.class).setCacheObject("ruoyi-admin:request:" + optNo
-                    , "1", 30 * 60 * 60, TimeUnit.SECONDS);
+                    , json, 30 * 60 * 60, TimeUnit.SECONDS);
         } catch (Exception e) {
             log.error("cacheRequestParameters.error={},{}", optNo, json, e);
         }
