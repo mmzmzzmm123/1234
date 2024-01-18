@@ -21,6 +21,7 @@ import com.ruoyi.common.utils.DelayAcquireTools;
 import com.ruoyi.common.utils.Strings;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.components.RedisTemplateTools;
 import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.service.PlayRobotPackLogService;
 import lombok.Data;
@@ -82,25 +83,25 @@ public class MultipackLogContainer implements InitializingBean {
 					try {
 						long s = System.currentTimeMillis();
 						stateJobProcessor.handle(play);
-						log.info("stateJobProcessor执行 {} {}", (System.currentTimeMillis() -s ) , play);
+						log.info("stateJobProcessor执行 {} {}", (System.currentTimeMillis() - s), play);
 					} catch (Exception e) {
-						log.error("stateJobProcessor执行异常 {}", play , e);
+						log.error("stateJobProcessor执行异常 {}", play, e);
 					}
 
 					try {
 						long s = System.currentTimeMillis();
 						retryJobProcessor.handle(play);
-						log.info("retryJobProcessor执行 {} {}", (System.currentTimeMillis() -s ) , play);
+						log.info("retryJobProcessor执行 {} {}", (System.currentTimeMillis() - s), play);
 					} catch (Exception e) {
-						log.error("retryJobProcessor执行异常 {}", play , e);
+						log.error("retryJobProcessor执行异常 {}", play, e);
 					}
 
 					try {
 						long s = System.currentTimeMillis();
 						logPostJobProcessor.handle(play);
-						log.info("logPostJobProcessor执行 {} {}", (System.currentTimeMillis() -s ) , play);
+						log.info("logPostJobProcessor执行 {} {}", (System.currentTimeMillis() - s), play);
 					} catch (Exception e) {
-						log.error("logPostJobProcessor执行异常 {}", play , e);
+						log.error("logPostJobProcessor执行异常 {}", play, e);
 					}
 
 				}
@@ -156,13 +157,13 @@ public class MultipackLogContainer implements InitializingBean {
 
 		public static void store(String opt, String attchContent, String error) {
 			if (StringUtils.isEmpty(error)) {
-				SpringUtils.getBean(RedisTemplate.class).opsForValue().set("ruoyi:CallValueStore:" + opt,
+				RedisTemplateTools.get().opsForValue().set("ruoyi:CallValueStore:" + opt,
 						JSON.toJSONString(new CallValue(opt).setSuccess(true).setAttchContent(attchContent)),
 						60 * 60 * 24 * 5, TimeUnit.SECONDS);
 
 				return;
 			}
-			SpringUtils.getBean(RedisTemplate.class).opsForValue().set("ruoyi:CallValueStore:" + opt,
+			RedisTemplateTools.get().opsForValue().set("ruoyi:CallValueStore:" + opt,
 					JSON.toJSONString(
 							new CallValue(opt).setSuccess(false).setAttchContent(attchContent).setError(error)),
 					60 * 60 * 24 * 5, TimeUnit.SECONDS);
@@ -172,7 +173,7 @@ public class MultipackLogContainer implements InitializingBean {
 		}
 
 		public static CallValue get(String opt) {
-			Object val = SpringUtils.getBean(RedisTemplate.class).opsForValue().get("ruoyi:CallValueStore:" + opt);
+			Object val = RedisTemplateTools.get().opsForValue().get("ruoyi:CallValueStore:" + opt);
 			if (val == null) {
 				return null;
 			}
