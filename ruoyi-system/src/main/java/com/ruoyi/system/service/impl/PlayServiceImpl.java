@@ -90,9 +90,12 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         //设置订单数据
         Long productId = dto.getProductId();
         if (null == productId || productId < 0) {
-            Product product = SpringUtils.getBean(ProductMapper.class).selectOne(new LambdaQueryWrapper<Product>()
-                            .select(Product::getProductId)
-                    .eq(Product::getCategoryId, ProductCategoryType.PLAY.getId()));
+            Product product = SpringUtils.getBean(ProductMapper.class).selectOne(new LambdaQueryWrapper<Product>().select(Product::getProductId)
+                    .eq(Product::getCategoryId, ProductCategoryType.PLAY.getId())
+                    .last(" limit 1 "));
+            if (null == product) {
+                return R.fail(ErrInfoConfig.getDynmic(11001, "未获取到商品信息"));
+            }
             productId = product.getProductId();
         }
         AjaxResult result = ProductTools.checkNormal(productId);
