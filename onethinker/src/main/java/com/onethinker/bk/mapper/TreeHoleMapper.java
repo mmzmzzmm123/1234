@@ -1,8 +1,10 @@
 package com.onethinker.bk.mapper;
 
-import java.util.List;
-import com.onethinker.bk.domain.TreeHole;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.bk.domain.TreeHole;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * 树洞Mapper接口
@@ -10,7 +12,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yangyouqi
  * @date 2024-01-16
  */
-public interface TreeHoleMapper extends BaseMapper<TreeHole>{
+public interface TreeHoleMapper extends BaseMapper<TreeHole> {
     /**
      * 查询树洞
      *
@@ -58,4 +60,13 @@ public interface TreeHoleMapper extends BaseMapper<TreeHole>{
      * @return 结果
      */
     public int deleteTreeHoleByIds(Long[] ids);
+
+    /**
+     * 查询集合，分页
+     *
+     * @param offset
+     * @param limit
+     * @return
+     */
+    List<TreeHole> queryAllByLimit(@Param("offset") int offset, @Param("limit") int limit);
 }

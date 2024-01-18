@@ -5,225 +5,249 @@
 <mapper namespace="com.onethinker.onethinker.mapper.RedEnvelopeCtrlMapper">
 
     <resultMap type="RedEnvelopeCtrl" id="RedEnvelopeCtrlResult">
-            <result property="id" column="id"/>
-            <result property="createTime" column="create_time"/>
-            <result property="updateTime" column="update_time"/>
-            <result property="enabled" column="enabled"/>
-            <result property="weight" column="weight"/>
-            <result property="batchNo" column="batch_no"/>
-            <result property="totalMoney" column="total_money"/>
-            <result property="totalSum" column="total_sum"/>
-            <result property="type" column="type"/>
-            <result property="drawCount" column="draw_count"/>
-            <result property="drawMoney" column="draw_money"/>
-            <result property="createUserId" column="create_user_id"/>
-            <result property="batchSum" column="batch_sum"/>
-            <result property="luckyAward" column="lucky_award"/>
-            <result property="luckyAwardCount" column="lucky_award_count"/>
-            <result property="luckyAwardMoney" column="lucky_award_money"/>
-            <result property="remark" column="remark"/>
-            <result property="status" column="status"/>
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="enabled" column="enabled"/>
+        <result property="weight" column="weight"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="totalMoney" column="total_money"/>
+        <result property="totalSum" column="total_sum"/>
+        <result property="type" column="type"/>
+        <result property="drawCount" column="draw_count"/>
+        <result property="drawMoney" column="draw_money"/>
+        <result property="createUserId" column="create_user_id"/>
+        <result property="batchSum" column="batch_sum"/>
+        <result property="luckyAward" column="lucky_award"/>
+        <result property="luckyAwardCount" column="lucky_award_count"/>
+        <result property="luckyAwardMoney" column="lucky_award_money"/>
+        <result property="remark" column="remark"/>
+        <result property="status" column="status"/>
     </resultMap>
 
     <sql id="selectRedEnvelopeCtrlVo">
-        select id, create_time, update_time, enabled, weight, batch_no, total_money, total_sum, type, draw_count, draw_money, create_user_id, batch_sum, lucky_award, lucky_award_count, lucky_award_money, remark, status
+        select id,
+               create_time,
+               update_time,
+               enabled,
+               weight,
+               batch_no,
+               total_money,
+               total_sum,
+               type,
+               draw_count,
+               draw_money,
+               create_user_id,
+               batch_sum,
+               lucky_award,
+               lucky_award_count,
+               lucky_award_money,
+               remark,
+               status
         from t_red_envelope_ctrl
     </sql>
 
     <select id="selectRedEnvelopeCtrlList" parameterType="RedEnvelopeCtrl" resultMap="RedEnvelopeCtrlResult">
         <include refid="selectRedEnvelopeCtrlVo"/>
         <where>
-                        <if test="enabled != null ">
-                            and enabled = #{enabled}
-                        </if>
-                        <if test="weight != null ">
-                            and weight = #{weight}
-                        </if>
-                        <if test="batchNo != null  and batchNo != ''">
-                            and batch_no = #{batchNo}
-                        </if>
-                        <if test="totalMoney != null ">
-                            and total_money = #{totalMoney}
-                        </if>
-                        <if test="totalSum != null ">
-                            and total_sum = #{totalSum}
-                        </if>
-                        <if test="type != null ">
-                            and type = #{type}
-                        </if>
-                        <if test="drawCount != null ">
-                            and draw_count = #{drawCount}
-                        </if>
-                        <if test="drawMoney != null ">
-                            and draw_money = #{drawMoney}
-                        </if>
-                        <if test="createUserId != null ">
-                            and create_user_id = #{createUserId}
-                        </if>
-                        <if test="batchSum != null ">
-                            and batch_sum = #{batchSum}
-                        </if>
-                        <if test="luckyAward != null ">
-                            and lucky_award = #{luckyAward}
-                        </if>
-                        <if test="luckyAwardCount != null ">
-                            and lucky_award_count = #{luckyAwardCount}
-                        </if>
-                        <if test="luckyAwardMoney != null ">
-                            and lucky_award_money = #{luckyAwardMoney}
-                        </if>
-                        <if test="status != null ">
-                            and status = #{status}
-                        </if>
+            <if test="enabled != null ">
+                and enabled = #{enabled}
+            </if>
+            <if test="weight != null ">
+                and weight = #{weight}
+            </if>
+            <if test="batchNo != null  and batchNo != ''">
+                and batch_no = #{batchNo}
+            </if>
+            <if test="totalMoney != null ">
+                and total_money = #{totalMoney}
+            </if>
+            <if test="totalSum != null ">
+                and total_sum = #{totalSum}
+            </if>
+            <if test="type != null ">
+                and type = #{type}
+            </if>
+            <if test="drawCount != null ">
+                and draw_count = #{drawCount}
+            </if>
+            <if test="drawMoney != null ">
+                and draw_money = #{drawMoney}
+            </if>
+            <if test="createUserId != null ">
+                and create_user_id = #{createUserId}
+            </if>
+            <if test="batchSum != null ">
+                and batch_sum = #{batchSum}
+            </if>
+            <if test="luckyAward != null ">
+                and lucky_award = #{luckyAward}
+            </if>
+            <if test="luckyAwardCount != null ">
+                and lucky_award_count = #{luckyAwardCount}
+            </if>
+            <if test="luckyAwardMoney != null ">
+                and lucky_award_money = #{luckyAwardMoney}
+            </if>
+            <if test="status != null ">
+                and status = #{status}
+            </if>
         </where>
     </select>
 
     <select id="selectRedEnvelopeCtrlById" parameterType="Long"
             resultMap="RedEnvelopeCtrlResult">
-            <include refid="selectRedEnvelopeCtrlVo"/>
-            where id = #{id}
+        <include refid="selectRedEnvelopeCtrlVo"/>
+        where id = #{id}
     </select>
 
     <insert id="insertRedEnvelopeCtrl" parameterType="RedEnvelopeCtrl" useGeneratedKeys="true"
             keyProperty="id">
         insert into t_red_envelope_ctrl
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="createTime != null">create_time,
-                    </if>
-                    <if test="updateTime != null">update_time,
-                    </if>
-                    <if test="enabled != null">enabled,
-                    </if>
-                    <if test="weight != null">weight,
-                    </if>
-                    <if test="batchNo != null and batchNo != ''">batch_no,
-                    </if>
-                    <if test="totalMoney != null">total_money,
-                    </if>
-                    <if test="totalSum != null">total_sum,
-                    </if>
-                    <if test="type != null">type,
-                    </if>
-                    <if test="drawCount != null">draw_count,
-                    </if>
-                    <if test="drawMoney != null">draw_money,
-                    </if>
-                    <if test="createUserId != null">create_user_id,
-                    </if>
-                    <if test="batchSum != null">batch_sum,
-                    </if>
-                    <if test="luckyAward != null">lucky_award,
-                    </if>
-                    <if test="luckyAwardCount != null">lucky_award_count,
-                    </if>
-                    <if test="luckyAwardMoney != null">lucky_award_money,
-                    </if>
-                    <if test="remark != null">remark,
-                    </if>
-                    <if test="status != null">status,
-                    </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="enabled != null">enabled,
+            </if>
+            <if test="weight != null">weight,
+            </if>
+            <if test="batchNo != null and batchNo != ''">batch_no,
+            </if>
+            <if test="totalMoney != null">total_money,
+            </if>
+            <if test="totalSum != null">total_sum,
+            </if>
+            <if test="type != null">type,
+            </if>
+            <if test="drawCount != null">draw_count,
+            </if>
+            <if test="drawMoney != null">draw_money,
+            </if>
+            <if test="createUserId != null">create_user_id,
+            </if>
+            <if test="batchSum != null">batch_sum,
+            </if>
+            <if test="luckyAward != null">lucky_award,
+            </if>
+            <if test="luckyAwardCount != null">lucky_award_count,
+            </if>
+            <if test="luckyAwardMoney != null">lucky_award_money,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+            <if test="status != null">status,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="createTime != null">#{createTime},
-                    </if>
-                    <if test="updateTime != null">#{updateTime},
-                    </if>
-                    <if test="enabled != null">#{enabled},
-                    </if>
-                    <if test="weight != null">#{weight},
-                    </if>
-                    <if test="batchNo != null and batchNo != ''">#{batchNo},
-                    </if>
-                    <if test="totalMoney != null">#{totalMoney},
-                    </if>
-                    <if test="totalSum != null">#{totalSum},
-                    </if>
-                    <if test="type != null">#{type},
-                    </if>
-                    <if test="drawCount != null">#{drawCount},
-                    </if>
-                    <if test="drawMoney != null">#{drawMoney},
-                    </if>
-                    <if test="createUserId != null">#{createUserId},
-                    </if>
-                    <if test="batchSum != null">#{batchSum},
-                    </if>
-                    <if test="luckyAward != null">#{luckyAward},
-                    </if>
-                    <if test="luckyAwardCount != null">#{luckyAwardCount},
-                    </if>
-                    <if test="luckyAwardMoney != null">#{luckyAwardMoney},
-                    </if>
-                    <if test="remark != null">#{remark},
-                    </if>
-                    <if test="status != null">#{status},
-                    </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="enabled != null">#{enabled},
+            </if>
+            <if test="weight != null">#{weight},
+            </if>
+            <if test="batchNo != null and batchNo != ''">#{batchNo},
+            </if>
+            <if test="totalMoney != null">#{totalMoney},
+            </if>
+            <if test="totalSum != null">#{totalSum},
+            </if>
+            <if test="type != null">#{type},
+            </if>
+            <if test="drawCount != null">#{drawCount},
+            </if>
+            <if test="drawMoney != null">#{drawMoney},
+            </if>
+            <if test="createUserId != null">#{createUserId},
+            </if>
+            <if test="batchSum != null">#{batchSum},
+            </if>
+            <if test="luckyAward != null">#{luckyAward},
+            </if>
+            <if test="luckyAwardCount != null">#{luckyAwardCount},
+            </if>
+            <if test="luckyAwardMoney != null">#{luckyAwardMoney},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+            <if test="status != null">#{status},
+            </if>
         </trim>
     </insert>
 
     <update id="updateRedEnvelopeCtrl" parameterType="RedEnvelopeCtrl">
         update t_red_envelope_ctrl
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="createTime != null">create_time =
-                        #{createTime},
-                    </if>
-                    <if test="updateTime != null">update_time =
-                        #{updateTime},
-                    </if>
-                    <if test="enabled != null">enabled =
-                        #{enabled},
-                    </if>
-                    <if test="weight != null">weight =
-                        #{weight},
-                    </if>
-                    <if test="batchNo != null and batchNo != ''">batch_no =
-                        #{batchNo},
-                    </if>
-                    <if test="totalMoney != null">total_money =
-                        #{totalMoney},
-                    </if>
-                    <if test="totalSum != null">total_sum =
-                        #{totalSum},
-                    </if>
-                    <if test="type != null">type =
-                        #{type},
-                    </if>
-                    <if test="drawCount != null">draw_count =
-                        #{drawCount},
-                    </if>
-                    <if test="drawMoney != null">draw_money =
-                        #{drawMoney},
-                    </if>
-                    <if test="createUserId != null">create_user_id =
-                        #{createUserId},
-                    </if>
-                    <if test="batchSum != null">batch_sum =
-                        #{batchSum},
-                    </if>
-                    <if test="luckyAward != null">lucky_award =
-                        #{luckyAward},
-                    </if>
-                    <if test="luckyAwardCount != null">lucky_award_count =
-                        #{luckyAwardCount},
-                    </if>
-                    <if test="luckyAwardMoney != null">lucky_award_money =
-                        #{luckyAwardMoney},
-                    </if>
-                    <if test="remark != null">remark =
-                        #{remark},
-                    </if>
-                    <if test="status != null">status =
-                        #{status},
-                    </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="enabled != null">enabled =
+                #{enabled},
+            </if>
+            <if test="weight != null">weight =
+                #{weight},
+            </if>
+            <if test="batchNo != null and batchNo != ''">batch_no =
+                #{batchNo},
+            </if>
+            <if test="totalMoney != null">total_money =
+                #{totalMoney},
+            </if>
+            <if test="totalSum != null">total_sum =
+                #{totalSum},
+            </if>
+            <if test="type != null">type =
+                #{type},
+            </if>
+            <if test="drawCount != null">draw_count =
+                #{drawCount},
+            </if>
+            <if test="drawMoney != null">draw_money =
+                #{drawMoney},
+            </if>
+            <if test="createUserId != null">create_user_id =
+                #{createUserId},
+            </if>
+            <if test="batchSum != null">batch_sum =
+                #{batchSum},
+            </if>
+            <if test="luckyAward != null">lucky_award =
+                #{luckyAward},
+            </if>
+            <if test="luckyAwardCount != null">lucky_award_count =
+                #{luckyAwardCount},
+            </if>
+            <if test="luckyAwardMoney != null">lucky_award_money =
+                #{luckyAwardMoney},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+            <if test="status != null">status =
+                #{status},
+            </if>
         </trim>
         where id = #{id}
     </update>
     <update id="updateRedEnvelopeCtrlAndStatus">
-        update t_red_envelope_ctrl set update_time = sysdate(),status = #{status},remark = #{remark} where id = #{id}  and status = #{orgStatus}
+        update t_red_envelope_ctrl
+        set update_time = sysdate(),
+            status      = #{status},
+            remark      = #{remark}
+        where id = #{id}
+          and status = #{orgStatus}
     </update>
 
     <delete id="deleteRedEnvelopeCtrlById" parameterType="Long">
-        delete from t_red_envelope_ctrl where id = #{id}
+        delete
+        from t_red_envelope_ctrl
+        where id = #{id}
     </delete>
 
     <delete id="deleteRedEnvelopeCtrlByIds" parameterType="String">

@@ -1,8 +1,9 @@
 package com.onethinker.onethinker.mapper;
 
-import java.util.List;
-import com.onethinker.onethinker.domain.SubscribeMsgSendResult;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.onethinker.domain.SubscribeMsgSendResult;
+
+import java.util.List;
 
 /**
  * 订阅消息发送结果Mapper接口
@@ -10,7 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yangyouqi
  * @date 2024-01-15
  */
-public interface SubscribeMsgSendResultMapper extends BaseMapper<SubscribeMsgSendResult>{
+public interface SubscribeMsgSendResultMapper extends BaseMapper<SubscribeMsgSendResult> {
     /**
      * 查询订阅消息发送结果
      *

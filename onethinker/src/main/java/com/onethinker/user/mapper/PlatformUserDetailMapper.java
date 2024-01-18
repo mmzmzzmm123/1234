@@ -1,5 +1,7 @@
 package com.onethinker.user.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.onethinker.domain.Activity;
 import com.onethinker.user.domain.PlatformUserDetail;
 
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.List;
  * @author yangyouqi
  * @date 2023-10-23
  */
-public interface PlatformUserDetailMapper {
+public interface PlatformUserDetailMapper  extends BaseMapper<PlatformUserDetail> {
     /**
      * 查询平台用户详情信息
      *

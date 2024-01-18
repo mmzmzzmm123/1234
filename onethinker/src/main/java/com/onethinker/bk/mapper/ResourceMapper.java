@@ -1,8 +1,9 @@
 package com.onethinker.bk.mapper;
 
-import java.util.List;
-import com.onethinker.bk.domain.BkResource;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.bk.domain.BkResource;
+
+import java.util.List;
 
 /**
  * 资源信息Mapper接口
@@ -10,7 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yangyouqi
  * @date 2024-01-16
  */
-public interface ResourceMapper extends BaseMapper<BkResource>{
+public interface ResourceMapper extends BaseMapper<BkResource> {
     /**
      * 查询资源信息
      *

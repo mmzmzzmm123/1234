@@ -1,36 +1,27 @@
 package com.onethinker.onethinker.service.impl;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.ruoyi.common.enums.ActivityTypeEnum;
-import com.ruoyi.common.utils.DateUtils;
-
+import com.onethinker.onethinker.domain.Activity;
 import com.onethinker.onethinker.domain.SysFileInfo;
+import com.onethinker.onethinker.dto.ActivityReqDTO;
 import com.onethinker.onethinker.dto.ActivityResDTO;
 import com.onethinker.onethinker.dto.RedEnvelopeCtrlDTO;
+import com.onethinker.onethinker.factory.ActivityDetailFactory;
+import com.onethinker.onethinker.factory.service.IActivityDetailService;
+import com.onethinker.onethinker.mapper.ActivityMapper;
+import com.onethinker.onethinker.service.IActivityService;
 import com.onethinker.onethinker.service.ISysFileInfoService;
-import org.apache.commons.compress.utils.Lists;
+import com.ruoyi.common.enums.ActivityTypeEnum;
+import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
-
-import com.ruoyi.common.utils.StringUtils;
-import com.onethinker.onethinker.dto.ActivityReqDTO;
-import com.onethinker.onethinker.factory.ActivityDetailFactory;
-import com.onethinker.onethinker.factory.service.IActivityDetailService;
-import com.onethinker.onethinker.mapper.ActivityMapper;
-import com.onethinker.onethinker.domain.Activity;
-import com.onethinker.onethinker.service.IActivityService;
-import lombok.extern.log4j.Log4j2;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 活动Service业务层处理
@@ -40,7 +31,7 @@ import javax.annotation.Resource;
  */
 @Service
 @Log4j2
-public class ActivityServiceImpl extends ServiceImpl<ActivityMapper,Activity> implements IActivityService {
+public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> implements IActivityService {
     @Resource
     private ActivityMapper activityMapper;
 
@@ -60,7 +51,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper,Activity> im
     public ActivityResDTO selectActivityById(Long id) {
         Activity activity = activityMapper.selectActivityById(id);
         ActivityResDTO resultDTO = new ActivityResDTO();
-        BeanUtils.copyProperties(activity,resultDTO);
+        BeanUtils.copyProperties(activity, resultDTO);
         // 获取活动详情内容
         IActivityDetailService activityDetailService = activityDetailFactory.queryActivityDetailByActivityType(activity.getActivityType());
         // 查看具体是什么
@@ -101,7 +92,7 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper,Activity> im
         // 常规校验
         reqDTO.existsParams();
         Activity activity = new Activity();
-        BeanUtils.copyProperties(reqDTO,activity);
+        BeanUtils.copyProperties(reqDTO, activity);
         activity.setCreateTime(DateUtils.getNowDate());
         activity.setWeight(System.currentTimeMillis());
         int i = activityMapper.insertActivity(activity);
@@ -154,10 +145,10 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper,Activity> im
     @Override
     public ActivityResDTO queryActivityMyBatisPuls(Long id) {
         LambdaQueryWrapper<Activity> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Activity::getId,id);
+        queryWrapper.eq(Activity::getId, id);
         Activity activity = activityMapper.selectOne(queryWrapper);
         ActivityResDTO activityResDTO = new ActivityResDTO();
-        BeanUtils.copyProperties(activity,activityResDTO);
+        BeanUtils.copyProperties(activity, activityResDTO);
         return activityResDTO;
     }
 

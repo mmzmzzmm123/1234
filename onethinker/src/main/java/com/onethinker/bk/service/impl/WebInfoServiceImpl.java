@@ -1,23 +1,22 @@
 package com.onethinker.bk.service.impl;
 
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONObject;
-import com.onethinker.user.domain.PlatformUserDetail;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.WebInfo;
+import com.onethinker.bk.mapper.WebInfoMapper;
+import com.onethinker.bk.service.IWebInfoService;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.CacheEnum;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.WebInfoMapper;
-import com.onethinker.bk.domain.WebInfo;
-import com.onethinker.bk.service.IWebInfoService;
-import lombok.extern.log4j.Log4j2;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
 import javax.annotation.Resource;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import org.springframework.util.Assert;
-import org.springframework.util.ObjectUtils;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 网站信息Service业务层处理
@@ -27,45 +26,12 @@ import org.springframework.util.ObjectUtils;
  */
 @Service
 @Log4j2
-public class WebInfoServiceImpl extends ServiceImpl<WebInfoMapper,WebInfo> implements IWebInfoService {
+public class WebInfoServiceImpl extends ServiceImpl<WebInfoMapper, WebInfo> implements IWebInfoService {
     @Resource
     private WebInfoMapper webInfoMapper;
 
     @Autowired
     private RedisCache redisCache;
-
-    /**
-     * 查询网站信息
-     *
-     * @param id 网站信息主键
-     * @return 网站信息
-     */
-    @Override
-    public WebInfo selectWebInfoById(Long id) {
-        return webInfoMapper.selectWebInfoById(id);
-    }
-
-    /**
-     * 查询网站信息列表
-     *
-     * @param webInfo 网站信息
-     * @return 网站信息
-     */
-    @Override
-    public List<WebInfo> selectWebInfoList(WebInfo webInfo) {
-        return webInfoMapper.selectWebInfoList(webInfo);
-    }
-
-    /**
-     * 新增网站信息
-     *
-     * @param webInfo 网站信息
-     * @return 结果
-     */
-    @Override
-    public int insertWebInfo(WebInfo webInfo) {
-            return webInfoMapper.insertWebInfo(webInfo);
-    }
 
     /**
      * 修改网站信息
@@ -75,41 +41,47 @@ public class WebInfoServiceImpl extends ServiceImpl<WebInfoMapper,WebInfo> imple
      */
     @Override
     public int updateWebInfo(WebInfo webInfo) {
-        return webInfoMapper.updateWebInfo(webInfo);
+        int i = webInfoMapper.updateWebInfo(webInfo);
+        // 删除相关网站信息
+        redisCache.deleteObject(CacheEnum.WEB_INFO.getCode());
+        return i;
     }
-
-    /**
-     * 批量删除网站信息
-     *
-     * @param ids 需要删除的网站信息主键
-     * @return 结果
-     */
-    @Override
-    public int deleteWebInfoByIds(Long[] ids) {
-        return webInfoMapper.deleteWebInfoByIds(ids);
-    }
-
-    /**
-     * 删除网站信息信息
-     *
-     * @param id 网站信息主键
-     * @return 结果
-     */
-    @Override
-    public int deleteWebInfoById(Long id) {
-        return webInfoMapper.deleteWebInfoById(id);
-    }
-
     @Override
     public WebInfo getWebInfo() {
-        String redisKey = CacheEnum.WEB_INFO.getCode() + 1L;
+        String redisKey = CacheEnum.WEB_INFO.getCode();
 
         if (redisCache.hasKey(redisKey)) {
             return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(), WebInfo.class);
         }
         WebInfo webInfo = webInfoMapper.selectWebInfoById(1L);
 
-        redisCache.setCacheObject(redisKey,webInfo,1,TimeUnit.DAYS);
+        redisCache.setCacheObject(redisKey, webInfo, 1, TimeUnit.DAYS);
         return webInfo;
+    }
+
+    @Override
+    public String getRandomAvatar(String key, String ipAddr) {
+        WebInfo webInfo = getWebInfo();
+        if (Objects.isNull(webInfo)) {
+            return "";
+        }
+        String randomAvatar = webInfo.getRandomAvatar();
+        List<String> randomAvatars = JSON.parseArray(randomAvatar, String.class);
+        if (!CollectionUtils.isEmpty(randomAvatars)) {
+            if (StringUtils.hasText(key)) {
+                return randomAvatars.get(hashLocation(key, randomAvatars.size()));
+            } else if (StringUtils.hasText(ipAddr)) {
+                return randomAvatars.get(hashLocation(ipAddr, randomAvatars.size()));
+            } else {
+                return randomAvatars.get(0);
+            }
+
+        }
+        return "";
+    }
+
+    public static int hashLocation(String key, int length) {
+        int h = key.hashCode();
+        return (h ^ (h >>> 16)) & (length - 1);
     }
 }

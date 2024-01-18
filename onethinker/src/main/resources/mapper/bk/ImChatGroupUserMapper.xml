@@ -5,115 +5,124 @@
 <mapper namespace="com.onethinker.bk.mapper.ImChatGroupUserMapper">
 
     <resultMap type="ImChatGroupUser" id="ImChatGroupUserResult">
-            <result property="id" column="id"/>
-            <result property="groupId" column="group_id"/>
-            <result property="userId" column="user_id"/>
-            <result property="verifyUserId" column="verify_user_id"/>
-            <result property="remark" column="remark"/>
-            <result property="adminFlag" column="admin_flag"/>
-            <result property="userStatus" column="user_status"/>
-            <result property="createTime" column="create_time"/>
+        <result property="id" column="id"/>
+        <result property="groupId" column="group_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="verifyUserId" column="verify_user_id"/>
+        <result property="remark" column="remark"/>
+        <result property="adminFlag" column="admin_flag"/>
+        <result property="userStatus" column="user_status"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectImChatGroupUserVo">
-        select id, group_id, user_id, verify_user_id, remark, admin_flag, user_status, create_time
+        select id,
+               group_id,
+               user_id,
+               verify_user_id,
+               remark,
+               admin_flag,
+               user_status,
+               create_time
         from bk_im_chat_group_user
     </sql>
 
     <select id="selectImChatGroupUserList" parameterType="ImChatGroupUser" resultMap="ImChatGroupUserResult">
         <include refid="selectImChatGroupUserVo"/>
         <where>
-                        <if test="groupId != null ">
-                            and group_id = #{groupId}
-                        </if>
-                        <if test="userId != null ">
-                            and user_id = #{userId}
-                        </if>
-                        <if test="verifyUserId != null ">
-                            and verify_user_id = #{verifyUserId}
-                        </if>
-                        <if test="adminFlag != null ">
-                            and admin_flag = #{adminFlag}
-                        </if>
-                        <if test="userStatus != null ">
-                            and user_status = #{userStatus}
-                        </if>
+            <if test="groupId != null ">
+                and group_id = #{groupId}
+            </if>
+            <if test="userId != null ">
+                and user_id = #{userId}
+            </if>
+            <if test="verifyUserId != null ">
+                and verify_user_id = #{verifyUserId}
+            </if>
+            <if test="adminFlag != null ">
+                and admin_flag = #{adminFlag}
+            </if>
+            <if test="userStatus != null ">
+                and user_status = #{userStatus}
+            </if>
         </where>
     </select>
 
     <select id="selectImChatGroupUserById" parameterType="Long"
             resultMap="ImChatGroupUserResult">
-            <include refid="selectImChatGroupUserVo"/>
-            where id = #{id}
+        <include refid="selectImChatGroupUserVo"/>
+        where id = #{id}
     </select>
 
     <insert id="insertImChatGroupUser" parameterType="ImChatGroupUser" useGeneratedKeys="true"
             keyProperty="id">
         insert into bk_im_chat_group_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="groupId != null">group_id,
-                    </if>
-                    <if test="userId != null">user_id,
-                    </if>
-                    <if test="verifyUserId != null">verify_user_id,
-                    </if>
-                    <if test="remark != null">remark,
-                    </if>
-                    <if test="adminFlag != null">admin_flag,
-                    </if>
-                    <if test="userStatus != null">user_status,
-                    </if>
-                    <if test="createTime != null">create_time,
-                    </if>
+            <if test="groupId != null">group_id,
+            </if>
+            <if test="userId != null">user_id,
+            </if>
+            <if test="verifyUserId != null">verify_user_id,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+            <if test="adminFlag != null">admin_flag,
+            </if>
+            <if test="userStatus != null">user_status,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="groupId != null">#{groupId},
-                    </if>
-                    <if test="userId != null">#{userId},
-                    </if>
-                    <if test="verifyUserId != null">#{verifyUserId},
-                    </if>
-                    <if test="remark != null">#{remark},
-                    </if>
-                    <if test="adminFlag != null">#{adminFlag},
-                    </if>
-                    <if test="userStatus != null">#{userStatus},
-                    </if>
-                    <if test="createTime != null">#{createTime},
-                    </if>
+            <if test="groupId != null">#{groupId},
+            </if>
+            <if test="userId != null">#{userId},
+            </if>
+            <if test="verifyUserId != null">#{verifyUserId},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+            <if test="adminFlag != null">#{adminFlag},
+            </if>
+            <if test="userStatus != null">#{userStatus},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
         </trim>
     </insert>
 
     <update id="updateImChatGroupUser" parameterType="ImChatGroupUser">
         update bk_im_chat_group_user
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="groupId != null">group_id =
-                        #{groupId},
-                    </if>
-                    <if test="userId != null">user_id =
-                        #{userId},
-                    </if>
-                    <if test="verifyUserId != null">verify_user_id =
-                        #{verifyUserId},
-                    </if>
-                    <if test="remark != null">remark =
-                        #{remark},
-                    </if>
-                    <if test="adminFlag != null">admin_flag =
-                        #{adminFlag},
-                    </if>
-                    <if test="userStatus != null">user_status =
-                        #{userStatus},
-                    </if>
-                    <if test="createTime != null">create_time =
-                        #{createTime},
-                    </if>
+            <if test="groupId != null">group_id =
+                #{groupId},
+            </if>
+            <if test="userId != null">user_id =
+                #{userId},
+            </if>
+            <if test="verifyUserId != null">verify_user_id =
+                #{verifyUserId},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+            <if test="adminFlag != null">admin_flag =
+                #{adminFlag},
+            </if>
+            <if test="userStatus != null">user_status =
+                #{userStatus},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteImChatGroupUserById" parameterType="Long">
-        delete from bk_im_chat_group_user where id = #{id}
+        delete
+        from bk_im_chat_group_user
+        where id = #{id}
     </delete>
 
     <delete id="deleteImChatGroupUserByIds" parameterType="String">

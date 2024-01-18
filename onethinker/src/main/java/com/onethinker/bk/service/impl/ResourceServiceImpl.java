@@ -1,15 +1,15 @@
 package com.onethinker.bk.service.impl;
 
-import java.util.List;
-import com.ruoyi.common.utils.DateUtils;
-import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.ResourceMapper;
-import com.onethinker.bk.domain.BkResource;
-import com.onethinker.bk.service.IResourceService;
-import lombok.extern.log4j.Log4j2;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.BkResource;
+import com.onethinker.bk.mapper.ResourceMapper;
+import com.onethinker.bk.service.IResourceService;
+import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 资源信息Service业务层处理
@@ -53,8 +53,8 @@ public class ResourceServiceImpl extends ServiceImpl<ResourceMapper, BkResource>
      */
     @Override
     public int insertResource(BkResource bkResource) {
-                bkResource.setCreateTime(DateUtils.getNowDate());
-            return resourceMapper.insertResource(bkResource);
+        bkResource.setCreateTime(DateUtils.getNowDate());
+        return resourceMapper.insertResource(bkResource);
     }
 
     /**

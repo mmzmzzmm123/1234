@@ -67,11 +67,11 @@ public enum SysConfigKeyEnum {
     /**
      * 创建二维码私钥
      */
-    QR_CODE_RSA_PRIVATE_KEY("qr_code_rsa_private_key","创建二维码私钥"),
+    QR_CODE_RSA_PRIVATE_KEY("qr_code_rsa_private_key", "创建二维码私钥"),
     /**
      * 创建二维码公钥
      */
-    QR_CODE_RSA_PUBLIC_KEY("qr_code_rsa_public_key","创建二维码公钥"),
+    QR_CODE_RSA_PUBLIC_KEY("qr_code_rsa_public_key", "创建二维码公钥"),
 
     /**
      * 服务器文件前缀
@@ -80,7 +80,7 @@ public enum SysConfigKeyEnum {
     /**
      * 验证码发送次数
      */
-    CODE_MAIL_COUNT("code_mail_count","验证码发送次数" ),
+    CODE_MAIL_COUNT("code_mail_count", "验证码发送次数"),
     /**
      * 验证码内容：【扬万科技】%s为本次验证的验证码，请在5分钟内完成验证。为保证账号安全，请勿泄漏此验证码。
      */
@@ -92,7 +92,11 @@ public enum SysConfigKeyEnum {
     /**
      * 管理员id
      */
-    ADMIN_USER_ID("admin_user_id", "管理员id");
+    ADMIN_USER_ID("admin_user_id", "管理员id"),
+    /**
+     * 订阅信息格式化 【扬万科技】您订阅的专栏【%s】新增一篇文章：%s。
+     */
+    SUBSCRIBE_FORMAT("subscribe_format", "订阅信息格式化");
     String code;
     String msg;
 

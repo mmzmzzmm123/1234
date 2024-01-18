@@ -4,8 +4,19 @@ import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.onethinker.bk.service.IFamilyService;
+import com.onethinker.onethinker.domain.Activity;
+import com.onethinker.onethinker.mapper.ActivityMapper;
+import com.onethinker.onethinker.service.IActivityService;
+import com.onethinker.user.domain.PlatformUser;
+import com.onethinker.user.domain.PlatformUserDetail;
+import com.onethinker.user.dto.PlatformUserReqDTO;
+import com.onethinker.user.mapper.PlatformUserDetailMapper;
+import com.onethinker.user.mapper.PlatformUserMapper;
+import com.onethinker.user.service.IPlatformUserDetailService;
+import com.ruoyi.common.constant.BkConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.CacheEnum;
 import com.ruoyi.common.enums.SysConfigKeyEnum;
@@ -13,12 +24,6 @@ import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysConfigService;
-import com.onethinker.user.domain.PlatformUser;
-import com.onethinker.user.domain.PlatformUserDetail;
-import com.onethinker.user.dto.PlatformUserReqDTO;
-import com.onethinker.user.mapper.PlatformUserDetailMapper;
-import com.onethinker.user.mapper.PlatformUserMapper;
-import com.onethinker.user.service.IPlatformUserDetailService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +32,7 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
+import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +47,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Log4j2
-public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService {
+public class PlatformUserDetailServiceImpl  extends ServiceImpl<PlatformUserDetailMapper, PlatformUserDetail> implements IPlatformUserDetailService {
     @Resource
     private PlatformUserDetailMapper platformUserDetailMapper;
 
@@ -63,11 +69,14 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
     @Override
     public int updatePlatformUserDetail(PlatformUserDetail platformUserDetail) {
         platformUserDetail.setUpdateTime(DateUtils.getNowDate());
-        return platformUserDetailMapper.updatePlatformUserDetail(platformUserDetail);
+        int i = platformUserDetailMapper.updatePlatformUserDetail(platformUserDetail);
+        // 删除用户信息
+        redisCache.deleteObject(CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY + platformUserDetail.getDataId());
+        return i;
     }
 
     @Override
-    public PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser,PlatformUserReqDTO reqDTO) {
+    public PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser, PlatformUserReqDTO reqDTO) {
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
         platformUserDetail.setAvatarUrl(platformUser.getAvatarUrl());
         platformUserDetail.setEnabled(PlatformUserDetail.STATE_TYPE_ENABLED);
@@ -79,25 +88,25 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         }
         String password = "";
         if (StringUtils.isNotEmpty(reqDTO.getPassword())) {
-//            platformUserDetail.setPassword(reqDTO.getPassword());
             password = reqDTO.getPassword();
         } else {
             password = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_PASSWORD);
-//            platformUserDetail.setPassword(sysConfigService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_PASSWORD));
         }
-//        platformUserDetail.setPassword(new String(SecureUtil.aes("ONETHINKER".getBytes(StandardCharsets.UTF_8)).decrypt(password)));
-        platformUserDetail.setPassword(password);
+        platformUserDetail.setPassword(SecureUtil.aes(BkConstants.CRYPOTJS_KEY.getBytes(StandardCharsets.UTF_8)).encryptBase64(password));
+//        platformUserDetail.setPassword(password);
         platformUserDetail.setNickName(platformUser.getNickName());
         platformUserDetail.setDataId(platformUser.getDataId());
         platformUserDetail.setWeight(System.currentTimeMillis());
         platformUserDetail.setCreateTime(new Date());
         platformUserDetailMapper.insertPlatformUserDetail(platformUserDetail);
+        // 清理下缓存信息
+        redisCache.deleteObject(CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + platformUser.getDataId());
         return platformUserDetail;
     }
 
     @Override
     public PlatformUserDetail saveEntryUserDetailByWx(PlatformUser platformUser, PlatformUserReqDTO reqDTO) {
-        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + reqDTO.getOpenId();
+        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + reqDTO.getDataId();
 
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
         platformUserDetail.setDataId(reqDTO.getDataId());
@@ -109,7 +118,6 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
             platformUserDetail.setNickName(ObjectUtils.isEmpty(reqDTO.getNickName()) ? platformUser.getNickName() : reqDTO.getNickName());
             platformUserDetail.setEnabled(PlatformUserDetail.STATE_TYPE_ENABLED);
             platformUserDetail.setType(PlatformUserReqDTO.SOURCE_TYPE_WX);
-            platformUserDetail.setDataId(platformUser.getDataId());
             platformUserDetail.setDataId(reqDTO.getDataId());
             platformUserDetail.setWeight(System.currentTimeMillis());
             platformUserDetail.setCreateTime(new Date());
@@ -125,7 +133,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
             platformUserDetail.setUpdateTime(new Date());
             platformUserDetailMapper.updatePlatformUserDetail(platformUserDetail);
         }
-        redisCache.setCacheObject(redisKey,platformUserDetail,1,TimeUnit.DAYS);
+        redisCache.setCacheObject(redisKey, platformUserDetail, 1, TimeUnit.DAYS);
         return platformUserDetail;
     }
 
@@ -150,7 +158,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
         String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + dataId;
 
         if (redisCache.hasKey(redisKey)) {
-            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(),PlatformUserDetail.class);
+            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(), PlatformUserDetail.class);
         }
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
         platformUserDetail.setDataId(dataId);
@@ -164,7 +172,7 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
                 return null;
             }
         }
-        redisCache.setCacheObject(redisKey,platformUserDetails.get(0),1, TimeUnit.DAYS);
+        redisCache.setCacheObject(redisKey, platformUserDetails.get(0), 1, TimeUnit.DAYS);
         return platformUserDetails.get(0);
     }
 
@@ -176,41 +184,48 @@ public class PlatformUserDetailServiceImpl implements IPlatformUserDetailService
     }
 
     @Override
-    public PlatformUser queryUserByPhone(String phone) {
-        String redisKey = CacheEnum.QUERY_USER_PHONE_KEY.getCode() + phone;
-
+    public Map<String, String> selectUserPhoneByUserIds(List<Long> puUserIds) {
+        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + String.join(",",puUserIds.toString());
         if (redisCache.hasKey(redisKey)) {
-            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(),PlatformUser.class);
+            return redisCache.getCacheMap(redisKey);
         }
-        PlatformUser platformUser = new PlatformUser();
-        platformUser.setDataId(phone);
-        List<PlatformUser> platformUsers = platformUserMapper.selectPlatformUserList(platformUser);
-        if (ObjectUtils.isEmpty(platformUsers) || platformUsers.isEmpty()) {
-            return null;
-        }
-        redisCache.setCacheObject(redisKey,platformUsers.get(0),1, TimeUnit.DAYS);
-        return platformUsers.get(0);
-    }
-
-    @Override
-    public Map<Long, String> selectUserPhoneByUserIds(List<Long> puUserIds) {
-        Assert.isTrue(!ObjectUtils.isEmpty(puUserIds) && !puUserIds.isEmpty(),"不能查询全用户信息");
+        Assert.isTrue(!ObjectUtils.isEmpty(puUserIds) && !puUserIds.isEmpty(), "不能查询全用户信息");
         List<PlatformUser> platformUsers = platformUserMapper.selectPlatformUserByIds(puUserIds);
         if (ObjectUtils.isEmpty(platformUsers)) {
             return Maps.newHashMap();
         }
-        return platformUsers.stream().collect(Collectors.toMap(PlatformUser::getId, PlatformUser::getDataId));
+        Map<String, String> result = platformUsers.stream().collect(Collectors.toMap(e -> e.getId().toString(), PlatformUser::getDataId));
+        redisCache.setCacheMap(redisKey,result);
+        redisCache.expire(redisKey,1, TimeUnit.DAYS);
+        return result;
     }
 
     @Override
     public PlatformUserDetail getPlatFormUserDetailByUserId(Long userId) {
-        String redisKey = CacheEnum.QUERY_USER_PHONE_KEY.getCode() + "_id:" + userId;
+        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + userId;
         if (redisCache.hasKey(redisKey)) {
-            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(),PlatformUserDetail.class);
+            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(), PlatformUserDetail.class);
         }
         PlatformUserDetail platformUserDetail = platformUserDetailMapper.selectPlatformUserDetailById(userId);
-        Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail),"用户信息不存在");
-        redisCache.setCacheObject(redisKey,platformUserDetail,30,TimeUnit.DAYS);
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail), "用户信息不存在");
+        redisCache.setCacheObject(redisKey, platformUserDetail, 1, TimeUnit.DAYS);
         return platformUserDetail;
+    }
+
+    @Override
+    public List<PlatformUserDetail> queryStatus(Integer enabled) {
+        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + "enabled_" + enabled;
+        if (redisCache.hasKey(redisKey)) {
+            return redisCache.getCacheList(redisKey);
+        }
+        LambdaQueryWrapper<PlatformUserDetail> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PlatformUserDetail::getEnabled,enabled);
+        List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectList(queryWrapper);
+        if (platformUserDetails.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        redisCache.setCacheList(redisKey,platformUserDetails);
+        redisCache.expire(redisKey,1,TimeUnit.DAYS);
+        return platformUserDetails;
     }
 }

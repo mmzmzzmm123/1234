@@ -61,6 +61,7 @@ public interface PlatformUserMapper {
 
     /**
      * 批量查询用户信息
+     *
      * @param puUserIds
      * @return
      */

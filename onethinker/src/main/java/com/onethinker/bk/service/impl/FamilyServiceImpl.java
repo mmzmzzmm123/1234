@@ -1,15 +1,16 @@
 package com.onethinker.bk.service.impl;
 
-import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.FamilyMapper;
-import com.onethinker.bk.domain.Family;
-import com.onethinker.bk.service.IFamilyService;
-import lombok.extern.log4j.Log4j2;
-import javax.annotation.Resource;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.Family;
+import com.onethinker.bk.mapper.FamilyMapper;
+import com.onethinker.bk.service.IFamilyService;
+import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
 /**
  * 家庭信息Service业务层处理
  *
@@ -18,7 +19,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class FamilyServiceImpl extends ServiceImpl<FamilyMapper,Family> implements IFamilyService {
+public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> implements IFamilyService {
     @Resource
     private FamilyMapper familyMapper;
 
@@ -52,8 +53,8 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper,Family> implemen
      */
     @Override
     public int insertFamily(Family family) {
-                family.setCreateTime(DateUtils.getNowDate());
-            return familyMapper.insertFamily(family);
+        family.setCreateTime(DateUtils.getNowDate());
+        return familyMapper.insertFamily(family);
     }
 
     /**
@@ -64,7 +65,7 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper,Family> implemen
      */
     @Override
     public int updateFamily(Family family) {
-                family.setUpdateTime(DateUtils.getNowDate());
+        family.setUpdateTime(DateUtils.getNowDate());
         return familyMapper.updateFamily(family);
     }
 

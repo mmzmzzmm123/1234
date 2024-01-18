@@ -15,11 +15,12 @@ import org.springframework.context.annotation.Configuration;
 /**
  * 这里由于自定义了包路径，所以需要添加对应路径扫描，不然会加载不到对应的bean导致启动失败
  */
-@MapperScan(value = {"com.ruoyi.**.mapper","com.onethinker.**.mapper"})
+@MapperScan(value = {"com.ruoyi.**.mapper", "com.onethinker.**.mapper"})
 public class MybatisPlusConfig {
 
     /**
      * 分页插件
+     *
      * @return
      */
     @Bean
@@ -34,6 +35,7 @@ public class MybatisPlusConfig {
 
     /**
      * 乐观锁插件
+     *
      * @return
      */
     @Bean

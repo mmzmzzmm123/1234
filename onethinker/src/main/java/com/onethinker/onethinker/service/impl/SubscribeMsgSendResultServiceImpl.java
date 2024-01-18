@@ -1,15 +1,16 @@
 package com.onethinker.onethinker.service.impl;
 
-import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.onethinker.onethinker.mapper.SubscribeMsgSendResultMapper;
-import com.onethinker.onethinker.domain.SubscribeMsgSendResult;
-import com.onethinker.onethinker.service.ISubscribeMsgSendResultService;
-import lombok.extern.log4j.Log4j2;
-import javax.annotation.Resource;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.onethinker.domain.SubscribeMsgSendResult;
+import com.onethinker.onethinker.mapper.SubscribeMsgSendResultMapper;
+import com.onethinker.onethinker.service.ISubscribeMsgSendResultService;
+import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
 /**
  * 订阅消息发送结果Service业务层处理
  *
@@ -18,7 +19,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class SubscribeMsgSendResultServiceImpl extends ServiceImpl<SubscribeMsgSendResultMapper,SubscribeMsgSendResult> implements ISubscribeMsgSendResultService {
+public class SubscribeMsgSendResultServiceImpl extends ServiceImpl<SubscribeMsgSendResultMapper, SubscribeMsgSendResult> implements ISubscribeMsgSendResultService {
     @Resource
     private SubscribeMsgSendResultMapper subscribeMsgSendResultMapper;
 
@@ -52,8 +53,8 @@ public class SubscribeMsgSendResultServiceImpl extends ServiceImpl<SubscribeMsgS
      */
     @Override
     public int insertSubscribeMsgSendResult(SubscribeMsgSendResult subscribeMsgSendResult) {
-                subscribeMsgSendResult.setCreateTime(DateUtils.getNowDate());
-            return subscribeMsgSendResultMapper.insertSubscribeMsgSendResult(subscribeMsgSendResult);
+        subscribeMsgSendResult.setCreateTime(DateUtils.getNowDate());
+        return subscribeMsgSendResultMapper.insertSubscribeMsgSendResult(subscribeMsgSendResult);
     }
 
     /**
@@ -64,7 +65,7 @@ public class SubscribeMsgSendResultServiceImpl extends ServiceImpl<SubscribeMsgS
      */
     @Override
     public int updateSubscribeMsgSendResult(SubscribeMsgSendResult subscribeMsgSendResult) {
-                subscribeMsgSendResult.setUpdateTime(DateUtils.getNowDate());
+        subscribeMsgSendResult.setUpdateTime(DateUtils.getNowDate());
         return subscribeMsgSendResultMapper.updateSubscribeMsgSendResult(subscribeMsgSendResult);
     }
 

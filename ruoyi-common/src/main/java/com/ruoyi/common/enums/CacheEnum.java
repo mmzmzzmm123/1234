@@ -46,22 +46,17 @@ public enum CacheEnum {
     /**
      * 平台登录用户信息
      */
-    QUERY_USER_DETAIL_DATA_ID_KEY("pu_login_user_info:","平台登录用户信息"),
-
-    /**
-     * 平台用户信息
-     */
-    QUERY_USER_PHONE_KEY("pu_user_info:","平台用户信息"),
+    QUERY_USER_DETAIL_DATA_ID_KEY("pu_login_user_info:", "平台登录用户信息"),
 
     /**
      * 订阅消息
      */
-    SUBSCRIBE_MSG_KEY("subscribe_msg:","订阅消息"),
+    SUBSCRIBE_MSG_KEY("subscribe_msg:", "订阅消息"),
 
     /**
      * 网站基础信息
      */
-    WEB_INFO("bk_web_info:","网站基础信息");
+    WEB_INFO("bk_web_info:", "网站基础信息");
 
     private String code;
     private String msg;

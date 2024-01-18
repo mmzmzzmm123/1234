@@ -1,15 +1,16 @@
 package com.onethinker.bk.service.impl;
 
-import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.ImChatUserGroupMessageMapper;
-import com.onethinker.bk.domain.ImChatUserGroupMessage;
-import com.onethinker.bk.service.IImChatUserGroupMessageService;
-import lombok.extern.log4j.Log4j2;
-import javax.annotation.Resource;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.ImChatUserGroupMessage;
+import com.onethinker.bk.mapper.ImChatUserGroupMessageMapper;
+import com.onethinker.bk.service.IImChatUserGroupMessageService;
+import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
 /**
  * 群聊记录Service业务层处理
  *
@@ -18,7 +19,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class ImChatUserGroupMessageServiceImpl extends ServiceImpl<ImChatUserGroupMessageMapper,ImChatUserGroupMessage> implements IImChatUserGroupMessageService {
+public class ImChatUserGroupMessageServiceImpl extends ServiceImpl<ImChatUserGroupMessageMapper, ImChatUserGroupMessage> implements IImChatUserGroupMessageService {
     @Resource
     private ImChatUserGroupMessageMapper imChatUserGroupMessageMapper;
 
@@ -52,8 +53,8 @@ public class ImChatUserGroupMessageServiceImpl extends ServiceImpl<ImChatUserGro
      */
     @Override
     public int insertImChatUserGroupMessage(ImChatUserGroupMessage imChatUserGroupMessage) {
-                imChatUserGroupMessage.setCreateTime(DateUtils.getNowDate());
-            return imChatUserGroupMessageMapper.insertImChatUserGroupMessage(imChatUserGroupMessage);
+        imChatUserGroupMessage.setCreateTime(DateUtils.getNowDate());
+        return imChatUserGroupMessageMapper.insertImChatUserGroupMessage(imChatUserGroupMessage);
     }
 
     /**

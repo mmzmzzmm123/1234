@@ -1,7 +1,8 @@
 package com.onethinker.bk.service;
 
-import java.util.List;
 import com.onethinker.bk.domain.WeiYan;
+
+import java.util.List;
 
 /**
  * 微言Service接口
@@ -16,7 +17,7 @@ public interface IWeiYanService {
      * @param id 微言主键
      * @return 微言
      */
-    public WeiYan selectWeiYanById(Long id);
+    WeiYan selectWeiYanById(Long id);
 
     /**
      * 查询微言列表
@@ -24,7 +25,7 @@ public interface IWeiYanService {
      * @param weiYan 微言
      * @return 微言集合
      */
-    public List<WeiYan> selectWeiYanList(WeiYan weiYan);
+    List<WeiYan> selectWeiYanList(WeiYan weiYan);
 
     /**
      * 新增微言
@@ -32,7 +33,7 @@ public interface IWeiYanService {
      * @param weiYan 微言
      * @return 结果
      */
-    public int insertWeiYan(WeiYan weiYan);
+    int insertWeiYan(WeiYan weiYan);
 
     /**
      * 修改微言
@@ -40,7 +41,7 @@ public interface IWeiYanService {
      * @param weiYan 微言
      * @return 结果
      */
-    public int updateWeiYan(WeiYan weiYan);
+    int updateWeiYan(WeiYan weiYan);
 
     /**
      * 批量删除微言
@@ -48,7 +49,7 @@ public interface IWeiYanService {
      * @param ids 需要删除的微言主键集合
      * @return 结果
      */
-    public int deleteWeiYanByIds(Long[] ids);
+    int deleteWeiYanByIds(Long[] ids);
 
     /**
      * 删除微言信息
@@ -56,10 +57,11 @@ public interface IWeiYanService {
      * @param id 微言主键
      * @return 结果
      */
-    public int deleteWeiYanById(Long id);
+    int deleteWeiYanById(Long id);
 
     /**
      * 根据用户平台id更新数据
+     *
      * @param id
      */
     void insertWeiYanByDataId(Long puUserId);

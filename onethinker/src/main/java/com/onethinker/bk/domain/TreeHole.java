@@ -1,11 +1,12 @@
 package com.onethinker.bk.domain;
 
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import com.baomidou.mybatisplus.annotation.TableName;
-import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import io.jsonwebtoken.lang.Assert;
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
+
 /**
  * 树洞对象 bk_tree_hole
  *
@@ -17,16 +18,26 @@ import lombok.Data;
 public class TreeHole extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /** id */
+    /**
+     * id
+     */
     private Long id;
 
-    /** 头像 */
+    /**
+     * 头像
+     */
     @Excel(name = "头像")
     private String avatar;
 
-    /** 留言 */
+    /**
+     * 留言
+     */
     @Excel(name = "留言")
     private String message;
+
+    public void existsParams() {
+        Assert.isTrue(!StringUtils.isEmpty(message), "树洞留言不能为空");
+    }
 
 
 }

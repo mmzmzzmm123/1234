@@ -1,27 +1,22 @@
 package com.onethinker.user.factory.service.impl;
 
-import cn.hutool.crypto.SecureUtil;
-import com.onethinker.bk.domain.WebInfo;
-import com.onethinker.bk.service.IImChatGroupService;
 import com.onethinker.bk.service.IImChatGroupUserService;
 import com.onethinker.bk.service.IImChatUserFriendService;
 import com.onethinker.bk.service.IWeiYanService;
 import com.onethinker.mail.service.IMailService;
-import com.onethinker.user.enums.ServiceTypeEnum;
-import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.enums.CacheEnum;
-import com.ruoyi.common.enums.SysConfigKeyEnum;
-import com.ruoyi.common.utils.PhoneUtils;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.framework.web.service.SysLoginService;
-import com.ruoyi.system.service.ISysConfigService;
 import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.domain.PlatformUserDetail;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
+import com.onethinker.user.enums.ServiceTypeEnum;
 import com.onethinker.user.factory.service.IPlatformUserService;
 import com.onethinker.user.mapper.PlatformUserMapper;
 import com.onethinker.user.service.IPlatformUserDetailService;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
+import com.ruoyi.common.enums.SysConfigKeyEnum;
+import com.ruoyi.framework.web.service.SysLoginService;
+import com.ruoyi.system.service.ISysConfigService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
@@ -33,10 +28,11 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 平台用户Service业务层处理
@@ -83,15 +79,15 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
     @Override
     public PlatformUserResDTO login(PlatformUserReqDTO reqDTO) {
         // 根据来源不同实例化不同具体实例
-        logger.info("手机/账户/邮箱登录{}",reqDTO.getDataId());
-        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getDataId()),"凭证信息不能为空");
-        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPassword()),"密码信息不能为空");
+        logger.info("手机/账户/邮箱登录{}", reqDTO.getDataId());
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getDataId()), "凭证信息不能为空");
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPassword()), "密码信息不能为空");
         PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
-        Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail),"账号不存在");
-        Assert.isTrue(Objects.equals(reqDTO.getPassword(),platformUserDetail.getPassword()),"账户密码有误");
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail), "账号不存在");
+        Assert.isTrue(Objects.equals(reqDTO.getPassword(), platformUserDetail.getPassword()), "账户密码有误");
         // 获取权限内容
-        String token = loginService.loginFe(platformUserDetail.getDataId(),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
-        return PlatformUserResDTO.foramtResponse(token,platformUserDetail);
+        String token = loginService.loginFe(platformUserDetail.getDataId(), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
+        return PlatformUserResDTO.foramtResponse(token, platformUserDetail);
     }
 
     @Override
@@ -105,7 +101,7 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
         PlatformUser platformUser = new PlatformUser();
         platformUser.setDataId(dataId);
         List<PlatformUser> existsUser = platformUserMapper.selectPlatformUserList(platformUser);
-        Assert.isTrue(ObjectUtils.isEmpty(existsUser) || existsUser.isEmpty(),"邮箱或账号已被注册");
+        Assert.isTrue(ObjectUtils.isEmpty(existsUser) || existsUser.isEmpty(), "邮箱或账号已被注册");
         // 保存用户信息
         platformUser = new PlatformUser();
         platformUser.setDataId(dataId);
@@ -125,8 +121,8 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
             imChatUserFriendService.insertImChatUserFriendByPlUserId(platformUser.getId());
         }
         // 获取权限内容
-        String token = loginService.loginFe(platformUserDetail.getDataId(),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
-        return PlatformUserResDTO.foramtResponse(token,platformUserDetail);
+        String token = loginService.loginFe(platformUserDetail.getDataId(), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
+        return PlatformUserResDTO.foramtResponse(token, platformUserDetail);
     }
 
     private String existsByCode(PlatformUserReqDTO reqDTO) {
@@ -151,10 +147,10 @@ public class PlatformUserSourceTypeAccountServiceImpl implements IPlatformUserSe
         int code = new Random().nextInt(900000) + 100000;
         if (PlatformUserReqDTO.PHONE_CODE.equals(flag)) {
             log.info(place + "---" + "手机验证码---" + code);
-        } else if (PlatformUserReqDTO.EMAIL_CODE.equals(flag)){
+        } else if (PlatformUserReqDTO.EMAIL_CODE.equals(flag)) {
             log.info(place + "---" + "邮箱验证码---" + code);
             // 发送邮箱验证码处理
-            mailService.sendMailCode(place,code);
+            mailService.sendMailCode(place, code);
         }
         // 保存5分钟
         redisCache.setCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + place + "_" + flag, String.valueOf(code), 5, TimeUnit.MINUTES);

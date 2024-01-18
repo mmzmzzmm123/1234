@@ -1,15 +1,14 @@
 package com.ruoyi.common.core.domain;
 
-import java.io.Serializable;
-import java.util.Date;
-import java.util.Map;
-
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.google.common.collect.Maps;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.google.common.collect.Maps;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Entity基类

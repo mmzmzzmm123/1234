@@ -1,13 +1,5 @@
 package com.ruoyi.common.utils.file;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Paths;
-import java.util.Objects;
-
-import org.apache.commons.io.FilenameUtils;
-import org.springframework.web.multipart.MultipartFile;
-
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
@@ -16,6 +8,13 @@ import com.ruoyi.common.exception.file.InvalidExtensionException;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.uuid.Seq;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
+import java.util.Objects;
 
 /**
  * 文件上传工具类
@@ -84,10 +83,10 @@ public class FileUploadUtils {
      * @param file             上传的文件
      * @param allowedExtension 上传文件类型
      * @return 返回上传成功的文件名
-     * @throws FileSizeLimitExceededException 如果超出最大大小
+     * @throws FileSizeLimitExceededException       如果超出最大大小
      * @throws FileNameLengthLimitExceededException 文件名太长
-     * @throws IOException 比如读写文件出错时
-     * @throws InvalidExtensionException 文件校验异常
+     * @throws IOException                          比如读写文件出错时
+     * @throws InvalidExtensionException            文件校验异常
      */
     public static final String upload(String baseDir, MultipartFile file, String[] allowedExtension)
             throws FileSizeLimitExceededException, IOException, FileNameLengthLimitExceededException,

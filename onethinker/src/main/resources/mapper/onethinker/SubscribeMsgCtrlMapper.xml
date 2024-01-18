@@ -5,134 +5,145 @@
 <mapper namespace="com.onethinker.onethinker.mapper.SubscribeMsgCtrlMapper">
 
     <resultMap type="SubscribeMsgCtrl" id="SubscribeMsgCtrlResult">
-            <result property="id" column="id"/>
-            <result property="createTime" column="create_time"/>
-            <result property="updateTime" column="update_time"/>
-            <result property="enabled" column="enabled"/>
-            <result property="weight" column="weight"/>
-            <result property="templateId" column="template_id"/>
-            <result property="page" column="page"/>
-            <result property="miniprogramState" column="miniprogram_state"/>
-            <result property="remark" column="remark"/>
-            <result property="data" column="data"/>
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="enabled" column="enabled"/>
+        <result property="weight" column="weight"/>
+        <result property="templateId" column="template_id"/>
+        <result property="page" column="page"/>
+        <result property="miniprogramState" column="miniprogram_state"/>
+        <result property="remark" column="remark"/>
+        <result property="data" column="data"/>
     </resultMap>
 
     <sql id="selectSubscribeMsgCtrlVo">
-        select id, create_time, update_time, enabled, weight, template_id, page, miniprogram_state, remark, data
+        select id,
+               create_time,
+               update_time,
+               enabled,
+               weight,
+               template_id,
+               page,
+               miniprogram_state,
+               remark,
+               data
         from t_subscribe_msg_ctrl
     </sql>
 
     <select id="selectSubscribeMsgCtrlList" parameterType="SubscribeMsgCtrl" resultMap="SubscribeMsgCtrlResult">
         <include refid="selectSubscribeMsgCtrlVo"/>
         <where>
-                        <if test="enabled != null ">
-                            and enabled = #{enabled}
-                        </if>
-                        <if test="weight != null ">
-                            and weight = #{weight}
-                        </if>
-                        <if test="templateId != null  and templateId != ''">
-                            and template_id = #{templateId}
-                        </if>
-                        <if test="page != null  and page != ''">
-                            and page = #{page}
-                        </if>
-                        <if test="miniprogramState != null  and miniprogramState != ''">
-                            and miniprogram_state = #{miniprogramState}
-                        </if>
-                        <if test="data != null  and data != ''">
-                            and data = #{data}
-                        </if>
+            <if test="enabled != null ">
+                and enabled = #{enabled}
+            </if>
+            <if test="weight != null ">
+                and weight = #{weight}
+            </if>
+            <if test="templateId != null  and templateId != ''">
+                and template_id = #{templateId}
+            </if>
+            <if test="page != null  and page != ''">
+                and page = #{page}
+            </if>
+            <if test="miniprogramState != null  and miniprogramState != ''">
+                and miniprogram_state = #{miniprogramState}
+            </if>
+            <if test="data != null  and data != ''">
+                and data = #{data}
+            </if>
         </where>
     </select>
 
     <select id="selectSubscribeMsgCtrlById" parameterType="Long"
             resultMap="SubscribeMsgCtrlResult">
-            <include refid="selectSubscribeMsgCtrlVo"/>
-            where id = #{id}
+        <include refid="selectSubscribeMsgCtrlVo"/>
+        where id = #{id}
     </select>
 
     <insert id="insertSubscribeMsgCtrl" parameterType="SubscribeMsgCtrl" useGeneratedKeys="true"
             keyProperty="id">
         insert into t_subscribe_msg_ctrl
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="createTime != null">create_time,
-                    </if>
-                    <if test="updateTime != null">update_time,
-                    </if>
-                    <if test="enabled != null">enabled,
-                    </if>
-                    <if test="weight != null">weight,
-                    </if>
-                    <if test="templateId != null and templateId != ''">template_id,
-                    </if>
-                    <if test="page != null">page,
-                    </if>
-                    <if test="miniprogramState != null and miniprogramState != ''">miniprogram_state,
-                    </if>
-                    <if test="remark != null">remark,
-                    </if>
-                    <if test="data != null and data != ''">data,
-                    </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="enabled != null">enabled,
+            </if>
+            <if test="weight != null">weight,
+            </if>
+            <if test="templateId != null and templateId != ''">template_id,
+            </if>
+            <if test="page != null">page,
+            </if>
+            <if test="miniprogramState != null and miniprogramState != ''">miniprogram_state,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+            <if test="data != null and data != ''">data,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="createTime != null">#{createTime},
-                    </if>
-                    <if test="updateTime != null">#{updateTime},
-                    </if>
-                    <if test="enabled != null">#{enabled},
-                    </if>
-                    <if test="weight != null">#{weight},
-                    </if>
-                    <if test="templateId != null and templateId != ''">#{templateId},
-                    </if>
-                    <if test="page != null">#{page},
-                    </if>
-                    <if test="miniprogramState != null and miniprogramState != ''">#{miniprogramState},
-                    </if>
-                    <if test="remark != null">#{remark},
-                    </if>
-                    <if test="data != null and data != ''">#{data},
-                    </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="enabled != null">#{enabled},
+            </if>
+            <if test="weight != null">#{weight},
+            </if>
+            <if test="templateId != null and templateId != ''">#{templateId},
+            </if>
+            <if test="page != null">#{page},
+            </if>
+            <if test="miniprogramState != null and miniprogramState != ''">#{miniprogramState},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+            <if test="data != null and data != ''">#{data},
+            </if>
         </trim>
     </insert>
 
     <update id="updateSubscribeMsgCtrl" parameterType="SubscribeMsgCtrl">
         update t_subscribe_msg_ctrl
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="createTime != null">create_time =
-                        #{createTime},
-                    </if>
-                    <if test="updateTime != null">update_time =
-                        #{updateTime},
-                    </if>
-                    <if test="enabled != null">enabled =
-                        #{enabled},
-                    </if>
-                    <if test="weight != null">weight =
-                        #{weight},
-                    </if>
-                    <if test="templateId != null and templateId != ''">template_id =
-                        #{templateId},
-                    </if>
-                    <if test="page != null">page =
-                        #{page},
-                    </if>
-                    <if test="miniprogramState != null and miniprogramState != ''">miniprogram_state =
-                        #{miniprogramState},
-                    </if>
-                    <if test="remark != null">remark =
-                        #{remark},
-                    </if>
-                    <if test="data != null and data != ''">data =
-                        #{data},
-                    </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="enabled != null">enabled =
+                #{enabled},
+            </if>
+            <if test="weight != null">weight =
+                #{weight},
+            </if>
+            <if test="templateId != null and templateId != ''">template_id =
+                #{templateId},
+            </if>
+            <if test="page != null">page =
+                #{page},
+            </if>
+            <if test="miniprogramState != null and miniprogramState != ''">miniprogram_state =
+                #{miniprogramState},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+            <if test="data != null and data != ''">data =
+                #{data},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteSubscribeMsgCtrlById" parameterType="Long">
-        delete from t_subscribe_msg_ctrl where id = #{id}
+        delete
+        from t_subscribe_msg_ctrl
+        where id = #{id}
     </delete>
 
     <delete id="deleteSubscribeMsgCtrlByIds" parameterType="String">

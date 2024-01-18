@@ -1,9 +1,9 @@
 package com.ruoyi.common.utils;
 
+import org.springframework.util.ObjectUtils;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
-import org.springframework.util.ObjectUtils;
 
 /**
  * @Title: MathUtils
@@ -16,6 +16,7 @@ public class MathUtils {
 
     /**
      * 加法
+     *
      * @param a
      * @param b
      * @return
@@ -34,6 +35,7 @@ public class MathUtils {
 
     /**
      * 减法
+     *
      * @param a
      * @param b
      * @return
@@ -52,6 +54,7 @@ public class MathUtils {
 
     /**
      * 乘法
+     *
      * @param a
      * @param b
      * @return
@@ -70,6 +73,7 @@ public class MathUtils {
 
     /**
      * 除法
+     *
      * @param a
      * @param b
      * @return
@@ -84,7 +88,7 @@ public class MathUtils {
                 throw new RuntimeException("计算错误，被除数不能为0");
             }
             BigDecimal valueBDecimal = new BigDecimal(value.longValue());
-            result = result.divide(valueBDecimal,RoundingMode.HALF_UP);
+            result = result.divide(valueBDecimal, RoundingMode.HALF_UP);
         }
         return result.longValue();
     }
@@ -92,6 +96,7 @@ public class MathUtils {
 
     /**
      * 求余
+     *
      * @param a
      * @param b
      * @return
@@ -110,6 +115,7 @@ public class MathUtils {
 
     /**
      * 最大值
+     *
      * @param a
      * @param b
      * @return
@@ -128,6 +134,7 @@ public class MathUtils {
 
     /**
      * 最小值
+     *
      * @param a
      * @param b
      * @return

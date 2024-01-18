@@ -1,7 +1,8 @@
 package com.onethinker.onethinker.service;
 
-import java.util.List;
 import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
+
+import java.util.List;
 
 /**
  * 订阅消息控制Service接口
@@ -60,6 +61,7 @@ public interface ISubscribeMsgCtrlService {
 
     /**
      * 通过模版id获取模版信息
+     *
      * @param templateId
      * @return
      */

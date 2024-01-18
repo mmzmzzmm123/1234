@@ -5,10 +5,10 @@
 <mapper namespace="com.onethinker.bk.mapper.TreeHoleMapper">
 
     <resultMap type="TreeHole" id="TreeHoleResult">
-            <result property="id" column="id"/>
-            <result property="avatar" column="avatar"/>
-            <result property="message" column="message"/>
-            <result property="createTime" column="create_time"/>
+        <result property="id" column="id"/>
+        <result property="avatar" column="avatar"/>
+        <result property="message" column="message"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectTreeHoleVo">
@@ -19,60 +19,68 @@
     <select id="selectTreeHoleList" parameterType="TreeHole" resultMap="TreeHoleResult">
         <include refid="selectTreeHoleVo"/>
         <where>
-                        <if test="avatar != null  and avatar != ''">
-                            and avatar = #{avatar}
-                        </if>
-                        <if test="message != null  and message != ''">
-                            and message = #{message}
-                        </if>
+            <if test="avatar != null  and avatar != ''">
+                and avatar = #{avatar}
+            </if>
+            <if test="message != null  and message != ''">
+                and message = #{message}
+            </if>
         </where>
     </select>
 
     <select id="selectTreeHoleById" parameterType="Long"
             resultMap="TreeHoleResult">
-            <include refid="selectTreeHoleVo"/>
-            where id = #{id}
+        <include refid="selectTreeHoleVo"/>
+        where id = #{id}
+    </select>
+    <select id="queryAllByLimit" resultType="com.onethinker.bk.domain.TreeHole">
+        select
+        <include refid="selectTreeHoleVo"/>
+        from tree_hole
+        limit #{offset}, #{limit}
     </select>
 
     <insert id="insertTreeHole" parameterType="TreeHole" useGeneratedKeys="true"
             keyProperty="id">
         insert into bk_tree_hole
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="avatar != null">avatar,
-                    </if>
-                    <if test="message != null and message != ''">message,
-                    </if>
-                    <if test="createTime != null">create_time,
-                    </if>
+            <if test="avatar != null">avatar,
+            </if>
+            <if test="message != null and message != ''">message,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="avatar != null">#{avatar},
-                    </if>
-                    <if test="message != null and message != ''">#{message},
-                    </if>
-                    <if test="createTime != null">#{createTime},
-                    </if>
+            <if test="avatar != null">#{avatar},
+            </if>
+            <if test="message != null and message != ''">#{message},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
         </trim>
     </insert>
 
     <update id="updateTreeHole" parameterType="TreeHole">
         update bk_tree_hole
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="avatar != null">avatar =
-                        #{avatar},
-                    </if>
-                    <if test="message != null and message != ''">message =
-                        #{message},
-                    </if>
-                    <if test="createTime != null">create_time =
-                        #{createTime},
-                    </if>
+            <if test="avatar != null">avatar =
+                #{avatar},
+            </if>
+            <if test="message != null and message != ''">message =
+                #{message},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteTreeHoleById" parameterType="Long">
-        delete from bk_tree_hole where id = #{id}
+        delete
+        from bk_tree_hole
+        where id = #{id}
     </delete>
 
     <delete id="deleteTreeHoleByIds" parameterType="String">

@@ -5,128 +5,143 @@
 <mapper namespace="com.onethinker.user.mapper.PlatformUserIntegralMapper">
 
     <resultMap type="PlatformUserIntegral" id="PlatformUserIntegralResult">
-            <result property="id" column="id"/>
-            <result property="createTime" column="create_time"/>
-            <result property="updateTime" column="update_time"/>
-            <result property="enabled" column="enabled"/>
-            <result property="totalIntegral" column="total_integral"/>
-            <result property="residualIntegral" column="residual_integral"/>
-            <result property="puUserId" column="pu_user_id"/>
-            <result property="batchNo" column="batch_no"/>
-            <result property="remark" column="remark"/>
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="enabled" column="enabled"/>
+        <result property="totalIntegral" column="total_integral"/>
+        <result property="residualIntegral" column="residual_integral"/>
+        <result property="puUserId" column="pu_user_id"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectPlatformUserIntegralVo">
-        select id, create_time, update_time, enabled, total_integral, residual_integral, pu_user_id, batch_no, remark
+        select id,
+               create_time,
+               update_time,
+               enabled,
+               total_integral,
+               residual_integral,
+               pu_user_id,
+               batch_no,
+               remark
         from t_platform_user_integral
     </sql>
 
-    <select id="selectPlatformUserIntegralList" parameterType="PlatformUserIntegral" resultMap="PlatformUserIntegralResult">
+    <select id="selectPlatformUserIntegralList" parameterType="PlatformUserIntegral"
+            resultMap="PlatformUserIntegralResult">
         <include refid="selectPlatformUserIntegralVo"/>
         <where>
-                        <if test="enabled != null ">
-                            and enabled = #{enabled}
-                        </if>
-                        <if test="totalIntegral != null ">
-                            and total_integral = #{totalIntegral}
-                        </if>
-                        <if test="residualIntegral != null ">
-                            and residual_integral = #{residualIntegral}
-                        </if>
-                        <if test="puUserId != null ">
-                            and pu_user_id = #{puUserId}
-                        </if>
-                        <if test="batchNo != null  and batchNo != ''">
-                            and batch_no = #{batchNo}
-                        </if>
+            <if test="enabled != null ">
+                and enabled = #{enabled}
+            </if>
+            <if test="totalIntegral != null ">
+                and total_integral = #{totalIntegral}
+            </if>
+            <if test="residualIntegral != null ">
+                and residual_integral = #{residualIntegral}
+            </if>
+            <if test="puUserId != null ">
+                and pu_user_id = #{puUserId}
+            </if>
+            <if test="batchNo != null  and batchNo != ''">
+                and batch_no = #{batchNo}
+            </if>
         </where>
     </select>
 
     <select id="selectPlatformUserIntegralById" parameterType="Long"
             resultMap="PlatformUserIntegralResult">
-            <include refid="selectPlatformUserIntegralVo"/>
-            where id = #{id}
+        <include refid="selectPlatformUserIntegralVo"/>
+        where id = #{id}
     </select>
 
     <insert id="insertPlatformUserIntegral" parameterType="PlatformUserIntegral" useGeneratedKeys="true"
             keyProperty="id">
         insert into t_platform_user_integral
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="createTime != null">create_time,
-                    </if>
-                    <if test="updateTime != null">update_time,
-                    </if>
-                    <if test="enabled != null">enabled,
-                    </if>
-                    <if test="totalIntegral != null">total_integral,
-                    </if>
-                    <if test="residualIntegral != null">residual_integral,
-                    </if>
-                    <if test="puUserId != null">pu_user_id,
-                    </if>
-                    <if test="batchNo != null and batchNo != ''">batch_no,
-                    </if>
-                    <if test="remark != null">remark,
-                    </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="enabled != null">enabled,
+            </if>
+            <if test="totalIntegral != null">total_integral,
+            </if>
+            <if test="residualIntegral != null">residual_integral,
+            </if>
+            <if test="puUserId != null">pu_user_id,
+            </if>
+            <if test="batchNo != null and batchNo != ''">batch_no,
+            </if>
+            <if test="remark != null">remark,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="createTime != null">#{createTime},
-                    </if>
-                    <if test="updateTime != null">#{updateTime},
-                    </if>
-                    <if test="enabled != null">#{enabled},
-                    </if>
-                    <if test="totalIntegral != null">#{totalIntegral},
-                    </if>
-                    <if test="residualIntegral != null">#{residualIntegral},
-                    </if>
-                    <if test="puUserId != null">#{puUserId},
-                    </if>
-                    <if test="batchNo != null and batchNo != ''">#{batchNo},
-                    </if>
-                    <if test="remark != null">#{remark},
-                    </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="enabled != null">#{enabled},
+            </if>
+            <if test="totalIntegral != null">#{totalIntegral},
+            </if>
+            <if test="residualIntegral != null">#{residualIntegral},
+            </if>
+            <if test="puUserId != null">#{puUserId},
+            </if>
+            <if test="batchNo != null and batchNo != ''">#{batchNo},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
         </trim>
     </insert>
 
     <update id="updatePlatformUserIntegral" parameterType="PlatformUserIntegral">
         update t_platform_user_integral
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="createTime != null">create_time =
-                        #{createTime},
-                    </if>
-                    <if test="updateTime != null">update_time =
-                        #{updateTime},
-                    </if>
-                    <if test="enabled != null">enabled =
-                        #{enabled},
-                    </if>
-                    <if test="totalIntegral != null">total_integral =
-                        #{totalIntegral},
-                    </if>
-                    <if test="residualIntegral != null">residual_integral =
-                        #{residualIntegral},
-                    </if>
-                    <if test="puUserId != null">pu_user_id =
-                        #{puUserId},
-                    </if>
-                    <if test="batchNo != null and batchNo != ''">batch_no =
-                        #{batchNo},
-                    </if>
-                    <if test="remark != null">remark =
-                        #{remark},
-                    </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="enabled != null">enabled =
+                #{enabled},
+            </if>
+            <if test="totalIntegral != null">total_integral =
+                #{totalIntegral},
+            </if>
+            <if test="residualIntegral != null">residual_integral =
+                #{residualIntegral},
+            </if>
+            <if test="puUserId != null">pu_user_id =
+                #{puUserId},
+            </if>
+            <if test="batchNo != null and batchNo != ''">batch_no =
+                #{batchNo},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <update id="updateIntegralByResidualIntegralAndId" parameterType="PlatformUserIntegral">
-        update t_platform_user_integral set total_integral = #{totalIntegral},residual_integral = #{residualIntegral},update_time = sysdate()
-        where id = #{id} and residual_integral = #{orgResidualIntegral}
+        update t_platform_user_integral
+        set total_integral    = #{totalIntegral},
+            residual_integral = #{residualIntegral},
+            update_time       = sysdate()
+        where id = #{id}
+          and residual_integral = #{orgResidualIntegral}
     </update>
 
     <delete id="deletePlatformUserIntegralById" parameterType="Long">
-        delete from t_platform_user_integral where id = #{id}
+        delete
+        from t_platform_user_integral
+        where id = #{id}
     </delete>
 
     <delete id="deletePlatformUserIntegralByIds" parameterType="String">

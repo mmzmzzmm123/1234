@@ -5,156 +5,169 @@
 <mapper namespace="com.onethinker.onethinker.mapper.ActivityMapper">
 
     <resultMap type="Activity" id="ActivityResult">
-            <result property="id" column="id"/>
-            <result property="createTime" column="create_time"/>
-            <result property="updateTime" column="update_time"/>
-            <result property="enabled" column="enabled"/>
-            <result property="weight" column="weight"/>
-            <result property="startTime" column="start_time"/>
-            <result property="endTime" column="end_time"/>
-            <result property="title" column="title"/>
-            <result property="bgUrl" column="bg_url"/>
-            <result property="batchNo" column="batch_no"/>
-            <result property="activityType" column="activity_type"/>
-            <result property="remark" column="remark"/>
+        <result property="id" column="id"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="enabled" column="enabled"/>
+        <result property="weight" column="weight"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="title" column="title"/>
+        <result property="bgUrl" column="bg_url"/>
+        <result property="batchNo" column="batch_no"/>
+        <result property="activityType" column="activity_type"/>
+        <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectActivityVo">
-        select id, create_time, update_time, enabled, weight, start_time, end_time, title, bg_url, batch_no, activity_type, remark
+        select id,
+               create_time,
+               update_time,
+               enabled,
+               weight,
+               start_time,
+               end_time,
+               title,
+               bg_url,
+               batch_no,
+               activity_type,
+               remark
         from t_activity
     </sql>
 
     <select id="selectActivityList" parameterType="Activity" resultMap="ActivityResult">
         <include refid="selectActivityVo"/>
         <where>
-                        <if test="enabled != null ">
-                            and enabled = #{enabled}
-                        </if>
-                        <if test="weight != null ">
-                            and weight = #{weight}
-                        </if>
-                        <if test="startTime != null ">
-                            and start_time = #{startTime}
-                        </if>
-                        <if test="endTime != null ">
-                            and end_time = #{endTime}
-                        </if>
-                        <if test="title != null  and title != ''">
-                            and title = #{title}
-                        </if>
-                        <if test="bgUrl != null  and bgUrl != ''">
-                            and bg_url = #{bgUrl}
-                        </if>
-                        <if test="batchNo != null  and batchNo != ''">
-                            and batch_no = #{batchNo}
-                        </if>
-                        <if test="activityType != null ">
-                            and activity_type = #{activityType}
-                        </if>
+            <if test="enabled != null ">
+                and enabled = #{enabled}
+            </if>
+            <if test="weight != null ">
+                and weight = #{weight}
+            </if>
+            <if test="startTime != null ">
+                and start_time = #{startTime}
+            </if>
+            <if test="endTime != null ">
+                and end_time = #{endTime}
+            </if>
+            <if test="title != null  and title != ''">
+                and title = #{title}
+            </if>
+            <if test="bgUrl != null  and bgUrl != ''">
+                and bg_url = #{bgUrl}
+            </if>
+            <if test="batchNo != null  and batchNo != ''">
+                and batch_no = #{batchNo}
+            </if>
+            <if test="activityType != null ">
+                and activity_type = #{activityType}
+            </if>
         </where>
     </select>
 
     <select id="selectActivityById" parameterType="Long"
             resultMap="ActivityResult">
-            <include refid="selectActivityVo"/>
-            where id = #{id}
+        <include refid="selectActivityVo"/>
+        where id = #{id}
     </select>
 
     <insert id="insertActivity" parameterType="Activity" useGeneratedKeys="true"
             keyProperty="id">
         insert into t_activity
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="createTime != null">create_time,
-                    </if>
-                    <if test="updateTime != null">update_time,
-                    </if>
-                    <if test="enabled != null">enabled,
-                    </if>
-                    <if test="weight != null">weight,
-                    </if>
-                    <if test="startTime != null">start_time,
-                    </if>
-                    <if test="endTime != null">end_time,
-                    </if>
-                    <if test="title != null and title != ''">title,
-                    </if>
-                    <if test="bgUrl != null">bg_url,
-                    </if>
-                    <if test="batchNo != null and batchNo != ''">batch_no,
-                    </if>
-                    <if test="activityType != null">activity_type,
-                    </if>
-                    <if test="remark != null">remark,
-                    </if>
+            <if test="createTime != null">create_time,
+            </if>
+            <if test="updateTime != null">update_time,
+            </if>
+            <if test="enabled != null">enabled,
+            </if>
+            <if test="weight != null">weight,
+            </if>
+            <if test="startTime != null">start_time,
+            </if>
+            <if test="endTime != null">end_time,
+            </if>
+            <if test="title != null and title != ''">title,
+            </if>
+            <if test="bgUrl != null">bg_url,
+            </if>
+            <if test="batchNo != null and batchNo != ''">batch_no,
+            </if>
+            <if test="activityType != null">activity_type,
+            </if>
+            <if test="remark != null">remark,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="createTime != null">#{createTime},
-                    </if>
-                    <if test="updateTime != null">#{updateTime},
-                    </if>
-                    <if test="enabled != null">#{enabled},
-                    </if>
-                    <if test="weight != null">#{weight},
-                    </if>
-                    <if test="startTime != null">#{startTime},
-                    </if>
-                    <if test="endTime != null">#{endTime},
-                    </if>
-                    <if test="title != null and title != ''">#{title},
-                    </if>
-                    <if test="bgUrl != null">#{bgUrl},
-                    </if>
-                    <if test="batchNo != null and batchNo != ''">#{batchNo},
-                    </if>
-                    <if test="activityType != null">#{activityType},
-                    </if>
-                    <if test="remark != null">#{remark},
-                    </if>
+            <if test="createTime != null">#{createTime},
+            </if>
+            <if test="updateTime != null">#{updateTime},
+            </if>
+            <if test="enabled != null">#{enabled},
+            </if>
+            <if test="weight != null">#{weight},
+            </if>
+            <if test="startTime != null">#{startTime},
+            </if>
+            <if test="endTime != null">#{endTime},
+            </if>
+            <if test="title != null and title != ''">#{title},
+            </if>
+            <if test="bgUrl != null">#{bgUrl},
+            </if>
+            <if test="batchNo != null and batchNo != ''">#{batchNo},
+            </if>
+            <if test="activityType != null">#{activityType},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
         </trim>
     </insert>
 
     <update id="updateActivity" parameterType="Activity">
         update t_activity
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="createTime != null">create_time =
-                        #{createTime},
-                    </if>
-                    <if test="updateTime != null">update_time =
-                        #{updateTime},
-                    </if>
-                    <if test="enabled != null">enabled =
-                        #{enabled},
-                    </if>
-                    <if test="weight != null">weight =
-                        #{weight},
-                    </if>
-                    <if test="startTime != null">start_time =
-                        #{startTime},
-                    </if>
-                    <if test="endTime != null">end_time =
-                        #{endTime},
-                    </if>
-                    <if test="title != null and title != ''">title =
-                        #{title},
-                    </if>
-                    <if test="bgUrl != null">bg_url =
-                        #{bgUrl},
-                    </if>
-                    <if test="batchNo != null and batchNo != ''">batch_no =
-                        #{batchNo},
-                    </if>
-                    <if test="activityType != null">activity_type =
-                        #{activityType},
-                    </if>
-                    <if test="remark != null">remark =
-                        #{remark},
-                    </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
+            <if test="updateTime != null">update_time =
+                #{updateTime},
+            </if>
+            <if test="enabled != null">enabled =
+                #{enabled},
+            </if>
+            <if test="weight != null">weight =
+                #{weight},
+            </if>
+            <if test="startTime != null">start_time =
+                #{startTime},
+            </if>
+            <if test="endTime != null">end_time =
+                #{endTime},
+            </if>
+            <if test="title != null and title != ''">title =
+                #{title},
+            </if>
+            <if test="bgUrl != null">bg_url =
+                #{bgUrl},
+            </if>
+            <if test="batchNo != null and batchNo != ''">batch_no =
+                #{batchNo},
+            </if>
+            <if test="activityType != null">activity_type =
+                #{activityType},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteActivityById" parameterType="Long">
-        delete from t_activity where id = #{id}
+        delete
+        from t_activity
+        where id = #{id}
     </delete>
 
     <delete id="deleteActivityByIds" parameterType="String">

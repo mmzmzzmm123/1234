@@ -1,7 +1,5 @@
 package com.onethinker.user.enums;
 
-import com.ruoyi.common.enums.SysConfigKeyEnum;
-
 import java.util.Objects;
 
 /**
@@ -13,7 +11,7 @@ public enum ServiceTypeEnum {
     /**
      * 博客业务
      */
-    BK("bk","博客业务");
+    BK("bk", "博客业务");
 
     String code;
     String msg;

@@ -1,10 +1,6 @@
 package com.onethinker.user.factory.service.impl;
 
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
-import com.ruoyi.common.enums.SysConfigKeyEnum;
-import com.ruoyi.common.utils.PhoneUtils;
-import com.ruoyi.framework.web.service.SysLoginService;
-import com.ruoyi.system.service.ISysConfigService;
 import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.domain.PlatformUserDetail;
 import com.onethinker.user.dto.PlatformUserReqDTO;
@@ -13,6 +9,10 @@ import com.onethinker.user.factory.service.IPlatformUserService;
 import com.onethinker.user.mapper.PlatformUserMapper;
 import com.onethinker.user.service.IPlatformUserDetailService;
 import com.onethinker.wechat.service.IMinWechatService;
+import com.ruoyi.common.enums.SysConfigKeyEnum;
+import com.ruoyi.common.utils.PhoneUtils;
+import com.ruoyi.framework.web.service.SysLoginService;
+import com.ruoyi.system.service.ISysConfigService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
@@ -56,20 +56,20 @@ public class PlatformUserSourceTypeWxServiceImpl implements IPlatformUserService
         PlatformUserDetail platformUserDetail = platformUserDetailService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
         if (ObjectUtils.isEmpty(platformUserDetail)) {
             // 微信登录保存相关信息
-            platformUserDetail = platformUserDetailService.saveEntryUserDetailByWx(new PlatformUser(),reqDTO);
+            platformUserDetail = platformUserDetailService.saveEntryUserDetailByWx(new PlatformUser(), reqDTO);
         }
         // 获取权限内容
-        String token = loginService.loginFe(reqDTO.getDataId(),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
-        return PlatformUserResDTO.foramtResponse(token,platformUserDetail);
+        String token = loginService.loginFe(reqDTO.getDataId(), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
+        return PlatformUserResDTO.foramtResponse(token, platformUserDetail);
     }
 
     @Override
     public PlatformUserResDTO register(PlatformUserReqDTO reqDTO) {
         // 微信登录注册
-        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getOpenId()),"用户凭证不能为空");
-        Assert.isTrue(PhoneUtils.isMobiPhoneNum(reqDTO.getPhone()),"手机号有误");
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getOpenId()), "用户凭证不能为空");
+        Assert.isTrue(PhoneUtils.isMobiPhoneNum(reqDTO.getPhone()), "手机号有误");
         // 校验手机号是否被绑定
-        platformUserDetailService.existsWxRegister(reqDTO.getOpenId(),reqDTO.getPhone());
+        platformUserDetailService.existsWxRegister(reqDTO.getOpenId(), reqDTO.getPhone());
         PlatformUser platformUserParams = new PlatformUser();
         platformUserParams.setDataId(reqDTO.getPhone());
         List<PlatformUser> platformUsers = platformUserMapper.selectPlatformUserList(platformUserParams);
@@ -87,12 +87,12 @@ public class PlatformUserSourceTypeWxServiceImpl implements IPlatformUserService
             platformUser.setNickName(ObjectUtils.isEmpty(reqDTO.getNickName()) ? configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_NICK_NAME) + System.currentTimeMillis() : reqDTO.getNickName());
             platformUserMapper.insertPlatformUser(platformUser);
             // 另外保存一份网页端账号信息
-            platformUserDetailService.saveEntryUserDetailByAccount(platformUser,reqDTO);
+            platformUserDetailService.saveEntryUserDetailByAccount(platformUser, reqDTO);
         }
         PlatformUserDetail platformUserDetail = platformUserDetailService.saveEntryUserDetailByWx(platformUser, reqDTO);
         // 获取权限内容
-        String token = loginService.loginFe(platformUser.getDataId(),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)),configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
-        return PlatformUserResDTO.foramtResponse(token,platformUserDetail);
+        String token = loginService.loginFe(platformUser.getDataId(), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
+        return PlatformUserResDTO.foramtResponse(token, platformUserDetail);
     }
 
     @Override

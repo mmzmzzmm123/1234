@@ -1,17 +1,17 @@
 package com.onethinker.bk.service.impl;
 
-import java.util.List;
-
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.ImChatGroupUser;
+import com.onethinker.bk.mapper.ImChatGroupUserMapper;
+import com.onethinker.bk.service.IImChatGroupUserService;
 import com.onethinker.im.websocket.ImConfigConst;
 import com.ruoyi.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.ImChatGroupUserMapper;
-import com.onethinker.bk.domain.ImChatGroupUser;
-import com.onethinker.bk.service.IImChatGroupUserService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
+
 /**
  * 聊天群成员Service业务层处理
  *
@@ -20,7 +20,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class ImChatGroupUserServiceImpl extends ServiceImpl<ImChatGroupUserMapper,ImChatGroupUser> implements IImChatGroupUserService {
+public class ImChatGroupUserServiceImpl extends ServiceImpl<ImChatGroupUserMapper, ImChatGroupUser> implements IImChatGroupUserService {
     @Resource
     private ImChatGroupUserMapper imChatGroupUserMapper;
 
@@ -54,8 +54,8 @@ public class ImChatGroupUserServiceImpl extends ServiceImpl<ImChatGroupUserMappe
      */
     @Override
     public int insertImChatGroupUser(ImChatGroupUser imChatGroupUser) {
-                imChatGroupUser.setCreateTime(DateUtils.getNowDate());
-            return imChatGroupUserMapper.insertImChatGroupUser(imChatGroupUser);
+        imChatGroupUser.setCreateTime(DateUtils.getNowDate());
+        return imChatGroupUserMapper.insertImChatGroupUser(imChatGroupUser);
     }
 
     /**

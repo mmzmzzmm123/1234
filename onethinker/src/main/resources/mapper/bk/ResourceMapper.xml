@@ -5,140 +5,151 @@
 <mapper namespace="com.onethinker.bk.mapper.ResourceMapper">
 
     <resultMap type="BkResource" id="ResourceResult">
-            <result property="id" column="id"/>
-            <result property="userId" column="user_id"/>
-            <result property="type" column="type"/>
-            <result property="path" column="path"/>
-            <result property="size" column="size"/>
-            <result property="originalName" column="original_name"/>
-            <result property="mimeType" column="mime_type"/>
-            <result property="status" column="status"/>
-            <result property="storeType" column="store_type"/>
-            <result property="createTime" column="create_time"/>
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="type" column="type"/>
+        <result property="path" column="path"/>
+        <result property="size" column="size"/>
+        <result property="originalName" column="original_name"/>
+        <result property="mimeType" column="mime_type"/>
+        <result property="status" column="status"/>
+        <result property="storeType" column="store_type"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectResourceVo">
-        select id, user_id, type, path, size, original_name, mime_type, status, store_type, create_time
+        select id,
+               user_id,
+               type,
+               path,
+               size,
+               original_name,
+               mime_type,
+               status,
+               store_type,
+               create_time
         from bk_resource
     </sql>
 
     <select id="selectResourceList" parameterType="BkResource" resultMap="ResourceResult">
         <include refid="selectResourceVo"/>
         <where>
-                        <if test="userId != null ">
-                            and user_id = #{userId}
-                        </if>
-                        <if test="type != null  and type != ''">
-                            and type = #{type}
-                        </if>
-                        <if test="path != null  and path != ''">
-                            and path = #{path}
-                        </if>
-                        <if test="size != null ">
-                            and size = #{size}
-                        </if>
-                        <if test="originalName != null  and originalName != ''">
-                            and original_name like concat('%', #{originalName}, '%')
-                        </if>
-                        <if test="mimeType != null  and mimeType != ''">
-                            and mime_type = #{mimeType}
-                        </if>
-                        <if test="status != null ">
-                            and status = #{status}
-                        </if>
-                        <if test="storeType != null  and storeType != ''">
-                            and store_type = #{storeType}
-                        </if>
+            <if test="userId != null ">
+                and user_id = #{userId}
+            </if>
+            <if test="type != null  and type != ''">
+                and type = #{type}
+            </if>
+            <if test="path != null  and path != ''">
+                and path = #{path}
+            </if>
+            <if test="size != null ">
+                and size = #{size}
+            </if>
+            <if test="originalName != null  and originalName != ''">
+                and original_name like concat('%', #{originalName}, '%')
+            </if>
+            <if test="mimeType != null  and mimeType != ''">
+                and mime_type = #{mimeType}
+            </if>
+            <if test="status != null ">
+                and status = #{status}
+            </if>
+            <if test="storeType != null  and storeType != ''">
+                and store_type = #{storeType}
+            </if>
         </where>
     </select>
 
     <select id="selectResourceById" parameterType="Long"
             resultMap="ResourceResult">
-            <include refid="selectResourceVo"/>
-            where id = #{id}
+        <include refid="selectResourceVo"/>
+        where id = #{id}
     </select>
 
     <insert id="insertResource" parameterType="BkResource" useGeneratedKeys="true"
             keyProperty="id">
         insert into bk_resource
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="userId != null">user_id,
-                    </if>
-                    <if test="type != null and type != ''">type,
-                    </if>
-                    <if test="path != null and path != ''">path,
-                    </if>
-                    <if test="size != null">size,
-                    </if>
-                    <if test="originalName != null">original_name,
-                    </if>
-                    <if test="mimeType != null">mime_type,
-                    </if>
-                    <if test="status != null">status,
-                    </if>
-                    <if test="storeType != null">store_type,
-                    </if>
-                    <if test="createTime != null">create_time,
-                    </if>
+            <if test="userId != null">user_id,
+            </if>
+            <if test="type != null and type != ''">type,
+            </if>
+            <if test="path != null and path != ''">path,
+            </if>
+            <if test="size != null">size,
+            </if>
+            <if test="originalName != null">original_name,
+            </if>
+            <if test="mimeType != null">mime_type,
+            </if>
+            <if test="status != null">status,
+            </if>
+            <if test="storeType != null">store_type,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="userId != null">#{userId},
-                    </if>
-                    <if test="type != null and type != ''">#{type},
-                    </if>
-                    <if test="path != null and path != ''">#{path},
-                    </if>
-                    <if test="size != null">#{size},
-                    </if>
-                    <if test="originalName != null">#{originalName},
-                    </if>
-                    <if test="mimeType != null">#{mimeType},
-                    </if>
-                    <if test="status != null">#{status},
-                    </if>
-                    <if test="storeType != null">#{storeType},
-                    </if>
-                    <if test="createTime != null">#{createTime},
-                    </if>
+            <if test="userId != null">#{userId},
+            </if>
+            <if test="type != null and type != ''">#{type},
+            </if>
+            <if test="path != null and path != ''">#{path},
+            </if>
+            <if test="size != null">#{size},
+            </if>
+            <if test="originalName != null">#{originalName},
+            </if>
+            <if test="mimeType != null">#{mimeType},
+            </if>
+            <if test="status != null">#{status},
+            </if>
+            <if test="storeType != null">#{storeType},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
         </trim>
     </insert>
 
     <update id="updateResource" parameterType="BkResource">
         update bk_resource
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="userId != null">user_id =
-                        #{userId},
-                    </if>
-                    <if test="type != null and type != ''">type =
-                        #{type},
-                    </if>
-                    <if test="path != null and path != ''">path =
-                        #{path},
-                    </if>
-                    <if test="size != null">size =
-                        #{size},
-                    </if>
-                    <if test="originalName != null">original_name =
-                        #{originalName},
-                    </if>
-                    <if test="mimeType != null">mime_type =
-                        #{mimeType},
-                    </if>
-                    <if test="status != null">status =
-                        #{status},
-                    </if>
-                    <if test="storeType != null">store_type =
-                        #{storeType},
-                    </if>
-                    <if test="createTime != null">create_time =
-                        #{createTime},
-                    </if>
+            <if test="userId != null">user_id =
+                #{userId},
+            </if>
+            <if test="type != null and type != ''">type =
+                #{type},
+            </if>
+            <if test="path != null and path != ''">path =
+                #{path},
+            </if>
+            <if test="size != null">size =
+                #{size},
+            </if>
+            <if test="originalName != null">original_name =
+                #{originalName},
+            </if>
+            <if test="mimeType != null">mime_type =
+                #{mimeType},
+            </if>
+            <if test="status != null">status =
+                #{status},
+            </if>
+            <if test="storeType != null">store_type =
+                #{storeType},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteResourceById" parameterType="Long">
-        delete from bk_resource where id = #{id}
+        delete
+        from bk_resource
+        where id = #{id}
     </delete>
 
     <delete id="deleteResourceByIds" parameterType="String">

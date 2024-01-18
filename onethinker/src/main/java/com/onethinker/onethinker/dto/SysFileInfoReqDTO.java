@@ -1,8 +1,7 @@
 package com.onethinker.onethinker.dto;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @author : yangyouqi
@@ -30,12 +29,12 @@ public class SysFileInfoReqDTO {
 
     /**
      * 文件归属模块
-     *
      */
     private String module;
 
     /**
      * 文件类型
+     *
      * @return
      */
     private Integer fileType;

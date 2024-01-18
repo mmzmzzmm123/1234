@@ -1,9 +1,8 @@
 package com.onethinker.onethinker.factory.service;
 
-import java.util.List;
-
-import com.onethinker.onethinker.domain.RedEnvelopeCtrl;
 import com.onethinker.onethinker.dto.ActivityReqDTO;
+
+import java.util.List;
 
 /**
  * @author : yangyouqi
@@ -13,6 +12,7 @@ public interface IActivityDetailService<T> {
 
     /**
      * 保存活动明细数据
+     *
      * @param activityReqDTO
      * @return
      */
@@ -20,6 +20,7 @@ public interface IActivityDetailService<T> {
 
     /**
      * 通过条件状态查询数据
+     *
      * @param reqDTO
      * @return
      */

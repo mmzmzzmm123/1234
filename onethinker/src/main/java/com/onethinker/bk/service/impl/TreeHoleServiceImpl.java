@@ -1,15 +1,26 @@
 package com.onethinker.bk.service.impl;
 
-import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.TreeHole;
+import com.onethinker.bk.mapper.TreeHoleMapper;
+import com.onethinker.bk.service.ITreeHoleService;
+import com.onethinker.bk.service.IWebInfoService;
+import com.ruoyi.common.constant.BkConstants;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
+import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.TreeHoleMapper;
-import com.onethinker.bk.domain.TreeHole;
-import com.onethinker.bk.service.ITreeHoleService;
-import lombok.extern.log4j.Log4j2;
+import org.springframework.util.StringUtils;
+
 import javax.annotation.Resource;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 /**
  * 树洞Service业务层处理
  *
@@ -18,31 +29,17 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper,TreeHole> implements ITreeHoleService {
+public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper, TreeHole> implements ITreeHoleService {
     @Resource
     private TreeHoleMapper treeHoleMapper;
 
-    /**
-     * 查询树洞
-     *
-     * @param id 树洞主键
-     * @return 树洞
-     */
-    @Override
-    public TreeHole selectTreeHoleById(Long id) {
-        return treeHoleMapper.selectTreeHoleById(id);
-    }
+    @Autowired
+    private IWebInfoService webInfoService;
 
-    /**
-     * 查询树洞列表
-     *
-     * @param treeHole 树洞
-     * @return 树洞
-     */
-    @Override
-    public List<TreeHole> selectTreeHoleList(TreeHole treeHole) {
-        return treeHoleMapper.selectTreeHoleList(treeHole);
-    }
+    @Autowired
+    private RedisCache redisCache;
+
+    private static final String REDIS_KEY = "treeHole";
 
     /**
      * 新增树洞
@@ -51,9 +48,16 @@ public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper,TreeHole> im
      * @return 结果
      */
     @Override
-    public int insertTreeHole(TreeHole treeHole) {
-                treeHole.setCreateTime(DateUtils.getNowDate());
-            return treeHoleMapper.insertTreeHole(treeHole);
+    public int insertTreeHole(TreeHole treeHole, String ipAddr) {
+        treeHole.existsParams();
+        if (!StringUtils.hasText(treeHole.getAvatar())) {
+            treeHole.setAvatar(webInfoService.getRandomAvatar(null, ipAddr));
+        }
+        treeHole.setCreateTime(DateUtils.getNowDate());
+        int i = treeHoleMapper.insertTreeHole(treeHole);
+        // 删除缓存
+        redisCache.deleteObject(CacheEnum.WEB_INFO.getCode() + REDIS_KEY);
+        return i;
     }
 
     /**
@@ -64,18 +68,9 @@ public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper,TreeHole> im
      */
     @Override
     public int updateTreeHole(TreeHole treeHole) {
-        return treeHoleMapper.updateTreeHole(treeHole);
-    }
-
-    /**
-     * 批量删除树洞
-     *
-     * @param ids 需要删除的树洞主键
-     * @return 结果
-     */
-    @Override
-    public int deleteTreeHoleByIds(Long[] ids) {
-        return treeHoleMapper.deleteTreeHoleByIds(ids);
+        int i = treeHoleMapper.updateTreeHole(treeHole);
+        redisCache.deleteObject(CacheEnum.WEB_INFO.getCode() + REDIS_KEY);
+        return i;
     }
 
     /**
@@ -86,6 +81,39 @@ public class TreeHoleServiceImpl extends ServiceImpl<TreeHoleMapper,TreeHole> im
      */
     @Override
     public int deleteTreeHoleById(Long id) {
-        return treeHoleMapper.deleteTreeHoleById(id);
+        int i = treeHoleMapper.deleteTreeHoleById(id);
+        redisCache.deleteObject(CacheEnum.WEB_INFO.getCode() + REDIS_KEY);
+        return i;
+    }
+
+    @Override
+    public List<TreeHole> listTreeHole() {
+        String redisKey = CacheEnum.WEB_INFO.getCode() + REDIS_KEY;
+        if (redisCache.hasKey(redisKey)) {
+            return redisCache.getCacheList(redisKey);
+        }
+        List<TreeHole> treeHoles;
+
+        /**
+         * 少于200条直接展示，大于200条的随机抽取从第N条开始往后200条
+         */
+        Integer count = new LambdaQueryChainWrapper<>(treeHoleMapper).count();
+        if (count > BkConstants.TREE_HOLE_COUNT) {
+            int i = new Random().nextInt(count + 1 - BkConstants.TREE_HOLE_COUNT);
+            treeHoles = treeHoleMapper.queryAllByLimit(i, BkConstants.TREE_HOLE_COUNT);
+        } else {
+            treeHoles = new LambdaQueryChainWrapper<>(treeHoleMapper).list();
+        }
+
+        List<TreeHole> result = treeHoles.stream().map(treeHole -> {
+            if (!StringUtils.hasText(treeHole.getAvatar())) {
+                treeHole.setAvatar(webInfoService.getRandomAvatar(treeHole.getId().toString(), ""));
+            }
+            return treeHole;
+        }).collect(Collectors.toList());
+
+        redisCache.setCacheList(redisKey, result);
+        redisCache.expire(redisKey, 1, TimeUnit.DAYS);
+        return result;
     }
 }

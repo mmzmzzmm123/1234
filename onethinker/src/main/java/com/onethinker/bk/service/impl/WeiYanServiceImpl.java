@@ -1,16 +1,16 @@
 package com.onethinker.bk.service.impl;
 
-import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.framework.web.domain.server.Sys;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.WeiYanMapper;
-import com.onethinker.bk.domain.WeiYan;
-import com.onethinker.bk.service.IWeiYanService;
-import lombok.extern.log4j.Log4j2;
-import javax.annotation.Resource;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.WeiYan;
+import com.onethinker.bk.mapper.WeiYanMapper;
+import com.onethinker.bk.service.IWeiYanService;
+import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
 /**
  * 微言Service业务层处理
  *
@@ -19,7 +19,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class WeiYanServiceImpl extends ServiceImpl<WeiYanMapper,WeiYan> implements IWeiYanService {
+public class WeiYanServiceImpl extends ServiceImpl<WeiYanMapper, WeiYan> implements IWeiYanService {
     @Resource
     private WeiYanMapper weiYanMapper;
 
@@ -53,8 +53,8 @@ public class WeiYanServiceImpl extends ServiceImpl<WeiYanMapper,WeiYan> implemen
      */
     @Override
     public int insertWeiYan(WeiYan weiYan) {
-                weiYan.setCreateTime(DateUtils.getNowDate());
-            return weiYanMapper.insertWeiYan(weiYan);
+        weiYan.setCreateTime(DateUtils.getNowDate());
+        return weiYanMapper.insertWeiYan(weiYan);
     }
 
     /**

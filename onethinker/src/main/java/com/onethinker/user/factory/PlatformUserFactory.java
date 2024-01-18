@@ -19,10 +19,11 @@ public class PlatformUserFactory {
 
     @Autowired
     private PlatformUserSourceTypeAccountServiceImpl sourceTypeAccountService;
+
     public IPlatformUserService queryPlatformUserServiceBySourceType(String sourceType) {
         if (PlatformUserReqDTO.SOURCE_TYPE_WX.equals(sourceType)) {
             return sourceTypeWxService;
-        } else if (PlatformUserReqDTO.SOURCE_TYPE_ACCOUNT.equals(sourceType)){
+        } else if (PlatformUserReqDTO.SOURCE_TYPE_ACCOUNT.equals(sourceType)) {
             return sourceTypeAccountService;
         } else {
             throw new RuntimeException("来源【" + sourceType + "】有误");

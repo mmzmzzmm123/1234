@@ -1,32 +1,24 @@
 package com.onethinker.bk.service.impl;
 
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArraySet;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.HistoryInfo;
+import com.onethinker.bk.mapper.HistoryInfoMapper;
+import com.onethinker.bk.service.IHistoryInfoService;
 import com.onethinker.user.domain.PlatformUserDetail;
-import com.onethinker.user.factory.service.IPlatformUserService;
 import com.onethinker.user.service.IPlatformUserDetailService;
 import com.ruoyi.common.constant.BkConstants;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.CacheEnum;
 import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.HistoryInfoMapper;
-import com.onethinker.bk.domain.HistoryInfo;
-import com.onethinker.bk.service.IHistoryInfoService;
-import lombok.extern.log4j.Log4j2;
+
 import javax.annotation.Resource;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+
 /**
  * 历史信息Service业务层处理
  *
@@ -35,7 +27,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class HistoryInfoServiceImpl extends ServiceImpl<HistoryInfoMapper,HistoryInfo> implements IHistoryInfoService {
+public class HistoryInfoServiceImpl extends ServiceImpl<HistoryInfoMapper, HistoryInfo> implements IHistoryInfoService {
     @Resource
     private HistoryInfoMapper historyInfoMapper;
 
@@ -45,27 +37,7 @@ public class HistoryInfoServiceImpl extends ServiceImpl<HistoryInfoMapper,Histor
     @Autowired
     private IPlatformUserDetailService platformUserDetailService;
 
-    /**
-     * 查询历史信息
-     *
-     * @param id 历史信息主键
-     * @return 历史信息
-     */
-    @Override
-    public HistoryInfo selectHistoryInfoById(Long id) {
-        return historyInfoMapper.selectHistoryInfoById(id);
-    }
-
-    /**
-     * 查询历史信息列表
-     *
-     * @param historyInfo 历史信息
-     * @return 历史信息
-     */
-    @Override
-    public List<HistoryInfo> selectHistoryInfoList(HistoryInfo historyInfo) {
-        return historyInfoMapper.selectHistoryInfoList(historyInfo);
-    }
+    private static final String REDIS_KEY = "HistoryInfo";
 
     /**
      * 新增历史信息
@@ -75,8 +47,11 @@ public class HistoryInfoServiceImpl extends ServiceImpl<HistoryInfoMapper,Histor
      */
     @Override
     public int insertHistoryInfo(HistoryInfo historyInfo) {
-                historyInfo.setCreateTime(DateUtils.getNowDate());
-            return historyInfoMapper.insertHistoryInfo(historyInfo);
+        historyInfo.setCreateTime(DateUtils.getNowDate());
+        int i = historyInfoMapper.insertHistoryInfo(historyInfo);
+        Collection<String> keys = redisCache.keys(CacheEnum.WEB_INFO.getCode() + REDIS_KEY + "*");
+        redisCache.deleteObject(keys);
+        return i;
     }
 
     /**
@@ -87,34 +62,15 @@ public class HistoryInfoServiceImpl extends ServiceImpl<HistoryInfoMapper,Histor
      */
     @Override
     public int updateHistoryInfo(HistoryInfo historyInfo) {
-        return historyInfoMapper.updateHistoryInfo(historyInfo);
-    }
-
-    /**
-     * 批量删除历史信息
-     *
-     * @param ids 需要删除的历史信息主键
-     * @return 结果
-     */
-    @Override
-    public int deleteHistoryInfoByIds(Long[] ids) {
-        return historyInfoMapper.deleteHistoryInfoByIds(ids);
-    }
-
-    /**
-     * 删除历史信息信息
-     *
-     * @param id 历史信息主键
-     * @return 结果
-     */
-    @Override
-    public int deleteHistoryInfoById(Long id) {
-        return historyInfoMapper.deleteHistoryInfoById(id);
+        int i = historyInfoMapper.updateHistoryInfo(historyInfo);
+        Collection<String> keys = redisCache.keys(CacheEnum.WEB_INFO.getCode() + REDIS_KEY + "*");
+        redisCache.deleteObject(keys);
+        return i;
     }
 
     @Override
     public Map<String, Object> getHistoryInfo() {
-        String redisKey = CacheEnum.WEB_INFO.getCode() + "history_info";
+        String redisKey = CacheEnum.WEB_INFO.getCode() + REDIS_KEY;
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheMap(redisKey);
         }
@@ -171,13 +127,13 @@ public class HistoryInfoServiceImpl extends ServiceImpl<HistoryInfoMapper,Histor
                 .collect(Collectors.toList());
 
         result.put("province_today", list);
-        redisCache.setCacheMap(redisKey,result);
-        redisCache.expire(redisKey,1,TimeUnit.DAYS);
+        redisCache.setCacheMap(redisKey, result);
+        redisCache.expire(redisKey, 1, TimeUnit.DAYS);
         return result;
     }
 
     private Map<String, Object> queryHistoryInfoByRedisCache() {
-        String redisKey = CacheEnum.WEB_INFO.getCode() + "history_info_statistics";
+        String redisKey = CacheEnum.WEB_INFO.getCode() + REDIS_KEY + "_statistics";
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheMap(redisKey);
         }
@@ -186,7 +142,7 @@ public class HistoryInfoServiceImpl extends ServiceImpl<HistoryInfoMapper,Histor
         history.put(BkConstants.IP_HISTORY_IP, historyInfoMapper.getHistoryByIp());
         history.put(BkConstants.IP_HISTORY_HOUR, historyInfoMapper.getHistoryBy24Hour());
         history.put(BkConstants.IP_HISTORY_COUNT, historyInfoMapper.getHistoryCount());
-        redisCache.setCacheObject(redisKey, history,1, TimeUnit.DAYS);
+        redisCache.setCacheObject(redisKey, history, 1, TimeUnit.DAYS);
         return history;
     }
 }

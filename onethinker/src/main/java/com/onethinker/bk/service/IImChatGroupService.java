@@ -1,7 +1,8 @@
 package com.onethinker.bk.service;
 
-import java.util.List;
 import com.onethinker.bk.domain.ImChatGroup;
+
+import java.util.List;
 
 /**
  * 聊天群Service接口
@@ -16,7 +17,7 @@ public interface IImChatGroupService {
      * @param id 聊天群主键
      * @return 聊天群
      */
-    public ImChatGroup selectImChatGroupById(Long id);
+    ImChatGroup selectImChatGroupById(Long id);
 
     /**
      * 查询聊天群列表
@@ -24,7 +25,7 @@ public interface IImChatGroupService {
      * @param imChatGroup 聊天群
      * @return 聊天群集合
      */
-    public List<ImChatGroup> selectImChatGroupList(ImChatGroup imChatGroup);
+    List<ImChatGroup> selectImChatGroupList(ImChatGroup imChatGroup);
 
     /**
      * 新增聊天群
@@ -32,7 +33,7 @@ public interface IImChatGroupService {
      * @param imChatGroup 聊天群
      * @return 结果
      */
-    public int insertImChatGroup(ImChatGroup imChatGroup);
+    int insertImChatGroup(ImChatGroup imChatGroup);
 
     /**
      * 修改聊天群
@@ -40,7 +41,7 @@ public interface IImChatGroupService {
      * @param imChatGroup 聊天群
      * @return 结果
      */
-    public int updateImChatGroup(ImChatGroup imChatGroup);
+    int updateImChatGroup(ImChatGroup imChatGroup);
 
     /**
      * 批量删除聊天群
@@ -48,7 +49,7 @@ public interface IImChatGroupService {
      * @param ids 需要删除的聊天群主键集合
      * @return 结果
      */
-    public int deleteImChatGroupByIds(Long[] ids);
+    int deleteImChatGroupByIds(Long[] ids);
 
     /**
      * 删除聊天群信息
@@ -56,5 +57,5 @@ public interface IImChatGroupService {
      * @param id 聊天群主键
      * @return 结果
      */
-    public int deleteImChatGroupById(Long id);
+    int deleteImChatGroupById(Long id);
 }

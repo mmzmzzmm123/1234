@@ -1,9 +1,9 @@
 package com.onethinker.bk.mapper;
 
-import java.util.List;
-
-import com.onethinker.bk.domain.Article;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.bk.domain.Article;
+
+import java.util.List;
 
 /**
  * 文章Mapper接口
@@ -59,4 +59,12 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @return 结果
      */
     public int deleteArticleByIds(Long[] ids);
+
+    /**
+     * 获取文章统计数
+     * @param id
+     * @param viewCount
+     * @return
+     */
+    int updateViewCount(Long id,Long viewCount);
 }

@@ -1,17 +1,16 @@
 package com.ruoyi.web.controller.user;
 
-import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.enums.CacheEnum;
 import com.onethinker.user.domain.PlatformUserDetail;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
 import com.onethinker.user.factory.PlatformUserFactory;
 import com.onethinker.user.factory.service.IPlatformUserService;
 import com.onethinker.user.service.IPlatformUserDetailService;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

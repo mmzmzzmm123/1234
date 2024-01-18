@@ -22,15 +22,18 @@ public interface IPlatformUserDetailService {
      * @return 结果
      */
     public int updatePlatformUserDetail(PlatformUserDetail platformUserDetail);
+
     /**
      * 保存用户信息，平台来自账户密码输入
+     *
      * @param platformUser
      * @return
      */
-    PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser,PlatformUserReqDTO reqDTO);
+    PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser, PlatformUserReqDTO reqDTO);
 
     /**
      * 保存用户详情信息，平台来自微信登录补全手机号
+     *
      * @param platformUser
      * @param reqDTO
      */
@@ -38,6 +41,7 @@ public interface IPlatformUserDetailService {
 
     /**
      * 校验手机号是否被其他微信账号绑定
+     *
      * @param openId
      * @param phone
      */
@@ -45,6 +49,7 @@ public interface IPlatformUserDetailService {
 
     /**
      * 获取用户信息
+     *
      * @param dataId
      * @return
      */
@@ -52,28 +57,30 @@ public interface IPlatformUserDetailService {
 
     /**
      * 获取当前登录用户信息
+     *
      * @return
      */
     PlatformUserDetail queryLoginUserInfo();
 
     /**
-     * 获取用户信息
-     * @param phone
-     * @return
-     */
-    PlatformUser queryUserByPhone(String phone);
-
-    /**
      * 用户多名用户信息
+     *
      * @param puUserIds
      * @return
      */
-    Map<Long, String> selectUserPhoneByUserIds(List<Long> puUserIds);
+    Map<String, String> selectUserPhoneByUserIds(List<Long> puUserIds);
 
     /**
      * 通过用户id查询用户信息
-     * @param aLong
+     * @param userId
      * @return
      */
     PlatformUserDetail getPlatFormUserDetailByUserId(Long userId);
+
+    /**
+     * 根据状态查询用户信息
+     * @param stateTypeEnabled
+     * @return
+     */
+    List<PlatformUserDetail> queryStatus(Integer stateTypeEnabled);
 }

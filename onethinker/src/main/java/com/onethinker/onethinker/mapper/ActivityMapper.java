@@ -1,9 +1,9 @@
 package com.onethinker.onethinker.mapper;
 
-import java.util.List;
-
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.onethinker.onethinker.domain.Activity;
+
+import java.util.List;
 
 /**
  * 活动Mapper接口

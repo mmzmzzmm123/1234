@@ -30,7 +30,8 @@ public enum ActivityTypeEnum {
     /**
      * 押大小
      */
-    BET_SIZE(4, "押大小"),;
+    BET_SIZE(4, "押大小"),
+    ;
     Integer code;
     String msg;
 

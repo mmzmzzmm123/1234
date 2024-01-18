@@ -1,11 +1,11 @@
 package com.onethinker.onethinker.dto;
 
+import com.ruoyi.common.utils.MathUtils;
+import lombok.Data;
+
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
-
-import com.ruoyi.common.utils.MathUtils;
-import lombok.Data;
 
 /**
  * @Title: RedEnvelopeView
@@ -52,11 +52,11 @@ public class CalculateRedEnvelopeDTO {
         calculateRedEnvelopeDTO.setTotalBatch(totalBatch);
 
         // 每一个红包多少钱
-        Long batchMoney = MathUtils.divide(totalMoney,totalSum);
+        Long batchMoney = MathUtils.divide(totalMoney, totalSum);
         // 每一批由多少个
-        Long batchNum = MathUtils.divide(totalSum,totalBatch);
+        Long batchNum = MathUtils.divide(totalSum, totalBatch);
         // 求余校验
-        Integer existsSurplus = MathUtils.remainder(totalMoney,totalSum);
+        Integer existsSurplus = MathUtils.remainder(totalMoney, totalSum);
         calculateRedEnvelopeDTO.setBatchMoney(batchMoney);
         calculateRedEnvelopeDTO.setBatchNum(batchNum);
         calculateRedEnvelopeDTO.setExistsSurplus(existsSurplus);
@@ -78,25 +78,25 @@ public class CalculateRedEnvelopeDTO {
         calculateRedEnvelopeDTO.setBatchLuckyAwardNum(batchluckyAwardNum);
 
         // 幸运奖总数
-        long totalLuckyAwardSum = MathUtils.multiply(totalBatch , batchluckyAwardNum);
+        long totalLuckyAwardSum = MathUtils.multiply(totalBatch, batchluckyAwardNum);
         // 幸运奖总金额
-        long totalLuckyAwardMoney = MathUtils.multiply(totalLuckyAwardSum , batchluckyAwardMoney);
+        long totalLuckyAwardMoney = MathUtils.multiply(totalLuckyAwardSum, batchluckyAwardMoney);
         // 总剩余数量： 总数量 - 幸运奖数
-        long surplusSum = MathUtils.subtract(totalSum , totalLuckyAwardSum);
+        long surplusSum = MathUtils.subtract(totalSum, totalLuckyAwardSum);
         if (surplusSum < 0) {
             throw new RuntimeException("红包分配有误，幸运奖数大于红包总数");
         }
         // 总剩余金额： 总金额 - 幸运奖总金额
-        long surplusMoney = MathUtils.subtract(totalMoney , totalLuckyAwardMoney);
+        long surplusMoney = MathUtils.subtract(totalMoney, totalLuckyAwardMoney);
         if (surplusMoney < 0) {
             throw new RuntimeException("红包分配有误，幸运奖金额大于红包总金额");
         }
         // 每一批有多少个(去幸运奖品数)
-        Long batchNum = MathUtils.divide(surplusSum,totalBatch);
+        Long batchNum = MathUtils.divide(surplusSum, totalBatch);
         // 每一个可分配到的金额(去幸运奖品金额)
-        Long batchMoney = MathUtils.divide(surplusMoney,surplusSum);
+        Long batchMoney = MathUtils.divide(surplusMoney, surplusSum);
         // 求余校验 (去幸运奖)
-        Integer existsSurplus = MathUtils.remainder(surplusMoney,surplusSum);
+        Integer existsSurplus = MathUtils.remainder(surplusMoney, surplusSum);
 
         calculateRedEnvelopeDTO.setBatchMoney(batchMoney);
         calculateRedEnvelopeDTO.setBatchNum(batchNum);
@@ -109,6 +109,7 @@ public class CalculateRedEnvelopeDTO {
 
     /**
      * 计算随机数据
+     *
      * @param totalMoney
      * @param totalSum
      * @param totalBatch
@@ -126,23 +127,23 @@ public class CalculateRedEnvelopeDTO {
         calculateRedEnvelopeDTO.setBatchluckyAwardMoney(batchluckyAwardMoney);
         calculateRedEnvelopeDTO.setBatchLuckyAwardNum(batchluckyAwardNum);
         // 幸运奖总数
-        long totalLuckyAwardSum = MathUtils.multiply(totalBatch , batchluckyAwardNum);
+        long totalLuckyAwardSum = MathUtils.multiply(totalBatch, batchluckyAwardNum);
         // 幸运奖总金额
-        long totalLuckyAwardMoney = MathUtils.multiply(totalLuckyAwardSum , batchluckyAwardMoney);
+        long totalLuckyAwardMoney = MathUtils.multiply(totalLuckyAwardSum, batchluckyAwardMoney);
         // 总剩余数量： 总数量 - 幸运奖数
-        long surplusSum = MathUtils.subtract(totalSum , totalLuckyAwardSum);
+        long surplusSum = MathUtils.subtract(totalSum, totalLuckyAwardSum);
         if (surplusSum < 0) {
             throw new RuntimeException("红包分配有误，幸运奖数大于红包总数");
         }
         // 总剩余金额： 总金额 - 幸运奖总金额
-        long surplusMoney = MathUtils.subtract(totalMoney , totalLuckyAwardMoney);
+        long surplusMoney = MathUtils.subtract(totalMoney, totalLuckyAwardMoney);
         if (surplusMoney < 0) {
             throw new RuntimeException("红包分配有误，幸运奖金额大于红包总金额");
         }
         // 每一批有多少个(去幸运奖品数)
-        Long batchNum = MathUtils.divide(surplusSum,totalBatch);
+        Long batchNum = MathUtils.divide(surplusSum, totalBatch);
         // 这里只要校验下扣除了幸运奖后的金额 大于 总数量即可
-        Integer existsSurplus = MathUtils.subtract(surplusMoney,surplusSum) > 0 ? 0 : 1;
+        Integer existsSurplus = MathUtils.subtract(surplusMoney, surplusSum) > 0 ? 0 : 1;
 
         // 这里是随机生成，所以这里就不赋值操作了
 //        calculateRedEnvelopeView.setBatchMoney(batchMoney);
@@ -156,9 +157,9 @@ public class CalculateRedEnvelopeDTO {
     }
 
     /**
-     *
      * 计算幸运奖数
-     * @param batchNum : 批次数
+     *
+     * @param batchNum         : 批次数
      * @param luckyAwardCount: 幸运数
      * @return
      */
@@ -187,6 +188,6 @@ public class CalculateRedEnvelopeDTO {
 
     public static void main(String[] args) {
 
-        System.out.println(calculatedLuckyPosition(4L,3));
+        System.out.println(calculatedLuckyPosition(4L, 3));
     }
 }

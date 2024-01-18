@@ -1,8 +1,8 @@
 package com.onethinker.onethinker.mapper;
 
-import java.util.List;
-
 import com.onethinker.onethinker.domain.SysFileInfo;
+
+import java.util.List;
 
 /**
  * 文件信息Mapper接口

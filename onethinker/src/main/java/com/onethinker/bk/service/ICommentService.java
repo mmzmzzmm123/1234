@@ -1,7 +1,8 @@
 package com.onethinker.bk.service;
 
-import java.util.List;
 import com.onethinker.bk.domain.Comment;
+
+import java.util.List;
 
 /**
  * 文章评论Service接口
@@ -16,7 +17,7 @@ public interface ICommentService {
      * @param id 文章评论主键
      * @return 文章评论
      */
-    public Comment selectCommentById(Long id);
+    Comment selectCommentById(Long id);
 
     /**
      * 查询文章评论列表
@@ -24,7 +25,7 @@ public interface ICommentService {
      * @param comment 文章评论
      * @return 文章评论集合
      */
-    public List<Comment> selectCommentList(Comment comment);
+    List<Comment> selectCommentList(Comment comment);
 
     /**
      * 新增文章评论
@@ -32,7 +33,7 @@ public interface ICommentService {
      * @param comment 文章评论
      * @return 结果
      */
-    public int insertComment(Comment comment);
+    int insertComment(Comment comment);
 
     /**
      * 修改文章评论
@@ -40,7 +41,7 @@ public interface ICommentService {
      * @param comment 文章评论
      * @return 结果
      */
-    public int updateComment(Comment comment);
+    int updateComment(Comment comment);
 
     /**
      * 批量删除文章评论
@@ -48,7 +49,7 @@ public interface ICommentService {
      * @param ids 需要删除的文章评论主键集合
      * @return 结果
      */
-    public int deleteCommentByIds(Long[] ids);
+    int deleteCommentByIds(Long[] ids);
 
     /**
      * 删除文章评论信息
@@ -56,5 +57,13 @@ public interface ICommentService {
      * @param id 文章评论主键
      * @return 结果
      */
-    public int deleteCommentById(Long id);
+    int deleteCommentById(Long id);
+
+    /**
+     * 获取文章统计数
+     * @param id
+     * @param code
+     * @return
+     */
+    Integer getCommentCount(Long id, String code);
 }

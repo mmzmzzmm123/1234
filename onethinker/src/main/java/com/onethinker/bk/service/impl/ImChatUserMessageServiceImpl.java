@@ -1,15 +1,16 @@
 package com.onethinker.bk.service.impl;
 
-import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.ImChatUserMessageMapper;
-import com.onethinker.bk.domain.ImChatUserMessage;
-import com.onethinker.bk.service.IImChatUserMessageService;
-import lombok.extern.log4j.Log4j2;
-import javax.annotation.Resource;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.ImChatUserMessage;
+import com.onethinker.bk.mapper.ImChatUserMessageMapper;
+import com.onethinker.bk.service.IImChatUserMessageService;
+import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+
 /**
  * 单聊记录Service业务层处理
  *
@@ -18,7 +19,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class ImChatUserMessageServiceImpl extends ServiceImpl<ImChatUserMessageMapper,ImChatUserMessage> implements IImChatUserMessageService {
+public class ImChatUserMessageServiceImpl extends ServiceImpl<ImChatUserMessageMapper, ImChatUserMessage> implements IImChatUserMessageService {
     @Resource
     private ImChatUserMessageMapper imChatUserMessageMapper;
 
@@ -52,8 +53,8 @@ public class ImChatUserMessageServiceImpl extends ServiceImpl<ImChatUserMessageM
      */
     @Override
     public int insertImChatUserMessage(ImChatUserMessage imChatUserMessage) {
-                imChatUserMessage.setCreateTime(DateUtils.getNowDate());
-            return imChatUserMessageMapper.insertImChatUserMessage(imChatUserMessage);
+        imChatUserMessage.setCreateTime(DateUtils.getNowDate());
+        return imChatUserMessageMapper.insertImChatUserMessage(imChatUserMessage);
     }
 
     /**

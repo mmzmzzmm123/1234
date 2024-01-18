@@ -1,7 +1,8 @@
 package com.onethinker.bk.service;
 
-import java.util.List;
 import com.onethinker.bk.domain.Family;
+
+import java.util.List;
 
 /**
  * 家庭信息Service接口
@@ -16,7 +17,7 @@ public interface IFamilyService {
      * @param id 家庭信息主键
      * @return 家庭信息
      */
-    public Family selectFamilyById(Long id);
+    Family selectFamilyById(Long id);
 
     /**
      * 查询家庭信息列表
@@ -24,7 +25,7 @@ public interface IFamilyService {
      * @param family 家庭信息
      * @return 家庭信息集合
      */
-    public List<Family> selectFamilyList(Family family);
+    List<Family> selectFamilyList(Family family);
 
     /**
      * 新增家庭信息
@@ -32,7 +33,7 @@ public interface IFamilyService {
      * @param family 家庭信息
      * @return 结果
      */
-    public int insertFamily(Family family);
+    int insertFamily(Family family);
 
     /**
      * 修改家庭信息
@@ -40,7 +41,7 @@ public interface IFamilyService {
      * @param family 家庭信息
      * @return 结果
      */
-    public int updateFamily(Family family);
+    int updateFamily(Family family);
 
     /**
      * 批量删除家庭信息
@@ -48,7 +49,7 @@ public interface IFamilyService {
      * @param ids 需要删除的家庭信息主键集合
      * @return 结果
      */
-    public int deleteFamilyByIds(Long[] ids);
+    int deleteFamilyByIds(Long[] ids);
 
     /**
      * 删除家庭信息信息
@@ -56,5 +57,5 @@ public interface IFamilyService {
      * @param id 家庭信息主键
      * @return 结果
      */
-    public int deleteFamilyById(Long id);
+    int deleteFamilyById(Long id);
 }

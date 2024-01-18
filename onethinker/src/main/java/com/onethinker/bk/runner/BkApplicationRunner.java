@@ -26,6 +26,7 @@ public class BkApplicationRunner implements ApplicationRunner {
 
     /**
      * 删除博客相关缓存内容
+     *
      * @param args incoming application arguments
      * @throws Exception
      */
@@ -39,7 +40,7 @@ public class BkApplicationRunner implements ApplicationRunner {
         }
         // 删除网站缓存信息
         boolean b = redisCache.deleteObject(cacheKeys);
-        LOG.info("博客相关缓存删除：{}",b);
+        LOG.info("博客相关缓存删除：{}", b);
 
     }
 }

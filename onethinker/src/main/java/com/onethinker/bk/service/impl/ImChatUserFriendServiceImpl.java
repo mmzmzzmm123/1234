@@ -1,19 +1,20 @@
 package com.onethinker.bk.service.impl;
 
-import java.util.List;
-
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.ImChatUserFriend;
+import com.onethinker.bk.mapper.ImChatUserFriendMapper;
+import com.onethinker.bk.service.IImChatUserFriendService;
 import com.onethinker.im.websocket.ImConfigConst;
 import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.service.ISysConfigService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.ImChatUserFriendMapper;
-import com.onethinker.bk.domain.ImChatUserFriend;
-import com.onethinker.bk.service.IImChatUserFriendService;
-import lombok.extern.log4j.Log4j2;
+
 import javax.annotation.Resource;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
+
 /**
  * 好友Service业务层处理
  *
@@ -22,12 +23,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class ImChatUserFriendServiceImpl extends ServiceImpl<ImChatUserFriendMapper,ImChatUserFriend> implements IImChatUserFriendService {
+public class ImChatUserFriendServiceImpl extends ServiceImpl<ImChatUserFriendMapper, ImChatUserFriend> implements IImChatUserFriendService {
     @Resource
     private ImChatUserFriendMapper imChatUserFriendMapper;
 
     @Autowired
     private ISysConfigService sysConfigService;
+
     /**
      * 查询好友
      *
@@ -58,8 +60,8 @@ public class ImChatUserFriendServiceImpl extends ServiceImpl<ImChatUserFriendMap
      */
     @Override
     public int insertImChatUserFriend(ImChatUserFriend imChatUserFriend) {
-                imChatUserFriend.setCreateTime(DateUtils.getNowDate());
-            return imChatUserFriendMapper.insertImChatUserFriend(imChatUserFriend);
+        imChatUserFriend.setCreateTime(DateUtils.getNowDate());
+        return imChatUserFriendMapper.insertImChatUserFriend(imChatUserFriend);
     }
 
     /**

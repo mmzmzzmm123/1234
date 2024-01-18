@@ -5,13 +5,13 @@
 <mapper namespace="com.onethinker.bk.mapper.HistoryInfoMapper">
 
     <resultMap type="HistoryInfo" id="HistoryInfoResult">
-            <result property="id" column="id"/>
-            <result property="userId" column="user_id"/>
-            <result property="ip" column="ip"/>
-            <result property="nation" column="nation"/>
-            <result property="province" column="province"/>
-            <result property="city" column="city"/>
-            <result property="createTime" column="create_time"/>
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="ip" column="ip"/>
+        <result property="nation" column="nation"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectHistoryInfoVo">
@@ -22,90 +22,92 @@
     <select id="selectHistoryInfoList" parameterType="HistoryInfo" resultMap="HistoryInfoResult">
         <include refid="selectHistoryInfoVo"/>
         <where>
-                        <if test="userId != null ">
-                            and user_id = #{userId}
-                        </if>
-                        <if test="ip != null  and ip != ''">
-                            and ip = #{ip}
-                        </if>
-                        <if test="nation != null  and nation != ''">
-                            and nation = #{nation}
-                        </if>
-                        <if test="province != null  and province != ''">
-                            and province = #{province}
-                        </if>
-                        <if test="city != null  and city != ''">
-                            and city = #{city}
-                        </if>
+            <if test="userId != null ">
+                and user_id = #{userId}
+            </if>
+            <if test="ip != null  and ip != ''">
+                and ip = #{ip}
+            </if>
+            <if test="nation != null  and nation != ''">
+                and nation = #{nation}
+            </if>
+            <if test="province != null  and province != ''">
+                and province = #{province}
+            </if>
+            <if test="city != null  and city != ''">
+                and city = #{city}
+            </if>
         </where>
     </select>
 
     <select id="selectHistoryInfoById" parameterType="Long"
             resultMap="HistoryInfoResult">
-            <include refid="selectHistoryInfoVo"/>
-            where id = #{id}
+        <include refid="selectHistoryInfoVo"/>
+        where id = #{id}
     </select>
 
     <insert id="insertHistoryInfo" parameterType="HistoryInfo" useGeneratedKeys="true"
             keyProperty="id">
         insert into bk_history_info
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="userId != null">user_id,
-                    </if>
-                    <if test="ip != null and ip != ''">ip,
-                    </if>
-                    <if test="nation != null">nation,
-                    </if>
-                    <if test="province != null">province,
-                    </if>
-                    <if test="city != null">city,
-                    </if>
-                    <if test="createTime != null">create_time,
-                    </if>
+            <if test="userId != null">user_id,
+            </if>
+            <if test="ip != null and ip != ''">ip,
+            </if>
+            <if test="nation != null">nation,
+            </if>
+            <if test="province != null">province,
+            </if>
+            <if test="city != null">city,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="userId != null">#{userId},
-                    </if>
-                    <if test="ip != null and ip != ''">#{ip},
-                    </if>
-                    <if test="nation != null">#{nation},
-                    </if>
-                    <if test="province != null">#{province},
-                    </if>
-                    <if test="city != null">#{city},
-                    </if>
-                    <if test="createTime != null">#{createTime},
-                    </if>
+            <if test="userId != null">#{userId},
+            </if>
+            <if test="ip != null and ip != ''">#{ip},
+            </if>
+            <if test="nation != null">#{nation},
+            </if>
+            <if test="province != null">#{province},
+            </if>
+            <if test="city != null">#{city},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
         </trim>
     </insert>
 
     <update id="updateHistoryInfo" parameterType="HistoryInfo">
         update bk_history_info
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="userId != null">user_id =
-                        #{userId},
-                    </if>
-                    <if test="ip != null and ip != ''">ip =
-                        #{ip},
-                    </if>
-                    <if test="nation != null">nation =
-                        #{nation},
-                    </if>
-                    <if test="province != null">province =
-                        #{province},
-                    </if>
-                    <if test="city != null">city =
-                        #{city},
-                    </if>
-                    <if test="createTime != null">create_time =
-                        #{createTime},
-                    </if>
+            <if test="userId != null">user_id =
+                #{userId},
+            </if>
+            <if test="ip != null and ip != ''">ip =
+                #{ip},
+            </if>
+            <if test="nation != null">nation =
+                #{nation},
+            </if>
+            <if test="province != null">province =
+                #{province},
+            </if>
+            <if test="city != null">city =
+                #{city},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteHistoryInfoById" parameterType="Long">
-        delete from bk_history_info where id = #{id}
+        delete
+        from bk_history_info
+        where id = #{id}
     </delete>
 
     <delete id="deleteHistoryInfoByIds" parameterType="String">

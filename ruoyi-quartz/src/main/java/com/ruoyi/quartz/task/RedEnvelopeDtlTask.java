@@ -53,12 +53,12 @@ public class RedEnvelopeDtlTask {
         redEnvelopeCtrlDTO.setStatus(AwardConstants.CREATE_QR_CODE_STATUS_INIT);
         // 分页处理
         PageHelper.startPage(1, 200);
-        List<RedEnvelopeCtrlDTO> redEnvelopeCtrlList =  activityDetailService.queryRedEnvelopeCtrlByParams(redEnvelopeCtrlDTO);
+        List<RedEnvelopeCtrlDTO> redEnvelopeCtrlList = activityDetailService.queryRedEnvelopeCtrlByParams(redEnvelopeCtrlDTO);
         if (redEnvelopeCtrlList.isEmpty()) {
 //            log.info("暂不需生成红包明细");
             return;
         }
-        log.info("开始生成红包明细，生成数量：{}",redEnvelopeCtrlList.size());
+        log.info("开始生成红包明细，生成数量：{}", redEnvelopeCtrlList.size());
         for (RedEnvelopeCtrlDTO reqDTO : redEnvelopeCtrlList) {
             try {
                 // 更新成生成中状态
@@ -70,13 +70,13 @@ public class RedEnvelopeDtlTask {
                 // 创建红包明细记录信息
                 Integer createQrcodeStatus = redEnvelopeDtlService.insertRedEnvelopeDtl(reqDTO);
                 if (createQrcodeStatus != 0) {
-                    activityDetailService.updateEntry(reqDTO,AwardConstants.CREATE_DTL_STATUS_SUCCESS);
+                    activityDetailService.updateEntry(reqDTO, AwardConstants.CREATE_DTL_STATUS_SUCCESS);
                 } else {
-                    activityDetailService.updateEntry(reqDTO,AwardConstants.CREATE_DTL_STATUS_INIT);
+                    activityDetailService.updateEntry(reqDTO, AwardConstants.CREATE_DTL_STATUS_INIT);
                 }
-            }catch (Exception e) {
+            } catch (Exception e) {
                 reqDTO.setRemark(e.getMessage());
-                activityDetailService.updateEntry(reqDTO,AwardConstants.CREATE_QR_CODE_STATUS_DOING);
+                activityDetailService.updateEntry(reqDTO, AwardConstants.CREATE_QR_CODE_STATUS_DOING);
             }
         }
     }
@@ -91,13 +91,13 @@ public class RedEnvelopeDtlTask {
         PageHelper.startPage(1, 200);
         RedEnvelopeDtl params = new RedEnvelopeDtl();
         params.setQrCodeStatus(AwardConstants.CREATE_QR_CODE_STATUS_INIT);
-        List<RedEnvelopeDtl> redEnvelopeDtlList =  redEnvelopeDtlService.selectRedEnvelopeDtlList(params);
+        List<RedEnvelopeDtl> redEnvelopeDtlList = redEnvelopeDtlService.selectRedEnvelopeDtlList(params);
 
         if (redEnvelopeDtlList.isEmpty()) {
 //            log.warn("暂不需要执行生成二维码操作");
             return;
         }
-        log.info("开始执行生成二维码处理，生成数量：{}",redEnvelopeDtlList.size());
+        log.info("开始执行生成二维码处理，生成数量：{}", redEnvelopeDtlList.size());
         for (RedEnvelopeDtl redEnvelopeDtl : redEnvelopeDtlList) {
             try {
                 // 更新红包明细状态
@@ -110,10 +110,10 @@ public class RedEnvelopeDtlTask {
                 String qrCodeUrl = redEnvelopeDtlService.createQrCodeBaseInfo(redEnvelopeDtl);
                 // 更新二维码红包明细状态
                 redEnvelopeDtl.setQrCodeUrl(qrCodeUrl);
-                redEnvelopeDtlService.updateRedEnvelopeDtl(redEnvelopeDtl,AwardConstants.CREATE_QR_CODE_STATUS_SUCCESS);
-            }catch (Exception e) {
+                redEnvelopeDtlService.updateRedEnvelopeDtl(redEnvelopeDtl, AwardConstants.CREATE_QR_CODE_STATUS_SUCCESS);
+            } catch (Exception e) {
                 redEnvelopeDtl.setRemark(e.getMessage());
-                redEnvelopeDtlService.updateRedEnvelopeDtl(redEnvelopeDtl,AwardConstants.CREATE_QR_CODE_STATUS_INIT);
+                redEnvelopeDtlService.updateRedEnvelopeDtl(redEnvelopeDtl, AwardConstants.CREATE_QR_CODE_STATUS_INIT);
             }
 
         }

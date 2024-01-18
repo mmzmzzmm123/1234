@@ -40,6 +40,7 @@ public interface IPlatformUserIntegralService {
 
     /**
      * 查询用户积分明细
+     *
      * @param reqDTO
      * @return
      */
@@ -47,6 +48,7 @@ public interface IPlatformUserIntegralService {
 
     /**
      * 积分提现
+     *
      * @param reqDTO
      * @return
      */

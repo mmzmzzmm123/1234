@@ -1,8 +1,9 @@
 package com.onethinker.bk.mapper;
 
-import java.util.List;
-import com.onethinker.bk.domain.Label;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.bk.domain.Label;
+
+import java.util.List;
 
 /**
  * 标签Mapper接口
@@ -10,7 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yangyouqi
  * @date 2024-01-16
  */
-public interface LabelMapper extends BaseMapper<Label>{
+public interface LabelMapper extends BaseMapper<Label> {
     /**
      * 查询标签
      *

@@ -1,24 +1,23 @@
 package com.onethinker.onethinker.service.impl;
 
-import java.util.List;
-import java.util.Objects;
-
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
+import com.onethinker.onethinker.mapper.SubscribeMsgCtrlMapper;
+import com.onethinker.onethinker.service.ISubscribeMsgCtrlService;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.enums.CacheEnum;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import io.jsonwebtoken.lang.Assert;
-import org.apache.commons.lang3.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.onethinker.onethinker.mapper.SubscribeMsgCtrlMapper;
-import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
-import com.onethinker.onethinker.service.ISubscribeMsgCtrlService;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
+
 /**
  * 订阅消息控制Service业务层处理
  *
@@ -27,7 +26,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class SubscribeMsgCtrlServiceImpl extends ServiceImpl<SubscribeMsgCtrlMapper,SubscribeMsgCtrl> implements ISubscribeMsgCtrlService {
+public class SubscribeMsgCtrlServiceImpl extends ServiceImpl<SubscribeMsgCtrlMapper, SubscribeMsgCtrl> implements ISubscribeMsgCtrlService {
     @Resource
     private SubscribeMsgCtrlMapper subscribeMsgCtrlMapper;
     @Resource
@@ -63,8 +62,8 @@ public class SubscribeMsgCtrlServiceImpl extends ServiceImpl<SubscribeMsgCtrlMap
      */
     @Override
     public int insertSubscribeMsgCtrl(SubscribeMsgCtrl subscribeMsgCtrl) {
-                subscribeMsgCtrl.setCreateTime(DateUtils.getNowDate());
-            return subscribeMsgCtrlMapper.insertSubscribeMsgCtrl(subscribeMsgCtrl);
+        subscribeMsgCtrl.setCreateTime(DateUtils.getNowDate());
+        return subscribeMsgCtrlMapper.insertSubscribeMsgCtrl(subscribeMsgCtrl);
     }
 
     /**
@@ -75,7 +74,7 @@ public class SubscribeMsgCtrlServiceImpl extends ServiceImpl<SubscribeMsgCtrlMap
      */
     @Override
     public int updateSubscribeMsgCtrl(SubscribeMsgCtrl subscribeMsgCtrl) {
-                subscribeMsgCtrl.setUpdateTime(DateUtils.getNowDate());
+        subscribeMsgCtrl.setUpdateTime(DateUtils.getNowDate());
         return subscribeMsgCtrlMapper.updateSubscribeMsgCtrl(subscribeMsgCtrl);
     }
 
@@ -103,18 +102,18 @@ public class SubscribeMsgCtrlServiceImpl extends ServiceImpl<SubscribeMsgCtrlMap
 
     @Override
     public SubscribeMsgCtrl findEntryByTemplateId(String templateId) {
-        Assert.isTrue(!StringUtils.isEmpty(templateId),"模版id不能为空");
+        Assert.isTrue(!StringUtils.isEmpty(templateId), "模版id不能为空");
         String redisKey = CacheEnum.SUBSCRIBE_MSG_KEY.getCode() + templateId;
         if (redisCache.hasKey(redisKey)) {
-            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(),SubscribeMsgCtrl.class);
+            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(), SubscribeMsgCtrl.class);
         }
         LambdaQueryWrapper<SubscribeMsgCtrl> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SubscribeMsgCtrl::getTemplateId,templateId).eq(SubscribeMsgCtrl::getEnabled,SubscribeMsgCtrl.STATE_TYPE_ENABLED);
+        queryWrapper.eq(SubscribeMsgCtrl::getTemplateId, templateId).eq(SubscribeMsgCtrl::getEnabled, SubscribeMsgCtrl.STATE_TYPE_ENABLED);
         SubscribeMsgCtrl subscribeMsgCtrl = subscribeMsgCtrlMapper.selectOne(queryWrapper);
         if (ObjectUtils.isEmpty(subscribeMsgCtrl)) {
             return null;
         }
-        redisCache.setCacheObject(redisKey,subscribeMsgCtrl);
+        redisCache.setCacheObject(redisKey, subscribeMsgCtrl);
         return subscribeMsgCtrl;
     }
 }

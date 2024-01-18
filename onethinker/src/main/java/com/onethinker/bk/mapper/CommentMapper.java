@@ -1,8 +1,9 @@
 package com.onethinker.bk.mapper;
 
-import java.util.List;
-import com.onethinker.bk.domain.Comment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.bk.domain.Comment;
+
+import java.util.List;
 
 /**
  * 文章评论Mapper接口
@@ -10,7 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yangyouqi
  * @date 2024-01-16
  */
-public interface CommentMapper extends BaseMapper<Comment>{
+public interface CommentMapper extends BaseMapper<Comment> {
     /**
      * 查询文章评论
      *

@@ -1,13 +1,11 @@
 package com.onethinker.onethinker.factory;
 
-import org.apache.poi.ss.formula.functions.T;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.ruoyi.common.enums.ActivityTypeEnum;
 import com.onethinker.onethinker.factory.service.IActivityDetailService;
 import com.onethinker.onethinker.factory.service.impl.RedEnvelopeCtrlServiceImpl;
+import com.ruoyi.common.enums.ActivityTypeEnum;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author : yangyouqi

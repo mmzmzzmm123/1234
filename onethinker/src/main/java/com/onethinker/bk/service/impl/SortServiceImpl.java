@@ -1,23 +1,25 @@
 package com.onethinker.bk.service.impl;
 
+import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.Sort;
+import com.onethinker.bk.mapper.SortMapper;
+import com.onethinker.bk.service.ILabelService;
+import com.onethinker.bk.service.ISortService;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.compress.utils.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
-import com.onethinker.bk.service.ILabelService;
-import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.enums.CacheEnum;
-import org.apache.commons.compress.utils.Lists;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.SortMapper;
-import com.onethinker.bk.domain.Sort;
-import com.onethinker.bk.service.ISortService;
-import lombok.extern.log4j.Log4j2;
-import javax.annotation.Resource;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 /**
  * 分类Service业务层处理
  *
@@ -26,7 +28,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISortService {
+public class SortServiceImpl extends ServiceImpl<SortMapper, Sort> implements ISortService {
     @Resource
     private SortMapper sortMapper;
 
@@ -36,16 +38,7 @@ public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISo
     @Autowired
     private ILabelService labelService;
 
-    /**
-     * 查询分类
-     *
-     * @param id 分类主键
-     * @return 分类
-     */
-    @Override
-    public Sort selectSortById(Long id) {
-        return sortMapper.selectSortById(id);
-    }
+    private static final String REDIS_KEY = "sort";
 
     /**
      * 查询分类列表
@@ -55,7 +48,17 @@ public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISo
      */
     @Override
     public List<Sort> selectSortList(Sort sort) {
-        return sortMapper.selectSortList(sort);
+        String redisKey = CacheEnum.WEB_INFO.getCode() + REDIS_KEY + JSON.toJSONString(sort);
+        if (redisCache.hasKey(redisKey)) {
+            return redisCache.getCacheList(redisKey);
+        }
+        List<Sort> sorts = sortMapper.selectSortList(sort);
+        if (sorts.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        redisCache.setCacheList(redisKey, sorts);
+        redisCache.expire(redisKey, 1, TimeUnit.DAYS);
+        return sorts;
     }
 
     /**
@@ -66,7 +69,12 @@ public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISo
      */
     @Override
     public int insertSort(Sort sort) {
-            return sortMapper.insertSort(sort);
+        sort.existsParams();
+        int i = sortMapper.insertSort(sort);
+        // 清除缓存信息
+        Collection<String> keys = redisCache.keys(CacheEnum.WEB_INFO.getCode() + REDIS_KEY + "*");
+        redisCache.deleteObject(keys);
+        return i;
     }
 
     /**
@@ -77,18 +85,10 @@ public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISo
      */
     @Override
     public int updateSort(Sort sort) {
-        return sortMapper.updateSort(sort);
-    }
-
-    /**
-     * 批量删除分类
-     *
-     * @param ids 需要删除的分类主键
-     * @return 结果
-     */
-    @Override
-    public int deleteSortByIds(Long[] ids) {
-        return sortMapper.deleteSortByIds(ids);
+        int i = sortMapper.updateSort(sort);
+        Collection<String> keys = redisCache.keys(CacheEnum.WEB_INFO.getCode() + REDIS_KEY + "*");
+        redisCache.deleteObject(keys);
+        return i;
     }
 
     /**
@@ -99,12 +99,16 @@ public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISo
      */
     @Override
     public int deleteSortById(Long id) {
-        return sortMapper.deleteSortById(id);
+        int i = sortMapper.deleteSortById(id);
+        // 清除缓存
+        Collection<String> keys = redisCache.keys(CacheEnum.WEB_INFO.getCode() + REDIS_KEY + "*");
+        redisCache.deleteObject(keys);
+        return i;
     }
 
     @Override
     public List<Sort> getSortInfo() {
-        String redisKey = CacheEnum.WEB_INFO.getCode() + "sort";
+        String redisKey = CacheEnum.WEB_INFO.getCode() + REDIS_KEY;
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheList(redisKey);
         }
@@ -112,8 +116,8 @@ public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISo
         if (sorts.isEmpty()) {
             return Lists.newArrayList();
         }
-        redisCache.setCacheList(redisKey,sorts);
-        redisCache.expire(redisKey,1, TimeUnit.DAYS);
+        redisCache.setCacheList(redisKey, sorts);
+        redisCache.expire(redisKey, 1, TimeUnit.DAYS);
         return sorts;
     }
 

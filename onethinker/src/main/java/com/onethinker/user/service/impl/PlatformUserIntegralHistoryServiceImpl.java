@@ -1,11 +1,11 @@
 package com.onethinker.user.service.impl;
 
-import com.ruoyi.common.enums.IntegralTypeEnum;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.onethinker.user.domain.PlatformUserIntegralHistory;
 import com.onethinker.user.mapper.PlatformUserIntegralHistoryMapper;
 import com.onethinker.user.service.IPlatformUserIntegralHistoryService;
+import com.ruoyi.common.enums.IntegralTypeEnum;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -61,8 +61,8 @@ public class PlatformUserIntegralHistoryServiceImpl implements IPlatformUserInte
 
     @Override
     public int updateWithdrawalIntegral(PlatformUserIntegralHistory platformUserIntegralHistory) {
-        Assert.isTrue(!ObjectUtils.isEmpty(platformUserIntegralHistory.getId()),"参数缺失");
-        Assert.isTrue(!ObjectUtils.isEmpty(platformUserIntegralHistory.getEnabled()),"参数缺失");
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUserIntegralHistory.getId()), "参数缺失");
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUserIntegralHistory.getEnabled()), "参数缺失");
         PlatformUserIntegralHistory saveParams = new PlatformUserIntegralHistory();
         saveParams.setSysUserId(SecurityUtils.getUserId());
         saveParams.setId(platformUserIntegralHistory.getId());

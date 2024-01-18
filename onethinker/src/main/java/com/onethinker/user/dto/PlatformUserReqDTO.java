@@ -57,8 +57,8 @@ public class PlatformUserReqDTO {
      */
     public void existsParams() {
         String regex = "\\d{11}";
-        Assert.isTrue(!userName.matches(regex),"用户名不能为11位数字！");
-        Assert.isTrue(!userName.contains("@"),"用户名不能包含@！");
+        Assert.isTrue(!userName.matches(regex), "用户名不能为11位数字！");
+        Assert.isTrue(!userName.contains("@"), "用户名不能包含@！");
         if (StringUtils.hasText(phone) && StringUtils.hasText(email)) {
             throw new RuntimeException("手机号与邮箱只能选择其中一个！");
         }

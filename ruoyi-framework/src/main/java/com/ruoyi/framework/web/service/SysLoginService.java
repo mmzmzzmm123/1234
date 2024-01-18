@@ -166,10 +166,11 @@ public class SysLoginService {
 
     /**
      * 前端获取token
+     *
      * @param dataId
      * @return
      */
-    public String loginFe(String dataId,String username,String password) {
+    public String loginFe(String dataId, String username, String password) {
         // 登录前置校验
         loginPreCheck(username, password);
         // 用户验证

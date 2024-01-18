@@ -1,10 +1,9 @@
 package com.onethinker.onethinker.mapper;
 
-import java.util.List;
-
+import com.onethinker.onethinker.domain.RedEnvelopeDtl;
 import org.apache.ibatis.annotations.Param;
 
-import com.onethinker.onethinker.domain.RedEnvelopeDtl;
+import java.util.List;
 
 /**
  * 红包明细Mapper接口
@@ -63,6 +62,7 @@ public interface RedEnvelopeDtlMapper {
 
     /**
      * 批量插入数据
+     *
      * @param saveEntitys
      * @return
      */

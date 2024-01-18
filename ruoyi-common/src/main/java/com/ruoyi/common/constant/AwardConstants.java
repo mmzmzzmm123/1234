@@ -54,9 +54,9 @@ public class AwardConstants {
     public static final Integer CREATE_DTL_STATUS_SUCCESS = 2;
 
     /**
-     *创建二维码内容分隔符
+     * 创建二维码内容分隔符
      */
-    public static final String  CREATE_QR_CODE_CONTENT_DELIMITER = "##";
+    public static final String CREATE_QR_CODE_CONTENT_DELIMITER = "##";
 
 
     /**

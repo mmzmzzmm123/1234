@@ -1,7 +1,8 @@
 package com.onethinker.bk.service;
 
-import java.util.List;
 import com.onethinker.bk.domain.Label;
+
+import java.util.List;
 
 /**
  * 标签Service接口
@@ -16,7 +17,7 @@ public interface ILabelService {
      * @param id 标签主键
      * @return 标签
      */
-    public Label selectLabelById(Long id);
+    Label selectLabelById(Long id);
 
     /**
      * 查询标签列表
@@ -24,7 +25,7 @@ public interface ILabelService {
      * @param label 标签
      * @return 标签集合
      */
-    public List<Label> selectLabelList(Label label);
+    List<Label> selectLabelList(Label label);
 
     /**
      * 新增标签
@@ -32,7 +33,7 @@ public interface ILabelService {
      * @param label 标签
      * @return 结果
      */
-    public int insertLabel(Label label);
+    int insertLabel(Label label);
 
     /**
      * 修改标签
@@ -40,15 +41,7 @@ public interface ILabelService {
      * @param label 标签
      * @return 结果
      */
-    public int updateLabel(Label label);
-
-    /**
-     * 批量删除标签
-     *
-     * @param ids 需要删除的标签主键集合
-     * @return 结果
-     */
-    public int deleteLabelByIds(Long[] ids);
+    int updateLabel(Label label);
 
     /**
      * 删除标签信息
@@ -56,10 +49,11 @@ public interface ILabelService {
      * @param id 标签主键
      * @return 结果
      */
-    public int deleteLabelById(Long id);
+    int deleteLabelById(Long id);
 
     /**
      * 获取所有标签信息
+     *
      * @return
      */
     List<Label> getLabelInfo();

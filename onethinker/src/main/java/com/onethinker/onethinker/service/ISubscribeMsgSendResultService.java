@@ -1,7 +1,8 @@
 package com.onethinker.onethinker.service;
 
-import java.util.List;
 import com.onethinker.onethinker.domain.SubscribeMsgSendResult;
+
+import java.util.List;
 
 /**
  * 订阅消息发送结果Service接口

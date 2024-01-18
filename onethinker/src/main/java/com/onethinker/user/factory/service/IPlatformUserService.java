@@ -13,6 +13,7 @@ public interface IPlatformUserService {
 
     /**
      * 用户登录
+     *
      * @param reqDTO
      * @return
      */
@@ -25,6 +26,7 @@ public interface IPlatformUserService {
 
     /**
      * 忘记密码，获取验证码
+     *
      * @param place
      * @param flag
      */

@@ -5,151 +5,163 @@
 <mapper namespace="com.onethinker.bk.mapper.CommentMapper">
 
     <resultMap type="Comment" id="CommentResult">
-            <result property="id" column="id"/>
-            <result property="source" column="source"/>
-            <result property="type" column="type"/>
-            <result property="parentCommentId" column="parent_comment_id"/>
-            <result property="userId" column="user_id"/>
-            <result property="floorCommentId" column="floor_comment_id"/>
-            <result property="parentUserId" column="parent_user_id"/>
-            <result property="likeCount" column="like_count"/>
-            <result property="commentContent" column="comment_content"/>
-            <result property="commentInfo" column="comment_info"/>
-            <result property="createTime" column="create_time"/>
+        <result property="id" column="id"/>
+        <result property="source" column="source"/>
+        <result property="type" column="type"/>
+        <result property="parentCommentId" column="parent_comment_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="floorCommentId" column="floor_comment_id"/>
+        <result property="parentUserId" column="parent_user_id"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="commentContent" column="comment_content"/>
+        <result property="commentInfo" column="comment_info"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectCommentVo">
-        select id, source, type, parent_comment_id, user_id, floor_comment_id, parent_user_id, like_count, comment_content, comment_info, create_time
+        select id,
+               source,
+               type,
+               parent_comment_id,
+               user_id,
+               floor_comment_id,
+               parent_user_id,
+               like_count,
+               comment_content,
+               comment_info,
+               create_time
         from bk_comment
     </sql>
 
     <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
         <include refid="selectCommentVo"/>
         <where>
-                        <if test="source != null ">
-                            and source = #{source}
-                        </if>
-                        <if test="type != null  and type != ''">
-                            and type = #{type}
-                        </if>
-                        <if test="parentCommentId != null ">
-                            and parent_comment_id = #{parentCommentId}
-                        </if>
-                        <if test="userId != null ">
-                            and user_id = #{userId}
-                        </if>
-                        <if test="floorCommentId != null ">
-                            and floor_comment_id = #{floorCommentId}
-                        </if>
-                        <if test="parentUserId != null ">
-                            and parent_user_id = #{parentUserId}
-                        </if>
-                        <if test="likeCount != null ">
-                            and like_count = #{likeCount}
-                        </if>
-                        <if test="commentContent != null  and commentContent != ''">
-                            and comment_content = #{commentContent}
-                        </if>
-                        <if test="commentInfo != null  and commentInfo != ''">
-                            and comment_info = #{commentInfo}
-                        </if>
+            <if test="source != null ">
+                and source = #{source}
+            </if>
+            <if test="type != null  and type != ''">
+                and type = #{type}
+            </if>
+            <if test="parentCommentId != null ">
+                and parent_comment_id = #{parentCommentId}
+            </if>
+            <if test="userId != null ">
+                and user_id = #{userId}
+            </if>
+            <if test="floorCommentId != null ">
+                and floor_comment_id = #{floorCommentId}
+            </if>
+            <if test="parentUserId != null ">
+                and parent_user_id = #{parentUserId}
+            </if>
+            <if test="likeCount != null ">
+                and like_count = #{likeCount}
+            </if>
+            <if test="commentContent != null  and commentContent != ''">
+                and comment_content = #{commentContent}
+            </if>
+            <if test="commentInfo != null  and commentInfo != ''">
+                and comment_info = #{commentInfo}
+            </if>
         </where>
     </select>
 
     <select id="selectCommentById" parameterType="Long"
             resultMap="CommentResult">
-            <include refid="selectCommentVo"/>
-            where id = #{id}
+        <include refid="selectCommentVo"/>
+        where id = #{id}
     </select>
 
     <insert id="insertComment" parameterType="Comment" useGeneratedKeys="true"
             keyProperty="id">
         insert into bk_comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="source != null">source,
-                    </if>
-                    <if test="type != null and type != ''">type,
-                    </if>
-                    <if test="parentCommentId != null">parent_comment_id,
-                    </if>
-                    <if test="userId != null">user_id,
-                    </if>
-                    <if test="floorCommentId != null">floor_comment_id,
-                    </if>
-                    <if test="parentUserId != null">parent_user_id,
-                    </if>
-                    <if test="likeCount != null">like_count,
-                    </if>
-                    <if test="commentContent != null and commentContent != ''">comment_content,
-                    </if>
-                    <if test="commentInfo != null">comment_info,
-                    </if>
-                    <if test="createTime != null">create_time,
-                    </if>
+            <if test="source != null">source,
+            </if>
+            <if test="type != null and type != ''">type,
+            </if>
+            <if test="parentCommentId != null">parent_comment_id,
+            </if>
+            <if test="userId != null">user_id,
+            </if>
+            <if test="floorCommentId != null">floor_comment_id,
+            </if>
+            <if test="parentUserId != null">parent_user_id,
+            </if>
+            <if test="likeCount != null">like_count,
+            </if>
+            <if test="commentContent != null and commentContent != ''">comment_content,
+            </if>
+            <if test="commentInfo != null">comment_info,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="source != null">#{source},
-                    </if>
-                    <if test="type != null and type != ''">#{type},
-                    </if>
-                    <if test="parentCommentId != null">#{parentCommentId},
-                    </if>
-                    <if test="userId != null">#{userId},
-                    </if>
-                    <if test="floorCommentId != null">#{floorCommentId},
-                    </if>
-                    <if test="parentUserId != null">#{parentUserId},
-                    </if>
-                    <if test="likeCount != null">#{likeCount},
-                    </if>
-                    <if test="commentContent != null and commentContent != ''">#{commentContent},
-                    </if>
-                    <if test="commentInfo != null">#{commentInfo},
-                    </if>
-                    <if test="createTime != null">#{createTime},
-                    </if>
+            <if test="source != null">#{source},
+            </if>
+            <if test="type != null and type != ''">#{type},
+            </if>
+            <if test="parentCommentId != null">#{parentCommentId},
+            </if>
+            <if test="userId != null">#{userId},
+            </if>
+            <if test="floorCommentId != null">#{floorCommentId},
+            </if>
+            <if test="parentUserId != null">#{parentUserId},
+            </if>
+            <if test="likeCount != null">#{likeCount},
+            </if>
+            <if test="commentContent != null and commentContent != ''">#{commentContent},
+            </if>
+            <if test="commentInfo != null">#{commentInfo},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
         </trim>
     </insert>
 
     <update id="updateComment" parameterType="Comment">
         update bk_comment
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="source != null">source =
-                        #{source},
-                    </if>
-                    <if test="type != null and type != ''">type =
-                        #{type},
-                    </if>
-                    <if test="parentCommentId != null">parent_comment_id =
-                        #{parentCommentId},
-                    </if>
-                    <if test="userId != null">user_id =
-                        #{userId},
-                    </if>
-                    <if test="floorCommentId != null">floor_comment_id =
-                        #{floorCommentId},
-                    </if>
-                    <if test="parentUserId != null">parent_user_id =
-                        #{parentUserId},
-                    </if>
-                    <if test="likeCount != null">like_count =
-                        #{likeCount},
-                    </if>
-                    <if test="commentContent != null and commentContent != ''">comment_content =
-                        #{commentContent},
-                    </if>
-                    <if test="commentInfo != null">comment_info =
-                        #{commentInfo},
-                    </if>
-                    <if test="createTime != null">create_time =
-                        #{createTime},
-                    </if>
+            <if test="source != null">source =
+                #{source},
+            </if>
+            <if test="type != null and type != ''">type =
+                #{type},
+            </if>
+            <if test="parentCommentId != null">parent_comment_id =
+                #{parentCommentId},
+            </if>
+            <if test="userId != null">user_id =
+                #{userId},
+            </if>
+            <if test="floorCommentId != null">floor_comment_id =
+                #{floorCommentId},
+            </if>
+            <if test="parentUserId != null">parent_user_id =
+                #{parentUserId},
+            </if>
+            <if test="likeCount != null">like_count =
+                #{likeCount},
+            </if>
+            <if test="commentContent != null and commentContent != ''">comment_content =
+                #{commentContent},
+            </if>
+            <if test="commentInfo != null">comment_info =
+                #{commentInfo},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteCommentById" parameterType="Long">
-        delete from bk_comment where id = #{id}
+        delete
+        from bk_comment
+        where id = #{id}
     </delete>
 
     <delete id="deleteCommentByIds" parameterType="String">

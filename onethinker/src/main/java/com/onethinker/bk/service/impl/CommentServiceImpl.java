@@ -1,15 +1,22 @@
 package com.onethinker.bk.service.impl;
 
-import java.util.List;
-        import com.ruoyi.common.utils.DateUtils;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bk.domain.Comment;
+import com.onethinker.bk.mapper.CommentMapper;
+import com.onethinker.bk.service.ICommentService;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
+import com.ruoyi.common.utils.DateUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.onethinker.bk.mapper.CommentMapper;
-import com.onethinker.bk.domain.Comment;
-import com.onethinker.bk.service.ICommentService;
-import lombok.extern.log4j.Log4j2;
+
 import javax.annotation.Resource;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 /**
  * 文章评论Service业务层处理
  *
@@ -18,9 +25,13 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
  */
 @Service
 @Log4j2
-public class CommentServiceImpl extends ServiceImpl<CommentMapper,Comment> implements ICommentService {
+public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements ICommentService {
     @Resource
     private CommentMapper commentMapper;
+    @Autowired
+    private RedisCache redisCache;
+
+    public static final String REDIS_KEY = "comment";
 
     /**
      * 查询文章评论
@@ -52,8 +63,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper,Comment> imple
      */
     @Override
     public int insertComment(Comment comment) {
-                comment.setCreateTime(DateUtils.getNowDate());
-            return commentMapper.insertComment(comment);
+        comment.setCreateTime(DateUtils.getNowDate());
+        return commentMapper.insertComment(comment);
     }
 
     /**
@@ -87,5 +98,16 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper,Comment> imple
     @Override
     public int deleteCommentById(Long id) {
         return commentMapper.deleteCommentById(id);
+    }
+
+    @Override
+    public Integer getCommentCount(Long source, String type) {
+        String redisKey = CacheEnum.WEB_INFO.getCode() + REDIS_KEY + source + "_" +type;
+        if (!redisCache.hasKey(redisKey)) {
+            LambdaQueryChainWrapper<Comment> queryWrapper = new LambdaQueryChainWrapper<>(commentMapper);
+            Integer count = queryWrapper.eq(Comment::getSource, source).eq(Comment::getType, type).count();
+            redisCache.setCacheObject(redisKey,count,1, TimeUnit.DAYS);
+        }
+        return redisCache.getCacheObject(redisKey);
     }
 }

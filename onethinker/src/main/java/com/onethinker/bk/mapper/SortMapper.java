@@ -1,8 +1,9 @@
 package com.onethinker.bk.mapper;
 
-import java.util.List;
-import com.onethinker.bk.domain.Sort;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.bk.domain.Sort;
+
+import java.util.List;
 
 /**
  * 分类Mapper接口
@@ -10,7 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yangyouqi
  * @date 2024-01-16
  */
-public interface SortMapper extends BaseMapper<Sort>{
+public interface SortMapper extends BaseMapper<Sort> {
     /**
      * 查询分类
      *

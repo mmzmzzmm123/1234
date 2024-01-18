@@ -1,22 +1,20 @@
 package com.onethinker.onethinker.factory.service.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.compress.utils.Lists;
-import org.springframework.beans.BeanUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-
 import com.onethinker.onethinker.domain.RedEnvelopeCtrl;
 import com.onethinker.onethinker.dto.ActivityReqDTO;
 import com.onethinker.onethinker.dto.RedEnvelopeCtrlDTO;
 import com.onethinker.onethinker.factory.service.IActivityDetailService;
 import com.onethinker.onethinker.mapper.RedEnvelopeCtrlMapper;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.compress.utils.Lists;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 红包批控制Service业务层处理

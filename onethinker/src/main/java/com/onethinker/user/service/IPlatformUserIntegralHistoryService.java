@@ -31,6 +31,7 @@ public interface IPlatformUserIntegralHistoryService {
 
     /**
      * 查询积分提现列表
+     *
      * @param platformUserIntegralHistory
      * @return
      */
@@ -38,6 +39,7 @@ public interface IPlatformUserIntegralHistoryService {
 
     /**
      * 提现审核
+     *
      * @param platformUserIntegralHistory
      * @return
      */

@@ -1,11 +1,11 @@
 package com.onethinker.bk.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.bk.domain.HistoryInfo;
+import org.apache.ibatis.annotations.Select;
+
 import java.util.List;
 import java.util.Map;
-
-import com.onethinker.bk.domain.HistoryInfo;
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import org.apache.ibatis.annotations.Select;
 
 /**
  * 历史信息Mapper接口
@@ -13,7 +13,7 @@ import org.apache.ibatis.annotations.Select;
  * @author yangyouqi
  * @date 2024-01-16
  */
-public interface HistoryInfoMapper extends BaseMapper<HistoryInfo>{
+public interface HistoryInfoMapper extends BaseMapper<HistoryInfo> {
     /**
      * 查询历史信息
      *

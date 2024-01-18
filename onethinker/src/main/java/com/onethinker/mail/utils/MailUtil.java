@@ -1,7 +1,6 @@
 package com.onethinker.mail.utils;
 
 import com.alibaba.fastjson2.JSONObject;
-import com.ruoyi.common.enums.SysConfigKeyEnum;
 import com.ruoyi.system.service.ISysConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +12,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.mail.MessagingException;
 import java.util.Date;
 import java.util.List;

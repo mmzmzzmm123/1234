@@ -1,8 +1,9 @@
 package com.onethinker.onethinker.service;
 
-import java.util.List;
 import com.onethinker.onethinker.domain.RedEnvelopeDtl;
 import com.onethinker.onethinker.dto.RedEnvelopeCtrlDTO;
+
+import java.util.List;
 
 /**
  * 红包明细Service接口
@@ -41,7 +42,7 @@ public interface IRedEnvelopeDtlService {
      * @param redEnvelopeDtl 红包明细
      * @return 结果
      */
-    public int updateRedEnvelopeDtl(RedEnvelopeDtl redEnvelopeDtl,Integer qrCodeStatus);
+    public int updateRedEnvelopeDtl(RedEnvelopeDtl redEnvelopeDtl, Integer qrCodeStatus);
 
     /**
      * 批量删除红包明细
@@ -61,6 +62,7 @@ public interface IRedEnvelopeDtlService {
 
     /**
      * 创建二维码内容
+     *
      * @param redEnvelopeDtl
      * @return
      */

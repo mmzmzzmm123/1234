@@ -1,7 +1,8 @@
 package com.onethinker.bk.service;
 
-import java.util.List;
 import com.onethinker.bk.domain.ImChatUserFriend;
+
+import java.util.List;
 
 /**
  * 好友Service接口
@@ -16,7 +17,7 @@ public interface IImChatUserFriendService {
      * @param id 好友主键
      * @return 好友
      */
-    public ImChatUserFriend selectImChatUserFriendById(Long id);
+    ImChatUserFriend selectImChatUserFriendById(Long id);
 
     /**
      * 查询好友列表
@@ -24,7 +25,7 @@ public interface IImChatUserFriendService {
      * @param imChatUserFriend 好友
      * @return 好友集合
      */
-    public List<ImChatUserFriend> selectImChatUserFriendList(ImChatUserFriend imChatUserFriend);
+    List<ImChatUserFriend> selectImChatUserFriendList(ImChatUserFriend imChatUserFriend);
 
     /**
      * 新增好友
@@ -32,7 +33,7 @@ public interface IImChatUserFriendService {
      * @param imChatUserFriend 好友
      * @return 结果
      */
-    public int insertImChatUserFriend(ImChatUserFriend imChatUserFriend);
+    int insertImChatUserFriend(ImChatUserFriend imChatUserFriend);
 
     /**
      * 修改好友
@@ -40,7 +41,7 @@ public interface IImChatUserFriendService {
      * @param imChatUserFriend 好友
      * @return 结果
      */
-    public int updateImChatUserFriend(ImChatUserFriend imChatUserFriend);
+    int updateImChatUserFriend(ImChatUserFriend imChatUserFriend);
 
     /**
      * 批量删除好友
@@ -48,7 +49,7 @@ public interface IImChatUserFriendService {
      * @param ids 需要删除的好友主键集合
      * @return 结果
      */
-    public int deleteImChatUserFriendByIds(Long[] ids);
+    int deleteImChatUserFriendByIds(Long[] ids);
 
     /**
      * 删除好友信息
@@ -56,10 +57,11 @@ public interface IImChatUserFriendService {
      * @param id 好友主键
      * @return 结果
      */
-    public int deleteImChatUserFriendById(Long id);
+    int deleteImChatUserFriendById(Long id);
 
     /**
      * 新增好友信息
+     *
      * @param id
      */
     void insertImChatUserFriendByPlUserId(Long id);

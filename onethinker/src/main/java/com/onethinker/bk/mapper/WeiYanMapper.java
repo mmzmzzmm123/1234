@@ -1,8 +1,9 @@
 package com.onethinker.bk.mapper;
 
-import java.util.List;
-import com.onethinker.bk.domain.WeiYan;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.bk.domain.WeiYan;
+
+import java.util.List;
 
 /**
  * 微言Mapper接口
@@ -10,7 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yangyouqi
  * @date 2024-01-16
  */
-public interface WeiYanMapper extends BaseMapper<WeiYan>{
+public interface WeiYanMapper extends BaseMapper<WeiYan> {
     /**
      * 查询微言
      *

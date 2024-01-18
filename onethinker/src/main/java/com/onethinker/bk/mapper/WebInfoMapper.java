@@ -1,8 +1,9 @@
 package com.onethinker.bk.mapper;
 
-import java.util.List;
-import com.onethinker.bk.domain.WebInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.bk.domain.WebInfo;
+
+import java.util.List;
 
 /**
  * 网站信息Mapper接口
@@ -10,7 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yangyouqi
  * @date 2024-01-16
  */
-public interface WebInfoMapper extends BaseMapper<WebInfo>{
+public interface WebInfoMapper extends BaseMapper<WebInfo> {
     /**
      * 查询网站信息
      *

@@ -1,13 +1,12 @@
 package com.onethinker.onethinker.dto;
 
-import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
-
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.constant.AwardConstants;
 import com.ruoyi.common.utils.MathUtils;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 /**
  * @author : yangyouqi
@@ -104,10 +103,14 @@ public class RedEnvelopeCtrlDTO {
     @Excel(name = "当前批次创建明细状态 0：未生成明细数据 1：生成明细数据中 2：已生成明细数据")
     private Integer status;
 
-    /** 原更新状态 **/
+    /**
+     * 原更新状态
+     **/
     private Integer orgStatus;
 
-    /** 备注**/
+    /**
+     * 备注
+     **/
     private String remark;
 
     public void existsReqParams() {
@@ -126,7 +129,7 @@ public class RedEnvelopeCtrlDTO {
         }
         // 做下限制，每个批次最多生成200笔的红包记录
         if (MathUtils.divide(totalSum, batchSum) > AwardConstants.AWARD_BATCH_CREATE_SUM) {
-            throw new RuntimeException("分配有误，每个批次最多生成"+AwardConstants.AWARD_BATCH_CREATE_SUM+"个红包");
+            throw new RuntimeException("分配有误，每个批次最多生成" + AwardConstants.AWARD_BATCH_CREATE_SUM + "个红包");
         }
         if (totalSum > totalMoney) {
             throw new RuntimeException("奖品金额分配不均");

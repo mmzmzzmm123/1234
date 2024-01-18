@@ -1,8 +1,9 @@
 package com.onethinker.onethinker.mapper;
 
-import java.util.List;
 import com.onethinker.onethinker.domain.RedEnvelopeCtrl;
 import com.onethinker.onethinker.dto.RedEnvelopeCtrlDTO;
+
+import java.util.List;
 
 /**
  * 红包批控制Mapper接口
@@ -61,6 +62,7 @@ public interface RedEnvelopeCtrlMapper {
 
     /**
      * 更新用户状态
+     *
      * @param redEnvelopeCtrl
      * @return
      */

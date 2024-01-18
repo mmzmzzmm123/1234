@@ -5,12 +5,12 @@
 <mapper namespace="com.onethinker.bk.mapper.ImChatUserFriendMapper">
 
     <resultMap type="ImChatUserFriend" id="ImChatUserFriendResult">
-            <result property="id" column="id"/>
-            <result property="userId" column="user_id"/>
-            <result property="friendId" column="friend_id"/>
-            <result property="friendStatus" column="friend_status"/>
-            <result property="remark" column="remark"/>
-            <result property="createTime" column="create_time"/>
+        <result property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="friendId" column="friend_id"/>
+        <result property="friendStatus" column="friend_status"/>
+        <result property="remark" column="remark"/>
+        <result property="createTime" column="create_time"/>
     </resultMap>
 
     <sql id="selectImChatUserFriendVo">
@@ -21,77 +21,79 @@
     <select id="selectImChatUserFriendList" parameterType="ImChatUserFriend" resultMap="ImChatUserFriendResult">
         <include refid="selectImChatUserFriendVo"/>
         <where>
-                        <if test="userId != null ">
-                            and user_id = #{userId}
-                        </if>
-                        <if test="friendId != null ">
-                            and friend_id = #{friendId}
-                        </if>
-                        <if test="friendStatus != null ">
-                            and friend_status = #{friendStatus}
-                        </if>
+            <if test="userId != null ">
+                and user_id = #{userId}
+            </if>
+            <if test="friendId != null ">
+                and friend_id = #{friendId}
+            </if>
+            <if test="friendStatus != null ">
+                and friend_status = #{friendStatus}
+            </if>
         </where>
     </select>
 
     <select id="selectImChatUserFriendById" parameterType="Long"
             resultMap="ImChatUserFriendResult">
-            <include refid="selectImChatUserFriendVo"/>
-            where id = #{id}
+        <include refid="selectImChatUserFriendVo"/>
+        where id = #{id}
     </select>
 
     <insert id="insertImChatUserFriend" parameterType="ImChatUserFriend" useGeneratedKeys="true"
             keyProperty="id">
         insert into bk_im_chat_user_friend
         <trim prefix="(" suffix=")" suffixOverrides=",">
-                    <if test="userId != null">user_id,
-                    </if>
-                    <if test="friendId != null">friend_id,
-                    </if>
-                    <if test="friendStatus != null">friend_status,
-                    </if>
-                    <if test="remark != null">remark,
-                    </if>
-                    <if test="createTime != null">create_time,
-                    </if>
+            <if test="userId != null">user_id,
+            </if>
+            <if test="friendId != null">friend_id,
+            </if>
+            <if test="friendStatus != null">friend_status,
+            </if>
+            <if test="remark != null">remark,
+            </if>
+            <if test="createTime != null">create_time,
+            </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-                    <if test="userId != null">#{userId},
-                    </if>
-                    <if test="friendId != null">#{friendId},
-                    </if>
-                    <if test="friendStatus != null">#{friendStatus},
-                    </if>
-                    <if test="remark != null">#{remark},
-                    </if>
-                    <if test="createTime != null">#{createTime},
-                    </if>
+            <if test="userId != null">#{userId},
+            </if>
+            <if test="friendId != null">#{friendId},
+            </if>
+            <if test="friendStatus != null">#{friendStatus},
+            </if>
+            <if test="remark != null">#{remark},
+            </if>
+            <if test="createTime != null">#{createTime},
+            </if>
         </trim>
     </insert>
 
     <update id="updateImChatUserFriend" parameterType="ImChatUserFriend">
         update bk_im_chat_user_friend
         <trim prefix="SET" suffixOverrides=",">
-                    <if test="userId != null">user_id =
-                        #{userId},
-                    </if>
-                    <if test="friendId != null">friend_id =
-                        #{friendId},
-                    </if>
-                    <if test="friendStatus != null">friend_status =
-                        #{friendStatus},
-                    </if>
-                    <if test="remark != null">remark =
-                        #{remark},
-                    </if>
-                    <if test="createTime != null">create_time =
-                        #{createTime},
-                    </if>
+            <if test="userId != null">user_id =
+                #{userId},
+            </if>
+            <if test="friendId != null">friend_id =
+                #{friendId},
+            </if>
+            <if test="friendStatus != null">friend_status =
+                #{friendStatus},
+            </if>
+            <if test="remark != null">remark =
+                #{remark},
+            </if>
+            <if test="createTime != null">create_time =
+                #{createTime},
+            </if>
         </trim>
         where id = #{id}
     </update>
 
     <delete id="deleteImChatUserFriendById" parameterType="Long">
-        delete from bk_im_chat_user_friend where id = #{id}
+        delete
+        from bk_im_chat_user_friend
+        where id = #{id}
     </delete>
 
     <delete id="deleteImChatUserFriendByIds" parameterType="String">

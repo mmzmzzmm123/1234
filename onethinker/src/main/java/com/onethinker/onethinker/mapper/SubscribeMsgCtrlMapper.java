@@ -1,8 +1,9 @@
 package com.onethinker.onethinker.mapper;
 
-import java.util.List;
-import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
+
+import java.util.List;
 
 /**
  * 订阅消息控制Mapper接口
@@ -10,7 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yangyouqi
  * @date 2024-01-15
  */
-public interface SubscribeMsgCtrlMapper extends BaseMapper<SubscribeMsgCtrl>{
+public interface SubscribeMsgCtrlMapper extends BaseMapper<SubscribeMsgCtrl> {
     /**
      * 查询订阅消息控制
      *

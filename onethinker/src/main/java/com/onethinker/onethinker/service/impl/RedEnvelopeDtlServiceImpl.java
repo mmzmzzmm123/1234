@@ -1,34 +1,26 @@
 package com.onethinker.onethinker.service.impl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
-import java.util.UUID;
-
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.RandomUtils;
-import org.springframework.stereotype.Service;
-
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import com.github.pagehelper.PageHelper;
-import com.ruoyi.common.constant.AwardConstants;
-import com.ruoyi.common.enums.SysConfigKeyEnum;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.MathUtils;
-import com.ruoyi.common.utils.QrCodeUtils;
 import com.onethinker.onethinker.domain.RedEnvelopeCtrl;
 import com.onethinker.onethinker.domain.RedEnvelopeDtl;
 import com.onethinker.onethinker.dto.CalculateRedEnvelopeDTO;
 import com.onethinker.onethinker.dto.RedEnvelopeCtrlDTO;
 import com.onethinker.onethinker.mapper.RedEnvelopeDtlMapper;
 import com.onethinker.onethinker.service.IRedEnvelopeDtlService;
+import com.ruoyi.common.constant.AwardConstants;
+import com.ruoyi.common.enums.SysConfigKeyEnum;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.MathUtils;
+import com.ruoyi.common.utils.QrCodeUtils;
 import com.ruoyi.system.service.ISysConfigService;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.RandomUtils;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.*;
 
 /**
  * 红包明细Service业务层处理
@@ -44,6 +36,7 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
 
     @Resource
     private ISysConfigService sysConfigService;
+
     /**
      * 查询红包明细
      *
@@ -178,8 +171,8 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
     @Override
     public String createQrCodeBaseInfo(RedEnvelopeDtl redEnvelopeDtl) {
         // 二维码内容 随机字符串##批次号##明细id##当前批次
-        RSA rsa = new RSA(sysConfigService.selectConfigByKey(SysConfigKeyEnum.QR_CODE_RSA_PRIVATE_KEY),sysConfigService.selectConfigByKey(SysConfigKeyEnum.QR_CODE_RSA_PUBLIC_KEY));
-        String content = UUID.randomUUID().toString().replaceAll("-","") + AwardConstants.CREATE_QR_CODE_CONTENT_DELIMITER
+        RSA rsa = new RSA(sysConfigService.selectConfigByKey(SysConfigKeyEnum.QR_CODE_RSA_PRIVATE_KEY), sysConfigService.selectConfigByKey(SysConfigKeyEnum.QR_CODE_RSA_PUBLIC_KEY));
+        String content = UUID.randomUUID().toString().replaceAll("-", "") + AwardConstants.CREATE_QR_CODE_CONTENT_DELIMITER
                 + redEnvelopeDtl.getBatchNo() + AwardConstants.CREATE_QR_CODE_CONTENT_DELIMITER
                 + redEnvelopeDtl.getId() + AwardConstants.CREATE_QR_CODE_CONTENT_DELIMITER
                 + redEnvelopeDtl.getBatch();
@@ -189,7 +182,7 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
         // 生成规则 批次号 + 批次 + 时间戳后8位 + 随机数
         String fileName = redEnvelopeDtl.getBatchNo() + "_" + redEnvelopeDtl.getBatch() + "_" + new String(System.currentTimeMillis() + "").substring(4) + "_" + RandomUtils.nextInt() + ".jpg";
         try {
-            QrCodeUtils.encode(encrypt,filePath,fileName);
+            QrCodeUtils.encode(encrypt, filePath, fileName);
         } catch (Exception e) {
             throw new RuntimeException("生成二维码失败:" + e.getMessage());
         }

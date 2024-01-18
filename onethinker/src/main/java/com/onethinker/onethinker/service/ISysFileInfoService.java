@@ -1,9 +1,9 @@
 package com.onethinker.onethinker.service;
 
-import java.util.List;
-
 import com.onethinker.onethinker.domain.SysFileInfo;
 import com.onethinker.onethinker.dto.SysFileInfoReqDTO;
+
+import java.util.List;
 
 /**
  * 文件信息Service接口
@@ -62,6 +62,7 @@ public interface ISysFileInfoService {
 
     /**
      * 文件上传
+     *
      * @param sysFileInfoReqDTO
      * @return
      */

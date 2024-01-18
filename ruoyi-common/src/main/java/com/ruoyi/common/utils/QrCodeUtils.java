@@ -1,5 +1,13 @@
 package com.ruoyi.common.utils;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
+import org.springframework.util.StringUtils;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
@@ -7,16 +15,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Hashtable;
-
-import javax.imageio.ImageIO;
-
-import org.springframework.util.StringUtils;
-
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.EncodeHintType;
-import com.google.zxing.MultiFormatWriter;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 
 /**
  * @Title: QrCodeUtils

@@ -1,27 +1,23 @@
 package com.onethinker.onethinker.service.impl;
 
-import java.io.File;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import com.ruoyi.common.config.RuoYiConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.ruoyi.common.enums.SysConfigKeyEnum;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.file.FileUploadUtils;
-import com.ruoyi.common.utils.ip.IpUtils;
-import com.ruoyi.common.utils.uuid.UUID;
 import com.onethinker.onethinker.domain.SysFileInfo;
 import com.onethinker.onethinker.dto.SysFileInfoReqDTO;
 import com.onethinker.onethinker.mapper.SysFileInfoMapper;
 import com.onethinker.onethinker.service.ISysFileInfoService;
+import com.ruoyi.common.enums.SysConfigKeyEnum;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.file.FileUploadUtils;
+import com.ruoyi.common.utils.uuid.UUID;
 import com.ruoyi.system.service.ISysConfigService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.io.File;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 文件信息Service业务层处理
@@ -127,7 +123,7 @@ public class SysFileInfoServiceImpl implements ISysFileInfoService {
         sysFileInfo.setFileId(UUID.fastUuid().toString());
         sysFileInfo.setFileName(fileName);
         sysFileInfo.setFileType(sysFileInfoReqDTO.getFileType());
-        sysFileInfo.setServerFileId(UUID.fastUuid().toString().replace("-",""));
+        sysFileInfo.setServerFileId(UUID.fastUuid().toString().replace("-", ""));
         sysFileInfo.setSource(SysFileInfo.SOURCE_TYPE_LOCALHOST);
         sysFileInfo.setSuffixName(suffixName);
         sysFileInfo.setSize(sysFileInfoReqDTO.getSize());

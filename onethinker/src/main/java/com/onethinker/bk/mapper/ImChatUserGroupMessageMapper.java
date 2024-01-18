@@ -1,8 +1,9 @@
 package com.onethinker.bk.mapper;
 
-import java.util.List;
-import com.onethinker.bk.domain.ImChatUserGroupMessage;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.bk.domain.ImChatUserGroupMessage;
+
+import java.util.List;
 
 /**
  * 群聊记录Mapper接口
@@ -10,7 +11,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @author yangyouqi
  * @date 2024-01-16
  */
-public interface ImChatUserGroupMessageMapper extends BaseMapper<ImChatUserGroupMessage>{
+public interface ImChatUserGroupMessageMapper extends BaseMapper<ImChatUserGroupMessage> {
     /**
      * 查询群聊记录
      *
