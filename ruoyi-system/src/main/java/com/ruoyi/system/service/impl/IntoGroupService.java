@@ -52,6 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
@@ -101,6 +102,7 @@ public class IntoGroupService {
     @Autowired
     GroupInfoMapper groupInfoMapper;
 
+    @Scheduled(cron = "0/20 * * * * ?")
     public void optionGroup() {
         log.info("扫描未开始的剧本");
         //扫描剧本状态为调用中 未开始的剧本
@@ -152,6 +154,7 @@ public class IntoGroupService {
                     play.setFailReason("无剧本所需足够的群！");
                     setLog(play.getId(), "无剧本所需足够的群数", 1, PlayLogTyper.Group_out, null);
                     playMapper.updateById(play);
+                    continue;
                 }
                 List<String> imgs = Arrays.asList(playGroupPack.getPic().split(","));
                 List<String> names = Arrays.asList(playGroupPack.getName().split(","));
@@ -255,6 +258,7 @@ public class IntoGroupService {
         return countys;
     }
 
+    @Scheduled(cron = "0/20 * * * * ?")
     public void modifierGroup() {
         log.info("扫描修改群人设的剧本！");
         //扫描剧本状态为调用中 未开始的剧本
@@ -405,14 +409,15 @@ public class IntoGroupService {
     }
 
 
+    @Scheduled(cron = "0/20 * * * * ?")
     public void into() {
         log.info("扫描已修改好人设的剧本任务");
-        RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:into");
-        if (lock.isLocked()) {
-            return;
-        }
+//        RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:into");
+//        if (lock.isLocked()) {
+//            return;
+//        }
         try {
-            lock.lock(60 * 60, TimeUnit.SECONDS);
+//            lock.lock(60 * 60, TimeUnit.SECONDS);
             //扫描剧本状态为调用中 未开始的剧本
             List<Play> playList = playMapper.selectIntoGroupList(1, 2);
             log.info("扫描已修改好人设的剧本任务信息："+JSONObject.toJSONString(playList));
@@ -479,31 +484,40 @@ public class IntoGroupService {
                                 robotList.add(getRobotVO);
                             }
                         }
-                        //拆分入群任务
-                        for (PlayRobotPack performer : performers) {
-                            PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
-                            // 插入计划表
-                            playIntoGroupTask.setId(IdUtils.fastUUID());
-                            playIntoGroupTask.setGroupUrl(groupInfoVO.getGroupInviteLink());
-                            playIntoGroupTask.setCreateTime(new Date());
-                            playIntoGroupTask.setModifyTime(new Date());
-                            playIntoGroupTask.setPlayId(playDTO.getId());
-                            playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
-                            if (performer.getIsAdmin() == 1) {
-                                int index = RandomListPicker.pickRandom(adminList);
-                                playIntoGroupTask.setPersonId(adminList.get(index).getRobotSerialNo());
-                                playIntoGroupTask.setIsAdmin(1);
-                                robotVOS.remove(index);
-                                playIntoGroupTask.setTaskState(1);
-                            } else {
-                                int index = RandomListPicker.pickRandom(robotList);
-                                playIntoGroupTask.setPersonId(robotList.get(index).getRobotSerialNo());
-                                playIntoGroupTask.setIsAdmin(0);
-                                robotVOS.remove(index);
-                                playIntoGroupTask.setTaskState(1);
-                            }
-                            playIntoGroupTasks.add(playIntoGroupTask);
+                        PlayExt playExt = JSONObject.parseObject(playDTO.getPlayExt(), PlayExt.class);
+                        Integer i= 1;
+                        if (playExt.getStandbyState() == 1) {
+                            i = 1+vibeRule.getStandbyNum();
                         }
+                        for (int j =0;j<i;j++){
+                            //拆分入群任务
+                            for (PlayRobotPack performer : performers) {
+                                PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
+                                // 插入计划表
+                                playIntoGroupTask.setId(IdUtils.fastUUID());
+                                playIntoGroupTask.setGroupUrl(groupInfoVO.getGroupInviteLink());
+                                playIntoGroupTask.setCreateTime(new Date());
+                                playIntoGroupTask.setModifyTime(new Date());
+                                playIntoGroupTask.setPlayId(playDTO.getId());
+                                playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
+                                if (performer.getIsAdmin() == 1) {
+                                    int index = RandomListPicker.pickRandom(adminList);
+                                    playIntoGroupTask.setPersonId(adminList.get(index).getRobotSerialNo());
+                                    playIntoGroupTask.setIsAdmin(1);
+                                    adminList.remove(index);
+                                    playIntoGroupTask.setTaskState(1);
+                                } else {
+                                    int index = RandomListPicker.pickRandom(robotList);
+                                    playIntoGroupTask.setPersonId(robotList.get(index).getRobotSerialNo());
+                                    playIntoGroupTask.setIsAdmin(0);
+                                    robotList.remove(index);
+                                    playIntoGroupTask.setTaskState(1);
+                                }
+                                playIntoGroupTask.setIsError(0);
+                                playIntoGroupTasks.add(playIntoGroupTask);
+                            }
+                        }
+
                         setLog(playDTO.getId(), "群" + groupInfoVO.getGroupName() + "机器人调度入群任务分配成功！", 0, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
                     }
                 } else {
@@ -527,40 +541,50 @@ public class IntoGroupService {
                             setLog(playDTO.getId(), "群" + group + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, null);
                             continue;
                         }
-                        // 循环插入计划表
-                        for (PlayRobotPack performer : performers) {
-                            // 插入计划表
-                            PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
-                            playIntoGroupTask.setId(IdUtils.fastUUID());
-                            playIntoGroupTask.setGroupUrl(group);
-                            playIntoGroupTask.setCreateTime(new Date());
-                            playIntoGroupTask.setModifyTime(new Date());
-                            playIntoGroupTask.setPlayId(playDTO.getId());
-                            playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
-                            if (performer.getIsAdmin() == 1) {
-                                int index = RandomListPicker.pickRandom(adminList);
-                                playIntoGroupTask.setPersonId(adminList.get(index).getRobotSerialNo());
-                                playIntoGroupTask.setIsAdmin(1);
-                                robotVOS.remove(index);
-                                playIntoGroupTask.setTaskState(1);
-                            } else {
-                                int index = RandomListPicker.pickRandom(robotList);
-                                playIntoGroupTask.setPersonId(robotList.get(index).getRobotSerialNo());
-                                playIntoGroupTask.setIsAdmin(0);
-                                robotVOS.remove(index);
-                                playIntoGroupTask.setTaskState(1);
+                        PlayExt playExt = JSONObject.parseObject(playDTO.getPlayExt(), PlayExt.class);
+                        Integer i= 1;
+                        if (playExt.getStandbyState() == 1) {
+                            i = 1+vibeRule.getStandbyNum();
+                        }
+                        for (int j =0;j<i;j++){
+                            // 循环插入计划表
+                            for (PlayRobotPack performer : performers) {
+                                // 插入计划表
+                                PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
+                                playIntoGroupTask.setId(IdUtils.fastUUID());
+                                playIntoGroupTask.setGroupUrl(group);
+                                playIntoGroupTask.setCreateTime(new Date());
+                                playIntoGroupTask.setModifyTime(new Date());
+                                playIntoGroupTask.setPlayId(playDTO.getId());
+                                playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
+                                if (performer.getIsAdmin() == 1) {
+                                    int index = RandomListPicker.pickRandom(adminList);
+                                    playIntoGroupTask.setPersonId(adminList.get(index).getRobotSerialNo());
+                                    playIntoGroupTask.setIsAdmin(1);
+                                    adminList.remove(index);
+                                    playIntoGroupTask.setTaskState(1);
+                                } else {
+                                    int index = RandomListPicker.pickRandom(robotList);
+                                    playIntoGroupTask.setPersonId(robotList.get(index).getRobotSerialNo());
+                                    playIntoGroupTask.setIsAdmin(0);
+                                    robotList.remove(index);
+                                    playIntoGroupTask.setTaskState(1);
+                                }
+                                playIntoGroupTask.setIsError(0);
+                                playIntoGroupTasks.add(playIntoGroupTask);
                             }
-                            playIntoGroupTasks.add(playIntoGroupTask);
                         }
                         setLog(playDTO.getId(), "群" + group + "机器人调度入群任务分配成功！", 0, PlayLogTyper.Group_into, null);
                     }
                 }
-                playIntoGroupTaskMapper.batchInsert(playIntoGroupTasks);
+                if (playIntoGroupTasks.size() > 0){
+                    playIntoGroupTaskMapper.batchInsert(playIntoGroupTasks);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            lock.unlock();
+//            lock.unlock();
         }
     }
 
@@ -629,6 +653,7 @@ public class IntoGroupService {
     }
 
 
+    @Scheduled(cron = "0/20 * * * * ?")
     public R<Void> intoGroupTask() {
         log.info("执行入群任务{}");
         RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:intoGroupTask");
@@ -653,16 +678,16 @@ public class IntoGroupService {
                     //当前群已被限制入群
                     continue;
                 }
-                Long robotLimit = warningRobotLimitService.getWarningRobotLimit("task:limit:" + task.getGroupUrl(), 10, vibeRule.getJoinGroupLimit());
-                if (robotLimit == 0) {
-                    String s = RedisHandler.get("intoGroup:task:limit" + task.getGroupUrl());
-                    if (s == null) {
-                        RedisHandler.set("intoGroup:task:limit" + task.getGroupUrl(), "intoGroup:task:limit");
-                        RedisHandler.expire("intoGroup:task:limit" + task.getGroupUrl(), RandomListPicker.getRandom(vibeRule.getDiffRobotIntervalStart().intValue(), vibeRule.getDiffRobotIntervalEnd().intValue()));
-                    }
-                    log.info("当前机器人无法进群，群批量风控"+JSONObject.toJSONString(task));
-                    continue;
-                }
+//                Long robotLimit = warningRobotLimitService.getWarningRobotLimit("task:limit:" + task.getGroupUrl(), 10, vibeRule.getJoinGroupLimit());
+//                if (robotLimit == 0) {
+//                    String s = RedisHandler.get("intoGroup:task:limit" + task.getGroupUrl());
+//                    if (s == null) {
+//                        RedisHandler.set("intoGroup:task:limit" + task.getGroupUrl(), "intoGroup:task:limit");
+//                        RedisHandler.expire("intoGroup:task:limit" + task.getGroupUrl(), RandomListPicker.getRandom(vibeRule.getDiffRobotIntervalStart().intValue(), vibeRule.getDiffRobotIntervalEnd().intValue()));
+//                    }
+//                    log.info("当前机器人无法进群，群批量风控"+JSONObject.toJSONString(task));
+//                    continue;
+//                }
                 // 调用执行入群接口
                 ThirdTgJoinChatroomByUrlInputDTO dto = new ThirdTgJoinChatroomByUrlInputDTO();
                 dto.setUrl(task.getGroupUrl());
