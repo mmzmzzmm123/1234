@@ -1,6 +1,7 @@
 package com.onethinker.bk.vo;
 
 import lombok.Data;
+import org.springframework.util.StringUtils;
 
 /**
  * @author : yangyouqi
@@ -12,11 +13,11 @@ public class BaseRequestVO {
 
     private boolean desc = true;
 
-    private Integer source;
+    private Long source;
 
     private String commentType;
 
-    private Integer floorCommentId;
+    private Long floorCommentId;
 
     private String searchKey;
 
@@ -40,4 +41,10 @@ public class BaseRequestVO {
     private Boolean status;
 
     private String classify;
+
+    public void existsParams() {
+        if (source == null || !StringUtils.hasText(commentType)) {
+            throw new RuntimeException("来源有误");
+        }
+    }
 }

@@ -78,4 +78,11 @@ public interface IArticleService {
      * @return
      */
     ArticleVO getArticleById(Long id, String password);
+
+    /**
+     * 根据id查数
+     * @param source
+     * @return
+     */
+    Article selectArticleById(Long source);
 }

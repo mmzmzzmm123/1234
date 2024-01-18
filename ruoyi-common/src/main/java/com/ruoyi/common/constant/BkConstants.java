@@ -169,7 +169,7 @@ public class BkConstants {
     /**
      * 顶层评论ID
      */
-    public static final int FIRST_COMMENT = 0;
+    public static final Long FIRST_COMMENT = 0L;
 
     /**
      * 文章摘要默认字数

@@ -1,6 +1,20 @@
 package com.onethinker.mail.utils;
 
 import com.alibaba.fastjson2.JSONObject;
+import com.onethinker.bk.domain.Article;
+import com.onethinker.bk.domain.Comment;
+import com.onethinker.bk.domain.WebInfo;
+import com.onethinker.bk.enums.CommentTypeEnum;
+import com.onethinker.bk.service.ICommentService;
+import com.onethinker.bk.service.IWebInfoService;
+import com.onethinker.bk.service.impl.CommentServiceImpl;
+import com.onethinker.bk.vo.CommentVO;
+import com.onethinker.user.domain.PlatformUserDetail;
+import com.onethinker.user.service.IPlatformUserDetailService;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
+import com.ruoyi.common.enums.SysConfigKeyEnum;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.service.ISysConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,11 +24,17 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import javax.mail.MessagingException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class MailUtil {
@@ -54,6 +74,15 @@ public class MailUtil {
 
     @Value("${spring.mail.username}")
     private String sendMailer;
+
+    @Autowired
+    private IPlatformUserDetailService platformUserDetailService;
+
+    @Autowired
+    private IWebInfoService webInfoService;
+
+    @Autowired
+    private RedisCache redisCache;
 
     /**
      * 1. 网站名称
@@ -135,4 +164,86 @@ public class MailUtil {
             log.error(e.getMessage());
         }
     }
+
+    public void sendCommentMail(CommentVO commentVO, Article article, ICommentService commentService) {
+        List<String> mail = new ArrayList<>();
+        String toName = "";
+        if (commentVO.getParentUserId() != null) {
+            PlatformUserDetail user = platformUserDetailService.getPlatFormUserDetailByUserId(commentVO.getParentUserId());
+            if (user != null && !user.getId().equals(SecurityUtils.getUserId()) && StringUtils.hasText(user.getDataId())) {
+                toName = user.getUsername();
+                mail.add(user.getDataId());
+            }
+        } else {
+            if (CommentTypeEnum.COMMENT_TYPE_MESSAGE.getCode().equals(commentVO.getType()) || CommentTypeEnum.COMMENT_TYPE_LOVE.getCode().equals(commentVO.getType())) {
+                // 树洞和表白墙
+
+            } else if (CommentTypeEnum.COMMENT_TYPE_ARTICLE.getCode().equals(commentVO.getType())) {
+                // 文章评论
+                PlatformUserDetail user = platformUserDetailService.getPlatFormUserDetailByUserId(article.getUserId());
+                if (user != null && StringUtils.hasText(user.getDataId()) && !user.getId().equals(SecurityUtils.getUserId())) {
+                    mail.add(user.getDataId());
+                }
+            }
+        }
+
+        if (!CollectionUtils.isEmpty(mail)) {
+            String sourceName = "";
+            if (CommentTypeEnum.COMMENT_TYPE_ARTICLE.getCode().equals(commentVO.getType())) {
+                sourceName = article.getArticleTitle();
+            }
+            String commentMail = getCommentMail(commentVO.getType(), sourceName,
+                    SecurityUtils.getUsername(),
+                    commentVO.getCommentContent(),
+                    toName,
+                    commentVO.getParentCommentId(), commentService);
+
+            Integer count = redisCache.getCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + mail.get(0));
+            if (count == null || count < Integer.parseInt(sysConfigService.selectConfigByKey(SysConfigKeyEnum.CODE_MAIL_COUNT) + "")) {
+                WebInfo webInfo = webInfoService.getWebInfo();
+                sendMailMessage(mail, "您有一封来自" + webInfo.getWebName() + "的回执！", commentMail);
+                if (count == null) {
+                    redisCache.setCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + mail.get(0), 1, 1, TimeUnit.DAYS);
+                } else {
+                    redisCache.setCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + mail.get(0), count++, 1, TimeUnit.DAYS);
+                }
+            }
+        }
+    }
+
+    /**
+     * source：0留言 其他是文章标题
+     * fromName：评论人
+     * toName：被评论人
+     */
+    private String getCommentMail(String commentType, String source, String fromName, String fromContent, String toName, Long toCommentId, ICommentService commentService) {
+        WebInfo webInfo = webInfoService.getWebInfo();
+
+        String mailType = "";
+        String toMail = "";
+        if (StringUtils.hasText(toName)) {
+            mailType = String.format(MailUtil.replyMail, fromName);
+            Comment toComment = commentService.selectCommentById(toCommentId);
+            if (toComment != null) {
+                toMail = String.format(MailUtil.originalText, toName, toComment.getCommentContent());
+            }
+        } else {
+            if (CommentTypeEnum.COMMENT_TYPE_MESSAGE.getCode().equals(commentType)) {
+                mailType = String.format(MailUtil.messageMail, fromName);
+            } else if (CommentTypeEnum.COMMENT_TYPE_ARTICLE.getCode().equals(commentType)) {
+                mailType = String.format(MailUtil.commentMail, source, fromName);
+            } else if (CommentTypeEnum.COMMENT_TYPE_LOVE.getCode().equals(commentType)) {
+                mailType = String.format(MailUtil.loveMail, fromName);
+            }
+        }
+
+        return String.format(mailText,
+                webInfo.getWebName(),
+                mailType,
+                fromName,
+                fromContent,
+                toMail,
+                webInfo.getWebName());
+    }
+
 }

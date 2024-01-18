@@ -1,5 +1,7 @@
 package com.onethinker.mail.service.impl;
 
+import com.onethinker.bk.domain.WebInfo;
+import com.onethinker.bk.service.IWebInfoService;
 import com.onethinker.mail.service.IMailService;
 import com.onethinker.mail.utils.MailUtil;
 import com.ruoyi.common.core.redis.RedisCache;
@@ -29,16 +31,20 @@ public class IMailServiceImpl implements IMailService {
     @Autowired
     private ISysConfigService sysConfigService;
 
+    @Autowired
+    private IWebInfoService webInfoService;
+
     @Override
     public void sendMailCode(String place, int code) {
         List<String> mail = new ArrayList<>();
         mail.add(place);
         String text = getCodeMail(code);
-//        WebInfo webInfo = (WebInfo) PoetryCache.get(CommonConst.WEB_INFO);
+
+        WebInfo webInfo = webInfoService.getWebInfo();
 
         Integer count = redisCache.getCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + mail.get(0));
         if (count == null || count < Integer.parseInt(sysConfigService.selectConfigByKey(SysConfigKeyEnum.CODE_MAIL_COUNT) + "")) {
-            mailUtil.sendMailMessage(mail, "您有一封来自" + ("OneThinker") + "的回执！", text);
+            mailUtil.sendMailMessage(mail, "您有一封来自" + webInfo.getWebName() + "的回执！", text);
             if (count == null) {
                 redisCache.setCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + mail.get(0), 1, 1, TimeUnit.DAYS);
             } else {

@@ -224,6 +224,19 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         return articleVO;
     }
 
+    @Override
+    public Article selectArticleById(Long source) {
+        String redisKey = CacheEnum.WEB_INFO.getCode() + REDIS_KEY + source;
+        if (!redisCache.hasKey(redisKey)) {
+            Article article = articleMapper.selectArticleById(source);
+            if (Objects.isNull(article)) {
+                return null;
+            }
+            redisCache.setCacheObject(redisKey,article,1,TimeUnit.DAYS);
+        }
+        return redisCache.getCacheObject(redisKey);
+    }
+
     private String getSubscribeMail(String labelName, String articleTitle) {
         WebInfo webInfo = webInfoService.getWebInfo();
         return String.format(mailUtil.getMailText(),

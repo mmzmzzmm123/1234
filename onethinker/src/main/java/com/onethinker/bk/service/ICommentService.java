@@ -1,6 +1,8 @@
 package com.onethinker.bk.service;
 
 import com.onethinker.bk.domain.Comment;
+import com.onethinker.bk.vo.BaseRequestVO;
+import com.onethinker.bk.vo.CommentVO;
 
 import java.util.List;
 
@@ -30,10 +32,10 @@ public interface ICommentService {
     /**
      * 新增文章评论
      *
-     * @param comment 文章评论
+     * @param commentVO 文章评论
      * @return 结果
      */
-    int insertComment(Comment comment);
+    int insertComment(CommentVO commentVO);
 
     /**
      * 修改文章评论
@@ -66,4 +68,11 @@ public interface ICommentService {
      * @return
      */
     Integer getCommentCount(Long id, String code);
+
+    /**
+     * 查询评论信息
+     * @param baseRequestVO
+     * @return
+     */
+    BaseRequestVO listComment(BaseRequestVO baseRequestVO);
 }
