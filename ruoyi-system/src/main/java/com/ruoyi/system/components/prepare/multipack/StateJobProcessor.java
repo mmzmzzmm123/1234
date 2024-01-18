@@ -37,6 +37,11 @@ public class StateJobProcessor implements LogJobProcessor {
 		List<PlayRobotPackLog> datas = robotPackLogMapper
 				.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getIsFinish, 0)
 						.eq(PlayRobotPackLog::getStatus, 0).eq(PlayRobotPackLog::getPlayId, play.getId()));
+		
+		if(CollectionUtils.isEmpty(datas)) {
+			return ;
+		}
+		
 		for (PlayRobotPackLog data : datas) {
 			CallValue ret = CallValueStore.get(data.getOpt());
 
@@ -73,6 +78,11 @@ public class StateJobProcessor implements LogJobProcessor {
 		// 是否执行完成 刷新
 		datas = robotPackLogMapper
 				.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getIsFinish, 0));
+		
+		if(CollectionUtils.isEmpty(datas)) {
+			return ;
+		}
+		
 		// 分组
 		Map<String, List<PlayRobotPackLog>> group = ListTools.group(datas, f -> f.getRadioId());
 		for (String radioId : group.keySet()) {

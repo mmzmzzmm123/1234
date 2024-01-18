@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.play.Play;
@@ -42,7 +43,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 	/**
 	 * 4分钟
 	 */
-	private static final int timeoutSecond = 60 * 4;
+	private static final int timeoutSecond = 10;
 
 	@Override
 	public void handle(Play play) {
@@ -54,6 +55,10 @@ public class RetryJobProcessor implements LogJobProcessor {
 						.le(PlayRobotPackLog::getRetryCount, MaxRetryCount).eq(PlayRobotPackLog::getRetryMaxFlag, 0)
 						.eq(PlayRobotPackLog::getPlayId, play.getId()));
 
+		if(CollectionUtils.isEmpty(datas)) {
+			return ;
+		}
+		
 		for (PlayRobotPackLog data : datas) {
 			// 再次调用
 			try {
@@ -182,6 +187,13 @@ public class RetryJobProcessor implements LogJobProcessor {
 			} else {
 				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, null,
 						ret.getOpt(), "管理员（获取hash值）-重试" + data.getRetryCount() + "次", true);
+				// 修改后置opt
+				PlayRobotPackLog condition = robotPackLogMapper.selectOne(new QueryWrapper<PlayRobotPackLog>().lambda()
+						.eq(PlayRobotPackLog::getWaitOpt, data.getOpt()).last(" limit 1 "));
+				if(condition != null) {
+					condition.setWaitOpt(ret.getOpt());
+					robotPackLogMapper.updateById(condition) ;
+				}
 				// 删除之前的操作码
 				robotPackLogMapper.deleteById(data.getOpt());
 				// 重新插入

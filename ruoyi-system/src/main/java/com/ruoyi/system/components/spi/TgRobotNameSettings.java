@@ -2,8 +2,13 @@ package com.ruoyi.system.components.spi;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
+
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.IdGenerator;
+
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
+import com.ruoyi.common.utils.Env;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.mapper.GroupInfoMapper;
@@ -27,6 +32,15 @@ public class TgRobotNameSettings implements Settings {
 		dto.setTgRobotId(param.get(Settings.Key_RobotId).toString());
 		@SuppressWarnings("rawtypes")
 		OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.modifyNameByThirdKpTg(dto);
+		
+		
+		if (Env.isLocal()) {
+			ret = new OpenApiResult<>();
+			TgBaseOutputDTO d = new TgBaseOutputDTO();
+			d.setOptSerNo(UUID.randomUUID().toString());
+			ret.setData(d);
+		}
+		
 		PlayRobotPackLog data = new PlayRobotPackLog();
 		data.setChatroomId(param.get(Settings.Key_GroupId).toString());
 		data.setCreateTime(new Date());
