@@ -898,6 +898,7 @@ public class IntoGroupService {
         groupInfo.setGroupUrl(task.getGroupUrl());
         groupInfo.setTgGroupId(dto.getGroupId());
         groupInfo.setTgGroupName(dto.getGroupName());
+        groupInfo.setPlayId(task.getPlayId());
         groupInfo.setIsDelete(0);
         groupInfo.setState(0);
         groupInfo.setIntoStatus(1);
@@ -925,6 +926,9 @@ public class IntoGroupService {
                 //查询剧本已完成调度群数
                 log.info("入群中的剧本:"+JSONObject.toJSONString(play));
                 Integer count = playGroupInfoMapper.selectSuccessGroupCount(play.getId());
+                if (count == null){
+                    count = 0;
+                }
                 log.info("剧本已完成调度的群数："+count);
                 if (count >= play.getGroupNum()) {
                     //修改剧本状态
