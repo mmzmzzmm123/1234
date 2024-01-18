@@ -8,7 +8,7 @@ import java.util.List;
 @Data
 public class VibeRuleTargetParam {
     @ApiModelProperty(value = "内容目标国是否为all: 0否 1是")
-    private Integer allState;
+    private Integer allState = 0;
 
     @ApiModelProperty(value = "内容目标国编码")
     private String countryCode;

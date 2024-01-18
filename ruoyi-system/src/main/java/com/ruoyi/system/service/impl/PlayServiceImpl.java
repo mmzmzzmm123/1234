@@ -72,21 +72,26 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Resource
     private PlayFileMapper playFileMapper;
 
+    @Resource
+    private PlayRepeatLogMapper playRepeatLogMapper;
+
+    @Resource
+    private PlayGroupInfoMapper playGroupInfoMapper;
+
+    @Resource
+    private PlayRobotGroupRelationMapper playRobotGroupRelationMapper;
+
     @Override
     @Transactional(rollbackFor=Exception.class)
     public R<String> create(PlayDTO dto) {
-        //获取商品
-        /*AjaxResult result = ProductTools.checkNormal(dto.getProductId());
-        if (result.isError()) {
-            return R.fail(ErrInfoConfig.getDynmic(11001));
-        }
-        handleOrder(dto.getProductId(), (Product) result.data(), dto.getName(), dto.getLoginUser());*/
+        //设置订单数据
+//        AjaxResult result = ProductTools.checkNormal(dto.getProductId());
+//        if (result.isError()) {
+//            return R.fail(ErrInfoConfig.getDynmic(11001));
+//        }
+//        handleOrder(dto.getProductId(), (Product) result.data(), dto.getName(), dto.getLoginUser());
 
-        dto.setUrlPool(handleUrlPool(dto.getUrlPool()));
-        if (StringUtils.isEmpty(dto.getUrlPool())) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "接粉号池不能为空"));
-        }
-        //todo 混淆处理
+        //todo 混淆处理?
 
         String playId = IdWorker.getIdStr();
         savePlay(dto, playId);
@@ -106,14 +111,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         }
 
         return R.ok(playId);
-    }
-
-    //接粉号池处理
-    private List<String> handleUrlPool(List<String> urlPool) {
-        // 去除空格
-        return urlPool.stream()
-                .map(org.springframework.util.StringUtils::trimAllWhitespace)
-                .collect(Collectors.toList());
     }
 
     //创建订单记录
@@ -172,6 +169,13 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             }
             playMessage.setMessageContent(JSON.toJSONString(messageDTO.getMessageContent()));
             playMessage.setPlayErrorType(sendMechanism.getSendErrorType());
+
+            //自定义消息类型处理
+//            for (ContentJson contentJson : messageDTO.getMessageContent()) {
+//                if (contentJson.getMomentTypeId() == 2018) {
+//                    contentJson.setSMateContent("");
+//                }
+//            }
 
             saveData.add(playMessage);
         }
@@ -232,18 +236,12 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         if (dto.getStartType() == 0) {
             play.setStartGroupDate(new Date());
         }
-        //System.out.println(play);
         super.save(play);
     }
 
     @Override
     @Transactional(rollbackFor=Exception.class)
     public R<String> updatePlay(PlayDTO dto) {
-        dto.setUrlPool(handleUrlPool(dto.getUrlPool()));
-        if (StringUtils.isEmpty(dto.getUrlPool())) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "接粉号池不能为空"));
-        }
-
         if (StringUtils.isEmpty(dto.getId())) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
@@ -291,6 +289,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         ret.setAdMonitor(play.convertAdMonitorStr());
         ret.setPlayExt(play.convertPlayExtStr());
         ret.setUrlPool(Arrays.asList(play.getUrlPool().split(",")));
+        if (play.getGroupSource() == 1) {
+            ret.setGroupUrls(Arrays.asList(play.getGroupUrls().split(",")));
+        }
 
         PlayGroupPack playGroupPack = playGroupPackMapper.selectOne(new LambdaQueryWrapper<PlayGroupPack>()
                 .eq(PlayGroupPack::getPlayId, playId).last(" limit 1 "));
@@ -354,8 +355,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return R.fail(ErrInfoConfig.getDynmic(11000, "修改失败"));
         }
 
-        //调用接口同步配置
-        List<PlayGroupInfo> playGroupInfos = SpringUtils.getBean(PlayGroupInfoMapper.class).selectGroupInfoByPlayId(playId);
+        //调用接口同步广告配置
+        List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(playId);
         if (playGroupInfos.isEmpty()) {
             return R.ok();
         }
@@ -519,7 +520,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     @Override
-    public R<String> repeatPlay(String playId) {
+    @Transactional(rollbackFor = Exception.class)
+    public R<String> repeatPlay(String playId, LoginUser loginUser) {
         if (StringUtils.isEmpty(playId)) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
@@ -534,14 +536,22 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return R.fail(ErrInfoConfig.getDynmic(11000, "该剧本未配置锁定水军"));
         }
 
+        R<PlayVO> infoRet  = this.info(playId);
+        if (infoRet.getCode() != SUCCESS) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "获取群信息失败"));
+        }
+
         PlayDTO dto = new PlayDTO();
+        BeanUtils.copyProperties(infoRet.getData(), dto);
+        dto.setLoginUser(loginUser);
+
         R<String> ret = this.create(dto);
         if (ret.getCode() != SUCCESS) {
             return R.fail(ErrInfoConfig.getDynmic(10000, "创建剧本失败"));
         }
         String newPlayId = ret.getData();
 
-        List<PlayGroupInfo> playGroupInfos = SpringUtils.getBean(PlayGroupInfoMapper.class).selectGroupInfoByPlayId(play.getId());
+        List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(play.getId());
         if (playGroupInfos.isEmpty()) {
             return R.ok();
         }
@@ -554,6 +564,11 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             savePlayGroupData.add(playGroupInfo);
         }
         SpringUtils.getBean(PlayGroupInfoServiceImpl.class).saveBatch(savePlayGroupData);
+
+        //保存重复炒日志
+        PlayRepeatLog playRepeatLog = new PlayRepeatLog();
+        playRepeatLog.setPlayId(playId);
+        playRepeatLogMapper.insert(playRepeatLog);
 
         return R.ok();
     }
@@ -572,6 +587,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             case PlayStatusConstants.CANCEL:
                 this.cancelPlay(dto.getPlayIds());
                 break;
+            case PlayStatusConstants.IN_PROGRESS:
+                this.startPlay(dto.getPlayIds());
+                break;
         }
         return Boolean.TRUE;
     }
@@ -579,11 +597,13 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     private void suspendPlay(List<String> ids) {
         for (String id : ids) {
             boolean ret = super.update(null, new UpdateWrapper<Play>().lambda()
-                    .eq(Play::getId, id).in(Play::getState, Arrays.asList(PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.DISPATCH))
+                    .eq(Play::getId, id)
+                    .in(Play::getState, Collections.singletonList(PlayStatusConstants.IN_PROGRESS))
                     .set(Play::getState, PlayStatusConstants.SUSPEND));
             if (ret) {
                 SpringUtils.getBean(PlayMessagePushService.class).update(null, new UpdateWrapper<PlayMessagePush>().lambda()
                         .eq(PlayMessagePush::getPlayId, id)
+                        .eq(PlayMessagePush::getPushState, PushStateEnum.ING.getKey())
                         .set(PlayMessagePush::getPushState, PushStateEnum.USER_STOP.getKey()));
             }
         }
@@ -592,13 +612,77 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     private void cancelPlay(List<String> ids) {
         for (String id : ids) {
             boolean ret = super.update(null, new UpdateWrapper<Play>().lambda()
-                    .eq(Play::getId, id).in(Play::getState, Arrays.asList(PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.DISPATCH))
+                    .eq(Play::getId, id)
+                    .in(Play::getState, Arrays.asList(PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.SUSPEND))
                     .set(Play::getState, PlayStatusConstants.CANCEL));
             if (ret) {
                 SpringUtils.getBean(PlayMessagePushService.class).update(null, new UpdateWrapper<PlayMessagePush>().lambda()
                         .eq(PlayMessagePush::getPlayId, id)
+                        .in(PlayMessagePush::getPushState, Arrays.asList(PushStateEnum.ING.getKey(), PushStateEnum.USER_STOP.getKey()))
                         .set(PlayMessagePush::getPushState, PushStateEnum.CANCEL.getKey()));
             }
         }
+    }
+
+    private void startPlay(List<String> ids) {
+        for (String id : ids) {
+            boolean ret = super.update(null, new UpdateWrapper<Play>().lambda()
+                    .eq(Play::getId, id)
+                    .in(Play::getState, Collections.singletonList(PlayStatusConstants.SUSPEND))
+                    .set(Play::getState, PlayStatusConstants.IN_PROGRESS));
+            if (ret) {
+                SpringUtils.getBean(PlayMessagePushService.class).update(null, new UpdateWrapper<PlayMessagePush>().lambda()
+                        .eq(PlayMessagePush::getPlayId, id)
+                        .in(PlayMessagePush::getPushState, Collections.singletonList(PushStateEnum.USER_STOP.getKey()))
+                        .set(PlayMessagePush::getPushState, PushStateEnum.USER_STOP.getKey()));
+            }
+        }
+    }
+
+    @Override
+    public R<String> releaseUser(String playId) {
+        if (StringUtils.isEmpty(playId)) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
+        }
+
+        Play play = super.getById(playId);
+        if (null == play) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
+        }
+
+        PlayExt playExt = play.convertPlayExtStr();
+        if (null == playExt || playExt.getLockState() != 1) {
+            return R.ok();
+        }
+
+        //已完成和已取消
+
+        //获取剧本关联群
+        List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(playId);
+        if (playGroupInfos.isEmpty()) {
+            return R.ok();
+        }
+
+        //获取群锁定水军
+        List<String> groupIds = playGroupInfos.stream().map(PlayGroupInfo::getGroupId).collect(Collectors.toList());
+        List<PlayRobotGroupRelation> playRobotGroupRelationList = playRobotGroupRelationMapper.selectWaitOutGroupByGroupIds(groupIds);
+        if (null == playRobotGroupRelationList) {
+            return R.ok();
+        }
+
+        //释放水军
+        for (PlayRobotGroupRelation playRobotGroupRelation : playRobotGroupRelationList) {
+
+        }
+
+        //todo 退群
+
+        return R.ok();
+    }
+
+    @Override
+    public void jobReleaseRobot() {
+        //查询配置锁定水军表数据
+        //两天内是否有重复炒日志
     }
 }

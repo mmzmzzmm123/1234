@@ -1,5 +1,7 @@
 package com.ruoyi.common.enums;
 
+import org.omg.CORBA.UNKNOWN;
+
 /**
  * @author 朱少波
  * @date 2024/1/18/018 9:31
@@ -41,6 +43,12 @@ public enum BotEventEnum {
      * 群人数统计
      */
     GROUP_MEMBER_COUNT,
+
+
+    /**
+     * 群被封
+     */
+    GROUP_BANED,
 
     /**
      * 未知事件

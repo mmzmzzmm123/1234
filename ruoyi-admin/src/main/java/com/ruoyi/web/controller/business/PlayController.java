@@ -9,6 +9,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author : zengyi
@@ -77,15 +79,24 @@ public class PlayController extends BaseController {
         if (dto.getGroupSource() == 0 && dto.getGroupNum() == null) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "请配置群需求数量"));
         }
-        if (dto.getGroupSource() == 1 && dto.getGroupUrls().isEmpty()) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
+        if (dto.getGroupSource() == 1) {
+            if (null == dto.getGroupUrls()) {
+                return R.fail(ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
+            }
+            dto.setGroupUrls(handleUrlList( dto.getGroupUrls()));
+            if (dto.getGroupUrls().isEmpty()) {
+                return R.fail(ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
+            }
         }
         if (null == dto.getRobotNum()) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "请配置每个群演员数"));
         }
+
+        dto.setUrlPool(handleUrlList(dto.getUrlPool()));
         if (dto.getUrlPool().isEmpty()) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "请配置接粉号池"));
         }
+
         if (dto.getGroupCondition() == 0) {
             if (dto.getUserNum() == null || dto.getUserNum() < 1) {
                 return R.fail(ErrInfoConfig.getDynmic(11000, "请配置群人数"));
@@ -99,6 +110,13 @@ public class PlayController extends BaseController {
         return R.ok();
     }
 
+    //群链接去除空格
+    private List<String> handleUrlList(List<String> urls) {
+        return urls.stream()
+                .map(org.springframework.util.StringUtils::trimAllWhitespace)
+                .collect(Collectors.toList());
+    }
+
     @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     @ApiOperation("修改炒群任务")
     @PostMapping(value = "/update")
@@ -108,6 +126,10 @@ public class PlayController extends BaseController {
         }
         if (dto.getName().length() > 100) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过100字"));
+        }
+        dto.setUrlPool(handleUrlList(dto.getUrlPool()));
+        if (dto.getUrlPool().isEmpty()) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "请配置接粉号池"));
         }
         return playService.updatePlay(dto);
     }
@@ -209,12 +231,28 @@ public class PlayController extends BaseController {
     @ApiOperation("重复炒群")
     @PostMapping("repeat/{playId}")
     public R<String> repeatPlay(@PathVariable String playId) {
-        return playService.repeatPlay(playId);
+        LoginUser loginUser = getLoginUser();
+        if (ObjectUtils.isEmpty(loginUser.getMerchantInfo()) || loginUser.getMerchantInfo().getMerchantType() != 0) {
+            return R.fail(ErrInfoConfig.getDynmic(11011));
+        }
+        return playService.repeatPlay(playId, loginUser);
     }
 
     @ApiOperation("修改炒群任务状态")
     @PostMapping("state")
     public R<Boolean> updateState(@Validated @RequestBody PlayStateDTO dto) {
         return R.ok(playService.updateState(dto));
+    }
+
+    @ApiOperation("释放水军")
+    @PostMapping("/{playId}/releaseRobot")
+    public R<String> releaseUser(@PathVariable String playId) {
+        return playService.releaseUser(playId);
+    }
+
+    @ApiOperation("job执行释放水军")
+    @PostMapping("jobReleaseRobot")
+    public void jobReleaseRobot() {
+        playService.jobReleaseRobot();
     }
 }

@@ -6,6 +6,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.entity.play.Play;
+import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.vo.play.*;
 
@@ -68,10 +69,17 @@ public interface IPlayService extends IService<Play> {
      * 设置重复炒群
      * @return
      */
-    R<String> repeatPlay(String playId);
+    R<String> repeatPlay(String playId, LoginUser loginUser);
 
     /**
      * 修改炒群任务状态
      */
     Boolean updateState(PlayStateDTO dto);
+
+    /**
+     * 释放水军
+     */
+    R<String> releaseUser(String playId);
+
+    void jobReleaseRobot();
 }

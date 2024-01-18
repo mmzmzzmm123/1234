@@ -86,4 +86,16 @@ public class GroupStateServiceImpl extends ServiceImpl<GroupStateMapper, GroupSt
                 .in(GroupState::getGroupId, groupIds)
                 .ne(GroupState::getGroupUsed, groupUsed));
     }
+
+    @Override
+    public void banned(List<String> groupIds) {
+        if (CollUtil.isEmpty(groupIds)) {
+            return;
+        }
+        GroupState groupState = new GroupState();
+        groupState.setGroupStatus(1);
+        groupState.setGroupStatusTime(LocalDateTime.now());
+        baseMapper.update(groupState, new LambdaQueryWrapper<GroupState>()
+                .in(GroupState::getGroupId, groupIds));
+    }
 }

@@ -39,4 +39,8 @@ public interface GroupMonitorInfoService extends IService<GroupMonitorInfo> {
     void setBotAdmin(String groupId);
 
     void setBotAdMonitor(String groupId);
+
+    List<String> updateBanned(String originalGroupId);
+
+    void updateBannedById(String groupId);
 }
