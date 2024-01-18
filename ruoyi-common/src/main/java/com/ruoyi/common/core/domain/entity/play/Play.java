@@ -150,8 +150,6 @@ public class Play {
      */
     private String failReason;
 
-    private Long productId;
-
     public SendMechanism convertSendMechanismStr() {
         if (StringUtils.isEmpty(this.sendMechanism)) {
             return null;

@@ -5,28 +5,24 @@ import com.alibaba.fastjson2.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.config.ErrInfoConfig;
+import com.ruoyi.common.constant.PlayStatusConstants;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.app.OrderProduceRequest;
 import com.ruoyi.common.core.domain.dto.play.*;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
-import com.ruoyi.common.core.domain.entity.order.Order;
 import com.ruoyi.common.core.domain.entity.play.*;
-import com.ruoyi.common.enums.AppType;
-import com.ruoyi.common.enums.ProductCategoryType;
+import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.enums.play.PushStateEnum;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
-import com.ruoyi.system.domain.dto.ProductDTO;
-import com.ruoyi.system.domain.dto.ProductSkuDTO;
-import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
-import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
-import com.ruoyi.system.domain.dto.play.QueryTaskProgressDTO;
-import com.ruoyi.system.domain.dto.play.SetSpeedDTO;
+import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.*;
@@ -43,6 +39,8 @@ import java.math.RoundingMode;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import static com.ruoyi.common.core.domain.R.SUCCESS;
 
 @Slf4j
 @Service
@@ -77,16 +75,21 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     @Transactional(rollbackFor=Exception.class)
     public R<String> create(PlayDTO dto) {
+        //获取商品
+        /*AjaxResult result = ProductTools.checkNormal(dto.getProductId());
+        if (result.isError()) {
+            return R.fail(ErrInfoConfig.getDynmic(11001));
+        }
+        handleOrder(dto.getProductId(), (Product) result.data(), dto.getName(), dto.getLoginUser());*/
+
         dto.setUrlPool(handleUrlPool(dto.getUrlPool()));
         if (StringUtils.isEmpty(dto.getUrlPool())) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "接粉号池不能为空"));
         }
+        //todo 混淆处理
 
-        //Long productId = handleProduceAndOrder(dto);
-        //System.out.println(productId);
-        Long productId = 0L;
         String playId = IdWorker.getIdStr();
-        savePlay(dto, playId, productId);
+        savePlay(dto, playId);
 
         //外部群不能设置人设包装
         if (dto.getGroupSource() == 0) {
@@ -96,8 +99,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         //插入剧本消息表
         savePlayMessage(playId, dto.getPlayMessageList(), dto.getSendMechanism());
-
-        //todo 混淆处理 自定义不混淆消息, 从接粉号池随机取一个, 类型变为2017
 
         //删除上传word文件
         if (StringUtils.isNotEmpty(dto.getFileId())) {
@@ -115,45 +116,23 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 .collect(Collectors.toList());
     }
 
-    //设置下单流程
-    private Long handleProduceAndOrder(PlayDTO dto) {
-        ProductDTO productDTO = new ProductDTO();
-        productDTO.setName(dto.getName());
-        productDTO.setAppType((AppType.TG.getId()));
-        productDTO.setCategoryId(ProductCategoryType.PLAY.getId());
-        productDTO.setStatus(2);
-        productDTO.setOperatorUser(dto.getLoginUser().getUsername());
-        productDTO.setOperatorUserId(dto.getLoginUser().getUserId());
-
-        List<ProductSkuDTO> skuDTOList = new ArrayList<>();
-        ProductSkuDTO skuDTO = new ProductSkuDTO();
-        skuDTO.setPrice((double) 0);
-        skuDTO.setPriceUnit("");
-        skuDTOList.add(skuDTO);
-        productDTO.setSkuList(skuDTOList);
-        Product product = SpringUtils.getBean(ProductServiceImpl.class).create(productDTO);
-        if (null == product || null == product.getProductId()) {
-            log.error("handleOrderProduce-err-{}", JSON.toJSONString(productDTO));
-            return null;
-        }
-
+    //创建订单记录
+    private void handleOrder(Long productId, Product product, String name, LoginUser loginUser) {
         long price = 0;
         Set<String> groupSet = new HashSet<>();
 
         List<ProductSku> skuList = new ArrayList<>();
-        ProductSku productSku = SpringUtils.getBean(ProductServiceImpl.class).getOneSkuByProductId(product.getProductId());
+        ProductSku productSku = SpringUtils.getBean(ProductServiceImpl.class).getOneSkuByProductId(productId);
         skuList.add(productSku);
 
         OrderProduceRequest request = new OrderProduceRequest();
-        request.setTaskName(dto.getName());
-        request.setProductId(product.getProductId());
+        request.setTaskName(name);
+        request.setProductId(productId);
         OrderProduceRequest.Params params = new OrderProduceRequest.Params();
         request.setParams(params);
-        request.setLoginUser(dto.getLoginUser());
+        request.setLoginUser(loginUser);
 
-        Order order = SpringUtils.getBean(OrderServiceImpl.class).orderStorage(request, product, skuList, groupSet, price, 2);
-        System.out.println(order);
-        return product.getProductId();
+        SpringUtils.getBean(OrderServiceImpl.class).orderStorage(request, product, skuList, groupSet, price, 2);
     }
 
     private void savePlayMessage(String playId, List<PlayMessageDTO> playMessageList, SendMechanism sendMechanism) {
@@ -236,11 +215,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         playGroupPackMapper.insert(playGroupPack);
     }
 
-    private void savePlay(PlayDTO dto, String id, Long productId) {
+    private void savePlay(PlayDTO dto, String id) {
         Play play = new Play();
         BeanUtils.copyProperties(dto, play);
         play.setId(id);
-        play.setProductId(productId);
         play.setSendMechanism(JSON.toJSONString(dto.getSendMechanism()));
         play.setAdMonitor(JSON.toJSONString(dto.getAdMonitor()));
         play.setPlayExt(JSON.toJSONString(dto.getPlayExt()));
@@ -248,8 +226,13 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         play.setUserId(dto.getLoginUser().getUserId());
         play.setMerchantId(dto.getLoginUser().getMerchantInfo().getMerchantId());
         if (dto.getGroupSource() == 1) {
+            play.setGroupUrls(String.join(",", dto.getGroupUrls()));
             play.setGroupNum(dto.getGroupUrls().size());
         }
+        if (dto.getStartType() == 0) {
+            play.setStartGroupDate(new Date());
+        }
+        //System.out.println(play);
         super.save(play);
     }
 
@@ -274,8 +257,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         play.setUrlPool(String.join(",", dto.getUrlPool()));
         play.setTargetCountyCode(dto.getTargetCountyCode());
         play.setTargetCountyName(dto.getTargetCountyName());
-
-        //todo 判断状态，不同状态限制修改字段
         play.setSendMechanism(JSON.toJSONString(dto.getSendMechanism()));
         play.setAdMonitor(JSON.toJSONString(dto.getAdMonitor()));
         play.setPlayExt(JSON.toJSONString(dto.getPlayExt()));
@@ -365,12 +346,24 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
     @Override
     public R<String> updateAdInfo(String playId, AdMonitor dto) {
-        //todo 验证剧本状态
-        super.update(null, new LambdaUpdateWrapper<Play>().eq(Play::getId, playId)
+        boolean status = super.update(null, new LambdaUpdateWrapper<Play>()
+                .eq(Play::getId, playId)
+                .in(Play::getState, Arrays.asList(PlayStatusConstants.DISPATCH, PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.SUSPEND))
                 .set(Play::getAdMonitor, JSON.toJSONString(dto)));
+        if (!status) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "修改失败"));
+        }
 
-        //todo 调用接口同步配置
-        SpringUtils.getBean(GroupService.class).setBotAdMonitor(playId);
+        //调用接口同步配置
+        List<PlayGroupInfo> playGroupInfos = SpringUtils.getBean(PlayGroupInfoMapper.class).selectGroupInfoByPlayId(playId);
+        if (playGroupInfos.isEmpty()) {
+            return R.ok();
+        }
+
+        GroupService groupService = SpringUtils.getBean(GroupService.class);
+        for (PlayGroupInfo info : playGroupInfos) {
+            groupService.setBotAdMonitor(info.getGroupId());
+        }
 
         return R.ok();
     }
@@ -527,18 +520,85 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
     @Override
     public R<String> repeatPlay(String playId) {
-//        if (StringUtils.isEmpty(playId)) {
-//            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
-//        }
-//
-//        Play play = super.getById(playId);
-//        if (null == play) {
-//            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
-//        }
-//        if (play.convertPlayExtStr()) {
-//
-//        }
+        if (StringUtils.isEmpty(playId)) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
+        }
+
+        Play play = super.getById(playId);
+        if (null == play) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
+        }
+
+        PlayExt playExt = play.convertPlayExtStr();
+        if (null == playExt || playExt.getLockState() != 1) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "该剧本未配置锁定水军"));
+        }
+
+        PlayDTO dto = new PlayDTO();
+        R<String> ret = this.create(dto);
+        if (ret.getCode() != SUCCESS) {
+            return R.fail(ErrInfoConfig.getDynmic(10000, "创建剧本失败"));
+        }
+        String newPlayId = ret.getData();
+
+        List<PlayGroupInfo> playGroupInfos = SpringUtils.getBean(PlayGroupInfoMapper.class).selectGroupInfoByPlayId(play.getId());
+        if (playGroupInfos.isEmpty()) {
+            return R.ok();
+        }
+
+        List<PlayGroupInfo> savePlayGroupData = new ArrayList<>();
+        for (PlayGroupInfo item : playGroupInfos) {
+            PlayGroupInfo playGroupInfo = new PlayGroupInfo();
+            BeanUtils.copyProperties(item, playGroupInfo);
+            playGroupInfo.setPlayId(newPlayId);
+            savePlayGroupData.add(playGroupInfo);
+        }
+        SpringUtils.getBean(PlayGroupInfoServiceImpl.class).saveBatch(savePlayGroupData);
 
         return R.ok();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean updateState(PlayStateDTO dto) {
+        if (dto == null || dto.getPlayIds().isEmpty()) {
+            return Boolean.FALSE;
+        }
+
+        switch (dto.getState()) {
+            case PlayStatusConstants.SUSPEND:
+                this.suspendPlay(dto.getPlayIds());
+                break;
+            case PlayStatusConstants.CANCEL:
+                this.cancelPlay(dto.getPlayIds());
+                break;
+        }
+        return Boolean.TRUE;
+    }
+
+    private void suspendPlay(List<String> ids) {
+        for (String id : ids) {
+            boolean ret = super.update(null, new UpdateWrapper<Play>().lambda()
+                    .eq(Play::getId, id).in(Play::getState, Arrays.asList(PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.DISPATCH))
+                    .set(Play::getState, PlayStatusConstants.SUSPEND));
+            if (ret) {
+                SpringUtils.getBean(PlayMessagePushService.class).update(null, new UpdateWrapper<PlayMessagePush>().lambda()
+                        .eq(PlayMessagePush::getPlayId, id)
+                        .set(PlayMessagePush::getPushState, PushStateEnum.USER_STOP.getKey()));
+            }
+        }
+    }
+
+    private void cancelPlay(List<String> ids) {
+        for (String id : ids) {
+            boolean ret = super.update(null, new UpdateWrapper<Play>().lambda()
+                    .eq(Play::getId, id).in(Play::getState, Arrays.asList(PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.DISPATCH))
+                    .set(Play::getState, PlayStatusConstants.CANCEL));
+            if (ret) {
+                SpringUtils.getBean(PlayMessagePushService.class).update(null, new UpdateWrapper<PlayMessagePush>().lambda()
+                        .eq(PlayMessagePush::getPlayId, id)
+                        .set(PlayMessagePush::getPushState, PushStateEnum.CANCEL.getKey()));
+            }
+        }
     }
 }
