@@ -35,4 +35,8 @@ public interface GroupMonitorInfoService extends IService<GroupMonitorInfo> {
     int updateInfo(MemberQuantityDTO dto);
 
     void updateInfo(String id, MemberQuantityDTO dto);
+
+    void setBotAdmin(String groupId);
+
+    void setBotAdMonitor(String groupId);
 }

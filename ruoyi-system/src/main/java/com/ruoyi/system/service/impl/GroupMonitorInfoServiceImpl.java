@@ -135,4 +135,20 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
         groupInfo.setGroupId(id);
         baseMapper.updateById(groupInfo);
     }
+
+    @Override
+    public void setBotAdmin(String groupId) {
+        GroupMonitorInfo groupInfo = new GroupMonitorInfo();
+        groupInfo.setBotAdmin(1);
+        groupInfo.setGroupId(groupId);
+        baseMapper.updateById(groupInfo);
+    }
+
+    @Override
+    public void setBotAdMonitor(String groupId) {
+        GroupMonitorInfo groupInfo = new GroupMonitorInfo();
+        groupInfo.setBotAdMonitor(1);
+        groupInfo.setGroupId(groupId);
+        baseMapper.updateById(groupInfo);
+    }
 }

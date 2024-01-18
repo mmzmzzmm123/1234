@@ -310,6 +310,13 @@ public class GroupService {
                 }
                 GroupInfo groupInfo = groupInfoService.getById(groupBatch.getGroupId());
 
+                if(botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP){
+                    groupRobotService.addBot(groupInfo.getGroupId(),groupActionLog.getChangeValue());
+                }
+
+                if (nextAction == InviteBotAction.SET_BOT_ADMIN) {
+                    groupMonitorInfoService.setBotAdmin(groupBatch.getGroupId());
+                }
                 String value;
                 //当前动作是搜索bot  对比username 获取是bot的数据
                 if (botAction == InviteBotAction.SEARCH_BOT) {
@@ -333,6 +340,7 @@ public class GroupService {
                     //其他的动作 都传bot的用户编号
                     value = groupActionLog.getChangeValue();
                 }
+
                 //执行动作
                 runAction(groupBatch.getBatchId(), nextAction.getAction(), groupInfo,
                         groupRobotService.getRobot(groupBatch.getGroupId(), groupActionLog.getRobotId()), value);
@@ -786,7 +794,11 @@ public class GroupService {
         dto.setRestrictMember(adMonitorInfo.getIsTabooMemberMsg());
         dto.setDeleteOtherStatement(adMonitorInfo.getIsDelMemberMsg());
         dto.setTimeUnit(ObjectUtil.equal(adMonitorInfo.getSpammingTimeUnit(), 2) ? "MINUTES" : "SECONDS");
-        return ApiClient.setBotAdMonitor(dto).isSuccess();
+        boolean success = ApiClient.setBotAdMonitor(dto).isSuccess();
+        if(success){
+            groupMonitorInfoService.setBotAdMonitor(groupId);
+        }
+        return success;
     }
 
 

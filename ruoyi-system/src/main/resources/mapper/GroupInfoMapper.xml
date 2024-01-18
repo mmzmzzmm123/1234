@@ -38,23 +38,23 @@
             <if test="dto.clusterId != null and dto.clusterId != ''">
                 AND tgc.cluster_id = #{dto.clusterId}
             </if>
-            <if test="dto.createTimeStart != null ">
+            <if test="dto.createTimeStart != null  and dto.createTimeStart != ''">
                 AND tgi.create_time <![CDATA[ >= ]]> #{dto.createTimeStart}
             </if>
-            <if test="dto.createTimeEnd != null ">
-                AND tgi.create_time <![CDATA[ <= ]]> #{dto.createTimeStart}
+            <if test="dto.createTimeEnd != null  and dto.createTimeEnd != ''">
+                AND tgi.create_time <![CDATA[ <= ]]> #{dto.createTimeEnd}
             </if>
-            <if test="dto.usedTimeStart != null ">
+            <if test="dto.usedTimeStart != null  and dto.usedTimeStart != ''">
                 AND tgs.used_time <![CDATA[ >= ]]> #{dto.usedTimeStart}
             </if>
-            <if test="dto.usedTimeEnd != null ">
+            <if test="dto.usedTimeEnd != null  and dto.usedTimeEnd != ''">
                 AND tgs.used_time <![CDATA[ <= ]]> #{dto.usedTimeEnd}
             </if>
-            <if test="dto.groupStatusTimeStart != null ">
+            <if test="dto.groupStatusTimeStart != null  and dto.groupStatusTimeStart != ''">
                 AND tgs.group_status = 1
                 AND tgs.group_status_time <![CDATA[ >= ]]> #{dto.groupStatusTimeStart}
             </if>
-            <if test="dto.groupStatusTimeEnd != null ">
+            <if test="dto.groupStatusTimeEnd != null  and dto.groupStatusTimeEnd != ''">
                 AND tgs.group_status = 1
                 AND tgs.group_status_time <![CDATA[ <= ]]> #{dto.groupStatusTimeEnd}
             </if>
