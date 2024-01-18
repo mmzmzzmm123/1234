@@ -144,7 +144,7 @@ public class ConfoundJobService {
                     playMessageConfoundMapper.updateById(confound);
                     continue;
                 }
-                // 超过5分钟 自动失败
+                // 超过10分钟 自动失败
                 if (date.after(confound.getCreateTime())) {
                     confound.setState(2);
                     playMessageConfoundMapper.updateById(confound);
@@ -152,6 +152,34 @@ public class ConfoundJobService {
             }
         } catch (Exception e) {
             log.info("refreshPlayMessageConfusionState error", e);
+        } finally {
+            redisLock.unlock(lockKey);
+        }
+    }
+
+    /**
+     * 拿剧本去跑混淆的 JOB
+     */
+    public void playConfusionJob() {
+        String lockKey = PlayConstants.serviceName + ":playConfusionJob";
+        boolean lock = redisLock.tryLock(lockKey, 180, TimeUnit.SECONDS);
+        if (!lock) {
+            log.info("playConfusionJob lock");
+            return;
+        }
+        try {
+            List<Play> playList = playInfoMapper.selectConfusionList();
+            for (Play play : playList) {
+                String playLockKey = PlayConstants.serviceName + ":playConfusion:" + play.getId();
+                boolean playLock = redisLock.tryLock(playLockKey, 60 * 10, TimeUnit.SECONDS);
+                if (!playLock) {
+                    log.info("playConfusionJob lock playLock {}", play.getId());
+                    continue;
+                }
+                playMessagePushService.createPush(play.getId());
+            }
+        } catch (Exception e) {
+            log.info("playConfusionJob error", e);
         } finally {
             redisLock.unlock(lockKey);
         }

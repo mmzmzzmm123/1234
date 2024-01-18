@@ -230,13 +230,13 @@
 
     <select id="selectConfusionStateStatistics" resultType="com.ruoyi.system.domain.vo.PlayConfusionStateVO">
         SELECT
-            tpi.id as playId,
+            tpi.id AS playId,
             count( tpmc.id ) AS total,
             sum( IF ( tpmc.state = 1, 1, 0 ) ) AS successCount,
             sum( IF ( tpmc.state = 2, 1, 0 ) ) AS failCount
         FROM
             t_play_info tpi
-            INNER JOIN t_play_message_confound tpmc ON tpi.play_id = tpmc.play_id
+                INNER JOIN t_play_message_confound tpmc ON tpi.id = tpmc.play_id
         WHERE
             1 = 1
           AND tpi.state = 1
@@ -244,7 +244,25 @@
           AND tpi.is_confound = 1
           AND tpi.create_time > ADDDATE( NOW( ),- 3 )
         GROUP BY
-            tpi.play_id
+            tpi.id
+    </select>
+
+    <select id="selectConfusionList" resultType="com.ruoyi.common.core.domain.entity.play.Play">
+        SELECT
+            tpi.id,
+            tpi.NAME,
+            tpi.state,
+            tpi.scan_progress
+        FROM
+            t_play_info tpi
+        WHERE
+            1 = 1
+          AND tpi.is_delete = 0
+          AND tpi.state = 1
+          AND scan_progress = 4
+          AND tpi.create_time > ADDDATE( NOW( ),- 3 )
+        GROUP BY
+            tpi.id
     </select>
 
 

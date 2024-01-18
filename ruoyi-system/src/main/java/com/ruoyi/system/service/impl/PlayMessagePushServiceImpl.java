@@ -73,7 +73,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
             return;
         }
         //操作类型 0-暂停 1-继续 2-取消 3-强制开炒
-        switch (dto.getOp()){
+        switch (dto.getOp()) {
             case 0:
                 this.pauseGroupPush(dto.getPushId());
                 break;
@@ -91,12 +91,14 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
 
     /**
      * 取消
+     *
      * @param pushId
      */
     public void cancelGroupPush(Integer pushId) {
         PlayMessagePush playMessagePush = super.getById(pushId);
         this.cancelGroupPush(playMessagePush);
     }
+
     public void cancelGroupPush(PlayMessagePush playMessagePush) {
         if (playMessagePush == null) {
             return;
@@ -107,17 +109,19 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
 
     /**
      * 强制开炒
+     *
      * @param pushId
      */
     public void forceStartGroupPush(Integer pushId) {
         PlayMessagePush playMessagePush = super.getById(pushId);
         this.forceStartGroupPush(playMessagePush);
     }
+
     public void forceStartGroupPush(PlayMessagePush playMessagePush) {
         if (playMessagePush == null) {
             return;
         }
-        Assert.isTrue(playMessagePush.getPushState().equals(1),"非待发送无法强制开炒");
+        Assert.isTrue(playMessagePush.getPushState().equals(1), "非待发送无法强制开炒");
         playMessagePush.setPushState(PushStateEnum.ING.getKey());
         super.updateById(playMessagePush);
     }
@@ -207,7 +211,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
                 // 混淆逻辑
                 playMessageConfoundService.clearAndCreateConfound(playInfo.getId());
             } else {
-                insertPushDetail(playInfo.getId(), playMessagePushList.stream().map(e -> e.getId()).collect(Collectors.toList()));
+                insertPushDetail(playInfo, playMessagePushList.stream().map(e -> e.getId()).collect(Collectors.toList()));
             }
         } catch (Exception e) {
             log.info("createPush 程序内部错误", e);
@@ -230,7 +234,8 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
     }
 
     //插入推送详情信息
-    private void insertPushDetail(String playId, List<Integer> pushIds) {
+    private void insertPushDetail(Play playInfo, List<Integer> pushIds) {
+        String playId = playInfo.getId();
         //查询剧本对应的消息
         List<PlayMessage> playMessageList = playMessageMapper.selectListByPlayId(playId);
         Assert.isTrue(CollectionUtils.isNotEmpty(playMessageList), "找不到对应的剧本消息,playId:" + playId);
@@ -251,10 +256,16 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
             }
         }
         playMessagePushDetailService.saveBatch(pushDetailList);
+        // 不要混淆的剧本 标记到 5-号分配
+        playInfo.setScanProgress(5);
+        playInfo.setConfoundState(1);
+        playInfoService.updateById(playInfo);
+
     }
 
     //插入推送详情信息
-    private void insertPushDetailConfound(String playId, List<Integer> pushIds) {
+    private void insertPushDetailConfound(Play playInfo, List<Integer> pushIds) {
+        String playId = playInfo.getId();
         //查询剧本对应的消息
         List<PlayMessage> playMessageList = playMessageMapper.selectListByPlayId(playId);
         Assert.isTrue(CollectionUtils.isEmpty(playMessageList), "找不到对应的剧本消息,playId:" + playId);
@@ -306,6 +317,9 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
             }
         }
         playMessagePushDetailService.saveBatch(pushDetailList);
+        // 混淆完成 标记到 5-号分配
+        playInfo.setScanProgress(5);
+        playInfoService.updateById(playInfo);
     }
 
 
@@ -319,12 +333,12 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         lambdaQueryWrapper.select(PlayMessagePush::getId);
         List<PlayMessagePush> list = list(lambdaQueryWrapper);
         List<Integer> pushIds = list.stream().map(PlayMessagePush::getId).collect(Collectors.toList());
-        this.insertPushDetailConfound(playId, pushIds);
+        this.insertPushDetailConfound(playInfo, pushIds);
     }
 
     @Override
     public RobotStatisticsVO getRobotStatisticsVO(String playId) {
-        if (StringUtils.isEmpty(playId)){
+        if (StringUtils.isEmpty(playId)) {
             return null;
         }
         return baseMapper.getRobotStatisticsVO(playId);

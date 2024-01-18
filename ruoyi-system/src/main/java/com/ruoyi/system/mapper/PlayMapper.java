@@ -41,4 +41,10 @@ public interface PlayMapper extends BaseMapper<Play> {
      * @return
      */
     List<PlayConfusionStateVO> selectConfusionStateStatistics();
+
+    /**
+     * 查询需要混淆的剧本
+     */
+    List<Play> selectConfusionList();
+
 }
