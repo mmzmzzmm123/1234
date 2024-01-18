@@ -131,6 +131,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 playMessage.setCallRobotNickname(messageDTO.getCallRobotNickname());
             }
             playMessage.setMessageSort(messageDTO.getMessageSort());
+            // 设置uuid 混淆适配使用
+            for (ContentJson contentJson : messageDTO.getMessageContent()) {
+                contentJson.setUuid(IdWorker.getIdStr());
+            }
             playMessage.setMessageContent(JSON.toJSONString(messageDTO.getMessageContent()));
             playMessage.setPlayErrorType(sendMechanism.getSendErrorType());
 

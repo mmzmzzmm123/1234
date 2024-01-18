@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.constant.PlayConstants;
+import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.tools.UrlReplaceTools;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.system.callback.dto.Called1100850405DTO;
@@ -48,6 +49,9 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
 
     @Resource
     private PlayMessageConfoundService playMessageConfoundService;
+
+    @Resource
+    private RedisLock redisLock;
 
 
     @Override
@@ -281,7 +285,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         } catch (Exception e) {
             log.info("retryingConfusion error", e);
         } finally {
-//            ClusterLock.of().unlock(lockKey, lockKey);
+            redisLock.unlock(lockKey);
         }
     }
 

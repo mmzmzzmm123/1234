@@ -80,7 +80,7 @@ public class Play {
     private Integer isConfound;
 
     /**
-     * 混淆状态 0-未混淆 1-已混淆
+     * 混淆状态 0-未混淆 1-已混淆 2-混淆失败
      */
     private Integer confoundState;
 
