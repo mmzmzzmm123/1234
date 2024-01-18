@@ -73,6 +73,15 @@ public class GroupPageQueryDTO extends PageBaseDTO {
     private Integer playId;
 
 
+    @ApiModelProperty(value = "群状态 0-正常 1-封群")
+    private Integer groupStatus;
+
+    @ApiModelProperty(value = "封群时间-开始")
+    private LocalDateTime groupStatusTimeStart;
+
+    @ApiModelProperty(value = "封群时间-结束")
+    private LocalDateTime groupStatusTimeEnd;
+
     @ApiModelProperty(value = "群名称")
     private String groupName;
 

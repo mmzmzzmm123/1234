@@ -26,4 +26,8 @@ public class GroupClusterVO {
      */
     @ApiModelProperty(value = "分组名")
     private String clusterName;
+
+
+    @ApiModelProperty(value = "分组类型 0-普通群 1-默认群")
+    private Integer clusterType;
 }

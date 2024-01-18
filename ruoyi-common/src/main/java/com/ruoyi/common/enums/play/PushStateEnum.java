@@ -12,7 +12,11 @@ public enum PushStateEnum {
     FINISH(3,"已结束"),
     USER_STOP(4,"人工暂停"),
     PUSH_FAIL(5,"推送失败"),
-    SYSTEM_STOP(6,"系统暂停");
+    SYSTEM_STOP(6,"系统暂停"),
+
+    CANCEL(7,"取消")
+    ;
+
 
     /** 键值 */
     private Integer key;
