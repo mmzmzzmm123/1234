@@ -58,7 +58,7 @@ public class RobotController {
 
     @ApiOperation("设置名字姓氏简介")
     @PostMapping("/setName")
-    public R<Void> setName(@RequestParam("file") MultipartFile file,
+    public R<Void> setName(@ApiParam(value = "文件")@RequestParam("file") MultipartFile file,
                            @ApiParam(value = "名字")@RequestParam(value = "firstName")String firstName,
                            @ApiParam(value = "姓氏")@RequestParam(value = "lastName")String lastName,
                            @ApiParam(value = "个人简介")@RequestParam(value = "briefIntro")String briefIntro,
