@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.business;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
@@ -30,6 +31,7 @@ import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.GroupMemberInfoVO;
 import com.ruoyi.system.domain.vo.GroupResourceVO;
+import com.ruoyi.system.domain.vo.GroupRobotVO;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.*;
@@ -133,7 +135,16 @@ public class GroupService {
                         //提前解锁
                         lock.unlock();
                         locks.remove(lock);
+                        continue;
                     }
+                    List<GroupRobot> adminRobots = groupRobotService.getAdminRobots(groupInfoVO.getGroupId());
+                    if(CollUtil.isNotEmpty(adminRobots)){
+                        failGroupId.add(groupInfoVO.getGroupId());
+                        continue;
+                    }
+
+                    groupInfoVO.setRobots(adminRobots.stream().map(p-> BeanUtil.copyProperties(p, GroupRobotVO.class)).collect(Collectors.toList()));
+
                     groupInfoList.add(groupInfoVO);
                 }
             }
@@ -142,6 +153,7 @@ public class GroupService {
                 List<String> groupIds = groupInfoList.stream().map(GroupInfoVO::getGroupId).collect(Collectors.toList());
                 groupStateService.markUsed(groupIds, 1);
                 groupMonitorInfoService.setPlayId(groupIds, dto.getPayId());
+
                 return R.ok(groupInfoList);
             } else {
                 if (CollUtil.isNotEmpty(groupInfoList) && dto.getSetAdminCount() != null) {

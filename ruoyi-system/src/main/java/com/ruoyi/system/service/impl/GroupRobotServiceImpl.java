@@ -84,6 +84,15 @@ public class GroupRobotServiceImpl extends ServiceImpl<GroupRobotMapper, GroupRo
     }
 
     @Override
+    public List<GroupRobot> getAdminRobots(String groupId) {
+        return baseMapper.selectList(new LambdaQueryWrapper<GroupRobot>()
+                .eq(GroupRobot::getGroupId, groupId)
+                .eq(GroupRobot::getBotType, 0)
+                .in(GroupRobot::getMemberType, 1, 2)
+                .orderByAsc(GroupRobot::getMemberType));
+    }
+
+    @Override
     public GroupRobot getAnyRobot(String groupId) {
 
         GroupRobot adminRobot = getAdminRobot(groupId);
