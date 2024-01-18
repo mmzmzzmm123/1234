@@ -839,10 +839,17 @@ public class IntoGroupService {
                 robotGroupRelation.setGroupId(group.getGroupId());
                 robotGroupRelation.setState(1);
                 robotGroupRelation.setIsDelete(0);
+                robotGroupRelation.setIsAdmin(task.getIsAdmin());
+                robotGroupRelation.setIncomeGroupTime(new Date());
+                robotGroupRelation.setCreateTime(new Date());
+                robotGroupRelation.setModifyTime(new Date());
                 playRobotGroupRelationMapper.insert(robotGroupRelation);
             }
             //查询群内机器人数量
             Integer robotCount = playRobotGroupRelationMapper.selectRobotGroupCount(group.getGroupId());
+            if (robotCount == null){
+                robotCount = 0;
+            }
             //根据剧本计算所需的群人数
             Integer groupNum = play.getRobotNum();
             PlayExt playExt = JSONObject.parseObject(play.getPlayExt(), PlayExt.class);
@@ -854,6 +861,9 @@ public class IntoGroupService {
             }
             //查询任务表无法重试的机器人数量
             Integer errorCount = playIntoGroupTaskMapper.selectIsErrorCount(task.getGroupUrl());
+            if (errorCount == null){
+                errorCount = 0;
+            }
             setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "群内水军数量为：" + robotCount + ",剧本所需目标数为：" + groupAllCount + ",重试3次后失败数量" + errorCount, 0, PlayLogTyper.Group_into, null);
             log.info("群内机器人数量："+robotCount);
             log.info("剧本所需目标数为："+groupAllCount);
