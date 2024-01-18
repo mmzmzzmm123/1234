@@ -83,6 +83,11 @@ public class Play {
      * 混淆状态 0-未混淆 1-已混淆 2-混淆失败
      */
     private Integer confoundState;
+    
+    /**
+     * 号人设状态 0-未执行 1-已执行
+     */
+    private Integer robotSettingsState;
 
     /**
      * 剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成

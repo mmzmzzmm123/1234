@@ -62,27 +62,36 @@ public class MultipackLogContainer implements InitializingBean {
 			log.info("MultipackLogContainer_jobScan_lock");
 			return;
 		}
-		final LogJobProcessor stateJobProcessor = ServiceLoader.load(LogJobProcessor.class, "StateJobProcessor");
-		final LogJobProcessor retryJobProcessor = ServiceLoader.load(LogJobProcessor.class, "RetryJobProcessor");
-		final LogJobProcessor logPostJobProcessor = ServiceLoader.load(LogJobProcessor.class, "LogPostJobProcessor");
-		final LogJobProcessor sendConditionJobProcessor = ServiceLoader.load(LogJobProcessor.class,
-				"SendConditionJobProcessor");
-		final LogJobProcessor sendPlayJobProcessor = ServiceLoader.load(LogJobProcessor.class, "SendPlayJobProcessor");
+		final StartupJobProcessor startupJobProcessor = (StartupJobProcessor) ServiceLoader.load(LogJobProcessor.class,
+				"StartupJobProcessor");
+		final StateJobProcessor stateJobProcessor = (StateJobProcessor) ServiceLoader.load(LogJobProcessor.class,
+				"StateJobProcessor");
+		final RetryJobProcessor retryJobProcessor = (RetryJobProcessor) ServiceLoader.load(LogJobProcessor.class,
+				"RetryJobProcessor");
+		final LogPostJobProcessor logPostJobProcessor = (LogPostJobProcessor) ServiceLoader.load(LogJobProcessor.class,
+				"LogPostJobProcessor");
+		final SendConditionJobProcessor sendConditionJobProcessor = (SendConditionJobProcessor) ServiceLoader
+				.load(LogJobProcessor.class, "SendConditionJobProcessor");
+		final SendPlayJobProcessor sendPlayJobProcessor = (SendPlayJobProcessor) ServiceLoader
+				.load(LogJobProcessor.class, "SendPlayJobProcessor");
 
 		try {
 			lock.lock(60 * 10, TimeUnit.SECONDS);
 			// 0未开始 1调度修改群人设中 2 调用入群中 3 入群等待中 4 混淆 5 号分配,人设 6等待超群条件 7发剧本
-			List<Play> datas = playMapper.selectList(new QueryWrapper<Play>().lambda()
-					.in(Play::getScanProgress,
-							Arrays.asList(ScanProgressEnum.Robot.getVal(), ScanProgressEnum.Send_Wait.getVal()))
-					.eq(Play::getIsDelete, 0).in(Play::getState, Arrays.asList(1, 2, 3)));
+			List<Play> datas = playMapper
+					.selectList(
+							new QueryWrapper<Play>().lambda()
+									.in(Play::getScanProgress, Arrays.asList(ScanProgressEnum.Robot.getVal(),
+											ScanProgressEnum.Send_Wait.getVal(), ScanProgressEnum.Sending.getVal()))
+									.eq(Play::getIsDelete, 0).in(Play::getState, Arrays.asList(1, 2, 3)));
 			if (CollectionUtils.isEmpty(datas)) {
 				return;
 			}
 			AsyncTask.newMultiTasker().map(datas, 5, curs -> {
 				for (Play play : curs) {
-					if (play.getScanProgress().intValue() == ScanProgressEnum.Send_Wait.getVal()) {
-						// 炒群条件
+					if (play.getScanProgress().intValue() == ScanProgressEnum.Send_Wait.getVal() ||
+							play.getScanProgress().intValue() == ScanProgressEnum.Sending.getVal()) {
+						// 炒群 条件 定时器 , 时间达到&人数达到
 						try {
 							long s = System.currentTimeMillis();
 							sendConditionJobProcessor.handle(play);
@@ -99,7 +108,17 @@ public class MultipackLogContainer implements InitializingBean {
 						}
 						continue;
 					}
-					// 号人设的 job处理
+
+					// 开始 启动人设 包装
+					try {
+						long s = System.currentTimeMillis();
+						startupJobProcessor.handle(play);
+						log.info("startupJobProcessor执行 {} {}", (System.currentTimeMillis() - s), play);
+					} catch (Exception e) {
+						log.error("startupJobProcessor执行异常 {}", play, e);
+					}
+
+					// 包装执行日志的 状态扭转
 					try {
 						long s = System.currentTimeMillis();
 						stateJobProcessor.handle(play);
@@ -108,6 +127,7 @@ public class MultipackLogContainer implements InitializingBean {
 						log.error("stateJobProcessor执行异常 {}", play, e);
 					}
 
+					// 包装执行日志的重试执行
 					try {
 						long s = System.currentTimeMillis();
 						retryJobProcessor.handle(play);
@@ -116,6 +136,7 @@ public class MultipackLogContainer implements InitializingBean {
 						log.error("retryJobProcessor执行异常 {}", play, e);
 					}
 
+					// 包装执行日志的 后置处理 (设置管理员)
 					try {
 						long s = System.currentTimeMillis();
 						logPostJobProcessor.handle(play);

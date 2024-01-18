@@ -40,7 +40,12 @@ public enum ScanProgressEnum {
 	/**
 	 * 等待超群条件
 	 */
-	Send_Wait(6);
+	Send_Wait(6),
+
+	/**
+	 * 剧本发送中
+	 */
+	Sending(7);
 
 	private int val;
 
