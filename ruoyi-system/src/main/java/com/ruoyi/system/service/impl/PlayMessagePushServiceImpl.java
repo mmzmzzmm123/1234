@@ -277,7 +277,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         String playId = playInfo.getId();
         //查询剧本对应的消息
         List<PlayMessage> playMessageList = playMessageMapper.selectListByPlayId(playId);
-        Assert.isTrue(CollectionUtils.isEmpty(playMessageList), "找不到对应的剧本消息,playId:" + playId);
+        Assert.isTrue(CollectionUtils.isNotEmpty(playMessageList), "找不到对应的剧本消息,playId:" + playId);
 
         log.info("insertPushDetailConfound {} {} {}", playId, pushIds, playMessageList.size());
         List<PlayMessagePushDetail> pushDetailList = new ArrayList<>();
