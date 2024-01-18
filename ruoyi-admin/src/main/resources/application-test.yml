@@ -121,3 +121,7 @@ swagger:
   enabled: true
   # 请求前缀
   pathMapping: /
+
+
+bot:
+  api-url: https://30q623450x.vicp.fun
