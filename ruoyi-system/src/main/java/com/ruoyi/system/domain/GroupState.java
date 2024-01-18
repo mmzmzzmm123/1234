@@ -40,6 +40,13 @@ public class GroupState {
     @ApiModelProperty(value = "群状态 0-正常 1-封群")
     @TableField("group_status")
     private Integer groupStatus;
+    /**
+     * 群状态变动时间
+     */
+    @ApiModelProperty(value = "群状态变动时间")
+    @TableField("group_status_time")
+    private LocalDateTime groupStatusTime;
+
 
     /**
      * 最后一次使用时间

@@ -123,3 +123,6 @@ swagger:
   enabled: false
   # 请求前缀
   pathMapping: /
+
+bot:
+  api-url: http://172.29.18.208:28088

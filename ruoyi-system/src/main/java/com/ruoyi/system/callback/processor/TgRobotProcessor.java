@@ -277,4 +277,24 @@ public class TgRobotProcessor {
             groupInfoService.changeGroupSerialNo(dto.getOld_chatroom_serial_no(),dto.getNew_chatroom_serial_no());
         }
     }
+
+    /**
+     * TG 发送群消息回调
+     *
+     * @param dto
+     */
+    @Type(value = 1100910011, parameterClass = Called1100910011DTO.class)
+    public void called1100910011(Called1100910011DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
+    /**
+     * TG 设置隐私手机号码谁可见接口
+     *
+     * @param dto
+     */
+    @Type(value = 1100910083, parameterClass = CalledEmptyDTO.class)
+    public void called1100910083(Called1100910011DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
 }

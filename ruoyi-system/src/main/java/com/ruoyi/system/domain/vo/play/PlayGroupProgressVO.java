@@ -22,6 +22,12 @@ public class PlayGroupProgressVO {
     @ApiModelProperty("炒群状态 0-待执行 1-炒群中 2-已完成 3-已暂停 4-已取消")
     private Integer state;
 
+    @ApiModelProperty("推送ID")
+    private Integer pushId;
+
+    @ApiModelProperty("推送状态 1:待发送 2:进行中 3:已结束 4:人工暂停 5:推送失败 6:系统暂停")
+    private Integer pushState;
+
     @ApiModelProperty("群Id")
     private String groupId;
     @ApiModelProperty("群编号")
@@ -38,6 +44,11 @@ public class PlayGroupProgressVO {
     private String groupPrivateLink;
     @ApiModelProperty("群类型 10私密群 20公开群")
     private Integer groupType;
+
+    @ApiModelProperty("群状态 0-正常 1-封群")
+    private Integer groupStatus;
+    @ApiModelProperty("群状态变化时间(封群时间)")
+    private Integer groupStatusTime;
 
     @ApiModelProperty("群成员数")
     private Integer memberCount;

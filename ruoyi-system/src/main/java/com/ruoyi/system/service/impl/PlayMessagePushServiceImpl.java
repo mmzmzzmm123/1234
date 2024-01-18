@@ -13,6 +13,7 @@ import com.ruoyi.common.enums.play.PushStateEnum;
 import com.ruoyi.system.components.RandomListPicker;
 import com.ruoyi.system.domain.PlayMessageConfoundLog;
 import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
+import com.ruoyi.system.domain.dto.play.PushOperationDTO;
 import com.ruoyi.system.domain.dto.play.QueryRobotDetailDTO;
 import com.ruoyi.system.domain.vo.play.QueryRobotDetailVO;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
@@ -67,15 +68,58 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
     }
 
     @Override
-    public void operation(Integer pushId, Integer op) {
-        if (pushId == null || op == null) {
+    public void operation(PushOperationDTO dto) {
+        if (dto == null) {
             return;
         }
-        if (op == 0) {
-            this.pauseGroupPush(pushId);
-        } else if (op == 1) {
-            this.resumeGroupPush(pushId);
+        //操作类型 0-暂停 1-继续 2-取消 3-强制开炒
+        switch (dto.getOp()){
+            case 0:
+                this.pauseGroupPush(dto.getPushId());
+                break;
+            case 1:
+                this.resumeGroupPush(dto.getPushId());
+                break;
+            case 2:
+                this.cancelGroupPush(dto.getPushId());
+                break;
+            case 3:
+                this.forceStartGroupPush(dto.getPushId());
+                break;
         }
+    }
+
+    /**
+     * 取消
+     * @param pushId
+     */
+    public void cancelGroupPush(Integer pushId) {
+        PlayMessagePush playMessagePush = super.getById(pushId);
+        this.cancelGroupPush(playMessagePush);
+    }
+    public void cancelGroupPush(PlayMessagePush playMessagePush) {
+        if (playMessagePush == null) {
+            return;
+        }
+        playMessagePush.setPushState(PushStateEnum.CANCEL.getKey());
+        super.updateById(playMessagePush);
+    }
+
+    /**
+     * 强制开炒
+     * @param pushId
+     */
+    public void forceStartGroupPush(Integer pushId) {
+        PlayMessagePush playMessagePush = super.getById(pushId);
+        this.forceStartGroupPush(playMessagePush);
+    }
+    public void forceStartGroupPush(PlayMessagePush playMessagePush) {
+        if (playMessagePush == null) {
+            return;
+        }
+        Assert.isTrue(playMessagePush.getPushState().equals(1),"非待发送无法强制开炒");
+        playMessagePush.setPushState(PushStateEnum.ING.getKey());
+        super.updateById(playMessagePush);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -10,10 +11,12 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.common.core.domain.entity.robot.RobotStatistics;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
+import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import com.ruoyi.system.mapper.GroupRobotMapper;
 import com.ruoyi.system.mapper.RobotMapper;
 import com.ruoyi.system.openapi.OpenApiClient;
@@ -28,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -316,7 +320,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         for (int i = 0; i < dto.getRobotSerialNos().size(); i++) {
             ThirdTgModifyNameInputDTO inputDTO = new ThirdTgModifyNameInputDTO();
             inputDTO.setTgRobotId(dto.getRobotSerialNos().get(i));
-            SetNameInfoDTO.Info info = dto.getInfos().get(i % dto.getInfos().size());
+            SetNameResourceVO info = dto.getInfos().get(i % dto.getInfos().size());
             inputDTO.setLastNameBase64(info.getLastName());
             inputDTO.setFirstNameBase64(info.getFirstName());
             inputDTO.setBriefIntroBase64(info.getBriefIntro());
@@ -324,6 +328,19 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             log.info("setName inputDTO:{},vo:{}",inputDTO,vo);
         }
         return R.ok();
+    }
+
+    @Override
+    public List<SetNameResourceVO> analysisExcelInfo(MultipartFile file) {
+        List<SetNameResourceVO> excel = Lists.newArrayList();
+        try {
+            ExcelUtil<SetNameResourceVO> util = new ExcelUtil<>(SetNameResourceVO.class);
+            excel = util.importExcel(file.getInputStream()).stream().filter(f->StringUtils.isNotEmpty(f.getFirstName()) && StringUtils.isNotEmpty(f.getLastName())).collect(Collectors.toList());
+        }catch (Exception e){
+            log.info("robotService analysisExcelInfo.error={}", file.getOriginalFilename(), e);
+        }
+        Assert.notEmpty(excel, "文件解析失败");
+        return excel;
     }
 
     @Override
@@ -350,7 +367,17 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
 
     @Override
     public R<Void> setPrivatePhone(SetPrivatePhoneDTO dto) {
-        return null;
+        if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
+            return R.fail("号编号不能为空");
+        }
+        for (String robotSerialNo : dto.getRobotSerialNos()) {
+            ThirdTgSetPhoneVisibilityInputDTO inputDTO = new ThirdTgSetPhoneVisibilityInputDTO();
+            inputDTO.setTgRobotId(robotSerialNo);
+            inputDTO.setType(dto.getType());
+            OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.setPhoneVisibilityByThirdKpTg(inputDTO);
+            log.info("setPrivatePhone inputDTO:{},vo:{}",inputDTO,vo);
+        }
+        return R.ok();
     }
 
     @Override

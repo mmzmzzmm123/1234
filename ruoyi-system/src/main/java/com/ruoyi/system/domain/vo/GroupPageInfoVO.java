@@ -40,6 +40,9 @@ public class GroupPageInfoVO {
     @ApiModelProperty(value = "群状态 0-正常 1-封群")
     private Integer groupStatus;
 
+    @ApiModelProperty(value = "封群时间")
+    private LocalDateTime groupStatusTime;
+
     @Excel(name = "是否使用", readConverterExp = "0=未使用,1=已使用")
     @ApiModelProperty(value = "是否使用 0-未使用 1-已使用")
     private Integer groupUsed;

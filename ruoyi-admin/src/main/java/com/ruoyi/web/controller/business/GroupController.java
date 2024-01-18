@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Assert;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.GroupCluster;
@@ -188,6 +189,7 @@ public class GroupController {
         }
     }
 
+    @Anonymous
     @ApiOperation(value = "导入群资源")
     @PostMapping("/importResource")
     public R<Void> importResource(@RequestParam(value = "file") @ApiParam("群资源文件") MultipartFile file,

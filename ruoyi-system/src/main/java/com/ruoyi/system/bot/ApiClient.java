@@ -30,7 +30,7 @@ public class ApiClient {
 
     public static <T> ApiResult<T> post(ApiEnum api, JSONObject body, Class<T> responseClass) {
 
-        String requestUrl = SpringUtils.getBean(OpenApiProperties.class).getOpenApiHost() + api.getRequestUrl();
+        String requestUrl = SpringUtils.getBean(BotProperties.class).getApiUrl() + api.getRequestUrl();
         // 生成 TraceId 方便排查问题
         String traceId = Ids.getId();
 

@@ -9,6 +9,7 @@
                tgi.group_invite_link,
                tgmi.bot_check,
                tgs.group_status,
+               if(tgs.group_status = 0,null, tgs.group_status_time) group_status_time,
                tgs.group_used,
                (select count(1) from t_play_robot_group_relation where group_id = tgi.group_id and state = 1) robot_num,
                if(tgmi.member_count > 0 and tgmi.bot_check = 1, tgi.member_count, tgi.member_count)                                  member_count,
@@ -49,11 +50,22 @@
             <if test="dto.usedTimeEnd != null ">
                 AND tgs.used_time <![CDATA[ <= ]]> #{dto.usedTimeEnd}
             </if>
+            <if test="dto.groupStatusTimeStart != null ">
+                AND tgs.group_status = 1
+                AND tgs.group_status_time <![CDATA[ >= ]]> #{dto.groupStatusTimeStart}
+            </if>
+            <if test="dto.groupStatusTimeEnd != null ">
+                AND tgs.group_status = 1
+                AND tgs.group_status_time <![CDATA[ <= ]]> #{dto.groupStatusTimeEnd}
+            </if>
             <if test="dto.createType != null ">
                 AND tgi.create_type = #{dto.createType}
             </if>
             <if test="dto.groupType != null ">
                 AND tgi.group_type = #{dto.groupType}
+            </if>
+            <if test="dto.groupStatus != null ">
+                AND tgs.group_status = #{dto.groupStatus}
             </if>
             <if test="dto.leaderRobot != null ">
                 AND tgs.leader_robot = #{dto.leaderRobot}

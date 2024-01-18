@@ -14,15 +14,15 @@ public enum ApiEnum {
 
     ;
 
-
+    /**
+     * Api描述
+     */
+    private final String apiDesc;
     /**
      * 请求地址
      */
     private final String requestUrl;
 
-    /**
-     * Api描述
-     */
-    private final String apiDesc;
+
 
 }

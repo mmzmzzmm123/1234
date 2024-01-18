@@ -33,6 +33,9 @@ public enum OpenApiEnum {
     THIRD_KP_TG_BATCH_ROBOT_SIMPINFO("kpTg-获取hw账号基础信息", "/thirdparty/tgModule/batchRobotSimpInfo", null),
     THIRD_KP_TG_JOIN_USER("kpTg-应用机器人加入通讯录", "/thirdparty/tgRobot/joinUser", 1100910026),
 
+    THIRD_KP_TG_SET_PHONE_VISIBILITY("kpTg-设置隐私手机号码谁可见接口", "/thirdparty/tgRobot/setPhoneVisibility", 1100910083),
+
+
     // kp
     THIRD_KP_TG_SQL_TASK_SUBMIT("kpTg-SQL执行接口", "/thirdparty/tgModule/sqlTaskSubmit", null),
     THIRD_KP_TG_DISPERSE_IMAGE("kpTg-获取离散图片", "/thirdparty/tgCharacter/disperseImage", 1100850508),
