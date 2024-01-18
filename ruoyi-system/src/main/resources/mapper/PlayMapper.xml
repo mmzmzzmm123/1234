@@ -123,7 +123,7 @@
             LEFT JOIN t_group_monitor_info tgmi ON tgi.group_id = tgmi.group_id
             LEFT JOIN t_group_state tgs on tgi.group_id = tgs.group_id
             LEFT JOIN t_play_message_push tpmp ON tpgi.play_id = tpgi.play_id
-            AND tpgi.group_id = tpmp.group_id
+            AND tpgi.tg_group_id = tpmp.group_id
             LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
         WHERE
             1 = 1
