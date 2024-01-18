@@ -18,7 +18,6 @@ import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.enums.InviteBotAction;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.bot.ApiClient;
-import com.ruoyi.system.bot.ApiResult;
 import com.ruoyi.system.bot.mode.input.AdMonitorDTO;
 import com.ruoyi.system.bot.mode.output.BotInfoVO;
 import com.ruoyi.system.callback.dto.Called1100910017DTO;
@@ -396,6 +395,9 @@ public class GroupService {
 
             runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, groupRobot, botUserName);
 
+        } catch (Exception e) {
+            log.error("邀请bot进群异常={}", groupInfo, e);
+            return false;
         } finally {
             lock.unlock();
         }
