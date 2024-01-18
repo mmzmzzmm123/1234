@@ -30,7 +30,7 @@
         <if test="dto.queryType != null and dto.queryValue != null and dto.queryValue != ''">
             <choose>
                 <when test="dto.queryType == 1">
-                    AND tpi.name liek concat('%',#{dto.queryValue},'%')
+                    AND tpi.name like concat('%',#{dto.queryValue},'%')
                 </when>
                 <when test="dto.queryType == 2">
                     AND tpi.id = #{dto.queryValue}
