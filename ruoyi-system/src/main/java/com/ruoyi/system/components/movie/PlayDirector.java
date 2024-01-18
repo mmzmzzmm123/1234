@@ -30,6 +30,13 @@ public class PlayDirector implements CallBackProcessor {
 	private PlayDirector(String alias) {
 		this.alias = alias;
 	}
+	
+	public ManualExecutivePlayer getManualExecutivePlayer(Play play) {
+		PlayBookFactory factory = ServiceLoader.load(PlayBookFactory.class, alias);
+		final PlayBook playBook = factory.newInstance(alias, play);
+		return new ManualExecutivePlayer(playBook) ;
+	}
+	
 
 	/**
 	 * 开始定时剧本

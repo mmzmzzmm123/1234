@@ -75,6 +75,11 @@ public class PlayMessagePush {
      * 号分配进度:0未分配 1成功 2失败
      */
     private Integer robotAllocationFlag;
+    
+    /**
+     * 炒群条件: 0-未达到 1-达到
+     */
+    private Integer sendFlag ;
 
 
     @TableField(exist = false)
