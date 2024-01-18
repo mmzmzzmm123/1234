@@ -399,4 +399,13 @@ public class OpenApiClient {
         return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SET_PHONE_VISIBILITY, JSONObject.from(data), TgBaseOutputDTO.class);
     }
 
+    /**
+     * 比邻第三方(开平TG)：-获取群成员
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> getGroupMemberByThirdKpTg(ThirdTgGetGroupMemberInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_GROUP_MEMBER, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
 }
