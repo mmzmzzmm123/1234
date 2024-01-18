@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -123,15 +124,23 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         return baseMapper.selectOne(new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo, serialNo).last(" limit 1"));
     }
 
+    public GroupInfo getGroupBySerialNo(String oldSerialNo, String newSerialNo) {
+        return baseMapper.selectOne(new LambdaQueryWrapper<GroupInfo>()
+                .in(GroupInfo::getGroupSerialNo, Optional.ofNullable(oldSerialNo).orElse(""),
+                        Optional.ofNullable(newSerialNo).orElse("")).last(" limit 1"));
+    }
+
+
     @Override
-    public void changeGroupSerialNo(String oldGroupSerialNo, String newGroupSerialNo) {
-        GroupInfo groupBySerialNo = getGroupBySerialNo(oldGroupSerialNo);
+    public GroupInfo changeGroupSerialNo(String oldGroupSerialNo, String newGroupSerialNo) {
+        GroupInfo groupBySerialNo = getGroupBySerialNo(oldGroupSerialNo, newGroupSerialNo);
         if (groupBySerialNo == null) {
-            return;
+            return null;
         }
         GroupInfo groupInfo = new GroupInfo();
         groupInfo.setGroupId(groupBySerialNo.getGroupId());
         groupInfo.setGroupSerialNo(newGroupSerialNo);
         baseMapper.updateById(groupInfo);
+        return groupBySerialNo;
     }
 }

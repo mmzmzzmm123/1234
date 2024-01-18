@@ -29,6 +29,7 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
             GroupMonitorInfo groupInfo = new GroupMonitorInfo();
             groupInfo.setGroupId(groupId);
             groupInfo.setBotCheck(0);
+            groupInfo.setBotAdmin(0);
             return groupInfo;
         }).collect(Collectors.toList()));
     }

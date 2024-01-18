@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -104,5 +105,13 @@ public class GroupRobotServiceImpl extends ServiceImpl<GroupRobotMapper, GroupRo
                 .eq(GroupRobot::getGroupId, groupId)
                 .eq(GroupRobot::getRobotId, robotId)
                 .last(" limit 1"));
+    }
+
+    @Override
+    public void setAdmin(String groupId, String robotId) {
+        GroupRobot groupRobot = getGroupRobot(robotId, groupId);
+        if (groupRobot != null && ObjectUtil.notEqual(groupRobot.getMemberType(), 1)) {
+
+        }
     }
 }

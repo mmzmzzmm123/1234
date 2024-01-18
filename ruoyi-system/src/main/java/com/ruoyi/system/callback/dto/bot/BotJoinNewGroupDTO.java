@@ -1,5 +1,6 @@
 package com.ruoyi.system.callback.dto.bot;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,7 +12,13 @@ import lombok.NoArgsConstructor;
 @Data
 public class BotJoinNewGroupDTO {
 
+    @ApiModelProperty("bot id")
     private Long botId;
+
+    @ApiModelProperty("chat id")
     private Long chatId;
+
+    @ApiModelProperty("robot user id")
+    private Long robotUserId;
 
 }

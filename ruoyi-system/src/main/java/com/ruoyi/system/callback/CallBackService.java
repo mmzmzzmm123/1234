@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.system.callback.dto.CalledDTO;
 import com.ruoyi.system.callback.dto.CalledDTOThreadLocal;
+import com.ruoyi.system.openapi.OpenApiRequestCache;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -80,6 +81,8 @@ public class CallBackService implements BeanPostProcessor {
     public void callback(String resultParams) {
         // 转成 实体
         CalledDTO root = JSON.parseObject(resultParams, CalledDTO.class);
+        root.setRequestPara(OpenApiRequestCache.getAndRemove(root.getOptSerNo()));
+
         Long type = root.getType();
         if (type == null) {
             return;

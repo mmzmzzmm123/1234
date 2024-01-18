@@ -1,6 +1,7 @@
 package com.ruoyi.system.callback.processor;
 
 import com.ruoyi.common.enums.BotEventEnum;
+import com.ruoyi.common.utils.MD5Utils;
 import com.ruoyi.system.callback.BotEvent;
 import com.ruoyi.system.callback.dto.bot.BotJoinNewGroupDTO;
 import com.ruoyi.system.callback.dto.bot.JoinGroupDTO;
@@ -40,4 +41,5 @@ public class BotEventProcessor {
     public void groupMemberCount(MemberQuantityDTO dto) {
 
     }
+
 }

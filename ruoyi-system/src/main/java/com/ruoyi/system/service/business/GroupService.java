@@ -23,6 +23,7 @@ import com.ruoyi.system.bot.mode.input.AdMonitorDTO;
 import com.ruoyi.system.bot.mode.output.BotInfoVO;
 import com.ruoyi.system.callback.dto.Called1100910017DTO;
 import com.ruoyi.system.callback.dto.Called1100910039DTO;
+import com.ruoyi.system.callback.dto.Called1100910053DTO;
 import com.ruoyi.system.domain.*;
 import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
@@ -505,7 +506,7 @@ public class GroupService {
                 setAction(GroupAction.SET_GROUP_NAME, groupInfo, robot, "", name, actionId -> {
                             ThirdTgModifyChatroomNameInputDTO input = new ThirdTgModifyChatroomNameInputDTO();
                             input.setTgRobotId(robot.getRobotId());
-                            input.setChatroomSerialNo("");
+                            input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
                             input.setChatroomNameBase64(Base64.encode(name));
                             input.setExtend(actionId);
                             return input;
@@ -786,4 +787,19 @@ public class GroupService {
         return ApiClient.setBotAdMonitor(dto).isSuccess();
     }
 
+
+    public void handlerNewAdmin(ThirdTgSetChatroomAdminInputDTO request, Called1100910053DTO dto) {
+        try {
+            if (request == null) {
+                return;
+            }
+            GroupInfo groupInfo = groupInfoService.changeGroupSerialNo(request.getChatroomSerialNo(), dto.getNewChatroomSerialNo());
+            if (groupInfo != null) {
+                groupRobotService.setAdmin(groupInfo.getGroupId(), request.getMemberSerialNo());
+            }
+        } catch (Exception e) {
+            log.info("handlerNewAdmin.error={},{}", request, dto, e);
+        }
+
+    }
 }

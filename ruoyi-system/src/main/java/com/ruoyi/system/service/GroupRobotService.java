@@ -26,4 +26,6 @@ public interface GroupRobotService extends IService<GroupRobot> {
     GroupRobot getAnyRobot(String groupId);
 
     GroupRobot getRobot(String groupId, String robotId);
+
+    void setAdmin(String groupId,String robotId);
 }

@@ -8,6 +8,7 @@ import com.ruoyi.system.callback.dto.*;
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
+import com.ruoyi.system.openapi.model.input.ThirdTgSetChatroomAdminInputDTO;
 import com.ruoyi.system.service.GroupInfoService;
 import com.ruoyi.system.service.IRobotService;
 import com.ruoyi.system.service.PlayMessageConfoundLogService;
@@ -90,12 +91,19 @@ public class TgRobotProcessor {
     @Type(value = 1100910053, parameterClass = Called1100910053DTO.class)
     public void called1100910053(Called1100910053DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        //处理tg设置管理员
+        if(root.isSuccess()) {
+            groupService.handlerNewAdmin(JSON.parseObject(root.getRequestPara(), ThirdTgSetChatroomAdminInputDTO.class), dto);
+        }
+
         //todo 更新群内机器人状态
         if(root.isSuccess()) {
         	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
         	return ;
         }
     	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
+        //处理请求结果
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
     }
 
     /**
@@ -322,4 +330,7 @@ public class TgRobotProcessor {
     public void called1100910083(Called1100910011DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
+
+
+
 }

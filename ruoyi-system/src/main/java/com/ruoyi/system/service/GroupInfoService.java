@@ -36,5 +36,5 @@ public interface GroupInfoService extends IService<GroupInfo> {
 
     GroupInfo getGroupBySerialNo(String groupSerialNo);
 
-    void changeGroupSerialNo(String oldGroupSerialNo,String newGroupSerialNo);
+    GroupInfo changeGroupSerialNo(String oldGroupSerialNo,String newGroupSerialNo);
 }
