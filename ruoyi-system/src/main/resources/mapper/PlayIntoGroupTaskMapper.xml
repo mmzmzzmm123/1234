@@ -101,6 +101,6 @@
     </select>
     
     <select id="selectIsErrorCount" resultType="java.lang.Integer">
-        select count(*) from t_play_into_group_task where group_url = #{groupUrl} and isError = 1
+        select count(*) from t_play_into_group_task where group_url = #{groupUrl} and is_error = 1
     </select>
  </mapper>
