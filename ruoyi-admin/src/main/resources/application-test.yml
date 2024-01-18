@@ -98,7 +98,7 @@ spring:
   data:
     mongodb:
       host: 116.205.231.237
-      port: 27017
+      port: 8635
       database: neighbour-resource
       authentication-database: neighbour-resource
       username: nsuser
