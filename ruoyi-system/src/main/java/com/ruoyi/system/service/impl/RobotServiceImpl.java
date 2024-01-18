@@ -103,7 +103,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
                 robot.setId(vo.getRobotId());
                 robot.setVpnIp(vo.getIp());
                 if(StringUtils.isNotEmpty(vo.getIp())){
-                    String[] split = vo.getIp().split(".");
+                    String[] split = vo.getIp().split("\\.");
                     if(split.length > 1){
                         robot.setVpnIpB(split[0]+"."+split[1]);
                     }
