@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 
@@ -290,7 +291,9 @@ public class TgRobotProcessor {
     public void called1100860002(List<Called1100860002DTO> dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         if(root.isSuccess()) {
-        	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), dto.getAccessHash());
+        	if(!CollectionUtils.isEmpty(dto)) {
+        		SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), dto.get(0).getAccessHash());
+        	}
         	return ;
         }
     	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());

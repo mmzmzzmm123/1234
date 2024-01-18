@@ -5,7 +5,6 @@ import org.springframework.util.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
-import com.ruoyi.common.enums.ScanProgressEnum;
 import com.ruoyi.common.utils.Objects;
 import com.ruoyi.common.utils.Times;
 import com.ruoyi.common.utils.spi.SPI;
@@ -29,14 +28,10 @@ public class SendConditionJobProcessor implements LogJobProcessor {
 
 	@Override
 	public void handle(Play play) {
-		if(play.getScanProgress().intValue() == ScanProgressEnum.Sending.getVal()) {
-			return ;
-		}
-		
 		final PlayMessagePushMapper messagePushMapper = SpringUtils.getBean(PlayMessagePushMapper.class);
 		// 查询所有的群
-		List<PlayMessagePush> groups = messagePushMapper
-				.selectList(new QueryWrapper<PlayMessagePush>().lambda().eq(PlayMessagePush::getPlayId, play.getId()));
+		List<PlayMessagePush> groups = messagePushMapper.selectList(new QueryWrapper<PlayMessagePush>().lambda()
+				.eq(PlayMessagePush::getPlayId, play.getId()).eq(PlayMessagePush::getSendFlag, 0));
 		if (CollectionUtils.isEmpty(groups)) {
 			return;
 		}
