@@ -37,13 +37,6 @@ public class MultipackLogContainer implements InitializingBean {
 	RedisTemplate redisTemplate;
 	@Autowired
 	RedisLock redisLock;
-
-	@Autowired(required = false)
-	List<OnPackMonitor> onPackMonitors;
-
-	@Autowired(required = false)
-	List<OnRadioPackMonitor> radioPackMonitors;
-
 	@Autowired
 	PlayRobotPackLogService robotPackLogService;
 
@@ -70,9 +63,9 @@ public class MultipackLogContainer implements InitializingBean {
 
 		try {
 			lock.lock(5, TimeUnit.SECONDS);
-			// 查询所有人设包装状态的剧本 剧本执行进度：0未开始 1调度修改群人设中 2 调用入群中 3 入群等待中 4混淆中 5号分配 6人设包装 7剧本发送
+			// 0未开始 1调度修改群人设中 2 调用入群中 3 入群等待中 4 混淆 5 号分配,人设 6等待超群条件 7发剧本
 			List<Play> datas = playMapper.selectList(
-					new QueryWrapper<Play>().lambda().in(Play::getScanProgress, Arrays.asList(5,6)).eq(Play::getIsDelete, 0));
+					new QueryWrapper<Play>().lambda().eq(Play::getScanProgress, 5).eq(Play::getIsDelete, 0));
 			if (CollectionUtils.isEmpty(datas)) {
 				return;
 			}
