@@ -17,6 +17,8 @@ public class WordUtil {
 
     public static final String spokesman_regex = "${";
 
+    public static final String img_pre = "data:image/";
+
     public static List<String> readWordDocument(MultipartFile file) {
         List<String> messageContent = new ArrayList<>();
         try {
@@ -37,7 +39,7 @@ public class WordUtil {
                         byte[] bytes = pictureData.getData(); // 图片二进制数据
                         // 将图片二进制数据转换为Base64字符串
                         String base64Image = Base64.encodeBase64String(bytes);
-                        messageContent.add("data:image/"+extension+";base64,"+base64Image);
+                        messageContent.add(img_pre+extension+";base64,"+base64Image);
                         // 在这里可以将图片保存到文件或进行其他处理
 //                        System.out.println("Picture found in paragraph: " + base64Image);
                     }

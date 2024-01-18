@@ -85,6 +85,7 @@ public class AnalysisFileService {
                 playFile.setFileId(fileId);
                 playFile.setContent(item);
                 playFile.setContentNo(no);
+                playFile.setType(item.startsWith(WordUtil.img_pre) ? 2 : 1);
                 playFileList.add(playFile);
             }
 
@@ -181,14 +182,24 @@ public class AnalysisFileService {
             return ret;
         }
 
+        ret.setStartIndex(playFileList.get(playFileList.size()-1).getId());
+
+        int imgNum = 0;
         for (PlayFile playFile : playFileList) {
             AnalysisPlayFileVO.ContentInfo contentInfo = new AnalysisPlayFileVO.ContentInfo();
             contentInfo.setContent(playFile.getContent());
             contentInfo.setNo(playFile.getContentNo());
             contentInfoList.add(contentInfo);
+            if (playFile.getType() == 2) {
+                imgNum++;
+                //图片数据太大, 限制返回
+                if (imgNum > 2) {
+                    ret.setStartIndex(playFile.getId());
+                    break;
+                }
+            }
         }
 
-        ret.setStartIndex(playFileList.get(playFileList.size()-1).getId());
         ret.setContentInfoList(contentInfoList);
         return ret;
     }

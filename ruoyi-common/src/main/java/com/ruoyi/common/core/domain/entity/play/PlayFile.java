@@ -16,4 +16,9 @@ public class PlayFile {
     private Integer contentNo;
 
     private String content;
+
+    /**
+     * 类型: 1文字 2图片
+     */
+    private Integer type;
 }
