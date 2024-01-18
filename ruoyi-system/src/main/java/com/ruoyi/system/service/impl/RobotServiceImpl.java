@@ -36,6 +36,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -357,14 +358,16 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
             return R.fail("号编号不能为空");
         }
-        List<String> userNameList = Lists.newArrayList();
-        for (String code : dto.getCode()) {
-            userNameList.add(dto.getUserName()+code);
-        }
+        ThreadLocalRandom random = ThreadLocalRandom.current();
         for (int i = 0; i < dto.getRobotSerialNos().size(); i++) {
             ThirdTgModifyUserNameInputDTO inputDTO = new ThirdTgModifyUserNameInputDTO();
             inputDTO.setTgRobotId(dto.getRobotSerialNos().get(i));
-            String userName = userNameList.get(i % userNameList.size());
+            String userName = "";
+            if(dto.getStartNum() != null && dto.getEndNum()  != null){
+                userName =dto.getUserName() + random.nextInt(dto.getStartNum(), dto.getEndNum());
+            }else{
+                userName = dto.getUserName();
+            }
             inputDTO.setUserName(userName);
             inputDTO.setExtend(userName);
             OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.modifyUserNameByThirdKpTg(inputDTO);
