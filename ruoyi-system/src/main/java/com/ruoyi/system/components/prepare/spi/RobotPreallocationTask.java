@@ -22,10 +22,10 @@ import com.ruoyi.system.components.movie.spi.impl.PreRobotSpeakAllocator;
 import com.ruoyi.system.components.prepare.ExecutionParamContext;
 import com.ruoyi.system.components.prepare.ExecutionResultContext;
 import com.ruoyi.system.components.spi.RobotInfoQuery;
-import com.ruoyi.system.components.spi.RobotInfoQuery.RobotInfoVO;
 import com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation;
 import com.ruoyi.system.mapper.PlayRobotGroupRelationMapper;
 import com.ruoyi.system.mapper.VibeRuleMapper;
+import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotInfoListVO;
 import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.PlayMessagePushDetailService;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +57,7 @@ public class RobotPreallocationTask implements TaskExecution {
 					"【号预分配】 群" + context.getChatroomId() + " 内无演员", "群内无演员");
 			return ExecutionResultContext.buildError(context, "群内无演员");
 		}
-		final Map<String, RobotInfoVO> map = new HashMap<>();
+		final Map<String, ExtTgSelectRobotInfoListVO> map = new HashMap<>();
 		List<String> source = ListTools.extract(relationList, f -> f.getRobotId());
 		// 查询所有的detail
 		List<PlayMessagePushDetail> details = context.getPushDetails();
@@ -65,13 +65,13 @@ public class RobotPreallocationTask implements TaskExecution {
 		final RobotInfoQuery robotInfoQuery = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery");
 
 		for (PlayMessagePushDetail detail : details) {
-			RobotInfoVO robot = map.get(detail.getSpokesmanNickname());
+			ExtTgSelectRobotInfoListVO robot = map.get(detail.getSpokesmanNickname());
 			if (robot != null) {
 				// 这个发言人 已经分配过了 ， 直接用
 				detail.setRobotId(robot.getRobotId());
-				detail.setRobotImgUrl(robot.getHeadImg());
-				detail.setRobotNickname(robot.getNickName());
-				detail.setRobotAcct(robot.getAcct());
+				detail.setRobotImgUrl(robot.getHeadImgUrl());
+				detail.setRobotNickname(robot.getUserName());
+				detail.setRobotAcct(robot.getAccount());
 
 				PreRobotSpeakAllocator.Cache.set(messagePush.getPlayId(), messagePush.getGroupId(),
 						detail.getSpokesmanNickname(), detail.getRobotId());
@@ -79,15 +79,14 @@ public class RobotPreallocationTask implements TaskExecution {
 			}
 			if (!CollectionUtils.isEmpty(source)) {
 				detail.setRobotId(source.get(0));
-				List<RobotInfoVO> robots = robotInfoQuery
-						.listById(Arrays.asList(new RobotInfoQuery.RobotInfoDTO(detail.getRobotId())));
+				List<ExtTgSelectRobotInfoListVO> robots = robotInfoQuery.listById(ListTools.newArrayList(detail.getRobotId()));
 				if (!CollectionUtils.isEmpty(robots)) {
-					detail.setRobotImgUrl(robots.get(0).getHeadImg());
-					detail.setRobotNickname(robots.get(0).getNickName());
-					detail.setRobotAcct(robots.get(0).getAcct());
+					detail.setRobotImgUrl(robots.get(0).getHeadImgUrl());
+					detail.setRobotNickname(robots.get(0).getUserName());
+					detail.setRobotAcct(robots.get(0).getAccount());
 					map.put(detail.getSpokesmanNickname(), robots.get(0));
 				} else {
-					RobotInfoVO vo = new RobotInfoVO();
+					ExtTgSelectRobotInfoListVO vo = new ExtTgSelectRobotInfoListVO();
 					vo.setRobotId(detail.getRobotId());
 					map.put(detail.getSpokesmanNickname(), vo);
 				}
@@ -120,7 +119,8 @@ public class RobotPreallocationTask implements TaskExecution {
 		}
 		// 批量更新
 		SpringUtils.getBean(PlayMessagePushDetailService.class).updateBatchById(details);
-		PlayExecutionLogService.robotPackLog(context.getPlay().getId(), context.getChatroomId(), null,  "【号预分配】 群" + context.getChatroomId() + " 分配成功", null);
+		PlayExecutionLogService.robotPackLog(context.getPlay().getId(), context.getChatroomId(), null,
+				"【号预分配】 群" + context.getChatroomId() + " 分配成功", null);
 		return ExecutionResultContext.buildSync(context);
 	}
 
