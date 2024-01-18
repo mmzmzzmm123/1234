@@ -268,7 +268,7 @@ public class GroupService {
         if (StrUtil.isBlank(id)) {
             return;
         }
-        handleActionResult(groupActionLogService.getById(optNo), optNo, success, msg, data);
+        handleActionResult(groupActionLogService.getById(id), optNo, success, msg, data);
     }
 
     public void handleActionResult(GroupActionLog groupActionLog, String optNo, boolean success, String msg, Object data) {
@@ -340,6 +340,7 @@ public class GroupService {
                     //其他的动作 都传bot的用户编号
                     value = groupActionLog.getChangeValue();
                 }
+                groupBatchActionService.doNextAction(groupBatch.getBatchId(),nextAction.getCode(), 0);
 
                 //执行动作
                 runAction(groupBatch.getBatchId(), nextAction.getAction(), groupInfo,
@@ -347,7 +348,7 @@ public class GroupService {
             } else {
                 //如果需要重试 则当前动作重复操作
                 if (groupBatch.getRetryCount() < botAction.getRetryCount()) {
-                    groupBatchActionService.doNextAction(groupBatch.getBatchId(), groupBatch.getRetryCount() + 1);
+                    groupBatchActionService.doNextAction(groupBatch.getBatchId(),botAction.getCode(), groupBatch.getRetryCount() + 1);
                     runAction(groupBatch.getBatchId(), botAction.getAction(), groupInfoService.getById(groupBatch.getGroupId()),
                             groupRobotService.getRobot(groupBatch.getGroupId(), groupActionLog.getRobotId()), groupActionLog.getChangeValue());
                 } else {
