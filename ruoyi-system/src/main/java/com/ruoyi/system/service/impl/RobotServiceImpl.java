@@ -97,22 +97,27 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         log.info("pullRobotDataList robotSerialNos:{},simpMap:{},",robotSerialNos,simpMap);
         List<Robot> robotList = Lists.newArrayList();
         for (ExtTgSelectRobotByMerchantVO vo : dataList) {
-            Robot robot = JSON.parseObject(JSON.toJSONString(vo), Robot.class);
-            robot.setPhone(vo.getAccount());
-            robot.setId(vo.getRobotId());
-            robot.setVpnIp(vo.getIp());
-            if(StringUtils.isNotEmpty(vo.getIp())){
-                String[] split = vo.getIp().split(".");
-                robot.setVpnIpB(split[0]+"."+split[1]);
-                robot.setVpnIpC(split[0]+"."+split[1]+"."+split[2]);
+            try {
+                Robot robot = JSON.parseObject(JSON.toJSONString(vo), Robot.class);
+                robot.setPhone(vo.getAccount());
+                robot.setId(vo.getRobotId());
+                robot.setVpnIp(vo.getIp());
+                if(StringUtils.isNotEmpty(vo.getIp())){
+                    String[] split = vo.getIp().split(".");
+                    robot.setVpnIpB(split[0]+"."+split[1]);
+                    robot.setVpnIpC(split[0]+"."+split[1]+"."+split[2]);
+                }
+                if(simpMap.containsKey(robot.getRobotSerialNo())){
+                    ExtTgBatchRobotSimpInfoData mapData = simpMap.get(robot.getRobotSerialNo());
+                    robot.setTgAppVersion(mapData.getTgAppVersion());
+                    robot.setProtocolType(mapData.getProtocolType());
+                    robot.setProxyType(mapData.getProxyType());
+                }
+                robotList.add(robot);
+            }catch (Exception e){
+                log.error("pullRobotDataList异常",e);
             }
-            if(simpMap.containsKey(robot.getRobotSerialNo())){
-                ExtTgBatchRobotSimpInfoData mapData = simpMap.get(robot.getRobotSerialNo());
-                robot.setTgAppVersion(mapData.getTgAppVersion());
-                robot.setProtocolType(mapData.getProtocolType());
-                robot.setProxyType(mapData.getProxyType());
-            }
-            robotList.add(robot);
+
         }
         this.storyRobot(robotList);
     }
