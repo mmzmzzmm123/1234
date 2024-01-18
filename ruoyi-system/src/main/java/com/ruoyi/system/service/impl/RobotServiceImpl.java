@@ -130,7 +130,6 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         oldRobotList.forEach(item->oldMap.put(item.getRobotSerialNo(),item));
         for (Robot newRobot : newRobotList) {
             if(!oldMap.containsKey(newRobot.getRobotSerialNo())){
-                newRobot.setEnableType(1);
                 newRobot.setUpdateTime(new Date());
                 newRobot.setCreateTime(new Date());
                 saveRobotList.add(newRobot);
