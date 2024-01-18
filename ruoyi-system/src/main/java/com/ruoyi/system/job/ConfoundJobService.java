@@ -1,6 +1,7 @@
 package com.ruoyi.system.job;
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.ruoyi.common.constant.PlayConstants;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.redis.RedisLock;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -56,8 +56,10 @@ public class ConfoundJobService {
             log.info("retryingConfusion lock");
             return;
         }
-        log.info("retryingConfusion start {}", LocalDateTime.now());
+        String uuid = IdWorker.getIdStr();
+        log.info("retryingConfusion start {}", uuid);
         playMessageConfoundLogService.retryingConfusion(lockKey);
+        log.info("retryingConfusion end {}", uuid);
     }
 
     /**
@@ -71,7 +73,8 @@ public class ConfoundJobService {
             return;
         }
         List<PlayConfusionStateVO> list = playInfoMapper.selectConfusionStateStatistics();
-        log.info("refreshPlayConfusionState start {}", list.size());
+        String uuid = IdWorker.getIdStr();
+        log.info("refreshPlayConfusionState start {} {}", uuid, list.size());
         try {
             if (CollectionUtils.isEmpty(list)) {
                 return;
@@ -113,6 +116,7 @@ public class ConfoundJobService {
             log.info("refreshPlayConfusionState error", e);
         } finally {
             redisLock.unlock(lockKey);
+            log.info("refreshPlayConfusionState end {}", uuid);
         }
     }
 
@@ -127,7 +131,8 @@ public class ConfoundJobService {
             return;
         }
         List<PlayMessageConfusionStateVO> list = playMessageConfoundMapper.selectConfusionStateStatistics();
-        log.info("refreshPlayMessageConfusionState start {}", list.size());
+        String uuid = IdWorker.getIdStr();
+        log.info("refreshPlayMessageConfusionState start {} {}", uuid, list.size());
         try {
             if (CollectionUtils.isEmpty(list)) {
                 return;
@@ -154,6 +159,7 @@ public class ConfoundJobService {
             log.info("refreshPlayMessageConfusionState error", e);
         } finally {
             redisLock.unlock(lockKey);
+            log.info("refreshPlayMessageConfusionState end {}", uuid);
         }
     }
 
@@ -167,6 +173,8 @@ public class ConfoundJobService {
             log.info("playConfusionJob lock");
             return;
         }
+        String uuid = IdWorker.getIdStr();
+        log.info("playConfusionJob start {}", uuid);
         try {
             List<Play> playList = playInfoMapper.selectConfusionList();
             for (Play play : playList) {
@@ -182,6 +190,7 @@ public class ConfoundJobService {
             log.info("playConfusionJob error", e);
         } finally {
             redisLock.unlock(lockKey);
+            log.info("playConfusionJob end {}", uuid);
         }
     }
 
