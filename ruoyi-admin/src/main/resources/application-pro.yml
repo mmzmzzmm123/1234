@@ -100,6 +100,9 @@ spring:
         wall:
           config:
             multi-statement-allow: true
+  data:
+    mongodb:
+      uri: mongodb://ncuser:Qq7FPy16Ey2^YnFcuO4aM@10.16.2.117:8635,10.16.2.55:8635/neighbour_ut_chat?authSource=neighbour_ut_chat
 
 # token配置
 token:

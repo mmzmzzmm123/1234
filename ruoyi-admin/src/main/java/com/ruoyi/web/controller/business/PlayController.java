@@ -103,7 +103,7 @@ public class PlayController extends BaseController {
             }
         }
         if (dto.getGroupCondition() == 1) {
-            if (dto.getStartType() == 1) {
+            if (dto.getStartType() == 1 && null == dto.getStartGroupDate()) {
                 return R.fail(ErrInfoConfig.getDynmic(11000, "请配置定时开始炒群时间"));
             }
         }
