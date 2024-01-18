@@ -11,6 +11,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.constant.PlayStatusConstants;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.app.OrderProduceRequest;
 import com.ruoyi.common.core.domain.dto.play.*;
@@ -22,6 +23,7 @@ import com.ruoyi.common.enums.play.PushStateEnum;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.components.ProductTools;
 import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.mapper.*;
@@ -85,23 +87,22 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Transactional(rollbackFor=Exception.class)
     public R<String> create(PlayDTO dto) {
         //设置订单数据
-//        AjaxResult result = ProductTools.checkNormal(dto.getProductId());
-//        if (result.isError()) {
-//            return R.fail(ErrInfoConfig.getDynmic(11001));
-//        }
-//        handleOrder(dto.getProductId(), (Product) result.data(), dto.getName(), dto.getLoginUser());
+        AjaxResult result = ProductTools.checkNormal(dto.getProductId());
+        if (result.isError()) {
+            return R.fail(ErrInfoConfig.getDynmic(11001, "未获取到商品信息"));
+        }
+        handleOrder(dto.getProductId(), (Product) result.data(), dto.getName(), dto.getLoginUser());
 
         //todo 混淆处理?
 
         String playId = IdWorker.getIdStr();
         savePlay(dto, playId);
 
-        //外部群不能设置人设包装
+        //外部群不能设置群包装
         if (dto.getGroupSource() == 0) {
             saveGroupPack(playId, dto.getGroupPack());
-            saveRobotPack(playId, dto.getPerformerList());
         }
-
+        saveRobotPack(playId, dto.getPerformerList());
         //插入剧本消息表
         savePlayMessage(playId, dto.getPlayMessageList(), dto.getSendMechanism());
 
@@ -170,7 +171,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             playMessage.setMessageContent(JSON.toJSONString(messageDTO.getMessageContent()));
             playMessage.setPlayErrorType(sendMechanism.getSendErrorType());
 
-            //自定义消息类型处理
+            //todo 自定义消息类型处理
 //            for (ContentJson contentJson : messageDTO.getMessageContent()) {
 //                if (contentJson.getMomentTypeId() == 2018) {
 //                    contentJson.setSMateContent("");
@@ -236,6 +237,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         if (dto.getStartType() == 0) {
             play.setStartGroupDate(new Date());
         }
+        if (dto.getStartType() == 1) {
+            play.setStartGroupDate(dto.getStartGroupDate());
+        }
+        play.setLockRobotStatus(dto.getPlayExt().getLockState());
         super.save(play);
     }
 
@@ -570,7 +575,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         playRepeatLog.setPlayId(playId);
         playRepeatLogMapper.insert(playRepeatLog);
 
-        return R.ok();
+        return R.ok(newPlayId);
     }
 
     @Override
@@ -655,7 +660,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return R.ok();
         }
 
-        //已完成和已取消
+        //已完成和已取消才可进行
+        if (play.getState() != PlayStatusConstants.CANCEL && play.getState() != PlayStatusConstants.FINISHED) {
+            return R.ok();
+        }
 
         //获取剧本关联群
         List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(playId);

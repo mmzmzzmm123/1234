@@ -155,6 +155,11 @@ public class Play {
      */
     private String failReason;
 
+    /**
+     * 是否锁定水军
+     */
+    private Integer lockRobotStatus;
+
     public SendMechanism convertSendMechanismStr() {
         if (StringUtils.isEmpty(this.sendMechanism)) {
             return null;
