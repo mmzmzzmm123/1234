@@ -53,7 +53,7 @@
         <if test="dto.ipType == 2">
             group by tri.vpn_ip_c
         </if>
-        limit 1,#{dto.limit}
+        limit 0,#{dto.limit}
     </select>
 
     <update id="addCount">

@@ -8,6 +8,7 @@ import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import com.ruoyi.system.service.IRobotService;
+import com.ruoyi.system.service.RobotStatisticsService;
 import com.ruoyi.system.service.TelegramDetChatroomAdminDistrService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,9 @@ public class RobotController {
 
     @Autowired
     private TelegramDetChatroomAdminDistrService telegramDetChatroomAdminDistrService;
+
+    @Autowired
+    private RobotStatisticsService robotStatisticsService;
     @ApiOperation("查询号列表")
     @PostMapping("/selectRobotPageList")
     public R<Page<SelectRobotListVO>> selectRobotPageList(@RequestBody SelectRobotListDTO dto){
@@ -126,5 +130,10 @@ public class RobotController {
     @PostMapping("/syncChatroomAdminDistr")
     public void syncChatroomAdminDistr(){
         telegramDetChatroomAdminDistrService.syncChatroomAdminDistr();
+    }
+
+    @PostMapping("/getRobot")
+    public void getRobot(@RequestBody GetRobotDTO dto){
+        robotStatisticsService.getRobot(dto);
     }
 }

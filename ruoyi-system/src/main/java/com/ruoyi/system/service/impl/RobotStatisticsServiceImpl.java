@@ -80,6 +80,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         }
 
         List<SelectRobotByRuleVO> selectRobotByRuleVOSTotal = new ArrayList<>();
+        selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS);
         List<SelectRobotByRuleVO> selectRobotByRuleVOS1 = new ArrayList<>();
         //如果有需要设置管理员号的,需要再次获取其他号
         if(adminFlag && dto.getCount() > 0){
@@ -91,7 +92,6 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             if(CollectionUtils.isEmpty(selectRobotByRuleVOS1) || selectRobotByRuleVOS1.size() < dto.getCount()){
                 return R.fail("号资源不足");
             }
-            selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS);
             selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS1);
         }
         List<String> ids = selectRobotByRuleVOSTotal.stream().filter(f-> StringUtils.isNotEmpty(f.getId())).map(SelectRobotByRuleVO::getId).collect(Collectors.toList());
