@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.system.domain.dto.play.QueryPlayDTO;
 import com.ruoyi.system.domain.dto.play.QueryPushDetailDTO;
+import com.ruoyi.system.domain.vo.PlayConfusionStateVO;
 import com.ruoyi.system.domain.vo.play.PlayGroupProgressVO;
 import com.ruoyi.system.domain.vo.play.PlayTaskProgressVO;
 import com.ruoyi.system.domain.vo.play.QueryPlayVO;
@@ -34,4 +35,10 @@ public interface PlayMapper extends BaseMapper<Play> {
     List<Play> selectIntoGroupList(@Param("state")Integer state,@Param("progress")Integer progress);
 
     Play selectPlayById(@Param("playId")String playId);
+
+    /**
+     * 查询需要修改混淆状态的剧本
+     * @return
+     */
+    List<PlayConfusionStateVO> selectConfusionStateStatistics();
 }
