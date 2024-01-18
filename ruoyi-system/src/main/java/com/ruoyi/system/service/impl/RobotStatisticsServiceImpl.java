@@ -94,8 +94,8 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS);
             selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS1);
         }
-
         List<String> ids = selectRobotByRuleVOSTotal.stream().filter(f-> StringUtils.isNotEmpty(f.getId())).map(SelectRobotByRuleVO::getId).collect(Collectors.toList());
+        log.info("selectRobotByRuleVOSTotal:{},ids:{}",selectRobotByRuleVOSTotal,ids);
         List<GetRobotVO> resultData = new ArrayList<>();
         SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession();
         try {

@@ -8,18 +8,20 @@
     <select id="selectRobotByRule" resultType="com.ruoyi.system.domain.vo.robot.SelectRobotByRuleVO">
         select
             tri.robot_serial_no,
-            trs.id,
+            trs.id
         <if test="dto.ipType == 1">
-            tri.vpn_ip_b as ip
+            ,tri.vpn_ip_b as ip
         </if>
         <if test="dto.ipType == 2">
-            tri.vpn_ip_c as ip
+            ,tri.vpn_ip_c as ip
         </if>
         from t_robot_info tri
             left join t_robot_statistics trs on tri.robot_serial_no = trs.robot_serial_no
         where tri.enable_type = 1
           and tri.delete_status = 0
           and trs.is_lock = 0
+          and tri.seal_status = 10
+          and tri.heartbeat_status = 20
         <if test="dto.countryCode != null and dto.countryCode.size > 0">
             and tri.country_code in
               <foreach collection="dto.countryCode" item="item" separator="," open="(" close=")">
