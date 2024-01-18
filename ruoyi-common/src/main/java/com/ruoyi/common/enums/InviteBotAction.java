@@ -19,7 +19,9 @@ public enum InviteBotAction {
 
     INVITE_BOT_JOIN_GROUP(2, GroupAction.INVITE_BOT_JOIN_GROUP, 0),
 
-    SET_BOT_ADMIN(3, GroupAction.SET_GROUP_ADMIN, 0);
+    QUERY_HASH(3, GroupAction.QUERY_HASH, 5),
+
+    SET_BOT_ADMIN(4, GroupAction.SET_GROUP_ADMIN, 0);
 
     private final int code;
 

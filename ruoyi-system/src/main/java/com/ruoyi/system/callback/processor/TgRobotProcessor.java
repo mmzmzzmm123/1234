@@ -294,6 +294,9 @@ public class TgRobotProcessor {
         	return ;
         }
     	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
+
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), dto.getAccessHash());
+
     }
 
     /**
