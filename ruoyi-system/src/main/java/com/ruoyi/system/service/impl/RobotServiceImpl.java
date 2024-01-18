@@ -29,23 +29,22 @@ import com.ruoyi.system.service.IRobotService;
 import com.ruoyi.system.service.RobotStatisticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements IRobotService {
-    @Resource
+    @Autowired
     private RobotMapper robotMapper;
-    @Resource
+    @Autowired
     private GroupRobotMapper groupRobotMapper;
-
-    @Resource
+    @Autowired
     private RobotStatisticsService robotStatisticsService;
     @Override
     public R<Page<SelectRobotListVO>> selectRobotPageList(SelectRobotListDTO dto) {
