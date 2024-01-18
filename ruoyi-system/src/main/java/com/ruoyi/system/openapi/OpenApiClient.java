@@ -373,4 +373,14 @@ public class OpenApiClient {
                 new TypeReference<List<ExtTgSelectRobotInfoListVO>>(ExtTgSelectRobotInfoListVO.class) {
                 });
     }
+
+    /**
+     * 比邻第三方(开平TG)：-发送群聊消息
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> sendGroupMessageByThirdKpTg(ThirdTgSendGroupMessageInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SEND_GROUP_MESSAGE, JSONObject.from(data), TgBaseOutputDTO.class);
+    }
+
 }
