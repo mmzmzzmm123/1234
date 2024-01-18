@@ -181,7 +181,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
             log.info("createPush start {}", JSON.toJSONString(playInfo));
 
             List<PlayGroupInfo> playGroupInfoList = playGroupInfoService.listByPlayId(playId);
-            Assert.isTrue(CollectionUtils.isNotEmpty(playGroupInfoList), "剧本对应群为找到");
+            Assert.isTrue(CollectionUtils.isNotEmpty(playGroupInfoList), "剧本对应群未找到");
 
             //需要推送的群集合构造
             List<PlayMessagePush> playMessagePushList = new ArrayList<>();
