@@ -110,9 +110,14 @@ public class Play {
     private String urlPool;
 
     /**
-     * 操作员id
+     * 商家id
      */
     private String merchantId;
+
+    /**
+     * 用户id
+     */
+    private Long userId;
 
     /**
      * 是否删除: 0否 1是
@@ -144,6 +149,8 @@ public class Play {
      * 失败原因
      */
     private String failReason;
+
+    private Long productId;
 
     public SendMechanism convertSendMechanismStr() {
         if (StringUtils.isEmpty(this.sendMechanism)) {

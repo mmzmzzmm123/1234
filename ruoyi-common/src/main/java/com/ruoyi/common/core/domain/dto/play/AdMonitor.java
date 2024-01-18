@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Data
 public class AdMonitor {
-    @ApiModelProperty(value = "监控类型(多个,连接)：1-发图片 2-发视频 3-发链接")
+    @ApiModelProperty(value = "监控类型(多个,连接)：1-发图片 2-发视频 3-发链接 4文档 5动图")
     private String types;
 
     @ApiModelProperty(value = "监控关键词")

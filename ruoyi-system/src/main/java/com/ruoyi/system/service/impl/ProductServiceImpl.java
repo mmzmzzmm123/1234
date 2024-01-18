@@ -79,7 +79,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
 
     @Override
     @Transactional(rollbackFor=Exception.class)
-    public R<Product> create(ProductDTO productDTO) {
+    public Product create(ProductDTO productDTO) {
         long id = IdWorker.getId();
         List<ProductSku> productSkus = new ArrayList<>();
         for (ProductSkuDTO item : productDTO.getSkuList()) {
@@ -96,7 +96,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         product.setOperatorUserId(productDTO.getOperatorUserId());
         save(product);
 
-        return R.ok(product);
+        return product;
     }
 
     private Product setProduct(ProductDTO productDTO, long id) {
@@ -110,16 +110,20 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         product.setStatus(productDTO.getStatus());
         product.setIsShow(productDTO.getIsShow());
         product.setIntro(productDTO.getIntro());
-        product.setSkuAttr(getSkuAttr(id));
+        product.setSkuAttr(getOneSkuAttr(id));
         return product;
     }
 
-    private String getSkuAttr(long productId) {
-        ProductSku productSku = productSkuService.getOne(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, productId)
-                .orderByAsc(ProductSku::getPrice).last("limit 1"));
+    private String getOneSkuAttr(long productId) {
+        ProductSku productSku = getOneSkuByProductId(productId);
         SkuAttrDTO skuDTO = new SkuAttrDTO();
         BeanUtils.copyProperties(productSku, skuDTO);
         return JSON.toJSONString(skuDTO);
+    }
+
+    public ProductSku getOneSkuByProductId(long productId) {
+        return productSkuService.getOne(new LambdaQueryWrapper<ProductSku>().eq(ProductSku::getProductId, productId)
+                .orderByAsc(ProductSku::getPrice).last("limit 1"));
     }
 
     @Override
