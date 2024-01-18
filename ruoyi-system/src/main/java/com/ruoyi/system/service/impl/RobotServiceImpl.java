@@ -104,8 +104,12 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
                 robot.setVpnIp(vo.getIp());
                 if(StringUtils.isNotEmpty(vo.getIp())){
                     String[] split = vo.getIp().split(".");
-                    robot.setVpnIpB(split[0]+"."+split[1]);
-                    robot.setVpnIpC(split[0]+"."+split[1]+"."+split[2]);
+                    if(split.length > 1){
+                        robot.setVpnIpB(split[0]+"."+split[1]);
+                    }
+                    if(split.length > 2){
+                        robot.setVpnIpC(split[0]+"."+split[1]+"."+split[2]);
+                    }
                 }
                 if(simpMap.containsKey(robot.getRobotSerialNo())){
                     ExtTgBatchRobotSimpInfoData mapData = simpMap.get(robot.getRobotSerialNo());
