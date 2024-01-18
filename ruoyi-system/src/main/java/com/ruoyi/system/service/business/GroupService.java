@@ -16,6 +16,7 @@ import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.enums.InviteBotAction;
+import com.ruoyi.common.exception.GlobalException;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.bot.ApiClient;
 import com.ruoyi.system.bot.mode.input.AdMonitorDTO;
@@ -377,7 +378,7 @@ public class GroupService {
             if (CollUtil.isEmpty(botList)) {
                 return false;
             }
-            BotInfoVO bo = botList.get(RandomUtil.randomInt(0, botList.size() + 1));
+            BotInfoVO bo = botList.get(RandomUtil.randomInt(0, botList.size()));
             groupMonitorInfoService.setBotInfo(groupInfo.getGroupId(), bo);
             String botUserName = bo.getBotUsername();
 
@@ -496,7 +497,7 @@ public class GroupService {
 
         for (GroupInfo groupInfo : groupInfos) {
             GroupRobot robot = groupRobotService.getAdminRobot(groupInfo.getGroupId());
-            if (CollUtil.isEmpty(groupNames)) {
+            if (CollUtil.isNotEmpty(groupNames)) {
                 if (nameIndex >= groupNames.size()) {
                     nameIndex = 0;
                 }
@@ -611,8 +612,14 @@ public class GroupService {
                     success = false;
                     msg = apply.getMessage();
                 }
+            } catch (GlobalException e) {
+                log.info("groupAction.error={},{},{}", action.getName(), JSON.toJSONString(input), e.getMessage());
+                success = false;
+                msg = e.getMessage();
             } catch (Exception e) {
                 log.info("groupAction.error={},{}", action.getName(), JSON.toJSONString(input), e);
+                success = false;
+                msg = "未知异常";
             }
         }
         //如果失败 获取无回调 直接返回结果

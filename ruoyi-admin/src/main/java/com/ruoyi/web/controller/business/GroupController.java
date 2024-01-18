@@ -173,6 +173,7 @@ public class GroupController {
         return R.ok();
     }
 
+
     @ApiOperation(value = "更新群信息")
     @PostMapping("/syncInfo")
     public R<Void> syncInfo(@RequestBody GroupIdsDTO dto) {
@@ -189,7 +190,6 @@ public class GroupController {
         }
     }
 
-    @Anonymous
     @ApiOperation(value = "导入群资源")
     @PostMapping("/importResource")
     public R<Void> importResource(@RequestParam(value = "file") @ApiParam("群资源文件") MultipartFile file,
@@ -203,7 +203,6 @@ public class GroupController {
             return R.fail("未知异常！ trace:" + idWork);
         }
     }
-
 
     @ApiOperation(value = "批量修改群信息")
     @PostMapping("/updateInfo")
@@ -243,7 +242,8 @@ public class GroupController {
     public R<Void> invitingBotJoin(@RequestBody GroupIdsDTO dto) {
         try {
             Assert.notEmpty(dto.getGroupIds(), "群不能为空");
-            Assert.isTrue(groupService.invitingBotJoin(dto.getGroupIds()) <= 0, "无满足条件的群");
+            int count = groupService.invitingBotJoin(dto.getGroupIds());
+            Assert.isTrue(count > 0, "无满足条件的群");
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());

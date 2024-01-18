@@ -18,7 +18,7 @@ public class ApiResult<T> {
     private String msg;
 
     public final boolean isSuccess() {
-        return Objects.equals(code, 0);
+        return Objects.equals(code, 200);
     }
 
     public final void failedAndThrow() {
