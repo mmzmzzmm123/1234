@@ -768,7 +768,6 @@ public class GroupService {
      * @param groupId
      */
     public boolean setBotAdMonitor(String groupId, String playId, String adMonitor) {
-        //todo 设置bot广告规则
         AdMonitor adMonitorInfo = JSON.parseObject(adMonitor, AdMonitor.class);
         GroupMonitorInfo groupInfo = groupMonitorInfoService.getById(groupId);
 

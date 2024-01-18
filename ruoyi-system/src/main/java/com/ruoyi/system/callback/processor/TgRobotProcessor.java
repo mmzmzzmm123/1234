@@ -95,8 +95,6 @@ public class TgRobotProcessor {
         if(root.isSuccess() && !StringUtils.isEmpty(root.getRequestPara())) {
             groupService.handlerNewAdmin(JSON.parseObject(root.getRequestPara(), ThirdTgSetChatroomAdminInputDTO.class), dto);
         }
-
-        //todo 更新群内机器人状态
         if(root.isSuccess()) {
         	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
         	return ;
@@ -212,7 +210,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910018, parameterClass = Called1100910018DTO.class)
     public void called1100910018(Called1100910018DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        //todo 修改群基础信息
+        groupInfoService.updateGroupInfo(dto.getChatroomInfo());
     }
 
     /**
