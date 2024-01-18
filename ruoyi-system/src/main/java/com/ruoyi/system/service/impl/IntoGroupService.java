@@ -147,7 +147,7 @@ public class IntoGroupService {
                 log.info("获取群入参："+JSONObject.toJSONString(groupQueryDTO));
                 R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
                 log.info("获取群返回："+JSONObject.toJSONString(groupList));
-                if (groupList.getCode() != 0) {
+                if (groupList.getCode() != 200) {
                     play.setState(3);
                     play.setFailReason("无剧本所需足够的群！");
                     setLog(play.getId(), "无剧本所需足够的群数", 1, PlayLogTyper.Group_out, null);
@@ -316,7 +316,7 @@ public class IntoGroupService {
                     //从波少那边获取足够的群
                     R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
                     log.info("重试获取群信息返回:"+JSONObject.toJSONString(groupList));
-                    if (groupList.getCode() != 0) {
+                    if (groupList.getCode() != 200) {
                         play.setState(3);
                         play.setFailReason("无剧本所需足够的群！");
                         setLog(play.getId(), "无剧本所需足够的群数", 1, PlayLogTyper.Group_out, null);
@@ -442,7 +442,7 @@ public class IntoGroupService {
                         //从波少那边获取足够的群
                         R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
                         log.info("不需要修改人设的群获取返回："+JSONObject.toJSONString(groupList));
-                        if (groupList.getCode() != 0) {
+                        if (groupList.getCode() != 200) {
                             //设置错误
                             playDTO.setState(3);
                             playDTO.setFailReason("无剧本所需足够的群！");
@@ -622,7 +622,7 @@ public class IntoGroupService {
         //调用获取机器人接口
         R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
         log.info("获取机器人返回："+JSONObject.toJSONString(robotAdminVOS));
-        if (robotAdminVOS.getCode() != 0) {
+        if (robotAdminVOS.getCode() != 200) {
             return null;
         }
         return robotAdminVOS.getData();
@@ -758,7 +758,7 @@ public class IntoGroupService {
                 R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
                 log.info("入群失败重试获取号结果："+JSONObject.toJSONString(robotAdminVOS));
                 PlayIntoGroupTask playIntoGroupTask = Beans.toView(task, PlayIntoGroupTask.class);
-                if (robotAdminVOS.getCode() != 0) {
+                if (robotAdminVOS.getCode() != 200) {
                     playIntoGroupTask.setPersonId(null);
                     setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人出库失败，无可用号！", 1, PlayLogTyper.Group_into, null);
                     playIntoGroupTask.setTaskState(4);
