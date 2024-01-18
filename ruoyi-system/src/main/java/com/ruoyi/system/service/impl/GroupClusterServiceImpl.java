@@ -75,7 +75,7 @@ public class GroupClusterServiceImpl extends ServiceImpl<GroupClusterMapper, Gro
     }
 
     public void checkName(String name) {
-        Assert.isNull(baseMapper.selectCount(new LambdaQueryWrapper<GroupCluster>()
+        Assert.isFalse(baseMapper.selectCount(new LambdaQueryWrapper<GroupCluster>()
                 .eq(GroupCluster::getClusterName, name)) > 0, "分组名重复");
     }
 
