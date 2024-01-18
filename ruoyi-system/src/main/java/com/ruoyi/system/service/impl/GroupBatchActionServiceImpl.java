@@ -36,10 +36,11 @@ public class GroupBatchActionServiceImpl extends ServiceImpl<GroupBatchActionMap
     }
 
     @Override
-    public void doNextAction(String id, Integer count) {
+    public void doNextAction(String id,Integer actionProgress,  Integer count) {
         GroupBatchAction action = new GroupBatchAction();
         action.setBatchId(id);
         action.setRetryCount(count);
+        action.setActionProgress(actionProgress);
         action.setLastActionTime(LocalDateTime.now());
         baseMapper.updateById(action);
     }

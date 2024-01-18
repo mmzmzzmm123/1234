@@ -86,6 +86,16 @@ public class PlayController extends BaseController {
         if (dto.getUrlPool().isEmpty()) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "请配置接粉号池"));
         }
+        if (dto.getGroupCondition() == 0) {
+            if (dto.getUserNum() == null || dto.getUserNum() < 1) {
+                return R.fail(ErrInfoConfig.getDynmic(11000, "请配置群人数"));
+            }
+        }
+        if (dto.getGroupCondition() == 1) {
+            if (dto.getStartType() == 1) {
+                return R.fail(ErrInfoConfig.getDynmic(11000, "请配置定时开始炒群时间"));
+            }
+        }
         return R.ok();
     }
 
@@ -202,4 +212,9 @@ public class PlayController extends BaseController {
         return playService.repeatPlay(playId);
     }
 
+    @ApiOperation("修改炒群任务状态")
+    @PostMapping("state")
+    public R<Boolean> updateState(@Validated @RequestBody PlayStateDTO dto) {
+        return R.ok(playService.updateState(dto));
+    }
 }

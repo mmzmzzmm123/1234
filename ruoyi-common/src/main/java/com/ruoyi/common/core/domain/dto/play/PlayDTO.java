@@ -81,5 +81,8 @@ public class PlayDTO {
     @ApiModelProperty(value = "速度")
     private BigDecimal speed;
 
+    @ApiModelProperty(value = "商品id")
+    private Long productId;
+
     private LoginUser loginUser;
 }
