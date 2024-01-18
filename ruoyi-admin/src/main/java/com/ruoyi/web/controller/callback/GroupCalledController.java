@@ -3,7 +3,6 @@ package com.ruoyi.web.controller.callback;
 import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.callback.BotCallBackService;
-import com.ruoyi.system.service.impl.GroupCalledService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

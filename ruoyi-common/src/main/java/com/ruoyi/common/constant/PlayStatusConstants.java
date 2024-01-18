@@ -15,17 +15,17 @@ public class PlayStatusConstants {
     public static final int IN_PROGRESS = 2;
 
     /**
-     * 已暂停
+     * 暂停
      */
     public static final int SUSPEND = 3;
 
     /**
-     * 已取消
+     * 取消
      */
     public static final int CANCEL = 4;
 
     /**
-     * 已完成
+     * 完成
      */
     public static final int FINISHED = 5;
 }

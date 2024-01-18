@@ -69,4 +69,9 @@ public interface IPlayService extends IService<Play> {
      * @return
      */
     R<String> repeatPlay(String playId);
+
+    /**
+     * 修改炒群任务状态
+     */
+    Boolean updateState(PlayStateDTO dto);
 }
