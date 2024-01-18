@@ -76,4 +76,10 @@ public interface IRobotService {
      */
     RobotStatisticsVO getRobotStatisticsVO(List<String> robotIds);
 
+    void updateUsername(String robotSerialNo,String userName);
+
+    void updateHeadImgUrl(String robotSerialNo,String headImgUrl);
+
+    void updateName(String robotSerialNo,SetNameResourceVO vo);
+
 }

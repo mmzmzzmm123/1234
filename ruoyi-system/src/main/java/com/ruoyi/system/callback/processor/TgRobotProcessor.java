@@ -1,11 +1,15 @@
 package com.ruoyi.system.callback.processor;
 
+import com.alibaba.fastjson2.JSON;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
+import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import com.ruoyi.system.service.GroupInfoService;
+import com.ruoyi.system.service.IRobotService;
 import com.ruoyi.system.service.PlayMessageConfoundLogService;
 import com.ruoyi.system.service.business.GroupService;
 import com.ruoyi.system.service.impl.IntoGroupService;
@@ -34,6 +38,9 @@ public class TgRobotProcessor {
 
     @Autowired
     GroupInfoService groupInfoService;
+
+    @Autowired
+    private IRobotService robotService;
 
     /***
      *
@@ -141,6 +148,12 @@ public class TgRobotProcessor {
     public void called1100910016(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         if(root.isSuccess()) {
+            if(StringUtils.isNotEmpty(root.getExtend())){
+                try {
+                    robotService.updateHeadImgUrl(root.getRobotId(), root.getExtend());
+                    return;
+                }catch (Exception e){}
+            }
         	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
         	return ;
         }
@@ -156,6 +169,13 @@ public class TgRobotProcessor {
     public void called1100910033(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         if(root.isSuccess()) {
+            if(StringUtils.isNotEmpty(root.getExtend())){
+                try {
+                    SetNameResourceVO setNameResourceVO = JSON.parseObject(root.getExtend(), SetNameResourceVO.class);
+                    robotService.updateName(root.getRobotId(),setNameResourceVO);
+                    return;
+                }catch (Exception e){}
+            }
         	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
         	return ;
         }
@@ -170,6 +190,11 @@ public class TgRobotProcessor {
     @Type(value = 1100910009, parameterClass = CalledEmptyDTO.class)
     public void called1100910009(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()){
+            if(StringUtils.isNotEmpty(root.getExtend())){
+                robotService.updateUsername(root.getRobotId(), root.getExtend());
+            }
+        }
     }
 
     /**

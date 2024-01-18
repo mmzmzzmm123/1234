@@ -60,7 +60,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
         robotDTO.setLimit(1000);
         robotDTO.setPage(1);
-        robotDTO.setMerchantId("");
+        robotDTO.setMerchantId("1241985555798124192");
         OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
         log.info("pullApiRobotDataList robotListResult:{}",JSON.toJSONString(robotListResult));
         if(robotListResult.isSuccess()){
@@ -302,7 +302,9 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         for (int i = 0; i < dto.getRobotSerialNos().size(); i++) {
             ThirdTgModifyRobotHeadImgInputDTO inputDTO = new ThirdTgModifyRobotHeadImgInputDTO();
             inputDTO.setTgRobotId(dto.getRobotSerialNos().get(i));
-            inputDTO.setHeadimgUrl(dto.getHeadImgUrls().get(i%dto.getHeadImgUrls().size()));
+            String headImgUrl = dto.getHeadImgUrls().get(i % dto.getHeadImgUrls().size());
+            inputDTO.setHeadimgUrl(headImgUrl);
+            inputDTO.setExtend(headImgUrl);
             OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.modifyRobotHeadImgByThirdKpTg(inputDTO);
             log.info("setHeadImg inputDTO:{},vo:{}",inputDTO,vo);
         }
@@ -324,6 +326,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             inputDTO.setLastNameBase64(info.getLastName());
             inputDTO.setFirstNameBase64(info.getFirstName());
             inputDTO.setBriefIntroBase64(info.getBriefIntro());
+            inputDTO.setExtend(JSON.toJSONString(info));
             OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.modifyNameByThirdKpTg(inputDTO);
             log.info("setName inputDTO:{},vo:{}",inputDTO,vo);
         }
@@ -358,7 +361,9 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         for (int i = 0; i < dto.getRobotSerialNos().size(); i++) {
             ThirdTgModifyUserNameInputDTO inputDTO = new ThirdTgModifyUserNameInputDTO();
             inputDTO.setTgRobotId(dto.getRobotSerialNos().get(i));
-            inputDTO.setUserName(userNameList.get(i%userNameList.size()));
+            String userName = userNameList.get(i % userNameList.size());
+            inputDTO.setUserName(userName);
+            inputDTO.setExtend(userName);
             OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.modifyUserNameByThirdKpTg(inputDTO);
             log.info("setUserName inputDTO:{},vo:{}",inputDTO,vo);
         }
@@ -406,7 +411,13 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
 
     @Override
     public R<Void> removeRobot(RemoveRobotDTO dto) {
-        return null;
+        if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
+            return R.fail("号编号不能为空");
+        }
+        update(new LambdaUpdateWrapper<Robot>()
+                .in(Robot::getRobotSerialNo,dto.getRobotSerialNos())
+                .set(Robot::getDeleteStatus,1));
+        return R.ok();
     }
 
     @Override
@@ -435,5 +446,24 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             return new RobotStatisticsVO();
         }
         return robotMapper.getRobotStatisticsVO(robotIds);
+    }
+
+    @Override
+    public void updateUsername(String robotSerialNo, String userName) {
+        this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo,robotSerialNo)
+                .set(Robot::getUserName,userName));
+    }
+
+    @Override
+    public void updateHeadImgUrl(String robotSerialNo, String headImgUrl) {
+        this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo,robotSerialNo)
+                .set(Robot::getHeadImgUrl,headImgUrl));
+    }
+
+    @Override
+    public void updateName(String robotSerialNo, SetNameResourceVO vo) {
+        this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo,robotSerialNo)
+                .set(Robot::getFirstName,vo.getFirstName())
+                .set(Robot::getLastName,vo.getLastName()));
     }
 }

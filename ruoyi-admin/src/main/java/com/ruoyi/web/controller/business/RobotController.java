@@ -24,7 +24,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/robot")
 public class RobotController {
-
     @Autowired
     private IRobotService robotService;
     @ApiOperation("查询号列表")
@@ -104,7 +103,7 @@ public class RobotController {
     @ApiOperation("移除号池")
     @PostMapping("/removeRobot")
     private R<Void> removeRobot(@RequestBody RemoveRobotDTO dto){
-        return R.ok();
+        return robotService.removeRobot(dto);
     }
 
     @ApiOperation("一键释放占用水军")
