@@ -109,7 +109,7 @@ public class WebInfoServiceImpl extends ServiceImpl<WebInfoMapper,WebInfo> imple
         }
         WebInfo webInfo = webInfoMapper.selectWebInfoById(1L);
 
-        redisCache.setCacheObject(redisKey,webInfo,30,TimeUnit.DAYS);
+        redisCache.setCacheObject(redisKey,webInfo,1,TimeUnit.DAYS);
         return webInfo;
     }
 }

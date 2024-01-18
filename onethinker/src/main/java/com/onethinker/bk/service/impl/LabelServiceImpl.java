@@ -98,7 +98,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper,Label> implements 
 
     @Override
     public List<Label> getLabelInfo() {
-        String redisKey = CacheEnum.WEB_INFO + "label";
+        String redisKey = CacheEnum.WEB_INFO.getCode() + "label";
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheList(redisKey);
         }
@@ -107,7 +107,7 @@ public class LabelServiceImpl extends ServiceImpl<LabelMapper,Label> implements 
             return Lists.newArrayList();
         }
         redisCache.setCacheList(redisKey,labels);
-        redisCache.expire(redisKey,30, TimeUnit.DAYS);
+        redisCache.expire(redisKey,1, TimeUnit.DAYS);
         return labels;
     }
 }

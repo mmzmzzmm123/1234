@@ -104,7 +104,7 @@ public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISo
 
     @Override
     public List<Sort> getSortInfo() {
-        String redisKey = CacheEnum.WEB_INFO + "sort";
+        String redisKey = CacheEnum.WEB_INFO.getCode() + "sort";
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheList(redisKey);
         }
@@ -113,7 +113,7 @@ public class SortServiceImpl extends ServiceImpl<SortMapper,Sort> implements ISo
             return Lists.newArrayList();
         }
         redisCache.setCacheList(redisKey,sorts);
-        redisCache.expire(redisKey,30, TimeUnit.DAYS);
+        redisCache.expire(redisKey,1, TimeUnit.DAYS);
         return sorts;
     }
 

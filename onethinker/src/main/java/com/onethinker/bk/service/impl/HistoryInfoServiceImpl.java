@@ -114,7 +114,7 @@ public class HistoryInfoServiceImpl extends ServiceImpl<HistoryInfoMapper,Histor
 
     @Override
     public Map<String, Object> getHistoryInfo() {
-        String redisKey = CacheEnum.WEB_INFO + "history_info";
+        String redisKey = CacheEnum.WEB_INFO.getCode() + "history_info";
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheMap(redisKey);
         }
@@ -172,12 +172,12 @@ public class HistoryInfoServiceImpl extends ServiceImpl<HistoryInfoMapper,Histor
 
         result.put("province_today", list);
         redisCache.setCacheMap(redisKey,result);
-        redisCache.expire(redisKey,5,TimeUnit.MINUTES);
+        redisCache.expire(redisKey,1,TimeUnit.DAYS);
         return result;
     }
 
     private Map<String, Object> queryHistoryInfoByRedisCache() {
-        String redisKey = CacheEnum.WEB_INFO + "history_info_statistics";
+        String redisKey = CacheEnum.WEB_INFO.getCode() + "history_info_statistics";
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheMap(redisKey);
         }
@@ -186,7 +186,7 @@ public class HistoryInfoServiceImpl extends ServiceImpl<HistoryInfoMapper,Histor
         history.put(BkConstants.IP_HISTORY_IP, historyInfoMapper.getHistoryByIp());
         history.put(BkConstants.IP_HISTORY_HOUR, historyInfoMapper.getHistoryBy24Hour());
         history.put(BkConstants.IP_HISTORY_COUNT, historyInfoMapper.getHistoryCount());
-        redisCache.setCacheObject(BkConstants.IP_HISTORY_STATISTICS, history,1, TimeUnit.DAYS);
+        redisCache.setCacheObject(redisKey, history,1, TimeUnit.DAYS);
         return history;
     }
 }
