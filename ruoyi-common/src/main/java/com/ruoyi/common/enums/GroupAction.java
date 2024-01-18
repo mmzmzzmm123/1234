@@ -11,7 +11,7 @@ import lombok.Getter;
 @Getter
 public enum GroupAction {
 
-    SET_GROUP_IMAGE(0, "设置群头像", false),
+    SET_GROUP_IMAGE(0, "设置群头像", true),
 
     SET_GROUP_NAME(1, "设置群名", true),
 
