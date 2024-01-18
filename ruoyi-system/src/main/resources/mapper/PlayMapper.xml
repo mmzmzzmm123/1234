@@ -158,7 +158,7 @@
             1 = 1
           AND tpmp.play_id = #{dto.playId}
         <choose>
-            <when test="timeType != null and timeType == 2">
+            <when test="dto.timeType != null and dto.timeType == 2">
                 <if test="dto.startTime != null and dto.startTime != ''">
                     and tpmpd.send_time >= #{dto.startTime}
                 </if>
