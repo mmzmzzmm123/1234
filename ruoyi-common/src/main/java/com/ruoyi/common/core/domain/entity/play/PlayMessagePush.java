@@ -76,10 +76,6 @@ public class PlayMessagePush {
      */
     private Integer robotAllocationFlag;
 
-    /**
-     * 群混淆进度 0未执行 1成功 2失败
-     */
-    private Integer confoundFlag;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
