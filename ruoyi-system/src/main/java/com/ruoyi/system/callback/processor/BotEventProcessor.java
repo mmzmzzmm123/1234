@@ -5,6 +5,7 @@ import com.ruoyi.system.callback.BotEvent;
 import com.ruoyi.system.callback.dto.bot.BotJoinNewGroupDTO;
 import com.ruoyi.system.callback.dto.bot.JoinGroupDTO;
 import com.ruoyi.system.callback.dto.bot.LeaveGroupDTO;
+import com.ruoyi.system.callback.dto.bot.MemberQuantityDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,11 @@ public class BotEventProcessor {
 
     @BotEvent(value = BotEventEnum.BOT_JOIN_NEW_GROUP, parameterClass = BotJoinNewGroupDTO.class)
     public void botJoinNewGroup(BotJoinNewGroupDTO dto) {
+
+    }
+
+    @BotEvent(value = BotEventEnum.GROUP_MEMBER_COUNT, parameterClass = MemberQuantityDTO.class)
+    public void groupMemberCount(MemberQuantityDTO dto) {
 
     }
 }

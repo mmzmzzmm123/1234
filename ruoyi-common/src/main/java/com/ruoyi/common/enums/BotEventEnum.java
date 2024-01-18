@@ -11,6 +11,11 @@ public enum BotEventEnum {
     JOIN_GROUP,
 
     /**
+     * 收到消息
+     */
+    RECEIVE_MESSAGE,
+
+    /**
      * 成员离开群聊
      */
     LEAVE_GROUP,
@@ -24,4 +29,19 @@ public enum BotEventEnum {
      * 群聊升级
      */
     GROUP_UPGRADE,
+
+    /**
+     * 机器人消息
+     */
+    BOT_COMMAND,
+
+    /**
+     * 群人数统计
+     */
+    GROUP_MEMBER_COUNT,
+
+    /**
+     * 未知事件
+     */
+    UNKNOWN;
 }
