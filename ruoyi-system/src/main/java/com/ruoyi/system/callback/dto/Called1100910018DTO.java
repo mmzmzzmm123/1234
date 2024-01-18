@@ -3,11 +3,40 @@ package com.ruoyi.system.callback.dto;
 import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class Called1100910018DTO {
 
+    @JSONField(name = "member_list")
+    private List<Called1100910018MemberDTO> memberList;
+
     @JSONField(name = "chatroom_info")
     private Called1100910018ChatroomInfoDTO chatroomInfo;
+
+    @Data
+    public static class Called1100910018MemberDTO {
+        @JSONField(name = "is_admin")
+        private Boolean isAdmin;
+
+        @JSONField(name = "member_serial_no")
+        private String memberSerialNo;
+
+        @JSONField(name = "phone")
+        private String phone;
+
+        @JSONField(name = "user_name")
+        private String userName;
+
+        @JSONField(name = "last_name")
+        private String lastName;
+
+        @JSONField(name = "invite_serial_no")
+        private String inviteSerialNo;
+
+        @JSONField(name = "first_name")
+        private String firstName;
+    }
 
     @Data
     public static class Called1100910018ChatroomInfoDTO {

@@ -125,4 +125,4 @@ swagger:
   pathMapping: /
 
 bot:
-  api-url: http://172.29.18.208:28088
+  api-url: https://bot.linkmaster.cc
