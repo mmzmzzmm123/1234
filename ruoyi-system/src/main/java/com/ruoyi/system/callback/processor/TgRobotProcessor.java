@@ -331,7 +331,7 @@ public class TgRobotProcessor {
 
 
     /**
-     * TG 设置隐私手机号码谁可见接口
+     * TG 修改群名称回调
      *
      * @param dto
      */
