@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.components.RedisTemplateTools;
 import com.ruoyi.system.components.movie.spi.RobotSpeakAllocator;
 
 import lombok.extern.slf4j.Slf4j;
@@ -20,22 +21,19 @@ public class PreRobotSpeakAllocator implements RobotSpeakAllocator {
 	@Slf4j
 	public static class Cache {
 
-		@SuppressWarnings("unchecked")
 		public static void set(String playId, String groupId, String nickName, String robotId) {
-
-			SpringUtils.getBean(RedisTemplate.class).opsForHash().put(
+			// SpringUtils.getBean(RedisTemplate.class)
+			RedisTemplateTools.get().opsForHash().put(
 					"ruoyiadmin:firegroup:DefaultRobotSpeakAllocator:" + playId + ":" + groupId, nickName, robotId);
 
-			SpringUtils.getBean(RedisTemplate.class).expire(
-					"ruoyiadmin:firegroup:DefaultRobotSpeakAllocator:" + playId + ":" + groupId, 60 * 60 * 24 * 5,
-					TimeUnit.SECONDS);
+			RedisTemplateTools.get().expire("ruoyiadmin:firegroup:DefaultRobotSpeakAllocator:" + playId + ":" + groupId,
+					60 * 60 * 24 * 5, TimeUnit.SECONDS);
 
 			log.info("DefaultRobotSpeakAllocator_cache {} {} {} {}", playId, groupId, nickName, robotId);
 		}
 
-		@SuppressWarnings("unchecked")
 		public static String get(String playId, String groupId, String nickName) {
-			return (String) SpringUtils.getBean(RedisTemplate.class).opsForHash()
+			return (String) RedisTemplateTools.get().opsForHash()
 					.get("ruoyiadmin:firegroup:DefaultRobotSpeakAllocator:" + playId + ":" + groupId, nickName);
 		}
 

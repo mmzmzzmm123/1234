@@ -63,26 +63,22 @@ public interface PlayExecutionLogService {
 		if (isSync && !StringUtils.isEmpty(errMsg)) {
 			// 同步请求 && 失败
 			log.setContent(String.format("【发言人包装-%s】 群%s 号%s 同步请求失败，原因：%s", funcAlias, groupId, robotId, errMsg));
-			return;
 		}
 
 		if (isSync && StringUtils.isEmpty(errMsg)) {
 			// 同步请求 & 成功
 			log.setContent(String.format("【发言人包装-%s】 群%s 号%s 请求成功，操作码：%s", funcAlias, groupId, robotId, opt));
-			return;
 		}
 
 		if (!isSync && !StringUtils.isEmpty(errMsg)) {
 			// 回调请求 && 失败
 			log.setContent(
 					String.format("【发言人包装-%s】 群%s 号%s 回调失败，操作码： %s，原因：%s", funcAlias, groupId, robotId, opt, errMsg));
-			return;
 		}
 
 		if (!isSync && StringUtils.isEmpty(errMsg)) {
 			// 回调请求 && 成功
 			log.setContent(String.format("【发言人包装-%s】 群%s 号%s 回调成功，操作码： %s", funcAlias, groupId, robotId, opt));
-			return;
 		}
 		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
 	}

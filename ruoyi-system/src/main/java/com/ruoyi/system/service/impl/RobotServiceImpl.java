@@ -367,7 +367,17 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
 
     @Override
     public R<Void> setPrivatePhone(SetPrivatePhoneDTO dto) {
-        return null;
+        if(CollectionUtils.isEmpty(dto.getRobotSerialNos())){
+            return R.fail("号编号不能为空");
+        }
+        for (String robotSerialNo : dto.getRobotSerialNos()) {
+            ThirdTgSetPhoneVisibilityInputDTO inputDTO = new ThirdTgSetPhoneVisibilityInputDTO();
+            inputDTO.setTgRobotId(robotSerialNo);
+            inputDTO.setType(dto.getType());
+            OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.setPhoneVisibilityByThirdKpTg(inputDTO);
+            log.info("setPrivatePhone inputDTO:{},vo:{}",inputDTO,vo);
+        }
+        return R.ok();
     }
 
     @Override

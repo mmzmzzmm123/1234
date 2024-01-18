@@ -3,6 +3,7 @@ package com.ruoyi.web.controller.business;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
@@ -10,11 +11,11 @@ import com.ruoyi.system.service.IRobotService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,14 @@ public class RobotController {
     @PostMapping("/selectRobotPageList")
     public R<Page<SelectRobotListVO>> selectRobotPageList(@RequestBody SelectRobotListDTO dto){
         return robotService.selectRobotPageList(dto);
+    }
+
+    @ApiOperation(value = "导出号列表")
+    @PostMapping("/export")
+    public R<Page<SelectRobotListVO>> export(@RequestBody SelectRobotListDTO dto, HttpServletResponse response){
+        ExcelUtil<SelectRobotListVO> excelUtil = new ExcelUtil<>(SelectRobotListVO.class);
+        excelUtil.exportExcel(response,robotService.selectRobotPageList(dto).getData().getRecords(),"号列表");
+        return R.ok();
     }
 
     @ApiOperation("同步账号")
@@ -83,8 +92,7 @@ public class RobotController {
     @ApiOperation("修改禁用启用状态")
     @PostMapping("/updateEnableType")
     public R<Void> updateEnableType(@RequestBody UpdateEnableTypeDTO dto){
-        robotService.updateEnableType(dto);
-        return R.ok();
+        return robotService.updateEnableType(dto);
     }
 
     @ApiOperation("一键清除封号数据")

@@ -44,7 +44,7 @@ public class PlayPrepareTaskExecuteChain implements OnPackMonitor, OnRadioPackMo
 	}
 
 	public void doExecute(ExecutionParamContext context) {
-		if (!chain.isEmpty()) {
+		if (chain.isEmpty()) {
 			return;
 		}
 		final TaskExecution execution = chain.removeFirst();

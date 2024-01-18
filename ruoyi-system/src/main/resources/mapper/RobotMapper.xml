@@ -5,6 +5,7 @@
 <mapper namespace="com.ruoyi.system.mapper.RobotMapper">
     <select id="selectRobotPageList" resultType="com.ruoyi.system.domain.vo.robot.SelectRobotListVO">
         select tri.*,
+               concat(tri.first_name,' ',tri.last_name) as name,
                trs.one_day_join_group_count as groupToDayNum,
                trs.total_join_group_count as groupTotalNum,
                trs.is_lock as occupyType

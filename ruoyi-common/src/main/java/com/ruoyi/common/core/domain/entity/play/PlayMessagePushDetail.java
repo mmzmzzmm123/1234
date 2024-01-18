@@ -49,11 +49,6 @@ public class PlayMessagePushDetail implements Serializable {
     private String robotAcct;
 
     /**
-     * 账号来源:1.水军 2.个人号
-     */
-    private Integer accSource;
-
-    /**
      * 是否需要@所有人  0-不需要  1-需要
      */
     private Integer callAll;

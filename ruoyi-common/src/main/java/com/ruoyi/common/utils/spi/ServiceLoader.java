@@ -15,6 +15,9 @@ public class ServiceLoader {
 
 	private static final Map<Class<?>, Object> implInstanceCache = new ConcurrentHashMap<>();
 
+	private static final Map<String, Object> aliasInstanceCache = new ConcurrentHashMap<>();
+
+	
 	static {
 		try {
 			implSet = PackageScans.findPackageClass("com.ruoyi", SPI.class);
@@ -50,11 +53,19 @@ public class ServiceLoader {
 
 	@SuppressWarnings("unchecked")
 	private static synchronized <T> T findSPIImpl(Class<T> interfaceClass, String alias) {
-		T impl = (T) implInstanceCache.get(interfaceClass);
-
-		if (impl != null) {
-			return impl;
+		if(StringUtils.isEmpty(alias)) {
+			T impl = (T) implInstanceCache.get(interfaceClass);
+			if (impl != null) {
+				return impl;
+			}
+		}else {
+			T impl = (T) aliasInstanceCache.get(alias);
+			if (impl != null) {
+				return impl;
+			}
+			
 		}
+	
 		Class<?> implClass = null;
 		for (Class<?> cls : implSet) {
 			if (interfaceClass.isAssignableFrom(cls)) {
@@ -73,7 +84,12 @@ public class ServiceLoader {
 		}
 		// 初始化
 		T obj = (T) Classes.newInstance(implClass);
-		implInstanceCache.put(interfaceClass, obj);
+		if(StringUtils.isEmpty(alias)) {
+			implInstanceCache.put(interfaceClass, obj);
+		}
+		if(!StringUtils.isEmpty(alias)) {
+			aliasInstanceCache.put(alias, obj);
+		}
 		return obj;
 	}
 
