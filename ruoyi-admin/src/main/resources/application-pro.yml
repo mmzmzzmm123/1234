@@ -117,6 +117,12 @@ ut-touch:
   merchant-password: bilin2Ph123
   touch-merchant-id: 1735486322619314176
 
+openapi:
+  openApiKey: U89dduMpQ2bdUDwQe6Q7uYD1Qmar7t1k
+  openApiSecret: ZVULlqavc8uVYeDEOwvPMXlT2QdrxfY7
+  openApiHost: https://gateway.bilinl.com
+
+
 # Swagger配置
 swagger:
   # 是否开启swagger
