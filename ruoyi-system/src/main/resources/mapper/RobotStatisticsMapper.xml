@@ -17,7 +17,9 @@
         </if>
         from t_robot_info tri
             left join t_robot_statistics trs on tri.robot_serial_no = trs.robot_serial_no
-        where 1=1
+        where tri.enable_type = 1
+          and tri.delete_status = 0
+          and trs.is_lock = 0
         <if test="dto.countryCode != null and dto.countryCode.size > 0">
             and tri.country_code in
               <foreach collection="dto.countryCode" item="item" separator="," open="(" close=")">
@@ -51,6 +53,7 @@
         </if>
         limit 1,#{dto.limit}
     </select>
+
     <update id="addCount">
         update t_robot_statistics
         set
