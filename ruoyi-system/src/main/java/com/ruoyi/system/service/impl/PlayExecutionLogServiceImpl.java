@@ -1,6 +1,8 @@
 package com.ruoyi.system.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.system.domain.dto.play.QueryExecutionLogDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.service.PlayExecutionLogService;
 import org.apache.commons.lang3.StringUtils;
@@ -36,6 +38,26 @@ public class PlayExecutionLogServiceImpl implements PlayExecutionLogService {
         query.addCriteria(Criteria.where("playId").is(playId));
         query.with(Sort.by(new Sort.Order(Sort.Direction.DESC, "createTime")));
         return mongoTemplate.find(query, PlayExecutionLog.class);
+    }
+
+    @Override
+    public Page<PlayExecutionLog> logPage(QueryExecutionLogDTO dto) {
+        Page<PlayExecutionLog> page = new Page<>(dto.getPage(),dto.getLimit());
+        if (StringUtils.isEmpty(dto.getPlayId())) {
+            return page;
+        }
+        Query query = new Query();
+        query.addCriteria(Criteria.where("playId").is(dto.getPlayId()));
+        long total = mongoTemplate.count(query, PlayExecutionLog.class);
+        page.setTotal(total);
+        if (total <= 0) {
+            return page;
+        }
+        query.skip((dto.getPage() - 1) * dto.getLimit());
+        query.limit(dto.getLimit());
+        query.with(Sort.by(new Sort.Order(Sort.Direction.DESC, "createTime")));
+        page.setRecords(mongoTemplate.find(query, PlayExecutionLog.class));
+        return page;
     }
 
     @Override

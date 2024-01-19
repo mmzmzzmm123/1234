@@ -130,6 +130,22 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
 
         }
         this.storyRobot(robotList);
+
+        // 号订阅
+        subscribeRobot(robotSerialNos);
+    }
+
+    private void subscribeRobot(List<String> robotSerialNos) {
+        if (!CollectionUtils.isEmpty(robotSerialNos)) {
+            try {
+                ThirdTelegramPersonalCallbackRegInputDTO dto = new ThirdTelegramPersonalCallbackRegInputDTO();
+                dto.setSubTypeList(Collections.singletonList(1100910101));
+                dto.setTelegramIdList(robotSerialNos);
+                OpenApiClient.personalOnByThirdTg(dto);
+            } catch (Exception e) {
+                log.error("号订阅失败", e);
+            }
+        }
     }
 
     private void storyRobot(List<Robot> newRobotList){

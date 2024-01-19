@@ -486,6 +486,7 @@ public class IntoGroupService {
                             playDTO.setState(4);
                             playDTO.setFailReason("无剧本所需足够的机器人！");
                             setLog(playDTO.getId(), "群" + groupInfoVO.getGroupName() + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
+                            playMapper.updateById(playDTO);
                             continue;
                         }
                         setLog(playDTO.getId(), "群" + groupInfoVO.getGroupName() + "机器人出库成功！", 0, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
@@ -543,18 +544,19 @@ public class IntoGroupService {
                         //拆分机器人列表
                         List<GetRobotVO> adminList = new ArrayList<>();
                         List<GetRobotVO> robotList = new ArrayList<>();
+                        if (robotVOS == null) {
+                            playDTO.setState(4);
+                            playDTO.setFailReason("无剧本所需足够的机器人！");
+                            setLog(playDTO.getId(), "群" + group + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, null);
+                            playMapper.updateById(playDTO);
+                            continue;
+                        }
                         for (GetRobotVO getRobotVO : robotVOS) {
                             if (getRobotVO.getIsSetAdmin() == 1) {
                                 adminList.add(getRobotVO);
                             } else {
                                 robotList.add(getRobotVO);
                             }
-                        }
-                        if (robotVOS == null) {
-                            playDTO.setState(4);
-                            playDTO.setFailReason("无剧本所需足够的机器人！");
-                            setLog(playDTO.getId(), "群" + group + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, null);
-                            continue;
                         }
                         PlayExt playExt = JSONObject.parseObject(playDTO.getPlayExt(), PlayExt.class);
                         Integer i= 1;
