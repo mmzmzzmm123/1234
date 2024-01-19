@@ -37,7 +37,7 @@ public class SendConditionJobProcessor implements LogJobProcessor {
 			return;
 		}
 		
-		log.info("SendConditionJobProcessor {}" , play);
+		log.info("SendConditionJobProcessor {} {}" , play , groups.size());
 
 
 		if (play.getGroupCondition().intValue() == 0) {
