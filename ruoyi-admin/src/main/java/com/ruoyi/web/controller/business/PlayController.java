@@ -8,6 +8,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
+import com.ruoyi.common.core.domain.dto.play.PlayMessageDTO;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
@@ -23,6 +24,7 @@ import com.ruoyi.system.service.PlayMessageConfoundLogService;
 import com.ruoyi.system.service.PlayMessagePushService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +37,7 @@ import java.util.stream.Collectors;
  * @Author : zengyi
  */
 @Api(tags = "炒群任务")
+@Slf4j
 @RestController
 @RequestMapping("/play")
 public class PlayController extends BaseController {
@@ -60,7 +63,30 @@ public class PlayController extends BaseController {
         if (checkPlayParamsRet.getCode() != HttpStatus.SUCCESS) {
             return checkPlayParamsRet;
         }
-        return playService.create(dto);
+
+        R<String> checkPlayMessageListRet = checkPlayMessageList(dto.getPlayMessageList());
+        if (checkPlayMessageListRet.getCode() != HttpStatus.SUCCESS) {
+            return checkPlayMessageListRet;
+        }
+
+        try {
+            return playService.create(dto);
+        } catch (Exception e) {
+            log.error("play_create_err:{}", e.getMessage());
+        }
+        return R.fail();
+    }
+
+    private R<String> checkPlayMessageList(List<PlayMessageDTO> playMessageDTOList) {
+        if (null == playMessageDTOList || playMessageDTOList.isEmpty()) {
+            return R.fail(ErrInfoConfig.getDynmic(11016));
+        }
+        for (PlayMessageDTO playMessageDTO : playMessageDTOList) {
+            if (StringUtils.isEmpty(playMessageDTO.getRobotNickname())) {
+                return R.fail(ErrInfoConfig.getDynmic(11017));
+            }
+        }
+        return R.ok();
     }
 
     private R<String> checkAddPlayParams(PlayDTO dto) {
@@ -83,7 +109,7 @@ public class PlayController extends BaseController {
             if (null == dto.getGroupUrls()) {
                 return R.fail(ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
             }
-            dto.setGroupUrls(handleUrlList( dto.getGroupUrls()));
+            dto.setGroupUrls(handleUrlList(dto.getGroupUrls()));
             if (dto.getGroupUrls().isEmpty()) {
                 return R.fail(ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
             }
@@ -130,6 +156,10 @@ public class PlayController extends BaseController {
         dto.setUrlPool(handleUrlList(dto.getUrlPool()));
         if (dto.getUrlPool().isEmpty()) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "请配置接粉号池"));
+        }
+        R<String> checkPlayMessageListRet = checkPlayMessageList(dto.getPlayMessageList());
+        if (checkPlayMessageListRet.getCode() != HttpStatus.SUCCESS) {
+            return checkPlayMessageListRet;
         }
         return playService.updatePlay(dto);
     }

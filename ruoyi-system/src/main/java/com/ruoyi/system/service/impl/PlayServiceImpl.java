@@ -88,26 +88,28 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Transactional(rollbackFor=Exception.class)
     public R<String> create(PlayDTO dto) {
         //设置订单数据
+        Product product;
         Long productId = dto.getProductId();
         if (null == productId || productId < 0) {
-            Product product = SpringUtils.getBean(ProductMapper.class).selectOne(new LambdaQueryWrapper<Product>().select(Product::getProductId)
-                    .eq(Product::getCategoryId, ProductCategoryType.PLAY.getId())
-                    .last(" limit 1 "));
-            if (null == product) {
-                return R.fail(ErrInfoConfig.getDynmic(11001, "未获取到商品信息"));
+            R<Product> productRet = ProductTools.getOneProductByCategory(ProductCategoryType.PLAY.getId());
+            if (productRet.getCode() != SUCCESS) {
+                return R.fail(productRet.getCode(), productRet.getMsg());
             }
-            productId = product.getProductId();
+            product = productRet.getData();
+        } else {
+            AjaxResult result = ProductTools.checkNormal(productId);
+            if (result.isError()) {
+                return R.fail(result.msg().toString());
+            }
+            product = (Product) result.data();
+            if (product.getCategoryId() != ProductCategoryType.PLAY.getId()) {
+                return R.fail(ErrInfoConfig.getDynmic(11001, "商品分类不符合"));
+            }
         }
-        AjaxResult result = ProductTools.checkNormal(productId);
-        if (result.isError()) {
-            return R.fail(ErrInfoConfig.getDynmic(11001, "未获取到商品信息"));
-        }
-        handleOrder(productId, (Product) result.data(), dto.getName(), dto.getLoginUser());
-
-        //todo 混淆处理?
+        handleOrder(product, dto.getName(), dto.getLoginUser());
 
         String playId = IdWorker.getIdStr();
-        savePlay(dto, playId, productId);
+        savePlay(dto, playId, product.getProductId());
 
         //外部群不能设置群包装
         if (dto.getGroupSource() == 0) {
@@ -126,19 +128,18 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     //创建订单记录
-    private void handleOrder(Long productId, Product product, String name, LoginUser loginUser) {
+    private void handleOrder(Product product, String name, LoginUser loginUser) {
         long price = 0;
         Set<String> groupSet = new HashSet<>();
 
         List<ProductSku> skuList = new ArrayList<>();
-        ProductSku productSku = SpringUtils.getBean(ProductServiceImpl.class).getOneSkuByProductId(productId);
+        ProductSku productSku = SpringUtils.getBean(ProductServiceImpl.class).getOneSkuByProductId(product.getProductId());
         skuList.add(productSku);
 
         OrderProduceRequest request = new OrderProduceRequest();
         request.setTaskName(name);
-        request.setProductId(productId);
-        OrderProduceRequest.Params params = new OrderProduceRequest.Params();
-        request.setParams(params);
+        request.setProductId(product.getProductId());
+        request.setParams(new OrderProduceRequest.Params());
         request.setLoginUser(loginUser);
 
         SpringUtils.getBean(OrderServiceImpl.class).orderStorage(request, product, skuList, groupSet, price, 2);
@@ -181,14 +182,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             }
             playMessage.setMessageContent(JSON.toJSONString(messageDTO.getMessageContent()));
             playMessage.setPlayErrorType(sendMechanism.getSendErrorType());
-
-            //todo 自定义消息类型处理
-//            for (ContentJson contentJson : messageDTO.getMessageContent()) {
-//                if (contentJson.getMomentTypeId() == 2018) {
-//                    contentJson.setSMateContent("");
-//                }
-//            }
-
             saveData.add(playMessage);
         }
 
@@ -248,9 +241,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         }
         if (dto.getStartType() == 0) {
             play.setStartGroupDate(new Date());
-        }
-        if (dto.getStartType() == 1) {
-            play.setStartGroupDate(dto.getStartGroupDate());
         }
         play.setLockRobotStatus(dto.getPlayExt().getLockState());
         super.save(play);
@@ -374,6 +364,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         //调用接口同步广告配置
         List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(playId);
+        log.info("play_updateAdInfo_groupIds:{}", playGroupInfos.stream().map(PlayGroupInfo::getGroupId).collect(Collectors.joining()));
         if (playGroupInfos.isEmpty()) {
             return R.ok();
         }
@@ -545,11 +536,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         Play play = super.getById(playId);
         if (null == play) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
+            return R.fail(ErrInfoConfig.getDynmic(11000, "炒群任务不存在"));
         }
 
-        PlayExt playExt = play.convertPlayExtStr();
-        if (null == playExt || playExt.getLockState() != 1) {
+        if (null == play.getLockRobotStatus() || play.getLockRobotStatus() != 1) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "该剧本未配置锁定水军"));
         }
 
@@ -569,6 +559,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         String newPlayId = ret.getData();
 
         List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(play.getId());
+        log.info("play_updateAdInfo_groupIds:{}", playGroupInfos.stream().map(PlayGroupInfo::getGroupId).collect(Collectors.joining()));
         if (playGroupInfos.isEmpty()) {
             return R.ok();
         }
@@ -651,7 +642,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 SpringUtils.getBean(PlayMessagePushService.class).update(null, new UpdateWrapper<PlayMessagePush>().lambda()
                         .eq(PlayMessagePush::getPlayId, id)
                         .in(PlayMessagePush::getPushState, Collections.singletonList(PushStateEnum.USER_STOP.getKey()))
-                        .set(PlayMessagePush::getPushState, PushStateEnum.USER_STOP.getKey()));
+                        .set(PlayMessagePush::getPushState, PushStateEnum.ING.getKey()));
             }
         }
     }
