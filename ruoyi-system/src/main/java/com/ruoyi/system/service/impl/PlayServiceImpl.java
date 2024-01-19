@@ -430,6 +430,13 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 vo.setSendSuccessNum(messageVO.getSendSuccessNum());
                 vo.setSendFailNum(messageVO.getSendFailNum());
             }
+            if (vo.getScanProgress() >= 4) {
+                vo.setGroupCurrentNum(vo.getGroupTotalNum());
+            }
+            if (vo.getScanProgress() >= 6) {
+                vo.setPackCurrentNum(vo.getPackTotalNum());
+            }
+
             vo.setTotalProgress(this.calculate(vo.getTotalNum(), vo.getCurrentNum()));
             vo.setGroupProgress(this.calculate(vo.getGroupTotalNum(), vo.getGroupCurrentNum()));
             vo.setPackProgress(this.calculate(vo.getPackTotalNum(), vo.getPackCurrentNum()));
