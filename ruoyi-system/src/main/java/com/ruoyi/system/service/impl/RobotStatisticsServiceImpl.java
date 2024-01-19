@@ -64,6 +64,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             selectRobotByRuleDTO.setSetAdminCount(dto.getSetAdminCount());
             selectRobotByRuleDTO.setIpType(dto.getIpType());
             selectRobotByRuleVOS = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
+            log.info("getRobot selectRobotByRuleVOS:{}",selectRobotByRuleVOS);
             if(CollectionUtils.isEmpty(selectRobotByRuleVOS)){
                 return R.fail("号资源不足");
             }
@@ -91,6 +92,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             selectRobotByRuleDTO.setIsSetAdmin(0);
             selectRobotByRuleDTO.setLimit(dto.getCount());
             selectRobotByRuleVOS1 = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
+            log.info("getRobot selectRobotByRuleVOS1:{}",selectRobotByRuleVOS1);
             if(CollectionUtils.isEmpty(selectRobotByRuleVOS1) || selectRobotByRuleVOS1.size() < dto.getCount()){
                 return R.fail("号资源不足");
             }
