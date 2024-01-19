@@ -32,6 +32,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -163,6 +164,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
                     .collect(Collectors.joining(joiningRegex));
             confoundLog.setResultContent(resultContent);
         }
+        confoundLog.setModifyTime(new Date());
         super.updateById(confoundLog);
 
     }
@@ -200,6 +202,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
                     .collect(Collectors.joining(joiningRegex));
             confoundLog.setResultContent(resultContent);
         }
+        confoundLog.setModifyTime(new Date());
         super.updateById(confoundLog);
     }
 
@@ -334,6 +337,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             confoundLog.setFailMessage("未支持的混淆类型");
         }
         confoundLog.setExecuteNum(confoundLog.getExecuteNum() + 1);
+        confoundLog.setModifyTime(new Date());
         super.updateById(confoundLog);
     }
 
@@ -360,7 +364,13 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         if (CollectionUtils.isEmpty(dto.getIds())) {
             return;
         }
-        List<PlayMessageConfoundLog> confoundLogs = super.listByIds(dto.getIds());
+//        List<PlayMessageConfoundLog> confoundLogs = super.listByIds(dto.getIds());
+        LambdaQueryWrapper<PlayMessageConfoundLog> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.in(PlayMessageConfoundLog::getId,dto.getIds());
+        // 不是成功的日志 才能重试
+        lambdaQueryWrapper.ne(PlayMessageConfoundLog::getState, 1);
+        List<PlayMessageConfoundLog> confoundLogs = super.list(lambdaQueryWrapper);
+        Assert.isTrue(CollectionUtils.isNotEmpty(confoundLogs), "未找到可重试混淆记录");
         Map<Integer, PlayMessageConfound> confoundMap = new HashMap<>();
         for (PlayMessageConfoundLog confoundLog : confoundLogs) {
             PlayMessageConfound confound = confoundMap.get(confoundLog.getMessageConfoundId());
