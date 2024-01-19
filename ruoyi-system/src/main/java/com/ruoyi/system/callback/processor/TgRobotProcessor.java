@@ -50,7 +50,7 @@ public class TgRobotProcessor {
 
     /***
      *
-     * TG号回收
+     * TG(被动)号回收
      */
     @Type(value = 50005004, parameterClass = Called50005004DTO.class)
     public void called50005004(Called50005004DTO source) {
@@ -59,7 +59,7 @@ public class TgRobotProcessor {
 
     /***
      *
-     * TG号变更商家
+     * TG(被动)号变更商家
      */
     @Type(value = 50005005, parameterClass = Called50005005DTO.class)
     public void called50005005(List<Called50005005DTO> sourceList) {
@@ -68,7 +68,7 @@ public class TgRobotProcessor {
 
     /***
      *
-     * TG号资料信息变更
+     * TG(被动)号资料信息变更
      */
     @Type(value = 50005006, parameterClass = Called50005006DTO.class)
     public void called50005006(List<Called50005006DTO> sourceList) {
@@ -100,13 +100,13 @@ public class TgRobotProcessor {
         if(root.isSuccess() && !StringUtils.isEmpty(root.getRequestPara())) {
             groupService.handlerNewAdmin(JSON.parseObject(root.getRequestPara(), ThirdTgSetChatroomAdminInputDTO.class), dto);
         }
+        //处理请求结果
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
         if(root.isSuccess()) {
         	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
         	return ;
         }
     	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
-        //处理请求结果
-        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
     }
 
     /**
@@ -298,9 +298,8 @@ public class TgRobotProcessor {
         if(CollUtil.isEmpty(dto)){
             root.setResultCode(1);
         }
-
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(),
-                root.isSuccess() ? dto.get(0).getAccessHash() : null);
+                root.isSuccess() ? dto : null);
 
         if(root.isSuccess()) {
         	if(!CollectionUtils.isEmpty(dto)) {
@@ -314,7 +313,7 @@ public class TgRobotProcessor {
     }
 
     /**
-     * TG 群编号变动回调
+     * TG（被动） 群编号变动回调
      *
      * @param dto
      */
