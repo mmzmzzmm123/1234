@@ -88,7 +88,9 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         //如果有需要设置管理员号的,需要再次获取其他号
         if(dto.getCount() > 0){
             List<String> ips = selectRobotByRuleVOS.stream().filter(f->StringUtils.isNotEmpty(f.getIp())).map(SelectRobotByRuleVO::getIp).collect(Collectors.toList());
-            selectRobotByRuleDTO.setIps(ips);
+            if(CollectionUtils.isEmpty(ips)){
+                selectRobotByRuleDTO.setIps(ips);
+            }
             selectRobotByRuleDTO.setIsSetAdmin(0);
             selectRobotByRuleDTO.setLimit(dto.getCount());
             selectRobotByRuleVOS1 = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
