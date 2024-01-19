@@ -846,13 +846,13 @@ public class GroupService {
             }
             dto.setGroupIds(Collections.singletonList(groupInfo.getOriginalGroupId()));
             dto.setKeywords(adMonitorInfo.getKeywordRule());
-            dto.setMonitorFrequency(adMonitorInfo.getSpammingTime());
+            dto.setMonitorFrequency(adMonitorInfo.getSpammingNum());
             if (StrUtil.isNotBlank(adMonitorInfo.getTypes())) {
                 dto.setMonitorTarget(Arrays.stream(adMonitorInfo.getTypes().split(",")).filter(
                                 p -> Arrays.asList("1", "2", "3").contains(p))
                         .map(p -> p.equals("3") ? 4 : p.equals("2") ? 2 : 1).collect(Collectors.toList()));
             }
-            dto.setMonitorTime(adMonitorInfo.getSpammingNum());
+            dto.setMonitorTime(adMonitorInfo.getSpammingTime());
             dto.setRestrictMember(adMonitorInfo.getIsTabooMemberMsg());
             dto.setDeleteOtherStatement(adMonitorInfo.getIsDelMemberMsg());
             dto.setTimeUnit(ObjectUtil.equal(adMonitorInfo.getSpammingTimeUnit(), 2) ? "MINUTES" : "SECONDS");
