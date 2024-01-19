@@ -28,6 +28,12 @@ public class QueryPushDetailVO {
     private String robotImgUrl;
     @ApiModelProperty("机器人账号")
     private String robotAcct;
+
+    @ApiModelProperty("是否是bot 0-否 1-是")
+    private Integer botType;
+    @ApiModelProperty("成员身份 0普通 1群主 2管理员")
+    private Integer memberType;
+
     @ApiModelProperty("消息主体")
     private String messageContent;
     @ApiModelProperty("发言顺序")
