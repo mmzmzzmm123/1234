@@ -709,31 +709,22 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     /**
-     * 暂停单个剧本
+     * 暂停单个群
      * @param playId
      * @param groupId
      */
-    @Transactional(rollbackFor = Exception.class)
     public void stopPlayByGroupId(String playId, String groupId) {
         log.info("stopPlayByGroupId_playId:{},_groupId:{}", playId, groupId);
         if (StringUtils.isNotEmpty(playId) || StringUtils.isEmpty(groupId)) {
             return;
         }
 
-        boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
-                .eq(Play::getId, playId).eq(Play::getState, PlayStatusConstants.IN_PROGRESS)
-                .set(Play::getState, PlayStatusConstants.SUSPEND));
-        if (setPlayFlag) {
-            PlayMessagePush playMessagePush = playMessagePushService.getOneByPlayIdAndGroupId(playId, groupId);
-            if (null == playMessagePush || !playMessagePush.getPushState().equals(PushStateEnum.ING.getKey())) {
-                return;
-            }
-
-            playMessagePush.setPushState(PushStateEnum.USER_STOP.getKey());
-            boolean setPlayMessage = playMessagePushService.updateById(playMessagePush);
-            if (setPlayMessage) {
-                PlayDirector.tgInstance().pause(playId, groupId);
-            }
+        boolean setPlayMessage = playMessagePushService.update(null, new UpdateWrapper<PlayMessagePush>().lambda()
+                .eq(PlayMessagePush::getPlayId, playId)
+                .eq(PlayMessagePush::getGroupId, groupId)
+                .set(PlayMessagePush::getPushState, PushStateEnum.USER_STOP.getKey()));
+        if (setPlayMessage) {
+            PlayDirector.tgInstance().pause(playId, groupId);
         }
     }
 
