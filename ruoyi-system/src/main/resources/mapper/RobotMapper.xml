@@ -13,10 +13,30 @@
         where tri.delete_status = 0
           and tri.recycle_status = 0
         <if test="dto.startTime != null and dto.startTime != ''">
-            and tri.create_time >= #{dto.startTime}
+            and
+            <if test="dto.timeType == 1">
+                tri.create_time
+            </if>
+            <if test="dto.timeType == 2">
+                tri.seal_time
+            </if>
+            <if test="dto.timeType == 3">
+                tri.bidirectional_time
+            </if>
+             >= #{dto.startTime}
         </if>
         <if test="dto.endTime != null and dto.endTime != ''">
-            and tri.create_time &lt; #{dto.endTime}
+            and
+            <if test="dto.timeType == 1">
+                tri.create_time
+            </if>
+            <if test="dto.timeType == 2">
+                tri.seal_time
+            </if>
+            <if test="dto.timeType == 3">
+                tri.bidirectional_time
+            </if>
+            &lt; #{dto.endTime}
         </if>
         <if test="dto.type != null">
             and tri.type = #{dto.type}

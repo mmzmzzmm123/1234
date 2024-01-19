@@ -421,6 +421,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             ThirdTgSetPhoneVisibilityInputDTO inputDTO = new ThirdTgSetPhoneVisibilityInputDTO();
             inputDTO.setTgRobotId(robotSerialNo);
             inputDTO.setType(dto.getType());
+            inputDTO.setAccountPrivacy(dto.getAccountPrivacy());
             OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.setPhoneVisibilityByThirdKpTg(inputDTO);
             log.info("setPrivatePhone inputDTO:{},vo:{}",inputDTO,vo);
         }
