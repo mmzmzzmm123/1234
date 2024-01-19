@@ -285,7 +285,7 @@ public class GroupService {
     public void handleActionResult(String id, String optNo, boolean success, String msg, Object data) {
         if (StrUtil.isBlank(id)) {
             id = redisCache.getCacheObject("ruoyi-admin:action:" + optNo);
-            log.info("getActionId={},{}",optNo,id);
+            log.info("getActionId={},{}", optNo, id);
         }
         if (StrUtil.isBlank(id)) {
             return;
@@ -834,29 +834,38 @@ public class GroupService {
      * @param groupId
      */
     public boolean setBotAdMonitor(String groupId, String playId, String adMonitor) {
-        AdMonitor adMonitorInfo = JSON.parseObject(adMonitor, AdMonitor.class);
-        GroupMonitorInfo groupInfo = groupMonitorInfoService.getById(groupId);
-
-        AdMonitorDTO dto = new AdMonitorDTO();
-        dto.setConfigId(playId);
-        dto.setDealFunction(Arrays.stream(adMonitorInfo.getDisposalType().split(",")).filter(
-                        p -> Arrays.asList("1", "2").contains(p))
-                .map(p -> p.equals("1") ? "RESTRICT" : "KICK_OUT").collect(Collectors.toList()));
-        dto.setGroupIds(Collections.singletonList(groupInfo.getOriginalGroupId()));
-        dto.setKeywords(adMonitorInfo.getKeywordRule());
-        dto.setMonitorFrequency(0);
-        dto.setMonitorTarget(Arrays.stream(adMonitorInfo.getTypes().split(",")).filter(
-                        p -> Arrays.asList("1", "2", "3").contains(p))
-                .map(p -> p.equals("3") ? 4 : p.equals("2") ? 2 : 1).collect(Collectors.toList()));
-        dto.setMonitorTime(adMonitorInfo.getSpammingTime());
-        dto.setRestrictMember(adMonitorInfo.getIsTabooMemberMsg());
-        dto.setDeleteOtherStatement(adMonitorInfo.getIsDelMemberMsg());
-        dto.setTimeUnit(ObjectUtil.equal(adMonitorInfo.getSpammingTimeUnit(), 2) ? "MINUTES" : "SECONDS");
-        boolean success = ApiClient.setBotAdMonitor(dto).isSuccess();
-        if (success) {
-            groupMonitorInfoService.setBotAdMonitor(groupId);
+        try {
+            AdMonitor adMonitorInfo = JSON.parseObject(adMonitor, AdMonitor.class);
+            GroupMonitorInfo groupInfo = groupMonitorInfoService.getById(groupId);
+            AdMonitorDTO dto = new AdMonitorDTO();
+            dto.setConfigId(playId);
+            if (StrUtil.isNotBlank(adMonitorInfo.getDisposalType())) {
+                dto.setDealFunction(Arrays.stream(adMonitorInfo.getDisposalType().split(",")).filter(
+                                p -> Arrays.asList("1", "2").contains(p))
+                        .map(p -> p.equals("1") ? "RESTRICT" : "KICK_OUT").collect(Collectors.toList()));
+            }
+            dto.setGroupIds(Collections.singletonList(groupInfo.getOriginalGroupId()));
+            dto.setKeywords(adMonitorInfo.getKeywordRule());
+            dto.setMonitorFrequency(adMonitorInfo.getSpammingTime());
+            if (StrUtil.isNotBlank(adMonitorInfo.getTypes())) {
+                dto.setMonitorTarget(Arrays.stream(adMonitorInfo.getTypes().split(",")).filter(
+                                p -> Arrays.asList("1", "2", "3").contains(p))
+                        .map(p -> p.equals("3") ? 4 : p.equals("2") ? 2 : 1).collect(Collectors.toList()));
+            }
+            dto.setMonitorTime(adMonitorInfo.getSpammingNum());
+            dto.setRestrictMember(adMonitorInfo.getIsTabooMemberMsg());
+            dto.setDeleteOtherStatement(adMonitorInfo.getIsDelMemberMsg());
+            dto.setTimeUnit(ObjectUtil.equal(adMonitorInfo.getSpammingTimeUnit(), 2) ? "MINUTES" : "SECONDS");
+            boolean success = ApiClient.setBotAdMonitor(dto).isSuccess();
+            if (success) {
+                groupMonitorInfoService.setBotAdMonitor(groupId);
+            }
+            return success;
+        } catch (Exception e) {
+            log.info("setBotAdMonitor.error={},{},{}", groupId, playId, adMonitor);
+            return false;
         }
-        return success;
+
     }
 
 
