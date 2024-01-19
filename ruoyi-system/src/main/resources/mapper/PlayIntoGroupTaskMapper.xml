@@ -4,7 +4,7 @@
 
 
     <insert id="batchInsert" parameterType="list">
-        insert into t_person_into_group_task (`id`,`group_url`, `person_id`, `task_state`, `create_time`,
+        insert into t_play_into_group_task (`id`,`group_url`, `person_id`, `task_state`, `create_time`,
         `modify_time`,`fail_cause`,`merchant_id`,`group_id`,`play_id`,`is_admin`,`is_error`)
         values
         <foreach item="item" collection="list" separator=",">
@@ -26,15 +26,15 @@
 
 
     <select id="selectTaskList" resultType="com.ruoyi.system.domain.dto.play.PlayIntoGroupTask">
-     select * from   t_person_into_group_task where   task_state = 1 order by create_time limit 500
+     select * from   t_play_into_group_task where   task_state = 1 order by create_time limit 500
     </select>
 
     <select id="selectTaskByCode" resultType="com.ruoyi.system.domain.dto.play.PlayIntoGroupTask">
-        select * from t_person_into_group_task where  code = #{code} and task_state = 2 limit 1
+        select * from t_play_into_group_task where  code = #{code} and task_state = 2 limit 1
     </select>
 
     <select id="selectIntoGroupLogCount" resultType="java.lang.Integer">
-        select count(*) from t_person_into_group_task p
+        select count(*) from t_play_into_group_task p
          where 1=1
         <if test="taskState != null and taskState!=''">
             and p.task_state = #{taskState}
@@ -63,7 +63,7 @@
     </select>
 
     <select id="selectIntoGroupLogList" resultType="com.ruoyi.system.domain.dto.play.PlayIntoGroupTask">
-        select p.*,t.task_name as taskName from t_person_into_group_task p
+        select p.*,t.task_name as taskName from t_play_into_group_task p
         where 1=1
         <if test="taskState != null and taskState!=''">
             and p.task_state = #{taskState}
@@ -93,14 +93,14 @@
     </select>
 
     <update id="updateTaskByOutTime" >
-        update t_person_into_group_task set task_state = 4,fail_cause = #{failCause} where task_state = 2 and  #{outTime} > modify_time
+        update t_play_into_group_task set task_state = 4,fail_cause = #{failCause} where task_state = 2 and  #{outTime} > modify_time
     </update>
 
     <select id="selectTaskByRetCount" resultType="java.lang.Integer">
-        select count(*) from t_person_into_group_task where retry_id = #{retId}
+        select count(*) from t_play_into_group_task where retry_id = #{retId}
     </select>
     
     <select id="selectIsErrorCount" resultType="java.lang.Integer">
-        select count(*) from t_person_into_group_task where group_url = #{groupUrl} and isError = 1
+        select count(*) from t_play_into_group_task where group_url = #{groupUrl} and is_error = 1
     </select>
  </mapper>

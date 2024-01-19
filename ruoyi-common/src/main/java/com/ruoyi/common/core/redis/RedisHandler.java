@@ -9,6 +9,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -26,11 +27,12 @@ import java.util.concurrent.TimeUnit;
  *
  */
 @Slf4j
+@Component
 public class RedisHandler implements BeanFactoryAware {
 
     private static BeanFactory beanFactory;
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisTemplate redisTemplate;
 
     /**
      * get RedisTemplate����
@@ -39,7 +41,7 @@ public class RedisHandler implements BeanFactoryAware {
      * @return
      * @author HadLuo 2020-9-2 11:42:22
      */
-    public static RedisTemplate<String, Object> getRedisTemplate() {
+    public static RedisTemplate getRedisTemplate() {
         return beanFactory.getBean(RedisHandler.class).redisTemplate ;
     }
 
@@ -58,10 +60,10 @@ public class RedisHandler implements BeanFactoryAware {
      * @return
      * @author HadLuo 2020-9-10 11:51:27
      */
-    public static <T> T execLua(Class<T> returnType, String lua, List<String> keys, String... args) {
-        Object[] argsA = args;
-        return getRedisTemplate().execute(new DefaultRedisScript<>(lua, returnType), keys, argsA);
-    }
+//    public static <T> T execLua(Class<T> returnType, String lua, List<String> keys, String... args) {
+//        Object[] argsA = args;
+////        return getRedisTemplate().execute(new DefaultRedisScript<>(lua, returnType), keys, argsA);
+//    }
 
     /**
      * set with expire time

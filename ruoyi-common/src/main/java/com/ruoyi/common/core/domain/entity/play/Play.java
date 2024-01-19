@@ -160,6 +160,8 @@ public class Play {
      */
     private Integer lockRobotStatus;
 
+    private Long productId;
+
     public SendMechanism convertSendMechanismStr() {
         if (StringUtils.isEmpty(this.sendMechanism)) {
             return null;

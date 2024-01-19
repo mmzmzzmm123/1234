@@ -9,6 +9,7 @@ import com.ruoyi.common.config.dymic.EnableRedisConfigure;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.service.OrderService;
 import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
  * 启动程序
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Import;
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @EnableRedisConfigure
 @Import(FastJsonHttpMessageConverter.class)
+@EnableScheduling
 public class RuoYiApplication
 {
     public static void main(String[] args)

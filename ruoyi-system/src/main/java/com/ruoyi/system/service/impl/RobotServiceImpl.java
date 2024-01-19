@@ -27,6 +27,7 @@ import com.ruoyi.system.openapi.model.output.ExtTgBatchRobotSimpInfoData;
 import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotByMerchantVO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.system.service.IRobotService;
+import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.RobotStatisticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
@@ -48,6 +49,9 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     private GroupRobotMapper groupRobotMapper;
     @Autowired
     private RobotStatisticsService robotStatisticsService;
+
+    @Autowired
+    private ISysConfigService configService;
     @Override
     public R<Page<SelectRobotListVO>> selectRobotPageList(SelectRobotListDTO dto) {
         Page<SelectRobotListVO> page = new Page<>(dto.getPage(),dto.getLimit());
@@ -62,7 +66,8 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
             robotDTO.setLimit(1000);
             robotDTO.setPage(1);//1747887445714726912
-            robotDTO.setMerchantId("1241985555798124192");
+            String merchantId = configService.selectConfigByKey("robot:merchant");
+            robotDTO.setMerchantId(merchantId);
             OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
             log.info("pullApiRobotDataList robotListResult:{}",JSON.toJSONString(robotListResult));
             if(robotListResult.isSuccess()){
@@ -103,7 +108,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
                 robot.setId(vo.getRobotId());
                 robot.setVpnIp(vo.getIp());
                 if(StringUtils.isNotEmpty(vo.getIp())){
-                    String[] split = vo.getIp().split(".");
+                    String[] split = vo.getIp().split("\\.");
                     if(split.length > 1){
                         robot.setVpnIpB(split[0]+"."+split[1]);
                     }
