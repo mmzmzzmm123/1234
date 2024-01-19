@@ -101,6 +101,7 @@
             tgi.group_link,
             tgi.group_private_link,
             tgi.group_type,
+            tgi.group_invite_link,
             tgmi.member_count,
             tgmi.join_count,
             tgmi.link_join_count,

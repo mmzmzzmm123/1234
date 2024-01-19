@@ -53,6 +53,9 @@
         <if test="dto.userName != null and dto.userName != ''">
             and tri.user_name like concat('%',#{dto.userName},'%')
         </if>
+        <if test="dto.protocolType != null">
+            and tri.protocol_type = #{dto.protocolType}
+        </if>
         <if test="dto.robotSerialNos != null and dto.robotSerialNos.size > 0">
             and tri.robot_serial_no in
         <foreach collection="dto.robotSerialNos" item="item" separator="," open="(" close=")">

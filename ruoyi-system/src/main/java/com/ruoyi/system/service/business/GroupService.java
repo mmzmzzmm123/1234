@@ -256,6 +256,77 @@ public class GroupService {
         return invitingBotJoin(groupInfoService.listByIds(groupIds), groupRobotService::getAdminRobot, false);
     }
 
+    public int setBotAdmin(List<String> groupIds) {
+        int count = 0;
+        List<GroupInfo> groupInfos = groupInfoService.listByIds(groupIds);
+        Assert.notEmpty(groupInfos, "群不存在");
+        for (GroupInfo groupInfo : groupInfos) {
+            if (setBotAdmin(groupInfo)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public boolean setBotAdmin(GroupInfo groupInfo) {
+        log.info("设置bot管理员={}", JSON.toJSONString(groupInfo));
+
+        GroupMonitorInfo groupMonitorInfo = groupMonitorInfoService.getById(groupInfo.getGroupId());
+        if (groupMonitorInfo == null
+                || ObjectUtil.notEqual(1, groupMonitorInfo.getBotCheck())
+                || ObjectUtil.equal(1, groupMonitorInfo.getBotAdmin())) {
+            log.info("无法设置bot管理员={}", JSON.toJSONString(groupMonitorInfo));
+            return false;
+        }
+
+        GroupRobot adminRobot = groupRobotService.getRobot(groupInfo.getGroupId(), groupMonitorInfo.getRobotId());
+        if (adminRobot == null) {
+            log.info("无法设置bot管理员={}", JSON.toJSONString(groupMonitorInfo));
+            return false;
+        }
+
+        String key = "setBotAdmin:" + groupInfo.getGroupId();
+        RLock lock = redisLock.lock(key);
+        if (!lock.isLocked()) {
+            log.info("设置管理员 加锁失败={}", JSON.toJSONString(groupInfo));
+            return false;
+        }
+        try {
+            //当前是否有批次任务执行邀请bot进群检测
+            GroupBatchAction batchAction = groupBatchActionService.getBatchAction(groupInfo.getGroupId(), 0);
+            if (batchAction != null) {
+                //上次邀请bot进群动作 已超过10分钟没结果  认为是失败
+                if (Duration.between(batchAction.getLastActionTime(), LocalDateTime.now()).toMinutes() > 10) {
+                    groupBatchActionService.updateStatus(batchAction.getBatchId(), 1);
+                } else {
+                    return false;
+                }
+            }
+            InviteBotAction inviteBotAction = InviteBotAction.of(3);
+
+            //初始化批量任务动作
+            GroupBatchAction action = new GroupBatchAction();
+            action.setBatchId(IdWorker.getIdStr());
+            action.setSetType(inviteBotAction.getCode());
+            action.setActionProgress(3);
+            action.setRetryCount(0);
+            action.setGroupId(groupInfo.getGroupId());
+            action.setLastActionTime(LocalDateTime.now());
+            action.setCreateTime(LocalDateTime.now());
+            action.setBatchStatus(0);
+            groupBatchActionService.save(action);
+
+            AsyncTask.execute(() -> runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, adminRobot, groupMonitorInfo.getBotUsername(), ""));
+
+        } catch (Exception e) {
+            log.error("邀请bot进群异常={}", groupInfo, e);
+            return false;
+        } finally {
+            lock.unlock();
+        }
+        return true;
+    }
+
     public int invitingBotJoin(List<GroupInfo> groupInfos, Function<String, GroupRobot> getGroupRobotFuc, boolean newGroup) {
         int count = 0;
         if (CollUtil.isEmpty(groupInfos)) {
@@ -504,8 +575,8 @@ public class GroupService {
                 setAction(action, groupInfo, groupRobot, batchId, lastValue, actionId -> {
                             ThirdTgSqlTaskSubmitInputDTO input = new ThirdTgSqlTaskSubmitInputDTO();
                             input.setDbSource("kfpt-doris-ed");
-                            input.setSql(TgGroupHashSettings.getSql(groupInfo.getGroupSerialNo(), groupRobot.getRobotId(),
-                                    ListTools.newArrayList(groupRobot.getRobotId())));
+                            input.setSql(TgGroupHashSettings.getSql(groupInfo.getGroupSerialNo(), lastValue,
+                                    ListTools.newArrayList(lastValue)));
                             return input;
                         },
                         OpenApiClient::sqlTaskSubmitByThirdKpTg, true);
@@ -880,7 +951,10 @@ public class GroupService {
             }
             GroupInfo groupInfo = groupInfoService.changeGroupSerialNo(request.getChatroomSerialNo(), dto.getNewChatroomSerialNo());
             if (groupInfo != null) {
-                groupRobotService.setAdmin(groupInfo.getGroupId(), request.getMemberSerialNo());
+                GroupRobot groupRobot = groupRobotService.setAdmin(groupInfo.getGroupId(), request.getMemberSerialNo());
+                if (ObjectUtil.equal(groupRobot.getBotType(), 1)) {
+                    groupMonitorInfoService.setBotAdmin(groupInfo.getGroupId());
+                }
             }
         } catch (Exception e) {
             log.info("handlerNewAdmin.error={},{}", request, dto, e);

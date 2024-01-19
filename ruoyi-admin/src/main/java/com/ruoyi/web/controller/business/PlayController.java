@@ -198,7 +198,7 @@ public class PlayController extends BaseController {
 
     @ApiOperation("混淆日志查询")
     @PostMapping("confoundLogPage")
-    public R<Page<QueryConfoundLogVO>> confoundLogPage(@RequestBody QueryConfoundLogDTO dto) {
+    public R<Page<QueryConfoundLogVO>> confoundLogPage(@Validated @RequestBody QueryConfoundLogDTO dto) {
         return R.ok(playMessageConfoundLogService.page(dto));
     }
 
