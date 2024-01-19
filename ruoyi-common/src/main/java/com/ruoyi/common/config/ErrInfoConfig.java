@@ -27,6 +27,9 @@ public class ErrInfoConfig {
 		err.put(11015, "群数大于目标数");
 		err.put(11016, "剧本内容不能为空");
 		err.put(11017, "发言人昵称不能为空");
+		err.put(11018, "消息类型不能为空");
+		err.put(11019, "接粉号池不能为空");
+		err.put(11020, "自定义类型未输入信息");
 	}
 
 	public static String get(int code) {
