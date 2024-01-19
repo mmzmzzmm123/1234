@@ -63,7 +63,7 @@
             total_join_group_count = total_join_group_count+1,
             group_count = group_count+1
             <if test="dto.isSetAdmin == 1">
-                ,one_day_set_admin_count = one_day_set_admin_count+1,
+                ,one_day_set_admin_count = one_day_set_admin_count+1
                 ,total_set_admin_count = total_set_admin_count+1
             </if>
         where robot_serial_no in

@@ -24,5 +24,11 @@ public enum PlayLogTyper {
 	/**
 	 * 机器人入群中
 	 */
-	Group_into;
+	Group_into,
+
+	/**
+	 * 剧本混淆
+	 */
+	Play_Confound;
+
 }

@@ -212,6 +212,12 @@ public class PlayController extends BaseController {
         return R.ok(playExecutionLogService.listByPlayId(playId));
     }
 
+    @ApiOperation("剧本执行日志-分页")
+    @PostMapping("executionLogPage")
+    public R<Page<PlayExecutionLog>> executionLogPage(@Validated @RequestBody QueryExecutionLogDTO dto) {
+        return R.ok(playExecutionLogService.logPage(dto));
+    }
+
     @ApiOperation("任务推送明细查询")
     @PostMapping("pushDetailPage")
     public R<Page<QueryPushDetailVO>> pushDetailPage(@Validated @RequestBody QueryPushDetailDTO dto) {

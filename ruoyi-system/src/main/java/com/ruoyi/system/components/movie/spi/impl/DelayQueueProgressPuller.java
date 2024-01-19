@@ -5,12 +5,16 @@ import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spi.ServiceLoader;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.PlayInfoTools;
 import com.ruoyi.system.components.movie.DelayQueueInvoker;
 import com.ruoyi.system.components.movie.GlobalIndexContext;
 import com.ruoyi.system.components.movie.PlaybackContext;
 import com.ruoyi.system.components.movie.spi.DelaySpeedController;
+import com.ruoyi.system.components.movie.spi.GroupCtrlStopper;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
+import com.ruoyi.system.service.impl.PlayServiceImpl;
+
 import lombok.extern.slf4j.Slf4j;
 
 @SPI
@@ -32,6 +36,15 @@ public class DelayQueueProgressPuller implements ProgressPuller {
 			log.info("剧本删除了 {} {}", message, chatroomId);
 			return;
 		}
+		// 风控限制了， 需要暂停剧本
+		boolean limit = ServiceLoader.load(GroupCtrlStopper.class, "BoxGroupCtrlStopper").isStoped(chatroomId);
+		if(limit) {
+			// 暂停剧本的某个群
+			SpringUtils.getBean(PlayServiceImpl.class).stopPlayByGroupId( message.getPlayId(), chatroomId);
+			log.info("群任务暂停 {} {}" , chatroomId , message);
+			return ;
+		}
+		
 		Integer delayTime = message.getIntervalTime();
 		// 先移动游标 ，
 		GlobalIndexContext.next(chatroomId, message.getPlayId());
@@ -59,6 +72,15 @@ public class DelayQueueProgressPuller implements ProgressPuller {
 			log.info("剧本删除了 {} {}", message, chatroomId);
 			return;
 		}
+		// 风控限制了， 需要暂停剧本
+		boolean limit = ServiceLoader.load(GroupCtrlStopper.class, "BoxGroupCtrlStopper").isStoped(chatroomId);
+		if(limit) {
+			// 暂停剧本的某个群
+			SpringUtils.getBean(PlayServiceImpl.class).stopPlayByGroupId( message.getPlayId(), chatroomId);
+			log.info("群任务暂停 {} {}" , chatroomId , message);
+			return ;
+		}
+		
 		Integer delayTime = message.getIntervalTime();
 		// 先移动游标 ，
 		DelayQueueInvoker.Entry e = new DelayQueueInvoker.Entry(chatroomId, message.getPlayId(), Ids.getId());

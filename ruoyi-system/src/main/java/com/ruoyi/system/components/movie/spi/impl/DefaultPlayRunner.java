@@ -12,6 +12,9 @@ import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.mapper.PlayMessageMapper;
 import com.ruoyi.system.mapper.PlayMessagePushDetailMapper;
 import com.ruoyi.system.mapper.PlayMessagePushMapper;
+import com.ruoyi.system.service.PlayExecutionLogService;
+import com.ruoyi.system.service.impl.IntoGroupService;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -32,9 +35,13 @@ public class DefaultPlayRunner implements PlayRunner {
 			log.info("DefaultPlayRunner_onItemFailure {} {} {} {} {} {}", opt, playId, msg, chatroomId, robotId,
 					msgSort);
 		}
+		// 打日志
+		PlayExecutionLogService.robotSendMassageErrLog(playId, chatroomId, robotId, msg, opt);
 		if (finished(playId, msgSort)) {
 			// 单个群的 已经发送结束了
 			SpringUtils.getBean(PlayMessagePushMapper.class).updateFailure(playId, chatroomId, msg);
+			String c = String.format("【剧本群推送完成】 群%s 剧本:%s" , chatroomId , playId) ;
+			PlayExecutionLogService.robotPackLog(playId, chatroomId, robotId, c, null);
 		}
 		// 单条数据
 		SpringUtils.getBean(PlayMessagePushDetailMapper.class).updateFailure(playId, chatroomId, msgSort, opt, msg,
@@ -88,10 +95,19 @@ public class DefaultPlayRunner implements PlayRunner {
 		// 更新剧本完成
 		Play play = SpringUtils.getBean(PlayMapper.class).selectById(playId);
 		if (play != null && play.getState().intValue() == 2) {
+			String c = String.format("【剧本推送完成】剧本:%s" , playId) ;
+			PlayExecutionLogService.robotPackLog(playId, null, null, c, null);
 			Play update = new Play();
 			update.setState(5);
 			update.setId(playId);
 			SpringUtils.getBean(PlayMapper.class).updateById(update);
+			// 退群
+			try {
+				SpringUtils.getBean(IntoGroupService.class).outGroup(play);
+				log.info("outGroup {}" , play);
+			} catch (Exception e) {
+				log.error("IntoGroupService_outGroup {}" , play);
+			}
 		}
 	}
 
@@ -104,6 +120,8 @@ public class DefaultPlayRunner implements PlayRunner {
 			Play update = new Play();
 			update.setState(2);
 			update.setId(playId);
+			String c = String.format("【剧本开始炒群】剧本:%s" , playId) ;
+			PlayExecutionLogService.robotPackLog(playId, null, null, c, null);
 			SpringUtils.getBean(PlayMapper.class).updateById(update);
 		}
 	}

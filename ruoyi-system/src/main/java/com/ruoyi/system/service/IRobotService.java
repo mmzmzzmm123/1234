@@ -86,13 +86,13 @@ public interface IRobotService extends IService<Robot> {
 
     /**
      * 号回收
-     * @param RobotSerialNos
+     * @param robotSerialNos
      */
-    void recycleRobot(List<String> RobotSerialNos);
+    void recycleRobot(List<String> robotSerialNos);
 
     /**
      * 号商家变更
      */
-    void updateRobotMerchant(List<String> RobotSerialNos);
+    void updateRobotMerchant(List<String> robotSerialNos);
 
 }

@@ -1,7 +1,7 @@
 package com.ruoyi.system.components.spi;
 
 import java.util.List;
-import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotInfoListVO;
+import com.ruoyi.common.core.domain.entity.robot.Robot;
 
 /**
  * title: 机器人 信息查询
@@ -11,6 +11,6 @@ import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotInfoListVO;
  */
 public interface RobotInfoQuery {
 
-	List<ExtTgSelectRobotInfoListVO> listById(List<String> ids);
+	List<Robot> listById(List<String> ids);
 
 }

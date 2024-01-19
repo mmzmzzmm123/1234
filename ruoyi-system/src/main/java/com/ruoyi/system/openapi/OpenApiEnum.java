@@ -8,6 +8,9 @@ public enum OpenApiEnum {
 
     THIRD_USER_LOGIN_CLIENT("第三方登录接口", "/thirdparty/user/login/client", null),
 
+    THIRD_TG_PERSONAL_ON("TG-个人号订阅", "/thirdparty/tgRegister/personalOn", null),
+
+
     // 开平群接口
     THIRD_KP_TG_MODIFY_CHATROOM_HEAD_IMAGE("kpTg-修改群头像", "/thirdparty/tgGroup/modifyChatroomHeadImage", 1100910049),
     THIRD_KP_TG_MODIFY_CHATROOM_NAME("kpTg-修改群名称", "/thirdparty/tgGroup/modifyChatroomName", null),
