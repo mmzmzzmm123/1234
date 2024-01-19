@@ -133,7 +133,7 @@ public class IntoGroupService {
                 //判断剧本是否需要设置群头像跟群名称
                 PlayGroupPack playGroupPack = playGroupPackMapper.selectGroupPackByPlayId(play.getId());
                 //设置群头像和群名称
-                if (playGroupPack == null) {
+                if (playGroupPack == null || (StringUtils.isEmpty(playGroupPack.getName()) && StringUtils.isEmpty(playGroupPack.getPic()))) {
                     play.setScanProgress(2);
                     playMapper.updateById(play);
                     log.info("内部群没有设置群人设："+JSONObject.toJSONString(play));
