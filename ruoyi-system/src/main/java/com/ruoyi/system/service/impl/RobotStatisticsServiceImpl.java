@@ -194,5 +194,10 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         return false;
     }
 
+    @Override
+    public void clearRobotOneDayNum() {
+        baseMapper.clearRobotOneDayNum();
+    }
+
 
 }

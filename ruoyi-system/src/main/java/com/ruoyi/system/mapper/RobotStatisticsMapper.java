@@ -16,4 +16,6 @@ public interface RobotStatisticsMapper extends BaseMapper<RobotStatistics> {
     void addLeaderCount(@Param("robotSerialNo") String robotSerialNo,@Param("count") Integer count);
 
     Integer decreaseRobotGroup(@Param("robotSerialNos") List<String> robotSerialNos);
+
+    Integer clearRobotOneDayNum();
 }
