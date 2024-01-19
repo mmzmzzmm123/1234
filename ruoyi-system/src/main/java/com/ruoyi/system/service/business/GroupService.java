@@ -307,8 +307,8 @@ public class GroupService {
             //初始化批量任务动作
             GroupBatchAction action = new GroupBatchAction();
             action.setBatchId(IdWorker.getIdStr());
-            action.setSetType(inviteBotAction.getCode());
-            action.setActionProgress(3);
+            action.setSetType(0);
+            action.setActionProgress(inviteBotAction.getCode());
             action.setRetryCount(0);
             action.setGroupId(groupInfo.getGroupId());
             action.setLastActionTime(LocalDateTime.now());
@@ -316,7 +316,7 @@ public class GroupService {
             action.setBatchStatus(0);
             groupBatchActionService.save(action);
 
-            AsyncTask.execute(() -> runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, adminRobot, groupMonitorInfo.getBotUsername(), ""));
+            AsyncTask.execute(() -> runAction(action.getBatchId(), inviteBotAction.getAction(), groupInfo, adminRobot, groupMonitorInfo.getBotSerialNo(), ""));
 
         } catch (Exception e) {
             log.error("邀请bot进群异常={}", groupInfo, e);
@@ -496,8 +496,8 @@ public class GroupService {
             //初始化批量任务动作
             GroupBatchAction action = new GroupBatchAction();
             action.setBatchId(IdWorker.getIdStr());
-            action.setSetType(inviteBotAction.getCode());
-            action.setActionProgress(0);
+            action.setSetType(0);
+            action.setActionProgress(inviteBotAction.getCode());
             action.setRetryCount(0);
             action.setGroupId(groupInfo.getGroupId());
             action.setLastActionTime(LocalDateTime.now());
