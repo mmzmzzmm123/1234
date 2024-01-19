@@ -369,14 +369,14 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
     }
 
     @Override
-    public List<PlayMessagePush> selectByPlayIdAndState(String playId, List<Integer> stateList) {
+    public List<PlayMessagePush> selectByPlayIdAndState(String playId, Integer state) {
         if (playId == null) {
             return new ArrayList<>();
         }
 
         return super.list(new LambdaQueryWrapper<PlayMessagePush>()
                 .eq(PlayMessagePush::getPlayId, playId)
-                .in(PlayMessagePush::getPushState, stateList)
+                .eq(PlayMessagePush::getPushState, state)
                 .eq(PlayMessagePush::getIsDelete, 0));
     }
 

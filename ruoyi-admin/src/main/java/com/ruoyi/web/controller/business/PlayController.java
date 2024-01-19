@@ -114,7 +114,7 @@ public class PlayController extends BaseController {
                 return R.fail(ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
             }
         }
-        if (null == dto.getRobotNum()) {
+        if (null == dto.getRobotNum() || dto.getRobotNum() < 1) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "请配置每个群演员数"));
         }
 
@@ -256,9 +256,14 @@ public class PlayController extends BaseController {
     public R<String> repeatPlay(@PathVariable String playId) {
         LoginUser loginUser = getLoginUser();
         if (ObjectUtils.isEmpty(loginUser.getMerchantInfo()) || loginUser.getMerchantInfo().getMerchantType() != 0) {
-            //return R.fail(ErrInfoConfig.getDynmic(11011));
+            return R.fail(ErrInfoConfig.getDynmic(11011));
         }
-        return playService.repeatPlay(playId, loginUser);
+        try {
+            return playService.repeatPlay(playId, loginUser);
+        } catch (Exception e) {
+            log.error("repeatPlay:params:{},msg:{}", playId, e.getMessage());
+        }
+        return R.fail();
     }
 
     @ApiOperation("修改炒群任务状态")
@@ -269,8 +274,8 @@ public class PlayController extends BaseController {
 
     @ApiOperation("释放水军")
     @PostMapping("/{playId}/releaseRobot")
-    public R<String> releaseUser(@PathVariable String playId) {
-        return playService.releaseUser(playId);
+    public R<String> releaseRobot(@PathVariable String playId) {
+        return playService.releaseRobot(playId);
     }
 
     @ApiOperation("job执行释放水军")
