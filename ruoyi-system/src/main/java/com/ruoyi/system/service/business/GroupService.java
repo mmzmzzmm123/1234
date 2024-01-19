@@ -575,8 +575,8 @@ public class GroupService {
                 setAction(action, groupInfo, groupRobot, batchId, lastValue, actionId -> {
                             ThirdTgSqlTaskSubmitInputDTO input = new ThirdTgSqlTaskSubmitInputDTO();
                             input.setDbSource("kfpt-doris-ed");
-                            input.setSql(TgGroupHashSettings.getSql(groupInfo.getGroupSerialNo(), groupRobot.getRobotId(),
-                                    ListTools.newArrayList(groupRobot.getRobotId())));
+                            input.setSql(TgGroupHashSettings.getSql(groupInfo.getGroupSerialNo(), lastValue,
+                                    ListTools.newArrayList(lastValue)));
                             return input;
                         },
                         OpenApiClient::sqlTaskSubmitByThirdKpTg, true);
