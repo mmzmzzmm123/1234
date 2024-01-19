@@ -357,6 +357,17 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
     public List<QueryRobotDetailVO> robotDetails(QueryRobotDetailDTO dto) {
         return baseMapper.robotDetails(dto);
     }
+
+    @Override
+    public List<PlayMessagePush> selectByPlayId(String playId) {
+        if (playId == null) {
+            return new ArrayList<>();
+        }
+
+        return super.list(new LambdaQueryWrapper<PlayMessagePush>()
+                .eq(PlayMessagePush::getPlayId, playId)
+                .eq(PlayMessagePush::getIsDelete, 0));
+    }
 }
 
 

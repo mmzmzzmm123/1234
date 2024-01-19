@@ -86,4 +86,5 @@ public class PlayDTO {
     private Long productId;
 
     private LoginUser loginUser;
+    private Integer scanProgress;
 }
