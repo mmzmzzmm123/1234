@@ -62,11 +62,12 @@ public class RobotController {
 
     @ApiOperation("设置名字姓氏简介")
     @PostMapping("/setName")
-    public R<Void> setName(@ApiParam(value = "文件")@RequestParam("file") MultipartFile file,
-                           @ApiParam(value = "名字")@RequestParam(value = "firstName")String firstName,
-                           @ApiParam(value = "姓氏")@RequestParam(value = "lastName")String lastName,
-                           @ApiParam(value = "个人简介")@RequestParam(value = "briefIntro")String briefIntro,
-                           @ApiParam(value = "机器人编号")@RequestParam(value = "robotSerialNos")List<String> robotSerialNos){
+    public R<Void> setName(
+            @ApiParam(value = "文件") @RequestParam(value = "file",required = false) MultipartFile file,
+            @ApiParam(value = "名字") @RequestParam(value = "firstName",required = false) String firstName,
+            @ApiParam(value = "姓氏")@RequestParam(value = "lastName",required = false) String lastName,
+            @ApiParam(value = "个人简介")@RequestParam(value = "briefIntro",required = false) String briefIntro,
+            @ApiParam(value = "机器人编号")@RequestParam(value = "robotSerialNos",required = false) List<String> robotSerialNos){
         SetNameInfoDTO setNameInfoDTO = new SetNameInfoDTO();
         setNameInfoDTO.setRobotSerialNos(robotSerialNos);
         if(StringUtils.isEmpty(firstName) && StringUtils.isEmpty(lastName) && StringUtils.isEmpty(briefIntro)){
