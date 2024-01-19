@@ -21,6 +21,10 @@ public class PlayTaskProgressVO {
     @ApiModelProperty("剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成")
     private Integer state;
 
+    // 剧本执行进度：0未开始 1调度修改群人设中 2 调用入群中 3 入群等待中 4 混淆 5 号分配,人设 6等待超群条件 7发剧本
+    @ApiModelProperty(hidden = true)
+    private Integer scanProgress;
+
     @ApiModelProperty("群出库进度")
     private BigDecimal groupProgress;
     @ApiModelProperty("群出库总数量")

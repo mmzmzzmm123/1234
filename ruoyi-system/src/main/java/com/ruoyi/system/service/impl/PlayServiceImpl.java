@@ -424,13 +424,18 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         for (PlayTaskProgressVO vo : voList) {
             PlayTaskProgressVO messageVO = messageMap.get(vo.getPlayId());
-            if (messageVO == null) {
-                continue;
+            if (messageVO != null) {
+                vo.setTotalNum(messageVO.getTotalNum());
+                vo.setCurrentNum(messageVO.getCurrentNum());
+                vo.setSendSuccessNum(messageVO.getSendSuccessNum());
+                vo.setSendFailNum(messageVO.getSendFailNum());
             }
-            vo.setTotalNum(messageVO.getTotalNum());
-            vo.setCurrentNum(messageVO.getCurrentNum());
-            vo.setSendSuccessNum(messageVO.getSendSuccessNum());
-            vo.setSendFailNum(messageVO.getSendFailNum());
+            if (vo.getScanProgress() >= 4) {
+                vo.setGroupCurrentNum(vo.getGroupTotalNum());
+            }
+            if (vo.getScanProgress() >= 6) {
+                vo.setPackCurrentNum(vo.getPackTotalNum());
+            }
 
             vo.setTotalProgress(this.calculate(vo.getTotalNum(), vo.getCurrentNum()));
             vo.setGroupProgress(this.calculate(vo.getGroupTotalNum(), vo.getGroupCurrentNum()));
@@ -459,12 +464,14 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             bigDecimal = new BigDecimal("100");
             return bigDecimal;
         }
+        BigDecimal multiply = new BigDecimal("100");
         BigDecimal totalBigDecimal = new BigDecimal(totalNum);
         BigDecimal currentBigDecimal = new BigDecimal(currentNum);
-        bigDecimal = currentBigDecimal.divide(totalBigDecimal, 2, RoundingMode.HALF_UP);
+        bigDecimal = currentBigDecimal.divide(totalBigDecimal, 4, RoundingMode.UP);
+        bigDecimal = bigDecimal.multiply(multiply);
+        bigDecimal = bigDecimal.setScale(2);
         return bigDecimal;
     }
-
 
     @Override
     public List<PlayGroupProgressVO> groupProgress(String playId) {
