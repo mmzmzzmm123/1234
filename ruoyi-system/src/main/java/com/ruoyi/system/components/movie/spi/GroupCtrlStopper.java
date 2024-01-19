@@ -8,8 +8,8 @@ package com.ruoyi.system.components.movie.spi;
  */
 public interface GroupCtrlStopper {
 
-	void doSetting(String groupId, String robotId);
+	void doSetting(String groupId);
 
-	boolean isStoped(String groupId, String robotId);
+	boolean isStoped(String groupId);
 
 }
