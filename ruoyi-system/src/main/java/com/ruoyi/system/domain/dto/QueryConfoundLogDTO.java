@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @Author : XGF（徐桂烽）
  * @create 2024/1/9/009 15:40
@@ -15,6 +17,7 @@ import lombok.Data;
 public class QueryConfoundLogDTO extends PageBaseDTO {
 
     @ApiModelProperty("剧本ID")
+    @NotBlank
     private String playId;
 
     @ApiModelProperty("开始时间")
