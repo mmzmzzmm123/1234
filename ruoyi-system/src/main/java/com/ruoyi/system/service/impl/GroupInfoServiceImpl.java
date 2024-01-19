@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.system.callback.dto.Called1100910018DTO;
 import com.ruoyi.system.domain.GroupInfo;
+import com.ruoyi.system.domain.base.PageBaseDTO;
 import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
 import com.ruoyi.system.domain.dto.GroupPageQueryExportDTO;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
@@ -46,6 +47,15 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
             page.setSearchCount(false);
         }
         return baseMapper.page(page, dto);
+    }
+
+    @Override
+    public List<GroupInfo> limitQuery(PageBaseDTO dto) {
+        Page page = new Page<>(dto.getPage(), dto.getLimit());
+        if (dto instanceof GroupPageQueryExportDTO) {
+            page.setSearchCount(false);
+        }
+        return baseMapper.pageAll(page).getRecords();
     }
 
     @Override
