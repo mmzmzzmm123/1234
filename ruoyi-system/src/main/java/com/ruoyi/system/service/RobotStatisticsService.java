@@ -10,11 +10,28 @@ import java.util.List;
 
 public interface RobotStatisticsService extends IService<RobotStatistics> {
 
+    /**
+     * 获取水军
+     * @param dto
+     * @return
+     */
     R<List<GetRobotVO>> getRobot(GetRobotDTO dto);
 
     boolean checkAndAddLeaderCount(String robotSerialNo, Integer count, Integer checkCount);
 
     void restoreQuantity(String robotSerialNo, Integer count);
 
+    /**
+     * 取消锁定水军
+     * @param robotSerialNos
+     * @return
+     */
     boolean unLockRobot(List<String> robotSerialNos);
+
+    /**
+     * 减少带群数
+     * @param robotSerialNos
+     * @return
+     */
+    boolean decreaseRobotGroup(List<String> robotSerialNos);
 }

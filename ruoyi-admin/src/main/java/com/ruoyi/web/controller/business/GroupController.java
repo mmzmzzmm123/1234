@@ -255,6 +255,23 @@ public class GroupController {
         }
     }
 
+    @ApiOperation(value = "设置bot为管理员")
+    @PostMapping("/setBotAdmin")
+    public R<Void> setBotAdmin(@RequestBody GroupIdsDTO dto) {
+        try {
+            Assert.notEmpty(dto.getGroupIds(), "群不能为空");
+            int count = groupService.setBotAdmin(dto.getGroupIds());
+            Assert.isTrue(count > 0, "只有bot进群才能设置管理员");
+            return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
+        } catch (Exception e) {
+            String idWork = IdWorker.getIdStr();
+            log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(dto), e);
+            return R.fail("未知异常！ trace:" + idWork);
+        }
+    }
+
 
     @ApiOperation(value = "标记群是否使用")
     @PostMapping("/markUsedFlag")

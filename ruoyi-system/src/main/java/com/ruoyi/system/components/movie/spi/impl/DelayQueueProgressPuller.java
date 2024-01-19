@@ -4,10 +4,12 @@ import com.ruoyi.common.core.delayqueue.context.FastDelayQueueContext;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spi.SPI;
+import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.system.components.PlayInfoTools;
 import com.ruoyi.system.components.movie.DelayQueueInvoker;
 import com.ruoyi.system.components.movie.GlobalIndexContext;
 import com.ruoyi.system.components.movie.PlaybackContext;
+import com.ruoyi.system.components.movie.spi.DelaySpeedController;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,6 +36,9 @@ public class DelayQueueProgressPuller implements ProgressPuller {
 		// 先移动游标 ，
 		GlobalIndexContext.next(chatroomId, message.getPlayId());
 		DelayQueueInvoker.Entry e = new DelayQueueInvoker.Entry(chatroomId, message.getPlayId(), Ids.getId());
+		// 计算 延时消息
+		int val = ServiceLoader.load(DelaySpeedController.class).calculate(delayTime, message.getPlayId());
+		log.info("加减计算 {} {} {}" , message.getPlayId() , delayTime , val);
 		// 放到延时队列里面继续下一条消息
 		FastDelayQueueContext.send(DelayQueueInvoker.class, e, delayTime);
 		log.info("延时队列生产 {} {} ", e, delayTime);
@@ -57,8 +62,11 @@ public class DelayQueueProgressPuller implements ProgressPuller {
 		Integer delayTime = message.getIntervalTime();
 		// 先移动游标 ，
 		DelayQueueInvoker.Entry e = new DelayQueueInvoker.Entry(chatroomId, message.getPlayId(), Ids.getId());
+		// 计算 延时消息
+		int val = ServiceLoader.load(DelaySpeedController.class).calculate(delayTime, message.getPlayId());
+		log.info("加减计算 {} {} {}" , message.getPlayId() , delayTime , val);
 		// 放到延时队列里面继续发消息
-		FastDelayQueueContext.send(DelayQueueInvoker.class, e, delayTime);
+		FastDelayQueueContext.send(DelayQueueInvoker.class, e, val);
 		log.info("延时队列生产 {} {} ", e, delayTime);
 
 	}

@@ -500,7 +500,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     public RobotStatisticsVO robotStatistics(String playId) {
         RobotStatisticsVO vo = new RobotStatisticsVO();
-        if (StringUtils.isNotEmpty(playId)){
+        if (StringUtils.isEmpty(playId)){
             return vo;
         }
         RobotStatisticsVO groupStatisticsVO = playMessagePushService.getRobotStatisticsVO(playId);

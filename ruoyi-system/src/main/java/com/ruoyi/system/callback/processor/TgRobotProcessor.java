@@ -1,5 +1,6 @@
 package com.ruoyi.system.callback.processor;
 
+import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
@@ -290,6 +291,11 @@ public class TgRobotProcessor {
     @Type(value = 1100860002, parameterClass = Called1100860002DTO.class)
     public void called1100860002(List<Called1100860002DTO> dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        //集合为空 认为失败
+        if(CollUtil.isEmpty(dto)){
+            root.setResultCode(1);
+        }
+
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(),
                 root.isSuccess() ? dto.get(0).getAccessHash() : null);
 
@@ -358,6 +364,16 @@ public class TgRobotProcessor {
     public void called1100910006(Called1100910006DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
+    }
+
+    /**
+     * TG(被动) 非双向解限时间回调推送
+     *
+     * @param dto
+     */
+    @Type(value = 1100910101, parameterClass = Called1100910101DTO.class)
+    public void called1100910101(Called1100910101DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
     }
 
 }

@@ -80,4 +80,11 @@
         where robot_serial_no  = #{robotSerialNo}
     </insert>
 
+    <update id="decreaseRobotGroup">
+        update t_robot_statistics set group_count = group_count-1 where robot_serial_no in
+        <foreach collection="robotSerialNos" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </update>
+
 </mapper>

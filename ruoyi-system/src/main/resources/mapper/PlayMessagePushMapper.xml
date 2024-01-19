@@ -36,6 +36,7 @@
         WHERE
             1 = 1
           AND tpmp.play_id = #{dto.playId}
+          AND tri.robot_serial_no IS NOT NULL
           <if test="dto.countryName != null and dto.countryName != ''">
               AND tri.country = #{dto.countryName}
           </if>
