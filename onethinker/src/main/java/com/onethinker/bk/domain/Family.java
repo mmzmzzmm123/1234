@@ -79,7 +79,7 @@ public class Family extends BaseEntity {
      * 是否启用[0:否，1:是]
      */
     @Excel(name = "是否启用[0:否，1:是]")
-    private Integer status;
+    private Boolean status;
 
     /**
      * 额外信息

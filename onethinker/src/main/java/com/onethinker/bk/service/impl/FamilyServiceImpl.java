@@ -1,15 +1,29 @@
 package com.onethinker.bk.service.impl;
 
+import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import com.onethinker.bk.domain.Family;
 import com.onethinker.bk.mapper.FamilyMapper;
 import com.onethinker.bk.service.IFamilyService;
+import com.onethinker.bk.vo.FamilyVO;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.CacheEnum;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 家庭信息Service业务层处理
@@ -22,6 +36,11 @@ import java.util.List;
 public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> implements IFamilyService {
     @Resource
     private FamilyMapper familyMapper;
+
+    @Autowired
+    private RedisCache redisCache;
+
+    private static final String REDIS_KEY = "family";
 
     /**
      * 查询家庭信息
@@ -48,13 +67,61 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> impleme
     /**
      * 新增家庭信息
      *
-     * @param family 家庭信息
+     * @param familyVO 家庭信息
      * @return 结果
      */
     @Override
-    public int insertFamily(Family family) {
+    public int insertFamily(FamilyVO familyVO) {
+        Long userId = SecurityUtils.getUserId();
+        familyVO.setUserId(userId);
+
+        Family oldFamily = selectFamilyByUserId(userId);
+        Family family = new Family();
+        BeanUtils.copyProperties(familyVO, family);
+        family.setStatus(Boolean.FALSE);
+        if (oldFamily != null) {
+            family.setId(oldFamily.getId());
+            updateById(family);
+        } else {
+            family.setId(null);
+            save(family);
+        }
         family.setCreateTime(DateUtils.getNowDate());
-        return familyMapper.insertFamily(family);
+        int i = familyMapper.insertFamily(family);
+        Collection<String> keys = redisCache.keys(CacheEnum.WEB_INFO.getCode() + REDIS_KEY + "*");
+        redisCache.deleteObject(keys);
+        return i;
+    }
+
+    @Override
+    public Family selectFamilyByUserId(Long userId) {
+        String redisKey = CacheEnum.WEB_INFO.getCode() + REDIS_KEY + userId;
+        if (!redisCache.hasKey(redisKey)) {
+            LambdaQueryWrapper<Family> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(Family::getUserId,userId);
+            Family family = familyMapper.selectOne(queryWrapper);
+            redisCache.setCacheObject(redisKey,family,1, TimeUnit.DAYS);
+        }
+        return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(),Family.class);
+    }
+
+    @Override
+    public List<Family> listRandomFamily(Integer size) {
+        String redisKey = CacheEnum.WEB_INFO.getCode() + REDIS_KEY + "LIST";
+        if (!redisCache.hasKey(redisKey)) {
+            List<Family> families = familyMapper.selectFamilyList(new Family());
+            if (Objects.isNull(families)) {
+                return Lists.newArrayList();
+            }
+            redisCache.setCacheList(redisKey,families);
+            redisCache.expire(redisKey,1,TimeUnit.DAYS);
+        }
+        List<Family> familyList = redisCache.getCacheList(redisKey);
+        if (familyList.size() > size) {
+            Collections.shuffle(familyList);
+            familyList = familyList.subList(0, size);
+        }
+        return familyList;
     }
 
     /**
@@ -66,6 +133,8 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> impleme
     @Override
     public int updateFamily(Family family) {
         family.setUpdateTime(DateUtils.getNowDate());
+        Collection<String> keys = redisCache.keys(CacheEnum.WEB_INFO.getCode() + REDIS_KEY + "*");
+        redisCache.deleteObject(keys);
         return familyMapper.updateFamily(family);
     }
 
@@ -88,6 +157,9 @@ public class FamilyServiceImpl extends ServiceImpl<FamilyMapper, Family> impleme
      */
     @Override
     public int deleteFamilyById(Long id) {
+        Family family = familyMapper.selectFamilyById(id);
+        Collection<String> keys = redisCache.keys(CacheEnum.WEB_INFO.getCode() + REDIS_KEY + "*");
+        redisCache.deleteObject(keys);
         return familyMapper.deleteFamilyById(id);
     }
 }

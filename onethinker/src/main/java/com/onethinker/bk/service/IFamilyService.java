@@ -1,6 +1,7 @@
 package com.onethinker.bk.service;
 
 import com.onethinker.bk.domain.Family;
+import com.onethinker.bk.vo.FamilyVO;
 
 import java.util.List;
 
@@ -30,10 +31,10 @@ public interface IFamilyService {
     /**
      * 新增家庭信息
      *
-     * @param family 家庭信息
+     * @param familyVO 家庭信息
      * @return 结果
      */
-    int insertFamily(Family family);
+    int insertFamily(FamilyVO familyVO);
 
     /**
      * 修改家庭信息
@@ -58,4 +59,18 @@ public interface IFamilyService {
      * @return 结果
      */
     int deleteFamilyById(Long id);
+
+    /**
+     * 通过用户id查询
+     * @param userId
+     * @return
+     */
+    Family selectFamilyByUserId(Long userId);
+
+    /**
+     * 随机获取家庭信息
+     * @param size
+     * @return
+     */
+    List<Family> listRandomFamily(Integer size);
 }

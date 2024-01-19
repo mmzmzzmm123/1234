@@ -5,9 +5,7 @@ import com.onethinker.bk.service.ICommentService;
 import com.onethinker.bk.vo.BaseRequestVO;
 import com.onethinker.bk.vo.CommentVO;
 import com.ruoyi.common.core.domain.AjaxResult;
-import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,7 +61,7 @@ public class CommentController {
      */
     @PostMapping("/listComment")
     public AjaxResult listComment(@RequestBody BaseRequestVO baseRequestVO) {
-        BaseRequestVO requestVO =  commentService.listComment(baseRequestVO);
+        BaseRequestVO requestVO = commentService.listComment(baseRequestVO);
         return AjaxResult.success(requestVO);
     }
 }

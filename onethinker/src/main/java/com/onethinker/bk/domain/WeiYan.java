@@ -1,9 +1,16 @@
 package com.onethinker.bk.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.onethinker.bk.vo.CommentVO;
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.common.constant.BkConstants;
+import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
+import org.springframework.util.StringUtils;
+
+import java.time.LocalDateTime;
+import java.util.Date;
 
 /**
  * 微言对象 bk_wei_yan
@@ -16,12 +23,6 @@ import lombok.Data;
 public class WeiYan extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 微言
-     */
-    public static final String WEIYAN_TYPE_FRIEND = "friend";
-
-    public static final String WEIYAN_TYPE_NEWS = "news";
 
     /**
      * id
@@ -64,5 +65,27 @@ public class WeiYan extends BaseEntity {
     @Excel(name = "是否公开[0:仅自己可见，1:所有人可见]")
     private Boolean isPublic;
 
+    public void existsParams(String weiYanType) {
+        if (BkConstants.WEIYAN_TYPE_FRIEND.equals(weiYanType)) {
+            if (!StringUtils.hasText(content)) {
+                throw new RuntimeException("微言不能为空！");
+            }
+
+            String existsContent = CommentVO.removeHtml(content);
+            if (!StringUtils.hasText(existsContent)) {
+                throw new RuntimeException("微言内容不合法！");
+            }
+
+        } else if (BkConstants.WEIYAN_TYPE_NEWS.equals(weiYanType)) {
+            if (!StringUtils.hasText(content) || source == null) {
+                throw new RuntimeException("信息不全！");
+            }
+            setIsPublic(Boolean.TRUE);
+        } else {
+            throw new RuntimeException("微言类型有误");
+        }
+        setType(weiYanType);
+
+    }
 
 }

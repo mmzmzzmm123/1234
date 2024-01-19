@@ -4,30 +4,29 @@ import java.util.Objects;
 
 /**
  * @author : yangyouqi
- * @date : 2024/1/18 14:53
+ * @date : 2024/1/19 10:00
  */
-public enum SortTypeEnum {
+public enum WeiYanEnum {
     /**
-     * 分类类型
+     * 公开
      */
-    SORT_TYPE_BAR(0, "导航栏分类"),
+    PUBLIC(1, "所有人可见"),
 
     /**
-     * 普通分类
+     * 仅自己可见
      */
-    SORT_TYPE_NORMAL(1, "普通分类");
-
+    PRIVATE(0, "仅自己可见");
 
     int code;
     String msg;
 
-    SortTypeEnum(int code, String msg) {
+    WeiYanEnum(int code, String msg) {
         this.code = code;
         this.msg = msg;
     }
 
-    public static SortTypeEnum getSysConfigKeyEnumByCode(String code) {
-        for (SortTypeEnum value : SortTypeEnum.values()) {
+    public static WeiYanEnum getSysConfigKeyEnumByCode(String code) {
+        for (WeiYanEnum value : WeiYanEnum.values()) {
             if (Objects.equals(value.code, code)) {
                 return value;
             }

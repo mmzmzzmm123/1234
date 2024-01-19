@@ -1,6 +1,7 @@
 package com.onethinker.bk.service;
 
 import com.onethinker.bk.domain.WeiYan;
+import com.onethinker.bk.vo.BaseRequestVO;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public interface IWeiYanService {
      * @param weiYan 微言
      * @return 微言集合
      */
-    List<WeiYan> selectWeiYanList(WeiYan weiYan);
+    List<WeiYan> selectWeiYanList(WeiYan weiYan,String weiYanType);
 
     /**
      * 新增微言
@@ -33,7 +34,7 @@ public interface IWeiYanService {
      * @param weiYan 微言
      * @return 结果
      */
-    int insertWeiYan(WeiYan weiYan);
+    int insertWeiYan(WeiYan weiYan,String weiYanType);
 
     /**
      * 修改微言
