@@ -156,6 +156,9 @@ public class ManualPackingTask implements TaskExecution {
 //					submitList.add(postposition);
 				}
 			}
+			if(CollectionUtils.isEmpty(submitList)) {
+				return null ;
+			}
 			// 提交到 容器
 			SpringUtils.getBean(MultipackLogContainer.class).submit(submitList);
 		}
