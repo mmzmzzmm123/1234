@@ -51,7 +51,7 @@ public class ManualPackingTask implements TaskExecution {
 
 		final Settings tgRobotNameSettings = ServiceLoader.load(Settings.class, "TgRobotNameSettings");
 
-		final Settings tgGroupHashSettings = ServiceLoader.load(Settings.class, "TgGroupHashSettings");
+		final Settings tgRobotAdminSettings = ServiceLoader.load(Settings.class, "TgRobotAdminSettings");
 
 		for (PlayRobotPack robotPck : context.getPlayRobotPackList()) {
 			// 查找 对应的sort 机器人数据
@@ -113,35 +113,47 @@ public class ManualPackingTask implements TaskExecution {
 					submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
 				}
 
-				// 设置 hash值 + 管理员
+				// 同步设置 管理员
 				if (robotPck.getIsAdmin() != null && robotPck.getIsAdmin().intValue() == 1) {
-					PlayRobotPackLog ret = tgGroupHashSettings.set(param);
-					if (StringUtils.isEmpty(ret.getOpt())) {
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "管理员（获取hash值）", true);
-					} else {
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(), "管理员（获取hash值）", true);
+					PlayRobotPackLog ret = tgRobotAdminSettings.set(param);
+					if(ret.getStatus().intValue() == 1) {
+						// 直接设置成功
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, 
+								String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", context.getChatroomId(), robot)
+								, null);
+					}else {
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, 
+								String.format("【发言人包装-%s】 群%s 号%s 设置失败，原因：%s", "管理员", context.getChatroomId(), robot , ret.getErrMsg())
+								, ret.getErrMsg());
 					}
-					final String opt = ret.wrapOpt().getOpt();
-					submitList.add(ret.wrapRadio(radioId).wrapPushDetailId(detail.getId()));
-
-					// 插入一条 后置 请求
-					PlayRobotPackLog postposition = new PlayRobotPackLog();
-					postposition.setChatroomId(context.getChatroomId());
-					postposition.setCreateTime(new Date());
-					postposition.setIsBackup((boolean) param.get(Settings.Key_Backup_Flag) ? 1 : 0);
-					postposition.setIsFinish(0);
-					// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员
-					postposition.setOp(4);
-					postposition.setOpt("wait_" + Ids.getId());
-					postposition.setPlayId(context.getPlay().getId());
-					postposition.setRadioId(radioId);
-					postposition.setRetryCount(0);
-					postposition.setRobotId(robot);
-					postposition.setStatus(-1);
-					postposition.setPushDetailId(detail.getId());
-					// 等待某个操作码执行完成才能开始调佣
-					postposition.setWaitOpt(opt);
-					submitList.add(postposition);
+					submitList.add(ret.wrapRadio(radioId).wrapPushDetailId(detail.getId()).wrapOpt());
+//					
+//					if (StringUtils.isEmpty(ret.getOpt())) {
+//						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "管理员（获取hash值）", true);
+//					} else {
+//						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(), "管理员（获取hash值）", true);
+//					}
+//					final String opt = ret.wrapOpt().getOpt();
+//					submitList.add(ret.wrapRadio(radioId).wrapPushDetailId(detail.getId()));
+//
+//					// 插入一条 后置 请求
+//					PlayRobotPackLog postposition = new PlayRobotPackLog();
+//					postposition.setChatroomId(context.getChatroomId());
+//					postposition.setCreateTime(new Date());
+//					postposition.setIsBackup((boolean) param.get(Settings.Key_Backup_Flag) ? 1 : 0);
+//					postposition.setIsFinish(0);
+//					// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员
+//					postposition.setOp(4);
+//					postposition.setOpt("wait_" + Ids.getId());
+//					postposition.setPlayId(context.getPlay().getId());
+//					postposition.setRadioId(radioId);
+//					postposition.setRetryCount(0);
+//					postposition.setRobotId(robot);
+//					postposition.setStatus(-1);
+//					postposition.setPushDetailId(detail.getId());
+//					// 等待某个操作码执行完成才能开始调佣
+//					postposition.setWaitOpt(opt);
+//					submitList.add(postposition);
 				}
 			}
 			// 提交到 容器

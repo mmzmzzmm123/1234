@@ -68,8 +68,8 @@ public class MultipackLogContainer implements InitializingBean {
 				"StateJobProcessor");
 		final RetryJobProcessor retryJobProcessor = (RetryJobProcessor) ServiceLoader.load(LogJobProcessor.class,
 				"RetryJobProcessor");
-		final LogPostJobProcessor logPostJobProcessor = (LogPostJobProcessor) ServiceLoader.load(LogJobProcessor.class,
-				"LogPostJobProcessor");
+//		final LogPostJobProcessor logPostJobProcessor = (LogPostJobProcessor) ServiceLoader.load(LogJobProcessor.class,
+//				"LogPostJobProcessor");
 		final SendConditionJobProcessor sendConditionJobProcessor = (SendConditionJobProcessor) ServiceLoader
 				.load(LogJobProcessor.class, "SendConditionJobProcessor");
 		final SendPlayJobProcessor sendPlayJobProcessor = (SendPlayJobProcessor) ServiceLoader
@@ -137,13 +137,13 @@ public class MultipackLogContainer implements InitializingBean {
 					}
 
 					// 包装执行日志的 后置处理 (设置管理员)
-					try {
-						long s = System.currentTimeMillis();
-						logPostJobProcessor.handle(play);
-						log.info("logPostJobProcessor执行 {} {}", (System.currentTimeMillis() - s), play);
-					} catch (Exception e) {
-						log.error("logPostJobProcessor执行异常 {}", play, e);
-					}
+//					try {
+//						long s = System.currentTimeMillis();
+//						logPostJobProcessor.handle(play);
+//						log.info("logPostJobProcessor执行 {} {}", (System.currentTimeMillis() - s), play);
+//					} catch (Exception e) {
+//						log.error("logPostJobProcessor执行异常 {}", play, e);
+//					}
 				}
 			});
 		} finally {
