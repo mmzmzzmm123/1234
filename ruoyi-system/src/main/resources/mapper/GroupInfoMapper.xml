@@ -185,4 +185,10 @@
         </if>
         limit ${groupNum}
     </select>
+    <select id="pageAll" resultType="com.ruoyi.system.domain.GroupInfo">
+        select tgi.*
+        from t_group_info tgi
+                 join t_group_cluster_ref tgcr on tgi.group_id = tgcr.group_id
+        order by tgi.group_id
+    </select>
 </mapper>

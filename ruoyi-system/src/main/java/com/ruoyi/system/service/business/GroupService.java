@@ -1065,4 +1065,24 @@ public class GroupService {
         }
 
     }
+
+    public void syncGroupInfo() {
+        GroupPageQueryDTO dto = new GroupPageQueryDTO();
+        int page = 1;
+        int limit = 500;
+        while (true) {
+            try {
+                dto.setPage(page++);
+                dto.setLimit(limit);
+                List<GroupInfo> records = groupInfoService.limitQuery(dto);
+                syncInfo(records, null);
+                if (records.size() < limit) {
+                    break;
+                }
+            } catch (Exception e) {
+                break;
+            }
+        }
+    }
+
 }

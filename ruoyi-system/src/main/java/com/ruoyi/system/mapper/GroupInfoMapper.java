@@ -23,6 +23,8 @@ public interface GroupInfoMapper extends BaseMapper<GroupInfo> {
 
     Page<GroupPageInfoVO> page(Page page,@Param("dto") GroupPageQueryDTO dto);
 
+    Page<GroupInfo> pageAll(Page page);
+
 
     List<GroupInfoVO> selectGroup(@Param("registrationDay") LocalDateTime registrationDay,
                                   @Param("groupNum") Integer groupNum,
