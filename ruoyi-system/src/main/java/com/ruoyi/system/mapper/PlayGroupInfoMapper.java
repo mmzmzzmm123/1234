@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface PlayGroupInfoMapper  extends BaseMapper<PlayGroupInfo> {
 
-    public PlayGroupInfo selectGroupInfoById(@Param("tgGroupId")String tgGroupId);
+    public PlayGroupInfo selectGroupInfoById(@Param("tgGroupId")String tgGroupId,@Param("playId")String playId);
 
 
     public Integer selectSuccessGroupCount(@Param("playId")String playId);

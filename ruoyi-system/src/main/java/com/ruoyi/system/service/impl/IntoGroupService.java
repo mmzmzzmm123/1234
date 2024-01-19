@@ -102,6 +102,8 @@ public class IntoGroupService {
     @Autowired
     GroupInfoMapper groupInfoMapper;
 
+    String errorMessageListRedisKey = "error_message_list_redis_key:";
+
     @Scheduled(cron = "0/20 * * * * ?")
     public void optionGroup() {
         log.info("扫描未开始的剧本");
@@ -386,6 +388,78 @@ public class IntoGroupService {
         } finally {
             lock.unlock();
         }
+    }
+
+
+    public void replaceGroup(Play play){
+        //重新获取群
+        GroupQueryDTO groupQueryDTO = new GroupQueryDTO();
+        groupQueryDTO.setGroupNum(1);
+        groupQueryDTO.setRegistrationDay(play.getGroupDay());
+        groupQueryDTO.setCountryCode(getCountys(play));
+        groupQueryDTO.setPayId(play.getId());
+        log.info("重试获取群信息入参:"+JSONObject.toJSONString(groupQueryDTO));
+        //从波少那边获取足够的群
+        R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
+        log.info("重试获取群信息返回:"+JSONObject.toJSONString(groupList));
+        if (groupList.getCode() != 200) {
+            play.setState(3);
+            play.setFailReason("无剧本所需足够的群！");
+            setLog(play.getId(), "无剧本所需足够的群数", 1, PlayLogTyper.Group_out, null);
+            playMapper.updateById(play);
+            return;
+        }
+        PlayGroupPack playGroupPack = playGroupPackMapper.selectGroupPackByPlayId(play.getId());
+        List<String> imgs = Arrays.asList(playGroupPack.getPic().split(","));
+        List<String> names = Arrays.asList(playGroupPack.getName().split(","));
+        GroupInfoVO groupInfoVO = groupList.getData().get(0);
+        setLog(play.getId(), "重新分配群出库", 0, PlayLogTyper.Group_out, groupInfoVO.getGroupSerialNo());
+        ThirdTgModifyChatroomHeadImageInputDTO dto = new ThirdTgModifyChatroomHeadImageInputDTO();
+        dto.setChatroomSerialNo(groupInfoVO.getGroupSerialNo());
+        //获取群主号
+        String tgRobotId = "";
+        for (GroupRobotVO robotVO : groupInfoVO.getRobots()) {
+            if (robotVO.getMemberType() == 1) {
+                tgRobotId = robotVO.getRobotId();
+            }
+        }
+        dto.setTgRobotId(tgRobotId);
+        int index = RandomListPicker.pickRandom(imgs);
+        dto.setUrl(imgs.get(index));
+        //修改群名称
+        ThirdTgModifyChatroomNameInputDTO inputDTO = new ThirdTgModifyChatroomNameInputDTO();
+        inputDTO.setChatroomNameBase64(Base64.encode(names.get(index).getBytes()));
+        inputDTO.setChatroomSerialNo(groupInfoVO.getGroupSerialNo());
+        inputDTO.setTgRobotId(tgRobotId);
+        log.info("重试修改群名称入参:"+JSONObject.toJSONString(inputDTO));
+        OpenApiResult<TgBaseOutputDTO> openApiResult = OpenApiClient.modifyChatroomNameByThirdKpTg(inputDTO);
+        log.info("重试修改群名称返回:"+JSONObject.toJSONString(openApiResult));
+        if (openApiResult.getCode() != 0) {
+            String optSerNo = null;
+            if (openApiResult.getData() != null) {
+                optSerNo = openApiResult.getData().getOptSerNo();
+            }
+            //修改群名称失败 需要换群
+            getLog(groupInfoVO, play, tgRobotId, optSerNo, 3);
+            setLog(play.getId(), "群" + groupInfoVO.getGroupName() + ",ID为：" + groupInfoVO.getGroupSerialNo() + "修改群名称为:" + names.get(index) + "失败！需要换群", 1, PlayLogTyper.Group_img_name, groupInfoVO.getGroupId());
+            return;
+        }
+        setLog(play.getId(), "群" + groupInfoVO.getGroupName() + ",ID为：" + groupInfoVO.getGroupSerialNo() + "修改群名称为:" + names.get(index) + "成功！", 0, PlayLogTyper.Group_img_name, groupInfoVO.getGroupId());
+        log.info("重试修改群头像入参:"+JSONObject.toJSONString(inputDTO));
+        OpenApiResult<TgBaseOutputDTO> dtoOpenApiResult = OpenApiClient.modifyChatroomHeadImageByThirdKpTg(dto);
+        log.info("重试修改群头像返回:"+JSONObject.toJSONString(inputDTO));
+        String optSerNo = null;
+        if (dtoOpenApiResult.getData() != null) {
+            optSerNo = dtoOpenApiResult.getData().getOptSerNo();
+        }
+        if (dtoOpenApiResult.getCode() != 0) {
+            //修改群名称失败 需要换群
+            getLog(groupInfoVO, play, tgRobotId, optSerNo, 3);
+            setLog(play.getId(), "群" + groupInfoVO.getGroupName() + ",ID为：" + groupInfoVO.getGroupSerialNo() + "修改群头像为:" + imgs.get(index) + "失败！需要换群", 1, PlayLogTyper.Group_img_name, groupInfoVO.getGroupId());
+            return;
+        }
+        getLog(groupInfoVO, play, tgRobotId, optSerNo, 1);
+        setLog(play.getId(), "群" + groupInfoVO.getGroupName() + ",ID为：" + groupInfoVO.getGroupSerialNo() + "修改群头像为:" + imgs.get(index) + "调用接口成功！",0, PlayLogTyper.Group_img_name, groupInfoVO.getGroupId());
     }
 
 
@@ -754,6 +828,19 @@ public class IntoGroupService {
                     isRet = true;
                 }
             }
+            String  errorMessageList = RedisHandler.get(errorMessageListRedisKey);
+            if (errorMessageList != null){
+                String [] strs = errorMessageList.split(",");
+                for (String str:strs)
+                //判断逻辑不做重试
+                if (calledDTO.getResultMsg().equals(str)){
+                    isRet = false;
+                    //修改当前剧本所有的入群记录为失败
+                    playIntoGroupTaskMapper.updateTaskByErrorGroupId(task.getGroupUrl());
+                    //进行换群处理
+
+                }
+            }
             if (isRet) {
                 //获取机器人
                 Integer adminNum = 0, robotNum = 0;
@@ -817,7 +904,7 @@ public class IntoGroupService {
         //添加等待锁
         SpringUtils.getBean(RedisLock.class).waitLock("ruoyi:wait:groupCallback" + group.getGroupId(), 60);
         try {
-            PlayGroupInfo groupInfo = playGroupInfoMapper.selectGroupInfoById(group.getGroupId());
+            PlayGroupInfo groupInfo = playGroupInfoMapper.selectGroupInfoById(group.getGroupId(),play.getId());
             log.info("入群成功获取群信息："+JSONObject.toJSONString(groupInfo));
             if (groupInfo == null) {
                 //创建群信息

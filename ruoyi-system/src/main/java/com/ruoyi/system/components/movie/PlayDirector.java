@@ -75,6 +75,8 @@ public class PlayDirector implements CallBackProcessor {
 	}
 
 	private void success0(SendMsgOptTempEntry entry, String opt) {
+		log.info("play_success0 {} {} {}" , entry , opt);
+
 		final PlayRunner playRunner = ServiceLoader.load(PlayRunner.class);
 		playRunner.onItemSendSuccess(opt, entry.getPlayId(), entry.getChatroomId(), entry.getMsgSort(),
 				entry.getRobotId());
@@ -98,6 +100,7 @@ public class PlayDirector implements CallBackProcessor {
 	}
 
 	void fail0(SendMsgOptTempEntry entry, String opt, String errMsg) {
+		log.info("play_fail0 {} {} {}" , entry , opt , errMsg);
 		final PlayRunner playRunner = ServiceLoader.load(PlayRunner.class);
 
 		// 如果启用了 备用号， 则需要重试发送这条消息

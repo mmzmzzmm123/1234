@@ -3,7 +3,7 @@
 <mapper namespace="com.ruoyi.system.mapper.PlayGroupInfoMapper">
 
     <select id="selectGroupInfoById" resultType="com.ruoyi.system.domain.dto.play.PlayGroupInfo">
-        select * from t_play_group_info where tg_group_id = #{tgGroupId}  and state = 1  and is_delete = 0 limit 1
+        select * from t_play_group_info where tg_group_id = #{tgGroupId} and play_id = #{playId} and state = 0  and is_delete = 0 limit 1
     </select>
 
     <select id="selectSuccessGroupCount" resultType="java.lang.Integer">
