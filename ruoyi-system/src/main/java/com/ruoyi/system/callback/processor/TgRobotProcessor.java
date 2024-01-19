@@ -399,6 +399,24 @@ public class TgRobotProcessor {
     public void called1100910101(Called1100910101DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         ServiceLoader.load(BothwayGroupCtrlStopper.class, "BothwayGroupCtrlStopper").doSetting(root.getRobotId());
+        robotService.updateBidirectional(dto);
     }
+
+    /***
+     * 机器人离线回调
+     */
+    @Type(value = 1100910003, parameterClass = Called1100910003DTO.class)
+    public void called1100910003(Called1100910003DTO source) {
+
+    }
+
+    /***
+     * 机器人封号回调
+     */
+    @Type(value = 1100910045, parameterClass = Called1100910045DTO.class)
+    public void robotBanned(Called1100910045DTO source) {
+
+    }
+
 
 }

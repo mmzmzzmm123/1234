@@ -121,7 +121,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         saveRobotPack(playId, dto.getPerformerList());
 
         //插入剧本消息表
-        savePlayMessage(playId, dto.getPlayMessageList(), dto.getSendMechanism());
+        savePlayMessage(playId, dto.getPlayMessageList(), dto.getSendMechanism(), dto.getUrlPool());
 
         //删除上传word文件
         if (StringUtils.isNotEmpty(dto.getFileId())) {
@@ -149,7 +149,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         SpringUtils.getBean(OrderServiceImpl.class).orderStorage(request, product, skuList, groupSet, price, 2);
     }
 
-    private void savePlayMessage(String playId, List<PlayMessageDTO> playMessageList, SendMechanism sendMechanism) {
+    private void savePlayMessage(String playId, List<PlayMessageDTO> playMessageList, SendMechanism sendMechanism, List<String> urlPool) {
         if (playMessageList.isEmpty()) {
             return;
         }
@@ -186,6 +186,14 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             }
             playMessage.setMessageContent(JSON.toJSONString(messageDTO.getMessageContent()));
             playMessage.setPlayErrorType(sendMechanism.getSendErrorType());
+
+            //接粉号处理
+            for (ContentJson content : messageDTO.getMessageContent()) {
+                if (content.getMomentTypeId() == 2017) {
+                    content.setSMateContent(urlPool.get(new Random().nextInt(urlPool.size())));
+                }
+            }
+
             saveData.add(playMessage);
         }
 
@@ -279,7 +287,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         //剧本内容
         playMessageMapper.delete(new LambdaQueryWrapper<PlayMessage>().eq(PlayMessage::getPlayId, dto.getId()));
-        savePlayMessage(dto.getId(), dto.getPlayMessageList(), dto.getSendMechanism());
+        savePlayMessage(dto.getId(), dto.getPlayMessageList(), dto.getSendMechanism(), dto.getUrlPool());
 
         //删除上传word文件
         if (StringUtils.isNotEmpty(dto.getFileId())) {

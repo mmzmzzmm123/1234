@@ -7,6 +7,7 @@ import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.AdMonitor;
+import com.ruoyi.common.core.domain.dto.play.ContentJson;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.dto.play.PlayMessageDTO;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
@@ -64,7 +65,7 @@ public class PlayController extends BaseController {
             return checkPlayParamsRet;
         }
 
-        R<String> checkPlayMessageListRet = checkPlayMessageList(dto.getPlayMessageList());
+        R<String> checkPlayMessageListRet = checkPlayMessageList(dto.getPlayMessageList(), dto.getUrlPool());
         if (checkPlayMessageListRet.getCode() != HttpStatus.SUCCESS) {
             return checkPlayMessageListRet;
         }
@@ -77,7 +78,7 @@ public class PlayController extends BaseController {
         return R.fail();
     }
 
-    private R<String> checkPlayMessageList(List<PlayMessageDTO> playMessageDTOList) {
+    private R<String> checkPlayMessageList(List<PlayMessageDTO> playMessageDTOList, List<String> urlPool) {
         if (null == playMessageDTOList || playMessageDTOList.isEmpty()) {
             return R.fail(ErrInfoConfig.getDynmic(11016));
         }
@@ -85,7 +86,23 @@ public class PlayController extends BaseController {
             if (StringUtils.isEmpty(playMessageDTO.getRobotNickname())) {
                 return R.fail(ErrInfoConfig.getDynmic(11017));
             }
+            List<ContentJson> contents = playMessageDTO.getMessageContent();
+            for (ContentJson content : contents) {
+                if (null == content.getMomentTypeId()) {
+                    return R.fail(ErrInfoConfig.getDynmic(11018));
+                }
+                if (content.getMomentTypeId() == 2017) {
+                    if (null == urlPool || urlPool.size() < 1) {
+                        return R.fail(ErrInfoConfig.getDynmic(11019));
+                    }
+                } else if (content.getMomentTypeId() == 2018) {
+                    if (StringUtils.isEmpty(content.getSMateContent())) {
+                        return R.fail(ErrInfoConfig.getDynmic(11020));
+                    }
+                }
+            }
         }
+
         return R.ok();
     }
 
@@ -150,7 +167,7 @@ public class PlayController extends BaseController {
             return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过64字"));
         }
         dto.setUrlPool(handleUrlList(dto.getUrlPool()));
-        R<String> checkPlayMessageListRet = checkPlayMessageList(dto.getPlayMessageList());
+        R<String> checkPlayMessageListRet = checkPlayMessageList(dto.getPlayMessageList(), dto.getUrlPool());
         if (checkPlayMessageListRet.getCode() != HttpStatus.SUCCESS) {
             return checkPlayMessageListRet;
         }
