@@ -190,8 +190,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             //接粉号处理
             for (ContentJson content : messageDTO.getMessageContent()) {
                 if (content.getMomentTypeId() == 2017) {
-                    Collections.shuffle(urlPool);
-                    content.setSMateContent(urlPool.get(0));
+                    content.setSMateContent(urlPool.get(new Random().nextInt(urlPool.size())));
                 }
             }
 
