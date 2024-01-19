@@ -283,14 +283,18 @@ public class GroupService {
 
 
     public void handleActionResult(String id, String optNo, boolean success, String msg, Object data) {
-        if (StrUtil.isBlank(id)) {
-            id = redisCache.getCacheObject("ruoyi-admin:action:" + optNo);
-            log.info("getActionId={},{}", optNo, id);
+        try {
+            if (StrUtil.isBlank(id)) {
+                id = redisCache.getCacheObject("ruoyi-admin:action:" + optNo);
+                log.info("getActionId={},{}", optNo, id);
+            }
+            if (StrUtil.isBlank(id)) {
+                return;
+            }
+            handleActionResult(groupActionLogService.getById(id), optNo, success, msg, data);
+        } catch (Exception e) {
+            log.info("handleActionResult.error={},{}", id, optNo);
         }
-        if (StrUtil.isBlank(id)) {
-            return;
-        }
-        handleActionResult(groupActionLogService.getById(id), optNo, success, msg, data);
     }
 
     public void handleActionResult(GroupActionLog groupActionLog, String optNo, boolean success, String msg, Object data) {
