@@ -179,6 +179,7 @@ public class IntoGroupService {
                             tgRobotId = robotVO.getRobotId();
                         }
                     }
+                    log.info("修改群名称入参names:"+JSONObject.toJSONString(names));
                     if (names.size() > 0){
                         //修改群名称
                         ThirdTgModifyChatroomNameInputDTO inputDTO = new ThirdTgModifyChatroomNameInputDTO();
@@ -473,6 +474,7 @@ public class IntoGroupService {
                             //设置错误
                             playDTO.setState(4);
                             playDTO.setFailReason("无剧本所需足够的群！");
+                            playMapper.updateById(playDTO);
                             continue;
                         }
                         infoVOS.addAll(groupList.getData());
