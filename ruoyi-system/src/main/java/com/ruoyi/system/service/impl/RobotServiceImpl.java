@@ -418,7 +418,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             return R.fail("类型不能为空");
         }
         boolean update = this.update(new LambdaUpdateWrapper<Robot>()
-                .in(Robot::getEnableType, dto.getRobotSerialNos())
+                .in(Robot::getRobotSerialNo, dto.getRobotSerialNos())
                 .set(Robot::getEnableType, dto.getEnableType()));
         if(update)return R.ok();
         return R.fail("操作失败");

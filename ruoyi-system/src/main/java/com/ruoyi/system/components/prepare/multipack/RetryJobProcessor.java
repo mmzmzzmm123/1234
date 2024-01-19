@@ -43,7 +43,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 	/**
 	 * 4分钟
 	 */
-	private static final int timeoutSecond = 10;
+	private static final int timeoutSecond = 60*4;
 
 	@Override
 	public void handle(Play play) {

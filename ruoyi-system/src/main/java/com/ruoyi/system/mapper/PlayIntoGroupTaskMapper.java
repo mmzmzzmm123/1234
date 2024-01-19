@@ -36,4 +36,6 @@ public interface PlayIntoGroupTaskMapper extends BaseMapper<PlayIntoGroupTask> {
 
     public Integer selectIsErrorCount(@Param("groupUrl")String groupUrl);
 
+
+    public Integer updateTaskByErrorGroupId(@Param("groupUrl")String groupUrl);
 }

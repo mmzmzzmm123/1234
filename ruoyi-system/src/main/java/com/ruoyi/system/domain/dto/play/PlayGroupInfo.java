@@ -33,7 +33,7 @@ public class PlayGroupInfo {
     private String tgGroupName;
 
     @ApiModelProperty("群成员数量")
-    private String memberCount;
+    private Integer memberCount;
 
     @ApiModelProperty("所属任务ID")
     private String playId;

@@ -66,6 +66,9 @@ public class GroupPageQueryDTO extends PageBaseDTO {
     @ApiModelProperty(value = "是否有bot检测 0-无 1-已有bot检测")
     private Integer botCheck;
 
+    @ApiModelProperty(value = "bot是否是管理员 0-否 1-是")
+    private Integer botAdmin;
+
     @ApiModelProperty(value = "是否黑群主 0-否 1-是")
     private Integer blackLeader;
 

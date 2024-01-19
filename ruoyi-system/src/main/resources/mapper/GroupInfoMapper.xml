@@ -8,6 +8,7 @@
                tgi.group_name,
                tgi.group_invite_link,
                tgmi.bot_check,
+               tgmi.bot_admin,
                tgs.group_status,
                if(tgs.group_status = 0,null, tgs.group_status_time) group_status_time,
                tgs.group_used,
@@ -72,6 +73,9 @@
             </if>
             <if test="dto.heartbeatStatus != null ">
                 AND robot.heartbeat_status = #{dto.heartbeatStatus}
+            </if>
+            <if test="dto.botAdmin != null ">
+                AND tgmi.bot_admin = #{dto.botAdmin}
             </if>
             <if test="dto.sealStatus != null ">
                 AND robot.seal_status = #{dto.sealStatus}

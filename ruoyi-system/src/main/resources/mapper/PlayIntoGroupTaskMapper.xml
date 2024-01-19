@@ -103,4 +103,8 @@
     <select id="selectIsErrorCount" resultType="java.lang.Integer">
         select count(*) from t_play_into_group_task where group_url = #{groupUrl} and is_error = 1
     </select>
+
+    <select id="updateTaskByErrorGroupId" resultType="java.lang.Integer">
+        update t_play_into_group_task set task_state = 4,fail_cause = '当前群回调返回异常，自动中止入群任务' where group_url = #{groupUrl} AND task_state IN (1,2)
+    </select>
  </mapper>

@@ -185,5 +185,14 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         return false;
     }
 
+    @Override
+    public boolean decreaseRobotGroup(List<String> robotSerialNos) {
+        if(!CollectionUtils.isEmpty(robotSerialNos)){
+            baseMapper.decreaseRobotGroup(robotSerialNos);
+            return true;
+        }
+        return false;
+    }
+
 
 }

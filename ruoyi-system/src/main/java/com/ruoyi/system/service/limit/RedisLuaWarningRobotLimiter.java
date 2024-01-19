@@ -38,7 +38,7 @@ public class RedisLuaWarningRobotLimiter implements InitializingBean, WarningRob
             return 0L;
         }
         //return redisTemplate.execute(script, Collections.singletonList(key),interval+"",limitCount+"");
-        return (Long) redisTemplate.execute(script, Collections.singletonList(key),interval+"",limitCount+"");
+            return (Long) redisTemplate.execute(script, Collections.singletonList(key),interval,limitCount);
     }
 
 

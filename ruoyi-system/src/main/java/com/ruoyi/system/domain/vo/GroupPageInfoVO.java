@@ -37,6 +37,10 @@ public class GroupPageInfoVO {
     @ApiModelProperty(value = "bot检测 0-无 1-已有bot检测")
     private Integer botCheck;
 
+    @Excel(name = "bot是否是管理员", readConverterExp = "0=否,1=是")
+    @ApiModelProperty(value = "bot是否是管理员 0-否 1-是")
+    private Integer botAdmin;
+
     @Excel(name = "群状态", readConverterExp = "0=正常,1=封群")
     @ApiModelProperty(value = "群状态 0-正常 1-封群")
     private Integer groupStatus;

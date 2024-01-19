@@ -46,6 +46,9 @@ public class PlayGroupProgressVO {
     private String groupPrivateLink;
     @ApiModelProperty("群类型 10私密群 20公开群")
     private Integer groupType;
+    @ApiModelProperty("群邀请链接")
+    private String groupInviteLink;
+
 
     @ApiModelProperty("群状态 0-正常 1-封群")
     private Integer groupStatus;
