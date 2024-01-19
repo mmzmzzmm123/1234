@@ -48,7 +48,7 @@ public class TgRobotProcessor {
 
     /***
      *
-     * TG号回收
+     * TG(被动)号回收
      */
     @Type(value = 50005004, parameterClass = Called50005004DTO.class)
     public void called50005004(Called50005004DTO source) {
@@ -57,7 +57,7 @@ public class TgRobotProcessor {
 
     /***
      *
-     * TG号变更商家
+     * TG(被动)号变更商家
      */
     @Type(value = 50005005, parameterClass = Called50005005DTO.class)
     public void called50005005(List<Called50005005DTO> sourceList) {
@@ -66,7 +66,7 @@ public class TgRobotProcessor {
 
     /***
      *
-     * TG号资料信息变更
+     * TG(被动)号资料信息变更
      */
     @Type(value = 50005006, parameterClass = Called50005006DTO.class)
     public void called50005006(List<Called50005006DTO> sourceList) {
@@ -311,7 +311,7 @@ public class TgRobotProcessor {
     }
 
     /**
-     * TG 群编号变动回调
+     * TG（被动） 群编号变动回调
      *
      * @param dto
      */
