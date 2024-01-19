@@ -11,7 +11,7 @@ public class PlayInfoTools {
 		if (playInfo == null) {
 			return true;
 		}
-		if (playInfo.getIsDelete().intValue() == 1) {
+		if (playInfo.getIsDelete().intValue() == 1 || playInfo.getIsDelete().intValue() == 4) {
 			return true;
 		}
 		return false;

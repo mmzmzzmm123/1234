@@ -402,18 +402,8 @@ public class GroupService {
         }
         try {
             if (success) {
-                InviteBotAction nextAction = botAction.getNextAction();
-                if (nextAction == null) {
-                    //所有动作完成 标记bot已进群检查
-                    groupMonitorInfoService.robotCheck(groupBatch.getGroupId());
-                    //批次动作完成
-                    groupBatchActionService.updateStatus(groupBatch.getBatchId(), 2);
-                    return;
-                }
-                GroupInfo groupInfo = groupInfoService.getById(groupBatch.getGroupId());
-
                 if (botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP) {
-                    groupRobotService.addBot(groupInfo.getGroupId(), groupActionLog.getChangeValue());
+                    groupRobotService.addBot(groupBatch.getGroupId(), groupActionLog.getChangeValue());
                 }
                 String value = "";
                 if (botAction == InviteBotAction.SET_BOT_ADMIN) {
@@ -434,6 +424,16 @@ public class GroupService {
                     //更新bot的用户编号
                     groupMonitorInfoService.updateRobotSerialNo(groupBatch.getGroupId(), value, groupActionLog.getRobotId());
                 }
+
+                InviteBotAction nextAction = botAction.getNextAction();
+                if (nextAction == null) {
+                    //所有动作完成 标记bot已进群检查
+                    groupMonitorInfoService.robotCheck(groupBatch.getGroupId());
+                    //批次动作完成
+                    groupBatchActionService.updateStatus(groupBatch.getBatchId(), 2);
+                    return;
+                }
+                GroupInfo groupInfo = groupInfoService.getById(groupBatch.getGroupId());
 
                 //当前动作是搜索bot  对比username 获取是bot的数据
                 if (botAction == InviteBotAction.INVITE_BOT_JOIN_GROUP && ObjectUtil.equal(groupInfo.getCreateType(), 20)) {
@@ -561,6 +561,7 @@ public class GroupService {
                             input.setTgRobotId(groupRobot.getRobotId());
                             input.setExtend(actionId);
                             input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+                            input.setGroupId(groupInfo.getGroupId());
                             input.setMemberSerialNo(lastValue);
                             input.setIsAll(true);
                             input.setChangeInfo(true);
@@ -702,6 +703,7 @@ public class GroupService {
                         ThirdTgSetChatroomTypeInputDTO input = new ThirdTgSetChatroomTypeInputDTO();
                         input.setTgRobotId(robot.getRobotId());
                         input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+                        input.setGroupId(groupInfo.getGroupId());
                         input.setUsername(url);
                         input.setChatroomType(dto.getGroupType());
                         input.setExtend(actionId);
@@ -820,6 +822,7 @@ public class GroupService {
             ThirdTgSetChatroomAdminInputDTO para = new ThirdTgSetChatroomAdminInputDTO();
             para.setTgRobotId(robot.getRobotId());
             para.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+            para.setGroupId(groupInfo.getGroupId());
             para.setMemberSerialNo(String.join(",", dto.getMemberIds()));
             para.setIsAll(dto.getIsAll());
             para.setChangeInfo(dto.getChangeInfo());
@@ -1050,19 +1053,36 @@ public class GroupService {
 
     public void handlerNewAdmin(ThirdTgSetChatroomAdminInputDTO request, Called1100910053DTO dto) {
         try {
-            if (request == null) {
+            if (request == null || StrUtil.isBlank(request.getGroupId())) {
                 return;
             }
-            GroupInfo groupInfo = groupInfoService.changeGroupSerialNo(request.getChatroomSerialNo(), dto.getNewChatroomSerialNo());
-            if (groupInfo != null) {
-                GroupRobot groupRobot = groupRobotService.setAdmin(groupInfo.getGroupId(), request.getMemberSerialNo());
-                if (ObjectUtil.equal(groupRobot.getBotType(), 1)) {
-                    groupMonitorInfoService.setBotAdmin(groupInfo.getGroupId());
-                }
+            GroupRobot groupRobot = groupRobotService.setAdmin(request.getGroupId(), request.getMemberSerialNo());
+            if (ObjectUtil.equal(groupRobot.getBotType(), 1)) {
+                groupMonitorInfoService.setBotAdmin(request.getGroupId());
             }
         } catch (Exception e) {
             log.info("handlerNewAdmin.error={},{}", request, dto, e);
         }
 
     }
+
+    public void syncGroupInfo() {
+        GroupPageQueryDTO dto = new GroupPageQueryDTO();
+        int page = 1;
+        int limit = 500;
+        while (true) {
+            try {
+                dto.setPage(page++);
+                dto.setLimit(limit);
+                List<GroupInfo> records = groupInfoService.limitQuery(dto);
+                syncInfo(records, null);
+                if (records.size() < limit) {
+                    break;
+                }
+            } catch (Exception e) {
+                break;
+            }
+        }
+    }
+
 }

@@ -19,7 +19,7 @@ import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.mapper.PlayMessageMapper;
 import com.ruoyi.system.mapper.PlayMessagePushMapper;
 
-@SPI("tg")
+@SPI("TgPlayBookFactory")
 public class TgPlayBookFactory implements PlayBookFactory {
 	@Override
 	public PlayBook newInstance(String alias, String playId) {
@@ -33,7 +33,7 @@ public class TgPlayBookFactory implements PlayBookFactory {
 		// 解析得到群id
 		List<String> chatroomIdList = parseChatroom(play.getId());
 
-		final MessageSupport messageSupport = ServiceLoader.load(MessageSupport.class, alias);
+		final MessageSupport messageSupport = ServiceLoader.load(MessageSupport.class, "TgMessageSupport");
 		final RobotSpeakAllocator robotSpeakAllocator = ServiceLoader.load(RobotSpeakAllocator.class);
 		final PlayRunner playRunner = ServiceLoader.load(PlayRunner.class);
 

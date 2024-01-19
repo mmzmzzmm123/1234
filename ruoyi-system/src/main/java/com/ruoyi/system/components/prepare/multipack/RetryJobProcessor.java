@@ -54,6 +54,8 @@ public class RetryJobProcessor implements LogJobProcessor {
 		if (CollectionUtils.isEmpty(datas)) {
 			return;
 		}
+		
+		log.info("RetryJobProcessor {}" , play);
 
 		for (PlayRobotPackLog data : datas) {
 			// 再次调用

@@ -9,6 +9,8 @@ import org.springframework.util.CollectionUtils;
 
 import com.ruoyi.common.utils.Env;
 import com.ruoyi.common.utils.spi.SPI;
+import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.mapper.RobotMapper;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.ThirdTgSelectRobotInfoListDTO;
@@ -22,6 +24,11 @@ public class TgRobotInfoQuery implements RobotInfoQuery {
 		if (CollectionUtils.isEmpty(ids)) {
 			return Collections.emptyList();
 		}
+		
+		SpringUtils.getBean(RobotMapper.class) ;
+		
+		
+		
 		if (Env.isLocal()) {
 			List<ExtTgSelectRobotInfoListVO> data = new ArrayList<ExtTgSelectRobotInfoListVO>();
 			for (String id : ids) {
