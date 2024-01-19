@@ -14,6 +14,7 @@ import com.ruoyi.common.core.domain.dto.play.PlayExt;
 import com.ruoyi.common.core.domain.entity.VibeRule;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
+import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spi.ServiceLoader;
@@ -57,7 +58,7 @@ public class RobotPreallocationTask implements TaskExecution {
 					"【号预分配】 群" + context.getChatroomId() + " 内无演员", "群内无演员");
 			return ExecutionResultContext.buildError(context, "群内无演员");
 		}
-		final Map<String, ExtTgSelectRobotInfoListVO> map = new HashMap<>();
+		final Map<String, Robot> map = new HashMap<>();
 		List<String> source = ListTools.extract(relationList, f -> f.getRobotId());
 		// 查询所有的detail
 		List<PlayMessagePushDetail> details = context.getPushDetails();
@@ -65,13 +66,13 @@ public class RobotPreallocationTask implements TaskExecution {
 		final RobotInfoQuery robotInfoQuery = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery");
 
 		for (PlayMessagePushDetail detail : details) {
-			ExtTgSelectRobotInfoListVO robot = map.get(detail.getSpokesmanNickname());
+			Robot robot = map.get(detail.getSpokesmanNickname());
 			if (robot != null) {
 				// 这个发言人 已经分配过了 ， 直接用
-				detail.setRobotId(robot.getRobotId());
+				detail.setRobotId(robot.getRobotSerialNo());
 				detail.setRobotImgUrl(robot.getHeadImgUrl());
 				detail.setRobotNickname(robot.getUserName());
-				detail.setRobotAcct(robot.getAccount());
+				detail.setRobotAcct(robot.getPhone());
 
 				PreRobotSpeakAllocator.Cache.set(messagePush.getPlayId(), messagePush.getGroupId(),
 						detail.getSpokesmanNickname(), detail.getRobotId());
@@ -79,15 +80,15 @@ public class RobotPreallocationTask implements TaskExecution {
 			}
 			if (!CollectionUtils.isEmpty(source)) {
 				detail.setRobotId(source.get(0));
-				List<ExtTgSelectRobotInfoListVO> robots = robotInfoQuery.listById(ListTools.newArrayList(detail.getRobotId()));
+				List<Robot> robots = robotInfoQuery.listById(ListTools.newArrayList(detail.getRobotId()));
 				if (!CollectionUtils.isEmpty(robots)) {
 					detail.setRobotImgUrl(robots.get(0).getHeadImgUrl());
 					detail.setRobotNickname(robots.get(0).getUserName());
-					detail.setRobotAcct(robots.get(0).getAccount());
+					detail.setRobotAcct(robots.get(0).getPhone());
 					map.put(detail.getSpokesmanNickname(), robots.get(0));
 				} else {
-					ExtTgSelectRobotInfoListVO vo = new ExtTgSelectRobotInfoListVO();
-					vo.setRobotId(detail.getRobotId());
+					Robot vo = new Robot();
+					vo.setRobotSerialNo(detail.getRobotId());
 					map.put(detail.getSpokesmanNickname(), vo);
 				}
 				source.remove(0);

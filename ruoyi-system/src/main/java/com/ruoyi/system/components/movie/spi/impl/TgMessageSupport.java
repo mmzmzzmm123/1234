@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.ContentJson;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
+import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spi.SPI;
@@ -92,7 +93,7 @@ public class TgMessageSupport implements MessageSupport {
 			String robot = PreRobotSpeakAllocator.Cache.get(playId, chatroomId, callRobotNickname);
 			if (!StringUtils.isEmpty(robot)) {
 				// 查询这个robot信息
-				List<ExtTgSelectRobotInfoListVO> vos = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery")
+				List<Robot> vos = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery")
 						.listById(ListTools.newArrayList(robot));
 				if (!CollectionUtils.isEmpty(vos)) {
 					return vos.get(0).getUserName();

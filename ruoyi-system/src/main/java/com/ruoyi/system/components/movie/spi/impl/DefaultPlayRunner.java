@@ -12,6 +12,8 @@ import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.mapper.PlayMessageMapper;
 import com.ruoyi.system.mapper.PlayMessagePushDetailMapper;
 import com.ruoyi.system.mapper.PlayMessagePushMapper;
+import com.ruoyi.system.service.impl.IntoGroupService;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -92,6 +94,13 @@ public class DefaultPlayRunner implements PlayRunner {
 			update.setState(5);
 			update.setId(playId);
 			SpringUtils.getBean(PlayMapper.class).updateById(update);
+			// 退群
+			try {
+				SpringUtils.getBean(IntoGroupService.class).outGroup(play);
+				log.info("outGroup {}" , play);
+			} catch (Exception e) {
+				log.error("IntoGroupService_outGroup {}" , play);
+			}
 		}
 	}
 

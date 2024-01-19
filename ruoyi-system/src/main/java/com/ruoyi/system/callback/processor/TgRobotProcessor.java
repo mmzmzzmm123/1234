@@ -398,7 +398,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910101, parameterClass = Called1100910101DTO.class)
     public void called1100910101(Called1100910101DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        ServiceLoader.load(BothwayGroupCtrlStopper.class, "BothwayGroupCtrlStopper").doSetting(null, root.getRobotId());
+        ServiceLoader.load(BothwayGroupCtrlStopper.class, "BothwayGroupCtrlStopper").doSetting(root.getRobotId());
     }
 
 }
