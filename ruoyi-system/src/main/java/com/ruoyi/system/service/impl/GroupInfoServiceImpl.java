@@ -150,10 +150,12 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         if (groupBySerialNo == null) {
             return null;
         }
-        GroupInfo groupInfo = new GroupInfo();
-        groupInfo.setGroupId(groupBySerialNo.getGroupId());
-        groupInfo.setGroupSerialNo(newGroupSerialNo);
-        baseMapper.updateById(groupInfo);
+        if(StrUtil.isNotBlank(newGroupSerialNo)) {
+            GroupInfo groupInfo = new GroupInfo();
+            groupInfo.setGroupId(groupBySerialNo.getGroupId());
+            groupInfo.setGroupSerialNo(newGroupSerialNo);
+            baseMapper.updateById(groupInfo);
+        }
         return groupBySerialNo;
     }
 
