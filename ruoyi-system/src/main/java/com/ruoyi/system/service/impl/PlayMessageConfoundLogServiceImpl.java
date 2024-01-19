@@ -248,6 +248,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
     public TgBaseOutputDTO<InsertEventOutputDTO> insertEvent(String activityRule) {
         ThirdTgInsertEventInputDTO dto = new ThirdTgInsertEventInputDTO();
         dto.setActivityRule(activityRule);
+        dto.setUnioUserNo(PlayConstants.unioUserNo);
         //域名分组传10
         dto.setDomainGroupTypeId(PlayConstants.domainGroupTypeId);
         //10：跳转落地URL 20：直接跳转原始URL

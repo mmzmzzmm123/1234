@@ -21,7 +21,7 @@ public enum InviteBotAction {
 
     QUERY_GROUP_MEMBER(3,GroupAction.QUERY_GROUP_MEMBER,0),
 
-    QUERY_HASH(4, GroupAction.QUERY_HASH, 5),
+    QUERY_HASH(4, GroupAction.QUERY_HASH, 3),
 
     SET_BOT_ADMIN(5, GroupAction.SET_GROUP_ADMIN, 0);
 

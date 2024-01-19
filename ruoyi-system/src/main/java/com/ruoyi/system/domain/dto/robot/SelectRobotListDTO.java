@@ -14,6 +14,8 @@ public class SelectRobotListDTO extends PageBaseDTO {
     private String startTime;
     @ApiModelProperty(value = "结束始时间")
     private String endTime;
+    @ApiModelProperty(value = "1-创建时间,2-封号时间,3-双向时间")
+    private Integer timeType;
     @ApiModelProperty(value = "机器人类型10-平台号 20-托管号")
     private Integer type;
     @ApiModelProperty(value = "协议类型：2-iPhone 4-Android 16-云机 17-工作机")

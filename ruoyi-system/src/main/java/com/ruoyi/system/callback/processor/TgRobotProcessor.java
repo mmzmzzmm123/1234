@@ -2,11 +2,16 @@ package com.ruoyi.system.callback.processor;
 
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.ruoyi.common.core.domain.entity.robot.Robot;
+import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
 import com.ruoyi.system.components.movie.PlayDirector;
+import com.ruoyi.system.components.movie.spi.impl.BothwayGroupCtrlStopper;
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
@@ -25,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -48,25 +54,37 @@ public class TgRobotProcessor {
 
     /***
      *
-     * TG号回收
+     * TG(被动)号回收
      */
     @Type(value = 50005004, parameterClass = Called50005004DTO.class)
     public void called50005004(Called50005004DTO source) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()){
+            if(!CollectionUtils.isEmpty(source.getRobotSerialNos())){
+                robotService.recycleRobot(source.getRobotSerialNos());
+            }
+        }
 
     }
 
     /***
      *
-     * TG号变更商家
+     * TG(被动)号变更商家
      */
     @Type(value = 50005005, parameterClass = Called50005005DTO.class)
     public void called50005005(List<Called50005005DTO> sourceList) {
-
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()){
+            if(!CollectionUtils.isEmpty(sourceList)){
+                List<String> robotSerialNos = sourceList.stream().map(Called50005005DTO::getRobotSerialNo).collect(Collectors.toList());
+                robotService.updateRobotMerchant(robotSerialNos);
+            }
+        }
     }
 
     /***
      *
-     * TG号资料信息变更
+     * TG(被动)号资料信息变更
      */
     @Type(value = 50005006, parameterClass = Called50005006DTO.class)
     public void called50005006(List<Called50005006DTO> sourceList) {
@@ -98,13 +116,13 @@ public class TgRobotProcessor {
         if(root.isSuccess() && !StringUtils.isEmpty(root.getRequestPara())) {
             groupService.handlerNewAdmin(JSON.parseObject(root.getRequestPara(), ThirdTgSetChatroomAdminInputDTO.class), dto);
         }
+        //处理请求结果
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
         if(root.isSuccess()) {
         	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
         	return ;
         }
     	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
-        //处理请求结果
-        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
     }
 
     /**
@@ -296,9 +314,8 @@ public class TgRobotProcessor {
         if(CollUtil.isEmpty(dto)){
             root.setResultCode(1);
         }
-
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(),
-                root.isSuccess() ? dto.get(0).getAccessHash() : null);
+                root.isSuccess() ? dto : null);
 
         if(root.isSuccess()) {
         	if(!CollectionUtils.isEmpty(dto)) {
@@ -312,7 +329,7 @@ public class TgRobotProcessor {
     }
 
     /**
-     * TG 群编号变动回调
+     * TG（被动） 群编号变动回调
      *
      * @param dto
      */
@@ -381,6 +398,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910101, parameterClass = Called1100910101DTO.class)
     public void called1100910101(Called1100910101DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        ServiceLoader.load(BothwayGroupCtrlStopper.class, "BothwayGroupCtrlStopper").doSetting(null, root.getRobotId());
     }
 
 }

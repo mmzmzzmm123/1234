@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.system.callback.dto.Called1100910018DTO;
 import com.ruoyi.system.domain.GroupInfo;
+import com.ruoyi.system.domain.base.PageBaseDTO;
 import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
 import com.ruoyi.system.domain.dto.GroupPageQueryExportDTO;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
@@ -49,6 +50,15 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
     }
 
     @Override
+    public List<GroupInfo> limitQuery(PageBaseDTO dto) {
+        Page page = new Page<>(dto.getPage(), dto.getLimit());
+        if (dto instanceof GroupPageQueryExportDTO) {
+            page.setSearchCount(false);
+        }
+        return baseMapper.pageAll(page).getRecords();
+    }
+
+    @Override
     public List<GroupInfo> saveImportGroup(List<GroupResourceVO> resourceList) {
         if (CollUtil.isEmpty(resourceList)) {
             return new ArrayList<>();
@@ -61,11 +71,20 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
                 : new HashMap<>();
 
         List<GroupInfo> result = new ArrayList<>();
+        List<GroupInfo> updates = new ArrayList<>();
         List<GroupInfo> adds = new ArrayList<>();
         List<String> newGroupSerialNos = new ArrayList<>();
         for (GroupResourceVO groupResourceVO : resourceList) {
             if (map.containsKey(groupResourceVO.getGroupSerialNo())) {
                 result.add(map.get(groupResourceVO.getGroupSerialNo()));
+
+                GroupInfo groupInfo = new GroupInfo();
+                groupInfo.setGroupId(IdWorker.getIdStr());
+                groupInfo.setGroupSerialNo(groupResourceVO.getGroupSerialNo());
+                groupInfo.setRegistrationTime(groupResourceVO.getRegistrationTime());
+                groupInfo.setGroupInviteLink(groupResourceVO.getGroupInviteLink());
+                groupInfo.setUpdateTime(LocalDateTime.now());
+                updates.add(groupInfo);
                 continue;
             }
 
@@ -87,6 +106,9 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         }
         if (CollUtil.isNotEmpty(adds)) {
             saveBatch(adds);
+        }
+        if(CollUtil.isNotEmpty(updates)){
+            updateBatchById(updates);
         }
         return result;
     }
@@ -150,11 +172,23 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         if (groupBySerialNo == null) {
             return null;
         }
-        GroupInfo groupInfo = new GroupInfo();
-        groupInfo.setGroupId(groupBySerialNo.getGroupId());
-        groupInfo.setGroupSerialNo(newGroupSerialNo);
-        baseMapper.updateById(groupInfo);
+        if(StrUtil.isNotBlank(newGroupSerialNo)) {
+            GroupInfo groupInfo = new GroupInfo();
+            groupInfo.setGroupId(groupBySerialNo.getGroupId());
+            groupInfo.setGroupSerialNo(newGroupSerialNo);
+            baseMapper.updateById(groupInfo);
+        }
         return groupBySerialNo;
+    }
+
+    @Override
+    public void updateGroupSerialNo(String groupId, String newGroupSerialNo) {
+        if(StrUtil.isNotBlank(newGroupSerialNo)) {
+            GroupInfo groupInfo = new GroupInfo();
+            groupInfo.setGroupId(groupId);
+            groupInfo.setGroupSerialNo(newGroupSerialNo);
+            baseMapper.updateById(groupInfo);
+        }
     }
 
     @Override

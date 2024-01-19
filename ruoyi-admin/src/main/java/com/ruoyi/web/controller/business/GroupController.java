@@ -189,6 +189,22 @@ public class GroupController {
         }
     }
 
+    @Anonymous
+    @ApiOperation(value = "更新所有群信息")
+    @PostMapping("/syncAll")
+    public R<Void> syncAll() {
+        try {
+            groupService.syncGroupInfo();
+            return R.ok();
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
+        } catch (Exception e) {
+            String idWork = IdWorker.getIdStr();
+            log.error("未知异常={} ", idWork, e);
+            return R.fail("未知异常！ trace:" + idWork);
+        }
+    }
+
     @ApiOperation(value = "导入群资源")
     @PostMapping("/importResource")
     public R<Void> importResource(@RequestParam(value = "file") @ApiParam("群资源文件") MultipartFile file,

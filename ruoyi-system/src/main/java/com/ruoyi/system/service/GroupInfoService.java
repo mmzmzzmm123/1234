@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.callback.dto.Called1100910018DTO;
 import com.ruoyi.system.callback.dto.Called1100910039DTO;
 import com.ruoyi.system.domain.GroupInfo;
+import com.ruoyi.system.domain.base.PageBaseDTO;
 import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.GroupPageInfoVO;
@@ -26,6 +27,8 @@ public interface GroupInfoService extends IService<GroupInfo> {
 
     Page<GroupPageInfoVO> groupPage(GroupPageQueryDTO dto);
 
+    List<GroupInfo> limitQuery(PageBaseDTO dto);
+
     List<GroupInfo> saveImportGroup(List<GroupResourceVO> resourceList);
 
 
@@ -40,6 +43,8 @@ public interface GroupInfoService extends IService<GroupInfo> {
      GroupInfo getGroupBySerialNo(String oldSerialNo, String newSerialNo);
 
     GroupInfo changeGroupSerialNo(String oldGroupSerialNo,String newGroupSerialNo);
+
+    void updateGroupSerialNo(String groupId,String newGroupSerialNo);
 
     void updateGroupInfo(Called1100910018DTO.Called1100910018ChatroomInfoDTO update);
 }

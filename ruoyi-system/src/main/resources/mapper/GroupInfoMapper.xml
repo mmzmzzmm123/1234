@@ -140,7 +140,7 @@
                 AND robot.robot_serial_no like CONCAT('%', #{dto.robotSerialNo}, '%')
             </if>
         </where>
-        order by tgi.create_time desc
+        order by tgi.create_time desc,tgi.group_id desc
 
     </select>
 
@@ -184,5 +184,11 @@
             </foreach>
         </if>
         limit ${groupNum}
+    </select>
+    <select id="pageAll" resultType="com.ruoyi.system.domain.GroupInfo">
+        select tgi.*
+        from t_group_info tgi
+                 join t_group_cluster_ref tgcr on tgi.group_id = tgcr.group_id
+        order by tgi.group_id
     </select>
 </mapper>

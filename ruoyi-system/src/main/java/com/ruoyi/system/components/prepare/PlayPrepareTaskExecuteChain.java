@@ -77,6 +77,7 @@ public class PlayPrepareTaskExecuteChain implements OnPackMonitor, OnRadioPackMo
 	}
 
 	private void updatePrepareProgress(int messagePushId, boolean succeed, String playId) {
+		log.info("updatePrepareProgress {} {} {}" , messagePushId , succeed , playId);
 		final PlayMessagePushMapper mapper = SpringUtils.getBean(PlayMessagePushMapper.class);
 		PlayMessagePush update = new PlayMessagePush();
 		update.setId(messagePushId);

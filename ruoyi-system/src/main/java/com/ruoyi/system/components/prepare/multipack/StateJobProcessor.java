@@ -42,6 +42,9 @@ public class StateJobProcessor implements LogJobProcessor {
 			return ;
 		}
 		
+		log.info("StateJobProcessor {}" , play);
+
+		
 		for (PlayRobotPackLog data : datas) {
 			CallValue ret = CallValueStore.get(data.getOpt());
 
@@ -87,6 +90,8 @@ public class StateJobProcessor implements LogJobProcessor {
 		Map<String, List<PlayRobotPackLog>> group = ListTools.group(datas, f -> f.getRadioId());
 		for (String radioId : group.keySet()) {
 			List<PlayRobotPackLog> logs = group.get(radioId);
+			
+			log.info("StateJobProcessor_j {} {}" , radioId , logs);
 			if (logs.size() < logs.get(0).getTotal().intValue()) {
 				// 数据还没有插满
 				continue;

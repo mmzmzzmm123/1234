@@ -1,7 +1,9 @@
 package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
@@ -10,7 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
-public interface IRobotService {
+public interface IRobotService extends IService<Robot> {
     /**
      * 查询号列表
      * @param dto
@@ -81,5 +83,16 @@ public interface IRobotService {
     void updateHeadImgUrl(String robotSerialNo,String headImgUrl);
 
     void updateName(String robotSerialNo,SetNameResourceVO vo);
+
+    /**
+     * 号回收
+     * @param RobotSerialNos
+     */
+    void recycleRobot(List<String> RobotSerialNos);
+
+    /**
+     * 号商家变更
+     */
+    void updateRobotMerchant(List<String> RobotSerialNos);
 
 }

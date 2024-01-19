@@ -20,4 +20,6 @@ public class ThirdTgSetChatroomTypeInputDTO {
 
     @ApiModelProperty(value = "群类型：10 私密 20公开")
     private Integer chatroomType;
+
+    private String groupId;
 }

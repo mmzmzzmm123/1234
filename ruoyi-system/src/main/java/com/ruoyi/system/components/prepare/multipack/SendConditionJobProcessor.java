@@ -35,6 +35,9 @@ public class SendConditionJobProcessor implements LogJobProcessor {
 		if (CollectionUtils.isEmpty(groups)) {
 			return;
 		}
+		
+		log.info("SendConditionJobProcessor {}" , play);
+
 
 		if (play.getGroupCondition().intValue() == 0) {
 			// 炒群条件：0-人数 1-时间

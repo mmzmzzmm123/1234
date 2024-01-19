@@ -11,6 +11,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.common.core.domain.entity.robot.RobotStatistics;
 import com.ruoyi.common.core.thread.AsyncTask;
+import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.GroupRobot;
@@ -489,5 +490,23 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo,robotSerialNo)
                 .set(Robot::getFirstName,vo.getFirstName())
                 .set(Robot::getLastName,vo.getLastName()));
+    }
+
+    @Override
+    public void recycleRobot(List<String> RobotSerialNos) {
+        for (List<String> item : ListTools.partition(RobotSerialNos,500)) {
+            this.update(new LambdaUpdateWrapper<Robot>()
+                    .in(Robot::getRobotSerialNo,item)
+                    .set(Robot::getRecycleStatus,1));
+        }
+    }
+
+    @Override
+    public void updateRobotMerchant(List<String> RobotSerialNos) {
+        for (List<String> item : ListTools.partition(RobotSerialNos,500)) {
+            this.update(new LambdaUpdateWrapper<Robot>()
+                    .in(Robot::getRobotSerialNo,item)
+                    .set(Robot::getDeleteStatus,1));
+        }
     }
 }

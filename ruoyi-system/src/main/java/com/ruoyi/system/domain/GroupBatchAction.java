@@ -31,7 +31,7 @@ public class GroupBatchAction {
     /**
      * 0-邀请bot进群检查
      */
-    @ApiModelProperty(value = "0-邀请bot进群检查 ")
+    @ApiModelProperty(value = "0-邀请bot进群检查  1-设置管理员")
     @TableField("set_type")
     private Integer setType;
 
