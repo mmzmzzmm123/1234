@@ -54,10 +54,13 @@ public class PlayPrepareTaskExecuteChain implements OnPackMonitor, OnRadioPackMo
 		}
 		final TaskExecution execution = chain.removeFirst();
 		ExecutionResultContext ctx = execution.doExecute(context);
-
 		if ((execution instanceof RobotPreallocationTask) && !ctx.isNeedWait()) {
 			// 更新 推送 业务进度
-			updatePrepareProgress(context.getMessagePush().getId(), ctx.isSucceed(), context.getPlay().getId());
+			PlayMessagePush update = new PlayMessagePush();
+			update.setId(context.getMessagePush().getId());
+			update.setRobotAllocationFlag(ctx.isSucceed() ? 1 : 2) ;
+			SpringUtils.getBean(PlayMessagePushMapper.class).updateById(update);
+			log.info("更新号分配进度 {}" , update);
 		}
 
 		if ((execution instanceof ManualPackingTask) && !ctx.isNeedWait()) {
