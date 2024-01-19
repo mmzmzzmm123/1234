@@ -208,13 +208,19 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
 
 
     public String disperseImage(String imageUrl) {
-        ThirdTgDisperseImageInputDTO dto = new ThirdTgDisperseImageInputDTO();
-        dto.setImageUrl(imageUrl);
-        dto.setNum(IMG_CONFOUND_SIZE);
 
-        OpenApiResult<TgBaseOutputDTO> result = OpenApiClient.disperseImageByThirdKpTg(dto);
+        OpenApiResult<TgBaseOutputDTO> result = null;
+        try {
+            ThirdTgDisperseImageInputDTO dto = new ThirdTgDisperseImageInputDTO();
+            dto.setImageUrl(imageUrl);
+            dto.setNum(IMG_CONFOUND_SIZE);
 
-        log.info("PlayMessageConfoundLogServiceImpl disperseImage {} {}", JSON.toJSONString(dto), JSON.toJSONString(result));
+            result = OpenApiClient.disperseImageByThirdKpTg(dto);
+
+            log.info("PlayMessageConfoundLogServiceImpl disperseImage {} {}", JSON.toJSONString(dto), result.toString());
+        } catch (Exception e) {
+            log.info("PlayMessageConfoundLogServiceImpl disperseImage error", e);
+        }
         return Optional.ofNullable(result)
                 .map(OpenApiResult::getData)
                 .map(TgBaseOutputDTO::getOptSerNo)
@@ -229,16 +235,21 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
      * @return
      */
     public String getAppointGradeTextList(String content, Integer num) {
-        ThirdTgAppointGradeTextListInputDTO dto = new ThirdTgAppointGradeTextListInputDTO();
-        dto.setTextContent(content);
+        OpenApiResult<TgBaseOutputDTO> result = null;
+        try {
+            ThirdTgAppointGradeTextListInputDTO dto = new ThirdTgAppointGradeTextListInputDTO();
+            dto.setTextContent(content);
 
-        // 获取条数，各离散等级条数限制 L1： 10 L2： 100 L3： 500 L4-L5： 1000
-        dto.setLevel(5);
-        dto.setNum(num);
+            // 获取条数，各离散等级条数限制 L1： 10 L2： 100 L3： 500 L4-L5： 1000
+            dto.setLevel(5);
+            dto.setNum(num);
 
-        OpenApiResult<TgBaseOutputDTO> result = OpenApiClient.getAppointGradeTextListByThirdKpTg(dto);
+            result = OpenApiClient.getAppointGradeTextListByThirdKpTg(dto);
 
-        log.info("PlayMessageConfoundLogServiceImpl getAppointGradeTextList {} {}", JSON.toJSONString(dto), JSON.toJSONString(result));
+            log.info("PlayMessageConfoundLogServiceImpl getAppointGradeTextList {} {}", JSON.toJSONString(dto), result.toString());
+        } catch (Exception e) {
+            log.info("PlayMessageConfoundLogServiceImpl getAppointGradeTextList error", e);
+        }
         return Optional.ofNullable(result)
                 .map(OpenApiResult::getData)
                 .map(TgBaseOutputDTO::getOptSerNo)
@@ -246,22 +257,27 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
     }
 
     public TgBaseOutputDTO<InsertEventOutputDTO> insertEvent(String activityRule) {
-        ThirdTgInsertEventInputDTO dto = new ThirdTgInsertEventInputDTO();
-        dto.setActivityRule(activityRule);
-        dto.setUnioUserNo(PlayConstants.unioUserNo);
-        //域名分组传10
-        dto.setDomainGroupTypeId(PlayConstants.domainGroupTypeId);
-        //10：跳转落地URL 20：直接跳转原始URL
-        dto.setRedirectWay(PlayConstants.redirectWa);
+        TgBaseOutputDTO outputDTO = null;
+        try {
+            ThirdTgInsertEventInputDTO dto = new ThirdTgInsertEventInputDTO();
+            dto.setActivityRule(activityRule);
+            dto.setUnioUserNo(PlayConstants.unioUserNo);
+            //域名分组传10
+            dto.setDomainGroupTypeId(PlayConstants.domainGroupTypeId);
+            //10：跳转落地URL 20：直接跳转原始URL
+            dto.setRedirectWay(PlayConstants.redirectWa);
 
-        OpenApiResult<TgBaseOutputDTO> result = OpenApiClient.insertEventByThirdKpTg(dto);
-        log.info("PlayMessageConfoundLogServiceImpl insertEvent {} {}", JSON.toJSONString(dto), JSON.toJSONString(result));
-        TgBaseOutputDTO outputDTO = result.getData();
-        Object object = Optional.ofNullable(outputDTO)
-                .map(TgBaseOutputDTO::getData)
-                .orElse(null);
-        if (object != null) {
-            outputDTO.setData(JSONObject.parseObject(object.toString(), InsertEventOutputDTO.class));
+            OpenApiResult<TgBaseOutputDTO> result = OpenApiClient.insertEventByThirdKpTg(dto);
+            log.info("PlayMessageConfoundLogServiceImpl insertEvent {} {}", JSON.toJSONString(dto), result.toString());
+            outputDTO = result.getData();
+            Object object = Optional.ofNullable(outputDTO)
+                    .map(TgBaseOutputDTO::getData)
+                    .orElse(null);
+            if (object != null) {
+                outputDTO.setData(JSONObject.parseObject(object.toString(), InsertEventOutputDTO.class));
+            }
+        } catch (Exception e) {
+            log.info("PlayMessageConfoundLogServiceImpl insertEvent error", e);
         }
         return outputDTO;
     }
