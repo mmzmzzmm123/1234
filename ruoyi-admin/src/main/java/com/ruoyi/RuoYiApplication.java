@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import com.ruoyi.common.config.dymic.EnableRedisConfigure;
+import com.ruoyi.common.core.delayqueue.EnableRedissonFastDelayQueue;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.service.OrderService;
 import org.springframework.context.annotation.Import;
@@ -20,6 +21,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableRedisConfigure
 @Import(FastJsonHttpMessageConverter.class)
 @EnableScheduling
+@EnableRedissonFastDelayQueue
 public class RuoYiApplication
 {
     public static void main(String[] args)

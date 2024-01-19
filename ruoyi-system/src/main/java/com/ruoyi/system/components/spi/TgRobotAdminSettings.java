@@ -14,8 +14,10 @@ import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.domain.GroupInfo;
+import com.ruoyi.system.domain.GroupMonitorInfo;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.mapper.GroupInfoMapper;
+import com.ruoyi.system.mapper.GroupMonitorInfoMapper;
 import com.ruoyi.system.mapper.GroupRobotMapper;
 import com.ruoyi.system.mapper.RobotMapper;
 import cn.hutool.http.ContentType;
@@ -57,7 +59,6 @@ public class TgRobotAdminSettings implements Settings {
 		final String robotId = param.get(Settings.Key_RobotId).toString();
 		final String groupId = param.get(Settings.Key_GroupId).toString();
 		//
-
 		PlayRobotPackLog data = new PlayRobotPackLog();
 		data.setChatroomId(groupId);
 		data.setCreateTime(new Date());
@@ -68,33 +69,28 @@ public class TgRobotAdminSettings implements Settings {
 		data.setRetryCount(0);
 		data.setRobotId(robotId);
 		data.setIsBackup(((boolean) param.get(Settings.Key_Backup_Flag)) ? 1 : 0);
-		GroupInfo groupInfo = SpringUtils.getBean(GroupInfoMapper.class)
-				.selectById(param.get(Settings.Key_GroupId).toString());
-		if (groupInfo == null) {
-			// 群信息查询不到
-			data.setStatus(2);
-			data.setErrMsg("群信息不存在");
-			return data;
-		}
 		// 查询群主
-		GroupRobot mainRobot = SpringUtils.getBean(GroupRobotMapper.class).selectOne(new QueryWrapper<GroupRobot>()
-				.lambda().eq(GroupRobot::getGroupId, groupId).eq(GroupRobot::getMemberType, 1).last(" limit 1 "));
-		if (mainRobot == null) {
+		GroupMonitorInfo bot = SpringUtils.getBean(GroupMonitorInfoMapper.class).selectById(groupId);
+		if (bot == null) {
 			data.setStatus(2);
-			data.setErrMsg("群主不存在");
+			data.setErrMsg("群bot监控不存在");
 			return data;
 		}
-		// 查找 user id
-		List<Robot> rs = SpringUtils.getBean(RobotMapper.class).selectList(new QueryWrapper<Robot>().lambda()
-				.in(Robot::getRobotSerialNo, Arrays.asList(robotId, mainRobot.getRobotId())));
-		if (CollectionUtils.isEmpty(rs) || rs.size() != 2) {
+		if (bot.getBotAdmin().intValue() == 0) {
 			data.setStatus(2);
-			data.setErrMsg("基础号不存在");
+			data.setErrMsg("群bot还不是管理员");
 			return data;
 		}
-		Map<String, List<Robot>> map = ListTools.group(rs, f -> f.getRobotSerialNo());
-		String jsonBody = JSON.toJSONString(
-				new Req(map.get(mainRobot.getRobotId()).get(0).getId(), groupId, map.get(robotId).get(0).getId()));
+
+		// 查询号
+		Robot info = SpringUtils.getBean(RobotMapper.class)
+				.selectOne(new QueryWrapper<Robot>().lambda().eq(Robot::getRobotSerialNo, robotId));
+		if (info == null) {
+			data.setStatus(2);
+			data.setErrMsg("号基础数据不存在");
+			return data;
+		}
+		String jsonBody = JSON.toJSONString(new Req(bot.getBotId(), bot.getOriginalGroupId(), info.getId()));
 
 		// http://30q623450x.vicp.fun:80/api/v1/bot/setAdminUser
 		try {
