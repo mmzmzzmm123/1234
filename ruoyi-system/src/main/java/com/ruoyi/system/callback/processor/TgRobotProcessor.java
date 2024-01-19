@@ -2,6 +2,9 @@ package com.ruoyi.system.callback.processor;
 
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.ruoyi.common.core.domain.entity.robot.Robot;
+import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
@@ -27,6 +30,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -54,6 +58,12 @@ public class TgRobotProcessor {
      */
     @Type(value = 50005004, parameterClass = Called50005004DTO.class)
     public void called50005004(Called50005004DTO source) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()){
+            if(!CollectionUtils.isEmpty(source.getRobotSerialNos())){
+                robotService.recycleRobot(source.getRobotSerialNos());
+            }
+        }
 
     }
 
@@ -63,7 +73,13 @@ public class TgRobotProcessor {
      */
     @Type(value = 50005005, parameterClass = Called50005005DTO.class)
     public void called50005005(List<Called50005005DTO> sourceList) {
-
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()){
+            if(!CollectionUtils.isEmpty(sourceList)){
+                List<String> robotSerialNos = sourceList.stream().map(Called50005005DTO::getRobotSerialNo).collect(Collectors.toList());
+                robotService.updateRobotMerchant(robotSerialNos);
+            }
+        }
     }
 
     /***

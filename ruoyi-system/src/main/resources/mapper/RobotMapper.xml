@@ -11,6 +11,7 @@
                trs.is_lock as occupyType
         from t_robot_info tri left join t_robot_statistics trs on tri.robot_serial_no = trs.robot_serial_no
         where tri.delete_status = 0
+          and tri.recycle_status = 0
         <if test="dto.startTime != null and dto.startTime != ''">
             and tri.create_time >= #{dto.startTime}
         </if>

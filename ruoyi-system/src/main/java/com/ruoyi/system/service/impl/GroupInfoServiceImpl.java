@@ -182,6 +182,16 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
     }
 
     @Override
+    public void updateGroupSerialNo(String groupId, String newGroupSerialNo) {
+        if(StrUtil.isNotBlank(newGroupSerialNo)) {
+            GroupInfo groupInfo = new GroupInfo();
+            groupInfo.setGroupId(groupId);
+            groupInfo.setGroupSerialNo(newGroupSerialNo);
+            baseMapper.updateById(groupInfo);
+        }
+    }
+
+    @Override
     public void updateGroupInfo(Called1100910018DTO.Called1100910018ChatroomInfoDTO dto) {
         if (dto == null) {
             return;

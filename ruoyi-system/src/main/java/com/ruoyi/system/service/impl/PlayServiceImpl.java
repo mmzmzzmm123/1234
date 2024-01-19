@@ -20,11 +20,13 @@ import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.core.domain.entity.play.*;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.enums.ProductCategoryType;
+import com.ruoyi.common.enums.ScanProgressEnum;
 import com.ruoyi.common.enums.play.PushStateEnum;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.ProductTools;
+import com.ruoyi.system.components.movie.PlayDirector;
 import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.mapper.*;
@@ -232,7 +234,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         play.setSendMechanism(JSON.toJSONString(dto.getSendMechanism()));
         play.setAdMonitor(JSON.toJSONString(dto.getAdMonitor()));
         play.setPlayExt(JSON.toJSONString(dto.getPlayExt()));
-        play.setUrlPool(String.join(",", dto.getUrlPool()));
         play.setUserId(dto.getLoginUser().getUserId());
         play.setMerchantId(dto.getLoginUser().getMerchantInfo().getMerchantId());
         if (dto.getGroupSource() == 1) {
@@ -241,6 +242,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         }
         if (dto.getStartType() == 0) {
             play.setStartGroupDate(new Date());
+        }
+        if (null != dto.getUrlPool() && dto.getUrlPool().size() > 0) {
+            play.setUrlPool(String.join(",", dto.getUrlPool()));
         }
         play.setLockRobotStatus(dto.getPlayExt().getLockState());
         super.save(play);
@@ -259,12 +263,14 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         }
 
         play.setName(dto.getName());
-        play.setUrlPool(String.join(",", dto.getUrlPool()));
         play.setTargetCountyCode(dto.getTargetCountyCode());
         play.setTargetCountyName(dto.getTargetCountyName());
         play.setSendMechanism(JSON.toJSONString(dto.getSendMechanism()));
         play.setAdMonitor(JSON.toJSONString(dto.getAdMonitor()));
         play.setPlayExt(JSON.toJSONString(dto.getPlayExt()));
+        if (null != dto.getUrlPool() && dto.getUrlPool().size() > 0) {
+            play.setUrlPool(String.join(",", dto.getUrlPool()));
+        }
         updateById(play);
 
         //剧本内容
@@ -295,9 +301,11 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         ret.setSendMechanism(play.convertSendMechanismStr());
         ret.setAdMonitor(play.convertAdMonitorStr());
         ret.setPlayExt(play.convertPlayExtStr());
-        ret.setUrlPool(Arrays.asList(play.getUrlPool().split(",")));
         if (play.getGroupSource() == 1) {
             ret.setGroupUrls(Arrays.asList(play.getGroupUrls().split(",")));
+        }
+        if (StringUtils.isNotEmpty(play.getUrlPool())) {
+            ret.setUrlPool(Arrays.asList(play.getUrlPool().split(",")));
         }
 
         PlayGroupPack playGroupPack = playGroupPackMapper.selectOne(new LambdaQueryWrapper<PlayGroupPack>()
@@ -558,27 +566,42 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         PlayDTO dto = new PlayDTO();
         BeanUtils.copyProperties(infoRet.getData(), dto);
         dto.setLoginUser(loginUser);
-
+        dto.setState(1);
+        dto.setScanProgress(ScanProgressEnum.Send_Wait.getVal());
         R<String> ret = this.create(dto);
         if (ret.getCode() != SUCCESS) {
             return R.fail(ErrInfoConfig.getDynmic(10000, "创建剧本失败"));
         }
         String newPlayId = ret.getData();
 
+        //复制进群数据
         List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(play.getId());
-        log.info("play_updateAdInfo_groupIds:{}", playGroupInfos.stream().map(PlayGroupInfo::getGroupId).collect(Collectors.joining()));
-        if (playGroupInfos.isEmpty()) {
-            return R.ok();
+        log.info("repeatPlay_playGroupInfoIds:{}", playGroupInfos.stream().map(PlayGroupInfo::getGroupId).collect(Collectors.joining(",")));
+        if (!playGroupInfos.isEmpty()) {
+            List<PlayGroupInfo> savePlayGroupData = new ArrayList<>();
+            for (PlayGroupInfo item : playGroupInfos) {
+                PlayGroupInfo playGroupInfo = new PlayGroupInfo();
+                BeanUtils.copyProperties(item, playGroupInfo);
+                playGroupInfo.setPlayId(newPlayId);
+                savePlayGroupData.add(playGroupInfo);
+            }
+            SpringUtils.getBean(PlayGroupInfoServiceImpl.class).saveBatch(savePlayGroupData);
         }
 
-        List<PlayGroupInfo> savePlayGroupData = new ArrayList<>();
-        for (PlayGroupInfo item : playGroupInfos) {
-            PlayGroupInfo playGroupInfo = new PlayGroupInfo();
-            BeanUtils.copyProperties(item, playGroupInfo);
-            playGroupInfo.setPlayId(newPlayId);
-            savePlayGroupData.add(playGroupInfo);
+        //复制推送数据 t_play_message_push push_state 1
+        List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayId(newPlayId);
+        log.info("repeatPlay_playMessagePushIds:{}", playMessagePushList.stream().map(x -> x.getId().toString()).collect(Collectors.joining(",")));
+        if (!playMessagePushList.isEmpty()) {
+            List<PlayMessagePush> savePlayMessagePush = new ArrayList<>();
+            for (PlayMessagePush item : playMessagePushList) {
+                PlayMessagePush playMessagePush = new PlayMessagePush();
+                BeanUtils.copyProperties(item, playMessagePush);
+                playMessagePush.setPlayId(newPlayId);
+                playMessagePush.setPushState(PushStateEnum.WAIT_SEND.getKey());
+                savePlayMessagePush.add(playMessagePush);
+            }
+            playMessagePushService.saveBatch(savePlayMessagePush);
         }
-        SpringUtils.getBean(PlayGroupInfoServiceImpl.class).saveBatch(savePlayGroupData);
 
         //保存重复炒日志
         PlayRepeatLog playRepeatLog = new PlayRepeatLog();
@@ -600,56 +623,87 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 this.suspendPlay(dto.getPlayIds());
                 break;
             case PlayStatusConstants.CANCEL:
-                this.cancelPlay(dto.getPlayIds());
+                this.setPlayCancel(dto.getPlayIds());
                 break;
             case PlayStatusConstants.IN_PROGRESS:
-                this.startPlay(dto.getPlayIds());
+                this.setPlayStart(dto.getPlayIds());
                 break;
         }
         return Boolean.TRUE;
     }
 
-    private void suspendPlay(List<String> ids) {
-        for (String id : ids) {
-            boolean ret = super.update(null, new UpdateWrapper<Play>().lambda()
+    /**
+     * 设置剧本暂停状态
+     */
+    public void suspendPlay(List<String> playIds) {
+        log.info("play_setState_{}, ids: {}", PlayStatusConstants.SUSPEND, playIds);
+        for (String id : playIds) {
+            boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
                     .eq(Play::getId, id)
                     .in(Play::getState, Collections.singletonList(PlayStatusConstants.IN_PROGRESS))
                     .set(Play::getState, PlayStatusConstants.SUSPEND));
-            if (ret) {
-                SpringUtils.getBean(PlayMessagePushService.class).update(null, new UpdateWrapper<PlayMessagePush>().lambda()
-                        .eq(PlayMessagePush::getPlayId, id)
-                        .eq(PlayMessagePush::getPushState, PushStateEnum.ING.getKey())
-                        .set(PlayMessagePush::getPushState, PushStateEnum.USER_STOP.getKey()));
+            if (setPlayFlag) {
+                List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayIdAndState(id, Collections.singletonList(PushStateEnum.ING.getKey()));
+                for (PlayMessagePush playMessagePush : playMessagePushList) {
+                    playMessagePush.setPushState(PushStateEnum.USER_STOP.getKey());
+                    boolean setPlayMessage = playMessagePushService.updateById(playMessagePush);
+                    if (setPlayMessage) {
+                        PlayDirector.tgInstance().pause(id, playMessagePush.getGroupId());
+                    }
+                }
             }
         }
     }
 
-    private void cancelPlay(List<String> ids) {
-        for (String id : ids) {
-            boolean ret = super.update(null, new UpdateWrapper<Play>().lambda()
-                    .eq(Play::getId, id)
-                    .in(Play::getState, Arrays.asList(PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.SUSPEND))
-                    .set(Play::getState, PlayStatusConstants.CANCEL));
-            if (ret) {
-                SpringUtils.getBean(PlayMessagePushService.class).update(null, new UpdateWrapper<PlayMessagePush>().lambda()
-                        .eq(PlayMessagePush::getPlayId, id)
-                        .in(PlayMessagePush::getPushState, Arrays.asList(PushStateEnum.ING.getKey(), PushStateEnum.USER_STOP.getKey()))
-                        .set(PlayMessagePush::getPushState, PushStateEnum.CANCEL.getKey()));
-            }
-        }
+    /**
+     * 取消剧本
+     */
+    public void setPlayCancel(List<String> ids) {
+        log.info("play_setState_{}, ids: {}", PlayStatusConstants.SUSPEND, ids);
+//        for (String id : ids) {
+//            boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
+//                    .eq(Play::getId, id)
+//                    .in(Play::getState, Arrays.asList(PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.SUSPEND))
+//                    .set(Play::getState, PlayStatusConstants.CANCEL));
+//            if (setPlayFlag) {
+////                playMessagePushService.update(null, new UpdateWrapper<PlayMessagePush>().lambda()
+////                        .eq(PlayMessagePush::getPlayId, id)
+////                        .in(PlayMessagePush::getPushState, Arrays.asList(PushStateEnum.ING.getKey(), PushStateEnum.USER_STOP.getKey()))
+////                        .set(PlayMessagePush::getPushState, PushStateEnum.CANCEL.getKey()));
+//
+//                List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayIdAndState(id, Arrays.asList(PushStateEnum.ING.getKey(), PushStateEnum.USER_STOP.getKey()));
+//                for (PlayMessagePush playMessagePush : playMessagePushList) {
+//                    playMessagePush.setPushState(PushStateEnum.CANCEL.getKey());
+//                    boolean setPlayMessage = playMessagePushService.updateById(playMessagePush);
+//                    if (setPlayMessage) {
+//                        PlayDirector.tgInstance().pause(id, playMessagePush.getGroupId());
+//                        //退群接口
+//                        SpringUtils.getBean(IntoGroupService.class).outGroup();
+//                    }
+//                }
+//            }
+//        }
     }
 
-    private void startPlay(List<String> ids) {
+    /**
+     * 设置剧本进行中
+     */
+    public void setPlayStart(List<String> ids) {
+        log.info("play_setState_{}, ids: {}", PlayStatusConstants.SUSPEND, ids);
         for (String id : ids) {
-            boolean ret = super.update(null, new UpdateWrapper<Play>().lambda()
+            boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
                     .eq(Play::getId, id)
                     .in(Play::getState, Collections.singletonList(PlayStatusConstants.SUSPEND))
                     .set(Play::getState, PlayStatusConstants.IN_PROGRESS));
-            if (ret) {
-                SpringUtils.getBean(PlayMessagePushService.class).update(null, new UpdateWrapper<PlayMessagePush>().lambda()
-                        .eq(PlayMessagePush::getPlayId, id)
-                        .in(PlayMessagePush::getPushState, Collections.singletonList(PushStateEnum.USER_STOP.getKey()))
-                        .set(PlayMessagePush::getPushState, PushStateEnum.ING.getKey()));
+            if (setPlayFlag) {
+                List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayIdAndState(id, Collections.singletonList(PushStateEnum.USER_STOP.getKey()));
+                for (PlayMessagePush playMessagePush : playMessagePushList) {
+                    playMessagePush.setPushState(PushStateEnum.ING.getKey());
+                    boolean setPlayMessage = playMessagePushService.updateById(playMessagePush);
+                    if (setPlayMessage) {
+                        PlayDirector.tgInstance().resume(id, playMessagePush.getGroupId());
+                    }
+                }
             }
         }
     }
@@ -688,16 +742,17 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return R.ok();
         }
 
-        //释放水军
+        //todo 释放水军
         for (PlayRobotGroupRelation playRobotGroupRelation : playRobotGroupRelationList) {
 
         }
 
-        //todo 退群
+        //退群
 
         return R.ok();
     }
 
+    //todo job释放水军
     @Override
     public void jobReleaseRobot() {
         //查询配置锁定水军表数据

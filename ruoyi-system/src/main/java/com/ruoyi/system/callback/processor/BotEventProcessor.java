@@ -6,6 +6,7 @@ import com.ruoyi.common.utils.MD5Utils;
 import com.ruoyi.system.callback.BotEvent;
 import com.ruoyi.system.callback.dto.bot.*;
 import com.ruoyi.system.domain.GroupInfo;
+import com.ruoyi.system.domain.GroupMonitorInfo;
 import com.ruoyi.system.service.GroupInfoService;
 import com.ruoyi.system.service.GroupMonitorInfoService;
 import com.ruoyi.system.service.GroupStateService;
@@ -43,16 +44,19 @@ public class BotEventProcessor {
 
     @BotEvent(value = BotEventEnum.GROUP_UPGRADE, parameterClass = GroupUpgradeDTO.class)
     public void groupUpgrade(GroupUpgradeDTO dto) {
-        int count = groupMonitorInfoService.originalGroupIdChange(dto.getBotId() + "", dto.getOldGroupId() + "", dto.getNewGroupId() + "");
-        //根据原始id 更新失败
-        if (count <= 0) {
+        GroupMonitorInfo groupMonitorInfo = groupMonitorInfoService.originalGroupIdChange(dto.getBotId() + "",
+                dto.getOldGroupId() + "", dto.getNewGroupId() + "");
+        if(groupMonitorInfo!=null){
+            String newGroupId = getGroupSerialNo(dto.getNewGroupId());
+            groupInfoService.updateGroupSerialNo(groupMonitorInfo.getGroupId(), newGroupId);
+        }else{
             //根据原始id md5获取加密后的编号
             String oldGroupId = getGroupSerialNo(dto.getOldGroupId());
             String newGroupId = getGroupSerialNo(dto.getNewGroupId());
-
             GroupInfo groupBySerialNo = groupInfoService.getGroupBySerialNo(oldGroupId, newGroupId);
             if (groupBySerialNo != null) {
                 groupMonitorInfoService.updateOriginalGroupId(groupBySerialNo.getGroupId(), dto.getNewGroupId() + "");
+                groupInfoService.updateGroupSerialNo(groupBySerialNo.getGroupId(), newGroupId);
             }
         }
 

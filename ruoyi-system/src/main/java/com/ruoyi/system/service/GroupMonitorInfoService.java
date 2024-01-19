@@ -30,7 +30,7 @@ public interface GroupMonitorInfoService extends IService<GroupMonitorInfo> {
     void updateOriginalGroupId(String botId, String robotId, String originalGroupId);
 
 
-    int originalGroupIdChange(String botId, String oldGroupId, String newGroupId);
+    GroupMonitorInfo originalGroupIdChange(String botId, String oldGroupId, String newGroupId);
 
     int updateInfo(MemberQuantityDTO dto);
 

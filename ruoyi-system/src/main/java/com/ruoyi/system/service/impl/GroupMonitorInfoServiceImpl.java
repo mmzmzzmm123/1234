@@ -106,11 +106,18 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
     }
 
     @Override
-    public int originalGroupIdChange(String botId, String oldGroupId, String newGroupId) {
+    public GroupMonitorInfo originalGroupIdChange(String botId, String oldGroupId, String newGroupId) {
+        GroupMonitorInfo groupMonitorInfo = baseMapper.selectOne(new LambdaQueryWrapper<GroupMonitorInfo>()
+                .eq(GroupMonitorInfo::getOriginalGroupId, oldGroupId).last(" limit 1"));
+        if(groupMonitorInfo==null){
+            return null;
+        }
+
         GroupMonitorInfo groupInfo = new GroupMonitorInfo();
         groupInfo.setOriginalGroupId(newGroupId);
-        return baseMapper.update(groupInfo, new LambdaQueryWrapper<GroupMonitorInfo>()
-                .eq(GroupMonitorInfo::getOriginalGroupId, oldGroupId));
+        groupInfo.setGroupId(groupMonitorInfo.getGroupId());
+        baseMapper.updateById(groupInfo);
+        return groupInfo;
     }
 
     @Override

@@ -119,10 +119,6 @@ public class PlayController extends BaseController {
         }
 
         dto.setUrlPool(handleUrlList(dto.getUrlPool()));
-        if (dto.getUrlPool().isEmpty()) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "请配置接粉号池"));
-        }
-
         if (dto.getGroupCondition() == 0) {
             if (dto.getUserNum() == null || dto.getUserNum() < 1) {
                 return R.fail(ErrInfoConfig.getDynmic(11000, "请配置群人数"));
@@ -150,13 +146,10 @@ public class PlayController extends BaseController {
         if (StringUtils.isEmpty(dto.getName())) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能为空"));
         }
-        if (dto.getName().length() > 100) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过100字"));
+        if (dto.getName().length() > 64) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过64字"));
         }
         dto.setUrlPool(handleUrlList(dto.getUrlPool()));
-        if (dto.getUrlPool().isEmpty()) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "请配置接粉号池"));
-        }
         R<String> checkPlayMessageListRet = checkPlayMessageList(dto.getPlayMessageList());
         if (checkPlayMessageListRet.getCode() != HttpStatus.SUCCESS) {
             return checkPlayMessageListRet;
@@ -263,7 +256,7 @@ public class PlayController extends BaseController {
     public R<String> repeatPlay(@PathVariable String playId) {
         LoginUser loginUser = getLoginUser();
         if (ObjectUtils.isEmpty(loginUser.getMerchantInfo()) || loginUser.getMerchantInfo().getMerchantType() != 0) {
-            return R.fail(ErrInfoConfig.getDynmic(11011));
+            //return R.fail(ErrInfoConfig.getDynmic(11011));
         }
         return playService.repeatPlay(playId, loginUser);
     }
