@@ -153,7 +153,7 @@ public class IntoGroupService {
                 R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
                 log.info("获取群返回："+JSONObject.toJSONString(groupList));
                 if (groupList.getCode() != 200) {
-                    play.setState(3);
+                    play.setState(4);
                     play.setFailReason("无剧本所需足够的群！");
                     setLog(play.getId(), "无剧本所需足够的群数", 1, PlayLogTyper.Group_out, null);
                     playMapper.updateById(play);
@@ -344,7 +344,7 @@ public class IntoGroupService {
         R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
         log.info("重试获取群信息返回:"+JSONObject.toJSONString(groupList));
         if (groupList.getCode() != 200) {
-            play.setState(3);
+            play.setState(4);
             play.setFailReason("无剧本所需足够的群！");
             setLog(play.getId(), "无剧本所需足够的群数", 1, PlayLogTyper.Group_out, null);
             playMapper.updateById(play);
@@ -464,7 +464,7 @@ public class IntoGroupService {
                         log.info("不需要修改人设的群获取返回："+JSONObject.toJSONString(groupList));
                         if (groupList.getCode() != 200) {
                             //设置错误
-                            playDTO.setState(3);
+                            playDTO.setState(4);
                             playDTO.setFailReason("无剧本所需足够的群！");
                             continue;
                         }
@@ -483,7 +483,7 @@ public class IntoGroupService {
                     for (GroupInfoVO groupInfoVO : infoVOS) {
                         List<GetRobotVO> robotVOS = getRobot(playDTO, vibeRule, performers);
                         if (robotVOS == null) {
-                            playDTO.setState(3);
+                            playDTO.setState(4);
                             playDTO.setFailReason("无剧本所需足够的机器人！");
                             setLog(playDTO.getId(), "群" + groupInfoVO.getGroupName() + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
                             continue;
@@ -551,7 +551,7 @@ public class IntoGroupService {
                             }
                         }
                         if (robotVOS == null) {
-                            playDTO.setState(3);
+                            playDTO.setState(4);
                             playDTO.setFailReason("无剧本所需足够的机器人！");
                             setLog(playDTO.getId(), "群" + group + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, null);
                             continue;
