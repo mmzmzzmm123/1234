@@ -82,4 +82,23 @@ public interface PlayExecutionLogService {
 		}
 		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
 	}
+	
+	
+	
+	public static void robotSendMassageErrLog(String playId, String groupId, String robotId, String errMsg, String opt) {
+		PlayExecutionLog log = new PlayExecutionLog();
+		log.setGroupId(groupId);
+		log.setPlayId(playId);
+		log.setOpt(opt);
+		// 状态 0-成功（默认） 1-失败
+		log.setState(StringUtils.isEmpty(errMsg) ? 0 : 1);
+		log.setType(PlayLogTyper.Robot_Settings);
+		log.setRobotId(robotId);
+		if(StringUtils.isEmpty(opt)) {
+			log.setContent(String.format("【剧本消息发送失败】 群%s 号%s，原因：%s，操作码:%s", groupId, robotId, errMsg , opt));
+		}else {
+			log.setContent(String.format("【剧本消息发送失败】 群%s 号%s，原因：%s", groupId, robotId, errMsg));
+		}
+		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
+	}
 }

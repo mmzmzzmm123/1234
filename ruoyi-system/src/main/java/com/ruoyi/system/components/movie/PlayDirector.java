@@ -16,9 +16,11 @@ import com.ruoyi.system.components.PlayInfoTools;
 import com.ruoyi.system.components.movie.SendMsgOptTempRedis.SendMsgOptTempEntry;
 import com.ruoyi.system.components.movie.spi.PlayRunner;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
+import com.ruoyi.system.components.movie.spi.impl.PreRobotSpeakAllocator;
 import com.ruoyi.system.mapper.PlayMessageMapper;
 import com.ruoyi.system.mapper.PlayMessagePushDetailMapper;
 import com.ruoyi.system.mapper.PlayMessagePushDetailTrackMapper;
+import com.ruoyi.system.service.PlayExecutionLogService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -116,11 +118,20 @@ public class PlayDirector implements CallBackProcessor {
 					// 有发过的
 					continue;
 				}
+				
+				PreRobotSpeakAllocator.Cache.set(entry.getPlayId(), entry.getChatroomId(), entry.getRobotNickName(), backRobot);
+				// 更新 detail
+				PlayMessagePushDetail d = new PlayMessagePushDetail();
+				d.setId(detail.getId());
+				d.setRobotId(backRobot);
+				SpringUtils.getBean(PlayMessagePushDetailMapper.class).updateById(d) ;
 				// 直接取这个号继续发送
 				PlayMessage playMsg = SpringUtils.getBean(PlayMessageMapper.class).getBySort(entry.getMsgSort(),
 						entry.getPlayId());
 				ServiceLoader.load(ProgressPuller.class).continuePull(playMsg, entry.getChatroomId());
 				log.info("切换备用号发送 {} {}" , entry , opt);
+				String c = String.format("【剧本推送-切换备用号重试发送】剧本:%s 群: %s 号:%s" , entry.getPlayId() , entry.getChatroomId(),backRobot) ;
+				PlayExecutionLogService.robotPackLog(entry.getPlayId(), entry.getChatroomId(), backRobot, c, errMsg);
 				return;
 			}
 		}
