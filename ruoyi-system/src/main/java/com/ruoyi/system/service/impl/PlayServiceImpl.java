@@ -633,7 +633,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     /**
-     * 设置剧本暂停状态
+     * 批量设置剧本暂停状态
      */
     public void suspendPlay(List<String> playIds) {
         log.info("play_setState_{}, ids: {}", PlayStatusConstants.SUSPEND, playIds);
@@ -656,7 +656,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     /**
-     * 取消剧本
+     * 批量取消剧本
      */
     public void setPlayCancel(List<String> ids) {
         log.info("play_setState_{}, ids: {}", PlayStatusConstants.SUSPEND, ids);
@@ -686,7 +686,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     /**
-     * 设置剧本进行中
+     * 批量设置剧本进行中
      */
     public void setPlayStart(List<String> ids) {
         log.info("play_setState_{}, ids: {}", PlayStatusConstants.SUSPEND, ids);
@@ -704,6 +704,35 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                         PlayDirector.tgInstance().resume(id, playMessagePush.getGroupId());
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * 暂停单个剧本
+     * @param playId
+     * @param groupId
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void stopPlayByGroupId(String playId, String groupId) {
+        log.info("stopPlayByGroupId_playId:{},_groupId:{}", playId, groupId);
+        if (StringUtils.isNotEmpty(playId) || StringUtils.isEmpty(groupId)) {
+            return;
+        }
+
+        boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
+                .eq(Play::getId, playId).eq(Play::getState, PlayStatusConstants.IN_PROGRESS)
+                .set(Play::getState, PlayStatusConstants.SUSPEND));
+        if (setPlayFlag) {
+            PlayMessagePush playMessagePush = playMessagePushService.getOneByPlayIdAndGroupId(playId, groupId);
+            if (null == playMessagePush || !playMessagePush.getPushState().equals(PushStateEnum.ING.getKey())) {
+                return;
+            }
+
+            playMessagePush.setPushState(PushStateEnum.USER_STOP.getKey());
+            boolean setPlayMessage = playMessagePushService.updateById(playMessagePush);
+            if (setPlayMessage) {
+                PlayDirector.tgInstance().pause(playId, groupId);
             }
         }
     }

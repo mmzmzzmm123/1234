@@ -379,6 +379,16 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
                 .in(PlayMessagePush::getPushState, stateList)
                 .eq(PlayMessagePush::getIsDelete, 0));
     }
+
+    @Override
+    public PlayMessagePush getOneByPlayIdAndGroupId(String playId, String groupId) {
+        return super.getOne(new LambdaQueryWrapper<PlayMessagePush>()
+                .eq(PlayMessagePush::getPlayId, playId)
+                .eq(PlayMessagePush::getGroupId, groupId)
+                .eq(PlayMessagePush::getIsDelete, 0)
+                .last(" limit 1 ")
+        );
+    }
 }
 
 
