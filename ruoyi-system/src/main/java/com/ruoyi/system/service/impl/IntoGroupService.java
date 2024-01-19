@@ -452,7 +452,7 @@ public class IntoGroupService {
                 if (playDTO.getGroupSource() == 0) {
                     PlayGroupPack playGroupPack = playGroupPackMapper.selectGroupPackByPlayId(playDTO.getId());
                     List<GroupInfoVO> infoVOS = new ArrayList<>();
-                    if (playGroupPack == null) {
+                    if (playGroupPack == null || (StringUtils.isEmpty(playGroupPack.getName()) && StringUtils.isEmpty(playGroupPack.getPic()))) {
                         GroupQueryDTO groupQueryDTO = new GroupQueryDTO();
                         groupQueryDTO.setGroupNum(playDTO.getGroupNum());
                         groupQueryDTO.setRegistrationDay(playDTO.getGroupDay());
