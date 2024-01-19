@@ -1105,7 +1105,21 @@ public class IntoGroupService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.MINUTE, -5);
-        playIntoGroupTaskMapper.updateTaskByOutTime(calendar.getTime(), "无回调，自动变更失败！");
+        List<PlayIntoGroupTask> playIntoGroupTasks =playIntoGroupTaskMapper.selectNotCallBackTask(calendar.getTime());
+        if (playIntoGroupTasks == null || playIntoGroupTasks.size() == 0){
+            return;
+        }
+        for (PlayIntoGroupTask playIntoGroupTask:playIntoGroupTasks){
+            PlayIntoGroupTask task = Beans.toView(playIntoGroupTask,PlayIntoGroupTask.class);
+            task.setTaskState(1);
+            task.setCreateTime(new Date());
+            task.setId(IdUtils.fastUUID());
+            task.setModifyTime(new Date());
+            playIntoGroupTaskMapper.insert(task);
+            setLog(task.getPlayId(),  "机器人" + task.getPersonId() + "入群没有接收到入群回调！正在重试！", 1, PlayLogTyper.Group_into, null);
+            playIntoGroupTask.setTaskState(4);
+            playIntoGroupTask.setFailCause("无入群回调,已自动变更为失败！");
+        }
     }
 
 }

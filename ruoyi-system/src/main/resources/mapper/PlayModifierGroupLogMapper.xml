@@ -19,4 +19,5 @@
     <update id="updateTaskByOutTime" >
         update t_play_modifier_group_log set state = 3 where state = 1 and  #{outTime} > create_time
     </update>
+
 </mapper>
