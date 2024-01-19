@@ -52,6 +52,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
@@ -101,6 +102,7 @@ public class IntoGroupService {
     @Autowired
     GroupInfoMapper groupInfoMapper;
 
+    @Scheduled(cron = "0/20 * * * * ?")
     public void optionGroup() {
         log.info("扫描未开始的剧本");
         //扫描剧本状态为调用中 未开始的剧本
@@ -152,6 +154,7 @@ public class IntoGroupService {
                     play.setFailReason("无剧本所需足够的群！");
                     setLog(play.getId(), "无剧本所需足够的群数", 1, PlayLogTyper.Group_out, null);
                     playMapper.updateById(play);
+                    continue;
                 }
                 List<String> imgs = Arrays.asList(playGroupPack.getPic().split(","));
                 List<String> names = Arrays.asList(playGroupPack.getName().split(","));
@@ -255,6 +258,7 @@ public class IntoGroupService {
         return countys;
     }
 
+    @Scheduled(cron = "0/20 * * * * ?")
     public void modifierGroup() {
         log.info("扫描修改群人设的剧本！");
         //扫描剧本状态为调用中 未开始的剧本
@@ -405,6 +409,7 @@ public class IntoGroupService {
     }
 
 
+    @Scheduled(cron = "0/20 * * * * ?")
     public void into() {
         log.info("扫描已修改好人设的剧本任务");
         RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:into");
@@ -479,31 +484,40 @@ public class IntoGroupService {
                                 robotList.add(getRobotVO);
                             }
                         }
-                        //拆分入群任务
-                        for (PlayRobotPack performer : performers) {
-                            PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
-                            // 插入计划表
-                            playIntoGroupTask.setId(IdUtils.fastUUID());
-                            playIntoGroupTask.setGroupUrl(groupInfoVO.getGroupInviteLink());
-                            playIntoGroupTask.setCreateTime(new Date());
-                            playIntoGroupTask.setModifyTime(new Date());
-                            playIntoGroupTask.setPlayId(playDTO.getId());
-                            playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
-                            if (performer.getIsAdmin() == 1) {
-                                int index = RandomListPicker.pickRandom(adminList);
-                                playIntoGroupTask.setPersonId(adminList.get(index).getRobotSerialNo());
-                                playIntoGroupTask.setIsAdmin(1);
-                                robotVOS.remove(index);
-                                playIntoGroupTask.setTaskState(1);
-                            } else {
-                                int index = RandomListPicker.pickRandom(robotList);
-                                playIntoGroupTask.setPersonId(robotList.get(index).getRobotSerialNo());
-                                playIntoGroupTask.setIsAdmin(0);
-                                robotVOS.remove(index);
-                                playIntoGroupTask.setTaskState(1);
-                            }
-                            playIntoGroupTasks.add(playIntoGroupTask);
+                        PlayExt playExt = JSONObject.parseObject(playDTO.getPlayExt(), PlayExt.class);
+                        Integer i= 1;
+                        if (playExt.getStandbyState() == 1) {
+                            i = 1+vibeRule.getStandbyNum();
                         }
+                        for (int j =0;j<i;j++){
+                            //拆分入群任务
+                            for (PlayRobotPack performer : performers) {
+                                PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
+                                // 插入计划表
+                                playIntoGroupTask.setId(IdUtils.fastUUID());
+                                playIntoGroupTask.setGroupUrl(groupInfoVO.getGroupInviteLink());
+                                playIntoGroupTask.setCreateTime(new Date());
+                                playIntoGroupTask.setModifyTime(new Date());
+                                playIntoGroupTask.setPlayId(playDTO.getId());
+                                playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
+                                if (performer.getIsAdmin() == 1) {
+                                    int index = RandomListPicker.pickRandom(adminList);
+                                    playIntoGroupTask.setPersonId(adminList.get(index).getRobotSerialNo());
+                                    playIntoGroupTask.setIsAdmin(1);
+                                    adminList.remove(index);
+                                    playIntoGroupTask.setTaskState(1);
+                                } else {
+                                    int index = RandomListPicker.pickRandom(robotList);
+                                    playIntoGroupTask.setPersonId(robotList.get(index).getRobotSerialNo());
+                                    playIntoGroupTask.setIsAdmin(0);
+                                    robotList.remove(index);
+                                    playIntoGroupTask.setTaskState(1);
+                                }
+                                playIntoGroupTask.setIsError(0);
+                                playIntoGroupTasks.add(playIntoGroupTask);
+                            }
+                        }
+
                         setLog(playDTO.getId(), "群" + groupInfoVO.getGroupName() + "机器人调度入群任务分配成功！", 0, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
                     }
                 } else {
@@ -527,35 +541,45 @@ public class IntoGroupService {
                             setLog(playDTO.getId(), "群" + group + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, null);
                             continue;
                         }
-                        // 循环插入计划表
-                        for (PlayRobotPack performer : performers) {
-                            // 插入计划表
-                            PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
-                            playIntoGroupTask.setId(IdUtils.fastUUID());
-                            playIntoGroupTask.setGroupUrl(group);
-                            playIntoGroupTask.setCreateTime(new Date());
-                            playIntoGroupTask.setModifyTime(new Date());
-                            playIntoGroupTask.setPlayId(playDTO.getId());
-                            playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
-                            if (performer.getIsAdmin() == 1) {
-                                int index = RandomListPicker.pickRandom(adminList);
-                                playIntoGroupTask.setPersonId(adminList.get(index).getRobotSerialNo());
-                                playIntoGroupTask.setIsAdmin(1);
-                                robotVOS.remove(index);
-                                playIntoGroupTask.setTaskState(1);
-                            } else {
-                                int index = RandomListPicker.pickRandom(robotList);
-                                playIntoGroupTask.setPersonId(robotList.get(index).getRobotSerialNo());
-                                playIntoGroupTask.setIsAdmin(0);
-                                robotVOS.remove(index);
-                                playIntoGroupTask.setTaskState(1);
+                        PlayExt playExt = JSONObject.parseObject(playDTO.getPlayExt(), PlayExt.class);
+                        Integer i= 1;
+                        if (playExt.getStandbyState() == 1) {
+                            i = 1+vibeRule.getStandbyNum();
+                        }
+                        for (int j =0;j<i;j++){
+                            // 循环插入计划表
+                            for (PlayRobotPack performer : performers) {
+                                // 插入计划表
+                                PlayIntoGroupTask playIntoGroupTask = new PlayIntoGroupTask();
+                                playIntoGroupTask.setId(IdUtils.fastUUID());
+                                playIntoGroupTask.setGroupUrl(group);
+                                playIntoGroupTask.setCreateTime(new Date());
+                                playIntoGroupTask.setModifyTime(new Date());
+                                playIntoGroupTask.setPlayId(playDTO.getId());
+                                playIntoGroupTask.setMerchantId(playDTO.getMerchantId());
+                                if (performer.getIsAdmin() == 1) {
+                                    int index = RandomListPicker.pickRandom(adminList);
+                                    playIntoGroupTask.setPersonId(adminList.get(index).getRobotSerialNo());
+                                    playIntoGroupTask.setIsAdmin(1);
+                                    adminList.remove(index);
+                                    playIntoGroupTask.setTaskState(1);
+                                } else {
+                                    int index = RandomListPicker.pickRandom(robotList);
+                                    playIntoGroupTask.setPersonId(robotList.get(index).getRobotSerialNo());
+                                    playIntoGroupTask.setIsAdmin(0);
+                                    robotList.remove(index);
+                                    playIntoGroupTask.setTaskState(1);
+                                }
+                                playIntoGroupTask.setIsError(0);
+                                playIntoGroupTasks.add(playIntoGroupTask);
                             }
-                            playIntoGroupTasks.add(playIntoGroupTask);
                         }
                         setLog(playDTO.getId(), "群" + group + "机器人调度入群任务分配成功！", 0, PlayLogTyper.Group_into, null);
                     }
                 }
-                playIntoGroupTaskMapper.batchInsert(playIntoGroupTasks);
+                if (playIntoGroupTasks.size() > 0){
+                    playIntoGroupTaskMapper.batchInsert(playIntoGroupTasks);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -618,6 +642,7 @@ public class IntoGroupService {
         adminDTO.setCountryCode(countys);
         adminDTO.setSetAdminCount(adminNum);
         adminDTO.setIpType(ipType);
+        adminDTO.setIsLock(playExt.getLockState());
         log.info("获取机器人入参："+JSONObject.toJSONString(adminDTO));
         //调用获取机器人接口
         R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
@@ -629,6 +654,7 @@ public class IntoGroupService {
     }
 
 
+    @Scheduled(cron = "0/20 * * * * ?")
     public R<Void> intoGroupTask() {
         log.info("执行入群任务{}");
         RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:intoGroupTask");
@@ -753,6 +779,8 @@ public class IntoGroupService {
                 adminDTO.setCountryCode(countys);
                 adminDTO.setSetAdminCount(adminNum);
                 adminDTO.setIpType(ipType);
+                PlayExt playExt = JSONObject.parseObject(play.getPlayExt(), PlayExt.class);
+                adminDTO.setIsLock(playExt.getLockState());
                 //调用获取机器人接口
                 log.info("入群失败重试获取号："+JSONObject.toJSONString(adminDTO));
                 R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
@@ -814,10 +842,17 @@ public class IntoGroupService {
                 robotGroupRelation.setGroupId(group.getGroupId());
                 robotGroupRelation.setState(1);
                 robotGroupRelation.setIsDelete(0);
+                robotGroupRelation.setIsAdmin(task.getIsAdmin());
+                robotGroupRelation.setIncomeGroupTime(new Date());
+                robotGroupRelation.setCreateTime(new Date());
+                robotGroupRelation.setModifyTime(new Date());
                 playRobotGroupRelationMapper.insert(robotGroupRelation);
             }
             //查询群内机器人数量
             Integer robotCount = playRobotGroupRelationMapper.selectRobotGroupCount(group.getGroupId());
+            if (robotCount == null){
+                robotCount = 0;
+            }
             //根据剧本计算所需的群人数
             Integer groupNum = play.getRobotNum();
             PlayExt playExt = JSONObject.parseObject(play.getPlayExt(), PlayExt.class);
@@ -829,6 +864,9 @@ public class IntoGroupService {
             }
             //查询任务表无法重试的机器人数量
             Integer errorCount = playIntoGroupTaskMapper.selectIsErrorCount(task.getGroupUrl());
+            if (errorCount == null){
+                errorCount = 0;
+            }
             setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "群内水军数量为：" + robotCount + ",剧本所需目标数为：" + groupAllCount + ",重试3次后失败数量" + errorCount, 0, PlayLogTyper.Group_into, null);
             log.info("群内机器人数量："+robotCount);
             log.info("剧本所需目标数为："+groupAllCount);
@@ -872,7 +910,9 @@ public class IntoGroupService {
         groupInfo.setMerchantId(task.getMerchantId());
         groupInfo.setGroupUrl(task.getGroupUrl());
         groupInfo.setTgGroupId(dto.getGroupId());
+        groupInfo.setMemberCount(0);
         groupInfo.setTgGroupName(dto.getGroupName());
+        groupInfo.setPlayId(task.getPlayId());
         groupInfo.setIsDelete(0);
         groupInfo.setState(0);
         groupInfo.setIntoStatus(1);
@@ -880,28 +920,44 @@ public class IntoGroupService {
     }
 
     //扫码群状态
+    @Scheduled(cron = "0/20 * * * * ?")
     public void scanGroupState() {
         log.info("扫描群状态！");
-        //获取入群中状态的剧本
-        //扫描剧本状态为调用中 未开始的剧本
-        List<Play> playList = playMapper.selectIntoGroupList(1, 3);
-        log.info("获取入群状态中的剧本:"+JSONObject.toJSONString(playList));
-        if (playList == null || playList.size() == 0) {
+        RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:scanGroupState");
+        if (lock.isLocked()) {
             return;
         }
-        for (Play play : playList) {
-            //查询剧本已完成调度群数
-            log.info("入群中的剧本:"+JSONObject.toJSONString(play));
-            Integer count = playGroupInfoMapper.selectSuccessGroupCount(play.getId());
-            log.info("剧本已完成调度的群数："+count);
-            if (count >= play.getGroupNum()) {
-                //修改剧本状态
-                play.setScanProgress(4);
-                log.info("已修改剧本状态"+JSONObject.toJSONString(count));
-                setLog(play.getId(), "所有群已完成入群调度！", 0, PlayLogTyper.Group_into, null);
-                playMapper.updateById(play);
+        try {
+            lock.lock(60 * 60, TimeUnit.SECONDS);
+            //获取入群中状态的剧本
+            //扫描剧本状态为调用中 未开始的剧本
+            List<Play> playList = playMapper.selectIntoGroupList(1, 3);
+            log.info("获取入群状态中的剧本:"+JSONObject.toJSONString(playList));
+            if (playList == null || playList.size() == 0) {
+                return;
             }
+            for (Play play : playList) {
+                //查询剧本已完成调度群数
+                log.info("入群中的剧本:"+JSONObject.toJSONString(play));
+                Integer count = playGroupInfoMapper.selectSuccessGroupCount(play.getId());
+                if (count == null){
+                    count = 0;
+                }
+                log.info("剧本已完成调度的群数："+count);
+                if (count >= play.getGroupNum()) {
+                    //修改剧本状态
+                    play.setScanProgress(4);
+                    log.info("已修改剧本状态"+JSONObject.toJSONString(count));
+                    setLog(play.getId(), "所有群已完成入群调度！", 0, PlayLogTyper.Group_into, null);
+                    playMapper.updateById(play);
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            lock.unlock();
         }
+
     }
 
     public void setLog(String playId, String content, Integer state, PlayLogTyper typer, String groupId) {

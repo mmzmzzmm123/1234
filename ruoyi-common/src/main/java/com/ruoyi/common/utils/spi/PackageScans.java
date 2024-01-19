@@ -26,7 +26,7 @@ public class PackageScans {
 	/***
 	 * 黑名单包(包名只要包含关键字的就不扫描) ，不扫描到
 	 */
-	private static final String[] BLACK_KEY_NAMES = {"com.alibaba"};
+	private static final String[] BLACK_KEY_NAMES = {"com.alibaba", "com.ruoyi.framework.manager", "com.ruoyi.system.extend"};
 
 	private final static ClassLoaderWrapper classloader = ClassLoaderWrapper.getWrapper();
 

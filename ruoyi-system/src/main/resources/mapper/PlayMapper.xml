@@ -64,13 +64,14 @@
         SELECT
             tpi.id AS playId,
             tpi.state,
+            tpi.scan_progress,
             tpi.group_num AS groupTotalNum,
             sum( IF ( tgs.group_status = 1, 1, 0 ) ) AS groupFailNum,
             count( tpgi.group_id ) AS groupCurrentNum,
             count( tpmp.id ) AS packTotalNum,
             sum( IF ( tpmp.robot_pack_flag = 1, 1, 0 ) ) AS packCurrentNum,
-            100 AS joinGroupTotalNum,
-            100 AS joinGroupCurrentNum
+            count( tpmp.id ) AS joinGroupTotalNum,
+            sum( IF ( tpmp.send_flag = 1, 1, 0 ) ) AS joinGroupCurrentNum
         FROM
             t_play_info tpi
             LEFT JOIN t_play_message_push tpmp ON tpi.id = tpmp.play_id
@@ -100,6 +101,7 @@
             tgi.group_link,
             tgi.group_private_link,
             tgi.group_type,
+            tgi.group_invite_link,
             tgmi.member_count,
             tgmi.join_count,
             tgmi.link_join_count,

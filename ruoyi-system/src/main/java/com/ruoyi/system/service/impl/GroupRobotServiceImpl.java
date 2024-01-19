@@ -115,11 +115,13 @@ public class GroupRobotServiceImpl extends ServiceImpl<GroupRobotMapper, GroupRo
     }
 
     @Override
-    public void setAdmin(String groupId, String robotId) {
+    public GroupRobot setAdmin(String groupId, String robotId) {
         GroupRobot groupRobot = getGroupRobot(robotId, groupId);
         if (groupRobot != null && ObjectUtil.notEqual(groupRobot.getMemberType(), 1)) {
-
+            groupRobot.setMemberType(2);
+            baseMapper.updateById(groupRobot);
         }
+        return groupRobot;
     }
 
     @Override
