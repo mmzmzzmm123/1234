@@ -159,8 +159,15 @@ public class IntoGroupService {
                     playMapper.updateById(play);
                     continue;
                 }
-                List<String> imgs = Arrays.asList(playGroupPack.getPic().split(","));
-                List<String> names = Arrays.asList(playGroupPack.getName().split(","));
+                List<String> imgs = new ArrayList<>();
+                List<String> names = new ArrayList<>();
+                if (StringUtils.isNotEmpty(imgs)){
+                    imgs  = Arrays.asList(playGroupPack.getPic().split(","));
+
+                }
+                if (StringUtils.isNotEmpty(names)){
+                    names = Arrays.asList(playGroupPack.getName().trim().split(","));
+                }
                 //循环群信息
                 List<GroupInfoVO> groupInfoVOS = groupList.getData();
                 for (GroupInfoVO groupInfoVO : groupInfoVOS) {
@@ -172,7 +179,7 @@ public class IntoGroupService {
                             tgRobotId = robotVO.getRobotId();
                         }
                     }
-                    if (names != null && names.size() > 0){
+                    if (names.size() > 0){
                         //修改群名称
                         ThirdTgModifyChatroomNameInputDTO inputDTO = new ThirdTgModifyChatroomNameInputDTO();
                         int index = RandomListPicker.pickRandom(names);
@@ -194,7 +201,7 @@ public class IntoGroupService {
                         }
                         setLog(play.getId(), "群" + groupInfoVO.getGroupName() + ",ID为：" + groupInfoVO.getGroupSerialNo() + "修改群名称为:" + names.get(index) + "成功！", 0, PlayLogTyper.Group_img_name, groupInfoVO.getGroupId());
                     }
-                    if (imgs != null && imgs.size() > 0){
+                    if (imgs.size() > 0){
                         ThirdTgModifyChatroomHeadImageInputDTO dto = new ThirdTgModifyChatroomHeadImageInputDTO();
                         dto.setChatroomSerialNo(groupInfoVO.getGroupSerialNo());
                         dto.setTgRobotId(tgRobotId);
