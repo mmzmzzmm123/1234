@@ -328,6 +328,10 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         // 混淆完成 标记到 5-号分配
         playInfo.setScanProgress(5);
         playInfoService.updateById(playInfo);
+
+        // 记录混淆日志
+        PlayExecutionLogService.playConfoundLog(playInfo.getId(), "混淆剧本完成", null);
+
     }
 
 
