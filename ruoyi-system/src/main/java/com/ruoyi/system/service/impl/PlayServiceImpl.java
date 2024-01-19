@@ -592,7 +592,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             SpringUtils.getBean(PlayGroupInfoServiceImpl.class).saveBatch(savePlayGroupData);
         }
 
-        //复制推送数据 t_play_message_push push_state 1
+        //复制推送数据
         List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayId(newPlayId);
         log.info("repeatPlay_playMessagePushIds:{}", playMessagePushList.stream().map(x -> x.getId().toString()).collect(Collectors.joining(",")));
         if (!playMessagePushList.isEmpty()) {
@@ -610,6 +610,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         //保存重复炒日志
         PlayRepeatLog playRepeatLog = new PlayRepeatLog();
         playRepeatLog.setPlayId(playId);
+        playRepeatLog.setNewPlayId(newPlayId);
         playRepeatLogMapper.insert(playRepeatLog);
 
         return R.ok(newPlayId);
