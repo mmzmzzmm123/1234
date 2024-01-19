@@ -44,7 +44,8 @@ public class RobotController {
     @PostMapping("/export")
     public R<Page<SelectRobotListVO>> export(@RequestBody SelectRobotListDTO dto, HttpServletResponse response){
         ExcelUtil<SelectRobotListVO> excelUtil = new ExcelUtil<>(SelectRobotListVO.class);
-        excelUtil.exportExcel(response,robotService.selectRobotPageList(dto).getData().getRecords(),"号列表");
+        List<SelectRobotListVO> records = robotService.selectRobotPageList(dto).getData().getRecords();
+        excelUtil.exportExcel(response,records,"号列表");
         return R.ok();
     }
 

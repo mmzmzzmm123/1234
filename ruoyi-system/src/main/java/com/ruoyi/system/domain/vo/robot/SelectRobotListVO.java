@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain.vo.robot;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import com.ruoyi.common.annotation.Excel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -10,7 +11,7 @@ import java.util.Date;
 @ApiModel("SelectRobotListVO")
 @Data
 public class SelectRobotListVO{
-    private String id;
+    //private String id;
     @Excel(name = "机器人编号")
     @ApiModelProperty(value = "机器人编号")
     private String robotSerialNo;
@@ -88,23 +89,28 @@ public class SelectRobotListVO{
     @ApiModelProperty(value = "双向状态,0-未被限制,1-已被限制")
     private Integer bidirectionalType;
 
-    @Excel(name = "双向状态-解除限制时间")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "双向状态-解除限制时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "双向状态-解除限制时间")
     private Date bidirectionalUnfreezeTime;
 
-    @Excel(name = "添加时间")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "添加时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "添加时间")
     private Date addTime;
 
-    @Excel(name = "封号时间")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "封号时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "封号时间")
     private Date sealTime;
 
-    @Excel(name = "双向时间")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "双向时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "双向时间")
     private Date bidirectionalTime;
 
-    @Excel(name = "创建时间")
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "创建时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
