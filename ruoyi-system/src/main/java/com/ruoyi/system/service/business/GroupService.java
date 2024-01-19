@@ -832,7 +832,7 @@ public class GroupService {
                 String optNo = "";
                 try {
                     GroupAction groupAction = GroupAction.of(groupActionLog.getSetType());
-                    if(!checkLimit(groupAction,groupActionLog.getRobotId(),groupActionLog.getId())){
+                    if(checkLimit(groupAction,groupActionLog.getRobotId(),groupActionLog.getId())){
                         continue;
                     }
                     OpenApiResult<TgBaseOutputDTO> apiResult  = null;
