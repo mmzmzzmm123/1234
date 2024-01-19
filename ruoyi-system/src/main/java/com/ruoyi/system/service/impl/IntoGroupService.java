@@ -161,11 +161,11 @@ public class IntoGroupService {
                 }
                 List<String> imgs = new ArrayList<>();
                 List<String> names = new ArrayList<>();
-                if (StringUtils.isNotEmpty(imgs)){
+                if (StringUtils.isNotEmpty(playGroupPack.getPic())){
                     imgs  = Arrays.asList(playGroupPack.getPic().split(","));
 
                 }
-                if (StringUtils.isNotEmpty(names)){
+                if (StringUtils.isNotEmpty(playGroupPack.getName())){
                     names = Arrays.asList(playGroupPack.getName().trim().split(","));
                 }
                 //循环群信息
