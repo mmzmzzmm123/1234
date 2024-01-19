@@ -28,6 +28,9 @@ public class StartupJobProcessor implements LogJobProcessor {
 			// 号人设状态 0-未执行 1-已执行
 			return;
 		}
+		log.info("StartupJobProcessor {}" , play);
+
+		
 		SpringUtils.getBean(TaskExecuteChainGroup.class).execute(play.getId());
 		// 改状态为已经执行
 		Play update = new Play();
