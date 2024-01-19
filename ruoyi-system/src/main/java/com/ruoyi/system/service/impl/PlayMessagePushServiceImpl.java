@@ -130,7 +130,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         Assert.isTrue(playMessagePush.getRobotAllocationFlag().equals(1), "号未分配无法强制开炒");
         Assert.isTrue(playMessagePush.getRobotPackFlag().equals(1), "人设未包装无法强制开炒");
         Assert.isTrue(playMessagePush.getPushState().equals(PushStateEnum.WAIT_SEND.getKey()), "非待执行状态无法强制开炒");
-
+        playMessagePush.setSendFlag(1);
         playMessagePush.setPushState(PushStateEnum.ING.getKey());
         super.updateById(playMessagePush);
     }
