@@ -408,4 +408,11 @@ public class OpenApiClient {
         return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_GROUP_MEMBER, JSONObject.from(data), TgBaseOutputDTO.class);
     }
 
+    /**
+     * 比邻第三方 TG个人号订阅
+     */
+    public static OpenApiResult<Void> personalOnByThirdTg(ThirdTelegramPersonalCallbackRegInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_TG_PERSONAL_ON, JSONObject.from(data), Void.class);
+    }
+
 }
