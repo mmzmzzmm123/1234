@@ -72,15 +72,6 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
                 return R.fail("号资源不足");
             }
         }
-//        if(adminFlag){
-//            if(selectRobotByRuleVOS.size() < dto.getSetAdminCount()){
-//                return R.fail("号资源不足");
-//            }
-//        }else{
-//            if(selectRobotByRuleVOS.size() < dto.getCount()){
-//                return R.fail("号资源不足");
-//            }
-//        }
 
         List<SelectRobotByRuleVO> selectRobotByRuleVOSTotal = new ArrayList<>();
         selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS);
@@ -91,8 +82,10 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             if(CollectionUtils.isEmpty(ips)){
                 selectRobotByRuleDTO.setIps(ips);
             }
+            List<String> excludeRobotSerialNos = selectRobotByRuleVOS.stream().map(SelectRobotByRuleVO::getRobotSerialNo).collect(Collectors.toList());
             selectRobotByRuleDTO.setIsSetAdmin(0);
             selectRobotByRuleDTO.setLimit(dto.getCount());
+            selectRobotByRuleDTO.setExcludeRobotSerialNos(excludeRobotSerialNos);
             selectRobotByRuleVOS1 = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
             log.info("getRobot selectRobotByRuleVOS1:{}",selectRobotByRuleVOS1);
             if(CollectionUtils.isEmpty(selectRobotByRuleVOS1) || selectRobotByRuleVOS1.size() < dto.getCount()){
