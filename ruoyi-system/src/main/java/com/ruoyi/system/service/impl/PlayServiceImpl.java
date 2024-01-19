@@ -623,10 +623,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 this.suspendPlay(dto.getPlayIds());
                 break;
             case PlayStatusConstants.CANCEL:
-                this.cancelPlay(dto.getPlayIds());
+                this.setPlayCancel(dto.getPlayIds());
                 break;
             case PlayStatusConstants.IN_PROGRESS:
-                this.startPlay(dto.getPlayIds());
+                this.setPlayStart(dto.getPlayIds());
                 break;
         }
         return Boolean.TRUE;
@@ -656,9 +656,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     /**
-     * 剧本取消状态
+     * 取消剧本
      */
-    public void cancelPlay(List<String> ids) {
+    public void setPlayCancel(List<String> ids) {
         log.info("play_setState_{}, ids: {}", PlayStatusConstants.SUSPEND, ids);
 //        for (String id : ids) {
 //            boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
@@ -688,7 +688,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     /**
      * 设置剧本进行中
      */
-    public void startPlay(List<String> ids) {
+    public void setPlayStart(List<String> ids) {
         log.info("play_setState_{}, ids: {}", PlayStatusConstants.SUSPEND, ids);
         for (String id : ids) {
             boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
