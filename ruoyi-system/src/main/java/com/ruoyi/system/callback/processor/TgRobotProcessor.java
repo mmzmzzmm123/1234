@@ -359,4 +359,14 @@ public class TgRobotProcessor {
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
     }
 
+    /**
+     * TG(被动) 非双向解限时间回调推送
+     *
+     * @param dto
+     */
+    @Type(value = 1100910101, parameterClass = Called1100910101DTO.class)
+    public void called1100910101(Called1100910101DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+    }
+
 }
