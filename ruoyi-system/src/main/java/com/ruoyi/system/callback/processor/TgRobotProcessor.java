@@ -296,9 +296,8 @@ public class TgRobotProcessor {
         if(CollUtil.isEmpty(dto)){
             root.setResultCode(1);
         }
-
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(),
-                root.isSuccess() ? dto.get(0).getAccessHash() : null);
+                root.isSuccess() ? dto : null);
 
         if(root.isSuccess()) {
         	if(!CollectionUtils.isEmpty(dto)) {
