@@ -93,7 +93,7 @@ public class RobotController {
     @ApiOperation("设置手机号隐私")
     @PostMapping("/setPrivatePhone")
     public R<Void> setPrivatePhone(@RequestBody SetPrivatePhoneDTO dto){
-        return R.ok();
+        return robotService.setPrivatePhone(dto);
     }
 
     @ApiOperation("修改禁用启用状态")
