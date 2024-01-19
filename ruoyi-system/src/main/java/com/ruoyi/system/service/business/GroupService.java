@@ -561,6 +561,7 @@ public class GroupService {
                             input.setTgRobotId(groupRobot.getRobotId());
                             input.setExtend(actionId);
                             input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+                            input.setGroupId(groupInfo.getGroupId());
                             input.setMemberSerialNo(lastValue);
                             input.setIsAll(true);
                             input.setChangeInfo(true);
@@ -702,6 +703,7 @@ public class GroupService {
                         ThirdTgSetChatroomTypeInputDTO input = new ThirdTgSetChatroomTypeInputDTO();
                         input.setTgRobotId(robot.getRobotId());
                         input.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+                        input.setGroupId(groupInfo.getGroupId());
                         input.setUsername(url);
                         input.setChatroomType(dto.getGroupType());
                         input.setExtend(actionId);
@@ -820,6 +822,7 @@ public class GroupService {
             ThirdTgSetChatroomAdminInputDTO para = new ThirdTgSetChatroomAdminInputDTO();
             para.setTgRobotId(robot.getRobotId());
             para.setChatroomSerialNo(groupInfo.getGroupSerialNo());
+            para.setGroupId(groupInfo.getGroupId());
             para.setMemberSerialNo(String.join(",", dto.getMemberIds()));
             para.setIsAll(dto.getIsAll());
             para.setChangeInfo(dto.getChangeInfo());
@@ -1050,15 +1053,12 @@ public class GroupService {
 
     public void handlerNewAdmin(ThirdTgSetChatroomAdminInputDTO request, Called1100910053DTO dto) {
         try {
-            if (request == null) {
+            if (request == null || StrUtil.isBlank(request.getGroupId())) {
                 return;
             }
-            GroupInfo groupInfo = groupInfoService.changeGroupSerialNo(request.getChatroomSerialNo(), dto.getNewChatroomSerialNo());
-            if (groupInfo != null) {
-                GroupRobot groupRobot = groupRobotService.setAdmin(groupInfo.getGroupId(), request.getMemberSerialNo());
-                if (ObjectUtil.equal(groupRobot.getBotType(), 1)) {
-                    groupMonitorInfoService.setBotAdmin(groupInfo.getGroupId());
-                }
+            GroupRobot groupRobot = groupRobotService.setAdmin(request.getGroupId(), request.getMemberSerialNo());
+            if (ObjectUtil.equal(groupRobot.getBotType(), 1)) {
+                groupMonitorInfoService.setBotAdmin(request.getGroupId());
             }
         } catch (Exception e) {
             log.info("handlerNewAdmin.error={},{}", request, dto, e);
