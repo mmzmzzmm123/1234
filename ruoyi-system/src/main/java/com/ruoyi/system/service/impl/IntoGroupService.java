@@ -910,6 +910,7 @@ public class IntoGroupService {
         groupInfo.setMerchantId(task.getMerchantId());
         groupInfo.setGroupUrl(task.getGroupUrl());
         groupInfo.setTgGroupId(dto.getGroupId());
+        groupInfo.setMemberCount(0);
         groupInfo.setTgGroupName(dto.getGroupName());
         groupInfo.setPlayId(task.getPlayId());
         groupInfo.setIsDelete(0);

@@ -131,7 +131,7 @@ public class RedisLock implements InitializingBean {
 				e.printStackTrace();
 				unWaitLock(key);
 			} finally {
-				SpringUtils.getBean(RedisTemplate.class).expire(key, second , TimeUnit.SECONDS) ;
+				((RedisTemplate)SpringUtils.getBean("redisTemplate")).expire(key, second , TimeUnit.SECONDS) ;
 			}
 		} catch (Exception e) {
 			log.error("WaitLock加锁错误 {} {}", key, second, e);
