@@ -11,6 +11,7 @@ import com.ruoyi.system.domain.vo.PlayConfusionStateVO;
 import com.ruoyi.system.domain.vo.PlayMessageConfusionStateVO;
 import com.ruoyi.system.mapper.PlayMapper;
 import com.ruoyi.system.mapper.PlayMessageConfoundMapper;
+import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.PlayMessageConfoundLogService;
 import com.ruoyi.system.service.PlayMessagePushService;
 import lombok.extern.slf4j.Slf4j;
@@ -90,6 +91,9 @@ public class ConfoundJobService {
                     playInfo.setConfoundState(2);
                     playInfo.setFailReason("剧本混淆失败");
                     playInfoMapper.updateById(playInfo);
+
+                    // 记录混淆日志
+                    PlayExecutionLogService.playConfoundLog(playInfo.getId(), "混淆剧本失败", 1);
                     continue;
                 }
 

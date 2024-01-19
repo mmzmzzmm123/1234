@@ -9,10 +9,7 @@ import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.system.domain.PlayMessageConfound;
 import com.ruoyi.system.mapper.PlayMessageConfoundMapper;
-import com.ruoyi.system.service.IPlayService;
-import com.ruoyi.system.service.PlayMessageConfoundLogService;
-import com.ruoyi.system.service.PlayMessageConfoundService;
-import com.ruoyi.system.service.PlayMessageService;
+import com.ruoyi.system.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,6 +54,9 @@ public class PlayMessageConfoundServiceImpl extends ServiceImpl<PlayMessageConfo
         }
         // 清理关联数据
         this.clearConfound(playInfo.getId());
+
+        // 记录混淆日志
+        PlayExecutionLogService.playConfoundLog(playInfo.getId(), "混淆剧本开始", null);
 
         // 创建混淆数据
         try {
