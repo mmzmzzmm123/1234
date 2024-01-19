@@ -642,6 +642,7 @@ public class IntoGroupService {
         adminDTO.setCountryCode(countys);
         adminDTO.setSetAdminCount(adminNum);
         adminDTO.setIpType(ipType);
+        adminDTO.setIsLock(playExt.getLockState());
         log.info("获取机器人入参："+JSONObject.toJSONString(adminDTO));
         //调用获取机器人接口
         R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
@@ -678,16 +679,16 @@ public class IntoGroupService {
                     //当前群已被限制入群
                     continue;
                 }
-//                Long robotLimit = warningRobotLimitService.getWarningRobotLimit("task:limit:" + task.getGroupUrl(), 10, vibeRule.getJoinGroupLimit());
-//                if (robotLimit == 0) {
-//                    String s = RedisHandler.get("intoGroup:task:limit" + task.getGroupUrl());
-//                    if (s == null) {
-//                        RedisHandler.set("intoGroup:task:limit" + task.getGroupUrl(), "intoGroup:task:limit");
-//                        RedisHandler.expire("intoGroup:task:limit" + task.getGroupUrl(), RandomListPicker.getRandom(vibeRule.getDiffRobotIntervalStart().intValue(), vibeRule.getDiffRobotIntervalEnd().intValue()));
-//                    }
-//                    log.info("当前机器人无法进群，群批量风控"+JSONObject.toJSONString(task));
-//                    continue;
-//                }
+                Long robotLimit = warningRobotLimitService.getWarningRobotLimit("task:limit:" + task.getGroupUrl(), 10, vibeRule.getJoinGroupLimit());
+                if (robotLimit == 0) {
+                    String s = RedisHandler.get("intoGroup:task:limit" + task.getGroupUrl());
+                    if (s == null) {
+                        RedisHandler.set("intoGroup:task:limit" + task.getGroupUrl(), "intoGroup:task:limit");
+                        RedisHandler.expire("intoGroup:task:limit" + task.getGroupUrl(), RandomListPicker.getRandom(vibeRule.getDiffRobotIntervalStart().intValue(), vibeRule.getDiffRobotIntervalEnd().intValue()));
+                    }
+                    log.info("当前机器人无法进群，群批量风控"+JSONObject.toJSONString(task));
+                    continue;
+                }
                 // 调用执行入群接口
                 ThirdTgJoinChatroomByUrlInputDTO dto = new ThirdTgJoinChatroomByUrlInputDTO();
                 dto.setUrl(task.getGroupUrl());
@@ -778,6 +779,8 @@ public class IntoGroupService {
                 adminDTO.setCountryCode(countys);
                 adminDTO.setSetAdminCount(adminNum);
                 adminDTO.setIpType(ipType);
+                PlayExt playExt = JSONObject.parseObject(play.getPlayExt(), PlayExt.class);
+                adminDTO.setIsLock(playExt.getLockState());
                 //调用获取机器人接口
                 log.info("入群失败重试获取号："+JSONObject.toJSONString(adminDTO));
                 R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
@@ -812,7 +815,7 @@ public class IntoGroupService {
         }
         //入群成功 查询群信息
         //添加等待锁
-//        SpringUtils.getBean(RedisLock.class).waitLock("ruoyi:wait:groupCallback" + group.getGroupId(), 60);
+        SpringUtils.getBean(RedisLock.class).waitLock("ruoyi:wait:groupCallback" + group.getGroupId(), 60);
         try {
             PlayGroupInfo groupInfo = playGroupInfoMapper.selectGroupInfoById(group.getGroupId());
             log.info("入群成功获取群信息："+JSONObject.toJSONString(groupInfo));
