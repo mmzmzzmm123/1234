@@ -61,11 +61,20 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
                 : new HashMap<>();
 
         List<GroupInfo> result = new ArrayList<>();
+        List<GroupInfo> updates = new ArrayList<>();
         List<GroupInfo> adds = new ArrayList<>();
         List<String> newGroupSerialNos = new ArrayList<>();
         for (GroupResourceVO groupResourceVO : resourceList) {
             if (map.containsKey(groupResourceVO.getGroupSerialNo())) {
                 result.add(map.get(groupResourceVO.getGroupSerialNo()));
+
+                GroupInfo groupInfo = new GroupInfo();
+                groupInfo.setGroupId(IdWorker.getIdStr());
+                groupInfo.setGroupSerialNo(groupResourceVO.getGroupSerialNo());
+                groupInfo.setRegistrationTime(groupResourceVO.getRegistrationTime());
+                groupInfo.setGroupInviteLink(groupResourceVO.getGroupInviteLink());
+                groupInfo.setUpdateTime(LocalDateTime.now());
+                updates.add(groupInfo);
                 continue;
             }
 
@@ -87,6 +96,9 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         }
         if (CollUtil.isNotEmpty(adds)) {
             saveBatch(adds);
+        }
+        if(CollUtil.isNotEmpty(updates)){
+            updateBatchById(updates);
         }
         return result;
     }
