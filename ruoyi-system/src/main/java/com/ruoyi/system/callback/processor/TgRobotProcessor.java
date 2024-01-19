@@ -290,6 +290,9 @@ public class TgRobotProcessor {
     @Type(value = 1100860002, parameterClass = Called1100860002DTO.class)
     public void called1100860002(List<Called1100860002DTO> dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(),
+                root.isSuccess() ? dto.get(0).getAccessHash() : null);
+
         if(root.isSuccess()) {
         	if(!CollectionUtils.isEmpty(dto)) {
         		SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), dto.get(0).getAccessHash());
@@ -298,8 +301,6 @@ public class TgRobotProcessor {
         }
     	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
 
-        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(),
-                root.isSuccess() ? dto.get(0).getAccessHash() : null);
 
     }
 
