@@ -14,11 +14,11 @@ import java.util.EnumSet;
 public enum SetAdminAction {
 
 
-    QUERY_GROUP_MEMBER(3,GroupAction.QUERY_GROUP_MEMBER,0),
+    QUERY_GROUP_MEMBER(0,GroupAction.QUERY_GROUP_MEMBER,0),
 
-    QUERY_HASH(4, GroupAction.QUERY_HASH, 5),
+    QUERY_HASH(1, GroupAction.QUERY_HASH, 5),
 
-    SET_BOT_ADMIN(5, GroupAction.SET_GROUP_ADMIN, 0);
+    SET_BOT_ADMIN(2, GroupAction.SET_GROUP_ADMIN, 0);
 
     private final int code;
 

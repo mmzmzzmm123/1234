@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 public interface PlayRobotGroupRelationMapper extends BaseMapper<PlayRobotGroupRelation> {
@@ -27,7 +28,7 @@ public interface PlayRobotGroupRelationMapper extends BaseMapper<PlayRobotGroupR
 
     Integer updateRobotState(@Param("groupId")String groupId);
 
-    List<PlayRobotGroupRelation> selectWaitOutGroup();
+    List<PlayRobotGroupRelation> selectWaitOutGroup(@Param("time") Date time);
 
     Integer updateRobotOutState(@Param("groupId")String groupId,@Param("robotId")String robotId,@Param("state")Integer state);
 
