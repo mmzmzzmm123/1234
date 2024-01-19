@@ -3,6 +3,8 @@ package com.ruoyi.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.domain.GroupActionLog;
 
+import java.util.List;
+
 /**
  * 群操作记录表(GroupActionLog)表服务接口
  *
@@ -12,4 +14,8 @@ import com.ruoyi.system.domain.GroupActionLog;
 public interface GroupActionLogService extends IService<GroupActionLog> {
 
     void handleActionResult(String id,  String optNo, boolean success, String msg);
+
+    void updateRun(String id);
+
+    List<GroupActionLog> getWaitRunAction();
 }

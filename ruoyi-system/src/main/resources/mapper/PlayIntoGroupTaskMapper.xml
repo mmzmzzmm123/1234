@@ -107,4 +107,8 @@
     <select id="updateTaskByErrorGroupId" resultType="java.lang.Integer">
         update t_play_into_group_task set task_state = 4,fail_cause = '当前群回调返回异常，自动中止入群任务' where group_url = #{groupUrl} AND task_state IN (1,2)
     </select>
+
+    <select id="selectNotCallBackTask" resultType="com.ruoyi.system.domain.dto.play.PlayIntoGroupTask">
+        select * from t_play_into_group_task where task_state = 2 and  #{outTime} > modify_time
+    </select>
  </mapper>
