@@ -107,6 +107,11 @@ public class GroupPageInfoVO {
     private Integer sealStatus;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "注册时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "注册时间")
+    private LocalDateTime registrationTime;
+
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "入库时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "入库时间")
     private LocalDateTime createTime;
