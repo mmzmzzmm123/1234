@@ -191,10 +191,11 @@ public class GroupService {
         }
         //1.保存群机器信息
         List<GroupInfo> groupInfos = groupInfoService.saveImportGroup(resourceList);
-        Assert.notEmpty(groupInfos, "群已存在,请勿重复添加");
         //保存群组关联
         List<String> groupIds = groupClusterRefService.add(groupInfos.stream().map(GroupInfo::getGroupId).collect(Collectors.toList()), newClusterId);
-        Assert.notEmpty(groupIds, "群已存在,请勿重复添加");
+        if(CollUtil.isEmpty(groupIds)){
+            return;
+        }
         groupInfos = groupInfos.stream().filter(p -> groupIds.contains(p.getGroupId())).collect(Collectors.toList());
         //默认保存群主信息
         Map<String, GroupRobot> robotMap = groupRobotService.addGroupLeader(groupIds, getRobotMap(groupInfos, resourceList));
