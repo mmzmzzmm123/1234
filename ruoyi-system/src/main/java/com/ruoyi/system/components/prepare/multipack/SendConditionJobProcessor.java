@@ -51,10 +51,12 @@ public class SendConditionJobProcessor implements LogJobProcessor {
 				// 排除机器人的人数
 				Long robotCount = SpringUtils.getBean(GroupRobotMapper.class).selectCount(
 						new QueryWrapper<GroupRobot>().lambda().eq(GroupRobot::getGroupId, push.getGroupId()));
-
-				boolean full = info.getMemberCount().intValue() - Objects.wrapNull(robotCount, 0L) >= play.getUserNum()
+				
+				// 拉手好
+				int p = Objects.wrapNull(info.getLinkJoinCount() , 0) ;
+				boolean full = info.getMemberCount().intValue() - Objects.wrapNull(robotCount, 0L) - p >= play.getUserNum()
 						.intValue();
-				log.info("炒群条件判断 {} {} {} {}", full, info, robotCount, push);
+				log.info("炒群条件判断 {} {} {} {} {}", full, info, robotCount, push , p);
 				if (full) {
 					// 达到了超群条件
 					fullCondition(push);
