@@ -80,7 +80,7 @@ public class GroupActionLog {
     /**
      * 设置状态 0-请求开平中 1-请求失败 2-请求成功
      */
-    @ApiModelProperty(value = "设置状态 0-请求开平中 1-请求失败 2-请求成功")
+    @ApiModelProperty(value = "设置状态 0-请求开平中 1-请求失败 2-请求成功 3-等待请求")
     @TableField("set_status")
     private Integer setStatus;
 

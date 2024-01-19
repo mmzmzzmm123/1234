@@ -19,6 +19,7 @@ import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.enums.InviteBotAction;
+import com.ruoyi.common.enums.LimitingDimensions;
 import com.ruoyi.common.enums.SetAdminAction;
 import com.ruoyi.common.exception.GlobalException;
 import com.ruoyi.common.utils.ListTools;
@@ -47,12 +48,15 @@ import com.ruoyi.system.service.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
+import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -751,6 +755,13 @@ public class GroupService {
             T input = buildInput.apply(actionLog.getId());
             actionLog.setRobotId(robot.getRobotId());
             actionLog.setPara(JSON.toJSONString(input));
+            boolean isLimit = checkLimit(action,robot.getRobotId(), actionLog.getId());
+            //触发限制  状态改成等待请求
+            if(isLimit){
+                actionLog.setSetStatus(3);
+                groupActionLogService.save(actionLog);
+                return;
+            }
             groupActionLogService.save(actionLog);
             try {
                 OpenApiResult<TgBaseOutputDTO> apply = requestFuc.apply(input);
@@ -777,6 +788,98 @@ public class GroupService {
         //如果失败 获取无回调 直接返回结果
         if (!success || !action.isCallBack()) {
             handleActionResult(actionLog, optNo, success, msg, null);
+        }
+    }
+
+    public boolean checkLimit(GroupAction action, String robotId,String id) {
+            if(action == null || action.getLimitingDimensions() == null || action.getLimitingDimensions() == LimitingDimensions.NONE){
+                return false;
+            }
+            String key = "actionLimit:" + action.getCode() ;
+            if(action.getLimitingDimensions() == LimitingDimensions.ROBOT){
+                key = key +":" + robotId;
+            }
+            LocalDateTime now = LocalDateTime.now();
+            long currentSource = now.toEpochSecond(ZoneOffset.of("+8"));
+            long expiredSource = now.plusSeconds(-action.getLimitTime()).toEpochSecond(ZoneOffset.of("+8"));
+            BoundZSetOperations<String, String> zSetOperations = redisCache.redisTemplate.boundZSetOps(key);
+
+            Long l = zSetOperations.removeRangeByScore(0, expiredSource);
+            Long count = zSetOperations.count(0, currentSource);
+
+            if (count != null && count >= action.getLimitFrequency()) {
+            return true;
+        }
+        zSetOperations.expire(action.getLimitTime() + 30, TimeUnit.SECONDS);
+        zSetOperations.addIfAbsent(id, LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8")));
+        return false;
+    }
+
+    public void continueRunAction(){
+        String key = "continueRunAction";
+        RLock lock = redisLock.lock(key);
+        if (!lock.isLocked()) {
+            return ;
+        }
+        try {
+            List<GroupActionLog> waitRunAction = groupActionLogService.getWaitRunAction();
+            if(CollUtil.isEmpty(waitRunAction)){
+               return;
+            }
+            for (GroupActionLog groupActionLog : waitRunAction) {
+                boolean success = false;
+                String msg = "未配置继续执行操作";
+                String optNo = "";
+                try {
+                    GroupAction groupAction = GroupAction.of(groupActionLog.getSetType());
+                    if(!checkLimit(groupAction,groupActionLog.getRobotId(),groupActionLog.getId())){
+                        continue;
+                    }
+                    OpenApiResult<TgBaseOutputDTO> apiResult  = null;
+                    switch (groupAction){
+
+                        case INVITE_BOT_JOIN_GROUP:
+                            OpenApiClient.inviteJoinChatroomByThirdKpTg(BeanUtil.copyProperties(groupActionLog.getPara(),ThirdTgInviteJoinChatroomInputDTO.class));
+                            break;
+                        case QUERY_HASH:
+                            OpenApiClient.sqlTaskSubmitByThirdKpTg(BeanUtil.copyProperties(groupActionLog.getPara(),ThirdTgSqlTaskSubmitInputDTO.class));
+                            break;
+
+                    }
+                    Assert.notNull(apiResult,"未配置继续执行操作");
+                    log.info("groupAction={},{},{}", groupAction.getName(), groupActionLog.getPara(), JSON.toJSONString(apiResult));
+                    optNo = apiResult.getData().getOptSerNo();
+                    if (!apiResult.isSuccess()) {
+                        success = false;
+                        msg = apiResult.getMessage();
+                    } else if (groupAction.getNeedCacheOpt()) {
+                        redisCache.setCacheObject("ruoyi-admin:action:" + optNo
+                                , groupActionLog.getId(), 30 * 60 * 60, TimeUnit.SECONDS);
+                    }
+
+                } catch (GlobalException e) {
+                    log.info("groupAction.error={},{}", groupActionLog, e.getMessage());
+                    success = false;
+                    msg = e.getMessage();
+                } catch (Exception e) {
+                    log.info("groupAction.error={}", groupActionLog, e);
+                    success = false;
+                    msg = "未知异常";
+                }
+                if(success){
+                    groupActionLogService.updateRun(groupActionLog.getId());
+                }else{
+                    String finalMsg = msg;
+                    boolean finalResult = success;
+                    String finalOptNo = optNo;
+                    AsyncTask.execute(()-> handleActionResult(groupActionLog, finalOptNo, finalResult, finalMsg, null));
+                }
+            }
+
+        }catch (Exception e){
+            log.error("continueRunAction.error");
+        }finally {
+            lock.unlock();
         }
     }
 
