@@ -25,7 +25,7 @@
     </update>
 
     <select id="selectWaitOutGroup" resultType="com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation">
-        select * from t_play_robot_group_relation where state = 3 and is_delete = 0
+        select * from t_play_robot_group_relation where state = 3 and is_delete = 0 and
     </select>
 
     <update id="updateRobotOutState">
