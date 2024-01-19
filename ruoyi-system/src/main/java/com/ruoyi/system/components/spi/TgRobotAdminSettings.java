@@ -94,7 +94,7 @@ public class TgRobotAdminSettings implements Settings {
 
 		// http://30q623450x.vicp.fun:80/api/v1/bot/setAdminUser
 		try {
-			HttpRequest request = HttpUtil.createPost("https://30q623450x.vicp.fun/api/v1/bot/setAdminUser")
+			HttpRequest request = HttpUtil.createPost("https://bot.linkmaster.cc/api/v1/bot/setAdminUser")
 					.body(jsonBody, ContentType.JSON.toString());
 			HttpResponse execute = request.execute();
 			String response = execute.body();
@@ -157,7 +157,7 @@ public class TgRobotAdminSettings implements Settings {
 
 		String jsonBody = JSON.toJSONString(new Req("11", "11", "11"));
 
-		HttpRequest request = HttpUtil.createPost("https://30q623450x.vicp.fun/api/v1/bot/setAdminUser").body(jsonBody,
+		HttpRequest request = HttpUtil.createPost("https://bot.linkmaster.cc/api/v1/bot/setAdminUser").body(jsonBody,
 				ContentType.JSON.toString());
 		HttpResponse execute = request.execute();
 		String response = execute.body();
