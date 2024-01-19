@@ -49,7 +49,7 @@ public class PlayDirector implements CallBackProcessor {
 	 * @param play
 	 */
 	public void timeup(Play play) {
-		PlayBookFactory factory = ServiceLoader.load(PlayBookFactory.class, alias);
+		PlayBookFactory factory = ServiceLoader.load(PlayBookFactory.class, "TgPlayBookFactory");
 		// 构建 电影 本子
 		final PlayBook playBook = factory.newInstance(alias, play);
 		// 定时剧本
@@ -63,7 +63,7 @@ public class PlayDirector implements CallBackProcessor {
 	 * @param chatroomId
 	 */
 	public void callMessage(String playId, String chatroomId) {
-		PlayBookFactory factory = ServiceLoader.load(PlayBookFactory.class, alias);
+		PlayBookFactory factory = ServiceLoader.load(PlayBookFactory.class, "TgPlayBookFactory");
 		// 构建 电影 本子
 		final PlayBook playBook = factory.newInstance(alias, playId);
 		new NextExecutivePlayer(playBook).sendOne(chatroomId, GlobalIndexContext.getIndex(chatroomId, playId));
