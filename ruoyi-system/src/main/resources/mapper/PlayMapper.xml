@@ -88,9 +88,8 @@
 
     <select id="selectGroupProgress" resultType="com.ruoyi.system.domain.vo.play.PlayGroupProgressVO">
         SELECT
-            tpgi.group_id AS id,
-            tpgi.play_id,
-            tpgi.state,
+            tpmp.id,
+            tpmp.play_id,
             tpmp.id AS pushId,
             tpmp.push_state AS pushState,
             tgi.group_id,
@@ -120,20 +119,18 @@
             count( tpmpd.id ) AS totalNum,
             sum( IF ( tpmpd.send_state > 0, 1, 0 ) ) AS currentNum
         FROM
-            t_play_group_info tpgi
-            LEFT JOIN t_group_info tgi ON tpgi.tg_group_id = tgi.group_id
-            LEFT JOIN t_group_monitor_info tgmi ON tgi.group_id = tgmi.group_id
-            LEFT JOIN t_group_state tgs on tgi.group_id = tgs.group_id
-            LEFT JOIN t_play_message_push tpmp ON tpgi.play_id = tpgi.play_id
-            AND tpgi.tg_group_id = tpmp.group_id
-            LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
+            t_play_message_push tpmp
+                LEFT JOIN t_group_info tgi ON tpmp.group_id = tgi.group_id
+                LEFT JOIN t_group_monitor_info tgmi ON tgi.group_id = tgmi.group_id
+                LEFT JOIN t_group_state tgs ON tgi.group_id = tgs.group_id
+                LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
         WHERE
             1 = 1
-          AND tpgi.play_id = #{playId}
+          AND tpmp.play_id = #{playId}
         GROUP BY
-            tpgi.group_id
+            tpmp.id
         ORDER BY
-            tpgi.create_time DESC
+            tpmp.create_time DESC
     </select>
 
     <select id="selectPushDetailPage" resultType="com.ruoyi.system.domain.vo.play.QueryPushDetailVO">
