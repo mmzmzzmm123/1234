@@ -1,7 +1,14 @@
 package com.ruoyi;
 
 import com.alibaba.fastjson2.support.spring.http.converter.FastJsonHttpMessageConverter;
+import com.ruoyi.system.callback.dto.CalledDTO;
+import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.openapi.OpenApiClient;
+import com.ruoyi.system.service.impl.IntoGroupService;
+import com.ruoyi.system.service.limit.WarningRobotLimitService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -22,8 +29,14 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Import(FastJsonHttpMessageConverter.class)
 @EnableScheduling
 @EnableRedissonFastDelayQueue
-public class RuoYiApplication
+public class RuoYiApplication implements ApplicationRunner
 {
+    @Autowired
+    IntoGroupService intoGroupService;
+
+    @Autowired
+    WarningRobotLimitService warningRobotLimitService;
+
     public static void main(String[] args)
     {
         // System.setProperty("spring.devtools.restart.enabled", "false");
@@ -38,5 +51,10 @@ public class RuoYiApplication
                 " |  | \\ `'   /|   `-'  /           \n" +
                 " |  |  \\    /  \\      /           \n" +
                 " ''-'   `'-'    `-..-'              ");
+    }
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+
     }
 }
