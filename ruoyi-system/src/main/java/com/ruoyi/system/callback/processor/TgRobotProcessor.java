@@ -6,6 +6,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
+import com.ruoyi.system.components.movie.PlayDirector;
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
@@ -97,13 +98,13 @@ public class TgRobotProcessor {
         if(root.isSuccess() && !StringUtils.isEmpty(root.getRequestPara())) {
             groupService.handlerNewAdmin(JSON.parseObject(root.getRequestPara(), ThirdTgSetChatroomAdminInputDTO.class), dto);
         }
+        //处理请求结果
+        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
         if(root.isSuccess()) {
         	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
         	return ;
         }
     	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
-        //处理请求结果
-        groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
     }
 
     /**
@@ -331,6 +332,12 @@ public class TgRobotProcessor {
     @Type(value = 1100910011, parameterClass = Called1100910011DTO.class)
     public void called1100910011(Called1100910011DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()) {
+    		// 成功
+        	PlayDirector.tgInstance().onMessageSuccess(root.getOptSerNo());
+        	return ;
+    	}
+        PlayDirector.tgInstance().onMessageFailure(root.getOptSerNo(), root.getResultMsg());
     }
 
     /**

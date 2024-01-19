@@ -140,7 +140,7 @@
                 AND robot.robot_serial_no like CONCAT('%', #{dto.robotSerialNo}, '%')
             </if>
         </where>
-        order by tgi.create_time desc
+        order by tgi.create_time desc,tgi.group_id desc
 
     </select>
 

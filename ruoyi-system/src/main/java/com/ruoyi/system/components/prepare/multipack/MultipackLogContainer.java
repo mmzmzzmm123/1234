@@ -74,6 +74,8 @@ public class MultipackLogContainer implements InitializingBean {
 				.load(LogJobProcessor.class, "SendConditionJobProcessor");
 		final SendPlayJobProcessor sendPlayJobProcessor = (SendPlayJobProcessor) ServiceLoader
 				.load(LogJobProcessor.class, "SendPlayJobProcessor");
+		final MessageTimeoutJobProcessor messageTimeoutJobProcessor = (MessageTimeoutJobProcessor) ServiceLoader
+				.load(LogJobProcessor.class, "MessageTimeoutJobProcessor");
 
 		try {
 			lock.lock(60 * 10, TimeUnit.SECONDS);
@@ -82,15 +84,14 @@ public class MultipackLogContainer implements InitializingBean {
 					.selectList(
 							new QueryWrapper<Play>().lambda()
 									.in(Play::getScanProgress, Arrays.asList(ScanProgressEnum.Robot.getVal(),
-											ScanProgressEnum.Send_Wait.getVal(), ScanProgressEnum.Sending.getVal()))
+											ScanProgressEnum.Send_Wait.getVal()))
 									.eq(Play::getIsDelete, 0).in(Play::getState, Arrays.asList(1, 2, 3)));
 			if (CollectionUtils.isEmpty(datas)) {
 				return;
 			}
 			AsyncTask.newMultiTasker().map(datas, 5, curs -> {
 				for (Play play : curs) {
-					if (play.getScanProgress().intValue() == ScanProgressEnum.Send_Wait.getVal() ||
-							play.getScanProgress().intValue() == ScanProgressEnum.Sending.getVal()) {
+					if (play.getScanProgress().intValue() == ScanProgressEnum.Send_Wait.getVal()) {
 						// 炒群 条件 定时器 , 时间达到&人数达到
 						try {
 							long s = System.currentTimeMillis();
@@ -105,6 +106,13 @@ public class MultipackLogContainer implements InitializingBean {
 							log.info("sendPlayJobProcessor执行 {} {}", (System.currentTimeMillis() - s), play);
 						} catch (Exception e) {
 							log.error("sendPlayJobProcessor执行异常 {}", play, e);
+						}
+						try {
+							long s = System.currentTimeMillis();
+							messageTimeoutJobProcessor.handle(play);
+							log.info("messageTimeoutJobProcessor执行 {} {}", (System.currentTimeMillis() - s), play);
+						} catch (Exception e) {
+							log.error("messageTimeoutJobProcessor执行异常 {}", play, e);
 						}
 						continue;
 					}

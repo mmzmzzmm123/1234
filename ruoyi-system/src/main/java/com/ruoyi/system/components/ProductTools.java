@@ -1,22 +1,21 @@
 package com.ruoyi.system.components;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.Arrays;
-import java.util.List;
-
-import org.springframework.util.CollectionUtils;
-
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.config.ErrInfoConfig;
+import com.ruoyi.common.constant.ProductStatusConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
-import com.ruoyi.common.core.domain.entity.order.OrderSku;
 import com.ruoyi.common.utils.spring.SpringUtils;
-import com.ruoyi.system.mapper.OrderSkuMapper;
 import com.ruoyi.system.mapper.ProductMapper;
 import com.ruoyi.system.mapper.ProductSkuMapper;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
 
 public class ProductTools {
 
@@ -73,5 +72,22 @@ public class ProductTools {
 			}
 		}
 		return AjaxResult.success(skuList);
+	}
+
+	public static R<Product> getOneProductByCategory(Integer category) {
+		Product product = SpringUtils.getBean(ProductMapper.class)
+				.selectOne(new LambdaQueryWrapper<Product>()
+				.eq(Product::getCategoryId, category)
+				.last(" limit 1 "));
+		if (product == null) {
+			return R.fail(ErrInfoConfig.getDynmic(11001));
+		}
+		if (product.getStatus() == null || product.getStatus() != ProductStatusConstants.LISTING) {
+			return R.fail(ErrInfoConfig.getDynmic(11002));
+		}
+		if (product.getIsShow() == null || product.getIsShow() != ProductStatusConstants.SHOW) {
+			return R.fail(ErrInfoConfig.getDynmic(11002));
+		}
+		return R.ok(product);
 	}
 }

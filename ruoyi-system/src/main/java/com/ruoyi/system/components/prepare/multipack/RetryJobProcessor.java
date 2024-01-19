@@ -4,28 +4,23 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
-
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPack;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
-import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.Objects;
 import com.ruoyi.common.utils.Times;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
-import com.ruoyi.system.components.prepare.ExecutionParamContext;
 import com.ruoyi.system.components.spi.Settings;
 import com.ruoyi.system.mapper.PlayMessagePushDetailMapper;
 import com.ruoyi.system.mapper.PlayRobotPackLogMapper;
 import com.ruoyi.system.mapper.PlayRobotPackMapper;
 import com.ruoyi.system.service.PlayExecutionLogService;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**

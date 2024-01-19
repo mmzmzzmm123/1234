@@ -87,4 +87,8 @@
         </foreach>
     </update>
 
+    <update id="clearRobotOneDayNum">
+        update t_robot_statistics set one_day_join_group_count = one_day_join_group_count * 0,one_day_set_admin_count = one_day_set_admin_count * 0
+    </update>
+
 </mapper>

@@ -14,4 +14,6 @@ public class RedisConfigure {
 	 */
 	private int refundTimeOutSec = 60 * 5;
 
+	private int timeout = 60 * 4;
+
 }

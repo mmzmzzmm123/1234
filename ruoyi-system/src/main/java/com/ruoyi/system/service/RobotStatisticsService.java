@@ -34,4 +34,10 @@ public interface RobotStatisticsService extends IService<RobotStatistics> {
      * @return
      */
     boolean decreaseRobotGroup(List<String> robotSerialNos);
+
+    /**
+     * 清除水军每日累计数据
+     * @return
+     */
+    void clearRobotOneDayNum();
 }

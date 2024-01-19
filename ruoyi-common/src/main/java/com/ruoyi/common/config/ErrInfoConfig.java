@@ -25,6 +25,8 @@ public class ErrInfoConfig {
 		err.put(11013, "手机号码所属国家与商品不一致");
 		err.put(11014, "目标数超过购买数量");
 		err.put(11015, "群数大于目标数");
+		err.put(11016, "剧本内容不能为空");
+		err.put(11017, "发言人昵称不能为空");
 	}
 
 	public static String get(int code) {
