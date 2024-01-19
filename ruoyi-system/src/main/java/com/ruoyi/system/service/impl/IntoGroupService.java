@@ -1085,4 +1085,25 @@ public class IntoGroupService {
         playRobotGroupRelationMapper.updateRobotOutState(dto.getChatroomSerialNo(), calledDTO.getRobotId(), 2);
     }
 
+    /**
+     *
+     */
+    @Scheduled(cron = "0/30 * * * * ?")
+    public void scanImgGroupCallBack(){
+        log.error("定时检测修改头像是否有回调超时的任务");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MINUTE, -5);
+        playModifierGroupLogMapper.updateTaskByOutTime(calendar.getTime(), "无回调，自动变更失败！");
+    }
+
+    @Scheduled(cron = "0/30 * * * * ?")
+    public void scanPersonGroupTask() {
+        log.error("定时检测入群是否有回调超时的任务");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MINUTE, -5);
+        playIntoGroupTaskMapper.updateTaskByOutTime(calendar.getTime(), "无回调，自动变更失败！");
+    }
+
 }

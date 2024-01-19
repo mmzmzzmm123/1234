@@ -24,7 +24,7 @@ import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotInfoListVO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import lombok.extern.slf4j.Slf4j;
 
-@SPI("tg")
+@SPI("TgMessageSupport")
 @Slf4j
 public class TgMessageSupport implements MessageSupport {
 

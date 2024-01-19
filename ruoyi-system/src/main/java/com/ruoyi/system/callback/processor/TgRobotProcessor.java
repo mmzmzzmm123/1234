@@ -3,10 +3,12 @@ package com.ruoyi.system.callback.processor;
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
 import com.ruoyi.system.components.movie.PlayDirector;
+import com.ruoyi.system.components.movie.spi.impl.BothwayGroupCtrlStopper;
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
@@ -380,6 +382,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910101, parameterClass = Called1100910101DTO.class)
     public void called1100910101(Called1100910101DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        ServiceLoader.load(BothwayGroupCtrlStopper.class, "BothwayGroupCtrlStopper").doSetting(null, root.getRobotId());
     }
 
 }

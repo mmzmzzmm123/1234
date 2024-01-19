@@ -38,7 +38,7 @@ public class PlayDirector implements CallBackProcessor {
 	}
 
 	public ManualExecutivePlayer getManualExecutivePlayer(Play play) {
-		PlayBookFactory factory = ServiceLoader.load(PlayBookFactory.class, alias);
+		PlayBookFactory factory = ServiceLoader.load(PlayBookFactory.class, "TgPlayBookFactory");
 		final PlayBook playBook = factory.newInstance(alias, play);
 		return new ManualExecutivePlayer(playBook);
 	}
