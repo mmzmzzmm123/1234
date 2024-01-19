@@ -328,6 +328,10 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         // 混淆完成 标记到 5-号分配
         playInfo.setScanProgress(5);
         playInfoService.updateById(playInfo);
+
+        // 记录混淆日志
+        PlayExecutionLogService.playConfoundLog(playInfo.getId(), "混淆剧本完成", null);
+
     }
 
 
@@ -355,6 +359,39 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
     @Override
     public List<QueryRobotDetailVO> robotDetails(QueryRobotDetailDTO dto) {
         return baseMapper.robotDetails(dto);
+    }
+
+    @Override
+    public List<PlayMessagePush> selectByPlayId(String playId) {
+        if (playId == null) {
+            return new ArrayList<>();
+        }
+
+        return super.list(new LambdaQueryWrapper<PlayMessagePush>()
+                .eq(PlayMessagePush::getPlayId, playId)
+                .eq(PlayMessagePush::getIsDelete, 0));
+    }
+
+    @Override
+    public List<PlayMessagePush> selectByPlayIdAndState(String playId, Integer state) {
+        if (playId == null) {
+            return new ArrayList<>();
+        }
+
+        return super.list(new LambdaQueryWrapper<PlayMessagePush>()
+                .eq(PlayMessagePush::getPlayId, playId)
+                .eq(PlayMessagePush::getPushState, state)
+                .eq(PlayMessagePush::getIsDelete, 0));
+    }
+
+    @Override
+    public PlayMessagePush getOneByPlayIdAndGroupId(String playId, String groupId) {
+        return super.getOne(new LambdaQueryWrapper<PlayMessagePush>()
+                .eq(PlayMessagePush::getPlayId, playId)
+                .eq(PlayMessagePush::getGroupId, groupId)
+                .eq(PlayMessagePush::getIsDelete, 0)
+                .last(" limit 1 ")
+        );
     }
 }
 

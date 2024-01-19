@@ -1125,9 +1125,21 @@ public class GroupService {
             AdMonitorDTO dto = new AdMonitorDTO();
             dto.setConfigId(playId);
             if (StrUtil.isNotBlank(adMonitorInfo.getDisposalType())) {
-                dto.setDealFunction(Arrays.stream(adMonitorInfo.getDisposalType().split(",")).filter(
-                                p -> Arrays.asList("1", "2").contains(p))
-                        .map(p -> p.equals("1") ? "RESTRICT" : "KICK_OUT").collect(Collectors.toList()));
+                List<String> dealFunctions = Arrays.stream(adMonitorInfo.getDisposalType().split(",")).filter(
+                                p -> Arrays.asList("1", "2", "0").contains(p))
+                        .map(it -> {
+                            switch (it) {
+                                case "0":
+                                    return "RESTRICT";
+                                case "1":
+                                    return "KICK_OUT";
+                                case "2":
+                                    return "KICK_REPEAL";
+                                default:
+                                    return null;
+                            }
+                        }).collect(Collectors.toList());
+                dto.setDealFunction(dealFunctions);
             }
             dto.setGroupIds(Collections.singletonList(groupInfo.getOriginalGroupId()));
             dto.setKeywords(adMonitorInfo.getKeywordRule());
@@ -1135,7 +1147,7 @@ public class GroupService {
             if (StrUtil.isNotBlank(adMonitorInfo.getTypes())) {
                 dto.setMonitorTarget(Arrays.stream(adMonitorInfo.getTypes().split(",")).filter(
                                 p -> Arrays.asList("1", "2", "3").contains(p))
-                        .map(p -> p.equals("3") ? 4 : p.equals("2") ? 2 : 1).collect(Collectors.toList()));
+                        .map(p -> "3".equals(p) ? 4 : "2".equals(p) ? 2 : 1).collect(Collectors.toList()));
             }
             dto.setMonitorTime(adMonitorInfo.getSpammingTime());
             dto.setRestrictMember(adMonitorInfo.getIsTabooMemberMsg());

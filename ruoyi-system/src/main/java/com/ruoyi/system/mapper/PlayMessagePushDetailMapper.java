@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
+import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.Strings;
 import com.ruoyi.common.utils.spi.ServiceLoader;
@@ -50,11 +51,11 @@ public interface PlayMessagePushDetailMapper extends BaseMapper<PlayMessagePushD
 		if (!StringUtils.isEmpty(robotId)) {
 			update.setRobotId(robotId);
 			RobotInfoQuery robotInfoQuery = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery");
-			List<ExtTgSelectRobotInfoListVO> info = robotInfoQuery.listById(ListTools.newArrayList(robotId));
+			List<Robot> info = robotInfoQuery.listById(ListTools.newArrayList(robotId));
 			if (!CollectionUtils.isEmpty(info)) {
 				update.setRobotNickname(info.get(0).getUserName());
 				update.setRobotImgUrl(info.get(0).getHeadImgUrl());
-				update.setRobotAcct(info.get(0).getAccount());
+				update.setRobotAcct(info.get(0).getPhone());
 			}
 		}
 		updateById(update);
@@ -73,11 +74,11 @@ public interface PlayMessagePushDetailMapper extends BaseMapper<PlayMessagePushD
 		if (!StringUtils.isEmpty(robotId)) {
 			update.setRobotId(robotId);
 			RobotInfoQuery robotInfoQuery = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery");
-			List<ExtTgSelectRobotInfoListVO> info = robotInfoQuery.listById(ListTools.newArrayList(robotId));
+			List<Robot> info = robotInfoQuery.listById(ListTools.newArrayList(robotId));
 			if (!CollectionUtils.isEmpty(info)) {
 				update.setRobotNickname(info.get(0).getUserName());
 				update.setRobotImgUrl(info.get(0).getHeadImgUrl());
-				update.setRobotAcct(info.get(0).getAccount());
+				update.setRobotAcct(info.get(0).getPhone());
 			}
 		}
 		updateById(update);
@@ -97,11 +98,11 @@ public interface PlayMessagePushDetailMapper extends BaseMapper<PlayMessagePushD
 		if (!StringUtils.isEmpty(robotId)) {
 			update.setRobotId(robotId);
 			RobotInfoQuery robotInfoQuery = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery");
-			List<ExtTgSelectRobotInfoListVO> info = robotInfoQuery.listById(ListTools.newArrayList(robotId));
+			List<Robot> info = robotInfoQuery.listById(ListTools.newArrayList(robotId));
 			if (!CollectionUtils.isEmpty(info)) {
 				update.setRobotNickname(info.get(0).getUserName());
 				update.setRobotImgUrl(info.get(0).getHeadImgUrl());
-				update.setRobotAcct(info.get(0).getAccount());
+				update.setRobotAcct(info.get(0).getPhone());
 			}
 		}
 		updateById(update);

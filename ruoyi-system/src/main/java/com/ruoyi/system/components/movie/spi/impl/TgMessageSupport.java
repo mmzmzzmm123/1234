@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.ContentJson;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
+import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spi.SPI;
@@ -39,15 +40,19 @@ public class TgMessageSupport implements MessageSupport {
 
 		int msgNum = 1;
 		// 先把链接提取出来
-		String link = extractLink2005(messageContentList);
+		// 提取@人
+		String link = "";
+		String atUserName = extractAt(message.getPlayId(), chatroomId, message.getCallRobotNickname());
+		if (!StringUtils.isEmpty(atUserName)) {
+			link = "@" + atUserName +" ";
+		}
+		link = extractLink2005(messageContentList);
 		// 不混淆的 文本
 		link = link + extractNoLikeText2017(messageContentList);
 		link = link + extractNoLikeText2018(messageContentList);
 		List<ThirdTgMessageDTO> dataList = ListTools.newArrayList();
 		boolean linkAppend = false;
-		// 提取@人
-		String atUserName = extractAt(message.getPlayId(), chatroomId, message.getCallRobotNickname());
-		insetAt(messageContentList, atUserName);
+
 		for (ContentJson msg : messageContentList) {
 			if (msg.getMomentTypeId().intValue() == 2005 || msg.getMomentTypeId().intValue() == 2017
 					|| msg.getMomentTypeId().intValue() == 2018) {
@@ -92,7 +97,7 @@ public class TgMessageSupport implements MessageSupport {
 			String robot = PreRobotSpeakAllocator.Cache.get(playId, chatroomId, callRobotNickname);
 			if (!StringUtils.isEmpty(robot)) {
 				// 查询这个robot信息
-				List<ExtTgSelectRobotInfoListVO> vos = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery")
+				List<Robot> vos = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery")
 						.listById(ListTools.newArrayList(robot));
 				if (!CollectionUtils.isEmpty(vos)) {
 					return vos.get(0).getUserName();

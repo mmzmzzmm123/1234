@@ -30,27 +30,32 @@ public class Play {
     private Integer groupSource;
 
     /**
-     * 群注册天数
+     * 平台群条件:群注册天数
      */
     private Integer groupDay;
 
     /**
-     * 炒群条件：0-人数 1-时间
+     * 平台群条件:群需求数量
+     */
+    private Integer groupNum;
+
+    /**
+     * 炒群条件类型：0-人数 1-时间
      */
     private Integer groupCondition;
 
     /**
-     * 炒群条件 群人数
+     * 人数炒群条件 群人数
      */
     private Integer userNum;
 
     /**
-     * 炒群条件 时间类型：0-立即开始 1定时开始
+     * 时间炒群条件 时间类型：0-立即开始 1定时开始
      */
     private Integer startType;
 
     /**
-     * 定时开始炒群时间
+     *  时间炒群条件 开始炒群时间
      */
     private Date startGroupDate;
 
@@ -63,11 +68,6 @@ public class Play {
      * 外包群邀请链接数量
      */
     private String groupUrlNum;
-
-    /**
-     * 群需求数量
-     */
-    private Integer groupNum;
 
     /**
      * 每个群演员数

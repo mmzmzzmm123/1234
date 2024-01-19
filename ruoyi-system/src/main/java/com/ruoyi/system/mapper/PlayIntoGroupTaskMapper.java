@@ -38,4 +38,6 @@ public interface PlayIntoGroupTaskMapper extends BaseMapper<PlayIntoGroupTask> {
 
 
     public Integer updateTaskByErrorGroupId(@Param("groupUrl")String groupUrl);
+
+    List<PlayIntoGroupTask> selectNotCallBackTask(@Param("outTime") Date outTime);
 }

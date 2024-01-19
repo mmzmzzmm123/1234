@@ -486,6 +486,7 @@ public class IntoGroupService {
                             playDTO.setState(4);
                             playDTO.setFailReason("无剧本所需足够的机器人！");
                             setLog(playDTO.getId(), "群" + groupInfoVO.getGroupName() + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
+                            playMapper.updateById(playDTO);
                             continue;
                         }
                         setLog(playDTO.getId(), "群" + groupInfoVO.getGroupName() + "机器人出库成功！", 0, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
@@ -543,18 +544,19 @@ public class IntoGroupService {
                         //拆分机器人列表
                         List<GetRobotVO> adminList = new ArrayList<>();
                         List<GetRobotVO> robotList = new ArrayList<>();
+                        if (robotVOS == null) {
+                            playDTO.setState(4);
+                            playDTO.setFailReason("无剧本所需足够的机器人！");
+                            setLog(playDTO.getId(), "群" + group + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, null);
+                            playMapper.updateById(playDTO);
+                            continue;
+                        }
                         for (GetRobotVO getRobotVO : robotVOS) {
                             if (getRobotVO.getIsSetAdmin() == 1) {
                                 adminList.add(getRobotVO);
                             } else {
                                 robotList.add(getRobotVO);
                             }
-                        }
-                        if (robotVOS == null) {
-                            playDTO.setState(4);
-                            playDTO.setFailReason("无剧本所需足够的机器人！");
-                            setLog(playDTO.getId(), "群" + group + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, null);
-                            continue;
                         }
                         PlayExt playExt = JSONObject.parseObject(playDTO.getPlayExt(), PlayExt.class);
                         Integer i= 1;
@@ -1103,7 +1105,21 @@ public class IntoGroupService {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.add(Calendar.MINUTE, -5);
-        playIntoGroupTaskMapper.updateTaskByOutTime(calendar.getTime(), "无回调，自动变更失败！");
+        List<PlayIntoGroupTask> playIntoGroupTasks =playIntoGroupTaskMapper.selectNotCallBackTask(calendar.getTime());
+        if (playIntoGroupTasks == null || playIntoGroupTasks.size() == 0){
+            return;
+        }
+        for (PlayIntoGroupTask playIntoGroupTask:playIntoGroupTasks){
+            PlayIntoGroupTask task = Beans.toView(playIntoGroupTask,PlayIntoGroupTask.class);
+            task.setTaskState(1);
+            task.setCreateTime(new Date());
+            task.setId(IdUtils.fastUUID());
+            task.setModifyTime(new Date());
+            playIntoGroupTaskMapper.insert(task);
+            setLog(task.getPlayId(),  "机器人" + task.getPersonId() + "入群没有接收到入群回调！正在重试！", 1, PlayLogTyper.Group_into, null);
+            playIntoGroupTask.setTaskState(4);
+            playIntoGroupTask.setFailCause("无入群回调,已自动变更为失败！");
+        }
     }
 
 }

@@ -11,6 +11,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.common.core.domain.entity.robot.RobotStatistics;
 import com.ruoyi.common.core.thread.AsyncTask;
+import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.GroupRobot;
@@ -129,6 +130,22 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
 
         }
         this.storyRobot(robotList);
+
+        // 号订阅
+        subscribeRobot(robotSerialNos);
+    }
+
+    private void subscribeRobot(List<String> robotSerialNos) {
+        if (!CollectionUtils.isEmpty(robotSerialNos)) {
+            try {
+                ThirdTelegramPersonalCallbackRegInputDTO dto = new ThirdTelegramPersonalCallbackRegInputDTO();
+                dto.setSubTypeList(Collections.singletonList(1100910101));
+                dto.setTelegramIdList(robotSerialNos);
+                OpenApiClient.personalOnByThirdTg(dto);
+            } catch (Exception e) {
+                log.error("号订阅失败", e);
+            }
+        }
     }
 
     private void storyRobot(List<Robot> newRobotList){
@@ -489,5 +506,32 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo,robotSerialNo)
                 .set(Robot::getFirstName,vo.getFirstName())
                 .set(Robot::getLastName,vo.getLastName()));
+    }
+
+    @Override
+    public void recycleRobot(List<String> robotSerialNos) {
+        for (List<String> item : ListTools.partition(robotSerialNos,500)) {
+            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
+            if(!CollectionUtils.isEmpty(robots)){
+                List<String> nos = robots.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
+                this.update(new LambdaUpdateWrapper<Robot>()
+                        .in(Robot::getRobotSerialNo,nos)
+                        .set(Robot::getRecycleStatus,1));
+            }
+
+        }
+    }
+
+    @Override
+    public void updateRobotMerchant(List<String> robotSerialNos) {
+        for (List<String> item : ListTools.partition(robotSerialNos,500)) {
+            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
+            if(!CollectionUtils.isEmpty(robots)){
+                List<String> nos = robots.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
+                this.update(new LambdaUpdateWrapper<Robot>()
+                        .in(Robot::getRobotSerialNo,nos)
+                        .set(Robot::getDeleteStatus,1));
+            }
+        }
     }
 }

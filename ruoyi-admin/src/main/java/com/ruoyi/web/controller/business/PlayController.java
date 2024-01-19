@@ -114,15 +114,11 @@ public class PlayController extends BaseController {
                 return R.fail(ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
             }
         }
-        if (null == dto.getRobotNum()) {
+        if (null == dto.getRobotNum() || dto.getRobotNum() < 1) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "请配置每个群演员数"));
         }
 
         dto.setUrlPool(handleUrlList(dto.getUrlPool()));
-        if (dto.getUrlPool().isEmpty()) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "请配置接粉号池"));
-        }
-
         if (dto.getGroupCondition() == 0) {
             if (dto.getUserNum() == null || dto.getUserNum() < 1) {
                 return R.fail(ErrInfoConfig.getDynmic(11000, "请配置群人数"));
@@ -150,13 +146,10 @@ public class PlayController extends BaseController {
         if (StringUtils.isEmpty(dto.getName())) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能为空"));
         }
-        if (dto.getName().length() > 100) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过100字"));
+        if (dto.getName().length() > 64) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过64字"));
         }
         dto.setUrlPool(handleUrlList(dto.getUrlPool()));
-        if (dto.getUrlPool().isEmpty()) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "请配置接粉号池"));
-        }
         R<String> checkPlayMessageListRet = checkPlayMessageList(dto.getPlayMessageList());
         if (checkPlayMessageListRet.getCode() != HttpStatus.SUCCESS) {
             return checkPlayMessageListRet;
@@ -219,6 +212,12 @@ public class PlayController extends BaseController {
         return R.ok(playExecutionLogService.listByPlayId(playId));
     }
 
+    @ApiOperation("剧本执行日志-分页")
+    @PostMapping("executionLogPage")
+    public R<Page<PlayExecutionLog>> executionLogPage(@Validated @RequestBody QueryExecutionLogDTO dto) {
+        return R.ok(playExecutionLogService.logPage(dto));
+    }
+
     @ApiOperation("任务推送明细查询")
     @PostMapping("pushDetailPage")
     public R<Page<QueryPushDetailVO>> pushDetailPage(@Validated @RequestBody QueryPushDetailDTO dto) {
@@ -265,7 +264,12 @@ public class PlayController extends BaseController {
         if (ObjectUtils.isEmpty(loginUser.getMerchantInfo()) || loginUser.getMerchantInfo().getMerchantType() != 0) {
             return R.fail(ErrInfoConfig.getDynmic(11011));
         }
-        return playService.repeatPlay(playId, loginUser);
+        try {
+            return playService.repeatPlay(playId, loginUser);
+        } catch (Exception e) {
+            log.error("repeatPlay:params:{},msg:{}", playId, e.getMessage());
+        }
+        return R.fail();
     }
 
     @ApiOperation("修改炒群任务状态")
@@ -276,8 +280,8 @@ public class PlayController extends BaseController {
 
     @ApiOperation("释放水军")
     @PostMapping("/{playId}/releaseRobot")
-    public R<String> releaseUser(@PathVariable String playId) {
-        return playService.releaseUser(playId);
+    public R<String> releaseRobot(@PathVariable String playId) {
+        return playService.releaseRobot(playId);
     }
 
     @ApiOperation("job执行释放水军")

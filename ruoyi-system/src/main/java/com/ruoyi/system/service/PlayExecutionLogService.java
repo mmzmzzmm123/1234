@@ -1,11 +1,13 @@
 package com.ruoyi.system.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.domain.dto.play.QueryExecutionLogDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
 
 /**
  * @Author : XGF（徐桂烽）
@@ -23,11 +25,36 @@ public interface PlayExecutionLogService {
 	List<PlayExecutionLog> listByPlayId(String playId);
 
 	/**
+	 * 分页查询剧本执行日志列表
+	 *
+	 * @param dto
+	 * @return
+	 */
+	Page<PlayExecutionLog> logPage(QueryExecutionLogDTO dto);
+
+	/**
 	 * 保存日志
 	 *
-	 * @param executionLog
+	 * @param log
 	 */
 	void saveLog(PlayExecutionLog log);
+
+	/**
+	 * 剧本混淆日志
+	 * @param playId
+	 * @param content
+	 * @param state
+	 */
+	public static void playConfoundLog(String playId, String content, Integer state) {
+		PlayExecutionLog log = new PlayExecutionLog();
+		log.setPlayId(playId);
+		if (state != null) {
+			log.setState(state);
+		}
+		log.setType(PlayLogTyper.Play_Confound);
+		log.setContent(content);
+		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
+	}
 	
 	
 	public static void robotPackLog(String playId, String groupId, String robotId ,String conetent , String errMsg){
@@ -79,6 +106,25 @@ public interface PlayExecutionLogService {
 		if (!isSync && StringUtils.isEmpty(errMsg)) {
 			// 回调请求 && 成功
 			log.setContent(String.format("【发言人包装-%s】 群%s 号%s 回调成功，操作码： %s", funcAlias, groupId, robotId, opt));
+		}
+		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
+	}
+	
+	
+	
+	public static void robotSendMassageErrLog(String playId, String groupId, String robotId, String errMsg, String opt) {
+		PlayExecutionLog log = new PlayExecutionLog();
+		log.setGroupId(groupId);
+		log.setPlayId(playId);
+		log.setOpt(opt);
+		// 状态 0-成功（默认） 1-失败
+		log.setState(StringUtils.isEmpty(errMsg) ? 0 : 1);
+		log.setType(PlayLogTyper.Robot_Settings);
+		log.setRobotId(robotId);
+		if(StringUtils.isEmpty(opt)) {
+			log.setContent(String.format("【剧本消息发送失败】 群%s 号%s，原因：%s，操作码:%s", groupId, robotId, errMsg , opt));
+		}else {
+			log.setContent(String.format("【剧本消息发送失败】 群%s 号%s，原因：%s", groupId, robotId, errMsg));
 		}
 		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
 	}

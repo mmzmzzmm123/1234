@@ -146,7 +146,7 @@
             tpmpd.message_content,
             tpmpd.message_sort,
             tpmpd.send_state,
-            tpmpd.send_time,
+            tpmpd.modify_time as sendTime,
             tpmpd.create_time,
             tpmpd.push_fail_reason,
             tgr.bot_type,
@@ -207,7 +207,7 @@
         ORDER BY
         <choose>
             <when test="dto.sortField != null and dto.sortField == 2">
-                tpmpd.send_time
+                tpmpd.modify_time
             </when>
             <otherwise>
                 tpmpd.create_time

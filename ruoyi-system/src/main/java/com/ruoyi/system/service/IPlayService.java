@@ -79,7 +79,7 @@ public interface IPlayService extends IService<Play> {
     /**
      * 释放水军
      */
-    R<String> releaseUser(String playId);
+    R<String> releaseRobot(String playId);
 
     void jobReleaseRobot();
 }

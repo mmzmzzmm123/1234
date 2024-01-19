@@ -59,4 +59,9 @@ public interface PlayMessagePushService extends IService<PlayMessagePush> {
      */
     List<QueryRobotDetailVO> robotDetails(QueryRobotDetailDTO dto);
 
+    List<PlayMessagePush> selectByPlayId(String playId);
+
+    List<PlayMessagePush> selectByPlayIdAndState(String playId, Integer state);
+
+    PlayMessagePush getOneByPlayIdAndGroupId(String playId, String groupId);
 }

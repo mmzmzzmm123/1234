@@ -18,5 +18,4 @@ public interface PlayModifierGroupLogMapper  extends BaseMapper<PlayModifierGrou
 
     Integer updateTaskByOutTime(@Param("outTime") Date outTime, @Param("failCause")String failCause);
 
-
 }
