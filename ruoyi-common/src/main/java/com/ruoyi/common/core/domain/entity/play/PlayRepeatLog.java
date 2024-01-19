@@ -12,4 +12,5 @@ public class PlayRepeatLog {
     private Integer id;
 
     private String playId;
+    private String newPlayId;
 }

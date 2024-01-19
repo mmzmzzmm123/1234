@@ -61,7 +61,7 @@ public interface PlayMessagePushService extends IService<PlayMessagePush> {
 
     List<PlayMessagePush> selectByPlayId(String playId);
 
-    List<PlayMessagePush> selectByPlayIdAndState(String playId, List<Integer> stateList);
+    List<PlayMessagePush> selectByPlayIdAndState(String playId, Integer state);
 
     PlayMessagePush getOneByPlayIdAndGroupId(String playId, String groupId);
 }

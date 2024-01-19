@@ -72,6 +72,15 @@ public class DelayQueueProgressPuller implements ProgressPuller {
 			log.info("剧本删除了 {} {}", message, chatroomId);
 			return;
 		}
+		// 风控限制了， 需要暂停剧本
+		boolean limit = ServiceLoader.load(GroupCtrlStopper.class, "BoxGroupCtrlStopper").isStoped(chatroomId);
+		if(limit) {
+			// 暂停剧本的某个群
+			SpringUtils.getBean(PlayServiceImpl.class).stopPlayByGroupId( message.getPlayId(), chatroomId);
+			log.info("群任务暂停 {} {}" , chatroomId , message);
+			return ;
+		}
+		
 		Integer delayTime = message.getIntervalTime();
 		// 先移动游标 ，
 		DelayQueueInvoker.Entry e = new DelayQueueInvoker.Entry(chatroomId, message.getPlayId(), Ids.getId());

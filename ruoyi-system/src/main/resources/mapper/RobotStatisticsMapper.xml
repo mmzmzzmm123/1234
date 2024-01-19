@@ -9,6 +9,9 @@
         select
             tri.robot_serial_no,
             trs.id
+        <if test="dto.ipType == 0">
+            ,tri.vpn_ip as ip
+        </if>
         <if test="dto.ipType == 1">
             ,tri.vpn_ip_b as ip
         </if>
@@ -42,10 +45,18 @@
             and #{dto.totalSetAdminCount} > trs.total_set_admin_count
         </if>
         <if test="dto.ips != null and dto.ips.size > 0">
-            and tri.vpn_ip_b not in
-        <foreach collection="dto.ips" item="item" separator="," open="(" close=")">
-            #{item}
-        </foreach>
+            <if test="dto.ipType == 0">
+                and tri.vpn_ip not in
+            </if>
+            <if test="dto.ipType == 1">
+                and tri.vpn_ip_b not in
+            </if>
+            <if test="dto.ipType == 2">
+                and tri.vpn_ip_c not in
+            </if>
+            <foreach collection="dto.ips" item="item" separator="," open="(" close=")">
+                    #{item}
+            </foreach>
         </if>
         <if test="dto.ipType == 1">
             group by tri.vpn_ip_b
@@ -63,7 +74,7 @@
             total_join_group_count = total_join_group_count+1,
             group_count = group_count+1
             <if test="dto.isSetAdmin == 1">
-                ,one_day_set_admin_count = one_day_set_admin_count+1,
+                ,one_day_set_admin_count = one_day_set_admin_count+1
                 ,total_set_admin_count = total_set_admin_count+1
             </if>
         where robot_serial_no in

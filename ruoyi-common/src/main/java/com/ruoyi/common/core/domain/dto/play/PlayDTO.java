@@ -19,25 +19,25 @@ public class PlayDTO {
     @ApiModelProperty(value = "群来源：0-平台提供 1-外部群")
     private Integer groupSource;
 
-    @ApiModelProperty("群需求数量")
+    @ApiModelProperty("平台群条件:群需求数量")
     private Integer groupNum;
 
-    @ApiModelProperty("群注册天数")
+    @ApiModelProperty("平台群条件:群注册天数")
     private Integer groupDay;
 
     @ApiModelProperty("剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成")
     private Integer state;
 
-    @ApiModelProperty("炒群条件：0-人数 1-时间")
+    @ApiModelProperty("炒群条件类型：0-人数 1-时间")
     private Integer groupCondition;
 
     @ApiModelProperty("炒群条件-群人数")
     private Integer userNum;
 
-    @ApiModelProperty("炒群时间条件类型：0-立即开始 1定时开始")
+    @ApiModelProperty("炒群条件-时间-类型：0-立即开始 1定时开始")
     private Integer startType;
 
-    @ApiModelProperty("定时开始炒群时间")
+    @ApiModelProperty("开始炒群时间")
     private Date startGroupDate;
 
     @ApiModelProperty("外部群邀请链接")
