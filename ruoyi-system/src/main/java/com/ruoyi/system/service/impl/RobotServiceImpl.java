@@ -509,20 +509,29 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public void recycleRobot(List<String> RobotSerialNos) {
-        for (List<String> item : ListTools.partition(RobotSerialNos,500)) {
-            this.update(new LambdaUpdateWrapper<Robot>()
-                    .in(Robot::getRobotSerialNo,item)
-                    .set(Robot::getRecycleStatus,1));
+    public void recycleRobot(List<String> robotSerialNos) {
+        for (List<String> item : ListTools.partition(robotSerialNos,500)) {
+            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
+            if(!CollectionUtils.isEmpty(robots)){
+                List<String> nos = robots.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
+                this.update(new LambdaUpdateWrapper<Robot>()
+                        .in(Robot::getRobotSerialNo,nos)
+                        .set(Robot::getRecycleStatus,1));
+            }
+
         }
     }
 
     @Override
-    public void updateRobotMerchant(List<String> RobotSerialNos) {
-        for (List<String> item : ListTools.partition(RobotSerialNos,500)) {
-            this.update(new LambdaUpdateWrapper<Robot>()
-                    .in(Robot::getRobotSerialNo,item)
-                    .set(Robot::getDeleteStatus,1));
+    public void updateRobotMerchant(List<String> robotSerialNos) {
+        for (List<String> item : ListTools.partition(robotSerialNos,500)) {
+            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
+            if(!CollectionUtils.isEmpty(robots)){
+                List<String> nos = robots.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
+                this.update(new LambdaUpdateWrapper<Robot>()
+                        .in(Robot::getRobotSerialNo,nos)
+                        .set(Robot::getDeleteStatus,1));
+            }
         }
     }
 }
