@@ -130,7 +130,7 @@
         GROUP BY
             tpmp.id
         ORDER BY
-            tpmp.create_time DESC
+            tpmp.id DESC
     </select>
 
     <select id="selectPushDetailPage" resultType="com.ruoyi.system.domain.vo.play.QueryPushDetailVO">
