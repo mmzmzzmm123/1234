@@ -437,11 +437,11 @@ public class TgRobotProcessor {
      */
     @Type(value = 1100910001, parameterClass = Called1100910001DTO.class)
     public void cacheLogin(Called1100910001DTO source) {
-        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ1100910001 called:{}",root);
-        if(root.isSuccess()){
-            robotService.cacheLogin(source.getRobot_serial_no());
-        }
+//        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+//        log.info("NQ1100910001 called:{}",root);
+//        if(root.isSuccess()){
+//            robotService.cacheLogin(source.getRobot_serial_no());
+//        }
     }
 
 
