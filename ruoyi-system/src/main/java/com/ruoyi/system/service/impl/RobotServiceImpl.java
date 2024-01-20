@@ -533,12 +533,16 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     public void updateRobotMerchant(List<Called50005005DTO> sourceList) {
         Called50005005DTO data = sourceList.stream().findFirst().get();
         String merchantId = configService.selectConfigByKey("robot:merchant");
-        if(!data.getBeforeBelongsMerchantId().equals(merchantId) && !data.getAfterBelongsMerchantId().equals(merchantId)){
-            //不属于改商家的变动
+        if(data.getAfterBelongsMerchantId().equals(merchantId) && !data.getBeforeBelongsMerchantId().equals(merchantId)){
+            //划拨商家,去同步号
+            log.info("商家划拨,同步号");
+            this.syncRobot();
             return;
         }
         //回收
-        if(data.getBeforeBelongsMerchantId().equals(merchantId)){
+        if(!StringUtils.isEmpty(data.getBeforeBelongsMerchantId())
+                && data.getBeforeBelongsMerchantId().equals(merchantId)
+                && !data.getAfterBelongsMerchantId().equals(merchantId) ){
             List<String> robotSerialNos = sourceList.stream().map(Called50005005DTO::getRobotSerialNo).collect(Collectors.toList());
             for (List<String> item : ListTools.partition(robotSerialNos,500)) {
                 List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
@@ -549,11 +553,8 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
                             .set(Robot::getRecycleStatus,1));
                 }
             }
-            return;
         }
-        //划拨商家,去同步号
-        log.info("商家划拨,同步号");
-        this.syncRobot();
+
     }
 
     @Override
