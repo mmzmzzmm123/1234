@@ -1,9 +1,9 @@
 package com.ruoyi.system.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.dto.play.WordPageDTO;
 import com.ruoyi.common.core.domain.entity.play.PlayFile;
-import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.WordUtil;
 import com.ruoyi.system.domain.vo.AnalysisPlayFileVO;
@@ -20,8 +20,10 @@ import java.util.List;
 @Slf4j
 @Service
 public class AnalysisFileService {
-    //@Autowired
-    //private RedisTeplate redisTemplate;
+    /**
+     * 发言人标识前缀
+     */
+    public static final String SPOKESMAN_REGEX = "${";
 
     @Autowired
     private PlayFileService playFileService;
@@ -32,7 +34,7 @@ public class AnalysisFileService {
     /**
      * 解析剧本文件,返回id
      */
-    public WordPageDTO analysisPlayWord(MultipartFile file) {
+    public WordPageDTO analysisPlayWord(MultipartFile file, Long userId) {
         WordPageDTO pageDTO = new WordPageDTO();
         List<String> tmpData = WordUtil.readWordDocument(file);
         if (tmpData.isEmpty()) {
@@ -41,43 +43,22 @@ public class AnalysisFileService {
             return pageDTO;
         }
 
-        //合并发言
-//        List<List<String>> playFileContent = new ArrayList<>();
-//        int index = 0;
-//        for (String item : tmpData) {
-//            List<String> tmp;
-//            if (item.startsWith(WordUtil.spokesman_regex)) {
-//                tmp = new ArrayList<>();
-//                tmp.add(item);
-//                playFileContent.add(index++, tmp);
-//            } else {
-//                if (playFileContent.isEmpty()) {
-//                    tmp = new ArrayList<>();
-//                    tmp.add(item);
-//                    playFileContent.add(index++, tmp);
-//                    continue;
-//                }
-//                //上一个发言人的数据
-//                index--;
-//                tmp = playFileContent.get(index);
-//                tmp.add(item);
-//                playFileContent.set(index++, tmp);
-//            }
-//        }
+        //一个用户只能上传一份文件
+        playFileMapper.delete(new LambdaQueryWrapper<PlayFile>().eq(PlayFile::getFileId, userId));
 
-        String fileId = Ids.getId();
+        String fileId = userId.toString();
         List<PlayFile> playFileList = new ArrayList<>();
         long time = System.currentTimeMillis();
         try {
-            int no = 1;
+            int no = 0;
             for (String item : tmpData) {
                 item = item.trim();
                 if (item.isEmpty()) {
                     continue;
                 }
 
-                // todo 判断是否另一个发言人
-                if (item.startsWith(WordUtil.spokesman_regex)) {
+                //判断是否另一个发言人
+                if (item.startsWith(SPOKESMAN_REGEX)) {
                     no++;
                 }
 
@@ -85,7 +66,7 @@ public class AnalysisFileService {
                 playFile.setFileId(fileId);
                 playFile.setContent(item);
                 playFile.setContentNo(no);
-                playFile.setType(item.startsWith(WordUtil.img_pre) ? 2 : 1);
+                playFile.setType(item.startsWith(WordUtil.IMG_PRE) ? 2 : 1);
                 playFileList.add(playFile);
             }
 
@@ -107,45 +88,6 @@ public class AnalysisFileService {
         return pageDTO;
     }
 
-    private void saveAnalysisPlayFile(String id, List<List<String>> playFileContent) {
-//        try {
-//            int no = 0;
-//            for (List<String> items : playFileContent) {
-//                for (String item : items) {
-//                    item = item.trim();
-//                    if (item.isEmpty()) {
-//                        continue;
-//                    }
-//                    Boolean r = redisTemplate.opsForZSet().add(PLAY_FILE_CONTENT + id, item, no);
-//                    if (r == false) {
-//                        System.out.println(r);
-//                    }
-//                }
-//                no++;
-//            }
-//            redisTemplate.multi();
-//            Object obj = redisTemplate.execute(new SessionCallback() {
-//                @Override
-//                public Object execute(RedisOperations redisOperations) throws DataAccessException {
-//                    redisOperations.multi();
-//
-//                    int no = 0;
-//                    for (List<String> items : playFileContent) {
-//                        for (String item : items) {
-//                            redisTemplate.opsForZSet().add(PLAY_FILE_CONTENT + id, item, no);
-//                        }
-//                        no++;
-//                    }
-//
-//                    return redisOperations.exec();
-//                }
-//            });
-//            System.out.println(obj);
-//        } catch (Exception e) {
-//            log.error("analysisPlayWord:{}", e.getMessage());
-//        }
-    }
-
     public AnalysisPlayFileVO playWordContentList(WordPageDTO pageDTO) {
         AnalysisPlayFileVO ret = new AnalysisPlayFileVO();
 
@@ -155,24 +97,6 @@ public class AnalysisFileService {
         if (StringUtils.isEmpty(pageDTO.getFileId())) {
             return ret;
         }
-
-        List<AnalysisPlayFileVO.ContentInfo> contentInfoList = new ArrayList<>();
-
-//        long start = (long) (pageDTO.getPage() - 1) * pageDTO.getPageSize();
-//        long end = (long) pageDTO.getPage() * pageDTO.getPageSize() - 1;
-//        Set<ZSetOperations.TypedTuple<Object>> stringSet = redisTemplate.opsForZSet().rangeWithScores(PLAY_FILE_CONTENT + pageDTO.getFileId(), start, end);
-//        if (null == stringSet) {
-//            ret.setContentInfoList(new ArrayList<>());
-//            return ret;
-//        }
-//
-//
-//        for (ZSetOperations.TypedTuple<Object> item : stringSet) {
-//            AnalysisPlayFileVO.ContentInfo contentInfo = new AnalysisPlayFileVO.ContentInfo();
-//            contentInfo.setNo(Objects.requireNonNull(item.getScore()).intValue());
-//            contentInfo.setContent(Objects.requireNonNull(item.getValue()).toString());
-//            contentInfoList.add(contentInfo);
-//        }
 
         List<PlayFile> playFileList = playFileMapper.selectList(new QueryWrapper<PlayFile>().lambda()
                 .eq(PlayFile::getFileId, pageDTO.getFileId())
@@ -184,6 +108,7 @@ public class AnalysisFileService {
 
         ret.setStartIndex(playFileList.get(playFileList.size()-1).getId());
 
+        List<AnalysisPlayFileVO.ContentInfo> contentInfoList = new ArrayList<>();
         int imgNum = 0;
         for (PlayFile playFile : playFileList) {
             AnalysisPlayFileVO.ContentInfo contentInfo = new AnalysisPlayFileVO.ContentInfo();
@@ -192,7 +117,7 @@ public class AnalysisFileService {
             contentInfoList.add(contentInfo);
             if (playFile.getType() == 2) {
                 imgNum++;
-                //图片数据太大, 限制返回
+                //图片格式数据太大, 限制返回数据
                 if (imgNum > 2) {
                     ret.setStartIndex(playFile.getId());
                     break;

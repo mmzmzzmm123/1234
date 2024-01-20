@@ -35,6 +35,7 @@ import com.ruoyi.system.service.*;
 import com.ruoyi.system.service.business.GroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -120,15 +121,16 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         }
         saveRobotPack(playId, dto.getPerformerList());
 
-        //插入剧本消息表
+        //保存剧本消息
         savePlayMessage(playId, dto.getPlayMessageList(), dto.getSendMechanism(), dto.getUrlPool());
-
-        //删除上传word文件
-        if (StringUtils.isNotEmpty(dto.getFileId())) {
-            playFileMapper.delete(new LambdaQueryWrapper<PlayFile>().eq(PlayFile::getFileId, dto.getFileId()));
-        }
-
+        delFileData(dto.getLoginUser().getUserId().toString());
         return R.ok(playId);
+    }
+
+    //删除上传word文件
+    @Async
+    public void delFileData(String fileId) {
+        playFileMapper.delete(new LambdaQueryWrapper<PlayFile>().eq(PlayFile::getFileId, fileId));
     }
 
     //创建订单记录
@@ -288,10 +290,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         playMessageMapper.delete(new LambdaQueryWrapper<PlayMessage>().eq(PlayMessage::getPlayId, dto.getId()));
         savePlayMessage(dto.getId(), dto.getPlayMessageList(), dto.getSendMechanism(), dto.getUrlPool());
 
-        //删除上传word文件
-        if (StringUtils.isNotEmpty(dto.getFileId())) {
-            playFileMapper.delete(new LambdaQueryWrapper<PlayFile>().eq(PlayFile::getFileId, dto.getFileId()));
-        }
+        delFileData(dto.getLoginUser().getUserId().toString());
 
         return R.ok();
     }
