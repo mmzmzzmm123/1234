@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.VibeRule;
 import com.ruoyi.common.core.domain.entity.robot.RobotStatistics;
 import com.ruoyi.common.core.redis.RedisLock;
+import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.dto.robot.AddCountDTO;
 import com.ruoyi.system.domain.dto.robot.GetRobotDTO;
@@ -193,7 +194,13 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
 
     @Override
     public void clearRobotOneDayNum() {
-        baseMapper.clearRobotOneDayNum();
+        List<RobotStatistics> robotStatistics = baseMapper.selectList(null);
+        if(!CollectionUtils.isEmpty(robotStatistics)){
+            for (List<RobotStatistics> statistics : ListTools.partition(robotStatistics, 500)) {
+                List<String> robotSerialNos = statistics.stream().map(RobotStatistics::getRobotSerialNo).collect(Collectors.toList());
+                baseMapper.clearRobotOneDayNum(robotSerialNos);
+            }
+        }
     }
 
 

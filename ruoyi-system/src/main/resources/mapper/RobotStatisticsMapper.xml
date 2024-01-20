@@ -106,7 +106,16 @@
     </update>
 
     <update id="clearRobotOneDayNum">
-        update t_robot_statistics set one_day_join_group_count = one_day_join_group_count * 0,one_day_set_admin_count = one_day_set_admin_count * 0
+        update t_robot_statistics
+        set one_day_join_group_count = one_day_join_group_count * 0,
+            one_day_set_admin_count = one_day_set_admin_count * 0
+        where 1=1
+        <if test="robotSerialNos != null and robotSerialNos.size > 0">
+            and robot_serial_no in
+            <foreach collection="robotSerialNos" item="item" separator="," open="(" close=")">
+                #{item}
+            </foreach>
+        </if>
     </update>
 
 </mapper>
