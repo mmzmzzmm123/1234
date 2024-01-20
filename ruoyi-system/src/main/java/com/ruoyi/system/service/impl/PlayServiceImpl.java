@@ -103,11 +103,11 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         } else {
             AjaxResult result = ProductTools.checkNormal(productId);
             if (result.isError()) {
-                return R.fail(result.msg().toString());
+                return R.fail(10000, result.msg().toString());
             }
             product = (Product) result.data();
             if (product.getCategoryId() != ProductCategoryType.PLAY.getId()) {
-                return R.fail(ErrInfoConfig.getDynmic(11001, "商品分类不符合"));
+                return R.fail(11001, ErrInfoConfig.getDynmic(11001, "商品分类不符合"));
             }
         }
         handleOrder(product, dto.getName(), dto.getLoginUser());
@@ -266,13 +266,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     @Transactional(rollbackFor=Exception.class)
     public R<String> updatePlay(PlayDTO dto) {
-        if (StringUtils.isEmpty(dto.getId())) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
-        }
-
         Play play = super.getById(dto.getId());
         if (null == play) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
 
         play.setName(dto.getName());
@@ -298,12 +294,12 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     public R<PlayVO> info(String playId) {
         if (StringUtils.isEmpty(playId)) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
 
         Play play = super.getById(playId);
         if (null == play) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
 
         PlayVO ret = new PlayVO();
@@ -377,7 +373,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 .in(Play::getState, Arrays.asList(PlayStatusConstants.DISPATCH, PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.SUSPEND))
                 .set(Play::getAdMonitor, JSON.toJSONString(dto)));
         if (!status) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "修改失败"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "修改失败"));
         }
 
         //调用接口同步广告配置
@@ -556,21 +552,21 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Transactional(rollbackFor = Exception.class)
     public R<String> repeatPlay(String playId, LoginUser loginUser) {
         if (StringUtils.isEmpty(playId)) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
 
         Play play = super.getById(playId);
         if (null == play) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "炒群任务不存在"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "炒群任务不存在"));
         }
 
         if (null == play.getLockRobotStatus() || play.getLockRobotStatus() != 1) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "该剧本未配置锁定水军"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "该剧本未配置锁定水军"));
         }
 
         R<PlayVO> infoRet  = this.info(playId);
         if (infoRet.getCode() != SUCCESS) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "获取群信息失败"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "获取群信息失败"));
         }
 
         PlayDTO dto = new PlayDTO();
@@ -580,7 +576,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         dto.setScanProgress(ScanProgressEnum.Send_Wait.getVal());
         R<String> ret = this.create(dto);
         if (ret.getCode() != SUCCESS) {
-            return R.fail(ErrInfoConfig.getDynmic(10000, "创建剧本失败"));
+            return ret;
         }
         String newPlayId = ret.getData();
 
@@ -738,12 +734,12 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     public R<String> releaseRobot(String playId) {
         if (StringUtils.isEmpty(playId)) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
 
         Play play = super.getById(playId);
         if (null == play) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
         //已完成和已取消才可进行
         if (play.getState() != PlayStatusConstants.CANCEL && play.getState() != PlayStatusConstants.FINISHED) {
