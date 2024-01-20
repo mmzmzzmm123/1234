@@ -749,10 +749,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         //获取剧本关联群
         List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(playId);
         if (playGroupInfos != null) {
-            log.info("releaseRobot_groupIds: {}", playGroupInfos.stream().map(PlayGroupInfo::getGroupId).collect(Collectors.joining(",")));
             RobotServiceImpl robotService = SpringUtils.getBean(RobotServiceImpl.class);
             //获取待退群水军
             for (PlayGroupInfo playGroupInfo : playGroupInfos) {
+                log.info("releaseRobot_groupId: {}", playGroupInfo.getGroupId());
                 List<PlayRobotGroupRelation> playRobotGroupRelationList = playRobotGroupRelationMapper.selectWaitOutGroupByGroupId(playGroupInfo.getGroupId());
                 if (null != playRobotGroupRelationList) {
                     log.info("releaseRobot_robotIds: {}", playRobotGroupRelationList.stream().map(PlayRobotGroupRelation::getRobotId).collect(Collectors.joining(",")));

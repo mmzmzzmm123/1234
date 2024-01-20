@@ -44,9 +44,8 @@ public class AnalysisFileService {
         }
 
         //一个用户只能上传一份文件
-        playFileMapper.delete(new LambdaQueryWrapper<PlayFile>().eq(PlayFile::getFileId, userId));
-
         String fileId = userId.toString();
+        playFileMapper.delete(new LambdaQueryWrapper<PlayFile>().eq(PlayFile::getFileId, fileId));
         List<PlayFile> playFileList = new ArrayList<>();
         long time = System.currentTimeMillis();
         int no = 0;
