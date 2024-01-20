@@ -114,9 +114,9 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
     }
 
     @Override
-    public List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode, List<String> excludeGroupId) {
+    public List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode, List<String> excludeGroupId,Integer botAdmin) {
         return baseMapper.selectGroup(registrationDay == null ? null :
-                LocalDateTime.now().plusDays(-registrationDay), groupNum, countryCode, excludeGroupId);
+                LocalDateTime.now().plusDays(-registrationDay), groupNum, countryCode, excludeGroupId,botAdmin);
     }
 
     @Override

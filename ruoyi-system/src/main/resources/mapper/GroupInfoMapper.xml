@@ -172,6 +172,9 @@
         <if test="registrationDay != null ">
             AND tgi.registration_time <![CDATA[ <= ]]>  #{registrationDay}
         </if>
+        <if test="botAdmin != null ">
+            AND tgmi.bot_admin  = #{botAdmin}
+        </if>
         <if test="countryCode != null and  countryCode.size > 0 ">
             AND robot.country_code in
             <foreach collection="countryCode" item="id" open="(" separator="," close=")">
