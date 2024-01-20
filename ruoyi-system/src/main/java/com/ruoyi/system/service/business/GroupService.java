@@ -24,6 +24,7 @@ import com.ruoyi.common.enums.SetAdminAction;
 import com.ruoyi.common.exception.GlobalException;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.bot.ApiClient;
 import com.ruoyi.system.bot.mode.input.AdMonitorDTO;
 import com.ruoyi.system.bot.mode.output.BotInfoVO;
@@ -99,6 +100,8 @@ public class GroupService {
 
     private final IPlayService playbackService;
 
+    private final ISysConfigService iSystemConfigService;
+
     /**
      * 选群
      *
@@ -111,6 +114,8 @@ public class GroupService {
         List<String> countryCodes = new ArrayList<>();
         List<String> locks = new ArrayList<>();
         List<GroupInfoVO> groupInfoList = new ArrayList<>();
+        Integer botAdmin = ObjectUtil.equal("1", iSystemConfigService.selectConfigByKey("selectGroup:botAdmin"))?1:null;
+
         VibeRuleDTO one = ibiRuleService.getOne();
         if (one == null) {
             return R.fail("无风控规则");
@@ -119,7 +124,7 @@ public class GroupService {
         try {
             while (groupInfoList.size() < dto.getGroupNum()) {
                 count = dto.getGroupNum() - groupInfoList.size();
-                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count, countryCodes, failGroupId);
+                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count, countryCodes, failGroupId, botAdmin);
                 //没有满足条件的群
                 if (CollUtil.isEmpty(result)) {
                     //如果有优先国家  清空优先国家再次查询 否则跳出循环
@@ -574,6 +579,10 @@ public class GroupService {
                             input.setManageCall(true);
                             input.setAnonymous(true);
                             input.setAddAdmins(true);
+                            if(ObjectUtil.equal("1", iSystemConfigService.selectConfigByKey("setBotAdmin:para"))){
+                                input.setAnonymous(false);
+                                input.setAddAdmins(false);
+                            }
                             input.setMemberUserAccessHash(value);
                             return input;
                         },

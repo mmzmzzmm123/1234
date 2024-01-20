@@ -28,5 +28,7 @@ public interface GroupInfoMapper extends BaseMapper<GroupInfo> {
 
     List<GroupInfoVO> selectGroup(@Param("registrationDay") LocalDateTime registrationDay,
                                   @Param("groupNum") Integer groupNum,
-                                  @Param("countryCode") List<String> countryCode,@Param("excludeGroupId") List<String> excludeGroupId);
+                                  @Param("countryCode") List<String> countryCode,
+                                  @Param("excludeGroupId") List<String> excludeGroupId,
+                                  @Param("botAdmin") Integer botAdmin);
 }

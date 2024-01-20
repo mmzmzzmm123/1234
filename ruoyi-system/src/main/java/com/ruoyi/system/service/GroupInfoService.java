@@ -32,7 +32,7 @@ public interface GroupInfoService extends IService<GroupInfo> {
     List<GroupInfo> saveImportGroup(List<GroupResourceVO> resourceList);
 
 
-    List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode, List<String> excludeGroupId);
+    List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode, List<String> excludeGroupId,Integer botAdmin);
 
     void syncGroupInfo(List<GroupInfo> groupInfoList, List<ExtTgSelectGroupVO> utInfos);
 
