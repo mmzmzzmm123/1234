@@ -90,9 +90,7 @@ public class TgRobotProcessor {
     public void called50005006(List<Called50005006DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         log.info("NQ50005005 called:{}",root);
-        if(root.isSuccess()){
-            robotService.updateRobotInfo(sourceList);
-        }
+        robotService.updateRobotInfo(sourceList);
     }
 
 
