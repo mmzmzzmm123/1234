@@ -29,6 +29,9 @@ public class GroupPageInfoVO {
     @ApiModelProperty(value = "群编号")
     private String groupSerialNo;
 
+    @ApiModelProperty(value = "老编号")
+    private String oldGroupSerialNo;
+
     @Excel(name = "群邀请链接")
     @ApiModelProperty(value = "群邀请链接")
     private String groupInviteLink;

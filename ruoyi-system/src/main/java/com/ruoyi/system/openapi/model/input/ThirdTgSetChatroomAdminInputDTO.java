@@ -37,6 +37,7 @@ public class ThirdTgSetChatroomAdminInputDTO {
     @ApiModelProperty("成员hash key")
     private String memberUserAccessHash;
 
+    private Boolean notModifyPermissions;
 
     private String groupId;
 }

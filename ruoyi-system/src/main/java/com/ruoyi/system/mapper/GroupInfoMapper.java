@@ -30,5 +30,6 @@ public interface GroupInfoMapper extends BaseMapper<GroupInfo> {
                                   @Param("groupNum") Integer groupNum,
                                   @Param("countryCode") List<String> countryCode,
                                   @Param("excludeGroupId") List<String> excludeGroupId,
-                                  @Param("botAdmin") Integer botAdmin);
+                                  @Param("botAdmin") Integer botAdmin,
+                                  @Param("groupRange") String groupRange);
 }
