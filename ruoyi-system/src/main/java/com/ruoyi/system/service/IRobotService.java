@@ -6,12 +6,14 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.system.callback.dto.Called1100910045DTO;
 import com.ruoyi.system.callback.dto.Called1100910101DTO;
+import com.ruoyi.system.callback.dto.Called50005005DTO;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface IRobotService extends IService<Robot> {
@@ -78,7 +80,7 @@ public interface IRobotService extends IService<Robot> {
      * @param robotIds
      * @return
      */
-    RobotStatisticsVO getRobotStatisticsVO(List<String> robotIds);
+    RobotStatisticsVO getRobotStatisticsVO(Collection<String> robotIds);
 
     void updateUsername(String robotSerialNo,String userName);
 
@@ -95,7 +97,7 @@ public interface IRobotService extends IService<Robot> {
     /**
      * 号商家变更
      */
-    void updateRobotMerchant(List<String> robotSerialNos);
+    void updateRobotMerchant(List<Called50005005DTO> sourceList);
 
     void updateBidirectional(Called1100910101DTO dto);
 

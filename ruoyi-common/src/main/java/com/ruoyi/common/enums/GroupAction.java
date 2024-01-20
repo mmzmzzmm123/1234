@@ -14,23 +14,23 @@ import java.util.EnumSet;
 @Getter
 public enum GroupAction {
 
-    SET_GROUP_IMAGE(0, "设置群头像", true,LimitingDimensions.NONE,null,null,false),
+    SET_GROUP_IMAGE(0, "设置群头像", true,LimitingDimensions.NONE,null,null,false,false),
 
-    SET_GROUP_NAME(1, "设置群名", true,LimitingDimensions.NONE,null,null,false),
+    SET_GROUP_NAME(1, "设置群名", true,LimitingDimensions.NONE,null,null,false,false),
 
-    SET_GROUP_TYPE(2, "设置群类型", true,LimitingDimensions.NONE,null,null,false),
+    SET_GROUP_TYPE(2, "设置群类型", true,LimitingDimensions.NONE,null,null,false,false),
 
-    SEARCH_BOT(3, "搜索BOT", true,LimitingDimensions.NONE,null,null,false),
+    SEARCH_BOT(3, "搜索BOT", true,LimitingDimensions.NONE,null,null,false,false),
 
-    ADD_BOT(4, "添加BOT", true,LimitingDimensions.NONE,null,null,false),
+    ADD_BOT(4, "添加BOT", true,LimitingDimensions.NONE,null,null,false,false),
 
-    INVITE_BOT_JOIN_GROUP(5, "邀请bot进入群聊", true, LimitingDimensions.ROBOT, 5*60L,10,false),
+    INVITE_BOT_JOIN_GROUP(5, "邀请bot进入群聊", true, LimitingDimensions.ROBOT, 5*60L,10,false,false),
 
-    SET_GROUP_ADMIN(6, "设置管理员", true,LimitingDimensions.NONE,null,null,false),
+    SET_GROUP_ADMIN(6, "设置管理员", true,LimitingDimensions.NONE,null,null,false,true),
 
-    QUERY_HASH(7,"查询成员hash", true,LimitingDimensions.ALL,60L,15,false),
+    QUERY_HASH(7,"查询成员hash", true,LimitingDimensions.ALL,60L,15,false,false),
 
-    QUERY_GROUP_MEMBER(8,"查询群成员",true,LimitingDimensions.NONE,null,null,false);
+    QUERY_GROUP_MEMBER(8,"查询群成员",true,LimitingDimensions.NONE,null,null,false,false);
 
     private final int code;
 
@@ -45,6 +45,8 @@ public enum GroupAction {
     private final Integer limitFrequency;
 
     private final Boolean needCacheOpt;
+
+    private final Boolean limitOne;
 
 
     public static GroupAction of(Integer code) {
