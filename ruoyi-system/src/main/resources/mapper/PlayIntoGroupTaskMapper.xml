@@ -111,4 +111,8 @@
     <select id="selectNotCallBackTask" resultType="com.ruoyi.system.domain.dto.play.PlayIntoGroupTask">
         select * from t_play_into_group_task where task_state = 2 and  #{outTime} > modify_time
     </select>
+
+    <select id="selectGroupUrlByPlayId" resultType="java.lang.Integer">
+        select count(*) from t_play_into_group_task where group_url = #{groupUrl} and play_id = #{playId} and person_id = #{personId}
+    </select>
  </mapper>

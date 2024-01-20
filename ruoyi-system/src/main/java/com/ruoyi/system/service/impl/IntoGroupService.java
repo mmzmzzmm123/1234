@@ -494,11 +494,11 @@ public class IntoGroupService {
                         if (robotVOS == null) {
                             playDTO.setState(4);
                             playDTO.setFailReason("无剧本所需足够的机器人！");
-                            setLog(playDTO.getId(), "群" + groupInfoVO.getGroupName() + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
+                            setLog(playDTO.getId(), "群ID:" + groupInfoVO.getGroupSerialNo() + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
                             playMapper.updateById(playDTO);
                             continue;
                         }
-                        setLog(playDTO.getId(), "群" + groupInfoVO.getGroupName() + "机器人出库成功！", 0, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
+                        setLog(playDTO.getId(), "群ID：" + groupInfoVO.getGroupSerialNo() + "机器人出库成功！", 0, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
                         //拆分机器人列表
                         List<GetRobotVO> adminList = new ArrayList<>();
                         List<GetRobotVO> robotList = new ArrayList<>();
@@ -543,7 +543,7 @@ public class IntoGroupService {
                             }
                         }
 
-                        setLog(playDTO.getId(), "群" + groupInfoVO.getGroupName() + "机器人调度入群任务分配成功！", 0, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
+                        setLog(playDTO.getId(), "群ID:" + groupInfoVO.getGroupSerialNo() + "机器人调度入群任务分配成功！", 0, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
                     }
                 } else {
                     //群链接入群
@@ -829,20 +829,28 @@ public class IntoGroupService {
                 adminDTO.setIpType(ipType);
                 PlayExt playExt = JSONObject.parseObject(play.getPlayExt(), PlayExt.class);
                 adminDTO.setIsLock(playExt.getLockState());
-                //调用获取机器人接口
-                log.info("入群失败重试获取号："+JSONObject.toJSONString(adminDTO));
-                R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
-                log.info("入群失败重试获取号结果："+JSONObject.toJSONString(robotAdminVOS));
                 PlayIntoGroupTask playIntoGroupTask = Beans.toView(task, PlayIntoGroupTask.class);
-                if (robotAdminVOS.getCode() != 200) {
-                    playIntoGroupTask.setPersonId(null);
-                    setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人出库失败，无可用号！", 1, PlayLogTyper.Group_into, null);
-                    playIntoGroupTask.setTaskState(4);
-                } else {
+                while (true) {
+                    //调用获取机器人接口
+                    log.info("入群失败重试获取号："+JSONObject.toJSONString(adminDTO));
+                    R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
+                    log.info("入群失败重试获取号结果："+JSONObject.toJSONString(robotAdminVOS));
+                    if (robotAdminVOS.getCode() != 200) {
+                        playIntoGroupTask.setPersonId(null);
+                        setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人出库失败，无可用号！", 1, PlayLogTyper.Group_into, null);
+                        playIntoGroupTask.setTaskState(4);
+                        break;
+                    }
                     GetRobotVO getRobotVO = robotAdminVOS.getData().get(0);
-                    playIntoGroupTask.setPersonId(getRobotVO.getRobotSerialNo());
-                    playIntoGroupTask.setTaskState(1);
-                    setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人出库成功！号ID为：" + getRobotVO.getRobotSerialNo(), 0, PlayLogTyper.Group_into, null);
+                    //判断当前机器人是否已经在当前剧本使用过
+                    Integer count = playIntoGroupTaskMapper.selectGroupUrlByPlayId(task.getGroupUrl(),task.getPlayId(),getRobotVO.getRobotSerialNo());
+                    //机器人已使用过 需要换号
+                    if (count == 0) {
+                        playIntoGroupTask.setPersonId(getRobotVO.getRobotSerialNo());
+                        playIntoGroupTask.setTaskState(1);
+                        setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人出库成功！号ID为：" + getRobotVO.getRobotSerialNo(), 0, PlayLogTyper.Group_into, null);
+                        break;
+                    }
                 }
                 playIntoGroupTask.setId(IdUtils.fastUUID());
                 playIntoGroupTask.setCreateTime(new Date());
