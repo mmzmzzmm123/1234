@@ -1128,6 +1128,7 @@ public class IntoGroupService {
             setLog(task.getPlayId(),  "机器人" + task.getPersonId() + "入群没有接收到入群回调！正在重试！", 1, PlayLogTyper.Group_into, null);
             playIntoGroupTask.setTaskState(4);
             playIntoGroupTask.setFailCause("无入群回调,已自动变更为失败！");
+            playIntoGroupTaskMapper.updateById(playIntoGroupTask);
         }
     }
 
