@@ -58,7 +58,7 @@ public class TgRobotProcessor {
     @Type(value = 50005004, parameterClass = Called50005004DTO.class)
     public void called50005004(Called50005004DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ50005004 called:{}",root);
+//        log.info("NQ50005004 called:{}",root);
         if(!CollectionUtils.isEmpty(source.getRobotSerialNos())){
             robotService.recycleRobot(source.getRobotSerialNos());
         }
@@ -71,7 +71,7 @@ public class TgRobotProcessor {
     @Type(value = 50005005, parameterClass = Called50005005DTO.class)
     public void called50005005(List<Called50005005DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ50005005 called:{}",root);
+//        log.info("NQ50005005 called:{}",root);
         if(!CollectionUtils.isEmpty(sourceList)){
             robotService.updateRobotMerchant(sourceList);
         }
@@ -84,7 +84,7 @@ public class TgRobotProcessor {
     @Type(value = 50005006, parameterClass = Called50005006DTO.class)
     public void called50005006(List<Called50005006DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ50005006 called:{}",root);
+//        log.info("NQ50005006 called:{}",root);
         robotService.updateRobotInfo(sourceList);
     }
 
@@ -406,7 +406,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910003, parameterClass = Called1100910003DTO.class)
     public void called1100910003(Called1100910003DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ1100910003 called:{}",root);
+//        log.info("NQ1100910003 called:{}",root);
         if(root.isSuccess()){
             robotService.offline(source.getUser_serial_no());
         }
