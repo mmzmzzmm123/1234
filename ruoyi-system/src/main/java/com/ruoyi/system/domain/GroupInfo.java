@@ -38,7 +38,7 @@ public class GroupInfo {
      * 群编号
      */
     @ApiModelProperty(value = "老的群编号")
-    @TableField("old_original_group_id")
+    @TableField("old_group_serial_no")
     private String oldGroupSerialNo;
 
     /**
