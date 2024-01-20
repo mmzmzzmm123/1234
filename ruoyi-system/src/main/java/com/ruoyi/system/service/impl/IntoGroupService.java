@@ -329,6 +329,10 @@ public class IntoGroupService {
                 //插入重试
                 if (logs.size() < groupNum) {
                     replaceGroup(play);
+                }else {
+                    play.setState(4);
+                    play.setFailReason("修改群人设失败");
+                    playMapper.updateById(play);
                 }
             }
 
