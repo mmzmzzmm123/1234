@@ -17,6 +17,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.callback.dto.Called1100910045DTO;
 import com.ruoyi.system.callback.dto.Called1100910101DTO;
+import com.ruoyi.system.callback.dto.Called50005005DTO;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
@@ -69,7 +70,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         AsyncTask.execute(()->{
             ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
             robotDTO.setLimit(1000);
-            robotDTO.setPage(1);//1747887445714726912
+            robotDTO.setPage(1);
             String merchantId = configService.selectConfigByKey("robot:merchant");
             robotDTO.setMerchantId(merchantId);
             OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
@@ -487,7 +488,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public RobotStatisticsVO getRobotStatisticsVO(List<String> robotIds) {
+    public RobotStatisticsVO getRobotStatisticsVO(Collection<String> robotIds) {
         if (org.apache.commons.collections4.CollectionUtils.isEmpty(robotIds)){
             return new RobotStatisticsVO();
         }
@@ -528,16 +529,30 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public void updateRobotMerchant(List<String> robotSerialNos) {
-        for (List<String> item : ListTools.partition(robotSerialNos,500)) {
-            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
-            if(!CollectionUtils.isEmpty(robots)){
-                List<String> nos = robots.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
-                this.update(new LambdaUpdateWrapper<Robot>()
-                        .in(Robot::getRobotSerialNo,nos)
-                        .set(Robot::getRecycleStatus,1));
-            }
+    public void updateRobotMerchant(List<Called50005005DTO> sourceList) {
+        Called50005005DTO data = sourceList.stream().findFirst().get();
+        String merchantId = configService.selectConfigByKey("robot:merchant");
+        if(!data.getBeforeBelongsMerchantId().equals(merchantId) && !data.getAfterBelongsMerchantId().equals(merchantId)){
+            //不属于改商家的变动
+            return;
         }
+        //回收
+        if(data.getBeforeBelongsMerchantId().equals(merchantId)){
+            List<String> robotSerialNos = sourceList.stream().map(Called50005005DTO::getRobotSerialNo).collect(Collectors.toList());
+            for (List<String> item : ListTools.partition(robotSerialNos,500)) {
+                List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
+                if(!CollectionUtils.isEmpty(robots)){
+                    List<String> nos = robots.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
+                    this.update(new LambdaUpdateWrapper<Robot>()
+                            .in(Robot::getRobotSerialNo,nos)
+                            .set(Robot::getRecycleStatus,1));
+                }
+            }
+            return;
+        }
+        //划拨商家,去同步号
+        log.info("商家划拨,同步号");
+        this.syncRobot();
     }
 
     @Override

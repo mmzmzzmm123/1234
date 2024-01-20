@@ -56,7 +56,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -110,7 +109,7 @@ public class GroupService {
         int count;
         List<String> failGroupId = new ArrayList<>();
         List<String> countryCodes = new ArrayList<>();
-        List<RLock> locks = new ArrayList<>();
+        List<String> locks = new ArrayList<>();
         List<GroupInfoVO> groupInfoList = new ArrayList<>();
         VibeRuleDTO one = ibiRuleService.getOne();
         if (one == null) {
@@ -133,20 +132,19 @@ public class GroupService {
                 for (GroupInfoVO groupInfoVO : result) {
                     //加锁 防止并发取群
                     String key = "selectGroup:" + groupInfoVO.getGroupId();
-                    RLock lock = redisLock.lock(key);
-                    if (!lock.isLocked()) {
+                    if (!redisLock.tryLock(key,200)) {
                         failGroupId.add(groupInfoVO.getGroupId());
                         log.info("选群失败 加锁失败={}", groupInfoVO);
                         continue;
                     }
-                    locks.add(lock);
+                    locks.add(key);
                     //检查是否满足风控
                     if (one.getSetManageLimit() != null && dto.getSetAdminCount() != null && !robotStatisticsService.checkAndAddLeaderCount(groupInfoVO.getLeaderId(), dto.getSetAdminCount(), one.getSetManageLimit())) {
                         failGroupId.add(groupInfoVO.getGroupId());
                         log.info("选群失败 单个群主号可设置管理员的上限={}", groupInfoVO);
                         //提前解锁
-                        lock.unlock();
-                        locks.remove(lock);
+                        redisLock.unlock(key);
+                        locks.remove(key);
                         continue;
                     }
                     List<GroupRobot> adminRobots = groupRobotService.getAdminRobots(groupInfoVO.getGroupId());
@@ -293,8 +291,7 @@ public class GroupService {
         }
 
         String key = "setBotAdmin:" + groupInfo.getGroupId();
-        RLock lock = redisLock.lock(key);
-        if (!lock.isLocked()) {
+        if (!redisLock.tryLock(key,200)) {
             log.info("设置管理员 加锁失败={}", JSON.toJSONString(groupInfo));
             return false;
         }
@@ -329,7 +326,7 @@ public class GroupService {
             log.error("邀请bot进群异常={}", groupInfo, e);
             return false;
         } finally {
-            lock.unlock();
+            redisLock.unlock(key);
         }
         return true;
     }
@@ -380,10 +377,12 @@ public class GroupService {
             return;
         }
         groupActionLogService.handleActionResult(groupActionLog.getId(), optNo, success, msg);
+        releaseRobot(GroupAction.of(groupActionLog.getSetType()), groupActionLog.getRobotId());
         //无操作动作记录 或者无批量id 直接返回
         if (StrUtil.isBlank(groupActionLog.getBatchId())) {
             return;
         }
+
 
         GroupBatchAction groupBatch = groupBatchActionService.getById(groupActionLog.getBatchId());
         if (ObjectUtil.equal(0, groupBatch.getSetType())) {
@@ -477,8 +476,7 @@ public class GroupService {
         log.info("邀请bot入群检查={},{}", JSON.toJSONString(groupInfo), JSON.toJSONString(groupRobot));
 
         String key = "invitingBotJoin:" + groupInfo.getGroupId();
-        RLock lock = redisLock.lock(key);
-        if (!lock.isLocked()) {
+        if (!redisLock.tryLock(key, 200)) {
             log.info("邀请bot入群检查 加锁失败={}", JSON.toJSONString(groupInfo));
             return false;
         }
@@ -520,7 +518,7 @@ public class GroupService {
             log.error("邀请bot进群异常={}", groupInfo, e);
             return false;
         } finally {
-            lock.unlock();
+            redisLock.unlock(key);
         }
         return true;
     }
@@ -755,9 +753,15 @@ public class GroupService {
             T input = buildInput.apply(actionLog.getId());
             actionLog.setRobotId(robot.getRobotId());
             actionLog.setPara(JSON.toJSONString(input));
-            boolean isLimit = checkLimit(action,robot.getRobotId(), actionLog.getId());
+            if (!lockRobot(action, robot.getRobotId())) {
+                actionLog.setSetStatus(3);
+                groupActionLogService.save(actionLog);
+                return;
+            }
+            boolean isLimit = checkLimit(action, robot.getRobotId(), actionLog.getId());
             //触发限制  状态改成等待请求
-            if(isLimit){
+            if (isLimit) {
+                releaseRobot(action, robot.getRobotId());
                 actionLog.setSetStatus(3);
                 groupActionLogService.save(actionLog);
                 return;
@@ -791,62 +795,86 @@ public class GroupService {
         }
     }
 
-    public boolean checkLimit(GroupAction action, String robotId,String id) {
-            if(action == null || action.getLimitingDimensions() == null || action.getLimitingDimensions() == LimitingDimensions.NONE){
+    public void releaseRobot(GroupAction action, String robotId) {
+        if (action != null && action.getLimitOne() != null && action.getLimitOne()) {
+            String robotKey = "action:" + action.getCode() + ":" + robotId;
+            redisCache.deleteObject(robotKey);
+        }
+    }
+
+    public boolean lockRobot(GroupAction action, String robotId) {
+        if (action != null && action.getLimitOne() != null && action.getLimitOne()) {
+            String robotKey = "action:" + action.getCode() + ":" + robotId;
+            if (!redisLock.tryLock(robotKey, 5, 100,TimeUnit.SECONDS)) {
                 return false;
             }
-            String key = "actionLimit:" + action.getCode() ;
-            if(action.getLimitingDimensions() == LimitingDimensions.ROBOT){
-                key = key +":" + robotId;
-            }
-            LocalDateTime now = LocalDateTime.now();
-            long currentSource = now.toEpochSecond(ZoneOffset.of("+8"));
-            long expiredSource = now.plusSeconds(-action.getLimitTime()).toEpochSecond(ZoneOffset.of("+8"));
-            BoundZSetOperations<String, String> zSetOperations = redisCache.redisTemplate.boundZSetOps(key);
+        }
+        return true;
+    }
 
-            Long l = zSetOperations.removeRangeByScore(0, expiredSource);
-            Long count = zSetOperations.count(0, currentSource);
+    public boolean checkLimit(GroupAction action, String robotId, String id) {
+        if (action == null || action.getLimitingDimensions() == null || action.getLimitingDimensions() == LimitingDimensions.NONE) {
+            return false;
+        }
 
-            if (count != null && count >= action.getLimitFrequency()) {
+        String key = "actionLimit:" + action.getCode();
+        if (action.getLimitingDimensions() == LimitingDimensions.ROBOT) {
+            key = key + ":" + robotId;
+        }
+        LocalDateTime now = LocalDateTime.now();
+        long currentSource = now.toEpochSecond(ZoneOffset.of("+8"));
+        long expiredSource = now.plusSeconds(-action.getLimitTime()).toEpochSecond(ZoneOffset.of("+8"));
+        BoundZSetOperations<String, String> zSetOperations = redisCache.redisTemplate.boundZSetOps(key);
+
+        Long l = zSetOperations.removeRangeByScore(0, expiredSource);
+        Long count = zSetOperations.count(0, currentSource);
+
+        if (count != null && count >= action.getLimitFrequency()) {
             return true;
         }
         zSetOperations.expire(action.getLimitTime() + 30, TimeUnit.SECONDS);
-        zSetOperations.addIfAbsent(id, LocalDateTime.now().toEpochSecond(ZoneOffset.of("+8")));
+        zSetOperations.addIfAbsent(id, currentSource);
         return false;
     }
 
-    public void continueRunAction(){
+
+    public void continueRunAction() {
         String key = "continueRunAction";
-        RLock lock = redisLock.lock(key);
-        if (!lock.isLocked()) {
-            return ;
+        if (!redisLock.tryLock(key,60)) {
+            return;
         }
         try {
             List<GroupActionLog> waitRunAction = groupActionLogService.getWaitRunAction();
-            if(CollUtil.isEmpty(waitRunAction)){
-               return;
+            if (CollUtil.isEmpty(waitRunAction)) {
+                return;
             }
             for (GroupActionLog groupActionLog : waitRunAction) {
                 boolean success = false;
                 String msg = "未配置继续执行操作";
+                GroupAction groupAction = GroupAction.of(groupActionLog.getSetType());
                 String optNo = "";
                 try {
-                    GroupAction groupAction = GroupAction.of(groupActionLog.getSetType());
-                    if(checkLimit(groupAction,groupActionLog.getRobotId(),groupActionLog.getId())){
+
+                    if (!lockRobot(groupAction, groupActionLog.getRobotId())) {
+                        return;
+                    }
+
+                    if (checkLimit(groupAction, groupActionLog.getRobotId(), groupActionLog.getId())) {
+                        releaseRobot(groupAction, groupActionLog.getRobotId());
                         continue;
                     }
-                    OpenApiResult<TgBaseOutputDTO> apiResult  = null;
-                    switch (groupAction){
+                    OpenApiResult<TgBaseOutputDTO> apiResult = null;
+                    switch (groupAction) {
 
                         case INVITE_BOT_JOIN_GROUP:
-                            apiResult=  OpenApiClient.inviteJoinChatroomByThirdKpTg(BeanUtil.copyProperties(groupActionLog.getPara(),ThirdTgInviteJoinChatroomInputDTO.class));
+                            apiResult = OpenApiClient.inviteJoinChatroomByThirdKpTg(BeanUtil.copyProperties(groupActionLog.getPara(), ThirdTgInviteJoinChatroomInputDTO.class));
                             break;
                         case QUERY_HASH:
-                            apiResult= OpenApiClient.sqlTaskSubmitByThirdKpTg(BeanUtil.copyProperties(groupActionLog.getPara(),ThirdTgSqlTaskSubmitInputDTO.class));
+                            apiResult = OpenApiClient.sqlTaskSubmitByThirdKpTg(BeanUtil.copyProperties(groupActionLog.getPara(), ThirdTgSqlTaskSubmitInputDTO.class));
                             break;
 
                     }
-                    Assert.notNull(apiResult,"未配置继续执行操作");
+                    Assert.notNull(apiResult, "未配置继续执行操作");
                     log.info("groupAction={},{},{}", groupAction.getName(), groupActionLog.getPara(), JSON.toJSONString(apiResult));
                     optNo = apiResult.getData().getOptSerNo();
                     if (!apiResult.isSuccess()) {
@@ -866,20 +894,20 @@ public class GroupService {
                     success = false;
                     msg = "未知异常";
                 }
-                if(success){
+                if (success) {
                     groupActionLogService.updateRun(groupActionLog.getId());
-                }else{
+                } else {
                     String finalMsg = msg;
                     boolean finalResult = success;
                     String finalOptNo = optNo;
-                    AsyncTask.execute(()-> handleActionResult(groupActionLog, finalOptNo, finalResult, finalMsg, null));
+                    AsyncTask.execute(() -> handleActionResult(groupActionLog, finalOptNo, finalResult, finalMsg, null));
                 }
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("continueRunAction.error");
-        }finally {
-            lock.unlock();
+        } finally {
+           redisLock.unlock(key);
         }
     }
 
@@ -893,8 +921,7 @@ public class GroupService {
         log.info("设置bot管理员={}", JSON.toJSONString(groupInfo));
 
         String key = "setAdmin:" + groupInfo.getGroupId();
-        RLock lock = redisLock.lock(key);
-        Assert.isTrue(lock.isLocked(), "群正在设置管理员中,请勿频繁操作！");
+        Assert.isTrue(redisLock.tryLock(key,200), "群正在设置管理员中,请勿频繁操作！");
         try {
             //当前是否有批次任务执行邀请bot进群检测
             GroupBatchAction batchAction = groupBatchActionService.getBatchAction(groupInfo.getGroupId(), 1);
@@ -946,7 +973,7 @@ public class GroupService {
                     },
                     OpenApiClient::getGroupMemberByThirdKpTg);
         } finally {
-            lock.unlock();
+            redisLock.unlock(key);
         }
     }
 
