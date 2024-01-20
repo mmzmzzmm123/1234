@@ -13,9 +13,12 @@ public interface PlayGroupInfoMapper  extends BaseMapper<PlayGroupInfo> {
 
     public Integer selectSuccessGroupCount(@Param("playId")String playId);
 
+    public Integer selectErrorGroupCount(@Param("playId")String playId);
 
     List<PlayGroupInfo>  selectGroupInfoByPlayId(@Param("playId")String playId);
 
 
     Integer updateGroupState(@Param("playID")String playId);
+
+    PlayGroupInfo selectGroupByUrl(@Param("groupUrl")String groupUrl,@Param("playId")String playId);
 }

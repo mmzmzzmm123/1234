@@ -791,7 +791,7 @@ public class IntoGroupService {
             } else {
                 //根据重试ID查询记录条数
                 Integer retCount = playIntoGroupTaskMapper.selectTaskByRetCount(task.getRetryId());
-                if (retCount < 2) {
+                if (retCount < 9) {
                     isRet = true;
                 }
             }
@@ -813,8 +813,32 @@ public class IntoGroupService {
             } else {
                 log.info("入群失败已满重试次数："+JSONObject.toJSONString(task));
                 task.setIsError(1);
-                setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "该发言人入群已失败3次，不再进行重试！", 1, PlayLogTyper.Group_into, null);
+                setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "该发言人入群已失败10次，不再进行重试！", 1, PlayLogTyper.Group_into, null);
                 playIntoGroupTaskMapper.updateById(task);
+                //判断当前任务是否还有正在入群或者回调的任务，如果没有 判断
+                Integer count = playIntoGroupTaskMapper.selectGroupUrlByPlayIdCount(task.getGroupUrl(),task.getPlayId());
+                if (count == 0){
+                    //查询群内机器人数量
+                    Integer robotCount = playRobotGroupRelationMapper.selectRobotGroupCount(group.getGroupId());
+                    if (robotCount == null){
+                        robotCount = 0;
+                    }
+                    //根据剧本计算所需的群人数
+                    Integer groupNum = play.getRobotNum();
+                    //根据群链接和剧本ID查询群
+                    PlayGroupInfo playGroupInfo = playGroupInfoMapper.selectGroupByUrl(task.getGroupUrl(),task.getPlayId());
+                    if (playGroupInfo != null){
+                        if (robotCount >= groupNum) {
+                            playGroupInfo.setIntoStatus(2);
+                        } else {
+                            log.info("群入群失败！");
+                            playGroupInfo.setIntoStatus(3);
+                            playGroupInfo.setState(3);
+                            playGroupInfo.setTip("入群失败！");
+                        }
+                        playGroupInfoMapper.updateById(playGroupInfo);
+                    }
+                }
             }
             return;
         }
@@ -1009,12 +1033,16 @@ public class IntoGroupService {
                 if (count == null){
                     count = 0;
                 }
+                Integer errorCount = playGroupInfoMapper.selectErrorGroupCount(play.getId());
+                if (errorCount == null){
+                    errorCount = 0;
+                }
                 log.info("剧本已完成调度的群数："+count);
-                if (count >= play.getGroupNum()) {
+                if (count + errorCount >= play.getGroupNum()) {
                     //修改剧本状态
                     play.setScanProgress(4);
                     log.info("已修改剧本状态"+JSONObject.toJSONString(count));
-                    setLog(play.getId(), "所有群已完成入群调度！", 0, PlayLogTyper.Group_into, null);
+                    setLog(play.getId(), "所有群已完成入群调度！已成功调度的群数"+count+"失败群数："+errorCount, 0, PlayLogTyper.Group_into, null);
                     playMapper.updateById(play);
                 }
             }
