@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.system.callback.dto.Called1100910045DTO;
 import com.ruoyi.system.callback.dto.Called1100910101DTO;
 import com.ruoyi.system.callback.dto.Called50005005DTO;
+import com.ruoyi.system.callback.dto.Called50005006DTO;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
@@ -117,5 +118,7 @@ public interface IRobotService extends IService<Robot> {
      * 登录
      */
     void cacheLogin(String robotSerialNo);
+
+    void updateRobotInfo(List<Called50005006DTO> sourceList);
 
 }
