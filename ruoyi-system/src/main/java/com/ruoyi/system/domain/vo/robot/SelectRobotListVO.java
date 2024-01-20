@@ -6,12 +6,15 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @ApiModel("SelectRobotListVO")
 @Data
 public class SelectRobotListVO{
-    //private String id;
+
+    @ApiModelProperty(value = "机器人id")
+    private String id;
+
     @Excel(name = "机器人编号")
     @ApiModelProperty(value = "机器人编号")
     private String robotSerialNo;
@@ -92,27 +95,27 @@ public class SelectRobotListVO{
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "双向状态-解除限制时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "双向状态-解除限制时间")
-    private Date bidirectionalUnfreezeTime;
+    private LocalDateTime bidirectionalUnfreezeTime;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "添加时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "添加时间")
-    private Date addTime;
+    private LocalDateTime addTime;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "封号时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "封号时间")
-    private Date sealTime;
+    private LocalDateTime sealTime;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "双向时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "双向时间")
-    private Date bidirectionalTime;
+    private LocalDateTime bidirectionalTime;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "创建时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "创建时间")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     @Excel(name = "带群数量-今日")
     @ApiModelProperty(value = "今日带群数")
