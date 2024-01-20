@@ -16,6 +16,9 @@ public class RobotStatisticsVO {
     @ApiModelProperty("群数")
     private Integer groupNum;
 
+    @ApiModelProperty("号总数")
+    private Integer robotTotalNum;
+
     @ApiModelProperty("水军号数")
     private Integer navyRobotNum;
 
