@@ -241,6 +241,9 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
                 oldRobot.setVpnIpC(newRobot.getVpnIpC());
                 flag = true;
             }
+            if(modify(oldRobot.getRecycleStatus(),newRobot.getRecycleStatus())){
+                oldRobot.setRecycleStatus(newRobot.getRecycleStatus());
+            }
             if(flag){
                 oldRobot.setUpdateTime(new Date());
                 updateRobotList.add(oldRobot);
