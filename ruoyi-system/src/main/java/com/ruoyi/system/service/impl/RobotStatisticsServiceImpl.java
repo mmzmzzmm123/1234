@@ -38,8 +38,6 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
     @Autowired
     private VibeRuleMapper vibeRuleMapper;
     @Autowired
-    private SqlSessionTemplate sqlSessionTemplate;
-    @Autowired
     private RedisLock redisLock;
 
     @Override
