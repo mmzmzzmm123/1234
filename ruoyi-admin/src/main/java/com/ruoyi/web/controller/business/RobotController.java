@@ -141,5 +141,11 @@ public class RobotController {
         robotStatisticsService.getRobot(dto);
     }
 
+    @ApiOperation("定时清除号每日累计数")
+    @PostMapping("/clearRobotOneDayNum")
+    public void clearRobotOneDayNum(){
+        robotStatisticsService.clearRobotOneDayNum();
+    }
+
 
 }

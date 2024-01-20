@@ -76,8 +76,7 @@ public class TgRobotProcessor {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         if(root.isSuccess()){
             if(!CollectionUtils.isEmpty(sourceList)){
-                List<String> robotSerialNos = sourceList.stream().map(Called50005005DTO::getRobotSerialNo).collect(Collectors.toList());
-                robotService.updateRobotMerchant(robotSerialNos);
+                robotService.updateRobotMerchant(sourceList);
             }
         }
     }
