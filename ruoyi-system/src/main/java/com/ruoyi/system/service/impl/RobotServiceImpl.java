@@ -14,6 +14,7 @@ import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.callback.dto.Called1100910101DTO;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
@@ -420,6 +421,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             ThirdTgSetPhoneVisibilityInputDTO inputDTO = new ThirdTgSetPhoneVisibilityInputDTO();
             inputDTO.setTgRobotId(robotSerialNo);
             inputDTO.setType(dto.getType());
+            inputDTO.setAccountPrivacy(dto.getAccountPrivacy());
             OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.setPhoneVisibilityByThirdKpTg(inputDTO);
             log.info("setPrivatePhone inputDTO:{},vo:{}",inputDTO,vo);
         }
@@ -533,5 +535,29 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
                         .set(Robot::getDeleteStatus,1));
             }
         }
+    }
+
+    @Override
+    public void updateBidirectional(Called1100910101DTO dto) {
+        if(dto == null){
+            return;
+        }
+        if(dto.getRelease_time() == null || StringUtils.isEmpty(dto.getBot_serial_no())){
+            return;
+        }
+        Robot robot = baseMapper.selectOne(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, dto.getBot_serial_no()).last(" limit 1"));
+        if(robot == null){
+            return;
+        }
+        LambdaUpdateWrapper<Robot> wrapper = new LambdaUpdateWrapper<>();
+        wrapper.eq(Robot::getRobotSerialNo,dto.getBot_serial_no());
+        if(robot.getBidirectionalTime() == null){
+            wrapper.set(Robot::getBidirectionalTime,dto.getRelease_time());
+        }else{
+            wrapper.set(Robot::getBidirectionalUnfreezeTime,dto.getRelease_time());
+            wrapper.set(Robot::getBidirectionalType,1);
+        }
+        this.update(wrapper);
+
     }
 }

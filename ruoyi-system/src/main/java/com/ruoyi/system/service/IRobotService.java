@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.robot.Robot;
+import com.ruoyi.system.callback.dto.Called1100910101DTO;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
@@ -94,5 +95,7 @@ public interface IRobotService extends IService<Robot> {
      * 号商家变更
      */
     void updateRobotMerchant(List<String> robotSerialNos);
+
+    void updateBidirectional(Called1100910101DTO dto);
 
 }

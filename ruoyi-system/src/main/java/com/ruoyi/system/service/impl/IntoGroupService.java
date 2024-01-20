@@ -159,8 +159,15 @@ public class IntoGroupService {
                     playMapper.updateById(play);
                     continue;
                 }
-                List<String> imgs = Arrays.asList(playGroupPack.getPic().split(","));
-                List<String> names = Arrays.asList(playGroupPack.getName().split(","));
+                List<String> imgs = new ArrayList<>();
+                List<String> names = new ArrayList<>();
+                if (StringUtils.isNotEmpty(playGroupPack.getPic())){
+                    imgs  = Arrays.asList(playGroupPack.getPic().split(","));
+
+                }
+                if (StringUtils.isNotEmpty(playGroupPack.getName())){
+                    names = Arrays.asList(playGroupPack.getName().trim().split(","));
+                }
                 //循环群信息
                 List<GroupInfoVO> groupInfoVOS = groupList.getData();
                 for (GroupInfoVO groupInfoVO : groupInfoVOS) {
@@ -172,7 +179,8 @@ public class IntoGroupService {
                             tgRobotId = robotVO.getRobotId();
                         }
                     }
-                    if (names != null && names.size() > 0){
+                    log.info("修改群名称入参names:"+JSONObject.toJSONString(names));
+                    if (names.size() > 0){
                         //修改群名称
                         ThirdTgModifyChatroomNameInputDTO inputDTO = new ThirdTgModifyChatroomNameInputDTO();
                         int index = RandomListPicker.pickRandom(names);
@@ -194,7 +202,7 @@ public class IntoGroupService {
                         }
                         setLog(play.getId(), "群" + groupInfoVO.getGroupName() + ",ID为：" + groupInfoVO.getGroupSerialNo() + "修改群名称为:" + names.get(index) + "成功！", 0, PlayLogTyper.Group_img_name, groupInfoVO.getGroupId());
                     }
-                    if (imgs != null && imgs.size() > 0){
+                    if (imgs.size() > 0){
                         ThirdTgModifyChatroomHeadImageInputDTO dto = new ThirdTgModifyChatroomHeadImageInputDTO();
                         dto.setChatroomSerialNo(groupInfoVO.getGroupSerialNo());
                         dto.setTgRobotId(tgRobotId);
@@ -466,6 +474,7 @@ public class IntoGroupService {
                             //设置错误
                             playDTO.setState(4);
                             playDTO.setFailReason("无剧本所需足够的群！");
+                            playMapper.updateById(playDTO);
                             continue;
                         }
                         infoVOS.addAll(groupList.getData());
@@ -1095,7 +1104,7 @@ public class IntoGroupService {
         log.error("定时检测修改头像是否有回调超时的任务");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.MINUTE, -5);
+        calendar.add(Calendar.MINUTE, -2);
         playModifierGroupLogMapper.updateTaskByOutTime(calendar.getTime(), "无回调，自动变更失败！");
     }
 
@@ -1104,7 +1113,7 @@ public class IntoGroupService {
         log.error("定时检测入群是否有回调超时的任务");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.MINUTE, -5);
+        calendar.add(Calendar.MINUTE, -2);
         List<PlayIntoGroupTask> playIntoGroupTasks =playIntoGroupTaskMapper.selectNotCallBackTask(calendar.getTime());
         if (playIntoGroupTasks == null || playIntoGroupTasks.size() == 0){
             return;
