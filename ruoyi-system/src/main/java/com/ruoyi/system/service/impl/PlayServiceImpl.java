@@ -490,6 +490,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     public Page<QueryPushDetailVO> pushDetailPage(QueryPushDetailDTO dto) {
         Page<QueryPushDetailVO> page = new Page<>(dto.getPage(), dto.getLimit());
+        page.setOptimizeCountSql(false);
+        page.setOptimizeJoinOfCountSql(false);
         baseMapper.selectPushDetailPage(page, dto);
         return page;
     }
