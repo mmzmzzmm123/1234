@@ -115,4 +115,8 @@
     <select id="selectGroupUrlByPlayId" resultType="java.lang.Integer">
         select count(*) from t_play_into_group_task where group_url = #{groupUrl} and play_id = #{playId} and person_id = #{personId}
     </select>
+
+    <select id="selectGroupUrlByPlayIdCount" resultType="java.lang.Integer">
+        select count(*) from t_play_into_group_task where group_url = #{groupUrl} and play_id = #{playId} and task_state in (1,2)
+    </select>
  </mapper>
