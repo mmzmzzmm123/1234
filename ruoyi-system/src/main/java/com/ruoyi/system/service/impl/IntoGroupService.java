@@ -739,6 +739,8 @@ public class IntoGroupService {
                         task.setCode(channelOutputDTO.getOptSerNo());
                         task.setFailCause(resultBody.getMessage());
                     }
+                    //同步失败 重新插入入群任务
+                    retryRobotIntoGroup(task,play,vibeRule);
                     setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人" + task.getPersonId() + "入群失败，正在进行换号重试", 1, PlayLogTyper.Group_into, null);
                 } else {
                     task.setTaskState(2);
@@ -803,64 +805,7 @@ public class IntoGroupService {
                 }
             }
             if (isRet) {
-                //获取机器人
-                Integer adminNum = 0, robotNum = 0;
-                if (task.getIsAdmin() == 1) {
-                    adminNum = 1;
-                } else {
-                    robotNum = 1;
-                }
-                List<String> countys = getCountys(play);
-                Integer ipType = 0;
-                //是否需要做IP离散
-                if (vibeRule.getPeriodByIp() == 1) {
-                    if (vibeRule.getPeriodByC() == 1) {
-                        ipType = 2;
-                    }
-                    if (vibeRule.getPeriodByB() == 1) {
-                        ipType = 1;
-                    }
-                }
-                GetRobotDTO adminDTO = new GetRobotDTO();
-                //获取可以被设置管理员的机器人
-                adminDTO.setCount(robotNum);
-                adminDTO.setCountryCode(countys);
-                adminDTO.setSetAdminCount(adminNum);
-                adminDTO.setIpType(ipType);
-                PlayExt playExt = JSONObject.parseObject(play.getPlayExt(), PlayExt.class);
-                adminDTO.setIsLock(playExt.getLockState());
-                PlayIntoGroupTask playIntoGroupTask = Beans.toView(task, PlayIntoGroupTask.class);
-                while (true) {
-                    //调用获取机器人接口
-                    log.info("入群失败重试获取号："+JSONObject.toJSONString(adminDTO));
-                    R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
-                    log.info("入群失败重试获取号结果："+JSONObject.toJSONString(robotAdminVOS));
-                    if (robotAdminVOS.getCode() != 200) {
-                        playIntoGroupTask.setPersonId(null);
-                        setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人出库失败，无可用号！", 1, PlayLogTyper.Group_into, null);
-                        playIntoGroupTask.setTaskState(4);
-                        break;
-                    }
-                    GetRobotVO getRobotVO = robotAdminVOS.getData().get(0);
-                    //判断当前机器人是否已经在当前剧本使用过
-                    Integer count = playIntoGroupTaskMapper.selectGroupUrlByPlayId(task.getGroupUrl(),task.getPlayId(),getRobotVO.getRobotSerialNo());
-                    //机器人已使用过 需要换号
-                    if (count == 0) {
-                        playIntoGroupTask.setPersonId(getRobotVO.getRobotSerialNo());
-                        playIntoGroupTask.setTaskState(1);
-                        setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人出库成功！号ID为：" + getRobotVO.getRobotSerialNo(), 0, PlayLogTyper.Group_into, null);
-                        break;
-                    }
-                }
-                playIntoGroupTask.setId(IdUtils.fastUUID());
-                playIntoGroupTask.setCreateTime(new Date());
-                playIntoGroupTask.setModifyTime(new Date());
-                if (task.getRetryId() != null) {
-                    playIntoGroupTask.setRetryId(task.getRetryId());
-                } else {
-                    playIntoGroupTask.setRetryId(task.getId());
-                }
-                playIntoGroupTaskMapper.insert(playIntoGroupTask);
+                retryRobotIntoGroup(task,play,vibeRule);
             } else {
                 log.info("入群失败已满重试次数："+JSONObject.toJSONString(task));
                 task.setIsError(1);
@@ -958,6 +903,67 @@ public class IntoGroupService {
             SpringUtils.getBean(RedisLock.class).unWaitLock("ruoyi:wait:groupCallback" + group.getGroupId());
         }
 
+    }
+
+    public void retryRobotIntoGroup(PlayIntoGroupTask task,Play play,VibeRuleDTO vibeRule){
+        //获取机器人
+        Integer adminNum = 0, robotNum = 0;
+        if (task.getIsAdmin() == 1) {
+            adminNum = 1;
+        } else {
+            robotNum = 1;
+        }
+        List<String> countys = getCountys(play);
+        Integer ipType = 0;
+        //是否需要做IP离散
+        if (vibeRule.getPeriodByIp() == 1) {
+            if (vibeRule.getPeriodByC() == 1) {
+                ipType = 2;
+            }
+            if (vibeRule.getPeriodByB() == 1) {
+                ipType = 1;
+            }
+        }
+        GetRobotDTO adminDTO = new GetRobotDTO();
+        //获取可以被设置管理员的机器人
+        adminDTO.setCount(robotNum);
+        adminDTO.setCountryCode(countys);
+        adminDTO.setSetAdminCount(adminNum);
+        adminDTO.setIpType(ipType);
+        PlayExt playExt = JSONObject.parseObject(play.getPlayExt(), PlayExt.class);
+        adminDTO.setIsLock(playExt.getLockState());
+        PlayIntoGroupTask playIntoGroupTask = Beans.toView(task, PlayIntoGroupTask.class);
+        while (true) {
+            //调用获取机器人接口
+            log.info("入群失败重试获取号："+JSONObject.toJSONString(adminDTO));
+            R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
+            log.info("入群失败重试获取号结果："+JSONObject.toJSONString(robotAdminVOS));
+            if (robotAdminVOS.getCode() != 200) {
+                playIntoGroupTask.setPersonId(null);
+                setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人出库失败，无可用号！", 1, PlayLogTyper.Group_into, null);
+                playIntoGroupTask.setTaskState(4);
+                break;
+            }
+            GetRobotVO getRobotVO = robotAdminVOS.getData().get(0);
+            //判断当前机器人是否已经在当前剧本使用过
+            Integer count = playIntoGroupTaskMapper.selectGroupUrlByPlayId(task.getGroupUrl(),task.getPlayId(),getRobotVO.getRobotSerialNo());
+            //机器人已使用过 需要换号
+            if (count == 0) {
+                playIntoGroupTask.setPersonId(getRobotVO.getRobotSerialNo());
+                playIntoGroupTask.setTaskState(1);
+                setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人出库成功！号ID为：" + getRobotVO.getRobotSerialNo(), 0, PlayLogTyper.Group_into, null);
+                break;
+            }
+        }
+        playIntoGroupTask.setId(IdUtils.fastUUID());
+        playIntoGroupTask.setCreateTime(new Date());
+        playIntoGroupTask.setModifyTime(new Date());
+        if (task.getRetryId() != null) {
+            playIntoGroupTask.setRetryId(task.getRetryId());
+        } else {
+            playIntoGroupTask.setRetryId(task.getId());
+        }
+        playIntoGroupTaskMapper.insert(playIntoGroupTask);
     }
 
     public PlayGroupInfo getGroupInfo(GroupInfo dto, PlayIntoGroupTask task) {
