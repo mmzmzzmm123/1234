@@ -243,6 +243,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             }
             if(modify(oldRobot.getRecycleStatus(),newRobot.getRecycleStatus())){
                 oldRobot.setRecycleStatus(newRobot.getRecycleStatus());
+                flag = true;
             }
             if(flag){
                 oldRobot.setUpdateTime(new Date());
