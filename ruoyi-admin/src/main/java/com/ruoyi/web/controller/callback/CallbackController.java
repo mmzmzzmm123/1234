@@ -18,7 +18,7 @@ public class CallbackController {
     @Anonymous
     @PostMapping("callback")
     public void callback(@RequestBody String msg) {
-        log.info("收到回调={}", msg);
+//        log.info("收到回调={}", msg);
         try {
             callBackService.callback(msg);
         } catch (Exception e) {

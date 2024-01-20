@@ -43,9 +43,9 @@ public class SaveChatRoomJoinTaskDTO {
 
     private String orderId;
 
-    private String biLinMerchantId;
+    private String biLinMerchantId = "";
 
-    private String biLinGroupId;
+    private String biLinGroupId = "";
 
     /**
      * 任务类型：0常规任务、1[比邻指定号任务->内部灰度任务]

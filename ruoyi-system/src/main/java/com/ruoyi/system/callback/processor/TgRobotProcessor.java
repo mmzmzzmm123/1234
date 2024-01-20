@@ -54,7 +54,7 @@ public class TgRobotProcessor {
 
     /***
      *
-     * TG(被动)号回收
+     * TG(资源被动)号回收
      */
     @Type(value = 50005004, parameterClass = Called50005004DTO.class)
     public void called50005004(Called50005004DTO source) {
@@ -69,22 +69,21 @@ public class TgRobotProcessor {
 
     /***
      *
-     * TG(被动)号变更商家
+     * TG(资源被动)号变更商家
      */
     @Type(value = 50005005, parameterClass = Called50005005DTO.class)
     public void called50005005(List<Called50005005DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         if(root.isSuccess()){
             if(!CollectionUtils.isEmpty(sourceList)){
-                List<String> robotSerialNos = sourceList.stream().map(Called50005005DTO::getRobotSerialNo).collect(Collectors.toList());
-                robotService.updateRobotMerchant(robotSerialNos);
+                robotService.updateRobotMerchant(sourceList);
             }
         }
     }
 
     /***
      *
-     * TG(被动)号资料信息变更
+     * TG(资源被动)号资料信息变更
      */
     @Type(value = 50005006, parameterClass = Called50005006DTO.class)
     public void called50005006(List<Called50005006DTO> sourceList) {
@@ -329,7 +328,7 @@ public class TgRobotProcessor {
     }
 
     /**
-     * TG（被动） 群编号变动回调
+     * TG（功能被动） 群编号变动回调
      *
      * @param dto
      */
@@ -391,7 +390,7 @@ public class TgRobotProcessor {
     }
 
     /**
-     * TG(被动) 非双向解限时间回调推送
+     * TG(号被动) 非双向解限时间回调推送
      *
      * @param dto
      */
@@ -403,18 +402,25 @@ public class TgRobotProcessor {
     }
 
     /***
-     * 机器人离线回调
+     * TG(号被动) 机器人离线回调
      */
     @Type(value = 1100910003, parameterClass = Called1100910003DTO.class)
     public void called1100910003(Called1100910003DTO source) {
-
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()){
+            robotService.offline(source.getUser_serial_no());
+        }
     }
 
     /***
-     * 机器人封号回调
+     * TG(号被动) 机器人封号回调
      */
     @Type(value = 1100910045, parameterClass = Called1100910045DTO.class)
     public void robotBanned(Called1100910045DTO source) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()){
+            robotService.sealRobot(source);
+        }
 
     }
 

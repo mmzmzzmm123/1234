@@ -38,7 +38,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 	/**
 	 * 4分钟
 	 */
-	private static final int timeoutSecond = 60*4;
+	private static final int timeoutSecond = 60 * 4;
 
 	@Override
 	public void handle(Play play) {
@@ -51,22 +51,41 @@ public class RetryJobProcessor implements LogJobProcessor {
 						.le(PlayRobotPackLog::getRetryCount, MaxRetryCount).eq(PlayRobotPackLog::getRetryMaxFlag, 0)
 						.eq(PlayRobotPackLog::getPlayId, play.getId()));
 
-		if (CollectionUtils.isEmpty(datas)) {
-			return;
-		}
-		
-		log.info("RetryJobProcessor {}" , play);
+		if (!CollectionUtils.isEmpty(datas)) {
+			log.info("RetryJobProcessor {}", play);
+			for (PlayRobotPackLog data : datas) {
+				// 再次调用
+				try {
+					PlayMessagePushDetail detail = mapper.selectById(data.getPushDetailId());
+					retryRequest(data, detail);
+				} catch (Exception e) {
+					log.info("RetryJobProcessor_error {}", data, e);
+				}
 
-		for (PlayRobotPackLog data : datas) {
-			// 再次调用
-			try {
-				PlayMessagePushDetail detail = mapper.selectById(data.getPushDetailId());
-				retryRequest(data, detail);
-			} catch (Exception e) {
-				log.info("RetryJobProcessor_error {}", data, e);
 			}
-
 		}
+		// 查询 错误的数据重试
+		datas = SpringUtils.getBean(PlayRobotPackLogMapper.class)
+				.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getStatus, 2)
+						.eq(PlayRobotPackLog::getIsFinish, 0)
+						.le(PlayRobotPackLog::getCreateTime, Times.getSecond(new Date(), -10))
+						.le(PlayRobotPackLog::getRetryCount, MaxRetryCount).eq(PlayRobotPackLog::getRetryMaxFlag, 0)
+						.eq(PlayRobotPackLog::getPlayId, play.getId()));
+		
+		if (!CollectionUtils.isEmpty(datas)) {
+			log.info("RetryJobProcessor2 {}", play);
+			for (PlayRobotPackLog data : datas) {
+				// 再次调用
+				try {
+					PlayMessagePushDetail detail = mapper.selectById(data.getPushDetailId());
+					retryRequest(data, detail);
+				} catch (Exception e) {
+					log.info("RetryJobProcessor_error {}", data, e);
+				}
+
+			}
+		}
+
 	}
 
 	private void retryRequest(PlayRobotPackLog data, PlayMessagePushDetail detail) {

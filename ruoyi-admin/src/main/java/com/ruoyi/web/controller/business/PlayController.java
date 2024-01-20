@@ -54,7 +54,6 @@ public class PlayController extends BaseController {
     @Resource
     private PlayMessagePushService playMessagePushService;
 
-
     @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     @ApiOperation("创建炒群任务")
     @PostMapping(value = "/create")

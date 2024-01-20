@@ -23,6 +23,7 @@
                robot.robot_serial_no,
                robot.heartbeat_status,
                robot.seal_status,
+               tgi.registration_time,
                tgi.create_time,
                tgs.used_time,
                tgi.create_type,

@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
@@ -14,7 +15,9 @@ import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.callback.dto.Called1100910045DTO;
 import com.ruoyi.system.callback.dto.Called1100910101DTO;
+import com.ruoyi.system.callback.dto.Called50005005DTO;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
@@ -67,7 +70,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         AsyncTask.execute(()->{
             ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
             robotDTO.setLimit(1000);
-            robotDTO.setPage(1);//1747887445714726912
+            robotDTO.setPage(1);
             String merchantId = configService.selectConfigByKey("robot:merchant");
             robotDTO.setMerchantId(merchantId);
             OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
@@ -140,9 +143,10 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         if (!CollectionUtils.isEmpty(robotSerialNos)) {
             try {
                 ThirdTelegramPersonalCallbackRegInputDTO dto = new ThirdTelegramPersonalCallbackRegInputDTO();
-                dto.setSubTypeList(Collections.singletonList(1100910101));
+                dto.setSubTypeList(Arrays.asList(1100910101,1100910003,1100910045));
                 dto.setTelegramIdList(robotSerialNos);
-                OpenApiClient.personalOnByThirdTg(dto);
+                OpenApiResult<Void> openApiResult = OpenApiClient.personalOnByThirdTg(dto);
+                log.info("号订阅 {}",openApiResult);
             } catch (Exception e) {
                 log.error("号订阅失败", e);
             }
@@ -421,6 +425,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             ThirdTgSetPhoneVisibilityInputDTO inputDTO = new ThirdTgSetPhoneVisibilityInputDTO();
             inputDTO.setTgRobotId(robotSerialNo);
             inputDTO.setType(dto.getType());
+            inputDTO.setAccountPrivacy(dto.getAccountPrivacy());
             OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.setPhoneVisibilityByThirdKpTg(inputDTO);
             log.info("setPrivatePhone inputDTO:{},vo:{}",inputDTO,vo);
         }
@@ -524,16 +529,29 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public void updateRobotMerchant(List<String> robotSerialNos) {
-        for (List<String> item : ListTools.partition(robotSerialNos,500)) {
-            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
-            if(!CollectionUtils.isEmpty(robots)){
-                List<String> nos = robots.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
-                this.update(new LambdaUpdateWrapper<Robot>()
-                        .in(Robot::getRobotSerialNo,nos)
-                        .set(Robot::getDeleteStatus,1));
-            }
+    public void updateRobotMerchant(List<Called50005005DTO> sourceList) {
+        Called50005005DTO data = sourceList.stream().findFirst().get();
+        String merchantId = configService.selectConfigByKey("robot:merchant");
+        if(!data.getBeforeBelongsMerchantId().equals(merchantId) && !data.getAfterBelongsMerchantId().equals(merchantId)){
+            //不属于改商家的变动
+            return;
         }
+        //回收
+        if(data.getBeforeBelongsMerchantId().equals(merchantId)){
+            List<String> robotSerialNos = sourceList.stream().map(Called50005005DTO::getRobotSerialNo).collect(Collectors.toList());
+            for (List<String> item : ListTools.partition(robotSerialNos,500)) {
+                List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
+                if(!CollectionUtils.isEmpty(robots)){
+                    List<String> nos = robots.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
+                    this.update(new LambdaUpdateWrapper<Robot>()
+                            .in(Robot::getRobotSerialNo,nos)
+                            .set(Robot::getRecycleStatus,1));
+                }
+            }
+            return;
+        }
+        //划拨商家,去同步号
+        this.syncRobot();
     }
 
     @Override
@@ -559,4 +577,41 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         this.update(wrapper);
 
     }
+
+    @Override
+    public void offline(String robotSerialNo) {
+        if(StringUtils.isEmpty(robotSerialNo)){
+            return;
+        }
+        Robot robot = baseMapper.selectOne(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, robotSerialNo).last(" limit 1"));
+        if(robot != null){
+            if(robot.getHeartbeatStatus() != 10){
+                robot.setHeartbeatStatus(10);
+                updateById(robot);
+            }
+        }
+    }
+
+    @Override
+    public void sealRobot(Called1100910045DTO source) {
+        if(source == null){
+            return;
+        }
+        Robot robot = baseMapper.selectOne(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, source.getRobot_serial_no()).last(" limit 1"));
+        if(robot != null){
+            boolean flag = false;
+            if(source.getBan_time() != null){
+                robot.setSealTime(DateUtil.parse(source.getBan_time()));
+                flag = true;
+            }
+            if(robot.getSealStatus() != 30){
+                robot.setSealStatus(30);
+                flag = true;
+            }
+            if(flag){
+                updateById(robot);
+            }
+        }
+    }
+
 }

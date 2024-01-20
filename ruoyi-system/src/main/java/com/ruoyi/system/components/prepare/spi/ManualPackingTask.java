@@ -45,14 +45,17 @@ public class ManualPackingTask implements TaskExecution {
 		if (CollectionUtils.isEmpty(context.getPlayRobotPackList())) {
 			return null;
 		}
-		final String playId = context.getPlay().getId() ;
-		
+		final String playId = context.getPlay().getId();
+
 		final Settings tgRobotImgSettings = ServiceLoader.load(Settings.class, "TgRobotImgSettings");
 
 		final Settings tgRobotNameSettings = ServiceLoader.load(Settings.class, "TgRobotNameSettings");
 
 		final Settings tgRobotAdminSettings = ServiceLoader.load(Settings.class, "TgRobotAdminSettings");
-
+		// 总共提交的数据
+		// 包装 组id
+		final String radioId = Ids.getId();
+		final List<PlayRobotPackLog> submitList = new ArrayList<>();
 		for (PlayRobotPack robotPck : context.getPlayRobotPackList()) {
 			// 查找 对应的sort 机器人数据
 			PlayMessagePushDetail detail = getBySort(context.getPushDetails(), robotPck.getMessageSort().intValue());
@@ -66,10 +69,6 @@ public class ManualPackingTask implements TaskExecution {
 			if (!StringUtils.isEmpty(detail.getSpareRobot())) {
 				robotList.addAll(Arrays.asList(StringUtils.split(detail.getSpareRobot(), ",")));
 			}
-			// 总共提交的数据
-			final List<PlayRobotPackLog> submitList = new ArrayList<>();
-			// 包装 组id
-			final String radioId = Ids.getId();
 			// 每个机器人都要请求人设
 			for (String robot : robotList) {
 				// 请求 设置 机器人头像 ，昵称等
@@ -95,38 +94,47 @@ public class ManualPackingTask implements TaskExecution {
 				if (!StringUtils.isEmpty(robotPck.getPic())) {
 					PlayRobotPackLog ret = tgRobotImgSettings.set(param);
 					if (StringUtils.isEmpty(ret.getOpt())) {
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "头像", true);
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(),
+								null, "头像", true);
 					} else {
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(), "头像", true);
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(),
+								"头像", true);
 					}
 					submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
+					
+					log.info("同步设置头像 {} " , ret);
 				}
 
 				// 设置 昵称
 				if (!StringUtils.isEmpty(robotPck.getName()) || !StringUtils.isEmpty(robotPck.getSurname())) {
 					PlayRobotPackLog ret = tgRobotNameSettings.set(param);
 					if (StringUtils.isEmpty(ret.getOpt())) {
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "姓名", true);
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(),
+								null, "姓名", true);
 					} else {
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(), "姓名", true);
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(),
+								"姓名", true);
 					}
 					submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
+					
+					log.info("同步设置昵称 {} " , ret);
 				}
 
 				// 同步设置 管理员
 				if (robotPck.getIsAdmin() != null && robotPck.getIsAdmin().intValue() == 1) {
 					PlayRobotPackLog ret = tgRobotAdminSettings.set(param);
-					if(ret.getStatus().intValue() == 1) {
+					if (ret.getStatus().intValue() == 1) {
 						// 直接设置成功
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, 
-								String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", context.getChatroomId(), robot)
-								, null);
-					}else {
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, 
-								String.format("【发言人包装-%s】 群%s 号%s 设置失败，原因：%s", "管理员", context.getChatroomId(), robot , ret.getErrMsg())
-								, ret.getErrMsg());
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot,
+								String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", context.getChatroomId(), robot), null);
+					} else {
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot,
+								String.format("【发言人包装-%s】 群%s 号%s 设置失败，原因：%s", "管理员", context.getChatroomId(), robot,
+										ret.getErrMsg()),
+								ret.getErrMsg());
 					}
 					submitList.add(ret.wrapRadio(radioId).wrapPushDetailId(detail.getId()).wrapOpt());
+					log.info("同步设置管理员 {} " , ret);
 //					
 //					if (StringUtils.isEmpty(ret.getOpt())) {
 //						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "管理员（获取hash值）", true);
@@ -156,12 +164,12 @@ public class ManualPackingTask implements TaskExecution {
 //					submitList.add(postposition);
 				}
 			}
-			if(CollectionUtils.isEmpty(submitList)) {
-				return null ;
-			}
-			// 提交到 容器
-			SpringUtils.getBean(MultipackLogContainer.class).submit(submitList);
 		}
+		if (CollectionUtils.isEmpty(submitList)) {
+			return null;
+		}
+		// 提交到 容器
+		SpringUtils.getBean(MultipackLogContainer.class).submit(submitList);
 		return R.ok();
 	}
 
@@ -179,7 +187,7 @@ public class ManualPackingTask implements TaskExecution {
 	}
 
 	public static void main(String[] args) {
-		String g = String.format("【发言人包装-头像】 群%s 号%s 同步请求失败，原因：%s", "ASDSAD","ASDASD","AA");
+		String g = String.format("【发言人包装-头像】 群%s 号%s 同步请求失败，原因：%s", "ASDSAD", "ASDASD", "AA");
 		System.err.println(g);
 	}
 

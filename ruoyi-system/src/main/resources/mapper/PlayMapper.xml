@@ -190,7 +190,7 @@
             and tpmpd.robot_acct = #{dto.robotAcct}
         </if>
         <if test="dto.robotNickname != null and dto.robotNickname != ''">
-            and tpmpd.robot_nickname = #{dto.robotNickname}
+            AND concat( tri.first_name, ' ', tri.last_name ) LIKE concat('%',#{dto.robotNickname},'%')
         </if>
 
 
