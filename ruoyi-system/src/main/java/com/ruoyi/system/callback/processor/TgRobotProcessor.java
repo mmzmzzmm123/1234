@@ -59,12 +59,9 @@ public class TgRobotProcessor {
     public void called50005004(Called50005004DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         log.info("NQ50005004 called:{}",root);
-        if(root.isSuccess()){
-            if(!CollectionUtils.isEmpty(source.getRobotSerialNos())){
-                robotService.recycleRobot(source.getRobotSerialNos());
-            }
+        if(!CollectionUtils.isEmpty(source.getRobotSerialNos())){
+            robotService.recycleRobot(source.getRobotSerialNos());
         }
-
     }
 
     /***
@@ -75,10 +72,8 @@ public class TgRobotProcessor {
     public void called50005005(List<Called50005005DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         log.info("NQ50005005 called:{}",root);
-        if(root.isSuccess()){
-            if(!CollectionUtils.isEmpty(sourceList)){
-                robotService.updateRobotMerchant(sourceList);
-            }
+        if(!CollectionUtils.isEmpty(sourceList)){
+            robotService.updateRobotMerchant(sourceList);
         }
     }
 
