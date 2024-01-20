@@ -48,4 +48,7 @@ public class ExtTgSelectRobotByMerchantVO {
     private String robotPwd;
     @ApiModelProperty("ip")
     private String ip;
+
+    @ApiModelProperty("回收状态,0-未回收,1-已回收")
+    private Integer recycleStatus;
 }
