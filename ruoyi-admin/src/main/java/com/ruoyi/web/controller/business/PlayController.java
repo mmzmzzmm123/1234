@@ -55,17 +55,12 @@ public class PlayController extends BaseController {
     @ApiOperation("创建炒群任务")
     @PostMapping(value = "/create")
     public R<String> create(@RequestBody PlayDTO dto) {
-        dto.setLoginUser(getLoginUser());
-        if (ObjectUtils.isEmpty(dto.getLoginUser().getMerchantInfo()) || dto.getLoginUser().getMerchantInfo().getMerchantType() != 0) {
-            return R.fail(ErrInfoConfig.getDynmic(11011));
-        }
-
         R<String> checkPlayParamsRet = checkAddPlayParams(dto);
         if (checkPlayParamsRet.getCode() != HttpStatus.SUCCESS) {
             return checkPlayParamsRet;
         }
 
-        R<String> checkPlayCommonRet = checkPlayCommonRet(dto.getName(), dto.getPlayMessageList(), dto.getUrlPool(), dto.getSendMechanism());
+        R<String> checkPlayCommonRet = checkPlayCommonRet(dto);
         if (checkPlayCommonRet.getCode() != HttpStatus.SUCCESS) {
             return checkPlayCommonRet;
         }
@@ -74,89 +69,93 @@ public class PlayController extends BaseController {
             return playService.create(dto);
         } catch (Exception e) {
             log.error("play_create_err:{}", e.getMessage());
+            return R.fail(10000, ErrInfoConfig.getDynmic(10000, e.getMessage()));
         }
-        return R.fail();
     }
 
-    private R<String> checkPlayCommonRet(String name, List<PlayMessageDTO> playMessageDTOList, List<String> urlPool, SendMechanism sendMechanism) {
-        if (StringUtils.isEmpty(name)) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能为空"));
+    private R<String> checkPlayCommonRet(PlayDTO dto) {
+        dto.setLoginUser(getLoginUser());
+        if (ObjectUtils.isEmpty(dto.getLoginUser().getMerchantInfo()) || dto.getLoginUser().getMerchantInfo().getMerchantType() != 0) {
+            return R.fail(11011, ErrInfoConfig.getDynmic(11011));
         }
-        if (name.length() > 64) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过64字"));
+        if (StringUtils.isEmpty(dto.getName())) {
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "任务名称不能为空"));
+        }
+        if (dto.getName().length() > 64) {
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "任务名称不能超过64字"));
         }
 
-        if (null == playMessageDTOList || playMessageDTOList.isEmpty()) {
-            return R.fail(ErrInfoConfig.getDynmic(11016));
+        if (null == dto.getPlayMessageList() || dto.getPlayMessageList().isEmpty()) {
+            return R.fail(11016, ErrInfoConfig.getDynmic(11016));
         }
-        for (PlayMessageDTO playMessageDTO : playMessageDTOList) {
+        for (PlayMessageDTO playMessageDTO : dto.getPlayMessageList()) {
             if (StringUtils.isEmpty(playMessageDTO.getRobotNickname())) {
-                return R.fail(ErrInfoConfig.getDynmic(11017));
+                return R.fail(11017, ErrInfoConfig.getDynmic(11017));
             }
             List<ContentJson> contents = playMessageDTO.getMessageContent();
             for (ContentJson content : contents) {
                 if (null == content.getMomentTypeId()) {
-                    return R.fail(ErrInfoConfig.getDynmic(11018));
+                    return R.fail(11018, ErrInfoConfig.getDynmic(11018));
                 }
                 if (content.getMomentTypeId() == 2017) {
-                    if (null == urlPool || urlPool.size() < 1) {
-                        return R.fail(ErrInfoConfig.getDynmic(11019));
+                    if (null == dto.getUrlPool() || dto.getUrlPool().size() < 1) {
+                        return R.fail(11019, ErrInfoConfig.getDynmic(11019));
                     }
                 } else if (content.getMomentTypeId() == 2018) {
                     if (StringUtils.isEmpty(content.getSMateContent())) {
-                        return R.fail(ErrInfoConfig.getDynmic(11020));
+                        return R.fail(11020, ErrInfoConfig.getDynmic(11020));
                     }
                 }
             }
         }
 
-        if (null == sendMechanism) {
-            return R.fail(ErrInfoConfig.getDynmic(11021));
+        if (null == dto.getSendMechanism()) {
+            return R.fail(11021, ErrInfoConfig.getDynmic(11021));
         }
-        if (null == sendMechanism.getMsgSepStart() || null == sendMechanism.getMsgSepEnd()) {
-            return R.fail(ErrInfoConfig.getDynmic(11022));
+        if (null == dto.getSendMechanism().getMsgSepStart() || null == dto.getSendMechanism().getMsgSepEnd()) {
+            return R.fail(11022, ErrInfoConfig.getDynmic(11022));
         }
-        if (sendMechanism.getMsgSepStart() >= sendMechanism.getMsgSepEnd()) {
-            return R.fail(ErrInfoConfig.getDynmic(11023));
+        if (dto.getSendMechanism().getMsgSepStart() >= dto.getSendMechanism().getMsgSepEnd()) {
+            return R.fail(11023, ErrInfoConfig.getDynmic(11023));
         }
-        if (null == sendMechanism.getPerformerSepStart() || null == sendMechanism.getPerformerSepEnd()) {
-            return R.fail(ErrInfoConfig.getDynmic(11024));
+        if (null == dto.getSendMechanism().getPerformerSepStart() || null == dto.getSendMechanism().getPerformerSepEnd()) {
+            return R.fail(11024, ErrInfoConfig.getDynmic(11024));
         }
-        if (sendMechanism.getPerformerSepStart() >= sendMechanism.getPerformerSepEnd()) {
-            return R.fail(ErrInfoConfig.getDynmic(11025));
+        if (dto.getSendMechanism().getPerformerSepStart() >= dto.getSendMechanism().getPerformerSepEnd()) {
+            return R.fail(11025, ErrInfoConfig.getDynmic(11025));
         }
         return R.ok();
     }
 
     private R<String> checkAddPlayParams(PlayDTO dto) {
         if (null == dto.getGroupSource()) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "请选择群来源"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "请选择群来源"));
         }
         if (dto.getGroupSource() == 0 && dto.getGroupNum() == null) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "请配置群需求数量"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "请配置群需求数量"));
         }
         if (dto.getGroupSource() == 1) {
             if (null == dto.getGroupUrls()) {
-                return R.fail(ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
+                return R.fail(11000, ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
             }
             dto.setGroupUrls(handleUrlList(dto.getGroupUrls()));
             if (dto.getGroupUrls().isEmpty()) {
-                return R.fail(ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
+                return R.fail(11000, ErrInfoConfig.getDynmic(11000, "外部群链接不能为空"));
             }
         }
         if (null == dto.getRobotNum() || dto.getRobotNum() < 1) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "请配置每个群演员数"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "请配置每个群演员数"));
         }
 
         dto.setUrlPool(handleUrlList(dto.getUrlPool()));
         if (dto.getGroupCondition() == 0) {
             if (dto.getUserNum() == null || dto.getUserNum() < 1) {
-                return R.fail(ErrInfoConfig.getDynmic(11000, "请配置群人数"));
+                return R.fail(11000, ErrInfoConfig.getDynmic(11000, "请配置群人数"));
             }
         }
         if (dto.getGroupCondition() == 1) {
             if (dto.getStartType() == 1 && null == dto.getStartGroupDate()) {
-                return R.fail(ErrInfoConfig.getDynmic(11000, "请配置定时开始炒群时间"));
+                return R.fail(11000, ErrInfoConfig.getDynmic(11000, "请配置定时开始炒群时间"));
             }
         }
         return R.ok();
@@ -173,7 +172,11 @@ public class PlayController extends BaseController {
     @ApiOperation("修改炒群任务")
     @PostMapping(value = "/update")
     public R<String> update(@RequestBody PlayDTO dto) {
-        R<String> checkPlayCommonRet = checkPlayCommonRet(dto.getName(), dto.getPlayMessageList(), dto.getUrlPool(), dto.getSendMechanism());
+        if (StringUtils.isEmpty(dto.getId())) {
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "参数错误"));
+        }
+
+        R<String> checkPlayCommonRet = checkPlayCommonRet(dto);
         if (checkPlayCommonRet.getCode() != HttpStatus.SUCCESS) {
             return checkPlayCommonRet;
         }
@@ -286,14 +289,14 @@ public class PlayController extends BaseController {
     public R<String> repeatPlay(@PathVariable String playId) {
         LoginUser loginUser = getLoginUser();
         if (ObjectUtils.isEmpty(loginUser.getMerchantInfo()) || loginUser.getMerchantInfo().getMerchantType() != 0) {
-            return R.fail(ErrInfoConfig.getDynmic(11011));
+            return R.fail(11011, ErrInfoConfig.getDynmic(11011));
         }
         try {
             return playService.repeatPlay(playId, loginUser);
         } catch (Exception e) {
             log.error("repeatPlay:params:{},msg:{}", playId, e.getMessage());
+            return R.fail(10000, ErrInfoConfig.getDynmic(10000, e.getMessage()));
         }
-        return R.fail();
     }
 
     @ApiOperation("修改炒群任务状态")

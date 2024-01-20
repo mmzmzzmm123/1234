@@ -88,6 +88,13 @@ public class GroupMonitorInfo {
     private String originalGroupId;
 
     /**
+     * 原始官方群Id
+     */
+    @ApiModelProperty(value = "老的原始官方群Id")
+    @TableField("old_original_group_id")
+    private String oldOriginalGroupId;
+
+    /**
      * 群成员数
      */
     @ApiModelProperty(value = "群成员数")
