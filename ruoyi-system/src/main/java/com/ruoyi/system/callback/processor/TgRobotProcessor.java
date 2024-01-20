@@ -408,7 +408,9 @@ public class TgRobotProcessor {
     @Type(value = 1100910003, parameterClass = Called1100910003DTO.class)
     public void called1100910003(Called1100910003DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-
+        if(root.isSuccess()){
+            robotService.offline(source.getUser_serial_no());
+        }
     }
 
     /***
@@ -417,6 +419,9 @@ public class TgRobotProcessor {
     @Type(value = 1100910045, parameterClass = Called1100910045DTO.class)
     public void robotBanned(Called1100910045DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()){
+            robotService.sealRobot(source);
+        }
 
     }
 
