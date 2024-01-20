@@ -6,10 +6,7 @@ import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.domain.dto.play.AdMonitor;
-import com.ruoyi.common.core.domain.dto.play.ContentJson;
-import com.ruoyi.common.core.domain.dto.play.PlayDTO;
-import com.ruoyi.common.core.domain.dto.play.PlayMessageDTO;
+import com.ruoyi.common.core.domain.dto.play.*;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
@@ -59,14 +56,18 @@ public class PlayController extends BaseController {
     @PostMapping(value = "/create")
     public R<String> create(@RequestBody PlayDTO dto) {
         dto.setLoginUser(getLoginUser());
+        if (ObjectUtils.isEmpty(dto.getLoginUser().getMerchantInfo()) || dto.getLoginUser().getMerchantInfo().getMerchantType() != 0) {
+            return R.fail(ErrInfoConfig.getDynmic(11011));
+        }
+
         R<String> checkPlayParamsRet = checkAddPlayParams(dto);
         if (checkPlayParamsRet.getCode() != HttpStatus.SUCCESS) {
             return checkPlayParamsRet;
         }
 
-        R<String> checkPlayMessageListRet = checkPlayMessageList(dto.getPlayMessageList(), dto.getUrlPool());
-        if (checkPlayMessageListRet.getCode() != HttpStatus.SUCCESS) {
-            return checkPlayMessageListRet;
+        R<String> checkPlayCommonRet = checkPlayCommonRet(dto.getName(), dto.getPlayMessageList(), dto.getUrlPool(), dto.getSendMechanism());
+        if (checkPlayCommonRet.getCode() != HttpStatus.SUCCESS) {
+            return checkPlayCommonRet;
         }
 
         try {
@@ -77,7 +78,14 @@ public class PlayController extends BaseController {
         return R.fail();
     }
 
-    private R<String> checkPlayMessageList(List<PlayMessageDTO> playMessageDTOList, List<String> urlPool) {
+    private R<String> checkPlayCommonRet(String name, List<PlayMessageDTO> playMessageDTOList, List<String> urlPool, SendMechanism sendMechanism) {
+        if (StringUtils.isEmpty(name)) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能为空"));
+        }
+        if (name.length() > 64) {
+            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过64字"));
+        }
+
         if (null == playMessageDTOList || playMessageDTOList.isEmpty()) {
             return R.fail(ErrInfoConfig.getDynmic(11016));
         }
@@ -102,19 +110,25 @@ public class PlayController extends BaseController {
             }
         }
 
+        if (null == sendMechanism) {
+            return R.fail(ErrInfoConfig.getDynmic(11021));
+        }
+        if (null == sendMechanism.getMsgSepStart() || null == sendMechanism.getMsgSepEnd()) {
+            return R.fail(ErrInfoConfig.getDynmic(11022));
+        }
+        if (sendMechanism.getMsgSepStart() >= sendMechanism.getMsgSepEnd()) {
+            return R.fail(ErrInfoConfig.getDynmic(11023));
+        }
+        if (null == sendMechanism.getPerformerSepStart() || null == sendMechanism.getPerformerSepEnd()) {
+            return R.fail(ErrInfoConfig.getDynmic(11024));
+        }
+        if (sendMechanism.getPerformerSepStart() >= sendMechanism.getPerformerSepEnd()) {
+            return R.fail(ErrInfoConfig.getDynmic(11025));
+        }
         return R.ok();
     }
 
     private R<String> checkAddPlayParams(PlayDTO dto) {
-        if (ObjectUtils.isEmpty(dto.getLoginUser().getMerchantInfo()) || dto.getLoginUser().getMerchantInfo().getMerchantType() != 0) {
-            return R.fail(ErrInfoConfig.getDynmic(11011));
-        }
-        if (StringUtils.isEmpty(dto.getName())) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能为空"));
-        }
-        if (dto.getName().length() > 64) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过64字"));
-        }
         if (null == dto.getGroupSource()) {
             return R.fail(ErrInfoConfig.getDynmic(11000, "请选择群来源"));
         }
@@ -159,17 +173,11 @@ public class PlayController extends BaseController {
     @ApiOperation("修改炒群任务")
     @PostMapping(value = "/update")
     public R<String> update(@RequestBody PlayDTO dto) {
-        if (StringUtils.isEmpty(dto.getName())) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能为空"));
+        R<String> checkPlayCommonRet = checkPlayCommonRet(dto.getName(), dto.getPlayMessageList(), dto.getUrlPool(), dto.getSendMechanism());
+        if (checkPlayCommonRet.getCode() != HttpStatus.SUCCESS) {
+            return checkPlayCommonRet;
         }
-        if (dto.getName().length() > 64) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "任务名称不能超过64字"));
-        }
-        dto.setUrlPool(handleUrlList(dto.getUrlPool()));
-        R<String> checkPlayMessageListRet = checkPlayMessageList(dto.getPlayMessageList(), dto.getUrlPool());
-        if (checkPlayMessageListRet.getCode() != HttpStatus.SUCCESS) {
-            return checkPlayMessageListRet;
-        }
+
         return playService.updatePlay(dto);
     }
 
