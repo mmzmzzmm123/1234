@@ -637,7 +637,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         sourceList.forEach(item->map.put(item.getRobotSerialNo(),item));
         for (List<Called50005006DTO> item : ListTools.partition(sourceList, 500)) {
             List<String> robotSerialNos = item.stream().map(Called50005006DTO::getRobotSerialNo).collect(Collectors.toList());
-            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, robotSerialNos));
+            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, robotSerialNos));
             List<Robot> updateRobot = new ArrayList<>();
             if(!CollectionUtils.isEmpty(robots)){
                 for (Robot oldRobot : robots) {
