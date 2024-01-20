@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
@@ -14,6 +15,7 @@ import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.callback.dto.Called1100910045DTO;
 import com.ruoyi.system.callback.dto.Called1100910101DTO;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.robot.*;
@@ -140,9 +142,10 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         if (!CollectionUtils.isEmpty(robotSerialNos)) {
             try {
                 ThirdTelegramPersonalCallbackRegInputDTO dto = new ThirdTelegramPersonalCallbackRegInputDTO();
-                dto.setSubTypeList(Collections.singletonList(1100910101));
+                dto.setSubTypeList(Arrays.asList(1100910101,1100910003,1100910045));
                 dto.setTelegramIdList(robotSerialNos);
-                OpenApiClient.personalOnByThirdTg(dto);
+                OpenApiResult<Void> openApiResult = OpenApiClient.personalOnByThirdTg(dto);
+                log.info("号订阅 {}",openApiResult);
             } catch (Exception e) {
                 log.error("号订阅失败", e);
             }
@@ -532,7 +535,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
                 List<String> nos = robots.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
                 this.update(new LambdaUpdateWrapper<Robot>()
                         .in(Robot::getRobotSerialNo,nos)
-                        .set(Robot::getDeleteStatus,1));
+                        .set(Robot::getRecycleStatus,1));
             }
         }
     }
@@ -560,4 +563,41 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         this.update(wrapper);
 
     }
+
+    @Override
+    public void offline(String robotSerialNo) {
+        if(StringUtils.isEmpty(robotSerialNo)){
+            return;
+        }
+        Robot robot = baseMapper.selectOne(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, robotSerialNo).last(" limit 1"));
+        if(robot != null){
+            if(robot.getHeartbeatStatus() != 10){
+                robot.setHeartbeatStatus(10);
+                updateById(robot);
+            }
+        }
+    }
+
+    @Override
+    public void sealRobot(Called1100910045DTO source) {
+        if(source == null){
+            return;
+        }
+        Robot robot = baseMapper.selectOne(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, source.getRobot_serial_no()).last(" limit 1"));
+        if(robot != null){
+            boolean flag = false;
+            if(source.getBan_time() != null){
+                robot.setSealTime(DateUtil.parse(source.getBan_time()));
+                flag = true;
+            }
+            if(robot.getSealStatus() != 30){
+                robot.setSealStatus(30);
+                flag = true;
+            }
+            if(flag){
+                updateById(robot);
+            }
+        }
+    }
+
 }

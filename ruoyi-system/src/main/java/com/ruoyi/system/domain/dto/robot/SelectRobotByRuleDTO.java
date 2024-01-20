@@ -23,5 +23,7 @@ public class SelectRobotByRuleDTO extends GetRobotDTO{
     private Integer isSetAdmin = 0;
     @ApiModelProperty(value = "要排除的ip")
     private List<String> ips;
+    @ApiModelProperty(value = "要排除的号")
+    private List<String> excludeRobotSerialNos;
     private Integer limit;
 }
