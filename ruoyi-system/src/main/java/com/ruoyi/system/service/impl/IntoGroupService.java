@@ -1039,10 +1039,17 @@ public class IntoGroupService {
                 }
                 log.info("剧本已完成调度的群数："+count);
                 if (count + errorCount >= play.getGroupNum()) {
-                    //修改剧本状态
-                    play.setScanProgress(4);
-                    log.info("已修改剧本状态"+JSONObject.toJSONString(count));
-                    setLog(play.getId(), "所有群已完成入群调度！已成功调度的群数"+count+"失败群数："+errorCount, 0, PlayLogTyper.Group_into, null);
+                    //全部失败
+                    if (count == 0){
+                        play.setState(4);
+                        log.info("已修改剧本状态"+JSONObject.toJSONString(count));
+                        setLog(play.getId(), "所有群都失败任务中止！", 1, PlayLogTyper.Group_into, null);
+                    }else {
+                        //修改剧本状态
+                        play.setScanProgress(4);
+                        log.info("已修改剧本状态"+JSONObject.toJSONString(count));
+                        setLog(play.getId(), "所有群已完成入群调度！已成功调度的群数"+count+"失败群数："+errorCount, 0, PlayLogTyper.Group_into, null);
+                    }
                     playMapper.updateById(play);
                 }
             }
