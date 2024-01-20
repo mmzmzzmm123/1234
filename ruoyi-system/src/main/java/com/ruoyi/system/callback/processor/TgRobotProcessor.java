@@ -74,6 +74,7 @@ public class TgRobotProcessor {
     @Type(value = 50005005, parameterClass = Called50005005DTO.class)
     public void called50005005(List<Called50005005DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("NQ50005005 called:{}",root);
         if(root.isSuccess()){
             if(!CollectionUtils.isEmpty(sourceList)){
                 robotService.updateRobotMerchant(sourceList);
