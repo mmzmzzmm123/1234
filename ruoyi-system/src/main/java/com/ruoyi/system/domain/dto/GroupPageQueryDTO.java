@@ -94,6 +94,15 @@ public class GroupPageQueryDTO extends PageBaseDTO {
     @ApiModelProperty(value = "群编号")
     private String groupSerialNo;
 
+    @ApiModelProperty(value = "老编号")
+    private String oldGroupSerialNo;
+
+    @ApiModelProperty(value = "群范围 0-所有  1-超级群 2-普通群")
+    private Integer groupRange;
+
+    @ApiModelProperty(value = "群是否已升级 0-否 1-是")
+    private Integer groupUpgrade;
+
     @ApiModelProperty(value = "群编号集合")
     private List<String> groupSerialNos;
 

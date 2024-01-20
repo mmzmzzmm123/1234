@@ -115,7 +115,7 @@ public class GroupService {
         List<String> locks = new ArrayList<>();
         List<GroupInfoVO> groupInfoList = new ArrayList<>();
         Integer botAdmin = ObjectUtil.equal("1", iSystemConfigService.selectConfigByKey("selectGroup:botAdmin"))?1:null;
-
+        String groupRange = iSystemConfigService.selectConfigByKey("selectGroup:groupType");
         VibeRuleDTO one = ibiRuleService.getOne();
         if (one == null) {
             return R.fail("无风控规则");
@@ -124,7 +124,7 @@ public class GroupService {
         try {
             while (groupInfoList.size() < dto.getGroupNum()) {
                 count = dto.getGroupNum() - groupInfoList.size();
-                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count, countryCodes, failGroupId, botAdmin);
+                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count, countryCodes, failGroupId, botAdmin,groupRange);
                 //没有满足条件的群
                 if (CollUtil.isEmpty(result)) {
                     //如果有优先国家  清空优先国家再次查询 否则跳出循环
@@ -582,6 +582,7 @@ public class GroupService {
                             if(ObjectUtil.equal("1", iSystemConfigService.selectConfigByKey("setBotAdmin:para"))){
                                 input.setAnonymous(false);
                                 input.setAddAdmins(false);
+                                input.setNotModifyPermissions(true);
                             }
                             input.setMemberUserAccessHash(value);
                             return input;

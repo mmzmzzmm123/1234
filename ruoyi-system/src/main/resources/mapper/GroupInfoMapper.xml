@@ -5,6 +5,7 @@
     <select id="page" resultType="com.ruoyi.system.domain.vo.GroupPageInfoVO">
         select tgi.group_id,
                tgi.group_serial_no,
+               tgi.old_group_serial_no,
                tgi.group_name,
                tgi.group_invite_link,
                tgmi.bot_check,
@@ -122,6 +123,29 @@
             <if test="dto.groupSerialNo != null and dto.groupSerialNo != ''">
                 AND tgi.group_serial_no = #{dto.groupSerialNo}
             </if>
+            <if test="dto.oldGroupSerialNo != null and dto.oldGroupSerialNo != ''">
+                AND tgi.old_group_serial_no = #{dto.oldGroupSerialNo}
+            </if>
+            <if test="dto.groupRange != null  and dto.groupRange != ''">
+                <choose>
+                    <when test="dto.groupRange == 1">
+                        AND tgmi.original_group_id like '-100%'
+                    </when>
+                    <when test="dto.groupRange == 2">
+                        AND tgmi.original_group_id not like '-100%'
+                    </when>
+                </choose>
+            </if>
+            <if test="dto.groupUpgrade != null">
+                <choose>
+                    <when test="dto.groupUpgrade == 1">
+                        AND tgi.old_group_serial_no !=''
+                    </when>
+                    <when test="dto.groupUpgrade == 0">
+                        AND tgi.old_group_serial_no =''
+                    </when>
+                </choose>
+            </if>
             <if test="dto.groupInviteLink != null and dto.groupInviteLink != ''">
                 AND tgi.group_invite_link = #{dto.groupInviteLink}
             </if>
@@ -169,6 +193,16 @@
            and robot.recycle_status =0
            and tgi.group_invite_link != ''
            and ttdcad.admin_serial_no is null
+        <if test="groupRange != null  and groupRange != ''">
+            <choose>
+                <when test="groupRange == 1">
+                    AND tgmi.original_group_id like '-100%'
+                </when>
+                <when test="groupRange == 2">
+                    AND tgmi.original_group_id not like '-100%'
+                </when>
+            </choose>
+        </if>
         <if test="registrationDay != null ">
             AND tgi.registration_time <![CDATA[ <= ]]>  #{registrationDay}
         </if>
