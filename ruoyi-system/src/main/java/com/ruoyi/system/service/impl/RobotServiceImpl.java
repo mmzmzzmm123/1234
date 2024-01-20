@@ -620,7 +620,14 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         if(StringUtils.isEmpty(robotSerialNo)){
             return;
         }
-        this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo,robotSerialNo).set(Robot::getHeartbeatStatus,20));
+        Robot robot = baseMapper.selectOne(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, robotSerialNo).last(" limit 1"));
+        if(robot == null){
+            return;
+        }
+        if(robot.getHeartbeatStatus() != 20){
+            this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo,robotSerialNo).set(Robot::getHeartbeatStatus,20));
+        }
+
     }
 
 }
