@@ -25,6 +25,7 @@
           and trs.is_lock = 0
           and tri.seal_status = 10
           and tri.heartbeat_status = 20
+          and tri.bidirectional_type = 0
         <if test="dto.countryCode != null and dto.countryCode.size > 0">
             and tri.country_code in
               <foreach collection="dto.countryCode" item="item" separator="," open="(" close=")">
