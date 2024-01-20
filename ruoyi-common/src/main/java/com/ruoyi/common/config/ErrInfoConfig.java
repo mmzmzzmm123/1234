@@ -30,6 +30,11 @@ public class ErrInfoConfig {
 		err.put(11018, "消息类型不能为空");
 		err.put(11019, "接粉号池不能为空");
 		err.put(11020, "自定义类型未输入信息");
+		err.put(11021, "发送机制不能为空");
+		err.put(11022, "多条内容间隔不能为空");
+		err.put(11023, "多条内容间隔最小值必须小于最大值");
+		err.put(11024, "演员之间发送间隔不能为空");
+		err.put(11025, "演员之间发送间隔最小值必须小于最大值");
 	}
 
 	public static String get(int code) {

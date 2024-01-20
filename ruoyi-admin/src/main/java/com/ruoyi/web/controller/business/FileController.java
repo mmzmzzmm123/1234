@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.business;
 
 import com.ruoyi.common.annotation.RepeatSubmit;
+import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.WordPageDTO;
@@ -26,8 +27,8 @@ public class FileController extends BaseController {
             return R.ok(analysisFileService.analysisPlayWord(file, getLoginUser().getUserId()));
         } catch (Exception e) {
             logger.error("analysisPlayWord_err", e);
+            return R.fail(10000, ErrInfoConfig.getDynmic(10000, e.getMessage()));
         }
-        return R.fail();
     }
 
     @ApiOperation(value = "获取上传的剧本word文件内容")
@@ -38,7 +39,7 @@ public class FileController extends BaseController {
             return R.ok(analysisFileService.playWordContentList(dto));
         } catch (Exception e) {
             logger.error("playWordContentList_err", e);
+            return R.fail(10000, ErrInfoConfig.getDynmic(10000, e.getMessage()));
         }
-        return R.fail();
     }
 }

@@ -49,31 +49,26 @@ public class AnalysisFileService {
         String fileId = userId.toString();
         List<PlayFile> playFileList = new ArrayList<>();
         long time = System.currentTimeMillis();
-        try {
-            int no = 0;
-            for (String item : tmpData) {
-                item = item.trim();
-                if (item.isEmpty()) {
-                    continue;
-                }
-
-                //判断是否另一个发言人
-                if (item.startsWith(SPOKESMAN_REGEX)) {
-                    no++;
-                }
-
-                PlayFile playFile = new PlayFile();
-                playFile.setFileId(fileId);
-                playFile.setContent(item);
-                playFile.setContentNo(no);
-                playFile.setType(item.startsWith(WordUtil.IMG_PRE) ? 2 : 1);
-                playFileList.add(playFile);
+        int no = 0;
+        for (String item : tmpData) {
+            item = item.trim();
+            if (item.isEmpty()) {
+                continue;
             }
 
-            playFileService.saveBatch(playFileList);
-        } catch (Exception e) {
-            log.error("analysisPlayWord");
+            //判断是否另一个发言人
+            if (item.startsWith(SPOKESMAN_REGEX)) {
+                no++;
+            }
+
+            PlayFile playFile = new PlayFile();
+            playFile.setFileId(fileId);
+            playFile.setContent(item);
+            playFile.setContentNo(no);
+            playFile.setType(item.startsWith(WordUtil.IMG_PRE) ? 2 : 1);
+            playFileList.add(playFile);
         }
+        playFileService.saveBatch(playFileList);
 
         pageDTO.setSaveFileTime(System.currentTimeMillis() - time);
 
