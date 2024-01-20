@@ -180,20 +180,19 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 playMessage.setCallRobotNickname(messageDTO.getCallRobotNickname());
             }
             playMessage.setMessageSort(messageDTO.getMessageSort());
-            // 设置uuid 混淆适配使用
-            for (ContentJson contentJson : messageDTO.getMessageContent()) {
-                contentJson.setUuid(IdWorker.getIdStr());
-            }
-            playMessage.setMessageContent(JSON.toJSONString(messageDTO.getMessageContent()));
-            playMessage.setPlayErrorType(sendMechanism.getSendErrorType());
 
-            //接粉号处理
-            for (ContentJson content : messageDTO.getMessageContent()) {
-                if (content.getMomentTypeId() == 2017) {
-                    content.setSMateContent(urlPool.get(new Random().nextInt(urlPool.size())));
+            for (ContentJson contentJson : messageDTO.getMessageContent()) {
+                // 设置uuid 混淆适配使用
+                contentJson.setUuid(IdWorker.getIdStr());
+
+                //接粉号处理
+                if (contentJson.getMomentTypeId() == 2017) {
+                    contentJson.setSMateContent(urlPool.get(new Random().nextInt(urlPool.size())));
                 }
             }
 
+            playMessage.setMessageContent(JSON.toJSONString(messageDTO.getMessageContent()));
+            playMessage.setPlayErrorType(sendMechanism.getSendErrorType());
             saveData.add(playMessage);
         }
 
