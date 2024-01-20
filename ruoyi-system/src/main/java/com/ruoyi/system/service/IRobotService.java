@@ -113,4 +113,9 @@ public interface IRobotService extends IService<Robot> {
      */
     void sealRobot(Called1100910045DTO source);
 
+    /**
+     * 登录
+     */
+    void cacheLogin(String robotSerialNo);
+
 }

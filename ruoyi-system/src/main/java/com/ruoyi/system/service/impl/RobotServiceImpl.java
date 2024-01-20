@@ -615,4 +615,12 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         }
     }
 
+    @Override
+    public void cacheLogin(String robotSerialNo) {
+        if(StringUtils.isEmpty(robotSerialNo)){
+            return;
+        }
+        this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo,robotSerialNo).set(Robot::getHeartbeatStatus,20));
+    }
+
 }
