@@ -1112,7 +1112,7 @@ public class IntoGroupService {
         log.error("定时检测修改头像是否有回调超时的任务");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.MINUTE, -2);
+        calendar.add(Calendar.MINUTE, -3);
         playModifierGroupLogMapper.updateTaskByOutTime(calendar.getTime(), "无回调，自动变更失败！");
     }
 
@@ -1121,7 +1121,7 @@ public class IntoGroupService {
         log.error("定时检测入群是否有回调超时的任务");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.MINUTE, -2);
+        calendar.add(Calendar.MINUTE, -3);
         List<PlayIntoGroupTask> playIntoGroupTasks =playIntoGroupTaskMapper.selectNotCallBackTask(calendar.getTime());
         if (playIntoGroupTasks == null || playIntoGroupTasks.size() == 0){
             return;
