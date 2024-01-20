@@ -510,43 +510,29 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         if (StringUtils.isEmpty(playId)){
             return vo;
         }
-        RobotStatisticsVO groupStatisticsVO = playMessagePushService.getRobotStatisticsVO(playId);
         // 统计群维度数据
+        RobotStatisticsVO groupStatisticsVO = playMessagePushService.getRobotStatisticsVO(playId);
         if (groupStatisticsVO != null) {
             vo.setGroupNum(groupStatisticsVO.getGroupNum());
             vo.setGroupClosureNum(groupStatisticsVO.getGroupClosureNum());
-            vo.setJoinGroupFailNum(groupStatisticsVO.getJoinGroupFailNum());
-        } else {
-            vo.setGroupNum(0);
-            vo.setGroupClosureNum(0);
-            vo.setJoinGroupFailNum(0);
         }
-
-        // 统计号维度数据
-        List<PlayMessagePushDetail> pushDetails = playMessagePushDetailService.listByPlayIdStatistics(playId);
-        Set<String> navyRobotIds = new HashSet<>();// 水军号
-        Set<String> spareRobotIds = new HashSet<>();// 备用号
-        for (PlayMessagePushDetail pushDetail : pushDetails) {
-            String robotId = pushDetail.getRobotId();
-            if (StringUtils.isNotEmpty(robotId)){
-                navyRobotIds.add(robotId);
-            }
-            String spareRobot = pushDetail.getSpareRobot();
-            if (StringUtils.isNotEmpty(spareRobot)){
-                String[] split = spareRobot.split(",");
-                spareRobotIds.addAll(Arrays.asList(split));
-            }
-        }
-        vo.setNavyRobotNum(navyRobotIds.size());
-        vo.setSpareRobotNum(spareRobotIds.size());
-
-        // 统计号的双向、封号数
-        navyRobotIds.addAll(spareRobotIds);
-        RobotStatisticsVO robotStatisticsVO = robotService.getRobotStatisticsVO(navyRobotIds);
-        if (robotStatisticsVO != null) {
+        RobotStatisticsVO robotStatisticsVO = robotService.getRobotStatisticsVO(playId);
+        if (robotStatisticsVO!= null){
+            vo.setRobotTotalNum(robotStatisticsVO.getRobotTotalNum());
             vo.setRobotClosureNum(robotStatisticsVO.getRobotClosureNum());
             vo.setBidirectionalRobotNum(robotStatisticsVO.getBidirectionalRobotNum());
         }
+        // 统计发言人数量  就是水军数量
+        LambdaQueryWrapper<PlayRobotPack> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(PlayRobotPack::getPlayId, playId);
+        // 水军号
+        long count = SpringUtils.getBean(PlayRobotPackService.class).count(lambdaQueryWrapper);
+        int navyRobotNum = (int) count;
+        vo.setNavyRobotNum(navyRobotNum);
+        int robotTotalNum = vo.getRobotTotalNum() == null ? 0 : vo.getRobotTotalNum();
+        // 备用号
+        int spareRobotNum = robotTotalNum - navyRobotNum;
+        vo.setSpareRobotNum(spareRobotNum <= 0 ? 0 : spareRobotNum);
         return vo;
     }
 
