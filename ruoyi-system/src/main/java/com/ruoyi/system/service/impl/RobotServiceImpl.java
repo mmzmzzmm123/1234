@@ -18,6 +18,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.callback.dto.Called1100910045DTO;
 import com.ruoyi.system.callback.dto.Called1100910101DTO;
 import com.ruoyi.system.callback.dto.Called50005005DTO;
+import com.ruoyi.system.callback.dto.Called50005006DTO;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
@@ -628,6 +629,70 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo,robotSerialNo).set(Robot::getHeartbeatStatus,20));
         }
 
+    }
+
+    @Override
+    public void updateRobotInfo(List<Called50005006DTO> sourceList) {
+        Map<String,Called50005006DTO> map = new HashMap<>();
+        sourceList.forEach(item->map.put(item.getRobotSerialNo(),item));
+        for (List<Called50005006DTO> item : ListTools.partition(sourceList, 500)) {
+            List<String> robotSerialNos = item.stream().map(Called50005006DTO::getRobotSerialNo).collect(Collectors.toList());
+            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, robotSerialNos));
+            List<Robot> updateRobot = new ArrayList<>();
+            if(!CollectionUtils.isEmpty(robots)){
+                for (Robot oldRobot : robots) {
+                    if(map.containsKey(oldRobot.getRobotSerialNo())){
+                        Called50005006DTO newRobot = map.get(oldRobot.getRobotSerialNo());
+                        boolean flag = false;
+                        if(modify(oldRobot.getUserName(),newRobot.getUserName())){
+                            oldRobot.setUserName(newRobot.getUserName());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getFirstName(),newRobot.getFirstName())){
+                            oldRobot.setFirstName(newRobot.getFirstName());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getLastName(),newRobot.getLastName())){
+                            oldRobot.setLastName(newRobot.getLastName());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getHeadImgUrl(),newRobot.getHeadImgUrl())){
+                            oldRobot.setHeadImgUrl(newRobot.getHeadImgUrl());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getCountry(),newRobot.getCountry())){
+                            oldRobot.setCountry(newRobot.getCountry());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getCountryCode(),newRobot.getCountryCode())){
+                            oldRobot.setCountryCode(newRobot.getCountryCode());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getType(),newRobot.getType())){
+                            oldRobot.setType(newRobot.getType());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getHeartbeatStatus(),newRobot.getHeartbeatStatus())){
+                            oldRobot.setHeartbeatStatus(newRobot.getHeartbeatStatus());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getSealStatus(),newRobot.getSealStatus())){
+                            oldRobot.setSealStatus(newRobot.getSealStatus());
+                            flag = true;
+                        }
+                        if(flag){
+                            updateRobot.add(oldRobot);
+                        }
+
+                    }
+
+                }
+            }
+            if(!CollectionUtils.isEmpty(updateRobot)){
+                this.updateBatchById(updateRobot);
+            }
+
+        }
     }
 
 }
