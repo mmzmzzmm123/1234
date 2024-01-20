@@ -140,9 +140,10 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         if (!CollectionUtils.isEmpty(robotSerialNos)) {
             try {
                 ThirdTelegramPersonalCallbackRegInputDTO dto = new ThirdTelegramPersonalCallbackRegInputDTO();
-                dto.setSubTypeList(Collections.singletonList(1100910101));
+                dto.setSubTypeList(Arrays.asList(1100910101,1100910003,1100910045));
                 dto.setTelegramIdList(robotSerialNos);
-                OpenApiClient.personalOnByThirdTg(dto);
+                OpenApiResult<Void> openApiResult = OpenApiClient.personalOnByThirdTg(dto);
+                log.info("号订阅 {}",openApiResult);
             } catch (Exception e) {
                 log.error("号订阅失败", e);
             }
