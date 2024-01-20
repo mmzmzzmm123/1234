@@ -25,9 +25,9 @@ public interface GroupMonitorInfoService extends IService<GroupMonitorInfo> {
 
     void setBotInfo(String groupId, BotInfoVO bo);
 
-    void updateOriginalGroupId(String groupId, String originalGroupId);
+    void updateOriginalGroupId(String groupId,String oldOriginalGroupId, String originalGroupId);
 
-    void updateOriginalGroupId(String botId, String robotId, String originalGroupId);
+    void updateOriginalGroupIdByBot(String botId, String robotId, String originalGroupId);
 
 
     GroupMonitorInfo originalGroupIdChange(String botId, String oldGroupId, String newGroupId);

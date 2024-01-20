@@ -48,18 +48,18 @@ public class BotEventProcessor {
                 dto.getOldGroupId() + "", dto.getNewGroupId() + "");
         if(groupMonitorInfo!=null){
             String newGroupId = getGroupSerialNo(dto.getNewGroupId());
-            groupInfoService.updateGroupSerialNo(groupMonitorInfo.getGroupId(), newGroupId);
+            String oldGroupId = getGroupSerialNo(dto.getOldGroupId());
+            groupInfoService.updateGroupSerialNo(groupMonitorInfo.getGroupId(),oldGroupId, newGroupId);
         }else{
             //根据原始id md5获取加密后的编号
             String oldGroupId = getGroupSerialNo(dto.getOldGroupId());
             String newGroupId = getGroupSerialNo(dto.getNewGroupId());
             GroupInfo groupBySerialNo = groupInfoService.getGroupBySerialNo(oldGroupId, newGroupId);
             if (groupBySerialNo != null) {
-                groupMonitorInfoService.updateOriginalGroupId(groupBySerialNo.getGroupId(), dto.getNewGroupId() + "");
-                groupInfoService.updateGroupSerialNo(groupBySerialNo.getGroupId(), newGroupId);
+                groupMonitorInfoService.updateOriginalGroupId(groupBySerialNo.getGroupId(), dto.getOldGroupId() +"", dto.getNewGroupId() + "");
+                groupInfoService.updateGroupSerialNo(groupBySerialNo.getGroupId(),oldGroupId, newGroupId);
             }
         }
-
     }
 
     @BotEvent(value = BotEventEnum.BOT_JOIN_NEW_GROUP, parameterClass = BotJoinNewGroupDTO.class)
@@ -67,9 +67,9 @@ public class BotEventProcessor {
         String groupSerialNo = getGroupSerialNo(dto.getChatId());
         GroupInfo groupBySerialNo = groupInfoService.getGroupBySerialNo(groupSerialNo);
         if (groupBySerialNo != null) {
-            groupMonitorInfoService.updateOriginalGroupId(groupBySerialNo.getGroupId(), dto.getChatId() + "");
+            groupMonitorInfoService.updateOriginalGroupId(groupBySerialNo.getGroupId(), "",dto.getChatId() + "");
         } else {
-            groupMonitorInfoService.updateOriginalGroupId(dto.getBotId() + "",
+            groupMonitorInfoService.updateOriginalGroupIdByBot(dto.getBotId() + "",
                     MD5Utils.getMD5(dto.getRobotUserId() + "", "UTF-8").toUpperCase(),
                     dto.getChatId() + "");
         }
@@ -84,7 +84,6 @@ public class BotEventProcessor {
             String groupSerialNo = getGroupSerialNo(dto.getChatId());
             GroupInfo groupBySerialNo = groupInfoService.getGroupBySerialNo(groupSerialNo);
             if (groupBySerialNo != null) {
-                groupMonitorInfoService.updateOriginalGroupId(groupBySerialNo.getGroupId(), dto.getChatId() + "");
                 groupMonitorInfoService.updateInfo(groupBySerialNo.getGroupId(), dto);
             }
         }
@@ -97,15 +96,6 @@ public class BotEventProcessor {
         //根据原始id 更新失败
         if (CollUtil.isNotEmpty(groupIds)) {
             groupStateService.banned(groupIds);
-        } else {
-            //根据原始id md5获取加密后的编号
-            String groupSerialNo = getGroupSerialNo(dto.getChatId());
-            GroupInfo groupBySerialNo = groupInfoService.getGroupBySerialNo(groupSerialNo);
-            if (groupBySerialNo != null) {
-                groupMonitorInfoService.updateOriginalGroupId(groupBySerialNo.getGroupId(), dto.getChatId() + "");
-                groupMonitorInfoService.updateBannedById(groupBySerialNo.getGroupId());
-                groupStateService.banned(Collections.singletonList(groupBySerialNo.getGroupId()));
-            }
         }
 
     }

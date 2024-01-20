@@ -35,6 +35,13 @@ public class GroupInfo {
     private String groupSerialNo;
 
     /**
+     * 群编号
+     */
+    @ApiModelProperty(value = "老的群编号")
+    @TableField("old_original_group_id")
+    private String oldGroupSerialNo;
+
+    /**
      * 群名称
      */
     @ApiModelProperty(value = "群名称")

@@ -1093,7 +1093,7 @@ public class GroupService {
     public GroupInfo handleRobotIn(Called1100910039DTO dto, String robotId) {
         GroupInfo groupInfo = groupInfoService.getGroupBySerialNo(dto.getChatroomSerialNo());
         if (groupInfo == null) {
-            groupInfo = groupInfoService.saveExternalGroup(dto.getChatroomSerialNo(), dto.getChatroomSerialNo());
+            groupInfo = groupInfoService.saveExternalGroup(dto.getChatroomSerialNo(), dto.getChatroomName());
         }
         groupRobotService.add(robotId, groupInfo.getGroupId());
         return groupInfo;
