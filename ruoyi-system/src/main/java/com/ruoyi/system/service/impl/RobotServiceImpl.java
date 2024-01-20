@@ -571,9 +571,9 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         wrapper.eq(Robot::getRobotSerialNo,dto.getBot_serial_no());
         if(robot.getBidirectionalTime() == null){
             wrapper.set(Robot::getBidirectionalTime,dto.getRelease_time());
+            wrapper.set(Robot::getBidirectionalType,1);
         }else{
             wrapper.set(Robot::getBidirectionalUnfreezeTime,dto.getRelease_time());
-            wrapper.set(Robot::getBidirectionalType,1);
         }
         this.update(wrapper);
 
