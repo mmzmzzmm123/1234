@@ -17,5 +17,5 @@ public interface RobotStatisticsMapper extends BaseMapper<RobotStatistics> {
 
     Integer decreaseRobotGroup(@Param("robotSerialNos") List<String> robotSerialNos);
 
-    Integer clearRobotOneDayNum();
+    Integer clearRobotOneDayNum(@Param("robotSerialNos") List<String> robotSerialNos);
 }

@@ -148,14 +148,14 @@ public class PlayPrepareTaskExecuteChain implements OnPackMonitor, OnRadioPackMo
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), null,
 					data.getOpt(), "头像", false);
 		}
-		if (data.getOp().intValue() == 3) {
-			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), null,
-					data.getOpt(), "管理员（获取hash值）", false);
-		}
-		if (data.getOp().intValue() == 4) {
-			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), null,
-					data.getOpt(), "管理员", false);
-		}
+//		if (data.getOp().intValue() == 3) {
+//			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), null,
+//					data.getOpt(), "管理员（获取hash值）", false);
+//		}
+//		if (data.getOp().intValue() == 4) {
+//			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), null,
+//					data.getOpt(), "管理员", false);
+//		}
 	}
 
 	@Override
@@ -170,14 +170,14 @@ public class PlayPrepareTaskExecuteChain implements OnPackMonitor, OnRadioPackMo
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
 					data.getOpt(), "头像", false);
 		}
-		if (data.getOp().intValue() == 3) {
-			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
-					data.getOpt(), "管理员（获取hash值）", false);
-		}
-		if (data.getOp().intValue() == 4) {
-			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
-					data.getOpt(), "管理员", false);
-		}
+//		if (data.getOp().intValue() == 3) {
+//			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
+//					data.getOpt(), "管理员（获取hash值）", false);
+//		}
+//		if (data.getOp().intValue() == 4) {
+//			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
+//					data.getOpt(), "管理员", false);
+//		}
 	}
 
 }

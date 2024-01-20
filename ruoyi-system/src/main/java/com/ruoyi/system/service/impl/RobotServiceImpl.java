@@ -571,9 +571,9 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         wrapper.eq(Robot::getRobotSerialNo,dto.getBot_serial_no());
         if(robot.getBidirectionalTime() == null){
             wrapper.set(Robot::getBidirectionalTime,dto.getRelease_time());
+            wrapper.set(Robot::getBidirectionalType,1);
         }else{
             wrapper.set(Robot::getBidirectionalUnfreezeTime,dto.getRelease_time());
-            wrapper.set(Robot::getBidirectionalType,1);
         }
         this.update(wrapper);
 
@@ -613,6 +613,21 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
                 updateById(robot);
             }
         }
+    }
+
+    @Override
+    public void cacheLogin(String robotSerialNo) {
+        if(StringUtils.isEmpty(robotSerialNo)){
+            return;
+        }
+        Robot robot = baseMapper.selectOne(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, robotSerialNo).last(" limit 1"));
+        if(robot == null){
+            return;
+        }
+        if(robot.getHeartbeatStatus() != 20){
+            this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo,robotSerialNo).set(Robot::getHeartbeatStatus,20));
+        }
+
     }
 
 }

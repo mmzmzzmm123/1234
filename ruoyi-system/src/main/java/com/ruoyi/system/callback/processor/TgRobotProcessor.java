@@ -398,6 +398,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910101, parameterClass = Called1100910101DTO.class)
     public void called1100910101(Called1100910101DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("NQ1100910101 called:{}",root);
         ServiceLoader.load(BothwayGroupCtrlStopper.class, "BothwayGroupCtrlStopper").doSetting(root.getRobotId());
         robotService.updateBidirectional(dto);
     }
@@ -408,6 +409,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910003, parameterClass = Called1100910003DTO.class)
     public void called1100910003(Called1100910003DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("NQ1100910003 called:{}",root);
         if(root.isSuccess()){
             robotService.offline(source.getUser_serial_no());
         }
@@ -419,10 +421,22 @@ public class TgRobotProcessor {
     @Type(value = 1100910045, parameterClass = Called1100910045DTO.class)
     public void robotBanned(Called1100910045DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("NQ1100910045 called:{}",root);
         if(root.isSuccess()){
             robotService.sealRobot(source);
         }
 
+    }
+
+    /***
+     * 机器人登录成功回调
+     */
+    @Type(value = 1100910001, parameterClass = Called1100910001DTO.class)
+    public void cacheLogin(Called1100910001DTO source) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if(root.isSuccess()){
+            robotService.cacheLogin(source.getRobot_serial_no());
+        }
     }
 
 
