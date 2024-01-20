@@ -154,8 +154,9 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         if(StrUtil.isBlank(serialNo)){
             return null;
         }
-
-        return baseMapper.selectOne(new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo, serialNo).last(" limit 1"));
+        return baseMapper.selectOne(new LambdaQueryWrapper<GroupInfo>()
+                .eq(GroupInfo::getGroupSerialNo, serialNo).or().eq(GroupInfo::getOldGroupSerialNo, serialNo)
+                .last(" limit 1"));
     }
 
     @Override
@@ -176,16 +177,18 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
             GroupInfo groupInfo = new GroupInfo();
             groupInfo.setGroupId(groupBySerialNo.getGroupId());
             groupInfo.setGroupSerialNo(newGroupSerialNo);
+            groupInfo.setOldGroupSerialNo(oldGroupSerialNo);
             baseMapper.updateById(groupInfo);
         }
         return groupBySerialNo;
     }
 
     @Override
-    public void updateGroupSerialNo(String groupId, String newGroupSerialNo) {
+    public void updateGroupSerialNo(String groupId,String oldGroupSerialNo, String newGroupSerialNo) {
         if(StrUtil.isNotBlank(newGroupSerialNo)) {
             GroupInfo groupInfo = new GroupInfo();
             groupInfo.setGroupId(groupId);
+            groupInfo.setOldGroupSerialNo(oldGroupSerialNo);
             groupInfo.setGroupSerialNo(newGroupSerialNo);
             baseMapper.updateById(groupInfo);
         }
