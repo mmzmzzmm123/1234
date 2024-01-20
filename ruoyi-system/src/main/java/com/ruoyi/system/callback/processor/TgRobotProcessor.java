@@ -30,7 +30,6 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -59,6 +58,7 @@ public class TgRobotProcessor {
     @Type(value = 50005004, parameterClass = Called50005004DTO.class)
     public void called50005004(Called50005004DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("NQ50005004 called:{}",root);
         if(root.isSuccess()){
             if(!CollectionUtils.isEmpty(source.getRobotSerialNos())){
                 robotService.recycleRobot(source.getRobotSerialNos());
@@ -88,7 +88,8 @@ public class TgRobotProcessor {
      */
     @Type(value = 50005006, parameterClass = Called50005006DTO.class)
     public void called50005006(List<Called50005006DTO> sourceList) {
-
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("NQ50005005 called:{}",root);
     }
 
 
