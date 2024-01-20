@@ -551,6 +551,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             return;
         }
         //划拨商家,去同步号
+        log.info("商家划拨,同步号");
         this.syncRobot();
     }
 
