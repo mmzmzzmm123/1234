@@ -12,6 +12,7 @@ import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface IRobotService extends IService<Robot> {
@@ -78,7 +79,7 @@ public interface IRobotService extends IService<Robot> {
      * @param robotIds
      * @return
      */
-    RobotStatisticsVO getRobotStatisticsVO(List<String> robotIds);
+    RobotStatisticsVO getRobotStatisticsVO(Collection<String> robotIds);
 
     void updateUsername(String robotSerialNo,String userName);
 

@@ -487,7 +487,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public RobotStatisticsVO getRobotStatisticsVO(List<String> robotIds) {
+    public RobotStatisticsVO getRobotStatisticsVO(Collection<String> robotIds) {
         if (org.apache.commons.collections4.CollectionUtils.isEmpty(robotIds)){
             return new RobotStatisticsVO();
         }

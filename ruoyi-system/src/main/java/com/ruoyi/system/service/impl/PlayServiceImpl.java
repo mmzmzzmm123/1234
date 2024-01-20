@@ -526,8 +526,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         // 统计号维度数据
         List<PlayMessagePushDetail> pushDetails = playMessagePushDetailService.listByPlayIdStatistics(playId);
-        List<String> navyRobotIds = new ArrayList<>();// 水军号
-        List<String> spareRobotIds = new ArrayList<>();// 备用号
+        Set<String> navyRobotIds = new HashSet<>();// 水军号
+        Set<String> spareRobotIds = new HashSet<>();// 备用号
         for (PlayMessagePushDetail pushDetail : pushDetails) {
             String robotId = pushDetail.getRobotId();
             if (StringUtils.isNotEmpty(robotId)){
