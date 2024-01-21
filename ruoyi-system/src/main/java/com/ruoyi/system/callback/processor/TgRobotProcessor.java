@@ -171,6 +171,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910016, parameterClass = CalledEmptyDTO.class)
     public void called1100910016(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("1100910016-{}",JSON.toJSONString(root));
         if(root.isSuccess()) {
             if(StringUtils.isNotEmpty(root.getExtend())){
                 try {
@@ -192,6 +193,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910033, parameterClass = CalledEmptyDTO.class)
     public void called1100910033(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("1100910033-{}",JSON.toJSONString(root));
         if(root.isSuccess()) {
             if(StringUtils.isNotEmpty(root.getExtend())){
                 try {
