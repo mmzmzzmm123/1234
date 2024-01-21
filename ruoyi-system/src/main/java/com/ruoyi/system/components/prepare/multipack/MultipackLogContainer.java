@@ -216,6 +216,7 @@ public class MultipackLogContainer implements InitializingBean {
 						JSON.toJSONString(new CallValue(opt).setSuccess(true).setAttchContent(attchContent)),
 						60 * 60 * 24 * 5, TimeUnit.SECONDS);
 
+				log.info("CallValueStoreSuc {} {} {}", opt, attchContent, error);
 				return;
 			}
 			RedisTemplateTools.get().opsForValue().set("ruoyi:CallValueStore:" + opt,
@@ -223,7 +224,7 @@ public class MultipackLogContainer implements InitializingBean {
 							new CallValue(opt).setSuccess(false).setAttchContent(attchContent).setError(error)),
 					60 * 60 * 24 * 5, TimeUnit.SECONDS);
 
-			log.info("CallValueStore {} {} {}", opt, attchContent, error);
+			log.info("CallValueStoreFail {} {} {}", opt, attchContent, error);
 
 		}
 

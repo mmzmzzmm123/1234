@@ -85,20 +85,22 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
         groupInfo.setBotId(bo.getBotUserId());
         groupInfo.setBotUsername(bo.getBotUsername());
         groupInfo.setOriginalGroupId("");
+        groupInfo.setOldOriginalGroupId("");
         baseMapper.updateById(groupInfo);
     }
 
     @Override
-    public void updateOriginalGroupId(String groupId, String originalGroupId) {
+    public void updateOriginalGroupId(String groupId,String oldOriginalGroupId, String originalGroupId) {
         GroupMonitorInfo groupInfo = new GroupMonitorInfo();
         groupInfo.setOriginalGroupId(originalGroupId);
+        groupInfo.setOldOriginalGroupId(oldOriginalGroupId);
         groupInfo.setGroupId(groupId);
         baseMapper.updateById(groupInfo);
     }
 
 
     @Override
-    public void updateOriginalGroupId(String botId, String robotId, String originalGroupId) {
+    public void updateOriginalGroupIdByBot(String botId, String robotId, String originalGroupId) {
         GroupMonitorInfo groupInfo = new GroupMonitorInfo();
         groupInfo.setOriginalGroupId(originalGroupId);
         baseMapper.update(groupInfo, new LambdaQueryWrapper<GroupMonitorInfo>().eq(GroupMonitorInfo::getBotId, botId)
@@ -115,6 +117,7 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
 
         GroupMonitorInfo groupInfo = new GroupMonitorInfo();
         groupInfo.setOriginalGroupId(newGroupId);
+        groupInfo.setOldOriginalGroupId(groupMonitorInfo.getOriginalGroupId());
         groupInfo.setGroupId(groupMonitorInfo.getGroupId());
         baseMapper.updateById(groupInfo);
         return groupInfo;

@@ -30,7 +30,6 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -54,41 +53,39 @@ public class TgRobotProcessor {
 
     /***
      *
-     * TG(被动)号回收
+     * TG(资源被动)号回收
      */
     @Type(value = 50005004, parameterClass = Called50005004DTO.class)
     public void called50005004(Called50005004DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        if(root.isSuccess()){
-            if(!CollectionUtils.isEmpty(source.getRobotSerialNos())){
-                robotService.recycleRobot(source.getRobotSerialNos());
-            }
+//        log.info("NQ50005004 called:{}",root);
+        if(!CollectionUtils.isEmpty(source.getRobotSerialNos())){
+            robotService.recycleRobot(source.getRobotSerialNos());
         }
-
     }
 
     /***
      *
-     * TG(被动)号变更商家
+     * TG(资源被动)号变更商家
      */
     @Type(value = 50005005, parameterClass = Called50005005DTO.class)
     public void called50005005(List<Called50005005DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        if(root.isSuccess()){
-            if(!CollectionUtils.isEmpty(sourceList)){
-                List<String> robotSerialNos = sourceList.stream().map(Called50005005DTO::getRobotSerialNo).collect(Collectors.toList());
-                robotService.updateRobotMerchant(robotSerialNos);
-            }
+//        log.info("NQ50005005 called:{}",root);
+        if(!CollectionUtils.isEmpty(sourceList)){
+            robotService.updateRobotMerchant(sourceList);
         }
     }
 
     /***
      *
-     * TG(被动)号资料信息变更
+     * TG(资源被动)号资料信息变更
      */
     @Type(value = 50005006, parameterClass = Called50005006DTO.class)
     public void called50005006(List<Called50005006DTO> sourceList) {
-
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+//        log.info("NQ50005006 called:{}",root);
+        robotService.updateRobotInfo(sourceList);
     }
 
 
@@ -174,6 +171,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910016, parameterClass = CalledEmptyDTO.class)
     public void called1100910016(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("1100910016-{}",JSON.toJSONString(root));
         if(root.isSuccess()) {
             if(StringUtils.isNotEmpty(root.getExtend())){
                 try {
@@ -195,6 +193,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910033, parameterClass = CalledEmptyDTO.class)
     public void called1100910033(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("1100910033-{}",JSON.toJSONString(root));
         if(root.isSuccess()) {
             if(StringUtils.isNotEmpty(root.getExtend())){
                 try {
@@ -329,7 +328,7 @@ public class TgRobotProcessor {
     }
 
     /**
-     * TG（被动） 群编号变动回调
+     * TG（功能被动） 群编号变动回调
      *
      * @param dto
      */
@@ -391,31 +390,53 @@ public class TgRobotProcessor {
     }
 
     /**
-     * TG(被动) 非双向解限时间回调推送
+     * TG(号被动) 非双向解限时间回调推送
      *
      * @param dto
      */
     @Type(value = 1100910101, parameterClass = Called1100910101DTO.class)
     public void called1100910101(Called1100910101DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("NQ1100910101 called:{}",root);
         ServiceLoader.load(BothwayGroupCtrlStopper.class, "BothwayGroupCtrlStopper").doSetting(root.getRobotId());
         robotService.updateBidirectional(dto);
     }
 
     /***
-     * 机器人离线回调
+     * TG(号被动) 机器人离线回调
      */
     @Type(value = 1100910003, parameterClass = Called1100910003DTO.class)
     public void called1100910003(Called1100910003DTO source) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+//        log.info("NQ1100910003 called:{}",root);
+        if(root.isSuccess()){
+            robotService.offline(source.getUser_serial_no());
+        }
+    }
+
+    /***
+     * TG(号被动) 机器人封号回调
+     */
+    @Type(value = 1100910045, parameterClass = Called1100910045DTO.class)
+    public void robotBanned(Called1100910045DTO source) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("NQ1100910045 called:{}",root);
+        if(root.isSuccess()){
+            robotService.sealRobot(source);
+        }
 
     }
 
     /***
-     * 机器人封号回调
+     * 机器人登录成功回调
      */
-    @Type(value = 1100910045, parameterClass = Called1100910045DTO.class)
-    public void robotBanned(Called1100910045DTO source) {
-
+    @Type(value = 1100910001, parameterClass = Called1100910001DTO.class)
+    public void cacheLogin(Called1100910001DTO source) {
+//        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+//        log.info("NQ1100910001 called:{}",root);
+//        if(root.isSuccess()){
+//            robotService.cacheLogin(source.getRobot_serial_no());
+//        }
     }
 
 

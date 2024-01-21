@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.robot.Robot;
+import com.ruoyi.system.callback.dto.Called1100910045DTO;
 import com.ruoyi.system.callback.dto.Called1100910101DTO;
+import com.ruoyi.system.callback.dto.Called50005005DTO;
+import com.ruoyi.system.callback.dto.Called50005006DTO;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
@@ -73,11 +76,11 @@ public interface IRobotService extends IService<Robot> {
     R<Void> setGroupOwner(List<String> robotSerialNos);
 
     /**
-     * 统计这些机器人的状态
-     * @param robotIds
+     * 统计机器人的状态
+     * @param playId
      * @return
      */
-    RobotStatisticsVO getRobotStatisticsVO(List<String> robotIds);
+    RobotStatisticsVO getRobotStatisticsVO(String playId);
 
     void updateUsername(String robotSerialNo,String userName);
 
@@ -94,8 +97,27 @@ public interface IRobotService extends IService<Robot> {
     /**
      * 号商家变更
      */
-    void updateRobotMerchant(List<String> robotSerialNos);
+    void updateRobotMerchant(List<Called50005005DTO> sourceList);
 
     void updateBidirectional(Called1100910101DTO dto);
+
+    /**
+     * 离线
+     * @param robotSerialNo
+     */
+    void offline(String robotSerialNo);
+
+    /**
+     * 封号
+     * @param source
+     */
+    void sealRobot(Called1100910045DTO source);
+
+    /**
+     * 登录
+     */
+    void cacheLogin(String robotSerialNo);
+
+    void updateRobotInfo(List<Called50005006DTO> sourceList);
 
 }

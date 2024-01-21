@@ -7,40 +7,53 @@
 
     <select id="getRobotStatisticsVO" resultType="com.ruoyi.system.domain.vo.play.RobotStatisticsVO">
         SELECT
-            count( t1.id ) AS groupNum,
-            sum( IF ( t2.group_status = 1, 1, 0 ) ) AS groupClosureNum,
-            0 as joinGroupFailNum
+            count( tpgi.group_id ) AS groupNum,
+            sum( IF ( tgs.group_status = 1, 1, 0 ) ) AS groupClosureNum
         FROM
-            t_play_message_push t1
-            LEFT JOIN t_group_state t2 ON t1.group_id = t2.group_id
+            t_play_group_info tpgi
+            LEFT JOIN t_group_state tgs ON tpgi.tg_group_id = tgs.group_id
         WHERE
-            t1.play_id = #{playId}
+            1 = 1
+          AND tpgi.play_id = #{playId}
+          AND tpgi.into_status = 2
     </select>
 
     <select id="robotDetails" resultType="com.ruoyi.system.domain.vo.play.QueryRobotDetailVO">
         SELECT
             tri.country_code AS countryCode,
             tri.country AS countryName,
-            count( tri.id ) AS robotTotalNUm,
+            count( 1 ) AS robotTotalNUm,
             SUM( IF ( tri.seal_status = 10, 1, 0 ) ) AS robotSuccessNUm,
             SUM( IF ( tri.bidirectional_type = 1, 1, 0 ) ) AS bidirectionalNum,
             SUM( IF ( tri.seal_status = 30, 1, 0 ) ) AS closureNum,
             SUM( IF ( tri.heartbeat_status = 10, 1, 0 ) ) AS offlineNum,
-            count( tpmpd.id ) AS sendTotalNUm,
-            SUM( IF ( tpmpd.send_state = 1, 1, 0 ) ) AS sendSuccessNUm,
-            SUM( IF ( tpmpd.send_state = 2, 1, 0 ) ) AS sendFailNUm
+            sum( t.sendTotalNUm ) AS sendTotalNUm,
+            sum( t.sendSuccessNUm ) AS sendSuccessNUm,
+            sum( t.sendFailNUm ) AS sendFailNUm
         FROM
-            t_play_message_push tpmp
-            LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
-            LEFT JOIN t_robot_info tri ON tri.robot_serial_no = tpmpd.robot_id
+            (
+                SELECT
+                    tpmpd.robot_id,
+                    count( tpmpd.id ) AS sendTotalNUm,
+                    SUM( IF ( tpmpd.send_state = 1, 1, 0 ) ) AS sendSuccessNUm,
+                    SUM( IF ( tpmpd.send_state = 2, 1, 0 ) ) AS sendFailNUm
+                FROM
+                    t_play_message_push tpmp
+                        LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
+                WHERE
+                    1 = 1
+                  AND tpmp.play_id = #{dto.playId}
+                  AND tpmpd.robot_id != ''
+                GROUP BY
+                    tpmpd.robot_id
+            ) t
+                LEFT JOIN t_robot_info tri ON t.robot_id = tri.robot_serial_no
         WHERE
             1 = 1
-          AND tpmp.play_id = #{dto.playId}
-          AND tri.robot_serial_no IS NOT NULL
-          <if test="dto.countryName != null and dto.countryName != ''">
-              AND tri.country = #{dto.countryName}
-          </if>
+        <if test="dto.countryName != null and dto.countryName != ''">
+            AND tri.country = #{dto.countryName}
+        </if>
         GROUP BY
-            tri.country_code
+            tri.country
     </select>
 </mapper>

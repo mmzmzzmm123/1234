@@ -1,7 +1,10 @@
 package com.ruoyi.system.components.prepare;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import com.alibaba.fastjson2.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -17,6 +20,7 @@ import com.ruoyi.system.mapper.PlayMessagePushMapper;
 import com.ruoyi.system.mapper.PlayRobotPackMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.spring.web.json.Json;
 
 @Component
 @Slf4j
@@ -47,11 +51,10 @@ public class TaskExecuteChainGroup {
 				.selectList(new QueryWrapper<PlayRobotPack>().lambda().eq(PlayRobotPack::getPlayId, playId));
 //		List<PlayGroupPack> playGroupPackList = playGroupPackMapper
 //				.selectList(new QueryWrapper<PlayGroupPack>().lambda().eq(PlayGroupPack::getPlayId, playId));
-
-		executeChain.reset();
 		// 每个群 ， 一个执行器链条
 		for (String chatroomId : ListTools.extract(messages, f -> f.getGroupId())) {
 			try {
+				executeChain.reset();
 				PlayMessagePush push = msgMap.get(chatroomId).get(0);
 				List<PlayMessagePushDetail> details = SpringUtils.getBean(PlayMessagePushDetailMapper.class)
 						.selectList(new QueryWrapper<PlayMessagePushDetail>().lambda()

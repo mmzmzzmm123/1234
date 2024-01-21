@@ -31,12 +31,13 @@ public class SendConditionJobProcessor implements LogJobProcessor {
 		final PlayMessagePushMapper messagePushMapper = SpringUtils.getBean(PlayMessagePushMapper.class);
 		// 查询所有的群
 		List<PlayMessagePush> groups = messagePushMapper.selectList(new QueryWrapper<PlayMessagePush>().lambda()
-				.eq(PlayMessagePush::getPlayId, play.getId()).eq(PlayMessagePush::getSendFlag, 0));
+				.eq(PlayMessagePush::getPlayId, play.getId()).eq(PlayMessagePush::getSendFlag, 0)
+				.eq(PlayMessagePush::getRobotPackFlag, 1).eq(PlayMessagePush::getRobotAllocationFlag, 1));
 		if (CollectionUtils.isEmpty(groups)) {
 			return;
 		}
 		
-		log.info("SendConditionJobProcessor {}" , play);
+		log.info("SendConditionJobProcessor {} {}" , play , groups.size());
 
 
 		if (play.getGroupCondition().intValue() == 0) {

@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.VibeRule;
 import com.ruoyi.common.core.domain.entity.robot.RobotStatistics;
 import com.ruoyi.common.core.redis.RedisLock;
+import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.dto.robot.AddCountDTO;
 import com.ruoyi.system.domain.dto.robot.GetRobotDTO;
@@ -36,8 +37,6 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
     private RobotStatisticsMapper robotStatisticsMapper;
     @Autowired
     private VibeRuleMapper vibeRuleMapper;
-    @Autowired
-    private SqlSessionTemplate sqlSessionTemplate;
     @Autowired
     private RedisLock redisLock;
 
@@ -72,15 +71,6 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
                 return R.fail("号资源不足");
             }
         }
-//        if(adminFlag){
-//            if(selectRobotByRuleVOS.size() < dto.getSetAdminCount()){
-//                return R.fail("号资源不足");
-//            }
-//        }else{
-//            if(selectRobotByRuleVOS.size() < dto.getCount()){
-//                return R.fail("号资源不足");
-//            }
-//        }
 
         List<SelectRobotByRuleVO> selectRobotByRuleVOSTotal = new ArrayList<>();
         selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS);
@@ -88,11 +78,13 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         //如果有需要设置管理员号的,需要再次获取其他号
         if(dto.getCount() > 0){
             List<String> ips = selectRobotByRuleVOS.stream().filter(f->StringUtils.isNotEmpty(f.getIp())).map(SelectRobotByRuleVO::getIp).collect(Collectors.toList());
-            if(CollectionUtils.isEmpty(ips)){
+            if(!CollectionUtils.isEmpty(ips)){
                 selectRobotByRuleDTO.setIps(ips);
             }
+            List<String> excludeRobotSerialNos = selectRobotByRuleVOS.stream().map(SelectRobotByRuleVO::getRobotSerialNo).collect(Collectors.toList());
             selectRobotByRuleDTO.setIsSetAdmin(0);
             selectRobotByRuleDTO.setLimit(dto.getCount());
+            selectRobotByRuleDTO.setExcludeRobotSerialNos(excludeRobotSerialNos);
             selectRobotByRuleVOS1 = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
             log.info("getRobot selectRobotByRuleVOS1:{}",selectRobotByRuleVOS1);
             if(CollectionUtils.isEmpty(selectRobotByRuleVOS1) || selectRobotByRuleVOS1.size() < dto.getCount()){
@@ -200,7 +192,13 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
 
     @Override
     public void clearRobotOneDayNum() {
-        baseMapper.clearRobotOneDayNum();
+        List<RobotStatistics> robotStatistics = baseMapper.selectList(null);
+        if(!CollectionUtils.isEmpty(robotStatistics)){
+            for (List<RobotStatistics> statistics : ListTools.partition(robotStatistics, 500)) {
+                List<String> robotSerialNos = statistics.stream().map(RobotStatistics::getRobotSerialNo).collect(Collectors.toList());
+                baseMapper.clearRobotOneDayNum(robotSerialNos);
+            }
+        }
     }
 
 

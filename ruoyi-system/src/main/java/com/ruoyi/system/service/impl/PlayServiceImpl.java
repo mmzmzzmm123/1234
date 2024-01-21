@@ -35,6 +35,7 @@ import com.ruoyi.system.service.*;
 import com.ruoyi.system.service.business.GroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -102,11 +103,11 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         } else {
             AjaxResult result = ProductTools.checkNormal(productId);
             if (result.isError()) {
-                return R.fail(result.msg().toString());
+                return R.fail(10000, result.msg().toString());
             }
             product = (Product) result.data();
             if (product.getCategoryId() != ProductCategoryType.PLAY.getId()) {
-                return R.fail(ErrInfoConfig.getDynmic(11001, "商品分类不符合"));
+                return R.fail(11001, ErrInfoConfig.getDynmic(11001, "商品分类不符合"));
             }
         }
         handleOrder(product, dto.getName(), dto.getLoginUser());
@@ -120,15 +121,16 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         }
         saveRobotPack(playId, dto.getPerformerList());
 
-        //插入剧本消息表
+        //保存剧本消息
         savePlayMessage(playId, dto.getPlayMessageList(), dto.getSendMechanism(), dto.getUrlPool());
-
-        //删除上传word文件
-        if (StringUtils.isNotEmpty(dto.getFileId())) {
-            playFileMapper.delete(new LambdaQueryWrapper<PlayFile>().eq(PlayFile::getFileId, dto.getFileId()));
-        }
-
+        delFileData(dto.getLoginUser().getUserId().toString());
         return R.ok(playId);
+    }
+
+    //删除上传word文件
+    @Async
+    public void delFileData(String fileId) {
+        playFileMapper.delete(new LambdaQueryWrapper<PlayFile>().eq(PlayFile::getFileId, fileId));
     }
 
     //创建订单记录
@@ -180,20 +182,19 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 playMessage.setCallRobotNickname(messageDTO.getCallRobotNickname());
             }
             playMessage.setMessageSort(messageDTO.getMessageSort());
-            // 设置uuid 混淆适配使用
-            for (ContentJson contentJson : messageDTO.getMessageContent()) {
-                contentJson.setUuid(IdWorker.getIdStr());
-            }
-            playMessage.setMessageContent(JSON.toJSONString(messageDTO.getMessageContent()));
-            playMessage.setPlayErrorType(sendMechanism.getSendErrorType());
 
-            //接粉号处理
-            for (ContentJson content : messageDTO.getMessageContent()) {
-                if (content.getMomentTypeId() == 2017) {
-                    content.setSMateContent(urlPool.get(new Random().nextInt(urlPool.size())));
+            for (ContentJson contentJson : messageDTO.getMessageContent()) {
+                // 设置uuid 混淆适配使用
+                contentJson.setUuid(IdWorker.getIdStr());
+
+                //接粉号处理
+                if (contentJson.getMomentTypeId() == 2017) {
+                    contentJson.setSMateContent(urlPool.get(new Random().nextInt(urlPool.size())));
                 }
             }
 
+            playMessage.setMessageContent(JSON.toJSONString(messageDTO.getMessageContent()));
+            playMessage.setPlayErrorType(sendMechanism.getSendErrorType());
             saveData.add(playMessage);
         }
 
@@ -265,13 +266,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     @Transactional(rollbackFor=Exception.class)
     public R<String> updatePlay(PlayDTO dto) {
-        if (StringUtils.isEmpty(dto.getId())) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
-        }
-
         Play play = super.getById(dto.getId());
         if (null == play) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
 
         play.setName(dto.getName());
@@ -289,10 +286,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         playMessageMapper.delete(new LambdaQueryWrapper<PlayMessage>().eq(PlayMessage::getPlayId, dto.getId()));
         savePlayMessage(dto.getId(), dto.getPlayMessageList(), dto.getSendMechanism(), dto.getUrlPool());
 
-        //删除上传word文件
-        if (StringUtils.isNotEmpty(dto.getFileId())) {
-            playFileMapper.delete(new LambdaQueryWrapper<PlayFile>().eq(PlayFile::getFileId, dto.getFileId()));
-        }
+        delFileData(dto.getLoginUser().getUserId().toString());
 
         return R.ok();
     }
@@ -300,12 +294,12 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     public R<PlayVO> info(String playId) {
         if (StringUtils.isEmpty(playId)) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
 
         Play play = super.getById(playId);
         if (null == play) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
 
         PlayVO ret = new PlayVO();
@@ -379,7 +373,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 .in(Play::getState, Arrays.asList(PlayStatusConstants.DISPATCH, PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.SUSPEND))
                 .set(Play::getAdMonitor, JSON.toJSONString(dto)));
         if (!status) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "修改失败"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "修改失败"));
         }
 
         //调用接口同步广告配置
@@ -496,6 +490,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     public Page<QueryPushDetailVO> pushDetailPage(QueryPushDetailDTO dto) {
         Page<QueryPushDetailVO> page = new Page<>(dto.getPage(), dto.getLimit());
+        page.setOptimizeCountSql(false);
+        page.setOptimizeJoinOfCountSql(false);
         baseMapper.selectPushDetailPage(page, dto);
         return page;
     }
@@ -514,43 +510,29 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         if (StringUtils.isEmpty(playId)){
             return vo;
         }
-        RobotStatisticsVO groupStatisticsVO = playMessagePushService.getRobotStatisticsVO(playId);
         // 统计群维度数据
+        RobotStatisticsVO groupStatisticsVO = playMessagePushService.getRobotStatisticsVO(playId);
         if (groupStatisticsVO != null) {
             vo.setGroupNum(groupStatisticsVO.getGroupNum());
             vo.setGroupClosureNum(groupStatisticsVO.getGroupClosureNum());
-            vo.setJoinGroupFailNum(groupStatisticsVO.getJoinGroupFailNum());
-        } else {
-            vo.setGroupNum(0);
-            vo.setGroupClosureNum(0);
-            vo.setJoinGroupFailNum(0);
         }
-
-        // 统计号维度数据
-        List<PlayMessagePushDetail> pushDetails = playMessagePushDetailService.listByPlayIdStatistics(playId);
-        List<String> navyRobotIds = new ArrayList<>();// 水军号
-        List<String> spareRobotIds = new ArrayList<>();// 备用号
-        for (PlayMessagePushDetail pushDetail : pushDetails) {
-            String robotId = pushDetail.getRobotId();
-            if (StringUtils.isNotEmpty(robotId)){
-                navyRobotIds.add(robotId);
-            }
-            String spareRobot = pushDetail.getSpareRobot();
-            if (StringUtils.isNotEmpty(spareRobot)){
-                String[] split = spareRobot.split(",");
-                spareRobotIds.addAll(Arrays.asList(split));
-            }
-        }
-        vo.setNavyRobotNum(navyRobotIds.size());
-        vo.setSpareRobotNum(spareRobotIds.size());
-
-        // 统计号的双向、封号数
-        navyRobotIds.addAll(spareRobotIds);
-        RobotStatisticsVO robotStatisticsVO = robotService.getRobotStatisticsVO(navyRobotIds);
-        if (robotStatisticsVO != null) {
+        RobotStatisticsVO robotStatisticsVO = robotService.getRobotStatisticsVO(playId);
+        if (robotStatisticsVO!= null){
+            vo.setRobotTotalNum(robotStatisticsVO.getRobotTotalNum());
             vo.setRobotClosureNum(robotStatisticsVO.getRobotClosureNum());
             vo.setBidirectionalRobotNum(robotStatisticsVO.getBidirectionalRobotNum());
         }
+        // 统计发言人数量  就是水军数量
+        LambdaQueryWrapper<PlayRobotPack> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(PlayRobotPack::getPlayId, playId);
+        // 水军号
+        long count = SpringUtils.getBean(PlayRobotPackService.class).count(lambdaQueryWrapper);
+        int navyRobotNum = (int) count;
+        vo.setNavyRobotNum(navyRobotNum);
+        int robotTotalNum = vo.getRobotTotalNum() == null ? 0 : vo.getRobotTotalNum();
+        // 备用号
+        int spareRobotNum = robotTotalNum - navyRobotNum;
+        vo.setSpareRobotNum(spareRobotNum <= 0 ? 0 : spareRobotNum);
         return vo;
     }
 
@@ -558,21 +540,21 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Transactional(rollbackFor = Exception.class)
     public R<String> repeatPlay(String playId, LoginUser loginUser) {
         if (StringUtils.isEmpty(playId)) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
 
         Play play = super.getById(playId);
         if (null == play) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "炒群任务不存在"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "炒群任务不存在"));
         }
 
         if (null == play.getLockRobotStatus() || play.getLockRobotStatus() != 1) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "该剧本未配置锁定水军"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "该剧本未配置锁定水军"));
         }
 
         R<PlayVO> infoRet  = this.info(playId);
         if (infoRet.getCode() != SUCCESS) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "获取群信息失败"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "获取群信息失败"));
         }
 
         PlayDTO dto = new PlayDTO();
@@ -582,7 +564,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         dto.setScanProgress(ScanProgressEnum.Send_Wait.getVal());
         R<String> ret = this.create(dto);
         if (ret.getCode() != SUCCESS) {
-            return R.fail(ErrInfoConfig.getDynmic(10000, "创建剧本失败"));
+            return ret;
         }
         String newPlayId = ret.getData();
 
@@ -740,12 +722,12 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Override
     public R<String> releaseRobot(String playId) {
         if (StringUtils.isEmpty(playId)) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "参数错误"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
 
         Play play = super.getById(playId);
         if (null == play) {
-            return R.fail(ErrInfoConfig.getDynmic(11000, "数据不存在"));
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
         //已完成和已取消才可进行
         if (play.getState() != PlayStatusConstants.CANCEL && play.getState() != PlayStatusConstants.FINISHED) {
@@ -755,10 +737,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         //获取剧本关联群
         List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(playId);
         if (playGroupInfos != null) {
-            log.info("releaseRobot_groupIds: {}", playGroupInfos.stream().map(PlayGroupInfo::getGroupId).collect(Collectors.joining(",")));
             RobotServiceImpl robotService = SpringUtils.getBean(RobotServiceImpl.class);
             //获取待退群水军
             for (PlayGroupInfo playGroupInfo : playGroupInfos) {
+                log.info("releaseRobot_groupId: {}", playGroupInfo.getGroupId());
                 List<PlayRobotGroupRelation> playRobotGroupRelationList = playRobotGroupRelationMapper.selectWaitOutGroupByGroupId(playGroupInfo.getGroupId());
                 if (null != playRobotGroupRelationList) {
                     log.info("releaseRobot_robotIds: {}", playRobotGroupRelationList.stream().map(PlayRobotGroupRelation::getRobotId).collect(Collectors.joining(",")));

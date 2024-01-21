@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.GroupCluster;
@@ -384,9 +385,4 @@ public class GroupController {
         }
     }
 
-    @Anonymous
-    @PostMapping("/test")
-    public void test() {
-        groupService.checkLimit(GroupAction.QUERY_HASH,"",IdWorker.getIdStr());
-    }
 }

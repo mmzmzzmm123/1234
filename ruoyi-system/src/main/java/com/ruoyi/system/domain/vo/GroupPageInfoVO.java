@@ -29,6 +29,9 @@ public class GroupPageInfoVO {
     @ApiModelProperty(value = "群编号")
     private String groupSerialNo;
 
+    @ApiModelProperty(value = "老编号")
+    private String oldGroupSerialNo;
+
     @Excel(name = "群邀请链接")
     @ApiModelProperty(value = "群邀请链接")
     private String groupInviteLink;
@@ -105,6 +108,11 @@ public class GroupPageInfoVO {
     @Excel(name = "封号状态", readConverterExp = "10=未封号,20=疑似封号 30=封号离线")
     @ApiModelProperty(value = "封号状态 10:未封号 20:疑似封号 30:封号离线")
     private Integer sealStatus;
+
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "注册时间", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "注册时间")
+    private LocalDateTime registrationTime;
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "入库时间", dateFormat = "yyyy-MM-dd HH:mm:ss")

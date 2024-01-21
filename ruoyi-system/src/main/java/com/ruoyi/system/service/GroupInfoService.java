@@ -32,7 +32,7 @@ public interface GroupInfoService extends IService<GroupInfo> {
     List<GroupInfo> saveImportGroup(List<GroupResourceVO> resourceList);
 
 
-    List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode, List<String> excludeGroupId);
+    List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode, List<String> excludeGroupId,Integer botAdmin,String groupRange);
 
     void syncGroupInfo(List<GroupInfo> groupInfoList, List<ExtTgSelectGroupVO> utInfos);
 
@@ -44,7 +44,7 @@ public interface GroupInfoService extends IService<GroupInfo> {
 
     GroupInfo changeGroupSerialNo(String oldGroupSerialNo,String newGroupSerialNo);
 
-    void updateGroupSerialNo(String groupId,String newGroupSerialNo);
+    void updateGroupSerialNo(String groupId,String oldGroupSerialNo,  String newGroupSerialNo);
 
     void updateGroupInfo(Called1100910018DTO.Called1100910018ChatroomInfoDTO update);
 }

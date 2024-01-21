@@ -24,11 +24,6 @@ public class Called1100910003DTO {
     /**
      * 机器人编号
      */
-    private String robot_serial_no;
+    private String user_serial_no;
 
-
-    /***
-     * 操作码
-     */
-    private String optSerNo;
 }

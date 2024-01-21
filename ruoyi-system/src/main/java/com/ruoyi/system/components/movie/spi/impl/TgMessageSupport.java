@@ -52,32 +52,61 @@ public class TgMessageSupport implements MessageSupport {
 		link = link + extractNoLikeText2018(messageContentList);
 		List<ThirdTgMessageDTO> dataList = ListTools.newArrayList();
 		boolean linkAppend = false;
-
-		for (ContentJson msg : messageContentList) {
-			if (msg.getMomentTypeId().intValue() == 2005 || msg.getMomentTypeId().intValue() == 2017
-					|| msg.getMomentTypeId().intValue() == 2018) {
-				continue;
-			}
+		boolean hadImg = false;
+		final ContentJson contentJson = messageContentList.stream().filter(it -> {return it.getMomentTypeId().intValue() == 2002;}).findFirst().orElse(null);
+		if(contentJson != null){
+			hadImg = true;
+		}
+		if(hadImg){
 			ThirdTgMessageDTO dto = new ThirdTgMessageDTO();
-			dto.setMsgType(msg.getMomentTypeId());
+			dto.setMsgType(2002);
 			dto.setMsgNum(msgNum++);
 			// 消息类型（2001 文本消息, 2002 图片 2003 语音（目前仅支持.ogg和 .mp3文件后缀） 2004 视频 2005 2007
 			// emoji表情 链接 2010 文件 2015 贴图消息 2034 超文本链接 2035 postbot消息）
 
 			// 消息类型: 2001 文字 2002 图片 2003 语音(只支持amr格式) 2004 视频 2005 链接 2006 好友名片 2010 文件
 			// 2013 小程序 2016 音乐 201姓名 2017接粉号 2018自定义
-			if (msg.getMomentTypeId().intValue() == 2002) {
-				dto.setMsgContent(msg.getSMateImgUrl());
-			} else {
-				if (dto.getMsgType().intValue() == 2001 && !linkAppend && !StringUtils.isEmpty(link)) {
-					dto.setMsgContent(msg.getSMateContent() + link);
-					linkAppend = true;
-				} else {
-					dto.setMsgContent(msg.getSMateContent());
-				}
-			}
+			dto.setMsgContent(contentJson.getSMateImgUrl());
+			dto.setMsgTitle(extractLink2001(messageContentList) + " " + link);
 			dataList.add(dto);
 		}
+		else{
+			ThirdTgMessageDTO dto = new ThirdTgMessageDTO();
+			dto.setMsgType(2001);
+			dto.setMsgNum(msgNum++);
+			// 消息类型（2001 文本消息, 2002 图片 2003 语音（目前仅支持.ogg和 .mp3文件后缀） 2004 视频 2005 2007
+			// emoji表情 链接 2010 文件 2015 贴图消息 2034 超文本链接 2035 postbot消息）
+
+			// 消息类型: 2001 文字 2002 图片 2003 语音(只支持amr格式) 2004 视频 2005 链接 2006 好友名片 2010 文件
+			// 2013 小程序 2016 音乐 201姓名 2017接粉号 2018自定义
+			dto.setMsgContent(extractLink2001(messageContentList) + " " + link);
+			dataList.add(dto);
+		}
+//		for (ContentJson msg : messageContentList) {
+//			if (msg.getMomentTypeId().intValue() == 2005 || msg.getMomentTypeId().intValue() == 2017
+//					|| msg.getMomentTypeId().intValue() == 2018) {
+//				continue;
+//			}
+//			ThirdTgMessageDTO dto = new ThirdTgMessageDTO();
+//			dto.setMsgType(msg.getMomentTypeId());
+//			dto.setMsgNum(msgNum++);
+//			// 消息类型（2001 文本消息, 2002 图片 2003 语音（目前仅支持.ogg和 .mp3文件后缀） 2004 视频 2005 2007
+//			// emoji表情 链接 2010 文件 2015 贴图消息 2034 超文本链接 2035 postbot消息）
+//
+//			// 消息类型: 2001 文字 2002 图片 2003 语音(只支持amr格式) 2004 视频 2005 链接 2006 好友名片 2010 文件
+//			// 2013 小程序 2016 音乐 201姓名 2017接粉号 2018自定义
+//			if (msg.getMomentTypeId().intValue() == 2002) {
+//				dto.setMsgContent(msg.getSMateImgUrl());
+//			} else {
+//				if (dto.getMsgType().intValue() == 2001 && !linkAppend && !StringUtils.isEmpty(link)) {
+//					dto.setMsgContent(msg.getSMateContent() + link);
+//					linkAppend = true;
+//				} else {
+//					dto.setMsgContent(msg.getSMateContent());
+//				}
+//			}
+//			dataList.add(dto);
+//		}
 		return dataList;
 	}
 
@@ -122,6 +151,19 @@ public class TgMessageSupport implements MessageSupport {
 			return R.ok(ret.getData().getOptSerNo());
 		}
 		return R.fail(ret.getMessage());
+	}
+
+	private String extractLink2001(List<ContentJson> messageContentList) {
+		StringBuilder sb = new StringBuilder("");
+		for (ContentJson item : messageContentList) {
+			if (item.getMomentTypeId().intValue() == 2001) {
+				sb.append(" ").append(item.getSMateContent());
+			}
+		}
+		if (StringUtils.isEmpty(sb.toString().trim())) {
+			return "";
+		}
+		return sb.toString();
 	}
 
 	private String extractLink2005(List<ContentJson> messageContentList) {

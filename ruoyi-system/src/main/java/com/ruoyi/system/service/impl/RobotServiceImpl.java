@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
@@ -14,7 +15,10 @@ import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.callback.dto.Called1100910045DTO;
 import com.ruoyi.system.callback.dto.Called1100910101DTO;
+import com.ruoyi.system.callback.dto.Called50005005DTO;
+import com.ruoyi.system.callback.dto.Called50005006DTO;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
@@ -67,7 +71,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         AsyncTask.execute(()->{
             ThirdTgSelectRobotListByRadioDTO robotDTO = new ThirdTgSelectRobotListByRadioDTO();
             robotDTO.setLimit(1000);
-            robotDTO.setPage(1);//1747887445714726912
+            robotDTO.setPage(1);
             String merchantId = configService.selectConfigByKey("robot:merchant");
             robotDTO.setMerchantId(merchantId);
             OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
@@ -140,9 +144,10 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         if (!CollectionUtils.isEmpty(robotSerialNos)) {
             try {
                 ThirdTelegramPersonalCallbackRegInputDTO dto = new ThirdTelegramPersonalCallbackRegInputDTO();
-                dto.setSubTypeList(Collections.singletonList(1100910101));
+                dto.setSubTypeList(Arrays.asList(1100910101,1100910003,1100910045,1100910001));
                 dto.setTelegramIdList(robotSerialNos);
-                OpenApiClient.personalOnByThirdTg(dto);
+                OpenApiResult<Void> openApiResult = OpenApiClient.personalOnByThirdTg(dto);
+                log.info("号订阅 {}",openApiResult);
             } catch (Exception e) {
                 log.error("号订阅失败", e);
             }
@@ -234,6 +239,10 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             }
             if(modify(oldRobot.getVpnIpC(),newRobot.getVpnIpC())){
                 oldRobot.setVpnIpC(newRobot.getVpnIpC());
+                flag = true;
+            }
+            if(modify(oldRobot.getRecycleStatus(),newRobot.getRecycleStatus())){
+                oldRobot.setRecycleStatus(newRobot.getRecycleStatus());
                 flag = true;
             }
             if(flag){
@@ -421,6 +430,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             ThirdTgSetPhoneVisibilityInputDTO inputDTO = new ThirdTgSetPhoneVisibilityInputDTO();
             inputDTO.setTgRobotId(robotSerialNo);
             inputDTO.setType(dto.getType());
+            inputDTO.setAccountPrivacy(dto.getAccountPrivacy());
             OpenApiResult<TgBaseOutputDTO> vo = OpenApiClient.setPhoneVisibilityByThirdKpTg(inputDTO);
             log.info("setPrivatePhone inputDTO:{},vo:{}",inputDTO,vo);
         }
@@ -483,11 +493,11 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public RobotStatisticsVO getRobotStatisticsVO(List<String> robotIds) {
-        if (org.apache.commons.collections4.CollectionUtils.isEmpty(robotIds)){
-            return new RobotStatisticsVO();
+    public RobotStatisticsVO getRobotStatisticsVO(String playId) {
+        if (StringUtils.isBlank(playId)) {
+            return null;
         }
-        return robotMapper.getRobotStatisticsVO(robotIds);
+        return robotMapper.getRobotStatisticsVO(playId);
     }
 
     @Override
@@ -524,16 +534,31 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public void updateRobotMerchant(List<String> robotSerialNos) {
-        for (List<String> item : ListTools.partition(robotSerialNos,500)) {
-            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
-            if(!CollectionUtils.isEmpty(robots)){
-                List<String> nos = robots.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
-                this.update(new LambdaUpdateWrapper<Robot>()
-                        .in(Robot::getRobotSerialNo,nos)
-                        .set(Robot::getDeleteStatus,1));
+    public void updateRobotMerchant(List<Called50005005DTO> sourceList) {
+        Called50005005DTO data = sourceList.stream().findFirst().get();
+        String merchantId = configService.selectConfigByKey("robot:merchant");
+        if(data.getAfterBelongsMerchantId().equals(merchantId) && !data.getBeforeBelongsMerchantId().equals(merchantId)){
+            //划拨商家,去同步号
+            log.info("商家划拨,同步号");
+            this.syncRobot();
+            return;
+        }
+        //回收
+        if(!StringUtils.isEmpty(data.getBeforeBelongsMerchantId())
+                && data.getBeforeBelongsMerchantId().equals(merchantId)
+                && !data.getAfterBelongsMerchantId().equals(merchantId) ){
+            List<String> robotSerialNos = sourceList.stream().map(Called50005005DTO::getRobotSerialNo).collect(Collectors.toList());
+            for (List<String> item : ListTools.partition(robotSerialNos,500)) {
+                List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
+                if(!CollectionUtils.isEmpty(robots)){
+                    List<String> nos = robots.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
+                    this.update(new LambdaUpdateWrapper<Robot>()
+                            .in(Robot::getRobotSerialNo,nos)
+                            .set(Robot::getRecycleStatus,1));
+                }
             }
         }
+
     }
 
     @Override
@@ -552,11 +577,127 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         wrapper.eq(Robot::getRobotSerialNo,dto.getBot_serial_no());
         if(robot.getBidirectionalTime() == null){
             wrapper.set(Robot::getBidirectionalTime,dto.getRelease_time());
+            wrapper.set(Robot::getBidirectionalType,1);
         }else{
             wrapper.set(Robot::getBidirectionalUnfreezeTime,dto.getRelease_time());
-            wrapper.set(Robot::getBidirectionalType,1);
         }
         this.update(wrapper);
 
     }
+
+    @Override
+    public void offline(String robotSerialNo) {
+        if(StringUtils.isEmpty(robotSerialNo)){
+            return;
+        }
+        Robot robot = baseMapper.selectOne(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, robotSerialNo).last(" limit 1"));
+        if(robot != null){
+            if(robot.getHeartbeatStatus() != 10){
+                robot.setHeartbeatStatus(10);
+                updateById(robot);
+            }
+        }
+    }
+
+    @Override
+    public void sealRobot(Called1100910045DTO source) {
+        if(source == null){
+            return;
+        }
+        Robot robot = baseMapper.selectOne(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, source.getRobot_serial_no()).last(" limit 1"));
+        if(robot != null){
+            boolean flag = false;
+            if(source.getBan_time() != null){
+                robot.setSealTime(DateUtil.parse(source.getBan_time()));
+                flag = true;
+            }
+            if(robot.getSealStatus() != 30){
+                robot.setSealStatus(30);
+                flag = true;
+            }
+            if(flag){
+                updateById(robot);
+            }
+        }
+    }
+
+    @Override
+    public void cacheLogin(String robotSerialNo) {
+        if(StringUtils.isEmpty(robotSerialNo)){
+            return;
+        }
+        Robot robot = baseMapper.selectOne(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, robotSerialNo).last(" limit 1"));
+        if(robot == null){
+            return;
+        }
+        if(robot.getHeartbeatStatus() != 20){
+            this.update(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo,robotSerialNo).set(Robot::getHeartbeatStatus,20));
+        }
+
+    }
+
+    @Override
+    public void updateRobotInfo(List<Called50005006DTO> sourceList) {
+        Map<String,Called50005006DTO> map = new HashMap<>();
+        sourceList.forEach(item->map.put(item.getRobotSerialNo(),item));
+        for (List<Called50005006DTO> item : ListTools.partition(sourceList, 500)) {
+            List<String> robotSerialNos = item.stream().map(Called50005006DTO::getRobotSerialNo).collect(Collectors.toList());
+            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, robotSerialNos));
+            List<Robot> updateRobot = new ArrayList<>();
+            if(!CollectionUtils.isEmpty(robots)){
+                for (Robot oldRobot : robots) {
+                    if(map.containsKey(oldRobot.getRobotSerialNo())){
+                        Called50005006DTO newRobot = map.get(oldRobot.getRobotSerialNo());
+                        boolean flag = false;
+                        if(modify(oldRobot.getUserName(),newRobot.getUserName())){
+                            oldRobot.setUserName(newRobot.getUserName());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getFirstName(),newRobot.getFirstName())){
+                            oldRobot.setFirstName(newRobot.getFirstName());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getLastName(),newRobot.getLastName())){
+                            oldRobot.setLastName(newRobot.getLastName());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getHeadImgUrl(),newRobot.getHeadImgUrl())){
+                            oldRobot.setHeadImgUrl(newRobot.getHeadImgUrl());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getCountry(),newRobot.getCountry())){
+                            oldRobot.setCountry(newRobot.getCountry());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getCountryCode(),newRobot.getCountryCode())){
+                            oldRobot.setCountryCode(newRobot.getCountryCode());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getType(),newRobot.getType())){
+                            oldRobot.setType(newRobot.getType());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getHeartbeatStatus(),newRobot.getHeartbeatStatus())){
+                            oldRobot.setHeartbeatStatus(newRobot.getHeartbeatStatus());
+                            flag = true;
+                        }
+                        if(modify(oldRobot.getSealStatus(),newRobot.getSealStatus())){
+                            oldRobot.setSealStatus(newRobot.getSealStatus());
+                            flag = true;
+                        }
+                        if(flag){
+                            updateRobot.add(oldRobot);
+                        }
+
+                    }
+
+                }
+            }
+            if(!CollectionUtils.isEmpty(updateRobot)){
+                this.updateBatchById(updateRobot);
+            }
+
+        }
+    }
+
 }

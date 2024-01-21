@@ -1,6 +1,8 @@
 package com.ruoyi.web.controller.business;
 
 import com.ruoyi.common.annotation.RepeatSubmit;
+import com.ruoyi.common.config.ErrInfoConfig;
+import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.WordPageDTO;
 import com.ruoyi.system.domain.vo.AnalysisPlayFileVO;
@@ -13,7 +15,7 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/file")
-public class FileController {
+public class FileController extends BaseController {
     @Resource
     private AnalysisFileService analysisFileService;
 
@@ -22,10 +24,10 @@ public class FileController {
     @PostMapping("/analysis/playWord")
     public R<WordPageDTO> analysisPlayWord(@RequestParam(value = "file") MultipartFile file) {
         try {
-            return R.ok(analysisFileService.analysisPlayWord(file));
+            return R.ok(analysisFileService.analysisPlayWord(file, getLoginUser().getUserId()));
         } catch (Exception e) {
-            e.printStackTrace();
-            return R.fail(e.getMessage());
+            logger.error("analysisPlayWord_err", e);
+            return R.fail(10000, ErrInfoConfig.getDynmic(10000, e.getMessage()));
         }
     }
 
@@ -33,10 +35,11 @@ public class FileController {
     @PostMapping("/playWord")
     public R<AnalysisPlayFileVO> playWordContentList(@RequestBody WordPageDTO dto) {
         try {
+            dto.setFileId(getLoginUser().getUserId().toString());
             return R.ok(analysisFileService.playWordContentList(dto));
         } catch (Exception e) {
-            e.printStackTrace();
-            return R.fail(e.getMessage());
+            logger.error("playWordContentList_err", e);
+            return R.fail(10000, ErrInfoConfig.getDynmic(10000, e.getMessage()));
         }
     }
 }

@@ -4,14 +4,14 @@ import lombok.Data;
 
 @Data
 public class Called1100910045DTO {
-    /**
-     * {
-     * "user_id":"6477024811",
-     * "robot_serial_no":"FEA32324DDD647DD1A274CA78D5C0C2C",
-     * "ban_code":"",
-     * "reason":"PHONE_NUMBER_BANNED"
-     * }
-     */
+/**
+ * \"data\":{\"reason\":\"USER_DEACTIVATED_BAN\",
+ * \"ban_code\":null,\"user_id\":\"6957015500\",
+ * \"robot_serial_no\":\"BCA10B3867E97860390D8AE739C94200\",\"ban_time\":\"2024-01-20T14:01:00.0484591\"}
+ */
+
+
+
     /**
      *
      */
@@ -29,9 +29,8 @@ public class Called1100910045DTO {
      */
     private String reason;
 
-
-    /***
-     * 操作码
+    /**
+     * 封号时间
      */
-    private String optSerNo;
+    private String ban_time;
 }
