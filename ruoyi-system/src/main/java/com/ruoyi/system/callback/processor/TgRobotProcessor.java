@@ -84,7 +84,7 @@ public class TgRobotProcessor {
     @Type(value = 50005006, parameterClass = Called50005006DTO.class)
     public void called50005006(List<Called50005006DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-//        log.info("NQ50005006 called:{}",root);
+        log.info("NQ50005006 called:{}",root);
         robotService.updateRobotInfo(sourceList);
     }
 
