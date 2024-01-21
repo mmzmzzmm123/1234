@@ -34,7 +34,7 @@ server:
 # 日志配置
 logging:
   level:
-    com.ruoyi: debug
+    com.ruoyi: info
     org.springframework: warn
 
 # 用户配置
@@ -60,8 +60,6 @@ mybatis-plus:
   mapperLocations: classpath*:mapper/**/*Mapper.xml
   # 加载全局的配置文件
   configLocation: classpath:mybatis/mybatis-config.xml
-  configuration:
-    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
 
 # PageHelper分页插件
 pagehelper:
