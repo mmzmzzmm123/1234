@@ -8,12 +8,11 @@ import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface RobotMapper extends BaseMapper<Robot> {
     List<SelectRobotListVO> selectRobotPageList(Page<SelectRobotListVO> page, @Param("dto") SelectRobotListDTO dto);
 
-    RobotStatisticsVO getRobotStatisticsVO(@Param("robotIds") Collection<String> robotIds);
+    RobotStatisticsVO getRobotStatisticsVO(@Param("playId") String playId);
 
 }

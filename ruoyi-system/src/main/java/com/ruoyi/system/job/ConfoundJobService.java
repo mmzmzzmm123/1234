@@ -1,6 +1,7 @@
 package com.ruoyi.system.job;
 
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.ruoyi.common.constant.PlayConstants;
 import com.ruoyi.common.core.domain.entity.play.Play;
@@ -15,6 +16,7 @@ import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.PlayMessageConfoundLogService;
 import com.ruoyi.system.service.PlayMessagePushService;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -52,11 +54,12 @@ public class ConfoundJobService {
      */
     public void retryingConfusion() {
         String lockKey = PlayConstants.serviceName + ":retryingConfusion";
-        boolean lock = redisLock.tryLock(lockKey, 90, TimeUnit.SECONDS);
-        if (!lock) {
+        RLock rLock = redisLock.getRLock(lockKey);
+        if (rLock.isLocked()) {
             log.info("retryingConfusion lock");
             return;
         }
+        rLock.lock(90, TimeUnit.SECONDS);
         String uuid = IdWorker.getIdStr();
         log.info("retryingConfusion start {}", uuid);
         playMessageConfoundLogService.retryingConfusion(lockKey);
@@ -68,14 +71,15 @@ public class ConfoundJobService {
      */
     public void refreshPlayConfusionState() {
         String lockKey = PlayConstants.serviceName + ":refreshPlayConfusionState";
-        boolean lock = redisLock.tryLock(lockKey, 180, TimeUnit.SECONDS);
-        if (!lock) {
+        RLock rLock = redisLock.getRLock(lockKey);
+        if (rLock.isLocked()) {
             log.info("refreshPlayConfusionState lock");
             return;
         }
+        rLock.lock(180, TimeUnit.SECONDS);
         List<PlayConfusionStateVO> list = playInfoMapper.selectConfusionStateStatistics();
         String uuid = IdWorker.getIdStr();
-        log.info("refreshPlayConfusionState start {} {}", uuid, list.size());
+        log.info("refreshPlayConfusionState start {} {}", uuid, JSON.toJSONString(list));
         try {
             if (CollectionUtils.isEmpty(list)) {
                 return;
@@ -112,12 +116,12 @@ public class ConfoundJobService {
                     try {
                         playMessagePushService.createPushDetail(playInfo.getId());
                     } catch (Exception e) {
-                        log.info("refreshPlayConfusionState createPushDetail error", e);
+                        log.error("refreshPlayConfusionState createPushDetail error {}", playInfo.getId(), e);
                     }
                 });
             }
         } catch (Exception e) {
-            log.info("refreshPlayConfusionState error", e);
+            log.error("refreshPlayConfusionState error", e);
         } finally {
             redisLock.unlock(lockKey);
             log.info("refreshPlayConfusionState end {}", uuid);
@@ -129,11 +133,12 @@ public class ConfoundJobService {
      */
     public void refreshPlayMessageConfusionState() {
         String lockKey = PlayConstants.serviceName + ":refreshPlayMessageConfusionState";
-        boolean lock = redisLock.tryLock(lockKey, 180, TimeUnit.SECONDS);
-        if (!lock) {
+        RLock rLock = redisLock.getRLock(lockKey);
+        if (rLock.isLocked()) {
             log.info("refreshPlayMessageConfusionState lock");
             return;
         }
+        rLock.lock(180, TimeUnit.SECONDS);
         List<PlayMessageConfusionStateVO> list = playMessageConfoundMapper.selectConfusionStateStatistics();
         String uuid = IdWorker.getIdStr();
         log.info("refreshPlayMessageConfusionState start {} {}", uuid, list.size());
@@ -172,11 +177,13 @@ public class ConfoundJobService {
      */
     public void playConfusionJob() {
         String lockKey = PlayConstants.serviceName + ":playConfusionJob";
-        boolean lock = redisLock.tryLock(lockKey, 180, TimeUnit.SECONDS);
-        if (!lock) {
+        RLock rLock = redisLock.getRLock(lockKey);
+        if (rLock.isLocked()){
             log.info("playConfusionJob lock");
             return;
         }
+        rLock.lock(180,TimeUnit.SECONDS);
+
         String uuid = IdWorker.getIdStr();
         log.info("playConfusionJob start {}", uuid);
         try {
@@ -184,11 +191,12 @@ public class ConfoundJobService {
             for (Play play : playList) {
                 String playLockKey = PlayConstants.serviceName + ":playConfusion:" + play.getId();
                 // 1个小时内不能再次触发
-                boolean playLock = redisLock.tryLock(playLockKey, 1, TimeUnit.HOURS);
-                if (!playLock) {
+                RLock playLock = redisLock.getRLock(playLockKey);
+                if (playLock.isLocked()) {
                     log.info("playConfusionJob lock playLock {}", play.getId());
                     continue;
                 }
+                playLock.lock(1, TimeUnit.HOURS);
                 playMessagePushService.createPush(play.getId());
             }
         } catch (Exception e) {

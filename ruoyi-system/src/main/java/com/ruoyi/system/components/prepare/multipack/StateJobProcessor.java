@@ -1,8 +1,13 @@
 package com.ruoyi.system.components.prepare.multipack;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.alibaba.fastjson2.JSON;
+import com.ruoyi.common.utils.Objects;
+import com.ruoyi.common.utils.spi.ServiceLoader;
+import com.ruoyi.system.components.spi.Settings;
+import com.ruoyi.system.service.PlayExecutionLogService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -62,6 +67,58 @@ public class StateJobProcessor implements LogJobProcessor {
 				robotPackLogMapper.updateById(update);
 				// 单个回调 成功
 				onPackMonitor.onPackSucceed(data);
+
+//				//获取未完成的后置条件，并执行
+//				List<PlayRobotPackLog> waitDatas = robotPackLogMapper
+//						.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getIsFinish, 0)
+//								.eq(PlayRobotPackLog::getStatus, -1).eq(PlayRobotPackLog::getPlayId, play.getId())
+//								.eq(PlayRobotPackLog::getWaitOpt, data.getOpt())
+//						);
+//				log.info("查询后置任务 {} {}",data.getOpt(), JSON.toJSONString(waitDatas));
+//				if(!CollectionUtils.isEmpty(waitDatas)){
+//					//存在后置任务，开始执行
+//					waitDatas.forEach(it ->{
+//						if (it.getOp().intValue() == 4) {
+//							final Settings tgKpRobotAdminSettings = ServiceLoader.load(Settings.class, "TgKpRobotAdminSettings");
+//							//执行后置任务 （现在只有管理员要后置任务）
+//							PlayRobotPackLog playRobotPackLog = robotPackLogMapper.selectById(data.getOpt());
+//							// 请求 设置 机器人头像 ，昵称等
+//							Map<String, Object> param = new HashMap<>();
+//							param.put(Settings.Key_PlayId, playRobotPackLog.getPlayId());
+//							// 机器人id
+//							param.put(Settings.Key_RobotId, playRobotPackLog.getRobotId());
+//							// 群id
+//							param.put(Settings.Key_GroupId, playRobotPackLog.getChatroomId());
+//							// 管理员
+//							param.put(Settings.Key_Admin_Flag, true);
+//							// 备用号
+//							param.put(Settings.Key_Backup_Flag, playRobotPackLog.getIsBackup());
+//							final PlayRobotPackLog res = tgKpRobotAdminSettings.set(param);
+//							if (StringUtils.isEmpty(res.getOpt())) {
+//								PlayExecutionLogService.robotPackLog(playRobotPackLog.getPlayId(), playRobotPackLog.getChatroomId(), playRobotPackLog.getRobotId(), res.getErrMsg(), null,
+//										String.format("【发言人包装-%s】 群%s 号%s 设置失败", "管理员", playRobotPackLog.getChatroomId(), playRobotPackLog.getRobotId()), true);
+//								// 更新 失败
+//								it.setErrMsg(res.getErrMsg());
+//								it.setCreateTime(new Date());
+//								it.setStatus(2);
+//								robotPackLogMapper.updateById(it);
+//								log.info("后置log更新 {}", it);
+//							} else {
+//								PlayExecutionLogService.robotPackLog(playRobotPackLog.getPlayId(), playRobotPackLog.getChatroomId(), playRobotPackLog.getRobotId(), null, res.getOpt(),
+//										String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", playRobotPackLog.getChatroomId(), playRobotPackLog.getRobotId()), true);
+//								// 删除之前的操作码
+//								robotPackLogMapper.deleteById(it.getOpt());
+//								// 重新插入
+//								it.setOpt(res.getOpt());
+//								it.setCreateTime(new Date());
+//								it.setStatus(0);
+//								it.setErrMsg("");
+//								robotPackLogMapper.insert(it);
+//								log.info("后置log覆盖插入 {}", it);
+//							}
+//						}
+//					});
+//				}
 				continue;
 			}
 

@@ -14,7 +14,6 @@ import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Collection;
 import java.util.List;
 
 public interface IRobotService extends IService<Robot> {
@@ -77,11 +76,11 @@ public interface IRobotService extends IService<Robot> {
     R<Void> setGroupOwner(List<String> robotSerialNos);
 
     /**
-     * 统计这些机器人的状态
-     * @param robotIds
+     * 统计机器人的状态
+     * @param playId
      * @return
      */
-    RobotStatisticsVO getRobotStatisticsVO(Collection<String> robotIds);
+    RobotStatisticsVO getRobotStatisticsVO(String playId);
 
     void updateUsername(String robotSerialNo,String userName);
 

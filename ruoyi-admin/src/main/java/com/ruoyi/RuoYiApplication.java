@@ -9,7 +9,9 @@ import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.ThirdTgJoinChatroomByUrlInputDTO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
+import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.impl.IntoGroupService;
+import com.ruoyi.system.service.impl.SysConfigServiceImpl;
 import com.ruoyi.system.service.limit.WarningRobotLimitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -60,6 +62,5 @@ public class RuoYiApplication implements ApplicationRunner
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-
     }
 }

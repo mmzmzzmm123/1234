@@ -58,13 +58,10 @@ public class TgRobotProcessor {
     @Type(value = 50005004, parameterClass = Called50005004DTO.class)
     public void called50005004(Called50005004DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ50005004 called:{}",root);
-        if(root.isSuccess()){
-            if(!CollectionUtils.isEmpty(source.getRobotSerialNos())){
-                robotService.recycleRobot(source.getRobotSerialNos());
-            }
+//        log.info("NQ50005004 called:{}",root);
+        if(!CollectionUtils.isEmpty(source.getRobotSerialNos())){
+            robotService.recycleRobot(source.getRobotSerialNos());
         }
-
     }
 
     /***
@@ -74,11 +71,9 @@ public class TgRobotProcessor {
     @Type(value = 50005005, parameterClass = Called50005005DTO.class)
     public void called50005005(List<Called50005005DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ50005005 called:{}",root);
-        if(root.isSuccess()){
-            if(!CollectionUtils.isEmpty(sourceList)){
-                robotService.updateRobotMerchant(sourceList);
-            }
+//        log.info("NQ50005005 called:{}",root);
+        if(!CollectionUtils.isEmpty(sourceList)){
+            robotService.updateRobotMerchant(sourceList);
         }
     }
 
@@ -89,10 +84,8 @@ public class TgRobotProcessor {
     @Type(value = 50005006, parameterClass = Called50005006DTO.class)
     public void called50005006(List<Called50005006DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ50005005 called:{}",root);
-        if(root.isSuccess()){
-            robotService.updateRobotInfo(sourceList);
-        }
+        log.info("NQ50005006 called:{}",root);
+        robotService.updateRobotInfo(sourceList);
     }
 
 
@@ -116,6 +109,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910053, parameterClass = Called1100910053DTO.class)
     public void called1100910053(Called1100910053DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("1100910053-设置群管理员-{}",JSON.toJSONString(root));
         //处理tg设置管理员
         if(root.isSuccess() && !StringUtils.isEmpty(root.getRequestPara())) {
             groupService.handlerNewAdmin(JSON.parseObject(root.getRequestPara(), ThirdTgSetChatroomAdminInputDTO.class), dto);
@@ -178,6 +172,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910016, parameterClass = CalledEmptyDTO.class)
     public void called1100910016(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("1100910016-修改号头像-{}",JSON.toJSONString(root));
         if(root.isSuccess()) {
             if(StringUtils.isNotEmpty(root.getExtend())){
                 try {
@@ -199,6 +194,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910033, parameterClass = CalledEmptyDTO.class)
     public void called1100910033(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("1100910033-修改号姓氏和名字-{}",JSON.toJSONString(root));
         if(root.isSuccess()) {
             if(StringUtils.isNotEmpty(root.getExtend())){
                 try {
@@ -314,6 +310,7 @@ public class TgRobotProcessor {
     @Type(value = 1100860002, parameterClass = Called1100860002DTO.class)
     public void called1100860002(List<Called1100860002DTO> dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("1100860002-SQL执行接口-{}",JSON.toJSONString(root));
         //集合为空 认为失败
         if(CollUtil.isEmpty(dto)){
             root.setResultCode(1);
@@ -413,7 +410,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910003, parameterClass = Called1100910003DTO.class)
     public void called1100910003(Called1100910003DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ1100910003 called:{}",root);
+//        log.info("NQ1100910003 called:{}",root);
         if(root.isSuccess()){
             robotService.offline(source.getUser_serial_no());
         }

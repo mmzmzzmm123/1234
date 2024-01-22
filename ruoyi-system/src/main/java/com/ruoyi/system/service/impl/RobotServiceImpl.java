@@ -241,6 +241,10 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
                 oldRobot.setVpnIpC(newRobot.getVpnIpC());
                 flag = true;
             }
+            if(modify(oldRobot.getRecycleStatus(),newRobot.getRecycleStatus())){
+                oldRobot.setRecycleStatus(newRobot.getRecycleStatus());
+                flag = true;
+            }
             if(flag){
                 oldRobot.setUpdateTime(new Date());
                 updateRobotList.add(oldRobot);
@@ -489,11 +493,11 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     }
 
     @Override
-    public RobotStatisticsVO getRobotStatisticsVO(Collection<String> robotIds) {
-        if (org.apache.commons.collections4.CollectionUtils.isEmpty(robotIds)){
-            return new RobotStatisticsVO();
+    public RobotStatisticsVO getRobotStatisticsVO(String playId) {
+        if (StringUtils.isBlank(playId)) {
+            return null;
         }
-        return robotMapper.getRobotStatisticsVO(robotIds);
+        return robotMapper.getRobotStatisticsVO(playId);
     }
 
     @Override
@@ -533,12 +537,16 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     public void updateRobotMerchant(List<Called50005005DTO> sourceList) {
         Called50005005DTO data = sourceList.stream().findFirst().get();
         String merchantId = configService.selectConfigByKey("robot:merchant");
-        if(!data.getBeforeBelongsMerchantId().equals(merchantId) && !data.getAfterBelongsMerchantId().equals(merchantId)){
-            //不属于改商家的变动
+        if(data.getAfterBelongsMerchantId().equals(merchantId) && !data.getBeforeBelongsMerchantId().equals(merchantId)){
+            //划拨商家,去同步号
+            log.info("商家划拨,同步号");
+            this.syncRobot();
             return;
         }
         //回收
-        if(data.getBeforeBelongsMerchantId().equals(merchantId)){
+        if(!StringUtils.isEmpty(data.getBeforeBelongsMerchantId())
+                && data.getBeforeBelongsMerchantId().equals(merchantId)
+                && !data.getAfterBelongsMerchantId().equals(merchantId) ){
             List<String> robotSerialNos = sourceList.stream().map(Called50005005DTO::getRobotSerialNo).collect(Collectors.toList());
             for (List<String> item : ListTools.partition(robotSerialNos,500)) {
                 List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, item));
@@ -549,11 +557,8 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
                             .set(Robot::getRecycleStatus,1));
                 }
             }
-            return;
         }
-        //划拨商家,去同步号
-        log.info("商家划拨,同步号");
-        this.syncRobot();
+
     }
 
     @Override
@@ -637,7 +642,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         sourceList.forEach(item->map.put(item.getRobotSerialNo(),item));
         for (List<Called50005006DTO> item : ListTools.partition(sourceList, 500)) {
             List<String> robotSerialNos = item.stream().map(Called50005006DTO::getRobotSerialNo).collect(Collectors.toList());
-            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().eq(Robot::getRobotSerialNo, robotSerialNos));
+            List<Robot> robots = baseMapper.selectList(new LambdaUpdateWrapper<Robot>().in(Robot::getRobotSerialNo, robotSerialNos));
             List<Robot> updateRobot = new ArrayList<>();
             if(!CollectionUtils.isEmpty(robots)){
                 for (Robot oldRobot : robots) {
