@@ -43,7 +43,7 @@ public class TgKpRobotAdminSettings implements Settings {
 		}
 		final String robotId = param.get(Settings.Key_RobotId).toString();
 		ThirdTgSetChatroomAdminInputDTO dto = new ThirdTgSetChatroomAdminInputDTO();
-		dto.setTgRobotId(param.get(Settings.Key_RobotId).toString());
+		dto.setTgRobotId(groupOwnerRobot.getRobotId());
 		dto.setChatroomSerialNo(groupId);
 		dto.setMemberSerialNo(robotId);
 		dto.setIsAll(true);
