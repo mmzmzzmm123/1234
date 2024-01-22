@@ -26,7 +26,7 @@ import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
 
-@SPI("TgGroupHashSettings")
+@SPI("TgKpRobotAdminSettings")
 @Slf4j
 public class TgKpRobotAdminSettings implements Settings {
 	@Override
