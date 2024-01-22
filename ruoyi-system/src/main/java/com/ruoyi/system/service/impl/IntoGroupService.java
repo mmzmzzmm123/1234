@@ -312,24 +312,23 @@ public class IntoGroupService {
                 List<PlayModifierGroupLog> logs = playModifierGroupLogMapper.selectGroupLogByPlayIdAll(play.getId());
                 log.info("获取所有修改人设的群信息:"+JSONObject.toJSONString(logs));
                 Boolean isError = true;
-                //判断是否有失败的群
-                for (PlayModifierGroupLog log : logs) {
-                    if (log.getState() == 3) {
-                        isError = false;
-                    }
-                }
-                if (isError) {
-                    continue;
-                }
                 //获取发送群数
                 groupNum = play.getGroupNum() + 10;
-                //插入重试
-                if (logs.size() < groupNum) {
-                    replaceGroup(play);
-                }else {
+                if (logs.size() >= groupNum) {
                     play.setState(4);
                     play.setFailReason("修改群人设失败");
                     playMapper.updateById(play);
+                    continue;
+                }
+                    //判断是否有失败的群
+                for (PlayModifierGroupLog log : logs) {
+                    if (log.getState() == 3) {
+                        //插入重试
+                        replaceGroup(play);
+                        //把状态改成4
+                        log.setState(4);
+                        playModifierGroupLogMapper.updateById(log);
+                    }
                 }
             }
 
@@ -914,7 +913,7 @@ public class IntoGroupService {
                     dto.setTgRobotId(task.getPersonId());
                     @SuppressWarnings("rawtypes")
                     OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.getGroupMemberByThirdKpTg(dto);
-                    if (ret.getCode() != 0){
+                    if (ret.getCode() == 0){
                         setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员成功！", 0, PlayLogTyper.Group_into, null);
                     }else {
                         setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员失败！原因："+ret.getMessage(), 0, PlayLogTyper.Group_into, null);
