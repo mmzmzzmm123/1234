@@ -25,6 +25,7 @@ import com.ruoyi.system.callback.dto.CalledEmptyDTO;
 import com.ruoyi.system.components.Beans;
 import com.ruoyi.system.components.RandomListPicker;
 import com.ruoyi.system.domain.GroupInfo;
+import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.GroupQueryDTO;
 import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
 import com.ruoyi.system.domain.dto.play.PlayIntoGroupTask;
@@ -40,6 +41,7 @@ import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.*;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
+import com.ruoyi.system.service.GroupRobotService;
 import com.ruoyi.system.service.IVibeRuleService;
 import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.RobotStatisticsService;
@@ -99,6 +101,9 @@ public class IntoGroupService {
 
     @Autowired
     GroupInfoMapper groupInfoMapper;
+
+    @Autowired
+    GroupRobotService groupRobotService;
 
     String errorMessageListRedisKey = "error_message_list_redis_key:";
 
@@ -910,13 +915,18 @@ public class IntoGroupService {
                     //调用开平接口获取群成员
                     ThirdTgGetGroupMemberInputDTO dto = new ThirdTgGetGroupMemberInputDTO();
                     dto.setChatroomSerialNo(group.getGroupSerialNo());
-                    dto.setTgRobotId(task.getPersonId());
-                    @SuppressWarnings("rawtypes")
-                    OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.getGroupMemberByThirdKpTg(dto);
-                    if (ret.getCode() == 0){
-                        setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员成功！", 0, PlayLogTyper.Group_into, null);
+                    GroupRobot robot = groupRobotService.getAdminRobot(group.getGroupId());
+                    if (robot != null){
+                        dto.setTgRobotId(robot.getRobotId());
+                        @SuppressWarnings("rawtypes")
+                        OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.getGroupMemberByThirdKpTg(dto);
+                        if (ret.getCode() == 0){
+                            setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员成功！", 0, PlayLogTyper.Group_into, null);
+                        }else {
+                            setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员失败！原因："+ret.getMessage(), 1, PlayLogTyper.Group_into, null);
+                        }
                     }else {
-                        setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员失败！原因："+ret.getMessage(), 0, PlayLogTyper.Group_into, null);
+                        setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "获取群主号异常！", 1, PlayLogTyper.Group_into, null);
                     }
                 } else {
                     log.info("群入群失败！");
