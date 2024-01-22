@@ -260,7 +260,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 				PlayRobotPackLog ret = tgKpRobotAdminSettings.set(param);
 				if (StringUtils.isEmpty(ret.getOpt())) {
 					PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, ret.getErrMsg(),
-							null, String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", data.getChatroomId(), data.getRobotId()), true);
+							null, String.format("【发言人包装-%s】 群%s 号%s 请求失败", "管理员", data.getChatroomId(), data.getRobotId()), true);
 					// 更新 失败
 					data.setErrMsg(ret.getErrMsg());
 					data.setCreateTime(new Date());
@@ -269,7 +269,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 					log.info("log重试更新 {}", data);
 				} else {
 					PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, null,
-							ret.getOpt(), String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", data.getChatroomId(), data.getRobotId()), true);
+							ret.getOpt(), String.format("【发言人包装-%s】 群%s 号%s 请求成功", "管理员", data.getChatroomId(), data.getRobotId()), true);
 					// 删除之前的操作码
 					robotPackLogMapper.deleteById(data.getOpt());
 					// 重新插入
