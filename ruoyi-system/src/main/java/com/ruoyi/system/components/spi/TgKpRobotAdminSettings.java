@@ -43,7 +43,7 @@ public class TgKpRobotAdminSettings implements Settings {
 		}
 		final String robotId = param.get(Settings.Key_RobotId).toString();
 		ThirdTgSetChatroomAdminInputDTO dto = new ThirdTgSetChatroomAdminInputDTO();
-		dto.setTgRobotId(param.get(Settings.Key_RobotId).toString());
+		dto.setTgRobotId(groupOwnerRobot.getRobotId());
 		dto.setChatroomSerialNo(groupId);
 		dto.setMemberSerialNo(robotId);
 		dto.setIsAll(true);
@@ -76,7 +76,7 @@ public class TgKpRobotAdminSettings implements Settings {
 		data.setChatroomId(param.get(Settings.Key_GroupId).toString());
 		data.setCreateTime(new Date());
 		data.setIsFinish(0);
-		//1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员
+		//1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员 5-获取群成员
 		data.setOp(4);
 		data.setPlayId(param.get(Settings.Key_PlayId).toString());
 		data.setRetryCount(0);

@@ -33,6 +33,14 @@ public interface PlayExecutionLogService {
 	Page<PlayExecutionLog> logPage(QueryExecutionLogDTO dto);
 
 	/**
+	 * 获取对应剧本某个群的最新一条记录
+	 * @param playId
+	 * @param groupId
+	 * @return
+	 */
+	PlayExecutionLog getOne(String playId, String groupId);
+
+	/**
 	 * 保存日志
 	 *
 	 * @param log

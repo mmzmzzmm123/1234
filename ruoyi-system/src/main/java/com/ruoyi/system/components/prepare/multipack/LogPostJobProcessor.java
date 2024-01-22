@@ -70,7 +70,7 @@ public class LogPostJobProcessor implements LogJobProcessor {
 		final PlayRobotPackLogMapper robotPackLogMapper = SpringUtils.getBean(PlayRobotPackLogMapper.class);
 
 		if (data.getOp().intValue() == 4) {
-			// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员
+			// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员 5-获取群成员
 			Settings settings = ServiceLoader.load(Settings.class, "TgKpRobotAdminSettings");
 			// 请求 设置 机器人头像 ，昵称等
 			Map<String, Object> param = new HashMap<>();
@@ -89,7 +89,7 @@ public class LogPostJobProcessor implements LogJobProcessor {
 			PlayRobotPackLog ret = settings.set(param);
 
 			if (StringUtils.isEmpty(ret.getOpt())) {
-				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(),  data.getRobotId(), ret.getErrMsg(), null, String.format("【发言人包装-%s】 群%s 号%s 设置失败", "管理员", data.getChatroomId(), data.getRobotId()), true);
+				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(),  data.getRobotId(), ret.getErrMsg(), null, String.format("【发言人包装-%s】 群%s 号%s 请求失败", "管理员", data.getChatroomId(), data.getRobotId()), true);
 				// 更新 状态
 				PlayRobotPackLog update = new PlayRobotPackLog();
 				update.setStatus(ret.getStatus());
@@ -98,7 +98,7 @@ public class LogPostJobProcessor implements LogJobProcessor {
 				robotPackLogMapper.updateById(update);
 				log.info("后置log更新 {}", data);
 			} else {
-				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(),  data.getRobotId(), null, ret.getOpt(), String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", data.getChatroomId(), data.getRobotId()), true);
+				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(),  data.getRobotId(), null, ret.getOpt(), String.format("【发言人包装-%s】 群%s 号%s 请求成功", "管理员", data.getChatroomId(), data.getRobotId()), true);
 				// 删除之前的
 				robotPackLogMapper.deleteById(data);
 				// 新增当前的

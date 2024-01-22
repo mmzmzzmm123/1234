@@ -29,6 +29,7 @@ import com.ruoyi.system.components.ProductTools;
 import com.ruoyi.system.components.movie.PlayDirector;
 import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.dto.robot.ReleaseOccupyRobotDTO;
+import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.*;
@@ -86,6 +87,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
     @Resource
     private PlayRobotGroupRelationMapper playRobotGroupRelationMapper;
+
+    @Resource
+    private PlayExecutionLogService playExecutionLogService;
 
     @Override
     @Transactional(rollbackFor=Exception.class)
@@ -482,6 +486,13 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return null;
         }
         List<PlayGroupProgressVO> taskProgressList = baseMapper.selectGroupProgress(playId);
+        for (PlayGroupProgressVO vo : taskProgressList) {
+            PlayExecutionLog one = playExecutionLogService.getOne(vo.getPlayId(), vo.getGroupId());
+            String tip = Optional.ofNullable(one)
+                    .map(PlayExecutionLog::getContent)
+                    .orElse("");
+            vo.setTip(tip);
+        }
         return taskProgressList;
     }
 
