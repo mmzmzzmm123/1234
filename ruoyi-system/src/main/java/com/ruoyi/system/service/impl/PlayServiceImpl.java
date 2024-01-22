@@ -653,6 +653,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 return;
             }
             play.setState(PlayStatusConstants.CANCEL);
+            play.setEndDate(new Date());
             super.updateById(play);
 
             //退群接口
