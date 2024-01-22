@@ -64,7 +64,7 @@ public class TgRobotAdminSettings implements Settings {
 		data.setCreateTime(new Date());
 		data.setIsFinish(0);
 		// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员
-		data.setOp(3);
+		data.setOp(4);
 		data.setPlayId(param.get(Settings.Key_PlayId).toString());
 		data.setRetryCount(0);
 		data.setRobotId(robotId);
