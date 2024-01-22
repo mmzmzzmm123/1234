@@ -60,6 +60,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         int tmpRobotSize;
         List<SelectRobotByRuleVO> tmpSelectData;
         List<SelectRobotByRuleVO> selectRobotByRuleVOS = new ArrayList<>();
+        List<String> updateRobotStatisticsIds = new ArrayList<>();
         //如果需要设置管理员的号,先获取设置管理员的号
         if(dto.getSetAdminCount() > 0){
             selectRobotByRuleDTO.setLimit(dto.getSetAdminCount());
@@ -94,12 +95,12 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             }
 
             if(dto.getIsLock() == 1){
-                List<String> ids = selectRobotByRuleVOS.stream()
+                updateRobotStatisticsIds = selectRobotByRuleVOS.stream()
                         .map(SelectRobotByRuleVO::getId)
                         .filter(StringUtils::isNotEmpty).collect(Collectors.toList());
-                log.info("getRobot_update_RobotStatistics_ids:{}",ids);
+                log.info("getRobot_update_AdminRobotStatistics_ids:{}", updateRobotStatisticsIds);
                 this.update(new LambdaUpdateWrapper<RobotStatistics>()
-                        .in(RobotStatistics::getId,ids)
+                        .in(RobotStatistics::getId, updateRobotStatisticsIds)
                         .set(RobotStatistics::getIsLock,1));
             }
         }
@@ -144,12 +145,12 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             }
             selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS1);
             if(dto.getIsLock() == 1){
-                List<String> ids = selectRobotByRuleVOS1.stream()
+                updateRobotStatisticsIds = selectRobotByRuleVOS1.stream()
                         .map(SelectRobotByRuleVO::getId)
                         .filter(StringUtils::isNotEmpty).collect(Collectors.toList());
-                log.info("getRobot_admin_update_RobotStatistics_ids:{}",ids);
+                log.info("getRobot_admin_update_RobotStatistics_ids:{}", updateRobotStatisticsIds);
                 this.update(new LambdaUpdateWrapper<RobotStatistics>()
-                        .in(RobotStatistics::getId,ids)
+                        .in(RobotStatistics::getId,  updateRobotStatisticsIds)
                         .set(RobotStatistics::getIsLock,1));
             }
         }
