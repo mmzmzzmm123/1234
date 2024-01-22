@@ -162,6 +162,11 @@ public class Play {
 
     private Long productId;
 
+    /**
+     * 剧本最终状态时间(取消或完成)
+     */
+    private Date endDate;
+
     public SendMechanism convertSendMechanismStr() {
         if (StringUtils.isEmpty(this.sendMechanism)) {
             return null;
