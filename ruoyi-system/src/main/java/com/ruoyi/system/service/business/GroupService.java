@@ -877,10 +877,12 @@ public class GroupService {
                     switch (groupAction) {
 
                         case INVITE_BOT_JOIN_GROUP:
-                            apiResult = OpenApiClient.inviteJoinChatroomByThirdKpTg(BeanUtil.copyProperties(groupActionLog.getPara(), ThirdTgInviteJoinChatroomInputDTO.class));
+                            apiResult = OpenApiClient.inviteJoinChatroomByThirdKpTg(
+                                    JSON.parseObject(groupActionLog.getPara(),ThirdTgInviteJoinChatroomInputDTO.class));
                             break;
                         case QUERY_HASH:
-                            apiResult = OpenApiClient.sqlTaskSubmitByThirdKpTg(BeanUtil.copyProperties(groupActionLog.getPara(), ThirdTgSqlTaskSubmitInputDTO.class));
+                            apiResult = OpenApiClient.sqlTaskSubmitByThirdKpTg(
+                            JSON.parseObject(groupActionLog.getPara(),ThirdTgSqlTaskSubmitInputDTO.class));
                             break;
 
                     }
