@@ -55,7 +55,7 @@ public class ConfoundJobService {
     public void retryingConfusion() {
         String lockKey = PlayConstants.serviceName + ":retryingConfusion";
         RLock rLock = redisLock.getRLock(lockKey);
-        if (!rLock.isLocked()) {
+        if (rLock.isLocked()) {
             log.info("retryingConfusion lock");
             return;
         }
@@ -72,7 +72,7 @@ public class ConfoundJobService {
     public void refreshPlayConfusionState() {
         String lockKey = PlayConstants.serviceName + ":refreshPlayConfusionState";
         RLock rLock = redisLock.getRLock(lockKey);
-        if (!rLock.isLocked()) {
+        if (rLock.isLocked()) {
             log.info("refreshPlayConfusionState lock");
             return;
         }
@@ -134,7 +134,7 @@ public class ConfoundJobService {
     public void refreshPlayMessageConfusionState() {
         String lockKey = PlayConstants.serviceName + ":refreshPlayMessageConfusionState";
         RLock rLock = redisLock.getRLock(lockKey);
-        if (!rLock.isLocked()) {
+        if (rLock.isLocked()) {
             log.info("refreshPlayMessageConfusionState lock");
             return;
         }
@@ -178,7 +178,7 @@ public class ConfoundJobService {
     public void playConfusionJob() {
         String lockKey = PlayConstants.serviceName + ":playConfusionJob";
         RLock rLock = redisLock.getRLock(lockKey);
-        if (!rLock.isLocked()){
+        if (rLock.isLocked()){
             log.info("playConfusionJob lock");
             return;
         }
@@ -192,7 +192,7 @@ public class ConfoundJobService {
                 String playLockKey = PlayConstants.serviceName + ":playConfusion:" + play.getId();
                 // 1个小时内不能再次触发
                 RLock playLock = redisLock.getRLock(playLockKey);
-                if (!playLock.isLocked()) {
+                if (playLock.isLocked()) {
                     log.info("playConfusionJob lock playLock {}", play.getId());
                     continue;
                 }
