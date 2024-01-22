@@ -126,7 +126,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         }
         Map<String, ExtTgSelectGroupVO> utInfoMap =
                 utInfos.stream().collect(Collectors.toMap(ExtTgSelectGroupVO::getChatroomSerialNo, p -> p));
-        groupInfoList.stream().filter(p -> utInfoMap.containsKey(p.getGroupSerialNo()))
+        List<GroupInfo> updates = groupInfoList.stream().filter(p -> utInfoMap.containsKey(p.getGroupSerialNo()))
                 .map(p -> {
                     ExtTgSelectGroupVO vo = utInfoMap.get(p.getGroupSerialNo());
                     GroupInfo update = new GroupInfo();
@@ -135,6 +135,9 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
                     update.setUpdateTime(LocalDateTime.now());
                     return update;
                 }).collect(Collectors.toList());
+        if(CollUtil.isNotEmpty(updates)){
+            updateBatchById(updates);
+        }
 
     }
 
