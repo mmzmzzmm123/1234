@@ -168,7 +168,7 @@ public class ManualPackingTask implements TaskExecution {
 							postposition.setCreateTime(new Date());
 							postposition.setIsBackup((boolean) param.get(Settings.Key_Backup_Flag) ? 1 : 0);
 							postposition.setIsFinish(0);
-							// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员
+							// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员 5-获取群成员
 							postposition.setOp(4);
 							postposition.setOpt("wait_" + Ids.getId());
 							postposition.setPlayId(context.getPlay().getId());

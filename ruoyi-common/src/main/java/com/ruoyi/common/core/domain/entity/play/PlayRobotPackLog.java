@@ -50,7 +50,7 @@ public class PlayRobotPackLog {
 	private Integer isBackup;
 
 	/**
-	 * 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员
+	 * 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员 5-获取群成员
 	 */
 	private Integer op;
 
