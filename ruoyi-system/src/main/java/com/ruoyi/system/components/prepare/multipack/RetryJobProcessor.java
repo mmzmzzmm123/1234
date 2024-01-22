@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.impl.SysConfigServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -210,11 +211,16 @@ public class RetryJobProcessor implements LogJobProcessor {
 						ret.getOpt(), "管理员（获取hash值）-重试" + data.getRetryCount() + "次", true);
 				// 修改后置opt
 				PlayRobotPackLog condition = robotPackLogMapper.selectOne(new QueryWrapper<PlayRobotPackLog>().lambda()
-						.eq(PlayRobotPackLog::getWaitOpt, data.getOpt()).last(" limit 1 "));
+						.eq(PlayRobotPackLog::getWaitOpt, data.getOpt())
+						.eq(PlayRobotPackLog::getStatus, -1)
+						.eq(PlayRobotPackLog::getPlayId, data.getPlayId())
+						.last(" limit 1 "));
 				if (condition != null) {
 					condition.setWaitOpt(ret.getOpt());
 					robotPackLogMapper.updateById(condition);
+					log.info("后置log更新opt {}", condition);
 				}
+
 				// 删除之前的操作码
 				robotPackLogMapper.deleteById(data.getOpt());
 				// 重新插入
@@ -223,6 +229,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 				data.setCreateTime(new Date());
 				data.setStatus(0);
 				robotPackLogMapper.insert(data);
+
 				log.info("log重试插入 {}", data);
 			}
 		}
@@ -260,7 +267,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 				PlayRobotPackLog ret = tgKpRobotAdminSettings.set(param);
 				if (StringUtils.isEmpty(ret.getOpt())) {
 					PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, ret.getErrMsg(),
-							null, String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", data.getChatroomId(), data.getRobotId()), true);
+							null, String.format("【发言人包装-%s】 群%s 号%s 重试" + data.getRetryCount() + "次", "管理员", data.getChatroomId(), data.getRobotId()), true);
 					// 更新 失败
 					data.setErrMsg(ret.getErrMsg());
 					data.setCreateTime(new Date());
@@ -269,7 +276,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 					log.info("log重试更新 {}", data);
 				} else {
 					PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, null,
-							ret.getOpt(), String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", data.getChatroomId(), data.getRobotId()), true);
+							ret.getOpt(), String.format("【发言人包装-%s】 群%s 号%s 重试" + data.getRetryCount() + "次", "管理员", data.getChatroomId(), data.getRobotId()), true);
 					// 删除之前的操作码
 					robotPackLogMapper.deleteById(data.getOpt());
 					// 重新插入
