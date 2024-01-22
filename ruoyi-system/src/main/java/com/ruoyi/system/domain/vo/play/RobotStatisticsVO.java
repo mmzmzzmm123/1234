@@ -19,12 +19,6 @@ public class RobotStatisticsVO {
     @ApiModelProperty("号总数")
     private Integer robotTotalNum;
 
-    @ApiModelProperty("水军号数")
-    private Integer navyRobotNum;
-
-    @ApiModelProperty("备用号数")
-    private Integer spareRobotNum;
-
     @ApiModelProperty("双向号数")
     private Integer bidirectionalRobotNum;
 
@@ -33,8 +27,5 @@ public class RobotStatisticsVO {
 
     @ApiModelProperty("封群数")
     private Integer groupClosureNum;
-
-    @ApiModelProperty("入群失败号数")
-    private Integer joinGroupFailNum;
 
 }

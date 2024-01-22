@@ -522,17 +522,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             vo.setRobotClosureNum(robotStatisticsVO.getRobotClosureNum());
             vo.setBidirectionalRobotNum(robotStatisticsVO.getBidirectionalRobotNum());
         }
-        // 统计发言人数量  就是水军数量
-        LambdaQueryWrapper<PlayRobotPack> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(PlayRobotPack::getPlayId, playId);
-        // 水军号
-        long count = SpringUtils.getBean(PlayRobotPackService.class).count(lambdaQueryWrapper);
-        int navyRobotNum = (int) count;
-        vo.setNavyRobotNum(navyRobotNum);
-        int robotTotalNum = vo.getRobotTotalNum() == null ? 0 : vo.getRobotTotalNum();
-        // 备用号
-        int spareRobotNum = robotTotalNum - navyRobotNum;
-        vo.setSpareRobotNum(spareRobotNum <= 0 ? 0 : spareRobotNum);
         return vo;
     }
 
