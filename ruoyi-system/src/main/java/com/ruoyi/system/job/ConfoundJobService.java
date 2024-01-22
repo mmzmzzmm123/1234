@@ -1,6 +1,7 @@
 package com.ruoyi.system.job;
 
 import cn.hutool.core.date.DateUtil;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.ruoyi.common.constant.PlayConstants;
 import com.ruoyi.common.core.domain.entity.play.Play;
@@ -75,7 +76,7 @@ public class ConfoundJobService {
         }
         List<PlayConfusionStateVO> list = playInfoMapper.selectConfusionStateStatistics();
         String uuid = IdWorker.getIdStr();
-        log.info("refreshPlayConfusionState start {} {}", uuid, list.size());
+        log.info("refreshPlayConfusionState start {} {}", uuid, JSON.toJSONString(list));
         try {
             if (CollectionUtils.isEmpty(list)) {
                 return;
@@ -112,12 +113,12 @@ public class ConfoundJobService {
                     try {
                         playMessagePushService.createPushDetail(playInfo.getId());
                     } catch (Exception e) {
-                        log.info("refreshPlayConfusionState createPushDetail error", e);
+                        log.error("refreshPlayConfusionState createPushDetail error {}", playInfo.getId(), e);
                     }
                 });
             }
         } catch (Exception e) {
-            log.info("refreshPlayConfusionState error", e);
+            log.error("refreshPlayConfusionState error", e);
         } finally {
             redisLock.unlock(lockKey);
             log.info("refreshPlayConfusionState end {}", uuid);
