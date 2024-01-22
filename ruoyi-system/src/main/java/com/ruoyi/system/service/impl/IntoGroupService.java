@@ -4,15 +4,11 @@ import cn.hutool.core.codec.Base64;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.VibeRuleTargetParam;
-import com.ruoyi.common.core.domain.dto.play.Performer;
-import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.dto.play.PlayExt;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
-import com.ruoyi.common.core.domain.entity.VibeRule;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayGroupPack;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPack;
-import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.redis.RedisHandler;
 import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.enums.PlayLogTyper;
@@ -21,7 +17,6 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.callback.dto.Called1100910039DTO;
 import com.ruoyi.system.callback.dto.CalledDTO;
-import com.ruoyi.system.callback.dto.CalledEmptyDTO;
 import com.ruoyi.system.components.Beans;
 import com.ruoyi.system.components.RandomListPicker;
 import com.ruoyi.system.domain.GroupInfo;
@@ -48,12 +43,9 @@ import com.ruoyi.system.service.RobotStatisticsService;
 import com.ruoyi.system.service.business.GroupService;
 import com.ruoyi.system.service.limit.WarningRobotLimitService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.compress.utils.Lists;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -156,6 +148,7 @@ public class IntoGroupService {
                 log.info("获取群返回："+JSONObject.toJSONString(groupList));
                 if (groupList.getCode() != 200) {
                     play.setState(4);
+                    play.setEndDate(new Date());
                     play.setFailReason("无剧本所需足够的群！");
                     setLog(play.getId(), "无剧本所需足够的群数", 1, PlayLogTyper.Group_out, null);
                     playMapper.updateById(play);
@@ -321,6 +314,7 @@ public class IntoGroupService {
                 groupNum = play.getGroupNum() + 10;
                 if (logs.size() >= groupNum) {
                     play.setState(4);
+                    play.setEndDate(new Date());
                     play.setFailReason("修改群人设失败");
                     playMapper.updateById(play);
                     continue;
@@ -358,6 +352,7 @@ public class IntoGroupService {
         log.info("重试获取群信息返回:"+JSONObject.toJSONString(groupList));
         if (groupList.getCode() != 200) {
             play.setState(4);
+            play.setEndDate(new Date());
             play.setFailReason("无剧本所需足够的群！");
             setLog(play.getId(), "无剧本所需足够的群数", 1, PlayLogTyper.Group_out, null);
             playMapper.updateById(play);
@@ -478,6 +473,7 @@ public class IntoGroupService {
                         if (groupList.getCode() != 200) {
                             //设置错误
                             playDTO.setState(4);
+                            playDTO.setEndDate(new Date());
                             playDTO.setFailReason("无剧本所需足够的群！");
                             playMapper.updateById(playDTO);
                             continue;
@@ -498,6 +494,7 @@ public class IntoGroupService {
                         List<GetRobotVO> robotVOS = getRobot(playDTO, vibeRule, performers);
                         if (robotVOS == null) {
                             playDTO.setState(4);
+                            playDTO.setEndDate(new Date());
                             playDTO.setFailReason("无剧本所需足够的机器人！");
                             setLog(playDTO.getId(), "群ID:" + groupInfoVO.getGroupSerialNo() + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, groupInfoVO.getGroupId());
                             playMapper.updateById(playDTO);
@@ -560,6 +557,7 @@ public class IntoGroupService {
                         List<GetRobotVO> robotList = new ArrayList<>();
                         if (robotVOS == null) {
                             playDTO.setState(4);
+                            playDTO.setEndDate(new Date());
                             playDTO.setFailReason("无剧本所需足够的机器人！");
                             setLog(playDTO.getId(), "群" + group + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, null);
                             playMapper.updateById(playDTO);
@@ -1059,6 +1057,7 @@ public class IntoGroupService {
                     //全部失败
                     if (count == 0){
                         play.setState(4);
+                        play.setEndDate(new Date());
                         log.info("已修改剧本状态"+JSONObject.toJSONString(count));
                         setLog(play.getId(), "所有群都失败任务中止！", 1, PlayLogTyper.Group_into, null);
                     }else {

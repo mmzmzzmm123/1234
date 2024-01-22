@@ -70,7 +70,7 @@ public class LogPostJobProcessor implements LogJobProcessor {
 		final PlayRobotPackLogMapper robotPackLogMapper = SpringUtils.getBean(PlayRobotPackLogMapper.class);
 
 		if (data.getOp().intValue() == 4) {
-			// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员
+			// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员 5-获取群成员
 			Settings settings = ServiceLoader.load(Settings.class, "TgKpRobotAdminSettings");
 			// 请求 设置 机器人头像 ，昵称等
 			Map<String, Object> param = new HashMap<>();

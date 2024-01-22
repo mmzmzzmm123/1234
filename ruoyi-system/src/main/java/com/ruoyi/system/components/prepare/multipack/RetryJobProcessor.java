@@ -137,7 +137,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 		final Settings tgKpRobotAdminSettings = ServiceLoader.load(Settings.class, "TgKpRobotAdminSettings");
 
 		data.setRetryCount(data.getRetryCount() + 1);
-		// 判断操作 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员
+		// 判断操作 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员 5-获取群成员
 		if (data.getOp().intValue() == 1) {
 			// 设置机器人姓名
 			PlayRobotPackLog ret = tgRobotNameSettings.set(param);
