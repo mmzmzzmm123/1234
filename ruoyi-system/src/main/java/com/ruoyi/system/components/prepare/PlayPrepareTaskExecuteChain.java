@@ -139,7 +139,7 @@ public class PlayPrepareTaskExecuteChain implements OnPackMonitor, OnRadioPackMo
 	public void onPackSucceed(PlayRobotPackLog data) {
 		log.info("onPackSucceed {}", data);
 
-		// 单个 回调 执行 成功 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员
+		// 单个 回调 执行 成功 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员 5-获取群成员
 		if (data.getOp().intValue() == 1) {
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), null,
 					data.getOpt(), "姓名", false);
