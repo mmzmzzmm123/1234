@@ -1,6 +1,5 @@
 package com.ruoyi.system.components.movie.spi.impl;
 
-import java.util.List;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
@@ -14,8 +13,10 @@ import com.ruoyi.system.mapper.PlayMessagePushDetailMapper;
 import com.ruoyi.system.mapper.PlayMessagePushMapper;
 import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.impl.IntoGroupService;
-
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Date;
+import java.util.List;
 
 @Slf4j
 @SPI
@@ -99,6 +100,7 @@ public class DefaultPlayRunner implements PlayRunner {
 			PlayExecutionLogService.robotPackLog(playId, null, null, c, null);
 			Play update = new Play();
 			update.setState(5);
+			update.setEndDate(new Date());
 			update.setId(playId);
 			SpringUtils.getBean(PlayMapper.class).updateById(update);
 			// 退群
