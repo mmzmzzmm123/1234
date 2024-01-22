@@ -38,10 +38,7 @@ import com.ruoyi.system.domain.vo.robot.GetRobotVO;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
-import com.ruoyi.system.openapi.model.input.ThirdTgExitChatroomInputDTO;
-import com.ruoyi.system.openapi.model.input.ThirdTgJoinChatroomByUrlInputDTO;
-import com.ruoyi.system.openapi.model.input.ThirdTgModifyChatroomHeadImageInputDTO;
-import com.ruoyi.system.openapi.model.input.ThirdTgModifyChatroomNameInputDTO;
+import com.ruoyi.system.openapi.model.input.*;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.system.service.IVibeRuleService;
 import com.ruoyi.system.service.PlayExecutionLogService;
@@ -424,7 +421,7 @@ public class IntoGroupService {
             return;
         }
         //失败
-        if (calledDTO.getResultCode() != 0) {
+        if (calledDTO.getResultCode().intValue() != 0) {
             log.setState(3);
             setLog(log.getPlayId(), "群" + log.getGroupSerialNo() + "修改群头像失败！", 1, PlayLogTyper.Group_img_name, log.getGroupId());
             playModifierGroupLogMapper.updateById(log);
@@ -911,6 +908,17 @@ public class IntoGroupService {
                     }
                     log.info("满足群要求后入群完成");
                     setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "已满足剧本所需发言人数，入群完成", 0, PlayLogTyper.Group_into, null);
+                    //调用开平接口获取群成员
+                    ThirdTgGetGroupMemberInputDTO dto = new ThirdTgGetGroupMemberInputDTO();
+                    dto.setChatroomSerialNo(group.getGroupSerialNo());
+                    dto.setTgRobotId(task.getPersonId());
+                    @SuppressWarnings("rawtypes")
+                    OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.getGroupMemberByThirdKpTg(dto);
+                    if (ret.getCode() != 0){
+                        setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员成功！", 0, PlayLogTyper.Group_into, null);
+                    }else {
+                        setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员失败！原因："+ret.getMessage(), 0, PlayLogTyper.Group_into, null);
+                    }
                 } else {
                     log.info("群入群失败！");
                     groupInfo.setIntoStatus(3);
