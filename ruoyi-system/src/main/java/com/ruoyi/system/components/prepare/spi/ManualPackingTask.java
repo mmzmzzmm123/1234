@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.fastjson2.JSON;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.impl.SysConfigServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -94,7 +95,7 @@ public class ManualPackingTask implements TaskExecution {
 				param.put(Settings.Key_Img, Objects.wrapNull(robotPck.getPic(), ""));
 				// 备用号
 				param.put(Settings.Key_Backup_Flag, findBackup(detail.getRobotId(), robot));
-
+				log.info("开始人设包装 {} {} " , robot, JSON.toJSONString(robotPck));
 				// 设置头像
 				if (!StringUtils.isEmpty(robotPck.getPic())) {
 					PlayRobotPackLog ret = tgRobotImgSettings.set(param);
@@ -127,9 +128,11 @@ public class ManualPackingTask implements TaskExecution {
 
 				// 同步设置 管理员
 				if (robotPck.getIsAdmin() != null && robotPck.getIsAdmin().intValue() == 1) {
+					log.info("设置管理员 {} " , JSON.toJSONString(robotPck));
 					ISysConfigService sysConfigService = SpringUtils.getBean(SysConfigServiceImpl.class);
 					final String botAdminPara = sysConfigService.selectConfigByKey("setBotAdmin:para");
 					if("0".equals(botAdminPara)) {
+						log.info("走bot的逻辑 {} " , JSON.toJSONString(robotPck));
 						//走bot的逻辑
 						PlayRobotPackLog ret = tgRobotAdminSettings.set(param);
 						if (ret.getStatus().intValue() == 1) {
@@ -147,6 +150,7 @@ public class ManualPackingTask implements TaskExecution {
 					}
 					else{
 						//走开平的逻辑
+						log.info("走开平的逻辑 {} " , JSON.toJSONString(robotPck));
 						final PlayRobotPackLog ret = tgGroupHashSettings.set(param);
 						if (StringUtils.isEmpty(ret.getOpt())) {
 							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "管理员（获取hash值）", true);
@@ -155,6 +159,7 @@ public class ManualPackingTask implements TaskExecution {
 						}
 						final String opt = ret.wrapOpt().getOpt();
 						submitList.add(ret.wrapRadio(radioId).wrapPushDetailId(detail.getId()));
+						log.info("同步设置管理员(获取hash值) {} ", ret);
 
 						if (!StringUtils.isEmpty(ret.getOpt())) {
 							// 请求成功后，插入一条 后置 请求

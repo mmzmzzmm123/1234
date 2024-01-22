@@ -85,7 +85,7 @@ public class MultipackLogContainer implements InitializingBean {
 							new QueryWrapper<Play>().lambda()
 									.in(Play::getScanProgress, Arrays.asList(ScanProgressEnum.Robot.getVal(),
 											ScanProgressEnum.Send_Wait.getVal()))
-									.eq(Play::getIsDelete, 0).in(Play::getState, Arrays.asList(1, 2, 3)));
+									.eq(Play::getIsDelete, 0).in(Play::getState, Arrays.asList(1, 2)));
 			if (CollectionUtils.isEmpty(datas)) {
 				return;
 			}

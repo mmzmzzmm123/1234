@@ -61,7 +61,7 @@ public class TgKpRobotAdminSettings implements Settings {
 			dto.setAddAdmins(false);
 			dto.setNotModifyPermissions(true);
 		}
-		dto.setMemberUserAccessHash(param.get(Settings.Key_AttachContent).toString());
+		dto.setMemberUserAccessHash(ObjectUtil.isNotEmpty(param.get(Settings.Key_AttachContent))?param.get(Settings.Key_AttachContent).toString(): null);
 		ret = OpenApiClient.setChatroomAdminByThirdKpTg(dto);
 
 
