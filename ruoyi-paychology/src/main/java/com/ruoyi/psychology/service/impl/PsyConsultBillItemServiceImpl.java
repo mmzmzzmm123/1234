@@ -62,18 +62,20 @@ public class PsyConsultBillItemServiceImpl extends ServiceImpl<PsyConsultBillIte
             // 以orderId 分组 计数
             Map<Long, List<PsyConsultBillItem>> collect = orderItems.stream().collect(groupingBy(PsyConsultBillItem::getOrderId));
             collect.forEach((key, value) -> {
-                AtomicInteger num = new AtomicInteger(1);
+                // 修复 咨询次数 咨询次数问题
+                // 序号 = 已核销-当前数+1
+                int i = value.get(0).getOrderNum() - value.get(0).getNum() - value.size() + 1;
+                AtomicInteger num = new AtomicInteger(i);
                 value.forEach(it -> {
                     it.setBuyNum(num.get());
                     it.setBuyNumStr(StrUtil.format("第{}次", num.get()));
-                    it.setNum(it.getOrderNum() - num.get());
                     num.getAndIncrement();
                     it.setPrice(it.getOrderTotal().divide(new BigDecimal(it.getOrderNum()), 2, BigDecimal.ROUND_UP));
                     it.setBrokerage(it.getPrice().multiply(it.getRatio().divide(new BigDecimal(100), 2, BigDecimal.ROUND_UP)));
                 });
             });
 
-            this.saveBatch(orderItems);
+            this.saveOrUpdateBatch(orderItems);
         }
     }
 
