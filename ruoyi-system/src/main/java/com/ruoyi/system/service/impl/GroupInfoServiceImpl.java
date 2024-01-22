@@ -146,6 +146,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         groupInfo.setGroupName(groupName);
         groupInfo.setCreateType(20);
         groupInfo.setCreateTime(LocalDateTime.now());
+        baseMapper.insert(groupInfo);
         return groupInfo;
     }
 
