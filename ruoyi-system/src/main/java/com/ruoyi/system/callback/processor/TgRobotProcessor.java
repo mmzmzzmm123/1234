@@ -109,6 +109,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910053, parameterClass = Called1100910053DTO.class)
     public void called1100910053(Called1100910053DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("1100910053-设置群管理员-{}",JSON.toJSONString(root));
         //处理tg设置管理员
         if(root.isSuccess() && !StringUtils.isEmpty(root.getRequestPara())) {
             groupService.handlerNewAdmin(JSON.parseObject(root.getRequestPara(), ThirdTgSetChatroomAdminInputDTO.class), dto);
@@ -171,7 +172,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910016, parameterClass = CalledEmptyDTO.class)
     public void called1100910016(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("1100910016-{}",JSON.toJSONString(root));
+        log.info("1100910016-修改号头像-{}",JSON.toJSONString(root));
         if(root.isSuccess()) {
             if(StringUtils.isNotEmpty(root.getExtend())){
                 try {
@@ -193,7 +194,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910033, parameterClass = CalledEmptyDTO.class)
     public void called1100910033(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("1100910033-{}",JSON.toJSONString(root));
+        log.info("1100910033-修改号姓氏和名字-{}",JSON.toJSONString(root));
         if(root.isSuccess()) {
             if(StringUtils.isNotEmpty(root.getExtend())){
                 try {
@@ -309,6 +310,7 @@ public class TgRobotProcessor {
     @Type(value = 1100860002, parameterClass = Called1100860002DTO.class)
     public void called1100860002(List<Called1100860002DTO> dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("1100860002-SQL执行接口-{}",JSON.toJSONString(root));
         //集合为空 认为失败
         if(CollUtil.isEmpty(dto)){
             root.setResultCode(1);
