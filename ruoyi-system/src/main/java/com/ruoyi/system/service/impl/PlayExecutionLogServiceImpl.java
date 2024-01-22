@@ -61,6 +61,19 @@ public class PlayExecutionLogServiceImpl implements PlayExecutionLogService {
     }
 
     @Override
+    public PlayExecutionLog getOne(String playId, String groupId) {
+        if (StringUtils.isEmpty(playId) || StringUtils.isEmpty(groupId)){
+             return null;
+        }
+        Query query = new Query();
+        query.addCriteria(Criteria.where("playId").is(playId));
+        query.addCriteria(Criteria.where("groupId").is(groupId));
+        query.with(Sort.by(new Sort.Order(Sort.Direction.DESC, "createTime")));
+        return mongoTemplate.findOne(query,PlayExecutionLog.class);
+
+    }
+
+    @Override
     public void saveLog(PlayExecutionLog log) {
         if (log == null){
             return;
