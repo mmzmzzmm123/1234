@@ -292,6 +292,12 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             }
             Map<Integer, PlayMessageConfound> confoundMap = new HashMap<>();
             for (PlayMessageConfoundLog confoundLog : logList) {
+                if (confoundLog.getExecuteNum() >= 3 ){
+                    confoundLog.setState(2);
+                    confoundLog.setFailMessage("未收到结果回调,混淆失败");
+                    super.updateById(confoundLog);
+                    continue;
+                }
                 PlayMessageConfound confound = confoundMap.get(confoundLog.getMessageConfoundId());
                 if (confound == null) {
                     confound = playMessageConfoundService.getById(confoundLog.getMessageConfoundId());

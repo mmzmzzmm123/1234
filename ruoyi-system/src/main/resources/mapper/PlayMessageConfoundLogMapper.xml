@@ -43,7 +43,7 @@
             1 = 1
           AND create_time > ADDDATE( NOW( ),- 1 )
           AND state IN ( 0, 2, 3 )
-          AND execute_num &lt; 3
+          AND execute_num &lt;= 3
     </select>
 
     <select id="page" resultType="com.ruoyi.system.domain.vo.QueryConfoundLogVO">
