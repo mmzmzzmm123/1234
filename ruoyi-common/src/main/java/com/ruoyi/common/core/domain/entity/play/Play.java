@@ -136,6 +136,16 @@ public class Play {
     private BigDecimal speed;
 
     /**
+     * 创建时间
+     */
+    private Date createTime;
+
+    /**
+     * 更新时间
+     */
+    private Date updateTime;
+
+    /**
      * TITLE : 剧本执行进度：0未开始 1调度修改群人设中 2 调用入群中 3 入群等待中 4 混淆 5 号分配,人设 6等待超群条件 7发剧本
      */
     private Integer scanProgress;
