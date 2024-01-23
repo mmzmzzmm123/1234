@@ -29,13 +29,13 @@ import com.ruoyi.system.components.ProductTools;
 import com.ruoyi.system.components.movie.PlayDirector;
 import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.dto.robot.ReleaseOccupyRobotDTO;
+import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.*;
 import com.ruoyi.system.service.business.GroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -88,6 +88,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     @Resource
     private PlayRobotGroupRelationMapper playRobotGroupRelationMapper;
 
+    @Resource
+    private PlayExecutionLogService playExecutionLogService;
+
     @Override
     @Transactional(rollbackFor=Exception.class)
     public R<String> create(PlayDTO dto) {
@@ -128,7 +131,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     //删除上传word文件
-    @Async
     public void delFileData(String fileId) {
         playFileMapper.delete(new LambdaQueryWrapper<PlayFile>().eq(PlayFile::getFileId, fileId));
     }
@@ -484,6 +486,13 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return null;
         }
         List<PlayGroupProgressVO> taskProgressList = baseMapper.selectGroupProgress(playId);
+        for (PlayGroupProgressVO vo : taskProgressList) {
+            PlayExecutionLog one = playExecutionLogService.getOne(vo.getPlayId(), vo.getGroupId());
+            String tip = Optional.ofNullable(one)
+                    .map(PlayExecutionLog::getContent)
+                    .orElse("");
+            vo.setTip(tip);
+        }
         return taskProgressList;
     }
 
