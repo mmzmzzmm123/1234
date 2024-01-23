@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import com.ruoyi.common.utils.Times;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.InitializingBean;
@@ -85,7 +87,9 @@ public class MultipackLogContainer implements InitializingBean {
 							new QueryWrapper<Play>().lambda()
 									.in(Play::getScanProgress, Arrays.asList(ScanProgressEnum.Robot.getVal(),
 											ScanProgressEnum.Send_Wait.getVal()))
-									.eq(Play::getIsDelete, 0).in(Play::getState, Arrays.asList(1, 2)));
+									.eq(Play::getIsDelete, 0)
+									.in(Play::getState, Arrays.asList(1, 2))
+									.gt(Play::getCreateTime, Times.getSecond(new Date(), - 60 * 60 * 24 * 3)));
 			if (CollectionUtils.isEmpty(datas)) {
 				return;
 			}
