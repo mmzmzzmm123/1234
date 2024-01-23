@@ -154,7 +154,7 @@ public class PlayPrepareTaskExecuteChain implements OnPackMonitor, OnRadioPackMo
 		}
 		if (data.getOp().intValue() == 4) {
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), null,
-					data.getOpt(), String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", data.getChatroomId(), data.getRobotId()), false);
+					data.getOpt(), "管理员", false);
 		}
 	}
 
@@ -174,10 +174,10 @@ public class PlayPrepareTaskExecuteChain implements OnPackMonitor, OnRadioPackMo
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
 					data.getOpt(), "管理员（获取hash值）", false);
 		}
-//		if (data.getOp().intValue() == 4) {
-//			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
-//					data.getOpt(), "管理员", false);
-//		}
+		if (data.getOp().intValue() == 4) {
+			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
+					data.getOpt(), "管理员", false);
+		}
 	}
 
 }
