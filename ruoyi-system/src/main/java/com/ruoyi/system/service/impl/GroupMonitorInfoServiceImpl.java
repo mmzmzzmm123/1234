@@ -129,7 +129,7 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
         groupInfo.setMemberCount(dto.getMemberQuantity());
         groupInfo.setJoinCount(dto.getJoinQuantity());
         groupInfo.setExitCount(dto.getLeaveQuantity());
-        groupInfo.setLinkJoinCount(dto.getInviteJoinQuantity());
+        groupInfo.setLinkJoinCount(dto.getSelfJoinQuantity());
 
         return baseMapper.update(groupInfo, new LambdaQueryWrapper<GroupMonitorInfo>()
                 .eq(GroupMonitorInfo::getOriginalGroupId, dto.getChatId()));
@@ -141,7 +141,7 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
         groupInfo.setMemberCount(dto.getMemberQuantity());
         groupInfo.setJoinCount(dto.getJoinQuantity());
         groupInfo.setExitCount(dto.getLeaveQuantity());
-        groupInfo.setLinkJoinCount(dto.getInviteJoinQuantity());
+        groupInfo.setLinkJoinCount(dto.getSelfJoinQuantity());
         groupInfo.setGroupId(id);
         baseMapper.updateById(groupInfo);
     }
