@@ -112,17 +112,19 @@ public class GroupService {
         List<String> countryCodes = new ArrayList<>();
         List<String> locks = new ArrayList<>();
         List<GroupInfoVO> groupInfoList = new ArrayList<>();
-        Integer botAdmin = ObjectUtil.equal("1", iSystemConfigService.selectConfigByKey("selectGroup:botAdmin"))?1:null;
+        Integer botAdmin = ObjectUtil.equal("1", iSystemConfigService.selectConfigByKey("selectGroup:botAdmin")) ? 1 : null;
         String groupRange = iSystemConfigService.selectConfigByKey("selectGroup:groupType");
         VibeRuleDTO one = ibiRuleService.getOne();
         if (one == null) {
             return R.fail("无风控规则");
         }
 
+        List<String> robotIds = new ArrayList<>();
+
         try {
             while (groupInfoList.size() < dto.getGroupNum()) {
                 count = dto.getGroupNum() - groupInfoList.size();
-                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count, countryCodes, failGroupId, botAdmin,groupRange);
+                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count, countryCodes, failGroupId, botAdmin, groupRange);
                 //没有满足条件的群
                 if (CollUtil.isEmpty(result)) {
                     //如果有优先国家  清空优先国家再次查询 否则跳出循环
@@ -133,9 +135,14 @@ public class GroupService {
                     }
                 }
                 for (GroupInfoVO groupInfoVO : result) {
+                    //同一个群主号的群 不能在一个批次
+                    if (robotIds.contains(groupInfoVO.getLeaderId())) {
+                        continue;
+                    }
+
                     //加锁 防止并发取群
                     String key = "selectGroup:" + groupInfoVO.getGroupId();
-                    if (!redisLock.tryLock(key,200)) {
+                    if (!redisLock.tryLock(key, 200)) {
                         failGroupId.add(groupInfoVO.getGroupId());
                         log.info("选群失败 加锁失败={}", groupInfoVO);
                         continue;
@@ -156,8 +163,8 @@ public class GroupService {
                         continue;
                     }
 
+                    robotIds.add(groupInfoVO.getLeaderId());
                     groupInfoVO.setRobots(adminRobots.stream().map(p -> BeanUtil.copyProperties(p, GroupRobotVO.class)).collect(Collectors.toList()));
-
                     groupInfoList.add(groupInfoVO);
                 }
             }
@@ -294,7 +301,7 @@ public class GroupService {
         }
 
         String key = "setBotAdmin:" + groupInfo.getGroupId();
-        if (!redisLock.tryLock(key,200)) {
+        if (!redisLock.tryLock(key, 200)) {
             log.info("设置管理员 加锁失败={}", JSON.toJSONString(groupInfo));
             return false;
         }
@@ -577,7 +584,7 @@ public class GroupService {
                             input.setManageCall(true);
                             input.setAnonymous(true);
                             input.setAddAdmins(true);
-                            if(ObjectUtil.equal("1", iSystemConfigService.selectConfigByKey("setBotAdmin:para"))){
+                            if (ObjectUtil.equal("1", iSystemConfigService.selectConfigByKey("setBotAdmin:para"))) {
                                 input.setAnonymous(false);
                                 input.setAddAdmins(false);
                                 input.setNotModifyPermissions(true);
@@ -813,7 +820,7 @@ public class GroupService {
     public boolean lockRobot(GroupAction action, String robotId) {
         if (action != null && action.getLimitOne() != null && action.getLimitOne()) {
             String robotKey = "action:" + action.getCode() + ":" + robotId;
-            if (!redisLock.tryLock(robotKey, 5, 100,TimeUnit.SECONDS)) {
+            if (!redisLock.tryLock(robotKey, 5, 100, TimeUnit.SECONDS)) {
                 return false;
             }
         }
@@ -848,7 +855,7 @@ public class GroupService {
 
     public void continueRunAction() {
         String key = "continueRunAction";
-        if (!redisLock.tryLock(key,60)) {
+        if (!redisLock.tryLock(key, 60)) {
             return;
         }
         try {
@@ -876,11 +883,11 @@ public class GroupService {
 
                         case INVITE_BOT_JOIN_GROUP:
                             apiResult = OpenApiClient.inviteJoinChatroomByThirdKpTg(
-                                    JSON.parseObject(groupActionLog.getPara(),ThirdTgInviteJoinChatroomInputDTO.class));
+                                    JSON.parseObject(groupActionLog.getPara(), ThirdTgInviteJoinChatroomInputDTO.class));
                             break;
                         case QUERY_HASH:
                             apiResult = OpenApiClient.sqlTaskSubmitByThirdKpTg(
-                            JSON.parseObject(groupActionLog.getPara(),ThirdTgSqlTaskSubmitInputDTO.class));
+                                    JSON.parseObject(groupActionLog.getPara(), ThirdTgSqlTaskSubmitInputDTO.class));
                             break;
 
                     }
@@ -917,7 +924,7 @@ public class GroupService {
         } catch (Exception e) {
             log.error("continueRunAction.error");
         } finally {
-           redisLock.unlock(key);
+            redisLock.unlock(key);
         }
     }
 
@@ -931,7 +938,7 @@ public class GroupService {
         log.info("设置bot管理员={}", JSON.toJSONString(groupInfo));
 
         String key = "setAdmin:" + groupInfo.getGroupId();
-        Assert.isTrue(redisLock.tryLock(key,200), "群正在设置管理员中,请勿频繁操作！");
+        Assert.isTrue(redisLock.tryLock(key, 200), "群正在设置管理员中,请勿频繁操作！");
         try {
             //当前是否有批次任务执行邀请bot进群检测
             GroupBatchAction batchAction = groupBatchActionService.getBatchAction(groupInfo.getGroupId(), 1);
