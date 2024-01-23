@@ -15,6 +15,7 @@ import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.system.callback.dto.Called1100910006DTO;
 import com.ruoyi.system.callback.dto.Called1100910039DTO;
 import com.ruoyi.system.callback.dto.CalledDTO;
 import com.ruoyi.system.components.Beans;
@@ -946,9 +947,9 @@ public class IntoGroupService {
             OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.getGroupMemberByThirdKpTg(dto);
             if (ret.getCode() == 0){
                 setMemberLog(groupId,playId,robot.getRobotId(),tgGroupId,1,ret.getData().getOptSerNo());
-                setLog(playId, "群" + groupId + "同步开平群成员成功！", 0, PlayLogTyper.Group_into, null);
+                setLog(playId, "群" + groupId + "同步开平群成员请求成功！等待回调", 0, PlayLogTyper.Group_into, null);
             }else {
-                setMemberLog(groupId,playId,robot.getRobotId(),tgGroupId,3,ret.getData().getOptSerNo());
+                setMemberLog(groupId,playId,robot.getRobotId(),tgGroupId,4,ret.getData().getOptSerNo());
                 setLog(playId, "群" + groupId + "同步开平群成员失败！原因："+ret.getMessage(), 1, PlayLogTyper.Group_into, null);
             }
         }else {
@@ -956,6 +957,38 @@ public class IntoGroupService {
         }
 
     }
+
+    @Scheduled(cron = "0/20 * * * * ?")
+    public void scanGroupMember(){
+        log.info("扫描获取群成员{}");
+        RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:scanGroupMember");
+        if (lock.isLocked()) {
+            return;
+        }
+        try {
+            lock.lock(60 * 60, TimeUnit.SECONDS);
+            List<PlayGroupMemberLog> playGroupMemberLogs = playGroupMemberLogMapper.selectGroupLogByState();
+            if (playGroupMemberLogs == null || playGroupMemberLogs.size() == 0){
+                return;
+            }
+            for (PlayGroupMemberLog memberLog:playGroupMemberLogs){
+                //判断是否还能重试
+                List<PlayGroupMemberLog> logs = playGroupMemberLogMapper.selectGroupLogByPlayIdAll(memberLog.getPlayId());
+                if (logs.size() < 10){
+                    retryGroupMember(memberLog.getGroupId(),memberLog.getPlayId(),memberLog.getGroupSerialNo());
+                }
+                //修改当前状态
+                memberLog.setState(3);
+                playGroupMemberLogMapper.updateById(memberLog);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            lock.unlock();
+        }
+
+    }
+
 
     public void  setMemberLog(String groupId,String playId,String robotId,String tgGroupId,Integer state,String opt){
         PlayGroupMemberLog playGroupMemberLog = new PlayGroupMemberLog();
@@ -967,6 +1000,37 @@ public class IntoGroupService {
         playGroupMemberLog.setRobotId(robotId);
         playGroupMemberLog.setCreateTime(new Date());
         playGroupMemberLogMapper.insert(playGroupMemberLog);
+    }
+
+    public void  setGroupMemberCallBack(Called1100910006DTO callBack, CalledDTO calledDTO){
+        log.info("获取群成员入参{}{}", calledDTO, callBack);
+        if (StringUtils.isEmpty(calledDTO.getOptSerNo())) {
+            return;
+        }
+        //根据操作编码去表里查询数据
+        PlayGroupMemberLog log = playGroupMemberLogMapper.selectGroupLogByCode(calledDTO.getOptSerNo());
+        if (log == null) {
+            return;
+        }
+        //失败
+        if (calledDTO.getResultCode().intValue() != 0) {
+            log.setState(3);
+            playGroupMemberLogMapper.updateById(log);
+            //判断是否已达重试次数
+            List<PlayGroupMemberLog> playGroupMemberLogs = playGroupMemberLogMapper.selectGroupLogByPlayIdAll(log.getPlayId());
+            if (playGroupMemberLogs.size() < 10){
+                //重试
+                setLog(log.getPlayId(), "群" + log.getGroupSerialNo() + "获取群成员失败！正在重试中", 1, PlayLogTyper.Group_into, log.getGroupId());
+                retryGroupMember(log.getGroupId(), log.getRobotId(),log.getGroupSerialNo());
+            }
+            setLog(log.getPlayId(), "群" + log.getGroupSerialNo() + "获取群成员失败！已达重试次数", 1, PlayLogTyper.Group_into, log.getGroupId());
+        } else {
+            log.setState(2);
+            setLog(log.getPlayId(), "群" + log.getGroupSerialNo() + "获取群成员失败！", 0, PlayLogTyper.Group_into, log.getGroupId());
+            playGroupMemberLogMapper.updateById(log);
+        }
+
+
     }
 
     public void retryRobotIntoGroup(PlayIntoGroupTask task,Play play,VibeRuleDTO vibeRule){
@@ -1196,6 +1260,15 @@ public class IntoGroupService {
         calendar.setTime(new Date());
         calendar.add(Calendar.MINUTE, -3);
         playModifierGroupLogMapper.updateTaskByOutTime(calendar.getTime(), "无回调，自动变更失败！");
+    }
+
+    @Scheduled(cron = "0/30 * * * * ?")
+    public void scanGroupMemberCallBack(){
+        log.error("定时检测同步群成员是否有回调超时的任务");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MINUTE, -3);
+        playGroupMemberLogMapper.updateTaskByOutTime(calendar.getTime());
     }
 
     @Scheduled(cron = "0/30 * * * * ?")
