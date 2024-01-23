@@ -22,10 +22,7 @@ import com.ruoyi.system.components.RandomListPicker;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.GroupQueryDTO;
-import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
-import com.ruoyi.system.domain.dto.play.PlayIntoGroupTask;
-import com.ruoyi.system.domain.dto.play.PlayModifierGroupLog;
-import com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation;
+import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.dto.robot.GetRobotDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
@@ -97,6 +94,8 @@ public class IntoGroupService {
     @Autowired
     GroupRobotService groupRobotService;
 
+    @Autowired
+    PlayGroupMemberLogMapper playGroupMemberLogMapper;
     String errorMessageListRedisKey = "error_message_list_redis_key:";
 
     @Scheduled(cron = "0/20 * * * * ?")
@@ -912,22 +911,7 @@ public class IntoGroupService {
                     }
                     log.info("满足群要求后入群完成");
                     setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "已满足剧本所需发言人数，入群完成", 0, PlayLogTyper.Group_into, null);
-                    //调用开平接口获取群成员
-                    ThirdTgGetGroupMemberInputDTO dto = new ThirdTgGetGroupMemberInputDTO();
-                    dto.setChatroomSerialNo(group.getGroupSerialNo());
-                    GroupRobot robot = groupRobotService.getAdminRobot(group.getGroupId());
-                    if (robot != null){
-                        dto.setTgRobotId(robot.getRobotId());
-                        @SuppressWarnings("rawtypes")
-                        OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.getGroupMemberByThirdKpTg(dto);
-                        if (ret.getCode() == 0){
-                            setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员成功！", 0, PlayLogTyper.Group_into, null);
-                        }else {
-                            setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员失败！原因："+ret.getMessage(), 1, PlayLogTyper.Group_into, null);
-                        }
-                    }else {
-                        setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "获取群主号异常！", 1, PlayLogTyper.Group_into, null);
-                    }
+                    retryGroupMember(group.getGroupId(),play.getId(),group.getGroupSerialNo());
                 } else {
                     log.info("群入群失败！");
                     groupInfo.setIntoStatus(3);
@@ -948,6 +932,41 @@ public class IntoGroupService {
             SpringUtils.getBean(RedisLock.class).unWaitLock("ruoyi:wait:groupCallback" + group.getGroupId());
         }
 
+    }
+
+
+    public  void retryGroupMember(String groupId,String playId,String tgGroupId){
+        //调用开平接口获取群成员
+        ThirdTgGetGroupMemberInputDTO dto = new ThirdTgGetGroupMemberInputDTO();
+        dto.setChatroomSerialNo(tgGroupId);
+        GroupRobot robot = groupRobotService.getAdminRobot(groupId);
+        if (robot != null){
+            dto.setTgRobotId(robot.getRobotId());
+            @SuppressWarnings("rawtypes")
+            OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.getGroupMemberByThirdKpTg(dto);
+            if (ret.getCode() == 0){
+                setMemberLog(groupId,playId,robot.getRobotId(),tgGroupId,1,ret.getData().getOptSerNo());
+                setLog(playId, "群" + groupId + "同步开平群成员成功！", 0, PlayLogTyper.Group_into, null);
+            }else {
+                setMemberLog(groupId,playId,robot.getRobotId(),tgGroupId,3,ret.getData().getOptSerNo());
+                setLog(playId, "群" + groupId + "同步开平群成员失败！原因："+ret.getMessage(), 1, PlayLogTyper.Group_into, null);
+            }
+        }else {
+            setLog(playId, "群" + groupId + "获取群主号异常！", 1, PlayLogTyper.Group_into, null);
+        }
+
+    }
+
+    public void  setMemberLog(String groupId,String playId,String robotId,String tgGroupId,Integer state,String opt){
+        PlayGroupMemberLog playGroupMemberLog = new PlayGroupMemberLog();
+        playGroupMemberLog.setGroupId(groupId);
+        playGroupMemberLog.setGroupSerialNo(tgGroupId);
+        playGroupMemberLog.setId(IdUtils.fastUUID());
+        playGroupMemberLog.setOptSerNo(opt);
+        playGroupMemberLog.setPlayId(playId);
+        playGroupMemberLog.setRobotId(robotId);
+        playGroupMemberLog.setCreateTime(new Date());
+        playGroupMemberLogMapper.insert(playGroupMemberLog);
     }
 
     public void retryRobotIntoGroup(PlayIntoGroupTask task,Play play,VibeRuleDTO vibeRule){
