@@ -138,7 +138,9 @@ public class StateJobProcessor implements LogJobProcessor {
 		}
 		// 是否执行完成 刷新
 		datas = robotPackLogMapper
-				.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getIsFinish, 0));
+				.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getIsFinish, 0)
+						.eq(PlayRobotPackLog::getPlayId, play.getId())
+				);
 		
 		if(CollectionUtils.isEmpty(datas)) {
 			return ;
