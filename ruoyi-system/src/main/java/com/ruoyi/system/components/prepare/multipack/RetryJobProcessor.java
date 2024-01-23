@@ -130,6 +130,8 @@ public class RetryJobProcessor implements LogJobProcessor {
 		param.put(Settings.Key_Img, Objects.wrapNull(conf.getPic(), ""));
 		// 备用号
 		param.put(Settings.Key_Backup_Flag, data.getIsBackup().intValue() == 0 ? false : true);
+		// hash 值
+		param.put(Settings.Key_AttachContent, Objects.wrapNull(data.getAttchContent(), ""));
 
 		final Settings tgRobotImgSettings = ServiceLoader.load(Settings.class, "TgRobotImgSettings");
 		final Settings tgRobotNameSettings = ServiceLoader.load(Settings.class, "TgRobotNameSettings");
