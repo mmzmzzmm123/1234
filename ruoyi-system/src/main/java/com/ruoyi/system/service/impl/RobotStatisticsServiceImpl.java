@@ -57,10 +57,8 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         selectRobotByRuleDTO.setOneDaySetAdminCount(vibeRule.getSetManageLimitByDay());
         selectRobotByRuleDTO.setTotalSetAdminCount(vibeRule.getSetManageLimitByTotal());
         Boolean adminFlag = false;
-        int tmpRobotSize;
         List<SelectRobotByRuleVO> tmpSelectData;
         List<SelectRobotByRuleVO> selectRobotByRuleVOS = new ArrayList<>();
-        List<String> updateRobotStatisticsIds = new ArrayList<>();
         //如果需要设置管理员的号,先获取设置管理员的号
         if(dto.getSetAdminCount() > 0){
             selectRobotByRuleDTO.setLimit(dto.getSetAdminCount());
@@ -71,6 +69,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             selectRobotByRuleDTO.setIpType(dto.getIpType());
             selectRobotByRuleVOS = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
             log.info("getRobot selectRobotByRuleVOS:{}",selectRobotByRuleVOS);
+            lockRobotByIds(selectRobotByRuleVOS, dto.getIsLock());
 
             // 目标国家不够则随机取其它国家
             if (null == selectRobotByRuleVOS || selectRobotByRuleVOS.size() < dto.getSetAdminCount()) {
@@ -83,25 +82,14 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
                         size = tmpSelectData.size();
                     }
                     selectRobotByRuleVOS.addAll(tmpSelectData.subList(0, size));
+                    lockRobotByIds(selectRobotByRuleVOS, dto.getIsLock());
                 }
             }
 
-            if(CollectionUtils.isEmpty(selectRobotByRuleVOS)){
-                return R.fail("未获取到管理员号资源");
-            }
-            if(selectRobotByRuleVOS.size() < dto.getSetAdminCount()){
-                log.info("RobotStatisticsService_getRobot_管理员号资源不足_dataSize:{}_count:{}", selectRobotByRuleVOS.size(),  dto.getSetAdminCount());
+            if(CollectionUtils.isEmpty(selectRobotByRuleVOS) || selectRobotByRuleVOS.size() < dto.getSetAdminCount()){
+                unlockRobotByIds(selectRobotByRuleVOS, dto.getIsLock());
+                log.info("RobotStatisticsService_getRobot_管理员号资源不足");
                 return R.fail("管理员号资源不足");
-            }
-
-            if(dto.getIsLock() == 1){
-                updateRobotStatisticsIds = selectRobotByRuleVOS.stream()
-                        .map(SelectRobotByRuleVO::getId)
-                        .filter(StringUtils::isNotEmpty).collect(Collectors.toList());
-                log.info("getRobot_update_AdminRobotStatistics_ids:{}", updateRobotStatisticsIds);
-                this.update(new LambdaUpdateWrapper<RobotStatistics>()
-                        .in(RobotStatistics::getId, updateRobotStatisticsIds)
-                        .set(RobotStatistics::getIsLock,1));
             }
         }
 
@@ -123,8 +111,9 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             selectRobotByRuleDTO.setExcludeRobotSerialNos(excludeRobotSerialNos);
             selectRobotByRuleVOS1 = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
             log.info("getRobot selectRobotByRuleVOS1:{}",selectRobotByRuleVOS1);
+            lockRobotByIds(selectRobotByRuleVOS1, dto.getIsLock());
 
-            if (null == selectRobotByRuleVOS1 || selectRobotByRuleVOS1.size() < dto.getCount()) {
+            if (CollectionUtils.isEmpty(selectRobotByRuleVOS1) || selectRobotByRuleVOS1.size() < dto.getCount()) {
                 tmpSelectData = this.selectRobotByAllCountyCode(selectRobotByRuleDTO, dto.getCount() * 10);
                 log.info("RobotStatisticsService_getRobot_tmpRobotSize:{}", null == tmpSelectData ? 0 : tmpSelectData.size());
                 if (null != tmpSelectData) {
@@ -134,27 +123,16 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
                     }
                     Collections.shuffle(tmpSelectData);
                     selectRobotByRuleVOS1.addAll(tmpSelectData.subList(0, size));
+                    lockRobotByIds(selectRobotByRuleVOS1, dto.getIsLock());
                 }
             }
 
-            if(CollectionUtils.isEmpty(selectRobotByRuleVOS1)){
-                return R.fail("没有普通号资源");
-            }
-            if (selectRobotByRuleVOS1.size() < dto.getCount()) {
+            if(null == selectRobotByRuleVOS1 || selectRobotByRuleVOS1.size() < dto.getCount()){
+                unlockRobotByIds(selectRobotByRuleVOS1, dto.getIsLock());
                 return R.fail("普通号资源不足");
             }
             selectRobotByRuleVOSTotal.addAll(selectRobotByRuleVOS1);
-            if(dto.getIsLock() == 1){
-                updateRobotStatisticsIds = selectRobotByRuleVOS1.stream()
-                        .map(SelectRobotByRuleVO::getId)
-                        .filter(StringUtils::isNotEmpty).collect(Collectors.toList());
-                log.info("getRobot_admin_update_RobotStatistics_ids:{}", updateRobotStatisticsIds);
-                this.update(new LambdaUpdateWrapper<RobotStatistics>()
-                        .in(RobotStatistics::getId,  updateRobotStatisticsIds)
-                        .set(RobotStatistics::getIsLock,1));
-            }
         }
-
         List<GetRobotVO> resultData = new ArrayList<>();
         try {
             if(adminFlag){
@@ -190,6 +168,32 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             return R.fail("计数失败");
         }
         return R.ok(resultData);
+    }
+
+    //释放号锁定状态
+    private void unlockRobotByIds(List<SelectRobotByRuleVO> robotData, int lockState) {
+        if (CollectionUtils.isNotEmpty(robotData) && lockState == 1) {
+            List<String> updateRobotStatisticsIds = robotData.stream()
+                    .map(SelectRobotByRuleVO::getId)
+                    .filter(StringUtils::isNotEmpty).collect(Collectors.toList());
+            log.info("getRobot_update_robotStatistics_ids:{}", updateRobotStatisticsIds);
+            this.update(new LambdaUpdateWrapper<RobotStatistics>()
+                    .in(RobotStatistics::getId, updateRobotStatisticsIds)
+                    .set(RobotStatistics::getIsLock, 0));
+        }
+    }
+
+    //将号标记为锁定状态
+    private void lockRobotByIds(List<SelectRobotByRuleVO> robotData, int lockState) {
+        if (CollectionUtils.isNotEmpty(robotData) && lockState == 1) {
+            List<String> updateRobotStatisticsIds = robotData.stream()
+                    .map(SelectRobotByRuleVO::getId)
+                    .filter(StringUtils::isNotEmpty).collect(Collectors.toList());
+            log.info("getRobot_update_robotStatistics_ids:{}", updateRobotStatisticsIds);
+            this.update(new LambdaUpdateWrapper<RobotStatistics>()
+                    .in(RobotStatistics::getId, updateRobotStatisticsIds)
+                    .set(RobotStatistics::getIsLock, 1));
+        }
     }
 
     private List<SelectRobotByRuleVO> selectRobotByAllCountyCode(SelectRobotByRuleDTO query, Integer limit) {
