@@ -475,6 +475,7 @@ public class IntoGroupService {
                             playDTO.setState(4);
                             playDTO.setEndDate(new Date());
                             playDTO.setFailReason("无剧本所需足够的群！");
+                            setLog(playDTO.getId(), "无剧本所需足够的群数", 1, PlayLogTyper.Group_out, null);
                             playMapper.updateById(playDTO);
                             continue;
                         }
@@ -559,6 +560,7 @@ public class IntoGroupService {
                             playDTO.setState(4);
                             playDTO.setEndDate(new Date());
                             playDTO.setFailReason("无剧本所需足够的机器人！");
+                            log.info("群" + group + "机器人出库失败，无足够的机器人");
                             setLog(playDTO.getId(), "群" + group + "机器人出库失败，无足够的机器人", 1, PlayLogTyper.Group_into, null);
                             playMapper.updateById(playDTO);
                             continue;
