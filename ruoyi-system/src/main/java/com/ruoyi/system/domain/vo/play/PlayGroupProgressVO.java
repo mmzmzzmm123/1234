@@ -75,4 +75,7 @@ public class PlayGroupProgressVO {
     @ApiModelProperty("提示")
     private String tip;
 
+    @ApiModelProperty("群主封号状态 10:未封号 20:疑似封号 30:封号离线")
+    private Integer groupMasterSealStatus;
+
 }

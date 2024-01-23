@@ -1,6 +1,13 @@
 package com.ruoyi.system.components.prepare.multipack;
 
 import java.util.List;
+
+import com.ruoyi.common.enums.PlayLogTyper;
+import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.domain.GroupInfo;
+import com.ruoyi.system.mapper.GroupInfoMapper;
+import com.ruoyi.system.service.PlayExecutionLogService;
 import org.springframework.util.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.play.Play;
@@ -59,6 +66,8 @@ public class SendConditionJobProcessor implements LogJobProcessor {
 						.intValue();
 				log.info("炒群条件判断 {} {} {} {} {}", full, info, robotCount, push , p);
 				if (full) {
+					GroupInfo groupInfo = SpringUtils.getBean(GroupInfoMapper.class).selectById(push.getGroupId());
+					PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, play.getId(), StringUtils.format("【群名称{}-{}】达到炒群条件，群人数大于{}人，开始炒群",groupInfo.getGroupName(), push.getGroupId(), play.getUserNum()), null);
 					// 达到了超群条件
 					fullCondition(push);
 				}
@@ -68,6 +77,7 @@ public class SendConditionJobProcessor implements LogJobProcessor {
 			// 是否过了系统时间
 			for (PlayMessagePush push : groups) {
 				if (Times.now() >= play.getStartGroupDate().getTime()) {
+					PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, play.getId(), StringUtils.format("达到炒群条件-{}，开始炒群", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, play.getStartGroupDate())), null);
 					fullCondition(push);
 				}
 			}

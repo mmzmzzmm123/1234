@@ -17,12 +17,14 @@ public class CallbackController {
 
     @Anonymous
     @PostMapping("callback")
-    public void callback(@RequestBody String msg) {
+    public String callback(@RequestBody String msg) {
 //        log.info("收到回调={}", msg);
         try {
             callBackService.callback(msg);
+            return "success";
         } catch (Exception e) {
             log.error("回调异常={}", msg, e);
         }
+        return "fail";
     }
 }

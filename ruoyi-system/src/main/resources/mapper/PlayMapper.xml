@@ -88,10 +88,11 @@
 
     <select id="selectGroupProgress" resultType="com.ruoyi.system.domain.vo.play.PlayGroupProgressVO">
         SELECT
-            tpmp.id,
-            tpmp.play_id,
+            tpgi.group_id AS id,
+            tpgi.play_id,
+            tpgi.state,
             tpmp.id AS pushId,
-            tpmp.push_state AS pushState,
+            IFNULL( tpmp.push_state, 1 ) AS pushState,
             tgi.group_id,
             tgi.group_serial_no,
             tgi.group_name,
@@ -117,20 +118,27 @@
                   AND tprgr.is_delete = 0
             ) AS navyCount,
             count( tpmpd.id ) AS totalNum,
-            sum( IF ( tpmpd.send_state > 0, 1, 0 ) ) AS currentNum
+            sum( IF ( tpmpd.send_state > 0, 1, 0 ) ) AS currentNum,
+            tri.seal_status AS groupMasterSealStatus
         FROM
-            t_play_message_push tpmp
-                LEFT JOIN t_group_info tgi ON tpmp.group_id = tgi.group_id
-                LEFT JOIN t_group_monitor_info tgmi ON tgi.group_id = tgmi.group_id
-                LEFT JOIN t_group_state tgs ON tgi.group_id = tgs.group_id
-                LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
+            t_play_group_info tpgi
+            LEFT JOIN t_group_info tgi ON tpgi.tg_group_id = tgi.group_id
+            LEFT JOIN t_group_monitor_info tgmi ON tgi.group_id = tgmi.group_id
+            LEFT JOIN t_group_state tgs ON tgi.group_id = tgs.group_id
+            LEFT JOIN t_group_robot tgr ON tgr.group_id = tgi.group_id
+            AND tgr.member_type = 1
+            LEFT JOIN t_robot_info tri ON tgr.robot_id = tri.robot_serial_no
+            LEFT JOIN t_play_message_push tpmp ON tpgi.play_id = tpmp.play_id
+            AND tpgi.tg_group_id = tpmp.group_id
+            LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
         WHERE
             1 = 1
-          AND tpmp.play_id = #{playId}
+          AND tpgi.into_status = 2
+          AND tpgi.play_id = #{playId}
         GROUP BY
-            tpmp.id
+            tpgi.group_id
         ORDER BY
-            tpmp.id DESC
+            tpgi.create_time DESC,tpgi.group_id ASC
     </select>
 
     <select id="selectPushDetailPage" resultType="com.ruoyi.system.domain.vo.play.QueryPushDetailVO">
