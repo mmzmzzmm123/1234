@@ -29,6 +29,11 @@ public enum PlayLogTyper {
 	/**
 	 * 剧本混淆
 	 */
-	Play_Confound;
+	Play_Confound,
+
+	/**
+	 * 炒群
+	 */
+	Group_Send;
 
 }
