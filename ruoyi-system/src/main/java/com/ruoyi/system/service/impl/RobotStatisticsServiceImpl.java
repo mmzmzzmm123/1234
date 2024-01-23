@@ -57,6 +57,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         selectRobotByRuleDTO.setTotalSetAdminCount(vibeRule.getSetManageLimitByTotal());
         selectRobotByRuleDTO.setIsLock(dto.getIsLock());
         Boolean adminFlag = false;
+        int size;
         List<SelectRobotByRuleVO> tmpSelectData;
         List<SelectRobotByRuleVO> selectRobotByRuleVOS = new ArrayList<>();
         //如果需要设置管理员的号,先获取设置管理员的号
@@ -71,10 +72,11 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             log.info("getRobot selectRobotByRuleVOS:{}",selectRobotByRuleVOS);
 
             // 目标国家不够则随机取其它国家
-            if (null == selectRobotByRuleVOS || selectRobotByRuleVOS.size() < dto.getSetAdminCount()) {
-                tmpSelectData = this.selectRobotByAllCountyCode(selectRobotByRuleDTO, dto.getSetAdminCount());
+            if (CollectionUtils.isEmpty(selectRobotByRuleVOS) || selectRobotByRuleVOS.size() < dto.getSetAdminCount()) {
+                size = dto.getSetAdminCount() - (CollectionUtils.isEmpty(selectRobotByRuleVOS) ? 0 : selectRobotByRuleVOS.size());
+                tmpSelectData = this.selectRobotByAllCountyCode(selectRobotByRuleDTO, size);
                 log.info("RobotStatisticsService_getRobot_tmpAdminRobotSize:{}", null == tmpSelectData ? 0 : tmpSelectData.size());
-                if (null != tmpSelectData) {
+                if (CollectionUtils.isNotEmpty(tmpSelectData)) {
                     selectRobotByRuleVOS.addAll(tmpSelectData);
                 }
             }
@@ -105,9 +107,10 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             log.info("getRobot selectRobotByRuleVOS1:{}",selectRobotByRuleVOS1);
 
             if (CollectionUtils.isEmpty(selectRobotByRuleVOS1) || selectRobotByRuleVOS1.size() < dto.getCount()) {
-                tmpSelectData = this.selectRobotByAllCountyCode(selectRobotByRuleDTO, dto.getCount());
+                size = dto.getCount() - (CollectionUtils.isEmpty(selectRobotByRuleVOS1) ? 0 : selectRobotByRuleVOS1.size());
+                tmpSelectData = this.selectRobotByAllCountyCode(selectRobotByRuleDTO, size);
                 log.info("RobotStatisticsService_getRobot_tmpRobotSize:{}", null == tmpSelectData ? 0 : tmpSelectData.size());
-                if (null != tmpSelectData) {
+                if (CollectionUtils.isNotEmpty(tmpSelectData)) {
                     selectRobotByRuleVOS1.addAll(tmpSelectData);
                 }
             }
