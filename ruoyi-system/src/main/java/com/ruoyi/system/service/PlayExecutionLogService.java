@@ -63,6 +63,17 @@ public interface PlayExecutionLogService {
 		log.setContent(content);
 		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
 	}
+
+	public static void robotPackLog(String playId, String content, Integer state) {
+		PlayExecutionLog log = new PlayExecutionLog();
+		log.setPlayId(playId);
+		if (state != null) {
+			log.setState(state);
+		}
+		log.setType(PlayLogTyper.Robot_Settings);
+		log.setContent(content);
+		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
+	}
 	
 	
 	public static void robotPackLog(String playId, String groupId, String robotId ,String conetent , String errMsg){
