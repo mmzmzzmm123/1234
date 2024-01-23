@@ -95,6 +95,7 @@ public class LogPostJobProcessor implements LogJobProcessor {
 				update.setStatus(ret.getStatus());
 				update.setErrMsg(ret.getErrMsg());
 				update.setOpt(data.getOpt());
+				update.setAttchContent(attchContent);
 				robotPackLogMapper.updateById(update);
 				log.info("后置log更新 {}", data);
 			} else {
@@ -105,6 +106,7 @@ public class LogPostJobProcessor implements LogJobProcessor {
 				data.setStatus(ret.getStatus());
 				data.setErrMsg(ret.getErrMsg());
 				data.setOpt(ret.getOpt());
+				data.setAttchContent(attchContent);
 				robotPackLogMapper.insert(data);
 				log.info("后置log覆盖插入 {}", data);
 			}

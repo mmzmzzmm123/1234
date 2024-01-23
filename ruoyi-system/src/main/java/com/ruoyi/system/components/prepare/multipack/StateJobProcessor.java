@@ -1,13 +1,14 @@
 package com.ruoyi.system.components.prepare.multipack;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.utils.Objects;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.system.components.spi.Settings;
 import com.ruoyi.system.service.PlayExecutionLogService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -165,6 +166,22 @@ public class StateJobProcessor implements LogJobProcessor {
 			wrapper.lambda().eq(PlayRobotPackLog::getRadioId, radioId);
 			robotPackLogMapper.update(update, wrapper);
 			log.info("PlayRobotPackLog_更新完成 {}", radioId);
+
+			{
+				List<PlayRobotPackLog> allLogs = robotPackLogMapper
+						.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getPlayId, play.getId()));
+				final List<PlayRobotPackLog> unFinishLogs = allLogs.stream().filter(it -> it.getIsFinish().intValue() == 0).collect(Collectors.toList());
+				if (CollectionUtils.isEmpty(unFinishLogs)) {
+					//人设包装完成，等待炒群条件触发；
+					final List<String> groupIds = allLogs.stream().map(PlayRobotPackLog::getChatroomId).distinct().collect(Collectors.toList());
+					final List<String> failGroupIds = allLogs.stream().filter(it -> it.getStatus().intValue() == 2).map(PlayRobotPackLog::getChatroomId).distinct().collect(Collectors.toList());
+					if (!CollectionUtils.isEmpty(failGroupIds)) {
+						PlayExecutionLogService.robotPackLog(play.getId(), StringUtils.format("总群数 {}，存在失败任务群数 {}：{}", groupIds.size(), failGroupIds.size(), StringUtils.join(failGroupIds, ",")), null);
+					}
+					PlayExecutionLogService.robotPackLog(play.getId(), "人设包装完成，等待炒群条件触发", null);
+				}
+			}
+
 			List<PlayRobotPackLog> failList = PlayRobotPackLog.listByError(logs);
 			if (CollectionUtils.isEmpty(failList)) {
 				// 全部都是成功， 代表成功
@@ -175,6 +192,12 @@ public class StateJobProcessor implements LogJobProcessor {
 			onRadioPackMonitor.onRadioPackFailed(logs);
 		}
 
+	}
+
+	public static void main(String[] args) {
+		List<String> list = new ArrayList<>();
+		list.add("1");list.add("2");list.add("3");
+		System.out.println(StringUtils.join(list, ","));
 	}
 
 }

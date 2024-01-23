@@ -21,6 +21,7 @@
         from t_robot_info tri
             left join t_robot_statistics trs on tri.robot_serial_no = trs.robot_serial_no
         where tri.enable_type = 1
+          and tri.group_owner = 0
           and tri.delete_status = 0
           and trs.is_lock = 0
           and tri.seal_status = 10
@@ -72,6 +73,9 @@
             group by tri.vpn_ip_c
         </if>
         limit 0,#{dto.limit}
+        <if test="dto.isLock != null and dto.isLock == 1">
+            for update
+        </if>
     </select>
 
     <update id="addCount">

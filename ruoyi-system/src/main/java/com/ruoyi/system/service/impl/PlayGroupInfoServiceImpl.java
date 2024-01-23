@@ -30,7 +30,8 @@ public class PlayGroupInfoServiceImpl extends ServiceImpl<PlayGroupInfoMapper, P
         }
         LambdaQueryWrapper<PlayGroupInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(PlayGroupInfo::getPlayId, playId);
-        lambdaQueryWrapper.orderByAsc(PlayGroupInfo::getCreateTime);
+        lambdaQueryWrapper.eq(PlayGroupInfo::getIntoStatus, 2);
+        lambdaQueryWrapper.orderByDesc(PlayGroupInfo::getCreateTime);
         return super.list(lambdaQueryWrapper);
     }
 }

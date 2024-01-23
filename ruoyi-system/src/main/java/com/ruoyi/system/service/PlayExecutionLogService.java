@@ -63,6 +63,10 @@ public interface PlayExecutionLogService {
 		log.setContent(content);
 		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
 	}
+
+	public static void robotPackLog(String playId, String content, Integer state) {
+		savePackLog(PlayLogTyper.Robot_Settings, playId, content,state);
+	}
 	
 	
 	public static void robotPackLog(String playId, String groupId, String robotId ,String conetent , String errMsg){
@@ -134,6 +138,17 @@ public interface PlayExecutionLogService {
 		}else {
 			log.setContent(String.format("【剧本消息发送失败】 群%s 号%s，原因：%s", groupId, robotId, errMsg));
 		}
+		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
+	}
+
+	public static void savePackLog(PlayLogTyper playLogTyper, String playId, String content, Integer state) {
+		PlayExecutionLog log = new PlayExecutionLog();
+		log.setPlayId(playId);
+		if (state != null) {
+			log.setState(state);
+		}
+		log.setType(playLogTyper);
+		log.setContent(content);
 		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
 	}
 }
