@@ -15,6 +15,7 @@ import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
+import com.ruoyi.system.callback.dto.Called1100910006DTO;
 import com.ruoyi.system.callback.dto.Called1100910039DTO;
 import com.ruoyi.system.callback.dto.CalledDTO;
 import com.ruoyi.system.components.Beans;
@@ -22,10 +23,7 @@ import com.ruoyi.system.components.RandomListPicker;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.GroupQueryDTO;
-import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
-import com.ruoyi.system.domain.dto.play.PlayIntoGroupTask;
-import com.ruoyi.system.domain.dto.play.PlayModifierGroupLog;
-import com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation;
+import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.dto.robot.GetRobotDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.GroupInfoVO;
@@ -97,6 +95,8 @@ public class IntoGroupService {
     @Autowired
     GroupRobotService groupRobotService;
 
+    @Autowired
+    PlayGroupMemberLogMapper playGroupMemberLogMapper;
     String errorMessageListRedisKey = "error_message_list_redis_key:";
 
     @Scheduled(cron = "0/20 * * * * ?")
@@ -912,22 +912,7 @@ public class IntoGroupService {
                     }
                     log.info("满足群要求后入群完成");
                     setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "已满足剧本所需发言人数，入群完成", 0, PlayLogTyper.Group_into, null);
-                    //调用开平接口获取群成员
-                    ThirdTgGetGroupMemberInputDTO dto = new ThirdTgGetGroupMemberInputDTO();
-                    dto.setChatroomSerialNo(group.getGroupSerialNo());
-                    GroupRobot robot = groupRobotService.getAdminRobot(group.getGroupId());
-                    if (robot != null){
-                        dto.setTgRobotId(robot.getRobotId());
-                        @SuppressWarnings("rawtypes")
-                        OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.getGroupMemberByThirdKpTg(dto);
-                        if (ret.getCode() == 0){
-                            setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员成功！", 0, PlayLogTyper.Group_into, null);
-                        }else {
-                            setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "同步开平群成员失败！原因："+ret.getMessage(), 1, PlayLogTyper.Group_into, null);
-                        }
-                    }else {
-                        setLog(task.getPlayId(), "群" + groupInfo.getTgGroupId() + "获取群主号异常！", 1, PlayLogTyper.Group_into, null);
-                    }
+                    retryGroupMember(group.getGroupId(),play.getId(),group.getGroupSerialNo());
                 } else {
                     log.info("群入群失败！");
                     groupInfo.setIntoStatus(3);
@@ -947,6 +932,101 @@ public class IntoGroupService {
         } finally {
             SpringUtils.getBean(RedisLock.class).unWaitLock("ruoyi:wait:groupCallback" + group.getGroupId());
         }
+
+    }
+
+
+    public  void retryGroupMember(String groupId,String playId,String tgGroupId){
+        //调用开平接口获取群成员
+        ThirdTgGetGroupMemberInputDTO dto = new ThirdTgGetGroupMemberInputDTO();
+        dto.setChatroomSerialNo(tgGroupId);
+        GroupRobot robot = groupRobotService.getAdminRobot(groupId);
+        if (robot != null){
+            dto.setTgRobotId(robot.getRobotId());
+            @SuppressWarnings("rawtypes")
+            OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.getGroupMemberByThirdKpTg(dto);
+            if (ret.getCode() == 0){
+                setMemberLog(groupId,playId,robot.getRobotId(),tgGroupId,1,ret.getData().getOptSerNo());
+                setLog(playId, "群" + groupId + "同步开平群成员请求成功！等待回调", 0, PlayLogTyper.Group_into, null);
+            }else {
+                setMemberLog(groupId,playId,robot.getRobotId(),tgGroupId,4,ret.getData().getOptSerNo());
+                setLog(playId, "群" + groupId + "同步开平群成员失败！原因："+ret.getMessage(), 1, PlayLogTyper.Group_into, null);
+            }
+        }else {
+            setLog(playId, "群" + groupId + "获取群主号异常！", 1, PlayLogTyper.Group_into, null);
+        }
+
+    }
+
+    @Scheduled(cron = "0/20 * * * * ?")
+    public void scanGroupMember(){
+        log.info("扫描获取群成员{}");
+        RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:scanGroupMember");
+        if (lock.isLocked()) {
+            return;
+        }
+        try {
+            lock.lock(60 * 60, TimeUnit.SECONDS);
+            List<PlayGroupMemberLog> playGroupMemberLogs = playGroupMemberLogMapper.selectGroupLogByState();
+            if (playGroupMemberLogs == null || playGroupMemberLogs.size() == 0){
+                return;
+            }
+            for (PlayGroupMemberLog memberLog:playGroupMemberLogs){
+                //判断是否还能重试
+                List<PlayGroupMemberLog> logs = playGroupMemberLogMapper.selectGroupLogByPlayIdAll(memberLog.getPlayId(),memberLog.getGroupId());
+                if (logs.size() < 10){
+                    retryGroupMember(memberLog.getGroupId(),memberLog.getPlayId(),memberLog.getGroupSerialNo());
+                }
+                //修改当前状态
+                playGroupMemberLogMapper.updatePlayGroupMemberLogState(memberLog.getId(),3);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            lock.unlock();
+        }
+
+    }
+
+
+    public void  setMemberLog(String groupId,String playId,String robotId,String tgGroupId,Integer state,String opt){
+        PlayGroupMemberLog playGroupMemberLog = new PlayGroupMemberLog();
+        playGroupMemberLog.setGroupId(groupId);
+        playGroupMemberLog.setGroupSerialNo(tgGroupId);
+        playGroupMemberLog.setId(IdUtils.fastUUID());
+        playGroupMemberLog.setOptSerNo(opt);
+        playGroupMemberLog.setPlayId(playId);
+        playGroupMemberLog.setRobotId(robotId);
+        playGroupMemberLog.setCreateTime(new Date());
+        playGroupMemberLogMapper.insert(playGroupMemberLog);
+    }
+
+    public void  setGroupMemberCallBack(Called1100910006DTO callBack, CalledDTO calledDTO){
+        log.info("获取群成员入参{}{}", calledDTO, callBack);
+        if (StringUtils.isEmpty(calledDTO.getOptSerNo())) {
+            return;
+        }
+        //根据操作编码去表里查询数据
+        PlayGroupMemberLog log = playGroupMemberLogMapper.selectGroupLogByCode(calledDTO.getOptSerNo());
+        if (log == null) {
+            return;
+        }
+        //失败
+        if (calledDTO.getResultCode().intValue() != 0) {
+            playGroupMemberLogMapper.updatePlayGroupMemberLogState(log.getId(),3);
+            //判断是否已达重试次数
+            List<PlayGroupMemberLog> playGroupMemberLogs = playGroupMemberLogMapper.selectGroupLogByPlayIdAll(log.getPlayId(),log.getGroupId());
+            if (playGroupMemberLogs.size() < 10){
+                //重试
+                setLog(log.getPlayId(), "群" + log.getGroupSerialNo() + "获取群成员失败！正在重试中", 1, PlayLogTyper.Group_into, log.getGroupId());
+                retryGroupMember(log.getGroupId(), log.getRobotId(),log.getGroupSerialNo());
+            }
+            setLog(log.getPlayId(), "群" + log.getGroupSerialNo() + "获取群成员失败！已达重试次数", 1, PlayLogTyper.Group_into, log.getGroupId());
+        } else {
+            playGroupMemberLogMapper.updatePlayGroupMemberLogState(log.getId(),2);
+            setLog(log.getPlayId(), "群" + log.getGroupSerialNo() + "获取群成员成功！", 0, PlayLogTyper.Group_into, log.getGroupId());
+        }
+
 
     }
 
@@ -1177,6 +1257,15 @@ public class IntoGroupService {
         calendar.setTime(new Date());
         calendar.add(Calendar.MINUTE, -3);
         playModifierGroupLogMapper.updateTaskByOutTime(calendar.getTime(), "无回调，自动变更失败！");
+    }
+
+    @Scheduled(cron = "0/30 * * * * ?")
+    public void scanGroupMemberCallBack(){
+        log.error("定时检测同步群成员是否有回调超时的任务");
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.MINUTE, -3);
+        playGroupMemberLogMapper.updateTaskByOutTime(calendar.getTime());
     }
 
     @Scheduled(cron = "0/30 * * * * ?")

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PlayGroupMemberLogMapper">
+
+
+    <select id="selectGroupLogByCode" resultType="com.ruoyi.system.domain.dto.play.PlayModifierGroupLog">
+        select * from t_play_group_member_log where opt_ser_no = #{optSerNo} limit 1
+    </select>
+
+    <select id="selectGroupLogByPlayIdAll" resultType="com.ruoyi.system.domain.dto.play.PlayModifierGroupLog">
+       select * from t_play_group_member_log where play_id = #{playId} and group_id = #{groupId}
+   </select>
+
+    <update id="updateTaskByOutTime" >
+        update t_play_group_member_log set state = 4 where state = 1 and  #{outTime} > create_time
+    </update>
+
+    <select id="selectGroupLogByState" resultType="com.ruoyi.system.domain.dto.play.PlayModifierGroupLog">
+        select * from t_play_group_member_log where state  = 4
+    </select>
+
+    <update id="updatePlayGroupMemberLogState">
+        update t_play_group_member_log set state = #{state} where id = #{id}
+    </update>
+
+</mapper>
