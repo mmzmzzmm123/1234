@@ -137,6 +137,7 @@ public class GroupService {
                 for (GroupInfoVO groupInfoVO : result) {
                     //同一个群主号的群 不能在一个批次
                     if (robotIds.contains(groupInfoVO.getLeaderId())) {
+                        failGroupId.add(groupInfoVO.getGroupId());
                         continue;
                     }
 
