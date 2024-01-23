@@ -108,7 +108,7 @@ public class GroupService {
      */
     public R<List<GroupInfoVO>> queryGroup(GroupQueryDTO dto) {
         int count;
-        List<String> failGroupId = new ArrayList<>();
+        List<String> exclusionGroupId = new ArrayList<>();
         List<String> countryCodes = new ArrayList<>();
         List<String> locks = new ArrayList<>();
         List<GroupInfoVO> groupInfoList = new ArrayList<>();
@@ -124,7 +124,7 @@ public class GroupService {
         try {
             while (groupInfoList.size() < dto.getGroupNum()) {
                 count = dto.getGroupNum() - groupInfoList.size();
-                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count, countryCodes, failGroupId, botAdmin, groupRange);
+                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count, countryCodes, exclusionGroupId, botAdmin, groupRange);
                 //没有满足条件的群
                 if (CollUtil.isEmpty(result)) {
                     //如果有优先国家  清空优先国家再次查询 否则跳出循环
@@ -135,23 +135,22 @@ public class GroupService {
                     }
                 }
                 for (GroupInfoVO groupInfoVO : result) {
+                    exclusionGroupId.add(groupInfoVO.getGroupId());
+
                     //同一个群主号的群 不能在一个批次
                     if (robotIds.contains(groupInfoVO.getLeaderId())) {
-                        failGroupId.add(groupInfoVO.getGroupId());
                         continue;
                     }
 
                     //加锁 防止并发取群
                     String key = "selectGroup:" + groupInfoVO.getGroupId();
                     if (!redisLock.tryLock(key, 200)) {
-                        failGroupId.add(groupInfoVO.getGroupId());
                         log.info("选群失败 加锁失败={}", groupInfoVO);
                         continue;
                     }
                     locks.add(key);
                     //检查是否满足风控
                     if (one.getSetManageLimit() != null && dto.getSetAdminCount() != null && !robotStatisticsService.checkAndAddLeaderCount(groupInfoVO.getLeaderId(), dto.getSetAdminCount(), one.getSetManageLimit())) {
-                        failGroupId.add(groupInfoVO.getGroupId());
                         log.info("选群失败 单个群主号可设置管理员的上限={}", groupInfoVO);
                         //提前解锁
                         redisLock.unlock(key);
@@ -160,7 +159,6 @@ public class GroupService {
                     }
                     List<GroupRobot> adminRobots = groupRobotService.getAdminRobots(groupInfoVO.getGroupId());
                     if (CollUtil.isEmpty(adminRobots)) {
-                        failGroupId.add(groupInfoVO.getGroupId());
                         continue;
                     }
 
