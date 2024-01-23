@@ -26,4 +26,5 @@ public class SelectRobotByRuleDTO extends GetRobotDTO{
     @ApiModelProperty(value = "要排除的号")
     private List<String> excludeRobotSerialNos;
     private Integer limit;
+    private Integer isLock;
 }

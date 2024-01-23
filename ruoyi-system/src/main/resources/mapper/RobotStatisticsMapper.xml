@@ -73,6 +73,9 @@
             group by tri.vpn_ip_c
         </if>
         limit 0,#{dto.limit}
+        <if test="dto.isLock != null and dto.isLock == 1">
+            for update
+        </if>
     </select>
 
     <update id="addCount">
