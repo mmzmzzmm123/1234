@@ -10,7 +10,7 @@
     </select>
 
     <select id="selectGroupLogByPlayIdAll" resultType="com.ruoyi.system.domain.dto.play.PlayModifierGroupLog">
-       select * from t_play_group_member_log where play_id = #{playId}
+       select * from t_play_group_member_log where play_id = #{playId} and group_id = #{groupId}
    </select>
 
     <update id="updateTaskByOutTime" >
@@ -20,5 +20,9 @@
     <select id="selectGroupLogByState" resultType="com.ruoyi.system.domain.dto.play.PlayModifierGroupLog">
         select * from t_play_group_member_log where state  = 4
     </select>
+
+    <update id="updatePlayGroupMemberLogState">
+        update t_play_group_member_log set state = #{state} where id = #{id}
+    </update>
 
 </mapper>

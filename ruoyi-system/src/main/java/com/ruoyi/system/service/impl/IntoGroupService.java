@@ -973,13 +973,12 @@ public class IntoGroupService {
             }
             for (PlayGroupMemberLog memberLog:playGroupMemberLogs){
                 //判断是否还能重试
-                List<PlayGroupMemberLog> logs = playGroupMemberLogMapper.selectGroupLogByPlayIdAll(memberLog.getPlayId());
+                List<PlayGroupMemberLog> logs = playGroupMemberLogMapper.selectGroupLogByPlayIdAll(memberLog.getPlayId(),memberLog.getGroupId());
                 if (logs.size() < 10){
                     retryGroupMember(memberLog.getGroupId(),memberLog.getPlayId(),memberLog.getGroupSerialNo());
                 }
                 //修改当前状态
-                memberLog.setState(3);
-                playGroupMemberLogMapper.updateById(memberLog);
+                playGroupMemberLogMapper.updatePlayGroupMemberLogState(memberLog.getId(),3);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -1014,10 +1013,9 @@ public class IntoGroupService {
         }
         //失败
         if (calledDTO.getResultCode().intValue() != 0) {
-            log.setState(3);
-            playGroupMemberLogMapper.updateById(log);
+            playGroupMemberLogMapper.updatePlayGroupMemberLogState(log.getId(),3);
             //判断是否已达重试次数
-            List<PlayGroupMemberLog> playGroupMemberLogs = playGroupMemberLogMapper.selectGroupLogByPlayIdAll(log.getPlayId());
+            List<PlayGroupMemberLog> playGroupMemberLogs = playGroupMemberLogMapper.selectGroupLogByPlayIdAll(log.getPlayId(),log.getGroupId());
             if (playGroupMemberLogs.size() < 10){
                 //重试
                 setLog(log.getPlayId(), "群" + log.getGroupSerialNo() + "获取群成员失败！正在重试中", 1, PlayLogTyper.Group_into, log.getGroupId());
@@ -1025,9 +1023,8 @@ public class IntoGroupService {
             }
             setLog(log.getPlayId(), "群" + log.getGroupSerialNo() + "获取群成员失败！已达重试次数", 1, PlayLogTyper.Group_into, log.getGroupId());
         } else {
-            log.setState(2);
-            setLog(log.getPlayId(), "群" + log.getGroupSerialNo() + "获取群成员失败！", 0, PlayLogTyper.Group_into, log.getGroupId());
-            playGroupMemberLogMapper.updateById(log);
+            playGroupMemberLogMapper.updatePlayGroupMemberLogState(log.getId(),2);
+            setLog(log.getPlayId(), "群" + log.getGroupSerialNo() + "获取群成员成功！", 0, PlayLogTyper.Group_into, log.getGroupId());
         }
 
 
