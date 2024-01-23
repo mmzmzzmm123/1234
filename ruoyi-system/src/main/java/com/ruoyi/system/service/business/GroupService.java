@@ -24,7 +24,6 @@ import com.ruoyi.common.enums.SetAdminAction;
 import com.ruoyi.common.exception.GlobalException;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.bot.ApiClient;
 import com.ruoyi.system.bot.mode.input.AdMonitorDTO;
 import com.ruoyi.system.bot.mode.output.BotInfoVO;
@@ -48,7 +47,6 @@ import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.system.service.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
 import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -889,8 +887,8 @@ public class GroupService {
                     Assert.notNull(apiResult, "未配置继续执行操作");
                     log.info("groupAction={},{},{}", groupAction.getName(), groupActionLog.getPara(), JSON.toJSONString(apiResult));
                     optNo = apiResult.getData().getOptSerNo();
+                    success = apiResult.isSuccess();
                     if (!apiResult.isSuccess()) {
-                        success = false;
                         msg = apiResult.getMessage();
                     } else if (groupAction.getNeedCacheOpt()) {
                         redisCache.setCacheObject("ruoyi-admin:action:" + optNo
