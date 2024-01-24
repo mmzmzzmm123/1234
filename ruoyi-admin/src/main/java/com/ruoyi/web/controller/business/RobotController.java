@@ -5,6 +5,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.dto.robot.*;
+import com.ruoyi.system.domain.vo.robot.GetRobotVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import com.ruoyi.system.service.IRobotService;
@@ -137,8 +138,9 @@ public class RobotController {
     }
 
     @PostMapping("/getRobot")
-    public void getRobot(@RequestBody GetRobotDTO dto){
-        robotStatisticsService.getRobot(dto);
+    public R<List<GetRobotVO>> getRobot(@RequestBody GetRobotDTO dto){
+        R<List<GetRobotVO>> robot = robotStatisticsService.getRobot(dto);
+        return robot;
     }
 
     @ApiOperation("定时清除号每日累计数")
