@@ -754,7 +754,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                     playMessagePushService.update(new UpdateWrapper<PlayMessagePush>().lambda()
                             .eq(PlayMessagePush::getPlayId,play)
                             .eq(PlayMessagePush::getPushState,PushStateEnum.USER_STOP.getKey())
-                            .set(PlayMessagePush::getPushState,PushStateEnum.WAIT_SEND));
+                            .set(PlayMessagePush::getPushState,PushStateEnum.WAIT_SEND.getKey()));
                 }
             }
         }
