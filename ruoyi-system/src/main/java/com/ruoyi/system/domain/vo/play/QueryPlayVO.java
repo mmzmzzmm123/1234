@@ -27,6 +27,11 @@ public class QueryPlayVO {
     @ApiModelProperty("剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成")
     private Integer state;
 
+    @ApiModelProperty("商家ID")
+    private String merchantId;
+    @ApiModelProperty("商家名称")
+    private String merchantName;
+
     @ApiModelProperty("创建时间")
     private Date createTime;
 

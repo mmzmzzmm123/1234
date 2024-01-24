@@ -6,13 +6,16 @@
 
     <select id="selectPage" resultType="com.ruoyi.system.domain.vo.play.QueryPlayVO">
         SELECT
-        id,
-        `name`,
-        group_source,
-        `state`,
-        create_time
+            tpi.id,
+            tpi.`name`,
+            tpi.group_source,
+            tpi.`state`,
+            tpi.create_time,
+            tmi.merchant_id,
+            tmi.merchant_name
         FROM
-        t_play_info tpi
+            t_play_info tpi
+            LEFT JOIN t_merchant_info tmi ON tpi.merchant_id = tmi.merchant_id
         WHERE
         1 = 1
         <if test="dto.merchantId != null and dto.merchantId != ''">
@@ -34,6 +37,12 @@
                 </when>
                 <when test="dto.queryType == 2">
                     AND tpi.id = #{dto.queryValue}
+                </when>
+                <when test="dto.queryType == 3">
+                    AND tmi.merchant_id = #{dto.queryValue}
+                </when>
+                <when test="dto.queryType == 4">
+                    AND tmi.merchant_name like concat('%',#{dto.queryValue},'%')
                 </when>
             </choose>
         </if>
