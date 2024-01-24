@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.bot.mode.output.BotInfoVO;
 import com.ruoyi.system.callback.dto.bot.MemberQuantityDTO;
 import com.ruoyi.system.domain.GroupMonitorInfo;
+import com.ruoyi.system.domain.vo.GroupPlayInfoVO;
 
 import java.util.List;
 
@@ -45,4 +46,14 @@ public interface GroupMonitorInfoService extends IService<GroupMonitorInfo> {
     void updateBannedById(String groupId);
 
     List<GroupMonitorInfo> getPlayOriginalGroupId();
+
+
+    /**
+     * 根据原始官方群ID 找到最近一个剧本信息
+     * @param originalGroupId
+     * @return
+     */
+    GroupPlayInfoVO getGroupPlayInfoVO(String originalGroupId);
+
+
 }

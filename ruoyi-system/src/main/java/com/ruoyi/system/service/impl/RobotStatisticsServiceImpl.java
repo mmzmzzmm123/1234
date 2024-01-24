@@ -16,6 +16,7 @@ import com.ruoyi.system.domain.vo.robot.GetRobotVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotByRuleVO;
 import com.ruoyi.system.mapper.RobotStatisticsMapper;
 import com.ruoyi.system.mapper.VibeRuleMapper;
+import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.RobotStatisticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -40,6 +41,9 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
     @Autowired
     private RedisLock redisLock;
 
+    @Autowired
+    private ISysConfigService configService;
+
     @Transactional
     @Override
     public R<List<GetRobotVO>> getRobot(GetRobotDTO dto) {
@@ -54,6 +58,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         selectRobotByRuleDTO.setOneDaySetAdminCount(vibeRule.getSetManageLimitByDay());
         selectRobotByRuleDTO.setTotalSetAdminCount(vibeRule.getSetManageLimitByTotal());
         selectRobotByRuleDTO.setIsLock(dto.getIsLock());
+        selectRobotByRuleDTO.setFilterUserName(configService.selectConfigByKey("selectRobot:filterUserName"));
         Boolean adminFlag = false;
         int robotSize;
         List<SelectRobotByRuleVO> tmpSelectData;

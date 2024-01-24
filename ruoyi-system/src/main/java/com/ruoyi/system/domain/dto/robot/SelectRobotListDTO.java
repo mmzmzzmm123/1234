@@ -44,5 +44,7 @@ public class SelectRobotListDTO extends PageBaseDTO {
     private String userName;
     @ApiModelProperty(value = "编号")
     private List<String> robotSerialNos;
+    @ApiModelProperty(value = "有无用户名,0-无,1-有")
+    private Integer isHasUserName;
 
 }

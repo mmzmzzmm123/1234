@@ -66,6 +66,9 @@
                     #{item}
             </foreach>
         </if>
+        <if test="dto.filterUserName != null and dto.filterUserName == 1">
+            and (tri.user_name is not null and tri.user_name != '')
+        </if>
         <if test="dto.ipType == 1">
             group by tri.vpn_ip_b
         </if>
