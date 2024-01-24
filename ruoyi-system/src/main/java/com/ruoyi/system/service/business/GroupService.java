@@ -25,8 +25,10 @@ import com.ruoyi.common.exception.GlobalException;
 import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.bot.ApiClient;
+import com.ruoyi.system.bot.ApiResult;
 import com.ruoyi.system.bot.mode.input.AdMonitorDTO;
 import com.ruoyi.system.bot.mode.output.BotInfoVO;
+import com.ruoyi.system.bot.mode.output.GroupStateVO;
 import com.ruoyi.system.callback.dto.Called1100860002DTO;
 import com.ruoyi.system.callback.dto.Called1100910017DTO;
 import com.ruoyi.system.callback.dto.Called1100910039DTO;
@@ -47,6 +49,7 @@ import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.system.service.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
 import org.springframework.data.redis.core.BoundZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,7 +127,8 @@ public class GroupService {
         try {
             while (groupInfoList.size() < dto.getGroupNum()) {
                 count = dto.getGroupNum() - groupInfoList.size();
-                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count, countryCodes, exclusionGroupId, botAdmin, groupRange);
+                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count,
+                        countryCodes, exclusionGroupId, botAdmin, groupRange, dto.getGroupType());
                 //没有满足条件的群
                 if (CollUtil.isEmpty(result)) {
                     //如果有优先国家  清空优先国家再次查询 否则跳出循环
@@ -1241,6 +1245,49 @@ public class GroupService {
                 break;
             }
         }
+    }
+
+
+    public void playGroupCheck() {
+        List<GroupMonitorInfo> groupIds = groupMonitorInfoService.getPlayOriginalGroupId();
+        if (CollUtil.isEmpty(groupIds)) {
+            return;
+        }
+        for (GroupMonitorInfo groupMonitorInfo : groupIds) {
+            groupCheck(groupMonitorInfo);
+        }
+
+    }
+
+    private ApiResult<GroupStateVO> groupCheck(GroupMonitorInfo groupMonitorInfo) {
+        try {
+            Assert.notNull(groupMonitorInfo, "群id不能为空");
+            Assert.notEmpty(groupMonitorInfo.getOriginalGroupId(), "原始id不存在");
+
+            RLock lock = redisLock.getRLock("botGroupCheck:" + groupMonitorInfo.getOriginalGroupId());
+            if (lock.isLocked()) {
+                return null;
+            }
+            lock.lock(60,TimeUnit.SECONDS);
+            try {
+                ApiResult<GroupStateVO> group = ApiClient.getGroup(groupMonitorInfo.getOriginalGroupId());
+                if (group.isNotHttpFail()) {
+                    groupStateService.banned(Collections.singletonList(groupMonitorInfo.getGroupId()));
+                }else{
+                    return group;
+                }
+            } finally {
+                lock.unlock();
+            }
+        } catch (Exception e) {
+            log.info("botGroupCheck.error={}", "");
+        }
+        return null;
+    }
+
+
+    public ApiResult<GroupStateVO> groupCheck(String groupId) {
+        return groupCheck(groupMonitorInfoService.getById(groupId));
     }
 
 }

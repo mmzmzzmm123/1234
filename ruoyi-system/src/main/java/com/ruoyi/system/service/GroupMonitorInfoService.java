@@ -43,4 +43,6 @@ public interface GroupMonitorInfoService extends IService<GroupMonitorInfo> {
     List<String> updateBanned(String originalGroupId);
 
     void updateBannedById(String groupId);
+
+    List<GroupMonitorInfo> getPlayOriginalGroupId();
 }

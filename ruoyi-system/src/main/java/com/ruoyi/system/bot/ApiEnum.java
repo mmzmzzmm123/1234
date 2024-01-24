@@ -12,6 +12,7 @@ public enum ApiEnum {
 
     SET_BOT_AD_MONITOR("设置机器广告监控", "/api/v1/botAd/addOrUpdate"),
 
+    GET_CHAT("获取群信息", "/getChat/%s"),
     ;
 
     /**

@@ -28,15 +28,15 @@
             resultType="com.ruoyi.system.domain.vo.PlayMessageConfusionStateVO">
         SELECT
             tpmc.id AS confoundId,
+            tpmc.state,
             count( tpmc.id ) AS total,
             sum( IF ( tpmcl.state = 1, 1, 0 ) ) AS successCount
         FROM
             t_play_message_confound tpmc
-                INNER JOIN t_play_message_confound_log tpmcl ON tpmc.id = tpmcl.message_confound_id
-                AND tpmc.state = 0
-                AND tpmc.create_time > ADDDATE( NOW( ),- 3 )
+            INNER JOIN t_play_message_confound_log tpmcl ON tpmc.id = tpmcl.message_confound_id
+            AND tpmc.state IN ( 0, 2 )
+            AND tpmc.create_time > ADDDATE( NOW( ),- 3 )
         GROUP BY
-            tpmc.id
-
+            tpmc.id;
     </select>
 </mapper>

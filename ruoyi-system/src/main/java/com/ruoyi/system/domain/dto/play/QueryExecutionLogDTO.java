@@ -20,4 +20,10 @@ public class QueryExecutionLogDTO extends PageBaseDTO {
     @NotBlank(message = "剧本ID不能为空")
     private String playId;
 
+    @ApiModelProperty("最大ID")
+    private String maxId;
+
+    @ApiModelProperty("最小ID")
+    private String minId;
+
 }

@@ -2,6 +2,7 @@ package com.ruoyi.system.components.prepare.multipack;
 
 import java.util.List;
 
+import com.ruoyi.common.constant.PlayStatusConstants;
 import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -26,7 +27,7 @@ public class SendPlayJobProcessor implements LogJobProcessor {
 
 	@Override
 	public void handle(Play play) {
-		if (play.getState().intValue() == 3|| play.getState().intValue() == 4 || play.getState().intValue() == 5) {
+		if (play.getState().intValue() == PlayStatusConstants.SUSPEND || play.getState().intValue() == PlayStatusConstants.CANCEL || play.getState().intValue() == PlayStatusConstants.FINISHED) {
 			// 剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成
 			return;
 		}

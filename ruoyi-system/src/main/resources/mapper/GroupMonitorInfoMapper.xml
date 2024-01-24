@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.GroupMonitorInfoMapper">
+
+
+    <select id="getPlayOriginalGroupId" resultType="com.ruoyi.system.domain.GroupMonitorInfo">
+        select tgmi.*
+        from t_play_info tpi
+                 join t_play_group_info tpgi on tpgi.play_id = tpi.id
+                 join t_group_monitor_info tgmi on tpgi.tg_group_id = tgmi.group_id
+                 join t_group_state tgs on tgs.group_id = tgmi.group_id
+        where tpi.state in (1, 2)
+          and tgmi.bot_check = 1
+          and tpgi.is_delete = 0
+          and tpgi.into_status = 2
+          and tgmi.group_status = 0
+          group by tgmi.group_id
+    </select>
+</mapper>

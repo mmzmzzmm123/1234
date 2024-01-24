@@ -159,7 +159,7 @@ public class ConfoundJobService {
                     continue;
                 }
                 // 超过10分钟 自动失败
-                if (date.after(confound.getCreateTime())) {
+                if (date.after(confound.getCreateTime()) && confound.getState().equals(0)) {
                     confound.setState(2);
                     playMessageConfoundMapper.updateById(confound);
                 }

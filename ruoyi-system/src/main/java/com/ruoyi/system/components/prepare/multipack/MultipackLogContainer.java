@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.ruoyi.common.constant.PlayStatusConstants;
 import com.ruoyi.common.utils.Times;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
@@ -88,7 +89,7 @@ public class MultipackLogContainer implements InitializingBean {
 									.in(Play::getScanProgress, Arrays.asList(ScanProgressEnum.Robot.getVal(),
 											ScanProgressEnum.Send_Wait.getVal()))
 									.eq(Play::getIsDelete, 0)
-									.in(Play::getState, Arrays.asList(1, 2))
+									.in(Play::getState, Arrays.asList(PlayStatusConstants.DISPATCH, PlayStatusConstants.IN_PROGRESS))
 									.gt(Play::getCreateTime, Times.getSecond(new Date(), - 60 * 60 * 24 * 3)));
 			if (CollectionUtils.isEmpty(datas)) {
 				return;

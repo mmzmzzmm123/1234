@@ -10,6 +10,7 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.bot.mode.input.AdMonitorDTO;
 import com.ruoyi.system.bot.mode.input.PageDTO;
 import com.ruoyi.system.bot.mode.output.BotInfoVO;
+import com.ruoyi.system.bot.mode.output.GroupStateVO;
 import com.ruoyi.system.domain.base.PageBaseDTO;
 import com.ruoyi.system.openapi.OpenApiProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,30 @@ import java.util.Optional;
 @Slf4j
 @Component
 public class ApiClient {
+
+    public static <T> ApiResult<T> post(ApiEnum api, String pathVariable, Class<T> responseClass) {
+
+        String requestUrl = SpringUtils.getBean(BotProperties.class).getApiUrl() + String.format(api.getRequestUrl(), pathVariable);
+        // 生成 TraceId 方便排查问题
+        String traceId = Ids.getId();
+
+        String response = null;
+        try {
+
+            HttpRequest request = HttpUtil.createPost(requestUrl).body("", ContentType.JSON.toString());
+            HttpResponse execute = request.execute();
+            response = execute.body();
+            log.info("调用bot服务 {} {},{}", traceId, pathVariable, response);
+        } catch (HttpException e) {
+            log.info("调用BOT相关接口发生异常 {} {}", traceId, e.getMessage(), e);
+            return ApiResult.failed("系统繁忙,请稍后重试" + traceId);
+        }
+
+        ApiResult<T> result = JSON.parseObject(response, new TypeReference<ApiResult<T>>(responseClass) {
+        });
+
+        return result;
+    }
 
     public static <T> ApiResult<T> post(ApiEnum api, JSONObject body, Class<T> responseClass) {
 
@@ -86,6 +111,11 @@ public class ApiClient {
 
     public static ApiResult<String> setBotAdMonitor(AdMonitorDTO data) {
         return ApiClient.post(ApiEnum.SET_BOT_AD_MONITOR, JSONObject.from(data), String.class);
+    }
+
+
+    public static ApiResult<GroupStateVO> getGroup(String chatId){
+        return ApiClient.post(ApiEnum.GET_CHAT, chatId, GroupStateVO.class);
     }
 
 }

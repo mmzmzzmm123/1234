@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain.dto;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -28,4 +29,7 @@ public class GroupQueryDTO {
 
     @ApiModelProperty(value = "群主机器人优先国家")
     private List<String> countryCode;
+
+    @ApiModelProperty(value = "群类型  10私密群 20公开群")
+    private Integer groupType;
 }
