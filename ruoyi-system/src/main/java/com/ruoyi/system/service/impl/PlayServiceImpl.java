@@ -15,6 +15,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.app.OrderProduceRequest;
 import com.ruoyi.common.core.domain.dto.play.*;
+import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.core.domain.entity.play.*;
@@ -355,6 +356,14 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 playMessageDTOList.add(playMessageDTO);
             }
             ret.setPlayMessageList(playMessageDTOList);
+        }
+
+        if (null != play.getMerchantId()) {
+            MerchantInfo merchantInfo = SpringUtils.getBean(MerchantInfoMapper.class).selectById(play.getMerchantId());
+            if (null != merchantInfo) {
+                ret.setMerchantId(merchantInfo.getMerchantId());
+                ret.setMerchantName(merchantInfo.getMerchantName());
+            }
         }
 
         return R.ok(ret);
