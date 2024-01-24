@@ -46,7 +46,7 @@ public class StateJobProcessor implements LogJobProcessor {
 		//status要in (0,2)，不然有错误的无法结束
 		List<PlayRobotPackLog> datas = robotPackLogMapper
 				.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getIsFinish, 0)
-						.in(PlayRobotPackLog::getStatus, 0,2).eq(PlayRobotPackLog::getPlayId, play.getId()));
+						.eq(PlayRobotPackLog::getStatus, 0).eq(PlayRobotPackLog::getPlayId, play.getId()));
 		
 		if(CollectionUtils.isEmpty(datas)) {
 			return ;
