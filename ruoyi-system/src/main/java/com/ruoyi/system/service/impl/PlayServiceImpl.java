@@ -262,6 +262,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             play.setUrlPool(String.join(",", dto.getUrlPool()));
         }
         play.setLockRobotStatus(dto.getPlayExt().getLockState());
+        play.setCreateTime(new Date());
+        play.setUpdateTime(new Date());
         super.save(play);
     }
 
@@ -282,6 +284,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         if (null != dto.getUrlPool() && dto.getUrlPool().size() > 0) {
             play.setUrlPool(String.join(",", dto.getUrlPool()));
         }
+        play.setUpdateTime(new Date());
         updateById(play);
 
         //剧本内容
@@ -373,7 +376,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         boolean status = super.update(null, new LambdaUpdateWrapper<Play>()
                 .eq(Play::getId, playId)
                 .in(Play::getState, Arrays.asList(PlayStatusConstants.DISPATCH, PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.SUSPEND))
-                .set(Play::getAdMonitor, JSON.toJSONString(dto)));
+                .set(Play::getAdMonitor, JSON.toJSONString(dto))
+                .set(Play::getUpdateTime, new Date())
+        );
         if (!status) {
             return R.fail(11000, ErrInfoConfig.getDynmic(11000, "修改失败"));
         }
@@ -640,9 +645,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         log.info("play_setState: {}, ids: {}", PlayStatusConstants.SUSPEND, playIds);
         for (String playId : playIds) {
             boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
-                    .eq(Play::getId, playId)
-                    .eq(Play::getState, PlayStatusConstants.IN_PROGRESS)
-                    .set(Play::getState, PlayStatusConstants.SUSPEND));
+                    .eq(Play::getId, playId).eq(Play::getState, PlayStatusConstants.IN_PROGRESS)
+                    .set(Play::getState, PlayStatusConstants.SUSPEND).set(Play::getUpdateTime, new Date()));
             if (setPlayFlag) {
                 List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayIdAndState(playId, PushStateEnum.ING.getKey());
                 for (PlayMessagePush playMessagePush : playMessagePushList) {
@@ -671,6 +675,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             }
             play.setState(PlayStatusConstants.CANCEL);
             play.setEndDate(new Date());
+            play.setUpdateTime(new Date());
             super.updateById(play);
 
             //退群接口
@@ -690,9 +695,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         log.info("play_setState: {}, ids: {}", PlayStatusConstants.SUSPEND, playIds);
         for (String playId : playIds) {
             boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
-                    .eq(Play::getId, playId)
-                    .eq(Play::getState, PlayStatusConstants.SUSPEND)
-                    .set(Play::getState, PlayStatusConstants.IN_PROGRESS));
+                    .eq(Play::getId, playId).eq(Play::getState, PlayStatusConstants.SUSPEND)
+                    .set(Play::getState, PlayStatusConstants.IN_PROGRESS).set(Play::getUpdateTime, new Date()));
             if (setPlayFlag) {
                 List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayIdAndState(playId, PushStateEnum.USER_STOP.getKey());
                 for (PlayMessagePush playMessagePush : playMessagePushList) {
