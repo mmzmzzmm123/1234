@@ -1195,6 +1195,7 @@ public class IntoGroupService {
         }
     }
 
+    @Scheduled(cron = "0/20 * * * * ?")
     public void outGroupJob() {
         log.info("执行退群任务{}");
         RLock lockJob = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:outGroupJob");
