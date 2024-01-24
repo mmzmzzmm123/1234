@@ -43,9 +43,10 @@ public class StateJobProcessor implements LogJobProcessor {
 		final OnPackMonitor onPackMonitor = SpringUtils.getBean(OnPackMonitor.class);
 		final OnRadioPackMonitor onRadioPackMonitor = SpringUtils.getBean(OnRadioPackMonitor.class);
 
+		//status要in (0,2)，不然有错误的无法结束
 		List<PlayRobotPackLog> datas = robotPackLogMapper
 				.selectList(new QueryWrapper<PlayRobotPackLog>().lambda().eq(PlayRobotPackLog::getIsFinish, 0)
-						.eq(PlayRobotPackLog::getStatus, 0).eq(PlayRobotPackLog::getPlayId, play.getId()));
+						.in(PlayRobotPackLog::getStatus, 0,2).eq(PlayRobotPackLog::getPlayId, play.getId()));
 		
 		if(CollectionUtils.isEmpty(datas)) {
 			return ;
