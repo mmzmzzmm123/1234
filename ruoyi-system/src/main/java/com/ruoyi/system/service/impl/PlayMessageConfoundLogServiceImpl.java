@@ -186,9 +186,9 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             confoundLog.setResultContent(resultContent);
         }
         confoundLog.setModifyTime(new Date());
-        log.info("handleConfoundText-optSerNo-success-{},{}",optSerNo,JSON.toJSONString(confoundLog));
-        super.updateById(confoundLog);
-
+        final boolean res = super.updateById(confoundLog);
+        log.info("handleConfoundText-optSerNo-success-{},{},{}",optSerNo,JSON.toJSONString(confoundLog),res);
+        log.info("handleConfoundText-optSerNo-success2-{},{},{}",optSerNo,JSON.toJSONString(super.getById(confoundLog.getId())),res);
     }
 
     @Override
@@ -318,7 +318,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
                     confoundLog.setState(2);
                     confoundLog.setFailMessage("未收到结果回调,混淆失败");
                     if(confoundLog.getState().intValue() != 2) {
-                        log.info("handleConfoundText-{}",JSON.toJSONString(confoundLog));
+                        log.info("handleConfoundText-optSerNo-{},{}",confoundLog.getOptSerialNo(),JSON.toJSONString(confoundLog));
                         super.updateById(confoundLog);
                     }
                     continue;
@@ -386,8 +386,9 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         }
         confoundLog.setExecuteNum(confoundLog.getExecuteNum() + 1);
         confoundLog.setModifyTime(new Date());
-        log.info("handleConfoundText-optSerNo-retry-{}",JSON.toJSONString(confoundLog));
-        super.baseMapper.update(confoundLog, new UpdateWrapper<PlayMessageConfoundLog>().lambda().eq(PlayMessageConfoundLog::getId,confoundLog.getId()).ne(PlayMessageConfoundLog::getState,1));
+        final int res = super.baseMapper.update(confoundLog, new UpdateWrapper<PlayMessageConfoundLog>().lambda().eq(PlayMessageConfoundLog::getId, confoundLog.getId()).ne(PlayMessageConfoundLog::getState, 1));
+        log.info("handleConfoundText-optSerNo-retry-{},{},{}",confoundLog.getOptSerialNo(), JSON.toJSONString(confoundLog),res);
+        log.info("handleConfoundText-optSerNo-retry2-{},{},{}",confoundLog.getOptSerialNo(),JSON.toJSONString(super.getById(confoundLog.getId())),res);
     }
 
     @Override
