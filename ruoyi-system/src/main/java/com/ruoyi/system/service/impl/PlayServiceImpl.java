@@ -752,7 +752,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                             .set(Play::getConfoundState, 0));
                     //恢复推送任务为待推送
                     playMessagePushService.update(new UpdateWrapper<PlayMessagePush>().lambda()
-                            .eq(PlayMessagePush::getPlayId,play)
+                            .eq(PlayMessagePush::getPlayId,playId)
                             .eq(PlayMessagePush::getPushState,PushStateEnum.USER_STOP.getKey())
                             .set(PlayMessagePush::getPushState,PushStateEnum.WAIT_SEND.getKey()));
                 }
