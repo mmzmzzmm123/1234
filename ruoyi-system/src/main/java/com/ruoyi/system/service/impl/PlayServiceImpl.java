@@ -744,12 +744,13 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 );
                 if (setPlayFlag) {
                     //恢复为调度中
-                    //恢复混淆状态为未混淆
+                    //恢复混淆状态为混淆重试中
                     super.update(null, new UpdateWrapper<Play>().lambda()
+                            .eq(Play::getId, playId)
                             .eq(Play::getIsConfound, 1)
                             .eq(Play::getScanProgress, ScanProgressEnum.Confuse.getVal())
                             .eq(Play::getConfoundState, 2)
-                            .set(Play::getConfoundState, 0)
+                            .set(Play::getConfoundState, 3)
                             .set(Play::getFailReason,""));
                     //恢复推送任务为待推送
                     playMessagePushService.update(new UpdateWrapper<PlayMessagePush>().lambda()

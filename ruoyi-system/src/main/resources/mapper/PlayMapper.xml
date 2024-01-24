@@ -261,7 +261,7 @@
         WHERE
             1 = 1
           AND tpi.state = 1
-          AND tpi.confound_state = 0
+          AND tpi.confound_state in (0, 3)
           AND tpi.is_confound = 1
           AND tpi.create_time > ADDDATE( NOW( ),- 3 )
         GROUP BY
