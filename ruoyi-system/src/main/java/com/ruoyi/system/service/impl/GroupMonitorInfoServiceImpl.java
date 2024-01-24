@@ -6,8 +6,10 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.system.bot.mode.output.BotInfoVO;
 import com.ruoyi.system.callback.dto.bot.MemberQuantityDTO;
 import com.ruoyi.system.domain.GroupMonitorInfo;
+import com.ruoyi.system.domain.vo.GroupPlayInfoVO;
 import com.ruoyi.system.mapper.GroupMonitorInfoMapper;
 import com.ruoyi.system.service.GroupMonitorInfoService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -187,5 +189,13 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
     @Override
     public List<GroupMonitorInfo> getPlayOriginalGroupId() {
         return baseMapper.getPlayOriginalGroupId();
+    }
+
+    @Override
+    public GroupPlayInfoVO getGroupPlayInfoVO(String originalGroupId) {
+        if (StringUtils.isBlank(originalGroupId)){
+            return null;
+        }
+        return baseMapper.getGroupPlayInfoVO(originalGroupId);
     }
 }
