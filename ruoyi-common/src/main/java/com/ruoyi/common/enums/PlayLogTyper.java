@@ -34,6 +34,13 @@ public enum PlayLogTyper {
 	/**
 	 * 炒群
 	 */
-	Group_Send;
+	Group_Send,
+
+	/**
+	 * 广告监控
+	 */
+	Advertising_Monitoring
+
+	;
 
 }

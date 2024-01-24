@@ -27,4 +27,9 @@ public class SelectRobotByRuleDTO extends GetRobotDTO{
     private List<String> excludeRobotSerialNos;
     private Integer limit;
     private Integer isLock;
+
+    /**
+     * 是否过滤空用户名: 0-否 1-是
+     */
+    private String filterUserName;
 }

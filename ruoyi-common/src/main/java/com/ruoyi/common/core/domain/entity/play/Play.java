@@ -177,6 +177,11 @@ public class Play {
      */
     private Date endDate;
 
+    /**
+     * 筛选群条件: 1私密群组 2公开群组
+     */
+    private Integer groupType;
+
     public SendMechanism convertSendMechanismStr() {
         if (StringUtils.isEmpty(this.sendMechanism)) {
             return null;

@@ -11,4 +11,10 @@ public class PlayVO extends PlayDTO {
     @ApiModelProperty(value = "剧本最终状态时间(取消或完成)")
     private Date endDate;
 
+    @ApiModelProperty(value = "商家id")
+    private String merchantId;
+
+    @ApiModelProperty(value = "商家名称")
+    private String merchantName;
+
 }

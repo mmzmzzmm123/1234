@@ -15,6 +15,7 @@ import com.ruoyi.common.core.domain.app.ProductRequest;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.core.redis.RedisCache;
+import com.ruoyi.common.enums.ProductCategoryType;
 import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.ProductDetailVO;
 import com.ruoyi.system.domain.vo.ProductVO;
@@ -410,7 +411,8 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
     @Override
     public List<Product> queryEnableProduct() {
         LambdaQueryWrapper<Product> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Product::getIsDel, 0);
+        queryWrapper.eq(Product::getIsDel, 0)
+                .eq(Product::getCategoryId, ProductCategoryType.PULL_PEOPLE.getId());
         return this.list(queryWrapper);
     }
 

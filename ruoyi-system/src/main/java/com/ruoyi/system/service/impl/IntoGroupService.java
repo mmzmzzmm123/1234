@@ -704,11 +704,15 @@ public class IntoGroupService {
             for (PlayIntoGroupTask task : personIntoGroupTasks) {
                 //获取当前剧本状态
                 Play play = playMapper.selectPlayById(task.getPlayId());
-                if (play.getState() == 3 || play.getState() == 4){
+                if (play.getState() == 4){
                     task.setTaskState(4);
                     task.setFailCause("剧本已停止，暂停入群");
                     playIntoGroupTaskMapper.updateById(task);
                     setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人" + task.getPersonId() + "入群结果失败原因剧本已停止暂停入群", 1, PlayLogTyper.Group_into, null);
+                    continue;
+                }
+                if (play.getState() == 3){
+                    setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "机器人" + task.getPersonId() + "入群结果失败原因剧本已暂停入群", 1, PlayLogTyper.Group_into, null);
                     continue;
                 }
                 //获取风控规则
@@ -1195,6 +1199,7 @@ public class IntoGroupService {
         }
     }
 
+    @Scheduled(cron = "0/20 * * * * ?")
     public void outGroupJob() {
         log.info("执行退群任务{}");
         RLock lockJob = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:outGroupJob");
