@@ -1161,7 +1161,7 @@ public class IntoGroupService {
 
     public void setLog(String playId, String content, Integer state, PlayLogTyper typer, String groupId) {
         PlayExecutionLog log = new PlayExecutionLog();
-        log.setId(IdUtils.fastUUID());
+//        log.setId(IdUtils.fastUUID());
         log.setPlayId(playId);
         log.setCreateTime(new Date());
         log.setContent(content);
