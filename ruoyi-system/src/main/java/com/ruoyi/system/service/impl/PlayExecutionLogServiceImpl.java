@@ -49,10 +49,10 @@ public class PlayExecutionLogServiceImpl implements PlayExecutionLogService {
         Query query = new Query();
         query.addCriteria(Criteria.where("playId").is(dto.getPlayId()));
         if (StringUtils.isNotBlank(dto.getMaxId())){
-            query.addCriteria(Criteria.where("id").lt(dto.getMaxId()));
+            query.addCriteria(Criteria.where("id").gt(dto.getMaxId()));
         }
         if (StringUtils.isNotBlank(dto.getMinId())){
-            query.addCriteria(Criteria.where("id").gt(dto.getMinId()));
+            query.addCriteria(Criteria.where("id").lt(dto.getMinId()));
         }
         long total = mongoTemplate.count(query, PlayExecutionLog.class);
         page.setTotal(total);
