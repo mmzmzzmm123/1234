@@ -749,7 +749,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                             .eq(Play::getIsConfound, 1)
                             .eq(Play::getScanProgress, ScanProgressEnum.Confuse.getVal())
                             .eq(Play::getConfoundState, 2)
-                            .set(Play::getConfoundState, 0));
+                            .set(Play::getConfoundState, 0)
+                            .set(Play::getFailReason,""));
                     //恢复推送任务为待推送
                     playMessagePushService.update(new UpdateWrapper<PlayMessagePush>().lambda()
                             .eq(PlayMessagePush::getPlayId,playId)
