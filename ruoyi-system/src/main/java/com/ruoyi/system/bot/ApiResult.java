@@ -21,6 +21,11 @@ public class ApiResult<T> {
         return Objects.equals(code, 200);
     }
 
+    public final boolean isNotHttpFail() {
+        return !Objects.equals(code, 200) && !Objects.equals(code, -999);
+    }
+
+
     public final void failedAndThrow() {
         if (!isSuccess()) {
             throw new GlobalException(msg);
@@ -35,6 +40,6 @@ public class ApiResult<T> {
     }
 
     public static <R> ApiResult<R> failed(String message) {
-        return (ApiResult<R>) new ApiResult<>().setCode(-1).setMsg(message);
+        return (ApiResult<R>) new ApiResult<>().setCode(-999).setMsg(message);
     }
 }

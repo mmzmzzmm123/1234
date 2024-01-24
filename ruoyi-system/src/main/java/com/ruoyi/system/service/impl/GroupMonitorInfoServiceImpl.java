@@ -183,4 +183,9 @@ public class GroupMonitorInfoServiceImpl extends ServiceImpl<GroupMonitorInfoMap
         groupInfo.setGroupId(groupId);
         baseMapper.updateById(groupInfo);
     }
+
+    @Override
+    public List<GroupMonitorInfo> getPlayOriginalGroupId() {
+        return baseMapper.getPlayOriginalGroupId();
+    }
 }
