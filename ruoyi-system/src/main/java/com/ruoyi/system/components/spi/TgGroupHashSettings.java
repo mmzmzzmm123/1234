@@ -1,5 +1,6 @@
 package com.ruoyi.system.components.spi;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,10 @@ import javax.swing.*;
 @Slf4j
 public class TgGroupHashSettings implements Settings {
 	public static String getSql(String chatroomSerialNo, String robotSerialNo, List<String> memberSerialNolist) {
-		StringBuffer sqlBuffer = new StringBuffer("SELECT * FROM telegram_det_group_member_info where ");
+		StringBuffer sqlBuffer = new StringBuffer("select access_hash " +
+				"from(select access_hash,ROW_NUMBER() " +
+				"over(PARTITION BY robot_code,chatroom_code,member_code order by update_time desc) rownum " +
+				"from telegram_det_group_member_info_v2 where ");
 		sqlBuffer.append("robot_code = '");
 		sqlBuffer.append(robotSerialNo);
 		sqlBuffer.append("' ");
@@ -43,7 +47,7 @@ public class TgGroupHashSettings implements Settings {
 			memberBuffer.append(",'" + memberSerialNolist.get(i) + "'");
 		}
 		sqlBuffer.append(memberBuffer);
-		sqlBuffer.append(")");
+		sqlBuffer.append("))t where rownum=1");
 		return sqlBuffer.toString();
 	}
 

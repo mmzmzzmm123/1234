@@ -23,7 +23,7 @@ public class QueryPlayDTO extends PageBaseDTO {
     @ApiModelProperty("剧本状态：1-调度中 2-炒群中 3-已暂停 4-已取消 5-已完成")
     private Integer state;
 
-    @ApiModelProperty("查询类型 1-任务名称 2-任务ID")
+    @ApiModelProperty("查询类型 1-任务名称 2-任务ID 3-商家ID 4-商家名称")
     private Integer queryType;
 
     @ApiModelProperty("查询值")

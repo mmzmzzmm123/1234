@@ -1161,7 +1161,7 @@ public class IntoGroupService {
 
     public void setLog(String playId, String content, Integer state, PlayLogTyper typer, String groupId) {
         PlayExecutionLog log = new PlayExecutionLog();
-        log.setId(IdUtils.fastUUID());
+//        log.setId(IdUtils.fastUUID());
         log.setPlayId(playId);
         log.setCreateTime(new Date());
         log.setContent(content);
@@ -1195,6 +1195,7 @@ public class IntoGroupService {
         }
     }
 
+    @Scheduled(cron = "0/20 * * * * ?")
     public void outGroupJob() {
         log.info("执行退群任务{}");
         RLock lockJob = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:outGroupJob");

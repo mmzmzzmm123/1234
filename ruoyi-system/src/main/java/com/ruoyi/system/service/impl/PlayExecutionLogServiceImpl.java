@@ -48,6 +48,12 @@ public class PlayExecutionLogServiceImpl implements PlayExecutionLogService {
         }
         Query query = new Query();
         query.addCriteria(Criteria.where("playId").is(dto.getPlayId()));
+        if (StringUtils.isNotBlank(dto.getMaxId())){
+            query.addCriteria(Criteria.where("id").gt(dto.getMaxId()));
+        }
+        if (StringUtils.isNotBlank(dto.getMinId())){
+            query.addCriteria(Criteria.where("id").lt(dto.getMinId()));
+        }
         long total = mongoTemplate.count(query, PlayExecutionLog.class);
         page.setTotal(total);
         if (total <= 0) {
@@ -55,7 +61,7 @@ public class PlayExecutionLogServiceImpl implements PlayExecutionLogService {
         }
         query.skip((dto.getPage() - 1) * dto.getLimit());
         query.limit(dto.getLimit());
-        query.with(Sort.by(new Sort.Order(Sort.Direction.DESC, "createTime")));
+        query.with(Sort.by(new Sort.Order(Sort.Direction.DESC, "id")));
         page.setRecords(mongoTemplate.find(query, PlayExecutionLog.class));
         return page;
     }

@@ -11,6 +11,8 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.enums.GroupAction;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import com.ruoyi.system.bot.ApiResult;
+import com.ruoyi.system.bot.mode.output.GroupStateVO;
 import com.ruoyi.system.domain.GroupCluster;
 import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.GroupClusterCountVO;
@@ -381,6 +383,22 @@ public class GroupController {
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
             log.error("未知异常={},{} ", idWork, JSONObject.toJSONString(dto), e);
+            return R.fail("未知异常！ trace:" + idWork);
+        }
+    }
+
+
+    @Anonymous
+    @ApiOperation(value = "封群检查")
+    @PostMapping("/groupCheck/{groupId}")
+    public R<ApiResult<GroupStateVO>> groupCheck(@PathVariable("groupId") String groupId) {
+        try {
+            return R.ok(groupService.groupCheck(groupId));
+        } catch (IllegalArgumentException e) {
+            return R.fail(e.getMessage());
+        } catch (Exception e) {
+            String idWork = IdWorker.getIdStr();
+            log.error("未知异常={},{} ", idWork, groupId, e);
             return R.fail("未知异常！ trace:" + idWork);
         }
     }

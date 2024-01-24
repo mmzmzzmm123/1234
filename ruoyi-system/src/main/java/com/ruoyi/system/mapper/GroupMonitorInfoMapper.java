@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.system.domain.GroupMonitorInfo;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * 群bot监控返回信息(GroupMonitorInfo)表数据库访问层
  *
@@ -13,4 +15,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GroupMonitorInfoMapper extends BaseMapper<GroupMonitorInfo> {
 
+    List<GroupMonitorInfo> getPlayOriginalGroupId();
 }

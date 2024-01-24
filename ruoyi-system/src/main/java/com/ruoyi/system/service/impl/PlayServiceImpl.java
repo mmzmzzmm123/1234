@@ -645,8 +645,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         log.info("play_setState: {}, ids: {}", PlayStatusConstants.SUSPEND, playIds);
         for (String playId : playIds) {
             boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
-                    .eq(Play::getId, playId).eq(Play::getState, PlayStatusConstants.IN_PROGRESS)
-                    .set(Play::getState, PlayStatusConstants.SUSPEND).set(Play::getUpdateTime, new Date()));
+                    .eq(Play::getId, playId)
+                    .in(Play::getState, PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.DISPATCH)//调度中、炒群中都可以暂停
+                    .set(Play::getState, PlayStatusConstants.SUSPEND)
+                    .set(Play::getUpdateTime, new Date()));
             if (setPlayFlag) {
                 List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayIdAndState(playId, PushStateEnum.ING.getKey());
                 for (PlayMessagePush playMessagePush : playMessagePushList) {
@@ -694,17 +696,48 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     public void batchStartPlay(List<String> playIds) {
         log.info("play_setState: {}, ids: {}", PlayStatusConstants.SUSPEND, playIds);
         for (String playId : playIds) {
-            boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
-                    .eq(Play::getId, playId).eq(Play::getState, PlayStatusConstants.SUSPEND)
-                    .set(Play::getState, PlayStatusConstants.IN_PROGRESS).set(Play::getUpdateTime, new Date()));
-            if (setPlayFlag) {
-                List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayIdAndState(playId, PushStateEnum.USER_STOP.getKey());
-                for (PlayMessagePush playMessagePush : playMessagePushList) {
-                    playMessagePush.setPushState(PushStateEnum.ING.getKey());
-                    boolean setPlayMessage = playMessagePushService.updateById(playMessagePush);
-                    if (setPlayMessage) {
-                        PlayDirector.tgInstance().resume(playId, playMessagePush.getGroupId());
+            final Play play = super.getById(playId);
+            if (play.getScanProgress() == ScanProgressEnum.Send_Wait.getVal()) {
+                boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
+                        .eq(Play::getId, playId)
+                        .eq(Play::getState, PlayStatusConstants.SUSPEND)
+                        .in(Play::getScanProgress, ScanProgressEnum.Send_Wait)
+                        .set(Play::getState, PlayStatusConstants.IN_PROGRESS)
+                        .set(Play::getUpdateTime, new Date())
+                );
+                if (setPlayFlag) {
+                    //恢复为炒群中
+                    List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayIdAndState(playId, PushStateEnum.USER_STOP.getKey());
+                    for (PlayMessagePush playMessagePush : playMessagePushList) {
+                        playMessagePush.setPushState(PushStateEnum.ING.getKey());
+                        boolean setPlayMessage = playMessagePushService.updateById(playMessagePush);
+                        if (setPlayMessage) {
+                            PlayDirector.tgInstance().resume(playId, playMessagePush.getGroupId());
+                        }
                     }
+                }
+            }
+            else {
+                boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
+                        .eq(Play::getId, playId)
+                        .eq(Play::getState, PlayStatusConstants.SUSPEND)
+                        .notIn(Play::getScanProgress, ScanProgressEnum.Send_Wait)
+                        .set(Play::getState, PlayStatusConstants.DISPATCH)
+                        .set(Play::getUpdateTime, new Date())
+                );
+                if (setPlayFlag) {
+                    //恢复为调度中
+                    //恢复混淆状态为未混淆
+                    super.update(null, new UpdateWrapper<Play>().lambda()
+                            .eq(Play::getIsConfound, 1)
+                            .eq(Play::getScanProgress, ScanProgressEnum.Confuse.getVal())
+                            .eq(Play::getConfoundState, 2)
+                            .set(Play::getConfoundState, 0));
+                    //恢复推送任务为待推送
+                    playMessagePushService.update(new UpdateWrapper<PlayMessagePush>().lambda()
+                            .eq(PlayMessagePush::getPlayId,play)
+                            .eq(PlayMessagePush::getPushState,PushStateEnum.USER_STOP.getKey())
+                            .set(PlayMessagePush::getPushState,PushStateEnum.WAIT_SEND));
                 }
             }
         }
