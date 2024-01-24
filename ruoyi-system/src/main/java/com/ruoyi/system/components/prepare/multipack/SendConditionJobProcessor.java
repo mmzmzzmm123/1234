@@ -75,9 +75,9 @@ public class SendConditionJobProcessor implements LogJobProcessor {
 		}
 		if (play.getGroupCondition().intValue() == 1) {
 			// 是否过了系统时间
-			for (PlayMessagePush push : groups) {
-				if (Times.now() >= play.getStartGroupDate().getTime()) {
-					PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, play.getId(), StringUtils.format("达到炒群条件-{}，开始炒群", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, play.getStartGroupDate())), null);
+			if (Times.now() >= play.getStartGroupDate().getTime()) {
+				PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, play.getId(), StringUtils.format("达到炒群条件-{}，开始炒群", DateUtils.parseDateToStr(DateUtils.YYYY_MM_DD_HH_MM_SS, play.getStartGroupDate())), null);
+				for (PlayMessagePush push : groups) {
 					fullCondition(push);
 				}
 			}
