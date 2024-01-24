@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -219,5 +220,18 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         groupInfo.setOnlineMemberCount(dto.getOnlineMemberCount());
         groupInfo.setUpdateTime(LocalDateTime.now());
         baseMapper.update(groupInfo,new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo,dto.getChatroomSerialNo()));
+    }
+
+    @Override
+    public void updateName(String groupId, String groupName) {
+        GroupInfo groupInfo = baseMapper.selectById(groupId);
+        if (groupInfo == null || ObjectUtil.equal(groupName, groupInfo.getGroupName())) {
+            return;
+        }
+
+        GroupInfo update = new GroupInfo();
+        update.setGroupId(groupId);
+        update.setGroupName(groupName);
+        baseMapper.updateById(update);
     }
 }

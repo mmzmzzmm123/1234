@@ -1274,6 +1274,7 @@ public class GroupService {
                 if (group.isNotHttpFail()) {
                     groupStateService.banned(Collections.singletonList(groupMonitorInfo.getGroupId()));
                 }else{
+                    groupInfoService.updateName(groupMonitorInfo.getGroupId(), group.getData().getTitle());
                     return group;
                 }
             } finally {

@@ -53,4 +53,6 @@ public interface GroupInfoService extends IService<GroupInfo> {
     void updateGroupSerialNo(String groupId,String oldGroupSerialNo,  String newGroupSerialNo);
 
     void updateGroupInfo(Called1100910018DTO.Called1100910018ChatroomInfoDTO update);
+
+    void updateName(String groupId,String groupName);
 }
