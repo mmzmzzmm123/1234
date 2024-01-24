@@ -487,6 +487,14 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         }
         List<PlayGroupProgressVO> taskProgressList = baseMapper.selectGroupProgress(playId);
         for (PlayGroupProgressVO vo : taskProgressList) {
+            // 拉手号 =  链接进群 - 水军
+            Integer linkJoinCount = vo.getLinkJoinCount() == null ? 0 : vo.getLinkJoinCount();
+            Integer navyCount = vo.getNavyCount() == null ? 0 : vo.getNavyCount();
+            if (linkJoinCount > 0 && navyCount > 0) {
+                linkJoinCount = linkJoinCount - navyCount;
+            }
+            vo.setLinkJoinCount(linkJoinCount);
+
             PlayExecutionLog one = playExecutionLogService.getOne(vo.getPlayId(), vo.getGroupId());
             String tip = Optional.ofNullable(one)
                     .map(PlayExecutionLog::getContent)

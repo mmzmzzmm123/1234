@@ -39,6 +39,13 @@ public class PlayMessageConfoundLog implements Serializable {
     private Integer executeNum;
 
     /**
+     * 文本内容的MD5值
+     *
+     */
+    @TableField(value = "content_md5")
+    private String contentMd5;
+
+    /**
      * 操作编码
      */
     private String optSerialNo;

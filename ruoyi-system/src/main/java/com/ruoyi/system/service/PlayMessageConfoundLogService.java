@@ -30,4 +30,6 @@ public interface PlayMessageConfoundLogService extends IService<PlayMessageConfo
 
     void retry(ConfoundRetryDTO dto);
 
+    PlayMessageConfoundLog queryByContentMd5OrSerialNo(String md5, String serialNo);
+
 }

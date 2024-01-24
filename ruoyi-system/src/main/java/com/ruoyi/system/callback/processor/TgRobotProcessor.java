@@ -2,9 +2,6 @@ package com.ruoyi.system.callback.processor;
 
 import cn.hutool.core.collection.CollUtil;
 import com.alibaba.fastjson2.JSON;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.ruoyi.common.core.domain.entity.robot.Robot;
-import com.ruoyi.common.utils.ListTools;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
@@ -28,7 +25,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-
 import java.util.List;
 
 @Component
@@ -389,6 +385,7 @@ public class TgRobotProcessor {
     public void called1100910006(Called1100910006DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
+        intoGroupService.setGroupMemberCallBack(dto,root);
     }
 
     /**

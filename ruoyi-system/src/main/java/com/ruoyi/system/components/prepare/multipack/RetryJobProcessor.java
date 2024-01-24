@@ -107,7 +107,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 		}
 
 		PlayRobotPack conf = playRobotPackMapper.selectOne(
-				new QueryWrapper<PlayRobotPack>().lambda().eq(PlayRobotPack::getMessageSort, detail.getMessageSort())
+				new QueryWrapper<PlayRobotPack>().lambda().eq(PlayRobotPack::getRobotNickname, detail.getSpokesmanNickname())
 						.eq(PlayRobotPack::getPlayId, data.getPlayId()).last(" limit 1 "));
 
 		final String chatroomId = data.getChatroomId();
