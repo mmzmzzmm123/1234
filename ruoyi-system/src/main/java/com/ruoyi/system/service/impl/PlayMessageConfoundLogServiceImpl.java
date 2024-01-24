@@ -3,6 +3,9 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.constant.PlayConstants;
@@ -383,9 +386,8 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         }
         confoundLog.setExecuteNum(confoundLog.getExecuteNum() + 1);
         confoundLog.setModifyTime(new Date());
-
         log.info("handleConfoundText-optSerNo-retry-{}",JSON.toJSONString(confoundLog));
-        super.updateById(confoundLog);
+        super.baseMapper.update(confoundLog, new UpdateWrapper<PlayMessageConfoundLog>().lambda().eq(PlayMessageConfoundLog::getId,confoundLog.getId()).ne(PlayMessageConfoundLog::getState,1));
     }
 
     @Override
