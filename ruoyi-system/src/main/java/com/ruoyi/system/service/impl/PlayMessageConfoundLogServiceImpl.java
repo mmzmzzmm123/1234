@@ -314,6 +314,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
                 if (confoundLog.getExecuteNum() >= 3 ){
                     confoundLog.setState(2);
                     confoundLog.setFailMessage("未收到结果回调,混淆失败");
+                    log.info("handleConfoundText-{}",JSON.toJSONString(confoundLog));
                     super.updateById(confoundLog);
                     continue;
                 }
