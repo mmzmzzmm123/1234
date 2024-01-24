@@ -718,7 +718,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
                         .eq(Play::getId, playId)
                         .eq(Play::getState, PlayStatusConstants.SUSPEND)
-                        .in(Play::getScanProgress, ScanProgressEnum.Send_Wait)
+                        .in(Play::getScanProgress, ScanProgressEnum.Send_Wait.getVal())
                         .set(Play::getState, PlayStatusConstants.IN_PROGRESS)
                         .set(Play::getUpdateTime, new Date())
                 );
@@ -738,7 +738,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
                         .eq(Play::getId, playId)
                         .eq(Play::getState, PlayStatusConstants.SUSPEND)
-                        .notIn(Play::getScanProgress, ScanProgressEnum.Send_Wait)
+                        .notIn(Play::getScanProgress, ScanProgressEnum.Send_Wait.getVal())
                         .set(Play::getState, PlayStatusConstants.DISPATCH)
                         .set(Play::getUpdateTime, new Date())
                 );

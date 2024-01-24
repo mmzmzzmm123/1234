@@ -442,6 +442,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             return confoundLog;
         }
         queryWrapper.eq(PlayMessageConfoundLog::getContentMd5, md5)
+                .isNull(PlayMessageConfoundLog::getResultContent)
                 .orderByDesc(PlayMessageConfoundLog::getCreateTime)
                 .last("limit 1");
         return this.getOne(queryWrapper);
