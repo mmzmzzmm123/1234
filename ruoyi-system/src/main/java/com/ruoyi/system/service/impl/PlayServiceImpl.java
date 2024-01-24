@@ -15,10 +15,12 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.app.OrderProduceRequest;
 import com.ruoyi.common.core.domain.dto.play.*;
+import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.core.domain.entity.play.*;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.enums.ProductCategoryType;
 import com.ruoyi.common.enums.ScanProgressEnum;
 import com.ruoyi.common.enums.play.PushStateEnum;
@@ -262,6 +264,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             play.setUrlPool(String.join(",", dto.getUrlPool()));
         }
         play.setLockRobotStatus(dto.getPlayExt().getLockState());
+        play.setCreateTime(new Date());
+        play.setUpdateTime(new Date());
         super.save(play);
     }
 
@@ -282,6 +286,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         if (null != dto.getUrlPool() && dto.getUrlPool().size() > 0) {
             play.setUrlPool(String.join(",", dto.getUrlPool()));
         }
+        play.setUpdateTime(new Date());
         updateById(play);
 
         //剧本内容
@@ -354,6 +359,14 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             ret.setPlayMessageList(playMessageDTOList);
         }
 
+        if (null != play.getMerchantId()) {
+            MerchantInfo merchantInfo = SpringUtils.getBean(MerchantInfoMapper.class).selectById(play.getMerchantId());
+            if (null != merchantInfo) {
+                ret.setMerchantId(merchantInfo.getMerchantId());
+                ret.setMerchantName(merchantInfo.getMerchantName());
+            }
+        }
+
         return R.ok(ret);
     }
 
@@ -373,7 +386,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         boolean status = super.update(null, new LambdaUpdateWrapper<Play>()
                 .eq(Play::getId, playId)
                 .in(Play::getState, Arrays.asList(PlayStatusConstants.DISPATCH, PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.SUSPEND))
-                .set(Play::getAdMonitor, JSON.toJSONString(dto)));
+                .set(Play::getAdMonitor, JSON.toJSONString(dto))
+                .set(Play::getUpdateTime, new Date())
+        );
         if (!status) {
             return R.fail(11000, ErrInfoConfig.getDynmic(11000, "修改失败"));
         }
@@ -388,6 +403,13 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         GroupService groupService = SpringUtils.getBean(GroupService.class);
         for (PlayGroupInfo info : playGroupInfos) {
             groupService.setBotAdMonitor(info.getGroupId());
+
+            PlayExecutionLog log = new PlayExecutionLog();
+            log.setPlayId(playId);
+            log.setGroupId(info.getTgGroupId());
+            log.setContent("【广告监控-修改配置】修改成功;");
+            log.setType(PlayLogTyper.Advertising_Monitoring);
+            SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
         }
 
         return R.ok();
@@ -642,7 +664,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
                     .eq(Play::getId, playId)
                     .in(Play::getState, PlayStatusConstants.IN_PROGRESS, PlayStatusConstants.DISPATCH)//调度中、炒群中都可以暂停
-                    .set(Play::getState, PlayStatusConstants.SUSPEND));
+                    .set(Play::getState, PlayStatusConstants.SUSPEND)
+                    .set(Play::getUpdateTime, new Date()));
             if (setPlayFlag) {
                 List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayIdAndState(playId, PushStateEnum.ING.getKey());
                 for (PlayMessagePush playMessagePush : playMessagePushList) {
@@ -671,6 +694,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             }
             play.setState(PlayStatusConstants.CANCEL);
             play.setEndDate(new Date());
+            play.setUpdateTime(new Date());
             super.updateById(play);
 
             //退群接口
@@ -690,12 +714,14 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         log.info("play_setState: {}, ids: {}", PlayStatusConstants.SUSPEND, playIds);
         for (String playId : playIds) {
             final Play play = super.getById(playId);
-            if (play.getScanProgress().intValue() == ScanProgressEnum.Send_Wait.getVal()) {
+            if (play.getScanProgress() == ScanProgressEnum.Send_Wait.getVal()) {
                 boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
                         .eq(Play::getId, playId)
                         .eq(Play::getState, PlayStatusConstants.SUSPEND)
                         .in(Play::getScanProgress, ScanProgressEnum.Send_Wait)
-                        .set(Play::getState, PlayStatusConstants.IN_PROGRESS));
+                        .set(Play::getState, PlayStatusConstants.IN_PROGRESS)
+                        .set(Play::getUpdateTime, new Date())
+                );
                 if (setPlayFlag) {
                     //恢复为炒群中
                     List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayIdAndState(playId, PushStateEnum.USER_STOP.getKey());
@@ -713,7 +739,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                         .eq(Play::getId, playId)
                         .eq(Play::getState, PlayStatusConstants.SUSPEND)
                         .notIn(Play::getScanProgress, ScanProgressEnum.Send_Wait)
-                        .set(Play::getState, PlayStatusConstants.DISPATCH));
+                        .set(Play::getState, PlayStatusConstants.DISPATCH)
+                        .set(Play::getUpdateTime, new Date())
+                );
                 if (setPlayFlag) {
                     //恢复为调度中
                     //恢复混淆状态为未混淆

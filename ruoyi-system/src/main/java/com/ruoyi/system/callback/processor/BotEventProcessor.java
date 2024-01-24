@@ -1,20 +1,28 @@
 package com.ruoyi.system.callback.processor;
 
 import cn.hutool.core.collection.CollUtil;
+import com.ruoyi.common.enums.BotDealFunctionsEnum;
 import com.ruoyi.common.enums.BotEventEnum;
+import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.MD5Utils;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.callback.BotEvent;
 import com.ruoyi.system.callback.dto.bot.*;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.GroupMonitorInfo;
+import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
+import com.ruoyi.system.domain.vo.GroupPlayInfoVO;
 import com.ruoyi.system.service.GroupInfoService;
 import com.ruoyi.system.service.GroupMonitorInfoService;
 import com.ruoyi.system.service.GroupStateService;
+import com.ruoyi.system.service.PlayExecutionLogService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -100,6 +108,32 @@ public class BotEventProcessor {
 
     }
 
+    @BotEvent(value = BotEventEnum.ADVERTISEMENT_FILTER, parameterClass = AdvertisementFilterDTO.class)
+    public void advertisementFilter(AdvertisementFilterDTO dto) {
+        GroupPlayInfoVO groupPlayInfoVO = groupMonitorInfoService.getGroupPlayInfoVO(String.valueOf(dto.getChatId()));
+        if (ObjectUtils.isEmpty(groupPlayInfoVO)) {
+            log.info("groupPlayInfoVO is null {}", dto.toString());
+            return;
+        }
+        List<String> rule = new ArrayList<>();
+        if (CollectionUtils.isNotEmpty(dto.getDealFunctions())) {
+            for (String dealFunction : dto.getDealFunctions()) {
+                BotDealFunctionsEnum functionsEnum = BotDealFunctionsEnum.findByKey(dealFunction);
+                rule.add(functionsEnum.getValue());
+            }
+        }
+        String groupId = groupPlayInfoVO.getGroupId();
+        String fullName = dto.getFullName();
+        String filterType = dto.getFilterType();
+
+        String content = String.format("【广告监控-%s】群：%s，成员：%s，触发监控类型-%s;", String.join(",", rule), groupId, fullName, filterType);
+        PlayExecutionLog log = new PlayExecutionLog();
+        log.setPlayId(groupPlayInfoVO.getPlayId());
+        log.setGroupId(groupPlayInfoVO.getGroupId());
+        log.setContent(content);
+        log.setType(PlayLogTyper.Advertising_Monitoring);
+        SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
+    }
 
     public String getGroupSerialNo(Long chatId) {
         String chatStr = Math.abs(chatId) + "";

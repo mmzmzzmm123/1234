@@ -16,4 +16,22 @@
           and tgmi.group_status = 0
           group by tgmi.group_id
     </select>
+
+    <select id="getGroupPlayInfoVO" resultType="com.ruoyi.system.domain.vo.GroupPlayInfoVO">
+        SELECT
+            tpgi.play_id,
+            tgmi.group_id,
+            tgmi.original_group_id
+        FROM
+            t_group_monitor_info tgmi
+            INNER JOIN t_play_group_info tpgi ON tpgi.tg_group_id = tgmi.group_id
+        WHERE
+            1 = 1
+          AND tgmi.original_group_id = #{originalGroupId}
+	      AND tpgi.into_status = 2
+        ORDER BY
+            tpgi.create_time DESC
+            LIMIT 1
+    </select>
+
 </mapper>

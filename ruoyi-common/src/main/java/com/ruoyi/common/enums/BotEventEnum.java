@@ -1,7 +1,5 @@
 package com.ruoyi.common.enums;
 
-import org.omg.CORBA.UNKNOWN;
-
 /**
  * @author 朱少波
  * @date 2024/1/18/018 9:31
@@ -53,5 +51,12 @@ public enum BotEventEnum {
     /**
      * 未知事件
      */
-    UNKNOWN;
+    UNKNOWN,
+
+    /**
+     * 广告监控
+     */
+    ADVERTISEMENT_FILTER;
+
+
 }
