@@ -183,6 +183,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             confoundLog.setResultContent(resultContent);
         }
         confoundLog.setModifyTime(new Date());
+        log.info("handleConfoundText-optSerNo-success-{},{}",optSerNo,JSON.toJSONString(confoundLog));
         super.updateById(confoundLog);
 
     }
@@ -379,6 +380,8 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         }
         confoundLog.setExecuteNum(confoundLog.getExecuteNum() + 1);
         confoundLog.setModifyTime(new Date());
+
+        log.info("handleConfoundText-optSerNo-retry-{}",JSON.toJSONString(confoundLog));
         super.updateById(confoundLog);
     }
 
