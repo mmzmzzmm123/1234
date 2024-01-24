@@ -124,7 +124,8 @@ public class GroupService {
         try {
             while (groupInfoList.size() < dto.getGroupNum()) {
                 count = dto.getGroupNum() - groupInfoList.size();
-                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count, countryCodes, exclusionGroupId, botAdmin, groupRange);
+                List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count,
+                        countryCodes, exclusionGroupId, botAdmin, groupRange,dto.getGroupType());
                 //没有满足条件的群
                 if (CollUtil.isEmpty(result)) {
                     //如果有优先国家  清空优先国家再次查询 否则跳出循环
