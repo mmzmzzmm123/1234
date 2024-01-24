@@ -19,6 +19,7 @@ import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.common.core.domain.entity.play.*;
 import com.ruoyi.common.core.domain.model.LoginUser;
+import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.enums.ProductCategoryType;
 import com.ruoyi.common.enums.ScanProgressEnum;
 import com.ruoyi.common.enums.play.PushStateEnum;
@@ -393,6 +394,13 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         GroupService groupService = SpringUtils.getBean(GroupService.class);
         for (PlayGroupInfo info : playGroupInfos) {
             groupService.setBotAdMonitor(info.getGroupId());
+
+            PlayExecutionLog log = new PlayExecutionLog();
+            log.setPlayId(playId);
+            log.setGroupId(info.getTgGroupId());
+            log.setContent("【广告监控-修改配置】修改成功;");
+            log.setType(PlayLogTyper.Advertising_Monitoring);
+            SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
         }
 
         return R.ok();

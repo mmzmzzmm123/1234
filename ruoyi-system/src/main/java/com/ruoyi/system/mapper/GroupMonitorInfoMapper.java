@@ -2,6 +2,8 @@ package com.ruoyi.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.system.domain.GroupMonitorInfo;
+import com.ruoyi.system.domain.vo.GroupPlayInfoVO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,4 +18,6 @@ import java.util.List;
 public interface GroupMonitorInfoMapper extends BaseMapper<GroupMonitorInfo> {
 
     List<GroupMonitorInfo> getPlayOriginalGroupId();
+
+    GroupPlayInfoVO getGroupPlayInfoVO(@Param("originalGroupId") String originalGroupId);
 }
