@@ -102,6 +102,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 			PlayRobotPackLog update = new PlayRobotPackLog();
 			update.setOpt(data.getOpt());
 			update.setRetryMaxFlag(1);
+			update.setStatus(2);
 			robotPackLogMapper.updateById(update);
 			return;
 		}

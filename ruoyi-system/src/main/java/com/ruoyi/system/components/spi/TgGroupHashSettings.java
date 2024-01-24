@@ -86,7 +86,7 @@ public class TgGroupHashSettings implements Settings {
 		data.setRobotId(robotId);
 		data.setIsBackup(((boolean) param.get(Settings.Key_Backup_Flag)) ? 1 : 0);
 
-		if (ret.getData() != null && !StringUtils.isEmpty(ret.getData().getOptSerNo())) {
+		if (ret.getData() != null && !StringUtils.isEmpty(ret.getData().getOptSerNo()) && ret.isSuccess()) {
 			// 成功
 			data.setStatus(0);
 			data.setOpt(ret.getData().getOptSerNo());
