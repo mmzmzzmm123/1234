@@ -188,7 +188,6 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         confoundLog.setModifyTime(new Date());
         final boolean res = super.updateById(confoundLog);
         log.info("handleConfoundText-optSerNo-success-{},{},{}",optSerNo,JSON.toJSONString(confoundLog),res);
-        log.info("handleConfoundText-optSerNo-success2-{},{},{}",optSerNo,JSON.toJSONString(super.getById(confoundLog.getId())),res);
     }
 
     @Override
@@ -388,7 +387,6 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         confoundLog.setModifyTime(new Date());
         final int res = super.baseMapper.update(confoundLog, new UpdateWrapper<PlayMessageConfoundLog>().lambda().eq(PlayMessageConfoundLog::getId, confoundLog.getId()).ne(PlayMessageConfoundLog::getState, 1));
         log.info("handleConfoundText-optSerNo-retry-{},{},{}",confoundLog.getOptSerialNo(), JSON.toJSONString(confoundLog),res);
-        log.info("handleConfoundText-optSerNo-retry2-{},{},{}",confoundLog.getOptSerialNo(),JSON.toJSONString(super.getById(confoundLog.getId())),res);
     }
 
     @Override
@@ -438,8 +436,12 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
     @Override
     public PlayMessageConfoundLog queryByContentMd5OrSerialNo(final String md5, final String serialNo) {
         LambdaQueryWrapper<PlayMessageConfoundLog> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.and(it -> it.eq(StringUtils.isNotBlank(serialNo), PlayMessageConfoundLog::getOptSerialNo, serialNo)
-                        .or(StringUtils.isNotBlank(md5), one -> one.eq(PlayMessageConfoundLog::getContentMd5, md5)))
+        queryWrapper.eq(PlayMessageConfoundLog::getOptSerialNo,serialNo);
+        final PlayMessageConfoundLog confoundLog = this.getOne(queryWrapper);
+        if(confoundLog != null){
+            return confoundLog;
+        }
+        queryWrapper.eq(PlayMessageConfoundLog::getContentMd5, md5)
                 .orderByDesc(PlayMessageConfoundLog::getCreateTime)
                 .last("limit 1");
         return this.getOne(queryWrapper);
