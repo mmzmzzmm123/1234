@@ -402,12 +402,12 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         GroupService groupService = SpringUtils.getBean(GroupService.class);
         for (PlayGroupInfo info : playGroupInfos) {
-            groupService.setBotAdMonitor(info.getGroupId());
+            groupService.setBotAdMonitor(info.getTgGroupId());
 
             PlayExecutionLog log = new PlayExecutionLog();
             log.setPlayId(playId);
             log.setGroupId(info.getTgGroupId());
-            log.setContent("【广告监控-修改配置】修改成功;");
+            log.setContent(StringUtils.format("【广告监控-修改配置】-{} 修改成功;",info.getTgGroupId()));
             log.setType(PlayLogTyper.Advertising_Monitoring);
             SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
         }
