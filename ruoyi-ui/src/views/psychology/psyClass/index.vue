@@ -115,6 +115,7 @@
           <el-input v-model="form.linkUrl" type="textarea" placeholder="跳转url" />
         </el-form-item>
         <template v-if="form.type === '1'">
+          <el-divider/>
           <el-form-item label="满足条件" prop="nand">
             <el-radio-group v-model="form.nand">
               <el-radio label="0">必须满足所有被选中的条件</el-radio>
@@ -148,7 +149,20 @@
           <el-form-item label="咨询师条件" prop="buy">
             <el-checkbox true-label="0" false-label="1" v-model="form.buy">当日可约</el-checkbox>
           </el-form-item>
+          <el-divider/>
         </template>
+
+        <el-form-item label="擅长领域" prop="way">
+          <el-cascader
+            size="small"
+            v-model="form.way"
+            :options="wayList"
+            :props="{ multiple: true }"
+            collapse-tags
+            filterable
+            clearable>
+          </el-cascader>
+        </el-form-item>
 
         <el-form-item label="启用" prop="status">
           <el-switch v-model="form.status" active-value="0" inactive-value="1"/>
@@ -166,6 +180,7 @@
 <script>
 import { listPsyClass, getPsyClass, delPsyClass, addPsyClass, updatePsyClass } from "@/api/psychology/psyClass";
 import { getList } from "@/api/psychology/serveConfig";
+import { getTree } from "@/api/psychology/type";
 
 export default {
   name: "PsyClass",
@@ -186,6 +201,7 @@ export default {
       // 咨询类型表格数据
       serves: [],
       PsyClassList: [],
+      wayList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -205,7 +221,9 @@ export default {
         status: null,
       },
       // 表单参数
-      form: {},
+      form: {
+        way: [],
+      },
       // 表单校验
       rules: {
         name: [
@@ -229,8 +247,13 @@ export default {
   created() {
     this.getServes();
     this.getList();
+    this.getAttr()
   },
   methods: {
+    async getAttr() {
+      const res = await getTree()
+      this.wayList = res.data
+    },
     getServes() {
       getList({}).then(response => {
         if (response && response.code === 200) {
@@ -274,7 +297,8 @@ export default {
         buy: "1",
         single: "1",
         price: "1",
-        serve: "1"
+        serve: "1",
+        way: []
       };
       this.resetForm("form");
     },
@@ -305,6 +329,7 @@ export default {
       this.reset();
       const id = row.id || this.ids
       getPsyClass(id).then(response => {
+        response.data.way = response.data.way ? JSON.parse(response.data.way) : []
         this.form = response.data;
         this.open = true;
         this.title = "修改首页tab";
@@ -314,14 +339,17 @@ export default {
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {
-          if (this.form.id != null) {
-            updatePsyClass(this.form).then(response => {
+          const form = JSON.parse(JSON.stringify(this.form))
+          form.way = JSON.stringify(form.way)
+
+          if (form.id != null) {
+            updatePsyClass(form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addPsyClass(this.form).then(response => {
+            addPsyClass(form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();

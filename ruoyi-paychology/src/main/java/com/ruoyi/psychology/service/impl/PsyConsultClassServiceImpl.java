@@ -1,6 +1,8 @@
 package com.ruoyi.psychology.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import com.alibaba.fastjson2.JSON;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.psychology.domain.PsyConsultClass;
 import com.ruoyi.psychology.mapper.PsyConsultClassMapper;
 import com.ruoyi.psychology.service.IPsyConsultClassService;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.HashSet;
 import java.util.List;
 
 /**
@@ -52,6 +55,7 @@ public class PsyConsultClassServiceImpl implements IPsyConsultClassService
     @Transactional(rollbackFor = Exception.class)
     public int add(PsyConsultClassVO req)
     {
+        converToStr(req);
         return psyConsultClassMapper.insert(BeanUtil.toBean(req, PsyConsultClass.class));
     }
 
@@ -62,7 +66,20 @@ public class PsyConsultClassServiceImpl implements IPsyConsultClassService
     @Transactional(rollbackFor = Exception.class)
     public int update(PsyConsultClassVO req)
     {
+        converToStr(req);
         return psyConsultClassMapper.updateById(BeanUtil.toBean(req, PsyConsultClass.class));
+    }
+
+    private void converToStr(PsyConsultClassVO req) {
+        HashSet<String> way = new HashSet<>();
+        if (StringUtils.isNotEmpty(req.getWay())) {
+            List<String> jsonArray = JSON.parseArray(req.getWay(), String.class);
+            jsonArray.forEach(a -> {
+                List<String> json = JSON.parseArray(a, String.class);
+                way.add(json.get(1));
+            });
+        }
+        req.setWayStr(String.join(",", way));
     }
 
     /**

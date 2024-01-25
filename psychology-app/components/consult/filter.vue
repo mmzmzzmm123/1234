@@ -132,8 +132,17 @@ import cityUtil from "@/utils/pc-city";
       }
     },
     created() {
-      console.log(this.attrParams.sexList)
-      console.log(this.attrParams.typeList)
+      console.log(this.filterParams.way)
+      if (this.filterParams.way && this.filterParams.way.length > 0) {
+        this.attrParams.attrList.forEach(node => {
+          const arr = node.children.filter(a => this.filterParams.way.includes(a.label)) || []
+          if (arr.length > 0) {
+            arr.forEach(item => item.flag = true)
+            node.flag = arr.length === node.children.length
+          }
+        })
+      }
+
       if (this.filterParams.province && this.filterParams.province !== '不限') {
         const item = this.city.find(a => a.name === this.filterParams.province)
         this.p = item.code

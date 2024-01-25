@@ -249,6 +249,7 @@
             this.queryData.highPrice = item.highPrice
           }
 
+          this.filterParams.way = this.queryData.way = item.wayStr ? item.wayStr.split(',') : []
           return this.submit()
         }
 
@@ -302,16 +303,18 @@
                   break
               }
             }
+            this.queryData.way = []
             break
           case 3:
             this.queryData.days = this.filterParams.days
             this.queryData.sex = this.filterParams.sex
             this.queryData.time = this.filterParams.time
             this.queryData.serve = this.filterParams.serve
-            this.queryData.way = this.filterParams.way
+            this.queryData.way = []
             this.queryData.dayType = this.filterParams.dayType
             break
           case 4:
+            this.queryData.way = []
             this.queryData.city = null
             this.queryData.province = null
 

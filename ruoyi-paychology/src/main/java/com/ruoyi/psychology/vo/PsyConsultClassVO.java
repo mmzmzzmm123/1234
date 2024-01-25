@@ -66,4 +66,8 @@ public class PsyConsultClassVO extends BaseValObj implements Serializable
     /** 价格 */
     private BigDecimal highPrice;
 
+    /** 擅长领域 */
+    private String way;
+    private String wayStr;
+
 }
