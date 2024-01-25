@@ -58,6 +58,7 @@ public class BotEventProcessor {
             String newGroupId = getGroupSerialNo(dto.getNewGroupId());
             String oldGroupId = getGroupSerialNo(dto.getOldGroupId());
             groupInfoService.updateGroupSerialNo(groupMonitorInfo.getGroupId(),oldGroupId, newGroupId);
+            groupStateService.recover(groupMonitorInfo.getGroupId());
         }else{
             //根据原始id md5获取加密后的编号
             String oldGroupId = getGroupSerialNo(dto.getOldGroupId());
@@ -66,6 +67,7 @@ public class BotEventProcessor {
             if (groupBySerialNo != null) {
                 groupMonitorInfoService.updateOriginalGroupId(groupBySerialNo.getGroupId(), dto.getOldGroupId() +"", dto.getNewGroupId() + "");
                 groupInfoService.updateGroupSerialNo(groupBySerialNo.getGroupId(),oldGroupId, newGroupId);
+                groupStateService.recover(groupBySerialNo.getGroupId());
             }
         }
     }

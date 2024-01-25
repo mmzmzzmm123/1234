@@ -98,4 +98,12 @@ public class GroupStateServiceImpl extends ServiceImpl<GroupStateMapper, GroupSt
         baseMapper.update(groupState, new LambdaQueryWrapper<GroupState>()
                 .in(GroupState::getGroupId, groupIds));
     }
+
+    @Override
+    public void recover(String groupId) {
+        GroupState groupState = new GroupState();
+        groupState.setGroupStatus(0);
+        groupState.setGroupId(groupId);
+        baseMapper.updateById(groupState);
+    }
 }
