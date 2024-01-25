@@ -189,7 +189,7 @@ public class OrderServiceImpl implements OrderService, InitializingBean {
 		// 冻结余额
 		String frozenId = "";
 		if (product.getCategoryId() != ProductCategoryType.PLAY.getId()) {
-			OrderTools.doFrozen(price, request.getLoginUser().getMerchantInfo().getMerchantId(), orderId);
+			frozenId = OrderTools.doFrozen(price, request.getLoginUser().getMerchantInfo().getMerchantId(), orderId);
 		}
 
 		// 插入订单

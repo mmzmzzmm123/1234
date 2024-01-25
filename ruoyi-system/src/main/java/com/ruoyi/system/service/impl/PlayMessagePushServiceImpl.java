@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.constant.PlayConstants;
 import com.ruoyi.common.core.domain.dto.play.ContentJson;
@@ -9,12 +10,15 @@ import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
+import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.enums.play.PushStateEnum;
+import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.RandomListPicker;
 import com.ruoyi.system.domain.PlayMessageConfoundLog;
 import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
 import com.ruoyi.system.domain.dto.play.PushOperationDTO;
 import com.ruoyi.system.domain.dto.play.QueryRobotDetailDTO;
+import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.play.QueryRobotDetailVO;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.mapper.PlayMessageConfoundLogMapper;
@@ -24,6 +28,7 @@ import com.ruoyi.system.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -72,21 +77,33 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         if (dto == null) {
             return;
         }
-        //操作类型 0-暂停 1-继续 2-取消 3-强制开炒
-        switch (dto.getOp()) {
-            case 0:
-                this.pauseGroupPush(dto.getPushId());
-                break;
-            case 1:
-                this.resumeGroupPush(dto.getPushId());
-                break;
-            case 2:
-                this.cancelGroupPush(dto.getPushId());
-                break;
-            case 3:
-                this.forceStartGroupPush(dto.getPushId());
-                break;
+        List<Integer> pushIds = dto.getPushIds();
+        if (CollectionUtils.isEmpty(pushIds)) {
+            pushIds = new ArrayList<>();
         }
+        if (dto.getPushId() != null) {
+            pushIds.add(dto.getPushId());
+        }
+        Assert.isTrue(CollectionUtils.isNotEmpty(pushIds), "参数错误");
+
+        for (Integer pushId : pushIds) {
+            //操作类型 0-暂停 1-继续 2-取消 3-强制开炒
+            switch (dto.getOp()) {
+                case 0:
+                    this.pauseGroupPush(pushId);
+                    break;
+                case 1:
+                    this.resumeGroupPush(pushId);
+                    break;
+                case 2:
+                    this.cancelGroupPush(pushId);
+                    break;
+                case 3:
+                    this.forceStartGroupPush(pushId);
+                    break;
+            }
+        }
+
     }
 
     /**
@@ -392,6 +409,71 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
                 .eq(PlayMessagePush::getIsDelete, 0)
                 .last(" limit 1 ")
         );
+    }
+
+    @Override
+    public void pauseGroupPushWhenWaitSend(String groupId, String pauseReason) {
+        List<PlayMessagePush> pushes = this.queryByGroupIdAndState(groupId, 1);
+        List<String> playIds = pushes.stream().map(PlayMessagePush::getPlayId).collect(Collectors.toList());
+
+        LambdaUpdateWrapper<PlayMessagePush> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(PlayMessagePush::getGroupId, groupId)
+                .eq(PlayMessagePush::getPushState, 1)
+                .set(PlayMessagePush::getPushState, 4)
+                .set(PlayMessagePush::getPauseReason, pauseReason);
+        boolean updated = this.update(updateWrapper);
+        log.info("暂停GroupPush结果 {} {} {} {}", updated, groupId, pauseReason, playIds);
+        List<PlayExecutionLog> pauseLogs = new ArrayList<>();
+        for (PlayMessagePush push : pushes) {
+            PlayExecutionLog playExecutionLog = new PlayExecutionLog();
+            playExecutionLog.setPlayId(push.getPlayId());
+            playExecutionLog.setGroupId(groupId);
+            playExecutionLog.setContent("收到群升级回调-暂停群剧本任务");
+            playExecutionLog.setType(PlayLogTyper.Group_Upgrade);
+            playExecutionLog.setCreateTime(new Date());
+            playExecutionLog.setState(updated ? 0: 1);
+            pauseLogs.add(playExecutionLog);
+        }
+        SpringUtils.getBean(MongoTemplate.class).insertAll(pauseLogs);
+    }
+
+    @Override
+    public void continuePushWhenPause(String groupId, String pauseReason) {
+        List<PlayMessagePush> pushes = this.queryByGroupIdAndState(groupId, 4);
+        List<String> playIds = pushes.stream().map(PlayMessagePush::getPlayId).collect(Collectors.toList());
+
+        LambdaUpdateWrapper<PlayMessagePush> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(PlayMessagePush::getGroupId, groupId)
+                .eq(PlayMessagePush::getPushState, 4)
+                .eq(PlayMessagePush::getPauseReason, pauseReason)
+                .set(PlayMessagePush::getPushState, 1)
+                .set(PlayMessagePush::getPauseReason, "");
+        boolean updated = this.update(updateWrapper);
+        log.info("继续GroupPush结果 {} {} {} {}", updated, groupId, pauseReason, playIds);
+
+        List<PlayExecutionLog> pauseLogs = new ArrayList<>();
+        for (PlayMessagePush push : pushes) {
+            PlayExecutionLog playExecutionLog = new PlayExecutionLog();
+            playExecutionLog.setPlayId(push.getPlayId());
+            playExecutionLog.setGroupId(groupId);
+            playExecutionLog.setContent("收到群升级完成回调-继续执行任务");
+            playExecutionLog.setType(PlayLogTyper.Group_Upgrade);
+            playExecutionLog.setCreateTime(new Date());
+            playExecutionLog.setState(updated ? 0: 1);
+            pauseLogs.add(playExecutionLog);
+        }
+        SpringUtils.getBean(MongoTemplate.class).insertAll(pauseLogs);
+
+    }
+
+    public List<PlayMessagePush> queryByGroupIdAndState(String groupId, Integer state) {
+        if (StringUtils.isBlank(groupId) || null == state) {
+            return new ArrayList<>();
+        }
+        LambdaQueryWrapper<PlayMessagePush> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PlayMessagePush::getPushState, state)
+                .eq(PlayMessagePush::getGroupId, groupId);
+        return this.list(queryWrapper);
     }
 }
 
