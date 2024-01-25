@@ -7,6 +7,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.dto.ScreeningTaskExportDTO;
 import com.ruoyi.system.domain.dto.ScreeningTaskPageDTO;
 import com.ruoyi.system.domain.vo.*;
+import com.ruoyi.system.service.business.ScreeningService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -14,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
@@ -27,18 +29,25 @@ import java.util.List;
 @Slf4j
 public class ScreeningController {
 
+    @Resource
+    private ScreeningService screeningService;
+
+
     @ApiOperation(value = "新增任务")
     @PostMapping("/add")
     public R<Void> add(@RequestParam(value = "file") @ApiParam("手机文件txt格式") MultipartFile file,
-                       @RequestParam(value = "taskName") @ApiParam("任务名") String name,
-                       @RequestParam(value = "CountryCode") @ApiParam("国家代码") Integer countryCode) {
+                       @RequestParam(value = "taskName") @ApiParam("任务名") String taskName,
+                       @RequestParam(value = "CountryCode") @ApiParam("国家代码") Integer countryCode,
+                       @RequestParam(value = "productId") @ApiParam("商品id") String productId) {
         try {
+            screeningService.addTask(screeningService.analysisFileInfo(file), taskName, countryCode);
+
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
-            log.error("未知异常={},{} ", idWork, name, e);
+            log.error("未知异常={},{} ", idWork, taskName, e);
             return R.fail("未知异常！ trace:" + idWork);
         }
     }

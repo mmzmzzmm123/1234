@@ -408,7 +408,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             log.setPlayId(playId);
             log.setGroupId(info.getTgGroupId());
             log.setContent(StringUtils.format("【广告监控-修改配置】-{} 修改成功;",info.getTgGroupId()));
-            log.setType(PlayLogTyper.Advertising_Monitoring);
+            log.setType(PlayLogTyper.Advertising_Monitoring_Settings);
             SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
         }
 
@@ -470,6 +470,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             vo.setGroupProgress(this.calculate(vo.getGroupTotalNum(), vo.getGroupCurrentNum()));
             vo.setPackProgress(this.calculate(vo.getPackTotalNum(), vo.getPackCurrentNum()));
             vo.setJoinGroupProgress(this.calculate(vo.getJoinGroupTotalNum(), vo.getJoinGroupCurrentNum()));
+            // 监控触发数查询
+            vo.setMonitorTriggerNum(playExecutionLogService.getMonitorTriggerNum(vo.getPlayId()));
         }
         return voList;
     }

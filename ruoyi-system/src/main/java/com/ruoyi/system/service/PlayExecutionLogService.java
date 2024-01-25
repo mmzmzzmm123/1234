@@ -48,6 +48,13 @@ public interface PlayExecutionLogService {
 	void saveLog(PlayExecutionLog log);
 
 	/**
+	 * 查询剧本广告监控触发次数
+	 * @param playId
+	 * @return
+	 */
+	long getMonitorTriggerNum(String playId);
+
+	/**
 	 * 剧本混淆日志
 	 * @param playId
 	 * @param content
@@ -151,4 +158,6 @@ public interface PlayExecutionLogService {
 		log.setContent(content);
 		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
 	}
+
+
 }

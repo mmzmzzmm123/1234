@@ -16,6 +16,7 @@ import com.ruoyi.system.openapi.model.input.ThirdTgSetChatroomAdminInputDTO;
 import com.ruoyi.system.service.GroupInfoService;
 import com.ruoyi.system.service.IRobotService;
 import com.ruoyi.system.service.PlayMessageConfoundLogService;
+import com.ruoyi.system.service.PlayMessagePushService;
 import com.ruoyi.system.service.business.GroupService;
 import com.ruoyi.system.service.impl.IntoGroupService;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,8 @@ public class TgRobotProcessor {
 
     @Autowired
     private IRobotService robotService;
+
+    private PlayMessagePushService playMessagePushService;
 
     /***
      *
@@ -334,9 +337,33 @@ public class TgRobotProcessor {
     @Type(value = 1100910112, parameterClass = Called1100910112DTO.class)
     public void called1100910112(Called1100910112DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("收到开平群Id变更回调 {}", JSON.toJSONString(dto));
         if(root.isSuccess()){
-            groupInfoService.changeGroupSerialNo(dto.getOld_chatroom_serial_no(),dto.getNew_chatroom_serial_no());
+            String oldChatroomSerialNo = dto.getOld_chatroom_serial_no();
+            String newChatroomSerialNo = dto.getNew_chatroom_serial_no();
+
+            GroupInfo groupInfo = groupInfoService.getGroupBySerialNo(oldChatroomSerialNo, newChatroomSerialNo);
+            groupInfoService.changeGroupSerialNo(oldChatroomSerialNo, newChatroomSerialNo);
+
+            if (groupInfo != null) {
+                playMessagePushService.pauseGroupPushWhenWaitSend(groupInfo.getGroupId(), "群升级-待升级完成");
+            }
+
         }
+    }
+
+
+    @Type(value = 1100910115, parameterClass = Called1100910115DTO.class)
+    public void called1100910115(Called1100910115DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("收到开平群升级结果回调 {}", JSON.toJSONString(dto));
+        if (root.isSuccess()) {
+            GroupInfo groupInfo = groupInfoService.getGroupBySerialNo(dto.getNewChatroomSerialNo());
+            if (groupInfo != null) {
+                playMessagePushService.continuePushWhenPause(groupInfo.getGroupId(), "群升级-待升级完成");
+            }
+        }
+
     }
 
     /**

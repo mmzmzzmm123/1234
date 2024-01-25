@@ -83,9 +83,9 @@
             sum( IF ( tpmp.send_flag = 1, 1, 0 ) ) AS joinGroupCurrentNum
         FROM
             t_play_info tpi
-            LEFT JOIN t_play_message_push tpmp ON tpi.id = tpmp.play_id
             LEFT JOIN t_play_group_info tpgi ON tpi.id = tpgi.play_id
-            LEFT JOIN t_group_state tgs ON tpmp.group_id = tgs.group_id
+            LEFT JOIN t_group_state tgs ON tpgi.tg_group_id = tgs.group_id
+            LEFT JOIN t_play_message_push tpmp ON tpgi.play_id = tpmp.play_id and tpgi.tg_group_id = tpmp.group_id
         WHERE
             tpi.id IN
             <foreach collection="playIds" item="playId" open="(" separator="," close=")">
