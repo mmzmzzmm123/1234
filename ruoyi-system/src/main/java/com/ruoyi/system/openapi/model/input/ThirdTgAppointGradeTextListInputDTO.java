@@ -14,4 +14,7 @@ public class ThirdTgAppointGradeTextListInputDTO {
 
     @ApiModelProperty("离散等级：1-5")
     private Integer level;
+
+    @ApiModelProperty(value = "商家透传字段" ,required = false)
+    private String extend;
 }

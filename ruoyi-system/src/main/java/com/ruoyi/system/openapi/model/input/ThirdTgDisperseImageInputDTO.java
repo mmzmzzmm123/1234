@@ -11,4 +11,7 @@ public class ThirdTgDisperseImageInputDTO {
 
     @ApiModelProperty("数量")
     private Integer num;
+
+    @ApiModelProperty(value = "商家透传字段" ,required = false)
+    private String extend;
 }
