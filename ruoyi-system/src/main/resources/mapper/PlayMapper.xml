@@ -113,6 +113,7 @@
             tgi.group_invite_link,
             tgmi.member_count,
             tgmi.join_count,
+            tgmi.exit_count,
             tgmi.link_join_count,
             tgs.group_status,
             tgs.group_status_time,
