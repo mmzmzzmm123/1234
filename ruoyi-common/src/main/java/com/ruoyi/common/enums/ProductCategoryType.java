@@ -7,7 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ProductCategoryType {
     PULL_PEOPLE(0, "拉人进群"),
-    PLAY(1, "群氛围")
+    PLAY(1, "群氛围"),
+    SCREENING(2, "筛查开通")
     ;
 
     int id;

@@ -142,6 +142,7 @@ public class IntoGroupService {
                 groupQueryDTO.setRegistrationDay(play.getGroupDay());
                 groupQueryDTO.setCountryCode(getCountys(play));
                 groupQueryDTO.setPayId(play.getId());
+                groupQueryDTO.setGroupType(play.getGroupType());
                 //从波少那边获取足够的群
                 log.info("获取群入参："+JSONObject.toJSONString(groupQueryDTO));
                 R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
@@ -346,6 +347,7 @@ public class IntoGroupService {
         groupQueryDTO.setRegistrationDay(play.getGroupDay());
         groupQueryDTO.setCountryCode(getCountys(play));
         groupQueryDTO.setPayId(play.getId());
+        groupQueryDTO.setGroupType(play.getGroupType());
         log.info("重试获取群信息入参:"+JSONObject.toJSONString(groupQueryDTO));
         //从波少那边获取足够的群
         R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
@@ -466,6 +468,7 @@ public class IntoGroupService {
                         groupQueryDTO.setRegistrationDay(playDTO.getGroupDay());
                         groupQueryDTO.setCountryCode(getCountys(playDTO));
                         groupQueryDTO.setPayId(playDTO.getId());
+                        groupQueryDTO.setGroupType(playDTO.getGroupType());
                         log.info("不需要修改人设的群获取入参："+JSONObject.toJSONString(groupQueryDTO));
                         //从波少那边获取足够的群
                         R<List<GroupInfoVO>> groupList = groupService.queryGroup(groupQueryDTO);
