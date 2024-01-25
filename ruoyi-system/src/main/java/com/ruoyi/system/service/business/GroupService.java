@@ -8,12 +8,14 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.VibeRuleDTO;
 import com.ruoyi.common.core.domain.entity.play.Play;
+import com.ruoyi.common.core.domain.entity.robot.Robot;
 import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.core.thread.AsyncTask;
@@ -40,6 +42,7 @@ import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.GroupMemberInfoVO;
 import com.ruoyi.system.domain.vo.GroupResourceVO;
 import com.ruoyi.system.domain.vo.GroupRobotVO;
+import com.ruoyi.system.mapper.RobotMapper;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.*;
@@ -163,6 +166,16 @@ public class GroupService {
                     }
                     List<GroupRobot> adminRobots = groupRobotService.getAdminRobots(groupInfoVO.getGroupId());
                     if (CollUtil.isEmpty(adminRobots)) {
+                        continue;
+                    }
+                    final GroupRobot groupRobot = adminRobots.stream().filter(it -> it.getMemberType().intValue() == 1).findFirst().orElse(null);
+                    if(groupRobot == null){
+                        log.info("选群失败 没有可用的群主号={}", groupInfoVO);
+                        continue;
+                    }
+                    final Robot robot = iRobotService.getOne(new LambdaQueryWrapper<Robot>().eq(Robot::getRobotSerialNo, groupRobot.getRobotId()));
+                    if(robot.getSealStatus().compareTo(10) != 0){
+                        log.info("选群失败 群主号已封号={},{}", groupInfoVO, robot);
                         continue;
                     }
 
