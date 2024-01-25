@@ -172,6 +172,29 @@
 
     <el-dialog title="创建订单" :visible.sync="openAd" width="700px" append-to-body>
       <el-form ref="formAd" :model="formAd" :rules="rulesAd" label-width="120px">
+        <el-form-item label="订单渠道" prop="channel">
+          <el-select v-model="formAd.channel" placeholder="请选择渠道">
+            <el-option
+              v-for="dict in dict.type.consult_order_channel"
+              :key="dict.value"
+              :label="dict.label"
+              :value="dict.label"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="支付状态" prop="status">
+          <el-radio-group v-model="formAd.status">
+            <el-radio :label="0">未支付</el-radio>
+            <el-radio :label="1">支付成功</el-radio>
+          </el-radio-group>
+          <div style="color:#BEBEBE;font-size: 12px;">如选择未支付，请创建订单后提醒用户在24小时内完成支付</div>
+        </el-form-item>
+
+        <el-form-item label="订单实付" prop="pay" v-if="formAd.status === 1">
+          <el-input-number size="mini" v-model="formAd.pay" :min="0" placeholder="请输入订单实付金额" />
+        </el-form-item>
+
         <el-form-item label="下单用户" prop="userId">
           <el-select v-model="formAd.userId" clearable filterable>
             <el-option
@@ -209,7 +232,7 @@
           <el-input-number size="mini" disabled v-model="formAd.num" placeholder="选择服务后显示" />
         </el-form-item>
 
-        <div style="color:#F56C6C;margin-left: 120px">后台订单创建成功后请提醒用户在24小时内完成支付</div>
+<!--        <div style="color:#F56C6C;margin-left: 120px">后台订单创建成功后请提醒用户在24小时内完成支付</div>-->
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="add">确 定</el-button>
@@ -234,6 +257,7 @@ import {mapState} from "vuex"; // 权限判断函数
 
 export default {
   name: "Order",
+  dicts: ['consult_order_channel'],
   components: { times, price, referral, closeModal },
   data() {
     return {
@@ -284,6 +308,9 @@ export default {
       form: {},
       formRm: {},
       formAd: {
+        channel: null,
+        status: null,
+        pay: null,
         userId: null,
         nickName: null,
         serveId: null,
@@ -296,6 +323,8 @@ export default {
         ],
       },
       rulesAd: {
+        channel: [ { required: true, message: "请选择订单渠道", trigger: "change" } ],
+        status: [ { required: true, message: "请选择支付状态", trigger: "change" } ],
         userId: [ { required: true, message: "请选择用户", trigger: "change" } ],
         serveId: [ { required: true, message: "请选择服务", trigger: "change" } ],
         consultId: [ { required: true, message: "请选择咨询师", trigger: "change" } ],
@@ -429,6 +458,10 @@ export default {
     add() {
       const that = this
       that.$refs["formAd"].validate(valid => {
+        if (that.formAd.status === 1 && that.formAd.pay === 0) {
+          return  that.$modal.msgError("请输入支付金额");
+        }
+
         if (valid) {
           that.formAd.nickName = that.userList.find(a => a.id === that.formAd.userId).name
 
@@ -447,6 +480,9 @@ export default {
     closeAdd() {
       this.openAd = false
       this.formAd = {
+        channel: null,
+        status: null,
+        pay: null,
         num: null,
         nickName: null,
         userId: null,

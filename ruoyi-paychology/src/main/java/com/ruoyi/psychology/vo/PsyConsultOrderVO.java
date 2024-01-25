@@ -79,4 +79,6 @@ public class PsyConsultOrderVO extends BaseValObj implements Serializable
     /** 下单方式0,H5 1,MP 2,DY 5,PC */
     private String source;
 
+    private String channel;
+
 }

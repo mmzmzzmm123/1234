@@ -34,17 +34,18 @@
     </template>
     <el-descriptions title="订单信息" :column="2" size="mini">
       <el-descriptions-item label="订单编号">{{ order.orderNo }}</el-descriptions-item>
-      <el-descriptions-item label="订单总价">{{ order.amount.toFixed(2) }}</el-descriptions-item>
+      <el-descriptions-item label="订单渠道">{{ order.channel || '-' }}</el-descriptions-item>
       <el-descriptions-item label="下单时间">{{ order.createTime }}</el-descriptions-item>
+      <el-descriptions-item label="订单总价">{{ order.amount.toFixed(2) }}</el-descriptions-item>
+      <el-descriptions-item label="支付时间">{{ order.payTime || '-' }}</el-descriptions-item>
       <el-descriptions-item label="订单实付">{{ order.pay.toFixed(2) }}</el-descriptions-item>
-      <el-descriptions-item label="支付时间">{{ order.payTime }}</el-descriptions-item>
-      <el-descriptions-item label="优惠券金额">-</el-descriptions-item>
       <el-descriptions-item label="下单方式">{{ order.source === '5' ? '后台创建' : '用户创建' }}</el-descriptions-item>
-      <el-descriptions-item label="积分抵扣">-</el-descriptions-item>
+      <el-descriptions-item label="优惠券金额">-</el-descriptions-item>
       <el-descriptions-item label="订单状态">{{ order.statusName }}</el-descriptions-item>
-      <el-descriptions-item label="订单备注">{{ order.remark }}</el-descriptions-item>
-      <el-descriptions-item label="支付状态">{{ order.payStatusName }}</el-descriptions-item>
+      <el-descriptions-item label="积分抵扣">-</el-descriptions-item>
       <el-descriptions-item v-if="order.reason" label="转介原因">{{ order.reason }}</el-descriptions-item>
+      <el-descriptions-item label="支付状态">{{ order.payStatusName }}</el-descriptions-item>
+      <el-descriptions-item label="订单备注">{{ order.remark }}</el-descriptions-item>
     </el-descriptions>
 
     <template v-if="logs.length > 0">

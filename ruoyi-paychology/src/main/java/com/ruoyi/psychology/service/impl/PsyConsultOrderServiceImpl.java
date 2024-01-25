@@ -462,7 +462,6 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         if (StringUtils.isNotBlank(req.getSource()) && req.getSource().equals("5")) {
             req.setId(IDhelper.getNextId());
             req.setOrderNo(OrderIdUtils.createOrderNo(PsyConstants.ORDER_CONSULT, req.getUserId()));
-            req.setPay(serve.getPrice());
             req.setAmount(serve.getPrice());
             req.setWorkId(0L);
             req.setTime(-1);
@@ -476,15 +475,28 @@ public class PsyConsultOrderServiceImpl implements IPsyConsultOrderService
         req.setDelFlag("0");
         req.setNum(serve.getNum());
         req.setBuyNum(0);
-        req.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_CREATED);
-        req.setPayStatus(ConsultConstant.PAY_STATUE_PENDING);
+
+        // 已支付订单,取前端传递金额
+        if (StringUtils.isNotBlank(req.getSource()) && req.getSource().equals("5") && ConsultConstant.CONSULT_ORDER_STATUE_PENDING.equals(req.getStatus())) {
+            req.setPayStatus(ConsultConstant.PAY_STATUE_PAID);
+            req.setPayTime(new Date());
+        } else {
+            req.setPay(serve.getPrice());
+            req.setStatus(ConsultConstant.CONSULT_ORDER_STATUE_CREATED);
+            req.setPayStatus(ConsultConstant.PAY_STATUE_PENDING);
+        }
 
         if (req.getWorkId() > 0 && req.getTime() > 0) {
             handleItem(req, 3);
         }
 
         doLog(req.getOrderNo(), PsyConstants.ORDER_LOG_CREATE, req.getNickName(), PsyConstants.ORDER_LOG_MESSAGE_CREATE);
-        return psyConsultOrderMapper.insert(BeanUtil.toBean(req, PsyConsultOrder.class));
+        int insert = psyConsultOrderMapper.insert(BeanUtil.toBean(req, PsyConsultOrder.class));
+        if (insert > 0 && StringUtils.isNotBlank(req.getSource()) && req.getSource().equals("5") && ConsultConstant.CONSULT_ORDER_STATUE_PENDING.equals(req.getStatus())) {
+            wechatPayNotify(req);
+        }
+
+        return insert;
     }
 
     @Override

@@ -103,6 +103,9 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     @Excel(name = "下单方式0,H5 1,MP 2,DY 5,PC")
     private String source;
 
+    @Excel(name = "订单渠道")
+    private String channel;
+
     @Excel(name = "备注")
     private String remark;
 

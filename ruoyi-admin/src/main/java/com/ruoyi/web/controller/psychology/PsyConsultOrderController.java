@@ -127,6 +127,10 @@ public class PsyConsultOrderController extends BaseController
     public AjaxResult add(@RequestBody PsyConsultOrderVO req)
     {
         req.setSource("5");
+        // 已支付订单,取前端传递金额
+        if (ConsultConstant.CONSULT_ORDER_STATUE_PENDING.equals(req.getStatus()) && req.getPay() == null) {
+            return AjaxResult.error("支付金额不能为空");
+        }
         return toAjax(psyConsultOrderService.add(req));
     }
 
