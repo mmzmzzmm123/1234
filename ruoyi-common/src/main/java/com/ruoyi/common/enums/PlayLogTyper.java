@@ -39,7 +39,12 @@ public enum PlayLogTyper {
 	/**
 	 * 广告监控
 	 */
-	Advertising_Monitoring
+	Advertising_Monitoring,
+
+	/**
+	 * 广告监控设置
+	 */
+	Advertising_Monitoring_Settings
 
 	;
 
