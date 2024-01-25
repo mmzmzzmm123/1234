@@ -13,10 +13,7 @@ import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import com.ruoyi.system.openapi.model.input.ThirdTgSetChatroomAdminInputDTO;
-import com.ruoyi.system.service.GroupInfoService;
-import com.ruoyi.system.service.IRobotService;
-import com.ruoyi.system.service.PlayMessageConfoundLogService;
-import com.ruoyi.system.service.PlayMessagePushService;
+import com.ruoyi.system.service.*;
 import com.ruoyi.system.service.business.GroupService;
 import com.ruoyi.system.service.impl.IntoGroupService;
 import lombok.RequiredArgsConstructor;
@@ -48,7 +45,11 @@ public class TgRobotProcessor {
     @Autowired
     private IRobotService robotService;
 
+    @Autowired
     private PlayMessagePushService playMessagePushService;
+
+    @Autowired
+    private GroupStateService groupStateService;
 
     /***
      *
@@ -468,6 +469,17 @@ public class TgRobotProcessor {
 //        if(root.isSuccess()){
 //            robotService.cacheLogin(source.getRobot_serial_no());
 //        }
+    }
+
+    @Type(value = 1100850217, parameterClass = Called1100850217DTO.class)
+    public void called1100850217(Called1100850217DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("NQ1100850217 called:{} {}", root, JSON.toJSONString(dto));
+        if (root.isSuccess()) {
+            groupStateService.groupBaned(dto.getChatroomSerialNo(), dto.getSealTime());
+        }
+
+
     }
 
 
