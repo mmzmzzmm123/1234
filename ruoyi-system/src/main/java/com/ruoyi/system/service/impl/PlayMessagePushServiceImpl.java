@@ -77,7 +77,16 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         if (dto == null) {
             return;
         }
-        for (Integer pushId : dto.getPushIds()) {
+        List<Integer> pushIds = dto.getPushIds();
+        if (CollectionUtils.isEmpty(pushIds)) {
+            pushIds = new ArrayList<>();
+        }
+        if (dto.getPushId() != null) {
+            pushIds.add(dto.getPushId());
+        }
+        Assert.isTrue(CollectionUtils.isNotEmpty(pushIds), "参数错误");
+
+        for (Integer pushId : pushIds) {
             //操作类型 0-暂停 1-继续 2-取消 3-强制开炒
             switch (dto.getOp()) {
                 case 0:

@@ -4,7 +4,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
@@ -18,7 +17,9 @@ import java.util.List;
 public class PushOperationDTO {
 
     @ApiModelProperty("推送ID")
-    @NotEmpty(message = "推送ID集合不能为空")
+    private Integer pushId;
+
+    @ApiModelProperty("推送ID集合")
     private List<Integer> pushIds;
 
     @ApiModelProperty("操作类型 0-暂停 1-继续 2-取消 3-强制开炒")
