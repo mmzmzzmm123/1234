@@ -21,7 +21,7 @@ import java.util.List;
  * @author 朱少波
  * @date 2024/1/25/025 9:57
  */
-@Api(tags = "群管理")
+@Api(tags = "筛查任务")
 @RestController
 @RequestMapping("/screening")
 @Slf4j
