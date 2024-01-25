@@ -441,6 +441,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         if(confoundLog != null){
             return confoundLog;
         }
+        queryWrapper.clear();
         queryWrapper.eq(PlayMessageConfoundLog::getContentMd5, md5)
                 .isNull(PlayMessageConfoundLog::getResultContent)
                 .orderByDesc(PlayMessageConfoundLog::getCreateTime)
