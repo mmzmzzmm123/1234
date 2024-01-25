@@ -72,21 +72,24 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         if (dto == null) {
             return;
         }
-        //操作类型 0-暂停 1-继续 2-取消 3-强制开炒
-        switch (dto.getOp()) {
-            case 0:
-                this.pauseGroupPush(dto.getPushId());
-                break;
-            case 1:
-                this.resumeGroupPush(dto.getPushId());
-                break;
-            case 2:
-                this.cancelGroupPush(dto.getPushId());
-                break;
-            case 3:
-                this.forceStartGroupPush(dto.getPushId());
-                break;
+        for (Integer pushId : dto.getPushIds()) {
+            //操作类型 0-暂停 1-继续 2-取消 3-强制开炒
+            switch (dto.getOp()) {
+                case 0:
+                    this.pauseGroupPush(pushId);
+                    break;
+                case 1:
+                    this.resumeGroupPush(pushId);
+                    break;
+                case 2:
+                    this.cancelGroupPush(pushId);
+                    break;
+                case 3:
+                    this.forceStartGroupPush(pushId);
+                    break;
+            }
         }
+
     }
 
     /**

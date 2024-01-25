@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.system.domain.dto.play.QueryExecutionLogDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.service.PlayExecutionLogService;
@@ -98,4 +99,15 @@ public class PlayExecutionLogServiceImpl implements PlayExecutionLogService {
         mongoTemplate.save(log);
     }
 
+    @Override
+    public long getMonitorTriggerNum(String playId) {
+        if (StringUtils.isEmpty(playId)) {
+            return 0L;
+        }
+        Query query = new Query();
+        query.addCriteria(Criteria.where("playId").is(playId));
+        query.addCriteria(Criteria.where("type").is(PlayLogTyper.Advertising_Monitoring));
+        return mongoTemplate.count(query, PlayExecutionLog.class);
+
+    }
 }

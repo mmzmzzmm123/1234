@@ -61,4 +61,7 @@ public class PlayTaskProgressVO {
 
     @ApiModelProperty("异常群数")
     private Integer groupFailNum;
+
+    @ApiModelProperty("监控触发数")
+    private Long monitorTriggerNum;
 }
