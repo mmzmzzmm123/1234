@@ -205,6 +205,10 @@ public class TgRobotProcessor {
         	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
         	return ;
         }
+        else if("名字重复".equals(root.getResultMsg())){//名字重复当做成功
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
+            return ;
+        }
     	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
     }
 
