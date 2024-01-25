@@ -44,7 +44,14 @@ public enum PlayLogTyper {
 	/**
 	 * 广告监控设置
 	 */
-	Advertising_Monitoring_Settings
+	Advertising_Monitoring_Settings,
+
+	/**
+	 * 群升级
+	 */
+	Group_Upgrade,
+
+
 
 	;
 

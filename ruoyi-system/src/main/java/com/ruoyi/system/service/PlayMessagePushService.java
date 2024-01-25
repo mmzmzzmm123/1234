@@ -64,4 +64,22 @@ public interface PlayMessagePushService extends IService<PlayMessagePush> {
     List<PlayMessagePush> selectByPlayIdAndState(String playId, Integer state);
 
     PlayMessagePush getOneByPlayIdAndGroupId(String playId, String groupId);
+
+    /**
+     * 仅状态是待发送的群
+     *
+     * @param groupId 群ID
+     * @param pauseReason 暂停原因
+     */
+    void pauseGroupPushWhenWaitSend(String groupId, String pauseReason);
+
+    /**
+     * 仅更新任务状态暂停中 且暂停原因是指定值
+     *
+     * @param groupId 群Id
+     * @param pauseReason 暂停原因
+     */
+    void continuePushWhenPause(String groupId, String pauseReason);
+
+
 }

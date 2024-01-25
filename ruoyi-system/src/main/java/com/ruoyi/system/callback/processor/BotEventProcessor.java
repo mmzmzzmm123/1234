@@ -12,10 +12,7 @@ import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.GroupMonitorInfo;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.GroupPlayInfoVO;
-import com.ruoyi.system.service.GroupInfoService;
-import com.ruoyi.system.service.GroupMonitorInfoService;
-import com.ruoyi.system.service.GroupStateService;
-import com.ruoyi.system.service.PlayExecutionLogService;
+import com.ruoyi.system.service.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -40,6 +37,8 @@ public class BotEventProcessor {
 
     private final GroupStateService groupStateService;
 
+    private final PlayMessagePushService playMessagePushService;
+
     @BotEvent(value = BotEventEnum.JOIN_GROUP, parameterClass = JoinGroupDTO.class)
     public void joinGroup(List<JoinGroupDTO> list) {
 
@@ -59,6 +58,9 @@ public class BotEventProcessor {
             String oldGroupId = getGroupSerialNo(dto.getOldGroupId());
             groupInfoService.updateGroupSerialNo(groupMonitorInfo.getGroupId(),oldGroupId, newGroupId);
             groupStateService.recover(groupMonitorInfo.getGroupId());
+
+            // 如果是待发送的群 需要把状态更新为暂停,并记录暂停原因
+            playMessagePushService.pauseGroupPushWhenWaitSend(groupMonitorInfo.getGroupId(), "群升级-待升级完成");
         }else{
             //根据原始id md5获取加密后的编号
             String oldGroupId = getGroupSerialNo(dto.getOldGroupId());

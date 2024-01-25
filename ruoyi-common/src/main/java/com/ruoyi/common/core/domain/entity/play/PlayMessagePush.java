@@ -86,6 +86,9 @@ public class PlayMessagePush {
 	 */
 	private Date pushTime ;
 
+	@TableField(value = "pause_reason")
+	private String pauseReason;
+
 	@TableField(exist = false)
 	private static final long serialVersionUID = 1L;
 }
