@@ -77,16 +77,6 @@
   word-break: break-word;
 }
 
-.el-dialog:not(.is-fullscreen) {
-  margin-top: 6vh !important;
-}
-
-.el-dialog__wrapper.scrollbar .el-dialog .el-dialog__body {
-  overflow: auto;
-  overflow-x: hidden;
-  max-height: 70vh;
-  padding: 10px 20px 0;
-}
 
 .el-table {
   .el-table__header-wrapper, .el-table__fixed-header-wrapper {
@@ -288,4 +278,56 @@
 .top-right-btn {
   position: relative;
   float: right;
+}
+
+
+
+.el-dialog:not(.is-fullscreen) {
+  margin-top: 6vh !important;
+}
+
+//.el-dialog__wrapper.scrollbar .el-dialog .el-dialog__body {
+//  overflow: auto;
+//  overflow-x: hidden;
+//  max-height: 70vh;
+//  padding: 10px 20px 0;
+//}
+
+.ruoyi_dialog {
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: Center;
+
+   .el-dialog {
+    margin: 0 auto !important;
+    overflow: hidden;
+     height: 80%;
+
+    .el-dialog__body {
+      position: absolute;
+      left: 0;
+      top: 68px;
+      bottom: 0;
+      right: 0;
+      padding: 0;
+      z-index: 1;
+      overflow: hidden;
+      overflow-y: auto;
+      // 下边设置字体，我的需求是黑底白字
+      //color: #ffffff;
+      line-height: 30px;
+      padding: 0 15px;
+      margin-bottom: 80px;
+    }
+
+    .el-dialog__footer {
+      position: absolute;
+      left: 0;
+      bottom: 20px;
+      right: 34px;
+      padding: 0;
+      z-index: 2;
+    }
+  }
 }

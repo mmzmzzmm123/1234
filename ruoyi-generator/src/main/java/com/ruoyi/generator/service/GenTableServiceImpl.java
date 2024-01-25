@@ -257,8 +257,8 @@ public class GenTableServiceImpl implements IGenTableService
         List<String> templates = VelocityUtils.getTemplateList(table.getTplCategory(), table.getTplWebType());
         for (String template : templates)
         {
-            if (!StringUtils.containsAny(template, "sql.vm", "api.js.vm", "index.vue.vm", "index-tree.vue.vm"))
-            {
+            // if (!StringUtils.containsAny(template, "sql.vm", "api.js.vm", "index.vue.vm", "index-tree.vue.vm"))
+            // {
                 // 渲染模板
                 StringWriter sw = new StringWriter();
                 Template tpl = Velocity.getTemplate(template, Constants.UTF8);
@@ -272,7 +272,7 @@ public class GenTableServiceImpl implements IGenTableService
                 {
                     throw new ServiceException("渲染模板失败，表名：" + table.getTableName());
                 }
-            }
+            // }
         }
     }
 
@@ -514,7 +514,7 @@ public class GenTableServiceImpl implements IGenTableService
         String genPath = table.getGenPath();
         if (StringUtils.equals(genPath, "/"))
         {
-            return System.getProperty("user.dir") + File.separator + "src" + File.separator + VelocityUtils.getFileName(template, table);
+            return System.getProperty("user.dir") + File.separator  + VelocityUtils.getFileName(template, table);
         }
         return genPath + File.separator + VelocityUtils.getFileName(template, table);
     }
