@@ -62,7 +62,7 @@ public class SendConditionJobProcessor implements LogJobProcessor {
 				
 				// 拉手好
 				int p = Objects.wrapNull(info.getLinkJoinCount() , 0) ;
-				boolean full = info.getMemberCount().intValue() - Objects.wrapNull(robotCount, 0L) - p >= play.getUserNum()
+				boolean full = info.getMemberCount().intValue() - p >= play.getUserNum()
 						.intValue();
 				log.info("炒群条件判断 {} {} {} {} {}", full, info, robotCount, push , p);
 				if (full) {

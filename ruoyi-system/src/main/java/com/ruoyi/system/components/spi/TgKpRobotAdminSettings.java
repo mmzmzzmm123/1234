@@ -83,7 +83,7 @@ public class TgKpRobotAdminSettings implements Settings {
 		data.setRobotId(dto.getTgRobotId());
 		data.setAttchContent(dto.getMemberUserAccessHash());
 		data.setIsBackup(((boolean) param.get(Settings.Key_Backup_Flag)) ? 1 : 0);
-		if (ret.getData() != null && !StringUtils.isEmpty(ret.getData().getOptSerNo())) {
+		if (ret.getData() != null && !StringUtils.isEmpty(ret.getData().getOptSerNo()) && ret.isSuccess()) {
 			// 成功
 			data.setStatus(0);
 			data.setOpt(ret.getData().getOptSerNo());

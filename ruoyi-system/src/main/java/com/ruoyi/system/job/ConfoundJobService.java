@@ -85,19 +85,19 @@ public class ConfoundJobService {
                 return;
             }
             for (PlayConfusionStateVO vo : list) {
+                Play playInfo = playInfoMapper.selectById(vo.getPlayId());
+                if (playInfo == null) {
+                    continue;
+                }
                 // 剧本标记失败
                 if (vo.getFailCount() > 0) {
-                    Play playInfo = playInfoMapper.selectById(vo.getPlayId());
-                    if (playInfo == null) {
-                        continue;
-                    }
+                    String failReason = playInfo.getConfoundState().equals(3) ? "剧本混淆重试失败" : "剧本混淆失败";
                     playInfo.setState(3);//标记剧本暂停
                     playInfo.setConfoundState(2);
-                    playInfo.setFailReason("剧本混淆失败");
+                    playInfo.setFailReason(failReason);
                     playInfoMapper.updateById(playInfo);
-
                     // 记录混淆日志
-                    PlayExecutionLogService.playConfoundLog(playInfo.getId(), "混淆剧本失败", 1);
+                    PlayExecutionLogService.playConfoundLog(playInfo.getId(), failReason, 1);
                     continue;
                 }
 
@@ -105,9 +105,9 @@ public class ConfoundJobService {
                 if (!vo.getTotal().equals(vo.getSuccessCount())) {
                     continue;
                 }
-                Play playInfo = playInfoMapper.selectById(vo.getPlayId());
-                if (playInfo == null) {
-                    continue;
+                if (playInfo.getConfoundState().equals(3)) {
+                    // 记录混淆日志
+                    PlayExecutionLogService.playConfoundLog(playInfo.getId(), "混淆重试中", null);
                 }
                 playInfo.setConfoundState(1);
                 playInfoMapper.updateById(playInfo);

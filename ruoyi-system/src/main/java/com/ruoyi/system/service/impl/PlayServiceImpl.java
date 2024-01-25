@@ -402,12 +402,12 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         GroupService groupService = SpringUtils.getBean(GroupService.class);
         for (PlayGroupInfo info : playGroupInfos) {
-            groupService.setBotAdMonitor(info.getGroupId());
+            groupService.setBotAdMonitor(info.getTgGroupId());
 
             PlayExecutionLog log = new PlayExecutionLog();
             log.setPlayId(playId);
             log.setGroupId(info.getTgGroupId());
-            log.setContent("【广告监控-修改配置】修改成功;");
+            log.setContent(StringUtils.format("【广告监控-修改配置】-{} 修改成功;",info.getTgGroupId()));
             log.setType(PlayLogTyper.Advertising_Monitoring);
             SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
         }
@@ -718,7 +718,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
                         .eq(Play::getId, playId)
                         .eq(Play::getState, PlayStatusConstants.SUSPEND)
-                        .in(Play::getScanProgress, ScanProgressEnum.Send_Wait)
+                        .in(Play::getScanProgress, ScanProgressEnum.Send_Wait.getVal())
                         .set(Play::getState, PlayStatusConstants.IN_PROGRESS)
                         .set(Play::getUpdateTime, new Date())
                 );
@@ -738,23 +738,25 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 boolean setPlayFlag = super.update(null, new UpdateWrapper<Play>().lambda()
                         .eq(Play::getId, playId)
                         .eq(Play::getState, PlayStatusConstants.SUSPEND)
-                        .notIn(Play::getScanProgress, ScanProgressEnum.Send_Wait)
+                        .notIn(Play::getScanProgress, ScanProgressEnum.Send_Wait.getVal())
                         .set(Play::getState, PlayStatusConstants.DISPATCH)
                         .set(Play::getUpdateTime, new Date())
                 );
                 if (setPlayFlag) {
                     //恢复为调度中
-                    //恢复混淆状态为未混淆
+                    //恢复混淆状态为混淆重试中
                     super.update(null, new UpdateWrapper<Play>().lambda()
+                            .eq(Play::getId, playId)
                             .eq(Play::getIsConfound, 1)
                             .eq(Play::getScanProgress, ScanProgressEnum.Confuse.getVal())
                             .eq(Play::getConfoundState, 2)
-                            .set(Play::getConfoundState, 0));
+                            .set(Play::getConfoundState, 3)
+                            .set(Play::getFailReason,""));
                     //恢复推送任务为待推送
                     playMessagePushService.update(new UpdateWrapper<PlayMessagePush>().lambda()
-                            .eq(PlayMessagePush::getPlayId,play)
+                            .eq(PlayMessagePush::getPlayId,playId)
                             .eq(PlayMessagePush::getPushState,PushStateEnum.USER_STOP.getKey())
-                            .set(PlayMessagePush::getPushState,PushStateEnum.WAIT_SEND));
+                            .set(PlayMessagePush::getPushState,PushStateEnum.WAIT_SEND.getKey()));
                 }
             }
         }

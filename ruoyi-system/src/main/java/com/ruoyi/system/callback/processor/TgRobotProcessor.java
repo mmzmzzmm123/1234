@@ -295,6 +295,7 @@ public class TgRobotProcessor {
     @Type(value = 1100850405, parameterClass = Called1100850405DTO.class)
     public void called1100850405(Called1100850405DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("1100850405-TG获取离散文案-{}",JSON.toJSONString(root));
         playMessageConfoundLogService.handleConfoundText(root);
     }
 

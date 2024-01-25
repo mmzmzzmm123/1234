@@ -3,6 +3,9 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.constant.PlayConstants;
@@ -183,8 +186,8 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             confoundLog.setResultContent(resultContent);
         }
         confoundLog.setModifyTime(new Date());
-        super.updateById(confoundLog);
-
+        final boolean res = super.updateById(confoundLog);
+        log.info("handleConfoundText-optSerNo-success-{},{},{}",optSerNo,JSON.toJSONString(confoundLog),res);
     }
 
     @Override
@@ -310,10 +313,13 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             }
             Map<Integer, PlayMessageConfound> confoundMap = new HashMap<>();
             for (PlayMessageConfoundLog confoundLog : logList) {
-                if (confoundLog.getExecuteNum() >= 3 ){
+                if (confoundLog.getExecuteNum() >= 3){
                     confoundLog.setState(2);
                     confoundLog.setFailMessage("未收到结果回调,混淆失败");
-                    super.updateById(confoundLog);
+                    if(confoundLog.getState().intValue() != 2) {
+                        log.info("handleConfoundText-optSerNo-{},{}",confoundLog.getOptSerialNo(),JSON.toJSONString(confoundLog));
+                        super.updateById(confoundLog);
+                    }
                     continue;
                 }
                 PlayMessageConfound confound = confoundMap.get(confoundLog.getMessageConfoundId());
@@ -379,7 +385,8 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         }
         confoundLog.setExecuteNum(confoundLog.getExecuteNum() + 1);
         confoundLog.setModifyTime(new Date());
-        super.updateById(confoundLog);
+        final int res = super.baseMapper.update(confoundLog, new UpdateWrapper<PlayMessageConfoundLog>().lambda().eq(PlayMessageConfoundLog::getId, confoundLog.getId()).ne(PlayMessageConfoundLog::getState, 1));
+        log.info("handleConfoundText-optSerNo-retry-{},{},{}",confoundLog.getOptSerialNo(), JSON.toJSONString(confoundLog),res);
     }
 
     @Override
@@ -429,8 +436,13 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
     @Override
     public PlayMessageConfoundLog queryByContentMd5OrSerialNo(final String md5, final String serialNo) {
         LambdaQueryWrapper<PlayMessageConfoundLog> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.and(it -> it.eq(StringUtils.isNotBlank(serialNo), PlayMessageConfoundLog::getOptSerialNo, serialNo)
-                        .or(StringUtils.isNotBlank(md5), one -> one.eq(PlayMessageConfoundLog::getContentMd5, md5)))
+        queryWrapper.eq(PlayMessageConfoundLog::getOptSerialNo,serialNo);
+        final PlayMessageConfoundLog confoundLog = this.getOne(queryWrapper);
+        if(confoundLog != null){
+            return confoundLog;
+        }
+        queryWrapper.eq(PlayMessageConfoundLog::getContentMd5, md5)
+                .isNull(PlayMessageConfoundLog::getResultContent)
                 .orderByDesc(PlayMessageConfoundLog::getCreateTime)
                 .last("limit 1");
         return this.getOne(queryWrapper);

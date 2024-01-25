@@ -142,7 +142,7 @@
             LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
         WHERE
             1 = 1
-          AND tpgi.into_status = 2
+          AND tpgi.into_status in (1, 2)
           AND tpgi.play_id = #{playId}
         GROUP BY
             tpgi.group_id
@@ -261,7 +261,7 @@
         WHERE
             1 = 1
           AND tpi.state = 1
-          AND tpi.confound_state = 0
+          AND tpi.confound_state in (0, 3)
           AND tpi.is_confound = 1
           AND tpi.create_time > ADDDATE( NOW( ),- 3 )
         GROUP BY

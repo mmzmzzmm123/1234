@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -74,7 +75,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             selectRobotByRuleDTO.setSetAdminCount(dto.getSetAdminCount());
             selectRobotByRuleDTO.setIpType(dto.getIpType());
             selectRobotByRuleVOS = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
-            log.info("getRobot selectRobotByRuleVOS:{}",selectRobotByRuleVOS);
+            log.info("getRobot selectRobotByRuleVOS:{},{}", JSON.toJSONString(selectRobotByRuleDTO),JSON.toJSONString(selectRobotByRuleVOS));
 
             // 目标国家不够则随机取其它国家
             if (CollectionUtils.isEmpty(selectRobotByRuleVOS) || selectRobotByRuleVOS.size() < dto.getSetAdminCount()) {
@@ -97,7 +98,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
                 }
 
                 tmpSelectData = this.selectRobotByAllCountyCode(selectRobotByRuleDTO, dto.getSetAdminCount() - robotSize);
-                log.info("RobotStatisticsService_getRobot_tmpAdminRobotSize:{}", null == tmpSelectData ? 0 : tmpSelectData.size());
+                log.info("RobotStatisticsService_getRobot_tmpAdminRobotSize:{}, {}", null == tmpSelectData ? 0 : tmpSelectData.size(), JSON.toJSONString(tmpSelectData));
                 if (CollectionUtils.isNotEmpty(tmpSelectData)) {
                     selectRobotByRuleVOS.addAll(tmpSelectData);
                 }
@@ -125,7 +126,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             selectRobotByRuleDTO.setLimit(dto.getCount());
             selectRobotByRuleDTO.setExcludeRobotSerialNos(excludeRobotSerialNos);
             selectRobotByRuleVOS1 = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
-            log.info("getRobot selectRobotByRuleVOS1:{}",selectRobotByRuleVOS1);
+            log.info("getRobot selectRobotByRuleVOS1:{},{}",JSON.toJSONString(selectRobotByRuleDTO), JSON.toJSONString(selectRobotByRuleVOS1));
 
             if (CollectionUtils.isEmpty(selectRobotByRuleVOS1) || selectRobotByRuleVOS1.size() < dto.getCount()) {
                 if (CollectionUtils.isEmpty(selectRobotByRuleVOS1)) {
@@ -146,7 +147,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
                 }
 
                 tmpSelectData = this.selectRobotByAllCountyCode(selectRobotByRuleDTO, dto.getCount() - robotSize);
-                log.info("RobotStatisticsService_getRobot_tmpRobotSize:{}", null == tmpSelectData ? 0 : tmpSelectData.size());
+                log.info("RobotStatisticsService_getRobot_tmpRobotSize:{}, {}", null == tmpSelectData ? 0 : tmpSelectData.size(), JSON.toJSONString(tmpSelectData));
                 if (CollectionUtils.isNotEmpty(tmpSelectData)) {
                     selectRobotByRuleVOS1.addAll(tmpSelectData);
                 }
@@ -213,7 +214,9 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
         BeanUtils.copyProperties(query, selectRobotQuery);
         selectRobotQuery.setCountryCode(null);
         selectRobotQuery.setLimit(limit);
-        return robotStatisticsMapper.selectRobotByRule(selectRobotQuery);
+        final List<SelectRobotByRuleVO> selectRobotByRuleVOS = robotStatisticsMapper.selectRobotByRule(selectRobotQuery);
+        log.info("selectRobotByAllCountyCode:{},{}",JSON.toJSONString(selectRobotQuery),JSON.toJSONString(selectRobotByRuleVOS));
+        return selectRobotByRuleVOS;
     }
 
     @Override
