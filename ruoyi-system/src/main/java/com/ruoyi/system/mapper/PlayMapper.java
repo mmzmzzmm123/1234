@@ -47,4 +47,5 @@ public interface PlayMapper extends BaseMapper<Play> {
      */
     List<Play> selectConfusionList();
 
+    List<String> selectReleaseRobots(@Param("startDate") String startDate, @Param("endDate") String endDate);
 }

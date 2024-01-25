@@ -85,7 +85,7 @@ public class PlayDTO {
     @ApiModelProperty(value = "商品id")
     private Long productId;
 
-    @ApiModelProperty(value = "筛选群条件: 1私密群组 2公开群组")
+    @ApiModelProperty(value = "筛选群条件: 10私密群组 20公开群组")
     private Integer groupType;
 
     private LoginUser loginUser;
