@@ -47,4 +47,7 @@ public class SelectRobotListDTO extends PageBaseDTO {
     @ApiModelProperty(value = "有无用户名,0-无,1-有")
     private Integer isHasUserName;
 
+    @ApiModelProperty(value = "代理类型 长效;短效;未知;")
+    private String proxyType;
+
 }

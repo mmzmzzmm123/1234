@@ -91,6 +91,12 @@
             #{item}
         </foreach>
         </if>
+        <if test="dto.proxyType != null and dto.proxyType != '' and dto.proxyType != '未知'">
+            and tri.proxy_type = #{dto.proxyType}
+        </if>
+        <if test="dto.proxyType != null and dto.proxyType != '' and dto.proxyType == '未知'">
+            and (tri.proxy_type is null or tri.proxy_type = '')
+        </if>
 
     </select>
 
