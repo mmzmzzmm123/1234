@@ -41,8 +41,15 @@ public class ScreeningTaskVO  {
     private LocalDateTime completionTime;
 
     @ApiModelProperty(value = "商品价格")
-    private Long price;
+    private BigDecimal price;
 
+    public void setPrice(BigDecimal price) {
+        if (price == null) {
+            this.price = BigDecimal.ZERO;
+            return;
+        }
+        this.price = price.divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP);
+    }
 
     @ApiModelProperty(value = "号码总数")
     private Long targetCount  =0L;
