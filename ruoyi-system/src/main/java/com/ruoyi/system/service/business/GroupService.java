@@ -42,7 +42,6 @@ import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.GroupMemberInfoVO;
 import com.ruoyi.system.domain.vo.GroupResourceVO;
 import com.ruoyi.system.domain.vo.GroupRobotVO;
-import com.ruoyi.system.mapper.RobotMapper;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.*;
@@ -169,12 +168,12 @@ public class GroupService {
                         continue;
                     }
                     final GroupRobot groupRobot = adminRobots.stream().filter(it -> it.getMemberType().intValue() == 1).findFirst().orElse(null);
-                    if(groupRobot == null){
+                    if (groupRobot == null) {
                         log.info("选群失败 没有可用的群主号={}", groupInfoVO);
                         continue;
                     }
                     final Robot robot = iRobotService.getOne(new LambdaQueryWrapper<Robot>().eq(Robot::getRobotSerialNo, groupRobot.getRobotId()));
-                    if(robot.getSealStatus().compareTo(10) != 0){
+                    if (robot.getSealStatus().compareTo(10) != 0) {
                         log.info("选群失败 群主号已封号={},{}", groupInfoVO, robot);
                         continue;
                     }
@@ -1123,10 +1122,21 @@ public class GroupService {
         return result;
     }
 
-    public GroupInfo handleRobotIn(Called1100910039DTO dto, String robotId) {
+    public GroupInfo handleRobotIn(Called1100910039DTO dto, String robotId, String requestInfo) {
         GroupInfo groupInfo = groupInfoService.getGroupBySerialNo(dto.getChatroomSerialNo());
         if (groupInfo == null) {
-            groupInfo = groupInfoService.saveExternalGroup(dto.getChatroomSerialNo(), dto.getChatroomName());
+            String groupInviteLink = "";
+            try {
+                if (StrUtil.isNotBlank(requestInfo)) {
+                    ThirdTgJoinChatroomByUrlInputDTO input = JSON.parseObject(requestInfo, ThirdTgJoinChatroomByUrlInputDTO.class);
+                    if (input != null) {
+                        groupInviteLink = input.getUrl();
+                    }
+                }
+            } catch (Exception e) {
+
+            }
+            groupInfo = groupInfoService.saveExternalGroup(dto.getChatroomSerialNo(), dto.getChatroomName(), groupInviteLink);
         }
         groupRobotService.add(robotId, groupInfo.getGroupId());
         return groupInfo;
@@ -1281,13 +1291,13 @@ public class GroupService {
             if (lock.isLocked()) {
                 return null;
             }
-            lock.lock(60,TimeUnit.SECONDS);
+            lock.lock(60, TimeUnit.SECONDS);
             try {
                 ApiResult<GroupStateVO> group = ApiClient.getGroup(groupMonitorInfo.getOriginalGroupId());
                 if (group.isNotHttpFail()) {
                     groupStateService.banned(Collections.singletonList(groupMonitorInfo.getGroupId()));
-                }else{
-                    if(group.isSuccess()) {
+                } else {
+                    if (group.isSuccess()) {
                         groupInfoService.updateName(groupMonitorInfo.getGroupId(), group.getData().getTitle());
                     }
                     return group;

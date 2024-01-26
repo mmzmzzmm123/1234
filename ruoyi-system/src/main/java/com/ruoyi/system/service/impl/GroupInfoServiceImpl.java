@@ -145,11 +145,12 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
     }
 
     @Override
-    public GroupInfo saveExternalGroup(String groupSerialNo, String groupName) {
+    public GroupInfo saveExternalGroup(String groupSerialNo, String groupName, String groupInviteLink) {
         GroupInfo groupInfo = new GroupInfo();
         groupInfo.setGroupId(IdWorker.getIdStr());
         groupInfo.setGroupSerialNo(groupSerialNo);
         groupInfo.setGroupName(groupName);
+        groupInfo.setGroupInviteLink(groupInviteLink);
         groupInfo.setCreateType(20);
         groupInfo.setCreateTime(LocalDateTime.now());
         baseMapper.insert(groupInfo);
