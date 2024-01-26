@@ -837,8 +837,11 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         int num = StringUtils.isNotEmpty(day) ? Integer.parseInt(day) : 2;
         String date = DateUtils.getBeforeDate(-num);
 
-        //查询配置锁定水军表数据
-        List<String> playIds = baseMapper.selectReleaseRobots(date + " 00:00:00", date + " 23:59:59");
+        //锁定水军的任务, 达到设置天数未重复炒群, 释放水军
+        String startDate = date + " 00:00:00";
+        String endDate = date + " 23:59:59";
+        List<String> playIds = baseMapper.selectReleaseRobots(startDate, endDate);
+        log.info("定时任务释放锁定水军_startDate:{}_endDate:{}_ids:{}", startDate, endDate, playIds);
         for (String playId : playIds) {
             Play play = super.getById(playId);
             releaseRobot(play);
