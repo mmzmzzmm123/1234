@@ -24,7 +24,7 @@ public class ScreeningTaskBatch {
     * 批次id 对应外部接口任务ID
     */
     @ApiModelProperty(value = "批次id 对应外部接口任务ID")
-    @TableField("batch_id")
+    @TableId
     private String batchId;
     
     /**
@@ -38,7 +38,7 @@ public class ScreeningTaskBatch {
     * 任务id
     */
     @ApiModelProperty(value = "任务id")
-    @TableId
+    @TableField("task_id")
     private String taskId;
     
     /**

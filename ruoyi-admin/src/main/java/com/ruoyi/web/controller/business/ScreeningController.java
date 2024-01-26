@@ -11,6 +11,7 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.dto.ScreeningTaskDetailDTO;
+import com.ruoyi.system.domain.dto.ScreeningTaskDetailExportDTO;
 import com.ruoyi.system.domain.dto.ScreeningTaskExportDTO;
 import com.ruoyi.system.domain.dto.ScreeningTaskPageDTO;
 import com.ruoyi.system.domain.vo.*;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -228,7 +230,24 @@ public class ScreeningController extends BaseController {
 
     @ApiOperation(value = "明细导出")
     @PostMapping("/detailExport")
-    public void detailExport(@RequestBody ScreeningTaskExportDTO dto, HttpServletResponse response) {
-
+    public void detailExport(@RequestBody ScreeningTaskDetailExportDTO dto, HttpServletResponse response) {
+        List<ScreeningTaskDetailVO> list = new ArrayList<>();
+        int page = 1;
+        int limit = 500;
+        while (true) {
+            try {
+                dto.setPage(page++);
+                dto.setLimit(limit);
+                List<ScreeningTaskDetailVO> records =screeningTaskService.taskDetail(dto).getRecords();
+                list.addAll(records);
+                if (records.size() < limit) {
+                    break;
+                }
+            } catch (Exception e) {
+                break;
+            }
+        }
+        ExcelUtil<ScreeningTaskDetailVO> util = new ExcelUtil<>(ScreeningTaskDetailVO.class);
+        util.exportExcel(response, list, "筛查明细数据");
     }
 }
