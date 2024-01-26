@@ -77,9 +77,12 @@ public interface IPlayService extends IService<Play> {
     Boolean updateState(PlayStateDTO dto);
 
     /**
-     * 释放水军
+     * 释放锁定水军
      */
-    R<String> releaseRobot(String playId);
+    R<String> handleReleaseRobot(String playId);
 
+    /**
+     * job释放锁定水军
+     */
     void jobReleaseRobot();
 }

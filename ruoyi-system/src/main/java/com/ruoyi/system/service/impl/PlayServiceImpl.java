@@ -24,13 +24,13 @@ import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.enums.ProductCategoryType;
 import com.ruoyi.common.enums.ScanProgressEnum;
 import com.ruoyi.common.enums.play.PushStateEnum;
+import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.ProductTools;
 import com.ruoyi.system.components.movie.PlayDirector;
 import com.ruoyi.system.domain.dto.play.*;
-import com.ruoyi.system.domain.dto.robot.ReleaseOccupyRobotDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.mapper.*;
@@ -785,7 +785,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     }
 
     @Override
-    public R<String> releaseRobot(String playId) {
+    @Transactional
+    public R<String> handleReleaseRobot(String playId) {
         if (StringUtils.isEmpty(playId)) {
             return R.fail(11000, ErrInfoConfig.getDynmic(11000, "参数错误"));
         }
@@ -794,40 +795,53 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         if (null == play) {
             return R.fail(11000, ErrInfoConfig.getDynmic(11000, "数据不存在"));
         }
+
+        releaseRobot(play);
+
+        return R.ok();
+    }
+
+    private void releaseRobot(Play play) {
+        if (play.getLockRobotStatus() != 1) {
+           return;
+        }
         //已完成和已取消才可进行
         if (play.getState() != PlayStatusConstants.CANCEL && play.getState() != PlayStatusConstants.FINISHED) {
-            return R.ok();
-        }
-
-        //获取剧本关联群
-        List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(playId);
-        if (playGroupInfos != null) {
-            RobotServiceImpl robotService = SpringUtils.getBean(RobotServiceImpl.class);
-            //获取待退群水军
-            for (PlayGroupInfo playGroupInfo : playGroupInfos) {
-                log.info("releaseRobot_groupId: {}", playGroupInfo.getGroupId());
-                List<PlayRobotGroupRelation> playRobotGroupRelationList = playRobotGroupRelationMapper.selectWaitOutGroupByGroupId(playGroupInfo.getGroupId());
-                if (null != playRobotGroupRelationList) {
-                    log.info("releaseRobot_robotIds: {}", playRobotGroupRelationList.stream().map(PlayRobotGroupRelation::getRobotId).collect(Collectors.joining(",")));
-                    //释放水军
-                    ReleaseOccupyRobotDTO releaseOccupyRobotDTO = new ReleaseOccupyRobotDTO();
-                    releaseOccupyRobotDTO.setRobotSerialNos(playRobotGroupRelationList.stream().map(PlayRobotGroupRelation::getRobotId).collect(Collectors.toList()));
-                    robotService.releaseOccupyRobot(releaseOccupyRobotDTO);
-                }
-            }
+            return;
         }
 
         //退群
         SpringUtils.getBean(IntoGroupService.class).outGroup(play);
 
-        return R.ok();
+        RobotStatisticsService robotStatisticsService = SpringUtils.getBean(RobotStatisticsService.class);
+        //剧本所有的群
+        List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(play.getId());
+        for (PlayGroupInfo playGroupInfo : playGroupInfos) {
+            //获取群内所有水军
+            List<PlayRobotGroupRelation> robotGroupRelations = playRobotGroupRelationMapper.selectRobotByGroup(playGroupInfo.getTgGroupId());
+            if (robotGroupRelations != null) {
+                List<String> robotIds = new ArrayList<>();
+                for (PlayRobotGroupRelation robotGroupRelation : robotGroupRelations) {
+                    robotIds.add(robotGroupRelation.getRobotId());
+                }
+                //释放锁定水军
+                robotStatisticsService.unLockRobot(robotIds);
+            }
+        }
     }
 
-    //todo job释放水军
     @Override
+    @Transactional
     public void jobReleaseRobot() {
-        //查询配置锁定水军表数据
+        String day = SpringUtils.getBean(ISysConfigService.class).selectConfigByKey("releaseRobot:day");
+        int num = StringUtils.isNotEmpty(day) ? Integer.parseInt(day) : 2;
+        String date = DateUtils.getBeforeDate(-num);
 
-        //两天内是否有重复炒日志
+        //查询配置锁定水军表数据
+        List<String> playIds = baseMapper.selectReleaseRobots(date + " 00:00:00", date + " 23:59:59");
+        for (String playId : playIds) {
+            Play play = super.getById(playId);
+            releaseRobot(play);
+        }
     }
 }

@@ -308,10 +308,10 @@ public class PlayController extends BaseController {
     @ApiOperation("释放水军")
     @PostMapping("/{playId}/releaseRobot")
     public R<String> releaseRobot(@PathVariable String playId) {
-        return playService.releaseRobot(playId);
+        return playService.handleReleaseRobot(playId);
     }
 
-    @ApiOperation("job执行释放水军")
+    @ApiOperation("job释放锁定水军")
     @PostMapping("jobReleaseRobot")
     public void jobReleaseRobot() {
         playService.jobReleaseRobot();
