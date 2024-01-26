@@ -127,7 +127,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
                 confoundLog.setContentMd5(extendId);
                 super.save(confoundLog);
 
-                String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum(), extendId);
+                String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum(), confoundLog.getId().toString());
                 confoundLog.setOptSerialNo(optSerNo);
                 if (StringUtils.isEmpty(optSerNo)) { //失败
                     confoundLog.setState(2);
@@ -350,7 +350,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             );
             log.info("重试文本混淆更新数据库数据 {} {} {}", extendId, confoundLog.getId(), res);
 
-            String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum(), extendId);
+            String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum(), confoundLog.getId().toString());
             confoundLog.setOptSerialNo(optSerNo);
             if (StringUtils.isEmpty(optSerNo)) {
                 confoundLog.setState(2);
@@ -450,10 +450,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         if (confoundLog != null) {
             return confoundLog;
         }
-        queryWrapper.clear();
-        queryWrapper.eq(PlayMessageConfoundLog::getContentMd5, md5)
-                .last("limit 1");
-        return this.getOne(queryWrapper);
+        return this.getById(md5);
     }
 }
 
