@@ -77,10 +77,10 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         List<String> newGroupSerialNos = new ArrayList<>();
         for (GroupResourceVO groupResourceVO : resourceList) {
             if (map.containsKey(groupResourceVO.getGroupSerialNo())) {
-                result.add(map.get(groupResourceVO.getGroupSerialNo()));
-
+                GroupInfo old = map.get(groupResourceVO.getGroupSerialNo());
+                result.add(old);
                 GroupInfo groupInfo = new GroupInfo();
-                groupInfo.setGroupId(IdWorker.getIdStr());
+                groupInfo.setGroupId(old.getGroupId());
                 groupInfo.setGroupSerialNo(groupResourceVO.getGroupSerialNo());
                 groupInfo.setRegistrationTime(groupResourceVO.getRegistrationTime());
                 groupInfo.setGroupInviteLink(groupResourceVO.getGroupInviteLink());
