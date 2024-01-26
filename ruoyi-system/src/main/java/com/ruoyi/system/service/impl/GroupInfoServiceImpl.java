@@ -127,9 +127,9 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
             return;
         }
         Map<String, ExtTgSelectGroupVO> utInfoMap =
-                utInfos.stream().collect(Collectors.toMap(ExtTgSelectGroupVO::getChatroomSerialNo, p -> p));
-        List<GroupInfo> updates = groupInfoList.stream().filter(p -> utInfoMap.containsKey(p.getGroupSerialNo())
-                        && StrUtil.isNotBlank(p.getGroupInviteLink()))
+                utInfos.stream().filter(p->StrUtil.isNotBlank(p.getInviteLink()))
+                        .collect(Collectors.toMap(ExtTgSelectGroupVO::getChatroomSerialNo, p -> p));
+        List<GroupInfo> updates = groupInfoList.stream().filter(p -> utInfoMap.containsKey(p.getGroupSerialNo()))
                 .map(p -> {
                     ExtTgSelectGroupVO vo = utInfoMap.get(p.getGroupSerialNo());
                     GroupInfo update = new GroupInfo();
