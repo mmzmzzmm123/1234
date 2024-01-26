@@ -4,14 +4,43 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.RobotMapper">
     <select id="selectRobotPageList" resultType="com.ruoyi.system.domain.vo.robot.SelectRobotListVO">
-        select tri.*,
-               concat(tri.first_name,' ',tri.last_name) as name,
-               trs.one_day_join_group_count as groupToDayNum,
-               trs.total_join_group_count as groupTotalNum,
-               trs.is_lock as occupyType
-        from t_robot_info tri left join t_robot_statistics trs on tri.robot_serial_no = trs.robot_serial_no
+        select tri.id,
+        tri.robot_serial_no,
+        user_name,
+        head_img_url,
+        first_name,
+        last_name,
+        type,
+        seal_status,
+        heartbeat_status,
+        phone,
+        country_code,
+        country,
+        protocol_type,
+        tg_app_version,
+        proxy_type,
+        vpn_ip,
+        vpn_ip_b,
+        vpn_ip_c,
+        enable_type,
+        bidirectional_type,
+        bidirectional_unfreeze_time,
+        add_time,
+        seal_time,
+        delete_status,
+        group_owner,
+        recycle_status,
+        bidirectional_time,
+        tri.create_time,
+        tri.update_time,
+        concat(tri.first_name, ' ', tri.last_name) as name,
+        trs.one_day_join_group_count               as groupToDayNum,
+        trs.total_join_group_count                 as groupTotalNum,
+        trs.is_lock                                as occupyType
+        from t_robot_info tri
+        left join t_robot_statistics trs on tri.robot_serial_no = trs.robot_serial_no
         where tri.delete_status = 0
-          and tri.recycle_status = 0
+        and tri.recycle_status = 0
         <if test="dto.startTime != null and dto.startTime != ''">
             and
             <if test="dto.timeType == 1">
