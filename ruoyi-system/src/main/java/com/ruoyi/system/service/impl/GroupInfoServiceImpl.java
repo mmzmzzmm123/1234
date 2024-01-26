@@ -234,4 +234,12 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         update.setGroupName(groupName);
         baseMapper.updateById(update);
     }
+
+    @Override
+    public void updateNameByGroupSerialNo(String groupSerialNo, String groupName) {
+        GroupInfo update = new GroupInfo();
+        update.setGroupName(groupName);
+        baseMapper.update(update,new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo,groupSerialNo));
+
+    }
 }
