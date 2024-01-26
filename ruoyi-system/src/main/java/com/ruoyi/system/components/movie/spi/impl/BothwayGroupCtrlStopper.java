@@ -28,6 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class BothwayGroupCtrlStopper implements GroupCtrlStopper {
 
+	//todo xsw 双向是否已入库
 	@Override
 	public void doSetting(String robotId) {
 		RedisTemplateTools.get().opsForValue().set("ruoyi:BothwayGroupCtrlStopper:" + robotId, "1");

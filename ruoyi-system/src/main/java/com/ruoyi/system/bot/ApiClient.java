@@ -41,9 +41,9 @@ public class ApiClient {
             HttpRequest request = HttpUtil.createPost(requestUrl).body("", ContentType.JSON.toString());
             HttpResponse execute = request.execute();
             response = execute.body();
-            log.info("调用bot服务 {} {},{}", traceId, pathVariable, response);
+            log.info("调用bot服务 {}, {}, {},{}", traceId, requestUrl, pathVariable, response);
         } catch (HttpException e) {
-            log.info("调用BOT相关接口发生异常 {} {}", traceId, e.getMessage(), e);
+            log.info("调用BOT相关接口发生异常 {}, {}, {}", traceId, requestUrl, e.getMessage(), e);
             return ApiResult.failed("系统繁忙,请稍后重试" + traceId);
         }
 
@@ -65,7 +65,7 @@ public class ApiClient {
             HttpRequest request = HttpUtil.createPost(requestUrl).body(jsonBody, ContentType.JSON.toString());
             HttpResponse execute = request.execute();
             response = execute.body();
-            log.info("调用bot服务 {} {},{}", traceId, jsonBody, response);
+            log.info("调用bot服务 {},{},{},{}", traceId, requestUrl, jsonBody, response);
         } catch (HttpException e) {
             log.info("调用BOT相关接口发生异常 {} {}", traceId, e.getMessage(), e);
             return ApiResult.failed("系统繁忙,请稍后重试" + traceId);
