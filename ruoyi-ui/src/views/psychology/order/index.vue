@@ -185,13 +185,13 @@
 
         <el-form-item label="支付状态" prop="status">
           <el-radio-group v-model="formAd.status">
-            <el-radio :label="0">未支付</el-radio>
-            <el-radio :label="1">支付成功</el-radio>
+            <el-radio label="0">未支付</el-radio>
+            <el-radio label="1">支付成功</el-radio>
           </el-radio-group>
-          <div style="color:#BEBEBE;font-size: 12px;">如选择未支付，请创建订单后提醒用户在24小时内完成支付</div>
+          <div v-if="formAd.status === '0'" style="color:#BEBEBE;font-size: 12px;">如选择未支付，请创建订单后提醒用户在24小时内完成支付</div>
         </el-form-item>
 
-        <el-form-item label="订单实付" prop="pay" v-if="formAd.status === 1">
+        <el-form-item label="订单实付" prop="pay" v-if="formAd.status === '1'">
           <el-input-number size="mini" v-model="formAd.pay" :min="0" placeholder="请输入订单实付金额" />
         </el-form-item>
 
@@ -458,8 +458,12 @@ export default {
     add() {
       const that = this
       that.$refs["formAd"].validate(valid => {
-        if (that.formAd.status === 1 && that.formAd.pay === 0) {
+        if (that.formAd.status === '1' && that.formAd.pay === 0) {
           return  that.$modal.msgError("请输入支付金额");
+        }
+
+        if (that.formAd.status === '0') {
+          that.formAd.pay = null
         }
 
         if (valid) {
