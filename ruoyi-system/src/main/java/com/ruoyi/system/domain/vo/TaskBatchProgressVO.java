@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,21 +17,21 @@ import java.util.List;
 public class TaskBatchProgressVO {
 
     @ApiModelProperty(value = "全部批次")
-    private List<ScreeningBatchProgressVO> totalList;
+    private List<ScreeningBatchProgressVO> totalList = new ArrayList<>();
 
     @ApiModelProperty(value = "待检查批次")
-    private List<ScreeningBatchProgressVO> waitList;
+    private List<ScreeningBatchProgressVO> waitList  = new ArrayList<>();
 
     @ApiModelProperty(value = "检查中")
-    private List<ScreeningBatchProgressVO> screeningList;
+    private List<ScreeningBatchProgressVO> screeningList  = new ArrayList<>();
 
     @ApiModelProperty(value = "暂停")
-    private List<ScreeningBatchProgressVO> stopList;
+    private List<ScreeningBatchProgressVO> stopList  = new ArrayList<>();
 
     @ApiModelProperty(value = "完成")
-    private List<ScreeningBatchProgressVO> completeList;
+    private List<ScreeningBatchProgressVO> completeList  = new ArrayList<>();
 
     @ApiModelProperty(value = "取消")
-    private List<ScreeningBatchProgressVO> cancelList;
+    private List<ScreeningBatchProgressVO> cancelList  = new ArrayList<>();
 
 }

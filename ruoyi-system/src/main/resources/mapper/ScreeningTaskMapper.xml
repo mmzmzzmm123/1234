@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.ScreeningTaskMapper">
+
+    <select id="taskPage" resultType="com.ruoyi.system.domain.vo.ScreeningTaskVO">
+        select tst.task_id, tst.task_name, tst.task_state, tst.create_time, tst.completion_time, tst.price
+        from t_screening_task tst
+        left join t_merchant_info tmi on tst.merchant_id = tmi.merchant_id
+        <where>
+            <if test="merchantId != null and merchantId != ''">
+                AND tst.merchant_id = #{merchantId}
+            </if>
+            <if test="dto.taskId != null and dto.taskId != ''">
+                AND tst.task_id = #{dto.taskId}
+            </if>
+            <if test="dto.taskName != null and dto.taskName != ''">
+                AND tst.task_name like CONCAT('%', #{dto.taskName}, '%')
+            </if>
+            <if test="dto.merchantName != null and dto.merchantName != ''">
+                AND tmi.merchant_name like CONCAT('%', #{dto.merchantName}, '%')
+            </if>
+            <if test="dto.merchantId != null and dto.merchantId != ''">
+                AND tst.merchant_id = #{dto.merchantId}
+            </if>
+            <if test="dto.taskState != null ">
+                AND tst.task_state = #{dto.taskState}
+            </if>
+            <if test="dto.createTimeStart != null  and dto.createTimeStart != ''">
+                AND tst.create_time <![CDATA[ >= ]]> #{dto.createTimeStart}
+            </if>
+            <if test="dto.createTimeEnd != null  and dto.createTimeEnd != ''">
+                AND tst.create_time <![CDATA[ <= ]]> #{dto.createTimeEnd}
+            </if>
+        </where>
+        order by tst.create_time desc
+    </select>
+
+    <select id="taskProgress" resultType="com.ruoyi.system.domain.vo.TaskProgressVO">
+        select count(1)                             target_count,
+               sum(if(tstt.result in (1, 2), 1, 0)) screening_count,
+               sum(if(tstt.result = 1, 1, 0))       valid_count,
+               tst.price
+        from t_screening_task tst
+                 join t_screening_task_batch tstb on tst.task_id = tstb.task_id
+                 join t_screening_task_target tstt on tstb.batch_id = tstt.batch_id
+        where tst.task_id = #{taskId}
+    </select>
+
+    <select id="batchProgress" resultType="com.ruoyi.system.domain.vo.ScreeningBatchProgressVO">
+        select tstb.batch_id,
+               tstb.batch_count,
+               tstb.batch_state,
+               tstb.create_time,
+               count(1)                             target_count,
+               sum(if(tstt.result in (1, 2), 1, 0)) screening_count,
+               sum(if(tstt.result = 1, 1, 0))       valid_count,
+               tst.price
+        from t_screening_task tst
+                 join t_screening_task_batch tstb on tst.task_id = tstb.task_id
+                 join t_screening_task_target tstt on tstb.batch_id = tstt.batch_id
+        where tst.task_id = #{taskId}
+        group by tstb.batch_id
+        order by tstb.batch_count
+    </select>
+
+
+    <select id="taskResult" resultType="com.ruoyi.system.domain.vo.ScreeningTaskResultVO">
+        select tstb.batch_id,
+        tstb.batch_count,
+        tstt.target,
+        tstt.result,
+        tstt.callback_time
+        from t_screening_task tst
+        join t_screening_task_batch tstb on tst.task_id = tstb.task_id
+        join t_screening_task_target tstt on tstb.batch_id = tstt.batch_id
+        where tst.task_id = #{dto.taskId}
+        <if test="dto.batchId != null and dto.batchId != ''">
+            AND tstb.batch_id = #{dto.batchId}
+        </if>
+
+        <if test="dto.result != null ">
+            <choose>
+                <when test="dto.result == 0">
+                    AND tstt.result = 0
+                </when>
+                <when test="dto.result == 1">
+                    AND tstt.result in (1,2)
+                </when>
+            </choose>
+        </if>
+    </select>
+
+    <select id="page" resultType="com.ruoyi.system.domain.vo.ScreeningTaskDetailVO">
+        select tstb.batch_id,
+               tstb.batch_count,
+               tstt.target,
+               tstt.result,
+               tstt.callback_time,
+               tst.country_code,
+               tst.price,
+               tc.country_name country
+        from t_screening_task tst
+                 join t_screening_task_batch tstb on tst.task_id = tstb.task_id
+                 join t_screening_task_target tstt on tstb.batch_id = tstt.batch_id
+                 left join t_country tc on tc.country_code = tst.country_code
+        where tst.task_id = #{dto.taskId}
+        <if test="dto.batchId != null and dto.batchId != ''">
+            AND tstb.batch_id = #{dto.batchId}
+        </if>
+
+        <if test="dto.country != null and dto.country != ''">
+            AND tc.country_name like CONCAT('%', #{dto.country}, '%')
+        </if>
+
+        <if test="dto.target != null and dto.target != ''">
+            AND tstt.target like CONCAT('%', #{dto.target}, '%')
+        </if>
+        <if test="dto.result != null ">
+            AND tstt.result = #{dto.result}
+        </if>
+        order by tstb.create_time desc, tstt.callback_time desc, tstt.target
+    </select>
+</mapper>
