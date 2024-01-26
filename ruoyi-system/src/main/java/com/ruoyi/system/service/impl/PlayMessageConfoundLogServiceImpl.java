@@ -348,6 +348,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
                     .eq(PlayMessageConfoundLog::getId, confoundLog.getId())
                     .ne(PlayMessageConfoundLog::getState, 1)
             );
+            log.info("重试文本混淆更新数据库数据 {} {} {}", extendId, confoundLog.getId(), res);
 
             String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum(), extendId);
             confoundLog.setOptSerialNo(optSerNo);
