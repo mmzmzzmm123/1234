@@ -172,6 +172,9 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             if(!oldMap.containsKey(newRobot.getRobotSerialNo())){
                 newRobot.setUpdateTime(new Date());
                 newRobot.setCreateTime(new Date());
+
+                // 24/01/26 产品需求 同步过来的新号默认是禁用状态
+                newRobot.setEnableType(0);
                 saveRobotList.add(newRobot);
                 continue;
             }
