@@ -44,6 +44,26 @@ public class ScreeningTaskBatchServiceImpl extends ServiceImpl<ScreeningTaskBatc
         if (CollUtil.isEmpty(batchs)) {
             return new ArrayList<>();
         }
-        return batchs.stream().map(p -> BeanUtil.copyProperties(p, ScreeningBatchVO.class)).collect(Collectors.toList());
+        return batchs.stream().map(p -> {
+            ScreeningBatchVO screeningBatchVO = BeanUtil.copyProperties(p, ScreeningBatchVO.class);
+            screeningBatchVO.setBatchName(String.format("第%s批次", p.getBatchCount()));
+            return screeningBatchVO;
+        }).collect(Collectors.toList());
+    }
+
+    @Override
+    public void updateBatchStatus(String batchId, Integer status) {
+        ScreeningTaskBatch batch = new ScreeningTaskBatch();
+        batch.setBatchId(batchId);
+        batch.setBatchState(status);
+        baseMapper.updateById(batch);
+    }
+
+    @Override
+    public long countRunning(String taskId) {
+        return baseMapper.selectCount(
+                new LambdaQueryWrapper<ScreeningTaskBatch>()
+                        .notIn(ScreeningTaskBatch::getBatchState, 3, 4)
+                        .eq(ScreeningTaskBatch::getTaskId, taskId));
     }
 }

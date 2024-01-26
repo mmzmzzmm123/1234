@@ -1,6 +1,5 @@
 package com.ruoyi.system.service;
 
-import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.core.domain.entity.ProductSku;
@@ -10,7 +9,6 @@ import com.ruoyi.system.domain.dto.ScreeningTaskExportDTO;
 import com.ruoyi.system.domain.dto.ScreeningTaskPageDTO;
 import com.ruoyi.system.domain.vo.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -21,14 +19,14 @@ import java.util.List;
  */
 public interface ScreeningTaskService extends IService<ScreeningTask> {
 
-    boolean checkName(String name,String merchantId);
+    boolean checkName(String name, String merchantId);
 
     ScreeningTask save(String merchantId, Long userId, String taskName, String countryCode, Long productId, ProductSku productSku);
 
 
     Page<ScreeningTaskVO> taskPage(String merchantId, ScreeningTaskPageDTO dto);
 
-    TaskProgressVO taskProgress(String taskId);
+   List<TaskProgressVO> taskProgress(List<String> taskId);
 
     TaskBatchProgressVO batchProgress(String taskId);
 
@@ -37,4 +35,6 @@ public interface ScreeningTaskService extends IService<ScreeningTask> {
     void addTarget(ScreeningTask task);
 
     Page<ScreeningTaskDetailVO> taskDetail(ScreeningTaskDetailDTO dto);
+
+    void updateBatchStatus(String taskId, Integer status);
 }

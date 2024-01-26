@@ -23,11 +23,11 @@ public interface ScreeningTaskMapper extends BaseMapper<ScreeningTask> {
 
     Page<ScreeningTaskVO> taskPage(Page<ScreeningTaskVO> page, @Param("merchantId") String merchantId, @Param("dto") ScreeningTaskPageDTO dto);
 
-    TaskProgressVO taskProgress(String taskId);
+    List<TaskProgressVO> taskProgress(@Param("taskIds") List<String> taskIds);
 
-    List<ScreeningBatchProgressVO> batchProgress(String taskId);
+    List<ScreeningBatchProgressVO> batchProgress(@Param("taskId") String taskId);
 
-    List<ScreeningTaskResultVO> taskResult(ScreeningTaskExportDTO dto);
+    List<ScreeningTaskResultVO> taskResult(@Param("dto") ScreeningTaskExportDTO dto);
 
     Page<ScreeningTaskDetailVO> page(Page page, @Param("dto") ScreeningTaskDetailDTO dto);
 }

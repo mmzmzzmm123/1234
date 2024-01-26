@@ -3,9 +3,10 @@
 <mapper namespace="com.ruoyi.system.mapper.ScreeningTaskMapper">
 
     <select id="taskPage" resultType="com.ruoyi.system.domain.vo.ScreeningTaskVO">
-        select tst.task_id, tst.task_name, tst.task_state, tst.create_time, tst.completion_time, tst.price
+        select tst.task_id, tst.task_name, tst.task_state, tst.create_time, tst.completion_time, tst.price,tc.country_name country
         from t_screening_task tst
         left join t_merchant_info tmi on tst.merchant_id = tmi.merchant_id
+        left join t_country tc on tc.country_code = tst.country_code
         <where>
             <if test="merchantId != null and merchantId != ''">
                 AND tst.merchant_id = #{merchantId}
@@ -36,19 +37,28 @@
     </select>
 
     <select id="taskProgress" resultType="com.ruoyi.system.domain.vo.TaskProgressVO">
-        select count(1)                             target_count,
-               sum(if(tstt.result in (1, 2), 1, 0)) screening_count,
-               sum(if(tstt.result = 1, 1, 0))       valid_count,
+        select  tst.task_id,
+                tst.task_state,
+                tst.completion_time,
+                count(1)                                        target_count,
+               ifnull(sum(if(tstt.result in (1, 2), 1, 0)), 0) screening_count,
+               ifnull(sum(if(tstt.result = 1, 1, 0)), 0)       valid_count,
                tst.price
         from t_screening_task tst
                  join t_screening_task_batch tstb on tst.task_id = tstb.task_id
                  join t_screening_task_target tstt on tstb.batch_id = tstt.batch_id
-        where tst.task_id = #{taskId}
+        where tst.task_id in
+        <foreach collection="taskIds" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+
+         group by  tst.task_id
     </select>
 
     <select id="batchProgress" resultType="com.ruoyi.system.domain.vo.ScreeningBatchProgressVO">
         select tstb.batch_id,
                tstb.batch_count,
+               CONCAT('第', tstb.batch_count, '批次') batch_name,
                tstb.batch_state,
                tstb.create_time,
                count(1)                             target_count,
@@ -67,6 +77,7 @@
     <select id="taskResult" resultType="com.ruoyi.system.domain.vo.ScreeningTaskResultVO">
         select tstb.batch_id,
         tstb.batch_count,
+        CONCAT('第', tstb.batch_count, '批次') batch_name,
         tstt.target,
         tstt.result,
         tstt.callback_time
@@ -93,6 +104,7 @@
     <select id="page" resultType="com.ruoyi.system.domain.vo.ScreeningTaskDetailVO">
         select tstb.batch_id,
                tstb.batch_count,
+               CONCAT('第', tstb.batch_count, '批次') batch_name,
                tstt.target,
                tstt.result,
                tstt.callback_time,

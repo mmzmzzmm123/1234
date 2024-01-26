@@ -115,60 +115,63 @@ public class ScreeningController extends BaseController {
 
 
     @ApiOperation(value = "暂停")
-    @PostMapping("/stop/{taskId}")
-    public R<Void> stop(@PathVariable String taskId) {
+    @PostMapping("/stop")
+    public R<Void> stop(@RequestBody List<String> taskIds) {
         try {
+            screeningService.stop(taskIds);
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
-            log.error("未知异常={},{} ", idWork, taskId, e);
+            log.error("未知异常={},{} ", idWork, taskIds, e);
             return R.fail("未知异常！ trace:" + idWork);
         }
     }
 
     @ApiOperation(value = "重启")
-    @PostMapping("/restart/{taskId}")
-    public R<Void> restart(@PathVariable String taskId) {
+    @PostMapping("/restart")
+    public R<Void> restart(@RequestBody List<String> taskIds) {
         try {
+            screeningService.restart(taskIds);
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
-            log.error("未知异常={},{} ", idWork, taskId, e);
+            log.error("未知异常={},{} ", idWork, taskIds, e);
             return R.fail("未知异常！ trace:" + idWork);
         }
     }
 
 
     @ApiOperation(value = "取消")
-    @PostMapping("/cancel/{taskId}")
-    public R<Void> cancel(@PathVariable String taskId) {
+    @PostMapping("/cancel")
+    public R<Void> cancel(@RequestBody List<String> taskIds) {
         try {
+            screeningService.cancel(taskIds);
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
-            log.error("未知异常={},{} ", idWork, taskId, e);
+            log.error("未知异常={},{} ", idWork, taskIds, e);
             return R.fail("未知异常！ trace:" + idWork);
         }
     }
 
 
     @ApiOperation(value = "任务进度")
-    @PostMapping("/taskProgress/{taskId}")
-    public R<TaskProgressVO> taskProgress(@PathVariable String taskId) {
+    @PostMapping("/taskProgress")
+    public R<List<TaskProgressVO>> taskProgress(@RequestBody List<String> taskIds) {
         try {
 
-            return R.ok(screeningTaskService.taskProgress(taskId));
+            return R.ok(screeningTaskService.taskProgress(taskIds));
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
         } catch (Exception e) {
             String idWork = IdWorker.getIdStr();
-            log.error("未知异常={},{} ", idWork, taskId, e);
+            log.error("未知异常={},{} ", idWork, taskIds, e);
             return R.fail("未知异常！ trace:" + idWork);
         }
     }

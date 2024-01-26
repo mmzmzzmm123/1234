@@ -24,10 +24,6 @@ public class ScreeningTaskResultVO {
     @ApiModelProperty(value = "批次名")
     private String batchName;
 
-    public String getBatchName() {
-        return batchCount == null ? "" : String.format("第%s批次", batchCount);
-    }
-
     @Excel(name = "手机号")
     @ApiModelProperty(value = "手机号")
     private String target;

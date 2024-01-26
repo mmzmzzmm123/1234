@@ -77,10 +77,10 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         List<String> newGroupSerialNos = new ArrayList<>();
         for (GroupResourceVO groupResourceVO : resourceList) {
             if (map.containsKey(groupResourceVO.getGroupSerialNo())) {
-                result.add(map.get(groupResourceVO.getGroupSerialNo()));
-
+                GroupInfo old = map.get(groupResourceVO.getGroupSerialNo());
+                result.add(old);
                 GroupInfo groupInfo = new GroupInfo();
-                groupInfo.setGroupId(IdWorker.getIdStr());
+                groupInfo.setGroupId(old.getGroupId());
                 groupInfo.setGroupSerialNo(groupResourceVO.getGroupSerialNo());
                 groupInfo.setRegistrationTime(groupResourceVO.getRegistrationTime());
                 groupInfo.setGroupInviteLink(groupResourceVO.getGroupInviteLink());
@@ -108,7 +108,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         if (CollUtil.isNotEmpty(adds)) {
             saveBatch(adds);
         }
-        if(CollUtil.isNotEmpty(updates)){
+        if (CollUtil.isNotEmpty(updates)) {
             updateBatchById(updates);
         }
         return result;
@@ -116,9 +116,9 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
 
     @Override
     public List<GroupInfoVO> selectGroup(Integer registrationDay, Integer groupNum, List<String> countryCode,
-                                         List<String> excludeGroupId,Integer botAdmin,String groupRange,Integer groupType) {
+                                         List<String> excludeGroupId, Integer botAdmin, String groupRange, Integer groupType) {
         return baseMapper.selectGroup(registrationDay == null ? null :
-                LocalDateTime.now().plusDays(-registrationDay), groupNum, countryCode, excludeGroupId,botAdmin,groupRange,groupType);
+                LocalDateTime.now().plusDays(-registrationDay), groupNum, countryCode, excludeGroupId, botAdmin, groupRange, groupType);
     }
 
     @Override
@@ -127,7 +127,8 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
             return;
         }
         Map<String, ExtTgSelectGroupVO> utInfoMap =
-                utInfos.stream().collect(Collectors.toMap(ExtTgSelectGroupVO::getChatroomSerialNo, p -> p));
+                utInfos.stream().filter(p->StrUtil.isNotBlank(p.getInviteLink()))
+                        .collect(Collectors.toMap(ExtTgSelectGroupVO::getChatroomSerialNo, p -> p));
         List<GroupInfo> updates = groupInfoList.stream().filter(p -> utInfoMap.containsKey(p.getGroupSerialNo()))
                 .map(p -> {
                     ExtTgSelectGroupVO vo = utInfoMap.get(p.getGroupSerialNo());
@@ -137,7 +138,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
                     update.setUpdateTime(LocalDateTime.now());
                     return update;
                 }).collect(Collectors.toList());
-        if(CollUtil.isNotEmpty(updates)){
+        if (CollUtil.isNotEmpty(updates)) {
             updateBatchById(updates);
         }
 
@@ -157,7 +158,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
 
     @Override
     public GroupInfo getGroupBySerialNo(String serialNo) {
-        if(StrUtil.isBlank(serialNo)){
+        if (StrUtil.isBlank(serialNo)) {
             return null;
         }
         return baseMapper.selectOne(new LambdaQueryWrapper<GroupInfo>()
@@ -179,7 +180,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         if (groupBySerialNo == null) {
             return null;
         }
-        if(StrUtil.isNotBlank(newGroupSerialNo)) {
+        if (StrUtil.isNotBlank(newGroupSerialNo)) {
             GroupInfo groupInfo = new GroupInfo();
             groupInfo.setGroupId(groupBySerialNo.getGroupId());
             groupInfo.setGroupSerialNo(newGroupSerialNo);
@@ -190,8 +191,8 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
     }
 
     @Override
-    public void updateGroupSerialNo(String groupId,String oldGroupSerialNo, String newGroupSerialNo) {
-        if(StrUtil.isNotBlank(newGroupSerialNo)) {
+    public void updateGroupSerialNo(String groupId, String oldGroupSerialNo, String newGroupSerialNo) {
+        if (StrUtil.isNotBlank(newGroupSerialNo)) {
             GroupInfo groupInfo = new GroupInfo();
             groupInfo.setGroupId(groupId);
             groupInfo.setOldGroupSerialNo(oldGroupSerialNo);
@@ -219,7 +220,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
         groupInfo.setBannedCount(dto.getBannedCount());
         groupInfo.setOnlineMemberCount(dto.getOnlineMemberCount());
         groupInfo.setUpdateTime(LocalDateTime.now());
-        baseMapper.update(groupInfo,new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo,dto.getChatroomSerialNo()));
+        baseMapper.update(groupInfo, new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo, dto.getChatroomSerialNo()));
     }
 
     @Override
@@ -239,7 +240,7 @@ public class GroupInfoServiceImpl extends ServiceImpl<GroupInfoMapper, GroupInfo
     public void updateNameByGroupSerialNo(String groupSerialNo, String groupName) {
         GroupInfo update = new GroupInfo();
         update.setGroupName(groupName);
-        baseMapper.update(update,new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo,groupSerialNo));
+        baseMapper.update(update, new LambdaQueryWrapper<GroupInfo>().eq(GroupInfo::getGroupSerialNo, groupSerialNo));
 
     }
 }

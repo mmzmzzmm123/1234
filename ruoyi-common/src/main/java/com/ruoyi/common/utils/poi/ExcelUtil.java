@@ -458,7 +458,11 @@ public class ExcelUtil<T>
                             val = LocalDateTime.ofInstant(((Date) val).toInstant(), ZoneId.systemDefault());
                         }else if (val instanceof String)
                         {
-                            val = LocalDateTime.parse(val.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                            if(StringUtils.isBlank(val.toString())){
+                                val = null;
+                            }else {
+                                val = LocalDateTime.parse(val.toString(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+                            }
                         }
                         else if (val instanceof Long)
                         {

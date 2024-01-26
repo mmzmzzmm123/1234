@@ -178,7 +178,7 @@ public class Play {
     private Date endDate;
 
     /**
-     * 筛选群条件: 1私密群组 2公开群组
+     * 筛选群条件: 10私密群组 20公开群组
      */
     private Integer groupType;
 

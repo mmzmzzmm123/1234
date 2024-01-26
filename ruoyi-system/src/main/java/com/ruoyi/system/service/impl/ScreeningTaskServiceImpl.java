@@ -8,7 +8,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.system.domain.ScreeningTask;
-import com.ruoyi.system.domain.dto.*;
+import com.ruoyi.system.domain.dto.ScreeningTaskDetailDTO;
+import com.ruoyi.system.domain.dto.ScreeningTaskDetailExportDTO;
+import com.ruoyi.system.domain.dto.ScreeningTaskExportDTO;
+import com.ruoyi.system.domain.dto.ScreeningTaskPageDTO;
 import com.ruoyi.system.domain.vo.*;
 import com.ruoyi.system.mapper.ScreeningTaskMapper;
 import com.ruoyi.system.service.ScreeningTaskService;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -54,12 +58,28 @@ public class ScreeningTaskServiceImpl extends ServiceImpl<ScreeningTaskMapper, S
 
     @Override
     public Page<ScreeningTaskVO> taskPage(String merchantId, ScreeningTaskPageDTO dto) {
-        return baseMapper.taskPage(new Page<ScreeningTaskVO>(dto.getPage(), dto.getLimit()), merchantId, dto);
+        Page<ScreeningTaskVO> screeningTaskVOPage = baseMapper.taskPage(new Page<ScreeningTaskVO>(dto.getPage(), dto.getLimit()), merchantId, dto);
+        if (CollUtil.isNotEmpty(screeningTaskVOPage.getRecords())) {
+            List<String> taskIds = screeningTaskVOPage.getRecords().stream().map(ScreeningTaskVO::getTaskId).collect(Collectors.toList());
+            List<TaskProgressVO> taskProgress = taskProgress(taskIds);
+            if (CollUtil.isNotEmpty(taskProgress)) {
+                Map<String, TaskProgressVO> map = taskProgress.stream().collect(Collectors.toMap(TaskProgressVO::getTaskId, p -> p));
+                for (ScreeningTaskVO record : screeningTaskVOPage.getRecords()) {
+                    if (map.containsKey(record.getTaskId())) {
+                        TaskProgressVO taskProgressVO = map.get(record.getTaskId());
+                        record.setScreeningCount(taskProgressVO.getScreeningCount());
+                        record.setTargetCount(taskProgressVO.getTargetCount());
+                        record.setScreeningRadio(taskProgressVO.getScreeningRadio());
+                    }
+                }
+            }
+        }
+        return screeningTaskVOPage;
     }
 
     @Override
-    public TaskProgressVO taskProgress(String taskId) {
-        return baseMapper.taskProgress(taskId);
+    public List<TaskProgressVO> taskProgress(List<String> taskIds) {
+        return baseMapper.taskProgress(taskIds).stream().peek(TaskProgressVO::calculateRatio).collect(Collectors.toList());
     }
 
     @Override
@@ -67,12 +87,12 @@ public class ScreeningTaskServiceImpl extends ServiceImpl<ScreeningTaskMapper, S
         TaskBatchProgressVO vo = new TaskBatchProgressVO();
         List<ScreeningBatchProgressVO> total = baseMapper.batchProgress(taskId);
         if (CollUtil.isNotEmpty(total)) {
-            vo.setTotalList(total);
-            vo.setWaitList(total.stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 0)).collect(Collectors.toList()));
-            vo.setScreeningList(total.stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 1)).collect(Collectors.toList()));
-            vo.setStopList(total.stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 2)).collect(Collectors.toList()));
-            vo.setCompleteList(total.stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 4)).collect(Collectors.toList()));
-            vo.setCancelList(total.stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 3)).collect(Collectors.toList()));
+            vo.setTotalList(total.stream().peek(ScreeningBatchProgressVO::calculateRatio).collect(Collectors.toList()));
+            vo.setWaitList(vo.getTotalList().stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 0)).collect(Collectors.toList()));
+            vo.setScreeningList(vo.getTotalList().stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 1)).collect(Collectors.toList()));
+            vo.setStopList(vo.getTotalList().stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 2)).collect(Collectors.toList()));
+            vo.setCompleteList(vo.getTotalList().stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 4)).collect(Collectors.toList()));
+            vo.setCancelList(vo.getTotalList().stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 3)).collect(Collectors.toList()));
         }
         return vo;
     }
@@ -100,6 +120,17 @@ public class ScreeningTaskServiceImpl extends ServiceImpl<ScreeningTaskMapper, S
             page.setSearchCount(false);
         }
         return baseMapper.page(page, dto);
+    }
+
+    @Override
+    public void updateBatchStatus(String taskId, Integer status) {
+        ScreeningTask update = new ScreeningTask();
+        update.setTaskId(taskId);
+        update.setTaskState(status);
+        if (ObjectUtil.equal(5, status) || ObjectUtil.equal(4, status)) {
+            update.setCompletionTime(LocalDateTime.now());
+        }
+        baseMapper.updateById(update);
     }
 
 
