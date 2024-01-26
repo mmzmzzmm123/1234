@@ -3,7 +3,6 @@ package com.ruoyi.system.domain.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -26,14 +25,6 @@ public class TaskProgressVO {
     @ApiModelProperty(value = "进度")
     private BigDecimal screeningRadio;
 
-    public BigDecimal getScreeningRadio() {
-        if (targetCount == null || screeningCount == null || targetCount <= 0 || screeningCount <= 0) {
-            return BigDecimal.ZERO;
-        }
-        return BigDecimal.valueOf(screeningCount)
-                .multiply(BigDecimal.valueOf(100))
-                .divide(BigDecimal.valueOf(targetCount), 2, RoundingMode.HALF_UP);
-    }
 
     @ApiModelProperty(value = "有效号码数")
     private Long validCount;
@@ -41,14 +32,6 @@ public class TaskProgressVO {
     @ApiModelProperty(value = "有效率")
     private BigDecimal validRadio;
 
-    public BigDecimal getValidRadio() {
-        if (validCount == null || screeningCount == null || validCount <= 0 || screeningCount <= 0) {
-            return BigDecimal.ZERO;
-        }
-        return BigDecimal.valueOf(validCount)
-                .multiply(BigDecimal.valueOf(100))
-                .divide(BigDecimal.valueOf(screeningCount), 2, RoundingMode.HALF_UP);
-    }
 
     @ApiModelProperty(value = "单价")
     private BigDecimal price;
@@ -65,11 +48,25 @@ public class TaskProgressVO {
     private BigDecimal totalPrice;
 
 
-    public BigDecimal getTotalPrice() {
+    public TaskProgressVO calculateRatio() {
         if (price == null || screeningCount == null) {
-            return BigDecimal.ZERO;
+            totalPrice = BigDecimal.ZERO;
+        } else {
+            totalPrice = price.multiply(BigDecimal.valueOf(screeningCount));
         }
-        return price.multiply(BigDecimal.valueOf(screeningCount));
+
+        if (validCount == null || screeningCount == null || validCount <= 0 || screeningCount <= 0) {
+            validRadio = BigDecimal.ZERO;
+        } else {
+            validRadio = BigDecimal.valueOf(validCount).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(screeningCount), 2, RoundingMode.HALF_UP);
+        }
+
+        if (targetCount == null || screeningCount == null || targetCount <= 0 || screeningCount <= 0) {
+            screeningRadio = BigDecimal.ZERO;
+        } else {
+            screeningRadio = BigDecimal.valueOf(screeningCount).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(targetCount), 2, RoundingMode.HALF_UP);
+        }
+        return this;
     }
 
 }

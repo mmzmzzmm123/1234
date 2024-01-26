@@ -44,6 +44,10 @@ public class ScreeningTaskBatchServiceImpl extends ServiceImpl<ScreeningTaskBatc
         if (CollUtil.isEmpty(batchs)) {
             return new ArrayList<>();
         }
-        return batchs.stream().map(p -> BeanUtil.copyProperties(p, ScreeningBatchVO.class)).collect(Collectors.toList());
+        return batchs.stream().map(p -> {
+            ScreeningBatchVO screeningBatchVO = BeanUtil.copyProperties(p, ScreeningBatchVO.class);
+            screeningBatchVO.setBatchName(String.format("第%s批次", p.getBatchCount()));
+            return screeningBatchVO;
+        }).collect(Collectors.toList());
     }
 }

@@ -25,9 +25,6 @@ public class ScreeningTaskDetailVO {
     @ApiModelProperty(value = "批次名")
     private String batchName;
 
-    public String getBatchName() {
-        return batchCount == null ? "" : String.format("第%s批次", batchCount);
-    }
 
     @JSONField(format = "yyyy-MM-dd HH:mm:ss")
     @Excel(name = "检查时间", dateFormat = "yyyy-MM-dd HH:mm:ss")

@@ -59,7 +59,7 @@ public class ScreeningTaskServiceImpl extends ServiceImpl<ScreeningTaskMapper, S
 
     @Override
     public TaskProgressVO taskProgress(String taskId) {
-        return baseMapper.taskProgress(taskId);
+        return baseMapper.taskProgress(taskId).calculateRatio();
     }
 
     @Override
@@ -67,12 +67,12 @@ public class ScreeningTaskServiceImpl extends ServiceImpl<ScreeningTaskMapper, S
         TaskBatchProgressVO vo = new TaskBatchProgressVO();
         List<ScreeningBatchProgressVO> total = baseMapper.batchProgress(taskId);
         if (CollUtil.isNotEmpty(total)) {
-            vo.setTotalList(total);
-            vo.setWaitList(total.stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 0)).collect(Collectors.toList()));
-            vo.setScreeningList(total.stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 1)).collect(Collectors.toList()));
-            vo.setStopList(total.stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 2)).collect(Collectors.toList()));
-            vo.setCompleteList(total.stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 4)).collect(Collectors.toList()));
-            vo.setCancelList(total.stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 3)).collect(Collectors.toList()));
+            vo.setTotalList(total.stream().peek(ScreeningBatchProgressVO::calculateRatio).collect(Collectors.toList()));
+            vo.setWaitList(vo.getTotalList().stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 0)).collect(Collectors.toList()));
+            vo.setScreeningList(vo.getTotalList().stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 1)).collect(Collectors.toList()));
+            vo.setStopList(vo.getTotalList().stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 2)).collect(Collectors.toList()));
+            vo.setCompleteList(vo.getTotalList().stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 4)).collect(Collectors.toList()));
+            vo.setCancelList(vo.getTotalList().stream().filter(p -> ObjectUtil.equal(p.getBatchState(), 3)).collect(Collectors.toList()));
         }
         return vo;
     }

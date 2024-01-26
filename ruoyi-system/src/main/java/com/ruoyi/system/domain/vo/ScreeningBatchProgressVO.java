@@ -33,14 +33,7 @@ public class ScreeningBatchProgressVO extends ScreeningBatchVO {
     @ApiModelProperty(value = "进度")
     private BigDecimal screeningRadio;
 
-    public BigDecimal getScreeningRadio() {
-        if (targetCount == null || screeningCount == null || targetCount <= 0 || screeningCount <= 0) {
-            return BigDecimal.ZERO;
-        }
-        return BigDecimal.valueOf(screeningCount)
-                .multiply(BigDecimal.valueOf(100))
-                .divide(BigDecimal.valueOf(targetCount), 2, RoundingMode.HALF_UP);
-    }
+
 
     @ApiModelProperty(value = "有效号码数")
     private Long validCount;
@@ -48,13 +41,21 @@ public class ScreeningBatchProgressVO extends ScreeningBatchVO {
     @ApiModelProperty(value = "有效率")
     private BigDecimal validRadio;
 
-    public BigDecimal getValidRadio() {
+
+
+    public ScreeningBatchProgressVO calculateRatio() {
         if (validCount == null || screeningCount == null || validCount <= 0 || screeningCount <= 0) {
-            return BigDecimal.ZERO;
+            validRadio = BigDecimal.ZERO;
+        } else {
+            validRadio = BigDecimal.valueOf(validCount).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(screeningCount), 2, RoundingMode.HALF_UP);
         }
-        return BigDecimal.valueOf(validCount)
-                .multiply(BigDecimal.valueOf(100))
-                .divide(BigDecimal.valueOf(screeningCount), 2, RoundingMode.HALF_UP);
+
+        if (targetCount == null || screeningCount == null || targetCount <= 0 || screeningCount <= 0) {
+            screeningRadio = BigDecimal.ZERO;
+        } else {
+            screeningRadio = BigDecimal.valueOf(screeningCount).multiply(BigDecimal.valueOf(100)).divide(BigDecimal.valueOf(targetCount), 2, RoundingMode.HALF_UP);
+        }
+        return this;
     }
 
 
