@@ -50,6 +50,7 @@ public enum OpenApiEnum {
 
     THIRD_KP_TG_INSERT_EVENT("kpTg-生成域名接口", "/thirdparty/tgModule/insertEvent", null),
 
+
     // utchat接口
     THIRD_UTCHAT_TG_SELECT_ROBOT_LIST_BY_RADIO("utchatTg-查询分组下的机器号", "/thirdparty/tgUtChat/selectRobotListByRadio", null),
 
@@ -64,6 +65,11 @@ public enum OpenApiEnum {
     THIRD_UTCHAT_TG_SYNC_CHATROOM_ADMIN_DISTR_ALL("utchatTg-同步全量黑群主信息", "/thirdparty/tgUtChat/syncChatroomAdminDistrAll", null),
 
     THIRD_UTCHAT_TG_SELECT_ROBOT_INFO_LIST("utchatTg-查询号信息", "/thirdparty/tgUtChat/selectRobotInfoList", null),
+
+    THIRD_UTCHAT_TG_SYNC_GROUP_INVITE_LINK("utchatTg-同步群邀请链接", "/thirdparty/tgUtChat/syncGroupInviteLink", null),
+
+
+
     ;
 
     /**

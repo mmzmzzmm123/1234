@@ -415,4 +415,13 @@ public class OpenApiClient {
         return OpenApiClient.post(OpenApiEnum.THIRD_TG_PERSONAL_ON, JSONObject.from(data), Void.class);
     }
 
+    /**
+     * 比邻第三方(UtchatTG)：-同步群邀请链接
+     *
+     * @return
+     */
+    public static OpenApiResult<Void> syncGroupInviteLinkByThirdUtchatTg(ThirdTgSyncGroupInviteLinkDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SYNC_GROUP_INVITE_LINK, JSONObject.from(data), Void.class);
+    }
+
 }
