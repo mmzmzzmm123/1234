@@ -159,7 +159,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
     @Override
     public void pauseGroupPush(Integer pushId) {
         PlayMessagePush playMessagePush = super.getById(pushId);
-        this.resumeGroupPush(playMessagePush);
+        this.pauseGroupPush(playMessagePush);
     }
 
     @Override
