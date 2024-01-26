@@ -3,6 +3,8 @@ package com.ruoyi.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.domain.ScreeningTaskTarget;
 
+import java.util.List;
+
 /**
  * 筛查任务筛查目标表(ScreeningTaskTarget)表服务接口
  *
@@ -11,4 +13,5 @@ import com.ruoyi.system.domain.ScreeningTaskTarget;
  */
 public interface ScreeningTaskTargetService extends IService<ScreeningTaskTarget> {
 
+    void save(String batchId, List<String> phones);
 }

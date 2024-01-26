@@ -3,7 +3,6 @@ package com.ruoyi.system.service;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.callback.dto.Called1100910018DTO;
-import com.ruoyi.system.callback.dto.Called1100910039DTO;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.base.PageBaseDTO;
 import com.ruoyi.system.domain.dto.GroupPageQueryDTO;
@@ -55,4 +54,6 @@ public interface GroupInfoService extends IService<GroupInfo> {
     void updateGroupInfo(Called1100910018DTO.Called1100910018ChatroomInfoDTO update);
 
     void updateName(String groupId,String groupName);
+
+    void updateNameByGroupSerialNo(String groupSerialNo,String groupName);
 }

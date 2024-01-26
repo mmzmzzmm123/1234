@@ -18,12 +18,16 @@ public class ScreeningTaskPageDTO extends PageBaseDTO {
     private String taskId;
 
     @ApiModelProperty(value = "任务名称")
-    @TableField("task_name")
     private String taskName;
+
+    @ApiModelProperty(value = "商家名")
+    private String merchantName;
+
+    @ApiModelProperty(value = "商家id")
+    private String merchantId;
 
 
     @ApiModelProperty(value = "任务状态：  0-待检查 1-检查中 3-已暂停 4-已取消 5-已完成 ")
-    @TableField("task_state")
     private Integer taskState;
 
     @ApiModelProperty(value = "创建时间-开始")

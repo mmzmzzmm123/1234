@@ -3,16 +3,14 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.constant.PlayConstants;
 import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.tools.UrlReplaceTools;
 import com.ruoyi.common.utils.ListTools;
-import com.ruoyi.common.utils.MD5Utils;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.callback.dto.Called1100850405DTO;
 import com.ruoyi.system.callback.dto.Called1100850508DTO;
 import com.ruoyi.system.callback.dto.CalledDTO;
@@ -39,7 +37,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -126,11 +123,11 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
                 confoundLog.setState(0);
 
                 // 计算文案的Md5值 先进行保存再请求
-                String contentMd5 = MD5Utils.getMD5(confound.getConfoundContent(), StandardCharsets.UTF_8.displayName());
-                confoundLog.setContentMd5(contentMd5);
+                String extendId = IdUtils.fastSimpleUUID();
+                confoundLog.setContentMd5(extendId);
                 super.save(confoundLog);
 
-                String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum());
+                String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum(), confoundLog.getId().toString());
                 confoundLog.setOptSerialNo(optSerNo);
                 if (StringUtils.isEmpty(optSerNo)) { //失败
                     confoundLog.setState(2);
@@ -160,18 +157,21 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
 
         String jsonData = inputDTO.getData().toString();
         String optSerNo = inputDTO.getOptSerNo();
+        log.info("handleConfoundText-callback-data {} {}", optSerNo, jsonData);
         if (StringUtils.isBlank(jsonData)) {
-            log.info("handleConfoundText callback data is blank {}", optSerNo);
+            log.info("handleConfoundText-callback-data-is-blank {}", optSerNo);
             return;
         }
 
         Called1100850405DTO data = JSONObject.parseObject(jsonData, Called1100850405DTO.class);
-        String md5 = MD5Utils.getMD5(data.getOriginContent(), StandardCharsets.UTF_8.displayName());
+
 
         // 通过MD5 或者 操作编码查询
-        PlayMessageConfoundLog confoundLog = this.queryByContentMd5OrSerialNo(md5, optSerNo);
+        String extend = inputDTO.getExtend();
+        PlayMessageConfoundLog confoundLog = this.queryByContentMd5OrSerialNo(extend, optSerNo);
+        log.info("handleConfoundText-callback-data {} {} {}", optSerNo, extend, JSON.toJSONString(confoundLog));
         if (confoundLog == null) {
-            log.info("handleConfoundText confoundLog is null {} {}", optSerNo, md5);
+            log.info("handleConfoundText-confoundLog-is-null {} {}", optSerNo, extend);
             return;
         }
 
@@ -255,7 +255,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
      * @param num     返回多少条
      * @return
      */
-    public String getAppointGradeTextList(String content, Integer num) {
+    public String getAppointGradeTextList(String content, Integer num, String extendId) {
         OpenApiResult<TgBaseOutputDTO> result = null;
         try {
             ThirdTgAppointGradeTextListInputDTO dto = new ThirdTgAppointGradeTextListInputDTO();
@@ -264,6 +264,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             // 获取条数，各离散等级条数限制 L1： 10 L2： 100 L3： 500 L4-L5： 1000
             dto.setLevel(5);
             dto.setNum(num);
+            dto.setExtend(extendId);
 
             result = OpenApiClient.getAppointGradeTextListByThirdKpTg(dto);
 
@@ -341,7 +342,15 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
 
     private void retryingConfusion(PlayMessageConfoundLog confoundLog, PlayMessageConfound confound) {
         if (confound.getMomentTypeId() == 2001) {
-            String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum());
+            String extendId = IdUtils.fastSimpleUUID();
+            confoundLog.setContentMd5(extendId);
+            final int res = super.baseMapper.update(confoundLog, new UpdateWrapper<PlayMessageConfoundLog>().lambda()
+                    .eq(PlayMessageConfoundLog::getId, confoundLog.getId())
+                    .ne(PlayMessageConfoundLog::getState, 1)
+            );
+            log.info("重试文本混淆更新数据库数据 {} {} {}", extendId, confoundLog.getId(), res);
+
+            String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum(), confoundLog.getId().toString());
             confoundLog.setOptSerialNo(optSerNo);
             if (StringUtils.isEmpty(optSerNo)) {
                 confoundLog.setState(2);
@@ -436,16 +445,12 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
     @Override
     public PlayMessageConfoundLog queryByContentMd5OrSerialNo(final String md5, final String serialNo) {
         LambdaQueryWrapper<PlayMessageConfoundLog> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PlayMessageConfoundLog::getOptSerialNo,serialNo);
+        queryWrapper.eq(PlayMessageConfoundLog::getOptSerialNo, serialNo);
         final PlayMessageConfoundLog confoundLog = this.getOne(queryWrapper);
-        if(confoundLog != null){
+        if (confoundLog != null) {
             return confoundLog;
         }
-        queryWrapper.eq(PlayMessageConfoundLog::getContentMd5, md5)
-                .isNull(PlayMessageConfoundLog::getResultContent)
-                .orderByDesc(PlayMessageConfoundLog::getCreateTime)
-                .last("limit 1");
-        return this.getOne(queryWrapper);
+        return this.getById(md5);
     }
 }
 

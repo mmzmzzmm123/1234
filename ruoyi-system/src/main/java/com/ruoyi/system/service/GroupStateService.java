@@ -3,6 +3,7 @@ package com.ruoyi.system.service;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.domain.GroupState;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -24,4 +25,6 @@ public interface GroupStateService extends IService<GroupState> {
     void banned(List<String> groupIds);
 
     void recover(String groupId);
+
+    void groupBaned(String chatroomSerialNo, LocalDateTime banedTime);
 }

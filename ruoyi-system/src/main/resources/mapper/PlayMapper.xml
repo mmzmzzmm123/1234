@@ -288,5 +288,10 @@
             tpi.id
     </select>
 
-
+    <select id="selectReleaseRobots" resultType="String">
+        select tpi.id from t_play_info tpi
+        left join t_play_repeat_log tprl on tpi.id = tprl.play_id
+        where tpi.state in (4,5) and tpi.lock_robot_status=1 and tprl.play_id is null
+        and tpi.end_date &gt;= #{startDate} and tpi.end_date &lt;= #{endDate}
+    </select>
 </mapper>

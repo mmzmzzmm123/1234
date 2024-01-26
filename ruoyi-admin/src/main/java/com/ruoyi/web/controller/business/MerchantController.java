@@ -1,9 +1,7 @@
 package com.ruoyi.web.controller.business;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.core.controller.BaseController;
-import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.MerchantAmount;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
@@ -67,7 +65,7 @@ public class MerchantController extends BaseController {
     public R<MerchantAmount> getAmount() {
         String merchantId = getMerchantId();
         if (StringUtils.isEmpty(merchantId)) {
-            return R.fail();
+            return R.ok();
         }
         return R.ok(merchantAmountService.getById(merchantId));
     }

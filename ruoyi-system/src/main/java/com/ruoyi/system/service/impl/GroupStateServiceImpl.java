@@ -4,9 +4,13 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.GroupState;
 import com.ruoyi.system.mapper.GroupStateMapper;
+import com.ruoyi.system.service.GroupInfoService;
 import com.ruoyi.system.service.GroupStateService;
 import org.springframework.stereotype.Service;
 
@@ -105,5 +109,19 @@ public class GroupStateServiceImpl extends ServiceImpl<GroupStateMapper, GroupSt
         groupState.setGroupStatus(0);
         groupState.setGroupId(groupId);
         baseMapper.updateById(groupState);
+    }
+
+    @Override
+    public void groupBaned(String chatroomSerialNo, LocalDateTime banedTime) {
+        GroupInfo groupInfo = SpringUtils.getBean(GroupInfoService.class).getGroupBySerialNo(chatroomSerialNo);
+        if (groupInfo == null) {
+            return;
+        }
+
+        LambdaUpdateWrapper<GroupState> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.eq(GroupState::getGroupId, groupInfo.getGroupId())
+                .set(GroupState::getGroupStatus, 1)
+                .set(banedTime != null, GroupState::getGroupStatusTime, banedTime);
+        this.update(updateWrapper);
     }
 }
