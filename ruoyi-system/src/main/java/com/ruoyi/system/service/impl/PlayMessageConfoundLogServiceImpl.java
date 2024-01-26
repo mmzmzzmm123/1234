@@ -14,7 +14,6 @@ import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.callback.dto.Called1100850405DTO;
 import com.ruoyi.system.callback.dto.Called1100850508DTO;
 import com.ruoyi.system.callback.dto.CalledDTO;
-import com.ruoyi.system.callback.dto.CalledDTOThreadLocal;
 import com.ruoyi.system.domain.PlayMessageConfound;
 import com.ruoyi.system.domain.PlayMessageConfoundLog;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
@@ -128,7 +127,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
                 confoundLog.setContentMd5(extendId);
                 super.save(confoundLog);
 
-                String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum(), extendId);
+                String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum(), confoundLog.getId().toString());
                 confoundLog.setOptSerialNo(optSerNo);
                 if (StringUtils.isEmpty(optSerNo)) { //失败
                     confoundLog.setState(2);
@@ -158,20 +157,21 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
 
         String jsonData = inputDTO.getData().toString();
         String optSerNo = inputDTO.getOptSerNo();
+        log.info("handleConfoundText-callback-data {} {}", optSerNo, jsonData);
         if (StringUtils.isBlank(jsonData)) {
-            log.info("handleConfoundText callback data is blank {}", optSerNo);
+            log.info("handleConfoundText-callback-data-is-blank {}", optSerNo);
             return;
         }
 
-        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         Called1100850405DTO data = JSONObject.parseObject(jsonData, Called1100850405DTO.class);
 
 
         // 通过MD5 或者 操作编码查询
-        String extend = root.getExtend();
+        String extend = inputDTO.getExtend();
         PlayMessageConfoundLog confoundLog = this.queryByContentMd5OrSerialNo(extend, optSerNo);
+        log.info("handleConfoundText-callback-data {} {} {}", optSerNo, extend, JSON.toJSONString(confoundLog));
         if (confoundLog == null) {
-            log.info("handleConfoundText confoundLog is null {} {}", optSerNo, extend);
+            log.info("handleConfoundText-confoundLog-is-null {} {}", optSerNo, extend);
             return;
         }
 
@@ -348,8 +348,9 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
                     .eq(PlayMessageConfoundLog::getId, confoundLog.getId())
                     .ne(PlayMessageConfoundLog::getState, 1)
             );
+            log.info("重试文本混淆更新数据库数据 {} {} {}", extendId, confoundLog.getId(), res);
 
-            String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum(), extendId);
+            String optSerNo = this.getAppointGradeTextList(confound.getConfoundContent(), confound.getGroupNum(), confoundLog.getId().toString());
             confoundLog.setOptSerialNo(optSerNo);
             if (StringUtils.isEmpty(optSerNo)) {
                 confoundLog.setState(2);
@@ -449,10 +450,7 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         if (confoundLog != null) {
             return confoundLog;
         }
-        queryWrapper.clear();
-        queryWrapper.eq(PlayMessageConfoundLog::getContentMd5, md5)
-                .last("limit 1");
-        return this.getOne(queryWrapper);
+        return this.getById(md5);
     }
 }
 
