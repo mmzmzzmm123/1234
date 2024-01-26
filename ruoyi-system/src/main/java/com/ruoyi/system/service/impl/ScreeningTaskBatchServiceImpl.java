@@ -28,7 +28,7 @@ public class ScreeningTaskBatchServiceImpl extends ServiceImpl<ScreeningTaskBatc
     @Override
     public ScreeningTaskBatch save(ScreeningTask task, String batchId, String orderId) {
         ScreeningTaskBatch batch = new ScreeningTaskBatch();
-        batch.setBatchId(task.getTaskId());
+        batch.setBatchId(batchId);
         batch.setBatchCount(task.getBatchCount());
         batch.setTaskId(task.getTaskId());
         batch.setBatchState(0);

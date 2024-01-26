@@ -3,6 +3,7 @@ package com.ruoyi.system.domain.vo;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -21,6 +22,7 @@ public class TaskProgressVO {
     @ApiModelProperty(value = "筛查总数")
     private Long screeningCount;
 
+
     @ApiModelProperty(value = "进度")
     private BigDecimal screeningRadio;
 
@@ -32,7 +34,6 @@ public class TaskProgressVO {
                 .multiply(BigDecimal.valueOf(100))
                 .divide(BigDecimal.valueOf(targetCount), 2, RoundingMode.HALF_UP);
     }
-
 
     @ApiModelProperty(value = "有效号码数")
     private Long validCount;
@@ -64,7 +65,7 @@ public class TaskProgressVO {
     private BigDecimal totalPrice;
 
 
-    private BigDecimal getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         if (price == null || screeningCount == null) {
             return BigDecimal.ZERO;
         }
