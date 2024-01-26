@@ -1,7 +1,11 @@
 package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.system.domain.ScreeningTask;
 import com.ruoyi.system.domain.ScreeningTaskBatch;
+import com.ruoyi.system.domain.vo.ScreeningBatchVO;
+
+import java.util.List;
 
 /**
  * 筛查任务批次表(ScreeningTaskBatch)表服务接口
@@ -11,4 +15,7 @@ import com.ruoyi.system.domain.ScreeningTaskBatch;
  */
 public interface ScreeningTaskBatchService extends IService<ScreeningTaskBatch> {
 
+    ScreeningTaskBatch save(ScreeningTask task, String batchId, String orderId );
+
+    List<ScreeningBatchVO> batchInfo(String taskId);
 }

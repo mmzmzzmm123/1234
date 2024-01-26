@@ -1,6 +1,8 @@
 package com.ruoyi.system.callback.processor;
 
+import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spi.ServiceLoader;
@@ -12,6 +14,7 @@ import com.ruoyi.system.components.movie.spi.impl.BothwayGroupCtrlStopper;
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
+import com.ruoyi.system.openapi.model.input.ThirdTgModifyChatroomNameInputDTO;
 import com.ruoyi.system.openapi.model.input.ThirdTgSetChatroomAdminInputDTO;
 import com.ruoyi.system.service.*;
 import com.ruoyi.system.service.business.GroupService;
@@ -59,7 +62,7 @@ public class TgRobotProcessor {
     public void called50005004(Called50005004DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
 //        log.info("NQ50005004 called:{}",root);
-        if(!CollectionUtils.isEmpty(source.getRobotSerialNos())){
+        if (!CollectionUtils.isEmpty(source.getRobotSerialNos())) {
             robotService.recycleRobot(source.getRobotSerialNos());
         }
     }
@@ -72,7 +75,7 @@ public class TgRobotProcessor {
     public void called50005005(List<Called50005005DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
 //        log.info("NQ50005005 called:{}",root);
-        if(!CollectionUtils.isEmpty(sourceList)){
+        if (!CollectionUtils.isEmpty(sourceList)) {
             robotService.updateRobotMerchant(sourceList);
         }
     }
@@ -84,7 +87,7 @@ public class TgRobotProcessor {
     @Type(value = 50005006, parameterClass = Called50005006DTO.class)
     public void called50005006(List<Called50005006DTO> sourceList) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ50005006 called:{}",root);
+        log.info("NQ50005006 called:{}", root);
         robotService.updateRobotInfo(sourceList);
     }
 
@@ -109,18 +112,18 @@ public class TgRobotProcessor {
     @Type(value = 1100910053, parameterClass = Called1100910053DTO.class)
     public void called1100910053(Called1100910053DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("1100910053-设置群管理员-{}",JSON.toJSONString(root));
+        log.info("1100910053-设置群管理员-{}", JSON.toJSONString(root));
         //处理tg设置管理员
-        if(root.isSuccess() && !StringUtils.isEmpty(root.getRequestPara())) {
+        if (root.isSuccess() && !StringUtils.isEmpty(root.getRequestPara())) {
             groupService.handlerNewAdmin(JSON.parseObject(root.getRequestPara(), ThirdTgSetChatroomAdminInputDTO.class), dto);
         }
         //处理请求结果
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
-        if(root.isSuccess()) {
-        	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
-        	return ;
+        if (root.isSuccess()) {
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
+            return;
         }
-    	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
     }
 
     /**
@@ -133,9 +136,9 @@ public class TgRobotProcessor {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         GroupInfo groupInfo = null;
         if (root.isSuccess()) {
-            groupInfo = groupService.handleRobotIn(dto,root.getRobotId());
+            groupInfo = groupService.handleRobotIn(dto, root.getRobotId());
         }
-        intoGroupService.intoGroupCallback(groupInfo,root);
+        intoGroupService.intoGroupCallback(groupInfo, root);
 
     }
 
@@ -149,9 +152,9 @@ public class TgRobotProcessor {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         GroupInfo groupInfo = null;
         if (root.isSuccess()) {
-            groupInfo =  groupService.handleRobotOut(dto,root.getRobotId());
+            groupInfo = groupService.handleRobotOut(dto, root.getRobotId());
         }
-        intoGroupService.outGroupCallback(root,dto);
+        intoGroupService.outGroupCallback(root, dto);
     }
 
     /**
@@ -172,18 +175,19 @@ public class TgRobotProcessor {
     @Type(value = 1100910016, parameterClass = CalledEmptyDTO.class)
     public void called1100910016(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("1100910016-修改号头像-{}",JSON.toJSONString(root));
-        if(root.isSuccess()) {
-            if(StringUtils.isNotEmpty(root.getExtend())){
+        log.info("1100910016-修改号头像-{}", JSON.toJSONString(root));
+        if (root.isSuccess()) {
+            if (StringUtils.isNotEmpty(root.getExtend())) {
                 try {
                     robotService.updateHeadImgUrl(root.getRobotId(), root.getExtend());
                     return;
-                }catch (Exception e){}
+                } catch (Exception e) {
+                }
             }
-        	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
-        	return ;
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
+            return;
         }
-    	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
     }
 
     /**
@@ -194,23 +198,24 @@ public class TgRobotProcessor {
     @Type(value = 1100910033, parameterClass = CalledEmptyDTO.class)
     public void called1100910033(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("1100910033-修改号姓氏和名字-{}",JSON.toJSONString(root));
-        if(root.isSuccess()) {
-            if(StringUtils.isNotEmpty(root.getExtend())){
+        log.info("1100910033-修改号姓氏和名字-{}", JSON.toJSONString(root));
+        if (root.isSuccess()) {
+            if (StringUtils.isNotEmpty(root.getExtend())) {
                 try {
                     SetNameResourceVO setNameResourceVO = JSON.parseObject(root.getExtend(), SetNameResourceVO.class);
-                    robotService.updateName(root.getRobotId(),setNameResourceVO);
+                    robotService.updateName(root.getRobotId(), setNameResourceVO);
                     return;
-                }catch (Exception e){}
+                } catch (Exception e) {
+                }
             }
-        	SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
-        	return ;
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
+            return;
         }
         else if("名字重复".equals(root.getResultMsg())){//名字重复当做成功
             SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
             return ;
         }
-    	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
     }
 
     /**
@@ -221,8 +226,8 @@ public class TgRobotProcessor {
     @Type(value = 1100910009, parameterClass = CalledEmptyDTO.class)
     public void called1100910009(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        if(root.isSuccess()){
-            if(StringUtils.isNotEmpty(root.getExtend())){
+        if (root.isSuccess()) {
+            if (StringUtils.isNotEmpty(root.getExtend())) {
                 robotService.updateUsername(root.getRobotId(), root.getExtend());
             }
         }
@@ -230,6 +235,7 @@ public class TgRobotProcessor {
 
     /**
      * TG获取群信息
+     *
      * @param dto
      */
     @Type(value = 1100910018, parameterClass = Called1100910018DTO.class)
@@ -303,7 +309,7 @@ public class TgRobotProcessor {
     @Type(value = 1100850405, parameterClass = Called1100850405DTO.class)
     public void called1100850405(Called1100850405DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("1100850405-TG获取离散文案-{}",JSON.toJSONString(root));
+        log.info("1100850405-TG获取离散文案-{}", JSON.toJSONString(root));
         playMessageConfoundLogService.handleConfoundText(root);
     }
 
@@ -315,21 +321,21 @@ public class TgRobotProcessor {
     @Type(value = 1100860002, parameterClass = Called1100860002DTO.class)
     public void called1100860002(List<Called1100860002DTO> dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("1100860002-SQL执行接口-{}",JSON.toJSONString(root));
+        log.info("1100860002-SQL执行接口-{}", JSON.toJSONString(root));
         //集合为空 认为失败
-        if(CollUtil.isEmpty(dto)){
+        if (CollUtil.isEmpty(dto)) {
             root.setResultCode(1);
         }
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(),
                 root.isSuccess() ? dto : null);
 
-        if(root.isSuccess()) {
-        	if(!CollectionUtils.isEmpty(dto)) {
-        		SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), dto.get(0).getAccessHash());
-        	}
-        	return ;
+        if (root.isSuccess()) {
+            if (!CollectionUtils.isEmpty(dto)) {
+                SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), dto.get(0).getAccessHash());
+            }
+            return;
         }
-    	SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
 
 
     }
@@ -379,11 +385,11 @@ public class TgRobotProcessor {
     @Type(value = 1100910011, parameterClass = Called1100910011DTO.class)
     public void called1100910011(Called1100910011DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        if(root.isSuccess()) {
-    		// 成功
-        	PlayDirector.tgInstance().onMessageSuccess(root.getOptSerNo());
-        	return ;
-    	}
+        if (root.isSuccess()) {
+            // 成功
+            PlayDirector.tgInstance().onMessageSuccess(root.getOptSerNo());
+            return;
+        }
         PlayDirector.tgInstance().onMessageFailure(root.getOptSerNo(), root.getResultMsg());
     }
 
@@ -407,6 +413,13 @@ public class TgRobotProcessor {
     public void called1100910043(CalledEmptyDTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
+        if (root.isSuccess() && StrUtil.isNotBlank(root.getRequestPara())) {
+            ThirdTgModifyChatroomNameInputDTO input = JSON.parseObject(root.getRequestPara(), ThirdTgModifyChatroomNameInputDTO.class);
+            if (input != null) {
+                groupInfoService.updateNameByGroupSerialNo(input.getChatroomSerialNo(), Base64.decodeStr(input.getChatroomNameBase64()));
+            }
+        }
+
     }
 
     /**
@@ -418,7 +431,7 @@ public class TgRobotProcessor {
     public void called1100910006(Called1100910006DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
-        intoGroupService.setGroupMemberCallBack(dto,root);
+        intoGroupService.setGroupMemberCallBack(dto, root);
     }
 
     /**
@@ -429,7 +442,7 @@ public class TgRobotProcessor {
     @Type(value = 1100910101, parameterClass = Called1100910101DTO.class)
     public void called1100910101(Called1100910101DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ1100910101 called:{}",root);
+        log.info("NQ1100910101 called:{}", root);
         ServiceLoader.load(BothwayGroupCtrlStopper.class, "BothwayGroupCtrlStopper").doSetting(root.getRobotId());
         robotService.updateBidirectional(dto);
     }
@@ -441,7 +454,7 @@ public class TgRobotProcessor {
     public void called1100910003(Called1100910003DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
 //        log.info("NQ1100910003 called:{}",root);
-        if(root.isSuccess()){
+        if (root.isSuccess()) {
             robotService.offline(source.getUser_serial_no());
         }
     }
@@ -452,8 +465,8 @@ public class TgRobotProcessor {
     @Type(value = 1100910045, parameterClass = Called1100910045DTO.class)
     public void robotBanned(Called1100910045DTO source) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("NQ1100910045 called:{}",root);
-        if(root.isSuccess()){
+        log.info("NQ1100910045 called:{}", root);
+        if (root.isSuccess()) {
             robotService.sealRobot(source);
         }
 

@@ -19,4 +19,7 @@ public class ThirdTgSendGroupMessageInputDTO {
 
     @ApiModelProperty(value = "商家透传字段", required = false)
     private String extend;
+
+    private String extendInfo;
+
 }
