@@ -26,6 +26,9 @@ public class ScreeningTaskVO  {
     @ApiModelProperty(value = "任务名称")
     private String taskName;
 
+    @ApiModelProperty(value = "国家")
+    private String country;
+
     @ApiModelProperty(value = "任务状态：  0-待检查 1-检查中 3-已暂停 4-已取消 5-已完成 ")
     private Integer taskState;
 

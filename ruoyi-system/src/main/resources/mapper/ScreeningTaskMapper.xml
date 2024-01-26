@@ -3,9 +3,10 @@
 <mapper namespace="com.ruoyi.system.mapper.ScreeningTaskMapper">
 
     <select id="taskPage" resultType="com.ruoyi.system.domain.vo.ScreeningTaskVO">
-        select tst.task_id, tst.task_name, tst.task_state, tst.create_time, tst.completion_time, tst.price
+        select tst.task_id, tst.task_name, tst.task_state, tst.create_time, tst.completion_time, tst.price,tc.country_name country
         from t_screening_task tst
         left join t_merchant_info tmi on tst.merchant_id = tmi.merchant_id
+        left join t_country tc on tc.country_code = tst.country_code
         <where>
             <if test="merchantId != null and merchantId != ''">
                 AND tst.merchant_id = #{merchantId}

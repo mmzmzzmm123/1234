@@ -1,13 +1,13 @@
 package com.ruoyi.system.domain.vo;
 
 import com.alibaba.fastjson2.annotation.JSONField;
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.ruoyi.common.annotation.Excel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 /**
@@ -50,4 +50,14 @@ public class ScreeningTaskDetailVO {
     @Excel(name = "费用")
     @ApiModelProperty(value = "费用")
     private BigDecimal price;
+
+
+    public void setPrice(BigDecimal price) {
+        if (price == null) {
+            this.price = BigDecimal.ZERO;
+            return;
+        }
+        this.price = price.divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP);
+    }
+
 }
