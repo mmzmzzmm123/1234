@@ -14,7 +14,6 @@ import com.ruoyi.common.utils.uuid.IdUtils;
 import com.ruoyi.system.callback.dto.Called1100850405DTO;
 import com.ruoyi.system.callback.dto.Called1100850508DTO;
 import com.ruoyi.system.callback.dto.CalledDTO;
-import com.ruoyi.system.callback.dto.CalledDTOThreadLocal;
 import com.ruoyi.system.domain.PlayMessageConfound;
 import com.ruoyi.system.domain.PlayMessageConfoundLog;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
@@ -164,12 +163,11 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
             return;
         }
 
-        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         Called1100850405DTO data = JSONObject.parseObject(jsonData, Called1100850405DTO.class);
 
 
         // 通过MD5 或者 操作编码查询
-        String extend = root.getExtend();
+        String extend = inputDTO.getExtend();
         PlayMessageConfoundLog confoundLog = this.queryByContentMd5OrSerialNo(extend, optSerNo);
         log.info("handleConfoundText-callback-data {} {} {}", optSerNo, extend, JSON.toJSONString(confoundLog));
         if (confoundLog == null) {
