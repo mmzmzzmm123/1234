@@ -14,6 +14,9 @@ import java.math.RoundingMode;
 @Data
 @ApiModel("筛选任务进度VO")
 public class TaskProgressVO {
+    @ApiModelProperty(value = "任务ID")
+    private String taskId;
+
 
     @ApiModelProperty(value = "号码总数")
     private Long targetCount;

@@ -28,7 +28,7 @@ public interface ScreeningTaskService extends IService<ScreeningTask> {
 
     Page<ScreeningTaskVO> taskPage(String merchantId, ScreeningTaskPageDTO dto);
 
-    TaskProgressVO taskProgress(String taskId);
+   List<TaskProgressVO> taskProgress(List<String> taskId);
 
     TaskBatchProgressVO batchProgress(String taskId);
 

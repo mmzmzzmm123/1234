@@ -8,7 +8,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.system.domain.ScreeningTask;
-import com.ruoyi.system.domain.dto.*;
+import com.ruoyi.system.domain.dto.ScreeningTaskDetailDTO;
+import com.ruoyi.system.domain.dto.ScreeningTaskDetailExportDTO;
+import com.ruoyi.system.domain.dto.ScreeningTaskExportDTO;
+import com.ruoyi.system.domain.dto.ScreeningTaskPageDTO;
 import com.ruoyi.system.domain.vo.*;
 import com.ruoyi.system.mapper.ScreeningTaskMapper;
 import com.ruoyi.system.service.ScreeningTaskService;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -54,12 +58,28 @@ public class ScreeningTaskServiceImpl extends ServiceImpl<ScreeningTaskMapper, S
 
     @Override
     public Page<ScreeningTaskVO> taskPage(String merchantId, ScreeningTaskPageDTO dto) {
-        return baseMapper.taskPage(new Page<ScreeningTaskVO>(dto.getPage(), dto.getLimit()), merchantId, dto);
+        Page<ScreeningTaskVO> screeningTaskVOPage = baseMapper.taskPage(new Page<ScreeningTaskVO>(dto.getPage(), dto.getLimit()), merchantId, dto);
+        if (CollUtil.isNotEmpty(screeningTaskVOPage.getRecords())) {
+            List<String> taskIds = screeningTaskVOPage.getRecords().stream().map(ScreeningTaskVO::getTaskId).collect(Collectors.toList());
+            List<TaskProgressVO> taskProgress = taskProgress(taskIds);
+            if (CollUtil.isNotEmpty(taskProgress)) {
+                Map<String, TaskProgressVO> map = taskProgress.stream().collect(Collectors.toMap(TaskProgressVO::getTaskId, p -> p));
+                for (ScreeningTaskVO record : screeningTaskVOPage.getRecords()) {
+                    if (map.containsKey(record.getTaskId())) {
+                        TaskProgressVO taskProgressVO = map.get(record.getTaskId());
+                        record.setScreeningCount(taskProgressVO.getScreeningCount());
+                        record.setTargetCount(taskProgressVO.getTargetCount());
+                        record.setScreeningRadio(taskProgressVO.getScreeningRadio());
+                    }
+                }
+            }
+        }
+        return screeningTaskVOPage;
     }
 
     @Override
-    public TaskProgressVO taskProgress(String taskId) {
-        return baseMapper.taskProgress(taskId).calculateRatio();
+    public List<TaskProgressVO> taskProgress(List<String> taskIds) {
+        return baseMapper.taskProgress(taskIds).stream().peek(TaskProgressVO::calculateRatio).collect(Collectors.toList());
     }
 
     @Override

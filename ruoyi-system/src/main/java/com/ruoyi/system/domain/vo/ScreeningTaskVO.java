@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 
 /**
@@ -39,4 +41,12 @@ public class ScreeningTaskVO  {
     private Long price;
 
 
+    @ApiModelProperty(value = "号码总数")
+    private Long targetCount  =0L;
+
+    @ApiModelProperty(value = "筛查总数")
+    private Long screeningCount = 0L;
+
+    @ApiModelProperty(value = "进度")
+    private BigDecimal screeningRadio = BigDecimal.ZERO;
 }
