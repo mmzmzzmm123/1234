@@ -158,8 +158,9 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
 
         String jsonData = inputDTO.getData().toString();
         String optSerNo = inputDTO.getOptSerNo();
+        log.info("handleConfoundText-callback-data {} {}", optSerNo, jsonData);
         if (StringUtils.isBlank(jsonData)) {
-            log.info("handleConfoundText callback data is blank {}", optSerNo);
+            log.info("handleConfoundText-callback-data-is-blank {}", optSerNo);
             return;
         }
 
@@ -170,8 +171,9 @@ public class PlayMessageConfoundLogServiceImpl extends ServiceImpl<PlayMessageCo
         // 通过MD5 或者 操作编码查询
         String extend = root.getExtend();
         PlayMessageConfoundLog confoundLog = this.queryByContentMd5OrSerialNo(extend, optSerNo);
+        log.info("handleConfoundText-callback-data {} {} {}", optSerNo, extend, JSON.toJSONString(confoundLog));
         if (confoundLog == null) {
-            log.info("handleConfoundText confoundLog is null {} {}", optSerNo, extend);
+            log.info("handleConfoundText-confoundLog-is-null {} {}", optSerNo, extend);
             return;
         }
 
