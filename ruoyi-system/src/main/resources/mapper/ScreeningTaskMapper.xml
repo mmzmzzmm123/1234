@@ -38,6 +38,8 @@
 
     <select id="taskProgress" resultType="com.ruoyi.system.domain.vo.TaskProgressVO">
         select  tst.task_id,
+                tst.task_state,
+                tst.completion_time,
                 count(1)                                        target_count,
                ifnull(sum(if(tstt.result in (1, 2), 1, 0)), 0) screening_count,
                ifnull(sum(if(tstt.result = 1, 1, 0)), 0)       valid_count,

@@ -122,5 +122,16 @@ public class ScreeningTaskServiceImpl extends ServiceImpl<ScreeningTaskMapper, S
         return baseMapper.page(page, dto);
     }
 
+    @Override
+    public void updateBatchStatus(String taskId, Integer status) {
+        ScreeningTask update = new ScreeningTask();
+        update.setTaskId(taskId);
+        update.setTaskState(status);
+        if (ObjectUtil.equal(5, status) || ObjectUtil.equal(4, status)) {
+            update.setCompletionTime(LocalDateTime.now());
+        }
+        baseMapper.updateById(update);
+    }
+
 
 }

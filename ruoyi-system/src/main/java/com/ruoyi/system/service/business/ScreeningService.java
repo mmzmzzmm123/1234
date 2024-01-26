@@ -6,10 +6,13 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.ruoyi.common.core.domain.entity.Product;
 import com.ruoyi.common.core.domain.entity.ProductSku;
+import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.enums.ProductCategoryType;
 import com.ruoyi.system.domain.Country;
 import com.ruoyi.system.domain.ScreeningTask;
 import com.ruoyi.system.domain.ScreeningTaskBatch;
+import com.ruoyi.system.domain.ScreeningTaskTarget;
+import com.ruoyi.system.domain.dto.TaskCallBackDTO;
 import com.ruoyi.system.mapper.ProductMapper;
 import com.ruoyi.system.service.CountryService;
 import com.ruoyi.system.service.ScreeningTaskBatchService;
@@ -17,6 +20,7 @@ import com.ruoyi.system.service.ScreeningTaskService;
 import com.ruoyi.system.service.ScreeningTaskTargetService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RLock;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,6 +29,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +50,8 @@ public class ScreeningService {
     private final ScreeningTaskBatchService screeningTaskBatchService;
 
     private final ScreeningTaskTargetService screeningTaskTargetService;
+
+    private final RedisLock redisLock;
 
     public List<String> analysisFileInfo(MultipartFile file) {
         List<String> phones = new ArrayList<>();
@@ -92,8 +99,8 @@ public class ScreeningService {
     public void addTask(MultipartFile file, String taskId) {
         ScreeningTask task = screeningTaskService.getById(taskId);
         Assert.notNull(task, "任务不存在");
-        Assert.isTrue(ObjectUtil.notEqual(task.getTaskState(),4), "任务已取消");
-        Assert.isTrue(ObjectUtil.notEqual(task.getTaskState(),5), "任务已完成");
+        Assert.isTrue(ObjectUtil.notEqual(task.getTaskState(), 4), "任务已取消");
+        Assert.isTrue(ObjectUtil.notEqual(task.getTaskState(), 5), "任务已完成");
 
         List<String> phones = analysisFileInfo(file);
         Assert.notEmpty(phones, "文件内容不能为空");
@@ -108,5 +115,65 @@ public class ScreeningService {
         screeningTaskBatchService.save(task, taskNo, orderId);
         screeningTaskTargetService.save(taskNo, phones);
 
+    }
+
+
+    public void callback(TaskCallBackDTO dto) {
+        if (dto == null) {
+            return;
+        }
+        ScreeningTaskTarget screeningTaskTarget = screeningTaskTargetService.updateResult(dto);
+        if (screeningTaskTarget == null) {
+            return;
+        }
+        ScreeningTaskBatch screeningTaskBatch = screeningTaskBatchService.getById(screeningTaskTarget.getBatchId());
+        if (ObjectUtil.equal(screeningTaskBatch.getBatchState(), 0)) {
+            screeningTaskBatchService.updateBatchStatus(screeningTaskTarget.getBatchId(), 1);
+        }
+        if (screeningTaskTargetService.countUnchecked(screeningTaskTarget.getBatchId()) <= 0) {
+            screeningTaskBatchService.updateBatchStatus(screeningTaskTarget.getBatchId(), 4);
+            if (screeningTaskBatchService.countRunning(screeningTaskBatch.getTaskId()) <= 0) {
+                screeningTaskService.updateBatchStatus(screeningTaskBatch.getTaskId(), 5);
+            }
+        }
+    }
+
+    public void cancel(List<String> taskIds) {
+        List<ScreeningTask> tasks = screeningTaskService.listByIds(taskIds);
+        Assert.notEmpty(tasks, "任务不存在");
+        tasks = tasks.stream().filter(p -> ObjectUtil.notEqual(p.getTaskState(), 4) && ObjectUtil.notEqual(p.getTaskState(), 5)).collect(Collectors.toList());
+        Assert.notEmpty(tasks, "没有可取消的任务");
+        String lockKey = "screeningTask:%s";
+        tasks = tasks.stream().filter(p -> redisLock.tryLock(String.format(lockKey, p.getTaskId()), 30, TimeUnit.SECONDS)).collect(Collectors.toList());
+        Assert.notEmpty(tasks, "任务正在变动中,请稍后再操作");
+        try {
+
+        } finally {
+            tasks.forEach(p -> redisLock.unlock(String.format(lockKey, p.getTaskId())));
+        }
+    }
+
+    public boolean cancel(ScreeningTask task) {
+        RLock rLock = redisLock.getRLock("screeningTask:" + task.getTaskId());
+        if (rLock.isLocked()) {
+            return false;
+        }
+        rLock.lock(60, TimeUnit.SECONDS);
+        try {
+
+
+            return true;
+        } catch (Exception e) {
+            log.info("ScreeningService.cancel.error={}", task, e);
+            return false;
+        } finally {
+            rLock.unlock();
+        }
+    }
+
+    public void restart(List<String> taskIds) {
+    }
+
+    public void stop(List<String> taskIds) {
     }
 }

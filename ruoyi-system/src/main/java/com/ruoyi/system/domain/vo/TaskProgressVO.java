@@ -1,11 +1,13 @@
 package com.ruoyi.system.domain.vo;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 
 /**
  * @author 朱少波
@@ -17,6 +19,12 @@ public class TaskProgressVO {
     @ApiModelProperty(value = "任务ID")
     private String taskId;
 
+    @ApiModelProperty(value = "任务状态：  0-待检查 1-检查中 3-已暂停 4-已取消 5-已完成 ")
+    private Integer taskState;
+
+    @JSONField(format = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "任务完成时间")
+    private LocalDateTime completionTime;
 
     @ApiModelProperty(value = "号码总数")
     private Long targetCount;

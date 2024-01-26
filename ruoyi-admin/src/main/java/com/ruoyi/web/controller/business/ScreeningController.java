@@ -118,6 +118,7 @@ public class ScreeningController extends BaseController {
     @PostMapping("/stop")
     public R<Void> stop(@RequestBody List<String> taskIds) {
         try {
+            screeningService.stop(taskIds);
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
@@ -132,6 +133,7 @@ public class ScreeningController extends BaseController {
     @PostMapping("/restart")
     public R<Void> restart(@RequestBody List<String> taskIds) {
         try {
+            screeningService.restart(taskIds);
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
@@ -147,6 +149,7 @@ public class ScreeningController extends BaseController {
     @PostMapping("/cancel")
     public R<Void> cancel(@RequestBody List<String> taskIds) {
         try {
+            screeningService.cancel(taskIds);
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());

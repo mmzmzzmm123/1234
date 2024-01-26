@@ -50,4 +50,20 @@ public class ScreeningTaskBatchServiceImpl extends ServiceImpl<ScreeningTaskBatc
             return screeningBatchVO;
         }).collect(Collectors.toList());
     }
+
+    @Override
+    public void updateBatchStatus(String batchId, Integer status) {
+        ScreeningTaskBatch batch = new ScreeningTaskBatch();
+        batch.setBatchId(batchId);
+        batch.setBatchState(status);
+        baseMapper.updateById(batch);
+    }
+
+    @Override
+    public long countRunning(String taskId) {
+        return baseMapper.selectCount(
+                new LambdaQueryWrapper<ScreeningTaskBatch>()
+                        .notIn(ScreeningTaskBatch::getBatchState, 3, 4)
+                        .eq(ScreeningTaskBatch::getTaskId, taskId));
+    }
 }

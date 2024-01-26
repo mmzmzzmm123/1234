@@ -2,6 +2,7 @@ package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.system.domain.ScreeningTaskTarget;
+import com.ruoyi.system.domain.dto.TaskCallBackDTO;
 
 import java.util.List;
 
@@ -14,4 +15,8 @@ import java.util.List;
 public interface ScreeningTaskTargetService extends IService<ScreeningTaskTarget> {
 
     void save(String batchId, List<String> phones);
+
+    ScreeningTaskTarget updateResult(TaskCallBackDTO dto);
+
+    long countUnchecked(String batchId);
 }
