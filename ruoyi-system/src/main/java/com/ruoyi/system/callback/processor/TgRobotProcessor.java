@@ -120,10 +120,10 @@ public class TgRobotProcessor {
         //处理请求结果
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
         if (root.isSuccess()) {
-            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null, true);
             return;
         }
-        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg(), true);
     }
 
     /**
@@ -184,10 +184,10 @@ public class TgRobotProcessor {
                 } catch (Exception e) {
                 }
             }
-            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null, true);
             return;
         }
-        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg(), true);
     }
 
     /**
@@ -208,14 +208,14 @@ public class TgRobotProcessor {
                 } catch (Exception e) {
                 }
             }
-            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null, true);
             return;
         }
         else if("名字重复".equals(root.getResultMsg())){//名字重复当做成功
-            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null);
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null, true);
             return ;
         }
-        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg(), true);
     }
 
     /**
@@ -331,11 +331,11 @@ public class TgRobotProcessor {
 
         if (root.isSuccess()) {
             if (!CollectionUtils.isEmpty(dto)) {
-                SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), dto.get(0).getAccessHash());
+                SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), dto.get(0).getAccessHash(), true);
             }
             return;
         }
-        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg());
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg(), true);
 
 
     }

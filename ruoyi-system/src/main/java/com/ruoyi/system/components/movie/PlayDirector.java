@@ -200,7 +200,7 @@ public class PlayDirector implements CallBackProcessor {
 	 * @param spokesmanNickname 对应发言人昵称
 	 * @param messageSort 暂停的发言顺序
 	 */
-	private boolean doProcessBackRobot(String playId, String groupId, String spokesmanNickname, Integer messageSort){
+    public boolean doProcessBackRobot(String playId, String groupId, String spokesmanNickname, Integer messageSort){
 		String lockKey = StringUtils.format("ruoyi:wait:doProcessBackRobot:{}:{}", playId, groupId);
 		SpringUtils.getBean(RedisLock.class).waitLock(lockKey, 60);
 		try{

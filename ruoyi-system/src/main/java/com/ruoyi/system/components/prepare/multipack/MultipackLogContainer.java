@@ -5,8 +5,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.common.constant.PlayStatusConstants;
+import com.ruoyi.common.core.domain.entity.play.PlayBackRobotLog;
 import com.ruoyi.common.utils.Times;
+import com.ruoyi.system.service.IPlayBackRobotLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.InitializingBean;
@@ -43,6 +46,8 @@ public class MultipackLogContainer implements InitializingBean {
 	RedisLock redisLock;
 	@Autowired
 	PlayRobotPackLogService robotPackLogService;
+	@Autowired
+	IPlayBackRobotLogService playBackRobotLogService;
 
 	@Autowired
 	PlayMapper playMapper;
@@ -191,12 +196,35 @@ public class MultipackLogContainer implements InitializingBean {
 			CallValueStore.store(opt, null, err);
 		});
 	}
+	public void onfail(String opt, String error, boolean isRobotLevel) {
+		onfail(opt, error);
+		if(isRobotLevel){
+			DelayAcquireTools.acquire(() -> playBackRobotLogService.getOne(new LambdaQueryWrapper<PlayBackRobotLog>()
+					.eq(PlayBackRobotLog::getOpt,opt)
+					.last(" limit 1 ")
+			), data -> {
+				CallValueStore.store(opt, null, error);
+			});
+		}
+	}
 
 	public void onSucceed(String opt, String attchContent) {
 		// 根据操作码 拿到 数据
 		DelayAcquireTools.acquire(() -> robotPackLogService.getById(opt), data -> {
 			CallValueStore.store(opt, attchContent, null);
 		});
+	}
+
+	public void onSucceed(String opt, String attchContent, boolean isRobotLevel) {
+		onSucceed(opt, attchContent);
+		if(isRobotLevel){
+			DelayAcquireTools.acquire(() -> playBackRobotLogService.getOne(new LambdaQueryWrapper<PlayBackRobotLog>()
+					.eq(PlayBackRobotLog::getOpt,opt)
+					.last(" limit 1 ")
+			), data -> {
+				CallValueStore.store(opt, attchContent, null);
+			});
+		}
 	}
 
 	@Data

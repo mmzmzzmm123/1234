@@ -13,8 +13,8 @@ import java.util.Date;
 @Data
 @TableName("t_play_back_robot_log")
 public class PlayBackRobotLog {
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+    @TableId
+    private String id;
 
     /**
      * 操作码
@@ -28,7 +28,7 @@ public class PlayBackRobotLog {
     /**
      * 群ID
      */
-    private String groupId;
+    private String chatroomId;
     /**
      * 备用机器人Id
      */
@@ -45,10 +45,6 @@ public class PlayBackRobotLog {
      * 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员
      */
     private Integer op;
-    /**
-     * 处理完成 0-未完成 1-已完成
-     */
-    private String isFinish;
     /**
      * 等待某个操作码执行完成才能开始调佣
      */
