@@ -2,6 +2,12 @@ package com.ruoyi.system.components.movie;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.ruoyi.common.core.domain.entity.play.PlayBackRobot;
+import com.ruoyi.common.enums.PlayLogTyper;
+import com.ruoyi.system.service.impl.PlayBackRobotServiceImpl;
 import org.redisson.api.RLock;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
@@ -202,6 +208,42 @@ public class PlayDirector implements CallBackProcessor {
 			ServiceLoader.load(ProgressPuller.class).nextPull(playMsg, chatroomId);
 		} finally {
 			lock.unlock();
+		}
+	}
+
+
+	/**
+	 * 启用备用号
+	 * @param playId 剧本ID
+	 * @param groupId 群ID
+	 * @param spokesmanNickname 对应发言人昵称
+	 * @param messageSort 暂停的发言顺序
+	 */
+	private void doProcessBackRobot(String playId, String groupId, String spokesmanNickname, Integer messageSort){
+		String lockKey = StringUtils.format("ruoyi:wait:doProcessBackRobot:{}:{}", playId, groupId);
+		SpringUtils.getBean(RedisLock.class).waitLock(lockKey, 60);
+		try{
+			LambdaQueryWrapper<PlayBackRobot> queryWrapper = new QueryWrapper<PlayBackRobot>().lambda()
+					.eq(PlayBackRobot::getPlayId, playId)
+					.eq(PlayBackRobot::getGroupId, groupId)
+					.eq(PlayBackRobot::getIsFinish, -1)
+					.last(" limit 1 ");
+			final PlayBackRobotServiceImpl playBackRobotService = SpringUtils.getBean(PlayBackRobotServiceImpl.class);
+			final PlayBackRobot playBackRobot = playBackRobotService.getOne(queryWrapper);
+			if(playBackRobot == null){
+				PlayExecutionLogService.savePackLog(PlayLogTyper.Robot_Pre_Alloc, playId, groupId, "没有可以分配的备用号", 1);
+				throw new ServiceException("没有可以分配的备用号");
+			}
+			playBackRobot.setIsFinish(0);
+			playBackRobot.setMessageSort(messageSort);
+			playBackRobot.setSpokesmanNickname(spokesmanNickname);
+			playBackRobotService.updateById(playBackRobot);
+			PlayExecutionLogService.savePackLog(PlayLogTyper.Robot_Pre_Alloc, playId, groupId, playBackRobot.getRobotId(),StringUtils.format("【备用号出库】 群{} 号{}，对应发言人：{}",groupId,playBackRobot.getRobotId(),spokesmanNickname), null);
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		} finally {
+			SpringUtils.getBean(RedisLock.class).unWaitLock(lockKey);
 		}
 	}
 

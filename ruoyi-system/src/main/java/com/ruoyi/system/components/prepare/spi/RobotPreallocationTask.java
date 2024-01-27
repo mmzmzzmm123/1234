@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import com.ruoyi.common.core.domain.entity.play.PlayBackRobot;
+import com.ruoyi.system.mapper.PlayBackRobotMapper;
+import com.ruoyi.system.service.impl.PlayBackRobotServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -107,16 +111,33 @@ public class RobotPreallocationTask implements TaskExecution {
 			List<String> excutionList = ListTools.extract(details, f -> f.getRobotId());
 			// 要排除的 正式 号
 			source.removeAll(excutionList);
-			LinkedList<String> lk = new LinkedList<>(source);
-			for (PlayMessagePushDetail detail : details) {
-				// 每个 号 带 bi 个备用水军
-				List<String> ids = take(lk, bi);
-				if (CollectionUtils.isEmpty(ids)) {
-					break;
-				}
-				detail.setSpareRobot(StringUtils.join(ids, ","));
-				log.info("预分配设置备用号 {}", detail);
+			if (!CollectionUtils.isEmpty(source)) {
+				List<PlayBackRobot> playBackRobotList = new ArrayList<>();
+				source.forEach(it -> {
+					if(playBackRobotList.size() >= bi * details.size()){
+						return;
+					}
+					PlayBackRobot playBackRobot = PlayBackRobot.builder()
+							.playId(context.getPlay().getId())
+							.groupId(context.getChatroomId())
+							.robotId(it)
+							.isFinish(-1)
+							.build();
+					playBackRobotList.add(playBackRobot);
+				});
+				SpringUtils.getBean(PlayBackRobotServiceImpl.class).saveBatch(playBackRobotList);
+				log.info("预分配设置备用号池 {}", playBackRobotList);
 			}
+//			LinkedList<String> lk = new LinkedList<>(source);
+//			for (PlayMessagePushDetail detail : details) {
+//				// 每个 号 带 bi 个备用水军
+//				List<String> ids = take(lk, bi);
+//				if (CollectionUtils.isEmpty(ids)) {
+//					break;
+//				}
+//				detail.setSpareRobot(StringUtils.join(ids, ","));
+//				log.info("预分配设置备用号 {}", detail);
+//			}
 		}
 		// 批量更新
 		SpringUtils.getBean(PlayMessagePushDetailService.class).updateBatchById(details);

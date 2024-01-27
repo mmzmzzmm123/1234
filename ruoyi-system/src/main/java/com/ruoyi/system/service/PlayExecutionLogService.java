@@ -149,11 +149,19 @@ public interface PlayExecutionLogService {
 	}
 
 	public static void savePackLog(PlayLogTyper playLogTyper, String playId, String content, Integer state) {
+		savePackLog(playLogTyper,playId,null,content,state);
+	}
+	public static void savePackLog(PlayLogTyper playLogTyper, String playId, String groupId, String content, Integer state) {
+		savePackLog(playLogTyper,playId,groupId,null, content,state);
+	}
+	public static void savePackLog(PlayLogTyper playLogTyper, String playId, String groupId, String robotId, String content, Integer state) {
 		PlayExecutionLog log = new PlayExecutionLog();
 		log.setPlayId(playId);
 		if (state != null) {
 			log.setState(state);
 		}
+		log.setGroupId(groupId);
+		log.setRobotId(robotId);
 		log.setType(playLogTyper);
 		log.setContent(content);
 		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);

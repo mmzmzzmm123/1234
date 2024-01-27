@@ -71,10 +71,10 @@ public class ManualPackingTask implements TaskExecution {
 			}
 			List<String> robotList = new ArrayList<>();
 			robotList.add(detail.getRobotId());
-			// 备用号 也要 设置人设
-			if (!StringUtils.isEmpty(detail.getSpareRobot())) {
-				robotList.addAll(Arrays.asList(StringUtils.split(detail.getSpareRobot(), ",")));
-			}
+//			// 备用号 也要 设置人设 (暂时屏蔽)
+//			if (!StringUtils.isEmpty(detail.getSpareRobot())) {
+//				robotList.addAll(Arrays.asList(StringUtils.split(detail.getSpareRobot(), ",")));
+//			}
 			// 每个机器人都要请求人设
 			for (String robot : robotList) {
 				// 请求 设置 机器人头像 ，昵称等
