@@ -52,7 +52,7 @@ public class RobotController {
         int current = 1;
         do {
             dto.setPage(current);
-            dto.setLimit(1000);
+            dto.setLimit(10000);
             R<Page<SelectRobotListVO>> result = robotService.selectRobotPageList(dto);
             page = result.getData();
             records.addAll(page.getRecords());
