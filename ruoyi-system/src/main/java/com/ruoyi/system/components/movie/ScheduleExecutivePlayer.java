@@ -14,7 +14,7 @@ public class ScheduleExecutivePlayer extends AbstractPlayer {
 			// 遍历群， 发送第一条消息
 			GlobalIndexContext.setIndex(chatroomId, book.getPlay().getId(), 1);
 			// 发送 消息
-			sendOne(chatroomId, 1);
+			sendOne(chatroomId, 1, null);
 		}
 	}
 

@@ -22,4 +22,6 @@ public class ThirdTgSendGroupMessageInputDTO {
 
     private String extendInfo;
 
+    private String firstOptSerialNo;
+
 }

@@ -16,6 +16,6 @@ public interface Player {
 	 * @param messageWapper
 	 * @param currentIndex  从1开始
 	 */
-	void sendOne(String chatroom, int currentIndex);
+	void sendOne(String chatroom, int currentIndex, String firstOptSerialNo);
 
 }

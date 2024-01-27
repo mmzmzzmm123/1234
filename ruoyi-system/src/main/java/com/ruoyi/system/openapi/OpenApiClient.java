@@ -6,10 +6,11 @@ import com.alibaba.fastjson2.JSONObject;
 import com.alibaba.fastjson2.TypeReference;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.exception.GlobalException;
-import com.ruoyi.system.openapi.model.output.*;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.openapi.model.input.*;
+import com.ruoyi.system.openapi.model.output.*;
+import com.ruoyi.system.service.business.RetryService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang3.StringUtils;
@@ -41,10 +42,17 @@ public class OpenApiClient {
         String jsonBody = JSON.toJSONString(body);
         try {
             log.info("调用openapi相关接口 {} {} {} {} {}", traceId, requestUrl, jsonBody, token, api.name());
-            HttpRequest request = HttpUtil.createPost(requestUrl).header("Authorization", "Bearer " + token).body(jsonBody, ContentType.JSON.toString());
+            HttpRequest request = HttpUtil.createPost(requestUrl)
+                    .header("Authorization", "Bearer " + token)
+                    .body(jsonBody, ContentType.JSON.toString());
             HttpResponse execute = request.execute();
             response = execute.body();
             log.info("调用openapi相关接口获得响应 {} {}", traceId, response);
+
+            if (OpenApiEnum.THIRD_KP_TG_SEND_GROUP_MESSAGE.equals(api)) {
+                SpringUtils.getBean(RetryService.class).saveRetrySendMessageLog(body, response);
+            }
+
         } catch (HttpException e) {
             log.info("调用openapi相关接口发生异常 {} {}", traceId, e.getMessage(), e);
             return OpenApiResult.failed("系统繁忙,请稍后重试" + traceId);

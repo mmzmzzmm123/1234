@@ -20,14 +20,12 @@ public class PlayInfoTools {
 	public static boolean failStoped(String playId) {
 		int playErrType = SpringUtils.getBean(PlayMapper.class).selectById(playId).convertSendMechanismStr()
 				.getSendErrorType();
-		boolean failStoped = (playErrType == 2) ? true : false;
-		return failStoped;
+        return playErrType == 2;
 	}
 
 	public static boolean failStoped(Play play) {
 		int playErrType = play.convertSendMechanismStr().getSendErrorType();
-		boolean failStoped = (playErrType == 2) ? true : false;
-		return failStoped;
+        return playErrType == 2;
 	}
 
 }

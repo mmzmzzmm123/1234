@@ -11,10 +11,10 @@ import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.movie.spi.impl.DefaultPlayRunner;
 import com.ruoyi.system.components.spi.RobotInfoQuery;
-import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotInfoListVO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
 import java.util.Date;
 import java.util.List;
 
@@ -110,4 +110,8 @@ public interface PlayMessagePushDetailMapper extends BaseMapper<PlayMessagePushD
 		DefaultPlayRunner.info("PlayMessagePushDetail_updateSending {}", update);
 
 	}
+
+    List<PlayMessagePushDetail> selectOldRobotMessage(@Param("playId") String playId,
+													  @Param("nickName") String spokesmanNickname,
+													  @Param("groupId") String groupId);
 }

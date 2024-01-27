@@ -1,7 +1,5 @@
 package com.ruoyi.system.components.movie;
 
-import java.util.Date;
-import org.springframework.util.StringUtils;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetailTrack;
@@ -14,6 +12,9 @@ import com.ruoyi.system.components.movie.spi.ProgressPuller;
 import com.ruoyi.system.components.movie.spi.RobotSpeakAllocator;
 import com.ruoyi.system.mapper.PlayMessagePushDetailTrackMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
+
+import java.util.Date;
 
 @Slf4j
 public abstract class AbstractPlayer implements Player {
@@ -31,7 +32,7 @@ public abstract class AbstractPlayer implements Player {
 	}
 
 	@SuppressWarnings("deprecation")
-	public void sendOne(String chatroomId, int currentIndex) {
+	public void sendOne(String chatroomId, int currentIndex, String firstOptSerialNo) {
 		log.info("sendOne {} {} {}", chatroomId, currentIndex, book.getPlay());
 		if (currentIndex > book.getMessageList().size()) {
 			// 已经结束
@@ -58,7 +59,7 @@ public abstract class AbstractPlayer implements Player {
 		// 发送消息
 		try {
 			if (!StringUtils.isEmpty(robotId)) {
-				R<String> ret = messageSupport.sendChatroomMessage(chatroomId, robotId, playMessage, currentIndex);
+				R<String> ret = messageSupport.sendChatroomMessage(chatroomId, robotId, playMessage, currentIndex, firstOptSerialNo);
 				if (StringUtils.isEmpty(ret.getData())) {
 					playRunner.onItemFailure(ret.getData(), playId, ret.getMsg(), chatroomId, robotId, currentIndex,
 							null);

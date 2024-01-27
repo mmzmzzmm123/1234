@@ -18,4 +18,6 @@ public interface PlayMessagePushDetailService extends IService<PlayMessagePushDe
     List<PlayMessagePushDetail> listByPlayIdStatistics(String playId);
 
 
+    List<PlayMessagePushDetail> selectOldRobotMessage(String playId, String spokesmanNickname, String groupId);
+
 }

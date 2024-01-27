@@ -23,4 +23,9 @@ public class PlayMessagePushDetailServiceImpl extends ServiceImpl<PlayMessagePus
 		}
 		return baseMapper.listByPlayIdStatistics(playId);
 	}
+
+	@Override
+	public List<PlayMessagePushDetail> selectOldRobotMessage(String playId, String spokesmanNickname, String groupId) {
+		return baseMapper.selectOldRobotMessage(playId, spokesmanNickname, groupId);
+	}
 }

@@ -1,10 +1,11 @@
 package com.ruoyi.common.utils;
 
+import org.springframework.util.StringUtils;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import org.springframework.util.StringUtils;
 
 public class DelayAcquireTools {
 	@SuppressWarnings({ "unchecked", "rawtypes" })

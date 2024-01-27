@@ -12,6 +12,6 @@ public interface MessageSupport {
 	 * @param robotId
 	 * @return
 	 */
-	R<String> sendChatroomMessage(String chatroomId, String robotId, PlayMessage message, int msgSort);
+	R<String> sendChatroomMessage(String chatroomId, String robotId, PlayMessage message, int msgSort, String firstOptSerialNo);
 
 }

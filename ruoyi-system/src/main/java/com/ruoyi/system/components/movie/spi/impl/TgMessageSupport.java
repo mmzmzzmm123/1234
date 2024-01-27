@@ -1,7 +1,5 @@
 package com.ruoyi.system.components.movie.spi.impl;
 
-import java.util.List;
-import org.springframework.util.CollectionUtils;
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.ContentJson;
@@ -21,9 +19,11 @@ import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.ThirdTgMessageDTO;
 import com.ruoyi.system.openapi.model.input.ThirdTgSendGroupMessageInputDTO;
-import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotInfoListVO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 @SPI("TgMessageSupport")
 @Slf4j
@@ -137,13 +137,14 @@ public class TgMessageSupport implements MessageSupport {
 	}
 
 	@Override
-	public R<String> sendChatroomMessage(String chatroomId, String robotId, PlayMessage message, int msgSort) {
+	public R<String> sendChatroomMessage(String chatroomId, String robotId, PlayMessage message, int msgSort, String firstOprSerialNo) {
 		ThirdTgSendGroupMessageInputDTO data = new ThirdTgSendGroupMessageInputDTO();
 		final String groupId = SpringUtils.getBean(GroupInfoMapper.class).selectById(chatroomId).getGroupSerialNo();
 		data.setChatroomSerialNo(groupId);
 		data.setTgRobotId(robotId);
 		data.setMessageData(createMsgData(message, chatroomId, msgSort));
 		data.setExtendInfo("{\"level\":0}");
+		data.setFirstOptSerialNo(firstOprSerialNo);
 		@SuppressWarnings("rawtypes")
 		OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.sendGroupMessageByThirdKpTg(data);
 		log.info("sendGroupMessageByThirdKpTg {} {}", data, ret);
