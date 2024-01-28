@@ -2,17 +2,16 @@ package com.ruoyi.system.job;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.constant.PlayConstants;
 import com.ruoyi.common.core.domain.entity.play.PlayBackRobot;
 import com.ruoyi.common.core.domain.entity.play.PlayBackRobotLog;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPack;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
 import com.ruoyi.common.core.redis.RedisLock;
-import com.ruoyi.common.enums.PlayLogTyper;
-import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.common.utils.*;
+import com.ruoyi.common.utils.Ids;
+import com.ruoyi.common.utils.MD5Utils;
 import com.ruoyi.common.utils.Objects;
+import com.ruoyi.common.utils.Times;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
@@ -23,7 +22,6 @@ import com.ruoyi.system.service.IPlayBackRobotLogService;
 import com.ruoyi.system.service.IPlayBackRobotService;
 import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.PlayExecutionLogService;
-import com.ruoyi.system.service.impl.PlayBackRobotServiceImpl;
 import com.ruoyi.system.service.impl.PlayRobotPackService;
 import com.ruoyi.system.service.impl.SysConfigServiceImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +31,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static com.ruoyi.common.utils.Objects.wrapNull;
@@ -65,7 +66,7 @@ public class BackRobotJobService {
         try {
             final List<PlayBackRobot> playBackRobotList = playBackRobotService.list(new LambdaQueryWrapper<PlayBackRobot>()
                     .eq(PlayBackRobot::getIsFinish, 0)
-                    .gt(PlayBackRobot::getCreateTime, Times.getDay(new Date(), 3)));
+                    .gt(PlayBackRobot::getCreateTime, Times.getDay(new Date(), -3)));
             log.info("doBackRobotJob:{}", playBackRobotList.size());
             playBackRobotList.forEach(robot -> {
                 final List<PlayBackRobotLog> playBackRobotLogList = playBackRobotLogService.list(new LambdaQueryWrapper<PlayBackRobotLog>()
@@ -241,7 +242,7 @@ public class BackRobotJobService {
         int timeOut = 60;//1分钟算超时
         final List<PlayBackRobotLog> playBackRobotLogList = playBackRobotLogService.list(new LambdaQueryWrapper<PlayBackRobotLog>()
                 .eq(PlayBackRobotLog::getStatus, 0)
-                .gt(PlayBackRobotLog::getCreateTime, Times.getDay(new Date(), 3)));
+                .gt(PlayBackRobotLog::getCreateTime, Times.getDay(new Date(), -3)));
         if(CollectionUtils.isEmpty(playBackRobotLogList)){
             log.info("doBackRobotStateJob:没有需要包装的备用号");
             return;
