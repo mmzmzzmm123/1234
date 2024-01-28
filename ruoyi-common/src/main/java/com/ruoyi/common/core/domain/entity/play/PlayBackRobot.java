@@ -40,7 +40,7 @@ public class PlayBackRobot implements Serializable {
      */
     private Integer messageSort;
     /**
-     * 是否包装完成 -1未包装,0包装中,1已包装,2包装失败
+     * 是否包装完成 -1未包装,0包装中,1已包装,2包装失败,3已使用;
      */
     private Integer isFinish;
     /**

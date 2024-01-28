@@ -173,6 +173,8 @@ public class RetryService {
         }
 
         for (PlayBackRobot playBackRobot : playBackRobots) {
+            playBackRobot.setIsFinish(3);
+            playBackRobotService.updateById(playBackRobot);
 
             // 恢复剧本的发送
             String playId = playBackRobot.getPlayId();
