@@ -26,7 +26,6 @@ import com.ruoyi.system.service.impl.SysConfigServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
-import org.springframework.beans.BeansException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -155,7 +154,7 @@ public class BackRobotJobService {
                 BeanUtils.copyProperties(ret, playBackRobotLog);
                 playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+ret.getOp().toString(),"utf-8"));
                 b = playBackRobotLogService.saveOrUpdate(playBackRobotLog);
-            } catch (BeansException e) {
+            } catch (Exception e) {
                 log.error("设置头像发生异常 {}", e.getMessage(), e);
             }
 
