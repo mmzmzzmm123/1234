@@ -8,6 +8,7 @@ import com.ruoyi.common.core.domain.entity.play.PlayBackRobotLog;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPack;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
 import com.ruoyi.common.core.redis.RedisLock;
+import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.MD5Utils;
 import com.ruoyi.common.utils.Times;
@@ -87,10 +88,12 @@ public class BackRobotJobService {
                     if(playBackRobotLogList.size() == successCount){
                         robot.setIsFinish(1);
                         playBackRobotService.updateById(robot);
+                        PlayExecutionLogService.savePackLog(PlayLogTyper.Robot_Settings, robot.getPlayId(),robot.getGroupId(),robot.getRobotId(), com.ruoyi.common.utils.StringUtils.format("群{}-备用机器人{} 备用号人设包装已完成"), null);
                     }
                     if(failCount > 0){
                         robot.setIsFinish(2);
                         playBackRobotService.updateById(robot);
+                        PlayExecutionLogService.savePackLog(PlayLogTyper.Robot_Settings, robot.getPlayId(),robot.getGroupId(),robot.getRobotId(), com.ruoyi.common.utils.StringUtils.format("群{}-备用机器人{} 备用号人设包装失败，准备换号继续"), 1);
                         //启动新备用机器人
                         PlayDirector.tgInstance().doProcessBackRobot(robot.getPlayId(),robot.getGroupId(),robot.getSpokesmanNickname(),robot.getMessageSort());
                     }
