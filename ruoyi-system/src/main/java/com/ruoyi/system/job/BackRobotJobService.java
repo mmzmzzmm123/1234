@@ -149,11 +149,12 @@ public class BackRobotJobService {
                 PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getOpt(),
                         "头像", true);
             }
+            log.info("备用号-同步设置头像-orgin {} " , ret);
             BeanUtils.copyProperties(ret, playBackRobotLog);
             playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+ret.getOp().toString(),"utf-8"));
-            playBackRobotLogService.saveOrUpdate(playBackRobotLog);
+            final boolean b = playBackRobotLogService.saveOrUpdate(playBackRobotLog);
 
-            log.info("同步设置头像 {} " , ret);
+            log.info("备用号-同步设置头像 {}, {} " , playBackRobotLog, b);
         }
 
         // 设置 昵称
@@ -167,17 +168,18 @@ public class BackRobotJobService {
                 PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getOpt(),
                         "姓名", true);
             }
+            log.info("备用号-同步设置昵称-orgin {} " , ret);
             BeanUtils.copyProperties(ret, playBackRobotLog);
             playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+ret.getOp().toString(),"utf-8"));
-            playBackRobotLogService.saveOrUpdate(playBackRobotLog);
+            final boolean b = playBackRobotLogService.saveOrUpdate(playBackRobotLog);
 
-            log.info("同步设置昵称 {} " , ret);
+            log.info("备用号-同步设置昵称 {} ,{}" , playBackRobotLog, b);
         }
 
         // 同步设置 管理员
         if (robotPck.getIsAdmin() != null && robotPck.getIsAdmin().intValue() == 1) {
             PlayBackRobotLog playBackRobotLog = new PlayBackRobotLog();
-            log.info("设置管理员 {} " , JSON.toJSONString(robotPck));
+            log.info("备用号-设置管理员 {} " , JSON.toJSONString(robotPck));
             ISysConfigService sysConfigService = SpringUtils.getBean(SysConfigServiceImpl.class);
             final String botAdminPara = sysConfigService.selectConfigByKey("setBotAdmin:para");
             if("0".equals(botAdminPara)) {
@@ -197,22 +199,23 @@ public class BackRobotJobService {
                 BeanUtils.copyProperties(ret, playBackRobotLog);
                 playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+ret.getOp().toString(),"utf-8"));
                 playBackRobotLogService.saveOrUpdate(playBackRobotLog);
-                log.info("同步设置管理员 {} ", ret);
+                log.info("备用号-同步设置管理员 {} ", ret);
             }
             else{
                 //走开平的逻辑
-                log.info("走开平的逻辑 {} " , JSON.toJSONString(robotPck));
+                log.info("备用号-走开平的逻辑 {} " , JSON.toJSONString(robotPck));
                 final PlayRobotPackLog ret = tgGroupHashSettings.set(param);
                 if (StringUtils.isEmpty(ret.getOpt())) {
                     PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), ret.getErrMsg(), null, "管理员（获取hash值）", true);
                 } else {
                     PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getOpt(), "管理员（获取hash值）", true);
                 }
+                log.info("备用号-同步设置管理员(获取hash值)-orgin {} " , ret);
                 final String opt = ret.wrapOpt().getOpt();
                 BeanUtils.copyProperties(ret, playBackRobotLog);
                 playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+ret.getOp().toString(),"utf-8"));
-                playBackRobotLogService.saveOrUpdate(playBackRobotLog);
-                log.info("同步设置管理员(获取hash值) {} ", ret);
+                final boolean b = playBackRobotLogService.saveOrUpdate(playBackRobotLog);
+                log.info("备用号-同步设置管理员(获取hash值) {},{} ", ret,b);
 
                 if (!StringUtils.isEmpty(ret.getOpt())) {
                     // 请求成功后，插入一条 后置 请求
