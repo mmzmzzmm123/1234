@@ -187,9 +187,8 @@ public class RetryService {
                     .peek(it -> it.setRobotId(playBackRobot.getRobotId()))
                     .collect(Collectors.toList());
 
-
+            log.info("更新发送详情中的发言人信息 {}", playMessagePushDetails);
             playMessagePushDetailService.updateBatchById(playMessagePushDetails, 1000);
-
             PlayMessage playMessage = playMessageMapper.getBySort(playBackRobot.getMessageSort(), playId);
             ServiceLoader.load(ProgressPuller.class).continuePull(playMessage, groupId, null);
 

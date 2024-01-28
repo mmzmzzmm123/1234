@@ -49,7 +49,6 @@ public interface PlayMessagePushDetailMapper extends BaseMapper<PlayMessagePushD
 		}
 		update.setPushFailReason(Strings.subMax(err, 900));
 		if (!StringUtils.isEmpty(robotId)) {
-			update.setRobotId(robotId);
 			RobotInfoQuery robotInfoQuery = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery");
 			List<Robot> info = robotInfoQuery.listById(ListTools.newArrayList(robotId));
 			if (!CollectionUtils.isEmpty(info)) {
@@ -72,7 +71,6 @@ public interface PlayMessagePushDetailMapper extends BaseMapper<PlayMessagePushD
 			update.setOptSerialNo(opt);
 		}
 		if (!StringUtils.isEmpty(robotId)) {
-			update.setRobotId(robotId);
 			RobotInfoQuery robotInfoQuery = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery");
 			List<Robot> info = robotInfoQuery.listById(ListTools.newArrayList(robotId));
 			if (!CollectionUtils.isEmpty(info)) {
@@ -96,7 +94,6 @@ public interface PlayMessagePushDetailMapper extends BaseMapper<PlayMessagePushD
 			update.setOptSerialNo(opt);
 		}
 		if (!StringUtils.isEmpty(robotId)) {
-			update.setRobotId(robotId);
 			RobotInfoQuery robotInfoQuery = ServiceLoader.load(RobotInfoQuery.class, "TgRobotInfoQuery");
 			List<Robot> info = robotInfoQuery.listById(ListTools.newArrayList(robotId));
 			if (!CollectionUtils.isEmpty(info)) {
