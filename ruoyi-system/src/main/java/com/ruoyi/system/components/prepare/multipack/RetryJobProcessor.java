@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
 @SPI("RetryJobProcessor")
 public class RetryJobProcessor implements LogJobProcessor {
 
-	private static final int MaxRetryCount = 10;
+	private static final int MaxRetryCount = 4;
 
 	/**
 	 * 4分钟
