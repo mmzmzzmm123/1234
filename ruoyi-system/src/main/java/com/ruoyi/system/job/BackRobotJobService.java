@@ -10,7 +10,6 @@ import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
 import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.MD5Utils;
-import com.ruoyi.common.utils.Objects;
 import com.ruoyi.common.utils.Times;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.spi.ServiceLoader;
@@ -27,6 +26,7 @@ import com.ruoyi.system.service.impl.SysConfigServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.api.RLock;
+import org.springframework.beans.BeansException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -150,9 +150,14 @@ public class BackRobotJobService {
                         "头像", true);
             }
             log.info("备用号-同步设置头像-orgin {} " , ret);
-            BeanUtils.copyProperties(ret, playBackRobotLog);
-            playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+ret.getOp().toString(),"utf-8"));
-            final boolean b = playBackRobotLogService.saveOrUpdate(playBackRobotLog);
+            boolean b = false;
+            try {
+                BeanUtils.copyProperties(ret, playBackRobotLog);
+                playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+ret.getOp().toString(),"utf-8"));
+                b = playBackRobotLogService.saveOrUpdate(playBackRobotLog);
+            } catch (BeansException e) {
+                log.error("设置头像发生异常 {}", e.getMessage(), e);
+            }
 
             log.info("备用号-同步设置头像 {}, {} " , playBackRobotLog, b);
         }
@@ -283,7 +288,7 @@ public class BackRobotJobService {
                         // 备用号
                         param.put(Settings.Key_Backup_Flag, true);
                         // hash 值
-                        param.put(Settings.Key_AttachContent, Objects.wrapNull(data.getAttchContent(), ""));
+                        param.put(Settings.Key_AttachContent, wrapNull(data.getAttchContent(), ""));
                         // 请求 设置管理员
                         PlayRobotPackLog retAdmin = settings.set(param);
                         waitData.setStatus(retAdmin.getStatus());
