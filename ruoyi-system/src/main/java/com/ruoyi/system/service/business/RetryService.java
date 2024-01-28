@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.TypeReference;
 import com.ruoyi.common.core.domain.entity.play.PlayBackRobot;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
+import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.movie.PlayDirector;
@@ -58,12 +59,16 @@ public class RetryService {
 
         // 更新错误次数
         String firstRequestId = requestLog.getLastTimeRequestId();
-        OpenApiRequestLog firstLog = this.incErrorTimes(firstRequestId);
+        OpenApiRequestLog firstLog = null;
+        if (StringUtils.isNotBlank(firstRequestId)) {
+            firstLog = this.incErrorTimes(firstRequestId);
+        }
+
 
         // 是否达到阈值
         String retryTimes = SpringUtils.getBean(SysConfigServiceImpl.class).selectConfigByKey("message-retry-times");
         Integer times = Optional.ofNullable(retryTimes).map(Integer::parseInt).orElse(10);
-        if (firstLog.getRequestTimes() >= times) {
+        if (firstLog != null && firstLog.getRequestTimes() >= times) {
             // 已经达到阈值无需重试
             log.info("重试达到次数不再继续重试 {} {} {}", entry, optSerialNo, errMsg);
             return false;
