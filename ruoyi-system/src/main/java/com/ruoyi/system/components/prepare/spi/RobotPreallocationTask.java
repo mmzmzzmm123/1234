@@ -1,21 +1,10 @@
 package com.ruoyi.system.components.prepare.spi;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import com.ruoyi.common.core.domain.entity.play.PlayBackRobot;
-import com.ruoyi.system.mapper.PlayBackRobotMapper;
-import com.ruoyi.system.service.impl.PlayBackRobotServiceImpl;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.util.CollectionUtils;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.dto.play.PlayExt;
 import com.ruoyi.common.core.domain.entity.VibeRule;
+import com.ruoyi.common.core.domain.entity.play.PlayBackRobot;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
 import com.ruoyi.common.core.domain.entity.robot.Robot;
@@ -30,10 +19,13 @@ import com.ruoyi.system.components.spi.RobotInfoQuery;
 import com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation;
 import com.ruoyi.system.mapper.PlayRobotGroupRelationMapper;
 import com.ruoyi.system.mapper.VibeRuleMapper;
-import com.ruoyi.system.openapi.model.output.ExtTgSelectRobotInfoListVO;
 import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.PlayMessagePushDetailService;
+import com.ruoyi.system.service.impl.PlayBackRobotServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
+
+import java.util.*;
 
 /**
  * 机器人预分配
