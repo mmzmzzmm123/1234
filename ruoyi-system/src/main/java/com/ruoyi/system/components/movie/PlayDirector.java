@@ -194,7 +194,7 @@ public class PlayDirector implements CallBackProcessor {
 
 
 	/**
-	 * 启用备用号
+	 * 启用备用号，走新的包装流程
 	 * @param playId 剧本ID
 	 * @param groupId 群ID
 	 * @param spokesmanNickname 对应发言人昵称
@@ -227,5 +227,41 @@ public class PlayDirector implements CallBackProcessor {
 			SpringUtils.getBean(RedisLock.class).unWaitLock(lockKey);
 		}
 	}
+
+    /**
+     * 直接获取备用号，并且不走新的备用号包装流程
+     * @param playId
+     * @param groupId
+     * @param spokesmanNickname
+     * @param messageSort
+     * @return
+     */
+    public PlayBackRobot getProcessBackRobot(String playId, String groupId, String spokesmanNickname, Integer messageSort){
+        String lockKey = StringUtils.format("ruoyi:wait:doProcessBackRobot:{}:{}", playId, groupId);
+        SpringUtils.getBean(RedisLock.class).waitLock(lockKey, 60);
+        try{
+            LambdaQueryWrapper<PlayBackRobot> queryWrapper = new QueryWrapper<PlayBackRobot>().lambda()
+                    .eq(PlayBackRobot::getPlayId, playId)
+                    .eq(PlayBackRobot::getGroupId, groupId)
+                    .eq(PlayBackRobot::getIsFinish, -1)
+                    .last(" limit 1 ");
+            final PlayBackRobotServiceImpl playBackRobotService = SpringUtils.getBean(PlayBackRobotServiceImpl.class);
+            final PlayBackRobot playBackRobot = playBackRobotService.getOne(queryWrapper);
+            if(playBackRobot == null){
+                PlayExecutionLogService.savePackLog(PlayLogTyper.Robot_Pre_Alloc, playId, groupId, "没有可以分配的备用号", 1);
+                throw new ServiceException("没有可以分配的备用号");
+            }
+            playBackRobot.setIsFinish(3);
+            playBackRobot.setMessageSort(messageSort);
+            playBackRobot.setSpokesmanNickname(spokesmanNickname);
+            playBackRobotService.updateById(playBackRobot);
+            PlayExecutionLogService.savePackLog(PlayLogTyper.Robot_Pre_Alloc, playId, groupId, playBackRobot.getRobotId(),StringUtils.format("【备用号出库】 群{} 号{}，对应发言人：{}",groupId,playBackRobot.getRobotId(),spokesmanNickname), null);
+            return playBackRobot;
+        } catch (Exception e){
+            return null;
+        } finally {
+            SpringUtils.getBean(RedisLock.class).unWaitLock(lockKey);
+        }
+    }
 
 }
