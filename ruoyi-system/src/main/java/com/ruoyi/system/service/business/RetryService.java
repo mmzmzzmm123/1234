@@ -11,6 +11,7 @@ import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.components.RedisTemplateTools;
 import com.ruoyi.system.components.movie.PlayDirector;
 import com.ruoyi.system.components.movie.SendMsgOptTempRedis;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
@@ -186,6 +187,10 @@ public class RetryService {
             playMessagePushDetails = CollectionUtils.emptyIfNull(playMessagePushDetails).stream()
                     .peek(it -> it.setRobotId(playBackRobot.getRobotId()))
                     .collect(Collectors.toList());
+
+            RedisTemplateTools.get().opsForHash().put(
+                    "ruoyiadmin:firegroup:DefaultRobotSpeakAllocator:" + playId + ":" + groupId, playBackRobot.getSpokesmanNickname(), playBackRobot.getRobotId());
+
 
             log.info("更新发送详情中的发言人信息 {}", playMessagePushDetails);
             playMessagePushDetailService.updateBatchById(playMessagePushDetails, 1000);
