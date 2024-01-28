@@ -122,7 +122,7 @@ public class BackRobotJobService {
         Map<String, Object> param = new HashMap<>();
         param.put(Settings.Key_PlayId, robot.getPlayId());
         // 机器人id
-        param.put(Settings.Key_RobotId, robot);
+        param.put(Settings.Key_RobotId, robot.getRobotId());
         // 群id
         param.put(Settings.Key_GroupId, robot.getGroupId());
         // 姓名
