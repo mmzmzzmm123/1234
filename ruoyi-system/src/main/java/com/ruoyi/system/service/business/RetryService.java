@@ -62,6 +62,8 @@ public class RetryService {
         OpenApiRequestLog firstLog = null;
         if (StringUtils.isNotBlank(firstRequestId)) {
             firstLog = this.incErrorTimes(firstRequestId);
+        } else {
+            firstRequestId = optSerialNo;
         }
 
 
