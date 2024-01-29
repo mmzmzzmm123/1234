@@ -123,6 +123,7 @@ public class PlayDirector implements CallBackProcessor {
             this.pause(entry.playId, entry.getChatroomId());
             return;
         }
+        log.info("失败进入发送下一条消息流程 {} {} {}", entry, opt, errMsg);
 
         // 备用号 都用完了 , 直接失败
         playRunner.onItemFailure(opt, entry.getPlayId(), errMsg, entry.getChatroomId(), entry.getRobotId(),
@@ -223,7 +224,7 @@ public class PlayDirector implements CallBackProcessor {
                     .eq(PlayBackRobot::getPlayId,playId)
                     .eq(PlayBackRobot::getGroupId,groupId)
                     .eq(PlayBackRobot::getSpokesmanNickname,spokesmanNickname)
-                    .in(PlayBackRobot::getIsFinish,0,1,3);
+                    .in(PlayBackRobot::getIsFinish,0,1);
             final List<PlayBackRobot> playBackRobotList = playBackRobotService.list(queryWrapperIng);
             if(!playBackRobotList.isEmpty()){
                 return playBackRobotList.get(0);

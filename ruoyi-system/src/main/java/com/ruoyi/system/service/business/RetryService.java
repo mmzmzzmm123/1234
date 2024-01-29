@@ -80,6 +80,10 @@ public class RetryService {
         String retryTimes = SpringUtils.getBean(SysConfigServiceImpl.class).selectConfigByKey("message-retry-times");
         Integer times = Optional.ofNullable(retryTimes).map(Integer::parseInt).orElse(10);
         if (firstLog != null && firstLog.getRequestTimes() >= times) {
+
+            // 把数据库的数据更新为待发送
+            this.updatePushStateDetail(entry);
+
             // 已经达到阈值无需重试
             log.info("重试达到次数不再继续重试 {} {} {}", entry, optSerialNo, errMsg);
             return false;
@@ -93,6 +97,21 @@ public class RetryService {
         ServiceLoader.load(ProgressPuller.class).continuePull(playMessage, chatroomId, firstRequestId);
         log.info("推送至重试延时队列进行处理 {} {} {}", entry, optSerialNo, errMsg);
         return true;
+    }
+
+    private void updatePushStateDetail(SendMsgOptTempRedis.SendMsgOptTempEntry entry) {
+        PlayMessagePushDetail playMessagePushDetail =
+                this.playMessagePushDetailService.selectRobotMessage(entry.getPlayId(),
+                        entry.getRobotNickName(),
+                        entry.getChatroomId(),
+                        entry.getMsgSort());
+
+        // 存在则更新
+        Optional.ofNullable(playMessagePushDetail).map(it -> {
+            it.setSendState(0);
+            return it;
+        }).ifPresent(playMessagePushDetailService::updateById);
+        log.info("将发送失败消息状态改为已发送 {}", entry);
     }
 
     /**

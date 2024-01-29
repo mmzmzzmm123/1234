@@ -49,4 +49,36 @@
           and tpmpd.spokesman_nickname = #{nickName}
 
     </select>
+
+    <select id="selectRobotMessage"
+            resultType="com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail">
+        select tpmpd.id,
+               play_msg_push_id,
+               spokesman_nickname,
+               robot_id,
+               robot_nickname,
+               robot_img_url,
+               robot_acct,
+               interval_time,
+               play_error_type,
+               message_content,
+               message_sort,
+               send_state,
+               tpmpd.create_time,
+               tpmpd.modify_time,
+               send_time,
+               tpmpd.is_delete,
+               push_fail_reason,
+               opt_serial_no,
+               spare_robot,
+               call_all,
+               tpmp.id
+        from t_play_message_push_detail tpmpd
+                 left join t_play_message_push tpmp on tpmpd.play_msg_push_id = tpmp.id
+        where tpmp.group_id = #{groupId}
+          and tpmp.play_id = #{playId}
+          and tpmpd.is_delete = 0
+          and tpmpd.spokesman_nickname = #{nickName}
+          and tpmpd.message_sort = #{messageSort}
+    </select>
 </mapper>

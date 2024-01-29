@@ -28,4 +28,9 @@ public class PlayMessagePushDetailServiceImpl extends ServiceImpl<PlayMessagePus
 	public List<PlayMessagePushDetail> selectOldRobotMessage(String playId, String spokesmanNickname, String groupId) {
 		return baseMapper.selectOldRobotMessage(playId, spokesmanNickname, groupId);
 	}
+
+	@Override
+	public PlayMessagePushDetail selectRobotMessage(String playId, String spokesmanNickname, String groupId, Integer messageSort) {
+		return baseMapper.selectRobotMessage(playId, spokesmanNickname, groupId, messageSort);
+	}
 }

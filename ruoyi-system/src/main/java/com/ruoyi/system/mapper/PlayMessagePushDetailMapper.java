@@ -111,4 +111,9 @@ public interface PlayMessagePushDetailMapper extends BaseMapper<PlayMessagePushD
     List<PlayMessagePushDetail> selectOldRobotMessage(@Param("playId") String playId,
 													  @Param("nickName") String spokesmanNickname,
 													  @Param("groupId") String groupId);
+
+	PlayMessagePushDetail selectRobotMessage(@Param("playId") String playId,
+											 @Param("nickName") String spokesmanNickname,
+											 @Param("groupId") String groupId,
+											 @Param("messageSort") Integer messageSort);
 }
