@@ -198,7 +198,7 @@ public class RetryService {
             // 恢复剧本的发送
             String playId = playBackRobot.getPlayId();
             String groupId = playBackRobot.getGroupId();
-            PlayDirector.tgInstance().resume(playId, groupId);
+            PlayDirector.tgInstance().resumeCurrentMessage(playId, groupId);
 
             // 更新待发送消息 - 把剩余数据都更新为新号
             List<PlayMessagePushDetail> playMessagePushDetails =

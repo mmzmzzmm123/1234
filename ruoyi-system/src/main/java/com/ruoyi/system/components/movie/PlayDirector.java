@@ -252,4 +252,27 @@ public class PlayDirector implements CallBackProcessor {
         }
     }
 
+
+    /**
+     * 恢复发送 - 重新发送消息(非一下条)
+     *
+     * @param playId     剧本Id
+     * @param chatroomId 群Id
+     */
+    public void resumeCurrentMessage(String playId, String chatroomId) {
+        RLock lock = SpringUtils.getBean(RedisLock.class).getRLock("ruoyi:pauselock:" + playId + ":" + chatroomId);
+        if (lock.isLocked()) {
+            throw new ServiceException("操作频繁");
+        }
+        try {
+            lock.lock(10, TimeUnit.SECONDS);
+            PlaybackContext.resume(playId, chatroomId);
+            int index = GlobalIndexContext.getIndex(chatroomId, playId);
+            PlayMessage playMsg = SpringUtils.getBean(PlayMessageMapper.class).getBySort(index, playId);
+            log.info("当前剧本恢复发送 {} {} ", chatroomId, playMsg);
+        } finally {
+            lock.unlock();
+        }
+    }
+
 }
