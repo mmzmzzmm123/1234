@@ -382,7 +382,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 				// 头像
 				param.put(Settings.Key_Img, Objects.wrapNull(robotPck.getPic(), ""));
 				// 备用号
-				param.put(Settings.Key_Backup_Flag, 1);
+				param.put(Settings.Key_Backup_Flag, true);
 				log.info("开始备用号初始人设包装 {} {} " , robot, JSON.toJSONString(robotPck));
 				// 设置头像
 				if (!StringUtils.isEmpty(robotPck.getPic())) {
