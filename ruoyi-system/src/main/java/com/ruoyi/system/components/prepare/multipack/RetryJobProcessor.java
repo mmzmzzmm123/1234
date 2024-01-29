@@ -120,7 +120,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 				}
 			}
 			//开始分配备用号逻辑
-			final PlayBackRobot processBackRobot = PlayDirector.tgInstance().getProcessBackRobot(data.getPlayId(), data.getChatroomId(), detail.getSpokesmanNickname(), null);
+			final PlayBackRobot processBackRobot = PlayDirector.tgInstance().doProcessBackRobot(data.getPlayId(), data.getChatroomId(), detail.getSpokesmanNickname(), null, 3);
 			if(processBackRobot == null){
 				//没有可用的备用号
 				return;
