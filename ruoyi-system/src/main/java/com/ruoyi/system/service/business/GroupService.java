@@ -114,7 +114,7 @@ public class GroupService {
     public R<List<GroupInfoVO>> queryGroup(GroupQueryDTO dto) {
         int count;
         List<String> exclusionGroupId = new ArrayList<>();
-        List<String> countryCodes = new ArrayList<>();
+        List<String> countryCodes = dto.getCountryCode();
         List<String> locks = new ArrayList<>();
         List<GroupInfoVO> groupInfoList = new ArrayList<>();
         Integer botAdmin = ObjectUtil.equal("1", iSystemConfigService.selectConfigByKey("selectGroup:botAdmin")) ? 1 : null;
