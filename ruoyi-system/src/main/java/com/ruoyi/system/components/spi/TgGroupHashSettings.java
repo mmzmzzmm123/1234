@@ -27,16 +27,15 @@ import javax.swing.*;
 @Slf4j
 public class TgGroupHashSettings implements Settings {
 	public static String getSql(String chatroomSerialNo, String robotSerialNo, List<String> memberSerialNolist) {
-		StringBuffer sqlBuffer = new StringBuffer("select access_hash " +
-				"from(select access_hash,ROW_NUMBER() " +
-				"over(PARTITION BY robot_code,chatroom_code,member_code order by update_time desc) rownum " +
-				"from telegram_det_group_member_info_v2 where ");
-		sqlBuffer.append("robot_code = '");
+		StringBuffer sqlBuffer = new StringBuffer("select robot_code, chatroom_code, member_code, access_hash from" +
+				"(SELECT robot_code, chatroom_code, member_code, access_hash, ROW_NUMBER() over(PARTITION BY robot_code,chatroom_code,member_code order by update_time desc) rownum " +
+				"from telegram_det_group_member_info_v2 WHERE ");
+		sqlBuffer.append("robot_code in ('");
 		sqlBuffer.append(robotSerialNo);
-		sqlBuffer.append("' ");
-		sqlBuffer.append("and chatroom_code = '");
+		sqlBuffer.append("') ");
+		sqlBuffer.append("and chatroom_code in ('");
 		sqlBuffer.append(chatroomSerialNo);
-		sqlBuffer.append("' ");
+		sqlBuffer.append("') ");
 		sqlBuffer.append("and member_code in(");
 		StringBuffer memberBuffer = new StringBuffer();
 		for (int i = 0; i < memberSerialNolist.size(); i++) {
