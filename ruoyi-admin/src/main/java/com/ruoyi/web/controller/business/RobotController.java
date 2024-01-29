@@ -159,5 +159,9 @@ public class RobotController {
         robotStatisticsService.clearRobotOneDayNum();
     }
 
-
+    @ApiOperation("定时任务-获取所有会话-回调统计机器人带群数")
+    @PostMapping("/getRobotFreGroupDataByThirdKpTg")
+    public void getRobotFreGroupDataByThirdKpTg() {
+        robotService.getRobotFreGroupDataByThirdKpTg();
+    }
 }

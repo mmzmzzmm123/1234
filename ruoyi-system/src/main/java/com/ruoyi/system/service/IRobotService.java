@@ -120,4 +120,5 @@ public interface IRobotService extends IService<Robot> {
 
     void updateRobotInfo(List<Called50005006DTO> sourceList);
 
+    void getRobotFreGroupDataByThirdKpTg();
 }

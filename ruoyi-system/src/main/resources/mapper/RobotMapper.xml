@@ -36,6 +36,7 @@
         concat(tri.first_name, ' ', tri.last_name) as name,
         trs.one_day_join_group_count               as groupToDayNum,
         trs.total_join_group_count                 as groupTotalNum,
+        trs.chatroom_num as chatroomNum,
         trs.is_lock                                as occupyType
         from t_robot_info tri
         left join t_robot_statistics trs on tri.robot_serial_no = trs.robot_serial_no
@@ -126,7 +127,22 @@
         <if test="dto.proxyType != null and dto.proxyType != '' and dto.proxyType == '未知'">
             and (tri.proxy_type is null or tri.proxy_type = '')
         </if>
-
+        <if test="dto.groupType != null and dto.groupType != ''">
+            <choose>
+                <when test="dto.groupType == 1">
+                    <if test="dto.groupOperator == 1">and trs.chatroom_num <![CDATA[>]]> #{dto.groupVal}</if>
+                    <if test="dto.groupOperator == 2">and trs.chatroom_num <![CDATA[<]]> #{dto.groupVal}</if>
+                </when>
+                <when test="dto.groupType == 2">
+                    <if test="dto.groupOperator == 1">and trs.one_day_join_group_count <![CDATA[>]]> #{dto.groupVal}</if>
+                    <if test="dto.groupOperator == 2">and trs.one_day_join_group_count <![CDATA[<]]> #{dto.groupVal}</if>
+                </when>
+                <otherwise>
+                    <if test="dto.groupOperator == 1">and trs.total_join_group_count <![CDATA[>]]> #{dto.groupVal}</if>
+                    <if test="dto.groupOperator == 2">and trs.total_join_group_count <![CDATA[<]]> #{dto.groupVal}</if>
+                </otherwise>
+            </choose>
+        </if>
     </select>
 
     <select id="getRobotStatisticsVO" resultType="com.ruoyi.system.domain.vo.play.RobotStatisticsVO">
@@ -160,6 +176,14 @@
             1 = 1
           AND tpgi.play_id = #{playId}
           AND tpgi.into_status = 2
+    </select>
+
+    <select id="selectRobotHandle" resultType="com.ruoyi.system.domain.vo.robot.SelectRobotByRuleVO">
+        select tri.id,tri.robot_serial_no from t_robot_info tri
+        inner join t_robot_statistics trs on tri.robot_serial_no = trs.robot_serial_no
+        where tri.delete_status = 0 and tri.recycle_status = 0 and seal_status <![CDATA[<>]]> 30
+        AND tri.id > #{id}
+        order by tri.id asc LIMIT 200
     </select>
 
 </mapper>

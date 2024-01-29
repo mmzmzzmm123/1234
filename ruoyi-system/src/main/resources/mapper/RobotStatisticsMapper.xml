@@ -125,4 +125,8 @@
         </if>
     </update>
 
+    <update id="updateChatroomNum">
+        update t_robot_statistics set chatroom_num = #{num}
+        where robot_serial_no = #{robotSerialNo}
+    </update>
 </mapper>
