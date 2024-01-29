@@ -127,6 +127,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         Assert.isTrue(isTrue,"当前状态无法取消");
         playMessagePush.setPushState(PushStateEnum.CANCEL.getKey());
         super.updateById(playMessagePush);
+        PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, playMessagePush.getPlayId(), playMessagePush.getGroupId(), com.ruoyi.common.utils.StringUtils.format("群id{}:已取消炒群",playMessagePush.getGroupId()), null);
     }
 
     /**
@@ -149,6 +150,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         Assert.isTrue(playMessagePush.getPushState().equals(PushStateEnum.WAIT_SEND.getKey()), "非待执行状态无法强制开炒");
         playMessagePush.setSendFlag(1);
         super.updateById(playMessagePush);
+        PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, playMessagePush.getPlayId(), playMessagePush.getGroupId(), com.ruoyi.common.utils.StringUtils.format("群id{}:已开启强制炒群",playMessagePush.getGroupId()), null);
     }
 
     /**
@@ -174,6 +176,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         //修改推送记录表
         playMessagePush.setPushState(PushStateEnum.USER_STOP.getKey());
         super.updateById(playMessagePush);
+        PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, playMessagePush.getPlayId(), playMessagePush.getGroupId(), com.ruoyi.common.utils.StringUtils.format("群id{}:已暂停炒群",playMessagePush.getGroupId()), null);
     }
 
     /**
@@ -200,6 +203,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
 //        //修改推送记录表
         playMessagePush.setPushState(PushStateEnum.ING.getKey());
         super.updateById(playMessagePush);
+        PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, playMessagePush.getPlayId(), playMessagePush.getGroupId(), com.ruoyi.common.utils.StringUtils.format("群id{}:已开启继续炒群",playMessagePush.getGroupId()), null);
     }
 
     @Override

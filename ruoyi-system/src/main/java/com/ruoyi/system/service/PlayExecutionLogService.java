@@ -83,6 +83,7 @@ public interface PlayExecutionLogService {
 		// 状态 0-成功（默认） 1-失败
 		log.setState(StringUtils.isEmpty(errMsg) ? 0 : 1);
 		log.setType(PlayLogTyper.Robot_Settings);
+		log.setContent(conetent);
 		log.setRobotId(robotId);
 		SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
 	}

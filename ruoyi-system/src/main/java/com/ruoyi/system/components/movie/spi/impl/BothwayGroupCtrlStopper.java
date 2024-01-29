@@ -3,6 +3,8 @@ package com.ruoyi.system.components.movie.spi.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ruoyi.common.enums.PlayLogTyper;
+import com.ruoyi.system.service.PlayExecutionLogService;
 import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -36,7 +38,7 @@ public class BothwayGroupCtrlStopper implements GroupCtrlStopper {
 	}
 
 	@Override
-	public boolean isStoped(String groupId) {
+	public boolean isStoped(String playId, String groupId) {
 		// 查询 群成员
 		// 查询 群内的号， 然后在查询 号状态
 		List<GroupRobot> robots = SpringUtils.getBean(GroupRobotMapper.class).selectList(new QueryWrapper<GroupRobot>()
@@ -55,6 +57,7 @@ public class BothwayGroupCtrlStopper implements GroupCtrlStopper {
 		}
 		if (bothwayIds.size() > limit) {
 			log.info("SendFailGroupCtrlStopper {} {} {}", groupId, limit, bothwayIds.size());
+			PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, playId, groupId, StringUtils.format("群id{}:触发单个群累计双向数上限风控(阈值:{},现在数值:{})，群任务暂停",groupId,limit,bothwayIds.size()), null);
 			return true;
 		}
 		return false;

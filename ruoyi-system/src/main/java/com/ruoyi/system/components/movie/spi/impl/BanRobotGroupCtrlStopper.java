@@ -3,6 +3,9 @@ package com.ruoyi.system.components.movie.spi.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ruoyi.common.enums.PlayLogTyper;
+import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.system.service.PlayExecutionLogService;
 import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -35,7 +38,7 @@ public class BanRobotGroupCtrlStopper implements GroupCtrlStopper {
 	}
 
 	@Override
-	public boolean isStoped(String groupId) {
+	public boolean isStoped(String playId, String groupId) {
 		// 查询 群内的号， 然后在查询 号状态
 		List<GroupRobot> robots = SpringUtils.getBean(GroupRobotMapper.class).selectList(new QueryWrapper<GroupRobot>()
 				.lambda().eq(GroupRobot::getGroupId, groupId).select(GroupRobot::getRobotId));
@@ -60,6 +63,7 @@ public class BanRobotGroupCtrlStopper implements GroupCtrlStopper {
 
 		if (banList.size() > limit) {
 			log.info("BanRobotGroupCtrlStopper {} {} {}", groupId, limit, banList.size());
+			PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, playId, groupId, StringUtils.format("群id{}:触发单个群累计封号数上限风控(阈值:{},现在数值:{})，群任务暂停",groupId,limit,banList.size()), null);
 			return true;
 		}
 		return false;

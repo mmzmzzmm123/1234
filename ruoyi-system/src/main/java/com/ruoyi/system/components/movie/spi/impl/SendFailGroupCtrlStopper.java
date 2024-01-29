@@ -2,6 +2,8 @@ package com.ruoyi.system.components.movie.spi.impl;
 
 import java.util.List;
 
+import com.ruoyi.common.enums.PlayLogTyper;
+import com.ruoyi.system.service.PlayExecutionLogService;
 import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -35,7 +37,7 @@ public class SendFailGroupCtrlStopper implements GroupCtrlStopper {
 	}
 
 	@Override
-	public boolean isStoped(String groupId) {
+	public boolean isStoped(String playId, String groupId) {
 		int limit = SpringUtils.getBean(IVibeRuleService.class).getOne().getErrLimit().intValue();
 
 		List<PlayMessagePush> pushs = SpringUtils.getBean(PlayMessagePushMapper.class)
@@ -55,6 +57,7 @@ public class SendFailGroupCtrlStopper implements GroupCtrlStopper {
 
 		if (count.intValue() > limit) {
 			log.info("SendFailGroupCtrlStopper {} {} {}", groupId, limit, count);
+			PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, playId, groupId, StringUtils.format("群id{}:触发单个群累计发送失败次数上限风控(阈值:{},现在数值:{})，群任务暂停",groupId,limit,count), null);
 			return true;
 		}
 		return false;

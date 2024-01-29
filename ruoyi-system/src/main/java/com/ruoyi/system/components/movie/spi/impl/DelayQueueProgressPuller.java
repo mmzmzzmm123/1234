@@ -39,7 +39,7 @@ public class DelayQueueProgressPuller implements ProgressPuller {
             return;
         }
         // 风控限制了， 需要暂停剧本
-        boolean limit = ServiceLoader.load(GroupCtrlStopper.class, "BoxGroupCtrlStopper").isStoped(chatroomId);
+        boolean limit = ServiceLoader.load(GroupCtrlStopper.class, "BoxGroupCtrlStopper").isStoped(message.getPlayId(), chatroomId);
         if (limit) {
             // 暂停剧本的某个群
             SpringUtils.getBean(PlayServiceImpl.class).stopPlayByGroupId(message.getPlayId(), chatroomId);
@@ -75,7 +75,7 @@ public class DelayQueueProgressPuller implements ProgressPuller {
             return;
         }
         // 风控限制了， 需要暂停剧本
-        boolean limit = ServiceLoader.load(GroupCtrlStopper.class, "BoxGroupCtrlStopper").isStoped(chatroomId);
+        boolean limit = ServiceLoader.load(GroupCtrlStopper.class, "BoxGroupCtrlStopper").isStoped(message.getPlayId(), chatroomId);
         if (limit) {
             // 暂停剧本的某个群
             SpringUtils.getBean(PlayServiceImpl.class).stopPlayByGroupId(message.getPlayId(), chatroomId);

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
+import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.movie.spi.PlayRunner;
@@ -97,7 +98,7 @@ public class DefaultPlayRunner implements PlayRunner {
 		Play play = SpringUtils.getBean(PlayMapper.class).selectById(playId);
 		if (play != null && play.getState().intValue() == 2) {
 			String c = String.format("【剧本推送完成】剧本:%s" , playId) ;
-			PlayExecutionLogService.robotPackLog(playId, null, null, c, null);
+			PlayExecutionLogService.savePackLog(PlayLogTyper.Group_Send, playId, c, null);
 			Play update = new Play();
 			update.setState(5);
 			update.setEndDate(new Date());

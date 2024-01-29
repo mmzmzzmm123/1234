@@ -10,6 +10,6 @@ public interface GroupCtrlStopper {
 
 	void doSetting(String groupId);
 
-	boolean isStoped(String groupId);
+	boolean isStoped(String playId, String groupId);
 
 }
