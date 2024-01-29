@@ -23,6 +23,7 @@ import com.ruoyi.system.service.impl.PlayBackRobotServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -217,12 +218,21 @@ public class PlayDirector implements CallBackProcessor {
         String lockKey = StringUtils.format("ruoyi:wait:doProcessBackRobot:{}:{}", playId, groupId);
         SpringUtils.getBean(RedisLock.class).waitLock(lockKey, 60);
         try{
+            final PlayBackRobotServiceImpl playBackRobotService = SpringUtils.getBean(PlayBackRobotServiceImpl.class);
+            LambdaQueryWrapper<PlayBackRobot> queryWrapperIng = new LambdaQueryWrapper<PlayBackRobot>()
+                    .eq(PlayBackRobot::getPlayId,playId)
+                    .eq(PlayBackRobot::getGroupId,groupId)
+                    .eq(PlayBackRobot::getSpokesmanNickname,spokesmanNickname)
+                    .in(PlayBackRobot::getIsFinish,0,1,3);
+            final List<PlayBackRobot> playBackRobotList = playBackRobotService.list(queryWrapperIng);
+            if(!playBackRobotList.isEmpty()){
+                return playBackRobotList.get(0);
+            }
             LambdaQueryWrapper<PlayBackRobot> queryWrapper = new QueryWrapper<PlayBackRobot>().lambda()
                     .eq(PlayBackRobot::getPlayId, playId)
                     .eq(PlayBackRobot::getGroupId, groupId)
                     .eq(PlayBackRobot::getIsFinish, -1)
                     .last(" limit 1 ");
-            final PlayBackRobotServiceImpl playBackRobotService = SpringUtils.getBean(PlayBackRobotServiceImpl.class);
             final PlayBackRobot playBackRobot = playBackRobotService.getOne(queryWrapper);
             if(playBackRobot == null){
                 PlayExecutionLogService.savePackLog(PlayLogTyper.Robot_Pre_Alloc, playId, groupId, "没有可以分配的备用号", 1);
