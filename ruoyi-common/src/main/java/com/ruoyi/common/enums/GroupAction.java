@@ -24,7 +24,7 @@ public enum GroupAction {
 
     ADD_BOT(4, "添加BOT", true,LimitingDimensions.NONE,null,null,false,false),
 
-    INVITE_BOT_JOIN_GROUP(5, "邀请bot进入群聊", true, LimitingDimensions.ROBOT, 5*60L,10,false,false),
+    INVITE_BOT_JOIN_GROUP(5, "邀请bot进入群聊", true, LimitingDimensions.ROBOT, 60L,50,false,false),
 
     SET_GROUP_ADMIN(6, "设置管理员", true,LimitingDimensions.NONE,null,null,false,true),
 

@@ -281,7 +281,7 @@ public class GroupController {
         try {
             Assert.notEmpty(dto.getGroupIds(), "群不能为空");
             int count = groupService.setBotAdmin(dto.getGroupIds());
-            Assert.isTrue(count > 0, "只有bot进群才能设置管理员");
+            Assert.isTrue(count > 0, "没有满足条件的群");
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
