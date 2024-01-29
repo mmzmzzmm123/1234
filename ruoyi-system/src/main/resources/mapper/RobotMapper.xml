@@ -132,7 +132,7 @@
     <select id="getRobotStatisticsVO" resultType="com.ruoyi.system.domain.vo.play.RobotStatisticsVO">
         SELECT
             count( DISTINCT tprgr.robot_id ) AS robotTotalNum,
-            SUM( IF ( tri.seal_status = 30, 1, 0 ) ) AS robotClosureNum,
+            SUM( IF ( tri.seal_status != 10, 1, 0 ) ) AS robotClosureNum,
             SUM( IF ( tri.bidirectional_type = 1, 1, 0 ) ) AS bidirectionalRobotNum
         FROM
             t_play_group_info tpgi
