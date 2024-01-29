@@ -147,10 +147,10 @@ public class BackRobotJobService {
             PlayRobotPackLog ret = tgRobotImgSettings.set(param);
             if (StringUtils.isEmpty(ret.getOpt())) {
                 PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), ret.getErrMsg(),
-                        null, "头像", true);
+                        null, "备用号-头像", true);
             } else {
                 PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getOpt(),
-                        "头像", true);
+                        "备用号-头像", true);
             }
             log.info("备用号-同步设置头像-orgin {} " , ret);
             boolean b = false;
@@ -171,10 +171,10 @@ public class BackRobotJobService {
             PlayRobotPackLog ret = tgRobotNameSettings.set(param);
             if (StringUtils.isEmpty(ret.getOpt())) {
                 PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), ret.getErrMsg(),
-                        null, "姓名", true);
+                        null, "备用号-姓名", true);
             } else {
                 PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getOpt(),
-                        "姓名", true);
+                        "备用号-姓名", true);
             }
             log.info("备用号-同步设置昵称-orgin {} " , ret);
             BeanUtils.copyProperties(ret, playBackRobotLog);
@@ -197,10 +197,10 @@ public class BackRobotJobService {
                 if (ret.getStatus().intValue() == 1) {
                     // 直接设置成功
                     PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(),
-                            String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", robot.getGroupId(), robot), null);
+                            String.format("【发言人包装-%s】 群%s 号%s 设置成功", "备用号-管理员", robot.getGroupId(), robot), null);
                 } else {
                     PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(),
-                            String.format("【发言人包装-%s】 群%s 号%s 设置失败，原因：%s", "管理员", robot.getGroupId(), robot,
+                            String.format("【发言人包装-%s】 群%s 号%s 设置失败，原因：%s", "备用号-管理员", robot.getGroupId(), robot,
                                     ret.getErrMsg()),
                             ret.getErrMsg());
                 }
@@ -214,9 +214,9 @@ public class BackRobotJobService {
                 log.info("备用号-走开平的逻辑 {} " , JSON.toJSONString(robotPck));
                 final PlayRobotPackLog ret = tgGroupHashSettings.set(param);
                 if (StringUtils.isEmpty(ret.getOpt())) {
-                    PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), ret.getErrMsg(), null, "管理员（获取hash值）", true);
+                    PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), ret.getErrMsg(), null, "备用号-管理员（获取hash值）", true);
                 } else {
-                    PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getOpt(), "管理员（获取hash值）", true);
+                    PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getOpt(), "备用号-管理员（获取hash值）", true);
                 }
                 log.info("备用号-同步设置管理员(获取hash值)-orgin {} " , ret);
                 final String opt = ret.wrapOpt().getOpt();

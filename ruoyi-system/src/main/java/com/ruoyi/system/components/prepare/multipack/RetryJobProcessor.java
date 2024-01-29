@@ -113,7 +113,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 			);
 			Map<String, List<PlayRobotPackLog>> group = ListTools.group(playRobotPackLogs, f -> f.getRobotId());
 			for (List<PlayRobotPackLog> logList : group.values()) {
-				final long failCount = logList.stream().filter(it -> it.getStatus().intValue() == 2).count();
+				final long failCount = logList.stream().filter(it -> it.getRetryMaxFlag().intValue() == 1).count();
 				if(failCount == 0L){
 					//有未失败的机器人包装记录，暂时不能再分配备用号
 					return;
@@ -389,10 +389,10 @@ public class RetryJobProcessor implements LogJobProcessor {
 					PlayRobotPackLog ret = tgRobotImgSettings.set(param);
 					if (StringUtils.isEmpty(ret.getOpt())) {
 						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(),
-								null, "头像", true);
+								null, "备用号-头像", true);
 					} else {
 						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(),
-								"头像", true);
+								"备用号-头像", true);
 					}
 					submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
 
@@ -404,10 +404,10 @@ public class RetryJobProcessor implements LogJobProcessor {
 					PlayRobotPackLog ret = tgRobotNameSettings.set(param);
 					if (StringUtils.isEmpty(ret.getOpt())) {
 						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(),
-								null, "姓名", true);
+								null, "备用号-姓名", true);
 					} else {
 						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(),
-								"姓名", true);
+								"备用号-姓名", true);
 					}
 					submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
 
@@ -426,10 +426,10 @@ public class RetryJobProcessor implements LogJobProcessor {
 						if (ret.getStatus().intValue() == 1) {
 							// 直接设置成功
 							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot,
-									String.format("【发言人包装-%s】 群%s 号%s 设置成功", "管理员", context.getChatroomId(), robot), null);
+									String.format("【发言人包装-%s】 群%s 号%s 设置成功", "备用号-管理员", context.getChatroomId(), robot), null);
 						} else {
 							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot,
-									String.format("【发言人包装-%s】 群%s 号%s 设置失败，原因：%s", "管理员", context.getChatroomId(), robot,
+									String.format("【发言人包装-%s】 群%s 号%s 设置失败，原因：%s", "备用号-管理员", context.getChatroomId(), robot,
 											ret.getErrMsg()),
 									ret.getErrMsg());
 						}
@@ -441,9 +441,9 @@ public class RetryJobProcessor implements LogJobProcessor {
 						log.info("备用号-初始-走开平的逻辑 {} " , JSON.toJSONString(robotPck));
 						final PlayRobotPackLog ret = tgGroupHashSettings.set(param);
 						if (StringUtils.isEmpty(ret.getOpt())) {
-							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "管理员（获取hash值）", true);
+							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "备用号-管理员（获取hash值）", true);
 						} else {
-							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(), "管理员（获取hash值）", true);
+							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(), "备用号-管理员（获取hash值）", true);
 						}
 						final String opt = ret.wrapOpt().getOpt();
 						submitList.add(ret.wrapRadio(radioId).wrapPushDetailId(detail.getId()));
