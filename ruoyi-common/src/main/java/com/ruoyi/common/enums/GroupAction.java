@@ -28,7 +28,7 @@ public enum GroupAction {
 
     SET_GROUP_ADMIN(6, "设置管理员", true,LimitingDimensions.NONE,null,null,false,true),
 
-    QUERY_HASH(7,"查询成员hash", true,LimitingDimensions.ALL,60L,15,false,false),
+    QUERY_HASH(7,"查询成员hash", true,LimitingDimensions.ALL,60L,15,true,false),
 
     QUERY_GROUP_MEMBER(8,"查询群成员",true,LimitingDimensions.NONE,null,null,false,false);
 
