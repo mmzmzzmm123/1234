@@ -810,9 +810,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             return;
         }
 
-        //退群
-        SpringUtils.getBean(IntoGroupService.class).outGroup(play);
-
         RobotStatisticsService robotStatisticsService = SpringUtils.getBean(RobotStatisticsService.class);
         //剧本所有的群
         List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(play.getId());
@@ -828,6 +825,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 robotStatisticsService.unLockRobot(robotIds);
             }
         }
+
+        //退群
+        SpringUtils.getBean(IntoGroupService.class).outGroup(play);
     }
 
     @Override

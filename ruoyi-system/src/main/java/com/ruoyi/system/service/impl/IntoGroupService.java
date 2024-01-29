@@ -1186,7 +1186,6 @@ public class IntoGroupService {
         if (playExt.getQuitState() == 1) {
             //将所有水军变成等待退群
             for (PlayGroupInfo playGroupInfo : playGroupInfos) {
-                playRobotGroupRelationMapper.updateRobotState(playGroupInfo.getTgGroupId());
                 //获取群内所有水军
                 List<PlayRobotGroupRelation> robotGroupRelations = playRobotGroupRelationMapper.selectRobotByGroup(playGroupInfo.getTgGroupId());
                 if (robotGroupRelations != null){
@@ -1196,6 +1195,8 @@ public class IntoGroupService {
                     }
                     robotStatisticsService.decreaseRobotGroup(strings);
                 }
+                //设置等待退群状态
+                playRobotGroupRelationMapper.updateRobotState(playGroupInfo.getTgGroupId());
             }
             //将群全部设置为删除
             playGroupInfoMapper.updateGroupState(play.getId());
