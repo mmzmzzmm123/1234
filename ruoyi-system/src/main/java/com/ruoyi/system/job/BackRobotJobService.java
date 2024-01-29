@@ -141,8 +141,10 @@ public class BackRobotJobService {
         // 备用号
         param.put(Settings.Key_Backup_Flag, true);
 
+        boolean isChange = false;
         // 设置头像
         if (!StringUtils.isEmpty(robotPck.getPic())) {
+            isChange = true;
             PlayBackRobotLog playBackRobotLog = new PlayBackRobotLog();
             PlayRobotPackLog ret = tgRobotImgSettings.set(param);
             if (StringUtils.isEmpty(ret.getOpt())) {
@@ -167,6 +169,7 @@ public class BackRobotJobService {
 
         // 设置 昵称
         if (!StringUtils.isEmpty(robotPck.getName()) || !StringUtils.isEmpty(robotPck.getSurname())) {
+            isChange = true;
             PlayBackRobotLog playBackRobotLog = new PlayBackRobotLog();
             PlayRobotPackLog ret = tgRobotNameSettings.set(param);
             if (StringUtils.isEmpty(ret.getOpt())) {
@@ -186,6 +189,7 @@ public class BackRobotJobService {
 
         // 同步设置 管理员
         if (robotPck.getIsAdmin() != null && robotPck.getIsAdmin().intValue() == 1) {
+            isChange = true;
             PlayBackRobotLog playBackRobotLog = new PlayBackRobotLog();
             log.info("备用号-设置管理员 {} " , JSON.toJSONString(robotPck));
             ISysConfigService sysConfigService = SpringUtils.getBean(SysConfigServiceImpl.class);
@@ -243,6 +247,10 @@ public class BackRobotJobService {
                     playBackRobotLogService.saveOrUpdate(postposition);
                 }
             }
+        }
+        if(!isChange){
+            robot.setIsFinish(1);
+            playBackRobotService.updateById(robot);
         }
     }
 
