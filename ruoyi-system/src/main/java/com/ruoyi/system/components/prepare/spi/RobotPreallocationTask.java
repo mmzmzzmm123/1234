@@ -19,6 +19,9 @@ import com.ruoyi.system.components.spi.RobotInfoQuery;
 import com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation;
 import com.ruoyi.system.mapper.PlayRobotGroupRelationMapper;
 import com.ruoyi.system.mapper.VibeRuleMapper;
+import com.ruoyi.system.openapi.OpenApiClient;
+import com.ruoyi.system.openapi.OpenApiResult;
+import com.ruoyi.system.openapi.model.input.ThirdTelegramPersonalCallbackRegInputDTO;
 import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.PlayMessagePushDetailService;
 import com.ruoyi.system.service.impl.PlayBackRobotServiceImpl;
@@ -26,6 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 机器人预分配
@@ -56,6 +60,10 @@ public class RobotPreallocationTask implements TaskExecution {
 		}
 		final Map<String, Robot> map = new HashMap<>();
 		List<String> source = ListTools.extract(relationList, f -> f.getRobotId());
+
+		// 订阅 1100910027 回调; 用于自动回复;
+		CompletableFuture.runAsync(() -> this.subscriptionCallback(source));
+
 		// 查询所有的detail
 		List<PlayMessagePushDetail> details = context.getPushDetails();
 
@@ -136,6 +144,14 @@ public class RobotPreallocationTask implements TaskExecution {
 		PlayExecutionLogService.robotPackLog(context.getPlay().getId(), context.getChatroomId(), null,
 				"【号预分配】 群" + context.getChatroomId() + " 分配成功", null);
 		return ExecutionResultContext.buildSync(context);
+	}
+
+
+	public void subscriptionCallback(List<String> robotSerialNos) {
+		ThirdTelegramPersonalCallbackRegInputDTO dto = new ThirdTelegramPersonalCallbackRegInputDTO();
+		dto.setSubTypeList(Collections.singletonList(1100910027));
+		dto.setTelegramIdList(robotSerialNos);
+		OpenApiResult<Void> openApiResult = OpenApiClient.personalOnByThirdTg(dto);
 	}
 
 	private List<String> take(LinkedList<String> lk, int num) {

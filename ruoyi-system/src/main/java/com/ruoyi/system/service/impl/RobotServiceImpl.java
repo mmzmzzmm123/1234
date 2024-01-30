@@ -148,7 +148,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             try {
                 CollUtil.split(robotSerialNos,500).forEach(list -> {
                     ThirdTelegramPersonalCallbackRegInputDTO dto = new ThirdTelegramPersonalCallbackRegInputDTO();
-                    dto.setSubTypeList(Arrays.asList(1100910101,1100910003,1100910045,1100910001,1100910027));
+                    dto.setSubTypeList(Arrays.asList(1100910101,1100910003,1100910045,1100910001));
                     dto.setTelegramIdList(robotSerialNos);
                     OpenApiResult<Void> openApiResult = OpenApiClient.personalOnByThirdTg(dto);
                     log.info("号订阅 {}",openApiResult);
