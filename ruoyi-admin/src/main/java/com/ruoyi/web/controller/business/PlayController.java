@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.business;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.config.ErrInfoConfig;
@@ -304,16 +305,22 @@ public class PlayController extends BaseController {
     }
 
     @ApiOperation("重复炒群")
-    @PostMapping("repeat/{playId}")
-    public R<String> repeatPlay(@PathVariable String playId) {
+    @PostMapping("repeat")
+    public R<String> repeatPlay(@RequestBody PlayDTO dto) {
+        if (StringUtils.isEmpty(dto.getId())) {
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "参数错误"));
+        }
+
         LoginUser loginUser = getLoginUser();
         if (ObjectUtils.isEmpty(loginUser.getMerchantInfo()) || loginUser.getMerchantInfo().getMerchantType() != 0) {
             return R.fail(11011, ErrInfoConfig.getDynmic(11011));
         }
+
+        dto.setLoginUser(loginUser);
         try {
-            return playService.repeatPlay(playId, loginUser);
+            return playService.repeatPlay(dto);
         } catch (Exception e) {
-            log.error("repeatPlay:params:{},msg:{}", playId, e.getMessage());
+            log.error("repeatPlay:params:{},msg:{}", JSONObject.toJSONString(dto), e.getMessage());
             return R.fail(10000, ErrInfoConfig.getDynmic(10000, e.getMessage()));
         }
     }

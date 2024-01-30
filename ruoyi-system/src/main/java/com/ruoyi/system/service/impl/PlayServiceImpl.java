@@ -609,72 +609,50 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public R<String> repeatPlay(String playId, LoginUser loginUser) {
-        if (StringUtils.isEmpty(playId)) {
-            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "参数错误"));
-        }
-
-        Play play = super.getById(playId);
+    public R<String> repeatPlay(PlayDTO oldPlay) {
+        Play play = super.getById(oldPlay.getId());
         if (null == play) {
             return R.fail(11000, ErrInfoConfig.getDynmic(11000, "炒群任务不存在"));
         }
-
-        if (null == play.getLockRobotStatus() || play.getLockRobotStatus() != 1) {
-            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "该剧本未配置锁定水军"));
+        if (null != oldPlay.getRobotNum() && null != play.getRobotNum() && oldPlay.getRobotNum() > play.getRobotNum()) {
+            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "群演员数不能超过旧剧本"));
         }
 
-        R<PlayVO> infoRet  = this.info(playId);
-        if (infoRet.getCode() != SUCCESS) {
-            return R.fail(11000, ErrInfoConfig.getDynmic(11000, "获取群信息失败"));
+        play.setState(PlayStatusConstants.IN_PROGRESS);
+        play.setScanProgress(ScanProgressEnum.Send_Wait.getVal());
+        play.setName(oldPlay.getName());
+        play.setTargetCountyCode(oldPlay.getTargetCountyCode());
+        play.setTargetCountyName(oldPlay.getTargetCountyName());
+        play.setSendMechanism(JSON.toJSONString(oldPlay.getSendMechanism()));
+        play.setAdMonitor(JSON.toJSONString(oldPlay.getAdMonitor()));
+        play.setPlayExt(JSON.toJSONString(oldPlay.getPlayExt()));
+        if (null != oldPlay.getUrlPool() && oldPlay.getUrlPool().size() > 0) {
+            play.setUrlPool(String.join(",", oldPlay.getUrlPool()));
         }
+        play.setUpdateTime(new Date());
+        updateById(play);
 
-        PlayDTO dto = new PlayDTO();
-        BeanUtils.copyProperties(infoRet.getData(), dto);
-        dto.setLoginUser(loginUser);
-        dto.setState(1);
-        dto.setScanProgress(ScanProgressEnum.Confuse.getVal());
-        R<String> ret = this.create(dto);
-        if (ret.getCode() != SUCCESS) {
-            return ret;
-        }
-        String newPlayId = ret.getData();
+        playMessagePushService.update(new UpdateWrapper<PlayMessagePush>().lambda()
+                .eq(PlayMessagePush::getPlayId, oldPlay.getId())
+                .set(PlayMessagePush::getPushState, PushStateEnum.WAIT_SEND.getKey()));
 
-        //复制进群数据
-        List<PlayGroupInfo> playGroupInfos = playGroupInfoMapper.selectGroupInfoByPlayId(play.getId());
-        log.info("repeatPlay_playGroupInfoIds:{}", playGroupInfos.stream().map(PlayGroupInfo::getGroupId).collect(Collectors.joining(",")));
-        if (!playGroupInfos.isEmpty()) {
-            List<PlayGroupInfo> savePlayGroupData = new ArrayList<>();
-            for (PlayGroupInfo item : playGroupInfos) {
-                PlayGroupInfo playGroupInfo = new PlayGroupInfo();
-                BeanUtils.copyProperties(item, playGroupInfo);
-                playGroupInfo.setPlayId(newPlayId);
-                savePlayGroupData.add(playGroupInfo);
-            }
-            SpringUtils.getBean(PlayGroupInfoServiceImpl.class).saveBatch(savePlayGroupData);
-        }
-
-        //复制推送数据
-        List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayId(newPlayId);
+        List<PlayMessagePush> playMessagePushList = playMessagePushService.selectByPlayId(oldPlay.getId());
         log.info("repeatPlay_playMessagePushIds:{}", playMessagePushList.stream().map(x -> x.getId().toString()).collect(Collectors.joining(",")));
-        if (!playMessagePushList.isEmpty()) {
-            List<PlayMessagePush> savePlayMessagePush = new ArrayList<>();
-            for (PlayMessagePush item : playMessagePushList) {
-                PlayMessagePush playMessagePush = new PlayMessagePush();
-                BeanUtils.copyProperties(item, playMessagePush);
-                playMessagePush.setPlayId(newPlayId);
-                playMessagePush.setPushState(PushStateEnum.WAIT_SEND.getKey());
-                savePlayMessagePush.add(playMessagePush);
-            }
-            playMessagePushService.saveBatch(savePlayMessagePush);
+        if (CollectionUtils.isNotEmpty(playMessagePushList)) {
+            List<Integer> playMessageIds = playMessagePushList.stream().map(PlayMessagePush::getId).collect(Collectors.toList());
+            playMessagePushDetailService.update(new UpdateWrapper<PlayMessagePushDetail>().lambda()
+                    .in(PlayMessagePushDetail::getPlayMsgPushId, playMessageIds)
+                    .set(PlayMessagePushDetail::getSendState, 0));
         }
+
+        delFileData(oldPlay.getLoginUser().getUserId().toString());
 
         //保存重复炒日志
         PlayRepeatLog playRepeatLog = new PlayRepeatLog();
-        playRepeatLog.setPlayId(playId);
-        playRepeatLog.setNewPlayId(newPlayId);
+        playRepeatLog.setPlayId(oldPlay.getId());
         playRepeatLogMapper.insert(playRepeatLog);
 
-        return R.ok(newPlayId);
+        return R.ok(oldPlay.getId());
     }
 
     @Override
