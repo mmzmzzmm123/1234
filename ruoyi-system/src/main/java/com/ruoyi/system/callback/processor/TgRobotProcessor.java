@@ -10,6 +10,7 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
 import com.ruoyi.system.components.movie.PlayDirector;
+import com.ruoyi.system.components.movie.spi.GroupCtrlStopper;
 import com.ruoyi.system.components.movie.spi.impl.BothwayGroupCtrlStopper;
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
@@ -443,7 +444,7 @@ public class TgRobotProcessor {
     public void called1100910101(Called1100910101DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         log.info("NQ1100910101 called:{}", root);
-        ServiceLoader.load(BothwayGroupCtrlStopper.class, "BothwayGroupCtrlStopper").doSetting(root.getRobotId());
+        ServiceLoader.load(GroupCtrlStopper.class, "BothwayGroupCtrlStopper").doSetting(root.getRobotId());
         robotService.updateBidirectional(dto);
     }
 
