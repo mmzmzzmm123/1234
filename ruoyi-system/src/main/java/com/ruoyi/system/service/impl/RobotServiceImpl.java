@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
@@ -145,11 +146,13 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
     private void subscribeRobot(List<String> robotSerialNos) {
         if (!CollectionUtils.isEmpty(robotSerialNos)) {
             try {
-                ThirdTelegramPersonalCallbackRegInputDTO dto = new ThirdTelegramPersonalCallbackRegInputDTO();
-                dto.setSubTypeList(Arrays.asList(1100910101,1100910003,1100910045,1100910001,1100910027));
-                dto.setTelegramIdList(robotSerialNos);
-                OpenApiResult<Void> openApiResult = OpenApiClient.personalOnByThirdTg(dto);
-                log.info("号订阅 {}",openApiResult);
+                CollUtil.split(robotSerialNos,500).forEach(list -> {
+                    ThirdTelegramPersonalCallbackRegInputDTO dto = new ThirdTelegramPersonalCallbackRegInputDTO();
+                    dto.setSubTypeList(Arrays.asList(1100910101,1100910003,1100910045,1100910001,1100910027));
+                    dto.setTelegramIdList(robotSerialNos);
+                    OpenApiResult<Void> openApiResult = OpenApiClient.personalOnByThirdTg(dto);
+                    log.info("号订阅 {}",openApiResult);
+                });
             } catch (Exception e) {
                 log.error("号订阅失败", e);
             }
