@@ -82,7 +82,7 @@ public class AutoReplyService {
             return;
         }
 
-        int offset = RandomUtil.randomInt(0, messageCount.intValue() - 1);
+        int offset = messageCount == 1 ? 0 :RandomUtil.randomInt(0, messageCount.intValue() - 1);
         PlayRobotMessage message = playRobotMessageService.selectByPlayId(playId, offset);
 
         Optional.ofNullable(message).ifPresent(it -> this.sendMessage(it, robotId, chatId));
