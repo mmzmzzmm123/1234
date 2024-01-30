@@ -88,6 +88,9 @@ public class PlayDTO {
     @ApiModelProperty(value = "筛选群条件: 10私密群组 20公开群组")
     private Integer groupType;
 
+    @ApiModelProperty(value = "自动回复内容")
+    private List<PlayRobotMessageDTO> playRobotMessageList;
+
     private LoginUser loginUser;
     private Integer scanProgress;
 }

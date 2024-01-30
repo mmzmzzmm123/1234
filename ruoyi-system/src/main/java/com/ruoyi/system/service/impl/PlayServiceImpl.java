@@ -126,13 +126,37 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         }
         saveRobotPack(playId, dto.getPerformerList());
 
-        //保存剧本消息
         savePlayMessage(playId, dto.getPlayMessageList(), dto.getSendMechanism(), dto.getUrlPool());
+        saveRobotMessageConf(playId, dto.getPlayRobotMessageList(), dto.getUrlPool());
         delFileData(dto.getLoginUser().getUserId().toString());
         return R.ok(playId);
     }
 
-    //删除上传word文件
+    //保存水军回复内容
+    private void saveRobotMessageConf(String playId, List<PlayRobotMessageDTO> messageList, List<String> urlPool) {
+        if (CollectionUtils.isEmpty(messageList)) {
+            return;
+        }
+
+        List<PlayRobotMessage> robotMessages = new ArrayList<>();
+        for (PlayRobotMessageDTO messageDTO : messageList) {
+            PlayRobotMessage playRobotMessage = new PlayRobotMessage();
+
+            for (ContentJson contentJson : messageDTO.getMessageContent()) {
+                //接粉号处理
+                if (contentJson.getMomentTypeId() == 2017) {
+                    contentJson.setSMateContent(urlPool.get(new Random().nextInt(urlPool.size())));
+                }
+            }
+
+            playRobotMessage.setPlayId(playId);
+            playRobotMessage.setMessageContent(JSON.toJSONString(messageDTO.getMessageContent()));
+            robotMessages.add(playRobotMessage);
+        }
+        SpringUtils.getBean(PlayRobotMessageService.class).saveBatch(robotMessages);
+    }
+
+    //删除上传word文件内容
     public void delFileData(String fileId) {
         playFileMapper.delete(new LambdaQueryWrapper<PlayFile>().eq(PlayFile::getFileId, fileId));
     }
@@ -155,8 +179,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         SpringUtils.getBean(OrderServiceImpl.class).orderStorage(request, product, skuList, groupSet, price, 2);
     }
 
+    //保存剧本消息
     private void savePlayMessage(String playId, List<PlayMessageDTO> playMessageList, SendMechanism sendMechanism, List<String> urlPool) {
-        if (playMessageList.isEmpty()) {
+        if (CollectionUtils.isEmpty(playMessageList)) {
             return;
         }
 
@@ -294,6 +319,9 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         playMessageMapper.delete(new LambdaQueryWrapper<PlayMessage>().eq(PlayMessage::getPlayId, dto.getId()));
         savePlayMessage(dto.getId(), dto.getPlayMessageList(), dto.getSendMechanism(), dto.getUrlPool());
 
+        SpringUtils.getBean(PlayRobotMessageMapper.class).delete(new LambdaQueryWrapper<PlayRobotMessage>().eq(PlayRobotMessage::getPlayId, dto.getId()));
+        saveRobotMessageConf(dto.getId(), dto.getPlayRobotMessageList(), dto.getUrlPool());
+
         delFileData(dto.getLoginUser().getUserId().toString());
 
         return R.ok();
@@ -337,7 +365,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         List<PlayRobotPack> robotPackList = playRobotPackMapper.selectList(new QueryWrapper<PlayRobotPack>()
                 .lambda().eq(PlayRobotPack::getPlayId, playId));
-        if (!robotPackList.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(robotPackList)) {
             List<Performer> performerList = new ArrayList<>();
             for (PlayRobotPack robotPack : robotPackList) {
                 Performer performer = new Performer();
@@ -349,7 +377,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         List<PlayMessage> playMessageList = playMessageMapper.selectList(new QueryWrapper<PlayMessage>()
                 .lambda().eq(PlayMessage::getPlayId, playId));
-        if (!playMessageList.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(playMessageList)) {
             List<PlayMessageDTO> playMessageDTOList = new ArrayList<>();
             for (PlayMessage playMessage : playMessageList) {
                 PlayMessageDTO playMessageDTO = new PlayMessageDTO();
@@ -366,6 +394,18 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 ret.setMerchantId(merchantInfo.getMerchantId());
                 ret.setMerchantName(merchantInfo.getMerchantName());
             }
+        }
+
+        List<PlayRobotMessage> playRobotMessageData = SpringUtils.getBean(PlayRobotMessageMapper.class).selectList(new QueryWrapper<PlayRobotMessage>()
+                .lambda().eq(PlayRobotMessage::getPlayId, playId));
+        if (CollectionUtils.isNotEmpty(playRobotMessageData)) {
+            List<PlayRobotMessageDTO> playRobotMessageDTOS = new ArrayList<>();
+            for (PlayRobotMessage item : playRobotMessageData ) {
+                PlayRobotMessageDTO playRobotMessageDTO = new PlayRobotMessageDTO();
+                playRobotMessageDTO.setMessageContent(JSONArray.parseArray(item.getMessageContent(), ContentJson.class));
+                playRobotMessageDTOS.add(playRobotMessageDTO);
+            }
+            ret.setPlayRobotMessageList(playRobotMessageDTOS);
         }
 
         return R.ok(ret);
