@@ -203,6 +203,8 @@ public class AutoReplyService {
             query.with(PageRequest.of(currentPage, pageSize));
             replyLogs = mongoTemplate.find(query, AutoReplyLog.class);
 
+            log.info("扫描到需要重试的数据 {}", replyLogs);
+
             this.retrySendMessage(replyLogs);
 
             // 当前页码++
