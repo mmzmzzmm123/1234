@@ -36,4 +36,22 @@
         select robot_id from t_play_robot_group_relation where state = 3 and is_delete = 0 and group_id = #{groupId}
     </select>
 
+    <select id="selectLatestByRobotId" resultType="com.ruoyi.system.domain.dto.RobotGroupRelationDTO">
+        select tprgr.group_id    as groupId,
+               tprgr.robot_id    as robotId,
+               tpi.id            as playId,
+               tprgr.merchant_id as merchantId,
+               tpi.state         as statte,
+               tpi.create_time   as createTime,
+               tpi.end_date      as endTime
+        from t_play_robot_group_relation tprgr
+                 left join t_play_group_info tpgi on tpgi.group_id = tprgr.group_id
+                 left join t_play_info tpi on tpi.id = tpgi.play_id
+        where tprgr.robot_id = #{robotId}
+          and tpi.id is not null
+          and tpi.state in (2, 3, 5)
+        order by tpi.create_time desc
+        limit 1
+    </select>
+
 </mapper>

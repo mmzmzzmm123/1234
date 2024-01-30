@@ -1,6 +1,7 @@
 package com.ruoyi.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ruoyi.system.domain.dto.RobotGroupRelationDTO;
 import com.ruoyi.system.domain.dto.play.PlayRobotGroupRelation;
 import org.apache.ibatis.annotations.Param;
 
@@ -33,4 +34,7 @@ public interface PlayRobotGroupRelationMapper extends BaseMapper<PlayRobotGroupR
     Integer updateRobotOutState(@Param("groupId")String groupId,@Param("robotId")String robotId,@Param("state")Integer state);
 
     List<PlayRobotGroupRelation> selectWaitOutGroupByGroupId(@Param("groupId") String groupId);
+
+
+    RobotGroupRelationDTO selectLatestByRobotId(@Param("robotId") String robotId);
 }

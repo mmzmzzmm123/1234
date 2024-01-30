@@ -42,7 +42,7 @@ public class TgMessageSupport implements MessageSupport {
 		return SpringUtils.getBean(PlayMessagePushDetailMapper.class).getOne(playId, chatroomId, sort);
 	}
 
-	private List<ThirdTgMessageDTO> createMsgData(PlayMessage message, String chatroomId, int msgSort) {
+	public List<ThirdTgMessageDTO> createMsgData(PlayMessage message, String chatroomId, int msgSort) {
 		final PlayMessagePushDetail detail = getDetail(message.getPlayId(), chatroomId, msgSort);
 		// 获取混淆后的内容
 		List<ContentJson> messageContentList = JSON.parseArray(detail.getMessageContent(), ContentJson.class);
@@ -62,7 +62,7 @@ public class TgMessageSupport implements MessageSupport {
 		List<ThirdTgMessageDTO> dataList = ListTools.newArrayList();
 		boolean linkAppend = false;
 		boolean hadImg = false;
-		final ContentJson contentJson = messageContentList.stream().filter(it -> {return it.getMomentTypeId().intValue() == 2002;}).findFirst().orElse(null);
+		final ContentJson contentJson = messageContentList.stream().filter(it -> it.getMomentTypeId().intValue() == 2002).findFirst().orElse(null);
 		if(contentJson != null){
 			hadImg = true;
 		}

@@ -18,6 +18,7 @@ import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import com.ruoyi.system.openapi.model.input.ThirdTgModifyChatroomNameInputDTO;
 import com.ruoyi.system.openapi.model.input.ThirdTgSetChatroomAdminInputDTO;
 import com.ruoyi.system.service.*;
+import com.ruoyi.system.service.business.AutoReplyService;
 import com.ruoyi.system.service.business.GroupService;
 import com.ruoyi.system.service.impl.IntoGroupService;
 import lombok.RequiredArgsConstructor;
@@ -497,9 +498,42 @@ public class TgRobotProcessor {
         if (root.isSuccess()) {
             groupStateService.groupBaned(dto.getChatroomSerialNo(), dto.getSealTime());
         }
-
-
     }
 
 
+    /**
+     * 机器人私聊消息回调
+     *
+     * @param dto
+     */
+    @Type(value = 1100910027, parameterClass = Called1100910027DTO.class)
+    public void called1100910027(List<Called1100910027DTO> dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("NQ1100910027 called:{} {}", root, JSON.toJSONString(dto));
+        SpringUtils.getBean(AutoReplyService.class).messageCallback(root, dto);
+    }
+
+    /**
+     * 获取所有会话回调
+     * @param dto
+     */
+    @Type(value = 1100910008, parameterClass = Called1100910008DTO.class)
+    public void called1100910008(Called1100910008DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("called_1100910008:{} {}", root, JSON.toJSONString(dto));
+    }
+
+    /**
+     * 发送好友消息回调
+     * @param dto
+     */
+    @Type(value = 1100910010, parameterClass = Called1100910010DTO.class)
+    public void called1100910010(Called1100910010DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        log.info("NQ1100910010 called:{} {}", root, JSON.toJSONString(dto));
+        if (!root.isSuccess()) {
+            SpringUtils.getBean(AutoReplyService.class).retrySendMessage(root, dto);
+        }
+
+    }
 }
