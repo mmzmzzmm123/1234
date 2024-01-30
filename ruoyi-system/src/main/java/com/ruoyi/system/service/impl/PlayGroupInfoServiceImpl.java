@@ -96,7 +96,7 @@ public class PlayGroupInfoServiceImpl extends ServiceImpl<PlayGroupInfoMapper, P
         if (robotCount >= groupNum) {
             playGroupInfo.setIntoStatus(2);
             //获取群ID
-            GroupInfo groupInfo = groupInfoService.getById(playGroupInfo.getGroupId());
+            GroupInfo groupInfo = groupInfoService.getById(playGroupInfo.getTgGroupId());
             retryGroupMember(playGroupInfo.getGroupId(),play.getId(),groupInfo.getGroupSerialNo());
         } else {
             log.info("群入群失败！");
