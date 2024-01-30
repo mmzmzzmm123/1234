@@ -821,7 +821,7 @@ public class IntoGroupService {
             } else {
                 log.info("入群失败已满重试次数："+JSONObject.toJSONString(task));
                 task.setIsError(1);
-                setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "该发言人入群已失败10次，不再进行重试！", 1, PlayLogTyper.Group_into, null);
+                setLog(task.getPlayId(), "群链接" + task.getGroupUrl() + "该发言人入群已失败3次，不再进行重试！", 1, PlayLogTyper.Group_into, null);
                 playIntoGroupTaskMapper.updateById(task);
                 //判断当前任务是否还有正在入群或者回调的任务，如果没有 判断
                 Integer count = playIntoGroupTaskMapper.selectGroupUrlByPlayIdCount(task.getGroupUrl(),task.getPlayId());

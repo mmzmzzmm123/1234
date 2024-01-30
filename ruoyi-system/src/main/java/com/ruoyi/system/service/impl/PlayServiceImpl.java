@@ -266,6 +266,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         play.setLockRobotStatus(dto.getPlayExt().getLockState());
         play.setCreateTime(new Date());
         play.setUpdateTime(new Date());
+        play.setScanProgress(dto.getScanProgress());
         super.save(play);
     }
 

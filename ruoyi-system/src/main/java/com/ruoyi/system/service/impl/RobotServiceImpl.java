@@ -105,7 +105,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         }
         List<String> robotSerialNos = dataList.stream().map(ExtTgSelectRobotByMerchantVO::getRobotSerialNo).collect(Collectors.toList());
         Map<String, ExtTgBatchRobotSimpInfoData> simpMap = this.pullApiRobotSimpMap(robotSerialNos);
-        log.info("pullRobotDataList robotSerialNos:{},simpMap:{},",robotSerialNos,simpMap);
+//        log.info("pullRobotDataList robotSerialNos:{},simpMap:{},",robotSerialNos,simpMap);
         List<Robot> robotList = Lists.newArrayList();
         for (ExtTgSelectRobotByMerchantVO vo : dataList) {
             try {
