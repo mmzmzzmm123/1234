@@ -3,6 +3,7 @@ package com.ruoyi.system.components.movie.spi.impl;
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.ContentJson;
+import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePushDetail;
 import com.ruoyi.common.core.domain.entity.robot.Robot;
@@ -11,6 +12,7 @@ import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
+import com.ruoyi.system.components.RedisTemplateTools;
 import com.ruoyi.system.components.movie.spi.MessageSupport;
 import com.ruoyi.system.components.spi.RobotInfoQuery;
 import com.ruoyi.system.mapper.GroupInfoMapper;
@@ -20,10 +22,17 @@ import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.ThirdTgMessageDTO;
 import com.ruoyi.system.openapi.model.input.ThirdTgSendGroupMessageInputDTO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
+import com.ruoyi.system.service.impl.PlayServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.redis.core.BoundValueOperations;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @SPI("TgMessageSupport")
 @Slf4j
@@ -48,7 +57,7 @@ public class TgMessageSupport implements MessageSupport {
 		}
 		link = extractLink2005(messageContentList);
 		// 不混淆的 文本
-		link = link + extractNoLikeText2017(messageContentList);
+		link = link + extractNoLikeText2017(messageContentList, message.getPlayId(), chatroomId);
 		link = link + extractNoLikeText2018(messageContentList);
 		List<ThirdTgMessageDTO> dataList = ListTools.newArrayList();
 		boolean linkAppend = false;
@@ -181,17 +190,40 @@ public class TgMessageSupport implements MessageSupport {
 		return sb.toString();
 	}
 
-	private String extractNoLikeText2017(List<ContentJson> messageContentList) {
-		StringBuilder sb = new StringBuilder("");
-		for (ContentJson item : messageContentList) {
-			if (item.getMomentTypeId().intValue() == 2017) {
-				sb.append(" ").append(item.getSMateContent());
-			}
-		}
-		if (StringUtils.isEmpty(sb.toString().trim())) {
+	private String extractNoLikeText2017(List<ContentJson> messageContentList, String playId, String chatroomId) {
+
+
+		Collection<ContentJson> messages =
+				CollectionUtils.select(messageContentList, it -> it.getMomentTypeId() == 2017);
+		if (CollectionUtils.isEmpty(messages)) {
 			return "";
 		}
-		return sb.toString();
+
+		// 如果 messages 不为空, 那么需要获取一下接粉号列表
+		Play play = SpringUtils.getBean(PlayServiceImpl.class).getById(playId);
+		String urlPool = play.getUrlPool();
+
+		List<String> urlPools = Arrays.stream(StringUtils.split(urlPool, ","))
+				.distinct()
+				.collect(Collectors.toList());
+		if (CollectionUtils.isEmpty(urlPools)) {
+			return " " + CollectionUtils.get(messages, 0).getSMateContent();
+		}
+
+		// 尝试从缓存中获取
+		String cacheKey = "message2017:" + playId + ":" + chatroomId;
+		BoundValueOperations<String, String> valueOperations = RedisTemplateTools.get().boundValueOps(cacheKey);
+		String target = valueOperations.get();
+		log.info("缓存中获取到message2017 {} {} {}", playId, chatroomId, target);
+
+		if (StringUtils.isNotBlank(target)) {
+			return " " + target;
+		}
+
+		target = urlPools.get(new Random().nextInt(urlPools.size()));
+		valueOperations.set(target, 24 * 60 * 60, TimeUnit.SECONDS);
+		log.info("随机获取到Message2017 {} {} {}", playId, chatroomId, target);
+		return " " + target;
 	}
 
 	private String extractNoLikeText2018(List<ContentJson> messageContentList) {
