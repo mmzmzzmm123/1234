@@ -23,6 +23,7 @@ import com.ruoyi.system.service.PlayMessagePushService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -124,6 +125,22 @@ public class PlayController extends BaseController {
         if (dto.getSendMechanism().getPerformerSepStart() >= dto.getSendMechanism().getPerformerSepEnd()) {
             return R.fail(11025, ErrInfoConfig.getDynmic(11025));
         }
+        if (CollectionUtils.isNotEmpty(dto.getPlayRobotMessageList())) {
+            for (PlayRobotMessageDTO playRobotMessageDTO : dto.getPlayRobotMessageList()) {
+                List<ContentJson> contents = playRobotMessageDTO.getMessageContent();
+                for (ContentJson content : contents) {
+                    if (null == content.getMomentTypeId()) {
+                        return R.fail(11018, ErrInfoConfig.getDynmic(11018));
+                    }
+                    if (content.getMomentTypeId() == 2017) {
+                        if (null == dto.getUrlPool() || dto.getUrlPool().size() < 1) {
+                            return R.fail(11019, ErrInfoConfig.getDynmic(11019));
+                        }
+                    }
+                }
+            }
+        }
+
         return R.ok();
     }
 
