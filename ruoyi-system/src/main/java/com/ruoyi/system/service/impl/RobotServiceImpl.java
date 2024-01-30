@@ -79,7 +79,7 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             if(robotListResult.isSuccess()){
                 Page<ExtTgSelectRobotByMerchantVO> data = robotListResult.getData();
                 this.pullRobotDataList(data.getRecords());
-                long count = data.getTotal()/robotDTO.getLimit() - 1;
+                long count = data.getPages();
                 if(count > 0){
                     for (long i = 0; i < count; i++) {
                         robotDTO.setPage(robotDTO.getPage()+1);
@@ -96,6 +96,11 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         });
 
         return R.ok();
+    }
+
+    public static void main(String[] args) {
+        int count = 5023/1000;
+        System.out.println(count);
     }
 
     private void pullRobotDataList(List<ExtTgSelectRobotByMerchantVO> dataList){
