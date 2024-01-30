@@ -78,10 +78,10 @@ public class PlayGroupInfoServiceImpl extends ServiceImpl<PlayGroupInfoMapper, P
     }
 
     @Override
-    public R<String> forceFinishGroup(String groupId) {
+    public R<String> forceFinishGroup(String groupId,String playId) {
         log.info("强制结束入群状态");
         //根据群链接和剧本ID查询群
-        PlayGroupInfo playGroupInfo = playGroupInfoMapper.selectGroupById(groupId);
+        PlayGroupInfo playGroupInfo = playGroupInfoMapper.selectGroupInfoById(groupId,playId);
         if (playGroupInfo == null) {
             return R.fail("群ID不存在！");
         }

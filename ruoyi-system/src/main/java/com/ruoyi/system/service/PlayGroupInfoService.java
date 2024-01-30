@@ -16,6 +16,6 @@ public interface PlayGroupInfoService extends IService<PlayGroupInfo> {
     List<PlayGroupInfo> listByPlayId(String playId);
 
 
-    R<String> forceFinishGroup(String groupId);
+    R<String> forceFinishGroup(String groupId,String playId);
 
 }

@@ -11,6 +11,7 @@ import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
+import com.ruoyi.system.domain.dto.ForceFinishGroupDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
 import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
@@ -338,7 +339,7 @@ public class PlayController extends BaseController {
 
     @ApiOperation("强制结束入群")
     @PostMapping("forceFinishGroup")
-    public R<String> forceFinishGroup(@PathVariable String groupId){
-        return playGroupInfoService.forceFinishGroup(groupId);
+    public R<String> forceFinishGroup(@RequestBody ForceFinishGroupDTO forceFinishGroupDTO){
+        return playGroupInfoService.forceFinishGroup(forceFinishGroupDTO.getGroupId(),forceFinishGroupDTO.getPlayId());
     }
 }
