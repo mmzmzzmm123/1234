@@ -60,7 +60,7 @@ public class SaveChatRoomJoinTaskDTO {
     /**
      * 选择群类型：1普通群组、2超级群组
      */
-    private Integer selectChatroomType = 1;
+    private Integer selectChatroomType;
 
     /**
      * 最后拉人时间超过多少分钟
