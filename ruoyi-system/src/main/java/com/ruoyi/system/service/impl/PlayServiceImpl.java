@@ -591,7 +591,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
         BeanUtils.copyProperties(infoRet.getData(), dto);
         dto.setLoginUser(loginUser);
         dto.setState(1);
-        dto.setScanProgress(ScanProgressEnum.Send_Wait.getVal());
+        dto.setScanProgress(ScanProgressEnum.Confuse.getVal());
         R<String> ret = this.create(dto);
         if (ret.getCode() != SUCCESS) {
             return ret;
