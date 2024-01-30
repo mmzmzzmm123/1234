@@ -31,7 +31,7 @@ public abstract class TaskQuery {
 
     static {
         INSTANCE_CACHE.put(0, new PullInGroupTaskQuery());
-        INSTANCE_CACHE.put(1, new ScreeningTaskQuery());
+        INSTANCE_CACHE.put(1, new PlayGroupTaskQuery());
         INSTANCE_CACHE.put(2, new ScreeningTaskQuery());
     }
 
