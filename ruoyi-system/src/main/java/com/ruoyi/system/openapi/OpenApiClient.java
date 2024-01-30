@@ -446,14 +446,14 @@ public class OpenApiClient {
         return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SYNC_GROUP_INVITE_LINK, JSONObject.from(data), Void.class);
     }
 
-    /**
-     * 比邻第三方(kpTG)：-获取所有会话
-     *
-     * @return
-     */
-    public static OpenApiResult<Void> getRobotFreGroupDataByThirdKpTg(ThirdTgRobotInputDTO data) {
-        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_ROBOT_FRE_GROUP_DATA, JSONObject.from(data), Void.class);
-    }
+//    /**
+//     * 比邻第三方(kpTG)：-获取所有会话
+//     *
+//     * @return
+//     */
+//    public static OpenApiResult<Void> getRobotFreGroupDataByThirdKpTg(ThirdTgRobotInputDTO data) {
+//        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_ROBOT_FRE_GROUP_DATA, JSONObject.from(data), Void.class);
+//    }
 
     /**
      * 比邻第三方(开平TG)：-发送好友消息接口

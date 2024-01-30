@@ -11,7 +11,6 @@ import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
 import com.ruoyi.system.components.movie.PlayDirector;
 import com.ruoyi.system.components.movie.spi.GroupCtrlStopper;
-import com.ruoyi.system.components.movie.spi.impl.BothwayGroupCtrlStopper;
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
@@ -511,16 +510,6 @@ public class TgRobotProcessor {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         log.info("NQ1100910027 called:{} {}", root, JSON.toJSONString(dto));
         SpringUtils.getBean(AutoReplyService.class).messageCallback(root, dto);
-    }
-
-    /**
-     * 获取所有会话回调
-     * @param dto
-     */
-    @Type(value = 1100910008, parameterClass = Called1100910008DTO.class)
-    public void called1100910008(Called1100910008DTO dto) {
-        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
-        log.info("called_1100910008:{} {}", root, JSON.toJSONString(dto));
     }
 
     /**
