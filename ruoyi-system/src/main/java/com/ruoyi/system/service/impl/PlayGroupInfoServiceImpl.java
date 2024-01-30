@@ -99,7 +99,7 @@ public class PlayGroupInfoServiceImpl extends ServiceImpl<PlayGroupInfoMapper, P
             GroupInfo groupInfo = groupInfoService.getById(playGroupInfo.getTgGroupId());
             //修改入群
             playIntoGroupTaskMapper.updateTaskByErrorGroupId(playGroupInfo.getGroupUrl());
-            retryGroupMember(playGroupInfo.getGroupId(),play.getId(),groupInfo.getGroupSerialNo());
+            retryGroupMember(playGroupInfo.getTgGroupId(),play.getId(),groupInfo.getGroupSerialNo());
         } else {
             log.info("群入群失败！");
             playGroupInfo.setIntoStatus(3);
