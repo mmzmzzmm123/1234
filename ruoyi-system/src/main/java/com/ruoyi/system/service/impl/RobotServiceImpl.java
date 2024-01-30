@@ -140,9 +140,6 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
 
         }
         this.storyRobot(robotList);
-
-        // 号订阅
-        subscribeRobot(robotSerialNos);
     }
 
     private void subscribeRobot(List<String> robotSerialNos) {
@@ -167,6 +164,8 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             log.info("storyRobot全部入库");
             this.saveBatch(this.compensateSetGroupOwnerRobot(newRobotList));
             this.insertRobotStatistics(newRobotList);
+            // 号订阅
+            subscribeRobot(newRobotSerialNos);
             return;
         }
         List<Robot> saveRobotList = Lists.newArrayList();
@@ -261,6 +260,9 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
         if(!CollectionUtils.isEmpty(saveRobotList)){
             this.saveBatch(this.compensateSetGroupOwnerRobot(saveRobotList));
             this.insertRobotStatistics(saveRobotList);
+            // 号订阅
+            List<String> robotSerialNos = saveRobotList.stream().map(Robot::getRobotSerialNo).collect(Collectors.toList());
+            subscribeRobot(robotSerialNos);
         }
         if(!CollectionUtils.isEmpty(updateRobotList)){
             this.updateBatchById(updateRobotList);
