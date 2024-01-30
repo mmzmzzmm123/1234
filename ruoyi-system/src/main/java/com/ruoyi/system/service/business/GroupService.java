@@ -144,9 +144,9 @@ public class GroupService {
                     exclusionGroupId.add(groupInfoVO.getGroupId());
 
                     //同一个群主号的群 不能在一个批次
-                    if (robotIds.contains(groupInfoVO.getLeaderId())) {
+                  /*  if (robotIds.contains(groupInfoVO.getLeaderId())) {
                         continue;
-                    }
+                    }*/
 
                     //加锁 防止并发取群
                     String key = "selectGroup:" + groupInfoVO.getGroupId();
