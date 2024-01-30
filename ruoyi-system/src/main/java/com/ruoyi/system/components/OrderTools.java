@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import cn.hutool.core.util.StrUtil;
 import org.springframework.util.CollectionUtils;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -33,10 +34,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OrderTools {
 
-	public static int getSuccessCountOfTaskDetail(String orderId) {
+	public static int getSuccessCountOfTaskDetail(Order order) {
 		// 获取 任务 详情成功的 个数
-		TaskQuery taskQuery = TaskQuery.newQuery(0);
-		List<TaskAdapter> taskAdapters = taskQuery.listByOrder(Arrays.asList(orderId));
+		TaskQuery taskQuery = TaskQuery.newQuery(order.getOrderType());
+		List<TaskAdapter> taskAdapters = taskQuery.listByOrder(Arrays.asList(order.getOrderId()));
 		if (CollectionUtils.isEmpty(taskAdapters)) {
 			return 0;
 		}
@@ -86,18 +87,18 @@ public class OrderTools {
 	public static List<Order> listComplete() {
 		final OrderMapper mapper = SpringUtils.getBean(OrderMapper.class);
 		// 订单状态 0-等待处理 1-进行中 2-已完成 3-已取消 4-已退款
-		return mapper.selectList(new QueryWrapper<Order>().lambda().eq(Order::getOrderStatus, 2));
+		return mapper.selectList(new QueryWrapper<Order>().lambda().eq(Order::getOrderStatus, 2).isNotNull(Order::getFinishTime));
 	}
 
 	public static void handleOrderStatus(Order order) {
 		final OrderMapper mapper = SpringUtils.getBean(OrderMapper.class);
-		List<TaskAdapter> taskAdapters = TaskQuery.newQuery(0).listByOrder(Arrays.asList(order.getOrderId()));
+		List<TaskAdapter> taskAdapters = TaskQuery.newQuery(order.getOrderType()).listByOrder(Arrays.asList(order.getOrderId()));
 		if (CollectionUtils.isEmpty(taskAdapters)) {
 			return;
 		}
 		String taskId = taskAdapters.get(0).getTaskId();
 		// 查询任务的状态 -1待执行 0-进行中 1-已完成 2-已取消
-		int taskStatus = TaskQuery.newQuery(0).getStatus(taskId);
+		int taskStatus = TaskQuery.newQuery(order.getOrderType()).getStatus(taskId);
 		if (taskStatus == 0) {
 			// 如果任务是 进行中， 设置订单为 进行中
 			mapper.updateStatus(order.getOrderId(), 1);
@@ -114,8 +115,23 @@ public class OrderTools {
 			settlementUserMonery(order, "任务主动取消");
 			mapper.updateCancel(order.getOrderId(), "任务主动取消");
 		}
+	}
+
+	public static void taskGenerationFailed(String orderId) {
+		if(StrUtil.isEmpty(orderId)){
+			return;
+		}
+		Order order = SpringUtils.getBean(OrderMapper.class).selectById(orderId);
+		if(order==null){
+			return;
+		}
+
+		settlementUserMonery(order, "任务生成失败");
+		SpringUtils.getBean(OrderMapper.class).updateCancel(order.getOrderId(), "任务生成失败");
 
 	}
+
+
 
 	public static long skuPrice(String orderId) {
 		final OrderSkuMapper mapper = SpringUtils.getBean(OrderSkuMapper.class);
@@ -134,7 +150,7 @@ public class OrderTools {
 	 */
 	public static void settlementUserMonery(Order order, String remark) {
 		// 根据订单 查询 实际完成了 多少任务详情
-		int successCount = getSuccessCountOfTaskDetail(order.getOrderId());
+		int successCount = getSuccessCountOfTaskDetail(order);
 		// sku单价
 		long skuPrice = skuPrice(order.getOrderId());
 		// 实际扣除的钱 = 成功详情数 * sku单价
@@ -161,7 +177,7 @@ public class OrderTools {
 		orderRefund.setUserId(order.getUserId());
 		orderRefund.setRemark(remark);
 		try {
-			orderRefund.setTaskId(TaskQuery.newQuery(0).listByOrder(Arrays.asList(order.getOrderId())).get(0).getTaskId());
+			orderRefund.setTaskId(TaskQuery.newQuery(order.getOrderType()).listByOrder(Arrays.asList(order.getOrderId())).get(0).getTaskId());
 		} catch (Exception e) {
 		}
 		SpringUtils.getBean(OrderRefundMapper.class).insert(orderRefund);

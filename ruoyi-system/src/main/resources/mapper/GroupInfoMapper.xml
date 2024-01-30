@@ -14,7 +14,7 @@
                if(tgs.group_status = 0,null, tgs.group_status_time) group_status_time,
                tgs.group_used,
                (select count(1) from t_play_robot_group_relation where group_id = tgi.group_id and state = 1) robot_num,
-               if(tgmi.member_count > 0 and tgmi.bot_check = 1, tgi.member_count, tgi.member_count)                                  member_count,
+               if(tgmi.member_count > 0 and tgmi.bot_check = 1, tgmi.member_count, tgi.member_count)                                  member_count,
                tgc.cluster_name,
                tgi.group_type,
                tgs.leader_robot,
@@ -60,6 +60,22 @@
             <if test="dto.groupStatusTimeEnd != null  and dto.groupStatusTimeEnd != ''">
                 AND tgs.group_status = 1
                 AND tgs.group_status_time <![CDATA[ <= ]]> #{dto.groupStatusTimeEnd}
+            </if>
+            <if test="dto.minMemberCount != null ">
+                AND if(tgmi.member_count > 0 and tgmi.bot_check = 1, tgmi.member_count, tgi.member_count) <![CDATA[ > ]]> #{dto.minMemberCount}
+            </if>
+            <if test="dto.maxMemberCount != null ">
+                AND if(tgmi.member_count > 0 and tgmi.bot_check = 1, tgmi.member_count, tgi.member_count) <![CDATA[ < ]]> #{dto.maxMemberCount}
+            </if>
+            <if test="dto.existInviteLink != null ">
+                <choose>
+                    <when test="dto.existInviteLink == 0">
+                        AND tgi.group_invite_link = ''
+                    </when>
+                    <when test="dto.existInviteLink == 1">
+                        AND tgi.group_invite_link != ''
+                    </when>
+                </choose>
             </if>
             <if test="dto.createType != null ">
                 AND tgi.create_type = #{dto.createType}
@@ -177,7 +193,7 @@
         tgi.group_invite_link,
         tgi.group_type,
         tgr.robot_id leader_id,
-        if(tgmi.member_count > 0 and tgmi.bot_check = 1, tgi.member_count, tgi.member_count)                                  member_count
+        if(tgmi.member_count > 0 and tgmi.bot_check = 1, tgmi.member_count, tgi.member_count)                                  member_count
         from t_group_info tgi
         join t_group_cluster_ref tgcr on tgi.group_id = tgcr.group_id
          join t_group_state tgs on tgi.group_id = tgs.group_id

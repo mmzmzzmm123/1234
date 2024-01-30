@@ -356,8 +356,8 @@ public class TgRobotProcessor {
 
             GroupInfo groupInfo = groupInfoService.getGroupBySerialNo(oldChatroomSerialNo, newChatroomSerialNo);
             groupInfoService.changeGroupSerialNo(oldChatroomSerialNo, newChatroomSerialNo);
-
             if (groupInfo != null) {
+                groupStateService.updateUpgradeTime(groupInfo.getGroupId());
                 playMessagePushService.pauseGroupPushWhenWaitSend(groupInfo.getGroupId(), "群升级-待升级完成");
             }
 
@@ -372,6 +372,7 @@ public class TgRobotProcessor {
         if (root.isSuccess()) {
             GroupInfo groupInfo = groupInfoService.getGroupBySerialNo(dto.getNewChatroomSerialNo());
             if (groupInfo != null) {
+                groupStateService.updateUpgradeTime(groupInfo.getGroupId());
                 playMessagePushService.continuePushWhenPause(groupInfo.getGroupId(), "群升级-待升级完成");
             }
         }
@@ -485,6 +486,10 @@ public class TgRobotProcessor {
 //        }
     }
 
+    /**
+     * 封群回调 被动
+     * @param dto
+     */
     @Type(value = 1100850217, parameterClass = Called1100850217DTO.class)
     public void called1100850217(Called1100850217DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();

@@ -61,5 +61,7 @@ public class ScreeningTaskBatch {
     @ApiModelProperty(value = "订单id")
     @TableField("order_id")
     private String orderId;
+
+    private String msg;
     
 }

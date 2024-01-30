@@ -6,6 +6,7 @@ import com.ruoyi.system.domain.ScreeningTask;
 import com.ruoyi.system.domain.dto.ScreeningTaskDetailDTO;
 import com.ruoyi.system.domain.dto.ScreeningTaskExportDTO;
 import com.ruoyi.system.domain.dto.ScreeningTaskPageDTO;
+import com.ruoyi.system.domain.dto.TaskOrderInfoDTO;
 import com.ruoyi.system.domain.vo.*;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -30,4 +31,6 @@ public interface ScreeningTaskMapper extends BaseMapper<ScreeningTask> {
     List<ScreeningTaskResultVO> taskResult(@Param("dto") ScreeningTaskExportDTO dto);
 
     Page<ScreeningTaskDetailVO> page(Page page, @Param("dto") ScreeningTaskDetailDTO dto);
+
+    List<TaskOrderInfoDTO> getByOrderIds(@Param("orderIds") List<String> orderIds);
 }

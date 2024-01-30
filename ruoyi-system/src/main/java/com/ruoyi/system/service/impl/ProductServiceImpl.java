@@ -70,7 +70,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             List<ProductSkuDTO> skuList = productDTO.getSkuList();
             skuList.forEach(x -> {
                 x.setStock(stockEstimateMap.get(x.getCountyCode()));
-                x.setPrice(BigDecimal.valueOf(x.getPrice()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue());
+                x.setPrice(BigDecimal.valueOf(x.getPrice()).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue());
             });
             productDTO.setSkuList(skuList);
         }
@@ -86,7 +86,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         for (ProductSkuDTO item : productDTO.getSkuList()) {
             ProductSku productSku = new ProductSku();
             BeanUtil.copyProperties(item, productSku);
-            productSku.setPrice(BigDecimal.valueOf(item.getPrice()).multiply(BigDecimal.valueOf(100L)).longValue());
+            productSku.setPrice(BigDecimal.valueOf(item.getPrice()).multiply(BigDecimal.valueOf(10000L)).longValue());
             productSku.setProductId(id);
             productSkus.add(productSku);
         }
@@ -149,7 +149,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
             ProductSkuDTO productSkuDTO = new ProductSkuDTO();
             BeanUtils.copyProperties(productSku, productSkuDTO);
 
-            double price = BigDecimal.valueOf(productSku.getPrice()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+            double price = BigDecimal.valueOf(productSku.getPrice()).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
             productSkuDTO.setPrice(price);
             skuList.add(productSkuDTO);
 
@@ -248,7 +248,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         List<ProductSku> productSkus = new ArrayList<>();
         for (ProductSkuDTO productSkuDTO : skuList) {
 
-            long price = BigDecimal.valueOf(productSkuDTO.getPrice()).multiply(BigDecimal.valueOf(100L)).longValue();
+            long price = BigDecimal.valueOf(productSkuDTO.getPrice()).multiply(BigDecimal.valueOf(10000L)).longValue();
             if (ObjectUtils.isEmpty(productSkuDTO.getId())) {
                 ProductSku productSku = new ProductSku();
                 productSku.setProductId(productId);
@@ -279,7 +279,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         if (ObjectUtils.isEmpty(product)) {
             return R.fail(ErrInfoConfig.getDynmic(11008));
         }
-        long price = BigDecimal.valueOf(productDTO.getPrice()).multiply(BigDecimal.valueOf(100L)).longValue();
+        long price = BigDecimal.valueOf(productDTO.getPrice()).multiply(BigDecimal.valueOf(10000L)).longValue();
 
         ProductSkuDTO skuAttrDTO = JSON.parseObject(product.getSkuAttr(), ProductSkuDTO.class);
         skuAttrDTO.setPrice((double) price);
@@ -337,7 +337,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         for (ProductVO productVO : productVOList) {
             ProductSkuDTO skuAttr = productVO.getSkuAttr();
             skuAttr.setStock(stockEstimateMap.get(skuAttr.getCountyCode()));
-            skuAttr.setPrice(BigDecimal.valueOf(skuAttr.getPrice()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue());
+            skuAttr.setPrice(BigDecimal.valueOf(skuAttr.getPrice()).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue());
             productVO.setSkuAttr(skuAttr);
         }
 
@@ -387,7 +387,7 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         List<ProductSkuDTO> skuList = new ArrayList<>();
         ProductSkuDTO productSkuDTO = new ProductSkuDTO();
         BeanUtils.copyProperties(productSku, productSkuDTO);
-        double price = BigDecimal.valueOf(productSku.getPrice()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        double price = BigDecimal.valueOf(productSku.getPrice()).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
         productSkuDTO.setPrice(price);
         skuList.add(productSkuDTO);
 
@@ -451,4 +451,17 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         );
         log.info("同步商品支撑量完成");
     }
+
+    @Override
+    public void refreshProduct() {
+        List<Product> products = baseMapper.selectList(new LambdaQueryWrapper<>());
+        updateBatchById(products.stream().map(p->{
+            Product update = new Product();
+            update.setProductId(p.getProductId());
+            update.setSkuAttr(getOneSkuAttr(p.getProductId()));
+            return update;
+        }).collect(Collectors.toList()));
+    }
+
+
 }

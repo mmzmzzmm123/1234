@@ -8,10 +8,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.system.domain.ScreeningTask;
-import com.ruoyi.system.domain.dto.ScreeningTaskDetailDTO;
-import com.ruoyi.system.domain.dto.ScreeningTaskDetailExportDTO;
-import com.ruoyi.system.domain.dto.ScreeningTaskExportDTO;
-import com.ruoyi.system.domain.dto.ScreeningTaskPageDTO;
+import com.ruoyi.system.domain.dto.*;
 import com.ruoyi.system.domain.vo.*;
 import com.ruoyi.system.mapper.ScreeningTaskMapper;
 import com.ruoyi.system.service.ScreeningTaskService;
@@ -104,8 +101,6 @@ public class ScreeningTaskServiceImpl extends ServiceImpl<ScreeningTaskMapper, S
 
     @Override
     public void addTarget(ScreeningTask task) {
-        task.setBatchCount(task.getBatchCount() + 1);
-
         ScreeningTask update = new ScreeningTask();
         update.setTaskId(task.getTaskId());
         update.setUpdateTime(LocalDateTime.now());
@@ -131,6 +126,16 @@ public class ScreeningTaskServiceImpl extends ServiceImpl<ScreeningTaskMapper, S
             update.setCompletionTime(LocalDateTime.now());
         }
         baseMapper.updateById(update);
+    }
+
+    @Override
+    public List<TaskOrderInfoDTO> getByOrderIds(List<String> orderIds) {
+        return baseMapper.getByOrderIds(orderIds);
+    }
+
+    @Override
+    public List<ScreeningTask> getRunningTasks() {
+        return baseMapper.selectList(new LambdaQueryWrapper<ScreeningTask>().notIn(ScreeningTask::getTaskState, 4, 5));
     }
 
 

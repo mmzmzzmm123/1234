@@ -33,7 +33,8 @@ public class ScreeningBatchProgressVO extends ScreeningBatchVO {
     @ApiModelProperty(value = "进度")
     private BigDecimal screeningRadio;
 
-
+    @ApiModelProperty(value = "异常原因")
+    private String msg;
 
     @ApiModelProperty(value = "有效号码数")
     private Long validCount;

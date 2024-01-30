@@ -48,7 +48,7 @@ public class ScreeningTaskVO  {
             this.price = BigDecimal.ZERO;
             return;
         }
-        this.price = price.divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP);
+        this.price = price.divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP);
     }
 
     @ApiModelProperty(value = "号码总数")
@@ -59,4 +59,9 @@ public class ScreeningTaskVO  {
 
     @ApiModelProperty(value = "进度")
     private BigDecimal screeningRadio = BigDecimal.ZERO;
+
+
+    private String merchantId;
+
+    private String merchantName;
 }

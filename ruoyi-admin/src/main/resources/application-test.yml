@@ -138,3 +138,13 @@ swagger:
 
 bot:
   api-url: https://30q623450x.vicp.fun
+
+
+search:
+  requestPath: http://phoneapi.haitungj.com:8878
+  username:  tgexternalapi
+  password: 202401191647
+  callTimeoutSecond: 10
+  connectTimeoutSecond: 10
+  strKey: 12u34%56X8032asGdfg3h!sA%SDFl2
+  callBackUrl: https://ruoyi-admin.csbilin.com/taskCallBack

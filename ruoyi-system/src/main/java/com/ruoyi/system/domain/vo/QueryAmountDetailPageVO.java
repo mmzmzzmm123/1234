@@ -53,7 +53,7 @@ public class QueryAmountDetailPageVO {
             this.changeBefore = 0d;
             return;
         }
-        this.changeBefore =  BigDecimal.valueOf(changeBefore).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.changeBefore =  BigDecimal.valueOf(changeBefore).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
     }
 
     public void setChangeAmount(Double changeAmount) {
@@ -62,7 +62,7 @@ public class QueryAmountDetailPageVO {
             this.changeAmount = 0d;
             return;
         }
-        this.changeAmount = BigDecimal.valueOf(changeAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.changeAmount = BigDecimal.valueOf(changeAmount).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
     }
 
     public void setChangeAfter(Double changeAfter) {
@@ -70,6 +70,6 @@ public class QueryAmountDetailPageVO {
             this.changeAfter = 0d;
             return;
         }
-        this.changeAfter = BigDecimal.valueOf(changeAfter).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.changeAfter = BigDecimal.valueOf(changeAfter).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
     }
 }

@@ -33,6 +33,7 @@
         <redisson.version>3.16.2</redisson.version>
         <hutool.version>5.8.24</hutool.version>
         <mongodb.version>2.3.12.RELEASE</mongodb.version>
+        <telegram-search-sdk.version>1.0.6</telegram-search-sdk.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -201,6 +202,12 @@
                 <scope>import</scope>
             </dependency>
 
+
+            <dependency>
+                <groupId>cc.linkmaster</groupId>
+                <artifactId>telegram-search-sdk</artifactId>
+                <version>${telegram-search-sdk.version}</version>
+            </dependency>
 
         </dependencies>
     </dependencyManagement>

@@ -59,4 +59,6 @@ public interface IProductService {
 
     void syncAllStocks();
 
+
+    void refreshProduct();
 }

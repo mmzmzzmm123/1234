@@ -5,6 +5,7 @@ import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
@@ -64,7 +65,7 @@ public class ScreeningController extends BaseController {
                     merchantId = merchantInfo.getMerchantId();
                 }
             }
-            screeningService.addTask(file, merchantId, getUserId(), taskName, countryCode, productId);
+            screeningService.addTask(file, merchantId, getLoginUser(), taskName, countryCode, productId);
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
@@ -81,7 +82,7 @@ public class ScreeningController extends BaseController {
     public R<Void> addTarget(@RequestParam(value = "file") @ApiParam("手机文件txt格式") MultipartFile file,
                              @RequestParam(value = "taskId") @ApiParam("追加的任务id") String taskId) {
         try {
-            screeningService.addTask(file, taskId);
+            screeningService.addTask(file, taskId, getLoginUser());
             return R.ok();
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
@@ -219,7 +220,7 @@ public class ScreeningController extends BaseController {
     @PostMapping("/detail")
     public R<Page<ScreeningTaskDetailVO>> detail(@RequestBody ScreeningTaskDetailDTO dto) {
         try {
-            Assert.notEmpty(dto.getTaskId(),"任务id不能为空");
+            Assert.notEmpty(dto.getTaskId(), "任务id不能为空");
             return R.ok(screeningTaskService.taskDetail(dto));
         } catch (IllegalArgumentException e) {
             return R.fail(e.getMessage());
@@ -241,7 +242,7 @@ public class ScreeningController extends BaseController {
             try {
                 dto.setPage(page++);
                 dto.setLimit(limit);
-                List<ScreeningTaskDetailVO> records =screeningTaskService.taskDetail(dto).getRecords();
+                List<ScreeningTaskDetailVO> records = screeningTaskService.taskDetail(dto).getRecords();
                 list.addAll(records);
                 if (records.size() < limit) {
                     break;
@@ -252,5 +253,18 @@ public class ScreeningController extends BaseController {
         }
         ExcelUtil<ScreeningTaskDetailVO> util = new ExcelUtil<>(ScreeningTaskDetailVO.class);
         util.exportExcel(response, list, "筛查明细数据");
+    }
+
+    @Anonymous
+    @PostMapping("refreshToken")
+    public R<String> refreshToken() {
+        return R.ok(screeningService.getToken());
+    }
+
+    @Anonymous
+    @PostMapping("refreshTask")
+    public R<String> refreshTask() {
+        screeningService.refreshTaskStatus();
+        return R.ok();
     }
 }

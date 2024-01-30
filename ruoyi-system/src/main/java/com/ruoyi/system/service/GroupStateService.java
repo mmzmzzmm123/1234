@@ -27,4 +27,7 @@ public interface GroupStateService extends IService<GroupState> {
     void recover(String groupId);
 
     void groupBaned(String chatroomSerialNo, LocalDateTime banedTime);
+
+
+    void updateUpgradeTime(String groupId);
 }

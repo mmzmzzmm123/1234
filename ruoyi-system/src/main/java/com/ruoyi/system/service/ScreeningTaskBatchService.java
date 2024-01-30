@@ -20,7 +20,11 @@ public interface ScreeningTaskBatchService extends IService<ScreeningTaskBatch> 
     List<ScreeningBatchVO> batchInfo(String taskId);
 
 
-    void updateBatchStatus(String batchId,Integer status);
+    void updateBatchStatus(String batchId,Integer status,String msg);
+
+    List<ScreeningTaskBatch> listRunning(String taskId);
 
     long countRunning(String taskId);
+
+
 }

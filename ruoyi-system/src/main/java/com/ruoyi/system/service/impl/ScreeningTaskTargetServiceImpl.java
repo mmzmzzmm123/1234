@@ -53,9 +53,17 @@ public class ScreeningTaskTargetServiceImpl extends ServiceImpl<ScreeningTaskTar
 
     @Override
     public long countUnchecked(String batchId) {
-        return  baseMapper.selectCount(
+        return baseMapper.selectCount(
                 new LambdaQueryWrapper<ScreeningTaskTarget>()
-                        .notIn(ScreeningTaskTarget::getResult,1,2)
+                        .notIn(ScreeningTaskTarget::getResult, 1, 2)
+                        .eq(ScreeningTaskTarget::getBatchId, batchId));
+    }
+
+    @Override
+    public long countCheck(String batchId) {
+        return baseMapper.selectCount(
+                new LambdaQueryWrapper<ScreeningTaskTarget>()
+                        .in(ScreeningTaskTarget::getResult, 1, 2)
                         .eq(ScreeningTaskTarget::getBatchId, batchId));
     }
 }

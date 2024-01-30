@@ -78,4 +78,19 @@ public class PlayGroupProgressVO {
     @ApiModelProperty("群主封号状态 10:未封号 20:疑似封号 30:封号离线")
     private Integer groupMasterSealStatus;
 
+
+    @ApiModelProperty(value = "是否超级群 0-普通群 1-超级群")
+    private Integer superGroup;
+
+
+    @ApiModelProperty(value = "升超级群时间")
+    private Date upgradeTime;
+
+    @ApiModelProperty("待发送")
+    private Integer waitNum;
+    @ApiModelProperty("发送成功")
+    private Integer successNum;
+    @ApiModelProperty("发送成功")
+    private Integer failNum;
+
 }

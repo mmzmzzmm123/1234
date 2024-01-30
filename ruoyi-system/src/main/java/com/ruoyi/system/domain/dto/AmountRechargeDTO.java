@@ -28,7 +28,7 @@ public class AmountRechargeDTO {
     private String createBy;
 
     public Long getAmount() {
-        return BigDecimal.valueOf(amount).multiply(BigDecimal.valueOf(100L)).longValue();
+        return BigDecimal.valueOf(amount).multiply(BigDecimal.valueOf(10000L)).longValue();
     }
 
 

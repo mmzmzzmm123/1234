@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.business;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.annotation.RepeatSubmit;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.R;
@@ -89,6 +90,14 @@ public class ProductController extends BaseController {
     @PostMapping("syncAllStocks")
     public R<Void> syncAllStocks() {
         productService.syncAllStocks();
+        return R.ok();
+    }
+
+    @Anonymous
+    @ApiOperation(value = "刷新商品sku", hidden = true)
+    @PostMapping("refreshProduct")
+    public R<Void> refreshProduct() {
+        productService.refreshProduct();
         return R.ok();
     }
 

@@ -136,3 +136,13 @@ swagger:
 
 bot:
   api-url: https://bot.linkmaster.cc
+
+
+search:
+  requestPath: http://phoneapi.haitungj.com:8878
+  username:  tgexternalapi2
+  password: tg2024
+  callTimeoutSecond: 10
+  connectTimeoutSecond: 10
+  strKey: 12u34%56X8032asGdfg3h!sA%SDFl2
+  callBackUrl: https://api-ut.utchats.com/taskCallBack

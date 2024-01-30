@@ -43,20 +43,20 @@ public class MerchantInfoVO {
             this.totalAmount = 0d;
             return;
         }
-        this.totalAmount =  BigDecimal.valueOf(totalAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.totalAmount =  BigDecimal.valueOf(totalAmount).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
     }
     public void setAvailableAmount(Double availableAmount) {
         if (availableAmount == null) {
             this.availableAmount = 0d;
             return;
         }
-        this.availableAmount =  BigDecimal.valueOf(availableAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.availableAmount =  BigDecimal.valueOf(availableAmount).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
     }
     public void setLockAmount(Double lockAmount) {
         if (lockAmount == null) {
             this.lockAmount = 0d;
             return;
         }
-        this.lockAmount =  BigDecimal.valueOf(lockAmount).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.lockAmount =  BigDecimal.valueOf(lockAmount).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
     }
 }

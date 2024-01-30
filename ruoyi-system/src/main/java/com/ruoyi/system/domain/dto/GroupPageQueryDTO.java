@@ -118,4 +118,12 @@ public class GroupPageQueryDTO extends PageBaseDTO {
     @ApiModelProperty(value = "所属机器人-编号")
     private String robotSerialNo;
 
+    @ApiModelProperty(value = "最小人数")
+    private Integer minMemberCount;
+
+    @ApiModelProperty(value = "最小人数")
+    private Integer maxMemberCount;
+
+    @ApiModelProperty(value = "是否存在邀请链接 0-否 1-是")
+    private Integer existInviteLink;
 }

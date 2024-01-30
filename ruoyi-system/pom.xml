@@ -27,6 +27,13 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-http</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>cc.linkmaster</groupId>
+            <artifactId>telegram-search-sdk</artifactId>
+        </dependency>
     </dependencies>
+
+
 
 </project>

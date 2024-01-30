@@ -1,6 +1,5 @@
 package com.ruoyi.common.enums;
 
-import io.lettuce.core.Limit;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -14,23 +13,23 @@ import java.util.EnumSet;
 @Getter
 public enum GroupAction {
 
-    SET_GROUP_IMAGE(0, "设置群头像", true,LimitingDimensions.NONE,null,null,false,false),
+    SET_GROUP_IMAGE(0, "设置群头像", true, LimitingDimensions.NONE, null, null, false, false),
 
-    SET_GROUP_NAME(1, "设置群名", true,LimitingDimensions.NONE,null,null,false,false),
+    SET_GROUP_NAME(1, "设置群名", true, LimitingDimensions.NONE, null, null, false, false),
 
-    SET_GROUP_TYPE(2, "设置群类型", true,LimitingDimensions.NONE,null,null,false,false),
+    SET_GROUP_TYPE(2, "设置群类型", true, LimitingDimensions.NONE, null, null, false, false),
 
-    SEARCH_BOT(3, "搜索BOT", true,LimitingDimensions.NONE,null,null,false,false),
+    SEARCH_BOT(3, "搜索BOT", true, LimitingDimensions.NONE, null, null, false, false),
 
-    ADD_BOT(4, "添加BOT", true,LimitingDimensions.NONE,null,null,false,false),
+    ADD_BOT(4, "添加BOT", true, LimitingDimensions.NONE, null, null, false, false),
 
-    INVITE_BOT_JOIN_GROUP(5, "邀请bot进入群聊", true, LimitingDimensions.ROBOT, 60L,50,false,false),
+    INVITE_BOT_JOIN_GROUP(5, "邀请bot进入群聊", true, LimitingDimensions.ROBOT, 5 * 60L, 10, false, false),
 
-    SET_GROUP_ADMIN(6, "设置管理员", true,LimitingDimensions.NONE,null,null,false,true),
+    SET_GROUP_ADMIN(6, "设置管理员", true, LimitingDimensions.NONE, null, null, false, true),
 
-    QUERY_HASH(7,"查询成员hash", true,LimitingDimensions.ALL,60L,15,true,false),
+    QUERY_HASH(7, "查询成员hash", true, LimitingDimensions.ALL, 60L, 50, true, false),
 
-    QUERY_GROUP_MEMBER(8,"查询群成员",true,LimitingDimensions.NONE,null,null,false,false);
+    QUERY_GROUP_MEMBER(8, "查询群成员", true, LimitingDimensions.NONE, null, null, false, false);
 
     private final int code;
 
@@ -40,7 +39,7 @@ public enum GroupAction {
 
     private final LimitingDimensions limitingDimensions;
 
-    private final Long limitTime ;
+    private final Long limitTime;
 
     private final Integer limitFrequency;
 

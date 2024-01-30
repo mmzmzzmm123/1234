@@ -52,11 +52,20 @@ public class ScreeningTaskBatchServiceImpl extends ServiceImpl<ScreeningTaskBatc
     }
 
     @Override
-    public void updateBatchStatus(String batchId, Integer status) {
+    public void updateBatchStatus(String batchId, Integer status,String msg) {
         ScreeningTaskBatch batch = new ScreeningTaskBatch();
         batch.setBatchId(batchId);
         batch.setBatchState(status);
+        batch.setMsg(msg);
         baseMapper.updateById(batch);
+    }
+
+    @Override
+    public List<ScreeningTaskBatch> listRunning(String taskId) {
+        return baseMapper.selectList(
+                new LambdaQueryWrapper<ScreeningTaskBatch>()
+                        .notIn(ScreeningTaskBatch::getBatchState, 3, 4)
+                        .eq(ScreeningTaskBatch::getTaskId, taskId));
     }
 
     @Override
@@ -66,4 +75,5 @@ public class ScreeningTaskBatchServiceImpl extends ServiceImpl<ScreeningTaskBatc
                         .notIn(ScreeningTaskBatch::getBatchState, 3, 4)
                         .eq(ScreeningTaskBatch::getTaskId, taskId));
     }
+
 }

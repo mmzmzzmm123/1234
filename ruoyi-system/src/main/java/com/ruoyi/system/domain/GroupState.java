@@ -1,6 +1,8 @@
 package com.ruoyi.system.domain;
 
 import java.time.LocalDateTime;
+import java.util.Date;
+
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
@@ -61,5 +63,9 @@ public class GroupState {
     @ApiModelProperty(value = "群主是否机器人 0-否 1-是")
     @TableField("leader_robot")
     private Integer leaderRobot;
+
+
+    @ApiModelProperty(value = "升超级群时间")
+    private LocalDateTime upgradeTime;
     
 }

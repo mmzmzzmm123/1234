@@ -61,7 +61,7 @@ public class OrderListResponseVO {
 			this.price = 0d;
 			return;
 		}
-		this.price = BigDecimal.valueOf(price).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+		this.price = BigDecimal.valueOf(price).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public void setActualPrice(Double actualPrice) {
@@ -69,7 +69,7 @@ public class OrderListResponseVO {
 			this.actualPrice = 0d;
 			return;
 		}
-		this.actualPrice = BigDecimal.valueOf(actualPrice).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+		this.actualPrice = BigDecimal.valueOf(actualPrice).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
 	}
 
 	public void setRefundPrice(Double refundPrice) {
@@ -77,6 +77,6 @@ public class OrderListResponseVO {
 			this.refundPrice = 0d;
 			return;
 		}
-		this.refundPrice = BigDecimal.valueOf(refundPrice).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+		this.refundPrice = BigDecimal.valueOf(refundPrice).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
 	}
 }

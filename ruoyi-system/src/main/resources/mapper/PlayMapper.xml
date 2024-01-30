@@ -116,7 +116,7 @@
             tgmi.exit_count,
             tgmi.link_join_count,
             tgs.group_status,
-            tgs.group_status_time,
+            if(tgs.group_status = 0,null, tgs.group_status_time) group_status_time,
             (
                 SELECT
                     count( 1 )
@@ -129,7 +129,12 @@
             ) AS navyCount,
             count( tpmpd.id ) AS totalNum,
             sum( IF ( tpmpd.send_state > 0, 1, 0 ) ) AS currentNum,
-            tri.seal_status AS groupMasterSealStatus
+            count( tpmpd.id ) - sum( IF ( tpmpd.send_state > 0, 1, 0 ) ) AS waitNum,
+            sum( IF ( tpmpd.send_state = 1, 1, 0 ) ) AS successNum,
+            sum( IF ( tpmpd.send_state = 2, 1, 0 ) ) AS failNum,
+            tri.seal_status AS groupMasterSealStatus,
+            tgs.upgrade_time,
+           if( tgmi.original_group_id  like '-100%', 1,0 ) AS superGroup
         FROM
             t_play_group_info tpgi
             LEFT JOIN t_group_info tgi ON tpgi.tg_group_id = tgi.group_id

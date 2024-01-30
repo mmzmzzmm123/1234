@@ -124,4 +124,12 @@ public class GroupStateServiceImpl extends ServiceImpl<GroupStateMapper, GroupSt
                 .set(banedTime != null, GroupState::getGroupStatusTime, banedTime);
         this.update(updateWrapper);
     }
+
+    @Override
+    public void updateUpgradeTime(String groupId) {
+        GroupState groupState = new GroupState();
+        groupState.setUpgradeTime(LocalDateTime.now());
+        groupState.setGroupId(groupId);
+        baseMapper.updateById(groupState);
+    }
 }

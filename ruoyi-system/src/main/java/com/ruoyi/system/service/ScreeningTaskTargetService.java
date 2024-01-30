@@ -19,4 +19,6 @@ public interface ScreeningTaskTargetService extends IService<ScreeningTaskTarget
     ScreeningTaskTarget updateResult(TaskCallBackDTO dto);
 
     long countUnchecked(String batchId);
+
+    long countCheck(String batchId);
 }

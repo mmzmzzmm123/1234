@@ -72,7 +72,7 @@ public class GroupPageInfoVO {
     @ApiModelProperty(value = "群类型 10私密群 20公开群")
     private Integer groupType;
 
-    @Excel(name = "群类型", readConverterExp = "10=开平导入群,20=外部自建群")
+    @Excel(name = "来源", readConverterExp = "10=开平导入群,20=外部自建群")
     @ApiModelProperty(value = "来源 10-开平导入群  20-外部自建群")
     private Integer createType;
 

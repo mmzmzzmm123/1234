@@ -54,6 +54,6 @@ public class OrderSkuVO {
             this.price = 0d;
             return;
         }
-        this.price =  BigDecimal.valueOf(price).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP).doubleValue();
+        this.price =  BigDecimal.valueOf(price).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP).doubleValue();
     }
 }

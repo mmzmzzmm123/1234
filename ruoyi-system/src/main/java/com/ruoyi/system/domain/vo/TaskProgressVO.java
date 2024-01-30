@@ -52,7 +52,7 @@ public class TaskProgressVO {
             this.price = BigDecimal.ZERO;
             return;
         }
-        this.price = price.divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP);
+        this.price = price.divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP);
     }
 
     @ApiModelProperty(value = "资金消耗")

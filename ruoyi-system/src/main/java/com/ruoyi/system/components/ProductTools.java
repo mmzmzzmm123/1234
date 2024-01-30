@@ -23,7 +23,7 @@ public class ProductTools {
 		if (sku == null) {
 			return "";
 		}
-		return sku.getCountyName() + " " + sku.getPriceUnit() + " " + BigDecimal.valueOf(sku.getPrice()).divide(BigDecimal.valueOf(100L), 2, RoundingMode.HALF_UP);
+		return sku.getCountyName() + " " + sku.getPriceUnit() + " " + BigDecimal.valueOf(sku.getPrice()).divide(BigDecimal.valueOf(10000L), 4, RoundingMode.HALF_UP);
 	}
 
 	public static List<Product> list(List<Long> ids) {

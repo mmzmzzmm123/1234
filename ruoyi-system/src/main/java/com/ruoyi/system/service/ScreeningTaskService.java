@@ -4,9 +4,11 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.core.domain.entity.ProductSku;
 import com.ruoyi.system.domain.ScreeningTask;
+import com.ruoyi.system.domain.ScreeningTaskBatch;
 import com.ruoyi.system.domain.dto.ScreeningTaskDetailDTO;
 import com.ruoyi.system.domain.dto.ScreeningTaskExportDTO;
 import com.ruoyi.system.domain.dto.ScreeningTaskPageDTO;
+import com.ruoyi.system.domain.dto.TaskOrderInfoDTO;
 import com.ruoyi.system.domain.vo.*;
 
 import java.util.List;
@@ -37,4 +39,9 @@ public interface ScreeningTaskService extends IService<ScreeningTask> {
     Page<ScreeningTaskDetailVO> taskDetail(ScreeningTaskDetailDTO dto);
 
     void updateBatchStatus(String taskId, Integer status);
+
+    List<TaskOrderInfoDTO> getByOrderIds(List<String> orderIds);
+
+
+    List<ScreeningTask> getRunningTasks();
 }
