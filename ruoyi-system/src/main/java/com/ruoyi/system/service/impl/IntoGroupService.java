@@ -841,7 +841,6 @@ public class IntoGroupService {
                         } else {
                             log.info("群入群失败！");
                             playGroupInfo.setIntoStatus(3);
-                            playGroupInfo.setState(3);
                             playGroupInfo.setTip("入群失败！");
                         }
                         playGroupInfoMapper.updateById(playGroupInfo);
