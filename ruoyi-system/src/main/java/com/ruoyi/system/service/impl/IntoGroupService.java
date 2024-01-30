@@ -799,7 +799,7 @@ public class IntoGroupService {
             } else {
                 //根据重试ID查询记录条数
                 Integer retCount = playIntoGroupTaskMapper.selectTaskByRetCount(task.getRetryId());
-                if (retCount < 9) {
+                if (retCount < 2) { //入群重试次数
                     isRet = true;
                 }
             }
@@ -1282,7 +1282,7 @@ public class IntoGroupService {
         log.error("定时检测入群是否有回调超时的任务");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.MINUTE, -3);
+        calendar.add(Calendar.MINUTE, -1);//回调超时时间1分钟
         List<PlayIntoGroupTask> playIntoGroupTasks =playIntoGroupTaskMapper.selectNotCallBackTask(calendar.getTime());
         if (playIntoGroupTasks == null || playIntoGroupTasks.size() == 0){
             return;
