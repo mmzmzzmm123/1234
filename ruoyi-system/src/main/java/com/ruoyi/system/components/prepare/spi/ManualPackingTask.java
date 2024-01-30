@@ -186,6 +186,7 @@ public class ManualPackingTask implements TaskExecution {
 			}
 		}
 		if (CollectionUtils.isEmpty(submitList)) {
+			PlayExecutionLogService.robotPackLog(playId, "无需人设包装，等待炒群条件触发", null);
 			return null;
 		}
 		// 提交到 容器
