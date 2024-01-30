@@ -103,7 +103,6 @@ public class PlayGroupInfoServiceImpl extends ServiceImpl<PlayGroupInfoMapper, P
         } else {
             log.info("群入群失败！");
             playGroupInfo.setIntoStatus(3);
-            playGroupInfo.setState(3);
             playGroupInfo.setTip("入群失败！群人数不足");
             //修改入群
             playIntoGroupTaskMapper.updateTaskByErrorGroupId(playGroupInfo.getGroupUrl());
