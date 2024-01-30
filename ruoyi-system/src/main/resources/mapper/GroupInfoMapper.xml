@@ -193,6 +193,7 @@
            and robot.recycle_status =0
            and tgi.group_invite_link != ''
            and ttdcad.admin_serial_no is null
+           and robot.seal_status = 10
         <if test="groupRange != null  and groupRange != ''">
             <choose>
                 <when test="groupRange == 1">
