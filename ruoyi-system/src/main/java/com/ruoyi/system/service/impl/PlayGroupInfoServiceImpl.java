@@ -11,10 +11,7 @@ import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
 import com.ruoyi.system.domain.dto.play.PlayGroupMemberLog;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
-import com.ruoyi.system.mapper.PlayGroupInfoMapper;
-import com.ruoyi.system.mapper.PlayGroupMemberLogMapper;
-import com.ruoyi.system.mapper.PlayMapper;
-import com.ruoyi.system.mapper.PlayRobotGroupRelationMapper;
+import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.openapi.OpenApiClient;
 import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.ThirdTgGetGroupMemberInputDTO;
@@ -64,6 +61,9 @@ public class PlayGroupInfoServiceImpl extends ServiceImpl<PlayGroupInfoMapper, P
     @Autowired
     private GroupInfoService groupInfoService;
 
+    @Autowired
+    private PlayIntoGroupTaskMapper playIntoGroupTaskMapper;
+
 
     @Override
     public List<PlayGroupInfo> listByPlayId(String playId) {
@@ -103,6 +103,8 @@ public class PlayGroupInfoServiceImpl extends ServiceImpl<PlayGroupInfoMapper, P
             playGroupInfo.setIntoStatus(3);
             playGroupInfo.setState(3);
             playGroupInfo.setTip("入群失败！群人数不足");
+            //修改入群
+            playIntoGroupTaskMapper.updateTaskByErrorGroupId(playGroupInfo.getGroupUrl());
         }
         playGroupInfoMapper.updateById(playGroupInfo);
         return R.ok();
