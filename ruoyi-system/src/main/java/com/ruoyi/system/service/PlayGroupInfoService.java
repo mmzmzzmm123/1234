@@ -1,6 +1,7 @@
 package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
 
 import java.util.List;
@@ -13,5 +14,8 @@ import java.util.List;
 public interface PlayGroupInfoService extends IService<PlayGroupInfo> {
 
     List<PlayGroupInfo> listByPlayId(String playId);
+
+
+    R<String> forceFinishGroup(String groupId);
 
 }

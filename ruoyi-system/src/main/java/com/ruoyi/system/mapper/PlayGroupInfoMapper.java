@@ -21,4 +21,7 @@ public interface PlayGroupInfoMapper  extends BaseMapper<PlayGroupInfo> {
     Integer updateGroupState(@Param("playID")String playId);
 
     PlayGroupInfo selectGroupByUrl(@Param("groupUrl")String groupUrl,@Param("playId")String playId);
+
+    PlayGroupInfo selectGroupById(@Param("groupId")String groupId);
+
 }

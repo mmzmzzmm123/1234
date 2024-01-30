@@ -16,14 +16,12 @@ import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.QueryConfoundLogVO;
 import com.ruoyi.system.domain.vo.play.*;
-import com.ruoyi.system.service.IPlayService;
-import com.ruoyi.system.service.PlayExecutionLogService;
-import com.ruoyi.system.service.PlayMessageConfoundLogService;
-import com.ruoyi.system.service.PlayMessagePushService;
+import com.ruoyi.system.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -51,6 +49,9 @@ public class PlayController extends BaseController {
 
     @Resource
     private PlayMessagePushService playMessagePushService;
+
+    @Autowired
+    private PlayGroupInfoService playGroupInfoService;
 
     @RepeatSubmit(interval = 1000, message = "请求过于频繁")
     @ApiOperation("创建炒群任务")
@@ -332,5 +333,12 @@ public class PlayController extends BaseController {
     @PostMapping("jobReleaseRobot")
     public void jobReleaseRobot() {
         playService.jobReleaseRobot();
+    }
+
+
+    @ApiOperation("强制结束入群")
+    @PostMapping("forceFinishGroup")
+    public R<String> forceFinishGroup(@PathVariable String groupId){
+        return playGroupInfoService.forceFinishGroup(groupId);
     }
 }

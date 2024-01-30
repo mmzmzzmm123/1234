@@ -26,4 +26,8 @@
     <select id="selectGroupByUrl" resultType="com.ruoyi.system.domain.dto.play.PlayGroupInfo">
        select * from t_play_group_info where play_id = #{playId} AND is_delete = 0 and group_url = #{groupUrl} limit 1
     </select>
+
+    <select id="selectGroupById"  resultType="com.ruoyi.system.domain.dto.play.PlayGroupInfo">
+        select * from t_play_group_info where tg_group_id = #{groupId} and state = 0  and is_delete = 0 limit 1
+    </select>
 </mapper>
