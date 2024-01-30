@@ -520,9 +520,9 @@ public class TgRobotProcessor {
     public void called1100910010(Called1100910010DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         log.info("NQ1100910010 called:{} {}", root, JSON.toJSONString(dto));
-        if (!root.isSuccess()) {
-            SpringUtils.getBean(AutoReplyService.class).retrySendMessage(root, dto);
-        }
+
+        SpringUtils.getBean(AutoReplyService.class).sendMessageResult(root, dto);
+
 
     }
 }

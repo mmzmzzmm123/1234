@@ -24,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -89,39 +90,24 @@ public class AutoReplyService {
     }
 
 
-    public void retrySendMessage(CalledDTO root, Called1100910010DTO dto) {
-        String optSerNo = root.getOptSerNo();
+    public void retrySendMessage(List<AutoReplyLog> firstReplyLogs) {
 
-        AutoReplyLog autoReplyLog = mongoTemplate.findById(optSerNo, AutoReplyLog.class);
-        String firstRequestId = Optional.ofNullable(autoReplyLog)
-                .map(AutoReplyLog::getFirstRequestId)
-                .orElse(optSerNo);
-        log.info("自动回复MongoDB数据 {}", JSON.toJSONString(autoReplyLog));
+        for (AutoReplyLog firstReplyLog : firstReplyLogs) {
+            String firstRequestId = firstReplyLog.getFirstRequestId();
+            Update inc = new Update().inc("requestTimes", 1L);
+            mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(firstRequestId)), inc, AutoReplyLog.class);
 
-        Update inc = new Update().inc("requestTimes", 1L);
-        mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(firstRequestId)), inc, AutoReplyLog.class);
+            Integer requestTimes = firstReplyLog.getRequestTimes();
 
-        AutoReplyLog firstReplyLog = mongoTemplate.findById(firstRequestId, AutoReplyLog.class);
+            log.info("自动回复开始重试 {} {}", requestTimes, JSON.toJSONString(firstReplyLog));
+            ThirdTgSendFriendMessageInputDTO input = JSON.parseObject(firstReplyLog.getRequestParams(), ThirdTgSendFriendMessageInputDTO.class);
+            OpenApiResult<TgBaseOutputDTO> result = OpenApiClient.sendFriendMessageByThirdKpTg(input);
 
-        if (firstReplyLog == null) {
-            log.info("自动回复最初发送数据为空,不会再次发送");
-            return;
+            // 记录发送日志
+            this.saveRequestLog(input, result, firstRequestId);
         }
 
-        Integer requestTimes = firstReplyLog.getRequestTimes();
 
-        String retryTimes = SpringUtils.getBean(SysConfigServiceImpl.class).selectConfigByKey("auto-reply-retry-times");
-        Integer times = Optional.ofNullable(retryTimes).map(Integer::parseInt).orElse(10);
-        if (requestTimes >= times) {
-            log.info("自动回复重试达到上限次数,不再发送消息 {} {}", requestTimes, times);
-            return;
-        }
-        log.info("自动回复开始重试 {} {} {}", requestTimes, times, JSON.toJSONString(firstReplyLog));
-        ThirdTgSendFriendMessageInputDTO input = JSON.parseObject(firstReplyLog.getRequestParams(), ThirdTgSendFriendMessageInputDTO.class);
-        OpenApiResult<TgBaseOutputDTO> result = OpenApiClient.sendFriendMessageByThirdKpTg(input);
-
-        // 记录发送日志
-        this.saveRequestLog(input, result, firstRequestId);
 
     }
 
@@ -167,6 +153,63 @@ public class AutoReplyService {
         replyLog.setCreateTime(LocalDateTime.now());
         replyLog.setFirstRequestId(firstSerialNo);
         replyLog.setFailMessage(errorMessage);
+        replyLog.setSuccess(false);
         mongoTemplate.save(replyLog);
+    }
+
+    public void sendMessageResult(CalledDTO root, Called1100910010DTO dto) {
+
+        String optSerialNo = root.getOptSerNo();
+        AutoReplyLog autoReplyLog = mongoTemplate.findById(optSerialNo, AutoReplyLog.class);
+        String firstRequestId = Optional.ofNullable(autoReplyLog)
+                .map(AutoReplyLog::getFirstRequestId)
+                .orElse(optSerialNo);
+
+
+        // 成功更新结果 /失败更新失败原因
+        Update updateResult = root.isSuccess() ?
+                Update.update("isSuccess", true) : Update.update("failMessage", root.getResultMsg());
+
+        mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(optSerialNo)),
+                updateResult,
+                AutoReplyLog.class);
+
+        if (root.isSuccess() && !StringUtils.equals(optSerialNo, firstRequestId)) {
+            // 成功 且 不是第一次调用就成功 需要更新第一条记录的成功状态
+            mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(firstRequestId)),
+                    updateResult,
+                    AutoReplyLog.class);
+        }
+    }
+
+
+    /**
+     * 定时任务调度 - 扫描第一发送没有成功 且重试次数小于设定值
+     */
+    public void scanAutoMessageRetry() {
+
+        int currentPage = 1;
+        int pageSize = 100;
+        List<AutoReplyLog> replyLogs = null;
+        String retryTimes = SpringUtils.getBean(SysConfigServiceImpl.class).selectConfigByKey("auto-reply-retry-times");
+        Integer times = Optional.ofNullable(retryTimes).map(Integer::parseInt).orElse(10);
+        do {
+
+            // 分页查询 MongoReply 数据
+            Criteria criteria = Criteria.where("firstRequestId").exists(false)
+                    .and("requestTimes").lt(times)
+                    .and("isSuccess").is(false);
+            Query query = Query.query(criteria);
+            query.with(PageRequest.of(currentPage, pageSize));
+            replyLogs = mongoTemplate.find(query, AutoReplyLog.class);
+
+            log.info("扫描到需要重试的数据 {}", replyLogs);
+
+            this.retrySendMessage(replyLogs);
+
+            // 当前页码++
+            currentPage++;
+
+        } while (replyLogs.size() == pageSize);
     }
 }

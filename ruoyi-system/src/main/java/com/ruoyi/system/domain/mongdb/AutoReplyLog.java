@@ -29,4 +29,6 @@ public class AutoReplyLog {
     private String firstRequestId;
 
     private String failMessage;
+
+    private boolean isSuccess;
 }
