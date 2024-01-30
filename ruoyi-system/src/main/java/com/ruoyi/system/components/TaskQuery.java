@@ -31,6 +31,7 @@ public abstract class TaskQuery {
 
     static {
         INSTANCE_CACHE.put(0, new PullInGroupTaskQuery());
+        INSTANCE_CACHE.put(1, new ScreeningTaskQuery());
         INSTANCE_CACHE.put(2, new ScreeningTaskQuery());
     }
 
@@ -124,6 +125,25 @@ public abstract class TaskQuery {
                 }
             }
             return successTotal;
+        }
+    }
+
+    @Slf4j
+    public static class PlayGroupTaskQuery extends TaskQuery {
+        @Override
+        public int getStatus(String taskId) {
+            //todo 要将OrderId存入t_play_info表进行关联判断
+            return 0;
+        }
+
+        @Override
+        public List<TaskAdapter> listByOrder(List<String> orderIds) {
+            return new ArrayList<>();
+        }
+
+        @Override
+        public int getSuccessCountOfTaskDetail(String taskId) {
+            return 0;
         }
     }
 
