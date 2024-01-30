@@ -102,6 +102,20 @@ public class OpenApiClient {
                 .orElseThrow(() -> new GlobalException("调用比邻第三方登录发生错误"));
     }
 
+
+    private static String getTokenFromRemote() {
+        RedisTemplate<String, String> redisTemplate = SpringUtils.getBean("redisTemplate");
+        // 调用接口获取Token
+        String token = OpenApiClient.login();
+
+        // Redis中缓存Token
+        if (StringUtils.isNotBlank(token)) {
+            redisTemplate.boundValueOps(getKey()).set(token);
+            redisTemplate.boundValueOps(getKey()).expire(1, TimeUnit.HOURS);
+        }
+        return token;
+    }
+
     private static String getToken() {
         RedisTemplate<String, String> redisTemplate = SpringUtils.getBean("redisTemplate");
         String token = redisTemplate.boundValueOps(getKey()).get();
@@ -430,6 +444,24 @@ public class OpenApiClient {
      */
     public static OpenApiResult<Void> syncGroupInviteLinkByThirdUtchatTg(ThirdTgSyncGroupInviteLinkDTO data) {
         return OpenApiClient.post(OpenApiEnum.THIRD_UTCHAT_TG_SYNC_GROUP_INVITE_LINK, JSONObject.from(data), Void.class);
+    }
+
+    /**
+     * 比邻第三方(kpTG)：-获取所有会话
+     *
+     * @return
+     */
+    public static OpenApiResult<Void> getRobotFreGroupDataByThirdKpTg(ThirdTgRobotInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_GET_ROBOT_FRE_GROUP_DATA, JSONObject.from(data), Void.class);
+    }
+
+    /**
+     * 比邻第三方(开平TG)：-发送好友消息接口
+     *
+     * @return
+     */
+    public static OpenApiResult<TgBaseOutputDTO> sendFriendMessageByThirdKpTg(ThirdTgSendFriendMessageInputDTO data) {
+        return OpenApiClient.post(OpenApiEnum.THIRD_KP_TG_SEND_FRIEND_MESSAGE, JSONObject.from(data), TgBaseOutputDTO.class);
     }
 
 }

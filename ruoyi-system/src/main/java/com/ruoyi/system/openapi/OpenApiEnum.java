@@ -41,6 +41,9 @@ public enum OpenApiEnum {
 
     THIRD_KP_TG_SET_PHONE_VISIBILITY("kpTg-设置隐私手机号码谁可见接口", "/thirdparty/tgRobot/setPhoneVisibility", 1100910083),
 
+    THIRD_KP_TG_GET_ROBOT_FRE_GROUP_DATA("kpTg-获取所有会话", "/thirdparty/tgRobot/getRobotFreGroupData", 1100910008),
+
+    THIRD_KP_TG_SEND_FRIEND_MESSAGE("kpTg-发送好友消息接口", "/thirdparty/tgRobot/sendFriendMessage", 1100910010),
 
     // kp
     THIRD_KP_TG_SQL_TASK_SUBMIT("kpTg-SQL执行接口", "/thirdparty/tgModule/sqlTaskSubmit", null),
