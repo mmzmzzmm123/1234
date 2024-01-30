@@ -52,6 +52,25 @@ public class SaveChatRoomJoinTaskDTO {
      */
     private Integer taskType = 0;
 
+    /**
+     * 是否仅分配优先拉手国 0：否 1：是
+     */
+    private Integer isOnlyPriorityCountry;
+
+    /**
+     * 选择群类型：1普通群组、2超级群组
+     */
+    private Integer selectChatroomType;
+
+    /**
+     * 最后拉人时间超过多少分钟
+     */
+    private Integer nLastInviteTimeOverMinute;
+
+    /**
+     * 优先使用超过多少次的拉手号
+     */
+    private Integer nPriorityUsedCount;
 
     @Data
     public static class TaskRuleData {
