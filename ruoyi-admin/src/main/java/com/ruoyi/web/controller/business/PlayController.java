@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.business;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageInfo;
@@ -386,5 +387,16 @@ public class PlayController extends BaseController {
             return R.fail(11000, ErrInfoConfig.getDynmic(11000, "任务id不能为空"));
         }
         return R.ok(playService.autoReplayLog(dto));
+    }
+
+    @ApiOperation(value = "导出自动回复日志")
+    @PostMapping("/export/autoReplayLog")
+    public void export(@RequestBody AutoReplayLogDTO dto, HttpServletResponse response) {
+        if (StrUtil.isBlank(dto.getPlayId())) {
+            return;
+        }
+        PageInfo<AutoReplayLogVO> result = playService.autoReplayLog(dto);
+        ExcelUtil<AutoReplayLogVO> util = new ExcelUtil<>(AutoReplayLogVO.class);
+        util.exportExcel(response, result.getList(), "自动回复日志");
     }
 }
