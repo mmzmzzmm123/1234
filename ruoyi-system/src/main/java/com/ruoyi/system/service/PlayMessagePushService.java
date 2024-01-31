@@ -1,9 +1,11 @@
 package com.ruoyi.system.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 import com.ruoyi.system.domain.dto.play.PushOperationDTO;
 import com.ruoyi.system.domain.dto.play.QueryRobotDetailDTO;
+import com.ruoyi.system.domain.vo.play.QueryRobotAccountDetailVO;
 import com.ruoyi.system.domain.vo.play.QueryRobotDetailVO;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 
@@ -58,6 +60,13 @@ public interface PlayMessagePushService extends IService<PlayMessagePush> {
      * @return
      */
     List<QueryRobotDetailVO> robotDetails(QueryRobotDetailDTO dto);
+
+    /**
+     * 账号明细列表-账号维度
+     * @param dto
+     * @return
+     */
+    Page<QueryRobotAccountDetailVO> robotAccountDetails(QueryRobotAccountDetailVO dto);
 
     List<PlayMessagePush> selectByPlayId(String playId);
 

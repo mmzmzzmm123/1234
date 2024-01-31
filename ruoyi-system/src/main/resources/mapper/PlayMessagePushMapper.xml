@@ -52,7 +52,8 @@
                     0 as 'sendSuccessNUm',
                     0 as 'sendFailNUm'
                 from t_play_back_robot tpbr
-                where tpbr.is_finish = -1
+                where 1=1
+                    and tpbr.is_finish = -1
                     and tpbr.play_id = #{dto.playId}
             ) t
                 LEFT JOIN t_robot_info tri ON t.robot_id = tri.robot_serial_no
@@ -63,5 +64,62 @@
         </if>
         GROUP BY
             tri.country
+    </select>
+    <select id="robotAccountDetails" resultType="com.ruoyi.system.domain.vo.play.QueryRobotAccountDetailVO">
+        SELECT
+            t.robot_id as robotSerialNo
+            tri.phone,
+            tri.country_code AS countryCode,
+            tri.country AS countryName,
+            tri.heartbeat_status as heartbeatStatus,
+            tri.seal_status sealStatus,
+            tri.bidirectional_type bidirectionalType,
+            t.group_id groupId,
+            tgi.group_serial_no groupSerialNo
+        FROM
+            (
+                SELECT
+                    tpmpd.robot_id,tpmp.group_id
+                FROM
+                    t_play_message_push tpmp
+                        LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
+                WHERE
+                    1 = 1
+                  AND tpmp.play_id = #{dto.playId}
+                  AND tpmpd.robot_id != ''
+                GROUP BY
+                    tpmpd.robot_id
+                UNION
+                select tpbr.robot_id,tpbr.group_id
+                from t_play_back_robot tpbr
+                where 1=1
+                  and tpbr.is_finish = -1
+                  and tpbr.play_id = #{dto.playId}
+            ) t
+                LEFT JOIN t_robot_info tri ON t.robot_id = tri.robot_serial_no
+                left join t_group_info tgi on tgi.group_id = t.group_id
+        <where>
+            <if test="dto.robotSerialNo != null and dto.robotSerialNo != ''">
+                and t.robot_id = #{dto.robotSerialNo}
+            </if>
+            <if test="dto.phone != null and dto.phone != ''">
+                and tri.phone = #{dto.phone}
+            </if>
+            <if test="dto.countryName != null and dto.countryName != ''">
+                and tri.country = #{dto.countryName}
+            </if>
+            <if test="dto.groupSerialNo != null and dto.groupSerialNo != ''">
+                and tgi.group_serial_no = #{dto.groupSerialNo}
+            </if>
+            <if test="dto.heartbeatStatus != null">
+                and tri.heartbeat_status = #{dto.heartbeatStatus}
+            </if>
+            <if test="dto.sealStatus != null">
+                and tri.seal_status = #{dto.sealStatus}
+            </if>
+            <if test="dto.bidirectionalType != null">
+                and tri.bidirectional_type = #{dto.bidirectionalType}
+            </if>
+        </where>
     </select>
 </mapper>

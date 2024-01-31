@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.constant.PlayConstants;
 import com.ruoyi.common.core.domain.dto.play.ContentJson;
@@ -20,6 +21,7 @@ import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
 import com.ruoyi.system.domain.dto.play.PushOperationDTO;
 import com.ruoyi.system.domain.dto.play.QueryRobotDetailDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
+import com.ruoyi.system.domain.vo.play.QueryRobotAccountDetailVO;
 import com.ruoyi.system.domain.vo.play.QueryRobotDetailVO;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
 import com.ruoyi.system.mapper.PlayMessageConfoundLogMapper;
@@ -381,6 +383,14 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
     @Override
     public List<QueryRobotDetailVO> robotDetails(QueryRobotDetailDTO dto) {
         return baseMapper.robotDetails(dto);
+    }
+
+    @Override
+    public Page<QueryRobotAccountDetailVO> robotAccountDetails(QueryRobotAccountDetailVO dto) {
+        Page<QueryRobotAccountDetailVO> page = new Page<>(dto.getPage(), dto.getLimit());
+        final List<QueryRobotAccountDetailVO> list = baseMapper.robotAccountDetails(page, dto);
+        page.setRecords(list);
+        return page;
     }
 
     @Override
