@@ -233,10 +233,9 @@ public class AutoReplyService {
             // 分页查询 MongoReply 数据
             Criteria criteria = Criteria.where("firstRequestId").exists(false)
                     .and("requestTimes").lt(times)
-                    .and("isSuccess").is(false)
-                    .and("createTime").gte(LocalDateTime.now().minusMinutes(5L));
+                    .and("isSuccess").is(false);
             Query query = Query.query(criteria);
-            query.with(PageRequest.of(currentPage, pageSize));
+            query.with(PageRequest.of(currentPage - 1, pageSize));
             replyLogs = mongoTemplate.find(query, AutoReplyLog.class);
 
             log.info("扫描到需要重试的数据 {}", replyLogs);

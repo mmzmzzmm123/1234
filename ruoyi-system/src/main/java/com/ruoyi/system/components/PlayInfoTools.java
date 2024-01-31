@@ -4,14 +4,16 @@ import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.mapper.PlayMapper;
 
+import java.util.Objects;
+
 public class PlayInfoTools {
 
-	public static boolean isDeleted(String playId) {
+	public static boolean isDeletedOrCancel(String playId) {
 		Play playInfo = SpringUtils.getBean(PlayMapper.class).selectById(playId);
 		if (playInfo == null) {
 			return true;
 		}
-		if (playInfo.getIsDelete().intValue() == 1 || playInfo.getIsDelete().intValue() == 4) {
+		if (playInfo.getIsDelete() == 1 || Objects.equals(playInfo.getState(), 4)) {
 			return true;
 		}
 		return false;

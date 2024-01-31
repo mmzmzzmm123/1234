@@ -37,7 +37,7 @@ public class DelayQueueProgressPuller implements ProgressPuller {
             return;
         }
         // 剧本被删除了
-        if (PlayInfoTools.isDeleted(message.getPlayId())) {
+        if (PlayInfoTools.isDeletedOrCancel(message.getPlayId())) {
             log.info("剧本删除了 {} {}", message, chatroomId);
             return;
         }
@@ -79,7 +79,7 @@ public class DelayQueueProgressPuller implements ProgressPuller {
             return;
         }
         // 剧本被删除了
-        if (PlayInfoTools.isDeleted(message.getPlayId())) {
+        if (PlayInfoTools.isDeletedOrCancel(message.getPlayId())) {
             log.info("剧本删除了 {} {}", message, chatroomId);
             return;
         }

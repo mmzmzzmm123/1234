@@ -22,6 +22,6 @@ public class PlaybackContext {
 		if (StringUtils.isEmpty(v)) {
 			return false;
 		}
-		return "1".equals(v);
+		return "1".equals(v.trim());
 	}
 }

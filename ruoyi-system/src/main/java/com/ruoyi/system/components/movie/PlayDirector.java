@@ -113,7 +113,7 @@ public class PlayDirector implements CallBackProcessor {
          * 	重试失败 - 走备用号逻辑
          */
         if (SpringUtils.getBean(RetryService.class).retry(entry, opt, errMsg)) {
-            this.pause(entry.playId, entry.getChatroomId());
+//            this.pause(entry.playId, entry.getChatroomId());
             log.info("进入发消息重试流程成功 {} {} {}", entry, opt, errMsg);
             return;
         }
