@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.config.ErrInfoConfig;
 import com.ruoyi.common.constant.PlayStatusConstants;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -30,14 +31,22 @@ import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.ProductTools;
 import com.ruoyi.system.components.movie.PlayDirector;
+import com.ruoyi.system.domain.dto.AutoReplayLogDTO;
 import com.ruoyi.system.domain.dto.play.*;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
+import com.ruoyi.system.domain.vo.AutoReplayLogVO;
+import com.ruoyi.system.domain.vo.GroupInfoVO;
 import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.mapper.*;
 import com.ruoyi.system.service.*;
 import com.ruoyi.system.service.business.GroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -822,7 +831,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
     private void releaseRobot(Play play) {
         if (play.getLockRobotStatus() != 1) {
-           return;
+            return;
         }
         //已完成和已取消才可进行
         if (play.getState() != PlayStatusConstants.CANCEL && play.getState() != PlayStatusConstants.FINISHED) {
@@ -865,5 +874,88 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             Play play = super.getById(playId);
             releaseRobot(play);
         }
+    }
+
+    @Override
+    public PageInfo<AutoReplayLogVO> autoReplayLog(AutoReplayLogDTO dto) {
+        PageInfo<AutoReplayLogVO> pageInfo = new PageInfo<>();
+        Map<String, String> groupInfoMap = new HashMap<>();
+
+        MongoTemplate mongoTemplate = SpringUtils.getBean(MongoTemplate.class);
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+
+        //查询群条件
+        List<GroupInfoVO> groupInfoVOS = new ArrayList<>();
+        GroupInfoMapper groupInfoMapper = SpringUtils.getBean(GroupInfoMapper.class);
+        if (null != dto.getGroupType()) {
+            if (1 == dto.getGroupType()) {
+                groupInfoVOS = groupInfoMapper.selectListByPlayId(dto.getPlayId(), null, dto.getGroupVal());
+            }
+            if (2 == dto.getGroupType()) {
+                groupInfoVOS = groupInfoMapper.selectListByPlayId(dto.getPlayId(), dto.getGroupVal(), null);
+            }
+            if (CollectionUtils.isEmpty(groupInfoVOS)) {
+                pageInfo.setTotal(0);
+                return pageInfo;
+            }
+            criteria.and("groupId").in(groupInfoVOS.stream().map(GroupInfoVO::getGroupId).collect(Collectors.toList()));
+            for (GroupInfoVO groupInfoVO : groupInfoVOS) {
+                groupInfoMap.put(groupInfoVO.getGroupId(), groupInfoVO.getGroupName());
+            }
+        }
+
+        criteria.and("playId").is(dto.getPlayId());
+        criteria.and("type").is(PlayLogTyper.Auto_Reply_Receive);
+        if (null != dto.getStartTime()) {
+            criteria.and("createTime").gte(dto.getStartTime());
+        }
+        if (null != dto.getEndTime()) {
+            criteria.and("createTime").lte(dto.getEndTime());
+        }
+        if (null != dto.getState()) {
+            criteria.and("state").is(dto.getState());
+        }
+        if (StringUtils.isNotEmpty(dto.getRobotId())) {
+            criteria.and("robotId").is(dto.getRobotId());
+        }
+
+        query.addCriteria(criteria);
+        long total = mongoTemplate.count(query, PlayExecutionLog.class);
+
+        Sort orderBy = Sort.by(Sort.Direction.DESC, "createTime");
+        query.with(PageRequest.of(dto.getPage() - 1, dto.getLimit(), orderBy));
+        log.info("自动回复日志MongoDb查询条件：{}", query);
+        List<PlayExecutionLog> playExecutionLogs = mongoTemplate.find(query, PlayExecutionLog.class);
+        if (CollectionUtils.isEmpty(playExecutionLogs)) {
+            pageInfo.setTotal(0);
+            return pageInfo;
+        }
+
+        if (null == dto.getGroupType()) {
+            List<String> groupIds = playExecutionLogs.stream().distinct()
+                    .map(PlayExecutionLog::getGroupId)
+                    .filter(StringUtils::isNotEmpty).collect(Collectors.toList());
+            groupInfoVOS = SpringUtils.getBean(GroupInfoMapper.class).selectByGroupIds(groupIds);
+            log.info("自动回复日志_查询群信息：{}", groupInfoVOS);
+            if (CollectionUtils.isNotEmpty(groupInfoVOS)) {
+                for (GroupInfoVO groupInfoVO : groupInfoVOS) {
+                    groupInfoMap.put(groupInfoVO.getGroupId(), groupInfoVO.getGroupName());
+                }
+            }
+        }
+
+        List<AutoReplayLogVO> autoReplayLogVOS = new ArrayList<>();
+        for (PlayExecutionLog playExecutionLog : playExecutionLogs) {
+            AutoReplayLogVO autoReplayLogVO = new AutoReplayLogVO();
+            BeanUtils.copyProperties(playExecutionLog, autoReplayLogVO);
+            autoReplayLogVO.setGroupName(groupInfoMap.getOrDefault(playExecutionLog.getGroupId(), ""));
+            autoReplayLogVO.setGroupSerialNo("");
+            autoReplayLogVOS.add(autoReplayLogVO);
+        }
+
+        pageInfo.setTotal(total);
+        pageInfo.setList(autoReplayLogVOS);
+        return pageInfo;
     }
 }

@@ -2,11 +2,14 @@ package com.ruoyi.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.AdMonitor;
 import com.ruoyi.common.core.domain.dto.play.PlayDTO;
 import com.ruoyi.common.core.domain.entity.play.Play;
+import com.ruoyi.system.domain.dto.AutoReplayLogDTO;
 import com.ruoyi.system.domain.dto.play.*;
+import com.ruoyi.system.domain.vo.AutoReplayLogVO;
 import com.ruoyi.system.domain.vo.play.*;
 
 import java.util.List;
@@ -84,4 +87,6 @@ public interface IPlayService extends IService<Play> {
      * job释放锁定水军
      */
     void jobReleaseRobot();
+
+    PageInfo<AutoReplayLogVO> autoReplayLog(AutoReplayLogDTO dto);
 }
