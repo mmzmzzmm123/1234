@@ -391,12 +391,13 @@ public class PlayController extends BaseController {
 
     @ApiOperation(value = "导出自动回复日志")
     @PostMapping("/export/autoReplayLog")
-    public void export(@RequestBody AutoReplayLogDTO dto, HttpServletResponse response) {
+    public R<PageInfo<AutoReplayLogVO>> export(@RequestBody AutoReplayLogDTO dto, HttpServletResponse response) {
         if (StrUtil.isBlank(dto.getPlayId())) {
-            return;
+            return R.ok();
         }
         PageInfo<AutoReplayLogVO> result = playService.autoReplayLog(dto);
-        ExcelUtil<AutoReplayLogVO> util = new ExcelUtil<>(AutoReplayLogVO.class);
-        util.exportExcel(response, result.getList(), "自动回复日志");
+        ExcelUtil<AutoReplayLogVO> excelUtil = new ExcelUtil<>(AutoReplayLogVO.class);
+        excelUtil.exportExcel(response, result.getList(), "任务id" + dto.getPlayId() + "自动回复日志");
+        return R.ok();
     }
 }
