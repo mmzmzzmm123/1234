@@ -6,6 +6,7 @@ import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.ruoyi.common.core.domain.dto.play.ContentJson;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotMessage;
+import com.ruoyi.common.core.redis.RedisLock;
 import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.callback.dto.Called1100910010DTO;
@@ -37,6 +38,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 自动回复Service
@@ -51,6 +53,7 @@ public class AutoReplyService {
     private final PlayRobotGroupRelationMapper playRobotGroupRelationMapper;
     private final PlayRobotMessageService playRobotMessageService;
     private final MongoTemplate mongoTemplate;
+    private final RedisLock redisLock;
 
     /**
      * 收到消息回调
@@ -83,17 +86,27 @@ public class AutoReplyService {
         // 记录发送消息日志
         this.saveAutoReplyMessage(playId, robotId, dto);
 
-        // 查询商家配置的回复话术
-        Long messageCount = playRobotMessageService.countByPlayId(playId);
-        if (messageCount == null || messageCount <= 0) {
-            log.info("剧本Id没有配置自动回复内容,自动回复跳过 {} {} {}", messageCount, playId, root.getOptSerNo());
-            return;
+        for (Called1100910027DTO data : dto) {
+
+            // 同一个用户多次消息仅回复一次
+            String lockKey = "auto-reply-user-lock:" + data.getFrom_serial_no() + ":" + data.getTo_serial_no();
+            if (!redisLock.tryLock(lockKey, 10, TimeUnit.MINUTES)) {
+                log.info("改用户在10分钟内收到多条消息,自动跳过 {} {}", root.getOptSerNo(), data);
+                continue;
+            }
+
+            // 查询商家配置的回复话术
+            Long messageCount = playRobotMessageService.countByPlayId(playId);
+            if (messageCount == null || messageCount <= 0) {
+                log.info("剧本Id没有配置自动回复内容,自动回复跳过 {} {} {}", messageCount, playId, root.getOptSerNo());
+                return;
+            }
+
+            int offset = messageCount == 1 ? 0 :RandomUtil.randomInt(0, messageCount.intValue() - 1);
+            PlayRobotMessage message = playRobotMessageService.selectByPlayId(playId, offset);
+
+            Optional.ofNullable(message).ifPresent(it -> this.sendMessage(it, robotId, data.getFrom_serial_no(), groupId));
         }
-
-        int offset = messageCount == 1 ? 0 :RandomUtil.randomInt(0, messageCount.intValue() - 1);
-        PlayRobotMessage message = playRobotMessageService.selectByPlayId(playId, offset);
-
-        Optional.ofNullable(message).ifPresent(it -> this.sendMessage(it, robotId, chatId, groupId));
     }
 
 
