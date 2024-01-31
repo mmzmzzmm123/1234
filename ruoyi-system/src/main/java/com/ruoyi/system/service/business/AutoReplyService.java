@@ -92,7 +92,7 @@ public class AutoReplyService {
             // 同一个用户多次消息仅回复一次
             String lockKey = "auto-reply-user-lock:" + data.getFrom_serial_no() + ":" + data.getTo_serial_no();
             RLock lock = redisLock.getRLock(lockKey);
-            if (!lock.isLocked()) {
+            if (lock.isLocked()) {
                 log.info("改用户在10分钟内收到多条消息,自动跳过 {} {}", root.getOptSerNo(), data);
                 continue;
             }
