@@ -499,6 +499,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
     }
 
     @Override
+    @Deprecated
     public List<PlayMessagePush> selectByGroupIdAndPlayId(String chatroomId, String playId) {
         LambdaQueryWrapper<PlayMessagePush> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PlayMessagePush::getGroupId, chatroomId)

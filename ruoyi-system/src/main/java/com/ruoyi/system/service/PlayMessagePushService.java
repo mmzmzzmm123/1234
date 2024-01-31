@@ -88,5 +88,6 @@ public interface PlayMessagePushService extends IService<PlayMessagePush> {
     void bandGroupAndStopPush(String groupSerialNo);
 
 
+    @Deprecated
     List<PlayMessagePush> selectByGroupIdAndPlayId(String chatroomId, String playId);
 }
