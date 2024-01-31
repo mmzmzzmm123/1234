@@ -49,6 +49,12 @@ public class DelayQueueProgressPuller implements ProgressPuller {
             log.info("群任务暂停 {} {}", chatroomId, message);
             return;
         }
+        GroupState groupState = SpringUtils.getBean(GroupStateService.class).getById(chatroomId);
+        if (groupState != null && Objects.equals(groupState.getGroupStatus(), 1)) {
+            PlaybackContext.pause(message.getPlayId(),chatroomId);
+            log.info("群状态异常不再发送消息 {} {} {}", groupState, message, chatroomId);
+            return;
+        }
 
         Integer delayTime = message.getIntervalTime();
         // 先移动游标 ，
@@ -80,6 +86,7 @@ public class DelayQueueProgressPuller implements ProgressPuller {
 
         GroupState groupState = SpringUtils.getBean(GroupStateService.class).getById(chatroomId);
         if (groupState != null && Objects.equals(groupState.getGroupStatus(), 1)) {
+            PlaybackContext.pause(message.getPlayId(),chatroomId);
             log.info("群状态异常不再发送消息 {} {} {} {}", groupState, message, chatroomId, optSerialNo);
             return;
         }

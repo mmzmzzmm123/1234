@@ -10,11 +10,14 @@ import com.ruoyi.system.components.movie.spi.MessageSupport;
 import com.ruoyi.system.components.movie.spi.PlayRunner;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
 import com.ruoyi.system.components.movie.spi.RobotSpeakAllocator;
+import com.ruoyi.system.domain.GroupState;
 import com.ruoyi.system.mapper.PlayMessagePushDetailTrackMapper;
+import com.ruoyi.system.service.GroupStateService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Slf4j
 public abstract class AbstractPlayer implements Player {
@@ -40,6 +43,14 @@ public abstract class AbstractPlayer implements Player {
 			return;
 		}
 		final String playId = book.getPlay().getId();
+
+		GroupState groupState = SpringUtils.getBean(GroupStateService.class).getById(chatroomId);
+		if (groupState != null && Objects.equals(groupState.getGroupStatus(), 1)) {
+			PlaybackContext.pause(playId,chatroomId);
+			log.info("群状态异常不再发送消息 {} {} {}", groupState, currentIndex, chatroomId);
+			return;
+		}
+
 		// 下标是从1开始， 数组从0开始
 		final PlayMessage playMessage = book.current(currentIndex).getMessage();
 		// 失败是否 停止发送
