@@ -46,6 +46,7 @@
         where tpmp.group_id = #{groupId}
           and tpmp.play_id = #{playId}
           and tpmpd.is_delete = 0
+          and tpmpd.send_state = 0
           and tpmpd.spokesman_nickname = #{nickName}
 
     </select>
