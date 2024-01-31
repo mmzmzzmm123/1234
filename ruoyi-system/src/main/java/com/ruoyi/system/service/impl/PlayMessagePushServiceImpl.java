@@ -14,6 +14,7 @@ import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.enums.play.PushStateEnum;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.RandomListPicker;
+import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.PlayMessageConfoundLog;
 import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
 import com.ruoyi.system.domain.dto.play.PushOperationDTO;
@@ -468,6 +469,23 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
         }
         SpringUtils.getBean(MongoTemplate.class).insertAll(pauseLogs);
 
+    }
+
+    @Override
+    public void bandGroupAndStopPush(String groupSerialNo) {
+        GroupInfo groupInfo = SpringUtils.getBean(GroupInfoService.class).getGroupBySerialNo(groupSerialNo);
+        if (groupInfo == null) {
+            return;
+        }
+        List<PlayMessagePush> pushList = baseMapper.selectList(new LambdaQueryWrapper<PlayMessagePush>()
+                .eq(PlayMessagePush::getGroupId,groupInfo.getGroupId())
+                .in(PlayMessagePush::getPushState, PushStateEnum.WAIT_SEND.getKey(), PushStateEnum.ING.getKey(), PushStateEnum.USER_STOP.getKey()));
+        if(CollectionUtils.isEmpty(pushList)){
+            return;
+        }
+        pushList.forEach(it -> {
+            baseMapper.updateFailure(it.getPlayId(),it.getGroupId(),"群已被封");
+        });
     }
 
     public List<PlayMessagePush> queryByGroupIdAndState(String groupId, Integer state) {

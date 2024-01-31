@@ -496,6 +496,7 @@ public class TgRobotProcessor {
         log.info("NQ1100850217 called:{} {}", root, JSON.toJSONString(dto));
         if (root.isSuccess()) {
             groupStateService.groupBaned(dto.getChatroomSerialNo(), dto.getSealTime());
+            playMessagePushService.bandGroupAndStopPush(dto.getChatroomSerialNo());
         }
     }
 

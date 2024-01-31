@@ -236,7 +236,7 @@ public class PlayDirector implements CallBackProcessor {
                     .last(" limit 1 ");
             final PlayBackRobot playBackRobot = playBackRobotService.getOne(queryWrapper);
             if(playBackRobot == null){
-                PlayExecutionLogService.savePackLog(PlayLogTyper.Robot_Pre_Alloc, playId, groupId, "没有可以分配的备用号", 1);
+                PlayExecutionLogService.savePackLog(PlayLogTyper.Robot_Pre_Alloc, playId, groupId, StringUtils.format("群id-{}:没有可以分配的备用号",groupId), 1);
                 throw new ServiceException("没有可以分配的备用号");
             }
             playBackRobot.setIsFinish(finishState);

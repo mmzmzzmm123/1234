@@ -81,5 +81,11 @@ public interface PlayMessagePushService extends IService<PlayMessagePush> {
      */
     void continuePushWhenPause(String groupId, String pauseReason);
 
+    /**
+     * 封群处理 暂停任务推送
+     * @param groupId
+     */
+    void bandGroupAndStopPush(String groupSerialNo);
+
 
 }

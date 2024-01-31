@@ -42,6 +42,7 @@ public interface PlayMessagePushMapper extends BaseMapper<PlayMessagePush> {
 		PlayMessagePush update = new PlayMessagePush();
 		update.setPushState(5);
 		update.setId(item.getId());
+		update.setPauseReason(err);
 		updateById(update);
 	}
 

@@ -26,7 +26,7 @@
 
 
     <select id="selectTaskList" resultType="com.ruoyi.system.domain.dto.play.PlayIntoGroupTask">
-     select * from   t_play_into_group_task where   task_state = 1 order by create_time limit 500
+     select * from   t_play_into_group_task where   task_state = 1 group by group_url
     </select>
 
     <select id="selectTaskByCode" resultType="com.ruoyi.system.domain.dto.play.PlayIntoGroupTask">
