@@ -77,29 +77,30 @@ public class AutoReplyService {
             return;
         }
 
-        // 查询商家配置的回复话术
         String playId = groupRobotRelation.getPlayId();
-        Long messageCount = playRobotMessageService.countByPlayId(playId);
-
-        if (messageCount == null || messageCount <= 0) {
-            log.info("剧本Id没有配置自动回复内容,自动回复跳过 {} {}", messageCount, playId);
-            return;
-        }
+        String groupId = groupRobotRelation.getGroupId();
 
         // 记录发送消息日志
-        this.saveAutoReplyMessage(playId, robotId, chatId);
+        this.saveAutoReplyMessage(playId, robotId, dto);
+
+        // 查询商家配置的回复话术
+        Long messageCount = playRobotMessageService.countByPlayId(playId);
+        if (messageCount == null || messageCount <= 0) {
+            log.info("剧本Id没有配置自动回复内容,自动回复跳过 {} {} {}", messageCount, playId, root.getOptSerNo());
+            return;
+        }
 
         int offset = messageCount == 1 ? 0 :RandomUtil.randomInt(0, messageCount.intValue() - 1);
         PlayRobotMessage message = playRobotMessageService.selectByPlayId(playId, offset);
 
-        Optional.ofNullable(message).ifPresent(it -> this.sendMessage(it, robotId, chatId));
+        Optional.ofNullable(message).ifPresent(it -> this.sendMessage(it, robotId, chatId, groupId));
     }
 
 
     public void retrySendMessage(List<AutoReplyLog> firstReplyLogs) {
 
         for (AutoReplyLog firstReplyLog : firstReplyLogs) {
-            String firstRequestId = firstReplyLog.getFirstRequestId();
+            String firstRequestId = firstReplyLog.getId();
             Update inc = new Update().inc("requestTimes", 1L);
             mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(firstRequestId)), inc, AutoReplyLog.class);
 
@@ -110,15 +111,15 @@ public class AutoReplyService {
             OpenApiResult<TgBaseOutputDTO> result = OpenApiClient.sendFriendMessageByThirdKpTg(input);
 
             // 记录发送日志
-            this.saveRequestLog(input, result, firstRequestId);
+            this.saveRequestLog(input, result, firstRequestId, firstReplyLog.getPlayId(), firstReplyLog.getGroupId());
         }
 
 
 
     }
 
-    public void sendMessage(PlayRobotMessage message, String robotId, String chatId) {
-        log.info("自动回复发送消息 {} {} {}", message, robotId, chatId);
+    public void sendMessage(PlayRobotMessage message, String robotId, String chatId, String groupId) {
+        log.info("自动回复发送消息 {} {} {} {}", message, robotId, chatId, groupId);
 
         String strMessage = message.getMessageContent();
         List<ContentJson> contentJsons = JSONArray.parseArray(strMessage, ContentJson.class);
@@ -130,19 +131,21 @@ public class AutoReplyService {
         input.setCountryCode("-1");
         input.setFriendSerialNo(chatId);
         input.setMessageData(messageInputs);
-        input.setExtendInfo("{\"level\":0}");
+        input.setExtendInfo("{\"level\":1}");
 
         OpenApiResult<TgBaseOutputDTO> result = OpenApiClient.sendFriendMessageByThirdKpTg(input);
         log.info("自动回复OpenApi发送消息 {} {}", JSON.toJSONString(result), JSON.toJSONString(input));
 
+        this.saveAutoReplyResultLog(message.getPlayId(), robotId, result);
+
         // 记录发送日志
-        this.saveRequestLog(input, result, null);
+        this.saveRequestLog(input, result, null, message.getPlayId(), groupId);
     }
 
 
     private void saveRequestLog(ThirdTgSendFriendMessageInputDTO input,
                                 OpenApiResult<TgBaseOutputDTO> result,
-                                String firstSerialNo) {
+                                String firstSerialNo, String playId, String groupId) {
         String optSerialNo = Optional.ofNullable(result)
                 .map(OpenApiResult::getData)
                 .map(TgBaseOutputDTO::getOptSerNo)
@@ -156,6 +159,10 @@ public class AutoReplyService {
         replyLog.setId(optSerialNo);
         replyLog.setRequestParams(JSON.toJSONString(input));
         replyLog.setRequestTimes(0);
+        replyLog.setPlayId(playId);
+        replyLog.setGroupId(groupId);
+        replyLog.setFriendId(input.getFriendSerialNo());
+        replyLog.setRobotId(input.getTgRobotId());
         replyLog.setCreateTime(LocalDateTime.now());
         replyLog.setFirstRequestId(firstSerialNo);
         replyLog.setFailMessage(errorMessage);
@@ -171,6 +178,12 @@ public class AutoReplyService {
                 .map(AutoReplyLog::getFirstRequestId)
                 .orElse(optSerialNo);
 
+        if (autoReplyLog == null) {
+            return;
+        }
+
+        // 保存发送结果操作日志
+        this.saveSendCallbackLog(autoReplyLog, root);
 
         // 成功更新结果 /失败更新失败原因
         Update updateResult = root.isSuccess() ?
@@ -204,7 +217,8 @@ public class AutoReplyService {
             // 分页查询 MongoReply 数据
             Criteria criteria = Criteria.where("firstRequestId").exists(false)
                     .and("requestTimes").lt(times)
-                    .and("isSuccess").is(false);
+                    .and("isSuccess").is(false)
+                    .and("createTime").gte(LocalDateTime.now().minusMinutes(5L));
             Query query = Query.query(criteria);
             query.with(PageRequest.of(currentPage, pageSize));
             replyLogs = mongoTemplate.find(query, AutoReplyLog.class);
@@ -219,8 +233,23 @@ public class AutoReplyService {
         } while (replyLogs.size() == pageSize);
     }
 
-    public void saveAutoReplyMessage(String playId, String robotId, String chatId) {
-        String content = StrUtil.format("机器人收到好友消息触发自动回复,机器人ID:{},好友ID{}", robotId, chatId);
-        PlayExecutionLogService.savePackLog(PlayLogTyper.Auto_Reply, playId, content, 0);
+    private void saveAutoReplyMessage(String playId, String robotId, List<Called1100910027DTO> callbackData) {
+        for (Called1100910027DTO data : callbackData) {
+            String content = StrUtil.format("【自动回复-收消息】{} 水军号：{}；收到私聊消息：{}；", data.getDate_time(), robotId, JSON.toJSONString(data));
+            PlayExecutionLogService.savePackLog(PlayLogTyper.Auto_Reply, playId, content, 0);
+        }
+    }
+
+    private void saveAutoReplyResultLog(String playId, String robotId, OpenApiResult<TgBaseOutputDTO> result) {
+        //【自动回复-触发】2024-1-29 21:19:41， 水军号：演员1/anhshhs；接收：hhhshhs，自动回复成功
+        String content = StrUtil.format("【自动回复-触发】{}， 水军号：{}；触发自动回复：{}，调用结果：{}",
+                LocalDateTime.now(), robotId, result.getData().getOptSerNo(), result.getMessage());
+        PlayExecutionLogService.savePackLog(PlayLogTyper.Auto_Reply, playId, content, result.isSuccess() ? 0 : 1);
+    }
+
+    private void saveSendCallbackLog(AutoReplyLog replyLog, CalledDTO root) {
+        String content = StrUtil.format("【自动回复-结果】{}， 水军号：{}；自动回复结果：{} {}",
+                LocalDateTime.now(), replyLog.getRobotId(), replyLog.getId(), root.isSuccess() ? "成功": root.getResultMsg());
+        PlayExecutionLogService.savePackLog(PlayLogTyper.Auto_Reply, replyLog.getPlayId(), content, root.isSuccess() ? 0 : 1);
     }
 }

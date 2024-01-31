@@ -117,10 +117,10 @@ public class MessagePackagingUtil {
                 if (enableConfound) {
 
                     // 如果混淆失败 会发送原链接
-                    sb.append(" ").append(MessagePackagingUtil.confoundLink(item.getSMateContent()));
+                    sb.append(" [").append(MessagePackagingUtil.confoundLink(item.getSMateContent())).append("]");
                     continue;
                 }
-                sb.append(" ").append(item.getSMateContent());
+                sb.append(" [").append(item.getSMateContent()).append("]");
             }
         }
         if (StringUtils.isEmpty(sb.toString().trim())) {
@@ -133,7 +133,7 @@ public class MessagePackagingUtil {
         StringBuilder sb = new StringBuilder();
         for (ContentJson item : messageContentList) {
             if (item.getMomentTypeId() == 2017) {
-                sb.append(" ").append(item.getSMateContent());
+                sb.append(" [").append(item.getSMateContent()).append("]");
             }
         }
         if (StringUtils.isEmpty(sb.toString().trim())) {

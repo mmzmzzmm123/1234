@@ -19,6 +19,16 @@ public class AutoReplyLog {
     @Id
     private String id;
 
+    @Indexed
+    private String playId;
+
+    @Indexed
+    private String groupId;
+
+    private String robotId;
+
+    private String friendId;
+
     private String requestParams;
 
     private Integer requestTimes;
