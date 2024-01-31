@@ -152,7 +152,7 @@ public class AutoReplyService {
         OpenApiResult<TgBaseOutputDTO> result = OpenApiClient.sendFriendMessageByThirdKpTg(input);
         log.info("自动回复OpenApi发送消息 {} {}", JSON.toJSONString(result), JSON.toJSONString(input));
 
-        this.saveAutoReplyResultLog(message.getPlayId(),groupId, robotId, result);
+        this.saveAutoReplyResultLog(message.getPlayId(),groupId, robotId, chatId, result);
 
         // 记录发送日志
         this.saveRequestLog(input, result, null, message.getPlayId(), groupId);
@@ -251,22 +251,22 @@ public class AutoReplyService {
 
     private void saveAutoReplyMessage(String playId, String robotId, String groupId, List<Called1100910027DTO> callbackData) {
         for (Called1100910027DTO data : callbackData) {
-            String content = StrUtil.format("【自动回复-收消息】{} 水军号：{}；群Id：{}，好友ID：{}；收到私聊消息：{}；",
-                    data.getDate_time(), robotId, groupId, data.getFrom_serial_no(), JSON.toJSONString(data));
-            PlayExecutionLogService.savePackLog(PlayLogTyper.Auto_Reply_Receive, playId, content, 0);
+            String content = StrUtil.format("【自动回复-收消息】水军号：{}；群Id：{}；好友ID：{}；收到私聊消息：{}；",
+                    robotId, groupId, data.getFrom_serial_no(), JSON.toJSONString(data));
+            PlayExecutionLogService.savePackLog(PlayLogTyper.Auto_Reply_Receive, playId, groupId, content, 0);
         }
     }
 
-    private void saveAutoReplyResultLog(String playId, String groupId, String robotId, OpenApiResult<TgBaseOutputDTO> result) {
+    private void saveAutoReplyResultLog(String playId, String groupId, String robotId, String chatId, OpenApiResult<TgBaseOutputDTO> result) {
         //【自动回复-触发】2024-1-29 21:19:41， 水军号：演员1/anhshhs；接收：hhhshhs，自动回复成功
-        String content = StrUtil.format("【自动回复-触发】{}， 水军号：{}；群Id：{}；触发自动回复：{}，调用结果：{}",
-                LocalDateTime.now(), robotId, groupId, result.getData().getOptSerNo(), result.getMessage());
-        PlayExecutionLogService.savePackLog(PlayLogTyper.Auto_Reply_Send, playId, content, result.isSuccess() ? 0 : 1);
+        String content = StrUtil.format("【自动回复-触发】水军号：{}；群Id：{}；好友ID：{}；触发自动回复：{}，调用结果：{}",
+                robotId, groupId, chatId, result.getData().getOptSerNo(), result.getMessage());
+        PlayExecutionLogService.savePackLog(PlayLogTyper.Auto_Reply_Send, playId, groupId, content, result.isSuccess() ? 0 : 1);
     }
 
     private void saveSendCallbackLog(AutoReplyLog replyLog, CalledDTO root) {
-        String content = StrUtil.format("【自动回复-结果】{}， 水军号：{}；群Id：{}；自动回复结果：{} {}",
-                LocalDateTime.now(), replyLog.getRobotId(), replyLog.getId(), replyLog.getGroupId(), root.isSuccess() ? "成功": root.getResultMsg());
-        PlayExecutionLogService.savePackLog(PlayLogTyper.Auto_Reply_Send, replyLog.getPlayId(), content, root.isSuccess() ? 0 : 1);
+        String content = StrUtil.format("【自动回复-结果】水军号：{}；群Id：{}；好友ID：{}；自动回复结果：{} {}",
+                replyLog.getRobotId(), replyLog.getGroupId(), replyLog.getFriendId(), root.isSuccess() ? "成功": root.getResultMsg());
+        PlayExecutionLogService.savePackLog(PlayLogTyper.Auto_Reply_Send, replyLog.getPlayId(), replyLog.getGroupId(), content, root.isSuccess() ? 0 : 1);
     }
 }
