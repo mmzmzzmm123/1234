@@ -28,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.redisson.api.RLock;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -90,10 +91,12 @@ public class AutoReplyService {
 
             // 同一个用户多次消息仅回复一次
             String lockKey = "auto-reply-user-lock:" + data.getFrom_serial_no() + ":" + data.getTo_serial_no();
-            if (!redisLock.tryLock(lockKey, 10, TimeUnit.MINUTES)) {
+            RLock lock = redisLock.getRLock(lockKey);
+            if (!lock.isLocked()) {
                 log.info("改用户在10分钟内收到多条消息,自动跳过 {} {}", root.getOptSerNo(), data);
                 continue;
             }
+            lock.lock(10, TimeUnit.MINUTES);
 
             // 查询商家配置的回复话术
             Long messageCount = playRobotMessageService.countByPlayId(playId);
