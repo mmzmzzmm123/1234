@@ -67,7 +67,7 @@
     </select>
     <select id="robotAccountDetails" resultType="com.ruoyi.system.domain.vo.play.QueryRobotAccountDetailVO">
         SELECT
-            t.robot_id as robotSerialNo
+            t.robot_id as robotSerialNo,
             tri.phone,
             tri.country_code AS countryCode,
             tri.country AS countryName,
@@ -95,6 +95,7 @@
                 where 1=1
                   and tpbr.is_finish = -1
                   and tpbr.play_id = #{dto.playId}
+                order by 1
             ) t
                 LEFT JOIN t_robot_info tri ON t.robot_id = tri.robot_serial_no
                 left join t_group_info tgi on tgi.group_id = t.group_id
