@@ -497,6 +497,15 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
                 .eq(PlayMessagePush::getGroupId, groupId);
         return this.list(queryWrapper);
     }
+
+    @Override
+    public List<PlayMessagePush> selectByGroupIdAndPlayId(String chatroomId, String playId) {
+        LambdaQueryWrapper<PlayMessagePush> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PlayMessagePush::getGroupId, chatroomId)
+                .eq(PlayMessagePush::getPlayId, playId)
+                .notIn(PlayMessagePush::getPushState, Arrays.asList(PushStateEnum.ING, PushStateEnum.WAIT_SEND));
+        return this.list(queryWrapper);
+    }
 }
 
 

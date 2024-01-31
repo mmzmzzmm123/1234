@@ -16,7 +16,7 @@ public class PlaybackContext {
 
 	@SuppressWarnings("deprecation")
 	public static boolean isPause(String playId, String chatroomId) {
-		String v = (String) RedisTemplateTools.get().opsForValue()
+		String v = RedisTemplateTools.get().opsForValue()
 				.get("ruoyi:PlaybackContext:" + playId + ":" + chatroomId);
 
 		if (StringUtils.isEmpty(v)) {

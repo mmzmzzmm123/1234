@@ -2,6 +2,7 @@ package com.ruoyi.system.components.movie.spi.impl;
 
 import com.ruoyi.common.core.delayqueue.context.FastDelayQueueContext;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
+import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spi.ServiceLoader;
@@ -13,10 +14,13 @@ import com.ruoyi.system.components.movie.PlaybackContext;
 import com.ruoyi.system.components.movie.spi.DelaySpeedController;
 import com.ruoyi.system.components.movie.spi.GroupCtrlStopper;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
+import com.ruoyi.system.service.PlayMessagePushService;
 import com.ruoyi.system.service.impl.PlayServiceImpl;
 import com.ruoyi.system.service.impl.SysConfigServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 @SPI
@@ -74,6 +78,16 @@ public class DelayQueueProgressPuller implements ProgressPuller {
             log.info("剧本删除了 {} {}", message, chatroomId);
             return;
         }
+
+        List<PlayMessagePush> playMessagePushes =
+                SpringUtils.getBean(PlayMessagePushService.class)
+                        .selectByGroupIdAndPlayId(chatroomId, message.getPlayId());
+
+        if (CollectionUtils.isNotEmpty(playMessagePushes)) {
+            log.info("群或剧本状态异常不再发送消息 {} {} {} {}", playMessagePushes, message, chatroomId, optSerialNo);
+            return;
+        }
+
         // 风控限制了， 需要暂停剧本
         boolean limit = ServiceLoader.load(GroupCtrlStopper.class, "BoxGroupCtrlStopper").isStoped(message.getPlayId(), chatroomId);
         if (limit) {
