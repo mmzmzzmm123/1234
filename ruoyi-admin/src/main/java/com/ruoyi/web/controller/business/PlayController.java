@@ -1,5 +1,6 @@
 package com.ruoyi.web.controller.business;
 
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.pagehelper.PageInfo;
@@ -12,6 +13,7 @@ import com.ruoyi.common.core.domain.dto.play.*;
 import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.dto.AutoReplayLogDTO;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.ForceFinishGroupDTO;
@@ -32,6 +34,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -360,5 +363,16 @@ public class PlayController extends BaseController {
             return R.fail(11000, ErrInfoConfig.getDynmic(11000, "任务id不能为空"));
         }
         return R.ok(playService.autoReplayLog(dto));
+    }
+
+    @ApiOperation(value = "导出自动回复日志")
+    @PostMapping("/export/autoReplayLog")
+    public void export(@RequestBody AutoReplayLogDTO dto, HttpServletResponse response) {
+        if (StrUtil.isBlank(dto.getPlayId())) {
+            return;
+        }
+        PageInfo<AutoReplayLogVO> result = playService.autoReplayLog(dto);
+        ExcelUtil<AutoReplayLogVO> util = new ExcelUtil<>(AutoReplayLogVO.class);
+        util.exportExcel(response, result.getList(), "自动回复日志");
     }
 }
