@@ -52,9 +52,14 @@ public enum PlayLogTyper {
 	Group_Upgrade,
 
 	/**
-	 * 自动回复
+	 * 自动回复-收到消息
 	 */
-	Auto_Reply
+	Auto_Reply_Receive,
+
+	/**
+	 * 自动回复-发送消息
+	 */
+	Auto_Reply_Send
 
 
 
