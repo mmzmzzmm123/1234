@@ -233,8 +233,7 @@ public class AutoReplyService {
             // 分页查询 MongoReply 数据
             Criteria criteria = Criteria.where("firstRequestId").exists(false)
                     .and("requestTimes").lt(times)
-                    .and("isSuccess").is(false)
-                    .and("createTime").gte(LocalDateTime.now().minusMinutes(5L));
+                    .and("isSuccess").is(false);
             Query query = Query.query(criteria);
             query.with(PageRequest.of(currentPage, pageSize));
             replyLogs = mongoTemplate.find(query, AutoReplyLog.class);
