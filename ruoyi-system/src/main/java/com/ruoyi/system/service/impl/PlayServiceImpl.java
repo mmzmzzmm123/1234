@@ -880,10 +880,10 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
     public PageInfo<AutoReplayLogVO> autoReplayLog(AutoReplayLogDTO dto) {
         PageInfo<AutoReplayLogVO> pageInfo = new PageInfo<>();
         Map<String, String> groupInfoMap = new HashMap<>();
+        Map<String, String> groupNoMap = new HashMap<>();
 
         MongoTemplate mongoTemplate = SpringUtils.getBean(MongoTemplate.class);
         Query query = new Query();
-        Criteria criteria = new Criteria();
 
         //查询群条件
         List<GroupInfoVO> groupInfoVOS = new ArrayList<>();
@@ -899,28 +899,28 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
                 pageInfo.setTotal(0);
                 return pageInfo;
             }
-            criteria.and("groupId").in(groupInfoVOS.stream().map(GroupInfoVO::getGroupId).collect(Collectors.toList()));
+            query.addCriteria(Criteria.where("groupId").in(groupInfoVOS.stream().map(GroupInfoVO::getGroupId).collect(Collectors.toList())));
             for (GroupInfoVO groupInfoVO : groupInfoVOS) {
                 groupInfoMap.put(groupInfoVO.getGroupId(), groupInfoVO.getGroupName());
+                groupNoMap.put(groupInfoVO.getGroupId(), groupInfoVO.getGroupSerialNo());
             }
         }
 
-        criteria.and("playId").is(dto.getPlayId());
-        criteria.and("type").is(PlayLogTyper.Auto_Reply_Receive);
-        if (null != dto.getStartTime()) {
-            criteria.and("createTime").gte(dto.getStartTime());
+        query.addCriteria(Criteria.where("playId").is(dto.getPlayId()));
+        query.addCriteria(Criteria.where("type").is(PlayLogTyper.Auto_Reply_Receive));
+        if (null != dto.getStartTime() && dto.getEndTime() == null) {
+            query.addCriteria(Criteria.where("createTime").gte(dto.getStartTime()));
         }
-        if (null != dto.getEndTime()) {
-            criteria.and("createTime").lte(dto.getEndTime());
+        if (null != dto.getEndTime() && null == dto.getStartTime()) {
+            query.addCriteria(Criteria.where("createTime").lte(dto.getEndTime()));
         }
-        if (null != dto.getState()) {
-            criteria.and("state").is(dto.getState());
+        if (null != dto.getStartTime() && null != dto.getEndTime()) {
+            query.addCriteria(Criteria.where("createTime").gte(dto.getStartTime()).lte(dto.getEndTime()));
         }
         if (StringUtils.isNotEmpty(dto.getRobotId())) {
-            criteria.and("robotId").is(dto.getRobotId());
+            query.addCriteria(Criteria.where("robotId").is(dto.getRobotId()));
         }
 
-        query.addCriteria(criteria);
         long total = mongoTemplate.count(query, PlayExecutionLog.class);
 
         Sort orderBy = Sort.by(Sort.Direction.DESC, "createTime");
@@ -941,6 +941,7 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             if (CollectionUtils.isNotEmpty(groupInfoVOS)) {
                 for (GroupInfoVO groupInfoVO : groupInfoVOS) {
                     groupInfoMap.put(groupInfoVO.getGroupId(), groupInfoVO.getGroupName());
+                    groupNoMap.put(groupInfoVO.getGroupId(), groupInfoVO.getGroupSerialNo());
                 }
             }
         }
@@ -950,7 +951,8 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
             AutoReplayLogVO autoReplayLogVO = new AutoReplayLogVO();
             BeanUtils.copyProperties(playExecutionLog, autoReplayLogVO);
             autoReplayLogVO.setGroupName(groupInfoMap.getOrDefault(playExecutionLog.getGroupId(), ""));
-            autoReplayLogVO.setGroupSerialNo("");
+            autoReplayLogVO.setGroupSerialNo(groupNoMap.getOrDefault(playExecutionLog.getGroupId(), ""));
+            autoReplayLogVO.setRobotId(playExecutionLog.getRobotId());
             autoReplayLogVOS.add(autoReplayLogVO);
         }
 
