@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain.dto.play;
 
+import com.ruoyi.system.domain.base.PageBaseDTO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,7 +14,7 @@ import javax.validation.constraints.NotBlank;
  */
 @ApiModel("查询任务账号明细DTO")
 @Data
-public class QueryRobotAccountDetailDTO {
+public class QueryRobotAccountDetailDTO extends PageBaseDTO {
 
     @ApiModelProperty("剧本ID")
     @NotBlank(message = "剧本ID不能为空")

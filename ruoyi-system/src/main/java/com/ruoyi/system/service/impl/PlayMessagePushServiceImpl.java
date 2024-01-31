@@ -19,6 +19,7 @@ import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.PlayMessageConfoundLog;
 import com.ruoyi.system.domain.dto.play.PlayGroupInfo;
 import com.ruoyi.system.domain.dto.play.PushOperationDTO;
+import com.ruoyi.system.domain.dto.play.QueryRobotAccountDetailDTO;
 import com.ruoyi.system.domain.dto.play.QueryRobotDetailDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.play.QueryRobotAccountDetailVO;
@@ -386,7 +387,7 @@ public class PlayMessagePushServiceImpl extends ServiceImpl<PlayMessagePushMappe
     }
 
     @Override
-    public Page<QueryRobotAccountDetailVO> robotAccountDetails(QueryRobotAccountDetailVO dto) {
+    public Page<QueryRobotAccountDetailVO> robotAccountDetails(QueryRobotAccountDetailDTO dto) {
         Page<QueryRobotAccountDetailVO> page = new Page<>(dto.getPage(), dto.getLimit());
         final List<QueryRobotAccountDetailVO> list = baseMapper.robotAccountDetails(page, dto);
         page.setRecords(list);

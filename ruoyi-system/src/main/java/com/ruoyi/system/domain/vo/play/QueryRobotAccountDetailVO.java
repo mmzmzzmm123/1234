@@ -13,7 +13,7 @@ import lombok.Data;
  */
 @ApiModel("查询任务账号明细-账号维度VO")
 @Data
-public class QueryRobotAccountDetailVO extends PageBaseDTO {
+public class QueryRobotAccountDetailVO {
     @Excel(name = "机器人编号")
     @ApiModelProperty("机器人编号")
     private String robotSerialNo;

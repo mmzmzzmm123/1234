@@ -304,12 +304,12 @@ public class PlayController extends BaseController {
 
     @ApiOperation("账号明细列表-账号维度")
     @PostMapping("robotAccountDetails")
-    public R<Page<QueryRobotAccountDetailVO>> robotAccountDetails(@RequestBody QueryRobotAccountDetailVO dto) {
+    public R<Page<QueryRobotAccountDetailVO>> robotAccountDetails(@RequestBody QueryRobotAccountDetailDTO dto) {
         return R.ok(playMessagePushService.robotAccountDetails(dto));
     }
     @ApiOperation(value = "导出账号明细列表-账号维度")
     @PostMapping("/exportRobotAccountDetails")
-    public R<Page<QueryRobotAccountDetailVO>> exportRobotAccountDetails(@RequestBody QueryRobotAccountDetailVO dto, HttpServletResponse response){
+    public R<Page<QueryRobotAccountDetailVO>> exportRobotAccountDetails(@RequestBody QueryRobotAccountDetailDTO dto, HttpServletResponse response){
         ExcelUtil<QueryRobotAccountDetailVO> excelUtil = new ExcelUtil<>(QueryRobotAccountDetailVO.class);
         List<QueryRobotAccountDetailVO> records = new ArrayList<>();
         Page<QueryRobotAccountDetailVO> page = null;

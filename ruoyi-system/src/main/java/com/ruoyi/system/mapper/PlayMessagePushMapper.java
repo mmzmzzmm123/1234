@@ -19,7 +19,7 @@ public interface PlayMessagePushMapper extends BaseMapper<PlayMessagePush> {
 	RobotStatisticsVO getRobotStatisticsVO(@Param("playId") String playId);
 
 	List<QueryRobotDetailVO> robotDetails(@Param("dto") QueryRobotDetailDTO dto);
-	List<QueryRobotAccountDetailVO> robotAccountDetails(Page<QueryRobotAccountDetailVO> page, @Param("dto") QueryRobotAccountDetailVO dto);
+	List<QueryRobotAccountDetailVO> robotAccountDetails(Page<QueryRobotAccountDetailVO> page, @Param("dto") QueryRobotAccountDetailDTO dto);
 
 	public default PlayMessagePush getOne(String playId, String chatroomId) {
 		return selectOne(new QueryWrapper<PlayMessagePush>().lambda().eq(PlayMessagePush::getGroupId, chatroomId)
