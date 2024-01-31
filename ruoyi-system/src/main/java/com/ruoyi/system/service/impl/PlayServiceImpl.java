@@ -884,7 +884,6 @@ public class PlayServiceImpl extends ServiceImpl<PlayMapper, Play> implements IP
 
         MongoTemplate mongoTemplate = SpringUtils.getBean(MongoTemplate.class);
         Query query = new Query();
-        Criteria criteria = new Criteria();
 
         //查询群条件
         List<GroupInfoVO> groupInfoVOS = new ArrayList<>();
