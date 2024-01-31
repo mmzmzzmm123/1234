@@ -1,10 +1,12 @@
 package com.ruoyi.system.service.business;
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONArray;
 import com.ruoyi.common.core.domain.dto.play.ContentJson;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotMessage;
+import com.ruoyi.common.enums.PlayLogTyper;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.callback.dto.Called1100910010DTO;
 import com.ruoyi.system.callback.dto.Called1100910027DTO;
@@ -17,6 +19,7 @@ import com.ruoyi.system.openapi.OpenApiResult;
 import com.ruoyi.system.openapi.model.input.ThirdTgMessageDTO;
 import com.ruoyi.system.openapi.model.input.ThirdTgSendFriendMessageInputDTO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
+import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.impl.PlayRobotMessageService;
 import com.ruoyi.system.service.impl.SysConfigServiceImpl;
 import com.ruoyi.system.utils.MessagePackagingUtil;
@@ -82,6 +85,9 @@ public class AutoReplyService {
             log.info("剧本Id没有配置自动回复内容,自动回复跳过 {} {}", messageCount, playId);
             return;
         }
+
+        // 记录发送消息日志
+        this.saveAutoReplyMessage(playId, robotId, chatId);
 
         int offset = messageCount == 1 ? 0 :RandomUtil.randomInt(0, messageCount.intValue() - 1);
         PlayRobotMessage message = playRobotMessageService.selectByPlayId(playId, offset);
@@ -211,5 +217,10 @@ public class AutoReplyService {
             currentPage++;
 
         } while (replyLogs.size() == pageSize);
+    }
+
+    public void saveAutoReplyMessage(String playId, String robotId, String chatId) {
+        String content = StrUtil.format("机器人收到好友消息触发自动回复,机器人ID:{},好友ID{}", robotId, chatId);
+        PlayExecutionLogService.savePackLog(PlayLogTyper.Auto_Reply, playId, content, 0);
     }
 }

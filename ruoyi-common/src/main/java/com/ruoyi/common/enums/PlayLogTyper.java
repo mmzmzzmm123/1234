@@ -51,6 +51,11 @@ public enum PlayLogTyper {
 	 */
 	Group_Upgrade,
 
+	/**
+	 * 自动回复
+	 */
+	Auto_Reply
+
 
 
 	;
