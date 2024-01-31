@@ -2,7 +2,6 @@ package com.ruoyi.system.components.movie.spi.impl;
 
 import com.ruoyi.common.core.delayqueue.context.FastDelayQueueContext;
 import com.ruoyi.common.core.domain.entity.play.PlayMessage;
-import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
 import com.ruoyi.common.utils.Ids;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spi.ServiceLoader;
@@ -14,13 +13,13 @@ import com.ruoyi.system.components.movie.PlaybackContext;
 import com.ruoyi.system.components.movie.spi.DelaySpeedController;
 import com.ruoyi.system.components.movie.spi.GroupCtrlStopper;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
-import com.ruoyi.system.service.PlayMessagePushService;
+import com.ruoyi.system.domain.GroupState;
+import com.ruoyi.system.service.GroupStateService;
 import com.ruoyi.system.service.impl.PlayServiceImpl;
 import com.ruoyi.system.service.impl.SysConfigServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 
-import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @SPI
@@ -79,12 +78,9 @@ public class DelayQueueProgressPuller implements ProgressPuller {
             return;
         }
 
-        List<PlayMessagePush> playMessagePushes =
-                SpringUtils.getBean(PlayMessagePushService.class)
-                        .selectByGroupIdAndPlayId(chatroomId, message.getPlayId());
-
-        if (CollectionUtils.isNotEmpty(playMessagePushes)) {
-            log.info("群或剧本状态异常不再发送消息 {} {} {} {}", playMessagePushes, message, chatroomId, optSerialNo);
+        GroupState groupState = SpringUtils.getBean(GroupStateService.class).getById(chatroomId);
+        if (groupState != null && Objects.equals(groupState.getGroupStatus(), 1)) {
+            log.info("群状态异常不再发送消息 {} {} {} {}", groupState, message, chatroomId, optSerialNo);
             return;
         }
 
