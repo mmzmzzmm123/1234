@@ -13,14 +13,17 @@ import com.ruoyi.common.core.domain.entity.MerchantInfo;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.domain.dto.AutoReplayLogDTO;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.ForceFinishGroupDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
 import com.ruoyi.system.domain.dto.play.*;
+import com.ruoyi.system.domain.dto.robot.SelectRobotListDTO;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.AutoReplayLogVO;
 import com.ruoyi.system.domain.vo.QueryConfoundLogVO;
 import com.ruoyi.system.domain.vo.play.*;
+import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 import com.ruoyi.system.service.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,6 +35,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -294,10 +299,33 @@ public class PlayController extends BaseController {
         return R.ok(playService.robotStatistics(playId));
     }
 
-    @ApiOperation("账号明细列表")
+    @ApiOperation("账号明细列表-国家维度")
     @PostMapping("robotDetails")
     public R<List<QueryRobotDetailVO>> robotDetails(@RequestBody QueryRobotDetailDTO dto) {
         return R.ok(playMessagePushService.robotDetails(dto));
+    }
+
+    @ApiOperation("账号明细列表-账号维度")
+    @PostMapping("robotAccountDetails")
+    public R<Page<QueryRobotAccountDetailVO>> robotAccountDetails(@RequestBody QueryRobotAccountDetailDTO dto) {
+        return R.ok(playMessagePushService.robotAccountDetails(dto));
+    }
+    @ApiOperation(value = "导出账号明细列表-账号维度")
+    @PostMapping("/exportRobotAccountDetails")
+    public R<Page<QueryRobotAccountDetailVO>> exportRobotAccountDetails(@RequestBody QueryRobotAccountDetailDTO dto, HttpServletResponse response){
+        ExcelUtil<QueryRobotAccountDetailVO> excelUtil = new ExcelUtil<>(QueryRobotAccountDetailVO.class);
+        List<QueryRobotAccountDetailVO> records = new ArrayList<>();
+        Page<QueryRobotAccountDetailVO> page = null;
+        int current = 1;
+        do {
+            dto.setPage(current);
+            dto.setLimit(10000);
+            page = playMessagePushService.robotAccountDetails(dto);
+            records.addAll(page.getRecords());
+            ++current;
+        } while (page.hasNext());
+        excelUtil.exportExcel(response,records,"账号明细列表");
+        return R.ok();
     }
 
     @ApiOperation("炒群状态操作")
