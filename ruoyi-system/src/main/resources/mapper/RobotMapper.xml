@@ -136,7 +136,25 @@
             SUM( IF ( tri.bidirectional_type = 1, 1, 0 ) ) AS bidirectionalRobotNum
         FROM
             t_play_group_info tpgi
-                LEFT JOIN t_play_robot_group_relation tprgr ON tpgi.tg_group_id = tprgr.group_id
+                LEFT JOIN (
+                SELECT
+                    tpmpd.robot_id,tpmp.group_id
+                FROM
+                    t_play_message_push tpmp
+                        LEFT JOIN t_play_message_push_detail tpmpd ON tpmp.id = tpmpd.play_msg_push_id
+                WHERE
+                    1 = 1
+                  AND tpmp.play_id = #{playId}
+                  AND tpmpd.robot_id != ''
+                GROUP BY
+                    tpmpd.robot_id
+                UNION
+                select tpbr.robot_id,tpbr.group_id
+                from t_play_back_robot tpbr
+                where 1=1
+                  and tpbr.is_finish = -1
+                  and tpbr.play_id = #{playId}
+            ) tprgr ON tpgi.tg_group_id = tprgr.group_id
                 LEFT JOIN t_robot_info tri ON tprgr.robot_id = tri.robot_serial_no
         WHERE
             1 = 1
