@@ -181,7 +181,7 @@
     <select id="selectRobotHandle" resultType="com.ruoyi.system.domain.vo.robot.SelectRobotByRuleVO">
         select tri.id,tri.robot_serial_no from t_robot_info tri
         inner join t_robot_statistics trs on tri.robot_serial_no = trs.robot_serial_no
-        where tri.delete_status = 0 and tri.recycle_status = 0 and seal_status <![CDATA[<>]]> 30
+        where tri.delete_status = 0 and tri.recycle_status = 0 and seal_status = 10
         AND tri.id > #{id}
         order by tri.id asc LIMIT 200
     </select>
