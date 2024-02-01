@@ -122,6 +122,8 @@ ut-touch:
   merchant-account: bilin2
   merchant-password: bilin123
   touch-merchant-id: 1735130303135006720
+  user-account: bl-app2
+  user-password: bl-app2
 
 openapi:
   openApiKey: yriWvNH7Bt83mCvTQYHMLkMbuh7Ll32z

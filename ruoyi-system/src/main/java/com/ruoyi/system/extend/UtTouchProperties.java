@@ -32,4 +32,14 @@ public class UtTouchProperties {
      */
     private String touchMerchantId = "1735130303135006720";
 
+    /**
+     * user账号
+     */
+    private String userAccount;
+
+    /**
+     * user密码
+     */
+    private String userPassword;
+
 }
