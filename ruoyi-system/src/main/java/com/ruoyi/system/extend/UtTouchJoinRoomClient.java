@@ -10,6 +10,15 @@ import com.ruoyi.system.extend.data.*;
 public abstract class UtTouchJoinRoomClient {
 
     /**
+     * 账号登录,获取token
+     *
+     * @return
+     */
+    public static UtTouchResult<UserLoginOutput> userLogin(UserLoginInputDTO input) {
+        return UtTouchClient.post(UtTouchApiEnum.USER_LOGIN, JSONObject.from(input), UserLoginOutput.class);
+    }
+
+    /**
      * 保存拉群任务
      *
      * @return

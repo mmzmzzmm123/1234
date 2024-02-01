@@ -272,6 +272,11 @@ public class UbpmPlusJoinChatRoomController {
         dto.setAutoCreateChatroomCount(0);
         dto.setNIsRobotExit(input.getRobotExitStatus());
         dto.setNIsCountryCode(0);
+        dto.setIsOnlyPriorityCountry(input.getIsOnlyPriorityCountry());
+        dto.setSelectChatroomType(input.getSelectChatroomType());
+        dto.setNLastInviteTimeOverMinute(input.getNLastInviteTimeOverMinute());
+        dto.setNPriorityUsedCount(input.getNPriorityUsedCount());
+
         if(StrUtil.isNotBlank(input.getCountries())){
             dto.setNIsCountryCode(1);
         }
@@ -284,5 +289,11 @@ public class UbpmPlusJoinChatRoomController {
         log.info("通过订单创建任务dto {}", JSON.toJSONString(dto));
         ubpmPlusJoinChatRoomService.saveChatRoomJoinTask(dto);
         return R.ok();
+    }
+
+    @ApiOperation("账号登录，获取token")
+    @PostMapping("userLogin")
+    public R<UserLoginOutput> userLogin() {
+        return R.ok(ubpmPlusJoinChatRoomService.userLogin());
     }
 }

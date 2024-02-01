@@ -8,6 +8,8 @@ import lombok.Getter;
 @Getter
 public enum UtTouchApiEnum {
 
+    USER_LOGIN("账号登录，获取token", "/api/User/UserLogin"),
+
     MERCHANT_LOGIN("商家登录", "/api/Merchant/UserLogin"),
 
     CREATE_PRIVATE_MESSAGE_TASK("创建批量私信任务", "/api/ComPrivateMessageTaskService/CreatePrivateMessageTask"),

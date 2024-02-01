@@ -21,10 +21,12 @@ import com.ruoyi.system.extend.UtTouchResult;
 import com.ruoyi.system.extend.data.*;
 import com.ruoyi.system.mapper.OrderMapper;
 import com.ruoyi.system.service.CountryService;
+import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.MerchantInfoService;
 import com.ruoyi.system.service.TaskService;
 import com.ruoyi.system.service.impl.OrderServiceImpl;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,7 @@ import java.util.stream.Collectors;
 /**
  * @author Jing.Zhang
  */
+@Slf4j
 @Service
 @AllArgsConstructor
 public class UbpmPlusJoinChatRoomService {
@@ -54,6 +57,9 @@ public class UbpmPlusJoinChatRoomService {
 
     @Resource
     private OrderServiceImpl orderService;
+
+    private final ISysConfigService configService;
+
 
 
     @Transactional(rollbackFor = Exception.class)
@@ -287,5 +293,23 @@ public class UbpmPlusJoinChatRoomService {
         final List<String> uploadPhones = com.ruoyi.common.utils.file.FileUtils.getTextListByFilePath(filePathUrl);
         return this.analysisPhoneNumbers(uploadPhones);
 
+    }
+
+    public UserLoginOutput userLogin() {
+        String merchantId = Optional.ofNullable(SecurityUtils.getLoginUser().getMerchantInfo()).map(MerchantInfo::getMerchantId).orElse(null);
+//        if (StringUtils.isEmpty(merchantId)) {
+//            merchantId = configService.selectConfigByKey("robot:merchant");
+//        }
+        UserLoginInputDTO input = new UserLoginInputDTO();
+        input.setAccount(utTouchProperties.getUserAccount());
+        input.setPwd(utTouchProperties.getUserPassword());
+        UtTouchResult<UserLoginOutput> result = UtTouchJoinRoomClient.userLogin(input);
+        if (result != null && result.isSuccess()) {
+            UserLoginOutput data = result.getData();
+            String url = data.getUrl() + "&extendKey=" + merchantId;
+            data.setUrl(url);
+            return data;
+        }
+        return result.getData();
     }
 }
