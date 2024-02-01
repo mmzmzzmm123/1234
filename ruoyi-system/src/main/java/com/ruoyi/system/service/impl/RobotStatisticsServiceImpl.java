@@ -276,6 +276,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
 
     @Override
     public void clearRobotOneDayNum() {
+        log.info("定时清除号每日累计数");
         List<RobotStatistics> robotStatistics = baseMapper.selectList(null);
         if(!CollectionUtils.isEmpty(robotStatistics)){
             for (List<RobotStatistics> statistics : ListTools.partition(robotStatistics, 500)) {

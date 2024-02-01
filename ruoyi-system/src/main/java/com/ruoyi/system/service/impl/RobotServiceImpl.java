@@ -76,17 +76,22 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             String merchantId = configService.selectConfigByKey("robot:merchant");
             robotDTO.setMerchantId(merchantId);
             OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> robotListResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
-            log.info("pullApiRobotDataList robotListResult:{}",JSON.toJSONString(robotListResult));
             if(robotListResult.isSuccess()){
+                log.info("pullApiRobotDataList robotListResult size:{}",robotListResult.getData().getSize());
                 Page<ExtTgSelectRobotByMerchantVO> data = robotListResult.getData();
                 this.pullRobotDataList(data.getRecords());
                 long count = data.getPages();
                 if(count > 0){
                     for (long i = 0; i < count; i++) {
+                        //每次查询间隔一秒
+                        try {
+                            Thread.sleep(1000);
+                        }catch (Exception e){}
+
                         robotDTO.setPage(robotDTO.getPage()+1);
                         OpenApiResult<Page<ExtTgSelectRobotByMerchantVO>> pageOpenApiResult = OpenApiClient.selectRobotListByRadioByThirdUtchatTg(robotDTO);
-                        log.info("pullApiRobotDataList pageOpenApiResult:{}",JSON.toJSONString(pageOpenApiResult));
                         if(pageOpenApiResult.isSuccess()){
+                            log.info("pullApiRobotDataList robotListResult size:{}",robotListResult.getData().getSize());
                             Page<ExtTgSelectRobotByMerchantVO> pageData = pageOpenApiResult.getData();
                             this.pullRobotDataList(pageData.getRecords());
                         }
