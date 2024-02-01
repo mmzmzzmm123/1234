@@ -117,13 +117,17 @@ public class SelectRobotListVO{
     @ApiModelProperty(value = "创建时间")
     private LocalDateTime createTime;
 
-    @Excel(name = "带群数量-今日")
-    @ApiModelProperty(value = "今日带群数")
+    @Excel(name = "入群数量-今日")
+    @ApiModelProperty(value = "今日入群数")
     private Integer groupToDayNum;
 
-    @Excel(name = "带群数量-累计")
-    @ApiModelProperty(value = "累计带群数")
+    @Excel(name = "入群数量-累计")
+    @ApiModelProperty(value = "累计入群数")
     private Integer groupTotalNum;
+
+    @Excel(name = "累计带群数")
+    @ApiModelProperty(value = "累计带群数")
+    private Integer chatroomNum;
 
 
 }

@@ -2,11 +2,9 @@ package com.ruoyi.system.callback.processor;
 
 import cn.hutool.core.codec.Base64;
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONReader;
-import com.ruoyi.common.utils.Objects;
+import com.ruoyi.common.core.thread.AsyncTask;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
@@ -18,6 +16,7 @@ import com.ruoyi.system.components.movie.spi.GroupCtrlStopper;
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
+import com.ruoyi.system.mapper.RobotStatisticsMapper;
 import com.ruoyi.system.openapi.model.input.ThirdTgModifyChatroomNameInputDTO;
 import com.ruoyi.system.openapi.model.input.ThirdTgSetChatroomAdminInputDTO;
 import com.ruoyi.system.service.*;
@@ -534,5 +533,19 @@ public class TgRobotProcessor {
         SpringUtils.getBean(AutoReplyService.class).sendMessageResult(root, dto);
 
 
+    }
+
+    /**
+     * 获取所有会话回调
+     * @param dto
+     */
+    @Type(value = 1100910008, parameterClass = Called1100910008DTO.class)
+    public void called1100910008(Called1100910008DTO dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        if (dto == null || dto.getChatroom_list() == null) {
+            return;
+        }
+        RobotStatisticsMapper robotStatisticsMapper = SpringUtils.getBean(RobotStatisticsMapper.class);
+        AsyncTask.execute(()-> robotStatisticsMapper.updateChatroomNum(root.getRobotId(), dto.getChatroom_list().size()));
     }
 }

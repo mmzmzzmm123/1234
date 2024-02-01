@@ -23,6 +23,7 @@ import com.ruoyi.system.callback.dto.Called50005006DTO;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.domain.dto.robot.*;
 import com.ruoyi.system.domain.vo.play.RobotStatisticsVO;
+import com.ruoyi.system.domain.vo.robot.SelectRobotByRuleVO;
 import com.ruoyi.system.domain.vo.robot.SelectRobotListVO;
 import com.ruoyi.system.domain.vo.robot.SetNameResourceVO;
 import com.ruoyi.system.mapper.GroupRobotMapper;
@@ -39,6 +40,7 @@ import com.ruoyi.system.service.RobotStatisticsService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -716,6 +718,54 @@ public class RobotServiceImpl extends ServiceImpl<RobotMapper, Robot> implements
             }
 
         }
+    }
+
+    @Override
+    public void getRobotFreGroupDataByThirdKpTg() {
+        requestRobotFreGroupDataByThirdKpTgApi();
+    }
+
+    @Async
+    public void requestRobotFreGroupDataByThirdKpTgApi() {
+        long startTime = System.currentTimeMillis();
+        String startId = "0";
+        int successNum = 0;
+        List<SelectRobotByRuleVO> robotList;
+        do {
+            robotList = robotMapper.selectRobotHandle(startId);
+            if (CollectionUtils.isEmpty(robotList)) {
+                break;
+            }
+
+            startId = robotList.get(robotList.size()-1).getId();
+            int num = robotList.size();
+
+            try {
+                for (SelectRobotByRuleVO item : robotList) {
+                    ThirdTgRobotInputDTO req = new ThirdTgRobotInputDTO();
+                    req.setTgRobotId(item.getRobotSerialNo());
+                    OpenApiResult<Void> ret = OpenApiClient.getRobotFreGroupDataByThirdKpTg(req);
+                    if (ret.isSuccess()) {
+                        successNum++;
+                    } else {
+                        log.info("getRobotFreGroupDataByThirdKpTg_params:{}_req:{}", req, ret);
+                    }
+
+                    num--;
+                    if (num < 1) {
+                        Random random = new Random();
+                        int minTime = 1000;
+                        int maxTime = 2000;
+                        long sleepTime = (random.nextInt((maxTime - minTime) + 1)) + minTime;
+                        Thread.sleep(sleepTime);
+                    }
+                }
+            } catch (InterruptedException e) {
+                log.error("getRobotFreGroupDataByThirdKpTg_err:{}", e.getMessage());
+            }
+        } while (true);
+
+        log.info("getRobotFreGroupDataByThirdKpTg_耗时：{}_接口响应成功数：{}", (System.currentTimeMillis() - startTime), successNum);
     }
 
 }

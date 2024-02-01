@@ -50,4 +50,10 @@ public class SelectRobotListDTO extends PageBaseDTO {
     @ApiModelProperty(value = "代理类型 长效;短效;未知;")
     private String proxyType;
 
+    @ApiModelProperty(value = "筛选群类型：1累计带群 2今日入群 3累计入群")
+    private Integer groupType;
+    @ApiModelProperty(value = "筛选群类型符号：1大于 2小于")
+    private Integer groupOperator;
+    @ApiModelProperty(value = "筛选群数值")
+    private Integer groupVal;
 }

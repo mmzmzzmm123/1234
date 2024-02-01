@@ -17,12 +17,10 @@ import com.ruoyi.system.components.movie.SendMsgOptTempRedis.SendMsgOptTempEntry
 import com.ruoyi.system.components.movie.spi.PlayRunner;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
 import com.ruoyi.system.mapper.PlayMessageMapper;
-import com.ruoyi.system.mapper.PlayMessagePushDetailMapper;
 import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.business.RetryService;
 import com.ruoyi.system.service.impl.PlayBackRobotServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
 import org.redisson.api.RLock;
 
 import java.util.List;
