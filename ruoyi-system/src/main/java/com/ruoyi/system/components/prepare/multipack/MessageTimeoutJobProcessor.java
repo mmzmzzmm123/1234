@@ -56,7 +56,7 @@ public class MessageTimeoutJobProcessor implements LogJobProcessor {
 				entry.setChatroomId(push.getGroupId());
 				entry.setPlayId(push.getPlayId());
 				entry.setMsgSort(d.getMessageSort());
-				entry.setRobotNickName(d.getSpokesmanNickname());
+				entry.setRnn(d.getSpokesmanNickname());
 				entry.setRobotId(d.getRobotId());
 				PlayDirector.tgInstance().onMessageFailure(d.getOptSerialNo(), "回调超时", entry);
 			}

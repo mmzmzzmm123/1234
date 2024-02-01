@@ -158,9 +158,9 @@ public class TgMessageSupport implements MessageSupport {
 		entry.setChatroomId(chatroomId);
 		entry.setPlayId(message.getPlayId());
 		entry.setMsgSort(message.getMessageSort());
-		entry.setRobotNickName(message.getRobotNickname());
+		entry.setRnn(message.getRobotNickname());
 		entry.setRobotId(robotId);
-		entry.setFirstOptSerialNo(firstOprSerialNo);
+		entry.setNo(firstOprSerialNo);
 		data.setExtend(JSON.toJSONString(entry));
 		@SuppressWarnings("rawtypes")
 		OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.sendGroupMessageByThirdKpTg(data);

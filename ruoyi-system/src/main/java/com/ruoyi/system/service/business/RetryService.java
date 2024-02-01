@@ -65,7 +65,7 @@ public class RetryService {
         OpenApiRequestLog requestLog = this.updateErrorMessage(optSerialNo, errMsg);
 
         // 更新错误次数
-        String firstRequestId = entry.getFirstOptSerialNo();
+        String firstRequestId = entry.getNo();
         OpenApiRequestLog firstLog = null;
         if (StringUtils.isNotBlank(firstRequestId)) {
             firstLog = this.incErrorTimes(firstRequestId);
@@ -102,7 +102,7 @@ public class RetryService {
     private void updatePushStateDetail(SendMsgOptTempRedis.SendMsgOptTempEntry entry) {
         PlayMessagePushDetail playMessagePushDetail =
                 this.playMessagePushDetailService.selectRobotMessage(entry.getPlayId(),
-                        entry.getRobotNickName(),
+                        entry.getRnn(),
                         entry.getChatroomId(),
                         entry.getMsgSort());
 

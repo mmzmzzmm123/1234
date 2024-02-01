@@ -19,7 +19,7 @@ public class SendMsgOptTempRedis {
 		entry.setMsgSort(msgSort);
 		entry.setRobotId(robotId);
 		entry.setPlayId(playId);
-		entry.setRobotNickName(robotNickName);
+		entry.setRnn(robotNickName);
 		RedisTemplateTools.get().opsForValue().set("ruoyi:SendMsgOptTempRedis:" + opt, JSON.toJSONString(entry),
 				60 * 60 * 24 * 5, TimeUnit.SECONDS);
 		log.info("SendMsgOptTempRedis {} {} {} {} {} {}", opt, chatroomId, playId, msgSort, robotNickName, robotId);
@@ -40,8 +40,16 @@ public class SendMsgOptTempRedis {
 		String chatroomId;
 		String playId;
 		int msgSort;
-		String robotNickName;
+
+		/**
+		 * robotNickName
+		 */
+		String rnn;
 		String robotId;
-		String firstOptSerialNo;
+
+		/**
+		 * firstSerialNo
+		 */
+		String no;
 	}
 }
