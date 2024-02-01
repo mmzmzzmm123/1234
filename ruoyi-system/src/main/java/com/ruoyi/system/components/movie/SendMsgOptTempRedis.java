@@ -1,5 +1,6 @@
 package com.ruoyi.system.components.movie;
 
+import java.io.Serializable;
 import java.util.concurrent.TimeUnit;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.util.StringUtils;
@@ -38,7 +39,7 @@ public class SendMsgOptTempRedis {
 	}
 
 	@Data
-	public static class SendMsgOptTempEntry {
+	public static class SendMsgOptTempEntry implements Serializable {
 		String chatroomId;
 		String playId;
 		int msgSort;

@@ -1,9 +1,5 @@
 package com.ruoyi.system.components.prepare.multipack;
 
-import java.util.Date;
-import java.util.List;
-import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ruoyi.common.core.domain.entity.play.Play;
 import com.ruoyi.common.core.domain.entity.play.PlayMessagePush;
@@ -12,10 +8,16 @@ import com.ruoyi.common.utils.Times;
 import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.movie.PlayDirector;
+import com.ruoyi.system.components.movie.SendMsgOptTempRedis;
 import com.ruoyi.system.configure.RedisConfigure;
 import com.ruoyi.system.mapper.PlayMessagePushDetailMapper;
 import com.ruoyi.system.mapper.PlayMessagePushMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import java.util.Date;
+import java.util.List;
 
 /***
  * title: 消息超时处理
@@ -50,7 +52,13 @@ public class MessageTimeoutJobProcessor implements LogJobProcessor {
 					continue;
 				}
 				log.info("MessageTimeoutJobProcessor_超时回调处理 {}", d);
-				PlayDirector.tgInstance().onMessageFailure(d.getOptSerialNo(), "回调超时");
+				SendMsgOptTempRedis.SendMsgOptTempEntry entry = new SendMsgOptTempRedis.SendMsgOptTempEntry();
+				entry.setChatroomId(push.getGroupId());
+				entry.setPlayId(push.getPlayId());
+				entry.setMsgSort(d.getMessageSort());
+				entry.setRobotNickName(d.getSpokesmanNickname());
+				entry.setRobotId(d.getRobotId());
+				PlayDirector.tgInstance().onMessageFailure(d.getOptSerialNo(), "回调超时", entry);
 			}
 			
 		}

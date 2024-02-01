@@ -11,6 +11,7 @@ import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.callback.Type;
 import com.ruoyi.system.callback.dto.*;
 import com.ruoyi.system.components.movie.PlayDirector;
+import com.ruoyi.system.components.movie.SendMsgOptTempRedis;
 import com.ruoyi.system.components.movie.spi.GroupCtrlStopper;
 import com.ruoyi.system.components.prepare.multipack.MultipackLogContainer;
 import com.ruoyi.system.domain.GroupInfo;
@@ -389,12 +390,17 @@ public class TgRobotProcessor {
     @Type(value = 1100910011, parameterClass = Called1100910011DTO.class)
     public void called1100910011(Called1100910011DTO dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        SendMsgOptTempRedis.SendMsgOptTempEntry entry = null;
+        try {
+            entry = JSON.parseObject(root.getExtend(), SendMsgOptTempRedis.SendMsgOptTempEntry.class);
+        }
+        catch (Exception e){}
         if (root.isSuccess()) {
             // 成功
-            PlayDirector.tgInstance().onMessageSuccess(root.getOptSerNo());
+            PlayDirector.tgInstance().onMessageSuccess(root.getOptSerNo(), entry);
             return;
         }
-        PlayDirector.tgInstance().onMessageFailure(root.getOptSerNo(), root.getResultMsg());
+        PlayDirector.tgInstance().onMessageFailure(root.getOptSerNo(), root.getResultMsg(), entry);
     }
 
     /**
