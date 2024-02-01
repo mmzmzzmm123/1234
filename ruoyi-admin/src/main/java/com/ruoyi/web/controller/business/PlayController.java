@@ -19,11 +19,13 @@ import com.ruoyi.system.domain.dto.ConfoundRetryDTO;
 import com.ruoyi.system.domain.dto.ForceFinishGroupDTO;
 import com.ruoyi.system.domain.dto.QueryConfoundLogDTO;
 import com.ruoyi.system.domain.dto.play.*;
+import com.ruoyi.system.domain.mongdb.MonitorLog;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.AutoReplayLogVO;
 import com.ruoyi.system.domain.vo.QueryConfoundLogVO;
 import com.ruoyi.system.domain.vo.play.*;
 import com.ruoyi.system.service.*;
+import com.ruoyi.system.service.business.MonitorLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +54,9 @@ public class PlayController extends BaseController {
 
     @Resource
     private PlayExecutionLogService playExecutionLogService;
+
+    @Resource
+    private MonitorLogService monitorLogService;
 
     @Resource
     private PlayMessageConfoundLogService playMessageConfoundLogService;
@@ -271,6 +276,37 @@ public class PlayController extends BaseController {
     public R<Page<PlayExecutionLog>> executionLogPage(@Validated @RequestBody QueryExecutionLogDTO dto) {
         return R.ok(playExecutionLogService.logPage(dto));
     }
+
+
+    @ApiOperation("监控触发日志-分页")
+    @PostMapping("monitorLogPage")
+    public R<Page<MonitorLog>> executionLogPage(@Validated @RequestBody QueryMonitorLogDTO dto) {
+        return R.ok(monitorLogService.logPage(dto));
+    }
+
+    @ApiOperation("监控触发日志-导出")
+    @PostMapping("monitorLogExport")
+    public void executionLogExport(@Validated @RequestBody QueryMonitorLogDTO dto, HttpServletResponse response) {
+        List<MonitorLog> list = new ArrayList<>();
+        int page = 1;
+        int limit = 500;
+        while (true) {
+            try {
+                dto.setPage(page++);
+                dto.setLimit(limit);
+                List<MonitorLog> records = monitorLogService.logPage(dto).getRecords();
+                list.addAll(records);
+                if (records.size() < limit) {
+                    break;
+                }
+            } catch (Exception e) {
+                break;
+            }
+        }
+        ExcelUtil<MonitorLog> util = new ExcelUtil<>(MonitorLog.class);
+        util.exportExcel(response, list, "监控触发日志");
+    }
+
 
     @ApiOperation("任务推送明细查询")
     @PostMapping("pushDetailPage")

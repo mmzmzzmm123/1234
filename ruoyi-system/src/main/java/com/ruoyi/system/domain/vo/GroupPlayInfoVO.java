@@ -1,6 +1,8 @@
 package com.ruoyi.system.domain.vo;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 /**
@@ -14,4 +16,8 @@ public class GroupPlayInfoVO {
     private String playId;
     private String groupId;
     private String originalGroupId;
+
+
+    private String groupSerialNo;
+    private String groupName;
 }

@@ -1,5 +1,6 @@
 package com.ruoyi.system.callback.processor;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.ruoyi.common.enums.BotDealFunctionsEnum;
 import com.ruoyi.common.enums.BotEventEnum;
@@ -10,9 +11,12 @@ import com.ruoyi.system.callback.BotEvent;
 import com.ruoyi.system.callback.dto.bot.*;
 import com.ruoyi.system.domain.GroupInfo;
 import com.ruoyi.system.domain.GroupMonitorInfo;
+import com.ruoyi.system.domain.mongdb.MonitorLog;
 import com.ruoyi.system.domain.mongdb.PlayExecutionLog;
 import com.ruoyi.system.domain.vo.GroupPlayInfoVO;
 import com.ruoyi.system.service.*;
+import com.ruoyi.system.service.business.MonitorLogService;
+import io.swagger.models.auth.In;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
@@ -119,16 +123,26 @@ public class BotEventProcessor {
             log.info("groupPlayInfoVO is null {}", dto.toString());
             return;
         }
+        MonitorLog monitorLog = BeanUtil.copyProperties(dto, MonitorLog.class);
+
         List<String> rule = new ArrayList<>();
         if (CollectionUtils.isNotEmpty(dto.getDealFunctions())) {
             for (String dealFunction : dto.getDealFunctions()) {
                 BotDealFunctionsEnum functionsEnum = BotDealFunctionsEnum.findByKey(dealFunction);
                 rule.add(functionsEnum.getValue());
             }
+            monitorLog.setDealFunctionValues(String.join(",", rule));
+            monitorLog.setDealFunctionCodes(String.join(",", dto.getDealFunctions()));
         }
         String groupId = groupPlayInfoVO.getGroupId();
         String fullName = dto.getFullName();
         String filterType = dto.getFilterType();
+        monitorLog.setPlayId(groupPlayInfoVO.getPlayId());
+        monitorLog.setGroupId(groupPlayInfoVO.getGroupId());
+        monitorLog.setGroupSerialNo(groupPlayInfoVO.getGroupSerialNo());
+        monitorLog.setGroupName(groupPlayInfoVO.getGroupName());
+        SpringUtils.getBean(MonitorLogService.class).saveLog(monitorLog);
+
 
         String content = String.format("【广告监控-%s】群：%s，成员：%s，触发监控类型-%s;", String.join(",", rule), groupId, fullName, filterType);
         PlayExecutionLog log = new PlayExecutionLog();
@@ -137,6 +151,8 @@ public class BotEventProcessor {
         log.setContent(content);
         log.setType(PlayLogTyper.Advertising_Monitoring);
         SpringUtils.getBean(PlayExecutionLogService.class).saveLog(log);
+
+
     }
 
     public String getGroupSerialNo(Long chatId) {

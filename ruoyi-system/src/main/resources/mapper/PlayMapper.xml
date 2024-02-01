@@ -114,7 +114,7 @@
             tgmi.member_count,
             tgmi.join_count,
             tgmi.exit_count,
-            tgmi.link_join_count,
+              tgmi.link_join_count,
             tgs.group_status,
             if(tgs.group_status = 0,null, tgs.group_status_time) group_status_time,
             (

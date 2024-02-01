@@ -21,9 +21,12 @@
         SELECT
             tpgi.play_id,
             tgmi.group_id,
-            tgmi.original_group_id
+            tgmi.original_group_id,
+            tgi.group_serial_no,
+            tgi.group_name
         FROM
             t_group_monitor_info tgmi
+            INNER JOIN t_group_info tgi on tgmi.group_id = tgi.group_id
             INNER JOIN t_play_group_info tpgi ON tpgi.tg_group_id = tgmi.group_id
         WHERE
             1 = 1

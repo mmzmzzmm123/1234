@@ -34,4 +34,10 @@ public class AdvertisementFilterDTO {
     @ApiModelProperty("处理方式")
     private List<String> dealFunctions;
 
+    @ApiModelProperty("文字消息内容")
+    private String messageText;
+
+    @ApiModelProperty("回复消息ID")
+    private String replyMessageId;
+
 }
