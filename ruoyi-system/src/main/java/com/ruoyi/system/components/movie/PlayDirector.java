@@ -17,10 +17,12 @@ import com.ruoyi.system.components.movie.SendMsgOptTempRedis.SendMsgOptTempEntry
 import com.ruoyi.system.components.movie.spi.PlayRunner;
 import com.ruoyi.system.components.movie.spi.ProgressPuller;
 import com.ruoyi.system.mapper.PlayMessageMapper;
+import com.ruoyi.system.mapper.PlayMessagePushDetailMapper;
 import com.ruoyi.system.service.PlayExecutionLogService;
 import com.ruoyi.system.service.business.RetryService;
 import com.ruoyi.system.service.impl.PlayBackRobotServiceImpl;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.redisson.api.RLock;
 
 import java.util.List;
@@ -75,8 +77,13 @@ public class PlayDirector implements CallBackProcessor {
     }
 
     @Override
-    public void onMessageSuccess(String opt) {
-        DelayAcquireTools.acquire(() -> SendMsgOptTempRedis.get(opt), (val) -> success0(val, opt));
+    public void onMessageSuccess(String opt, SendMsgOptTempEntry entry) {
+        if(entry != null) {
+            success0(entry,opt);
+        }
+        else {
+            DelayAcquireTools.acquire(() -> SendMsgOptTempRedis.get(opt), (val) -> success0(val, opt));
+        }
     }
 
     private void success0(SendMsgOptTempEntry entry, String opt) {
@@ -100,8 +107,13 @@ public class PlayDirector implements CallBackProcessor {
     }
 
     @Override
-    public void onMessageFailure(String opt, String errMsg) {
-        DelayAcquireTools.acquire(() -> SendMsgOptTempRedis.get(opt), (val) -> fail0(val, opt, errMsg));
+    public void onMessageFailure(String opt, String errMsg, SendMsgOptTempEntry entry) {
+        if(entry != null){
+            fail0(entry, opt, errMsg);
+        }
+        else {
+            DelayAcquireTools.acquire(() -> SendMsgOptTempRedis.get(opt), (val) -> fail0(val, opt, errMsg));
+        }
     }
 
     void fail0(SendMsgOptTempEntry entry, String opt, String errMsg) {

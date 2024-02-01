@@ -2,6 +2,9 @@ package com.ruoyi.system.components.prepare.multipack;
 
 import java.util.Date;
 import java.util.List;
+
+import cn.hutool.core.util.ObjectUtil;
+import com.ruoyi.system.components.movie.SendMsgOptTempRedis;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -50,7 +53,13 @@ public class MessageTimeoutJobProcessor implements LogJobProcessor {
 					continue;
 				}
 				log.info("MessageTimeoutJobProcessor_超时回调处理 {}", d);
-				PlayDirector.tgInstance().onMessageFailure(d.getOptSerialNo(), "回调超时");
+				SendMsgOptTempRedis.SendMsgOptTempEntry entry = new SendMsgOptTempRedis.SendMsgOptTempEntry();
+				entry.setChatroomId(push.getGroupId());
+				entry.setPlayId(push.getPlayId());
+				entry.setMsgSort(d.getMessageSort());
+				entry.setRobotNickName(d.getSpokesmanNickname());
+				entry.setRobotId(d.getRobotId());
+				PlayDirector.tgInstance().onMessageFailure(d.getOptSerialNo(), "回调超时", entry);
 			}
 			
 		}
