@@ -36,12 +36,13 @@ public class MonitorLog {
     @ApiModelProperty("群Id")
     private String groupId;
 
-    @ApiModelProperty("群编号")
-    private String groupSerialNo;
-
     @Excel(name = "群名称")
     @ApiModelProperty("群名称")
     private String groupName;
+
+    @Excel(name = "群编号")
+    @ApiModelProperty("群编号")
+    private String groupSerialNo;
 
     @ApiModelProperty("消息Id")
     private String messageId;
@@ -53,11 +54,10 @@ public class MonitorLog {
     @ApiModelProperty("用户ID")
     private Long userId;
 
-
+    @Excel(name = "处理方式")
     @ApiModelProperty("处理方式")
     private String dealFunctionValues;
 
-    @Excel(name = "处理方式")
     @ApiModelProperty("处理方式")
     private String dealFunctionCodes;
 
