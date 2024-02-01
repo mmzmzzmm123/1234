@@ -1,12 +1,10 @@
 package com.ruoyi.system.components.movie;
 
-import java.util.concurrent.TimeUnit;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.StringUtils;
-import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.RedisTemplateTools;
-
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
+
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class GlobalIndexContext {
@@ -20,7 +18,7 @@ public class GlobalIndexContext {
 	}
 
 	public static int getIndex(String chatroomId, String playId) {
-		String v = (String) RedisTemplateTools.get().opsForValue()
+		String v = RedisTemplateTools.get().opsForValue()
 				.get("ruoyi:GlobalIndexContext:" + playId + ":" + chatroomId);
 		if (StringUtils.isEmpty(v)) {
 			return -1;

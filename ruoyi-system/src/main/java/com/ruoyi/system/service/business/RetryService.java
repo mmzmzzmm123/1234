@@ -40,6 +40,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -141,19 +142,24 @@ public class RetryService {
     }
 
     public OpenApiRequestLog getRequestLog(String optSerialNo) {
+        String cacheKey = "cache-retry-log:" + optSerialNo;
+        String json = RedisTemplateTools.get().boundValueOps(cacheKey).get();
+        if (StringUtils.isNotBlank(json)) {
+            return JSONObject.parseObject(json, OpenApiRequestLog.class);
+        }
         return mongoTemplate.findOne(Query.query(Criteria.where("id").is(optSerialNo)), OpenApiRequestLog.class);
     }
 
     public OpenApiRequestLog updateErrorMessage(String optSerialNo, String errorMessage) {
         Update update = Update.update("errorMessage", errorMessage);
-        mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(optSerialNo)), update, OpenApiRequestLog.class);
+        mongoTemplate.upsert(Query.query(Criteria.where("id").is(optSerialNo)), update, OpenApiRequestLog.class);
         return getRequestLog(optSerialNo);
     }
 
 
     public OpenApiRequestLog incErrorTimes(String optSerialNo) {
         Update update = new Update().inc("requestTimes", 1L);
-        mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(optSerialNo)), update, OpenApiRequestLog.class);
+        mongoTemplate.upsert(Query.query(Criteria.where("id").is(optSerialNo)), update, OpenApiRequestLog.class);
         return this.getRequestLog(optSerialNo);
     }
 
@@ -179,6 +185,9 @@ public class RetryService {
         oneLog.setErrorMessage(errorMessage);
         oneLog.setRequestTimes(0);
         oneLog.setCreateTime(LocalDateTime.now());
+
+        String cacheKey = "cache-retry-log:" + currentOptSerialNo;
+        RedisTemplateTools.get().boundValueOps(cacheKey).set(JSON.toJSONString(oneLog), 5, TimeUnit.MINUTES);
 
         mongoTemplate.save(oneLog);
     }
