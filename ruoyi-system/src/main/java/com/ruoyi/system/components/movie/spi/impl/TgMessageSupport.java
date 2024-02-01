@@ -1,5 +1,6 @@
 package com.ruoyi.system.components.movie.spi.impl;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.ContentJson;
@@ -13,6 +14,7 @@ import com.ruoyi.common.utils.spi.SPI;
 import com.ruoyi.common.utils.spi.ServiceLoader;
 import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.RedisTemplateTools;
+import com.ruoyi.system.components.movie.SendMsgOptTempRedis;
 import com.ruoyi.system.components.movie.spi.MessageSupport;
 import com.ruoyi.system.components.spi.RobotInfoQuery;
 import com.ruoyi.system.mapper.GroupInfoMapper;
@@ -154,6 +156,13 @@ public class TgMessageSupport implements MessageSupport {
 		data.setMessageData(createMsgData(message, chatroomId, msgSort));
 		data.setExtendInfo("{\"level\":0}");
 		data.setFirstOptSerialNo(firstOprSerialNo);
+		SendMsgOptTempRedis.SendMsgOptTempEntry entry = new SendMsgOptTempRedis.SendMsgOptTempEntry();
+		entry.setChatroomId(chatroomId);
+		entry.setPlayId(message.getPlayId());
+		entry.setMsgSort(message.getMessageSort());
+		entry.setRobotNickName(message.getRobotNickname());
+		entry.setRobotId(robotId);
+		data.setExtend(JSON.toJSONString(entry));
 		@SuppressWarnings("rawtypes")
 		OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.sendGroupMessageByThirdKpTg(data);
 		log.info("sendGroupMessageByThirdKpTg {} {}", data, ret);
