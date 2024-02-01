@@ -1,6 +1,5 @@
 package com.ruoyi.system.components.movie.spi.impl;
 
-import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.fastjson2.JSON;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.dto.play.ContentJson;
@@ -155,13 +154,13 @@ public class TgMessageSupport implements MessageSupport {
 		data.setTgRobotId(robotId);
 		data.setMessageData(createMsgData(message, chatroomId, msgSort));
 		data.setExtendInfo("{\"level\":0}");
-		data.setFirstOptSerialNo(firstOprSerialNo);
 		SendMsgOptTempRedis.SendMsgOptTempEntry entry = new SendMsgOptTempRedis.SendMsgOptTempEntry();
 		entry.setChatroomId(chatroomId);
 		entry.setPlayId(message.getPlayId());
 		entry.setMsgSort(message.getMessageSort());
 		entry.setRobotNickName(message.getRobotNickname());
 		entry.setRobotId(robotId);
+		entry.setFirstOptSerialNo(firstOprSerialNo);
 		data.setExtend(JSON.toJSONString(entry));
 		@SuppressWarnings("rawtypes")
 		OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.sendGroupMessageByThirdKpTg(data);

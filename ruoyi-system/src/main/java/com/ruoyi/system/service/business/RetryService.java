@@ -40,7 +40,6 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -66,7 +65,7 @@ public class RetryService {
         OpenApiRequestLog requestLog = this.updateErrorMessage(optSerialNo, errMsg);
 
         // 更新错误次数
-        String firstRequestId = requestLog.getLastTimeRequestId();
+        String firstRequestId = entry.getFirstOptSerialNo();
         OpenApiRequestLog firstLog = null;
         if (StringUtils.isNotBlank(firstRequestId)) {
             firstLog = this.incErrorTimes(firstRequestId);
@@ -142,11 +141,6 @@ public class RetryService {
     }
 
     public OpenApiRequestLog getRequestLog(String optSerialNo) {
-        String cacheKey = "cache-retry-log:" + optSerialNo;
-        String json = RedisTemplateTools.get().boundValueOps(cacheKey).get();
-        if (StringUtils.isNotBlank(json)) {
-            return JSONObject.parseObject(json, OpenApiRequestLog.class);
-        }
         return mongoTemplate.findOne(Query.query(Criteria.where("id").is(optSerialNo)), OpenApiRequestLog.class);
     }
 
@@ -186,10 +180,10 @@ public class RetryService {
         oneLog.setRequestTimes(0);
         oneLog.setCreateTime(LocalDateTime.now());
 
-        String cacheKey = "cache-retry-log:" + currentOptSerialNo;
-        RedisTemplateTools.get().boundValueOps(cacheKey).set(JSON.toJSONString(oneLog), 5, TimeUnit.MINUTES);
-
-        mongoTemplate.save(oneLog);
+        try {
+            mongoTemplate.save(oneLog);
+        } catch (Exception ignored) {
+        }
     }
 
     public void scanPlayRobotPackReady() {

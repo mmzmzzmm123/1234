@@ -1,16 +1,13 @@
 package com.ruoyi.system.components.movie;
 
-import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.StringUtils;
-
 import com.alibaba.fastjson2.JSON;
-import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.RedisTemplateTools;
-
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
+
+import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class SendMsgOptTempRedis {
@@ -45,5 +42,6 @@ public class SendMsgOptTempRedis {
 		int msgSort;
 		String robotNickName;
 		String robotId;
+		String firstOptSerialNo;
 	}
 }
