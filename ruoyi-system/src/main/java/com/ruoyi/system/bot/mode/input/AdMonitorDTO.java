@@ -16,7 +16,7 @@ public class AdMonitorDTO {
     @ApiModelProperty("config id")
     private String configId;
 
-    @ApiModelProperty(value = "monitor target", allowableValues = "1-photo,2-video,4-links")
+    @ApiModelProperty(value = "monitor target", allowableValues = "1-photo,2-video,4-links,8-contact,16-document,32-animation")
     private List<Integer> monitorTarget;
 
     @ApiModelProperty(value = "keywords")
@@ -43,4 +43,6 @@ public class AdMonitorDTO {
     @ApiModelProperty(value = "apply groups")
     private List<String> groupIds;
 
+    @ApiModelProperty(value = "清除系统消息", allowableValues = "JOIN_GROUP,LEAVE_GROUP,UPDATE_CHAT_TITLE")
+    private List<String> clearSystemMsg;
 }

@@ -1215,9 +1215,44 @@ public class GroupService {
             dto.setKeywords(adMonitorInfo.getKeywordRule());
             dto.setMonitorFrequency(adMonitorInfo.getSpammingNum());
             if (StrUtil.isNotBlank(adMonitorInfo.getTypes())) {
-                dto.setMonitorTarget(Arrays.stream(adMonitorInfo.getTypes().split(",")).filter(
-                                p -> Arrays.asList("1", "2", "3").contains(p))
-                        .map(p -> "3".equals(p) ? 4 : "2".equals(p) ? 2 : 1).collect(Collectors.toList()));
+                dto.setMonitorTarget(Arrays.stream(adMonitorInfo.getTypes().split(","))
+                    .filter(p -> Arrays.asList("1", "2", "3", "4", "5", "6").contains(p))
+                    .map(p -> {
+                        switch (p) {
+                            case "1":
+                                return 1;
+                            case "2":
+                                return 2;
+                            case "3":
+                                return 4;
+                            case "4":
+                                return 16;
+                            case "5":
+                                return 32;
+                            case "6":
+                                return 8;
+                            default:
+                                return null;
+                        }
+                    }).collect(Collectors.toList()));
+            }
+            if (StrUtil.isNotBlank(adMonitorInfo.getClearSystemMsg())) {
+                dto.setClearSystemMsg(Arrays.stream(adMonitorInfo.getClearSystemMsg().split(","))
+                        .filter(p -> Arrays.asList("1", "2", "3").contains(p))
+                        .map(p -> {
+                            switch (p) {
+                                case "1":
+                                    return "JOIN_GROUP";
+                                case "2":
+                                    return "LEAVE_GROUP";
+                                case "3":
+                                    return "UPDATE_CHAT_TITLE";
+                                default:
+                                    return null;
+                            }
+                        })
+                        .collect(Collectors.toList())
+                );
             }
             dto.setMonitorTime(adMonitorInfo.getSpammingTime());
             dto.setRestrictMember(adMonitorInfo.getIsTabooMemberMsg());
