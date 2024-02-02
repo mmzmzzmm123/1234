@@ -66,7 +66,7 @@ public class TgKpRobotAdminSettings implements Settings {
 		dto.setMemberUserAccessHash(ObjectUtil.isNotEmpty(param.get(Settings.Key_AttachContent))?param.get(Settings.Key_AttachContent).toString(): null);
 
 		PlayRobotPackLog data = new PlayRobotPackLog();
-		data.setOpt(Ids.getId());
+		data.setOpt(param.get(Settings.Key_OldOpt).toString());
 		data.setChatroomId(param.get(Settings.Key_GroupId).toString());
 		data.setCreateTime(new Date());
 		data.setIsFinish(0);
@@ -78,7 +78,7 @@ public class TgKpRobotAdminSettings implements Settings {
 		data.setAttchContent(dto.getMemberUserAccessHash());
 		data.setIsBackup(((boolean) param.get(Settings.Key_Backup_Flag)) ? 1 : 0);
 		data.setStatus(0);
-		SpringUtils.getBean(PlayRobotPackLogService.class).saveOrUpdate(data);
+//		SpringUtils.getBean(PlayRobotPackLogService.class).saveOrUpdate(data);
 
 		dto.setExtend(data.getOpt());
 		if(ret.isSuccess()) {
