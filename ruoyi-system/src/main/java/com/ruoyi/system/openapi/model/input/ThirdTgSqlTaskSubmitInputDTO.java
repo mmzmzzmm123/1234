@@ -10,4 +10,7 @@ public class ThirdTgSqlTaskSubmitInputDTO {
     private String dbSource;
     @ApiModelProperty("select * from tg_chatroom_info limit 10")
     private String sql;
+
+    @ApiModelProperty("透传字段")
+    private String extend;
 }
