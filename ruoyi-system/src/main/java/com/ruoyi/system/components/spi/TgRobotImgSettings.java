@@ -3,6 +3,8 @@ package com.ruoyi.system.components.spi;
 import java.util.Date;
 import java.util.Map;
 
+import com.ruoyi.common.utils.Ids;
+import com.ruoyi.system.service.PlayRobotPackLogService;
 import org.apache.commons.lang3.StringUtils;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
 import com.ruoyi.common.utils.spi.SPI;
@@ -23,9 +25,8 @@ public class TgRobotImgSettings implements Settings {
 			dto.setHeadimgUrl(param.get(Settings.Key_Img).toString());
 		}
 		dto.setTgRobotId(param.get(Settings.Key_RobotId).toString());
-		@SuppressWarnings("rawtypes")
-		OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.modifyRobotHeadImgByThirdKpTg(dto);
 		PlayRobotPackLog data = new PlayRobotPackLog();
+		data.setOpt(Ids.getId());
 		data.setChatroomId(param.get(Settings.Key_GroupId).toString());
 		data.setCreateTime(new Date());
 		data.setIsFinish(0);
@@ -35,10 +36,15 @@ public class TgRobotImgSettings implements Settings {
 		data.setRetryCount(0);
 		data.setRobotId(dto.getTgRobotId());
 		data.setIsBackup(((boolean) param.get(Settings.Key_Backup_Flag)) ? 1 : 0);
+		data.setStatus(0);
+		SpringUtils.getBean(PlayRobotPackLogService.class).saveOrUpdate(data);
+		dto.setExtend(data.getOpt());
+		@SuppressWarnings("rawtypes")
+		OpenApiResult<TgBaseOutputDTO> ret = OpenApiClient.modifyRobotHeadImgByThirdKpTg(dto);
 		if (ret.getData() != null && !StringUtils.isEmpty(ret.getData().getOptSerNo()) && ret.isSuccess()) {
 			// 成功
 			data.setStatus(0);
-			data.setOpt(ret.getData().getOptSerNo());
+			data.setKpOpt(ret.getData().getOptSerNo());
 			return data;
 		}
 		// 失败

@@ -182,7 +182,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 		if (data.getOp().intValue() == 1) {
 			// 设置机器人姓名
 			PlayRobotPackLog ret = tgRobotNameSettings.set(param);
-			if (StringUtils.isEmpty(ret.getOpt())) {
+			if (StringUtils.isEmpty(ret.getKpOpt())) {
 				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, ret.getErrMsg(),
 						null, "姓名-重试" + data.getRetryCount() + "次", true);
 				// 更新 失败
@@ -193,23 +193,23 @@ public class RetryJobProcessor implements LogJobProcessor {
 				log.info("log重试更新 {}", data);
 			} else {
 				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, null,
-						ret.getOpt(), "姓名-重试" + data.getRetryCount() + "次", true);
-				// 删除之前的操作码
-				robotPackLogMapper.deleteById(data.getOpt());
-				// 重新插入
-				data.setOpt(ret.getOpt());
+						ret.getKpOpt(), "姓名-重试" + data.getRetryCount() + "次", true);
+//				// 删除之前的操作码
+//				robotPackLogMapper.deleteById(data.getOpt());
+				// 重新更新
+				data.setKpOpt(ret.getKpOpt());
 				data.setCreateTime(new Date());
 				data.setStatus(0);
 				data.setErrMsg("");
-				robotPackLogMapper.insert(data);
-				log.info("log重试插入 {}", data);
+				robotPackLogMapper.updateById(data);
+				log.info("log重试更新 {}", data);
 			}
 		}
 
 		if (data.getOp().intValue() == 2) {
 			// 设置机器人头像
 			PlayRobotPackLog ret = tgRobotImgSettings.set(param);
-			if (StringUtils.isEmpty(ret.getOpt())) {
+			if (StringUtils.isEmpty(ret.getKpOpt())) {
 				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, ret.getErrMsg(),
 						null, "头像-重试" + data.getRetryCount() + "次", true);
 				// 更新 失败
@@ -220,24 +220,24 @@ public class RetryJobProcessor implements LogJobProcessor {
 				log.info("log重试更新 {}", data);
 			} else {
 				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, null,
-						ret.getOpt(), "头像-重试" + data.getRetryCount() + "次", true);
+						ret.getKpOpt(), "头像-重试" + data.getRetryCount() + "次", true);
 
-				// 删除之前的操作码
-				robotPackLogMapper.deleteById(data.getOpt());
+//				// 删除之前的操作码
+//				robotPackLogMapper.deleteById(data.getOpt());
 				// 重新插入
-				data.setOpt(ret.getOpt());
+				data.setKpOpt(ret.getKpOpt());
 				data.setErrMsg("");
 				data.setCreateTime(new Date());
 				data.setStatus(0);
-				robotPackLogMapper.insert(data);
-				log.info("log重试插入 {}", data);
+				robotPackLogMapper.updateById(data);
+				log.info("log重试更新 {}", data);
 			}
 		}
 
 		if (data.getOp().intValue() == 3) {
 			// 设置群hash值
 			PlayRobotPackLog ret = tgGroupHashSettings.set(param);
-			if (StringUtils.isEmpty(ret.getOpt())) {
+			if (StringUtils.isEmpty(ret.getKpOpt())) {
 				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, ret.getErrMsg(),
 						null, "管理员（获取hash值）-重试" + data.getRetryCount() + "次", true);
 				// 更新 失败
@@ -248,29 +248,29 @@ public class RetryJobProcessor implements LogJobProcessor {
 				log.info("log重试更新 {}", data);
 			} else {
 				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, null,
-						ret.getOpt(), "管理员（获取hash值）-重试" + data.getRetryCount() + "次", true);
-				// 修改后置opt
-				PlayRobotPackLog condition = robotPackLogMapper.selectOne(new QueryWrapper<PlayRobotPackLog>().lambda()
-						.eq(PlayRobotPackLog::getWaitOpt, data.getOpt())
-						.eq(PlayRobotPackLog::getStatus, -1)
-						.eq(PlayRobotPackLog::getPlayId, data.getPlayId())
-						.last(" limit 1 "));
-				if (condition != null) {
-					condition.setWaitOpt(ret.getOpt());
-					robotPackLogMapper.updateById(condition);
-					log.info("后置log更新opt {}", condition);
-				}
+						ret.getKpOpt(), "管理员（获取hash值）-重试" + data.getRetryCount() + "次", true);
+//				// 修改后置opt
+//				PlayRobotPackLog condition = robotPackLogMapper.selectOne(new QueryWrapper<PlayRobotPackLog>().lambda()
+//						.eq(PlayRobotPackLog::getWaitOpt, data.getOpt())
+//						.eq(PlayRobotPackLog::getStatus, -1)
+//						.eq(PlayRobotPackLog::getPlayId, data.getPlayId())
+//						.last(" limit 1 "));
+//				if (condition != null) {
+//					condition.setWaitOpt(ret.getOpt());
+//					robotPackLogMapper.updateById(condition);
+//					log.info("后置log更新opt {}", condition);
+//				}
 
-				// 删除之前的操作码
-				robotPackLogMapper.deleteById(data.getOpt());
+//				// 删除之前的操作码
+//				robotPackLogMapper.deleteById(data.getOpt());
 				// 重新插入
-				data.setOpt(ret.getOpt());
+				data.setKpOpt(ret.getKpOpt());
 				data.setErrMsg("");
 				data.setCreateTime(new Date());
 				data.setStatus(0);
-				robotPackLogMapper.insert(data);
+				robotPackLogMapper.updateById(data);
 
-				log.info("log重试插入 {}", data);
+				log.info("log重试覆盖更新 {}", data);
 			}
 		}
 
@@ -305,7 +305,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 			else {
 				//走开平的逻辑
 				PlayRobotPackLog ret = tgKpRobotAdminSettings.set(param);
-				if (StringUtils.isEmpty(ret.getOpt())) {
+				if (StringUtils.isEmpty(ret.getKpOpt())) {
 					PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, ret.getErrMsg(),
 							null, String.format("【发言人包装-%s】 群%s 号%s 重试" + data.getRetryCount() + "次", "管理员", data.getChatroomId(), data.getRobotId()), true);
 					// 更新 失败
@@ -316,16 +316,16 @@ public class RetryJobProcessor implements LogJobProcessor {
 					log.info("log重试更新 {}", data);
 				} else {
 					PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), robotId, null,
-							ret.getOpt(), String.format("【发言人包装-%s】 群%s 号%s 重试" + data.getRetryCount() + "次", "管理员", data.getChatroomId(), data.getRobotId()), true);
-					// 删除之前的操作码
-					robotPackLogMapper.deleteById(data.getOpt());
+							ret.getKpOpt(), String.format("【发言人包装-%s】 群%s 号%s 重试" + data.getRetryCount() + "次", "管理员", data.getChatroomId(), data.getRobotId()), true);
+//					// 删除之前的操作码
+//					robotPackLogMapper.deleteById(data.getOpt());
 					// 重新插入
-					data.setOpt(ret.getOpt());
+					data.setKpOpt(ret.getKpOpt());
 					data.setCreateTime(new Date());
 					data.setStatus(0);
 					data.setErrMsg("");
 					robotPackLogMapper.insert(data);
-					log.info("log重试插入 {}", data);
+					log.info("log重试更新 {}", data);
 				}
 			}
 		}
@@ -387,11 +387,11 @@ public class RetryJobProcessor implements LogJobProcessor {
 				// 设置头像
 				if (!StringUtils.isEmpty(robotPck.getPic())) {
 					PlayRobotPackLog ret = tgRobotImgSettings.set(param);
-					if (StringUtils.isEmpty(ret.getOpt())) {
+					if (StringUtils.isEmpty(ret.getKpOpt())) {
 						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(),
 								null, "备用号-头像", true);
 					} else {
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(),
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getKpOpt(),
 								"备用号-头像", true);
 					}
 					submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
@@ -402,11 +402,11 @@ public class RetryJobProcessor implements LogJobProcessor {
 				// 设置 昵称
 				if (!StringUtils.isEmpty(robotPck.getName()) || !StringUtils.isEmpty(robotPck.getSurname())) {
 					PlayRobotPackLog ret = tgRobotNameSettings.set(param);
-					if (StringUtils.isEmpty(ret.getOpt())) {
+					if (StringUtils.isEmpty(ret.getKpOpt())) {
 						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(),
 								null, "备用号-姓名", true);
 					} else {
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(),
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getKpOpt(),
 								"备用号-姓名", true);
 					}
 					submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
@@ -440,16 +440,16 @@ public class RetryJobProcessor implements LogJobProcessor {
 						//走开平的逻辑
 						log.info("备用号-初始-走开平的逻辑 {} " , JSON.toJSONString(robotPck));
 						final PlayRobotPackLog ret = tgGroupHashSettings.set(param);
-						if (StringUtils.isEmpty(ret.getOpt())) {
+						if (StringUtils.isEmpty(ret.getKpOpt())) {
 							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "备用号-管理员（获取hash值）", true);
 						} else {
-							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(), "备用号-管理员（获取hash值）", true);
+							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getKpOpt(), "备用号-管理员（获取hash值）", true);
 						}
 						final String opt = ret.wrapOpt().getOpt();
 						submitList.add(ret.wrapRadio(radioId).wrapPushDetailId(detail.getId()));
 						log.info("备用号-初始-同步设置管理员(获取hash值) {} ", ret);
 
-						if (!StringUtils.isEmpty(ret.getOpt())) {
+						if (!StringUtils.isEmpty(ret.getKpOpt())) {
 							// 请求成功后，插入一条 后置 请求
 							PlayRobotPackLog postposition = new PlayRobotPackLog();
 							postposition.setChatroomId(context.getChatroomId());
@@ -458,7 +458,7 @@ public class RetryJobProcessor implements LogJobProcessor {
 							postposition.setIsFinish(0);
 							// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员 5-获取群成员
 							postposition.setOp(4);
-							postposition.setOpt("wait_" + Ids.getId());
+							postposition.setOpt(Ids.getId());
 							postposition.setPlayId(context.getPlay().getId());
 							postposition.setRadioId(radioId);
 							postposition.setRetryCount(0);

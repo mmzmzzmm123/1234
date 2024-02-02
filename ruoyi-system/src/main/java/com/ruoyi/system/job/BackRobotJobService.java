@@ -147,11 +147,11 @@ public class BackRobotJobService {
             isChange = true;
             PlayBackRobotLog playBackRobotLog = new PlayBackRobotLog();
             PlayRobotPackLog ret = tgRobotImgSettings.set(param);
-            if (StringUtils.isEmpty(ret.getOpt())) {
+            if (StringUtils.isEmpty(ret.getKpOpt())) {
                 PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), ret.getErrMsg(),
                         null, "备用号-头像", true);
             } else {
-                PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getOpt(),
+                PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getKpOpt(),
                         "备用号-头像", true);
             }
             log.info("备用号-同步设置头像-orgin {} " , ret);
@@ -172,11 +172,11 @@ public class BackRobotJobService {
             isChange = true;
             PlayBackRobotLog playBackRobotLog = new PlayBackRobotLog();
             PlayRobotPackLog ret = tgRobotNameSettings.set(param);
-            if (StringUtils.isEmpty(ret.getOpt())) {
+            if (StringUtils.isEmpty(ret.getKpOpt())) {
                 PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), ret.getErrMsg(),
                         null, "备用号-姓名", true);
             } else {
-                PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getOpt(),
+                PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getKpOpt(),
                         "备用号-姓名", true);
             }
             log.info("备用号-同步设置昵称-orgin {} " , ret);
@@ -217,10 +217,10 @@ public class BackRobotJobService {
                 //走开平的逻辑
                 log.info("备用号-走开平的逻辑 {} " , JSON.toJSONString(robotPck));
                 final PlayRobotPackLog ret = tgGroupHashSettings.set(param);
-                if (StringUtils.isEmpty(ret.getOpt())) {
+                if (StringUtils.isEmpty(ret.getKpOpt())) {
                     PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), ret.getErrMsg(), null, "备用号-管理员（获取hash值）", true);
                 } else {
-                    PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getOpt(), "备用号-管理员（获取hash值）", true);
+                    PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getKpOpt(), "备用号-管理员（获取hash值）", true);
                 }
                 log.info("备用号-同步设置管理员(获取hash值)-orgin {} " , ret);
                 final String opt = ret.wrapOpt().getOpt();
@@ -229,7 +229,7 @@ public class BackRobotJobService {
                 final boolean b = playBackRobotLogService.saveOrUpdate(playBackRobotLog);
                 log.info("备用号-同步设置管理员(获取hash值) {},{} ", ret,b);
 
-                if (!StringUtils.isEmpty(ret.getOpt())) {
+                if (!StringUtils.isEmpty(ret.getKpOpt())) {
                     // 请求成功后，插入一条 后置 请求
                     PlayBackRobotLog postposition = new PlayBackRobotLog();
                     postposition.setChatroomId(robot.getGroupId());

@@ -18,6 +18,7 @@ import com.ruoyi.system.openapi.model.input.ThirdTgSetChatroomAdminInputDTO;
 import com.ruoyi.system.openapi.model.input.ThirdTgSqlTaskSubmitInputDTO;
 import com.ruoyi.system.openapi.model.output.TgBaseOutputDTO;
 import com.ruoyi.system.service.ISysConfigService;
+import com.ruoyi.system.service.PlayRobotPackLogService;
 import com.ruoyi.system.service.impl.SysConfigServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -32,13 +33,13 @@ public class TgKpRobotAdminSettings implements Settings {
 	@Override
 	public PlayRobotPackLog set(Map<String, Object> param) {
 		@SuppressWarnings("rawtypes")
-		OpenApiResult<TgBaseOutputDTO> ret = null;
+		OpenApiResult<TgBaseOutputDTO> ret = new OpenApiResult<>();
 		final String groupId = SpringUtils.getBean(GroupInfoMapper.class).selectById(param.get(Settings.Key_GroupId).toString()).getGroupSerialNo();
 		final GroupRobot groupOwnerRobot = SpringUtils.getBean(GroupRobotMapper.class).selectOne(new LambdaQueryWrapper<GroupRobot>().eq(GroupRobot::getGroupId, param.get(Settings.Key_GroupId).toString()).eq(GroupRobot::getMemberType, 1).last(" limit 1 "));
 		if(groupOwnerRobot == null){
-			ret = new OpenApiResult<>();
 			String trace = Ids.getId();
 			ret.setMessage("接口异常: 群主号信息未同步");
+			ret.setCode(1);
 			log.error("sqlTaskSubmitByThirdKpTg_error {} {}" , trace , groupId);
 		}
 		final String robotId = param.get(Settings.Key_RobotId).toString();
@@ -62,17 +63,9 @@ public class TgKpRobotAdminSettings implements Settings {
 			dto.setNotModifyPermissions(true);
 		}
 		dto.setMemberUserAccessHash(ObjectUtil.isNotEmpty(param.get(Settings.Key_AttachContent))?param.get(Settings.Key_AttachContent).toString(): null);
-		ret = OpenApiClient.setChatroomAdminByThirdKpTg(dto);
-
-
-//		if (Env.isLocal()) {
-//			ret = new OpenApiResult<>();
-//			TgBaseOutputDTO d = new TgBaseOutputDTO();
-//			d.setOptSerNo(UUID.randomUUID().toString());
-//			ret.setData(d);
-//		}
 
 		PlayRobotPackLog data = new PlayRobotPackLog();
+		data.setOpt(Ids.getId());
 		data.setChatroomId(param.get(Settings.Key_GroupId).toString());
 		data.setCreateTime(new Date());
 		data.setIsFinish(0);
@@ -83,10 +76,16 @@ public class TgKpRobotAdminSettings implements Settings {
 		data.setRobotId(dto.getTgRobotId());
 		data.setAttchContent(dto.getMemberUserAccessHash());
 		data.setIsBackup(((boolean) param.get(Settings.Key_Backup_Flag)) ? 1 : 0);
+		data.setStatus(0);
+		SpringUtils.getBean(PlayRobotPackLogService.class).saveOrUpdate(data);
+
+		dto.setExtend(data.getOpt());
+		ret = OpenApiClient.setChatroomAdminByThirdKpTg(dto);
+
 		if (ret.getData() != null && !StringUtils.isEmpty(ret.getData().getOptSerNo()) && ret.isSuccess()) {
 			// 成功
 			data.setStatus(0);
-			data.setOpt(ret.getData().getOptSerNo());
+			data.setKpOpt(ret.getData().getOptSerNo());
 			return data;
 		}
 		// 失败

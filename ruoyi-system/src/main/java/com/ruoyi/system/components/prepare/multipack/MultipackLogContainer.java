@@ -186,7 +186,7 @@ public class MultipackLogContainer implements InitializingBean {
 			item.setTotal(pckList.size());
 			log.info("设置组元数据 {} ", item);
 		}
-		robotPackLogService.saveBatch(pckList);
+		robotPackLogService.saveOrUpdateBatch(pckList);
 	}
 
 	public void onfail(String opt, String error) {
