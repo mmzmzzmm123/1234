@@ -158,6 +158,7 @@ public class BackRobotJobService {
             boolean b = false;
             try {
                 BeanUtils.copyProperties(ret, playBackRobotLog);
+                playBackRobotLog.setOpt(ret.getKpOpt());
                 playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+ret.getOp().toString(),"utf-8"));
                 b = playBackRobotLogService.saveOrUpdate(playBackRobotLog);
             } catch (Exception e) {
@@ -181,6 +182,7 @@ public class BackRobotJobService {
             }
             log.info("备用号-同步设置昵称-orgin {} " , ret);
             BeanUtils.copyProperties(ret, playBackRobotLog);
+            playBackRobotLog.setOpt(ret.getKpOpt());
             playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+ret.getOp().toString(),"utf-8"));
             final boolean b = playBackRobotLogService.saveOrUpdate(playBackRobotLog);
 
@@ -209,6 +211,7 @@ public class BackRobotJobService {
                             ret.getErrMsg());
                 }
                 BeanUtils.copyProperties(ret, playBackRobotLog);
+                playBackRobotLog.setOpt(ret.getKpOpt());
                 playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+ret.getOp().toString(),"utf-8"));
                 playBackRobotLogService.saveOrUpdate(playBackRobotLog);
                 log.info("备用号-同步设置管理员 {} ", ret);
@@ -223,8 +226,8 @@ public class BackRobotJobService {
                     PlayExecutionLogService.robotPackLog(robot.getPlayId(), robot.getGroupId(), robot.getRobotId(), null, ret.getKpOpt(), "备用号-管理员（获取hash值）", true);
                 }
                 log.info("备用号-同步设置管理员(获取hash值)-orgin {} " , ret);
-                final String opt = ret.wrapOpt().getOpt();
                 BeanUtils.copyProperties(ret, playBackRobotLog);
+                playBackRobotLog.setOpt(ret.getKpOpt());
                 playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+ret.getOp().toString(),"utf-8"));
                 final boolean b = playBackRobotLogService.saveOrUpdate(playBackRobotLog);
                 log.info("备用号-同步设置管理员(获取hash值) {},{} ", ret,b);
@@ -236,14 +239,14 @@ public class BackRobotJobService {
                     postposition.setCreateTime(new Date());
                     // 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员 5-获取群成员
                     postposition.setOp(4);
-                    postposition.setOpt("wait_" + Ids.getId());
+                    postposition.setOpt(Ids.getId());
                     postposition.setPlayId(robot.getPlayId());
                     postposition.setRetryCount(0);
                     postposition.setRobotId(robot.getRobotId());
                     postposition.setStatus(-1);
                     // 等待某个操作码执行完成才能开始调用
-                    postposition.setWaitOpt(opt);
-                    playBackRobotLog.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+postposition.getOp().toString(),"utf-8"));
+                    postposition.setWaitOpt(playBackRobotLog.getId());
+                    postposition.setId(MD5Utils.md5Hex(robot.getRobotId()+ robot.getGroupId()+ robot.getRobotId()+postposition.getOp().toString(),"utf-8"));
                     playBackRobotLogService.saveOrUpdate(postposition);
                 }
             }
@@ -281,7 +284,7 @@ public class BackRobotJobService {
 
                     //处理后置动作请求
                     final PlayBackRobotLog waitData = playBackRobotLogService.getOne(new LambdaQueryWrapper<PlayBackRobotLog>()
-                            .eq(PlayBackRobotLog::getWaitOpt, data.getOpt())
+                            .eq(PlayBackRobotLog::getWaitOpt, data.getId())
                             .last(" limit 1 ")
                     );
                     if (waitData.getOp().intValue() == 4) {
@@ -304,10 +307,10 @@ public class BackRobotJobService {
                         PlayRobotPackLog retAdmin = settings.set(param);
                         waitData.setStatus(retAdmin.getStatus());
                         waitData.setErrMsg(retAdmin.getErrMsg());
-                        waitData.setOpt(retAdmin.getOpt());
+                        waitData.setOpt(retAdmin.getKpOpt());
 
-                        if (StringUtils.isEmpty(retAdmin.getOpt())) {
-                            saveLog(waitData, JSON.toJSONString(ret), true);
+                        if (StringUtils.isEmpty(retAdmin.getKpOpt())) {
+                            saveLog(waitData, retAdmin.getErrMsg(), true);
                         } else {
                             saveLog(waitData, null, true);
                         }

@@ -80,7 +80,9 @@ public class TgKpRobotAdminSettings implements Settings {
 		SpringUtils.getBean(PlayRobotPackLogService.class).saveOrUpdate(data);
 
 		dto.setExtend(data.getOpt());
-		ret = OpenApiClient.setChatroomAdminByThirdKpTg(dto);
+		if(ret.isSuccess()) {
+			ret = OpenApiClient.setChatroomAdminByThirdKpTg(dto);
+		}
 
 		if (ret.getData() != null && !StringUtils.isEmpty(ret.getData().getOptSerNo()) && ret.isSuccess()) {
 			// 成功
