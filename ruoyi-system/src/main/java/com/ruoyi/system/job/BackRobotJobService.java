@@ -271,7 +271,7 @@ public class BackRobotJobService {
         }
         log.info("doBackRobotStateJob:{}", playBackRobotLogList.size());
         playBackRobotLogList.forEach(data -> {
-            MultipackLogContainer.CallValue ret = MultipackLogContainer.CallValueStore.get(data.getOpt());
+            MultipackLogContainer.CallValue ret = MultipackLogContainer.CallValueStore.get(data.getId());
             if (ret != null) {
                 //已有回调
                 if (ret.isSuccess()) {

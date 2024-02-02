@@ -56,7 +56,7 @@ public class StateJobProcessor implements LogJobProcessor {
 
 		
 		for (PlayRobotPackLog data : datas) {
-			CallValue ret = CallValueStore.get(data.getKpOpt());
+			CallValue ret = CallValueStore.get(data.getOpt());
 
 			if (ret == null) {
 				// 还没有回调
