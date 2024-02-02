@@ -128,7 +128,7 @@ public class PlayDirector implements CallBackProcessor {
             return;
         }
 
-        if (this.doProcessBackRobot(entry.getPlayId(), entry.getChatroomId(), entry.getRobotNickName(), entry.getMsgSort())) {
+        if (this.doProcessBackRobot(entry.getPlayId(), entry.getChatroomId(), entry.getRnn(), entry.getMsgSort())) {
             log.info("进入备用号包装流程成功 {} {} {}", entry, opt, errMsg);
             this.pause(entry.playId, entry.getChatroomId());
             return;

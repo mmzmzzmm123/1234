@@ -1,16 +1,13 @@
 package com.ruoyi.system.components.movie;
 
-import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.util.StringUtils;
-
 import com.alibaba.fastjson2.JSON;
-import com.ruoyi.common.utils.spring.SpringUtils;
 import com.ruoyi.system.components.RedisTemplateTools;
-
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.StringUtils;
+
+import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 public class SendMsgOptTempRedis {
@@ -22,7 +19,7 @@ public class SendMsgOptTempRedis {
 		entry.setMsgSort(msgSort);
 		entry.setRobotId(robotId);
 		entry.setPlayId(playId);
-		entry.setRobotNickName(robotNickName);
+		entry.setRnn(robotNickName);
 		RedisTemplateTools.get().opsForValue().set("ruoyi:SendMsgOptTempRedis:" + opt, JSON.toJSONString(entry),
 				60 * 60 * 24 * 5, TimeUnit.SECONDS);
 		log.info("SendMsgOptTempRedis {} {} {} {} {} {}", opt, chatroomId, playId, msgSort, robotNickName, robotId);
@@ -43,7 +40,16 @@ public class SendMsgOptTempRedis {
 		String chatroomId;
 		String playId;
 		int msgSort;
-		String robotNickName;
+
+		/**
+		 * robotNickName
+		 */
+		String rnn;
 		String robotId;
+
+		/**
+		 * firstSerialNo
+		 */
+		String no;
 	}
 }

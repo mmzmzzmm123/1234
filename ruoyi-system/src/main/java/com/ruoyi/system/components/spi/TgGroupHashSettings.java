@@ -53,26 +53,29 @@ public class TgGroupHashSettings implements Settings {
 	@Override
 	public PlayRobotPackLog set(Map<String, Object> param) {
 		@SuppressWarnings("rawtypes")
-		OpenApiResult<TgBaseOutputDTO> ret = null;
+		OpenApiResult<TgBaseOutputDTO> ret = new OpenApiResult<>();
+		ret.setCode(0);
 		final String groupId = SpringUtils.getBean(GroupInfoMapper.class).selectById(param.get(Settings.Key_GroupId).toString()).getGroupSerialNo();
 		final GroupRobot groupOwnerRobot = SpringUtils.getBean(GroupRobotMapper.class).selectOne(new LambdaQueryWrapper<GroupRobot>().eq(GroupRobot::getGroupId, param.get(Settings.Key_GroupId).toString()).eq(GroupRobot::getMemberType, 1).last(" limit 1 "));
 		if(groupOwnerRobot == null){
-			ret = new OpenApiResult<>();
 			String trace = Ids.getId();
 			ret.setMessage("接口异常: 群主号信息未同步");
 			log.error("sqlTaskSubmitByThirdKpTg_error {} {}" , trace , groupId);
+			ret.setCode(1);
 		}
 		final String robotId = param.get(Settings.Key_RobotId).toString();
-		ThirdTgSqlTaskSubmitInputDTO dto = new ThirdTgSqlTaskSubmitInputDTO();
-		dto.setDbSource("kfpt-doris-ed");
-		dto.setSql(getSql(groupId, groupOwnerRobot.getRobotId(), ListTools.newArrayList(robotId)));
-		try {
-			ret = OpenApiClient.sqlTaskSubmitByThirdKpTg(dto);
-			log.info("sqlTaskSubmitByThirdKpTg {} {}" , dto , ret);
-		} catch (Exception e) {
-			String trace = Ids.getId();
-			ret.setMessage("接口异常: " + trace);
-			log.error("sqlTaskSubmitByThirdKpTg_error {} {}" , trace , dto);
+		if(ret.isSuccess()) {
+			ThirdTgSqlTaskSubmitInputDTO dto = new ThirdTgSqlTaskSubmitInputDTO();
+			dto.setDbSource("kfpt-doris-ed");
+			dto.setSql(getSql(groupId, groupOwnerRobot.getRobotId(), ListTools.newArrayList(robotId)));
+			try {
+				ret = OpenApiClient.sqlTaskSubmitByThirdKpTg(dto);
+				log.info("sqlTaskSubmitByThirdKpTg {} {}", dto, ret);
+			} catch (Exception e) {
+				String trace = Ids.getId();
+				ret.setMessage("接口异常: " + trace);
+				log.error("sqlTaskSubmitByThirdKpTg_error {} {}", trace, dto);
+			}
 		}
 		PlayRobotPackLog data = new PlayRobotPackLog();
 		data.setChatroomId(param.get(Settings.Key_GroupId).toString());

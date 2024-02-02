@@ -65,7 +65,7 @@ public class RetryService {
         OpenApiRequestLog requestLog = this.updateErrorMessage(optSerialNo, errMsg);
 
         // 更新错误次数
-        String firstRequestId = requestLog.getLastTimeRequestId();
+        String firstRequestId = entry.getNo();
         OpenApiRequestLog firstLog = null;
         if (StringUtils.isNotBlank(firstRequestId)) {
             firstLog = this.incErrorTimes(firstRequestId);
@@ -102,7 +102,7 @@ public class RetryService {
     private void updatePushStateDetail(SendMsgOptTempRedis.SendMsgOptTempEntry entry) {
         PlayMessagePushDetail playMessagePushDetail =
                 this.playMessagePushDetailService.selectRobotMessage(entry.getPlayId(),
-                        entry.getRobotNickName(),
+                        entry.getRnn(),
                         entry.getChatroomId(),
                         entry.getMsgSort());
 
@@ -146,14 +146,14 @@ public class RetryService {
 
     public OpenApiRequestLog updateErrorMessage(String optSerialNo, String errorMessage) {
         Update update = Update.update("errorMessage", errorMessage);
-        mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(optSerialNo)), update, OpenApiRequestLog.class);
+        mongoTemplate.upsert(Query.query(Criteria.where("id").is(optSerialNo)), update, OpenApiRequestLog.class);
         return getRequestLog(optSerialNo);
     }
 
 
     public OpenApiRequestLog incErrorTimes(String optSerialNo) {
         Update update = new Update().inc("requestTimes", 1L);
-        mongoTemplate.updateFirst(Query.query(Criteria.where("id").is(optSerialNo)), update, OpenApiRequestLog.class);
+        mongoTemplate.upsert(Query.query(Criteria.where("id").is(optSerialNo)), update, OpenApiRequestLog.class);
         return this.getRequestLog(optSerialNo);
     }
 
@@ -180,7 +180,10 @@ public class RetryService {
         oneLog.setRequestTimes(0);
         oneLog.setCreateTime(LocalDateTime.now());
 
-        mongoTemplate.save(oneLog);
+        try {
+            mongoTemplate.save(oneLog);
+        } catch (Exception ignored) {
+        }
     }
 
     public void scanPlayRobotPackReady() {

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +26,9 @@ public class WordUtil {
             // 读取段落
             List<XWPFParagraph> paragraphs = document.getParagraphs();
             for (XWPFParagraph paragraph : paragraphs) {
-                messageContent.add(paragraph.getText());
+                String strText = paragraph.getRuns().stream().map(XWPFRun::text).collect(Collectors.joining());
+                String[] split = StringUtils.split(strText, "\n");
+                messageContent.addAll(Arrays.asList(split));
 
                 // 处理段落中的图片
                 final List<XWPFRun> collect = paragraph.getRuns().stream().filter(it -> StringUtils.isEmpty(it.text())).collect(Collectors.toList());
