@@ -21,4 +21,7 @@ public class VibeRuleTargetParam {
 
     @ApiModelProperty(value = "优选群主号和水军国名称")
     private List<String> preferenceNames;
+
+    @ApiModelProperty(value = "是否必要,0否,1是")
+    private Integer required = 0;
 }

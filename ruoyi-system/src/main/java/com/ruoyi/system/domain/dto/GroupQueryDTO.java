@@ -32,4 +32,7 @@ public class GroupQueryDTO {
 
     @ApiModelProperty(value = "群类型  10私密群 20公开群")
     private Integer groupType;
+
+    @ApiModelProperty(value = "是否必要,0否,1是")
+    private Integer required = 0;
 }

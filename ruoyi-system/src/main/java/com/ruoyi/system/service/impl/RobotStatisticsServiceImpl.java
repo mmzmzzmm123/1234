@@ -2,6 +2,7 @@ package com.ruoyi.system.service.impl;
 
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.core.domain.R;
@@ -48,7 +49,8 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
     @Transactional
     @Override
     public R<List<GetRobotVO>> getRobot(GetRobotDTO dto) {
-        VibeRule vibeRule = vibeRuleMapper.selectOne(new LambdaQueryWrapper<VibeRule>().last("limit 1"));
+        VibeRule vibeRule = vibeRuleMapper.selectOne(new QueryWrapper<VibeRule>().lambda()
+                .eq(VibeRule::getStatus, 1).orderByDesc(VibeRule::getId).last(" limit  1 "));
         if(vibeRule == null){
             return R.fail("查询不到规则表数据");
         }
@@ -79,7 +81,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             log.info("getRobot selectRobotByRuleVOS:{},{}", JSON.toJSONString(selectRobotByRuleDTO),JSON.toJSONString(selectRobotByRuleVOS));
 
             // 目标国家不够则随机取其它国家
-            if (countryCodeFlag && (CollectionUtils.isEmpty(selectRobotByRuleVOS) || selectRobotByRuleVOS.size() < dto.getSetAdminCount())) {
+            if (countryCodeFlag && (CollectionUtils.isEmpty(selectRobotByRuleVOS) || selectRobotByRuleVOS.size() < dto.getSetAdminCount()) && dto.getRequired() == 0) {
                 if (CollectionUtils.isEmpty(selectRobotByRuleVOS)) {
                     robotSize = 0;
                 } else {
@@ -129,7 +131,7 @@ public class RobotStatisticsServiceImpl extends ServiceImpl<RobotStatisticsMappe
             selectRobotByRuleVOS1 = robotStatisticsMapper.selectRobotByRule(selectRobotByRuleDTO);
             log.info("getRobot selectRobotByRuleVOS1:{},{}",JSON.toJSONString(selectRobotByRuleDTO), JSON.toJSONString(selectRobotByRuleVOS1));
 
-            if (countryCodeFlag && (CollectionUtils.isEmpty(selectRobotByRuleVOS1) || selectRobotByRuleVOS1.size() < dto.getCount())) {
+            if (countryCodeFlag && (CollectionUtils.isEmpty(selectRobotByRuleVOS1) || selectRobotByRuleVOS1.size() < dto.getCount()) && dto.getRequired() == 0) {
                 if (CollectionUtils.isEmpty(selectRobotByRuleVOS1)) {
                     robotSize = 0;
                 } else {
