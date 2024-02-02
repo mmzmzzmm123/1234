@@ -54,6 +54,7 @@ public class TgGroupHashSettings implements Settings {
 	public PlayRobotPackLog set(Map<String, Object> param) {
 		@SuppressWarnings("rawtypes")
 		OpenApiResult<TgBaseOutputDTO> ret = new OpenApiResult<>();
+		ret.setCode(0);
 		final String groupId = SpringUtils.getBean(GroupInfoMapper.class).selectById(param.get(Settings.Key_GroupId).toString()).getGroupSerialNo();
 		final GroupRobot groupOwnerRobot = SpringUtils.getBean(GroupRobotMapper.class).selectOne(new LambdaQueryWrapper<GroupRobot>().eq(GroupRobot::getGroupId, param.get(Settings.Key_GroupId).toString()).eq(GroupRobot::getMemberType, 1).last(" limit 1 "));
 		if(groupOwnerRobot == null){
