@@ -8,6 +8,7 @@ import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.system.domain.GroupRobot;
 import com.ruoyi.system.mapper.GroupRobotMapper;
+import com.ruoyi.system.service.PlayRobotPackLogService;
 import org.apache.commons.lang3.StringUtils;
 import com.ruoyi.common.core.domain.entity.play.PlayRobotPackLog;
 import com.ruoyi.common.utils.Ids;
@@ -64,20 +65,8 @@ public class TgGroupHashSettings implements Settings {
 			ret.setCode(1);
 		}
 		final String robotId = param.get(Settings.Key_RobotId).toString();
-		if(ret.isSuccess()) {
-			ThirdTgSqlTaskSubmitInputDTO dto = new ThirdTgSqlTaskSubmitInputDTO();
-			dto.setDbSource("kfpt-doris-ed");
-			dto.setSql(getSql(groupId, groupOwnerRobot.getRobotId(), ListTools.newArrayList(robotId)));
-			try {
-				ret = OpenApiClient.sqlTaskSubmitByThirdKpTg(dto);
-				log.info("sqlTaskSubmitByThirdKpTg {} {}", dto, ret);
-			} catch (Exception e) {
-				String trace = Ids.getId();
-				ret.setMessage("接口异常: " + trace);
-				log.error("sqlTaskSubmitByThirdKpTg_error {} {}", trace, dto);
-			}
-		}
 		PlayRobotPackLog data = new PlayRobotPackLog();
+		data.setOpt(Ids.getId());
 		data.setChatroomId(param.get(Settings.Key_GroupId).toString());
 		data.setCreateTime(new Date());
 		data.setIsFinish(0);
@@ -87,11 +76,28 @@ public class TgGroupHashSettings implements Settings {
 		data.setRetryCount(0);
 		data.setRobotId(robotId);
 		data.setIsBackup(((boolean) param.get(Settings.Key_Backup_Flag)) ? 1 : 0);
+		data.setStatus(0);
+		SpringUtils.getBean(PlayRobotPackLogService.class).saveOrUpdate(data);
+		if(ret.isSuccess()) {
+			ThirdTgSqlTaskSubmitInputDTO dto = new ThirdTgSqlTaskSubmitInputDTO();
+			dto.setDbSource("kfpt-doris-ed");
+			dto.setSql(getSql(groupId, groupOwnerRobot.getRobotId(), ListTools.newArrayList(robotId)));
+			dto.setExtend(data.getOpt());
+			try {
+				ret = OpenApiClient.sqlTaskSubmitByThirdKpTg(dto);
+				log.info("sqlTaskSubmitByThirdKpTg {} {}", dto, ret);
+			} catch (Exception e) {
+				String trace = Ids.getId();
+				ret.setMessage("接口异常: " + trace);
+				ret.setCode(1);
+				log.error("sqlTaskSubmitByThirdKpTg_error {} {}", trace, dto);
+			}
+		}
 
 		if (ret.getData() != null && !StringUtils.isEmpty(ret.getData().getOptSerNo()) && ret.isSuccess()) {
 			// 成功
 			data.setStatus(0);
-			data.setOpt(ret.getData().getOptSerNo());
+			data.setKpOpt(ret.getData().getOptSerNo());
 			return data;
 		}
 		// 失败

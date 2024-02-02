@@ -99,11 +99,11 @@ public class ManualPackingTask implements TaskExecution {
 				// 设置头像
 				if (!StringUtils.isEmpty(robotPck.getPic())) {
 					PlayRobotPackLog ret = tgRobotImgSettings.set(param);
-					if (StringUtils.isEmpty(ret.getOpt())) {
+					if (StringUtils.isEmpty(ret.getKpOpt())) {
 						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(),
 								null, "头像", true);
 					} else {
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(),
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getKpOpt(),
 								"头像", true);
 					}
 					submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
@@ -114,11 +114,11 @@ public class ManualPackingTask implements TaskExecution {
 				// 设置 昵称
 				if (!StringUtils.isEmpty(robotPck.getName()) || !StringUtils.isEmpty(robotPck.getSurname())) {
 					PlayRobotPackLog ret = tgRobotNameSettings.set(param);
-					if (StringUtils.isEmpty(ret.getOpt())) {
+					if (StringUtils.isEmpty(ret.getKpOpt())) {
 						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(),
 								null, "姓名", true);
 					} else {
-						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(),
+						PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getKpOpt(),
 								"姓名", true);
 					}
 					submitList.add(ret.wrapOpt().wrapRadio(radioId).wrapPushDetailId(detail.getId()));
@@ -152,16 +152,16 @@ public class ManualPackingTask implements TaskExecution {
 						//走开平的逻辑
 						log.info("走开平的逻辑 {} " , JSON.toJSONString(robotPck));
 						final PlayRobotPackLog ret = tgGroupHashSettings.set(param);
-						if (StringUtils.isEmpty(ret.getOpt())) {
+						if (StringUtils.isEmpty(ret.getKpOpt())) {
 							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, ret.getErrMsg(), null, "管理员（获取hash值）", true);
 						} else {
-							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getOpt(), "管理员（获取hash值）", true);
+							PlayExecutionLogService.robotPackLog(playId, context.getChatroomId(), robot, null, ret.getKpOpt(), "管理员（获取hash值）", true);
 						}
 						final String opt = ret.wrapOpt().getOpt();
 						submitList.add(ret.wrapRadio(radioId).wrapPushDetailId(detail.getId()));
 						log.info("同步设置管理员(获取hash值) {} ", ret);
 
-						if (!StringUtils.isEmpty(ret.getOpt())) {
+						if (!StringUtils.isEmpty(ret.getKpOpt())) {
 							// 请求成功后，插入一条 后置 请求
 							PlayRobotPackLog postposition = new PlayRobotPackLog();
 							postposition.setChatroomId(context.getChatroomId());
@@ -170,7 +170,7 @@ public class ManualPackingTask implements TaskExecution {
 							postposition.setIsFinish(0);
 							// 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员 5-获取群成员
 							postposition.setOp(4);
-							postposition.setOpt("wait_" + Ids.getId());
+							postposition.setOpt(Ids.getId());
 							postposition.setPlayId(context.getPlay().getId());
 							postposition.setRadioId(radioId);
 							postposition.setRetryCount(0);

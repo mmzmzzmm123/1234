@@ -26,9 +26,10 @@ public class GlobalIndexContext {
 		return Integer.parseInt(v);
 	}
 
-	public static int next(String chatroomId, String playId) {
+	public static int next(String chatroomId, String playId, int messageSort) {
 		try {
-			int index = getIndex(chatroomId, playId);
+//			int index = getIndex(chatroomId, playId);
+			int index = messageSort;
 			index++;
 			setIndex(chatroomId, playId, index);
 			return index;

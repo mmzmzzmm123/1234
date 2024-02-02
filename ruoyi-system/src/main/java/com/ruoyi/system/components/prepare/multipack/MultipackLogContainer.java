@@ -186,45 +186,38 @@ public class MultipackLogContainer implements InitializingBean {
 			item.setTotal(pckList.size());
 			log.info("设置组元数据 {} ", item);
 		}
-		robotPackLogService.saveBatch(pckList);
+		robotPackLogService.saveOrUpdateBatch(pckList);
 	}
 
-	public void onfail(String opt, String error) {
+	public void onfail(String id, String error) {
 		String err = Strings.subMax(error, 500);
-		DelayAcquireTools.acquire(() -> robotPackLogService.getById(opt), data -> {
+		final PlayRobotPackLog playRobotPackLog = robotPackLogService.getById(id);
+		if(playRobotPackLog != null) {
+			CallValueStore.store(id, null, err);
+		}
+		final PlayBackRobotLog playBackRobotLog = playBackRobotLogService.getById(id);
+		if((playBackRobotLog != null)) {
+			CallValueStore.store(id, null, error);
+		}
+		/*DelayAcquireTools.acquire(() -> robotPackLogService.getById(opt), data -> {
 			// 修改 状态
 			CallValueStore.store(opt, null, err);
-		});
-	}
-	public void onfail(String opt, String error, boolean isRobotLevel) {
-		onfail(opt, error);
-		if(isRobotLevel){
-			DelayAcquireTools.acquire(() -> playBackRobotLogService.getOne(new LambdaQueryWrapper<PlayBackRobotLog>()
-					.eq(PlayBackRobotLog::getOpt,opt)
-					.last(" limit 1 ")
-			), data -> {
-				CallValueStore.store(opt, null, error);
-			});
-		}
+		});*/
 	}
 
-	public void onSucceed(String opt, String attchContent) {
+	public void onSucceed(String id, String attchContent) {
+		final PlayRobotPackLog playRobotPackLog = robotPackLogService.getById(id);
 		// 根据操作码 拿到 数据
-		DelayAcquireTools.acquire(() -> robotPackLogService.getById(opt), data -> {
-			CallValueStore.store(opt, attchContent, null);
-		});
-	}
-
-	public void onSucceed(String opt, String attchContent, boolean isRobotLevel) {
-		onSucceed(opt, attchContent);
-		if(isRobotLevel){
-			DelayAcquireTools.acquire(() -> playBackRobotLogService.getOne(new LambdaQueryWrapper<PlayBackRobotLog>()
-					.eq(PlayBackRobotLog::getOpt,opt)
-					.last(" limit 1 ")
-			), data -> {
-				CallValueStore.store(opt, attchContent, null);
-			});
+		if(playRobotPackLog != null) {
+			CallValueStore.store(id, attchContent, null);
 		}
+		final PlayBackRobotLog playBackRobotLog = playBackRobotLogService.getById(id);
+		if(playBackRobotLog != null) {
+			CallValueStore.store(id, attchContent, null);
+		}
+//		DelayAcquireTools.acquire(() -> robotPackLogService.getById(opt), data -> {
+//			CallValueStore.store(opt, attchContent, null);
+//		});
 	}
 
 	@Data

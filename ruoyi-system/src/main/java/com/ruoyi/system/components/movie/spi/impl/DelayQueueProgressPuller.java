@@ -58,7 +58,7 @@ public class DelayQueueProgressPuller implements ProgressPuller {
 
         Integer delayTime = message.getIntervalTime();
         // 先移动游标 ，
-        GlobalIndexContext.next(chatroomId, message.getPlayId());
+        GlobalIndexContext.next(chatroomId, message.getPlayId(), message.getMessageSort());
         DelayQueueInvoker.Entry e = new DelayQueueInvoker.Entry(chatroomId, message.getPlayId(), Ids.getId(), null);
         // 计算 延时消息
         int val = ServiceLoader.load(DelaySpeedController.class).calculate(delayTime, message.getPlayId());

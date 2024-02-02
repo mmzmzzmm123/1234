@@ -142,19 +142,19 @@ public class PlayPrepareTaskExecuteChain implements OnPackMonitor, OnRadioPackMo
 		// 单个 回调 执行 成功 1-设置机器人姓名，姓氏 2-设置机器人头像 3-设置群hash值 4-设置管理员 5-获取群成员
 		if (data.getOp().intValue() == 1) {
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), null,
-					data.getOpt(), "姓名", false);
+					data.getKpOpt(), "姓名", false);
 		}
 		if (data.getOp().intValue() == 2) {
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), null,
-					data.getOpt(), "头像", false);
+					data.getKpOpt(), "头像", false);
 		}
 		if (data.getOp().intValue() == 3) {
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), null,
-					data.getOpt(), "管理员（获取hash值）", false);
+					data.getKpOpt(), "管理员（获取hash值）", false);
 		}
 		if (data.getOp().intValue() == 4) {
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), null,
-					data.getOpt(), "管理员", false);
+					data.getKpOpt(), "管理员", false);
 		}
 	}
 
@@ -164,19 +164,19 @@ public class PlayPrepareTaskExecuteChain implements OnPackMonitor, OnRadioPackMo
 		// 单个 回调 执行 失败
 		if (data.getOp().intValue() == 1) {
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
-					data.getOpt(), "姓名", false);
+					data.getKpOpt(), "姓名", false);
 		}
 		if (data.getOp().intValue() == 2) {
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
-					data.getOpt(), "头像", false);
+					data.getKpOpt(), "头像", false);
 		}
 		if (data.getOp().intValue() == 3) {
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
-					data.getOpt(), "管理员（获取hash值）", false);
+					data.getKpOpt(), "管理员（获取hash值）", false);
 		}
 		if (data.getOp().intValue() == 4) {
 			PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(), data.getRobotId(), error,
-					data.getOpt(), "管理员", false);
+					data.getKpOpt(), "管理员", false);
 		}
 	}
 

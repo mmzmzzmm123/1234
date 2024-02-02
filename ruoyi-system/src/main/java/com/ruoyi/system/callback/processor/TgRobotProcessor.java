@@ -124,10 +124,10 @@ public class TgRobotProcessor {
         //处理请求结果
         groupService.handleActionResult(root.getExtend(), root.getOptSerNo(), root.isSuccess(), root.getResultMsg(), null);
         if (root.isSuccess()) {
-            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null, true);
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getExtend(), null);
             return;
         }
-        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg(), true);
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getExtend(), root.getResultMsg());
     }
 
     /**
@@ -181,17 +181,17 @@ public class TgRobotProcessor {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         log.info("1100910016-修改号头像-{}", JSON.toJSONString(root));
         if (root.isSuccess()) {
-            if (StringUtils.isNotEmpty(root.getExtend())) {
+            if (StringUtils.isNotEmpty(root.getExtend()) && root.getExtend().startsWith("http")) {
                 try {
                     robotService.updateHeadImgUrl(root.getRobotId(), root.getExtend());
                     return;
                 } catch (Exception e) {
                 }
             }
-            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null, true);
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getExtend(), null);
             return;
         }
-        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg(), true);
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getExtend(), root.getResultMsg());
     }
 
     /**
@@ -212,14 +212,14 @@ public class TgRobotProcessor {
                 } catch (Exception e) {
                 }
             }
-            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null, true);
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getExtend(), null);
             return;
         }
         else if("名字重复".equals(root.getResultMsg())){//名字重复当做成功
-            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), null, true);
+            SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getExtend(), null);
             return ;
         }
-        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg(), true);
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getExtend(), root.getResultMsg());
     }
 
     /**
@@ -335,11 +335,11 @@ public class TgRobotProcessor {
 
         if (root.isSuccess()) {
             if (!CollectionUtils.isEmpty(dto)) {
-                SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getOptSerNo(), dto.get(0).getAccessHash(), true);
+                SpringUtils.getBean(MultipackLogContainer.class).onSucceed(root.getExtend(), dto.get(0).getAccessHash());
             }
             return;
         }
-        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getOptSerNo(), root.getResultMsg(), true);
+        SpringUtils.getBean(MultipackLogContainer.class).onfail(root.getExtend(), root.getResultMsg());
 
 
     }
@@ -518,6 +518,7 @@ public class TgRobotProcessor {
     public void called1100910027(List<Called1100910027DTO> dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         log.info("NQ1100910027 called:{} {}", root, JSON.toJSONString(dto));
+        AsyncTask.execute(()-> SpringUtils.getBean(FriendRobotService.class).addSync(root, dto));
         SpringUtils.getBean(AutoReplyService.class).messageCallback(root, dto);
     }
 
@@ -547,5 +548,14 @@ public class TgRobotProcessor {
         }
         RobotStatisticsMapper robotStatisticsMapper = SpringUtils.getBean(RobotStatisticsMapper.class);
         AsyncTask.execute(()-> robotStatisticsMapper.updateChatroomNum(root.getRobotId(), dto.getChatroom_list().size()));
+    }
+
+    /***
+     * 获取TG好友数据接口回调
+     */
+    @Type(value = 1100910012, parameterClass = Called1100910012DTO.class)
+    public void friendList(List<Called1100910012DTO> dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        SpringUtils.getBean(FriendRobotService.class).unlockUpdateData(root,dto);
     }
 }

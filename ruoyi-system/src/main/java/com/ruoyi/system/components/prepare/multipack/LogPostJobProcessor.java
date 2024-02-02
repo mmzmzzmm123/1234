@@ -85,30 +85,32 @@ public class LogPostJobProcessor implements LogJobProcessor {
 			param.put(Settings.Key_Backup_Flag, data.getIsBackup().intValue() == 1 ? true : false);
 			// hash 值
 			param.put(Settings.Key_AttachContent, Objects.wrapNull(attchContent, ""));
+			param.put(Settings.Key_OldOpt, data.getOpt());
 			// 请求 设置管理员
 			PlayRobotPackLog ret = settings.set(param);
 
-			if (StringUtils.isEmpty(ret.getOpt())) {
+			if (StringUtils.isEmpty(ret.getKpOpt())) {
 				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(),  data.getRobotId(), ret.getErrMsg(), null, "管理员", true);
 				// 更新 状态
 				PlayRobotPackLog update = new PlayRobotPackLog();
 				update.setStatus(ret.getStatus());
 				update.setErrMsg(ret.getErrMsg());
-				update.setOpt(data.getOpt());
+				update.setKpOpt(data.getKpOpt());
 				update.setAttchContent(attchContent);
+				update.setOpt(data.getOpt());
 				robotPackLogMapper.updateById(update);
 				log.info("后置log更新 {}", data);
 			} else {
-				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(),  data.getRobotId(), null, ret.getOpt(), "管理员", true);
-				// 删除之前的
-				robotPackLogMapper.deleteById(data);
+				PlayExecutionLogService.robotPackLog(data.getPlayId(), data.getChatroomId(),  data.getRobotId(), null, ret.getKpOpt(), "管理员", true);
+//				// 删除之前的
+//				robotPackLogMapper.deleteById(data);
 				// 新增当前的
 				data.setStatus(ret.getStatus());
 				data.setErrMsg(ret.getErrMsg());
-				data.setOpt(ret.getOpt());
+				data.setKpOpt(ret.getKpOpt());
 				data.setAttchContent(attchContent);
-				robotPackLogMapper.insert(data);
-				log.info("后置log覆盖插入 {}", data);
+				robotPackLogMapper.updateById(data);
+				log.info("后置log覆盖更新 {}", data);
 			}
 		}
 	}

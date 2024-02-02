@@ -66,6 +66,11 @@ public class PlayRobotPackLog {
 
 	private Integer pushDetailId;
 
+	/**
+	 * 开平OPT
+	 */
+	private String kpOpt;
+
 	public static boolean unFinished(List<PlayRobotPackLog> datas) {
 		for (PlayRobotPackLog data : datas) {
 			if ((data.getRetryMaxFlag().intValue() == 0 && data.getStatus().intValue() != 1) || data.getStatus().intValue() == -1
@@ -89,7 +94,7 @@ public class PlayRobotPackLog {
 
 	public PlayRobotPackLog wrapOpt() {
 		if (StringUtils.isEmpty(getOpt())) {
-			setOpt("my_" + Ids.getId());
+			setOpt(Ids.getId());
 		}
 		return this;
 	}
