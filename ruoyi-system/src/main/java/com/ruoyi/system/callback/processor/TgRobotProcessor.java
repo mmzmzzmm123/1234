@@ -518,6 +518,7 @@ public class TgRobotProcessor {
     public void called1100910027(List<Called1100910027DTO> dto) {
         CalledDTO root = CalledDTOThreadLocal.getAndRemove();
         log.info("NQ1100910027 called:{} {}", root, JSON.toJSONString(dto));
+        AsyncTask.execute(()-> SpringUtils.getBean(FriendRobotService.class).addSync(root, dto));
         SpringUtils.getBean(AutoReplyService.class).messageCallback(root, dto);
     }
 
@@ -547,5 +548,14 @@ public class TgRobotProcessor {
         }
         RobotStatisticsMapper robotStatisticsMapper = SpringUtils.getBean(RobotStatisticsMapper.class);
         AsyncTask.execute(()-> robotStatisticsMapper.updateChatroomNum(root.getRobotId(), dto.getChatroom_list().size()));
+    }
+
+    /***
+     * 获取TG好友数据接口回调
+     */
+    @Type(value = 1100910012, parameterClass = Called1100910012DTO.class)
+    public void friendList(List<Called1100910012DTO> dto) {
+        CalledDTO root = CalledDTOThreadLocal.getAndRemove();
+        SpringUtils.getBean(FriendRobotService.class).unlockUpdateData(root,dto);
     }
 }
