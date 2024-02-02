@@ -31,6 +31,8 @@ public enum OpenApiEnum {
 
     THIRD_KP_TG_GET_GROUP_MEMBER("kpTg-获取群成员", "/thirdparty/tgGroup/getGroupMember", null),
 
+    THIRD_KP_TG_GET_SALE_ACTIVE_CHATROOM("kpTg-获取建群资源接口", "/thirdparty/tgGroup/getSaleActiveChatroom", 1100850216),
+
 
     // 开平号接口
     THIRD_KP_TG_MODIFY_ROBOT_HEAD_IMG("kpTg-修改号头像", "/thirdparty/tgRobot/modifyRobotHeadImg", 1100910016),
@@ -45,6 +47,8 @@ public enum OpenApiEnum {
 
     THIRD_KP_TG_SEND_FRIEND_MESSAGE("kpTg-发送好友消息接口", "/thirdparty/tgRobot/sendFriendMessage", 1100910010),
 
+    THIRD_KP_TG_GET_ROBOT_FRE_DATA("kpTg-获取好友数据接口", "/thirdparty/tgRobot/getRobotFreData", 1100910010),
+
     // kp
     THIRD_KP_TG_SQL_TASK_SUBMIT("kpTg-SQL执行接口", "/thirdparty/tgModule/sqlTaskSubmit", null),
     THIRD_KP_TG_DISPERSE_IMAGE("kpTg-获取离散图片", "/thirdparty/tgCharacter/disperseImage", 1100850508),
@@ -52,7 +56,6 @@ public enum OpenApiEnum {
     THIRD_KP_TG_GET_APPOINT_GRADE_TEXT_LIST("kpTg-获取离散文字", "/thirdparty/tgCharacter/getAppointGradeTextList", 1100850405),
 
     THIRD_KP_TG_INSERT_EVENT("kpTg-生成域名接口", "/thirdparty/tgModule/insertEvent", null),
-
 
     // utchat接口
     THIRD_UTCHAT_TG_SELECT_ROBOT_LIST_BY_RADIO("utchatTg-查询分组下的机器号", "/thirdparty/tgUtChat/selectRobotListByRadio", null),
