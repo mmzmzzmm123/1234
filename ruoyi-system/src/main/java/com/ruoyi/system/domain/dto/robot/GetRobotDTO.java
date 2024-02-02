@@ -19,4 +19,6 @@ public class GetRobotDTO {
     private Integer ipType;
     @ApiModelProperty(value = "是否锁定号,0-否,1-是")
     private Integer isLock = 0;
+    @ApiModelProperty(value = "是否必要,0否,1是")
+    private Integer required = 0;
 }
