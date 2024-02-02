@@ -47,7 +47,7 @@ public abstract class UtTouchClient {
         String requestUrl = SpringUtils.getBean(UtTouchProperties.class).getApiUrl() + api.getRequestUrl();
 
         String token = null;
-        if (!UtTouchApiEnum.MERCHANT_LOGIN.equals(api)) {
+        if (!UtTouchApiEnum.MERCHANT_LOGIN.equals(api) && !UtTouchApiEnum.USER_LOGIN.equals(api)) {
             token = UtTouchClient.getToken();
         }
 

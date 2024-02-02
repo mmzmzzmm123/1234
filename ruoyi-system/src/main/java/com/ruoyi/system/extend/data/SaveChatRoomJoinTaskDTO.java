@@ -1,5 +1,6 @@
 package com.ruoyi.system.extend.data;
 
+import com.alibaba.fastjson2.annotation.JSONField;
 import lombok.Data;
 
 import java.util.List;
@@ -65,11 +66,13 @@ public class SaveChatRoomJoinTaskDTO {
     /**
      * 最后拉人时间超过多少分钟
      */
+    @JSONField(name = "nLastInviteTimeOverMinute")
     private Integer nLastInviteTimeOverMinute;
 
     /**
      * 优先使用超过多少次的拉手号
      */
+    @JSONField(name = "nPriorityUsedCount")
     private Integer nPriorityUsedCount;
 
     @Data
