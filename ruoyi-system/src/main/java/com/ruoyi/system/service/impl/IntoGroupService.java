@@ -641,22 +641,32 @@ public class IntoGroupService {
             robotNum = robotNum + (robotNum * vibeRule.getStandbyNum());
         }
         List<String> countys = new ArrayList<>();
+        Integer required = 0;
         //是否设置目标国
         if (StringUtils.isNotEmpty(playDTO.getTargetCountyCode()) && vibeRule.getTargetParams() != null) {
             List<String> allList = new ArrayList<>();
             List<String> preferenceCodes = new ArrayList<>();
+            Boolean isTarget = false;
+            Integer perRequired = 0;
+            Integer allReqyired = 0;
             for (VibeRuleTargetParam param : vibeRule.getTargetParams()) {
                 if (param.getAllState() == 1) {
                     allList = param.getPreferenceCodes();
+                    allReqyired = param.getRequired();
                     continue;
                 }
                 if (playDTO.getTargetCountyCode().equals(param.getCountryCode())) {
+                    perRequired = param.getRequired();
                     preferenceCodes = param.getPreferenceCodes();
+                    isTarget = true;
                 }
             }
-            if (performers.size() != 0) {
+            if (isTarget){
+                required = perRequired;
                 countys = preferenceCodes;
-            } else {
+
+            }else {
+                required = allReqyired;
                 countys = allList;
             }
         }
@@ -677,6 +687,7 @@ public class IntoGroupService {
         adminDTO.setSetAdminCount(adminNum);
         adminDTO.setIpType(ipType);
         adminDTO.setIsLock(playExt.getLockState());
+        adminDTO.setRequired(required);
         log.info("获取机器人入参："+JSONObject.toJSONString(adminDTO));
         //调用获取机器人接口
         R<List<GetRobotVO>> robotAdminVOS = robotStatisticsService.getRobot(adminDTO);
@@ -1044,7 +1055,35 @@ public class IntoGroupService {
         } else {
             robotNum = 1;
         }
-        List<String> countys = getCountys(play);
+        List<String> countys = new ArrayList<>();
+        Integer required = 0;
+        //是否设置目标国
+        if (StringUtils.isNotEmpty(play.getTargetCountyCode()) && vibeRule.getTargetParams() != null) {
+            List<String> allList = new ArrayList<>();
+            List<String> preferenceCodes = new ArrayList<>();
+            Boolean isTarget = false;
+            Integer perRequired = 0;
+            Integer allReqyired = 0;
+            for (VibeRuleTargetParam param : vibeRule.getTargetParams()) {
+                if (param.getAllState() == 1) {
+                    allList = param.getPreferenceCodes();
+                    allReqyired = param.getRequired();
+                    continue;
+                }
+                if (play.getTargetCountyCode().equals(param.getCountryCode())) {
+                    perRequired = param.getRequired();
+                    preferenceCodes = param.getPreferenceCodes();
+                    isTarget = true;
+                }
+            }
+            if (isTarget){
+                required = perRequired;
+                countys = preferenceCodes;
+            }else {
+                required = allReqyired;
+                countys = allList;
+            }
+        }
         Integer ipType = 0;
         //是否需要做IP离散
         if (vibeRule.getPeriodByIp() == 1) {
@@ -1061,6 +1100,7 @@ public class IntoGroupService {
         adminDTO.setCountryCode(countys);
         adminDTO.setSetAdminCount(adminNum);
         adminDTO.setIpType(ipType);
+        adminDTO.setRequired(required);
         PlayExt playExt = JSONObject.parseObject(play.getPlayExt(), PlayExt.class);
         adminDTO.setIsLock(playExt.getLockState());
         PlayIntoGroupTask playIntoGroupTask = Beans.toView(task, PlayIntoGroupTask.class);
