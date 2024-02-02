@@ -10,7 +10,10 @@ import java.util.List;
  */
 @Data
 public class AdMonitor {
-    @ApiModelProperty(value = "监控类型(多个,连接)：1-发图片 2-发视频 3-发链接 4文档 5动图")
+    @ApiModelProperty(value = "清除系统消息(多个,连接): 1入群消息 2退群消息 3更改群组消息")
+    private String clearSystemMsg;
+
+    @ApiModelProperty(value = "监控类型(多个,连接)：1-发图片 2-发视频 3-发链接 4文档 5动图 6名片")
     private String types;
 
     @ApiModelProperty(value = "监控关键词")
