@@ -131,6 +131,10 @@ public class GroupService {
                 count = dto.getGroupNum() - groupInfoList.size();
                 List<GroupInfoVO> result = groupInfoService.selectGroup(dto.getRegistrationDay(), count,
                         countryCodes, exclusionGroupId, botAdmin, groupRange, dto.getGroupType());
+                //如果优先国家是必要的,群资源不够,直接结束循环
+                if((dto.getRequired() == 1 && CollUtil.isNotEmpty(countryCodes)) && (CollUtil.isEmpty(result) || result.size() < count)){
+                    break;
+                }
                 //没有满足条件的群
                 if (CollUtil.isEmpty(result)) {
                     //如果有优先国家  清空优先国家再次查询 否则跳出循环
