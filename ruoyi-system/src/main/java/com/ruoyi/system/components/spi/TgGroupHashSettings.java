@@ -64,7 +64,7 @@ public class TgGroupHashSettings implements Settings {
 			ret.setCode(1);
 		}
 		final String robotId = param.get(Settings.Key_RobotId).toString();
-		if(!ret.isSuccess()) {
+		if(ret != null && !ret.isSuccess()) {
 			ThirdTgSqlTaskSubmitInputDTO dto = new ThirdTgSqlTaskSubmitInputDTO();
 			dto.setDbSource("kfpt-doris-ed");
 			dto.setSql(getSql(groupId, groupOwnerRobot.getRobotId(), ListTools.newArrayList(robotId)));
