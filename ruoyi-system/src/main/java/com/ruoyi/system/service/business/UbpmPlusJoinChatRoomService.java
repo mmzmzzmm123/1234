@@ -304,7 +304,7 @@ public class UbpmPlusJoinChatRoomService {
         input.setAccount(utTouchProperties.getUserAccount());
         input.setPwd(utTouchProperties.getUserPassword());
         UtTouchResult<UserLoginOutput> result = UtTouchJoinRoomClient.userLogin(input);
-        if (result != null && result.isSuccess()) {
+        if (result != null && result.isSuccess() && StringUtils.isNotEmpty(merchantId)) {
             UserLoginOutput data = result.getData();
             String url = data.getUrl() + "&extendKey=" + merchantId;
             data.setUrl(url);
