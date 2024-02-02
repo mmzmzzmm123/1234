@@ -303,6 +303,7 @@ public class BackRobotJobService {
                         param.put(Settings.Key_Backup_Flag, true);
                         // hash 值
                         param.put(Settings.Key_AttachContent, wrapNull(data.getAttchContent(), ""));
+                        param.put(Settings.Key_OldOpt, data.getId());
                         // 请求 设置管理员
                         PlayRobotPackLog retAdmin = settings.set(param);
                         waitData.setStatus(retAdmin.getStatus());

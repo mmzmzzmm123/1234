@@ -14,6 +14,7 @@ public interface Settings {
 	public static final String Key_Admin_Flag = "Key_Admin_Flag";
 	public static final String Key_Backup_Flag = "Key_Backup_Flag";
 	public static final String Key_AttachContent = "Key_AttachContent";
+	public static final String Key_OldOpt = "Key_OldOpt";
 
 	PlayRobotPackLog set(Map<String, Object> param);
 }

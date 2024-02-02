@@ -85,6 +85,7 @@ public class LogPostJobProcessor implements LogJobProcessor {
 			param.put(Settings.Key_Backup_Flag, data.getIsBackup().intValue() == 1 ? true : false);
 			// hash 值
 			param.put(Settings.Key_AttachContent, Objects.wrapNull(attchContent, ""));
+			param.put(Settings.Key_OldOpt, data.getOpt());
 			// 请求 设置管理员
 			PlayRobotPackLog ret = settings.set(param);
 
@@ -96,6 +97,7 @@ public class LogPostJobProcessor implements LogJobProcessor {
 				update.setErrMsg(ret.getErrMsg());
 				update.setKpOpt(data.getKpOpt());
 				update.setAttchContent(attchContent);
+				update.setOpt(data.getOpt());
 				robotPackLogMapper.updateById(update);
 				log.info("后置log更新 {}", data);
 			} else {
