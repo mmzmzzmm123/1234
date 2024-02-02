@@ -1237,7 +1237,7 @@ public class GroupService {
                     }).collect(Collectors.toList()));
             }
             if (StrUtil.isNotBlank(adMonitorInfo.getClearSystemMsg())) {
-                dto.setClearSystemMsg(Arrays.stream(adMonitorInfo.getTypes().split(","))
+                dto.setClearSystemMsg(Arrays.stream(adMonitorInfo.getClearSystemMsg().split(","))
                         .filter(p -> Arrays.asList("1", "2", "3").contains(p))
                         .map(p -> {
                             switch (p) {
