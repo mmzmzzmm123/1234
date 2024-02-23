@@ -66,6 +66,12 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>onethinker</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>1.16.1</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
