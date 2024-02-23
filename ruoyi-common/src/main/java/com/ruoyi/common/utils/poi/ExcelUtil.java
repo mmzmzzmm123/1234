@@ -1467,7 +1467,21 @@ public class ExcelUtil<T>
         List<Field> tempFields = new ArrayList<>();
         tempFields.addAll(Arrays.asList(clazz.getSuperclass().getDeclaredFields()));
         tempFields.addAll(Arrays.asList(clazz.getDeclaredFields()));
-        for (Field field : tempFields)
+
+        // 修改获取注解字段，支持子类覆盖
+        Map<String, Field> classFieldMap = new HashMap<>();
+        for (Field field : clazz.getSuperclass().getDeclaredFields()) {
+            if (classFieldMap.put(field.getName(), field) != null) {
+                throw new IllegalStateException("Duplicate key");
+            }
+        }
+        for (Field field : clazz.getDeclaredFields()) {
+            classFieldMap.put(field.getName(), field);
+        }
+
+        Collection<Field> values = classFieldMap.values();
+
+        for (Field field : values)
         {
             if (!ArrayUtils.contains(this.excludeFields, field.getName()))
             {
