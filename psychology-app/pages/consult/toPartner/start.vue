@@ -60,7 +60,7 @@ export default {
   name: "ConsultPartnerStart",
   data() {
     return {
-      checkBox: '',
+      checkBox: 'ok',
       pageHeight: app.globalData.windowHeight + 100 + 'px',
     }
   },
