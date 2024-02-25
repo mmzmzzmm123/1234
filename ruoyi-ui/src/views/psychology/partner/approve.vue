@@ -88,6 +88,10 @@ export default {
           this.form.money = 3000
           this.form.ratio = 70
           break
+        case 4:
+          this.form.money = 5800
+          this.form.ratio = 70
+          break
       }
     },
     async submit() {

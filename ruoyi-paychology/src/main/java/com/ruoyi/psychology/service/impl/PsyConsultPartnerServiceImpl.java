@@ -268,14 +268,15 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
     }
 
     private String getTypeName(Integer type) {
-        if (ConsultConstant.PARTNER_TYPE_HZ.equals(type)) {
-            return ConsultConstant.PARTNER_TYPE_HZ_STR;
-        } else if (ConsultConstant.PARTNER_TYPE_TT.equals(type)) {
-            return ConsultConstant.PARTNER_TYPE_TT_STR;
-        } else if (ConsultConstant.PARTNER_TYPE_GT.equals(type)) {
-            return ConsultConstant.PARTNER_TYPE_GT_STR;
-        }
-        return "";
+//        if (ConsultConstant.PARTNER_TYPE_HZ.equals(type)) {
+//            return ConsultConstant.PARTNER_TYPE_HZ_STR;
+//        } else if (ConsultConstant.PARTNER_TYPE_TT.equals(type)) {
+//            return ConsultConstant.PARTNER_TYPE_TT_STR;
+//        } else if (ConsultConstant.PARTNER_TYPE_GT.equals(type)) {
+//            return ConsultConstant.PARTNER_TYPE_GT_STR;
+//        }
+
+        return ConsultConstant.PARTNER_TYPE_HZ.equals(type) ? ConsultConstant.PARTNER_TYPE_HZ_STR : ConsultConstant.PARTNER_TYPE_QY_STR;
     }
 
     private String getStatusName(String status) {

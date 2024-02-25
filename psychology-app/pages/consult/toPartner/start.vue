@@ -61,7 +61,7 @@ export default {
   data() {
     return {
       checkBox: '',
-      pageHeight: app.globalData.windowHeight + 'px',
+      pageHeight: app.globalData.windowHeight + 100 + 'px',
     }
   },
   async onLoad(options) {

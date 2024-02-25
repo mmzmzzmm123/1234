@@ -41,6 +41,8 @@ public class ConsultConstant {
     public static final String PARTNER_TYPE_TT_STR = "签约型（团体督导）";
     public static final Integer PARTNER_TYPE_GT = 3;
     public static final String PARTNER_TYPE_GT_STR = "签约型（个体督导）";
+    public static final Integer PARTNER_TYPE_QY = 4;
+    public static final String PARTNER_TYPE_QY_STR = "签约型";
 
     // 入驻审批状态
     public static final String PARTNER_STATUS_0 = "0";

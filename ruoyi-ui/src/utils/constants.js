@@ -63,8 +63,9 @@ export const partnerStatus = [
 
 export const partnerTypes = [
   { label: '合作型', value: '1' },
-  { label: '签约型（团体督导）', value: '2' },
-  { label: '签约型（个体督导）', value: '3' },
+  // { label: '签约型（团体督导）', value: '2' },
+  // { label: '签约型（个体督导）', value: '3' },
+  { label: '签约型', value: '4' },
 ]
 
 // 1-待签署,2-已撤销,3-逾期未签署,4-待生效,5-生效中,6-已失效,7-终止 */

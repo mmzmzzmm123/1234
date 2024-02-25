@@ -14,6 +14,7 @@
         </template>
       </el-table-column>
       <el-table-column label="销量" align="center" prop="sales"/>
+      <el-table-column label="价格" align="center" prop="price"/>
       <el-table-column label="状态" align="center" prop="status">
         <template slot-scope="scope">
           {{ scope.row.status === '0' ? '上架' : '下架'}}
