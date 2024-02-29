@@ -26,6 +26,7 @@ public class LoginBody
      * 唯一标识
      */
     private String uuid;
+    private String phonenumber;
 
     public String getUsername()
     {
@@ -65,5 +66,13 @@ public class LoginBody
     public void setUuid(String uuid)
     {
         this.uuid = uuid;
+    }
+
+    public String getPhonenumber() {
+        return phonenumber;
+    }
+
+    public void setPhonenumber(String phonenumber) {
+        this.phonenumber = phonenumber;
     }
 }

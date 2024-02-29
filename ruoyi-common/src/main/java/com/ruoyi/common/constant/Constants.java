@@ -58,7 +58,10 @@ public class Constants
      * 注册
      */
     public static final String REGISTER = "Register";
-
+    /**
+     * 注册
+     */
+    public static final String FORGETPWD = "ForgetPwd";
     /**
      * 登录失败
      */
