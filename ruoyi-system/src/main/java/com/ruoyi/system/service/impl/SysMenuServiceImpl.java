@@ -229,7 +229,7 @@ public class SysMenuServiceImpl implements ISysMenuService
             router.setQuery(menu.getQuery());
             router.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals("1", menu.getIsCache()), menu.getPath()));
             List<SysMenu> cMenus = menu.getChildren();
-            if (!cMenus.isEmpty() && cMenus.size() > 0 && UserConstants.TYPE_DIR.equals(menu.getMenuType()))
+            if (StringUtils.isNotEmpty(cMenus) && UserConstants.TYPE_DIR.equals(menu.getMenuType()))
             {
                 router.setAlwaysShow(true);
                 router.setRedirect("noRedirect");
@@ -389,7 +389,7 @@ public class SysMenuServiceImpl implements ISysMenuService
      * @return 结果
      */
     @Override
-    public String checkMenuNameUnique(SysMenu menu)
+    public boolean checkMenuNameUnique(SysMenu menu)
     {
         Long menuId = StringUtils.isNull(menu.getMenuId()) ? -1L : menu.getMenuId();
         SysMenu info = menuMapper.checkMenuNameUnique(menu.getMenuName(), menu.getParentId());
@@ -579,7 +579,7 @@ public class SysMenuServiceImpl implements ISysMenuService
      */
     public String innerLinkReplaceEach(String path)
     {
-        return StringUtils.replaceEach(path, new String[] { Constants.HTTP, Constants.HTTPS, Constants.WWW, "." },
-                new String[] { "", "", "", "/" });
+        return StringUtils.replaceEach(path, new String[] { Constants.HTTP, Constants.HTTPS, Constants.WWW, ".", ":" },
+                new String[] { "", "", "", "/", "/" });
     }
 }
