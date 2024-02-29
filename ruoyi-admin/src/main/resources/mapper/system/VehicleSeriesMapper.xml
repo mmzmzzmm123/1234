@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.VehicleSeriesMapper">
+    
+    <resultMap type="VehicleSeries" id="VehicleSeriesResult">
+        <result property="id"    column="id"    />
+        <result property="brandId"    column="brand_id"    />
+        <result property="name"    column="name"    />
+        <result property="price"    column="price"    />
+        <result property="url"    column="url"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectVehicleSeriesVo">
+        select id, brand_id, name, price, url, create_time, update_time from vehicle_series
+    </sql>
+
+    <select id="selectVehicleSeriesList" parameterType="VehicleSeries" resultMap="VehicleSeriesResult">
+        <include refid="selectVehicleSeriesVo"/>
+        <where>  
+            <if test="brandId != null "> and brand_id = #{brandId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+        </where>
+    </select>
+    
+    <select id="selectVehicleSeriesById" parameterType="Long" resultMap="VehicleSeriesResult">
+        <include refid="selectVehicleSeriesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVehicleSeries" parameterType="VehicleSeries" useGeneratedKeys="true" keyProperty="id">
+        insert into vehicle_series
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">brand_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="price != null">price,</if>
+            <if test="url != null">url,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brandId != null">#{brandId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="price != null">#{price},</if>
+            <if test="url != null">#{url},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVehicleSeries" parameterType="VehicleSeries">
+        update vehicle_series
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandId != null">brand_id = #{brandId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVehicleSeriesById" parameterType="Long">
+        delete from vehicle_series where id = #{id}
+    </delete>
+
+    <delete id="deleteVehicleSeriesByIds" parameterType="String">
+        delete from vehicle_series where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

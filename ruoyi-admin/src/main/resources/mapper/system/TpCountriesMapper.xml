@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TpCountriesMapper">
+    
+    <resultMap type="TpCountries" id="TpCountriesResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="enName"    column="en_name"    />
+    </resultMap>
+
+    <sql id="selectTpCountriesVo">
+        select id, name, code, en_name from tp_countries
+    </sql>
+
+    <select id="selectTpCountriesList" parameterType="TpCountries" resultMap="TpCountriesResult">
+        <include refid="selectTpCountriesVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="enName != null  and enName != ''"> and en_name like concat('%', #{enName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTpCountriesById" parameterType="Long" resultMap="TpCountriesResult">
+        <include refid="selectTpCountriesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTpCountries" parameterType="TpCountries" useGeneratedKeys="true" keyProperty="id">
+        insert into tp_countries
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">name,</if>
+            <if test="code != null and code != ''">code,</if>
+            <if test="enName != null and enName != ''">en_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="enName != null and enName != ''">#{enName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTpCountries" parameterType="TpCountries">
+        update tp_countries
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="enName != null and enName != ''">en_name = #{enName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTpCountriesById" parameterType="Long">
+        delete from tp_countries where id = #{id}
+    </delete>
+
+    <delete id="deleteTpCountriesByIds" parameterType="String">
+        delete from tp_countries where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

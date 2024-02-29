@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.VehicleSourceMapper">
+    
+    <resultMap type="VehicleSource" id="VehicleSourceResult">
+        <result property="id"    column="id"    />
+        <result property="seriesId"    column="series_id"    />
+        <result property="name"    column="name"    />
+        <result property="color"    column="color"    />
+        <result property="innerColor"    column="inner_color"    />
+        <result property="area"    column="area"    />
+        <result property="status"    column="status"    />
+        <result property="sourceArea"    column="source_area"    />
+        <result property="notes"    column="notes"    />
+        <result property="age"    column="age"    />
+        <result property="ownerId"    column="owner_id"    />
+        <result property="price"    column="price"    />
+        <result property="type"    column="type"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectVehicleSourceVo">
+        select id, series_id, name, color, inner_color, area, status, source_area, notes, age, owner_id, price, type, create_time, update_time from vehicle_source
+    </sql>
+
+    <select id="selectVehicleSourceList" parameterType="VehicleSource" resultMap="VehicleSourceResult">
+        <include refid="selectVehicleSourceVo"/>
+        <where>  
+            <if test="seriesId != null "> and series_id = #{seriesId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="color != null  and color != ''"> and color = #{color}</if>
+            <if test="innerColor != null  and innerColor != ''"> and inner_color = #{innerColor}</if>
+            <if test="area != null  and area != ''"> and area = #{area}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="sourceArea != null  and sourceArea != ''"> and source_area = #{sourceArea}</if>
+            <if test="notes != null  and notes != ''"> and notes = #{notes}</if>
+            <if test="age != null "> and age = #{age}</if>
+            <if test="ownerId != null "> and owner_id = #{ownerId}</if>
+            <if test="price != null "> and price = #{price}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectVehicleSourceById" parameterType="Long" resultMap="VehicleSourceResult">
+        <include refid="selectVehicleSourceVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVehicleSource" parameterType="VehicleSource" useGeneratedKeys="true" keyProperty="id">
+        insert into vehicle_source
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="seriesId != null">series_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="color != null">color,</if>
+            <if test="innerColor != null">inner_color,</if>
+            <if test="area != null">area,</if>
+            <if test="status != null">status,</if>
+            <if test="sourceArea != null">source_area,</if>
+            <if test="notes != null">notes,</if>
+            <if test="age != null">age,</if>
+            <if test="ownerId != null">owner_id,</if>
+            <if test="price != null">price,</if>
+            <if test="type != null">type,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="seriesId != null">#{seriesId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="color != null">#{color},</if>
+            <if test="innerColor != null">#{innerColor},</if>
+            <if test="area != null">#{area},</if>
+            <if test="status != null">#{status},</if>
+            <if test="sourceArea != null">#{sourceArea},</if>
+            <if test="notes != null">#{notes},</if>
+            <if test="age != null">#{age},</if>
+            <if test="ownerId != null">#{ownerId},</if>
+            <if test="price != null">#{price},</if>
+            <if test="type != null">#{type},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVehicleSource" parameterType="VehicleSource">
+        update vehicle_source
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="seriesId != null">series_id = #{seriesId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="color != null">color = #{color},</if>
+            <if test="innerColor != null">inner_color = #{innerColor},</if>
+            <if test="area != null">area = #{area},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="sourceArea != null">source_area = #{sourceArea},</if>
+            <if test="notes != null">notes = #{notes},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="ownerId != null">owner_id = #{ownerId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVehicleSourceById" parameterType="Long">
+        delete from vehicle_source where id = #{id}
+    </delete>
+
+    <delete id="deleteVehicleSourceByIds" parameterType="String">
+        delete from vehicle_source where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

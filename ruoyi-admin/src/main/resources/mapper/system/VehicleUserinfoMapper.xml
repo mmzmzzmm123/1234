@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.VehicleUserinfoMapper">
+    
+    <resultMap type="VehicleUserinfo" id="VehicleUserinfoResult">
+        <result property="id"    column="id"    />
+        <result property="openid"    column="openid"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="avatarUrl"    column="avatar_url"    />
+        <result property="phone"    column="phone"    />
+        <result property="address"    column="address"    />
+        <result property="birth"    column="birth"    />
+        <result property="email"    column="email"    />
+        <result property="unit"    column="unit"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="nickName"    column="nick_name"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectVehicleUserinfoVo">
+        select id, openid, name, sex, avatar_url, phone, address, birth, email, unit, create_time, nick_name, update_time from vehicle_userinfo
+    </sql>
+
+    <select id="selectVehicleUserinfoList" parameterType="VehicleUserinfo" resultMap="VehicleUserinfoResult">
+        <include refid="selectVehicleUserinfoVo"/>
+        <where>  
+            <if test="openid != null  and openid != ''"> and openid = #{openid}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="avatarUrl != null  and avatarUrl != ''"> and avatar_url = #{avatarUrl}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="birth != null "> and birth = #{birth}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="unit != null  and unit != ''"> and unit = #{unit}</if>
+            <if test="nickName != null  and nickName != ''"> and nick_name like concat('%', #{nickName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectVehicleUserinfoById" parameterType="Long" resultMap="VehicleUserinfoResult">
+        <include refid="selectVehicleUserinfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVehicleUserinfo" parameterType="VehicleUserinfo" useGeneratedKeys="true" keyProperty="id">
+        insert into vehicle_userinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="openid != null">openid,</if>
+            <if test="name != null">name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="avatarUrl != null">avatar_url,</if>
+            <if test="phone != null">phone,</if>
+            <if test="address != null">address,</if>
+            <if test="birth != null">birth,</if>
+            <if test="email != null">email,</if>
+            <if test="unit != null">unit,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="nickName != null">nick_name,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="openid != null">#{openid},</if>
+            <if test="name != null">#{name},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="avatarUrl != null">#{avatarUrl},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="address != null">#{address},</if>
+            <if test="birth != null">#{birth},</if>
+            <if test="email != null">#{email},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="nickName != null">#{nickName},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVehicleUserinfo" parameterType="VehicleUserinfo">
+        update vehicle_userinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="openid != null">openid = #{openid},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="avatarUrl != null">avatar_url = #{avatarUrl},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="birth != null">birth = #{birth},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="nickName != null">nick_name = #{nickName},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVehicleUserinfoById" parameterType="Long">
+        delete from vehicle_userinfo where id = #{id}
+    </delete>
+
+    <delete id="deleteVehicleUserinfoByIds" parameterType="String">
+        delete from vehicle_userinfo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
