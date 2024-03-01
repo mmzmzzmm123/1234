@@ -153,6 +153,10 @@ create table sys_menu (
   primary key (menu_id)
 ) engine=innodb auto_increment=2000 comment = '菜单权限表';
 
+insert into sys_menu values('120',  '预约管理', '1',   '10', 'appoint',       'system/appoint/index',        '', 1, 0, 'C', '0', '0', 'system:appoint:list',        'appoint',          'admin', sysdate(), '', null, '预约管理菜单');
+insert into sys_menu values('122',  '报表生成', '1',   '12', 'report',       'system/report/index',        '', 1, 0, 'C', '0', '0', 'system:report:list',        'report',          'admin', sysdate(), '', null, '报表生成');
+insert into sys_menu values('123',  '客户中心', '1',   '13', 'customer',       'system/customer/index',        '', 1, 0, 'C', '0', '0', 'system:customer:list',        'customer',          'admin', sysdate(), '', null, '客户中心');
+insert into sys_menu values('124',  '出库管理', '1',   '14', 'outbound',       'system/outbound/index',        '', 1, 0, 'C', '0', '0', 'system:outbound:list',        'outbound',          'admin', sysdate(), '', null, '出库管理');
 -- ----------------------------
 -- 初始化-菜单信息表数据
 -- ----------------------------
