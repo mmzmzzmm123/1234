@@ -233,6 +233,16 @@
         }
       },
       toClass(item) {
+        if (item.linkUrl) {
+          // item.linkUrl = 'https://www.wjx.cn/vm/OKbBuqb.aspx# '
+          if (item.linkUrl.indexOf('http') === 0) {
+            return window.location.href = item.linkUrl
+          }
+          return uni.navigateTo({
+            url: item.linkUrl,
+          });
+        }
+
         if (item.type === '1' || item.cat === '1') {
           this.resetQuery()
           this.resetFilterParams()
@@ -253,11 +263,6 @@
           return this.submit()
         }
 
-        if (item.linkUrl) {
-          uni.navigateTo({
-            url: item.linkUrl,
-          });
-        }
       },
       toSearch() {
         uni.navigateTo({
