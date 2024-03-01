@@ -31,6 +31,18 @@ export function register(data) {
   })
 }
 
+// 注册方法
+export function forgetpwd(data) {
+  return request({
+    url: '/forgetpwd',
+    headers: {
+      isToken: false
+    },
+    method: 'post',
+    data: data
+  })
+}
+
 // 获取用户详细信息
 export function getInfo() {
   return request({

@@ -1,5 +1,7 @@
 package com.ruoyi.framework.web.service;
 
+import com.ruoyi.common.core.domain.model.ForgetBody;
+import io.netty.util.internal.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
@@ -111,5 +113,43 @@ public class SysRegisterService
         {
             throw new CaptchaException();
         }
+    }
+
+    public String recoverpwd(ForgetBody recoverBody) {
+        String msg = "", username = recoverBody.getUsername(),password=recoverBody.getPassword();
+        SysUser sysUser = new SysUser();
+        sysUser.setUserName(username);
+
+        // 验证码开关
+        boolean captchaEnabled = configService.selectCaptchaEnabled();
+        if (captchaEnabled)
+        {
+            validateCaptcha(username, recoverBody.getCode(), recoverBody.getUuid());
+        }
+
+        if (StringUtils.isEmpty(username))
+        {
+            msg = "用户名不能为空";
+        }
+
+        else if (username.length() < UserConstants.USERNAME_MIN_LENGTH
+                || username.length() > UserConstants.USERNAME_MAX_LENGTH)
+        {
+            msg = "账户长度必须在2到20个字符之间";
+        }
+        if(!StringUtils.isBlank(msg)){
+            return msg;
+
+        }
+        String encryptPassword=SecurityUtils.encryptPassword(password);
+        recoverBody.setPassword(encryptPassword);
+        int i = userService.updateForgetpwd(recoverBody);
+        if (i==0){
+            msg="请检查账号，或联系管理员恢复密码";
+        }
+        else{
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.FORGETPWD, MessageUtils.message("user.recover.success")));
+        }
+        return msg;
     }
 }
