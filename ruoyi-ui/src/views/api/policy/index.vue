@@ -9,37 +9,29 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="简介" prop="intro">
+      <el-form-item label="图片" prop="pictureUrl">
         <el-input
-          v-model="queryParams.intro"
-          placeholder="请输入简介"
+          v-model="queryParams.pictureUrl"
+          placeholder="请输入图片"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="文章封面图" prop="picture">
+      <el-form-item label="国家id" prop="region">
         <el-input
-          v-model="queryParams.picture"
-          placeholder="请输入文章封面图"
+          v-model="queryParams.region"
+          placeholder="请输入国家id"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="车源地" prop="sourceAddr">
-        <el-input
-          v-model="queryParams.sourceAddr"
-          placeholder="请输入车源地"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="微信号" prop="wxNum">
-        <el-input
-          v-model="queryParams.wxNum"
-          placeholder="请输入微信号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+      <el-form-item label="发布日期" prop="pushDate">
+        <el-date-picker clearable
+          v-model="queryParams.pushDate"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择发布日期">
+        </el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -55,7 +47,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:dynamic:add']"
+          v-hasPermi="['api:policy:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -66,7 +58,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:dynamic:edit']"
+          v-hasPermi="['api:policy:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -77,7 +69,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:dynamic:remove']"
+          v-hasPermi="['api:policy:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -87,21 +79,24 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:dynamic:export']"
+          v-hasPermi="['api:policy:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="dynamicList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="policyList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
+      <el-table-column label="政策id" align="center" prop="id" />
       <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="简介" align="center" prop="intro" />
-      <el-table-column label="文章内容" align="center" prop="content" />
-      <el-table-column label="文章封面图" align="center" prop="picture" />
-      <el-table-column label="车源地" align="center" prop="sourceAddr" />
-      <el-table-column label="微信号" align="center" prop="wxNum" />
+      <el-table-column label="图片" align="center" prop="pictureUrl" />
+      <el-table-column label="文件" align="center" prop="fileUrl" />
+      <el-table-column label="国家id" align="center" prop="region" />
+      <el-table-column label="发布日期" align="center" prop="pushDate" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.pushDate, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -109,14 +104,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:dynamic:edit']"
+            v-hasPermi="['api:policy:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:dynamic:remove']"
+            v-hasPermi="['api:policy:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -130,26 +125,28 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改动态管理对话框 -->
+    <!-- 添加或修改政策信息管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="标题" prop="title">
           <el-input v-model="form.title" placeholder="请输入标题" />
         </el-form-item>
-        <el-form-item label="简介" prop="intro">
-          <el-input v-model="form.intro" placeholder="请输入简介" />
+        <el-form-item label="图片" prop="pictureUrl">
+          <el-input v-model="form.pictureUrl" placeholder="请输入图片" />
         </el-form-item>
-        <el-form-item label="文章内容">
-          <editor v-model="form.content" :min-height="192"/>
+        <el-form-item label="文件" prop="fileUrl">
+          <file-upload v-model="form.fileUrl"/>
         </el-form-item>
-        <el-form-item label="文章封面图" prop="picture">
-          <el-input v-model="form.picture" placeholder="请输入文章封面图" />
+        <el-form-item label="国家id" prop="region">
+          <el-input v-model="form.region" placeholder="请输入国家id" />
         </el-form-item>
-        <el-form-item label="车源地" prop="sourceAddr">
-          <el-input v-model="form.sourceAddr" placeholder="请输入车源地" />
-        </el-form-item>
-        <el-form-item label="微信号" prop="wxNum">
-          <el-input v-model="form.wxNum" placeholder="请输入微信号" />
+        <el-form-item label="发布日期" prop="pushDate">
+          <el-date-picker clearable
+            v-model="form.pushDate"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择发布日期">
+          </el-date-picker>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -161,10 +158,10 @@
 </template>
 
 <script>
-import { listDynamic, getDynamic, delDynamic, addDynamic, updateDynamic } from "@/api/system/dynamic";
+import { listPolicy, getPolicy, delPolicy, addPolicy, updatePolicy } from "@/api/api/policy";
 
 export default {
-  name: "Dynamic",
+  name: "Policy",
   data() {
     return {
       // 遮罩层
@@ -179,8 +176,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 动态管理表格数据
-      dynamicList: [],
+      // 政策信息管理表格数据
+      policyList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -190,22 +187,15 @@ export default {
         pageNum: 1,
         pageSize: 10,
         title: null,
-        intro: null,
-        content: null,
-        picture: null,
-        sourceAddr: null,
-        wxNum: null,
+        pictureUrl: null,
+        fileUrl: null,
+        region: null,
+        pushDate: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        title: [
-          { required: true, message: "标题不能为空", trigger: "blur" }
-        ],
-        picture: [
-          { required: true, message: "文章封面图不能为空", trigger: "blur" }
-        ],
       }
     };
   },
@@ -213,11 +203,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询动态管理列表 */
+    /** 查询政策信息管理列表 */
     getList() {
       this.loading = true;
-      listDynamic(this.queryParams).then(response => {
-        this.dynamicList = response.rows;
+      listPolicy(this.queryParams).then(response => {
+        this.policyList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -232,11 +222,10 @@ export default {
       this.form = {
         id: null,
         title: null,
-        intro: null,
-        content: null,
-        picture: null,
-        sourceAddr: null,
-        wxNum: null,
+        pictureUrl: null,
+        fileUrl: null,
+        region: null,
+        pushDate: null,
         createTime: null,
         updateTime: null
       };
@@ -262,16 +251,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加动态管理";
+      this.title = "添加政策信息管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getDynamic(id).then(response => {
+      getPolicy(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改动态管理";
+        this.title = "修改政策信息管理";
       });
     },
     /** 提交按钮 */
@@ -279,13 +268,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateDynamic(this.form).then(response => {
+            updatePolicy(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addDynamic(this.form).then(response => {
+            addPolicy(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -297,8 +286,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除动态管理编号为"' + ids + '"的数据项？').then(function() {
-        return delDynamic(ids);
+      this.$modal.confirm('是否确认删除政策信息管理编号为"' + ids + '"的数据项？').then(function() {
+        return delPolicy(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -306,9 +295,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/dynamic/export', {
+      this.download('api/policy/export', {
         ...this.queryParams
-      }, `dynamic_${new Date().getTime()}.xlsx`)
+      }, `policy_${new Date().getTime()}.xlsx`)
     }
   }
 };

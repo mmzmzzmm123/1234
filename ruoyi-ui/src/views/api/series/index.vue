@@ -1,26 +1,26 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="${comment}" prop="brand">
+      <el-form-item label="品牌id" prop="brandId">
         <el-input
-          v-model="queryParams.brand"
-          placeholder="请输入${comment}"
+          v-model="queryParams.brandId"
+          placeholder="请输入品牌id"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="${comment}" prop="notes">
+      <el-form-item label="车系名" prop="name">
         <el-input
-          v-model="queryParams.notes"
-          placeholder="请输入${comment}"
+          v-model="queryParams.name"
+          placeholder="请输入车系名"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="${comment}" prop="url">
+      <el-form-item label="指导价" prop="price">
         <el-input
-          v-model="queryParams.url"
-          placeholder="请输入${comment}"
+          v-model="queryParams.price"
+          placeholder="请输入指导价"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -39,7 +39,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:brand:add']"
+          v-hasPermi="['api:series:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -50,7 +50,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:brand:edit']"
+          v-hasPermi="['api:series:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -61,7 +61,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:brand:remove']"
+          v-hasPermi="['api:series:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,18 +71,23 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:brand:export']"
+          v-hasPermi="['api:series:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="brandList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="seriesList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
-      <el-table-column label="${comment}" align="center" prop="brand" />
-      <el-table-column label="${comment}" align="center" prop="notes" />
-      <el-table-column label="${comment}" align="center" prop="url" />
+      <el-table-column label="主键id" align="center" prop="id" />
+      <el-table-column label="品牌id" align="center" prop="brandId" />
+      <el-table-column label="车系名" align="center" prop="name" />
+      <el-table-column label="指导价" align="center" prop="price" />
+      <el-table-column label="车系图片" align="center" prop="url" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.url" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -90,14 +95,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:brand:edit']"
+            v-hasPermi="['api:series:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:brand:remove']"
+            v-hasPermi="['api:series:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -111,17 +116,20 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改汽车品牌管理对话框 -->
+    <!-- 添加或修改车系管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="${comment}" prop="brand">
-          <el-input v-model="form.brand" placeholder="请输入${comment}" />
+        <el-form-item label="品牌id" prop="brandId">
+          <el-input v-model="form.brandId" placeholder="请输入品牌id" />
         </el-form-item>
-        <el-form-item label="${comment}" prop="notes">
-          <el-input v-model="form.notes" placeholder="请输入${comment}" />
+        <el-form-item label="车系名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入车系名" />
         </el-form-item>
-        <el-form-item label="${comment}" prop="url">
-          <el-input v-model="form.url" placeholder="请输入${comment}" />
+        <el-form-item label="指导价" prop="price">
+          <el-input v-model="form.price" placeholder="请输入指导价" />
+        </el-form-item>
+        <el-form-item label="车系图片" prop="url">
+          <image-upload v-model="form.url"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -133,10 +141,10 @@
 </template>
 
 <script>
-import { listBrand, getBrand, delBrand, addBrand, updateBrand } from "@/api/system/brand";
+import { listSeries, getSeries, delSeries, addSeries, updateSeries } from "@/api/api/series";
 
 export default {
-  name: "Brand",
+  name: "Series",
   data() {
     return {
       // 遮罩层
@@ -151,8 +159,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 汽车品牌管理表格数据
-      brandList: [],
+      // 车系管理表格数据
+      seriesList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -161,26 +169,21 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        brand: null,
-        notes: null,
+        brandId: null,
+        name: null,
+        price: null,
         url: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        brand: [
-          { required: true, message: "$comment不能为空", trigger: "blur" }
+        brandId: [
+          { required: true, message: "品牌id不能为空", trigger: "blur" }
         ],
-        url: [
-          { required: true, message: "$comment不能为空", trigger: "blur" }
+        name: [
+          { required: true, message: "车系名不能为空", trigger: "blur" }
         ],
-        createTime: [
-          { required: true, message: "$comment不能为空", trigger: "blur" }
-        ],
-        updateTime: [
-          { required: true, message: "$comment不能为空", trigger: "blur" }
-        ]
       }
     };
   },
@@ -188,11 +191,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询汽车品牌管理列表 */
+    /** 查询车系管理列表 */
     getList() {
       this.loading = true;
-      listBrand(this.queryParams).then(response => {
-        this.brandList = response.rows;
+      listSeries(this.queryParams).then(response => {
+        this.seriesList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -206,8 +209,9 @@ export default {
     reset() {
       this.form = {
         id: null,
-        brand: null,
-        notes: null,
+        brandId: null,
+        name: null,
+        price: null,
         url: null,
         createTime: null,
         updateTime: null
@@ -234,16 +238,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加汽车品牌管理";
+      this.title = "添加车系管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getBrand(id).then(response => {
+      getSeries(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改汽车品牌管理";
+        this.title = "修改车系管理";
       });
     },
     /** 提交按钮 */
@@ -251,13 +255,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateBrand(this.form).then(response => {
+            updateSeries(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addBrand(this.form).then(response => {
+            addSeries(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -269,8 +273,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除汽车品牌管理编号为"' + ids + '"的数据项？').then(function() {
-        return delBrand(ids);
+      this.$modal.confirm('是否确认删除车系管理编号为"' + ids + '"的数据项？').then(function() {
+        return delSeries(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -278,9 +282,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/brand/export', {
+      this.download('api/series/export', {
         ...this.queryParams
-      }, `brand_${new Date().getTime()}.xlsx`)
+      }, `series_${new Date().getTime()}.xlsx`)
     }
   }
 };

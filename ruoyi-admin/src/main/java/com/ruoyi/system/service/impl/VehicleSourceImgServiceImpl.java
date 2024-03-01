@@ -12,7 +12,7 @@ import com.ruoyi.system.service.IVehicleSourceImgService;
  * 车源图片管理Service业务层处理
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 @Service
 public class VehicleSourceImgServiceImpl implements IVehicleSourceImgService 

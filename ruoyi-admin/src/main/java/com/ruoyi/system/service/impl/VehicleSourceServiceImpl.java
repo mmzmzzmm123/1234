@@ -11,8 +11,8 @@ import com.ruoyi.system.service.IVehicleSourceService;
 /**
  * 车源管理Service业务层处理
  * 
- * @author ruoyi
- * @date 2024-02-29
+ * @author carol
+ * @date 2024-03-01
  */
 @Service
 public class VehicleSourceServiceImpl implements IVehicleSourceService 

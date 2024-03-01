@@ -9,14 +9,14 @@ import com.ruoyi.common.core.domain.BaseEntity;
 /**
  * 车源管理对象 vehicle_source
  * 
- * @author ruoyi
- * @date 2024-02-29
+ * @author carol
+ * @date 2024-03-01
  */
 public class VehicleSource extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** 主键id */
     private Long id;
 
     /** 所属车系id */
@@ -35,12 +35,12 @@ public class VehicleSource extends BaseEntity
     @Excel(name = "内饰颜色")
     private String innerColor;
 
-    /** 当前车辆所在地 */
-    @Excel(name = "当前车辆所在地")
+    /** 车辆所在地 */
+    @Excel(name = "车辆所在地")
     private String area;
 
-    /** 车辆状态/ */
-    @Excel(name = "车辆状态/")
+    /** 车辆状态 */
+    @Excel(name = "车辆状态")
     private String status;
 
     /** 车源地 */
@@ -63,8 +63,8 @@ public class VehicleSource extends BaseEntity
     @Excel(name = "售卖价格")
     private BigDecimal price;
 
-    /** 车辆类型：中规车&国产现车&进口车&合资车 */
-    @Excel(name = "车辆类型：中规车&国产现车&进口车&合资车")
+    /** 车辆类型 */
+    @Excel(name = "车辆类型")
     private String type;
 
     public void setId(Long id) 

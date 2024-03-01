@@ -9,10 +9,10 @@ import com.ruoyi.system.domain.VehicleUserinfo;
 import com.ruoyi.system.service.IVehicleUserinfoService;
 
 /**
- * 用户展示信息Service业务层处理
+ * 小程序用户信息管理Service业务层处理
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 @Service
 public class VehicleUserinfoServiceImpl implements IVehicleUserinfoService 
@@ -21,10 +21,10 @@ public class VehicleUserinfoServiceImpl implements IVehicleUserinfoService
     private VehicleUserinfoMapper vehicleUserinfoMapper;
 
     /**
-     * 查询用户展示信息
+     * 查询小程序用户信息管理
      * 
-     * @param id 用户展示信息主键
-     * @return 用户展示信息
+     * @param id 小程序用户信息管理主键
+     * @return 小程序用户信息管理
      */
     @Override
     public VehicleUserinfo selectVehicleUserinfoById(Long id)
@@ -33,10 +33,10 @@ public class VehicleUserinfoServiceImpl implements IVehicleUserinfoService
     }
 
     /**
-     * 查询用户展示信息列表
+     * 查询小程序用户信息管理列表
      * 
-     * @param vehicleUserinfo 用户展示信息
-     * @return 用户展示信息
+     * @param vehicleUserinfo 小程序用户信息管理
+     * @return 小程序用户信息管理
      */
     @Override
     public List<VehicleUserinfo> selectVehicleUserinfoList(VehicleUserinfo vehicleUserinfo)
@@ -45,9 +45,9 @@ public class VehicleUserinfoServiceImpl implements IVehicleUserinfoService
     }
 
     /**
-     * 新增用户展示信息
+     * 新增小程序用户信息管理
      * 
-     * @param vehicleUserinfo 用户展示信息
+     * @param vehicleUserinfo 小程序用户信息管理
      * @return 结果
      */
     @Override
@@ -58,9 +58,9 @@ public class VehicleUserinfoServiceImpl implements IVehicleUserinfoService
     }
 
     /**
-     * 修改用户展示信息
+     * 修改小程序用户信息管理
      * 
-     * @param vehicleUserinfo 用户展示信息
+     * @param vehicleUserinfo 小程序用户信息管理
      * @return 结果
      */
     @Override
@@ -71,9 +71,9 @@ public class VehicleUserinfoServiceImpl implements IVehicleUserinfoService
     }
 
     /**
-     * 批量删除用户展示信息
+     * 批量删除小程序用户信息管理
      * 
-     * @param ids 需要删除的用户展示信息主键
+     * @param ids 需要删除的小程序用户信息管理主键
      * @return 结果
      */
     @Override
@@ -83,9 +83,9 @@ public class VehicleUserinfoServiceImpl implements IVehicleUserinfoService
     }
 
     /**
-     * 删除用户展示信息信息
+     * 删除小程序用户信息管理信息
      * 
-     * @param id 用户展示信息主键
+     * @param id 小程序用户信息管理主键
      * @return 结果
      */
     @Override

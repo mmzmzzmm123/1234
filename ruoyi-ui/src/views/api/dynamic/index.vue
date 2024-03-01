@@ -1,26 +1,42 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="中文名字" prop="name">
+      <el-form-item label="标题" prop="title">
         <el-input
-          v-model="queryParams.name"
-          placeholder="请输入中文名字"
+          v-model="queryParams.title"
+          placeholder="请输入标题"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="简称" prop="code">
+      <el-form-item label="简介" prop="intro">
         <el-input
-          v-model="queryParams.code"
-          placeholder="请输入简称"
+          v-model="queryParams.intro"
+          placeholder="请输入简介"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="英文名字" prop="enName">
+      <el-form-item label="文章封面图" prop="picture">
         <el-input
-          v-model="queryParams.enName"
-          placeholder="请输入英文名字"
+          v-model="queryParams.picture"
+          placeholder="请输入文章封面图"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="车源地" prop="sourceAddr">
+        <el-input
+          v-model="queryParams.sourceAddr"
+          placeholder="请输入车源地"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="微信号" prop="wxNum">
+        <el-input
+          v-model="queryParams.wxNum"
+          placeholder="请输入微信号"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -39,7 +55,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:countries:add']"
+          v-hasPermi="['api:dynamic:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -50,7 +66,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:countries:edit']"
+          v-hasPermi="['api:dynamic:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -61,7 +77,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:countries:remove']"
+          v-hasPermi="['api:dynamic:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,18 +87,21 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:countries:export']"
+          v-hasPermi="['api:dynamic:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="countriesList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="dynamicList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
-      <el-table-column label="中文名字" align="center" prop="name" />
-      <el-table-column label="简称" align="center" prop="code" />
-      <el-table-column label="英文名字" align="center" prop="enName" />
+      <el-table-column label="主键id" align="center" prop="id" />
+      <el-table-column label="标题" align="center" prop="title" />
+      <el-table-column label="简介" align="center" prop="intro" />
+      <el-table-column label="文章内容" align="center" prop="content" />
+      <el-table-column label="文章封面图" align="center" prop="picture" />
+      <el-table-column label="车源地" align="center" prop="sourceAddr" />
+      <el-table-column label="微信号" align="center" prop="wxNum" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -90,14 +109,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:countries:edit']"
+            v-hasPermi="['api:dynamic:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:countries:remove']"
+            v-hasPermi="['api:dynamic:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -111,17 +130,26 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改全球国家管理对话框 -->
+    <!-- 添加或修改动态信息管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="中文名字" prop="name">
-          <el-input v-model="form.name" placeholder="请输入中文名字" />
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="form.title" placeholder="请输入标题" />
         </el-form-item>
-        <el-form-item label="简称" prop="code">
-          <el-input v-model="form.code" placeholder="请输入简称" />
+        <el-form-item label="简介" prop="intro">
+          <el-input v-model="form.intro" placeholder="请输入简介" />
         </el-form-item>
-        <el-form-item label="英文名字" prop="enName">
-          <el-input v-model="form.enName" placeholder="请输入英文名字" />
+        <el-form-item label="文章内容">
+          <editor v-model="form.content" :min-height="192"/>
+        </el-form-item>
+        <el-form-item label="文章封面图" prop="picture">
+          <el-input v-model="form.picture" placeholder="请输入文章封面图" />
+        </el-form-item>
+        <el-form-item label="车源地" prop="sourceAddr">
+          <el-input v-model="form.sourceAddr" placeholder="请输入车源地" />
+        </el-form-item>
+        <el-form-item label="微信号" prop="wxNum">
+          <el-input v-model="form.wxNum" placeholder="请输入微信号" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -133,10 +161,10 @@
 </template>
 
 <script>
-import { listCountries, getCountries, delCountries, addCountries, updateCountries } from "@/api/system/countries";
+import { listDynamic, getDynamic, delDynamic, addDynamic, updateDynamic } from "@/api/api/dynamic";
 
 export default {
-  name: "Countries",
+  name: "Dynamic",
   data() {
     return {
       // 遮罩层
@@ -151,8 +179,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 全球国家管理表格数据
-      countriesList: [],
+      // 动态信息管理表格数据
+      dynamicList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -161,23 +189,23 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        name: null,
-        code: null,
-        enName: null
+        title: null,
+        intro: null,
+        content: null,
+        picture: null,
+        sourceAddr: null,
+        wxNum: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        name: [
-          { required: true, message: "中文名字不能为空", trigger: "blur" }
+        title: [
+          { required: true, message: "标题不能为空", trigger: "blur" }
         ],
-        code: [
-          { required: true, message: "简称不能为空", trigger: "blur" }
+        picture: [
+          { required: true, message: "文章封面图不能为空", trigger: "blur" }
         ],
-        enName: [
-          { required: true, message: "英文名字不能为空", trigger: "blur" }
-        ]
       }
     };
   },
@@ -185,11 +213,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询全球国家管理列表 */
+    /** 查询动态信息管理列表 */
     getList() {
       this.loading = true;
-      listCountries(this.queryParams).then(response => {
-        this.countriesList = response.rows;
+      listDynamic(this.queryParams).then(response => {
+        this.dynamicList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -203,9 +231,14 @@ export default {
     reset() {
       this.form = {
         id: null,
-        name: null,
-        code: null,
-        enName: null
+        title: null,
+        intro: null,
+        content: null,
+        picture: null,
+        sourceAddr: null,
+        wxNum: null,
+        createTime: null,
+        updateTime: null
       };
       this.resetForm("form");
     },
@@ -229,16 +262,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加全球国家管理";
+      this.title = "添加动态信息管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getCountries(id).then(response => {
+      getDynamic(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改全球国家管理";
+        this.title = "修改动态信息管理";
       });
     },
     /** 提交按钮 */
@@ -246,13 +279,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateCountries(this.form).then(response => {
+            updateDynamic(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addCountries(this.form).then(response => {
+            addDynamic(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -264,8 +297,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除全球国家管理编号为"' + ids + '"的数据项？').then(function() {
-        return delCountries(ids);
+      this.$modal.confirm('是否确认删除动态信息管理编号为"' + ids + '"的数据项？').then(function() {
+        return delDynamic(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -273,9 +306,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/countries/export', {
+      this.download('api/dynamic/export', {
         ...this.queryParams
-      }, `countries_${new Date().getTime()}.xlsx`)
+      }, `dynamic_${new Date().getTime()}.xlsx`)
     }
   }
 };

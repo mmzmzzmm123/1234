@@ -9,10 +9,10 @@ import com.ruoyi.system.domain.VehicleBrand;
 import com.ruoyi.system.service.IVehicleBrandService;
 
 /**
- * 汽车品牌管理Service业务层处理
+ * 品牌管理Service业务层处理
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 @Service
 public class VehicleBrandServiceImpl implements IVehicleBrandService 
@@ -21,10 +21,10 @@ public class VehicleBrandServiceImpl implements IVehicleBrandService
     private VehicleBrandMapper vehicleBrandMapper;
 
     /**
-     * 查询汽车品牌管理
+     * 查询品牌管理
      * 
-     * @param id 汽车品牌管理主键
-     * @return 汽车品牌管理
+     * @param id 品牌管理主键
+     * @return 品牌管理
      */
     @Override
     public VehicleBrand selectVehicleBrandById(Long id)
@@ -33,10 +33,10 @@ public class VehicleBrandServiceImpl implements IVehicleBrandService
     }
 
     /**
-     * 查询汽车品牌管理列表
+     * 查询品牌管理列表
      * 
-     * @param vehicleBrand 汽车品牌管理
-     * @return 汽车品牌管理
+     * @param vehicleBrand 品牌管理
+     * @return 品牌管理
      */
     @Override
     public List<VehicleBrand> selectVehicleBrandList(VehicleBrand vehicleBrand)
@@ -45,9 +45,9 @@ public class VehicleBrandServiceImpl implements IVehicleBrandService
     }
 
     /**
-     * 新增汽车品牌管理
+     * 新增品牌管理
      * 
-     * @param vehicleBrand 汽车品牌管理
+     * @param vehicleBrand 品牌管理
      * @return 结果
      */
     @Override
@@ -58,9 +58,9 @@ public class VehicleBrandServiceImpl implements IVehicleBrandService
     }
 
     /**
-     * 修改汽车品牌管理
+     * 修改品牌管理
      * 
-     * @param vehicleBrand 汽车品牌管理
+     * @param vehicleBrand 品牌管理
      * @return 结果
      */
     @Override
@@ -71,9 +71,9 @@ public class VehicleBrandServiceImpl implements IVehicleBrandService
     }
 
     /**
-     * 批量删除汽车品牌管理
+     * 批量删除品牌管理
      * 
-     * @param ids 需要删除的汽车品牌管理主键
+     * @param ids 需要删除的品牌管理主键
      * @return 结果
      */
     @Override
@@ -83,9 +83,9 @@ public class VehicleBrandServiceImpl implements IVehicleBrandService
     }
 
     /**
-     * 删除汽车品牌管理信息
+     * 删除品牌管理信息
      * 
-     * @param id 汽车品牌管理主键
+     * @param id 品牌管理主键
      * @return 结果
      */
     @Override

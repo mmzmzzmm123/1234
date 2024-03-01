@@ -22,22 +22,22 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 全球国家管理Controller
+ * 全球国家信息管理Controller
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 @RestController
-@RequestMapping("/system/countries")
+@RequestMapping("/api/countries")
 public class TpCountriesController extends BaseController
 {
     @Autowired
     private ITpCountriesService tpCountriesService;
 
     /**
-     * 查询全球国家管理列表
+     * 查询全球国家信息管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:countries:list')")
+    @PreAuthorize("@ss.hasPermi('api:countries:list')")
     @GetMapping("/list")
     public TableDataInfo list(TpCountries tpCountries)
     {
@@ -47,22 +47,22 @@ public class TpCountriesController extends BaseController
     }
 
     /**
-     * 导出全球国家管理列表
+     * 导出全球国家信息管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:countries:export')")
-    @Log(title = "全球国家管理", businessType = BusinessType.EXPORT)
+    @PreAuthorize("@ss.hasPermi('api:countries:export')")
+    @Log(title = "全球国家信息管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, TpCountries tpCountries)
     {
         List<TpCountries> list = tpCountriesService.selectTpCountriesList(tpCountries);
         ExcelUtil<TpCountries> util = new ExcelUtil<TpCountries>(TpCountries.class);
-        util.exportExcel(response, list, "全球国家管理数据");
+        util.exportExcel(response, list, "全球国家信息管理数据");
     }
 
     /**
-     * 获取全球国家管理详细信息
+     * 获取全球国家信息管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:countries:query')")
+    @PreAuthorize("@ss.hasPermi('api:countries:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -70,10 +70,10 @@ public class TpCountriesController extends BaseController
     }
 
     /**
-     * 新增全球国家管理
+     * 新增全球国家信息管理
      */
-    @PreAuthorize("@ss.hasPermi('system:countries:add')")
-    @Log(title = "全球国家管理", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('api:countries:add')")
+    @Log(title = "全球国家信息管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody TpCountries tpCountries)
     {
@@ -81,10 +81,10 @@ public class TpCountriesController extends BaseController
     }
 
     /**
-     * 修改全球国家管理
+     * 修改全球国家信息管理
      */
-    @PreAuthorize("@ss.hasPermi('system:countries:edit')")
-    @Log(title = "全球国家管理", businessType = BusinessType.UPDATE)
+    @PreAuthorize("@ss.hasPermi('api:countries:edit')")
+    @Log(title = "全球国家信息管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody TpCountries tpCountries)
     {
@@ -92,10 +92,10 @@ public class TpCountriesController extends BaseController
     }
 
     /**
-     * 删除全球国家管理
+     * 删除全球国家信息管理
      */
-    @PreAuthorize("@ss.hasPermi('system:countries:remove')")
-    @Log(title = "全球国家管理", businessType = BusinessType.DELETE)
+    @PreAuthorize("@ss.hasPermi('api:countries:remove')")
+    @Log(title = "全球国家信息管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {

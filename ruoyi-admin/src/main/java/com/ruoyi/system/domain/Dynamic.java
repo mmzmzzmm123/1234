@@ -6,16 +6,16 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 动态管理对象 dynamic
+ * 动态信息管理对象 dynamic
  * 
- * @author ruoyi
- * @date 2024-02-29
+ * @author carol
+ * @date 2024-03-01
  */
 public class Dynamic extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** 主键id */
     private Long id;
 
     /** 标题 */

@@ -6,16 +6,16 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 全球国家管理对象 tp_countries
+ * 全球国家信息管理对象 tp_countries
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 public class TpCountries extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** 主键id */
     private Long id;
 
     /** 中文名字 */

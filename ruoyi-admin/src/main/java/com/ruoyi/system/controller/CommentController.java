@@ -25,10 +25,10 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 评论管理Controller
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 @RestController
-@RequestMapping("/system/comment")
+@RequestMapping("/api/comment")
 public class CommentController extends BaseController
 {
     @Autowired
@@ -37,7 +37,7 @@ public class CommentController extends BaseController
     /**
      * 查询评论管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:comment:list')")
+    @PreAuthorize("@ss.hasPermi('api:comment:list')")
     @GetMapping("/list")
     public TableDataInfo list(Comment comment)
     {
@@ -49,7 +49,7 @@ public class CommentController extends BaseController
     /**
      * 导出评论管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:comment:export')")
+    @PreAuthorize("@ss.hasPermi('api:comment:export')")
     @Log(title = "评论管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Comment comment)
@@ -62,7 +62,7 @@ public class CommentController extends BaseController
     /**
      * 获取评论管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:comment:query')")
+    @PreAuthorize("@ss.hasPermi('api:comment:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -72,7 +72,7 @@ public class CommentController extends BaseController
     /**
      * 新增评论管理
      */
-    @PreAuthorize("@ss.hasPermi('system:comment:add')")
+    @PreAuthorize("@ss.hasPermi('api:comment:add')")
     @Log(title = "评论管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Comment comment)
@@ -83,7 +83,7 @@ public class CommentController extends BaseController
     /**
      * 修改评论管理
      */
-    @PreAuthorize("@ss.hasPermi('system:comment:edit')")
+    @PreAuthorize("@ss.hasPermi('api:comment:edit')")
     @Log(title = "评论管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Comment comment)
@@ -94,7 +94,7 @@ public class CommentController extends BaseController
     /**
      * 删除评论管理
      */
-    @PreAuthorize("@ss.hasPermi('system:comment:remove')")
+    @PreAuthorize("@ss.hasPermi('api:comment:remove')")
     @Log(title = "评论管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

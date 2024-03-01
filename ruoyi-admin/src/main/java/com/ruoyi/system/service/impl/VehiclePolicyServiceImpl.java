@@ -9,10 +9,10 @@ import com.ruoyi.system.domain.VehiclePolicy;
 import com.ruoyi.system.service.IVehiclePolicyService;
 
 /**
- * 出口国家政策Service业务层处理
+ * 政策信息管理Service业务层处理
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 @Service
 public class VehiclePolicyServiceImpl implements IVehiclePolicyService 
@@ -21,10 +21,10 @@ public class VehiclePolicyServiceImpl implements IVehiclePolicyService
     private VehiclePolicyMapper vehiclePolicyMapper;
 
     /**
-     * 查询出口国家政策
+     * 查询政策信息管理
      * 
-     * @param id 出口国家政策主键
-     * @return 出口国家政策
+     * @param id 政策信息管理主键
+     * @return 政策信息管理
      */
     @Override
     public VehiclePolicy selectVehiclePolicyById(Long id)
@@ -33,10 +33,10 @@ public class VehiclePolicyServiceImpl implements IVehiclePolicyService
     }
 
     /**
-     * 查询出口国家政策列表
+     * 查询政策信息管理列表
      * 
-     * @param vehiclePolicy 出口国家政策
-     * @return 出口国家政策
+     * @param vehiclePolicy 政策信息管理
+     * @return 政策信息管理
      */
     @Override
     public List<VehiclePolicy> selectVehiclePolicyList(VehiclePolicy vehiclePolicy)
@@ -45,9 +45,9 @@ public class VehiclePolicyServiceImpl implements IVehiclePolicyService
     }
 
     /**
-     * 新增出口国家政策
+     * 新增政策信息管理
      * 
-     * @param vehiclePolicy 出口国家政策
+     * @param vehiclePolicy 政策信息管理
      * @return 结果
      */
     @Override
@@ -58,9 +58,9 @@ public class VehiclePolicyServiceImpl implements IVehiclePolicyService
     }
 
     /**
-     * 修改出口国家政策
+     * 修改政策信息管理
      * 
-     * @param vehiclePolicy 出口国家政策
+     * @param vehiclePolicy 政策信息管理
      * @return 结果
      */
     @Override
@@ -71,9 +71,9 @@ public class VehiclePolicyServiceImpl implements IVehiclePolicyService
     }
 
     /**
-     * 批量删除出口国家政策
+     * 批量删除政策信息管理
      * 
-     * @param ids 需要删除的出口国家政策主键
+     * @param ids 需要删除的政策信息管理主键
      * @return 结果
      */
     @Override
@@ -83,9 +83,9 @@ public class VehiclePolicyServiceImpl implements IVehiclePolicyService
     }
 
     /**
-     * 删除出口国家政策信息
+     * 删除政策信息管理信息
      * 
-     * @param id 出口国家政策主键
+     * @param id 政策信息管理主键
      * @return 结果
      */
     @Override

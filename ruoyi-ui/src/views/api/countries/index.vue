@@ -1,18 +1,26 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="所属车源id" prop="vehicleId">
+      <el-form-item label="中文名字" prop="name">
         <el-input
-          v-model="queryParams.vehicleId"
-          placeholder="请输入所属车源id"
+          v-model="queryParams.name"
+          placeholder="请输入中文名字"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="图片url" prop="url">
+      <el-form-item label="简称" prop="code">
         <el-input
-          v-model="queryParams.url"
-          placeholder="请输入图片url"
+          v-model="queryParams.code"
+          placeholder="请输入简称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="英文名字" prop="enName">
+        <el-input
+          v-model="queryParams.enName"
+          placeholder="请输入英文名字"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -31,7 +39,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:img:add']"
+          v-hasPermi="['api:countries:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -42,7 +50,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:img:edit']"
+          v-hasPermi="['api:countries:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -53,7 +61,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:img:remove']"
+          v-hasPermi="['api:countries:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -63,17 +71,18 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:img:export']"
+          v-hasPermi="['api:countries:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="imgList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="countriesList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
-      <el-table-column label="所属车源id" align="center" prop="vehicleId" />
-      <el-table-column label="图片url" align="center" prop="url" />
+      <el-table-column label="主键id" align="center" prop="id" />
+      <el-table-column label="中文名字" align="center" prop="name" />
+      <el-table-column label="简称" align="center" prop="code" />
+      <el-table-column label="英文名字" align="center" prop="enName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -81,14 +90,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:img:edit']"
+            v-hasPermi="['api:countries:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:img:remove']"
+            v-hasPermi="['api:countries:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -102,14 +111,17 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改车源图片管理对话框 -->
+    <!-- 添加或修改全球国家信息管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="所属车源id" prop="vehicleId">
-          <el-input v-model="form.vehicleId" placeholder="请输入所属车源id" />
+        <el-form-item label="中文名字" prop="name">
+          <el-input v-model="form.name" placeholder="请输入中文名字" />
         </el-form-item>
-        <el-form-item label="图片url" prop="url">
-          <el-input v-model="form.url" placeholder="请输入图片url" />
+        <el-form-item label="简称" prop="code">
+          <el-input v-model="form.code" placeholder="请输入简称" />
+        </el-form-item>
+        <el-form-item label="英文名字" prop="enName">
+          <el-input v-model="form.enName" placeholder="请输入英文名字" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -121,10 +133,10 @@
 </template>
 
 <script>
-import { listImg, getImg, delImg, addImg, updateImg } from "@/api/system/img";
+import { listCountries, getCountries, delCountries, addCountries, updateCountries } from "@/api/api/countries";
 
 export default {
-  name: "Img",
+  name: "Countries",
   data() {
     return {
       // 遮罩层
@@ -139,8 +151,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 车源图片管理表格数据
-      imgList: [],
+      // 全球国家信息管理表格数据
+      countriesList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -149,13 +161,23 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        vehicleId: null,
-        url: null,
+        name: null,
+        code: null,
+        enName: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        name: [
+          { required: true, message: "中文名字不能为空", trigger: "blur" }
+        ],
+        code: [
+          { required: true, message: "简称不能为空", trigger: "blur" }
+        ],
+        enName: [
+          { required: true, message: "英文名字不能为空", trigger: "blur" }
+        ]
       }
     };
   },
@@ -163,11 +185,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询车源图片管理列表 */
+    /** 查询全球国家信息管理列表 */
     getList() {
       this.loading = true;
-      listImg(this.queryParams).then(response => {
-        this.imgList = response.rows;
+      listCountries(this.queryParams).then(response => {
+        this.countriesList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -181,10 +203,9 @@ export default {
     reset() {
       this.form = {
         id: null,
-        vehicleId: null,
-        url: null,
-        createTime: null,
-        updateTime: null
+        name: null,
+        code: null,
+        enName: null
       };
       this.resetForm("form");
     },
@@ -208,16 +229,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加车源图片管理";
+      this.title = "添加全球国家信息管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getImg(id).then(response => {
+      getCountries(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改车源图片管理";
+        this.title = "修改全球国家信息管理";
       });
     },
     /** 提交按钮 */
@@ -225,13 +246,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateImg(this.form).then(response => {
+            updateCountries(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addImg(this.form).then(response => {
+            addCountries(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -243,8 +264,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除车源图片管理编号为"' + ids + '"的数据项？').then(function() {
-        return delImg(ids);
+      this.$modal.confirm('是否确认删除全球国家信息管理编号为"' + ids + '"的数据项？').then(function() {
+        return delCountries(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -252,9 +273,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/img/export', {
+      this.download('api/countries/export', {
         ...this.queryParams
-      }, `img_${new Date().getTime()}.xlsx`)
+      }, `countries_${new Date().getTime()}.xlsx`)
     }
   }
 };

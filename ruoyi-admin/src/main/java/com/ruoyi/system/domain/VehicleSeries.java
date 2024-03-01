@@ -10,13 +10,13 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 车系管理对象 vehicle_series
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 public class VehicleSeries extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** 主键id */
     private Long id;
 
     /** 品牌id */

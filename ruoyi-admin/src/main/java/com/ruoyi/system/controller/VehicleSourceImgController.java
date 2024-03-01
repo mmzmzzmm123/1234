@@ -25,10 +25,10 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 车源图片管理Controller
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 @RestController
-@RequestMapping("/system/img")
+@RequestMapping("/api/img")
 public class VehicleSourceImgController extends BaseController
 {
     @Autowired
@@ -37,7 +37,7 @@ public class VehicleSourceImgController extends BaseController
     /**
      * 查询车源图片管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:img:list')")
+    @PreAuthorize("@ss.hasPermi('api:img:list')")
     @GetMapping("/list")
     public TableDataInfo list(VehicleSourceImg vehicleSourceImg)
     {
@@ -49,7 +49,7 @@ public class VehicleSourceImgController extends BaseController
     /**
      * 导出车源图片管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:img:export')")
+    @PreAuthorize("@ss.hasPermi('api:img:export')")
     @Log(title = "车源图片管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, VehicleSourceImg vehicleSourceImg)
@@ -62,7 +62,7 @@ public class VehicleSourceImgController extends BaseController
     /**
      * 获取车源图片管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:img:query')")
+    @PreAuthorize("@ss.hasPermi('api:img:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -72,7 +72,7 @@ public class VehicleSourceImgController extends BaseController
     /**
      * 新增车源图片管理
      */
-    @PreAuthorize("@ss.hasPermi('system:img:add')")
+    @PreAuthorize("@ss.hasPermi('api:img:add')")
     @Log(title = "车源图片管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody VehicleSourceImg vehicleSourceImg)
@@ -83,7 +83,7 @@ public class VehicleSourceImgController extends BaseController
     /**
      * 修改车源图片管理
      */
-    @PreAuthorize("@ss.hasPermi('system:img:edit')")
+    @PreAuthorize("@ss.hasPermi('api:img:edit')")
     @Log(title = "车源图片管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody VehicleSourceImg vehicleSourceImg)
@@ -94,7 +94,7 @@ public class VehicleSourceImgController extends BaseController
     /**
      * 删除车源图片管理
      */
-    @PreAuthorize("@ss.hasPermi('system:img:remove')")
+    @PreAuthorize("@ss.hasPermi('api:img:remove')")
     @Log(title = "车源图片管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

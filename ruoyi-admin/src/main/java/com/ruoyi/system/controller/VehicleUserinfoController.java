@@ -22,22 +22,22 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 用户展示信息Controller
+ * 小程序用户信息管理Controller
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 @RestController
-@RequestMapping("/system/userinfo")
+@RequestMapping("/api/userinfo")
 public class VehicleUserinfoController extends BaseController
 {
     @Autowired
     private IVehicleUserinfoService vehicleUserinfoService;
 
     /**
-     * 查询用户展示信息列表
+     * 查询小程序用户信息管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:userinfo:list')")
+    @PreAuthorize("@ss.hasPermi('api:userinfo:list')")
     @GetMapping("/list")
     public TableDataInfo list(VehicleUserinfo vehicleUserinfo)
     {
@@ -47,22 +47,22 @@ public class VehicleUserinfoController extends BaseController
     }
 
     /**
-     * 导出用户展示信息列表
+     * 导出小程序用户信息管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:userinfo:export')")
-    @Log(title = "用户展示信息", businessType = BusinessType.EXPORT)
+    @PreAuthorize("@ss.hasPermi('api:userinfo:export')")
+    @Log(title = "小程序用户信息管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, VehicleUserinfo vehicleUserinfo)
     {
         List<VehicleUserinfo> list = vehicleUserinfoService.selectVehicleUserinfoList(vehicleUserinfo);
         ExcelUtil<VehicleUserinfo> util = new ExcelUtil<VehicleUserinfo>(VehicleUserinfo.class);
-        util.exportExcel(response, list, "用户展示信息数据");
+        util.exportExcel(response, list, "小程序用户信息管理数据");
     }
 
     /**
-     * 获取用户展示信息详细信息
+     * 获取小程序用户信息管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:userinfo:query')")
+    @PreAuthorize("@ss.hasPermi('api:userinfo:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -70,10 +70,10 @@ public class VehicleUserinfoController extends BaseController
     }
 
     /**
-     * 新增用户展示信息
+     * 新增小程序用户信息管理
      */
-    @PreAuthorize("@ss.hasPermi('system:userinfo:add')")
-    @Log(title = "用户展示信息", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('api:userinfo:add')")
+    @Log(title = "小程序用户信息管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody VehicleUserinfo vehicleUserinfo)
     {
@@ -81,10 +81,10 @@ public class VehicleUserinfoController extends BaseController
     }
 
     /**
-     * 修改用户展示信息
+     * 修改小程序用户信息管理
      */
-    @PreAuthorize("@ss.hasPermi('system:userinfo:edit')")
-    @Log(title = "用户展示信息", businessType = BusinessType.UPDATE)
+    @PreAuthorize("@ss.hasPermi('api:userinfo:edit')")
+    @Log(title = "小程序用户信息管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody VehicleUserinfo vehicleUserinfo)
     {
@@ -92,10 +92,10 @@ public class VehicleUserinfoController extends BaseController
     }
 
     /**
-     * 删除用户展示信息
+     * 删除小程序用户信息管理
      */
-    @PreAuthorize("@ss.hasPermi('system:userinfo:remove')")
-    @Log(title = "用户展示信息", businessType = BusinessType.DELETE)
+    @PreAuthorize("@ss.hasPermi('api:userinfo:remove')")
+    @Log(title = "小程序用户信息管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {

@@ -7,7 +7,7 @@ import com.ruoyi.system.domain.VehicleSourceImg;
  * 车源图片管理Service接口
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 public interface IVehicleSourceImgService 
 {

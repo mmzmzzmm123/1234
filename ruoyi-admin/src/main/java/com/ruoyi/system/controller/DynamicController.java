@@ -22,22 +22,22 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 动态管理Controller
+ * 动态信息管理Controller
  * 
- * @author ruoyi
- * @date 2024-02-29
+ * @author carol
+ * @date 2024-03-01
  */
 @RestController
-@RequestMapping("/system/dynamic")
+@RequestMapping("/api/dynamic")
 public class DynamicController extends BaseController
 {
     @Autowired
     private IDynamicService dynamicService;
 
     /**
-     * 查询动态管理列表
+     * 查询动态信息管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:dynamic:list')")
+    @PreAuthorize("@ss.hasPermi('api:dynamic:list')")
     @GetMapping("/list")
     public TableDataInfo list(Dynamic dynamic)
     {
@@ -47,22 +47,22 @@ public class DynamicController extends BaseController
     }
 
     /**
-     * 导出动态管理列表
+     * 导出动态信息管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:dynamic:export')")
-    @Log(title = "动态管理", businessType = BusinessType.EXPORT)
+    @PreAuthorize("@ss.hasPermi('api:dynamic:export')")
+    @Log(title = "动态信息管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, Dynamic dynamic)
     {
         List<Dynamic> list = dynamicService.selectDynamicList(dynamic);
         ExcelUtil<Dynamic> util = new ExcelUtil<Dynamic>(Dynamic.class);
-        util.exportExcel(response, list, "动态管理数据");
+        util.exportExcel(response, list, "动态信息管理数据");
     }
 
     /**
-     * 获取动态管理详细信息
+     * 获取动态信息管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:dynamic:query')")
+    @PreAuthorize("@ss.hasPermi('api:dynamic:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -70,10 +70,10 @@ public class DynamicController extends BaseController
     }
 
     /**
-     * 新增动态管理
+     * 新增动态信息管理
      */
-    @PreAuthorize("@ss.hasPermi('system:dynamic:add')")
-    @Log(title = "动态管理", businessType = BusinessType.INSERT)
+    @PreAuthorize("@ss.hasPermi('api:dynamic:add')")
+    @Log(title = "动态信息管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody Dynamic dynamic)
     {
@@ -81,10 +81,10 @@ public class DynamicController extends BaseController
     }
 
     /**
-     * 修改动态管理
+     * 修改动态信息管理
      */
-    @PreAuthorize("@ss.hasPermi('system:dynamic:edit')")
-    @Log(title = "动态管理", businessType = BusinessType.UPDATE)
+    @PreAuthorize("@ss.hasPermi('api:dynamic:edit')")
+    @Log(title = "动态信息管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody Dynamic dynamic)
     {
@@ -92,10 +92,10 @@ public class DynamicController extends BaseController
     }
 
     /**
-     * 删除动态管理
+     * 删除动态信息管理
      */
-    @PreAuthorize("@ss.hasPermi('system:dynamic:remove')")
-    @Log(title = "动态管理", businessType = BusinessType.DELETE)
+    @PreAuthorize("@ss.hasPermi('api:dynamic:remove')")
+    @Log(title = "动态信息管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {

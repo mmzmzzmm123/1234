@@ -1,82 +1,74 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="所属车系id" prop="seriesId">
+      <el-form-item label="微信用户唯一标识" prop="openid">
         <el-input
-          v-model="queryParams.seriesId"
-          placeholder="请输入所属车系id"
+          v-model="queryParams.openid"
+          placeholder="请输入微信用户唯一标识"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="车辆具体名称" prop="name">
+      <el-form-item label="姓名" prop="name">
         <el-input
           v-model="queryParams.name"
-          placeholder="请输入车辆具体名称"
+          placeholder="请输入姓名"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="外观颜色" prop="color">
+      <el-form-item label="头像" prop="avatarUrl">
         <el-input
-          v-model="queryParams.color"
-          placeholder="请输入外观颜色"
+          v-model="queryParams.avatarUrl"
+          placeholder="请输入头像"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="内饰颜色" prop="innerColor">
+      <el-form-item label="手机号码" prop="phone">
         <el-input
-          v-model="queryParams.innerColor"
-          placeholder="请输入内饰颜色"
+          v-model="queryParams.phone"
+          placeholder="请输入手机号码"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="当前车辆所在地" prop="area">
+      <el-form-item label="所在地" prop="address">
         <el-input
-          v-model="queryParams.area"
-          placeholder="请输入当前车辆所在地"
+          v-model="queryParams.address"
+          placeholder="请输入所在地"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="车源地" prop="sourceArea">
+      <el-form-item label="出生年月" prop="birth">
+        <el-date-picker clearable
+          v-model="queryParams.birth"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择出生年月">
+        </el-date-picker>
+      </el-form-item>
+      <el-form-item label="邮箱" prop="email">
         <el-input
-          v-model="queryParams.sourceArea"
-          placeholder="请输入车源地"
+          v-model="queryParams.email"
+          placeholder="请输入邮箱"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="备注信息" prop="notes">
+      <el-form-item label="单位" prop="unit">
         <el-input
-          v-model="queryParams.notes"
-          placeholder="请输入备注信息"
+          v-model="queryParams.unit"
+          placeholder="请输入单位"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="车龄" prop="age">
+      <el-form-item label="网名" prop="nickName">
         <el-input
-          v-model="queryParams.age"
-          placeholder="请输入车龄"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="卖家id" prop="ownerId">
-        <el-input
-          v-model="queryParams.ownerId"
-          placeholder="请输入卖家id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="售卖价格" prop="price">
-        <el-input
-          v-model="queryParams.price"
-          placeholder="请输入售卖价格"
+          v-model="queryParams.nickName"
+          placeholder="请输入网名"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -95,7 +87,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:source:add']"
+          v-hasPermi="['api:userinfo:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -106,7 +98,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:source:edit']"
+          v-hasPermi="['api:userinfo:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -117,7 +109,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:source:remove']"
+          v-hasPermi="['api:userinfo:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -127,27 +119,29 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:source:export']"
+          v-hasPermi="['api:userinfo:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="sourceList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="userinfoList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
-      <el-table-column label="所属车系id" align="center" prop="seriesId" />
-      <el-table-column label="车辆具体名称" align="center" prop="name" />
-      <el-table-column label="外观颜色" align="center" prop="color" />
-      <el-table-column label="内饰颜色" align="center" prop="innerColor" />
-      <el-table-column label="当前车辆所在地" align="center" prop="area" />
-      <el-table-column label="车辆状态/" align="center" prop="status" />
-      <el-table-column label="车源地" align="center" prop="sourceArea" />
-      <el-table-column label="备注信息" align="center" prop="notes" />
-      <el-table-column label="车龄" align="center" prop="age" />
-      <el-table-column label="卖家id" align="center" prop="ownerId" />
-      <el-table-column label="售卖价格" align="center" prop="price" />
-      <el-table-column label="车辆类型：中规车&国产现车&进口车&合资车" align="center" prop="type" />
+      <el-table-column label="用户id" align="center" prop="id" />
+      <el-table-column label="微信用户唯一标识" align="center" prop="openid" />
+      <el-table-column label="姓名" align="center" prop="name" />
+      <el-table-column label="性别" align="center" prop="sex" />
+      <el-table-column label="头像" align="center" prop="avatarUrl" />
+      <el-table-column label="手机号码" align="center" prop="phone" />
+      <el-table-column label="所在地" align="center" prop="address" />
+      <el-table-column label="出生年月" align="center" prop="birth" width="180">
+        <template slot-scope="scope">
+          <span>{{ parseTime(scope.row.birth, '{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="邮箱" align="center" prop="email" />
+      <el-table-column label="单位" align="center" prop="unit" />
+      <el-table-column label="网名" align="center" prop="nickName" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -155,14 +149,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:source:edit']"
+            v-hasPermi="['api:userinfo:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:source:remove']"
+            v-hasPermi="['api:userinfo:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -176,38 +170,40 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改车源管理对话框 -->
+    <!-- 添加或修改小程序用户信息管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="所属车系id" prop="seriesId">
-          <el-input v-model="form.seriesId" placeholder="请输入所属车系id" />
+        <el-form-item label="微信用户唯一标识" prop="openid">
+          <el-input v-model="form.openid" placeholder="请输入微信用户唯一标识" />
         </el-form-item>
-        <el-form-item label="车辆具体名称" prop="name">
-          <el-input v-model="form.name" placeholder="请输入车辆具体名称" />
+        <el-form-item label="姓名" prop="name">
+          <el-input v-model="form.name" placeholder="请输入姓名" />
         </el-form-item>
-        <el-form-item label="外观颜色" prop="color">
-          <el-input v-model="form.color" placeholder="请输入外观颜色" />
+        <el-form-item label="头像" prop="avatarUrl">
+          <el-input v-model="form.avatarUrl" placeholder="请输入头像" />
         </el-form-item>
-        <el-form-item label="内饰颜色" prop="innerColor">
-          <el-input v-model="form.innerColor" placeholder="请输入内饰颜色" />
+        <el-form-item label="手机号码" prop="phone">
+          <el-input v-model="form.phone" placeholder="请输入手机号码" />
         </el-form-item>
-        <el-form-item label="当前车辆所在地" prop="area">
-          <el-input v-model="form.area" placeholder="请输入当前车辆所在地" />
+        <el-form-item label="所在地" prop="address">
+          <el-input v-model="form.address" placeholder="请输入所在地" />
         </el-form-item>
-        <el-form-item label="车源地" prop="sourceArea">
-          <el-input v-model="form.sourceArea" placeholder="请输入车源地" />
+        <el-form-item label="出生年月" prop="birth">
+          <el-date-picker clearable
+            v-model="form.birth"
+            type="date"
+            value-format="yyyy-MM-dd"
+            placeholder="请选择出生年月">
+          </el-date-picker>
         </el-form-item>
-        <el-form-item label="备注信息" prop="notes">
-          <el-input v-model="form.notes" placeholder="请输入备注信息" />
+        <el-form-item label="邮箱" prop="email">
+          <el-input v-model="form.email" placeholder="请输入邮箱" />
         </el-form-item>
-        <el-form-item label="车龄" prop="age">
-          <el-input v-model="form.age" placeholder="请输入车龄" />
+        <el-form-item label="单位" prop="unit">
+          <el-input v-model="form.unit" placeholder="请输入单位" />
         </el-form-item>
-        <el-form-item label="卖家id" prop="ownerId">
-          <el-input v-model="form.ownerId" placeholder="请输入卖家id" />
-        </el-form-item>
-        <el-form-item label="售卖价格" prop="price">
-          <el-input v-model="form.price" placeholder="请输入售卖价格" />
+        <el-form-item label="网名" prop="nickName">
+          <el-input v-model="form.nickName" placeholder="请输入网名" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -219,10 +215,10 @@
 </template>
 
 <script>
-import { listSource, getSource, delSource, addSource, updateSource } from "@/api/system/source";
+import { listUserinfo, getUserinfo, delUserinfo, addUserinfo, updateUserinfo } from "@/api/api/userinfo";
 
 export default {
-  name: "Source",
+  name: "Userinfo",
   data() {
     return {
       // 遮罩层
@@ -237,8 +233,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 车源管理表格数据
-      sourceList: [],
+      // 小程序用户信息管理表格数据
+      userinfoList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -247,29 +243,21 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        seriesId: null,
+        openid: null,
         name: null,
-        color: null,
-        innerColor: null,
-        area: null,
-        status: null,
-        sourceArea: null,
-        notes: null,
-        age: null,
-        ownerId: null,
-        price: null,
-        type: null,
+        sex: null,
+        avatarUrl: null,
+        phone: null,
+        address: null,
+        birth: null,
+        email: null,
+        unit: null,
+        nickName: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        seriesId: [
-          { required: true, message: "所属车系id不能为空", trigger: "blur" }
-        ],
-        name: [
-          { required: true, message: "车辆具体名称不能为空", trigger: "blur" }
-        ],
       }
     };
   },
@@ -277,11 +265,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询车源管理列表 */
+    /** 查询小程序用户信息管理列表 */
     getList() {
       this.loading = true;
-      listSource(this.queryParams).then(response => {
-        this.sourceList = response.rows;
+      listUserinfo(this.queryParams).then(response => {
+        this.userinfoList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -295,19 +283,17 @@ export default {
     reset() {
       this.form = {
         id: null,
-        seriesId: null,
+        openid: null,
         name: null,
-        color: null,
-        innerColor: null,
-        area: null,
-        status: null,
-        sourceArea: null,
-        notes: null,
-        age: null,
-        ownerId: null,
-        price: null,
-        type: null,
+        sex: null,
+        avatarUrl: null,
+        phone: null,
+        address: null,
+        birth: null,
+        email: null,
+        unit: null,
         createTime: null,
+        nickName: null,
         updateTime: null
       };
       this.resetForm("form");
@@ -332,16 +318,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加车源管理";
+      this.title = "添加小程序用户信息管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getSource(id).then(response => {
+      getUserinfo(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改车源管理";
+        this.title = "修改小程序用户信息管理";
       });
     },
     /** 提交按钮 */
@@ -349,13 +335,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateSource(this.form).then(response => {
+            updateUserinfo(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addSource(this.form).then(response => {
+            addUserinfo(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -367,8 +353,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除车源管理编号为"' + ids + '"的数据项？').then(function() {
-        return delSource(ids);
+      this.$modal.confirm('是否确认删除小程序用户信息管理编号为"' + ids + '"的数据项？').then(function() {
+        return delUserinfo(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -376,9 +362,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/source/export', {
+      this.download('api/userinfo/export', {
         ...this.queryParams
-      }, `source_${new Date().getTime()}.xlsx`)
+      }, `userinfo_${new Date().getTime()}.xlsx`)
     }
   }
 };

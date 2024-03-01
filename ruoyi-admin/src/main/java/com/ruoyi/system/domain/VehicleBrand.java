@@ -6,28 +6,28 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 汽车品牌管理对象 vehicle_brand
+ * 品牌管理对象 vehicle_brand
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 public class VehicleBrand extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** 主键id */
     private Long id;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    /** 品牌 */
+    @Excel(name = "品牌")
     private String brand;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    /** 备注 */
+    @Excel(name = "备注")
     private String notes;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    /** 品牌图标地址 */
+    @Excel(name = "品牌图标地址")
     private String url;
 
     public void setId(Long id) 

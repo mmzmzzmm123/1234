@@ -6,8 +6,8 @@ import com.ruoyi.system.domain.VehicleSource;
 /**
  * 车源管理Service接口
  * 
- * @author ruoyi
- * @date 2024-02-29
+ * @author carol
+ * @date 2024-03-01
  */
 public interface IVehicleSourceService 
 {

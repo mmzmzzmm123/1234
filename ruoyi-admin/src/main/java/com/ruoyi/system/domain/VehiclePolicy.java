@@ -8,10 +8,10 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 出口国家政策对象 vehicle_policy
+ * 政策信息管理对象 vehicle_policy
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 public class VehiclePolicy extends BaseEntity
 {

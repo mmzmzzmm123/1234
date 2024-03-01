@@ -1,18 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="父级评论id" prop="parentId">
+      <el-form-item label="品牌" prop="brand">
         <el-input
-          v-model="queryParams.parentId"
-          placeholder="请输入父级评论id"
+          v-model="queryParams.brand"
+          placeholder="请输入品牌"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="用户id" prop="userId">
+      <el-form-item label="备注" prop="notes">
         <el-input
-          v-model="queryParams.userId"
-          placeholder="请输入用户id"
+          v-model="queryParams.notes"
+          placeholder="请输入备注"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -31,7 +31,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:comment:add']"
+          v-hasPermi="['api:brand:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -42,7 +42,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:comment:edit']"
+          v-hasPermi="['api:brand:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -53,7 +53,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:comment:remove']"
+          v-hasPermi="['api:brand:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -63,18 +63,22 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:comment:export']"
+          v-hasPermi="['api:brand:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="commentList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="brandList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
-      <el-table-column label="父级评论id" align="center" prop="parentId" />
-      <el-table-column label="评论内容" align="center" prop="content" />
-      <el-table-column label="用户id" align="center" prop="userId" />
+      <el-table-column label="主键id" align="center" prop="id" />
+      <el-table-column label="品牌" align="center" prop="brand" />
+      <el-table-column label="备注" align="center" prop="notes" />
+      <el-table-column label="品牌图标地址" align="center" prop="url" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.url" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -82,14 +86,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:comment:edit']"
+            v-hasPermi="['api:brand:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:comment:remove']"
+            v-hasPermi="['api:brand:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -103,17 +107,17 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改评论管理对话框 -->
+    <!-- 添加或修改品牌管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="父级评论id" prop="parentId">
-          <el-input v-model="form.parentId" placeholder="请输入父级评论id" />
+        <el-form-item label="品牌" prop="brand">
+          <el-input v-model="form.brand" placeholder="请输入品牌" />
         </el-form-item>
-        <el-form-item label="评论内容">
-          <editor v-model="form.content" :min-height="192"/>
+        <el-form-item label="备注" prop="notes">
+          <el-input v-model="form.notes" placeholder="请输入备注" />
         </el-form-item>
-        <el-form-item label="用户id" prop="userId">
-          <el-input v-model="form.userId" placeholder="请输入用户id" />
+        <el-form-item label="品牌图标地址" prop="url">
+          <image-upload v-model="form.url"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -125,10 +129,10 @@
 </template>
 
 <script>
-import { listComment, getComment, delComment, addComment, updateComment } from "@/api/system/comment";
+import { listBrand, getBrand, delBrand, addBrand, updateBrand } from "@/api/api/brand";
 
 export default {
-  name: "Comment",
+  name: "Brand",
   data() {
     return {
       // 遮罩层
@@ -143,8 +147,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 评论管理表格数据
-      commentList: [],
+      // 品牌管理表格数据
+      brandList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -153,17 +157,26 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        parentId: null,
-        content: null,
-        userId: null,
+        brand: null,
+        notes: null,
+        url: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        userId: [
-          { required: true, message: "用户id不能为空", trigger: "blur" }
+        brand: [
+          { required: true, message: "品牌不能为空", trigger: "blur" }
         ],
+        url: [
+          { required: true, message: "品牌图标地址不能为空", trigger: "blur" }
+        ],
+        createTime: [
+          { required: true, message: "插入时间不能为空", trigger: "blur" }
+        ],
+        updateTime: [
+          { required: true, message: "修改时间不能为空", trigger: "blur" }
+        ]
       }
     };
   },
@@ -171,11 +184,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询评论管理列表 */
+    /** 查询品牌管理列表 */
     getList() {
       this.loading = true;
-      listComment(this.queryParams).then(response => {
-        this.commentList = response.rows;
+      listBrand(this.queryParams).then(response => {
+        this.brandList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -189,9 +202,9 @@ export default {
     reset() {
       this.form = {
         id: null,
-        parentId: null,
-        content: null,
-        userId: null,
+        brand: null,
+        notes: null,
+        url: null,
         createTime: null,
         updateTime: null
       };
@@ -217,16 +230,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加评论管理";
+      this.title = "添加品牌管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getComment(id).then(response => {
+      getBrand(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改评论管理";
+        this.title = "修改品牌管理";
       });
     },
     /** 提交按钮 */
@@ -234,13 +247,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateComment(this.form).then(response => {
+            updateBrand(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addComment(this.form).then(response => {
+            addBrand(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -252,8 +265,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除评论管理编号为"' + ids + '"的数据项？').then(function() {
-        return delComment(ids);
+      this.$modal.confirm('是否确认删除品牌管理编号为"' + ids + '"的数据项？').then(function() {
+        return delBrand(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -261,9 +274,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/comment/export', {
+      this.download('api/brand/export', {
         ...this.queryParams
-      }, `comment_${new Date().getTime()}.xlsx`)
+      }, `brand_${new Date().getTime()}.xlsx`)
     }
   }
 };

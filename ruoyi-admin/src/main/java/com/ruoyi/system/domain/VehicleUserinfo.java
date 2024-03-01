@@ -8,10 +8,10 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 用户展示信息对象 vehicle_userinfo
+ * 小程序用户信息管理对象 vehicle_userinfo
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 public class VehicleUserinfo extends BaseEntity
 {

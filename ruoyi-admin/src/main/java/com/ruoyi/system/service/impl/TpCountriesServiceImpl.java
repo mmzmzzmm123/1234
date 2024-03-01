@@ -8,10 +8,10 @@ import com.ruoyi.system.domain.TpCountries;
 import com.ruoyi.system.service.ITpCountriesService;
 
 /**
- * 全球国家管理Service业务层处理
+ * 全球国家信息管理Service业务层处理
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 @Service
 public class TpCountriesServiceImpl implements ITpCountriesService 
@@ -20,10 +20,10 @@ public class TpCountriesServiceImpl implements ITpCountriesService
     private TpCountriesMapper tpCountriesMapper;
 
     /**
-     * 查询全球国家管理
+     * 查询全球国家信息管理
      * 
-     * @param id 全球国家管理主键
-     * @return 全球国家管理
+     * @param id 全球国家信息管理主键
+     * @return 全球国家信息管理
      */
     @Override
     public TpCountries selectTpCountriesById(Long id)
@@ -32,10 +32,10 @@ public class TpCountriesServiceImpl implements ITpCountriesService
     }
 
     /**
-     * 查询全球国家管理列表
+     * 查询全球国家信息管理列表
      * 
-     * @param tpCountries 全球国家管理
-     * @return 全球国家管理
+     * @param tpCountries 全球国家信息管理
+     * @return 全球国家信息管理
      */
     @Override
     public List<TpCountries> selectTpCountriesList(TpCountries tpCountries)
@@ -44,9 +44,9 @@ public class TpCountriesServiceImpl implements ITpCountriesService
     }
 
     /**
-     * 新增全球国家管理
+     * 新增全球国家信息管理
      * 
-     * @param tpCountries 全球国家管理
+     * @param tpCountries 全球国家信息管理
      * @return 结果
      */
     @Override
@@ -56,9 +56,9 @@ public class TpCountriesServiceImpl implements ITpCountriesService
     }
 
     /**
-     * 修改全球国家管理
+     * 修改全球国家信息管理
      * 
-     * @param tpCountries 全球国家管理
+     * @param tpCountries 全球国家信息管理
      * @return 结果
      */
     @Override
@@ -68,9 +68,9 @@ public class TpCountriesServiceImpl implements ITpCountriesService
     }
 
     /**
-     * 批量删除全球国家管理
+     * 批量删除全球国家信息管理
      * 
-     * @param ids 需要删除的全球国家管理主键
+     * @param ids 需要删除的全球国家信息管理主键
      * @return 结果
      */
     @Override
@@ -80,9 +80,9 @@ public class TpCountriesServiceImpl implements ITpCountriesService
     }
 
     /**
-     * 删除全球国家管理信息
+     * 删除全球国家信息管理信息
      * 
-     * @param id 全球国家管理主键
+     * @param id 全球国家信息管理主键
      * @return 结果
      */
     @Override

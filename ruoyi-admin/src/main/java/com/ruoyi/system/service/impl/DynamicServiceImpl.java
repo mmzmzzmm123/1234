@@ -9,10 +9,10 @@ import com.ruoyi.system.domain.Dynamic;
 import com.ruoyi.system.service.IDynamicService;
 
 /**
- * 动态管理Service业务层处理
+ * 动态信息管理Service业务层处理
  * 
- * @author ruoyi
- * @date 2024-02-29
+ * @author carol
+ * @date 2024-03-01
  */
 @Service
 public class DynamicServiceImpl implements IDynamicService 
@@ -21,10 +21,10 @@ public class DynamicServiceImpl implements IDynamicService
     private DynamicMapper dynamicMapper;
 
     /**
-     * 查询动态管理
+     * 查询动态信息管理
      * 
-     * @param id 动态管理主键
-     * @return 动态管理
+     * @param id 动态信息管理主键
+     * @return 动态信息管理
      */
     @Override
     public Dynamic selectDynamicById(Long id)
@@ -33,10 +33,10 @@ public class DynamicServiceImpl implements IDynamicService
     }
 
     /**
-     * 查询动态管理列表
+     * 查询动态信息管理列表
      * 
-     * @param dynamic 动态管理
-     * @return 动态管理
+     * @param dynamic 动态信息管理
+     * @return 动态信息管理
      */
     @Override
     public List<Dynamic> selectDynamicList(Dynamic dynamic)
@@ -45,9 +45,9 @@ public class DynamicServiceImpl implements IDynamicService
     }
 
     /**
-     * 新增动态管理
+     * 新增动态信息管理
      * 
-     * @param dynamic 动态管理
+     * @param dynamic 动态信息管理
      * @return 结果
      */
     @Override
@@ -58,9 +58,9 @@ public class DynamicServiceImpl implements IDynamicService
     }
 
     /**
-     * 修改动态管理
+     * 修改动态信息管理
      * 
-     * @param dynamic 动态管理
+     * @param dynamic 动态信息管理
      * @return 结果
      */
     @Override
@@ -71,9 +71,9 @@ public class DynamicServiceImpl implements IDynamicService
     }
 
     /**
-     * 批量删除动态管理
+     * 批量删除动态信息管理
      * 
-     * @param ids 需要删除的动态管理主键
+     * @param ids 需要删除的动态信息管理主键
      * @return 结果
      */
     @Override
@@ -83,9 +83,9 @@ public class DynamicServiceImpl implements IDynamicService
     }
 
     /**
-     * 删除动态管理信息
+     * 删除动态信息管理信息
      * 
-     * @param id 动态管理主键
+     * @param id 动态信息管理主键
      * @return 结果
      */
     @Override

@@ -25,10 +25,10 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 车系管理Controller
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 @RestController
-@RequestMapping("/system/series")
+@RequestMapping("/api/series")
 public class VehicleSeriesController extends BaseController
 {
     @Autowired
@@ -37,7 +37,7 @@ public class VehicleSeriesController extends BaseController
     /**
      * 查询车系管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:series:list')")
+    @PreAuthorize("@ss.hasPermi('api:series:list')")
     @GetMapping("/list")
     public TableDataInfo list(VehicleSeries vehicleSeries)
     {
@@ -49,7 +49,7 @@ public class VehicleSeriesController extends BaseController
     /**
      * 导出车系管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:series:export')")
+    @PreAuthorize("@ss.hasPermi('api:series:export')")
     @Log(title = "车系管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, VehicleSeries vehicleSeries)
@@ -62,7 +62,7 @@ public class VehicleSeriesController extends BaseController
     /**
      * 获取车系管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:series:query')")
+    @PreAuthorize("@ss.hasPermi('api:series:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -72,7 +72,7 @@ public class VehicleSeriesController extends BaseController
     /**
      * 新增车系管理
      */
-    @PreAuthorize("@ss.hasPermi('system:series:add')")
+    @PreAuthorize("@ss.hasPermi('api:series:add')")
     @Log(title = "车系管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody VehicleSeries vehicleSeries)
@@ -83,7 +83,7 @@ public class VehicleSeriesController extends BaseController
     /**
      * 修改车系管理
      */
-    @PreAuthorize("@ss.hasPermi('system:series:edit')")
+    @PreAuthorize("@ss.hasPermi('api:series:edit')")
     @Log(title = "车系管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody VehicleSeries vehicleSeries)
@@ -94,7 +94,7 @@ public class VehicleSeriesController extends BaseController
     /**
      * 删除车系管理
      */
-    @PreAuthorize("@ss.hasPermi('system:series:remove')")
+    @PreAuthorize("@ss.hasPermi('api:series:remove')")
     @Log(title = "车系管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

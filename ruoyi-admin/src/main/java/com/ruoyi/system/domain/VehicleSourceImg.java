@@ -9,13 +9,13 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 车源图片管理对象 vehicle_source_img
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 public class VehicleSourceImg extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** 主键id */
     private Long id;
 
     /** 所属车源id */

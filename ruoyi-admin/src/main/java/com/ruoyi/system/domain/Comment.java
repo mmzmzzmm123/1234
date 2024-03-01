@@ -9,13 +9,13 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 评论管理对象 comment
  * 
  * @author carol
- * @date 2024-02-29
+ * @date 2024-03-01
  */
 public class Comment extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /** 主键id */
     private Long id;
 
     /** 父级评论id */
@@ -29,6 +29,10 @@ public class Comment extends BaseEntity
     /** 用户id */
     @Excel(name = "用户id")
     private Long userId;
+
+    /** 相关动态id */
+    @Excel(name = "相关动态id")
+    private Long dynamicId;
 
     public void setId(Long id) 
     {
@@ -66,6 +70,15 @@ public class Comment extends BaseEntity
     {
         return userId;
     }
+    public void setDynamicId(Long dynamicId) 
+    {
+        this.dynamicId = dynamicId;
+    }
+
+    public Long getDynamicId() 
+    {
+        return dynamicId;
+    }
 
     @Override
     public String toString() {
@@ -76,6 +89,7 @@ public class Comment extends BaseEntity
             .append("userId", getUserId())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
+            .append("dynamicId", getDynamicId())
             .toString();
     }
 }

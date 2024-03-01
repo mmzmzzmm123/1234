@@ -24,11 +24,11 @@ import com.ruoyi.common.core.page.TableDataInfo;
 /**
  * 车源管理Controller
  * 
- * @author ruoyi
- * @date 2024-02-29
+ * @author carol
+ * @date 2024-03-01
  */
 @RestController
-@RequestMapping("/system/source")
+@RequestMapping("/api/source")
 public class VehicleSourceController extends BaseController
 {
     @Autowired
@@ -37,7 +37,7 @@ public class VehicleSourceController extends BaseController
     /**
      * 查询车源管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:source:list')")
+    @PreAuthorize("@ss.hasPermi('api:source:list')")
     @GetMapping("/list")
     public TableDataInfo list(VehicleSource vehicleSource)
     {
@@ -49,7 +49,7 @@ public class VehicleSourceController extends BaseController
     /**
      * 导出车源管理列表
      */
-    @PreAuthorize("@ss.hasPermi('system:source:export')")
+    @PreAuthorize("@ss.hasPermi('api:source:export')")
     @Log(title = "车源管理", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, VehicleSource vehicleSource)
@@ -62,7 +62,7 @@ public class VehicleSourceController extends BaseController
     /**
      * 获取车源管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:source:query')")
+    @PreAuthorize("@ss.hasPermi('api:source:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -72,7 +72,7 @@ public class VehicleSourceController extends BaseController
     /**
      * 新增车源管理
      */
-    @PreAuthorize("@ss.hasPermi('system:source:add')")
+    @PreAuthorize("@ss.hasPermi('api:source:add')")
     @Log(title = "车源管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody VehicleSource vehicleSource)
@@ -83,7 +83,7 @@ public class VehicleSourceController extends BaseController
     /**
      * 修改车源管理
      */
-    @PreAuthorize("@ss.hasPermi('system:source:edit')")
+    @PreAuthorize("@ss.hasPermi('api:source:edit')")
     @Log(title = "车源管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody VehicleSource vehicleSource)
@@ -94,7 +94,7 @@ public class VehicleSourceController extends BaseController
     /**
      * 删除车源管理
      */
-    @PreAuthorize("@ss.hasPermi('system:source:remove')")
+    @PreAuthorize("@ss.hasPermi('api:source:remove')")
     @Log(title = "车源管理", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)

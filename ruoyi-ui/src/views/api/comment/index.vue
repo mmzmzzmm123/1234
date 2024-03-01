@@ -1,45 +1,29 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="标题" prop="title">
+      <el-form-item label="父级评论id" prop="parentId">
         <el-input
-          v-model="queryParams.title"
-          placeholder="请输入标题"
+          v-model="queryParams.parentId"
+          placeholder="请输入父级评论id"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="图片" prop="pictureUrl">
+      <el-form-item label="用户id" prop="userId">
         <el-input
-          v-model="queryParams.pictureUrl"
-          placeholder="请输入图片"
+          v-model="queryParams.userId"
+          placeholder="请输入用户id"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="文件" prop="fileUrl">
+      <el-form-item label="相关动态id" prop="dynamicId">
         <el-input
-          v-model="queryParams.fileUrl"
-          placeholder="请输入文件"
+          v-model="queryParams.dynamicId"
+          placeholder="请输入相关动态id"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="国家id" prop="region">
-        <el-input
-          v-model="queryParams.region"
-          placeholder="请输入国家id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="发布日期" prop="pushDate">
-        <el-date-picker clearable
-          v-model="queryParams.pushDate"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择发布日期">
-        </el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -55,7 +39,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:policy:add']"
+          v-hasPermi="['api:comment:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -66,7 +50,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:policy:edit']"
+          v-hasPermi="['api:comment:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -77,7 +61,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:policy:remove']"
+          v-hasPermi="['api:comment:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -87,24 +71,19 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:policy:export']"
+          v-hasPermi="['api:comment:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="policyList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="commentList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="政策id" align="center" prop="id" />
-      <el-table-column label="标题" align="center" prop="title" />
-      <el-table-column label="图片" align="center" prop="pictureUrl" />
-      <el-table-column label="文件" align="center" prop="fileUrl" />
-      <el-table-column label="国家id" align="center" prop="region" />
-      <el-table-column label="发布日期" align="center" prop="pushDate" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.pushDate, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="主键id" align="center" prop="id" />
+      <el-table-column label="父级评论id" align="center" prop="parentId" />
+      <el-table-column label="评论内容" align="center" prop="content" />
+      <el-table-column label="用户id" align="center" prop="userId" />
+      <el-table-column label="相关动态id" align="center" prop="dynamicId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -112,14 +91,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:policy:edit']"
+            v-hasPermi="['api:comment:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:policy:remove']"
+            v-hasPermi="['api:comment:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -133,28 +112,20 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改出口国家政策对话框 -->
+    <!-- 添加或修改评论管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="标题" prop="title">
-          <el-input v-model="form.title" placeholder="请输入标题" />
+        <el-form-item label="父级评论id" prop="parentId">
+          <el-input v-model="form.parentId" placeholder="请输入父级评论id" />
         </el-form-item>
-        <el-form-item label="图片" prop="pictureUrl">
-          <el-input v-model="form.pictureUrl" placeholder="请输入图片" />
+        <el-form-item label="评论内容">
+          <editor v-model="form.content" :min-height="192"/>
         </el-form-item>
-        <el-form-item label="文件" prop="fileUrl">
-          <el-input v-model="form.fileUrl" placeholder="请输入文件" />
+        <el-form-item label="用户id" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入用户id" />
         </el-form-item>
-        <el-form-item label="国家id" prop="region">
-          <el-input v-model="form.region" placeholder="请输入国家id" />
-        </el-form-item>
-        <el-form-item label="发布日期" prop="pushDate">
-          <el-date-picker clearable
-            v-model="form.pushDate"
-            type="date"
-            value-format="yyyy-MM-dd"
-            placeholder="请选择发布日期">
-          </el-date-picker>
+        <el-form-item label="相关动态id" prop="dynamicId">
+          <el-input v-model="form.dynamicId" placeholder="请输入相关动态id" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -166,10 +137,10 @@
 </template>
 
 <script>
-import { listPolicy, getPolicy, delPolicy, addPolicy, updatePolicy } from "@/api/system/policy";
+import { listComment, getComment, delComment, addComment, updateComment } from "@/api/api/comment";
 
 export default {
-  name: "Policy",
+  name: "Comment",
   data() {
     return {
       // 遮罩层
@@ -184,8 +155,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 出口国家政策表格数据
-      policyList: [],
+      // 评论管理表格数据
+      commentList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -194,16 +165,18 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        title: null,
-        pictureUrl: null,
-        fileUrl: null,
-        region: null,
-        pushDate: null,
+        parentId: null,
+        content: null,
+        userId: null,
+        dynamicId: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
+        userId: [
+          { required: true, message: "用户id不能为空", trigger: "blur" }
+        ],
       }
     };
   },
@@ -211,11 +184,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询出口国家政策列表 */
+    /** 查询评论管理列表 */
     getList() {
       this.loading = true;
-      listPolicy(this.queryParams).then(response => {
-        this.policyList = response.rows;
+      listComment(this.queryParams).then(response => {
+        this.commentList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -229,13 +202,12 @@ export default {
     reset() {
       this.form = {
         id: null,
-        title: null,
-        pictureUrl: null,
-        fileUrl: null,
-        region: null,
-        pushDate: null,
+        parentId: null,
+        content: null,
+        userId: null,
         createTime: null,
-        updateTime: null
+        updateTime: null,
+        dynamicId: null
       };
       this.resetForm("form");
     },
@@ -259,16 +231,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加出口国家政策";
+      this.title = "添加评论管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getPolicy(id).then(response => {
+      getComment(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改出口国家政策";
+        this.title = "修改评论管理";
       });
     },
     /** 提交按钮 */
@@ -276,13 +248,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updatePolicy(this.form).then(response => {
+            updateComment(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addPolicy(this.form).then(response => {
+            addComment(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -294,8 +266,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除出口国家政策编号为"' + ids + '"的数据项？').then(function() {
-        return delPolicy(ids);
+      this.$modal.confirm('是否确认删除评论管理编号为"' + ids + '"的数据项？').then(function() {
+        return delComment(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -303,9 +275,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/policy/export', {
+      this.download('api/comment/export', {
         ...this.queryParams
-      }, `policy_${new Date().getTime()}.xlsx`)
+      }, `comment_${new Date().getTime()}.xlsx`)
     }
   }
 };

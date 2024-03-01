@@ -1,34 +1,10 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="品牌id" prop="brandId">
+      <el-form-item label="所属车源id" prop="vehicleId">
         <el-input
-          v-model="queryParams.brandId"
-          placeholder="请输入品牌id"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="车系名" prop="name">
-        <el-input
-          v-model="queryParams.name"
-          placeholder="请输入车系名"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="指导价" prop="price">
-        <el-input
-          v-model="queryParams.price"
-          placeholder="请输入指导价"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="车系图片" prop="url">
-        <el-input
-          v-model="queryParams.url"
-          placeholder="请输入车系图片"
+          v-model="queryParams.vehicleId"
+          placeholder="请输入所属车源id"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -47,7 +23,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['system:series:add']"
+          v-hasPermi="['api:img:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -58,7 +34,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['system:series:edit']"
+          v-hasPermi="['api:img:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -69,7 +45,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['system:series:remove']"
+          v-hasPermi="['api:img:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -79,19 +55,21 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['system:series:export']"
+          v-hasPermi="['api:img:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="seriesList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="imgList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="${comment}" align="center" prop="id" />
-      <el-table-column label="品牌id" align="center" prop="brandId" />
-      <el-table-column label="车系名" align="center" prop="name" />
-      <el-table-column label="指导价" align="center" prop="price" />
-      <el-table-column label="车系图片" align="center" prop="url" />
+      <el-table-column label="主键id" align="center" prop="id" />
+      <el-table-column label="所属车源id" align="center" prop="vehicleId" />
+      <el-table-column label="图片url" align="center" prop="url" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.url" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -99,14 +77,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:series:edit']"
+            v-hasPermi="['api:img:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['system:series:remove']"
+            v-hasPermi="['api:img:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -120,20 +98,14 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改车系管理对话框 -->
+    <!-- 添加或修改车源图片管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="品牌id" prop="brandId">
-          <el-input v-model="form.brandId" placeholder="请输入品牌id" />
+        <el-form-item label="所属车源id" prop="vehicleId">
+          <el-input v-model="form.vehicleId" placeholder="请输入所属车源id" />
         </el-form-item>
-        <el-form-item label="车系名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入车系名" />
-        </el-form-item>
-        <el-form-item label="指导价" prop="price">
-          <el-input v-model="form.price" placeholder="请输入指导价" />
-        </el-form-item>
-        <el-form-item label="车系图片" prop="url">
-          <el-input v-model="form.url" placeholder="请输入车系图片" />
+        <el-form-item label="图片url" prop="url">
+          <image-upload v-model="form.url"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -145,10 +117,10 @@
 </template>
 
 <script>
-import { listSeries, getSeries, delSeries, addSeries, updateSeries } from "@/api/system/series";
+import { listImg, getImg, delImg, addImg, updateImg } from "@/api/api/img";
 
 export default {
-  name: "Series",
+  name: "Img",
   data() {
     return {
       // 遮罩层
@@ -163,8 +135,8 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 车系管理表格数据
-      seriesList: [],
+      // 车源图片管理表格数据
+      imgList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -173,21 +145,13 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        brandId: null,
-        name: null,
-        price: null,
+        vehicleId: null,
         url: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        brandId: [
-          { required: true, message: "品牌id不能为空", trigger: "blur" }
-        ],
-        name: [
-          { required: true, message: "车系名不能为空", trigger: "blur" }
-        ],
       }
     };
   },
@@ -195,11 +159,11 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询车系管理列表 */
+    /** 查询车源图片管理列表 */
     getList() {
       this.loading = true;
-      listSeries(this.queryParams).then(response => {
-        this.seriesList = response.rows;
+      listImg(this.queryParams).then(response => {
+        this.imgList = response.rows;
         this.total = response.total;
         this.loading = false;
       });
@@ -213,9 +177,7 @@ export default {
     reset() {
       this.form = {
         id: null,
-        brandId: null,
-        name: null,
-        price: null,
+        vehicleId: null,
         url: null,
         createTime: null,
         updateTime: null
@@ -242,16 +204,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加车系管理";
+      this.title = "添加车源图片管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getSeries(id).then(response => {
+      getImg(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改车系管理";
+        this.title = "修改车源图片管理";
       });
     },
     /** 提交按钮 */
@@ -259,13 +221,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateSeries(this.form).then(response => {
+            updateImg(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addSeries(this.form).then(response => {
+            addImg(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -277,8 +239,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除车系管理编号为"' + ids + '"的数据项？').then(function() {
-        return delSeries(ids);
+      this.$modal.confirm('是否确认删除车源图片管理编号为"' + ids + '"的数据项？').then(function() {
+        return delImg(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -286,9 +248,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('system/series/export', {
+      this.download('api/img/export', {
         ...this.queryParams
-      }, `series_${new Date().getTime()}.xlsx`)
+      }, `img_${new Date().getTime()}.xlsx`)
     }
   }
 };
