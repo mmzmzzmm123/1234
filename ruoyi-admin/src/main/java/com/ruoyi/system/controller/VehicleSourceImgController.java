@@ -2,6 +2,8 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +25,12 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 车源图片管理Controller
- * 
+ *
  * @author carol
  * @date 2024-03-01
  */
 @RestController
+@Api(tags = "车源图片接口")
 @RequestMapping("/api/img")
 public class VehicleSourceImgController extends BaseController
 {

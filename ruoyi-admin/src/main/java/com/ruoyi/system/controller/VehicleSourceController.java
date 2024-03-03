@@ -2,6 +2,11 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.R;
+import com.ruoyi.system.domain.VehicleBrand;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +28,11 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 车源管理Controller
- * 
+ *
  * @author carol
  * @date 2024-03-01
  */
+@Api(tags ="车源接口")
 @RestController
 @RequestMapping("/api/source")
 public class VehicleSourceController extends BaseController
@@ -100,5 +106,20 @@ public class VehicleSourceController extends BaseController
     public AjaxResult remove(@PathVariable Long[] ids)
     {
         return toAjax(vehicleSourceService.deleteVehicleSourceByIds(ids));
+    }
+
+    @ApiOperation("查询现有品牌")
+    @GetMapping("/brands")
+    public R<List<VehicleBrand>> getBrands(){
+        List<VehicleBrand> brands =  vehicleSourceService.listGroupByBrandId();
+        R<List<VehicleBrand>> r = new R<>();
+        r.setData(brands);
+        return r;
+    }
+
+    @ApiOperation("根据车辆id查询具体的车辆信息")
+    @GetMapping("/getinfo/{id}")
+    public R getInfoById(@PathVariable("id")Long id){
+        return vehicleSourceService.getInfoById(id);
     }
 }

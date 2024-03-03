@@ -2,6 +2,9 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +26,11 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 品牌管理Controller
- * 
+ *
  * @author carol
  * @date 2024-03-01
  */
+@Api(tags = "车辆品牌接口")
 @RestController
 @RequestMapping("/api/brand")
 public class VehicleBrandController extends BaseController
@@ -39,6 +43,7 @@ public class VehicleBrandController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('api:brand:list')")
     @GetMapping("/list")
+    @ApiOperation("查询所有品牌")
     public TableDataInfo list(VehicleBrand vehicleBrand)
     {
         startPage();

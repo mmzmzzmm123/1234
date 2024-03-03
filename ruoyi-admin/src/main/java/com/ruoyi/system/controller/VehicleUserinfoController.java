@@ -2,6 +2,9 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,11 +26,12 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 小程序用户信息管理Controller
- * 
+ *
  * @author carol
  * @date 2024-03-01
  */
 @RestController
+@Api(tags = "微信小程序用户接口")
 @RequestMapping("/api/userinfo")
 public class VehicleUserinfoController extends BaseController
 {
@@ -37,6 +41,7 @@ public class VehicleUserinfoController extends BaseController
     /**
      * 查询小程序用户信息管理列表
      */
+    @ApiOperation("展示小程序用户列表")
     @PreAuthorize("@ss.hasPermi('api:userinfo:list')")
     @GetMapping("/list")
     public TableDataInfo list(VehicleUserinfo vehicleUserinfo)

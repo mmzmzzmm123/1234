@@ -2,6 +2,8 @@ package com.ruoyi.system.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import io.swagger.annotations.Api;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +25,11 @@ import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
  * 全球国家信息管理Controller
- * 
+ *
  * @author carol
  * @date 2024-03-01
  */
+@Api(tags = "全球国家名接口")
 @RestController
 @RequestMapping("/api/countries")
 public class TpCountriesController extends BaseController

@@ -17,14 +17,6 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="文章封面图" prop="picture">
-        <el-input
-          v-model="queryParams.picture"
-          placeholder="请输入文章封面图"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="车源地" prop="sourceAddr">
         <el-input
           v-model="queryParams.sourceAddr"
@@ -37,6 +29,14 @@
         <el-input
           v-model="queryParams.wxNum"
           placeholder="请输入微信号"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="发布者id" prop="userId">
+        <el-input
+          v-model="queryParams.userId"
+          placeholder="请输入发布者id"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -99,9 +99,14 @@
       <el-table-column label="标题" align="center" prop="title" />
       <el-table-column label="简介" align="center" prop="intro" />
       <el-table-column label="文章内容" align="center" prop="content" />
-      <el-table-column label="文章封面图" align="center" prop="picture" />
+      <el-table-column label="文章封面图" align="center" prop="picture" width="100">
+        <template slot-scope="scope">
+          <image-preview :src="scope.row.picture" :width="50" :height="50"/>
+        </template>
+      </el-table-column>
       <el-table-column label="车源地" align="center" prop="sourceAddr" />
       <el-table-column label="微信号" align="center" prop="wxNum" />
+      <el-table-column label="发布者id" align="center" prop="userId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -143,13 +148,16 @@
           <editor v-model="form.content" :min-height="192"/>
         </el-form-item>
         <el-form-item label="文章封面图" prop="picture">
-          <el-input v-model="form.picture" placeholder="请输入文章封面图" />
+          <image-upload v-model="form.picture"/>
         </el-form-item>
         <el-form-item label="车源地" prop="sourceAddr">
           <el-input v-model="form.sourceAddr" placeholder="请输入车源地" />
         </el-form-item>
         <el-form-item label="微信号" prop="wxNum">
           <el-input v-model="form.wxNum" placeholder="请输入微信号" />
+        </el-form-item>
+        <el-form-item label="发布者id" prop="userId">
+          <el-input v-model="form.userId" placeholder="请输入发布者id" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -195,6 +203,7 @@ export default {
         picture: null,
         sourceAddr: null,
         wxNum: null,
+        userId: null
       },
       // 表单参数
       form: {},
@@ -238,7 +247,8 @@ export default {
         sourceAddr: null,
         wxNum: null,
         createTime: null,
-        updateTime: null
+        updateTime: null,
+        userId: null
       };
       this.resetForm("form");
     },

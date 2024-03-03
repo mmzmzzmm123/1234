@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.mapper.VehicleSourceMapper">
-    
+
     <resultMap type="VehicleSource" id="VehicleSourceResult">
         <result property="id"    column="id"    />
         <result property="seriesId"    column="series_id"    />
@@ -28,7 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <select id="selectVehicleSourceList" parameterType="VehicleSource" resultMap="VehicleSourceResult">
         <include refid="selectVehicleSourceVo"/>
-        <where>  
+        <where>
             <if test="seriesId != null "> and series_id = #{seriesId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="color != null  and color != ''"> and color = #{color}</if>
@@ -43,12 +43,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="type != null  and type != ''"> and type = #{type}</if>
         </where>
     </select>
-    
+
     <select id="selectVehicleSourceById" parameterType="Long" resultMap="VehicleSourceResult">
         <include refid="selectVehicleSourceVo"/>
         where id = #{id}
     </select>
-        
+
+    <select id="listGroupByBrandId" resultType="java.lang.Long">
+        select brand_id from vehicle_source group by brand_id
+    </select>
+
     <insert id="insertVehicleSource" parameterType="VehicleSource" useGeneratedKeys="true" keyProperty="id">
         insert into vehicle_source
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -111,7 +115,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteVehicleSourceByIds" parameterType="String">
-        delete from vehicle_source where id in 
+        delete from vehicle_source where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -14,10 +14,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="wxNum"    column="wx_num"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="userId"    column="user_id"    />
     </resultMap>
 
     <sql id="selectDynamicVo">
-        select id, title, intro, content, picture, source_addr, wx_num, create_time, update_time from dynamic
+        select id, title, intro, content, picture, source_addr, wx_num, create_time, update_time, user_id from dynamic
     </sql>
 
     <select id="selectDynamicList" parameterType="Dynamic" resultMap="DynamicResult">
@@ -29,6 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="picture != null  and picture != ''"> and picture = #{picture}</if>
             <if test="sourceAddr != null  and sourceAddr != ''"> and source_addr = #{sourceAddr}</if>
             <if test="wxNum != null  and wxNum != ''"> and wx_num = #{wxNum}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
         </where>
     </select>
     
@@ -48,6 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="wxNum != null">wx_num,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="userId != null">user_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null and title != ''">#{title},</if>
@@ -58,6 +61,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="wxNum != null">#{wxNum},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="userId != null">#{userId},</if>
          </trim>
     </insert>
 
@@ -72,6 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="wxNum != null">wx_num = #{wxNum},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
         </trim>
         where id = #{id}
     </update>

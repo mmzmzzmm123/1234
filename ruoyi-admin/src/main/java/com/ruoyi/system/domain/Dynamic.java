@@ -42,6 +42,10 @@ public class Dynamic extends BaseEntity
     @Excel(name = "微信号")
     private String wxNum;
 
+    /** 发布者id */
+    @Excel(name = "发布者id")
+    private Long userId;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -105,6 +109,15 @@ public class Dynamic extends BaseEntity
     {
         return wxNum;
     }
+    public void setUserId(Long userId) 
+    {
+        this.userId = userId;
+    }
+
+    public Long getUserId() 
+    {
+        return userId;
+    }
 
     @Override
     public String toString() {
@@ -118,6 +131,7 @@ public class Dynamic extends BaseEntity
             .append("wxNum", getWxNum())
             .append("createTime", getCreateTime())
             .append("updateTime", getUpdateTime())
+            .append("userId", getUserId())
             .toString();
     }
 }
