@@ -87,6 +87,7 @@ export default {
   watch: {
     value: {
       handler(val) {
+        console.log("handler方法是干啥的？",val)
         if (val) {
           // 首先将值转为数组
           const list = Array.isArray(val) ? val : this.value.split(',');
@@ -119,6 +120,7 @@ export default {
   methods: {
     // 上传前loading加载
     handleBeforeUpload(file) {
+      console.log("handlerBeforeUpload方法？？？？？？？？？",file)
       let isImg = false;
       if (this.fileType.length) {
         let fileExtension = "";
@@ -154,8 +156,11 @@ export default {
     },
     // 上传成功回调
     handleUploadSuccess(res, file) {
+      console.log("上传成功回调是干啥的？？？",res,"这里的file：",file)
+      //res是调用上传接口后返回的数据 res.url就是图片路径
       if (res.code === 200) {
-        this.uploadList.push({ name: res.fileName, url: res.fileName });
+        this.uploadList.push({ name: res.fileName, url: res.url });
+        console.log("handleUploadSuccess..."+res.fileName)
         this.uploadedSuccessfully();
       } else {
         this.number--;
@@ -180,6 +185,7 @@ export default {
     },
     // 上传结束处理
     uploadedSuccessfully() {
+      console.log("上传结束调用")
       if (this.number > 0 && this.uploadList.length === this.number) {
         this.fileList = this.fileList.concat(this.uploadList);
         this.uploadList = [];
@@ -190,6 +196,7 @@ export default {
     },
     // 预览
     handlePictureCardPreview(file) {
+      console.log("预览文件对象...",file)
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },

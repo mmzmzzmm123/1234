@@ -127,3 +127,19 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+# 阿里云对象存储配置
+# 把下面配置直接追加到配置文件中，修改对应的值即可
+
+aliyunoss:
+  # 地域节点
+  endpoint: oss-cn-chengdu.aliyuncs.com
+  # AccessKey
+  accessKeyId: LTAI5tRyqQdKN6cmsKruku67
+  # AccessKey 秘钥
+  accessKeySecret: Fmxgunmrr4VPlSKbKllSmfLWBBEvPE
+  # bucket名称
+  bucketName: carol-oss
+  # bucket下文件夹的路径
+  filehost: vehicle-trade
+  # 访问域名
+  url: https://carol-oss.oss-cn-chengdu.aliyuncs.com
