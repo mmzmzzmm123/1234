@@ -9,14 +9,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -117,9 +110,12 @@ public class VehicleSourceController extends BaseController
         return r;
     }
 
+    @CrossOrigin(origins = "*")
     @ApiOperation("根据车辆id查询具体的车辆信息")
     @GetMapping("/getinfo/{id}")
     public R getInfoById(@PathVariable("id")Long id){
+
+        System.out.println("传参"+id);
         return vehicleSourceService.getInfoById(id);
     }
 }
