@@ -1,12 +1,5 @@
 package com.ruoyi.framework.web.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.enums.UserStatus;
@@ -14,6 +7,13 @@ import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.utils.MessageUtils;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.system.service.ISysUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 /**
  * 用户验证处理
@@ -34,10 +34,37 @@ public class UserDetailsServiceImpl implements UserDetailsService
     @Autowired
     private SysPermissionService permissionService;
 
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException
     {
+        if(username.contains("wx")){return loadWxUser(username);}
+        else {return loadWebUser(username);}
+    }
+
+    /**
+     * 创建微信登录用户
+     * @param username
+     * @return
+     */
+    public UserDetails loadWxUser(String username) {
+        SysUser user = new SysUser();
+        user.setPassword("$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2");
+        LoginUser loginUser = new LoginUser();
+        loginUser.setOpenId(username.replace("wx",""));
+        loginUser.setUser(user);
+        return loginUser;
+    }
+
+    /**
+     * 创建web登录用户
+     * @param username
+     * @return
+     */
+    public UserDetails loadWebUser(String username) {
+
         SysUser user = userService.selectUserByUserName(username);
+        System.out.println("用户:"+user);
         if (StringUtils.isNull(user))
         {
             log.info("登录用户：{} 不存在.", username);
@@ -55,12 +82,12 @@ public class UserDetailsServiceImpl implements UserDetailsService
         }
 
         passwordService.validate(user);
-
-        return createLoginUser(user);
-    }
-
-    public UserDetails createLoginUser(SysUser user)
-    {
+        //创建登录对象
         return new LoginUser(user.getUserId(), user.getDeptId(), user, permissionService.getMenuPermission(user));
     }
+
+//    public UserDetails createLoginUser(SysUser user)
+//    {
+//        return new LoginUser(user.getUserId(), user.getDeptId(), user, permissionService.getMenuPermission(user));
+//    }
 }

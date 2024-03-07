@@ -1,7 +1,7 @@
 package com.ruoyi.system.mapper;
+import com.ruoyi.system.domain.VehiclePolicy;
 
 import java.util.List;
-import com.ruoyi.system.domain.VehiclePolicy;
 
 /**
  * 政策信息管理Mapper接口
@@ -9,7 +9,7 @@ import com.ruoyi.system.domain.VehiclePolicy;
  * @author carol
  * @date 2024-03-01
  */
-public interface VehiclePolicyMapper 
+public interface VehiclePolicyMapper
 {
     /**
      * 查询政策信息管理

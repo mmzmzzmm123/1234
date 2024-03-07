@@ -1,7 +1,8 @@
 package com.ruoyi.system.mapper;
 
-import java.util.List;
 import com.ruoyi.system.domain.VehicleUserinfo;
+
+import java.util.List;
 
 /**
  * 小程序用户信息管理Mapper接口
@@ -9,7 +10,7 @@ import com.ruoyi.system.domain.VehicleUserinfo;
  * @author carol
  * @date 2024-03-01
  */
-public interface VehicleUserinfoMapper 
+public interface VehicleUserinfoMapper
 {
     /**
      * 查询小程序用户信息管理
@@ -58,4 +59,17 @@ public interface VehicleUserinfoMapper
      * @return 结果
      */
     public int deleteVehicleUserinfoByIds(Long[] ids);
+
+    /**
+     * 根据openid获取用户信息
+     * @param openid
+     * @return
+     */
+    VehicleUserinfo getUserByOpenId(String openid);
+
+    /**
+     * 新增小程序用户
+     * @param userinfo
+     */
+    void insert(VehicleUserinfo userinfo);
 }

@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectVehicleUserinfoVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertVehicleUserinfo" parameterType="VehicleUserinfo" useGeneratedKeys="true" keyProperty="id">
         insert into vehicle_userinfo
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -77,6 +77,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
+
     <update id="updateVehicleUserinfo" parameterType="VehicleUserinfo">
         update vehicle_userinfo
         <trim prefix="SET" suffixOverrides=",">
@@ -106,4 +107,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="getUserByOpenId" resultType="com.ruoyi.system.domain.VehicleUserinfo">
+        select * from vehicle_userinfo where openid = #{openId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into vehicle_userinfo (openid, name, sex, avatar_url, phone, address, birth, email, unit, create_time, nick_name, update_time)
+        values (#{openid}, #{name}, #{sex}, #{avatarUrl}, #{phone}, #{address}, #{birth}, #{email}, #{unit}, #{createTime}, #{nickName}, #{updateTime})
+    </insert>
 </mapper>

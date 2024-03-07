@@ -1,28 +1,24 @@
 package com.ruoyi.system.controller;
 
-import java.util.List;
-import javax.servlet.http.HttpServletResponse;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.system.domain.VehicleUserinfo;
 import com.ruoyi.system.service.IVehicleUserinfoService;
-import com.ruoyi.common.utils.poi.ExcelUtil;
-import com.ruoyi.common.core.page.TableDataInfo;
+import com.ruoyi.system.vo.LoginBody;
+import com.ruoyi.system.vo.LoginVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 小程序用户信息管理Controller
@@ -33,10 +29,24 @@ import com.ruoyi.common.core.page.TableDataInfo;
 @RestController
 @Api(tags = "微信小程序用户接口")
 @RequestMapping("/api/userinfo")
+@Slf4j
 public class VehicleUserinfoController extends BaseController
 {
     @Autowired
     private IVehicleUserinfoService vehicleUserinfoService;
+    /**
+     * 微信登录
+     * @param
+     * @return
+     */
+    @PostMapping("/login")
+    @ApiOperation("微信登录")
+    public AjaxResult login(@RequestBody LoginBody loginBody){
+        log.info("微信登录：{}",loginBody);
+        //微信登录
+        LoginVO loginVO = vehicleUserinfoService.wxLogin(loginBody);
+        return AjaxResult.success(loginVO);
+    }
 
     /**
      * 查询小程序用户信息管理列表
@@ -67,7 +77,7 @@ public class VehicleUserinfoController extends BaseController
     /**
      * 获取小程序用户信息管理详细信息
      */
-    @PreAuthorize("@ss.hasPermi('api:userinfo:query')")
+    //@PreAuthorize("@ss.hasPermi('api:userinfo:query')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {

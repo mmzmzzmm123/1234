@@ -100,9 +100,19 @@ public class Constants
     public static final String TOKEN_PREFIX = "Bearer ";
 
     /**
+     * 微信令牌前缀
+     */
+    public static final String WXTOKEN_PREFIX = "WxBearer ";
+
+    /**
      * 令牌前缀
      */
     public static final String LOGIN_USER_KEY = "login_user_key";
+
+    /**
+     * 微信小程序令牌前缀
+     */
+    public static final String LOGIN_WXUSER_KEY = "login_wxuser_key";
 
     /**
      * 用户ID

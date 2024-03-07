@@ -1,7 +1,10 @@
 package com.ruoyi.system.service;
 
-import java.util.List;
 import com.ruoyi.system.domain.VehicleUserinfo;
+import com.ruoyi.system.vo.LoginBody;
+import com.ruoyi.system.vo.LoginVO;
+
+import java.util.List;
 
 /**
  * 小程序用户信息管理Service接口
@@ -9,8 +12,11 @@ import com.ruoyi.system.domain.VehicleUserinfo;
  * @author carol
  * @date 2024-03-01
  */
-public interface IVehicleUserinfoService 
+public interface IVehicleUserinfoService
 {
+
+
+
     /**
      * 查询小程序用户信息管理
      * 
@@ -58,4 +64,11 @@ public interface IVehicleUserinfoService
      * @return 结果
      */
     public int deleteVehicleUserinfoById(Long id);
+
+    /**
+     * 微信小程序登录
+     * @param 登录参数
+     * @return
+     */
+    LoginVO wxLogin(LoginBody loginBody);
 }
