@@ -146,31 +146,31 @@
             <!-- 定时任务-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-quartz</artifactId>
+                <artifactId>ot-quartz</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
             <!-- 代码生成-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-generator</artifactId>
+                <artifactId>ot-generator</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
             <!-- 核心模块-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-framework</artifactId>
+                <artifactId>ot-framework</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
             <!-- 系统模块-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-system</artifactId>
+                <artifactId>ot-system</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
             <!-- 通用工具-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-common</artifactId>
+                <artifactId>ot-common</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
             <!-- 业务模块-->
@@ -214,12 +214,12 @@
     </dependencyManagement>
 
     <modules>
-        <module>ruoyi-admin</module>
-        <module>ruoyi-framework</module>
-        <module>ruoyi-system</module>
-        <module>ruoyi-quartz</module>
-        <module>ruoyi-generator</module>
-        <module>ruoyi-common</module>
+        <module>ot-admin</module>
+        <module>ot-framework</module>
+        <module>ot-system</module>
+        <module>ot-quartz</module>
+        <module>ot-generator</module>
+        <module>ot-common</module>
         <module>onethinker</module>
     </modules>
     <packaging>pom</packaging>
