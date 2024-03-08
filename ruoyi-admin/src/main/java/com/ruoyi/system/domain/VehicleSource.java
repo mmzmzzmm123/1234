@@ -10,7 +10,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 车源管理对象 vehicle_source
  * 
  * @author carol
- * @date 2024-03-01
+ * @date 2024-03-06
  */
 public class VehicleSource extends BaseEntity
 {

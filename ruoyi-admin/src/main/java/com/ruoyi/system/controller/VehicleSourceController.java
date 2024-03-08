@@ -4,12 +4,20 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.system.domain.VehicleBrand;
+import com.ruoyi.system.vo.VehicleSourceListVO;
+import com.ruoyi.system.vo.VehicleSourceVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -23,9 +31,8 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 车源管理Controller
  *
  * @author carol
- * @date 2024-03-01
+ * @date 2024-03-06
  */
-@Api(tags ="车源接口")
 @RestController
 @RequestMapping("/api/source")
 public class VehicleSourceController extends BaseController
@@ -101,21 +108,17 @@ public class VehicleSourceController extends BaseController
         return toAjax(vehicleSourceService.deleteVehicleSourceByIds(ids));
     }
 
-    @ApiOperation("查询现有品牌")
-    @GetMapping("/brands")
-    public R<List<VehicleBrand>> getBrands(){
-        List<VehicleBrand> brands =  vehicleSourceService.listGroupByBrandId();
-        R<List<VehicleBrand>> r = new R<>();
-        r.setData(brands);
-        return r;
+    @ApiOperation("查询所有车源信息")
+    @GetMapping("/all")
+    public R<List<VehicleSourceListVO>> getAllVehicleSources(){
+        List<VehicleSourceListVO> list= vehicleSourceService.getAllVehicleSource();
+        return R.ok(list);
     }
 
-    @CrossOrigin(origins = "*")
-    @ApiOperation("根据车辆id查询具体的车辆信息")
+    @ApiOperation("查询具体车源的车辆信息")
     @GetMapping("/getinfo/{id}")
-    public R getInfoById(@PathVariable("id")Long id){
-
-        System.out.println("传参"+id);
-        return vehicleSourceService.getInfoById(id);
+    public R<VehicleSourceVO> getVehicleDetail(@PathVariable("id")Long id){
+        VehicleSourceVO vehicleSourceVO =  vehicleSourceService.selectVehicleSourceInfoById(id);
+        return R.ok(vehicleSourceVO);
     }
 }

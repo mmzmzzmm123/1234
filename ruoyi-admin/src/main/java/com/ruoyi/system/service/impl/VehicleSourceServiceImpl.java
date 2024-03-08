@@ -1,15 +1,14 @@
 package com.ruoyi.system.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.system.domain.VehicleBrand;
 import com.ruoyi.system.domain.VehicleSeries;
 import com.ruoyi.system.domain.VehicleUserinfo;
 import com.ruoyi.system.mapper.VehicleSeriesMapper;
 import com.ruoyi.system.mapper.VehicleSourceImgMapper;
 import com.ruoyi.system.mapper.VehicleUserinfoMapper;
+import com.ruoyi.system.vo.VehicleSourceListVO;
 import com.ruoyi.system.vo.VehicleSourceVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +20,7 @@ import com.ruoyi.system.service.IVehicleSourceService;
  * 车源管理Service业务层处理
  *
  * @author carol
- * @date 2024-03-01
+ * @date 2024-03-06
  */
 @Service
 public class VehicleSourceServiceImpl implements IVehicleSourceService
@@ -33,11 +32,10 @@ public class VehicleSourceServiceImpl implements IVehicleSourceService
     private VehicleSeriesMapper vehicleSeriesMapper;
 
     @Autowired
-    private VehicleUserinfoMapper userinfoMapper;
+    private VehicleUserinfoMapper vehicleUserinfoMapper;
 
     @Autowired
-    private VehicleSourceImgMapper sourceImgMapper;
-
+    private VehicleSourceImgMapper vehicleSourceImgMapper;
 
     /**
      * 查询车源管理
@@ -114,50 +112,62 @@ public class VehicleSourceServiceImpl implements IVehicleSourceService
     }
 
     @Override
-    public List<VehicleBrand> listGroupByBrandId() {
-        //以groupId分组查询车源中有哪些品牌id
-        List<Long> brandIds = vehicleSourceMapper.listGroupByBrandId();
-        //用品牌id查询品牌进行返回
-        brandIds.forEach(e-> System.out.println(e));
+    public List<VehicleSourceListVO> getAllVehicleSource() {
+        List<VehicleSourceListVO> list = new ArrayList<>();
+        VehicleSource vehicleSource = new VehicleSource();
 
-        return null;
+        List<VehicleSource> vehicleSources = vehicleSourceMapper.selectVehicleSourceList(vehicleSource);
+        vehicleSources.forEach(e->{
+            VehicleSourceListVO vehicleSourceListVO = new VehicleSourceListVO();
+            Long seriesId = e.getSeriesId();
+            //获取车系，车系指导价 车系图片
+            VehicleSeries vehicleSeries = vehicleSeriesMapper.selectVehicleSeriesById(seriesId);
+            vehicleSourceListVO.setId(e.getId());
+            vehicleSourceListVO.setName(e.getName());
+            vehicleSourceListVO.setType(e.getType());
+            vehicleSourceListVO.setColor(e.getColor());
+            vehicleSourceListVO.setGuidPrice(vehicleSeries.getPrice());
+            vehicleSourceListVO.setArea(e.getArea());
+            vehicleSourceListVO.setUrl(vehicleSeries.getUrl());
+            vehicleSourceListVO.setStatus(e.getStatus());
+            //填入list
+            list.add(vehicleSourceListVO);
+        });
+        return list;
     }
 
     @Override
-    public R getInfoById(Long id) {
-        //前端返回对象
+    public VehicleSourceVO selectVehicleSourceInfoById(Long id) {
         VehicleSourceVO vehicleSourceVO = new VehicleSourceVO();
         //查询车源
         VehicleSource vehicleSource = vehicleSourceMapper.selectVehicleSourceById(id);
-        Long seriesId = vehicleSource.getSeriesId();//获取车系id，查询指导价，车系名称
-        Long ownerId = vehicleSource.getOwnerId();//卖家id，查询卖家手机号、微信号、头像\昵称
-        //填入source输入
-        vehicleSourceVO.setAge(vehicleSource.getAge());
-        vehicleSourceVO.setArea(vehicleSource.getArea());
-        vehicleSourceVO.setColor(vehicleSource.getColor());
+        Long seriesId = vehicleSource.getSeriesId();
+        Long ownerId = vehicleSource.getOwnerId();
+
         vehicleSourceVO.setName(vehicleSource.getName());
-        vehicleSourceVO.setNotes(vehicleSource.getNotes());
         vehicleSourceVO.setPrice(vehicleSource.getPrice());
+        vehicleSourceVO.setColor(vehicleSource.getColor());
         vehicleSourceVO.setInnerColor(vehicleSource.getInnerColor());
-        vehicleSourceVO.setType(vehicleSource.getType());
+        vehicleSourceVO.setArea(vehicleSource.getArea());
+        vehicleSourceVO.setSourceArea(vehicleSource.getSourceArea());
+        vehicleSourceVO.setNotes(vehicleSource.getNotes());
         vehicleSourceVO.setStatus(vehicleSource.getStatus());
-        //查询你车系信息
+        vehicleSourceVO.setAge(vehicleSource.getAge());
+
+        //查询车系
         VehicleSeries vehicleSeries = vehicleSeriesMapper.selectVehicleSeriesById(seriesId);
         vehicleSourceVO.setSeries(vehicleSeries.getName());
         vehicleSourceVO.setGuidPrice(vehicleSeries.getPrice());
 
+
+        //查询图片url
+        List<String> url = vehicleSourceImgMapper.selectImgListBySourceId(id);
+        vehicleSourceVO.setUrls(url);
         //查询卖家信息
-        VehicleUserinfo vehicleUserinfo = userinfoMapper.selectVehicleUserinfoById(ownerId);
-        vehicleSourceVO.setOwnerId(ownerId);
+        VehicleUserinfo vehicleUserinfo = vehicleUserinfoMapper.selectVehicleUserinfoById(ownerId);
+        vehicleSourceVO.setOwnerId(vehicleUserinfo.getId());
         vehicleSourceVO.setPhone(vehicleUserinfo.getPhone());
-        vehicleSourceVO.setAvatar(vehicleUserinfo.getAvatarUrl());
         vehicleSourceVO.setWxNum(vehicleUserinfo.getPhone());
-        vehicleSourceVO.setNickName(vehicleUserinfo.getNickName());
-
-        //查询车源相关图片
-        List<String> imgList = sourceImgMapper.selectImgListBySourceId(id);
-        vehicleSourceVO.setUrls(imgList);
-        return R.ok(vehicleSourceVO);
+        return vehicleSourceVO;
     }
-
 }
