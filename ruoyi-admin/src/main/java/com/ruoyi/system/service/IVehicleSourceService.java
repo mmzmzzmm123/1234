@@ -1,16 +1,15 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
-
-import com.ruoyi.common.core.domain.R;
-import com.ruoyi.system.domain.VehicleBrand;
 import com.ruoyi.system.domain.VehicleSource;
+import com.ruoyi.system.vo.VehicleSourceListVO;
+import com.ruoyi.system.vo.VehicleSourceVO;
 
 /**
  * 车源管理Service接口
  *
  * @author carol
- * @date 2024-03-01
+ * @date 2024-03-06
  */
 public interface IVehicleSourceService
 {
@@ -62,12 +61,16 @@ public interface IVehicleSourceService
      */
     public int deleteVehicleSourceById(Long id);
 
-    List<VehicleBrand> listGroupByBrandId();
+    /**
+     * 查询所有车源
+     * @return
+     */
+    List<VehicleSourceListVO> getAllVehicleSource();
 
     /**
-     * 通过车源id查询车源具体信息
+     * 查询车辆详细信息进行展示
      * @param id
      * @return
      */
-    R getInfoById(Long id);
+    VehicleSourceVO selectVehicleSourceInfoById(Long id);
 }

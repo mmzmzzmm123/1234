@@ -5,7 +5,7 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.ruoyi.common.config.AliyunOssConfig;
 import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.utils.StringUtils;
-import org.apache.http.client.utils.URLEncodedUtils;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;

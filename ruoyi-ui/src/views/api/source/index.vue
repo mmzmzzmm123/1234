@@ -41,6 +41,14 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="车辆状态" prop="status">
+        <el-input
+          v-model="queryParams.status"
+          placeholder="请输入车辆状态"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
       <el-form-item label="车源地" prop="sourceArea">
         <el-input
           v-model="queryParams.sourceArea"
@@ -77,6 +85,14 @@
         <el-input
           v-model="queryParams.price"
           placeholder="请输入售卖价格"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="车辆类型" prop="type">
+        <el-input
+          v-model="queryParams.type"
+          placeholder="请输入车辆类型"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -194,6 +210,9 @@
         <el-form-item label="车辆所在地" prop="area">
           <el-input v-model="form.area" placeholder="请输入车辆所在地" />
         </el-form-item>
+        <el-form-item label="车辆状态" prop="status">
+          <el-input v-model="form.status" placeholder="请输入车辆状态" />
+        </el-form-item>
         <el-form-item label="车源地" prop="sourceArea">
           <el-input v-model="form.sourceArea" placeholder="请输入车源地" />
         </el-form-item>
@@ -208,6 +227,9 @@
         </el-form-item>
         <el-form-item label="售卖价格" prop="price">
           <el-input v-model="form.price" placeholder="请输入售卖价格" />
+        </el-form-item>
+        <el-form-item label="车辆类型" prop="type">
+          <el-input v-model="form.type" placeholder="请输入车辆类型" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
