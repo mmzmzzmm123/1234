@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onethinker.onethinker.mapper.BannerMapper">
+
+    <resultMap type="Banner" id="BannerResult">
+            <result property="id" column="id"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="enabled" column="enabled"/>
+            <result property="weight" column="weight"/>
+            <result property="imageUrl" column="image_url"/>
+            <result property="url" column="url"/>
+            <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectBannerVo">
+        select id, create_time, update_time, enabled, weight, image_url, url, remark
+        from t_banner
+    </sql>
+
+    <select id="selectBannerList" parameterType="Banner" resultMap="BannerResult">
+        <include refid="selectBannerVo"/>
+        <where>
+                        <if test="enabled != null ">
+                            and enabled = #{enabled}
+                        </if>
+                        <if test="weight != null ">
+                            and weight = #{weight}
+                        </if>
+                        <if test="imageUrl != null  and imageUrl != ''">
+                            and image_url = #{imageUrl}
+                        </if>
+                        <if test="url != null  and url != ''">
+                            and url = #{url}
+                        </if>
+        </where>
+    </select>
+
+    <select id="selectBannerById" parameterType="Long"
+            resultMap="BannerResult">
+            <include refid="selectBannerVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertBanner" parameterType="Banner" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into t_banner
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="createTime != null">create_time,
+                    </if>
+                    <if test="updateTime != null">update_time,
+                    </if>
+                    <if test="enabled != null">enabled,
+                    </if>
+                    <if test="weight != null">weight,
+                    </if>
+                    <if test="imageUrl != null">image_url,
+                    </if>
+                    <if test="url != null">url,
+                    </if>
+                    <if test="remark != null">remark,
+                    </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="createTime != null">#{createTime},
+                    </if>
+                    <if test="updateTime != null">#{updateTime},
+                    </if>
+                    <if test="enabled != null">#{enabled},
+                    </if>
+                    <if test="weight != null">#{weight},
+                    </if>
+                    <if test="imageUrl != null">#{imageUrl},
+                    </if>
+                    <if test="url != null">#{url},
+                    </if>
+                    <if test="remark != null">#{remark},
+                    </if>
+        </trim>
+    </insert>
+
+    <update id="updateBanner" parameterType="Banner">
+        update t_banner
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                    <if test="updateTime != null">update_time =
+                        #{updateTime},
+                    </if>
+                    <if test="enabled != null">enabled =
+                        #{enabled},
+                    </if>
+                    <if test="weight != null">weight =
+                        #{weight},
+                    </if>
+                    <if test="imageUrl != null">image_url =
+                        #{imageUrl},
+                    </if>
+                    <if test="url != null">url =
+                        #{url},
+                    </if>
+                    <if test="remark != null">remark =
+                        #{remark},
+                    </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBannerById" parameterType="Long">
+        delete from t_banner where id = #{id}
+    </delete>
+
+    <delete id="deleteBannerByIds" parameterType="String">
+        delete from t_banner where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

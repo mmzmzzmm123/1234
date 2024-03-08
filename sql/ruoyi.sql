@@ -1643,3 +1643,40 @@ CREATE TABLE `t_subscribe_msg_send_result`
   CHARACTER SET = utf8
   COLLATE = utf8_general_ci COMMENT = '订阅消息发送结果'
   ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `t_weather_info`;
+CREATE TABLE `t_weather_info`
+(
+    `id`          bigint(20) UNSIGNED                                    NOT NULL AUTO_INCREMENT COMMENT '表主键',
+    `create_time` datetime                                               NULL     DEFAULT NULL COMMENT '添加时间',
+    `update_time` datetime                                               NULL     DEFAULT NULL COMMENT '更新时间',
+    `create_by`   varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL     DEFAULT '' COMMENT '创建者',
+    `update_by`   varchar(64) CHARACTER SET utf8 COLLATE utf8_general_ci NULL     DEFAULT '' COMMENT '更新者',
+    `enabled`     int(11)                                                NULL     DEFAULT 1 COMMENT '是否可见，0发送失败，1发送成功',
+    `weight`      bigint(20)                                             NULL     DEFAULT 0 COMMENT '权重',
+    `key`         varchar(100)                                           NOT NULL DEFAULT '' COMMENT '请求服务权限标识',
+    `city`        varchar(20)                                            NOT NULL DEFAULT '' COMMENT '城市编码',
+    `extensions`  varchar(255)                                           NOT NULL DEFAULT '' COMMENT '气象类型',
+    `send_result` text COMMENT '请求结果',
+    PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB
+  CHARACTER SET = utf8
+  COLLATE = utf8_general_ci COMMENT = '天气预报最新结果'
+  ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `t_banner`;
+CREATE TABLE `t_banner`
+(
+    `id`          bigint unsigned NOT NULL AUTO_INCREMENT COMMENT '表主键',
+    `create_time` bigint       DEFAULT '0' COMMENT '添加时间',
+    `update_time` bigint       DEFAULT '0' COMMENT '更新时间',
+    `enabled`     int          DEFAULT '1' COMMENT '是否可见，0为不可见，1为可见',
+    `weight`      bigint       DEFAULT '0' COMMENT '权重',
+    `image_url`   longtext CHARACTER SET utf8mb3 COLLATE utf8mb3_general_ci COMMENT '图片地址',
+    `url`         varchar(100) DEFAULT NULL COMMENT '跳转地址',
+    `remark`      varchar(255) DEFAULT '' COMMENT '备注',
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb3 COMMENT ='轮播图';

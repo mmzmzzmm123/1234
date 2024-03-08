@@ -6,7 +6,9 @@ import java.lang.management.ManagementFactory;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.*;
+import java.time.format.TextStyle;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * 时间工具类
@@ -160,5 +162,16 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         LocalDateTime localDateTime = LocalDateTime.of(temporalAccessor, LocalTime.of(0, 0, 0));
         ZonedDateTime zdt = localDateTime.atZone(ZoneId.systemDefault());
         return Date.from(zdt.toInstant());
+    }
+
+    public static String DayOfWeek() {
+        // 获取当前日期
+        LocalDate today = LocalDate.now();
+
+        // 获取今天是星期几
+        DayOfWeek dayOfWeek = today.getDayOfWeek();
+
+        // 打印结果
+        return dayOfWeek.getDisplayName(TextStyle.FULL, Locale.CHINA);
     }
 }
