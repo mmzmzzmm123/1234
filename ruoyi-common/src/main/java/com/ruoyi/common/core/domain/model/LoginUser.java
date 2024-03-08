@@ -27,6 +27,11 @@ public class LoginUser implements UserDetails
     private Long deptId;
 
     /**
+     * 微信用户开发id
+     */
+    private String openId;
+
+    /**
      * 用户唯一标识
      */
     private String token;
@@ -71,6 +76,12 @@ public class LoginUser implements UserDetails
      */
     private SysUser user;
 
+    /**
+     *  微信用户对象
+     */
+    private Object object;
+
+
     public LoginUser()
     {
     }
@@ -87,6 +98,22 @@ public class LoginUser implements UserDetails
         this.deptId = deptId;
         this.user = user;
         this.permissions = permissions;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
+    public Object getObject() {
+        return object;
     }
 
     public Long getUserId()

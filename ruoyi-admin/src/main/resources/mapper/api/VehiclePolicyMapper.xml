@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.VehiclePolicyMapper">
+    
+    <resultMap type="VehiclePolicy" id="VehiclePolicyResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="pictureUrl"    column="picture_url"    />
+        <result property="fileUrl"    column="file_url"    />
+        <result property="region"    column="region"    />
+        <result property="pushDate"    column="push_date"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectVehiclePolicyVo">
+        select id, title, picture_url, file_url, region, push_date, create_time, update_time from vehicle_policy
+    </sql>
+
+    <select id="selectVehiclePolicyList" parameterType="VehiclePolicy" resultMap="VehiclePolicyResult">
+        <include refid="selectVehiclePolicyVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="pictureUrl != null  and pictureUrl != ''"> and picture_url = #{pictureUrl}</if>
+            <if test="fileUrl != null  and fileUrl != ''"> and file_url = #{fileUrl}</if>
+            <if test="region != null "> and region = #{region}</if>
+            <if test="pushDate != null "> and push_date = #{pushDate}</if>
+        </where>
+    </select>
+    
+    <select id="selectVehiclePolicyById" parameterType="Long" resultMap="VehiclePolicyResult">
+        <include refid="selectVehiclePolicyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertVehiclePolicy" parameterType="VehiclePolicy" useGeneratedKeys="true" keyProperty="id">
+        insert into vehicle_policy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="pictureUrl != null">picture_url,</if>
+            <if test="fileUrl != null">file_url,</if>
+            <if test="region != null">region,</if>
+            <if test="pushDate != null">push_date,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="pictureUrl != null">#{pictureUrl},</if>
+            <if test="fileUrl != null">#{fileUrl},</if>
+            <if test="region != null">#{region},</if>
+            <if test="pushDate != null">#{pushDate},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVehiclePolicy" parameterType="VehiclePolicy">
+        update vehicle_policy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="pictureUrl != null">picture_url = #{pictureUrl},</if>
+            <if test="fileUrl != null">file_url = #{fileUrl},</if>
+            <if test="region != null">region = #{region},</if>
+            <if test="pushDate != null">push_date = #{pushDate},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVehiclePolicyById" parameterType="Long">
+        delete from vehicle_policy where id = #{id}
+    </delete>
+
+    <delete id="deleteVehiclePolicyByIds" parameterType="String">
+        delete from vehicle_policy where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

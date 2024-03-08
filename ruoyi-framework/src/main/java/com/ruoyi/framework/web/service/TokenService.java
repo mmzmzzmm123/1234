@@ -1,14 +1,5 @@
 package com.ruoyi.framework.web.service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import com.ruoyi.common.constant.CacheConstants;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.core.domain.model.LoginUser;
@@ -22,6 +13,16 @@ import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * token验证处理
@@ -41,15 +42,25 @@ public class TokenService
     @Value("${token.secret}")
     private String secret;
 
+    // 令牌秘钥
+    @Value("${token.wxSecret}")
+    private String wxSecret;
+
     // 令牌有效期（默认30分钟）
     @Value("${token.expireTime}")
     private int expireTime;
+
+    // 令牌有效期（默认3三天）
+    @Value("${token.wxExpireTime}")
+    private int wxExpireTime;
 
     protected static final long MILLIS_SECOND = 1000;
 
     protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
 
     private static final Long MILLIS_MINUTE_TEN = 20 * 60 * 1000L;
+
+    private static final Long MILLIS_DAY = 24 * 60 * 60 * 1000L;
 
     @Autowired
     private RedisCache redisCache;
@@ -67,12 +78,21 @@ public class TokenService
         {
             try
             {
-                Claims claims = parseToken(token);
-                // 解析对应的权限以及用户信息
-                String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
-                String userKey = getTokenKey(uuid);
-                LoginUser user = redisCache.getCacheObject(userKey);
-                return user;
+                String userKey;
+                if(token.contains("wx")){
+                    Claims claims = Jwts.parser()
+                            .setSigningKey(wxSecret)
+                            .parseClaimsJws(token.replace("wx",""))
+                            .getBody();
+                    String uuid = (String) claims.get(Constants.LOGIN_WXUSER_KEY);
+                    userKey = getWXTokenKey(uuid);
+                }else {
+                    Claims claims = parseToken(token);
+                    // 解析对应的权限以及用户信息
+                    String uuid = (String) claims.get(Constants.LOGIN_USER_KEY);
+                    userKey = getTokenKey(uuid);
+                }
+                return redisCache.getCacheObject(userKey);
             }
             catch (Exception e)
             {
@@ -121,6 +141,30 @@ public class TokenService
         Map<String, Object> claims = new HashMap<>();
         claims.put(Constants.LOGIN_USER_KEY, token);
         return createToken(claims);
+    }
+
+    /**
+     * 微信创建令牌
+     *
+     * @param loginUser 用户信息
+     * @return 令牌
+     */
+    public String createWxToken(LoginUser loginUser)
+    {
+        String token = IdUtils.randomUUID();
+        loginUser.setToken(token);
+        setUserAgent(loginUser);
+        //refreshToken(loginUser);
+        loginUser.setLoginTime(System.currentTimeMillis());
+        loginUser.setExpireTime(loginUser.getLoginTime() + wxExpireTime * MILLIS_DAY);
+        // 根据uuid将loginUser缓存
+        String userKey = getWXTokenKey(loginUser.getToken());
+        redisCache.setCacheObject(userKey, loginUser, wxExpireTime, TimeUnit.DAYS);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put(Constants.LOGIN_WXUSER_KEY, token);
+        return Jwts.builder()
+                .setClaims(claims)
+                .signWith(SignatureAlgorithm.HS512, wxSecret).compact();
     }
 
     /**
@@ -221,11 +265,20 @@ public class TokenService
         {
             token = token.replace(Constants.TOKEN_PREFIX, "");
         }
+
+        if (StringUtils.isNotEmpty(token) && token.startsWith(Constants.WXTOKEN_PREFIX))
+        {
+            token = "wx"+token.replace(Constants.WXTOKEN_PREFIX, "");
+        }
         return token;
     }
 
     private String getTokenKey(String uuid)
     {
         return CacheConstants.LOGIN_TOKEN_KEY + uuid;
+    }
+    private String getWXTokenKey(String uuid)
+    {
+        return CacheConstants.LOGIN_WXTOKEN_KEY + uuid;
     }
 }

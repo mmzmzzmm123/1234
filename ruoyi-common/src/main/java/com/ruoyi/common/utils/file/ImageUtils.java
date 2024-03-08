@@ -57,7 +57,7 @@ public class ImageUtils
 
     /**
      * 读取文件为字节数据
-     * 
+     *
      * @param url 地址
      * @return 字节数据
      */
@@ -81,6 +81,7 @@ public class ImageUtils
                 // 本机地址
                 String localPath = RuoYiConfig.getProfile();
                 String downloadPath = localPath + StringUtils.substringAfter(url, Constants.RESOURCE_PREFIX);
+                log.info("调用获取图片接口...",downloadPath);
                 in = new FileInputStream(downloadPath);
             }
             return IOUtils.toByteArray(in);

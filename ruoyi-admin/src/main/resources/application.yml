@@ -68,13 +68,13 @@ spring:
   # redis 配置
   redis:
     # 地址
-    host: localhost
+    host: 47.109.27.216
     # 端口，默认为6379
     port: 6379
     # 数据库索引
     database: 0
     # 密码
-    password:
+    password: 031205@_Carol
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -94,8 +94,12 @@ token:
   header: Authorization
   # 令牌密钥
   secret: abcdefghijklmnopqrstuvwxyz
+  # 微信令牌密钥
+  wxSecret: woshizuibangdehahaha
   # 令牌有效期（默认30分钟）
   expireTime: 30
+  # 微信令牌有效期（默认3天）
+  wxExpireTime: 3
 
 # MyBatis配置
 mybatis:
@@ -105,7 +109,6 @@ mybatis:
   mapperLocations: classpath*:mapper/**/*Mapper.xml
   # 加载全局的配置文件
   configLocation: classpath:mybatis/mybatis-config.xml
-
 # PageHelper分页插件
 pagehelper:
   helperDialect: mysql
@@ -127,3 +130,19 @@ xss:
   excludes: /system/notice
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
+# 阿里云对象存储配置
+# 把下面配置直接追加到配置文件中，修改对应的值即可
+
+aliyunoss:
+  # 地域节点
+  endpoint: oss-cn-chengdu.aliyuncs.com
+  # AccessKey
+  accessKeyId: LTAI5tRyqQdKN6cmsKruku67
+  # AccessKey 秘钥
+  accessKeySecret: Fmxgunmrr4VPlSKbKllSmfLWBBEvPE
+  # bucket名称
+  bucketName: carol-oss
+  # bucket下文件夹的路径
+  filehost: vehicle-trade
+  # 访问域名
+  url: https://carol-oss.oss-cn-chengdu.aliyuncs.com

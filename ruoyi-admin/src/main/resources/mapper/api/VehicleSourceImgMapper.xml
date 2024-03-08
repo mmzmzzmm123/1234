@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.VehicleSourceImgMapper">
+
+    <resultMap type="VehicleSourceImg" id="VehicleSourceImgResult">
+        <result property="id"    column="id"    />
+        <result property="vehicleId"    column="vehicle_id"    />
+        <result property="url"    column="url"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectVehicleSourceImgVo">
+        select id, vehicle_id, url, create_time, update_time from vehicle_source_img
+    </sql>
+
+    <select id="selectVehicleSourceImgList" parameterType="VehicleSourceImg" resultMap="VehicleSourceImgResult">
+        <include refid="selectVehicleSourceImgVo"/>
+        <where>
+            <if test="vehicleId != null "> and vehicle_id = #{vehicleId}</if>
+            <if test="url != null  and url != ''"> and url = #{url}</if>
+        </where>
+    </select>
+
+    <select id="selectVehicleSourceImgById" parameterType="Long" resultMap="VehicleSourceImgResult">
+        <include refid="selectVehicleSourceImgVo"/>
+        where id = #{id}
+    </select>
+
+
+    <insert id="insertVehicleSourceImg" parameterType="VehicleSourceImg" useGeneratedKeys="true" keyProperty="id">
+        insert into vehicle_source_img
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="vehicleId != null">vehicle_id,</if>
+            <if test="url != null">url,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="vehicleId != null">#{vehicleId},</if>
+            <if test="url != null">#{url},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateVehicleSourceImg" parameterType="VehicleSourceImg">
+        update vehicle_source_img
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="vehicleId != null">vehicle_id = #{vehicleId},</if>
+            <if test="url != null">url = #{url},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteVehicleSourceImgById" parameterType="Long">
+        delete from vehicle_source_img where id = #{id}
+    </delete>
+
+    <delete id="deleteVehicleSourceImgByIds" parameterType="String">
+        delete from vehicle_source_img where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
