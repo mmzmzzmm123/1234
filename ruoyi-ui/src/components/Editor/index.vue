@@ -18,12 +18,16 @@
 </template>
 
 <script>
+import request from '@/utils/request'
 import Quill from "quill";
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 import { getToken } from "@/utils/auth";
+import ImageResize from 'quill-image-resize-module' // 引用，调整图片大小
+Quill.register('modules/imageResize', ImageResize);
 
+var __this;
 export default {
   name: "Editor",
   props: {
@@ -84,6 +88,15 @@ export default {
             ["clean"],                                       // 清除文本格式
             ["link", "image", "video"]                       // 链接、图片、视频
           ],
+          //图片缩放
+          imageResize: {
+            displayStyles: {
+              backgroundColor: 'black',
+              border: 'none',
+              color: 'white'
+            },
+            modules: ['Resize', 'DisplaySize', 'Toolbar']
+          },
         },
         placeholder: "请输入内容",
         readOnly: this.readOnly,
@@ -116,6 +129,7 @@ export default {
     },
   },
   mounted() {
+    __this = this;
     this.init();
   },
   beforeDestroy() {
@@ -154,6 +168,38 @@ export default {
       this.Quill.on("editor-change", (eventName, ...args) => {
         this.$emit("on-editor-change", eventName, ...args);
       });
+      //  自定义粘贴图片功能
+      this.Quill.root.addEventListener('paste', evt => {
+        if (evt.clipboardData && evt.clipboardData.files && evt.clipboardData.files.length) {
+          evt.preventDefault();
+          [].forEach.call(evt.clipboardData.files, file => {
+            if (!file.type.match(/^image\/(gif|jpe?g|a?png|bmp)/i)) {
+              return;
+            }
+            let formData = new FormData();
+            formData.append('file', file)
+            request({
+              url: '/common/upload',
+              method: 'post',
+              data: formData
+            }).then(response => {
+              // console.log(response)
+              let quill = __this.Quill;
+              // 如果上传成功
+              if (response.code == 200) {
+                // 获取光标所在位置
+                let length = quill.getSelection().index;
+                // 插入图片  res.url为服务器返回的图片地址
+                quill.insertEmbed(length, "image", process.env.VUE_APP_BASE_API + response.fileName);
+                // 调整光标到最后
+                quill.setSelection(length + 1);
+              } else {
+                this.$message.error("图片插入失败");
+              }
+            });
+          });
+        }
+      }, false);
     },
     // 上传前校检格式和大小
     handleBeforeUpload(file) {
