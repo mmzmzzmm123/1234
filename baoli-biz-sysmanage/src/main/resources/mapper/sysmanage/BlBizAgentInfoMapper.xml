@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.sysmanage.mapper.BlBizAgentInfoMapper">
+    
+    <resultMap type="BlBizAgentInfo" id="BlBizAgentInfoResult">
+        <result property="id"    column="id"    />
+        <result property="agentName"    column="agent_name"    />
+        <result property="brand"    column="brand"    />
+        <result property="submitTime"    column="submit_time"    />
+        <result property="groupName"    column="group_name"    />
+        <result property="contacts"    column="contacts"    />
+        <result property="contactsPosition"    column="contacts_position"    />
+        <result property="contactsPhone"    column="contacts_phone"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBlBizAgentInfoVo">
+        select id, agent_name, brand, submit_time, group_name, contacts, contacts_position, contacts_phone, remark, create_time, update_time, create_by, update_by from bl_biz_agent_info
+    </sql>
+
+    <select id="selectBlBizAgentInfoList" parameterType="BlBizAgentInfo" resultMap="BlBizAgentInfoResult">
+        <include refid="selectBlBizAgentInfoVo"/>
+        <where>  
+            <if test="agentName != null  and agentName != ''"> and agent_name like concat('%', #{agentName}, '%')</if>
+            <if test="brand != null  and brand != ''"> and brand = #{brand}</if>
+            <if test="submitTime != null "> and submit_time = #{submitTime}</if>
+            <if test="groupName != null  and groupName != ''"> and group_name like concat('%', #{groupName}, '%')</if>
+            <if test="contacts != null  and contacts != ''"> and contacts = #{contacts}</if>
+            <if test="contactsPosition != null  and contactsPosition != ''"> and contacts_position = #{contactsPosition}</if>
+            <if test="contactsPhone != null  and contactsPhone != ''"> and contacts_phone = #{contactsPhone}</if>
+        </where>
+    </select>
+    
+    <select id="selectBlBizAgentInfoById" parameterType="Long" resultMap="BlBizAgentInfoResult">
+        <include refid="selectBlBizAgentInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBlBizAgentInfo" parameterType="BlBizAgentInfo">
+        insert into bl_biz_agent_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="agentName != null">agent_name,</if>
+            <if test="brand != null">brand,</if>
+            <if test="submitTime != null">submit_time,</if>
+            <if test="groupName != null">group_name,</if>
+            <if test="contacts != null">contacts,</if>
+            <if test="contactsPosition != null">contacts_position,</if>
+            <if test="contactsPhone != null">contacts_phone,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="agentName != null">#{agentName},</if>
+            <if test="brand != null">#{brand},</if>
+            <if test="submitTime != null">#{submitTime},</if>
+            <if test="groupName != null">#{groupName},</if>
+            <if test="contacts != null">#{contacts},</if>
+            <if test="contactsPosition != null">#{contactsPosition},</if>
+            <if test="contactsPhone != null">#{contactsPhone},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBlBizAgentInfo" parameterType="BlBizAgentInfo">
+        update bl_biz_agent_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="agentName != null">agent_name = #{agentName},</if>
+            <if test="brand != null">brand = #{brand},</if>
+            <if test="submitTime != null">submit_time = #{submitTime},</if>
+            <if test="groupName != null">group_name = #{groupName},</if>
+            <if test="contacts != null">contacts = #{contacts},</if>
+            <if test="contactsPosition != null">contacts_position = #{contactsPosition},</if>
+            <if test="contactsPhone != null">contacts_phone = #{contactsPhone},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBlBizAgentInfoById" parameterType="Long">
+        delete from bl_biz_agent_info where id = #{id}
+    </delete>
+
+    <delete id="deleteBlBizAgentInfoByIds" parameterType="String">
+        delete from bl_biz_agent_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
