@@ -35,7 +35,7 @@ export default {
   },
   data() {
     return {
-      title: '壹加壹管理系统',
+      title: '口袋心理管理系统',
       logo: null
     }
   }
