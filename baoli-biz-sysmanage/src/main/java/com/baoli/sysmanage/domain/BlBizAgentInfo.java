@@ -24,13 +24,17 @@ public class BlBizAgentInfo extends BaseEntity
     @Excel(name = "经销商名称")
     private String agentName;
 
-    /** 品牌名称 */
-    @Excel(name = "品牌名称")
+    /** 品牌id */
+    @Excel(name = "品牌id")
     private String brand;
 
+    private String[] brands;
+    /** 品牌名称 */
+    @Excel(name = "品牌名称")
+    private String brandName;
     /** 提交时间 */
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    @Excel(name = "提交时间", width = 30, dateFormat = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @Excel(name = "提交时间", width = 30, dateFormat = "yyyy-MM-dd HH:mm:ss")
     private Date submitTime;
 
     /** 集团名称 */
@@ -120,6 +124,22 @@ public class BlBizAgentInfo extends BaseEntity
     public String getContactsPhone() 
     {
         return contactsPhone;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String[] getBrands() {
+        return brands;
+    }
+
+    public void setBrands(String[] brands) {
+        this.brands = brands;
     }
 
     @Override

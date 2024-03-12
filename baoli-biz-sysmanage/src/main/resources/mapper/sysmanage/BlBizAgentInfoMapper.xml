@@ -8,6 +8,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="id"    column="id"    />
         <result property="agentName"    column="agent_name"    />
         <result property="brand"    column="brand"    />
+        <result property="brandName"    column="brand_name"    />
         <result property="submitTime"    column="submit_time"    />
         <result property="groupName"    column="group_name"    />
         <result property="contacts"    column="contacts"    />
@@ -21,14 +22,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBlBizAgentInfoVo">
-        select id, agent_name, brand, submit_time, group_name, contacts, contacts_position, contacts_phone, remark, create_time, update_time, create_by, update_by from bl_biz_agent_info
+        select a.id,a.agent_name,a.brand,(select b.`name` from  baoli_biz_carbrand b where b.id = a.brand) as brand_name, a.submit_time, a.group_name, a.contacts, a.contacts_position, a.contacts_phone, a.remark from bl_biz_agent_info a
     </sql>
 
     <select id="selectBlBizAgentInfoList" parameterType="BlBizAgentInfo" resultMap="BlBizAgentInfoResult">
         <include refid="selectBlBizAgentInfoVo"/>
         <where>  
             <if test="agentName != null  and agentName != ''"> and agent_name like concat('%', #{agentName}, '%')</if>
-            <if test="brand != null  and brand != ''"> and brand = #{brand}</if>
+            <if test="brands != null  and brands != ''"> and brand in
+                <foreach collection="brands" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
             <if test="submitTime != null "> and submit_time = #{submitTime}</if>
             <if test="groupName != null  and groupName != ''"> and group_name like concat('%', #{groupName}, '%')</if>
             <if test="contacts != null  and contacts != ''"> and contacts = #{contacts}</if>

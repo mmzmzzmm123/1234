@@ -17,6 +17,9 @@ public class BaseEntity implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
+    /* 设置是否分页(默认为true) */
+    private boolean pageAble = true;
+
     /** 搜索值 */
     @JsonIgnore
     private String searchValue;
@@ -100,6 +103,14 @@ public class BaseEntity implements Serializable
     public void setRemark(String remark)
     {
         this.remark = remark;
+    }
+
+    public boolean isPageAble() {
+        return pageAble;
+    }
+
+    public void setPageAble(boolean pageAble) {
+        this.pageAble = pageAble;
     }
 
     public Map<String, Object> getParams()
