@@ -22,6 +22,10 @@ public class BaoliBizCarmodel extends BaseEntity
     @Excel(name = "品牌id")
     private String brandId;
 
+    /** 品牌名称 */
+    @Excel(name = "品牌名称")
+    private String brandName;
+
     /** 型号名称 */
     @Excel(name = "型号名称")
     private String name;
@@ -130,6 +134,14 @@ public class BaoliBizCarmodel extends BaseEntity
     public String getExplain() 
     {
         return explain;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     @Override

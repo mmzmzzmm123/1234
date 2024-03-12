@@ -24,7 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="imgname != null  and imgname != ''"> and imgname like concat('%', #{imgname}, '%')</if>
             <if test="imgpath != null  and imgpath != ''"> and imgpath = #{imgpath}</if>
-            <if test="explain != null  and explain != ''"> and explain = #{explain}</if>
+            <if test="explain != null  and explain != ''"> and `explain` = #{explain}</if>
         </where>
     </select>
     
@@ -40,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="name != null and name != ''">name,</if>
             <if test="imgname != null and imgname != ''">imgname,</if>
             <if test="imgpath != null and imgpath != ''">imgpath,</if>
-            <if test="explain != null and explain != ''">explain,</if>
+            <if test="explain != null and explain != ''">`explain`,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="letter != null and letter != ''">#{letter},</if>
@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="imgname != null and imgname != ''">imgname = #{imgname},</if>
             <if test="imgpath != null and imgpath != ''">imgpath = #{imgpath},</if>
-            <if test="explain != null and explain != ''">explain = #{explain},</if>
+            <if test="explain != null and explain != ''">`explain` = #{explain},</if>
         </trim>
         where id = #{id}
     </update>

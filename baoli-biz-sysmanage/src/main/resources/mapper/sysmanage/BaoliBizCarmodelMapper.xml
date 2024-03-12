@@ -7,6 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="BaoliBizCarmodel" id="BaoliBizCarmodelResult">
         <result property="id"    column="id"    />
         <result property="brandId"    column="brand_id"    />
+        <result property="brandName"    column="brand_name"    />
         <result property="name"    column="name"    />
         <result property="pedar"    column="pedar"    />
         <result property="minprice"    column="minprice"    />
@@ -17,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBaoliBizCarmodelVo">
-        select id, brand_id, name, pedar, minprice, maxprice, imgname, imgpath, `explain` from baoli_biz_carmodel
+        select a.id, a.brand_id,(select b.`name` from  baoli_biz_carbrand b where b.id = a.brand_id) as brand_name, a.name, a.pedar, a.minprice, a.maxprice, a.imgname, a.imgpath, `explain` from baoli_biz_carmodel a
     </sql>
 
     <select id="selectBaoliBizCarmodelList" parameterType="BaoliBizCarmodel" resultMap="BaoliBizCarmodelResult">
@@ -30,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="maxprice != null "> and maxprice = #{maxprice}</if>
             <if test="imgname != null  and imgname != ''"> and imgname like concat('%', #{imgname}, '%')</if>
             <if test="imgpath != null  and imgpath != ''"> and imgpath = #{imgpath}</if>
-            <if test="explain != null  and explain != ''"> and explain = #{explain}</if>
+            <if test="explain != null  and explain != ''"> and `explain` = #{explain}</if>
         </where>
     </select>
     
@@ -49,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="maxprice != null">maxprice,</if>
             <if test="imgname != null and imgname != ''">imgname,</if>
             <if test="imgpath != null and imgpath != ''">imgpath,</if>
-            <if test="explain != null">explain,</if>
+            <if test="explain != null">`explain`,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="brandId != null and brandId != ''">#{brandId},</if>
@@ -73,7 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="maxprice != null">maxprice = #{maxprice},</if>
             <if test="imgname != null and imgname != ''">imgname = #{imgname},</if>
             <if test="imgpath != null and imgpath != ''">imgpath = #{imgpath},</if>
-            <if test="explain != null">explain = #{explain},</if>
+            <if test="explain != null">`explain` = #{explain},</if>
         </trim>
         where id = #{id}
     </update>
