@@ -118,7 +118,7 @@
     },
     async mounted() {
       // #ifdef H5
-      this.$utils.share('壹加壹心理', '壹加壹心理')
+      this.$utils.share('口袋心理', '口袋心理')
       // #endif
 
       this.userInfo = this.$utils.getUserInfo()

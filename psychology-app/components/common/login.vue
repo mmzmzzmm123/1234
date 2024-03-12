@@ -4,7 +4,7 @@
       <view class="cu-dialog">
         <view class="bg-white padding-xl">
           <image src="/static/logo.jpg" class="cu-avatar xl round"/>
-          <view class="text-lg text-black text-bold margin-top">壹加壹心理</view>
+          <view class="text-lg text-black text-bold margin-top">口袋心理</view>
           <view class="margin-top-sm">您尚未登录, 是否使用微信静默登录</view>
 
           <view class="flex justify-center margin-top-xl">

@@ -189,4 +189,23 @@ public class demo1 {
         String format = startSdf.format(c.getTime());
         System.out.println(format);
     }
+
+    @Test
+    public void test11() {
+        int type = 3;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, calendar.get(Calendar.YEAR));
+        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+        calendar.set(Calendar.DAY_OF_MONTH, calendar.getActualMaximum(Calendar.DAY_OF_MONTH));
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+
+        if (type > 1) {
+            calendar.add(Calendar.YEAR, type - 1);
+        }
+
+        System.out.println(calendar.getTime());
+    }
 }

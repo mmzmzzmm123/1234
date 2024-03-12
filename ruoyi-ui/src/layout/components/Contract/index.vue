@@ -10,7 +10,7 @@
 
     <div slot="footer" class="dialog-footer">
       <div class="check-box">
-        <el-checkbox v-model="check">我已确认并接受《壹加壹心理咨询师入驻平台服务协议》</el-checkbox>
+        <el-checkbox v-model="check">我已确认并接受《口袋心理咨询师入驻平台服务协议》</el-checkbox>
       </div>
       <el-button type="primary" @click="submitForm">确 定</el-button>
     </div>

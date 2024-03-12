@@ -93,7 +93,7 @@ export default {
     init() {
       this.form = {
         id: null,
-        name: '壹加壹心理平台入驻协议'
+        name: '口袋心理平台入驻协议'
       }
       this.open = true
       console.log(2222)
@@ -136,7 +136,7 @@ export default {
           const that = this
           that.form.consultName = this.consultList.find(item => item.id === that.form.consultId).nickName
           that.form.status = '1'
-          that.form.name = '壹加壹心理平台入驻协议'
+          that.form.name = '口袋心理平台入驻协议'
           // 查询是否存在有效的合同
           const req = {
             consultId: that.form.consultId,

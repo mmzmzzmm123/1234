@@ -2,11 +2,11 @@
   <view class="page" :style="{ height: pageHeight }">
     <view class="padding-xs">
       <view class="margin-top text-center text-xl text-black text-bold">
-        壹加壹心理服务平台咨询师入驻流程
+        口袋心理服务平台咨询师入驻流程
       </view>
 
       <view class="text-left padding-sm">
-        欢迎您申请入驻壹加壹心理服务平台，请填写您的入驻信息。
+        欢迎您申请入驻口袋心理服务平台，请填写您的入驻信息。
       </view>
       <view class="text-left padding-sm margin-top-xs">
         <view class="padding-top-xs text-bold">第一步 为方便您的操作流程，建议提前将以下资料存入相册，便于上传</view>
@@ -52,7 +52,7 @@ export default {
   onLoad() {
     // this.getApply()
     // #ifdef H5
-    this.$utils.share('壹加壹心理入驻申请', '欢迎入驻壹加壹心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
+    this.$utils.share('口袋心理入驻申请', '欢迎入驻口袋心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
     // #endif
   },
   data() {

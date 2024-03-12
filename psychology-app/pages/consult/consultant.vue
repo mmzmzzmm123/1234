@@ -323,7 +323,7 @@ export default {
       this.consultInfo.experiences = this.consultInfo.experience && this.consultInfo.experience !== '[]' ? JSON.parse(this.consultInfo.experience) : []
       // #ifdef H5
       console.log('consultInfo: ', this.consultInfo)
-      this.$utils.share('壹加壹心理咨询师：' + this.consultInfo.nickName, this.consultInfo.share ? this.consultInfo.share : '', this.consultInfo.avatar)
+      this.$utils.share('口袋心理咨询师：' + this.consultInfo.nickName, this.consultInfo.share ? this.consultInfo.share : '', this.consultInfo.avatar)
       // #endif
     },
     async getConsultCourseByName() {

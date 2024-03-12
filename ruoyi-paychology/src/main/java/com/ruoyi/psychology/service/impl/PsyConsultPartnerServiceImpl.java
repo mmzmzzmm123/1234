@@ -176,7 +176,7 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
         contract.setId(IDhelper.getNextId());
         contract.setConsultId(consultId);
         contract.setConsultName(vo.getNickName());
-        contract.setName("壹加壹心理平台入驻协议");
+        contract.setName("口袋心理平台入驻协议");
         contract.setStatus(ConsultConstant.CONTRACT_STATUS_1);
         contract.setType(partner.getType());
         contract.setMoney(partner.getMoney());

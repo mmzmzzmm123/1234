@@ -2,15 +2,15 @@
   <view class="page" :style="{ height: pageHeight }">
     <view class="padding-xs">
       <view class="margin-top text-center text-xl text-black text-bold">
-        欢迎入驻壹加壹心理咨询服务平台
+        欢迎入驻口袋心理咨询服务平台
       </view>
 
       <view class="text-left padding-sm">
-        壹加壹心理线上预约咨询平台上线于2023年8月，平台业务专注于个人心理成长，帮助每位前来寻求专业咨询师帮助的来访者探索自我价值，找到自我的人生意义，实现心灵的自由，活出自己想要的样子。
+        口袋心理线上预约咨询平台上线于2023年8月，平台业务专注于个人心理成长，帮助每位前来寻求专业咨询师帮助的来访者探索自我价值，找到自我的人生意义，实现心灵的自由，活出自己想要的样子。
       </view>
 
       <view class="text-left padding-sm">
-        在过去的几年里，壹加壹心理服务中心已帮助成千上万位有心理困扰的来访者实现了心灵成长，找到了适合自己独自前行的人生轨迹。
+        在过去的几年里，口袋心理服务中心已帮助成千上万位有心理困扰的来访者实现了心灵成长，找到了适合自己独自前行的人生轨迹。
       </view>
 
       <view class="text-left padding-sm">
@@ -18,7 +18,7 @@
       </view>
 
       <view class="text-left padding-sm">
-        为进一步发展平台业务，为更多需要专业力量帮助的来访者提供更优质的服务，壹加壹心理诚邀各位咨询同道入驻，让我们一起维护心理服务行业的健康生态，一起燃烧助人自助的初心。
+        为进一步发展平台业务，为更多需要专业力量帮助的来访者提供更优质的服务，口袋心理诚邀各位咨询同道入驻，让我们一起维护心理服务行业的健康生态，一起燃烧助人自助的初心。
       </view>
 
       <view class="text-left padding-sm">
@@ -66,7 +66,7 @@ export default {
   },
   async onLoad(options) {
     // #ifdef H5
-    this.$utils.share('壹加壹心理入驻申请', '欢迎入驻壹加壹心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
+    this.$utils.share('口袋心理入驻申请', '欢迎入驻口袋心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
     // #endif
 
     console.log(options)

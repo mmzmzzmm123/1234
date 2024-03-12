@@ -20,13 +20,13 @@
     <template v-else-if="type === '3'">
       <image src="/static/consult/pass.png" class="empty-img"></image>
       <view class="margin-top text-bold text-lg">恭喜，您的申请已通过！</view>
-      <view class="margin text-gray">欢迎您加入壹加壹心理服务平台，成为我们的一员。</view>
+      <view class="margin text-gray">欢迎您加入口袋心理服务平台，成为我们的一员。</view>
       <view class="margin padding-sm bg-gray">
         <view class="text-left margin-bottom-sm">请使用微信扫一扫或长按图片识别以下二维码完成缴费，缴费成功后平台工作人员会向您发放管理后台地址、账号密码。</view>
         <image src="/static/consult/wePay.png" class="card-img"></image>
         <view class="text-left padding-xs" v-if="order">
           <view>支付金额：¥{{ order.money.toFixed(2) }}</view>
-          <view>收款方：壹加壹心理服务平台</view>
+          <view>收款方：口袋心理服务平台</view>
           <view>主体：武汉仁心网络科技有限公司</view>
           <view class="margin-xs text-sm text-gray">
             缴费成功即表示您同意并接受
@@ -38,7 +38,7 @@
     </template>
     <template v-else-if="type === '4'">
       <image src="/static/consult/pass.png" class="empty-img"></image>
-      <view class="margin-top text-lg">壹加壹心理欢迎你的加入。</view>
+      <view class="margin-top text-lg">口袋心理欢迎你的加入。</view>
     </template>
     <template v-else-if="type === '5'">
       <image src="/static/consult/back.png" class="empty-img"></image>
@@ -75,7 +75,7 @@ export default {
   },
   async onLoad(option) {
     // #ifdef H5
-    this.$utils.share('壹加壹心理入驻申请', '欢迎入驻壹加壹心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
+    this.$utils.share('口袋心理入驻申请', '欢迎入驻口袋心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
     // #endif
 
     console.log(option)

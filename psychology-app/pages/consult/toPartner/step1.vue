@@ -10,7 +10,7 @@
       </view>
       <view class="margin-top-xs psy-title-ext">说明：平台咨询师分为合作型和签约型两类。</view>
       <view class="margin-top-xs psy-title-ext">请根据入驻标准及自身情况选择相应的入驻类型。</view>
-      <view class="margin-top-xs psy-title-ext" style="color: #1890FF" @tap="openStep">【点击了解壹加壹心理服务平台咨询师入驻介绍】</view>
+      <view class="margin-top-xs psy-title-ext" style="color: #1890FF" @tap="openStep">【点击了解口袋心理服务平台咨询师入驻介绍】</view>
       <view class="psy-title margin-top-sm">我要申请</view>
       <radio-group class="block" @change="typeChange">
         <label class="margin-top-xs block" v-for="(item, index) in types" :key="item.value">
@@ -265,7 +265,7 @@ export default {
   },
   async onLoad() {
     // #ifdef H5
-    this.$utils.share('壹加壹心理入驻申请', '欢迎入驻壹加壹心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
+    this.$utils.share('口袋心理入驻申请', '欢迎入驻口袋心理咨询服务平台', '', 'https://wx.ssgpsy.com/pages/consult/toPartner/start')
     // #endif
 
     // 编辑时替换实际

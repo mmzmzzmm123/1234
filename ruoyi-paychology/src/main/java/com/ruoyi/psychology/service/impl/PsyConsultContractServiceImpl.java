@@ -131,7 +131,7 @@ public class PsyConsultContractServiceImpl extends ServiceImpl<PsyConsultContrac
             PsyConsultContract contract = new PsyConsultContract();
             contract.setConsultId(item.getId());
             contract.setConsultName(item.getNickName());
-            contract.setName("壹加壹心理平台入驻协议");
+            contract.setName("口袋心理平台入驻协议");
             contract.setType(2);
             contract.setMoney(new BigDecimal("3200"));
             contract.setRatio(new BigDecimal("70"));
