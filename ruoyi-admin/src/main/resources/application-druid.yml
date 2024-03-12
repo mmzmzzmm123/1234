@@ -6,14 +6,10 @@ spring:
     druid:
       # 开发
       # 主库数据源
-      #            master:
-      #                url: jdbc:mysql://101.42.12.252:3306/psy-test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
-      #                username: root
-      #                password: 1234567890qwerQWER=
       master:
-        url: jdbc:mysql://127.0.0.1:3306/psy-test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+        url: jdbc:mysql://101.42.12.252:3306/psy-test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
         username: root
-        password: root
+        password: 123456qwerQWER=
       # 本地
       #            master:
       #                url: jdbc:mysql://124.223.63.81:3306/psy_test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
@@ -69,14 +65,13 @@ spring:
   # 正式
   redis:
     # 地址
-    #    host: 10.0.24.3
-    host: 127.0.0.1
+    host: 10.0.24.3
     # 端口，默认为6379
     port: 6379
     # 数据库索引
     database: 5
     # 密码
-    #    password: 123456
+    password: 123456
     # 连接超时时间
     timeout: 10s
     lettuce:
@@ -96,7 +91,7 @@ token:
   # 令牌密钥
   secret: abcdefghijklmnopqrstuvwxyz
   # 令牌有效期（默认30分钟）
-  expireTime: 300000
+  expireTime: 120
 
   # token配置
 app:
@@ -105,7 +100,7 @@ app:
     header: Authorization
     # 令牌密钥
     secret: appabcdefghijklmnopqrstuvwxyz
-    # 令牌有效期（默认30分钟）单位s
+    # 令牌有效期（默认7天 60*60*24*7）单位s
     expireTime: 2592000
   filter:
     urls: /app/user/bindPhone,app/api/wechatPay/v3/wechatPay,/app/wxPay/**,/app/*/order/**,/app/gauge/result,/app/gauge/result/commit,/app/gauge/questions/list,/app/home/gauge/getInfo,/app/course/detail,/app/course/userSection/saveUserSectionInfo,/app/course/getCourseListByUserId*
