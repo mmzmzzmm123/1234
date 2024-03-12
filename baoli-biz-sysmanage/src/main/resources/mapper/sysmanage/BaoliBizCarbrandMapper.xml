@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.sysmanage.mapper.BaoliBizCarbrandMapper">
+    
+    <resultMap type="BaoliBizCarbrand" id="BaoliBizCarbrandResult">
+        <result property="id"    column="id"    />
+        <result property="letter"    column="letter"    />
+        <result property="name"    column="name"    />
+        <result property="imgname"    column="imgname"    />
+        <result property="imgpath"    column="imgpath"    />
+        <result property="explain"    column="explain"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizCarbrandVo">
+        select id, letter, name, imgname, imgpath, `explain` from baoli_biz_carbrand
+    </sql>
+
+    <select id="selectBaoliBizCarbrandList" parameterType="BaoliBizCarbrand" resultMap="BaoliBizCarbrandResult">
+        <include refid="selectBaoliBizCarbrandVo"/>
+        <where>  
+            <if test="letter != null  and letter != ''"> and letter = #{letter}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="imgname != null  and imgname != ''"> and imgname like concat('%', #{imgname}, '%')</if>
+            <if test="imgpath != null  and imgpath != ''"> and imgpath = #{imgpath}</if>
+            <if test="explain != null  and explain != ''"> and explain = #{explain}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizCarbrandById" parameterType="Long" resultMap="BaoliBizCarbrandResult">
+        <include refid="selectBaoliBizCarbrandVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizCarbrand" parameterType="BaoliBizCarbrand" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_carbrand
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="letter != null and letter != ''">letter,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="imgname != null and imgname != ''">imgname,</if>
+            <if test="imgpath != null and imgpath != ''">imgpath,</if>
+            <if test="explain != null and explain != ''">explain,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="letter != null and letter != ''">#{letter},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="imgname != null and imgname != ''">#{imgname},</if>
+            <if test="imgpath != null and imgpath != ''">#{imgpath},</if>
+            <if test="explain != null and explain != ''">#{explain},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizCarbrand" parameterType="BaoliBizCarbrand">
+        update baoli_biz_carbrand
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="letter != null and letter != ''">letter = #{letter},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="imgname != null and imgname != ''">imgname = #{imgname},</if>
+            <if test="imgpath != null and imgpath != ''">imgpath = #{imgpath},</if>
+            <if test="explain != null and explain != ''">explain = #{explain},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizCarbrandById" parameterType="Long">
+        delete from baoli_biz_carbrand where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizCarbrandByIds" parameterType="String">
+        delete from baoli_biz_carbrand where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

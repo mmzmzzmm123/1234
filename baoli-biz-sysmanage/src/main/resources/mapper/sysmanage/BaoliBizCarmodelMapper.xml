@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.sysmanage.mapper.BaoliBizCarmodelMapper">
+    
+    <resultMap type="BaoliBizCarmodel" id="BaoliBizCarmodelResult">
+        <result property="id"    column="id"    />
+        <result property="brandId"    column="brand_id"    />
+        <result property="name"    column="name"    />
+        <result property="pedar"    column="pedar"    />
+        <result property="minprice"    column="minprice"    />
+        <result property="maxprice"    column="maxprice"    />
+        <result property="imgname"    column="imgname"    />
+        <result property="imgpath"    column="imgpath"    />
+        <result property="explain"    column="explain"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizCarmodelVo">
+        select id, brand_id, name, pedar, minprice, maxprice, imgname, imgpath, `explain` from baoli_biz_carmodel
+    </sql>
+
+    <select id="selectBaoliBizCarmodelList" parameterType="BaoliBizCarmodel" resultMap="BaoliBizCarmodelResult">
+        <include refid="selectBaoliBizCarmodelVo"/>
+        <where>  
+            <if test="brandId != null  and brandId != ''"> and brand_id = #{brandId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="pedar != null  and pedar != ''"> and pedar = #{pedar}</if>
+            <if test="minprice != null "> and minprice = #{minprice}</if>
+            <if test="maxprice != null "> and maxprice = #{maxprice}</if>
+            <if test="imgname != null  and imgname != ''"> and imgname like concat('%', #{imgname}, '%')</if>
+            <if test="imgpath != null  and imgpath != ''"> and imgpath = #{imgpath}</if>
+            <if test="explain != null  and explain != ''"> and explain = #{explain}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizCarmodelById" parameterType="Long" resultMap="BaoliBizCarmodelResult">
+        <include refid="selectBaoliBizCarmodelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizCarmodel" parameterType="BaoliBizCarmodel" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_carmodel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="brandId != null and brandId != ''">brand_id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="pedar != null and pedar != ''">pedar,</if>
+            <if test="minprice != null">minprice,</if>
+            <if test="maxprice != null">maxprice,</if>
+            <if test="imgname != null and imgname != ''">imgname,</if>
+            <if test="imgpath != null and imgpath != ''">imgpath,</if>
+            <if test="explain != null">explain,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="brandId != null and brandId != ''">#{brandId},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="pedar != null and pedar != ''">#{pedar},</if>
+            <if test="minprice != null">#{minprice},</if>
+            <if test="maxprice != null">#{maxprice},</if>
+            <if test="imgname != null and imgname != ''">#{imgname},</if>
+            <if test="imgpath != null and imgpath != ''">#{imgpath},</if>
+            <if test="explain != null">#{explain},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizCarmodel" parameterType="BaoliBizCarmodel">
+        update baoli_biz_carmodel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="brandId != null and brandId != ''">brand_id = #{brandId},</if>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="pedar != null and pedar != ''">pedar = #{pedar},</if>
+            <if test="minprice != null">minprice = #{minprice},</if>
+            <if test="maxprice != null">maxprice = #{maxprice},</if>
+            <if test="imgname != null and imgname != ''">imgname = #{imgname},</if>
+            <if test="imgpath != null and imgpath != ''">imgpath = #{imgpath},</if>
+            <if test="explain != null">explain = #{explain},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizCarmodelById" parameterType="Long">
+        delete from baoli_biz_carmodel where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizCarmodelByIds" parameterType="String">
+        delete from baoli_biz_carmodel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
