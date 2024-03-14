@@ -1455,9 +1455,6 @@ public class ExcelUtil<T>
     public List<Object[]> getFields()
     {
         List<Object[]> fields = new ArrayList<Object[]>();
-        List<Field> tempFields = new ArrayList<>();
-        tempFields.addAll(Arrays.asList(clazz.getSuperclass().getDeclaredFields()));
-        tempFields.addAll(Arrays.asList(clazz.getDeclaredFields()));
 
         // 修改获取注解字段，支持子类覆盖
         Map<String, Field> classFieldMap = new LinkedHashMap<>();
