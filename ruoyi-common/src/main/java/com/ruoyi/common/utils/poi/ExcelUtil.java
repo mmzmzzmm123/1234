@@ -12,16 +12,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.ArrayUtils;
@@ -1469,7 +1460,7 @@ public class ExcelUtil<T>
         tempFields.addAll(Arrays.asList(clazz.getDeclaredFields()));
 
         // 修改获取注解字段，支持子类覆盖
-        Map<String, Field> classFieldMap = new HashMap<>();
+        Map<String, Field> classFieldMap = new LinkedHashMap<>();
         for (Field field : clazz.getSuperclass().getDeclaredFields()) {
             if (classFieldMap.put(field.getName(), field) != null) {
                 throw new IllegalStateException("Duplicate key");
