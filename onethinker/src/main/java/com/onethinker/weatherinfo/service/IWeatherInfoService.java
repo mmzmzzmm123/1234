@@ -63,7 +63,8 @@ public interface IWeatherInfoService {
     /**
      * 最后处理成一段文字返回
      * @param city
+     * @param type: 返回内容是否简写
      * @return
      */
-    String selectNewWeatherInfoByCity(String city);
+    String selectNewWeatherInfoByCity(String city,String... type);
 }

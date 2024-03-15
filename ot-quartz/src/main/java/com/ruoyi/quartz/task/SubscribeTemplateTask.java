@@ -59,7 +59,7 @@ public class SubscribeTemplateTask {
         // 获取当前城市信息（可以通过用户设定，目前先暂时用广州的值）
         String cityKey = "440100";
         // 返回天气结果
-        String content = weatherInfoService.selectNewWeatherInfoByCity(cityKey);
+        String content = weatherInfoService.selectNewWeatherInfoByCity(cityKey,"true");
         String templateId = "QVISoOJAxIH-eb3Ky-xFbmH5WcC5I1kcopworAsBfm4";
         // 日期
         String date = DateUtils.getDate();

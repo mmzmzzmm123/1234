@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 天气预报最新结果Service业务层处理
@@ -97,7 +98,7 @@ public class WeatherInfoServiceImpl extends ServiceImpl<WeatherInfoMapper, Weath
     }
 
     @Override
-    public String selectNewWeatherInfoByCity(String city) {
+    public String selectNewWeatherInfoByCity(String city,String... type) {
         StringBuffer url = new StringBuffer("https://restapi.amap.com/v3/weather/weatherInfo?parameters");
         url.append("&key=e00f9370db14dae128473190e1b73507")
                 .append("&city=").append(city)
@@ -137,7 +138,13 @@ public class WeatherInfoServiceImpl extends ServiceImpl<WeatherInfoMapper, Weath
         // 当前星期几
         String week = DateUtils.DayOfWeek();
         // 拼接
-        String resultText = "宝！早上好ლ(°◕‵ƹ′◕ლ)，今天{{DayOfWeek}},{{cityName}}今天{{weather}}哦。早上温度：{{dayTemp}}°,晚上温度：{{nightTemp}}°,当前温度:{{temperature}}°";
+        String resultText = "";
+        if (Objects.nonNull(type) && type.length > 0) {
+            resultText = "早上温度：{{dayTemp}}°,晚上温度：{{nightTemp}}°";
+        } else {
+            resultText = "宝！早上好ლ(°◕‵ƹ′◕ლ)，今天{{DayOfWeek}},{{cityName}}今天{{weather}}哦。早上温度：{{dayTemp}}°,晚上温度：{{nightTemp}}°,当前温度:{{temperature}}°";
+        }
+
         return resultText.replace("{{DayOfWeek}}", week)
                 .replace("{{cityName}}", cityName)
                 .replace("{{weather}}", weather)
