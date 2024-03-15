@@ -1,9 +1,12 @@
 package com.onethinker.user.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 import lombok.Data;
+
+import java.util.Date;
 
 /**
  * 平台用户详情信息对象 t_platform_user_detail
@@ -13,7 +16,19 @@ import lombok.Data;
  */
 @Data
 @TableName("t_platform_user_detail")
-public class PlatformUserDetail extends BaseEntity {
+public class PlatformUserDetail {
+
+    /**
+     * 启用
+     */
+    public static final Integer STATE_TYPE_ENABLED = 1;
+
+    /**
+     * 禁用
+     */
+    public static final Integer STATE_TYPE_DISABLE = 0;
+
+
     private static final long serialVersionUID = 1L;
 
     public static final String DEFAULT_PASSWORD = "default_password";
@@ -76,4 +91,16 @@ public class PlatformUserDetail extends BaseEntity {
      */
     @Excel(name = "用户昵称")
     private String nickName;
+
+    /**
+     * 创建时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    /**
+     * 更新时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 }
