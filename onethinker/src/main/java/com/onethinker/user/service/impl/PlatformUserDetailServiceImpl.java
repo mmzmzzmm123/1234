@@ -3,13 +3,9 @@ package com.onethinker.user.service.impl;
 import cn.hutool.crypto.SecureUtil;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.onethinker.onethinker.domain.Activity;
-import com.onethinker.onethinker.mapper.ActivityMapper;
-import com.onethinker.onethinker.service.IActivityService;
 import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.domain.PlatformUserDetail;
 import com.onethinker.user.dto.PlatformUserReqDTO;
@@ -32,11 +28,9 @@ import org.springframework.util.ObjectUtils;
 
 import javax.annotation.Resource;
 import java.nio.charset.StandardCharsets;
-import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -48,7 +42,7 @@ import java.util.stream.Collectors;
  */
 @Service
 @Log4j2
-public class PlatformUserDetailServiceImpl  extends ServiceImpl<PlatformUserDetailMapper, PlatformUserDetail> implements IPlatformUserDetailService {
+public class PlatformUserDetailServiceImpl extends ServiceImpl<PlatformUserDetailMapper, PlatformUserDetail> implements IPlatformUserDetailService {
     @Resource
     private PlatformUserDetailMapper platformUserDetailMapper;
 
@@ -186,7 +180,7 @@ public class PlatformUserDetailServiceImpl  extends ServiceImpl<PlatformUserDeta
 
     @Override
     public Map<String, String> selectUserPhoneByUserIds(List<Long> puUserIds) {
-        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + String.join(",",puUserIds.toString());
+        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + String.join(",", puUserIds.toString());
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheMap(redisKey);
         }
@@ -196,8 +190,8 @@ public class PlatformUserDetailServiceImpl  extends ServiceImpl<PlatformUserDeta
             return Maps.newHashMap();
         }
         Map<String, String> result = platformUsers.stream().collect(Collectors.toMap(e -> e.getId().toString(), PlatformUser::getDataId));
-        redisCache.setCacheMap(redisKey,result);
-        redisCache.expire(redisKey,1, TimeUnit.DAYS);
+        redisCache.setCacheMap(redisKey, result);
+        redisCache.expire(redisKey, 1, TimeUnit.DAYS);
         return result;
     }
 
@@ -220,20 +214,20 @@ public class PlatformUserDetailServiceImpl  extends ServiceImpl<PlatformUserDeta
             return redisCache.getCacheList(redisKey);
         }
         LambdaQueryWrapper<PlatformUserDetail> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PlatformUserDetail::getEnabled,enabled);
+        queryWrapper.eq(PlatformUserDetail::getEnabled, enabled);
         List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectList(queryWrapper);
         if (platformUserDetails.isEmpty()) {
             return Lists.newArrayList();
         }
-        redisCache.setCacheList(redisKey,platformUserDetails);
-        redisCache.expire(redisKey,1,TimeUnit.DAYS);
+        redisCache.setCacheList(redisKey, platformUserDetails);
+        redisCache.expire(redisKey, 1, TimeUnit.DAYS);
         return platformUserDetails;
     }
 
     @Override
     public List<PlatformUserDetail> queryAllUserByType(String sourceTypeWx) {
         LambdaQueryWrapper<PlatformUserDetail> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PlatformUserDetail::getType,sourceTypeWx);
+        queryWrapper.eq(PlatformUserDetail::getType, sourceTypeWx);
         List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectList(queryWrapper);
         return platformUserDetails;
     }
