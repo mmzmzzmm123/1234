@@ -83,4 +83,6 @@ public interface IPlatformUserDetailService {
      * @return
      */
     List<PlatformUserDetail> queryStatus(Integer stateTypeEnabled);
+
+    List<PlatformUserDetail> queryAllUserByType(String sourceTypeWx);
 }

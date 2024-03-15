@@ -1,27 +1,19 @@
 package com.ruoyi.quartz.task;
 
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.data.domain.Page;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
-
 import com.github.pagehelper.PageHelper;
-import com.ruoyi.common.constant.AwardConstants;
-import com.ruoyi.common.enums.ActivityTypeEnum;
-import com.ruoyi.common.utils.bean.BeanUtils;
-import com.onethinker.onethinker.domain.RedEnvelopeCtrl;
 import com.onethinker.onethinker.domain.RedEnvelopeDtl;
-import com.onethinker.onethinker.dto.ActivityReqDTO;
 import com.onethinker.onethinker.dto.RedEnvelopeCtrlDTO;
 import com.onethinker.onethinker.factory.ActivityDetailFactory;
 import com.onethinker.onethinker.factory.service.IActivityDetailService;
 import com.onethinker.onethinker.service.IRedEnvelopeDtlService;
+import com.ruoyi.common.constant.AwardConstants;
+import com.ruoyi.common.enums.ActivityTypeEnum;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 
 /**

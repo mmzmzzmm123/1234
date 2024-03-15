@@ -36,6 +36,7 @@ import java.sql.Time;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -226,6 +227,14 @@ public class PlatformUserDetailServiceImpl  extends ServiceImpl<PlatformUserDeta
         }
         redisCache.setCacheList(redisKey,platformUserDetails);
         redisCache.expire(redisKey,1,TimeUnit.DAYS);
+        return platformUserDetails;
+    }
+
+    @Override
+    public List<PlatformUserDetail> queryAllUserByType(String sourceTypeWx) {
+        LambdaQueryWrapper<PlatformUserDetail> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PlatformUserDetail::getType,sourceTypeWx);
+        List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectList(queryWrapper);
         return platformUserDetails;
     }
 }
