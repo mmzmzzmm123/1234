@@ -61,6 +61,8 @@ public class SubscribeTemplateTask {
         // 返回天气结果
         String content = weatherInfoService.selectNewWeatherInfoByCity(cityKey);
         String templateId = "QVISoOJAxIH-eb3Ky-xFbmH5WcC5I1kcopworAsBfm4";
+        // 日期
+        String date = DateUtils.getDate();
         SubscribeMsgCtrl subscribeMsgCtrl = subscribeMsgCtrlService.findEntryByTemplateId(templateId);
         if (ObjectUtils.isEmpty(subscribeMsgCtrl)) {
             return;
@@ -80,7 +82,7 @@ public class SubscribeTemplateTask {
                     msgData.setValue(DateUtils.getTime());
                 } else {
                     msgData.setName(key);
-                    msgData.setValue(dataFrom.getString(key).replace("{{content}}",content));
+                    msgData.setValue(dataFrom.getString(key).replace("{{content}}",content).replace("{{date}}",date));
                 }
                 data.add(msgData);
             }

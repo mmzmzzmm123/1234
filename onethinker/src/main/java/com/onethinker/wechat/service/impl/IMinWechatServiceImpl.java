@@ -9,6 +9,7 @@ import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
 import cn.binarywang.wx.miniapp.config.WxMaConfig;
 import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
 import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
+import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
 import com.onethinker.wechat.service.IMinWechatService;
 import com.ruoyi.common.enums.SysConfigKeyEnum;
@@ -71,6 +72,7 @@ public class IMinWechatServiceImpl implements IMinWechatService {
         // 获取发送消息service
         WxMaMsgService msgService = this.getWxMaService().getMsgService();
         try {
+            log.info("发送模版消息：" + JSONObject.toJSONString(subscribeMessage));
             msgService.sendSubscribeMsg(subscribeMessage);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
