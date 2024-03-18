@@ -1,18 +1,18 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
-      <el-form-item label="拼音首字母" prop="letter">
-        <el-input
-          v-model="queryParams.letter"
-          placeholder="请输入拼音首字母"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="品牌名称" prop="name">
         <el-input
           v-model="queryParams.name"
           placeholder="请输入品牌名称"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="品牌首字母" prop="letter">
+        <el-input
+          v-model="queryParams.letter"
+          placeholder="请输入品牌首字母"
           clearable
           @keyup.enter.native="handleQuery"
         />
@@ -30,7 +30,7 @@
           plain
           icon="el-icon-plus"
           size="mini"
-          @click="handleAdd"
+          @click="handleFirstAdd"
           v-hasPermi="['sysmanage:carbrand:add']"
         >新增</el-button>
       </el-col>
@@ -41,7 +41,7 @@
           icon="el-icon-edit"
           size="mini"
           :disabled="single"
-          @click="handleUpdate"
+          @click="handleFirstUpdate"
           v-hasPermi="['sysmanage:carbrand:edit']"
         >修改</el-button>
       </el-col>
@@ -71,10 +71,19 @@
 
     <el-table v-loading="loading" :data="carbrandList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="拼音首字母" align="center" prop="letter" />
-      <el-table-column label="品牌名" align="center" prop="name" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
+      <el-table-column label="品牌首字母" align="center" prop="letter" />
+      <el-table-column label="品牌名称" align="center" prop="name" />
+      <el-table-column label="上级品牌" align="center" prop="parentName" />
+      <el-table-column label="操作" align="right" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-plus"
+            @click="handleAdd(scope.row)"
+            v-hasPermi="['sysmanage:carbrand:edit']"
+            v-if="showAddSubBtn(scope.row)"
+          >增加二级品牌</el-button>
           <el-button
             size="mini"
             type="text"
@@ -101,17 +110,34 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改汽车品牌对话框 -->
+    <!-- 添加或修改汽车一级品牌对话框 -->
+    <el-dialog :title="title" :visible.sync="firstOpen" width="500px" append-to-body>
+      <el-form ref="form" :model="form" :rules="rules" label-width="100px">        
+        <el-form-item label="一级品牌名称" prop="name">
+          <el-input v-model="form.name" placeholder="请输入品牌名称" />
+        </el-form-item>
+        <el-form-item label="品牌首字母" prop="letter">
+          <el-input v-model="form.letter" placeholder="请输入品牌首字母"/>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="firstSubmitForm">确 定</el-button>
+        <el-button @click="cancel">取 消</el-button>
+      </div>
+    </el-dialog>
+
+    <!-- 添加或修改汽车二级品牌对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="拼音首字母" prop="letter">
-          <el-input v-model="form.letter" placeholder="请输入拼音首字母" />
+        <el-form-item label="一级品牌" prop="parentName" >
+          <el-input v-model="form.parentName" placeholder="" disabled  />
         </el-form-item>
-        <el-form-item label="品牌名" prop="name">
-          <el-input v-model="form.name" placeholder="请输入品牌名" />
+        
+        <el-form-item label="二级品牌" prop="name">
+          <el-input v-model="form.name" placeholder="请输入品牌名称" />
         </el-form-item>
-        <el-form-item label="说明" prop="explain">
-          <el-input v-model="form.explain" placeholder="请输入说明" type="textarea"/>
+        <el-form-item label="品牌首字母" prop="letter">
+          <el-input v-model="form.letter" placeholder="请输入品牌首字母"  disabled />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -147,42 +173,36 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
+      firstOpen: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        letter: null,
         name: null,
-        imgname: null,
-        imgpath: null,
-        explain: null
+        letter: null,
+        parentId: null,
+        status: null,
+        indexId: null
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        letter: [
-          { required: true, message: "$comment不能为空", trigger: "blur" }
-        ],
-        name: [
-          { required: true, message: "品牌名不能为空", trigger: "blur" }
-        ],
-        imgname: [
-          { required: true, message: "品牌Logo图片名不能为空", trigger: "blur" }
-        ],
-        imgpath: [
-          { required: true, message: "品牌Logo图片路径不能为空", trigger: "blur" }
-        ],
-        explain: [
-          { required: true, message: "说明不能为空", trigger: "blur" }
-        ]
       }
     };
   },
   created() {
     this.getList();
   },
+  computed:{
+    enableUpdate(){
+      return this.form.id != null
+    }
+  },
   methods: {
+    showAddSubBtn(row){
+      return row.parentId == null
+    },
     /** 查询汽车品牌列表 */
     getList() {
       this.loading = true;
@@ -201,11 +221,15 @@ export default {
     reset() {
       this.form = {
         id: null,
-        letter: null,
         name: null,
-        imgname: null,
-        imgpath: null,
-        explain: null
+        letter: null,
+        parentId: null,
+        createTime: null,
+        updateTime: null,
+        createBy: null,
+        updateBy: null,
+        status: null,
+        indexId: null
       };
       this.resetForm("form");
     },
@@ -226,7 +250,7 @@ export default {
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
-    handleAdd() {
+    handleAdd(row) {
       this.reset();
       this.open = true;
       this.title = "添加汽车品牌";
@@ -241,7 +265,43 @@ export default {
         this.title = "修改汽车品牌";
       });
     },
-    /** 提交按钮 */
+    /** 新增按钮操作 */
+    handleFirstAdd() {
+      this.reset();
+      this.firstOpen = true;
+      this.title = "添加汽车品牌";
+    },
+    /** 修改按钮操作 */
+    handleFirstUpdate(row) {
+      this.reset();
+      const id = row.id || this.ids
+      getCarbrand(id).then(response => {
+        this.form = response.data;
+        this.firstOpen = true;
+        this.title = "修改汽车品牌";
+      });
+    },
+      /** 一级品牌提交按钮 */
+      firstSubmitForm() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          if (this.form.id != null) {
+            updateCarbrand(this.form).then(response => {
+              this.$modal.msgSuccess("修改成功");
+              this.open = false;
+              this.getList();
+            });
+          } else {
+            addCarbrand(this.form).then(response => {
+              this.$modal.msgSuccess("新增成功");
+              this.open = false;
+              this.getList();
+            });
+          }
+        }
+      });
+    },  
+    /** 二级品牌提交按钮 */
     submitForm() {
       this.$refs["form"].validate(valid => {
         if (valid) {

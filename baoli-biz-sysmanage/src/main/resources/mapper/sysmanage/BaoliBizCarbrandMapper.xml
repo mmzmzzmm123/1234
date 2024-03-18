@@ -2,73 +2,91 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.baoli.sysmanage.mapper.BaoliBizCarbrandMapper">
+<mapper namespace="com.baoli.sysmanage.mapper.BaoliBizCarBrandMapper">
     
-    <resultMap type="BaoliBizCarbrand" id="BaoliBizCarbrandResult">
+    <resultMap type="BaoliBizCarBrand" id="BaoliBizCarBrandResult">
         <result property="id"    column="id"    />
-        <result property="letter"    column="letter"    />
         <result property="name"    column="name"    />
-        <result property="imgname"    column="imgname"    />
-        <result property="imgpath"    column="imgpath"    />
-        <result property="explain"    column="explain"    />
+        <result property="letter"    column="letter"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="parentName"    column="parent_name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="status"    column="status"    />
+        <result property="indexId"    column="index_id"    />
     </resultMap>
 
-    <sql id="selectBaoliBizCarbrandVo">
-        select id, letter, name, imgname, imgpath, `explain` from baoli_biz_carbrand
+    <sql id="selectBaoliBizCarBrandVo">
+        select id, name,ifnull(b.letter,(select a.letter from baoli_biz_car_brand a where a.id = b.parent_id)) letter, parent_id,ifnull((select a.name from baoli_biz_car_brand a where a.id = b.parent_id),'/') parent_name, create_time, update_time, create_by, update_by, status, index_id from baoli_biz_car_brand b
     </sql>
 
-    <select id="selectBaoliBizCarbrandList" parameterType="BaoliBizCarbrand" resultMap="BaoliBizCarbrandResult">
-        <include refid="selectBaoliBizCarbrandVo"/>
+    <select id="selectBaoliBizCarBrandList" parameterType="BaoliBizCarBrand" resultMap="BaoliBizCarBrandResult">
+        <include refid="selectBaoliBizCarBrandVo"/>
         <where>  
-            <if test="letter != null  and letter != ''"> and letter = #{letter}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="imgname != null  and imgname != ''"> and imgname like concat('%', #{imgname}, '%')</if>
-            <if test="imgpath != null  and imgpath != ''"> and imgpath = #{imgpath}</if>
-            <if test="explain != null  and explain != ''"> and `explain` = #{explain}</if>
+            <if test="letter != null  and letter != ''"> and ifnull(b.letter,(select a.letter from baoli_biz_car_brand a where a.id = b.parent_id)) = #{letter}</if>
+            <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="indexId != null  and indexId != ''"> and index_id = #{indexId}</if>
         </where>
+        order by ifnull(parent_id,id) * 10000 + id
     </select>
     
-    <select id="selectBaoliBizCarbrandById" parameterType="Long" resultMap="BaoliBizCarbrandResult">
-        <include refid="selectBaoliBizCarbrandVo"/>
+    <select id="selectBaoliBizCarBrandById" parameterType="Long" resultMap="BaoliBizCarBrandResult">
+        <include refid="selectBaoliBizCarBrandVo"/>
         where id = #{id}
     </select>
         
-    <insert id="insertBaoliBizCarbrand" parameterType="BaoliBizCarbrand" useGeneratedKeys="true" keyProperty="id">
-        insert into baoli_biz_carbrand
+    <insert id="insertBaoliBizCarBrand" parameterType="BaoliBizCarBrand" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_car_brand
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="letter != null and letter != ''">letter,</if>
-            <if test="name != null and name != ''">name,</if>
-            <if test="imgname != null and imgname != ''">imgname,</if>
-            <if test="imgpath != null and imgpath != ''">imgpath,</if>
-            <if test="explain != null and explain != ''">`explain`,</if>
+            <if test="name != null">name,</if>
+            <if test="letter != null">letter,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="status != null">status,</if>
+            <if test="indexId != null">index_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="letter != null and letter != ''">#{letter},</if>
-            <if test="name != null and name != ''">#{name},</if>
-            <if test="imgname != null and imgname != ''">#{imgname},</if>
-            <if test="imgpath != null and imgpath != ''">#{imgpath},</if>
-            <if test="explain != null and explain != ''">#{explain},</if>
+            <if test="name != null">#{name},</if>
+            <if test="letter != null">#{letter},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="status != null">#{status},</if>
+            <if test="indexId != null">#{indexId},</if>
          </trim>
     </insert>
 
-    <update id="updateBaoliBizCarbrand" parameterType="BaoliBizCarbrand">
-        update baoli_biz_carbrand
+    <update id="updateBaoliBizCarBrand" parameterType="BaoliBizCarBrand">
+        update baoli_biz_car_brand
         <trim prefix="SET" suffixOverrides=",">
-            <if test="letter != null and letter != ''">letter = #{letter},</if>
-            <if test="name != null and name != ''">name = #{name},</if>
-            <if test="imgname != null and imgname != ''">imgname = #{imgname},</if>
-            <if test="imgpath != null and imgpath != ''">imgpath = #{imgpath},</if>
-            <if test="explain != null and explain != ''">`explain` = #{explain},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="letter != null">letter = #{letter},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="indexId != null">index_id = #{indexId},</if>
         </trim>
         where id = #{id}
     </update>
 
-    <delete id="deleteBaoliBizCarbrandById" parameterType="Long">
-        delete from baoli_biz_carbrand where id = #{id}
+    <delete id="deleteBaoliBizCarBrandById" parameterType="Long">
+        delete from baoli_biz_car_brand where id = #{id}
     </delete>
 
-    <delete id="deleteBaoliBizCarbrandByIds" parameterType="String">
-        delete from baoli_biz_carbrand where id in 
+    <delete id="deleteBaoliBizCarBrandByIds" parameterType="String">
+        delete from baoli_biz_car_brand where id in 
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

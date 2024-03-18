@@ -16,8 +16,8 @@ import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.enums.BusinessType;
-import com.baoli.sysmanage.domain.BaoliBizCarbrand;
-import com.baoli.sysmanage.service.IBaoliBizCarbrandService;
+import com.baoli.sysmanage.domain.BaoliBizCarBrand;
+import com.baoli.sysmanage.service.IBaoliBizCarBrandService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
@@ -25,26 +25,24 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 汽车品牌Controller
  * 
  * @author niujs
- * @date 2024-03-12
+ * @date 2024-03-18
  */
 @RestController
 @RequestMapping("/sysmanage/carbrand")
-public class BaoliBizCarbrandController extends BaseController
+public class BaoliBizCarBrandController extends BaseController
 {
     @Autowired
-    private IBaoliBizCarbrandService baoliBizCarbrandService;
+    private IBaoliBizCarBrandService baoliBizCarBrandService;
 
     /**
      * 查询汽车品牌列表
      */
     @PreAuthorize("@ss.hasPermi('sysmanage:carbrand:list')")
     @GetMapping("/list")
-    public TableDataInfo list(BaoliBizCarbrand baoliBizCarbrand)
+    public TableDataInfo list(BaoliBizCarBrand baoliBizCarBrand)
     {
-        if(baoliBizCarbrand.isPageAble()){
-            startPage();
-        }
-        List<BaoliBizCarbrand> list = baoliBizCarbrandService.selectBaoliBizCarbrandList(baoliBizCarbrand);
+        startPage();
+        List<BaoliBizCarBrand> list = baoliBizCarBrandService.selectBaoliBizCarBrandList(baoliBizCarBrand);
         return getDataTable(list);
     }
 
@@ -54,10 +52,10 @@ public class BaoliBizCarbrandController extends BaseController
     @PreAuthorize("@ss.hasPermi('sysmanage:carbrand:export')")
     @Log(title = "汽车品牌", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, BaoliBizCarbrand baoliBizCarbrand)
+    public void export(HttpServletResponse response, BaoliBizCarBrand baoliBizCarBrand)
     {
-        List<BaoliBizCarbrand> list = baoliBizCarbrandService.selectBaoliBizCarbrandList(baoliBizCarbrand);
-        ExcelUtil<BaoliBizCarbrand> util = new ExcelUtil<BaoliBizCarbrand>(BaoliBizCarbrand.class);
+        List<BaoliBizCarBrand> list = baoliBizCarBrandService.selectBaoliBizCarBrandList(baoliBizCarBrand);
+        ExcelUtil<BaoliBizCarBrand> util = new ExcelUtil<BaoliBizCarBrand>(BaoliBizCarBrand.class);
         util.exportExcel(response, list, "汽车品牌数据");
     }
 
@@ -68,7 +66,7 @@ public class BaoliBizCarbrandController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        return success(baoliBizCarbrandService.selectBaoliBizCarbrandById(id));
+        return success(baoliBizCarBrandService.selectBaoliBizCarBrandById(id));
     }
 
     /**
@@ -77,9 +75,9 @@ public class BaoliBizCarbrandController extends BaseController
     @PreAuthorize("@ss.hasPermi('sysmanage:carbrand:add')")
     @Log(title = "汽车品牌", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BaoliBizCarbrand baoliBizCarbrand)
+    public AjaxResult add(@RequestBody BaoliBizCarBrand baoliBizCarBrand)
     {
-        return toAjax(baoliBizCarbrandService.insertBaoliBizCarbrand(baoliBizCarbrand));
+        return toAjax(baoliBizCarBrandService.insertBaoliBizCarBrand(baoliBizCarBrand));
     }
 
     /**
@@ -88,9 +86,9 @@ public class BaoliBizCarbrandController extends BaseController
     @PreAuthorize("@ss.hasPermi('sysmanage:carbrand:edit')")
     @Log(title = "汽车品牌", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BaoliBizCarbrand baoliBizCarbrand)
+    public AjaxResult edit(@RequestBody BaoliBizCarBrand baoliBizCarBrand)
     {
-        return toAjax(baoliBizCarbrandService.updateBaoliBizCarbrand(baoliBizCarbrand));
+        return toAjax(baoliBizCarBrandService.updateBaoliBizCarBrand(baoliBizCarBrand));
     }
 
     /**
@@ -101,6 +99,6 @@ public class BaoliBizCarbrandController extends BaseController
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
-        return toAjax(baoliBizCarbrandService.deleteBaoliBizCarbrandByIds(ids));
+        return toAjax(baoliBizCarBrandService.deleteBaoliBizCarBrandByIds(ids));
     }
 }
