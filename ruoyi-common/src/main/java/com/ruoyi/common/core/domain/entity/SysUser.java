@@ -31,6 +31,7 @@ public class SysUser extends BaseEntity
 
     /** 用户账号 */
     @Excel(name = "登录名称")
+    @Pattern(regexp = "^[a-zA-Z0-9_-]*$", message = "用户名不能有特殊字符")
     private String userName;
 
     /** 用户昵称 */
@@ -43,6 +44,7 @@ public class SysUser extends BaseEntity
 
     /** 手机号码 */
     @Excel(name = "手机号码")
+    @Pattern(regexp = "^[0-9]*$", message = "手机号码只能是数字")
     private String phonenumber;
 
     /** 用户性别 */
