@@ -36,28 +36,6 @@
       </el-col>
       <el-col :span="1.5">
         <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleFirstUpdate"
-          v-hasPermi="['sysmanage:carbrand:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['sysmanage:carbrand:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
           type="warning"
           plain
           icon="el-icon-download"
@@ -70,7 +48,6 @@
     </el-row>
 
     <el-table v-loading="loading" :data="carbrandList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="品牌首字母" align="center" prop="letter" />
       <el-table-column label="品牌名称" align="center" prop="name" />
       <el-table-column label="上级品牌" align="center" prop="parentName" />
@@ -122,7 +99,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="firstSubmitForm">确 定</el-button>
-        <el-button @click="cancel">取 消</el-button>
+        <el-button @click="cancelFirst">取 消</el-button>
       </div>
     </el-dialog>
 
@@ -201,7 +178,7 @@ export default {
   },
   methods: {
     showAddSubBtn(row){
-      return row.parentId == null
+      return row.parentId == 0
     },
     /** 查询汽车品牌列表 */
     getList() {
@@ -211,6 +188,11 @@ export default {
         this.total = response.total;
         this.loading = false;
       });
+    },
+    // 取消按钮
+    cancelFirst() {
+      this.firstOpen = false;
+      this.reset();
     },
     // 取消按钮
     cancel() {
@@ -250,8 +232,14 @@ export default {
       this.multiple = !selection.length
     },
     /** 新增按钮操作 */
-    handleAdd(row) {
+    handleAdd(row) {      
+      let parentId = row.id;
+      let parentName = row.name;
+      let letter = row.letter;
       this.reset();
+      this.form.parentId = parentId;
+      this.form.parentName = parentName;
+      this.form.letter = letter;      
       this.open = true;
       this.title = "添加汽车品牌";
     },
@@ -288,13 +276,13 @@ export default {
           if (this.form.id != null) {
             updateCarbrand(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
-              this.open = false;
+              this.firstOpen = false;
               this.getList();
             });
           } else {
             addCarbrand(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
-              this.open = false;
+              this.firstOpen = false;
               this.getList();
             });
           }
@@ -323,8 +311,9 @@ export default {
     },
     /** 删除按钮操作 */
     handleDelete(row) {
-      const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除汽车品牌编号为"' + ids + '"的数据项？').then(function() {
+      const ids = row.id;
+      // 如果删除的是一级品牌，需要判断是否存在二级品牌、系列、型号（）
+      this.$modal.confirm('是否确认删除汽车品牌名称为"' + row.name + '"的数据项？').then(function() {
         return delCarbrand(ids);
       }).then(() => {
         this.getList();
@@ -335,7 +324,7 @@ export default {
     handleExport() {
       this.download('sysmanage/carbrand/export', {
         ...this.queryParams
-      }, `carbrand_${new Date().getTime()}.xlsx`)
+      }, `汽车品牌_${new Date().getTime()}.xlsx`)
     }
   }
 };

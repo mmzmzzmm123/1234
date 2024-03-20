@@ -17,29 +17,27 @@ public class BaoliBizCarBrand extends BaseEntity
 
     /** 品牌id */
     private Long id;
+    /** 品牌首字母 */
+    @Excel(name = "品牌首字母")
+    private String letter;
 
     /** 品牌名称 */
     @Excel(name = "品牌名称")
     private String name;
 
-    /** 品牌首字母 */
-    @Excel(name = "品牌首字母")
-    private String letter;
-
+    /** 上级品牌id */
+    @Excel(name = "上级品牌")
+    private String parentName;
     /** 上级品牌id */
     private Long parentId;
 
-    /** 上级品牌id */
-    @Excel(name = "上级品牌id")
-    private String parentName;
-
     /** 状态 */
-    @Excel(name = "状态")
     private String status;
-
     /** 汽车之家index_id */
-    @Excel(name = "汽车之家index_id")
     private String indexId;
+
+    /* 是否分页 */
+    private Integer pageable;
 
     public void setId(Long id) 
     {
@@ -102,6 +100,14 @@ public class BaoliBizCarBrand extends BaseEntity
 
     public void setParentName(String parentName) {
         this.parentName = parentName;
+    }
+
+    public Integer getPageable() {
+        return pageable;
+    }
+
+    public void setPageable(Integer pageable) {
+        this.pageable = pageable;
     }
 
     @Override
