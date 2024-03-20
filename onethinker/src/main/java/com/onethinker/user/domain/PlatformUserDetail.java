@@ -103,4 +103,7 @@ public class PlatformUserDetail {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
+    @Excel(name = "备注")
+    private String remark;
 }
