@@ -41,7 +41,9 @@ public class BaoliBizCarSeriesController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(BaoliBizCarSeries baoliBizCarSeries)
     {
-        startPage();
+        if(baoliBizCarSeries.isPageAble()){
+            startPage();
+        }
         List<BaoliBizCarSeries> list = baoliBizCarSeriesService.selectBaoliBizCarSeriesList(baoliBizCarSeries);
         return getDataTable(list);
     }

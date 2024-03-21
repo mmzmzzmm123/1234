@@ -1,44 +1,44 @@
 import request from '@/utils/request'
 
 // 查询汽车型号列表
-export function listCarmodel(query) {
+export function listCarModel(query) {
   return request({
-    url: '/sysmanage/carmodel/list',
+    url: '/sysmanage/carModel/list',
     method: 'get',
     params: query
   })
 }
 
 // 查询汽车型号详细
-export function getCarmodel(id) {
+export function getCarModel(id) {
   return request({
-    url: '/sysmanage/carmodel/' + id,
+    url: '/sysmanage/carModel/' + id,
     method: 'get'
   })
 }
 
 // 新增汽车型号
-export function addCarmodel(data) {
+export function addCarModel(data) {
   return request({
-    url: '/sysmanage/carmodel',
+    url: '/sysmanage/carModel',
     method: 'post',
     data: data
   })
 }
 
 // 修改汽车型号
-export function updateCarmodel(data) {
+export function updateCarModel(data) {
   return request({
-    url: '/sysmanage/carmodel',
+    url: '/sysmanage/carModel',
     method: 'put',
     data: data
   })
 }
 
 // 删除汽车型号
-export function delCarmodel(id) {
+export function delCarModel(id) {
   return request({
-    url: '/sysmanage/carmodel/' + id,
+    url: '/sysmanage/carModel/' + id,
     method: 'delete'
   })
 }

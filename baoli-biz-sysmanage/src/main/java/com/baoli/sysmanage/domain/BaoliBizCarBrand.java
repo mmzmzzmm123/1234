@@ -36,9 +36,6 @@ public class BaoliBizCarBrand extends BaseEntity
     /** 汽车之家index_id */
     private String indexId;
 
-    /* 是否分页 */
-    private Integer pageable;
-
     public void setId(Long id) 
     {
         this.id = id;
@@ -100,14 +97,6 @@ public class BaoliBizCarBrand extends BaseEntity
 
     public void setParentName(String parentName) {
         this.parentName = parentName;
-    }
-
-    public Integer getPageable() {
-        return pageable;
-    }
-
-    public void setPageable(Integer pageable) {
-        this.pageable = pageable;
     }
 
     @Override

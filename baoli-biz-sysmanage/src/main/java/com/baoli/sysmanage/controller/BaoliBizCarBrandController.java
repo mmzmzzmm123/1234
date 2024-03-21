@@ -41,7 +41,7 @@ public class BaoliBizCarBrandController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(BaoliBizCarBrand baoliBizCarBrand)
     {
-        if(baoliBizCarBrand.getPageable() == null || baoliBizCarBrand.getPageable()== 1){
+        if(baoliBizCarBrand.isPageAble()){
             startPage();
         }
         List<BaoliBizCarBrand> list = baoliBizCarBrandService.selectBaoliBizCarBrandList(baoliBizCarBrand);
