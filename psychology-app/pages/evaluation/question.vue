@@ -336,7 +336,7 @@ export default {
       let result = await questionServer.setResult(this.form);
       if (result.code === 200) {
         this.resetForm()
-        this.$utils.clearTimeLoad();
+        // this.$utils.clearTimeLoad();
         uni.navigateTo({
           url: "/pages/evaluation/mResult?orderId=" + this.order.orderId,
         });
