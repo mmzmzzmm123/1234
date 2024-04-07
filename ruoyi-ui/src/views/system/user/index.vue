@@ -269,6 +269,8 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="岗位">
+                <dict-select v-model="form.postIds" :dict-arr="postOptions" :multiple="true"/>
+              <!--
               <el-select v-model="form.postIds" multiple placeholder="请选择岗位">
                 <el-option
                   v-for="item in postOptions"
@@ -278,6 +280,7 @@
                   :disabled="item.status == 1"
                 ></el-option>
               </el-select>
+              -->
             </el-form-item>
           </el-col>
           <el-col :span="12">
@@ -564,6 +567,12 @@ export default {
       this.reset();
       getUser().then(response => {
         this.postOptions = response.posts;
+        this.postOptions.forEach(item => {
+          if(item.status != 1){
+            item.value = item.postId;
+            item.label = item.postName;
+          }
+        });
         this.roleOptions = response.roles;
         this.open = true;
         this.title = "添加用户";
