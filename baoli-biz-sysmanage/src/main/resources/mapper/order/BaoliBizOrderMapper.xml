@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.order.mapper.BaoliBizOrderMapper">
+    
+    <resultMap type="BaoliBizOrder" id="BaoliBizOrderResult">
+        <result property="id"    column="id"    />
+        <result property="orderSchema"    column="order_schema"    />
+        <result property="city"    column="city"    />
+        <result property="dealerType"    column="dealer_type"    />
+        <result property="dealerId"    column="dealer_id"    />
+        <result property="carType"    column="car_type"    />
+        <result property="loanType"    column="loan_type"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="bank"    column="bank"    />
+        <result property="innerOfficer"    column="inner_officer"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="applyNumber"    column="apply_number"    />
+        <result property="newEnergy"    column="new_energy"    />
+        <result property="invoicePrice"    column="invoice_price"    />
+        <result property="loanAmount"    column="loan_amount"    />
+        <result property="downPayment"    column="down_payment"    />
+        <result property="loanRatio"    column="loan_ratio"    />
+        <result property="periodNumber"    column="period_number"    />
+        <result property="supplyMaterialType"    column="supply_material_type"    />
+        <result property="customerPhoneNumber"    column="customer_phone_number"    />
+        <result property="customerWorkUnion"    column="customer_work_union"    />
+        <result property="isDiscount"    column="is_discount"    />
+        <result property="feeRatio"    column="fee_ratio"    />
+        <result property="isHxr"    column="is_hxr"    />
+        <result property="businessNumber"    column="business_number"    />
+        <result property="creditCardNumber"    column="credit_card_number"    />
+        <result property="customerAge"    column="customer_age"    />
+        <result property="married"    column="married"    />
+        <result property="existsDriveLicense"    column="exists_drive_license"    />
+        <result property="domicileType"    column="domicile_type"    />
+        <result property="workPlace"    column="work_place"    />
+        <result property="workField"    column="work_field"    />
+        <result property="workCatetory"    column="work_catetory"    />
+        <result property="education"    column="education"    />
+        <result property="companionRelationship"    column="companion_relationship"    />
+        <result property="companionNumber"    column="companion_number"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizOrderVo">
+        select id, order_schema, city, dealer_type, dealer_id, car_type, loan_type, order_number, bank, inner_officer, customer_name, apply_number, new_energy, invoice_price, loan_amount, down_payment, loan_ratio, period_number, supply_material_type, customer_phone_number, customer_work_union, is_discount, fee_ratio, is_hxr, business_number, credit_card_number, customer_age, married, exists_drive_license, domicile_type, work_place, work_field, work_catetory, education, companion_relationship, companion_number, create_time, update_time, create_by, update_by from baoli_biz_order
+    </sql>
+
+    <select id="selectBaoliBizOrderList" parameterType="BaoliBizOrder" resultMap="BaoliBizOrderResult">
+        <include refid="selectBaoliBizOrderVo"/>
+        <where>  
+            <if test="orderSchema != null  and orderSchema != ''"> and order_schema = #{orderSchema}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="dealerType != null  and dealerType != ''"> and dealer_type = #{dealerType}</if>
+            <if test="dealerId != null "> and dealer_id = #{dealerId}</if>
+            <if test="carType != null  and carType != ''"> and car_type = #{carType}</if>
+            <if test="loanType != null  and loanType != ''"> and loan_type = #{loanType}</if>
+            <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
+            <if test="bank != null "> and bank = #{bank}</if>
+            <if test="innerOfficer != null  and innerOfficer != ''"> and inner_officer = #{innerOfficer}</if>
+            <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
+            <if test="applyNumber != null  and applyNumber != ''"> and apply_number = #{applyNumber}</if>
+            <if test="newEnergy != null  and newEnergy != ''"> and new_energy = #{newEnergy}</if>
+            <if test="invoicePrice != null "> and invoice_price = #{invoicePrice}</if>
+            <if test="loanAmount != null "> and loan_amount = #{loanAmount}</if>
+            <if test="downPayment != null "> and down_payment = #{downPayment}</if>
+            <if test="loanRatio != null "> and loan_ratio = #{loanRatio}</if>
+            <if test="periodNumber != null  and periodNumber != ''"> and period_number = #{periodNumber}</if>
+            <if test="supplyMaterialType != null  and supplyMaterialType != ''"> and supply_material_type = #{supplyMaterialType}</if>
+            <if test="customerPhoneNumber != null  and customerPhoneNumber != ''"> and customer_phone_number = #{customerPhoneNumber}</if>
+            <if test="customerWorkUnion != null  and customerWorkUnion != ''"> and customer_work_union = #{customerWorkUnion}</if>
+            <if test="isDiscount != null  and isDiscount != ''"> and is_discount = #{isDiscount}</if>
+            <if test="feeRatio != null "> and fee_ratio = #{feeRatio}</if>
+            <if test="isHxr != null  and isHxr != ''"> and is_hxr = #{isHxr}</if>
+            <if test="businessNumber != null  and businessNumber != ''"> and business_number = #{businessNumber}</if>
+            <if test="creditCardNumber != null  and creditCardNumber != ''"> and credit_card_number = #{creditCardNumber}</if>
+            <if test="customerAge != null  and customerAge != ''"> and customer_age = #{customerAge}</if>
+            <if test="married != null  and married != ''"> and married = #{married}</if>
+            <if test="existsDriveLicense != null  and existsDriveLicense != ''"> and exists_drive_license = #{existsDriveLicense}</if>
+            <if test="domicileType != null  and domicileType != ''"> and domicile_type = #{domicileType}</if>
+            <if test="workPlace != null  and workPlace != ''"> and work_place = #{workPlace}</if>
+            <if test="workField != null  and workField != ''"> and work_field = #{workField}</if>
+            <if test="workCatetory != null  and workCatetory != ''"> and work_catetory = #{workCatetory}</if>
+            <if test="education != null  and education != ''"> and education = #{education}</if>
+            <if test="companionRelationship != null  and companionRelationship != ''"> and companion_relationship = #{companionRelationship}</if>
+            <if test="companionNumber != null "> and companion_number = #{companionNumber}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizOrderById" parameterType="Long" resultMap="BaoliBizOrderResult">
+        <include refid="selectBaoliBizOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizOrder" parameterType="BaoliBizOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderSchema != null">order_schema,</if>
+            <if test="city != null">city,</if>
+            <if test="dealerType != null">dealer_type,</if>
+            <if test="dealerId != null">dealer_id,</if>
+            <if test="carType != null">car_type,</if>
+            <if test="loanType != null">loan_type,</if>
+            <if test="orderNumber != null">order_number,</if>
+            <if test="bank != null">bank,</if>
+            <if test="innerOfficer != null">inner_officer,</if>
+            <if test="customerName != null">customer_name,</if>
+            <if test="applyNumber != null">apply_number,</if>
+            <if test="newEnergy != null">new_energy,</if>
+            <if test="invoicePrice != null">invoice_price,</if>
+            <if test="loanAmount != null">loan_amount,</if>
+            <if test="downPayment != null">down_payment,</if>
+            <if test="loanRatio != null">loan_ratio,</if>
+            <if test="periodNumber != null">period_number,</if>
+            <if test="supplyMaterialType != null">supply_material_type,</if>
+            <if test="customerPhoneNumber != null">customer_phone_number,</if>
+            <if test="customerWorkUnion != null">customer_work_union,</if>
+            <if test="isDiscount != null">is_discount,</if>
+            <if test="feeRatio != null">fee_ratio,</if>
+            <if test="isHxr != null">is_hxr,</if>
+            <if test="businessNumber != null">business_number,</if>
+            <if test="creditCardNumber != null">credit_card_number,</if>
+            <if test="customerAge != null">customer_age,</if>
+            <if test="married != null">married,</if>
+            <if test="existsDriveLicense != null">exists_drive_license,</if>
+            <if test="domicileType != null">domicile_type,</if>
+            <if test="workPlace != null">work_place,</if>
+            <if test="workField != null">work_field,</if>
+            <if test="workCatetory != null">work_catetory,</if>
+            <if test="education != null">education,</if>
+            <if test="companionRelationship != null">companion_relationship,</if>
+            <if test="companionNumber != null">companion_number,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderSchema != null">#{orderSchema},</if>
+            <if test="city != null">#{city},</if>
+            <if test="dealerType != null">#{dealerType},</if>
+            <if test="dealerId != null">#{dealerId},</if>
+            <if test="carType != null">#{carType},</if>
+            <if test="loanType != null">#{loanType},</if>
+            <if test="orderNumber != null">#{orderNumber},</if>
+            <if test="bank != null">#{bank},</if>
+            <if test="innerOfficer != null">#{innerOfficer},</if>
+            <if test="customerName != null">#{customerName},</if>
+            <if test="applyNumber != null">#{applyNumber},</if>
+            <if test="newEnergy != null">#{newEnergy},</if>
+            <if test="invoicePrice != null">#{invoicePrice},</if>
+            <if test="loanAmount != null">#{loanAmount},</if>
+            <if test="downPayment != null">#{downPayment},</if>
+            <if test="loanRatio != null">#{loanRatio},</if>
+            <if test="periodNumber != null">#{periodNumber},</if>
+            <if test="supplyMaterialType != null">#{supplyMaterialType},</if>
+            <if test="customerPhoneNumber != null">#{customerPhoneNumber},</if>
+            <if test="customerWorkUnion != null">#{customerWorkUnion},</if>
+            <if test="isDiscount != null">#{isDiscount},</if>
+            <if test="feeRatio != null">#{feeRatio},</if>
+            <if test="isHxr != null">#{isHxr},</if>
+            <if test="businessNumber != null">#{businessNumber},</if>
+            <if test="creditCardNumber != null">#{creditCardNumber},</if>
+            <if test="customerAge != null">#{customerAge},</if>
+            <if test="married != null">#{married},</if>
+            <if test="existsDriveLicense != null">#{existsDriveLicense},</if>
+            <if test="domicileType != null">#{domicileType},</if>
+            <if test="workPlace != null">#{workPlace},</if>
+            <if test="workField != null">#{workField},</if>
+            <if test="workCatetory != null">#{workCatetory},</if>
+            <if test="education != null">#{education},</if>
+            <if test="companionRelationship != null">#{companionRelationship},</if>
+            <if test="companionNumber != null">#{companionNumber},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizOrder" parameterType="BaoliBizOrder">
+        update baoli_biz_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderSchema != null">order_schema = #{orderSchema},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="dealerType != null">dealer_type = #{dealerType},</if>
+            <if test="dealerId != null">dealer_id = #{dealerId},</if>
+            <if test="carType != null">car_type = #{carType},</if>
+            <if test="loanType != null">loan_type = #{loanType},</if>
+            <if test="orderNumber != null">order_number = #{orderNumber},</if>
+            <if test="bank != null">bank = #{bank},</if>
+            <if test="innerOfficer != null">inner_officer = #{innerOfficer},</if>
+            <if test="customerName != null">customer_name = #{customerName},</if>
+            <if test="applyNumber != null">apply_number = #{applyNumber},</if>
+            <if test="newEnergy != null">new_energy = #{newEnergy},</if>
+            <if test="invoicePrice != null">invoice_price = #{invoicePrice},</if>
+            <if test="loanAmount != null">loan_amount = #{loanAmount},</if>
+            <if test="downPayment != null">down_payment = #{downPayment},</if>
+            <if test="loanRatio != null">loan_ratio = #{loanRatio},</if>
+            <if test="periodNumber != null">period_number = #{periodNumber},</if>
+            <if test="supplyMaterialType != null">supply_material_type = #{supplyMaterialType},</if>
+            <if test="customerPhoneNumber != null">customer_phone_number = #{customerPhoneNumber},</if>
+            <if test="customerWorkUnion != null">customer_work_union = #{customerWorkUnion},</if>
+            <if test="isDiscount != null">is_discount = #{isDiscount},</if>
+            <if test="feeRatio != null">fee_ratio = #{feeRatio},</if>
+            <if test="isHxr != null">is_hxr = #{isHxr},</if>
+            <if test="businessNumber != null">business_number = #{businessNumber},</if>
+            <if test="creditCardNumber != null">credit_card_number = #{creditCardNumber},</if>
+            <if test="customerAge != null">customer_age = #{customerAge},</if>
+            <if test="married != null">married = #{married},</if>
+            <if test="existsDriveLicense != null">exists_drive_license = #{existsDriveLicense},</if>
+            <if test="domicileType != null">domicile_type = #{domicileType},</if>
+            <if test="workPlace != null">work_place = #{workPlace},</if>
+            <if test="workField != null">work_field = #{workField},</if>
+            <if test="workCatetory != null">work_catetory = #{workCatetory},</if>
+            <if test="education != null">education = #{education},</if>
+            <if test="companionRelationship != null">companion_relationship = #{companionRelationship},</if>
+            <if test="companionNumber != null">companion_number = #{companionNumber},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizOrderById" parameterType="Long">
+        delete from baoli_biz_order where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizOrderByIds" parameterType="String">
+        delete from baoli_biz_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

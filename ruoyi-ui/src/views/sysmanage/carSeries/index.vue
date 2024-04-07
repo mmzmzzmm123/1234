@@ -138,7 +138,7 @@ export default {
     /** 查询汽车品牌列表 */
     getSubBrandsList(ele) {
       let param = {};
-      param.pageable = 0;
+      param.pageable = false;
       param.parentId = ele.value;
       listCarbrand(param).then(response => {
         if (response.rows != null) {
@@ -192,7 +192,7 @@ export default {
     /** 查询一级品牌*/
     getBrandList() {
       let param = {};
-      param.pageable = 0;
+      param.pageAble = false;
       param.status = 0;
       listCarbrand(param).then(response => {
         this.carbrandList = this.transBrandList(response.rows, 1);
