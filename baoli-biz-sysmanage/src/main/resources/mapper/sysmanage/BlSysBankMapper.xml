@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.sysmanage.mapper.BlSysBankMapper">
+    
+    <resultMap type="BlSysBank" id="BlSysBankResult">
+        <result property="id"    column="id"    />
+        <result property="provinceId"    column="province_id"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="compary"    column="compary"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBlSysBankVo">
+        select id, province_id, city_id, name, code, compary, create_by, create_time, update_by, update_time from bl_sys_bank
+    </sql>
+
+    <select id="selectBlSysBankList" parameterType="BlSysBank" resultMap="BlSysBankResult">
+        <include refid="selectBlSysBankVo"/>
+        <where>  
+            <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
+            <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="compary != null  and compary != ''"> and compary = #{compary}</if>
+        </where>
+    </select>
+    
+    <select id="selectBlSysBankById" parameterType="Long" resultMap="BlSysBankResult">
+        <include refid="selectBlSysBankVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBlSysBank" parameterType="BlSysBank" useGeneratedKeys="true" keyProperty="id">
+        insert into bl_sys_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="name != null">name,</if>
+            <if test="code != null">code,</if>
+            <if test="compary != null">compary,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="code != null">#{code},</if>
+            <if test="compary != null">#{compary},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBlSysBank" parameterType="BlSysBank">
+        update bl_sys_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="provinceId != null">province_id = #{provinceId},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="compary != null">compary = #{compary},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBlSysBankById" parameterType="Long">
+        delete from bl_sys_bank where id = #{id}
+    </delete>
+
+    <delete id="deleteBlSysBankByIds" parameterType="String">
+        delete from bl_sys_bank where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
