@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
+    <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
 
       <el-form-item label="订单模式" prop="orderSchema">
         <el-select v-model="queryParams.orderSchema">
@@ -9,7 +9,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="城市" prop="city">
-        <el-input v-model="queryParams.city" placeholder="请输入城市" clearable @keyup.enter.native="handleQuery" />
+        <el-cascader v-model="queryParams.city" :options="cityOptions" clearable filterable placeholder="请选择">
+        </el-cascader>
       </el-form-item>
       <el-form-item label="经销商" prop="dealerId">
         <el-input v-model="queryParams.dealerId" placeholder="请输入经销商" clearable @keyup.enter.native="handleQuery" />
@@ -151,10 +152,9 @@
 
     <el-table v-loading="loading" :data="orderManageList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
       <el-table-column label="订单模式" align="center" prop="orderSchema" />
       <el-table-column label="城市" align="center" prop="city" />
-      <el-table-column label="经销商类型" align="center" prop="dealerType" />
+      <el-table-column width="180" label="经销商类型" align="center" prop="dealerType" />
       <el-table-column label="经销商" align="center" prop="dealerId" />
       <el-table-column label="是否新车" align="center" prop="carType" />
       <el-table-column label="贷款类型" align="center" prop="loanType" />
@@ -163,30 +163,30 @@
       <el-table-column label="内勤" align="center" prop="innerOfficer" />
       <el-table-column label="客户姓名" align="center" prop="customerName" />
       <el-table-column label="申请编号" align="center" prop="applyNumber" />
-      <el-table-column label="是否新能源" align="center" prop="newEnergy" />
+      <el-table-column width="180" label="是否新能源" align="center" prop="newEnergy" />
       <el-table-column label="开票价格" align="center" prop="invoicePrice" />
       <el-table-column label="贷款金额" align="center" prop="loanAmount" />
       <el-table-column label="首付金额" align="center" prop="downPayment" />
       <el-table-column label="贷款比率" align="center" prop="loanRatio" />
       <el-table-column label="期数" align="center" prop="periodNumber" />
-      <el-table-column label="进件材料类型" align="center" prop="supplyMaterialType" />
-      <el-table-column label="客户联系方式" align="center" prop="customerPhoneNumber" />
-      <el-table-column label="客户工作单位" align="center" prop="customerWorkUnion" />
+      <el-table-column width="180" label="进件材料类型" align="center" prop="supplyMaterialType" />
+      <el-table-column width="180" label="客户联系方式" align="center" prop="customerPhoneNumber" />
+      <el-table-column width="180" label="客户工作单位" align="center" prop="customerWorkUnion" />
       <el-table-column label="是否贴息" align="center" prop="isDiscount" />
       <el-table-column label="总费率" align="center" prop="feeRatio" />
-      <el-table-column label="是否惠享荣" align="center" prop="isHxr" />
+      <el-table-column width="180" label="是否惠享荣" align="center" prop="isHxr" />
       <el-table-column label="业务编号" align="center" prop="businessNumber" />
       <el-table-column label="信用卡号" align="center" prop="creditCardNumber" />
       <el-table-column label="客户年龄" align="center" prop="customerAge" />
       <el-table-column label="婚否" align="center" prop="married" />
       <el-table-column label="有无驾照" align="center" prop="existsDriveLicense" />
       <el-table-column label="户籍类型" align="center" prop="domicileType" />
-      <el-table-column label="工作所在地" align="center" prop="workPlace" />
+      <el-table-column width="180" label="工作所在地" align="center" prop="workPlace" />
       <el-table-column label="行业" align="center" prop="workField" />
       <el-table-column label="工作性质" align="center" prop="workCategory" />
       <el-table-column label="学历" align="center" prop="education" />
-      <el-table-column label="陪同人员关系" align="center" prop="companionRelationship" />
-      <el-table-column label="陪同人员数量" align="center" prop="companionNumber" />
+      <el-table-column width="180" label="陪同人员关系" align="center" prop="companionRelationship" />
+      <el-table-column width="180" label="陪同人员数量" align="center" prop="companionNumber" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button size="mini" type="text" icon="el-icon-edit" @click="handleUpdate(scope.row)"
@@ -305,6 +305,7 @@
 <script>
 import { listOrderManage, getOrderManage, delOrderManage, addOrderManage, updateOrderManage } from "@/api/order/orderManage";
 import { getDicts } from "@/api/system/dict/data";
+import { listCities } from "@/api/sysmanage/cities";
 export default {
   name: "OrderManage",
   data() {
@@ -336,6 +337,8 @@ export default {
       dicWorkCategory:[],
       dicMarriedStatus:[],
       dicCompanionRelationship:[],
+      cityOptions:[],
+      provinceOptions:[],
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -408,9 +411,39 @@ export default {
     });
     this.getDicts("bl_companion_relationship").then(response => {
       this.dicCompanionRelationship = response.data;
-    });    
+    });   
+    this.getCitys(); 
   },
   methods: {
+    getCitys(){
+      let param = {};
+      param.pageAble= false;
+      listCities(param).then(response => {
+        if(response!=null && response.rows!=null){
+          let citys = response.rows;
+          let provMap = new Map();
+          for(let i =0;i<citys.length;i++){
+            let province = null
+            let provinceId = citys[i].provinceid;
+            if(provMap.get(provinceId) == null){
+              province = {}
+              province.value = provinceId
+              province.label = citys[i].provinceName
+              province.children = []
+              provMap.set(provinceId,province);
+
+            }
+            province = provMap.get(provinceId)
+            let city = {}
+            city.value =  citys[i].cityid;
+            city.label = citys[i].city;
+            province.children.push(city);
+          }
+
+          this.cityOptions = Array.from(provMap.values());
+        }
+      });
+    },
     /** 查询订单列表 */
     getList() {
       this.loading = true;
