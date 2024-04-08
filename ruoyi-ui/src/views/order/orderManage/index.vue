@@ -8,8 +8,8 @@
             :value="item.dictCode" />
         </el-select>
       </el-form-item>
-      <el-form-item label="城市" prop="city">
-        <el-cascader v-model="queryParams.city" :options="cityOptions" clearable filterable placeholder="请选择">
+      <el-form-item label="城市" prop="cityId">
+        <el-cascader v-model="queryParams.cityId" :options="cityOptions" clearable filterable placeholder="请选择">
         </el-cascader>
       </el-form-item>
       <el-form-item label="经销商" prop="dealerId">
@@ -345,6 +345,7 @@ export default {
         pageSize: 10,
         orderSchema: null,
         city: null,
+        cityId: null,
         dealerType: null,
         dealerId: null,
         carType: null,
@@ -447,6 +448,9 @@ export default {
     /** 查询订单列表 */
     getList() {
       this.loading = true;
+      if(this.queryParams.cityId!=null){
+        this.queryParams.city = this.queryParams.cityId[1]
+      }
       listOrderManage(this.queryParams).then(response => {
         this.orderManageList = response.rows;
         this.total = response.total;
