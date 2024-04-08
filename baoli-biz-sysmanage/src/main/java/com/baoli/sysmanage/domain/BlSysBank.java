@@ -26,6 +26,14 @@ public class BlSysBank extends BaseEntity
     @Excel(name = "城市")
     private String cityId;
 
+    /** 省份 */
+    @Excel(name = "省份")
+    private String provinceName;
+
+    /** 城市 */
+    @Excel(name = "城市")
+    private String cityName;
+
     /** 名称 */
     @Excel(name = "名称")
     private String name;
@@ -79,7 +87,23 @@ public class BlSysBank extends BaseEntity
         this.code = code;
     }
 
-    public String getCode() 
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getCode()
     {
         return code;
     }

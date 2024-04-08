@@ -7,7 +7,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="BlSysBank" id="BlSysBankResult">
         <result property="id"    column="id"    />
         <result property="provinceId"    column="province_id"    />
+        <result property="provinceName"    column="province_name"    />
         <result property="cityId"    column="city_id"    />
+        <result property="cityName"    column="city_name"    />
         <result property="name"    column="name"    />
         <result property="code"    column="code"    />
         <result property="compary"    column="compary"    />
@@ -18,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBlSysBankVo">
-        select id, province_id, city_id, name, code, compary, create_by, create_time, update_by, update_time from bl_sys_bank
+        select id, province_id,(select b.province from bl_sys_provinces b where b.provinceid = a.province_id) province_name, city_id,(select c.city from bl_sys_cities c  where c.cityid = a.city_id) city_name, name, code, compary, create_by, create_time, update_by, update_time from bl_sys_bank a
     </sql>
 
     <select id="selectBlSysBankList" parameterType="BlSysBank" resultMap="BlSysBankResult">
