@@ -57,10 +57,6 @@ export default {
       default: true
     }
   },
-  data() {
-    return {
-    };
-  },
   computed: {
     currentPage: {
       get() {
