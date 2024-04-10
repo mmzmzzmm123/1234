@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="domicileType"    column="domicile_type"    />
         <result property="workPlace"    column="work_place"    />
         <result property="workField"    column="work_field"    />
-        <result property="workCatetory"    column="work_catetory"    />
+        <result property="workCategory"    column="work_category"    />
         <result property="education"    column="education"    />
         <result property="companionRelationship"    column="companion_relationship"    />
         <result property="companionNumber"    column="companion_number"    />
@@ -48,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBaoliBizOrderVo">
-        select id, order_schema, city, dealer_type, dealer_id, car_type, loan_type, order_number, bank, inner_officer, customer_name, apply_number, new_energy, invoice_price, loan_amount, down_payment, loan_ratio, period_number, supply_material_type, customer_phone_number, customer_work_union, is_discount, fee_ratio, is_hxr, business_number, credit_card_number, customer_age, married, exists_drive_license, domicile_type, work_place, work_field, work_catetory, education, companion_relationship, companion_number, create_time, update_time, create_by, update_by from baoli_biz_order
+        select id, order_schema, city, dealer_type, dealer_id, car_type, loan_type, order_number, bank, inner_officer, customer_name, apply_number, new_energy, invoice_price, loan_amount, down_payment, loan_ratio, period_number, supply_material_type, customer_phone_number, customer_work_union, is_discount, fee_ratio, is_hxr, business_number, credit_card_number, customer_age, married, exists_drive_license, domicile_type, work_place, work_field, work_category, education, companion_relationship, companion_number, create_time, update_time, create_by, update_by from baoli_biz_order
     </sql>
 
     <select id="selectBaoliBizOrderList" parameterType="BaoliBizOrder" resultMap="BaoliBizOrderResult">
@@ -85,7 +85,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="domicileType != null  and domicileType != ''"> and domicile_type = #{domicileType}</if>
             <if test="workPlace != null  and workPlace != ''"> and work_place = #{workPlace}</if>
             <if test="workField != null  and workField != ''"> and work_field = #{workField}</if>
-            <if test="workCatetory != null  and workCatetory != ''"> and work_catetory = #{workCatetory}</if>
+            <if test="workCategory != null  and workCategory != ''"> and work_category = #{workCategory}</if>
             <if test="education != null  and education != ''"> and education = #{education}</if>
             <if test="companionRelationship != null  and companionRelationship != ''"> and companion_relationship = #{companionRelationship}</if>
             <if test="companionNumber != null "> and companion_number = #{companionNumber}</if>
@@ -131,7 +131,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="domicileType != null">domicile_type,</if>
             <if test="workPlace != null">work_place,</if>
             <if test="workField != null">work_field,</if>
-            <if test="workCatetory != null">work_catetory,</if>
+            <if test="workCategory != null">work_category,</if>
             <if test="education != null">education,</if>
             <if test="companionRelationship != null">companion_relationship,</if>
             <if test="companionNumber != null">companion_number,</if>
@@ -172,7 +172,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="domicileType != null">#{domicileType},</if>
             <if test="workPlace != null">#{workPlace},</if>
             <if test="workField != null">#{workField},</if>
-            <if test="workCatetory != null">#{workCatetory},</if>
+            <if test="workCategory != null">#{workCategory},</if>
             <if test="education != null">#{education},</if>
             <if test="companionRelationship != null">#{companionRelationship},</if>
             <if test="companionNumber != null">#{companionNumber},</if>
@@ -217,7 +217,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="domicileType != null">domicile_type = #{domicileType},</if>
             <if test="workPlace != null">work_place = #{workPlace},</if>
             <if test="workField != null">work_field = #{workField},</if>
-            <if test="workCatetory != null">work_catetory = #{workCatetory},</if>
+            <if test="workCategory != null">work_category = #{workCategory},</if>
             <if test="education != null">education = #{education},</if>
             <if test="companionRelationship != null">companion_relationship = #{companionRelationship},</if>
             <if test="companionNumber != null">companion_number = #{companionNumber},</if>

@@ -144,7 +144,7 @@ public class BaoliBizOrder extends BaseEntity
 
     /** 工作性质 */
     @Excel(name = "工作性质")
-    private String workCatetory;
+    private String workCategory;
 
     /** 学历 */
     @Excel(name = "学历")
@@ -446,14 +446,14 @@ public class BaoliBizOrder extends BaseEntity
     {
         return workField;
     }
-    public void setWorkCatetory(String workCatetory) 
+    public void setWorkCateory(String workCategory)
     {
-        this.workCatetory = workCatetory;
+        this.workCategory = workCategory;
     }
 
-    public String getWorkCatetory() 
+    public String getWorkCateory()
     {
-        return workCatetory;
+        return workCategory;
     }
     public void setEducation(String education) 
     {
@@ -518,7 +518,7 @@ public class BaoliBizOrder extends BaseEntity
             .append("domicileType", getDomicileType())
             .append("workPlace", getWorkPlace())
             .append("workField", getWorkField())
-            .append("workCatetory", getWorkCatetory())
+            .append("workCategory", getWorkCateory())
             .append("education", getEducation())
             .append("companionRelationship", getCompanionRelationship())
             .append("companionNumber", getCompanionNumber())

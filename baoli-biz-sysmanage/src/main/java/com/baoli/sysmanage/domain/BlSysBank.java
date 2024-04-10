@@ -42,9 +42,29 @@ public class BlSysBank extends BaseEntity
     @Excel(name = "编码")
     private String code;
 
+    public String getAgency() {
+        return agency;
+    }
+
+    public void setAgency(String agency) {
+        this.agency = agency;
+    }
+
     /** 所属商业银行 */
     @Excel(name = "所属商业银行")
-    private String compary;
+    private String agency;
+
+    public String getBankType() {
+        return bankType;
+    }
+
+    public void setBankType(String bankType) {
+        this.bankType = bankType;
+    }
+
+    /** 银行类型 */
+    @Excel(name = "银行类型")
+    private String bankType;
 
     public void setId(Long id) 
     {
@@ -107,15 +127,6 @@ public class BlSysBank extends BaseEntity
     {
         return code;
     }
-    public void setCompary(String compary) 
-    {
-        this.compary = compary;
-    }
-
-    public String getCompary() 
-    {
-        return compary;
-    }
 
     @Override
     public String toString() {
@@ -125,7 +136,6 @@ public class BlSysBank extends BaseEntity
             .append("cityId", getCityId())
             .append("name", getName())
             .append("code", getCode())
-            .append("compary", getCompary())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

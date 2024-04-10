@@ -50,7 +50,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBaoliBizStoreVo">
-        select id, name, brand_id, group, province_id, city_id, dealer_type, most_sell_model, staff_amount, gm_name, gm_phone_number, sm_name, sm_phone_number, fo_name, fo_phone_number, month_sells_amout, permeation_rate, brand_pr, bank_pr, sf_investor, sf_rate, discount_cars, discount_sells_rate, discount_bank, non_discount_cars, non_discount_sells_rate, defect_rate, brand_defect_rate, bank_defect_rate, key_person, kp_position, kp_phone_number, remark, sells_policy, be_review_person, brp_position, brp_phone_number, brp_in_store, create_time, update_time, create_by, update_by from baoli_biz_store
+        select id, name, brand_id, `group`, province_id, city_id, dealer_type, most_sell_model, staff_amount, gm_name, gm_phone_number, sm_name, sm_phone_number, fo_name, fo_phone_number, month_sells_amout, permeation_rate, brand_pr, bank_pr, sf_investor, sf_rate, discount_cars, discount_sells_rate, discount_bank, non_discount_cars, non_discount_sells_rate, defect_rate, brand_defect_rate, bank_defect_rate, key_person, kp_position, kp_phone_number, remark, sells_policy, be_review_person, brp_position, brp_phone_number, brp_in_store, create_time, update_time, create_by, update_by from baoli_biz_store
     </sql>
 
     <select id="selectBaoliBizStoreList" parameterType="BaoliBizStore" resultMap="BaoliBizStoreResult">
@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="brandId != null "> and brand_id = #{brandId}</if>
-            <if test="group != null  and group != ''"> and group = #{group}</if>
+            <if test="group != null  and group != ''"> and `group` = #{group}</if>
             <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
             <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
             <if test="dealerType != null  and dealerType != ''"> and dealer_type = #{dealerType}</if>
@@ -105,7 +105,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="name != null">name,</if>
             <if test="brandId != null">brand_id,</if>
-            <if test="group != null">group,</if>
+            <if test="group != null">`group`,</if>
             <if test="provinceId != null">province_id,</if>
             <if test="cityId != null">city_id,</if>
             <if test="dealerType != null">dealer_type,</if>
@@ -195,7 +195,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
             <if test="brandId != null">brand_id = #{brandId},</if>
-            <if test="group != null">group = #{group},</if>
+            <if test="group != null">`group` = #{group},</if>
             <if test="provinceId != null">province_id = #{provinceId},</if>
             <if test="cityId != null">city_id = #{cityId},</if>
             <if test="dealerType != null">dealer_type = #{dealerType},</if>
