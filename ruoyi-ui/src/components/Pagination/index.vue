@@ -1,5 +1,5 @@
 <template>
-  <div :class="{'hidden':hidden}" class="pagination-container">
+  <div class="pagination-container">
     <el-pagination
       :background="background"
       :current-page.sync="currentPage"
@@ -55,10 +55,6 @@ export default {
     autoScroll: {
       type: Boolean,
       default: true
-    },
-    hidden: {
-      type: Boolean,
-      default: false
     }
   },
   data() {
@@ -106,9 +102,5 @@ export default {
 <style scoped>
 .pagination-container {
   background: #fff;
-  padding: 32px 16px;
-}
-.pagination-container.hidden {
-  display: none;
 }
 </style>
