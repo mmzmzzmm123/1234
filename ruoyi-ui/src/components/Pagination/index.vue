@@ -1,7 +1,6 @@
 <template>
   <div class="pagination-container">
     <el-pagination
-      v-if="pageShow"
       :background="background"
       :current-page.sync="currentPage"
       :page-size.sync="pageSize"
@@ -60,7 +59,6 @@ export default {
   },
   data() {
     return {
-      pageShow: true
     };
   },
   computed: {
@@ -84,10 +82,7 @@ export default {
   methods: {
     handleSizeChange(val) {
       if (this.currentPage * val > this.total) {
-        this.pageShow = false;
-        this.$nextTick(() => {
-          this.pageShow = true
-        })
+        this.currentPage = 1
       }
       this.$emit('pagination', { page: this.currentPage, limit: val })
       if (this.autoScroll) {
