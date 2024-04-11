@@ -12,16 +12,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.ArrayUtils;
@@ -886,6 +877,39 @@ public class ExcelUtil<T>
                 annotationDataStyles(styles, field, excel);
             }
         }
+
+        // 兼容子对象
+        if(this.subFields != null && !this.subFields.isEmpty()){
+            this.subFields.forEach(subField->{
+                Excel annotation = subField.getAnnotation(Excel.class);
+                if(annotation != null){
+                    String key = StringUtils.format("data_{}_{}_{}", annotation.align(), annotation.color(), annotation.backgroundColor());
+                    if (!styles.containsKey(key))
+                    {
+                        CellStyle style = wb.createCellStyle();
+                        style.setAlignment(annotation.align());
+                        style.setVerticalAlignment(VerticalAlignment.CENTER);
+                        style.setBorderRight(BorderStyle.THIN);
+                        style.setRightBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                        style.setBorderLeft(BorderStyle.THIN);
+                        style.setLeftBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                        style.setBorderTop(BorderStyle.THIN);
+                        style.setTopBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                        style.setBorderBottom(BorderStyle.THIN);
+                        style.setBottomBorderColor(IndexedColors.GREY_50_PERCENT.getIndex());
+                        style.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+                        style.setFillForegroundColor(annotation.backgroundColor().getIndex());
+                        Font dataFont = wb.createFont();
+                        dataFont.setFontName("Arial");
+                        dataFont.setFontHeightInPoints((short) 10);
+                        dataFont.setColor(annotation.color().index);
+                        style.setFont(dataFont);
+                        styles.put(key, style);
+                    }
+                }
+            });
+        }
+
         return styles;
     }
 
@@ -1469,10 +1493,21 @@ public class ExcelUtil<T>
     public List<Object[]> getFields()
     {
         List<Object[]> fields = new ArrayList<Object[]>();
-        List<Field> tempFields = new ArrayList<>();
-        tempFields.addAll(Arrays.asList(clazz.getSuperclass().getDeclaredFields()));
-        tempFields.addAll(Arrays.asList(clazz.getDeclaredFields()));
-        for (Field field : tempFields)
+
+        // 修改获取注解字段，支持子类覆盖
+        Map<String, Field> classFieldMap = new LinkedHashMap<>();
+        for (Field field : clazz.getSuperclass().getDeclaredFields()) {
+            if (classFieldMap.put(field.getName(), field) != null) {
+                throw new IllegalStateException("Duplicate key");
+            }
+        }
+        for (Field field : clazz.getDeclaredFields()) {
+            classFieldMap.put(field.getName(), field);
+        }
+
+        Collection<Field> values = classFieldMap.values();
+
+        for (Field field : values)
         {
             if (!ArrayUtils.contains(this.excludeFields, field.getName()))
             {
