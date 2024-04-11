@@ -380,6 +380,8 @@ public class ExcelUtil<T>
                 if (column != null)
                 {
                     fieldsMap.put(column, objects);
+                } else if(attr.index != -1){
+                    fieldsMap.put(attr.index, objects);
                 }
             }
             for (int i = titleNum + 1; i <= rows; i++)
