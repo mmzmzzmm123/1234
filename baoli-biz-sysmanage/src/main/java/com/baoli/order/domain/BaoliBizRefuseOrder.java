@@ -24,7 +24,7 @@ public class BaoliBizRefuseOrder extends BaseEntity
 
     /** 经销商 */
     @Excel(name = "经销商")
-    private Long dealerId;
+    private Long storeId;
 
     /** 是否新车 */
     @Excel(name = "是否新车")
@@ -99,15 +99,6 @@ public class BaoliBizRefuseOrder extends BaseEntity
     public String getCity() 
     {
         return city;
-    }
-    public void setDealerId(Long dealerId) 
-    {
-        this.dealerId = dealerId;
-    }
-
-    public Long getDealerId() 
-    {
-        return dealerId;
     }
     public void setCarType(String carType) 
     {
@@ -236,12 +227,19 @@ public class BaoliBizRefuseOrder extends BaseEntity
         return status;
     }
 
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("city", getCity())
-            .append("dealerId", getDealerId())
             .append("carType", getCarType())
             .append("level1BrandId", getLevel1BrandId())
             .append("level2BrandId", getLevel2BrandId())

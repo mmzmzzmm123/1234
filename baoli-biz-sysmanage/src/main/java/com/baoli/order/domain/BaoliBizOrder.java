@@ -19,27 +19,355 @@ public class BaoliBizOrder extends BaseEntity
     private Long id;
 
     /** 订单模式（01 先放款后抵押，02 先抵押后放款，03 无抵押，04 借指标） */
-    @Excel(name = "订单模式", readConverterExp = "0=1,先=放款后抵押，02,先=抵押后放款，03,无=抵押，04,借=指标")
+    @Excel(name = "订单模式")
     private String orderSchema;
 
     /** 城市 */
     @Excel(name = "城市")
     private String city;
 
-    /** 经销商类型（01 一级经销商 02 二级经销商） */
-    @Excel(name = "经销商类型", readConverterExp = "0=1,一=级经销商,0=2,二=级经销商")
-    private String dealerType;
+    /** 经销商等级（01 一级经销商 02 二级经销商） */
+    @Excel(name = "经销商等级")
+    private String storeLevel;
 
-    /** 经销商 */
-    @Excel(name = "经销商")
-    private Long dealerId;
+    /** 商户id */
+    @Excel(name = "商户id")
+    private Long storeId;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getOrderSchema() {
+        return orderSchema;
+    }
+
+    public void setOrderSchema(String orderSchema) {
+        this.orderSchema = orderSchema;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getStoreLevel() {
+        return storeLevel;
+    }
+
+    public void setStoreLevel(String storeLevel) {
+        this.storeLevel = storeLevel;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getCarType() {
+        return carType;
+    }
+
+    public void setCarType(String carType) {
+        this.carType = carType;
+    }
+
+    public String getLoanType() {
+        return loanType;
+    }
+
+    public void setLoanType(String loanType) {
+        this.loanType = loanType;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public Long getBank() {
+        return bank;
+    }
+
+    public void setBank(Long bank) {
+        this.bank = bank;
+    }
+
+    public String getInnerOfficer() {
+        return innerOfficer;
+    }
+
+    public void setInnerOfficer(String innerOfficer) {
+        this.innerOfficer = innerOfficer;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getApplyNumber() {
+        return applyNumber;
+    }
+
+    public void setApplyNumber(String applyNumber) {
+        this.applyNumber = applyNumber;
+    }
+
+    public String getNewEnergy() {
+        return newEnergy;
+    }
+
+    public void setNewEnergy(String newEnergy) {
+        this.newEnergy = newEnergy;
+    }
+
+    public Long getInvoicePrice() {
+        return invoicePrice;
+    }
+
+    public void setInvoicePrice(Long invoicePrice) {
+        this.invoicePrice = invoicePrice;
+    }
+
+    public Long getLoanAmount() {
+        return loanAmount;
+    }
+
+    public void setLoanAmount(Long loanAmount) {
+        this.loanAmount = loanAmount;
+    }
+
+    public Long getDownPayment() {
+        return downPayment;
+    }
+
+    public void setDownPayment(Long downPayment) {
+        this.downPayment = downPayment;
+    }
+
+    public Long getLoanRatio() {
+        return loanRatio;
+    }
+
+    public void setLoanRatio(Long loanRatio) {
+        this.loanRatio = loanRatio;
+    }
+
+    public String getPeriodNumber() {
+        return periodNumber;
+    }
+
+    public void setPeriodNumber(String periodNumber) {
+        this.periodNumber = periodNumber;
+    }
+
+    public String getSupplyMaterialType() {
+        return supplyMaterialType;
+    }
+
+    public void setSupplyMaterialType(String supplyMaterialType) {
+        this.supplyMaterialType = supplyMaterialType;
+    }
+
+    public String getCustomerPhoneNumber() {
+        return customerPhoneNumber;
+    }
+
+    public void setCustomerPhoneNumber(String customerPhoneNumber) {
+        this.customerPhoneNumber = customerPhoneNumber;
+    }
+
+    public String getCustomerWorkUnion() {
+        return customerWorkUnion;
+    }
+
+    public void setCustomerWorkUnion(String customerWorkUnion) {
+        this.customerWorkUnion = customerWorkUnion;
+    }
+
+    public String getIsDiscount() {
+        return isDiscount;
+    }
+
+    public void setIsDiscount(String isDiscount) {
+        this.isDiscount = isDiscount;
+    }
+
+    public Long getFeeRatio() {
+        return feeRatio;
+    }
+
+    public void setFeeRatio(Long feeRatio) {
+        this.feeRatio = feeRatio;
+    }
+
+    public String getIsHxr() {
+        return isHxr;
+    }
+
+    public void setIsHxr(String isHxr) {
+        this.isHxr = isHxr;
+    }
+
+    public String getBusinessNumber() {
+        return businessNumber;
+    }
+
+    public void setBusinessNumber(String businessNumber) {
+        this.businessNumber = businessNumber;
+    }
+
+    public String getCreditCardNumber() {
+        return creditCardNumber;
+    }
+
+    public void setCreditCardNumber(String creditCardNumber) {
+        this.creditCardNumber = creditCardNumber;
+    }
+
+    public String getCustomerAge() {
+        return customerAge;
+    }
+
+    public void setCustomerAge(String customerAge) {
+        this.customerAge = customerAge;
+    }
+
+    public String getMarried() {
+        return married;
+    }
+
+    public void setMarried(String married) {
+        this.married = married;
+    }
+
+    public String getExistsDriveLicense() {
+        return existsDriveLicense;
+    }
+
+    public void setExistsDriveLicense(String existsDriveLicense) {
+        this.existsDriveLicense = existsDriveLicense;
+    }
+
+    public String getDomicileType() {
+        return domicileType;
+    }
+
+    public void setDomicileType(String domicileType) {
+        this.domicileType = domicileType;
+    }
+
+    public String getWorkPlace() {
+        return workPlace;
+    }
+
+    public void setWorkPlace(String workPlace) {
+        this.workPlace = workPlace;
+    }
+
+    public String getWorkField() {
+        return workField;
+    }
+
+    public void setWorkField(String workField) {
+        this.workField = workField;
+    }
+
+    public String getWorkCategory() {
+        return workCategory;
+    }
+
+    public void setWorkCategory(String workCategory) {
+        this.workCategory = workCategory;
+    }
+
+    public String getEducation() {
+        return education;
+    }
+
+    public void setEducation(String education) {
+        this.education = education;
+    }
+
+    public String getCompanionRelationship() {
+        return companionRelationship;
+    }
+
+    public void setCompanionRelationship(String companionRelationship) {
+        this.companionRelationship = companionRelationship;
+    }
+
+    public Long getCompanionNumber() {
+        return companionNumber;
+    }
+
+    public void setCompanionNumber(Long companionNumber) {
+        this.companionNumber = companionNumber;
+    }
+
+    public Long getLevel1BrandId() {
+        return level1BrandId;
+    }
+
+    public void setLevel1BrandId(Long level1BrandId) {
+        this.level1BrandId = level1BrandId;
+    }
+
+    public Long getLevel2BrandId() {
+        return level2BrandId;
+    }
+
+    public void setLevel2BrandId(Long level2BrandId) {
+        this.level2BrandId = level2BrandId;
+    }
+
+    public Long getCarSeriesId() {
+        return carSeriesId;
+    }
+
+    public void setCarSeriesId(Long carSeriesId) {
+        this.carSeriesId = carSeriesId;
+    }
+
+    public Long getCarModelId() {
+        return carModelId;
+    }
+
+    public void setCarModelId(Long carModelId) {
+        this.carModelId = carModelId;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     /** 是否新车（01 新车 02 二手车） */
-    @Excel(name = "是否新车", readConverterExp = "0=1,新=车,0=2,二=手车")
+    @Excel(name = "是否新车")
     private String carType;
 
     /** 贷款类型（01 信用卡 02 消费贷） */
-    @Excel(name = "贷款类型", readConverterExp = "0=1,信=用卡,0=2,消=费贷")
+    @Excel(name = "贷款类型")
     private String loanType;
 
     /** 订单编号 */
@@ -158,374 +486,9 @@ public class BaoliBizOrder extends BaseEntity
     @Excel(name = "陪同人员数量")
     private Long companionNumber;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
-
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setOrderSchema(String orderSchema) 
-    {
-        this.orderSchema = orderSchema;
-    }
-
-    public String getOrderSchema() 
-    {
-        return orderSchema;
-    }
-    public void setCity(String city) 
-    {
-        this.city = city;
-    }
-
-    public String getCity() 
-    {
-        return city;
-    }
-    public void setDealerType(String dealerType) 
-    {
-        this.dealerType = dealerType;
-    }
-
-    public String getDealerType() 
-    {
-        return dealerType;
-    }
-    public void setDealerId(Long dealerId) 
-    {
-        this.dealerId = dealerId;
-    }
-
-    public Long getDealerId() 
-    {
-        return dealerId;
-    }
-    public void setCarType(String carType) 
-    {
-        this.carType = carType;
-    }
-
-    public String getCarType() 
-    {
-        return carType;
-    }
-    public void setLoanType(String loanType) 
-    {
-        this.loanType = loanType;
-    }
-
-    public String getLoanType() 
-    {
-        return loanType;
-    }
-    public void setOrderNumber(String orderNumber) 
-    {
-        this.orderNumber = orderNumber;
-    }
-
-    public String getOrderNumber() 
-    {
-        return orderNumber;
-    }
-    public void setBank(Long bank) 
-    {
-        this.bank = bank;
-    }
-
-    public Long getBank() 
-    {
-        return bank;
-    }
-    public void setInnerOfficer(String innerOfficer) 
-    {
-        this.innerOfficer = innerOfficer;
-    }
-
-    public String getInnerOfficer() 
-    {
-        return innerOfficer;
-    }
-    public void setCustomerName(String customerName) 
-    {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerName() 
-    {
-        return customerName;
-    }
-    public void setApplyNumber(String applyNumber) 
-    {
-        this.applyNumber = applyNumber;
-    }
-
-    public String getApplyNumber() 
-    {
-        return applyNumber;
-    }
-    public void setNewEnergy(String newEnergy) 
-    {
-        this.newEnergy = newEnergy;
-    }
-
-    public String getNewEnergy() 
-    {
-        return newEnergy;
-    }
-    public void setInvoicePrice(Long invoicePrice) 
-    {
-        this.invoicePrice = invoicePrice;
-    }
-
-    public Long getInvoicePrice() 
-    {
-        return invoicePrice;
-    }
-    public void setLoanAmount(Long loanAmount) 
-    {
-        this.loanAmount = loanAmount;
-    }
-
-    public Long getLoanAmount() 
-    {
-        return loanAmount;
-    }
-    public void setDownPayment(Long downPayment) 
-    {
-        this.downPayment = downPayment;
-    }
-
-    public Long getDownPayment() 
-    {
-        return downPayment;
-    }
-    public void setLoanRatio(Long loanRatio) 
-    {
-        this.loanRatio = loanRatio;
-    }
-
-    public Long getLoanRatio() 
-    {
-        return loanRatio;
-    }
-    public void setPeriodNumber(String periodNumber) 
-    {
-        this.periodNumber = periodNumber;
-    }
-
-    public String getPeriodNumber() 
-    {
-        return periodNumber;
-    }
-    public void setSupplyMaterialType(String supplyMaterialType) 
-    {
-        this.supplyMaterialType = supplyMaterialType;
-    }
-
-    public String getSupplyMaterialType() 
-    {
-        return supplyMaterialType;
-    }
-    public void setCustomerPhoneNumber(String customerPhoneNumber) 
-    {
-        this.customerPhoneNumber = customerPhoneNumber;
-    }
-
-    public String getCustomerPhoneNumber() 
-    {
-        return customerPhoneNumber;
-    }
-    public void setCustomerWorkUnion(String customerWorkUnion) 
-    {
-        this.customerWorkUnion = customerWorkUnion;
-    }
-
-    public String getCustomerWorkUnion() 
-    {
-        return customerWorkUnion;
-    }
-    public void setIsDiscount(String isDiscount) 
-    {
-        this.isDiscount = isDiscount;
-    }
-
-    public String getIsDiscount() 
-    {
-        return isDiscount;
-    }
-    public void setFeeRatio(Long feeRatio) 
-    {
-        this.feeRatio = feeRatio;
-    }
-
-    public Long getFeeRatio() 
-    {
-        return feeRatio;
-    }
-    public void setIsHxr(String isHxr) 
-    {
-        this.isHxr = isHxr;
-    }
-
-    public String getIsHxr() 
-    {
-        return isHxr;
-    }
-    public void setBusinessNumber(String businessNumber) 
-    {
-        this.businessNumber = businessNumber;
-    }
-
-    public String getBusinessNumber() 
-    {
-        return businessNumber;
-    }
-    public void setCreditCardNumber(String creditCardNumber) 
-    {
-        this.creditCardNumber = creditCardNumber;
-    }
-
-    public String getCreditCardNumber() 
-    {
-        return creditCardNumber;
-    }
-    public void setCustomerAge(String customerAge) 
-    {
-        this.customerAge = customerAge;
-    }
-
-    public String getCustomerAge() 
-    {
-        return customerAge;
-    }
-    public void setMarried(String married) 
-    {
-        this.married = married;
-    }
-
-    public String getMarried() 
-    {
-        return married;
-    }
-    public void setExistsDriveLicense(String existsDriveLicense) 
-    {
-        this.existsDriveLicense = existsDriveLicense;
-    }
-
-    public String getExistsDriveLicense() 
-    {
-        return existsDriveLicense;
-    }
-    public void setDomicileType(String domicileType) 
-    {
-        this.domicileType = domicileType;
-    }
-
-    public String getDomicileType() 
-    {
-        return domicileType;
-    }
-    public void setWorkPlace(String workPlace) 
-    {
-        this.workPlace = workPlace;
-    }
-
-    public String getWorkPlace() 
-    {
-        return workPlace;
-    }
-    public void setWorkField(String workField) 
-    {
-        this.workField = workField;
-    }
-
-    public String getWorkField() 
-    {
-        return workField;
-    }
-    public void setWorkCateory(String workCategory)
-    {
-        this.workCategory = workCategory;
-    }
-
-    public String getWorkCateory()
-    {
-        return workCategory;
-    }
-    public void setEducation(String education) 
-    {
-        this.education = education;
-    }
-
-    public String getEducation() 
-    {
-        return education;
-    }
-    public void setCompanionRelationship(String companionRelationship) 
-    {
-        this.companionRelationship = companionRelationship;
-    }
-
-    public String getCompanionRelationship() 
-    {
-        return companionRelationship;
-    }
-    public void setCompanionNumber(Long companionNumber) 
-    {
-        this.companionNumber = companionNumber;
-    }
-
-    public Long getCompanionNumber() 
-    {
-        return companionNumber;
-    }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("orderSchema", getOrderSchema())
-            .append("city", getCity())
-            .append("dealerType", getDealerType())
-            .append("dealerId", getDealerId())
-            .append("carType", getCarType())
-            .append("loanType", getLoanType())
-            .append("orderNumber", getOrderNumber())
-            .append("bank", getBank())
-            .append("innerOfficer", getInnerOfficer())
-            .append("customerName", getCustomerName())
-            .append("applyNumber", getApplyNumber())
-            .append("newEnergy", getNewEnergy())
-            .append("invoicePrice", getInvoicePrice())
-            .append("loanAmount", getLoanAmount())
-            .append("downPayment", getDownPayment())
-            .append("loanRatio", getLoanRatio())
-            .append("periodNumber", getPeriodNumber())
-            .append("supplyMaterialType", getSupplyMaterialType())
-            .append("customerPhoneNumber", getCustomerPhoneNumber())
-            .append("customerWorkUnion", getCustomerWorkUnion())
-            .append("isDiscount", getIsDiscount())
-            .append("feeRatio", getFeeRatio())
-            .append("isHxr", getIsHxr())
-            .append("businessNumber", getBusinessNumber())
-            .append("creditCardNumber", getCreditCardNumber())
-            .append("customerAge", getCustomerAge())
-            .append("married", getMarried())
-            .append("existsDriveLicense", getExistsDriveLicense())
-            .append("domicileType", getDomicileType())
-            .append("workPlace", getWorkPlace())
-            .append("workField", getWorkField())
-            .append("workCategory", getWorkCateory())
-            .append("education", getEducation())
-            .append("companionRelationship", getCompanionRelationship())
-            .append("companionNumber", getCompanionNumber())
-            .append("createTime", getCreateTime())
-            .append("updateTime", getUpdateTime())
-            .append("createBy", getCreateBy())
-            .append("updateBy", getUpdateBy())
-            .toString();
-    }
+    private Long level1BrandId;
+    private Long level2BrandId;
+    private Long carSeriesId;
+    private Long carModelId;
+    private String status;
 }

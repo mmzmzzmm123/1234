@@ -7,7 +7,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="BaoliBizRefuseOrder" id="BaoliBizRefuseOrderResult">
         <result property="id"    column="id"    />
         <result property="city"    column="city"    />
-        <result property="dealerId"    column="dealer_id"    />
+        <result property="storeId"    column="store_id"    />
         <result property="carType"    column="car_type"    />
         <result property="level1BrandId"    column="level1_brand_id"    />
         <result property="level2BrandId"    column="level2_brand_id"    />
@@ -30,14 +30,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBaoliBizRefuseOrderVo">
-        select id, city, dealer_id, car_type, level1_brand_id, level2_brand_id, car_series_id, car_model_id, loan_type, order_number, bank, customer_name, apply_number, loan_amount, in_store, refuse_reason, remark, status, create_time, update_time, create_by, update_by from baoli_biz_refuse_order
+        select id, city, store_id, car_type, level1_brand_id, level2_brand_id, car_series_id, car_model_id, loan_type, order_number, bank, customer_name, apply_number, loan_amount, in_store, refuse_reason, remark, status, create_time, update_time, create_by, update_by from baoli_biz_refuse_order
     </sql>
 
     <select id="selectBaoliBizRefuseOrderList" parameterType="BaoliBizRefuseOrder" resultMap="BaoliBizRefuseOrderResult">
         <include refid="selectBaoliBizRefuseOrderVo"/>
         <where>  
             <if test="city != null  and city != ''"> and city = #{city}</if>
-            <if test="dealerId != null "> and dealer_id = #{dealerId}</if>
+            <if test="storeId != null "> and store_id = #{storeId}</if>
             <if test="carType != null  and carType != ''"> and car_type = #{carType}</if>
             <if test="level1BrandId != null "> and level1_brand_id = #{level1BrandId}</if>
             <if test="level2BrandId != null "> and level2_brand_id = #{level2BrandId}</if>
@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="city != null">city,</if>
-            <if test="dealerId != null">dealer_id,</if>
+            <if test="storeId != null">store_id,</if>
             <if test="carType != null">car_type,</if>
             <if test="level1BrandId != null">level1_brand_id,</if>
             <if test="level2BrandId != null">level2_brand_id,</if>
@@ -89,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
             <if test="city != null">#{city},</if>
-            <if test="dealerId != null">#{dealerId},</if>
+            <if test="storeId != null">#{storeId},</if>
             <if test="carType != null">#{carType},</if>
             <if test="level1BrandId != null">#{level1BrandId},</if>
             <if test="level2BrandId != null">#{level2BrandId},</if>
@@ -116,7 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update baoli_biz_refuse_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="city != null">city = #{city},</if>
-            <if test="dealerId != null">dealer_id = #{dealerId},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
             <if test="carType != null">car_type = #{carType},</if>
             <if test="level1BrandId != null">level1_brand_id = #{level1BrandId},</if>
             <if test="level2BrandId != null">level2_brand_id = #{level2BrandId},</if>

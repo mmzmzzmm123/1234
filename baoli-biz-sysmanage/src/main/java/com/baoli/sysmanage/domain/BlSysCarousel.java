@@ -42,6 +42,10 @@ public class BlSysCarousel extends BaseEntity
     @Excel(name = "图文")
     private String images;
 
+    /** 时间间隔 */
+    @Excel(name = "时间间隔")
+    private String interval;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -95,6 +99,14 @@ public class BlSysCarousel extends BaseEntity
     public String getImages() 
     {
         return images;
+    }
+
+    public String getInterval() {
+        return interval;
+    }
+
+    public void setInterval(String interval) {
+        this.interval = interval;
     }
 
     @Override
