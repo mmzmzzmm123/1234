@@ -345,6 +345,7 @@ export default {
       listData({pageNum:1,pageSize:90000,dictType:this.form.dictType}).then(response => {
         let total = response.total;
         this.form.dictSort = total *10 +10;
+        this.form.dictValue = 200 + total *10 +10;
       });
     },
     // 多选框选中数据
