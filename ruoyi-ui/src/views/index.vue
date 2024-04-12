@@ -3,12 +3,8 @@
     <el-row :gutter="20">
       <el-col :sm="24" :lg="24">
         <blockquote class="text-warning" style="font-size: 14px">
-
-          <el-link href=" " type="primary" target="_blank"
-           <h1>欢迎使用若依管理系统</h1>
-          </el-link >
+            <h1>欢迎使用若依管理系统</h1>
         </blockquote>
-
         <hr/>
       </el-col>
     </el-row>
