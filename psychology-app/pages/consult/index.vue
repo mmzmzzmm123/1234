@@ -197,7 +197,7 @@
       },
       async getCat() {
         const classData = await classServer.getClassList()
-        this.classList = classData.slice(0, 4) // 取前8个类别
+        this.classList = classData.slice(0, 8) // 取前8个类别
       },
       async getTypes() {
         this.attrParams.typeList = await indexServer.getConfigByType('consult_type');
@@ -403,7 +403,7 @@
       display: flex;
       flex-direction: row;
       flex-wrap: wrap;
-      justify-content: space-around;
+      // justify-content: space-around;
       text-align: center;
       font-size: 12px;
       margin-bottom: 32upx;
@@ -411,6 +411,7 @@
 
       .item {
         width: 25%;
+				margin-top: 10upx;
 
         .class-img {
           width: 88upx;
