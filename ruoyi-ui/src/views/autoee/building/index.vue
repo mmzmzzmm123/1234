@@ -18,12 +18,14 @@
         />
       </el-form-item>
       <el-form-item label="所属学校" prop="schoolId">
-        <el-input
-          v-model="queryParams.schoolId"
-          placeholder="请输入所属学校"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
+        <el-select v-model="queryParams.schoolId" placeholder="请选择所属学校" clearable>
+          <el-option
+            v-for="dict in schoolList"
+            :key="dict.id"
+            :label="dict.schoolName"
+            :value="dict.id"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="建筑类型" prop="buildingType">
         <el-select v-model="queryParams.buildingType" placeholder="请选择建筑类型" clearable>
@@ -126,7 +128,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -142,8 +144,15 @@
           <el-input v-model="form.buildingName" placeholder="请输入建筑物名称" />
         </el-form-item>
         <el-form-item label="所属学校" prop="schoolId">
-          <el-input v-model="form.schoolId" placeholder="请输入所属学校" />
-        </el-form-item>
+            <el-select v-model="form.schoolId" placeholder="请选择所属学校" >
+              <el-option
+                v-for="dict in schoolList"
+                :key="dict.id"
+                :label="dict.schoolName"
+                :value="dict.id"
+              />
+            </el-select>
+          </el-form-item>
         <el-form-item label="建筑类型" prop="buildingType">
           <el-select v-model="form.buildingType" placeholder="请选择建筑类型">
             <el-option
@@ -171,7 +180,7 @@
 
 <script>
 import { listBuilding, getBuilding, delBuilding, addBuilding, updateBuilding } from "@/api/autoee/building";
-
+import { listSchool, getSchool, delSchool, addSchool, updateSchool } from "@/api/autoee/school";
 export default {
   name: "Building",
   dicts: ['building_type'],
@@ -191,6 +200,7 @@ export default {
       total: 0,
       // 建筑物管理表格数据
       buildingList: [],
+      schoolList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -229,6 +239,7 @@ export default {
   },
   created() {
     this.getList();
+    this.getSchoolList();
   },
   methods: {
     /** 查询建筑物管理列表 */
@@ -238,6 +249,11 @@ export default {
         this.buildingList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    getSchoolList() {
+      listSchool({pageNum: 1, pageSize: 90000000}).then(response => {
+        this.schoolList = response.rows;
       });
     },
     // 取消按钮
