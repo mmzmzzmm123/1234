@@ -341,6 +341,11 @@ export default {
       this.open = true;
       this.title = "添加字典数据";
       this.form.dictType = this.queryParams.dictType;
+
+      listData({pageNum:1,pageSize:90000,dictType:this.form.dictType}).then(response => {
+        let total = response.total;
+        this.form.dictSort = total *10 +10;
+      });
     },
     // 多选框选中数据
     handleSelectionChange(selection) {
