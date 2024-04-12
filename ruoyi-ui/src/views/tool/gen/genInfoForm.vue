@@ -72,12 +72,12 @@
         <el-form-item prop="genType">
           <span slot="label">
             生成代码方式
-            <el-tooltip content="默认为zip压缩包下载，也可以自定义生成路径" placement="top">
+            <el-tooltip content="默认选中是通过数据库字段默认值设置；当前默认为自定义生成路径，当路径为“/”时，直接生成到当前项目中。" placement="top">
               <i class="el-icon-question"></i>
             </el-tooltip>
           </span>
-          <el-radio v-model="info.genType" label="0">zip压缩包</el-radio>
           <el-radio v-model="info.genType" label="1">自定义路径</el-radio>
+          <el-radio v-model="info.genType" label="0">zip压缩包</el-radio>
         </el-form-item>
       </el-col>
 
