@@ -1,39 +1,23 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="100px">
-      <el-form-item label="学校编号" prop="id">
+      <el-form-item label="楼层名称" prop="floorName">
         <el-input
-          v-model="queryParams.id"
-          placeholder="请输入学校编号"
+          v-model="queryParams.floorName"
+          placeholder="请输入楼层名称"
           clearable
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="学校名称" prop="schoolName">
-        <el-input
-          v-model="queryParams.schoolName"
-          placeholder="请输入学校名称"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="学校类型" prop="schoolType">
-        <el-select v-model="queryParams.schoolType" placeholder="请选择学校类型" clearable>
+      <el-form-item label="所属建筑物" prop="buildingId">
+        <el-select v-model="queryParams.buildingId" placeholder="请输入所属建筑物" clearable>
           <el-option
-            v-for="dict in dict.type.school_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
+            v-for="dict in BuildingList"
+            :key="dict.id"
+            :label="dict.buildingName"
+            :value="dict.id"
           />
         </el-select>
-      </el-form-item>
-      <el-form-item label="所在地区" prop="location">
-        <el-input
-          v-model="queryParams.location"
-          placeholder="请输入所在地区"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
@@ -49,7 +33,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['autoee:school:add']"
+          v-hasPermi="['autoee:floor:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -60,7 +44,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['autoee:school:edit']"
+          v-hasPermi="['autoee:floor:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -71,7 +55,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['autoee:school:remove']"
+          v-hasPermi="['autoee:floor:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -81,23 +65,20 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['autoee:school:export']"
+          v-hasPermi="['autoee:floor:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
-    <el-table v-loading="loading" :data="schoolList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="floorList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-       <el-table-column label="学校编号" align="center" prop="id" />
-      <el-table-column label="学校名称" align="center" prop="schoolName" />
-      <el-table-column label="学校类型" align="center" prop="schoolType">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.school_type" :value="scope.row.schoolType"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="所在地区" align="center" prop="location" />
-      <el-table-column label="校园面积" align="center" prop="campusArea" />
+       <el-table-column label="楼层编号" align="center" prop="id" />
+      <el-table-column label="楼层名称" align="center" prop="floorName" />
+      <el-table-column label="所属建筑物" align="center" prop="buildingName" />
+<!--      <el-table-column label="所属建筑物" align="center" prop="buildingId" />-->
+      <el-table-column label="楼层面积" align="center" prop="floorArea" />
+      <el-table-column label="房间数量" align="center" prop="roomCount" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -105,14 +86,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['autoee:school:edit']"
+            v-hasPermi="['autoee:floor:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['autoee:school:remove']"
+            v-hasPermi="['autoee:floor:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -126,27 +107,27 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改学校管理对话框 -->
+    <!-- 添加或修改楼层管理对话框 -->
     <el-dialog class="ruoyi_dialog" :title="title" :visible.sync="open" width="600px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-        <el-form-item label="学校名称" prop="schoolName">
-          <el-input v-model="form.schoolName" placeholder="请输入学校名称" />
+        <el-form-item label="楼层名称" prop="floorName">
+          <el-input v-model="form.floorName" placeholder="请输入楼层名称" />
         </el-form-item>
-        <el-form-item label="学校类型" prop="schoolType">
-          <el-select v-model="form.schoolType" placeholder="请选择学校类型">
+        <el-form-item label="所属建筑物" prop="buildingId">
+          <el-select v-model="form.buildingId" placeholder="请输入所属建筑物" clearable>
             <el-option
-              v-for="dict in dict.type.school_type"
-              :key="dict.value"
-              :label="dict.label"
-              :value="dict.value"
-            ></el-option>
+              v-for="dict in BuildingList"
+              :key="dict.id"
+              :label="dict.buildingName"
+              :value="dict.id"
+            />
           </el-select>
         </el-form-item>
-        <el-form-item label="所在地区" prop="location">
-          <el-input v-model="form.location" placeholder="请输入所在地区" />
+        <el-form-item label="楼层面积" prop="floorArea">
+          <el-input v-model="form.floorArea" placeholder="请输入楼层面积" />
         </el-form-item>
-        <el-form-item label="校园面积" prop="campusArea">
-          <el-input v-model="form.campusArea" placeholder="请输入校园面积" />
+        <el-form-item label="房间数量" prop="roomCount">
+          <el-input-number v-model="form.roomCount" placeholder="请输入房间数量" controls-position="right" :min="1" :max="10000"></el-input-number>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -158,11 +139,10 @@
 </template>
 
 <script>
-import { listSchool, getSchool, delSchool, addSchool, updateSchool } from "@/api/autoee/school";
-
+import { listFloor, getFloor, delFloor, addFloor, updateFloor } from "@/api/autoee/floor";
+import { listBuilding, getBuilding, delBuilding, addBuilding, updateBuilding } from "@/api/autoee/building";
 export default {
-  name: "School",
-  dicts: ['school_type'],
+  name: "Floor",
   data() {
     return {
       // 遮罩层
@@ -177,8 +157,9 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 学校管理表格数据
-      schoolList: [],
+      // 楼层管理表格数据
+      floorList: [],
+      BuildingList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -187,41 +168,47 @@ export default {
       queryParams: {
         pageNum: 1,
         pageSize: 10,
-        id: null,
-        schoolName: null,
-        schoolType: null,
-        location: null,
+        floorName: null,
+        buildingId: null,
+        floorArea: null,
+        roomCount: null,
       },
       // 表单参数
       form: {},
       // 表单校验
       rules: {
-        schoolName: [
-          { required: true, message: "学校名称不能为空", trigger: "blur" }
+        floorName: [
+          { required: true, message: "楼层名称不能为空", trigger: "blur" }
         ],
-        schoolType: [
-          { required: true, message: "学校类型不能为空", trigger: "change" }
+        buildingId: [
+          { required: true, message: "所属建筑物不能为空", trigger: "blur" }
         ],
-        location: [
-          { required: true, message: "所在地区不能为空", trigger: "blur" }
+        floorArea: [
+          { required: true, message: "楼层面积不能为空", trigger: "blur" }
         ],
-        campusArea: [
-          { required: true, message: "校园面积不能为空", trigger: "blur" }
+        roomCount: [
+          { required: true, message: "房间数量不能为空", trigger: "blur" }
         ],
       }
     };
   },
   created() {
     this.getList();
+    this.getBuildingList();
   },
   methods: {
-    /** 查询学校管理列表 */
+    /** 查询楼层管理列表 */
     getList() {
       this.loading = true;
-      listSchool(this.queryParams).then(response => {
-        this.schoolList = response.rows;
+      listFloor(this.queryParams).then(response => {
+        this.floorList = response.rows;
         this.total = response.total;
         this.loading = false;
+      });
+    },
+    getBuildingList() {
+      listBuilding({pageNum: 1, pageSize: 90000000}).then(response => {
+        this.BuildingList = response.rows;
       });
     },
     // 取消按钮
@@ -233,10 +220,10 @@ export default {
     reset() {
       this.form = {
         id: null,
-        schoolName: null,
-        schoolType: null,
-        location: null,
-        campusArea: null,
+        floorName: null,
+        buildingId: null,
+        floorArea: null,
+        roomCount: null,
         delFlag: null,
         createBy: null,
         createTime: null,
@@ -265,16 +252,16 @@ export default {
     handleAdd() {
       this.reset();
       this.open = true;
-      this.title = "添加学校管理";
+      this.title = "添加楼层管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getSchool(id).then(response => {
+      getFloor(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改学校管理";
+        this.title = "修改楼层管理";
       });
     },
     /** 提交按钮 */
@@ -282,13 +269,13 @@ export default {
       this.$refs["form"].validate(valid => {
         if (valid) {
           if (this.form.id != null) {
-            updateSchool(this.form).then(response => {
+            updateFloor(this.form).then(response => {
               this.$modal.msgSuccess("修改成功");
               this.open = false;
               this.getList();
             });
           } else {
-            addSchool(this.form).then(response => {
+            addFloor(this.form).then(response => {
               this.$modal.msgSuccess("新增成功");
               this.open = false;
               this.getList();
@@ -300,8 +287,8 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除学校管理编号为"' + ids + '"的数据项？').then(function() {
-        return delSchool(ids);
+      this.$modal.confirm('是否确认删除楼层管理编号为"' + ids + '"的数据项？').then(function() {
+        return delFloor(ids);
       }).then(() => {
         this.getList();
         this.$modal.msgSuccess("删除成功");
@@ -309,9 +296,9 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('autoee/school/export', {
+      this.download('autoee/floor/export', {
         ...this.queryParams
-      }, `school_${new Date().getTime()}.xlsx`)
+      }, `floor_${new Date().getTime()}.xlsx`)
     }
   }
 };
