@@ -7,7 +7,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 建筑物管理对象 a_building
- * 
+ *
  * @author ruoyi
  * @date 2024-04-12
  */
@@ -28,7 +28,7 @@ public class ABuilding extends BaseEntity
     private Long schoolId;
 
     /** 建筑类型 */
-    @Excel(name = "建筑类型")
+    @Excel(name = "建筑类型", dictType = "building_type")
     private String buildingType;
 
     /** 所在地区 */
@@ -39,57 +39,57 @@ public class ABuilding extends BaseEntity
     @Excel(name = "建筑面积")
     private String buildingArea;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setBuildingName(String buildingName) 
+    public void setBuildingName(String buildingName)
     {
         this.buildingName = buildingName;
     }
 
-    public String getBuildingName() 
+    public String getBuildingName()
     {
         return buildingName;
     }
-    public void setSchoolId(Long schoolId) 
+    public void setSchoolId(Long schoolId)
     {
         this.schoolId = schoolId;
     }
 
-    public Long getSchoolId() 
+    public Long getSchoolId()
     {
         return schoolId;
     }
-    public void setBuildingType(String buildingType) 
+    public void setBuildingType(String buildingType)
     {
         this.buildingType = buildingType;
     }
 
-    public String getBuildingType() 
+    public String getBuildingType()
     {
         return buildingType;
     }
-    public void setLocation(String Location) 
+    public void setLocation(String Location)
     {
         this.Location = Location;
     }
 
-    public String getLocation() 
+    public String getLocation()
     {
         return Location;
     }
-    public void setBuildingArea(String buildingArea) 
+    public void setBuildingArea(String buildingArea)
     {
         this.buildingArea = buildingArea;
     }
 
-    public String getBuildingArea() 
+    public String getBuildingArea()
     {
         return buildingArea;
     }

@@ -18,14 +18,12 @@
         />
       </el-form-item>
       <el-form-item label="所属学校" prop="schoolId">
-        <el-select v-model="queryParams.schoolId" placeholder="请选择所属学校" clearable>
-          <el-option
-            v-for="dict in dict.type.sys_notice_type"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
+        <el-input
+          v-model="queryParams.schoolId"
+          placeholder="请输入所属学校"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
       </el-form-item>
       <el-form-item label="建筑类型" prop="buildingType">
         <el-select v-model="queryParams.buildingType" placeholder="请选择建筑类型" clearable>
@@ -101,11 +99,7 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="建筑物编号" align="center" prop="id" /> -->
       <el-table-column label="建筑物名称" align="center" prop="buildingName" />
-      <el-table-column label="所属学校" align="center" prop="schoolId">
-        <template slot-scope="scope">
-          <dict-tag :options="dict.type.sys_notice_type" :value="scope.row.schoolId"/>
-        </template>
-      </el-table-column>
+      <el-table-column label="所属学校" align="center" prop="schoolId" />
       <el-table-column label="建筑类型" align="center" prop="buildingType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.building_type" :value="scope.row.buildingType"/>
@@ -148,14 +142,7 @@
           <el-input v-model="form.buildingName" placeholder="请输入建筑物名称" />
         </el-form-item>
         <el-form-item label="所属学校" prop="schoolId">
-          <el-select v-model="form.schoolId" placeholder="请选择所属学校">
-            <el-option
-              v-for="dict in dict.type.sys_notice_type"
-              :key="dict.value"
-              :label="dict.label"
-              :value="parseInt(dict.value)"
-            ></el-option>
-          </el-select>
+          <el-input v-model="form.schoolId" placeholder="请输入所属学校" />
         </el-form-item>
         <el-form-item label="建筑类型" prop="buildingType">
           <el-select v-model="form.buildingType" placeholder="请选择建筑类型">
@@ -187,7 +174,7 @@ import { listBuilding, getBuilding, delBuilding, addBuilding, updateBuilding } f
 
 export default {
   name: "Building",
-  dicts: ['building_type', 'sys_notice_type'],
+  dicts: ['building_type'],
   data() {
     return {
       // 遮罩层
@@ -226,7 +213,7 @@ export default {
           { required: true, message: "建筑物名称不能为空", trigger: "blur" }
         ],
         schoolId: [
-          { required: true, message: "所属学校不能为空", trigger: "change" }
+          { required: true, message: "所属学校不能为空", trigger: "blur" }
         ],
         buildingType: [
           { required: true, message: "建筑类型不能为空", trigger: "change" }
