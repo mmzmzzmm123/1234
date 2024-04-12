@@ -15,8 +15,8 @@ ruoyi:
 
 # 开发环境配置
 server:
-  # 服务器的HTTP端口，默认为8080
-  port: 8080
+  # 服务器的HTTP端口，默认为8096。如果进行修改，需要一同修改前端ruoyi-ui/vue.config.js中的target: `http://localhost:8096`,
+  port: 8096
   servlet:
     # 应用的访问路径
     context-path: /
