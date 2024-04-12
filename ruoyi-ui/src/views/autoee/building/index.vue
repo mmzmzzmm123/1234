@@ -37,9 +37,9 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="所在地区" prop="Location">
+      <el-form-item label="所在地区" prop="location">
         <el-input
-          v-model="queryParams.Location"
+          v-model="queryParams.location"
           placeholder="请输入所在地区"
           clearable
           @keyup.enter.native="handleQuery"
@@ -101,13 +101,14 @@
       <el-table-column type="selection" width="55" align="center" />
       <!-- <el-table-column label="建筑物编号" align="center" prop="id" /> -->
       <el-table-column label="建筑物名称" align="center" prop="buildingName" />
-      <el-table-column label="所属学校" align="center" prop="schoolId" />
+      <el-table-column label="所属学校" align="center" prop="schoolName" />
+<!--      <el-table-column label="所属学校" align="center" prop="schoolId" />-->
       <el-table-column label="建筑类型" align="center" prop="buildingType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.building_type" :value="scope.row.buildingType"/>
         </template>
       </el-table-column>
-      <el-table-column label="所在地区" align="center" prop="Location" />
+      <el-table-column label="所在地区" align="center" prop="location" />
       <el-table-column label="建筑面积" align="center" prop="buildingArea" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -163,8 +164,8 @@
             ></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="所在地区" prop="Location">
-          <el-input v-model="form.Location" placeholder="请输入所在地区" />
+        <el-form-item label="所在地区" prop="location">
+          <el-input v-model="form.location" placeholder="请输入所在地区" />
         </el-form-item>
         <el-form-item label="建筑面积" prop="buildingArea">
           <el-input v-model="form.buildingArea" placeholder="请输入建筑面积" />
@@ -213,7 +214,7 @@ export default {
         buildingName: null,
         schoolId: null,
         buildingType: null,
-        Location: null,
+        location: null,
       },
       // 表单参数
       form: {},
@@ -228,7 +229,7 @@ export default {
         buildingType: [
           { required: true, message: "建筑类型不能为空", trigger: "change" }
         ],
-        Location: [
+        location: [
           { required: true, message: "所在地区不能为空", trigger: "blur" }
         ],
         buildingArea: [
@@ -268,7 +269,7 @@ export default {
         buildingName: null,
         schoolId: null,
         buildingType: null,
-        Location: null,
+        location: null,
         buildingArea: null,
         delFlag: null,
         createBy: null,

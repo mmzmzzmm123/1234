@@ -3,13 +3,14 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.autoee.mapper.ABuildingMapper">
-    
+
     <resultMap type="ABuilding" id="ABuildingResult">
         <result property="id"    column="id"    />
         <result property="buildingName"    column="building_name"    />
         <result property="schoolId"    column="school_id"    />
+        <result property="schoolName"    column="school_name"    />
         <result property="buildingType"    column="building_type"    />
-        <result property="Location"    column="Location"    />
+        <result property="location"    column="location"    />
         <result property="buildingArea"    column="building_area"    />
         <result property="delFlag"    column="del_flag"    />
         <result property="createBy"    column="create_by"    />
@@ -19,33 +20,35 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectABuildingVo">
-        select id, building_name, school_id, building_type, Location, building_area, del_flag, create_by, create_time, update_by, update_time from a_building
+        select id, building_name, school_id, building_type, location, building_area, del_flag, create_by, create_time, update_by, update_time,
+               (select s.school_name from a_school s where s.id = t.school_id) as school_name
+               from a_building t
     </sql>
 
     <select id="selectABuildingList" parameterType="ABuilding" resultMap="ABuildingResult">
         <include refid="selectABuildingVo"/>
-        <where>  
+        <where>
             <if test="id != null "> and id = #{id}</if>
             <if test="buildingName != null  and buildingName != ''"> and building_name like concat('%', #{buildingName}, '%')</if>
             <if test="schoolId != null "> and school_id = #{schoolId}</if>
             <if test="buildingType != null  and buildingType != ''"> and building_type = #{buildingType}</if>
-            <if test="Location != null  and Location != ''"> and Location = #{Location}</if>
+            <if test="location != null  and location != ''"> and location = #{location}</if>
         </where>
 		order by update_time desc, create_time desc
     </select>
-    
+
     <select id="selectABuildingById" parameterType="Long" resultMap="ABuildingResult">
         <include refid="selectABuildingVo"/>
         where id = #{id}
     </select>
-        
+
     <insert id="insertABuilding" parameterType="ABuilding" useGeneratedKeys="true" keyProperty="id">
         insert into a_building
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="buildingName != null and buildingName != ''">building_name,</if>
             <if test="schoolId != null">school_id,</if>
             <if test="buildingType != null and buildingType != ''">building_type,</if>
-            <if test="Location != null and Location != ''">Location,</if>
+            <if test="location != null and location != ''">location,</if>
             <if test="buildingArea != null and buildingArea != ''">building_area,</if>
             <if test="delFlag != null">del_flag,</if>
             <if test="createBy != null">create_by,</if>
@@ -57,7 +60,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="buildingName != null and buildingName != ''">#{buildingName},</if>
             <if test="schoolId != null">#{schoolId},</if>
             <if test="buildingType != null and buildingType != ''">#{buildingType},</if>
-            <if test="Location != null and Location != ''">#{Location},</if>
+            <if test="location != null and location != ''">#{location},</if>
             <if test="buildingArea != null and buildingArea != ''">#{buildingArea},</if>
             <if test="delFlag != null">#{delFlag},</if>
             <if test="createBy != null">#{createBy},</if>
@@ -73,7 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="buildingName != null and buildingName != ''">building_name = #{buildingName},</if>
             <if test="schoolId != null">school_id = #{schoolId},</if>
             <if test="buildingType != null and buildingType != ''">building_type = #{buildingType},</if>
-            <if test="Location != null and Location != ''">Location = #{Location},</if>
+            <if test="location != null and location != ''">location = #{location},</if>
             <if test="buildingArea != null and buildingArea != ''">building_area = #{buildingArea},</if>
             <if test="delFlag != null">del_flag = #{delFlag},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
@@ -89,7 +92,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </delete>
 
     <delete id="deleteABuildingByIds" parameterType="String">
-        delete from a_building where id in 
+        delete from a_building where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

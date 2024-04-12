@@ -24,8 +24,9 @@ public class ABuilding extends BaseEntity
     private String buildingName;
 
     /** 所属学校 */
-    @Excel(name = "所属学校")
     private Long schoolId;
+    @Excel(name = "所属学校")
+    private String schoolName;
 
     /** 建筑类型 */
     @Excel(name = "建筑类型", dictType = "building_type")
@@ -33,13 +34,21 @@ public class ABuilding extends BaseEntity
 
     /** 所在地区 */
     @Excel(name = "所在地区")
-    private String Location;
+    private String location;
 
     /** 建筑面积 */
     @Excel(name = "建筑面积")
     private String buildingArea;
 
-    public void setId(Long id)
+	public String getSchoolName() {
+		return schoolName;
+	}
+
+	public void setSchoolName(String schoolName) {
+		this.schoolName = schoolName;
+	}
+
+	public void setId(Long id)
     {
         this.id = id;
     }
@@ -75,14 +84,14 @@ public class ABuilding extends BaseEntity
     {
         return buildingType;
     }
-    public void setLocation(String Location)
+    public void setLocation(String location)
     {
-        this.Location = Location;
+        this.location = location;
     }
 
     public String getLocation()
     {
-        return Location;
+        return location;
     }
     public void setBuildingArea(String buildingArea)
     {
@@ -101,7 +110,7 @@ public class ABuilding extends BaseEntity
             .append("buildingName", getBuildingName())
             .append("schoolId", getSchoolId())
             .append("buildingType", getBuildingType())
-            .append("Location", getLocation())
+            .append("location", getLocation())
             .append("buildingArea", getBuildingArea())
             .append("delFlag", getDelFlag())
             .append("createBy", getCreateBy())
