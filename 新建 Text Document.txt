@@ -5,11 +5,11 @@
 所在地区（Location）：学校所在的地区或城市
 校园面积（Campus_Area）：学校校园的总面积建筑物表（Building）
 
-建筑物编号（Building_ID）：主键，唯一标识建筑物的编号
-建筑物名称（Building_Name）：建筑物的名称或编号
-所属学校（School_ID）：外键，与学校表关联，表示该建筑物所属的学校
-建筑类型（Building_Type）：区分建筑物类型，如教学楼、实验楼、图书馆、宿舍楼等
-建筑面积（Building_Area）：该建筑物的总建筑面积
+建筑物编号（building_id）：主键，唯一标识建筑物的编号
+建筑物名称（building_name）：建筑物的名称或编号
+所属学校（school_id）：外键，与学校表关联，表示该建筑物所属的学校
+建筑类型（building_type）：区分建筑物类型，如教学楼、实验楼、图书馆、宿舍楼等
+建筑面积（building_area）：该建筑物的总建筑面积
 
 楼层表（Floor）
 楼层编号（Floor_ID）：主键，唯一标识楼层的编号
