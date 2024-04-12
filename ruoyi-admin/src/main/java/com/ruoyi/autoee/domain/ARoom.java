@@ -22,10 +22,10 @@ public class ARoom extends BaseEntity
     @Excel(name = "房间名称")
     private String roomName;
 
-    /** 所属建筑物 */
-    private Long buildingId;
-    @Excel(name = "所属建筑物")
-    private String buildingName;
+    /** 所属楼层*/
+    private Long floorId;
+    @Excel(name = "所属楼层")
+    private String floorName;
 
     /** 房间类型 */
     @Excel(name = "房间类型", dictType = "room_type")
@@ -39,12 +39,20 @@ public class ARoom extends BaseEntity
     @Excel(name = "所属学科")
     private String subject;
 
-	public String getBuildingName() {
-		return buildingName;
+	public Long getFloorId() {
+		return floorId;
 	}
 
-	public void setBuildingName(String buildingName) {
-		this.buildingName = buildingName;
+	public void setFloorId(Long floorId) {
+		this.floorId = floorId;
+	}
+
+	public String getFloorName() {
+		return floorName;
+	}
+
+	public void setFloorName(String floorName) {
+		this.floorName = floorName;
 	}
 
 	public void setId(Long id)
@@ -65,14 +73,14 @@ public class ARoom extends BaseEntity
     {
         return roomName;
     }
-    public void setBuildingId(Long buildingId)
+    public void setBuildingId(Long floorId)
     {
-        this.buildingId = buildingId;
+        this.floorId = floorId;
     }
 
     public Long getBuildingId()
     {
-        return buildingId;
+        return floorId;
     }
     public void setRoomType(String roomType)
     {
@@ -107,7 +115,7 @@ public class ARoom extends BaseEntity
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("roomName", getRoomName())
-            .append("buildingId", getBuildingId())
+            .append("floorId", getBuildingId())
             .append("roomType", getRoomType())
             .append("roomArea", getRoomArea())
             .append("subject", getSubject())

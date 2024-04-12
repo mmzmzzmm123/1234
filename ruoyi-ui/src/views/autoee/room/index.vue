@@ -9,12 +9,12 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="所属建筑物" prop="buildingId">
-        <el-select v-model="queryParams.buildingId" placeholder="请输入所属建筑物" clearable>
+      <el-form-item label="所属楼层" prop="floorId">
+        <el-select v-model="queryParams.floorId" placeholder="请输入所属楼层" clearable>
           <el-option
-            v-for="dict in BuildingList"
+            v-for="dict in FloorList"
             :key="dict.id"
-            :label="dict.buildingName"
+            :label="dict.floorName"
             :value="dict.id"
           />
         </el-select>
@@ -85,8 +85,8 @@
       <el-table-column type="selection" width="55" align="center" />
        <el-table-column label="房间编号" align="center" prop="id" />
       <el-table-column label="房间名称" align="center" prop="roomName" />
-      <el-table-column label="所属建筑物" align="center" prop="buildingName" />
-<!--      <el-table-column label="所属建筑物" align="center" prop="buildingId" />-->
+      <el-table-column label="所属楼层" align="center" prop="floorName" />
+<!--      <el-table-column label="所属楼层" align="center" prop="floorId" />-->
       <el-table-column label="房间类型" align="center" prop="roomType">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.room_type" :value="scope.row.roomType"/>
@@ -128,12 +128,12 @@
         <el-form-item label="房间名称" prop="roomName">
           <el-input v-model="form.roomName" placeholder="请输入房间名称" />
         </el-form-item>
-        <el-form-item label="所属建筑物" prop="buildingId">
-          <el-select v-model="form.buildingId" placeholder="请输入所属建筑物" clearable>
+        <el-form-item label="所属楼层" prop="floorId">
+          <el-select v-model="form.floorId" placeholder="请输入所属楼层" clearable>
             <el-option
-              v-for="dict in BuildingList"
+              v-for="dict in FloorList"
               :key="dict.id"
-              :label="dict.buildingName"
+              :label="dict.floorName"
               :value="dict.id"
             />
           </el-select>
@@ -165,7 +165,7 @@
 
 <script>
 import { listRoom, getRoom, delRoom, addRoom, updateRoom } from "@/api/autoee/room";
-import { listBuilding, getBuilding, delBuilding, addBuilding, updateBuilding } from "@/api/autoee/building";
+import { listFloor, getFloor, delFloor, addFloor, updateFloor } from "@/api/autoee/floor";
 export default {
   name: "Room",
   dicts: ['room_type'],
@@ -185,7 +185,7 @@ export default {
       total: 0,
       // 房间管理表格数据
       roomList: [],
-      BuildingList: [],
+      FloorList: [],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -195,7 +195,7 @@ export default {
         pageNum: 1,
         pageSize: 10,
         roomName: null,
-        buildingId: null,
+        floorId: null,
         roomType: null,
       },
       // 表单参数
@@ -205,8 +205,8 @@ export default {
         roomName: [
           { required: true, message: "房间名称不能为空", trigger: "blur" }
         ],
-        buildingId: [
-          { required: true, message: "所属建筑物不能为空", trigger: "blur" }
+        floorId: [
+          { required: true, message: "所属楼层不能为空", trigger: "blur" }
         ],
         roomType: [
           { required: true, message: "房间类型不能为空", trigger: "change" }
@@ -222,7 +222,7 @@ export default {
   },
   created() {
     this.getList();
-    this.getBuildingList();
+    this.getFloorList();
   },
   methods: {
     /** 查询房间管理列表 */
@@ -234,9 +234,9 @@ export default {
         this.loading = false;
       });
     },
-    getBuildingList() {
-      listBuilding({pageNum: 1, pageSize: 90000000}).then(response => {
-        this.BuildingList = response.rows;
+    getFloorList() {
+      listFloor({pageNum: 1, pageSize: 90000000}).then(response => {
+        this.FloorList = response.rows;
       });
     },
     // 取消按钮
@@ -249,7 +249,7 @@ export default {
       this.form = {
         id: null,
         roomName: null,
-        buildingId: null,
+        floorId: null,
         roomType: null,
         roomArea: null,
         subject: null,

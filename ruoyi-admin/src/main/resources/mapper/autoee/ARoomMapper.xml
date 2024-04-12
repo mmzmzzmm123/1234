@@ -7,8 +7,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="ARoom" id="ARoomResult">
         <result property="id"    column="id"    />
         <result property="roomName"    column="room_name"    />
-        <result property="buildingId"    column="building_id"    />
-        <result property="buildingName"    column="building_name"    />
+        <result property="floorId"    column="floor_id"    />
+        <result property="floorName"    column="floor_name"    />
         <result property="roomType"    column="room_type"    />
         <result property="roomArea"    column="room_area"    />
         <result property="subject"    column="subject"    />
@@ -20,8 +20,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectARoomVo">
-        select id, room_name, building_id, room_type, room_area, subject, del_flag, create_by, create_time, update_by, update_time ,
-                  (select s.building_name from a_building s where s.id = t.building_id) as building_name
+        select id, room_name, floor_id, room_type, room_area, subject, del_flag, create_by, create_time, update_by, update_time ,
+                  (select s.floor_name from a_floor s where s.id = t.floor_id) as floor_name
         from a_room t
     </sql>
 
@@ -29,7 +29,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectARoomVo"/>
         <where>
             <if test="roomName != null  and roomName != ''"> and room_name like concat('%', #{roomName}, '%')</if>
-            <if test="buildingId != null "> and building_id = #{buildingId}</if>
+            <if test="floorId != null "> and floor_id = #{floorId}</if>
             <if test="roomType != null  and roomType != ''"> and room_type = #{roomType}</if>
         </where>
 		order by update_time desc, create_time desc
@@ -44,7 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         insert into a_room
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="roomName != null and roomName != ''">room_name,</if>
-            <if test="buildingId != null">building_id,</if>
+            <if test="floorId != null">floor_id,</if>
             <if test="roomType != null and roomType != ''">room_type,</if>
             <if test="roomArea != null and roomArea != ''">room_area,</if>
             <if test="subject != null and subject != ''">subject,</if>
@@ -56,7 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="roomName != null and roomName != ''">#{roomName},</if>
-            <if test="buildingId != null">#{buildingId},</if>
+            <if test="floorId != null">#{floorId},</if>
             <if test="roomType != null and roomType != ''">#{roomType},</if>
             <if test="roomArea != null and roomArea != ''">#{roomArea},</if>
             <if test="subject != null and subject != ''">#{subject},</if>
@@ -72,7 +72,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         update a_room
         <trim prefix="SET" suffixOverrides=",">
             <if test="roomName != null and roomName != ''">room_name = #{roomName},</if>
-            <if test="buildingId != null">building_id = #{buildingId},</if>
+            <if test="floorId != null">floor_id = #{floorId},</if>
             <if test="roomType != null and roomType != ''">room_type = #{roomType},</if>
             <if test="roomArea != null and roomArea != ''">room_area = #{roomArea},</if>
             <if test="subject != null and subject != ''">subject = #{subject},</if>
