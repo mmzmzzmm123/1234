@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.autoee.mapper.ARoomMapper">
+
+    <resultMap type="ARoom" id="ARoomResult">
+        <result property="id"    column="id"    />
+        <result property="roomName"    column="room_name"    />
+        <result property="buildingId"    column="building_id"    />
+        <result property="buildingName"    column="building_name"    />
+        <result property="roomType"    column="room_type"    />
+        <result property="roomArea"    column="room_area"    />
+        <result property="subject"    column="subject"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectARoomVo">
+        select id, room_name, building_id, room_type, room_area, subject, del_flag, create_by, create_time, update_by, update_time ,
+                  (select s.building_name from a_building s where s.id = t.building_id) as building_name
+        from a_room t
+    </sql>
+
+    <select id="selectARoomList" parameterType="ARoom" resultMap="ARoomResult">
+        <include refid="selectARoomVo"/>
+        <where>
+            <if test="roomName != null  and roomName != ''"> and room_name like concat('%', #{roomName}, '%')</if>
+            <if test="buildingId != null "> and building_id = #{buildingId}</if>
+            <if test="roomType != null  and roomType != ''"> and room_type = #{roomType}</if>
+        </where>
+		order by update_time desc, create_time desc
+    </select>
+
+    <select id="selectARoomById" parameterType="Long" resultMap="ARoomResult">
+        <include refid="selectARoomVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertARoom" parameterType="ARoom" useGeneratedKeys="true" keyProperty="id">
+        insert into a_room
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="roomName != null and roomName != ''">room_name,</if>
+            <if test="buildingId != null">building_id,</if>
+            <if test="roomType != null and roomType != ''">room_type,</if>
+            <if test="roomArea != null and roomArea != ''">room_area,</if>
+            <if test="subject != null and subject != ''">subject,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="roomName != null and roomName != ''">#{roomName},</if>
+            <if test="buildingId != null">#{buildingId},</if>
+            <if test="roomType != null and roomType != ''">#{roomType},</if>
+            <if test="roomArea != null and roomArea != ''">#{roomArea},</if>
+            <if test="subject != null and subject != ''">#{subject},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateARoom" parameterType="ARoom">
+        update a_room
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="roomName != null and roomName != ''">room_name = #{roomName},</if>
+            <if test="buildingId != null">building_id = #{buildingId},</if>
+            <if test="roomType != null and roomType != ''">room_type = #{roomType},</if>
+            <if test="roomArea != null and roomArea != ''">room_area = #{roomArea},</if>
+            <if test="subject != null and subject != ''">subject = #{subject},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteARoomById" parameterType="Long">
+        delete from a_room where id = #{id}
+    </delete>
+
+    <delete id="deleteARoomByIds" parameterType="String">
+        delete from a_room where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
