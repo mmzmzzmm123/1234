@@ -39,6 +39,22 @@ public class ARoom extends BaseEntity
     @Excel(name = "所属学科")
     private String subject;
 
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public String getRoomName() {
+		return roomName;
+	}
+
+	public void setRoomName(String roomName) {
+		this.roomName = roomName;
+	}
+
 	public Long getFloorId() {
 		return floorId;
 	}
@@ -55,67 +71,36 @@ public class ARoom extends BaseEntity
 		this.floorName = floorName;
 	}
 
-	public void setId(Long id)
-    {
-        this.id = id;
-    }
+	public String getRoomType() {
+		return roomType;
+	}
 
-    public Long getId()
-    {
-        return id;
-    }
-    public void setRoomName(String roomName)
-    {
-        this.roomName = roomName;
-    }
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
+	}
 
-    public String getRoomName()
-    {
-        return roomName;
-    }
-    public void setBuildingId(Long floorId)
-    {
-        this.floorId = floorId;
-    }
+	public String getRoomArea() {
+		return roomArea;
+	}
 
-    public Long getBuildingId()
-    {
-        return floorId;
-    }
-    public void setRoomType(String roomType)
-    {
-        this.roomType = roomType;
-    }
+	public void setRoomArea(String roomArea) {
+		this.roomArea = roomArea;
+	}
 
-    public String getRoomType()
-    {
-        return roomType;
-    }
-    public void setRoomArea(String roomArea)
-    {
-        this.roomArea = roomArea;
-    }
+	public String getSubject() {
+		return subject;
+	}
 
-    public String getRoomArea()
-    {
-        return roomArea;
-    }
-    public void setSubject(String subject)
-    {
-        this.subject = subject;
-    }
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 
-    public String getSubject()
-    {
-        return subject;
-    }
-
-    @Override
+	@Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
             .append("id", getId())
             .append("roomName", getRoomName())
-            .append("floorId", getBuildingId())
+            .append("floorId", getFloorId())
             .append("roomType", getRoomType())
             .append("roomArea", getRoomArea())
             .append("subject", getSubject())

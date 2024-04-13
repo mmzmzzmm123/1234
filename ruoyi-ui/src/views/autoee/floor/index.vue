@@ -77,7 +77,7 @@
       <el-table-column label="楼层名称" align="center" prop="floorName" />
       <el-table-column label="所属建筑物" align="center" prop="buildingName" />
 <!--      <el-table-column label="所属建筑物" align="center" prop="buildingId" />-->
-      <el-table-column label="楼层面积" align="center" prop="floorArea" />
+<!--      <el-table-column label="楼层面积" align="center" prop="floorArea" />-->
       <el-table-column label="房间数量" align="center" prop="roomCount" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
@@ -250,12 +250,14 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.getBuildingList();
       this.reset();
       this.open = true;
       this.title = "添加楼层管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.getBuildingList();
       this.reset();
       const id = row.id || this.ids
       getFloor(id).then(response => {

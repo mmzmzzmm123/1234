@@ -297,12 +297,14 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.getSchoolList();
       this.reset();
       this.open = true;
       this.title = "添加建筑物管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.getSchoolList();
       this.reset();
       const id = row.id || this.ids
       getBuilding(id).then(response => {

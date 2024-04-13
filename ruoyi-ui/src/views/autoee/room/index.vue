@@ -279,12 +279,14 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
+      this.getFloorList();
       this.reset();
       this.open = true;
       this.title = "添加房间管理";
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
+      this.getFloorList();
       this.reset();
       const id = row.id || this.ids
       getRoom(id).then(response => {
