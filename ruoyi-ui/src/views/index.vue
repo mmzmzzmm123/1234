@@ -3,7 +3,7 @@
     <el-row :gutter="20">
       <el-col :sm="24" :lg="24">
         <blockquote class="text-warning" style="font-size: 14px">
-            <h1>欢迎使用若依管理系统</h1>
+            <h1>欢迎使用高校建筑面积指标统计系统</h1>
         </blockquote>
         <hr/>
       </el-col>
