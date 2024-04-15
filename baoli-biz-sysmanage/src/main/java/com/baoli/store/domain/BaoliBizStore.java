@@ -162,6 +162,11 @@ public class BaoliBizStore extends BaseEntity
     @Excel(name = "被回访驻店")
     private String brpInStore;
 
+    private String cityName;
+    private String brandName;
+    private String signBanks;
+    private String isExceptional;
+    private String exceptionDesc;
     public void setId(Long id) 
     {
         this.id = id;
@@ -494,6 +499,46 @@ public class BaoliBizStore extends BaseEntity
     public String getBrpInStore() 
     {
         return brpInStore;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String getSignBanks() {
+        return signBanks;
+    }
+
+    public void setSignBanks(String signBanks) {
+        this.signBanks = signBanks;
+    }
+
+    public String getIsExceptional() {
+        return isExceptional;
+    }
+
+    public void setIsExceptional(String isExceptional) {
+        this.isExceptional = isExceptional;
+    }
+
+    public String getExceptionDesc() {
+        return exceptionDesc;
+    }
+
+    public void setExceptionDesc(String exceptionDesc) {
+        this.exceptionDesc = exceptionDesc;
     }
 
     @Override

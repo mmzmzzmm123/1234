@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBlBizAgentInfoVo">
-        select a.id,a.agent_name,a.brand,(select b.`name` from  baoli_biz_carbrand b where b.id = a.brand) as brand_name, a.submit_time, a.group_name, a.contacts, a.contacts_position, a.contacts_phone, a.remark from bl_biz_agent_info a
+        select a.id,a.agent_name,a.brand,(select b.`name` from  baoli_biz_car_brand b where b.id = a.brand) as brand_name, a.submit_time, a.group_name, a.contacts, a.contacts_position, a.contacts_phone, a.remark from bl_biz_agent_info a
     </sql>
 
     <select id="selectBlBizAgentInfoList" parameterType="BlBizAgentInfo" resultMap="BlBizAgentInfoResult">

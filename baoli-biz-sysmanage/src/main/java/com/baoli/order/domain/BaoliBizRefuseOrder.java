@@ -82,6 +82,11 @@ public class BaoliBizRefuseOrder extends BaseEntity
     @Excel(name = "状态")
     private String status;
 
+    private String cityName;
+    private String storeName;
+    private String brandName;
+    private String bankName;
+    private String inStoreName;
     public void setId(Long id) 
     {
         this.id = id;
@@ -233,6 +238,46 @@ public class BaoliBizRefuseOrder extends BaseEntity
 
     public void setStoreId(Long storeId) {
         this.storeId = storeId;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getInStoreName() {
+        return inStoreName;
+    }
+
+    public void setInStoreName(String inStoreName) {
+        this.inStoreName = inStoreName;
     }
 
     @Override

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.store.mapper.BaoliBizFeeSchemaMapper">
+    
+    <resultMap type="BaoliBizFeeSchema" id="BaoliBizFeeSchemaResult">
+        <result property="id"    column="id"    />
+        <result property="storeId"    column="store_id"    />
+        <result property="feeType"    column="fee_type"    />
+        <result property="bankId"    column="bank_id"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="orderNum"    column="order_num"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizFeeSchemaVo">
+        select id, store_id, fee_type, bank_id, start_time, end_time, order_num from baoli_biz_fee_schema
+    </sql>
+
+    <select id="selectBaoliBizFeeSchemaList" parameterType="BaoliBizFeeSchema" resultMap="BaoliBizFeeSchemaResult">
+        <include refid="selectBaoliBizFeeSchemaVo"/>
+        <where>  
+            <if test="storeId != null "> and store_id = #{storeId}</if>
+            <if test="feeType != null  and feeType != ''"> and fee_type = #{feeType}</if>
+            <if test="bankId != null "> and bank_id = #{bankId}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="orderNum != null "> and order_num = #{orderNum}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizFeeSchemaById" parameterType="Long" resultMap="BaoliBizFeeSchemaResult">
+        <include refid="selectBaoliBizFeeSchemaVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizFeeSchema" parameterType="BaoliBizFeeSchema" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_fee_schema
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="storeId != null">store_id,</if>
+            <if test="feeType != null">fee_type,</if>
+            <if test="bankId != null">bank_id,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="orderNum != null">order_num,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="storeId != null">#{storeId},</if>
+            <if test="feeType != null">#{feeType},</if>
+            <if test="bankId != null">#{bankId},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="orderNum != null">#{orderNum},</if>
+         </trim>
+    </insert>
+
+    <insert id="insertBaoliBizFeeSchemaBatch" parameterType="list">
+        insert into baoli_biz_fee_schema
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            store_id,
+            fee_type,
+            bank_id,
+            start_time,
+            end_time,
+            order_num,
+        </trim>
+        values
+        <foreach collection="baoliBizFeeRateSchema" item="fee" separator=",">
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fee.storeId != null">#{fee.storeId},</if>
+            <if test="fee.feeType != null">#{fee.feeType},</if>
+            <if test="fee.bankId != null">#{fee.bankId},</if>
+            <if test="fee.startTime != null">#{fee.startTime},</if>
+            <if test="fee.endTime != null">#{fee.endTime},</if>
+            <if test="fee.orderNum != null">#{fee.orderNum},</if>
+        </trim>
+        </foreach>
+    </insert>
+
+    <update id="updateBaoliBizFeeSchema" parameterType="BaoliBizFeeSchema">
+        update baoli_biz_fee_schema
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="storeId != null">store_id = #{storeId},</if>
+            <if test="feeType != null">fee_type = #{feeType},</if>
+            <if test="bankId != null">bank_id = #{bankId},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizFeeSchemaById" parameterType="Long">
+        delete from baoli_biz_fee_schema where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizFeeSchemaByIds" parameterType="String">
+        delete from baoli_biz_fee_schema where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
