@@ -12,6 +12,7 @@ public class SysCache
     /** 缓存名称 */
     private String cacheName = "";
 
+private
     /** 缓存键名 */
     private String cacheKey = "";
 
