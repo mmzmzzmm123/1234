@@ -165,7 +165,7 @@ public class BaoliBizStore extends BaseEntity
     private String cityName;
     private String brandName;
     private String signBanks;
-    private String isExceptional;
+    private String status;
     private String exceptionDesc;
     public void setId(Long id) 
     {
@@ -525,12 +525,12 @@ public class BaoliBizStore extends BaseEntity
         this.signBanks = signBanks;
     }
 
-    public String getIsExceptional() {
-        return isExceptional;
+    public String getStatus() {
+        return status;
     }
 
-    public void setIsExceptional(String isExceptional) {
-        this.isExceptional = isExceptional;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getExceptionDesc() {

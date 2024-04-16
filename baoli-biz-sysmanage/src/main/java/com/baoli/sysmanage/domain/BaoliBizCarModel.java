@@ -37,6 +37,21 @@ public class BaoliBizCarModel extends BaseEntity
     private Long serieId;
 
     private String brandName;
+    /** 名称 */
+    @Excel(name = "指导价")
+    private Float guidePrice;
+
+    public void setFullBrandName(String fullBrandName) {
+        this.fullBrandName = fullBrandName;
+    }
+
+    public Float getGuidePrice() {
+        return guidePrice;
+    }
+
+    public void setGuidePrice(Float guidePrice) {
+        this.guidePrice = guidePrice;
+    }
 
     public String getFullBrandName(){
         fullBrandName = brandName +" / " + level2BrandName;
