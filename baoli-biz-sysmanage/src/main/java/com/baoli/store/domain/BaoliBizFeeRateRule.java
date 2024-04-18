@@ -30,9 +30,8 @@ public class BaoliBizFeeRateRule extends BaseEntity
     @Excel(name = "银行id")
     private Long bankId;
 
-    /** 额外选项 */
-    @Excel(name = "额外选项")
-    private String extraOptions;
+    private Long brandId;
+    private Long modelId;
 
     public void setId(Long id) 
     {
@@ -66,20 +65,26 @@ public class BaoliBizFeeRateRule extends BaseEntity
         this.bankId = bankId;
     }
 
-    public Long getBankId() 
+    public Long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
+    }
+
+    public Long getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(Long modelId) {
+        this.modelId = modelId;
+    }
+
+    public Long getBankId()
     {
         return bankId;
     }
-    public void setExtraOptions(String extraOptions) 
-    {
-        this.extraOptions = extraOptions;
-    }
-
-    public String getExtraOptions() 
-    {
-        return extraOptions;
-    }
-
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -88,7 +93,6 @@ public class BaoliBizFeeRateRule extends BaseEntity
             .append("feeRateType", getFeeRateType())
             .append("bankId", getBankId())
             .append("remark", getRemark())
-            .append("extraOptions", getExtraOptions())
             .toString();
     }
 }
