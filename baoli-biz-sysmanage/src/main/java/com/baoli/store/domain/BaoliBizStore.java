@@ -167,6 +167,8 @@ public class BaoliBizStore extends BaseEntity
     private String signBanks;
     private String status;
     private String exceptionDesc;
+    private String feeSchema;
+    private String feeRateSchema;
     public void setId(Long id) 
     {
         this.id = id;
@@ -539,6 +541,22 @@ public class BaoliBizStore extends BaseEntity
 
     public void setExceptionDesc(String exceptionDesc) {
         this.exceptionDesc = exceptionDesc;
+    }
+
+    public String getFeeSchema() {
+        return feeSchema;
+    }
+
+    public void setFeeSchema(String feeSchema) {
+        this.feeSchema = feeSchema;
+    }
+
+    public String getFeeRateSchema() {
+        return feeRateSchema;
+    }
+
+    public void setFeeRateSchema(String feeRateSchema) {
+        this.feeRateSchema = feeRateSchema;
     }
 
     @Override

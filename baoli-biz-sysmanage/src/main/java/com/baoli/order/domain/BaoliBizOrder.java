@@ -106,11 +106,11 @@ public class BaoliBizOrder extends BaseEntity
         this.bank = bank;
     }
 
-    public String getInnerOfficer() {
+    public Long getInnerOfficer() {
         return innerOfficer;
     }
 
-    public void setInnerOfficer(String innerOfficer) {
+    public void setInnerOfficer(Long innerOfficer) {
         this.innerOfficer = innerOfficer;
     }
 
@@ -162,11 +162,11 @@ public class BaoliBizOrder extends BaseEntity
         this.downPayment = downPayment;
     }
 
-    public Long getLoanRatio() {
+    public Float getLoanRatio() {
         return loanRatio;
     }
 
-    public void setLoanRatio(Long loanRatio) {
+    public void setLoanRatio(Float loanRatio) {
         this.loanRatio = loanRatio;
     }
 
@@ -380,7 +380,7 @@ public class BaoliBizOrder extends BaseEntity
 
     /** 内勤 */
     @Excel(name = "内勤")
-    private String innerOfficer;
+    private Long innerOfficer;
 
     /** 客户姓名 */
     @Excel(name = "客户姓名")
@@ -408,7 +408,7 @@ public class BaoliBizOrder extends BaseEntity
 
     /** 贷款比率 */
     @Excel(name = "贷款比率")
-    private Long loanRatio;
+    private Float loanRatio;
 
     /** 期数（12 十二期 24 二十四期 36 三十六期 48 四十八期 60 六十期） */
     @Excel(name = "期数", readConverterExp = "1=2,十=二期,2=4,二=十四期,3=6,三=十六期,4=8,四=十八期,6=0,六=十期")

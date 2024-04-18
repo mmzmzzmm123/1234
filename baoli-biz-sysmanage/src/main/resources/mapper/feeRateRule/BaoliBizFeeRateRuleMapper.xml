@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.store.mapper.BaoliBizFeeRateRuleMapper">
+    
+    <resultMap type="BaoliBizFeeRateRule" id="BaoliBizFeeRateRuleResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="feeRateType"    column="fee_rate_type"    />
+        <result property="bankId"    column="bank_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="extraOptions"    column="extra_options"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizFeeRateRuleVo">
+        select id, title, fee_rate_type, bank_id, remark, extra_options from baoli_biz_fee_rate_rule
+    </sql>
+
+    <select id="selectBaoliBizFeeRateRuleList" parameterType="BaoliBizFeeRateRule" resultMap="BaoliBizFeeRateRuleResult">
+        <include refid="selectBaoliBizFeeRateRuleVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="feeRateType != null  and feeRateType != ''"> and fee_rate_type = #{feeRateType}</if>
+            <if test="bankId != null "> and bank_id = #{bankId}</if>
+            <if test="extraOptions != null  and extraOptions != ''"> and extra_options = #{extraOptions}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizFeeRateRuleById" parameterType="Long" resultMap="BaoliBizFeeRateRuleResult">
+        <include refid="selectBaoliBizFeeRateRuleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizFeeRateRule" parameterType="BaoliBizFeeRateRule" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_fee_rate_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="feeRateType != null">fee_rate_type,</if>
+            <if test="bankId != null">bank_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="extraOptions != null">extra_options,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="feeRateType != null">#{feeRateType},</if>
+            <if test="bankId != null">#{bankId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="extraOptions != null">#{extraOptions},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizFeeRateRule" parameterType="BaoliBizFeeRateRule">
+        update baoli_biz_fee_rate_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="feeRateType != null">fee_rate_type = #{feeRateType},</if>
+            <if test="bankId != null">bank_id = #{bankId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="extraOptions != null">extra_options = #{extraOptions},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizFeeRateRuleById" parameterType="Long">
+        delete from baoli_biz_fee_rate_rule where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizFeeRateRuleByIds" parameterType="String">
+        delete from baoli_biz_fee_rate_rule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

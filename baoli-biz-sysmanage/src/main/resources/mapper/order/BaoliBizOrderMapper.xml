@@ -205,7 +205,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="orderSchema != null">order_schema = #{orderSchema},</if>
             <if test="city != null">city = #{city},</if>
             <if test="storeLevel != null">store_level = #{storeLevel},</if>
-            <if test="store_id != null">store_id = #{storeId},</if>
+            <if test="storeId != null">store_id = #{storeId},</if>
             <if test="carType != null">car_type = #{carType},</if>
             <if test="loanType != null">loan_type = #{loanType},</if>
             <if test="orderNumber != null">order_number = #{orderNumber},</if>
