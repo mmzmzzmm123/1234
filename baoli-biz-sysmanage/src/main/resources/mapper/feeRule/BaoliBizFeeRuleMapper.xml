@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.store.mapper.BaoliBizFeeRuleMapper">
+    
+    <resultMap type="BaoliBizFeeRule" id="BaoliBizFeeRuleResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="feeType"    column="fee_type"    />
+        <result property="bankId"    column="bank_id"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizFeeRuleVo">
+        select id, title, fee_type, bank_id, remark from baoli_biz_fee_rule
+    </sql>
+
+    <select id="selectBaoliBizFeeRuleList" parameterType="BaoliBizFeeRule" resultMap="BaoliBizFeeRuleResult">
+        <include refid="selectBaoliBizFeeRuleVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="feeType != null  and feeType != ''"> and fee_type = #{feeType}</if>
+            <if test="bankId != null "> and bank_id = #{bankId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizFeeRuleById" parameterType="Long" resultMap="BaoliBizFeeRuleResult">
+        <include refid="selectBaoliBizFeeRuleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizFeeRule" parameterType="BaoliBizFeeRule" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_fee_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="feeType != null">fee_type,</if>
+            <if test="bankId != null">bank_id,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="feeType != null">#{feeType},</if>
+            <if test="bankId != null">#{bankId},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizFeeRule" parameterType="BaoliBizFeeRule">
+        update baoli_biz_fee_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="feeType != null">fee_type = #{feeType},</if>
+            <if test="bankId != null">bank_id = #{bankId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizFeeRuleById" parameterType="Long">
+        delete from baoli_biz_fee_rule where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizFeeRuleByIds" parameterType="String">
+        delete from baoli_biz_fee_rule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

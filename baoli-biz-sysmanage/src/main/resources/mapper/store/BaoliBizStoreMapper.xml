@@ -152,6 +152,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">update_by,</if>
             <if test="status != null">status,</if>
             <if test="exceptionDesc != null">exception_desc,</if>
+            <if test="signBanks != null">sign_banks,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
@@ -197,6 +198,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateBy != null">#{updateBy},</if>
             <if test="status != null">#{status},</if>
             <if test="exceptionDesc != null">#{exceptionDesc},</if>
+            <if test="signBanks != null">#{signBanks},</if>
          </trim>
     </insert>
 
