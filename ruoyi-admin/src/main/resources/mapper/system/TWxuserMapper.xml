@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.wxuser.mapper.TWxuserMapper">
+    
+    <resultMap type="TWxuser" id="TWxuserResult">
+        <result property="id"    column="id"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="mpId"    column="mp_id"    />
+        <result property="unionId"    column="union_id"    />
+        <result property="avatar"    column="avatar"    />
+        <result property="mobile"    column="mobile"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTWxuserVo">
+        select id, tenant_id, user_id, mp_id, union_id, avatar, mobile, nickname, create_time, update_time from t_wxuser
+    </sql>
+
+    <select id="selectTWxuserList" parameterType="TWxuser" resultMap="TWxuserResult">
+        <include refid="selectTWxuserVo"/>
+        <where>  
+            <if test="mobile != null  and mobile != ''"> and mobile = #{mobile}</if>
+            <if test="nickname != null  and nickname != ''"> and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectTWxuserById" parameterType="Long" resultMap="TWxuserResult">
+        <include refid="selectTWxuserVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTWxuser" parameterType="TWxuser" useGeneratedKeys="true" keyProperty="id">
+        insert into t_wxuser
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="mpId != null">mp_id,</if>
+            <if test="unionId != null">union_id,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="mobile != null">mobile,</if>
+            <if test="nickname != null">nickname,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="mpId != null">#{mpId},</if>
+            <if test="unionId != null">#{unionId},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="mobile != null">#{mobile},</if>
+            <if test="nickname != null">#{nickname},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTWxuser" parameterType="TWxuser">
+        update t_wxuser
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="mpId != null">mp_id = #{mpId},</if>
+            <if test="unionId != null">union_id = #{unionId},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="mobile != null">mobile = #{mobile},</if>
+            <if test="nickname != null">nickname = #{nickname},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTWxuserById" parameterType="Long">
+        delete from t_wxuser where id = #{id}
+    </delete>
+
+    <delete id="deleteTWxuserByIds" parameterType="String">
+        delete from t_wxuser where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
