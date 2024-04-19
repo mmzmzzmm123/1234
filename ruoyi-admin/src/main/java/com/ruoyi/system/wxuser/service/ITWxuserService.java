@@ -1,6 +1,6 @@
 package com.ruoyi.system.wxuser.service;
 
-import com.ruoyi.system.domain.TWxuser;
+import com.ruoyi.system.wxuser.domain.TWxuser;
 
 import java.util.List;
 

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.productcategory.mapper.TProductCategoryMapper">
+
+    <resultMap type="TProductCategory" id="TProductCategoryResult">
+        <result property="id"    column="id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="categoryId"    column="category_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTProductCategoryVo">
+        select id, product_id, category_id, create_time from t_product_category
+    </sql>
+
+    <select id="selectTProductCategoryList" parameterType="TProductCategory" resultMap="TProductCategoryResult">
+        <include refid="selectTProductCategoryVo"/>
+        <where>
+            <if test="productId != null "> and product_id = #{productId}</if>
+            <if test="categoryId != null "> and category_id = #{categoryId}</if>
+        </where>
+    </select>
+
+    <select id="selectTProductCategoryById" parameterType="Long" resultMap="TProductCategoryResult">
+        <include refid="selectTProductCategoryVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTProductCategory" parameterType="TProductCategory">
+        insert into t_product_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="categoryId != null">category_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="categoryId != null">#{categoryId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+    <insert id="insertTProductCategoryBatch">
+        insert into t_product_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            product_id,
+            category_id,
+            create_time
+        </trim>
+            values
+        <foreach collection="tProductCategories" item="item" separator="," >
+            (#{item.productId},#{item.categoryId},#{item.createTime})
+        </foreach>
+    </insert>
+
+    <update id="updateTProductCategory" parameterType="TProductCategory">
+        update t_product_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="categoryId != null">category_id = #{categoryId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTProductCategoryById" parameterType="Long">
+        delete from t_product_category where id = #{id}
+    </delete>
+
+    <delete id="deleteTProductCategoryByIds" parameterType="String">
+        delete from t_product_category where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

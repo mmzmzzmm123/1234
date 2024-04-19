@@ -2,7 +2,7 @@ package com.ruoyi.system.wxuser.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.system.domain.TWxuser;
+import com.ruoyi.system.wxuser.domain.TWxuser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.wxuser.mapper.TWxuserMapper;

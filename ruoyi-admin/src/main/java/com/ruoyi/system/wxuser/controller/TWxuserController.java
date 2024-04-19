@@ -3,7 +3,7 @@ package com.ruoyi.system.wxuser.controller;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
-import com.ruoyi.system.domain.TWxuser;
+import com.ruoyi.system.wxuser.domain.TWxuser;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

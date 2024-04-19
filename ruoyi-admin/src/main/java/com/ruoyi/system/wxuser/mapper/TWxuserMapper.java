@@ -1,6 +1,7 @@
 package com.ruoyi.system.wxuser.mapper;
 
-import com.ruoyi.system.domain.TWxuser;
+
+import com.ruoyi.system.wxuser.domain.TWxuser;
 
 import java.util.List;
 
