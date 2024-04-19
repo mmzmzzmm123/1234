@@ -17,6 +17,16 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+      <el-form-item label="vip等级" prop="vip">
+        <el-select v-model="queryParams.vip" placeholder="请选择vip等级" clearable>
+          <el-option
+            v-for="dict in dict.type.vip"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="创建时间">
         <el-date-picker
           v-model="daterangeCreateTime"
@@ -94,7 +104,6 @@
     <el-table v-loading="loading" :data="wxuserList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="自增id" align="center" prop="id" />
-      <el-table-column label="小程序Id" align="center" prop="mpId" />
       <el-table-column label="微信头像" align="center" prop="avatar" width="100">
         <template slot-scope="scope">
           <image-preview :src="scope.row.avatar" :width="50" :height="50"/>
@@ -102,6 +111,11 @@
       </el-table-column>
       <el-table-column label="微信手机号" align="center" prop="mobile" />
       <el-table-column label="微信昵称" align="center" prop="nickname" />
+      <el-table-column label="vip等级" align="center" prop="vip">
+        <template slot-scope="scope">
+          <dict-tag :options="dict.type.vip" :value="scope.row.vip"/>
+        </template>
+      </el-table-column>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
           <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
@@ -143,9 +157,6 @@
     <!-- 添加或修改微信用户对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="小程序Id" prop="mpId">
-          <el-input v-model="form.mpId" placeholder="请输入小程序Id" />
-        </el-form-item>
         <el-form-item label="微信头像" prop="avatar">
           <image-upload v-model="form.avatar"/>
         </el-form-item>
@@ -154,6 +165,16 @@
         </el-form-item>
         <el-form-item label="微信昵称" prop="nickname">
           <el-input v-model="form.nickname" placeholder="请输入微信昵称" />
+        </el-form-item>
+        <el-form-item label="vip等级" prop="vip">
+          <el-select v-model="form.vip" placeholder="请选择vip等级">
+            <el-option
+              v-for="dict in dict.type.vip"
+              :key="dict.value"
+              :label="dict.label"
+              :value="parseInt(dict.value)"
+            ></el-option>
+          </el-select>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -169,6 +190,7 @@ import { listWxuser, getWxuser, delWxuser, addWxuser, updateWxuser } from "@/api
 
 export default {
   name: "Wxuser",
+  dicts: ['vip'],
   data() {
     return {
       // 遮罩层
@@ -189,9 +211,9 @@ export default {
       title: "",
       // 是否显示弹出层
       open: false,
-      // 微信昵称时间范围
+      // vip等级时间范围
       daterangeCreateTime: [],
-      // 微信昵称时间范围
+      // vip等级时间范围
       daterangeUpdateTime: [],
       // 查询参数
       queryParams: {
@@ -199,6 +221,7 @@ export default {
         pageSize: 10,
         mobile: null,
         nickname: null,
+        vip: null,
         createTime: null,
         updateTime: null
       },
@@ -206,9 +229,6 @@ export default {
       form: {},
       // 表单校验
       rules: {
-        mobile: [
-          { required: true, message: "微信手机号不能为空", trigger: "blur" }
-        ],
       }
     };
   },
@@ -250,6 +270,7 @@ export default {
         avatar: null,
         mobile: null,
         nickname: null,
+        vip: null,
         createTime: null,
         updateTime: null
       };

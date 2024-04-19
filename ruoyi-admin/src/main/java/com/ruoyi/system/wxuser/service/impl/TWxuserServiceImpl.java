@@ -2,27 +2,27 @@ package com.ruoyi.system.wxuser.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.domain.TWxuser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.wxuser.mapper.TWxuserMapper;
-import com.ruoyi.system.wxuser.domain.TWxuser;
 import com.ruoyi.system.wxuser.service.ITWxuserService;
 
 /**
  * 微信用户Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2024-04-18
  */
 @Service
-public class TWxuserServiceImpl implements ITWxuserService 
+public class TWxuserServiceImpl implements ITWxuserService
 {
     @Autowired
     private TWxuserMapper tWxuserMapper;
 
     /**
      * 查询微信用户
-     * 
+     *
      * @param id 微信用户主键
      * @return 微信用户
      */
@@ -34,7 +34,7 @@ public class TWxuserServiceImpl implements ITWxuserService
 
     /**
      * 查询微信用户列表
-     * 
+     *
      * @param tWxuser 微信用户
      * @return 微信用户
      */
@@ -46,7 +46,7 @@ public class TWxuserServiceImpl implements ITWxuserService
 
     /**
      * 新增微信用户
-     * 
+     *
      * @param tWxuser 微信用户
      * @return 结果
      */
@@ -59,7 +59,7 @@ public class TWxuserServiceImpl implements ITWxuserService
 
     /**
      * 修改微信用户
-     * 
+     *
      * @param tWxuser 微信用户
      * @return 结果
      */
@@ -72,7 +72,7 @@ public class TWxuserServiceImpl implements ITWxuserService
 
     /**
      * 批量删除微信用户
-     * 
+     *
      * @param ids 需要删除的微信用户主键
      * @return 结果
      */
@@ -84,7 +84,7 @@ public class TWxuserServiceImpl implements ITWxuserService
 
     /**
      * 删除微信用户信息
-     * 
+     *
      * @param id 微信用户主键
      * @return 结果
      */
