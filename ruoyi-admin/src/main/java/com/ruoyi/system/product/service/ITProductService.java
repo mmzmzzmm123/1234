@@ -19,6 +19,7 @@ public interface ITProductService
      * @return 商品
      */
     public TProduct selectTProductById(Long id);
+    public TProductVO selectTProducVotById(Long id);
 
     /**
      * 查询商品列表
@@ -44,6 +45,8 @@ public interface ITProductService
      * @return 结果
      */
     public int updateTProduct(TProduct tProduct);
+
+    public int updateTProductVO(TProductVO tProductVO);
 
     /**
      * 批量删除商品

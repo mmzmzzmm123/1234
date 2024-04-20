@@ -3,28 +3,32 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ruoyi.system.product.mapper.TProductMapper">
-
     <resultMap type="TProduct" id="TProductResult">
         <result property="id"    column="id"    />
         <result property="name"    column="name"    />
         <result property="image"    column="image"    />
+        <result property="price"    column="price"    />
+        <result property="hidePrice"    column="hide_price"    />
+        <result property="recoveredPrice"    column="recovered_price"    />
         <result property="status"    column="status"    />
         <result property="description"    column="description"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="version"    column="version"    />
     </resultMap>
-
     <sql id="selectTProductVo">
-        select id, name, image, status, description, create_time, update_time from t_product
+        select id, name, image, price, hide_price, recovered_price, status, description, create_time, update_time, version from t_product
     </sql>
 
-    <select id="selectTProductList" parameterType="TProductVO" resultMap="TProductResult">
+
+    <select id="selectTProductList" parameterType="TProduct" resultMap="TProductResult">
         <include refid="selectTProductVo"/>
         <where>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="image != null  and image != ''"> and image = #{image}</if>
             <if test="status != null "> and status = #{status}</if>
             <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="params.beginCreateTime != null and params.beginCreateTime != '' and params.endCreateTime != null and params.endCreateTime != ''"> and create_time between #{params.beginCreateTime} and #{params.endCreateTime}</if>
+            <if test="params.beginUpdateTime != null and params.beginUpdateTime != '' and params.endUpdateTime != null and params.endUpdateTime != ''"> and update_time between #{params.beginUpdateTime} and #{params.endUpdateTime}</if>
         </where>
     </select>
 
@@ -33,37 +37,47 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
 
-    <insert id="insertTProduct" parameterType="TProductVO">
+    <insert id="insertTProduct" parameterType="TProduct" useGeneratedKeys="true" keyProperty="id">
         insert into t_product
         <trim prefix="(" suffix=")" suffixOverrides=",">
-            <if test="id != null">id,</if>
             <if test="name != null">name,</if>
             <if test="image != null">image,</if>
+            <if test="price != null">price,</if>
+            <if test="hidePrice != null">hide_price,</if>
+            <if test="recoveredPrice != null">recovered_price,</if>
             <if test="status != null">status,</if>
             <if test="description != null">description,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
-         </trim>
+            <if test="version != null">version,</if>
+        </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
-            <if test="id != null">#{id},</if>
             <if test="name != null">#{name},</if>
             <if test="image != null">#{image},</if>
+            <if test="price != null">#{price},</if>
+            <if test="hidePrice != null">#{hidePrice},</if>
+            <if test="recoveredPrice != null">#{recoveredPrice},</if>
             <if test="status != null">#{status},</if>
             <if test="description != null">#{description},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
-         </trim>
+            <if test="version != null">#{version},</if>
+        </trim>
     </insert>
 
-    <update id="updateTProduct" parameterType="TProductVO">
+    <update id="updateTProduct" parameterType="TProduct">
         update t_product
         <trim prefix="SET" suffixOverrides=",">
             <if test="name != null">name = #{name},</if>
             <if test="image != null">image = #{image},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="hidePrice != null">hide_price = #{hidePrice},</if>
+            <if test="recoveredPrice != null">recovered_price = #{recoveredPrice},</if>
             <if test="status != null">status = #{status},</if>
             <if test="description != null">description = #{description},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="version != null">version = #{version},</if>
         </trim>
         where id = #{id}
     </update>

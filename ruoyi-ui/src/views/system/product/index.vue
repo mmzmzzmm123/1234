@@ -92,25 +92,30 @@
           <image-preview :src="scope.row.image" :width="50" :height="50"/>
         </template>
       </el-table-column>
+      <el-table-column label="商品价格" align="center" prop="price" />
+      <el-table-column label="商品隐藏价格" align="center" prop="hidePrice" />
+      <el-table-column label="商品回收价" align="center" prop="recoveredPrice" />
       <el-table-column label="上架状态" align="center" prop="status">
         <template slot-scope="scope">
           <dict-tag :options="dict.type.productstatus" :value="scope.row.status"/>
         </template>
       </el-table-column>
       <el-table-column label="商品分类" align="center" prop="status">
-        <template slot-scope="scope">
-          <dict-tag :options="categoryList" :value="scope.row.categoryList"/>
+        <template slot-scope="scope" v-if="scope.row.categoryList">
+          <template v-for="(item,index) in categoryList" >
+            <el-tag  size="small"  v-if="scope.row.categoryList.includes(item.id)">{{item.name}}</el-tag>
+          </template>
         </template>
       </el-table-column>
       <el-table-column label="商品描述" align="center" prop="description"/>
       <el-table-column label="创建时间" align="center" prop="createTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="更新时间" align="center" prop="updateTime" width="180">
         <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d}') }}</span>
+          <span>{{ parseTime(scope.row.updateTime, '{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
@@ -152,6 +157,15 @@
         <el-form-item label="商品图片" prop="image">
           <image-upload v-model="form.image"/>
         </el-form-item>
+        <el-form-item label="商品价格" prop="price">
+          <el-input v-model="form.price" placeholder="请输入商品价格" />
+        </el-form-item>
+        <el-form-item label="商品隐藏价格" prop="hidePrice">
+          <el-input v-model="form.hidePrice" placeholder="请输入商品隐藏价格" />
+        </el-form-item>
+        <el-form-item label="商品回收价" prop="recoveredPrice">
+          <el-input v-model="form.recoveredPrice" placeholder="请输入商品回收价" />
+        </el-form-item>
         <el-form-item label="上架状态" prop="status">
           <el-radio-group v-model="form.status">
             <el-radio
@@ -166,9 +180,9 @@
           <el-select v-model="form.categoryList" multiple placeholder="请选择" filterable clearable>
             <el-option
               v-for="item in categoryList"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value">
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
             </el-option>
           </el-select>
         </el-form-item>
@@ -232,16 +246,21 @@ export default {
     this.getList();
     this.getCategoryList();
   },
+/*  filters:{
+    categoryName(id){
+      console.log(id,this.categoryList)
+      for (let c in this.categoryList){
+        if (id === c.id){
+          return c.name;
+        }
+      }
+    }
+  },*/
   methods: {
     getCategoryList() {
       listCategory().then(response => {
         console.log(response)
-        this.categoryList = response.rows.map(r => {
-          return {
-            label: r.name,
-            value: r.id
-          }
-        });
+        this.categoryList = response.rows;
         console.log(this.categoryList)
       });
     },
@@ -300,6 +319,7 @@ export default {
       const id = row.id || this.ids
       getProduct(id).then(response => {
         this.form = response.data;
+        console.log(this.form)
         this.open = true;
         this.title = "修改商品";
       });

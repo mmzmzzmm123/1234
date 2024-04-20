@@ -3,7 +3,7 @@ import request from '@/utils/request'
 // 查询商品列表
 export function listProduct(query) {
   return request({
-    url: '/system/product/list',
+    url: '/system/product/listvo',
     method: 'get',
     params: query
   })
@@ -12,7 +12,7 @@ export function listProduct(query) {
 // 查询商品详细
 export function getProduct(id) {
   return request({
-    url: '/system/product/' + id,
+    url: '/system/product/vo/' + id,
     method: 'get'
   })
 }
@@ -20,7 +20,7 @@ export function getProduct(id) {
 // 新增商品
 export function addProduct(data) {
   return request({
-    url: '/system/product',
+    url: '/system/product/addVo',
     method: 'post',
     data: data
   })
@@ -29,7 +29,7 @@ export function addProduct(data) {
 // 修改商品
 export function updateProduct(data) {
   return request({
-    url: '/system/product',
+    url: '/system/product/editVO',
     method: 'put',
     data: data
   })

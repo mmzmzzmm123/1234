@@ -2,6 +2,7 @@ package com.ruoyi.system.category.mapper;
 
 import java.util.List;
 import com.ruoyi.system.category.domain.TCategory;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 商品分类Mapper接口
@@ -59,5 +60,5 @@ public interface TCategoryMapper
      */
     public int deleteTCategoryByIds(Long[] ids);
 
-    public List<TCategory> selectTCategoryListByIds(List<Long> ids);
+    public List<TCategory> selectTCategoryListByIds(@Param("ids") List<Long> ids);
 }

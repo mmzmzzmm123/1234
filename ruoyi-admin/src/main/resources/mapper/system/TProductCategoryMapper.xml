@@ -76,4 +76,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+    <delete id="deleteByTProductId">
+        delete from t_product_category where product_id = #{productId}
+    </delete>
 </mapper>

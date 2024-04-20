@@ -1,13 +1,22 @@
 package com.ruoyi.system.product.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.category.domain.TCategory;
+import com.ruoyi.system.category.mapper.TCategoryMapper;
 import com.ruoyi.system.product.domain.vo.TProductVO;
+import com.ruoyi.system.productcategory.domain.TProductCategory;
 import com.ruoyi.system.productcategory.mapper.TProductCategoryMapper;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.product.mapper.TProductMapper;
 import com.ruoyi.system.product.domain.TProduct;
@@ -23,12 +32,13 @@ import javax.annotation.Resource;
  * @date 2024-04-19
  */
 @Service
-public class TProductServiceImpl implements ITProductService
-{
-    @Autowired
+public class TProductServiceImpl implements ITProductService {
+    @Resource
     private TProductMapper tProductMapper;
     @Resource
-    private TProductCategoryMapper productCategoryMapper ;
+    private TProductCategoryMapper productCategoryMapper;
+    @Resource
+    private TCategoryMapper categoryMapper;
 
     /**
      * 查询商品
@@ -37,9 +47,26 @@ public class TProductServiceImpl implements ITProductService
      * @return 商品
      */
     @Override
-    public TProduct selectTProductById(Long id)
-    {
+    public TProduct selectTProductById(Long id) {
         return tProductMapper.selectTProductById(id);
+    }
+
+    @Override
+    public TProductVO selectTProducVotById(Long id) {
+        TProductVO tProductVO = new TProductVO();
+        TProduct tProduct = tProductMapper.selectTProductById(id);
+        if (Objects.nonNull(tProduct)) {
+            BeanUtil.copyProperties(tProduct, tProductVO);
+            TProductCategory tProductCategoryQuery = new TProductCategory();
+            tProductCategoryQuery.setProductId(id);
+            List<TProductCategory> tProductCategories = productCategoryMapper.selectTProductCategoryList(tProductCategoryQuery);
+            if (CollUtil.isNotEmpty(tProductCategories)) {
+                tProductVO.setCategoryList(tProductCategories.stream().map(TProductCategory::getCategoryId).collect(Collectors.toList()));
+            }
+            return tProductVO;
+
+        }
+        return null;
     }
 
     /**
@@ -49,8 +76,7 @@ public class TProductServiceImpl implements ITProductService
      * @return 商品
      */
     @Override
-    public List<TProduct> selectTProductList(TProduct tProduct)
-    {
+    public List<TProduct> selectTProductList(TProduct tProduct) {
         return tProductMapper.selectTProductList(tProduct);
     }
 
@@ -61,8 +87,7 @@ public class TProductServiceImpl implements ITProductService
      * @return 结果
      */
     @Override
-    public int insertTProduct(TProduct tProduct)
-    {
+    public int insertTProduct(TProduct tProduct) {
         tProduct.setCreateTime(DateUtils.getNowDate());
         return tProductMapper.insertTProduct(tProduct);
     }
@@ -71,13 +96,20 @@ public class TProductServiceImpl implements ITProductService
     @Transactional(rollbackFor = Exception.class)
     public int insertTProductVO(TProductVO tProductVO) {
         TProduct tProduct = new TProduct();
-        BeanUtil.copyProperties(tProductVO,tProduct);
-        tProductMapper.insertTProduct(tProduct);
-        if (CollUtil.isNotEmpty(tProductVO.getCategoryList())){
-//            productCategoryMapper.
-            //todo 构建批量保存方法
+        BeanUtil.copyProperties(tProductVO, tProduct);
+        int result = tProductMapper.insertTProduct(tProduct);
+        if (CollUtil.isNotEmpty(tProductVO.getCategoryList())) {
+            List<TProductCategory> tProductCategories = new ArrayList<>();
+            for (Long categoryId : tProductVO.getCategoryList()) {
+                TProductCategory tProductCategory = new TProductCategory();
+                tProductCategory.setCategoryId(categoryId);
+                tProductCategory.setProductId(tProduct.getId());
+                tProductCategory.setCreateTime(new Date());
+                tProductCategories.add(tProductCategory);
+            }
+            productCategoryMapper.insertTProductCategoryBatch(tProductCategories);
         }
-        return 0;
+        return result;
     }
 
     /**
@@ -87,10 +119,30 @@ public class TProductServiceImpl implements ITProductService
      * @return 结果
      */
     @Override
-    public int updateTProduct(TProduct tProduct)
-    {
+    public int updateTProduct(TProduct tProduct) {
         tProduct.setUpdateTime(DateUtils.getNowDate());
         return tProductMapper.updateTProduct(tProduct);
+    }
+
+    @Override
+    public int updateTProductVO(TProductVO tProductVO) {
+        TProduct tProduct = new TProduct();
+        BeanUtil.copyProperties(tProductVO, tProduct);
+        tProduct.setUpdateTime(DateUtils.getNowDate());
+        int result = tProductMapper.updateTProduct(tProduct);
+        productCategoryMapper.deleteByTProductId(tProductVO.getId());
+        if (CollUtil.isNotEmpty(tProductVO.getCategoryList())){
+            List<TProductCategory> tProductCategories = new ArrayList<>();
+            for (Long categoryId : tProductVO.getCategoryList()) {
+                TProductCategory tProductCategory = new TProductCategory();
+                tProductCategory.setProductId(tProductVO.getId());
+                tProductCategory.setCategoryId(categoryId);
+                tProductCategory.setCreateTime(new Date());
+                tProductCategories.add(tProductCategory);
+            }
+            productCategoryMapper.insertTProductCategoryBatch(tProductCategories);
+        }
+        return result;
     }
 
     /**
@@ -100,8 +152,7 @@ public class TProductServiceImpl implements ITProductService
      * @return 结果
      */
     @Override
-    public int deleteTProductByIds(Long[] ids)
-    {
+    public int deleteTProductByIds(Long[] ids) {
         return tProductMapper.deleteTProductByIds(ids);
     }
 
@@ -112,8 +163,7 @@ public class TProductServiceImpl implements ITProductService
      * @return 结果
      */
     @Override
-    public int deleteTProductById(Long id)
-    {
+    public int deleteTProductById(Long id) {
         return tProductMapper.deleteTProductById(id);
     }
 }

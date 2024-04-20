@@ -55,6 +55,14 @@ public class TProductVO extends BaseEntity
     private Integer version;
 
 
+    public BigDecimal getHidePrice() {
+        return hidePrice;
+    }
+
+    public void setHidePrice(BigDecimal hidePrice) {
+        this.hidePrice = hidePrice;
+    }
+
     public BigDecimal getPrice() {
         return price;
     }
@@ -79,13 +87,13 @@ public class TProductVO extends BaseEntity
         this.version = version;
     }
 
-    private List<TCategory> categoryList;
+    private List<Long> categoryList;
 
-    public List<TCategory> getCategoryList() {
+    public List<Long> getCategoryList() {
         return categoryList;
     }
 
-    public void setCategoryList(List<TCategory> categoryList) {
+    public void setCategoryList(List<Long> categoryList) {
         this.categoryList = categoryList;
     }
 

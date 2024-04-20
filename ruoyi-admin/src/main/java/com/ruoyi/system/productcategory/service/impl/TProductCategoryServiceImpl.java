@@ -10,19 +10,19 @@ import com.ruoyi.system.productcategory.service.ITProductCategoryService;
 
 /**
  * 商品和分类关联Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2024-04-19
  */
 @Service
-public class TProductCategoryServiceImpl implements ITProductCategoryService 
+public class TProductCategoryServiceImpl implements ITProductCategoryService
 {
     @Autowired
     private TProductCategoryMapper tProductCategoryMapper;
 
     /**
      * 查询商品和分类关联
-     * 
+     *
      * @param id 商品和分类关联主键
      * @return 商品和分类关联
      */
@@ -34,7 +34,7 @@ public class TProductCategoryServiceImpl implements ITProductCategoryService
 
     /**
      * 查询商品和分类关联列表
-     * 
+     *
      * @param tProductCategory 商品和分类关联
      * @return 商品和分类关联
      */
@@ -46,7 +46,7 @@ public class TProductCategoryServiceImpl implements ITProductCategoryService
 
     /**
      * 新增商品和分类关联
-     * 
+     *
      * @param tProductCategory 商品和分类关联
      * @return 结果
      */
@@ -59,7 +59,7 @@ public class TProductCategoryServiceImpl implements ITProductCategoryService
 
     /**
      * 修改商品和分类关联
-     * 
+     *
      * @param tProductCategory 商品和分类关联
      * @return 结果
      */
@@ -71,7 +71,7 @@ public class TProductCategoryServiceImpl implements ITProductCategoryService
 
     /**
      * 批量删除商品和分类关联
-     * 
+     *
      * @param ids 需要删除的商品和分类关联主键
      * @return 结果
      */
@@ -83,7 +83,7 @@ public class TProductCategoryServiceImpl implements ITProductCategoryService
 
     /**
      * 删除商品和分类关联信息
-     * 
+     *
      * @param id 商品和分类关联主键
      * @return 结果
      */
@@ -91,5 +91,10 @@ public class TProductCategoryServiceImpl implements ITProductCategoryService
     public int deleteTProductCategoryById(Long id)
     {
         return tProductCategoryMapper.deleteTProductCategoryById(id);
+    }
+
+    @Override
+    public int inertBatch(List<TProductCategory> list) {
+        return tProductCategoryMapper.insertTProductCategoryBatch(list);
     }
 }

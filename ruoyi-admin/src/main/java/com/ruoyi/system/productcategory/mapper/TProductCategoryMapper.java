@@ -61,4 +61,7 @@ public interface TProductCategoryMapper
      * @return 结果
      */
     public int deleteTProductCategoryByIds(Long[] ids);
+
+
+    public int deleteByTProductId(@Param("productId") Long productId);
 }
