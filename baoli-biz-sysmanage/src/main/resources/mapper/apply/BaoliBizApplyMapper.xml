@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.apply.mapper.BaoliBizApplyMapper">
+    
+    <resultMap type="BaoliBizApply" id="BaoliBizApplyResult">
+        <result property="id"    column="id"    />
+        <result property="applyType"    column="apply_type"    />
+        <result property="applyContent"    column="apply_content"    />
+        <result property="status"    column="status"    />
+        <result property="applicantId"    column="applicant_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizApplyVo">
+        select id, apply_type, apply_content, status, applicant_id, create_time, update_time, create_by, update_by from baoli_biz_apply
+    </sql>
+
+    <select id="selectBaoliBizApplyList" parameterType="BaoliBizApply" resultMap="BaoliBizApplyResult">
+        <include refid="selectBaoliBizApplyVo"/>
+        <where>  
+            <if test="applyType != null  and applyType != ''"> and apply_type = #{applyType}</if>
+            <if test="applyContent != null  and applyContent != ''"> and apply_content = #{applyContent}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="applicantId != null "> and applicant_id = #{applicantId}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizApplyById" parameterType="Long" resultMap="BaoliBizApplyResult">
+        <include refid="selectBaoliBizApplyVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizApply" parameterType="BaoliBizApply" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="applyType != null">apply_type,</if>
+            <if test="applyContent != null">apply_content,</if>
+            <if test="status != null">status,</if>
+            <if test="applicantId != null">applicant_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="applyType != null">#{applyType},</if>
+            <if test="applyContent != null">#{applyContent},</if>
+            <if test="status != null">#{status},</if>
+            <if test="applicantId != null">#{applicantId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizApply" parameterType="BaoliBizApply">
+        update baoli_biz_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="applyType != null">apply_type = #{applyType},</if>
+            <if test="applyContent != null">apply_content = #{applyContent},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="applicantId != null">applicant_id = #{applicantId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizApplyById" parameterType="Long">
+        delete from baoli_biz_apply where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizApplyByIds" parameterType="String">
+        delete from baoli_biz_apply where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
