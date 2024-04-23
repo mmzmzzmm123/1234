@@ -27,6 +27,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <include refid="selectTProductCategoryVo"/>
         where id = #{id}
     </select>
+    <select id="queryProductListByCategoryId" resultType="com.ruoyi.system.product.domain.TProduct">
+        select tp.id,
+               tp.name,
+               tp.image,
+               tp.price,
+               tp.hide_price,
+               tp.recovered_price,
+               tp.status,
+               tp.description,
+               tp.tp.create_time,
+               tp.update_time,
+               tp.version
+        from t_product_category tpc
+                 left join t_product tp on tp.id = tpc.product_id
+        where category_id = #{categoryId}
+    </select>
 
     <insert id="insertTProductCategory" parameterType="TProductCategory">
         insert into t_product_category

@@ -8,7 +8,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
  * 商品对象 t_product
- * 
+ *
  * @author ruoyi
  * @date 2024-04-19
  */
@@ -51,87 +51,89 @@ public class TProduct extends BaseEntity
     @Excel(name = "版本号")
     private Integer version;
 
-    public void setId(Long id) 
+    public void setId(Long id)
     {
         this.id = id;
     }
 
-    public Long getId() 
+    public Long getId()
     {
         return id;
     }
-    public void setName(String name) 
+    public void setName(String name)
     {
         this.name = name;
     }
 
-    public String getName() 
+    public String getName()
     {
         return name;
     }
-    public void setImage(String image) 
+    public void setImage(String image)
     {
         this.image = image;
     }
 
-    public String getImage() 
+    public String getImage()
     {
         return image;
     }
-    public void setPrice(BigDecimal price) 
+    public void setPrice(BigDecimal price)
     {
         this.price = price;
     }
 
-    public BigDecimal getPrice() 
+    public BigDecimal getPrice()
     {
         return price;
     }
-    public void setHidePrice(BigDecimal hidePrice) 
+    public void setHidePrice(BigDecimal hidePrice)
     {
         this.hidePrice = hidePrice;
     }
 
-    public BigDecimal getHidePrice() 
+    public BigDecimal getHidePrice()
     {
         return hidePrice;
     }
-    public void setRecoveredPrice(BigDecimal recoveredPrice) 
+    public void setRecoveredPrice(BigDecimal recoveredPrice)
     {
         this.recoveredPrice = recoveredPrice;
     }
 
-    public BigDecimal getRecoveredPrice() 
+    public BigDecimal getRecoveredPrice()
     {
         return recoveredPrice;
     }
-    public void setStatus(Integer status) 
+
+    public void setStatus(Integer status)
     {
         this.status = status;
     }
 
-    public Integer getStatus() 
+    public Integer getStatus()
     {
         return status;
     }
-    public void setDescription(String description) 
+    public void setDescription(String description)
     {
         this.description = description;
     }
 
-    public String getDescription() 
+    public String getDescription()
     {
         return description;
     }
-    public void setVersion(Integer version) 
+    public void setVersion(Integer version)
     {
         this.version = version;
     }
 
-    public Integer getVersion() 
+    public Integer getVersion()
     {
         return version;
     }
+
 
     @Override
     public String toString() {

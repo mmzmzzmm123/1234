@@ -2,6 +2,7 @@ package com.ruoyi.system.productcategory.service.impl;
 
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.product.domain.TProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.productcategory.mapper.TProductCategoryMapper;
@@ -96,5 +97,10 @@ public class TProductCategoryServiceImpl implements ITProductCategoryService
     @Override
     public int inertBatch(List<TProductCategory> list) {
         return tProductCategoryMapper.insertTProductCategoryBatch(list);
+    }
+
+    @Override
+    public List<TProduct> queryProductListByCategoryId(Long categoryId) {
+        return null;
     }
 }

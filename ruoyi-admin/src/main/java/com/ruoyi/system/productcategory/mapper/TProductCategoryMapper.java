@@ -1,6 +1,8 @@
 package com.ruoyi.system.productcategory.mapper;
 
 import java.util.List;
+
+import com.ruoyi.system.product.domain.TProduct;
 import com.ruoyi.system.productcategory.domain.TProductCategory;
 import org.apache.ibatis.annotations.Param;
 
@@ -35,6 +37,7 @@ public interface TProductCategoryMapper
      * @return 结果
      */
     public int insertTProductCategory(TProductCategory tProductCategory);
+
     public int insertTProductCategoryBatch(@Param("tProductCategories") List<TProductCategory> tProductCategories);
 
 
@@ -64,4 +67,7 @@ public interface TProductCategoryMapper
 
 
     public int deleteByTProductId(@Param("productId") Long productId);
+
+
+    List<TProduct> queryProductListByCategoryId(Long categoryId);
 }

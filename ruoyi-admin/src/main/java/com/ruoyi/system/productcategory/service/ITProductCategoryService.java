@@ -1,7 +1,10 @@
 package com.ruoyi.system.productcategory.service;
 
 import java.util.List;
+
+import com.ruoyi.system.product.domain.TProduct;
 import com.ruoyi.system.productcategory.domain.TProductCategory;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 商品和分类关联Service接口
@@ -60,4 +63,6 @@ public interface ITProductCategoryService
     public int deleteTProductCategoryById(Long id);
 
     public int inertBatch(List<TProductCategory> list);
+
+    public List<TProduct> queryProductListByCategoryId(@Param("categoryId") Long categoryId);
 }

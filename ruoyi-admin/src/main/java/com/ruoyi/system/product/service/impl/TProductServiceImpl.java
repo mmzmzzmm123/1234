@@ -11,6 +11,8 @@ import cn.hutool.core.collection.CollUtil;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.system.category.domain.TCategory;
 import com.ruoyi.system.category.mapper.TCategoryMapper;
+import com.ruoyi.system.price.domain.TPrice;
+import com.ruoyi.system.price.mapper.TPriceMapper;
 import com.ruoyi.system.product.domain.vo.TProductVO;
 import com.ruoyi.system.productcategory.domain.TProductCategory;
 import com.ruoyi.system.productcategory.mapper.TProductCategoryMapper;
@@ -39,6 +41,8 @@ public class TProductServiceImpl implements ITProductService {
     private TProductCategoryMapper productCategoryMapper;
     @Resource
     private TCategoryMapper categoryMapper;
+    @Resource
+    private TPriceMapper priceMapper;
 
     /**
      * 查询商品
@@ -80,6 +84,18 @@ public class TProductServiceImpl implements ITProductService {
         return tProductMapper.selectTProductList(tProduct);
     }
 
+    @Override
+    public List<TProductVO> selectTProductVOList(TProduct tProduct) {
+        List<TProductVO> voList = new ArrayList<>();
+        List<TProduct> tProducts = tProductMapper.selectTProductList(tProduct);
+        if (CollUtil.isNotEmpty(tProducts)) {
+            for (TProduct product : tProducts) {
+
+            }
+        }
+        return null;
+    }
+
     /**
      * 新增商品
      *
@@ -98,6 +114,11 @@ public class TProductServiceImpl implements ITProductService {
         TProduct tProduct = new TProduct();
         BeanUtil.copyProperties(tProductVO, tProduct);
         int result = tProductMapper.insertTProduct(tProduct);
+        TPrice tPrice = new TPrice();
+        tPrice.setProductId(tProduct.getId());
+        tPrice.setPrice(tProduct.getPrice());
+        tPrice.setCreateTime(new Date());
+        priceMapper.insertTPrice(tPrice);
         if (CollUtil.isNotEmpty(tProductVO.getCategoryList())) {
             List<TProductCategory> tProductCategories = new ArrayList<>();
             for (Long categoryId : tProductVO.getCategoryList()) {
@@ -125,13 +146,20 @@ public class TProductServiceImpl implements ITProductService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int updateTProductVO(TProductVO tProductVO) {
         TProduct tProduct = new TProduct();
         BeanUtil.copyProperties(tProductVO, tProduct);
         tProduct.setUpdateTime(DateUtils.getNowDate());
         int result = tProductMapper.updateTProduct(tProduct);
+        //todo-lx 记录价格变动日志
+        TPrice tPrice = new TPrice();
+        tPrice.setProductId(tProduct.getId());
+        tPrice.setPrice(tProduct.getPrice());
+        tPrice.setCreateTime(new Date());
+        priceMapper.insertTPrice(tPrice);
         productCategoryMapper.deleteByTProductId(tProductVO.getId());
-        if (CollUtil.isNotEmpty(tProductVO.getCategoryList())){
+        if (CollUtil.isNotEmpty(tProductVO.getCategoryList())) {
             List<TProductCategory> tProductCategories = new ArrayList<>();
             for (Long categoryId : tProductVO.getCategoryList()) {
                 TProductCategory tProductCategory = new TProductCategory();

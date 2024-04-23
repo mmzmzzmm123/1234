@@ -28,6 +28,7 @@ public interface ITProductService
      * @return 商品集合
      */
     public List<TProduct> selectTProductList(TProduct tProduct);
+    public List<TProductVO> selectTProductVOList(TProduct tProduct);
 
     /**
      * 新增商品
