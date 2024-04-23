@@ -2,6 +2,8 @@ package com.baoli.apply.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,7 @@ import com.baoli.apply.domain.BaoliBizApply;
 import com.baoli.apply.service.IBaoliBizApplyService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import sun.plugin2.util.SystemUtil;
 
 /**
  * 申请管理Controller
@@ -77,6 +80,10 @@ public class BaoliBizApplyController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody BaoliBizApply baoliBizApply)
     {
+        baoliBizApply.setApplicantId(SecurityUtils.getUserId());
+        if(baoliBizApply.getStatus() == null){
+            baoliBizApply.setStatus("02");
+        }
         return toAjax(baoliBizApplyService.insertBaoliBizApply(baoliBizApply));
     }
 

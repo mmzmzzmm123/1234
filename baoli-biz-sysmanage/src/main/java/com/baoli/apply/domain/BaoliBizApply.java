@@ -33,6 +33,7 @@ public class BaoliBizApply extends BaseEntity
     /** 申请人 */
     @Excel(name = "申请人")
     private Long applicantId;
+    private String applicantName;
 
     public void setId(Long id) 
     {
@@ -78,6 +79,14 @@ public class BaoliBizApply extends BaseEntity
     public Long getApplicantId() 
     {
         return applicantId;
+    }
+
+    public String getApplicantName() {
+        return applicantName;
+    }
+
+    public void setApplicantName(String applicantName) {
+        this.applicantName = applicantName;
     }
 
     @Override
