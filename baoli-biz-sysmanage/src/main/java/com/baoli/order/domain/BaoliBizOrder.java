@@ -378,6 +378,14 @@ public class BaoliBizOrder extends BaseEntity
         this.refuseOrderId = refuseOrderId;
     }
 
+    public String getOrderYear() {
+        return orderYear;
+    }
+
+    public void setOrderYear(String orderYear) {
+        this.orderYear = orderYear;
+    }
+
     /** 是否新车（01 新车 02 二手车） */
     @Excel(name = "是否新车")
     private String carType;
@@ -511,4 +519,6 @@ public class BaoliBizOrder extends BaseEntity
     private Long applicantId;
     // 拒单Id
     private Long refuseOrderId;
+    //出单年份
+    private String orderYear;
 }

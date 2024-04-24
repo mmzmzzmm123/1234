@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 订单Controller
@@ -39,7 +40,25 @@ public class BaoliBizOrderController extends BaseController
         List<BaoliBizOrder> list = baoliBizOrderService.selectBaoliBizOrderList(baoliBizOrder);
         return getDataTable(list);
     }
+    @PreAuthorize("@ss.hasPermi('order:orderManage:list')")
+    @GetMapping("/myList")
+    public TableDataInfo myList(BaoliBizOrder baoliBizOrder)
+    {
+        startPage();
+        baoliBizOrder.setApplicantId(getUserId());
+        List<BaoliBizOrder> list = baoliBizOrderService.selectMyOrderList(baoliBizOrder);
+        return getDataTable(list);
+    }
 
+    @PreAuthorize("@ss.hasPermi('order:orderManage:list')")
+    @GetMapping("/myOrder")
+    public TableDataInfo myOrder(BaoliBizOrder baoliBizOrder)
+    {
+        startPage();
+        baoliBizOrder.setApplicantId(getUserId());
+        List<Map<String,Object>> list = baoliBizOrderService.selectMyOrder(baoliBizOrder);
+        return getDataTable(list);
+    }
     /**
      * 导出订单列表
      */

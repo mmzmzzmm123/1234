@@ -12,10 +12,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="orderId"    column="order_id"    />
         <result property="status"    column="status"    />
         <result property="remark"    column="remark"    />
+        <result property="orderStatus"    column="order_status"    />
+        <result property="customerName"    column="customer_name"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="loanAmount"    column="loan_amount"    />
     </resultMap>
 
     <sql id="selectBaoliBizOrderLabelVo">
-        select id, label_type, send_user_id, receive_user_id, order_id, status, remark from baoli_biz_order_label
+        select id, label_type, send_user_id, receive_user_id, order_id, status, remark,(select b.customer_name from baoli_biz_order b where a.order_id = b.id) customer_name,(select b.order_number from baoli_biz_order b where a.order_id = b.id) order_number,(select b.loan_amount from baoli_biz_order b where a.order_id = b.id) loan_amount,(select b.status from baoli_biz_order b where a.order_id = b.id) order_status from baoli_biz_order_label a
     </sql>
 
     <select id="selectBaoliBizOrderLabelList" parameterType="BaoliBizOrderLabel" resultMap="BaoliBizOrderLabelResult">

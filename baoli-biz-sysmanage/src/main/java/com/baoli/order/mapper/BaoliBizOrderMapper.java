@@ -1,6 +1,8 @@
 package com.baoli.order.mapper;
 
 import java.util.List;
+import java.util.Map;
+
 import com.baoli.order.domain.BaoliBizOrder;
 
 /**
@@ -26,7 +28,8 @@ public interface BaoliBizOrderMapper
      * @return 订单集合
      */
     public List<BaoliBizOrder> selectBaoliBizOrderList(BaoliBizOrder baoliBizOrder);
-
+    public List<BaoliBizOrder> selectMyOrderList(BaoliBizOrder baoliBizOrder);
+    public List<Map<String,Object>> selectMyOrder(BaoliBizOrder baoliBizOrder);
     /**
      * 新增订单
      * 

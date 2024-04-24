@@ -38,7 +38,44 @@ public class BaoliBizOrderLabel extends BaseEntity
     @Excel(name = "状态")
     private String status;
 
-    public void setId(Long id) 
+    private String orderStatus;
+    private String customerName;
+    private String orderNumber;
+    private Long loanAmount;
+
+    public String getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(String orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(String orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public Long getLoanAmount() {
+        return loanAmount;
+    }
+
+    public void setLoanAmount(Long loanAmount) {
+        this.loanAmount = loanAmount;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

@@ -1,6 +1,8 @@
 package com.baoli.order.service.impl;
 
 import java.util.List;
+import java.util.Map;
+
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,6 +44,16 @@ public class BaoliBizOrderServiceImpl implements IBaoliBizOrderService
     public List<BaoliBizOrder> selectBaoliBizOrderList(BaoliBizOrder baoliBizOrder)
     {
         return baoliBizOrderMapper.selectBaoliBizOrderList(baoliBizOrder);
+    }
+
+    @Override
+    public List<BaoliBizOrder> selectMyOrderList(BaoliBizOrder baoliBizOrder) {
+        return baoliBizOrderMapper.selectMyOrderList(baoliBizOrder);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectMyOrder(BaoliBizOrder baoliBizOrder) {
+        return baoliBizOrderMapper.selectMyOrder(baoliBizOrder);
     }
 
     /**

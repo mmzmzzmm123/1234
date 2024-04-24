@@ -58,9 +58,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, status,refuse_order_id,applicant_id,order_schema, city, store_level, store_id, car_type, loan_type, order_number, bank, inner_officer, customer_name, apply_number, new_energy, invoice_price, loan_amount, down_payment, loan_ratio, period_number, supply_material_type, customer_phone_number, customer_work_union, is_discount, fee_ratio, is_hxr, business_number, credit_card_number, customer_age, married, exists_drive_license, domicile_type, work_place, work_field, work_category, education, companion_relationship, companion_number, create_time, update_time, create_by, update_by,level1_brand_id,level2_brand_id,car_series_id,car_model_id from baoli_biz_order
     </sql>
 
+    <sql id="myOrder">
+        SELECT count(1) cnt,sum(loan_amount) sum,DATE_FORMAT(NOW(), '%Y-%m') yearMonth FROM `ruoyi-vue`.baoli_biz_order
+    </sql>
     <select id="selectBaoliBizOrderList" parameterType="BaoliBizOrder" resultMap="BaoliBizOrderResult">
         <include refid="selectBaoliBizOrderVo"/>
-        <where>  
+        <where>
             <if test="orderSchema != null  and orderSchema != ''"> and order_schema = #{orderSchema}</if>
             <if test="city != null  and city != ''"> and city = #{city}</if>
             <if test="storeLevel != null  and storeLevel != ''"> and store_level = #{storeLevel}</if>
@@ -105,7 +108,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="refuseOrderId != null "> and refuse_order_id = #{refuseOrderId}</if>
         </where>
     </select>
-    
+    <select id="selectMyOrderList" parameterType="BaoliBizOrder" resultMap="BaoliBizOrderResult">
+        <include refid="selectBaoliBizOrderVo"/>
+        <where>
+            status >= '05'
+            <if test="applicantId != null "> and applicant_id = #{applicantId}</if>
+            <if test="orderYear != null "> and DATE_FORMAT(NOW(), '%Y') = #{orderYear}</if>
+        </where>
+    </select>
+
+    <select id="selectMyOrder" parameterType="BaoliBizOrder" resultType="map">
+        <include refid="myOrder"/>
+        <where>
+            status >= '05'
+            <if test="applicantId != null "> and applicant_id = #{applicantId}</if>
+            <if test="orderYear != null "> and DATE_FORMAT(NOW(), '%Y') = #{orderYear}</if>
+        </where>
+    </select>
+
     <select id="selectBaoliBizOrderById" parameterType="Long" resultMap="BaoliBizOrderResult">
         <include refid="selectBaoliBizOrderVo"/>
         where id = #{id}
