@@ -36,7 +36,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                tp.recovered_price,
                tp.status,
                tp.description,
-               tp.tp.create_time,
+               tp.create_time,
                tp.update_time,
                tp.version
         from t_product_category tpc

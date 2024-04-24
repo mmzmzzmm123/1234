@@ -1,8 +1,11 @@
 package com.ruoyi.app.product.ao;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
+import com.ruoyi.app.product.vo.MobileProductVO;
 import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.category.service.ITCategoryService;
 import com.ruoyi.system.product.domain.TProduct;
@@ -55,22 +58,31 @@ public class UserProductAO {
         return AjaxResult.success();
     }
 
-    public AjaxResult querySubscribeProduct(Long userId) {
+    public R<List<MobileProductVO>> querySubscribeProduct(Long userId) {
         if (ObjectUtil.hasNull(userId)) {
-            return AjaxResult.error("参数错误");
+            return R.fail("参数错误");
         }
         SysUser sysUser = sysUserService.selectUserById(userId);
         if (ObjectUtil.hasNull(sysUser)) {
-            return AjaxResult.error("未找到有效用户~");
+            return R.fail("未找到有效用户~");
         }
         TUserProduct tUserProductQuery = new TUserProduct();
         tUserProductQuery.setUserId(userId);
         List<TUserProduct> tUserProducts = userProductService.selectTUserProductList(tUserProductQuery);
         if (CollUtil.isNotEmpty(tUserProducts)) {
-            return AjaxResult.success(userProductService.queryTProductsByUserId(userId));
-
+            List<TProduct> products = userProductService.queryTProductsByUserId(userId);
+            // 模糊隐藏价
+            List<MobileProductVO> voList = BeanUtil.copyToList(products,MobileProductVO.class);
+            for (MobileProductVO vo : voList){
+                vo.setHidePrice("**");
+            }
+            return R.ok(voList);
         }
-        return AjaxResult.success();
+        return R.ok();
+    }
+    public R<List<MobileProductVO>> queryProductPriceList(){
+
+        return R.ok();
     }
 
 
