@@ -71,6 +71,7 @@ public class BaoliBizOrderController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody BaoliBizOrder baoliBizOrder)
     {
+        baoliBizOrder.setApplicantId(getUserId());
         return toAjax(baoliBizOrderService.insertBaoliBizOrder(baoliBizOrder));
     }
 

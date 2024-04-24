@@ -80,7 +80,7 @@ public class BaoliBizApplyController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody BaoliBizApply baoliBizApply)
     {
-        baoliBizApply.setApplicantId(SecurityUtils.getUserId());
+        baoliBizApply.setApplicantId(getUserId());
         if(baoliBizApply.getStatus() == null){
             baoliBizApply.setStatus("02");
         }

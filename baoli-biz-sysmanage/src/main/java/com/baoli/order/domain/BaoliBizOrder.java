@@ -362,6 +362,22 @@ public class BaoliBizOrder extends BaseEntity
         this.status = status;
     }
 
+    public Long getApplicantId() {
+        return applicantId;
+    }
+
+    public void setApplicantId(Long applicantId) {
+        this.applicantId = applicantId;
+    }
+
+    public Long getRefuseOrderId() {
+        return refuseOrderId;
+    }
+
+    public void setRefuseOrderId(Long refuseOrderId) {
+        this.refuseOrderId = refuseOrderId;
+    }
+
     /** 是否新车（01 新车 02 二手车） */
     @Excel(name = "是否新车")
     private String carType;
@@ -491,4 +507,8 @@ public class BaoliBizOrder extends BaseEntity
     private Long carSeriesId;
     private Long carModelId;
     private String status;
+    // 申请人
+    private Long applicantId;
+    // 拒单Id
+    private Long refuseOrderId;
 }

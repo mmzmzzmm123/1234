@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="brandId != null "> and brand_id = #{brandId}</if>
-            <if test="group != null  and group != ''"> and `group` = #{group}</if>
+            <if test="group != null  and group != ''"> and `group` like concat('%', #{group}, '%')</if>
             <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
             <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
             <if test="dealerType != null  and dealerType != ''"> and dealer_type = #{dealerType}</if>
