@@ -124,7 +124,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         // 添加Logout filter
         httpSecurity.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
         // 添加Logout filter
-        httpSecurity.logout().logoutUrl("/wx/user/logout").logoutSuccessHandler(logoutSuccessHandler);
+//        httpSecurity.logout().logoutUrl("/wx/user/logout").logoutSuccessHandler(logoutSuccessHandler);
         // 添加JWT filter
         httpSecurity.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         // 添加CORS filter

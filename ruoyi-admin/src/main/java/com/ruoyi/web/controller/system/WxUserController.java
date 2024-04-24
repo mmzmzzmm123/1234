@@ -1,18 +1,19 @@
 package com.ruoyi.web.controller.system;
 
 import com.alibaba.fastjson2.JSON;
+import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.constant.Constants;
+import com.ruoyi.common.constant.HttpStatus;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.core.domain.entity.WxUser;
 import com.ruoyi.common.core.domain.model.LoginBody;
 import com.ruoyi.common.core.domain.model.LoginUser;
 import com.ruoyi.common.core.domain.model.WxLoginBody;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
-import com.ruoyi.common.utils.MessageUtils;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.StringUtils;
+import com.ruoyi.common.utils.*;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.framework.manager.AsyncManager;
 import com.ruoyi.framework.manager.factory.AsyncFactory;
@@ -29,15 +30,13 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,7 +68,6 @@ public class WxUserController {
     @ApiImplicitParams({
             @ApiImplicitParam(name = "username", value = "用户名称", dataType = "String", dataTypeClass = String.class),
             @ApiImplicitParam(name = "nickName", value = "用户昵称", dataType = "String", dataTypeClass = String.class),
-            @ApiImplicitParam(name = "password", value = "用户密码", dataType = "String", dataTypeClass = String.class),
             @ApiImplicitParam(name = "phonenumber", value = "用户手机", dataType = "String", dataTypeClass = String.class)
     })
     @PostMapping("/register")
@@ -83,12 +81,6 @@ public class WxUserController {
         {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
         }
-        else if (StringUtils.isNotEmpty(user.getEmail()) && !userService.checkEmailUnique(user))
-        {
-            return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，邮箱账号已存在");
-        }
-        user.setCreateBy(SecurityUtils.getLoginUser().getUsername());
-        user.setPassword(SecurityUtils.encryptPassword(user.getPassword()));
         user.setUserType("01");
         return toAjax(userService.insertUser(user));
     }
@@ -112,27 +104,45 @@ public class WxUserController {
         return ajax;
     }
 
+
     /**
-     * 退出方法
-     * @return 结果
+     * 获取用户列表
      */
-    /*@PostMapping("/logout")
-    @ApiOperation("微信用户退出")
-    public AjaxResult logout(HttpServletRequest request, HttpServletResponse response)
+    @PreAuthorize("@ss.hasPermi('system:wxuser:list')")
+    @GetMapping("/list")
+    public TableDataInfo list(SysUser user)
     {
-        AjaxResult ajax = AjaxResult.success();
-        LoginUser loginUser = tokenService.getLoginUser(request);
-        if (StringUtils.isNotNull(loginUser))
-        {
-            String userName = loginUser.getUsername();
-            // 删除用户缓存记录
-            tokenService.delLoginUser(loginUser.getToken());
-            // 记录用户退出日志
-            AsyncManager.me().execute(AsyncFactory.recordLogininfor(userName, Constants.LOGOUT, MessageUtils.message("user.logout.success")));
+        PageUtils.startPage();
+        user.setUserType("01");
+        List<SysUser> list = userService.selectUserList(user);
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setMsg("查询成功");
+        rspData.setRows(list);
+        rspData.setTotal(new PageInfo(list).getTotal());
+        return rspData;
+    }
+
+    @PreAuthorize("@ss.hasPermi('system:wxuser:export')")
+    @PostMapping("/export")
+    public void export(HttpServletResponse response, SysUser user)
+    {
+        user.setUserType("01");
+        List<SysUser> list = userService.selectUserList(user);
+        List<WxUser> wxUserList = new ArrayList<>();
+        for (SysUser sysUser : list) {
+            WxUser wxUser = new WxUser();
+            wxUser.setUserId(sysUser.getUserId());
+            wxUser.setUserName(sysUser.getUserName());
+            wxUser.setUserType(sysUser.getUserType());
+            wxUser.setPhonenumber(sysUser.getPhonenumber());
+            wxUser.setNickName(sysUser.getNickName());
+            wxUserList.add(wxUser);
         }
-        ServletUtils.renderString(response, JSON.toJSONString(AjaxResult.success(MessageUtils.message("user.logout.success"))));
-        return ajax;
-    }*/
+        ExcelUtil<WxUser> util = new ExcelUtil<>(WxUser.class);
+        util.exportExcel(response, wxUserList, "微信用户数据");
+    }
+
 
     /**
      * 响应返回结果
