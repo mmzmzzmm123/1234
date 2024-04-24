@@ -10,10 +10,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="imgPath"    column="img_path"    />
         <result property="createTime"    column="create_time"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="sorted"    column="sorted"    />
     </resultMap>
 
     <sql id="selectTIndexImgVo">
-        select id, img_name, img_path, create_time, update_time from t_index_img
+        select id, img_name, img_path, create_time, update_time,sorted  from t_index_img
     </sql>
 
     <select id="selectTIndexImgList" parameterType="TIndexImg" resultMap="TIndexImgResult">
@@ -22,6 +23,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="imgName != null  and imgName != ''"> and img_name like concat('%', #{imgName}, '%')</if>
             <if test="imgPath != null  and imgPath != ''"> and img_path = #{imgPath}</if>
         </where>
+        order by sorted
     </select>
     
     <select id="selectTIndexImgById" parameterType="Long" resultMap="TIndexImgResult">
@@ -36,12 +38,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="imgPath != null">img_path,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="sorted != null">sorted,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="imgName != null">#{imgName},</if>
             <if test="imgPath != null">#{imgPath},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="sorted != null">#{sorted},</if>
          </trim>
     </insert>
 
@@ -52,6 +56,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="imgPath != null">img_path = #{imgPath},</if>
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="sorted != null">sorted = #{sorted},</if>
         </trim>
         where id = #{id}
     </update>

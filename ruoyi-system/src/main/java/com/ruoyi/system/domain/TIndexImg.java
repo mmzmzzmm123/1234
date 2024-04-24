@@ -15,18 +15,23 @@ public class TIndexImg extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
     private Long id;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private String imgName;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private String imgPath;
 
-    public void setId(Long id) 
+    private Integer sorted;
+
+    public Integer getSorted() {
+        return sorted;
+    }
+
+    public void setSorted(Integer sorted) {
+        this.sorted = sorted;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
@@ -56,12 +61,11 @@ public class TIndexImg extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("imgName", getImgName())
-            .append("imgPath", getImgPath())
-            .append("createTime", getCreateTime())
-            .append("updateTime", getUpdateTime())
-            .toString();
+        return "TIndexImg{" +
+                "id=" + id +
+                ", imgName='" + imgName + '\'' +
+                ", imgPath='" + imgPath + '\'' +
+                ", sorted=" + sorted +
+                '}';
     }
 }

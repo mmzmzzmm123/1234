@@ -43,6 +43,11 @@
           <image-preview :src=" scope.row.imgPath" :width="300" :height="100"/>
         </template>
       </el-table-column>
+       <el-table-column label="排序" align="center" prop="sorted">
+          <template slot-scope="scope">
+              <el-input-number v-model="scope.row.sorted" @change="handleChange(scope)" :min="0"></el-input-number>
+          </template>
+       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button
@@ -155,6 +160,15 @@ export default {
       this.$refs.upload.clearFiles();
       this.getList();
     },
+    handleChange(data) {
+        var params = {
+          id:data.row.id,
+          sorted:data.row.sorted
+        }
+        updateIndexImg(params).then(response => {
+            this.getList();
+        });
+    }
   }
 };
 </script>
