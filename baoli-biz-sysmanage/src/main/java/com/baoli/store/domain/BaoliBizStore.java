@@ -169,6 +169,7 @@ public class BaoliBizStore extends BaseEntity
     private String exceptionDesc;
     private String feeSchema;
     private String feeRateSchema;
+    private String exceptionReason;
     public void setId(Long id) 
     {
         this.id = id;
@@ -557,6 +558,14 @@ public class BaoliBizStore extends BaseEntity
 
     public void setFeeRateSchema(String feeRateSchema) {
         this.feeRateSchema = feeRateSchema;
+    }
+
+    public String getExceptionReason() {
+        return exceptionReason;
+    }
+
+    public void setExceptionReason(String exceptionReason) {
+        this.exceptionReason = exceptionReason;
     }
 
     @Override

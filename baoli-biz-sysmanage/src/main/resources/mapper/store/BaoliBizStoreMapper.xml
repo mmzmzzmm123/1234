@@ -54,10 +54,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="exceptionDesc"    column="exception_desc"    />
         <result property="feeSchema"    column="fee_schema"    />
         <result property="feeRateSchema"    column="fee_rate_schema"    />
+        <result property="exceptionReason"    column="exception_reason"    />
     </resultMap>
 
     <sql id="selectBaoliBizStoreVo">
-        select id,status,fee_schema,fee_rate_schema,exception_desc,sign_banks, name,(select `name` from baoli_biz_car_brand b where b.id = a.brand_id) brand_name,brand_id, `group`, province_id,(select city from bl_sys_cities b where b.cityid = a.city_id) city_name, city_id, dealer_type, most_sell_model, staff_amount, gm_name, gm_phone_number, sm_name, sm_phone_number, fo_name, fo_phone_number, month_sells_amout, permeation_rate, brand_pr, bank_pr, sf_investor, sf_rate, discount_cars, discount_sells_rate, discount_bank, non_discount_cars, non_discount_sells_rate, defect_rate, brand_defect_rate, bank_defect_rate, key_person, kp_position, kp_phone_number, remark, sells_policy, be_review_person, brp_position, brp_phone_number, brp_in_store, create_time, update_time, create_by, update_by from baoli_biz_store a
+        select id,exception_reason,status,fee_schema,fee_rate_schema,exception_desc,sign_banks, name,(select `name` from baoli_biz_car_brand b where b.id = a.brand_id) brand_name,brand_id, `group`, province_id,(select city from bl_sys_cities b where b.cityid = a.city_id) city_name, city_id, dealer_type, most_sell_model, staff_amount, gm_name, gm_phone_number, sm_name, sm_phone_number, fo_name, fo_phone_number, month_sells_amout, permeation_rate, brand_pr, bank_pr, sf_investor, sf_rate, discount_cars, discount_sells_rate, discount_bank, non_discount_cars, non_discount_sells_rate, defect_rate, brand_defect_rate, bank_defect_rate, key_person, kp_position, kp_phone_number, remark, sells_policy, be_review_person, brp_position, brp_phone_number, brp_in_store, create_time, update_time, create_by, update_by from baoli_biz_store a
     </sql>
 
     <select id="selectBaoliBizStoreList" parameterType="BaoliBizStore" resultMap="BaoliBizStoreResult">
@@ -155,6 +156,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">status,</if>
             <if test="exceptionDesc != null">exception_desc,</if>
             <if test="signBanks != null">sign_banks,</if>
+            <if test="exceptionReason != null">exception_reason,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="name != null">#{name},</if>
@@ -201,6 +203,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">#{status},</if>
             <if test="exceptionDesc != null">#{exceptionDesc},</if>
             <if test="signBanks != null">#{signBanks},</if>
+            <if test="exceptionReason != null">#{exceptionReason},</if>
          </trim>
     </insert>
 
@@ -253,6 +256,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="exceptionDesc != null">exception_desc= #{exceptionDesc},</if>
             <if test="feeSchema != null">fee_schema= #{feeSchema},</if>
             <if test="feeRateSchema != null">fee_rate_schema= #{feeRateSchema},</if>
+            <if test="exceptionReason != null">exception_reason= #{exceptionReason},</if>
         </trim>
         where id = #{id}
     </update>

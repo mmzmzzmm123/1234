@@ -144,17 +144,31 @@ public class HomePageStatisticController {
      */
     private Map<String,Object> riskData(){
         Map<String,Object> result = new HashMap<>(1);
+        String countSql = "";
+        Map<String,Object> countResult = null;
+        countSql = "select * FROM `ruoyi-vue`.sys_user_post_region where user_id = ?";
+        long userId = SecurityUtils.getUserId();
+        countResult = jdbcTemplate.queryForMap(countSql,userId);
+        String regionId = countResult.get("region_id").toString();
+
+        countSql = "select (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and label= '01') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ?) ratio from dual";
+        countResult = jdbcTemplate.queryForMap(countSql,regionId,regionId);
         Map<String,Object> item = null;
         item = new HashMap<>(1);
-        item.put("value",0.85);
+        item.put("value",countResult.get("ratio"));
         item.put("param","");
         result.put("clear",item);
+
+        countSql = "select (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and label= '02') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ?) ratio from dual";
+        countResult = jdbcTemplate.queryForMap(countSql,regionId,regionId);
         item = new HashMap<>(1);
-        item.put("value",0.05);
+        item.put("value",countResult.get("ratio"));
         item.put("param","");
         result.put("bad",item);
+        countSql = "select (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and status>='08') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and (status>='06')) ratio from dual;";
+        countResult = jdbcTemplate.queryForMap(countSql,regionId,regionId);
         item = new HashMap<>(1);
-        item.put("value",0.6);
+        item.put("value",countResult.get("ratio"));
         item.put("param","");
         result.put("mortgage",item);
         return result;
@@ -169,8 +183,13 @@ public class HomePageStatisticController {
         Map<String,Object> result = new HashMap<>(1);
         String countSql = "";
         Map<String,Object> countResult = null;
-        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-01-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql,status);
+        countSql = "select * FROM `ruoyi-vue`.sys_user_post_region where user_id = ?";
+        long userId = SecurityUtils.getUserId();
+        countResult = jdbcTemplate.queryForMap(countSql,userId);
+        String regionId = countResult.get("region_id").toString();
+
+        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-01-01'),'%Y-%m-%d %H:%i:%s')";
+        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
         // 年出单
         Map<String,Object> item = null;
         item = new HashMap<>(1);
@@ -181,8 +200,8 @@ public class HomePageStatisticController {
         item.put("value",countResult.get("sum"));
         item.put("param","");
         result.put("yearOrderSum01",item);
-        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-01-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql,"07");
+        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-01-01'),'%Y-%m-%d %H:%i:%s')";
+        countResult = jdbcTemplate.queryForMap(countSql,"07",regionId);
         // 年放款
         item = new HashMap<>(1);
         item.put("value",countResult.get("cnt"));
@@ -192,19 +211,21 @@ public class HomePageStatisticController {
         item.put("value",countResult.get("sum"));
         item.put("param","");
         result.put("yearOrderSum02",item);
-        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql,status);
+        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
+        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
         // 月出单
         item = new HashMap<>(1);
         item.put("value",countResult.get("cnt"));
         item.put("param","");
         result.put("monthOrderCount01",item);
         item = new HashMap<>(1);
-        item.put("value",countResult.get("sum"));
+        // 月出单合计金额
+        double monthOrder= Double.valueOf(countResult.get("sum").toString());
+        item.put("value",monthOrder);
         item.put("param","");
         result.put("monthOrderSum01",item);
-        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql,"07");
+        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
+        countResult = jdbcTemplate.queryForMap(countSql,"07",regionId);
         // 月放款
         item = new HashMap<>(1);
         item.put("value",countResult.get("cnt"));
@@ -214,11 +235,11 @@ public class HomePageStatisticController {
         item.put("value",countResult.get("sum"));
         item.put("param","");
         result.put("monthOrderSum02",item);
-        countSql = "SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql,"04");
+        countSql = "SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
+        countResult = jdbcTemplate.queryForMap(countSql,"04",regionId);
         int passed = Integer.valueOf(countResult.get("cnt").toString());
-        countSql = "SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where refuse_order_id is not null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql);
+        countSql = "SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where refuse_order_id is not null  and city= ? and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
+        countResult = jdbcTemplate.queryForMap(countSql,regionId);
         int refuse = Integer.valueOf(countResult.get("cnt").toString());
 
         Float valid = 0f;
@@ -233,11 +254,31 @@ public class HomePageStatisticController {
         item.put("value",valid);
         item.put("param","");
         result.put("approvePassed",item);
-        // 月任务完成率
+
+        // 月任务完成率（暂时只考虑了按月度考核）
+        countSql = "SELECT * FROM `ruoyi-vue`.baoli_biz_month_task_evaluate WHERE YEAR = DATE_FORMAT(now(), '%Y') AND MONTH = DATE_FORMAT(now(), '%m') and city_id = ?";
+        countResult = jdbcTemplate.queryForMap(countSql,regionId);
+        double amount = 0;
+        String evaluateType = countResult.get("evaluate_type").toString();
+        String refrencePlan = countResult.get("refrence_plan").toString();
+        amount = Double.valueOf(countResult.get("amount").toString());
+        double monthTaskCompleted = (double)(monthOrder / amount);
+        formattedNumber = df.format(monthTaskCompleted);
+        monthTaskCompleted = Double.valueOf(formattedNumber);
         item = new HashMap<>(1);
-        item.put("value",20);
+        item.put("value",monthTaskCompleted);
         item.put("param","");
         result.put("monthTaskCompleted",item);
+
+        // 费用占比
+        countSql = "SELECT   (sum(fee1+fee2+fee3+fee4) / any_value(income)) fee_ratio FROM `ruoyi-vue`.baoli_biz_order where  city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s') group by city";
+        countResult = jdbcTemplate.queryForMap(countSql,regionId);
+
+        amount = Double.valueOf(countResult.get("fee_ratio").toString());
+        item = new HashMap<>(1);
+        item.put("value",amount);
+        item.put("param","");
+        result.put("feeRatio",item);
         return result;
     }
 
@@ -247,39 +288,46 @@ public class HomePageStatisticController {
         Map<String,Object> result = new HashMap<>(1);
         String countSql = "";
         Map<String,Object> countResult = null;
-        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store where status = ?";
-        countResult = jdbcTemplate.queryForMap(countSql,status);
+
+        countSql = "select * FROM `ruoyi-vue`.sys_user_post_region where user_id = ?";
+        long userId = SecurityUtils.getUserId();
+        countResult = jdbcTemplate.queryForMap(countSql,userId);
+        String regionId = countResult.get("region_id").toString();
+
+        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store where status = ? and city_id = ?";
+        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
         int total =Integer.valueOf(countResult.get("cnt").toString());
         Map<String,Object> item = null;
         item = new HashMap<>(1);
         item.put("value",total);
         item.put("param","");
         result.put("total",item);
-        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(NOW(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s'))";
-        countResult = jdbcTemplate.queryForMap(countSql,status);
+        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(NOW(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')) and city_id = ?";
+        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
         int monthOrder =Integer.valueOf(countResult.get("cnt").toString());
         item = new HashMap<>(1);
         item.put("value",monthOrder);
         item.put("param","");
         result.put("monthOrder",item);
-        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and not exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(NOW(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s'))";
-        countResult = jdbcTemplate.queryForMap(countSql,status);
+        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and not exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(NOW(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')) and city_id = ?";
+        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
         item = new HashMap<>(1);
         item.put("value",countResult.get("cnt"));
         item.put("param","");
         result.put("monthNoOrder",item);
-        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and not exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and  b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(date_sub(NOW(), interval 3 month), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s'))";
-        countResult = jdbcTemplate.queryForMap(countSql,status);
+        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and not exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and  b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(date_sub(NOW(), interval 3 month), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')) and city_id = ?";
+        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
         item = new HashMap<>(1);
         item.put("value",countResult.get("cnt"));
         item.put("param","");
-        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store where status = ?";
-        countResult = jdbcTemplate.queryForMap(countSql,"03");
         result.put("threeMonthNoOrder",item);
+        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store where status = ? and city_id = ?";
+        countResult = jdbcTemplate.queryForMap(countSql,"03",regionId);
         item = new HashMap<>(1);
         item.put("value",countResult.get("cnt"));
         item.put("param","");
         result.put("except",item);
+
         Float valid = (float)(monthOrder / total);
         DecimalFormat df = new DecimalFormat("#.##");
         String formattedNumber = df.format(valid);
@@ -288,8 +336,11 @@ public class HomePageStatisticController {
         item.put("value",valid);
         item.put("param","");
         result.put("valid",item);
+
+        countSql ="select (SELECT count(1) FROM `ruoyi-vue`.baoli_biz_store where city_id = ? and (status = '01' or exception_reason ='01')) / (SELECT count(1) FROM `ruoyi-vue`.baoli_biz_store where city_id = ?)  expand from dual";
+        countResult = jdbcTemplate.queryForMap(countSql,regionId,regionId);
         item = new HashMap<>(1);
-        item.put("value",1500);
+        item.put("value",countResult.get("expand"));
         item.put("param","");
         result.put("expand",item);
         return result;
