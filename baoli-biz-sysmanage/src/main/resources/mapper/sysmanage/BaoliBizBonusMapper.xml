@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.sysmanage.mapper.BaoliBizBonusMapper">
+    
+    <resultMap type="BaoliBizBonus" id="BaoliBizBonusResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="positionId"    column="position_id"    />
+        <result property="provinceId"    column="province_id"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="year"    column="year"    />
+        <result property="month"    column="month"    />
+        <result property="genOrderCount"    column="gen_order_count"    />
+        <result property="genOrderAmount"    column="gen_order_amount"    />
+        <result property="releaseMoneyCount"    column="release_money_count"    />
+        <result property="releaseMoneyAmount"    column="release_money_amount"    />
+        <result property="bonusRatio"    column="bonus_ratio"    />
+        <result property="bonusAmount"    column="bonus_amount"    />
+        <result property="adjustAmount"    column="adjust_amount"    />
+        <result property="deductAmount"    column="deduct_amount"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="totalAmount"    column="total_amount"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizBonusVo">
+        select id, user_id, position_id, province_id, city_id, year, month, gen_order_count, gen_order_amount, release_money_count, release_money_amount, bonus_ratio, bonus_amount, adjust_amount, deduct_amount,(bonus_amount + adjust_amount - deduct_amount) total_amount, create_time, update_time, create_by, update_by from baoli_biz_bonus
+    </sql>
+
+    <select id="selectBaoliBizBonusList" parameterType="BaoliBizBonus" resultMap="BaoliBizBonusResult">
+        <include refid="selectBaoliBizBonusVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="positionId != null "> and position_id = #{positionId}</if>
+            <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
+            <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
+            <if test="year != null  and year != ''"> and year = #{year}</if>
+            <if test="month != null  and month != ''"> and month = #{month}</if>
+            <if test="genOrderCount != null "> and gen_order_count = #{genOrderCount}</if>
+            <if test="genOrderAmount != null "> and gen_order_amount = #{genOrderAmount}</if>
+            <if test="releaseMoneyCount != null "> and release_money_count = #{releaseMoneyCount}</if>
+            <if test="releaseMoneyAmount != null "> and release_money_amount = #{releaseMoneyAmount}</if>
+            <if test="bonusRatio != null "> and bonus_ratio = #{bonusRatio}</if>
+            <if test="bonusAmount != null "> and bonus_amount = #{bonusAmount}</if>
+            <if test="adjustAmount != null "> and adjust_amount = #{adjustAmount}</if>
+            <if test="deductAmount != null "> and deduct_amount = #{deductAmount}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizBonusById" parameterType="Long" resultMap="BaoliBizBonusResult">
+        <include refid="selectBaoliBizBonusVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizBonus" parameterType="BaoliBizBonus" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_bonus
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="positionId != null">position_id,</if>
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="year != null">year,</if>
+            <if test="month != null">month,</if>
+            <if test="genOrderCount != null">gen_order_count,</if>
+            <if test="genOrderAmount != null">gen_order_amount,</if>
+            <if test="releaseMoneyCount != null">release_money_count,</if>
+            <if test="releaseMoneyAmount != null">release_money_amount,</if>
+            <if test="bonusRatio != null">bonus_ratio,</if>
+            <if test="bonusAmount != null">bonus_amount,</if>
+            <if test="adjustAmount != null">adjust_amount,</if>
+            <if test="deductAmount != null">deduct_amount,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="positionId != null">#{positionId},</if>
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="year != null">#{year},</if>
+            <if test="month != null">#{month},</if>
+            <if test="genOrderCount != null">#{genOrderCount},</if>
+            <if test="genOrderAmount != null">#{genOrderAmount},</if>
+            <if test="releaseMoneyCount != null">#{releaseMoneyCount},</if>
+            <if test="releaseMoneyAmount != null">#{releaseMoneyAmount},</if>
+            <if test="bonusRatio != null">#{bonusRatio},</if>
+            <if test="bonusAmount != null">#{bonusAmount},</if>
+            <if test="adjustAmount != null">#{adjustAmount},</if>
+            <if test="deductAmount != null">#{deductAmount},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizBonus" parameterType="BaoliBizBonus">
+        update baoli_biz_bonus
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="positionId != null">position_id = #{positionId},</if>
+            <if test="provinceId != null">province_id = #{provinceId},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="year != null">year = #{year},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="genOrderCount != null">gen_order_count = #{genOrderCount},</if>
+            <if test="genOrderAmount != null">gen_order_amount = #{genOrderAmount},</if>
+            <if test="releaseMoneyCount != null">release_money_count = #{releaseMoneyCount},</if>
+            <if test="releaseMoneyAmount != null">release_money_amount = #{releaseMoneyAmount},</if>
+            <if test="bonusRatio != null">bonus_ratio = #{bonusRatio},</if>
+            <if test="bonusAmount != null">bonus_amount = #{bonusAmount},</if>
+            <if test="adjustAmount != null">adjust_amount = #{adjustAmount},</if>
+            <if test="deductAmount != null">deduct_amount = #{deductAmount},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizBonusById" parameterType="Long">
+        delete from baoli_biz_bonus where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizBonusByIds" parameterType="String">
+        delete from baoli_biz_bonus where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
