@@ -151,7 +151,7 @@ public class HomePageStatisticController {
         countResult = jdbcTemplate.queryForMap(countSql,userId);
         String regionId = countResult.get("region_id").toString();
 
-        countSql = "round(select (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and label= '01') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ?),4) ratio from dual";
+        countSql = "select round((select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and label= '01') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ?),4) ratio from dual";
         countResult = jdbcTemplate.queryForMap(countSql,regionId,regionId);
         Map<String,Object> item = null;
         item = new HashMap<>(1);
@@ -159,13 +159,13 @@ public class HomePageStatisticController {
         item.put("param","");
         result.put("clear",item);
 
-        countSql = "round(select (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and label= '02') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ?),4) ratio from dual";
+        countSql = "select round((select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and label= '02') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ?),4) ratio from dual";
         countResult = jdbcTemplate.queryForMap(countSql,regionId,regionId);
         item = new HashMap<>(1);
         item.put("value",countResult.get("ratio"));
         item.put("param","");
         result.put("bad",item);
-        countSql = "round(select (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and status>='08') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and (status>='06')),4) ratio from dual;";
+        countSql = "select round((select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and status>='08') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and (status>='06')),4) ratio from dual;";
         countResult = jdbcTemplate.queryForMap(countSql,regionId,regionId);
         item = new HashMap<>(1);
         item.put("value",countResult.get("ratio"));
