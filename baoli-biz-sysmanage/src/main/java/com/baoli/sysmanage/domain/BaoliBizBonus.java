@@ -21,18 +21,22 @@ public class BaoliBizBonus extends BaseEntity
     /** 用户Id */
     @Excel(name = "用户Id")
     private Long userId;
+    private String userName;
 
     /** 岗位id */
     @Excel(name = "岗位id")
     private Long positionId;
+    private String positionName;
 
     /** 省份 */
     @Excel(name = "省份")
     private String provinceId;
+    private String provinceName;
 
     /** 城市 */
     @Excel(name = "城市")
     private String cityId;
+    private String cityName;
 
     /** 年份 */
     @Excel(name = "年份")
@@ -74,6 +78,38 @@ public class BaoliBizBonus extends BaseEntity
     @Excel(name = "扣款")
     private Float deductAmount;
     private Float totalAmount;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
 
     public Float getTotalAmount() {
         return totalAmount;
