@@ -10,19 +10,22 @@ import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.category.service.ITCategoryService;
 import com.ruoyi.system.product.domain.TProduct;
 import com.ruoyi.system.product.service.ITProductService;
-import com.ruoyi.system.productcategory.domain.TProductCategory;
 import com.ruoyi.system.productcategory.service.ITProductCategoryService;
 import com.ruoyi.system.service.ISysUserService;
 import com.ruoyi.system.userproduct.domain.TUserProduct;
 import com.ruoyi.system.userproduct.service.ITUserProductService;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.stereotype.Service;
-
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
+
+/**
+ * 用户产品ao
+ *
+ * @author Guard Baby
+ * @date 2024/04/25
+ */
 @Service("userProductAO")
 public class UserProductAO {
     @Resource
@@ -75,13 +78,14 @@ public class UserProductAO {
             List<MobileProductVO> voList = BeanUtil.copyToList(products,MobileProductVO.class);
             for (MobileProductVO vo : voList){
                 vo.setHidePrice("**");
+                vo.settCategoryList(categoryService.selectTCategoryListByProductId(vo.getId()));
             }
             return R.ok(voList);
         }
         return R.ok();
     }
     public R<List<MobileProductVO>> queryProductPriceList(){
-
+        //todo-lx 根据某种排序方式返回产品列表
         return R.ok();
     }
 

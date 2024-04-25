@@ -30,6 +30,7 @@ public interface ITCategoryService
 
     public List<TCategory> selectTCategoryListByIds(List<Long> ids);
 
+    public List<TCategory> selectTCategoryListByProductId(Long productId);
     /**
      * 新增商品分类
      *

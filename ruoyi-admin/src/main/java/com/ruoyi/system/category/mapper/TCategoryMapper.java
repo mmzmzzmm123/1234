@@ -61,4 +61,6 @@ public interface TCategoryMapper
     public int deleteTCategoryByIds(Long[] ids);
 
     public List<TCategory> selectTCategoryListByIds(@Param("ids") List<Long> ids);
+
+    List<TCategory> selectTCategoryListByProductId(@Param("productId") Long productId);
 }

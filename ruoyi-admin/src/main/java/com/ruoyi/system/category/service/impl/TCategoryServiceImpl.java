@@ -49,6 +49,11 @@ public class TCategoryServiceImpl implements ITCategoryService
         return tCategoryMapper.selectTCategoryListByIds(ids);
     }
 
+    @Override
+    public List<TCategory> selectTCategoryListByProductId(Long productId) {
+        return tCategoryMapper.selectTCategoryListByProductId(productId);
+    }
+
     /**
      * 新增商品分类
      *

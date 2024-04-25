@@ -2,14 +2,24 @@ package com.ruoyi.app.product.vo;
 
 
 import com.ruoyi.common.annotation.Excel;
+import com.ruoyi.system.category.domain.TCategory;
+import com.ruoyi.system.price.domain.TPrice;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiParam;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
+/**
+ * 移动产品vo
+ *
+ * @author Guard Baby
+ * @date 2024/04/25
+ */
 @ApiModel(value = "MobileProductVO", description = "商品实体类VO")
-public class MobileProductVO {
+public class MobileProductVO implements Serializable {
 
     @ApiModelProperty("主键id")
     private Long id;
@@ -48,6 +58,39 @@ public class MobileProductVO {
     @ApiModelProperty("商品描述")
     @Excel(name = "商品描述")
     private String description;
+
+    @ApiModelProperty("价格涨幅")
+    private BigDecimal subPrice;
+
+    @ApiModelProperty("上次价格")
+    private TPrice tPrice;
+
+    @ApiModelProperty("商品分类")
+    private List<TCategory> tCategoryList;
+
+    public List<TCategory> gettCategoryList() {
+        return tCategoryList;
+    }
+
+    public void settCategoryList(List<TCategory> tCategoryList) {
+        this.tCategoryList = tCategoryList;
+    }
+
+    public BigDecimal getSubPrice() {
+        return subPrice;
+    }
+
+    public void setSubPrice(BigDecimal subPrice) {
+        this.subPrice = subPrice;
+    }
+
+    public TPrice gettPrice() {
+        return tPrice;
+    }
+
+    public void settPrice(TPrice tPrice) {
+        this.tPrice = tPrice;
+    }
 
     public Long getId() {
         return id;

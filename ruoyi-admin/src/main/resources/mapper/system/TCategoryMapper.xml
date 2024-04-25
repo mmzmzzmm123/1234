@@ -33,6 +33,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                 #{id}
             </foreach>
     </select>
+    <select id="selectTCategoryListByProductId" resultType="com.ruoyi.system.category.domain.TCategory">
+        select tpy.id ,name from t_category ty left join t_product_category tpy on ty.id = tpy.product_id
+        where tpy.product_id = #{productId}
+    </select>
 
     <insert id="insertTCategory" parameterType="TCategory" useGeneratedKeys="true" keyProperty="id">
         insert into t_category
