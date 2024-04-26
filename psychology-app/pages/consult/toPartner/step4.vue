@@ -239,8 +239,9 @@ export default {
       if (type) {
         const types = [
             { value: 1, name: '合作型' },
-            { value: 2, name: '签约型（团体督导）' },
-            { value: 3, name: '签约型（个体督导）' },
+            // { value: 2, name: '签约型（团体督导）' },
+            // { value: 3, name: '签约型（个体督导）' },
+						{ value: 4, name: '签约型' },
         ]
         return types.find(a => a.value === type).name
       }

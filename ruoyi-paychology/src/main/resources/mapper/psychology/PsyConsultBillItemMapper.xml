@@ -10,7 +10,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             a.order_id  order_id,
             a.consult_id  consult_id,
             b.nick_name  consult_name,
-            CASE WHEN c.type = 1 THEN '合作型' WHEN c.type = 2 THEN '签约型-团体督导' ELSE '签约型-个体督导' END type,
+            CASE WHEN c.type = 1 THEN '合作型' ELSE '签约型' END type,
             c.ratio  ratio,
             d.order_no  order_no,
             d.create_time  order_time,
