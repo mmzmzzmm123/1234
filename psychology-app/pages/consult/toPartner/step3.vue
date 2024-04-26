@@ -47,7 +47,7 @@
       </view>
 
       <view class="padding-sm margin-sm margin-top-lg bg-white">
-        <view class="psy-title">其他经历
+        <view class="psy-title">个人体验经历
           <text class="psy-title-ext">（选填）</text>
         </view>
         <view class="margin-top-xs psy-title-ext">可在这部分补充其他培训经历，申请入驻时，这类培训只作为补充信息，不作为入驻审核条件。</view>

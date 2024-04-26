@@ -144,7 +144,7 @@
 
     <view class="padding-sm margin-sm bg-white">
       <view class="flex justify-between">
-        <text class="psy-title">其他经历</text>
+        <text class="psy-title">个人体验经历</text>
         <text v-if="type === 'edit'" class="text-orange" @tap="edit(3)">编辑</text>
       </view>
       <view class="margin-top-xs">
