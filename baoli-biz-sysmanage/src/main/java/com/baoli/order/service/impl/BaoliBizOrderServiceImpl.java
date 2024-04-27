@@ -82,6 +82,10 @@ public class BaoliBizOrderServiceImpl implements IBaoliBizOrderService
         return baoliBizOrderMapper.updateBaoliBizOrder(baoliBizOrder);
     }
 
+    @Override
+    public int batchUpdateOrder(Map<String, Object> baoliBizOrder) {
+        return baoliBizOrderMapper.batchUpdateOrder(baoliBizOrder);
+    }
     /**
      * 批量删除订单
      * 

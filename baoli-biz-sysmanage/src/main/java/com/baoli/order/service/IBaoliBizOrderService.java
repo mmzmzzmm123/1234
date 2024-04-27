@@ -46,7 +46,7 @@ public interface IBaoliBizOrderService
      * @return 结果
      */
     public int updateBaoliBizOrder(BaoliBizOrder baoliBizOrder);
-
+    public int batchUpdateOrder(Map<String,Object> baoliBizOrder);
     /**
      * 批量删除订单
      * 

@@ -241,7 +241,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="guidePrice != null">#{guidePrice},</if>
          </trim>
     </insert>
-
+    <update id="batchUpdateOrder" parameterType="map">
+        update baoli_biz_order
+        set status = #{status} where id in
+        <foreach item="id" collection="ids" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
     <update id="updateBaoliBizOrder" parameterType="BaoliBizOrder">
         update baoli_biz_order
         <trim prefix="SET" suffixOverrides=",">

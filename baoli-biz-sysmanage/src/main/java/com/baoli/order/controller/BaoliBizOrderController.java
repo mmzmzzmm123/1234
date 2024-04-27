@@ -171,4 +171,12 @@ public class BaoliBizOrderController extends BaseController
     {
         return toAjax(baoliBizOrderService.deleteBaoliBizOrderByIds(ids));
     }
+
+    @PreAuthorize("@ss.hasPermi('order:orderManage:remove')")
+    @Log(title = "订单", businessType = BusinessType.DELETE)
+    @PostMapping("/batchUpdateOrder")
+    public AjaxResult batchUpdateOrder(@RequestBody Map<String,Object> shareOrders)
+    {
+        return toAjax(baoliBizOrderService.batchUpdateOrder(shareOrders));
+    }
 }
