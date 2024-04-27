@@ -52,10 +52,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="status"    column="status"    />
         <result property="applicantId"    column="applicant_id"    />
         <result property="refuseOrderId"    column="refuse_order_id"    />
+        <result property="guidePrice"    column="guide_price"    />
+        <result property="applicantName"    column="applicant_name"    />
+        <result property="cityName"    column="city_name"    />
+        <result property="storeName"    column="store_name"    />
+        <result property="bankName"    column="bank_name"    />
+        <result property="innerOfficerName"    column="inner_officer_name"    />
+        <result property="brandName"    column="brand_name"    />
+        <result property="carSeriesName"    column="car_series_name"    />
+        <result property="carModelName"    column="car_model_name"    />
     </resultMap>
 
     <sql id="selectBaoliBizOrderVo">
-        select id, status,refuse_order_id,applicant_id,order_schema, city, store_level, store_id, car_type, loan_type, order_number, bank, inner_officer, customer_name, apply_number, new_energy, invoice_price, loan_amount, down_payment, loan_ratio, period_number, supply_material_type, customer_phone_number, customer_work_union, is_discount, fee_ratio, is_hxr, business_number, credit_card_number, customer_age, married, exists_drive_license, domicile_type, work_place, work_field, work_category, education, companion_relationship, companion_number, create_time, update_time, create_by, update_by,level1_brand_id,level2_brand_id,car_series_id,car_model_id from baoli_biz_order
+        select (select b.nick_name from sys_user b where b.user_id = a.applicant_id) applicant_name,(select b.city from bl_sys_cities b where b.cityid = a.city) city_name,(select b.name from baoli_biz_store b where b.id = a.store_id) store_name,concat((SELECT dict_label FROM sys_dict_data b where dict_type ='bl_biz_bank' and b.dict_value =(select agency from bl_sys_bank c where c.id = a.bank)),'/', (select `name` from bl_sys_bank b where b.id = a.bank)) bank_name,(select b.nick_name from sys_user b where b.user_id = a.inner_officer) inner_officer_name,concat((select b.`name` from  baoli_biz_car_brand b where b.id = a.level1_brand_id),' / ',(select b.`name` from  baoli_biz_car_brand b where b.id = a.level2_brand_id)) as brand_name,(select b.name from baoli_biz_car_series b where b.id = a.car_series_id) car_series_name,(select b.name from baoli_biz_car_model b where b.id = a.car_model_id) car_model_name,id, guide_price,status,refuse_order_id,applicant_id,order_schema, city, store_level, store_id, car_type, loan_type, order_number, bank, inner_officer, customer_name, apply_number, new_energy, invoice_price, loan_amount, down_payment, loan_ratio, period_number, supply_material_type, customer_phone_number, customer_work_union, is_discount, fee_ratio, is_hxr, business_number, credit_card_number, customer_age, married, exists_drive_license, domicile_type, work_place, work_field, work_category, education, companion_relationship, companion_number, create_time, update_time, create_by, update_by,level1_brand_id,level2_brand_id,car_series_id,car_model_id from baoli_biz_order a
     </sql>
 
     <sql id="myOrder">
@@ -180,6 +189,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">status,</if>
             <if test="applicantId != null">applicant_id,</if>
             <if test="refuseOrderId != null">refuse_order_id,</if>
+            <if test="guidePrice != null">guide_price,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderSchema != null">#{orderSchema},</if>
@@ -228,6 +238,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="status != null">#{status},</if>
             <if test="applicantId != null">#{applicantId},</if>
             <if test="refuseOrderId != null">#{refuseOrderId},</if>
+            <if test="guidePrice != null">#{guidePrice},</if>
          </trim>
     </insert>
 

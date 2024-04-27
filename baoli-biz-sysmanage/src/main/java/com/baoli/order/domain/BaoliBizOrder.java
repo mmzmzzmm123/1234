@@ -370,6 +370,70 @@ public class BaoliBizOrder extends BaseEntity
         this.applicantId = applicantId;
     }
 
+    public String getApplicantName() {
+        return applicantName;
+    }
+
+    public void setApplicantName(String applicantName) {
+        this.applicantName = applicantName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    public String getInnerOfficerName() {
+        return innerOfficerName;
+    }
+
+    public void setInnerOfficerName(String innerOfficerName) {
+        this.innerOfficerName = innerOfficerName;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String getCarSeriesName() {
+        return carSeriesName;
+    }
+
+    public void setCarSeriesName(String carSeriesName) {
+        this.carSeriesName = carSeriesName;
+    }
+
+    public String getCarModelName() {
+        return carModelName;
+    }
+
+    public void setCarModelName(String carModelName) {
+        this.carModelName = carModelName;
+    }
+
     public Long getRefuseOrderId() {
         return refuseOrderId;
     }
@@ -384,6 +448,14 @@ public class BaoliBizOrder extends BaseEntity
 
     public void setOrderYear(String orderYear) {
         this.orderYear = orderYear;
+    }
+
+    public Float getGuidePrice() {
+        return guidePrice;
+    }
+
+    public void setGuidePrice(Float guidePrice) {
+        this.guidePrice = guidePrice;
     }
 
     /** 是否新车（01 新车 02 二手车） */
@@ -514,6 +586,7 @@ public class BaoliBizOrder extends BaseEntity
     private Long level2BrandId;
     private Long carSeriesId;
     private Long carModelId;
+    private Float guidePrice;
     private String status;
     // 申请人
     private Long applicantId;
@@ -521,4 +594,13 @@ public class BaoliBizOrder extends BaseEntity
     private Long refuseOrderId;
     //出单年份
     private String orderYear;
+    private String applicantName;
+    private String cityName;
+    private String storeName;
+    private String bankName;
+    private String innerOfficerName;
+    private String brandName;
+    private String carSeriesName;
+    private String carModelName;
+
 }

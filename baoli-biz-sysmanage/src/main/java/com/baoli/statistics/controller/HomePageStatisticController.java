@@ -271,10 +271,15 @@ public class HomePageStatisticController {
         result.put("monthTaskCompleted",item);
 
         // 费用占比
-        countSql = "SELECT   (sum(fee1+fee2+fee3+fee4) / any_value(income)) fee_ratio FROM `ruoyi-vue`.baoli_biz_order where  city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s') group by city";
-        countResult = jdbcTemplate.queryForMap(countSql,regionId);
+        countSql = "SELECT   ifnull((sum(fee1+fee2+fee3+fee4) / any_value(income)),0) fee_ratio FROM `ruoyi-vue`.baoli_biz_order where  city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s') group by city";
+        if(jdbcTemplate.queryForList(countSql,regionId).size()>0){
+            countResult = jdbcTemplate.queryForMap(countSql,regionId);
+            amount = Double.valueOf(countResult.get("fee_ratio").toString());
+        } else {
+            amount = 0;
+        }
 
-        amount = Double.valueOf(countResult.get("fee_ratio").toString());
+
         item = new HashMap<>(1);
         item.put("value",amount);
         item.put("param","");

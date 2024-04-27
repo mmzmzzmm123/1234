@@ -13,6 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -28,7 +31,10 @@ public class BaoliBizOrderController extends BaseController
 {
     @Autowired
     private IBaoliBizOrderService baoliBizOrderService;
-
+    //订单流水号
+    private static int serialNumber = 0;
+    //订单日期前缀
+    private static String orderDatePrefix = null;
     /**
      * 查询订单列表
      */
@@ -50,6 +56,56 @@ public class BaoliBizOrderController extends BaseController
         return getDataTable(list);
     }
 
+    @PreAuthorize("@ss.hasPermi('order:orderManage:list')")
+    @GetMapping("/getOrderNumber")
+    public AjaxResult getOrderNumber(BaoliBizOrder baoliBizOrder)
+    {
+        // 获取当前日期
+        Calendar calendar = Calendar.getInstance();
+        // 创建一个SimpleDateFormat对象，指定目标格式
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        // 格式化日期
+        String formattedDate = sdf.format(calendar.getTime());
+        if(orderDatePrefix == null){
+            orderDatePrefix = formattedDate;
+        }
+        if(!orderDatePrefix.equals(formattedDate)){
+            orderDatePrefix = formattedDate;
+            serialNumber = 0;
+        }
+        String loanType = "X";
+        switch(baoliBizOrder.getLoanType()){
+            case "01":
+                loanType = "X";
+                break;
+            case "02":
+                loanType = "D";
+                break;
+        }
+        String carType = "N";
+        switch(baoliBizOrder.getCarType()){
+            case "01":
+                carType = "B";
+                break;
+            case "02":
+                carType = "O";
+                break;
+        }
+        serialNumber++;
+        baoliBizOrder.setOrderNumber(loanType + carType + orderDatePrefix + padZero(String.valueOf(serialNumber),4));
+        return success(baoliBizOrder);
+    }
+
+
+    public String padZero(String str, int length) {
+        int zeroCount = length - str.length();
+        if (zeroCount <= 0) {
+            return str;
+        }
+        char[] zeros = new char[zeroCount];
+        Arrays.fill(zeros, '0');
+        return new String(zeros) + str;
+    }
     @PreAuthorize("@ss.hasPermi('order:orderManage:list')")
     @GetMapping("/myOrder")
     public TableDataInfo myOrder(BaoliBizOrder baoliBizOrder)
