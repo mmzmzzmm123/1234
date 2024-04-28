@@ -1,5 +1,6 @@
 package com.baoli.statistics.controller;
 
+import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,7 +13,6 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @RestController
 @RequestMapping("/statistic/homePage")
 public class HomePageStatisticController {
@@ -26,6 +26,13 @@ public class HomePageStatisticController {
     private static final String CODE_STORE_DATA="store-data";
     private static final String CODE_TASK_COMPLETE_STATUS="task-complete-status";
 
+    @Anonymous
+    @RequestMapping(value = "/feedBack",method = RequestMethod.GET)
+    public Map<String,Object> feedBack(String applyId){
+        Map<String,Object> result = null;
+        return result;
+    }
+    @Anonymous
     @RequestMapping(value = "/statisticItem",method = RequestMethod.GET)
     public Map<String,Object> statisticItem(String itemCode){
         Map<String,Object> result = null;

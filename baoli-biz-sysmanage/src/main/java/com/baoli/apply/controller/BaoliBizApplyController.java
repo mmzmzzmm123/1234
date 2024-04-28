@@ -1,5 +1,6 @@
 package com.baoli.apply.controller;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baoli.apply.domain.BaoliBizApply;
 import com.baoli.apply.service.IBaoliBizApplyService;
 import com.ruoyi.common.annotation.Log;
@@ -11,9 +12,12 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 申请管理Controller
@@ -27,7 +31,8 @@ public class BaoliBizApplyController extends BaseController
 {
     @Autowired
     private IBaoliBizApplyService baoliBizApplyService;
-
+    @Autowired
+    private RestTemplate restTemplate;
     /**
      * 查询申请管理列表
      */
@@ -75,6 +80,8 @@ public class BaoliBizApplyController extends BaseController
         if(baoliBizApply.getStatus() == null){
             baoliBizApply.setStatus("02");
         }
+        JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"Flowable1784092644025155584:6:1784114952487907328\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
+        String response = restTemplate.postForObject("http://192.168.10.37:9999/workspace/process/start", request, String.class);
         return toAjax(baoliBizApplyService.insertBaoliBizApply(baoliBizApply));
     }
 
