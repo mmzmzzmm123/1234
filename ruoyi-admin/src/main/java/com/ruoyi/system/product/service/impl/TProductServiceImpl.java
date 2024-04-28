@@ -152,10 +152,12 @@ public class TProductServiceImpl implements ITProductService {
         BeanUtil.copyProperties(tProductVO, tProduct);
         tProduct.setUpdateTime(DateUtils.getNowDate());
         int result = tProductMapper.updateTProduct(tProduct);
-        //todo-lx 记录价格变动日志
+        // 记录价格变动日志
         TPrice tPrice = new TPrice();
         tPrice.setProductId(tProduct.getId());
         tPrice.setPrice(tProduct.getPrice());
+        tPrice.setHidePrice(tProduct.getHidePrice());
+        tPrice.setRecoveredPrice(tProduct.getRecoveredPrice());
         tPrice.setCreateTime(new Date());
         priceMapper.insertTPrice(tPrice);
         productCategoryMapper.deleteByTProductId(tProductVO.getId());

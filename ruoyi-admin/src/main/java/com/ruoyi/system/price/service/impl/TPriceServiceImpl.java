@@ -1,6 +1,10 @@
 package com.ruoyi.system.price.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import cn.hutool.core.date.DatePattern;
+import cn.hutool.core.date.DateUtil;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,19 +14,19 @@ import com.ruoyi.system.price.service.ITPriceService;
 
 /**
  * 商品价格Service业务层处理
- * 
+ *
  * @author ruoyi
  * @date 2024-04-19
  */
 @Service
-public class TPriceServiceImpl implements ITPriceService 
+public class TPriceServiceImpl implements ITPriceService
 {
     @Autowired
     private TPriceMapper tPriceMapper;
 
     /**
      * 查询商品价格
-     * 
+     *
      * @param id 商品价格主键
      * @return 商品价格
      */
@@ -34,7 +38,7 @@ public class TPriceServiceImpl implements ITPriceService
 
     /**
      * 查询商品价格列表
-     * 
+     *
      * @param tPrice 商品价格
      * @return 商品价格
      */
@@ -46,7 +50,7 @@ public class TPriceServiceImpl implements ITPriceService
 
     /**
      * 新增商品价格
-     * 
+     *
      * @param tPrice 商品价格
      * @return 结果
      */
@@ -59,7 +63,7 @@ public class TPriceServiceImpl implements ITPriceService
 
     /**
      * 修改商品价格
-     * 
+     *
      * @param tPrice 商品价格
      * @return 结果
      */
@@ -72,7 +76,7 @@ public class TPriceServiceImpl implements ITPriceService
 
     /**
      * 批量删除商品价格
-     * 
+     *
      * @param ids 需要删除的商品价格主键
      * @return 结果
      */
@@ -84,7 +88,7 @@ public class TPriceServiceImpl implements ITPriceService
 
     /**
      * 删除商品价格信息
-     * 
+     *
      * @param id 商品价格主键
      * @return 结果
      */
@@ -92,5 +96,15 @@ public class TPriceServiceImpl implements ITPriceService
     public int deleteTPriceById(Long id)
     {
         return tPriceMapper.deleteTPriceById(id);
+    }
+
+    @Override
+    public TPrice queryLastTprice(Long productId) {
+        return tPriceMapper.queryLastTprice(productId, DateUtil.beginOfDay(new Date()));
+    }
+
+    @Override
+    public TPrice queryLastTprice(Long productId, Date loCreateTime) {
+        return tPriceMapper.queryLastTprice(productId,loCreateTime);
     }
 }

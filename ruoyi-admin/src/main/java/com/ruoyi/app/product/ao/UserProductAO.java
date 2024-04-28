@@ -8,6 +8,8 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.system.category.service.ITCategoryService;
+import com.ruoyi.system.price.domain.TPrice;
+import com.ruoyi.system.price.service.ITPriceService;
 import com.ruoyi.system.product.domain.TProduct;
 import com.ruoyi.system.product.service.ITProductService;
 import com.ruoyi.system.productcategory.service.ITProductCategoryService;
@@ -38,6 +40,8 @@ public class UserProductAO {
     private ITUserProductService userProductService;
     @Resource
     private ISysUserService sysUserService;
+    @Resource
+    private ITPriceService priceService;
 
 
     /*
@@ -79,6 +83,12 @@ public class UserProductAO {
             for (MobileProductVO vo : voList){
                 vo.setHidePrice("**");
                 vo.settCategoryList(categoryService.selectTCategoryListByProductId(vo.getId()));
+                //查询价格变动
+                TPrice price = priceService.queryLastTprice(vo.getId());
+                if (ObjectUtil.isNotNull(price)){
+                    vo.settPrice(price);
+                    vo.setSubPrice(price.getPrice().subtract(vo.getPrice()));
+                }
             }
             return R.ok(voList);
         }

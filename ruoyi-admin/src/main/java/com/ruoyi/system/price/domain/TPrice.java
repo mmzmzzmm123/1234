@@ -27,6 +27,29 @@ public class TPrice extends BaseEntity
     @Excel(name = "商品价格")
     private BigDecimal price;
 
+    @Excel(name = "商品隐藏价格")
+    private BigDecimal hidePrice;
+
+    /** 商品回收价 */
+    @Excel(name = "商品回收价")
+    private BigDecimal recoveredPrice;
+
+    public BigDecimal getHidePrice() {
+        return hidePrice;
+    }
+
+    public void setHidePrice(BigDecimal hidePrice) {
+        this.hidePrice = hidePrice;
+    }
+
+    public BigDecimal getRecoveredPrice() {
+        return recoveredPrice;
+    }
+
+    public void setRecoveredPrice(BigDecimal recoveredPrice) {
+        this.recoveredPrice = recoveredPrice;
+    }
+
 
 
     public void setId(Long id)
@@ -59,12 +82,12 @@ public class TPrice extends BaseEntity
 
     @Override
     public String toString() {
-        return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("id", getId())
-            .append("productId", getProductId())
-            .append("price", getPrice())
-            .append("createTime", getCreateTime())
-            .append("updateTime", getUpdateTime())
-            .toString();
+        return "TPrice{" +
+                "id=" + id +
+                ", productId=" + productId +
+                ", price=" + price +
+                ", hidePrice=" + hidePrice +
+                ", recoveredPrice=" + recoveredPrice +
+                '}';
     }
 }
