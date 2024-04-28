@@ -2,6 +2,8 @@ package com.baoli.store.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.annotation.Anonymous;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +39,8 @@ public class BaoliBizFeeRateRuleController extends BaseController
     /**
      * 查询费率规则列表
      */
-    @PreAuthorize("@ss.hasPermi('feeRateRule:feeRateRule:list')")
+    //@PreAuthorize("@ss.hasPermi('feeRateRule:feeRateRule:list')")
+    @Anonymous
     @GetMapping("/list")
     public TableDataInfo list(BaoliBizFeeRateRule baoliBizFeeRateRule)
     {

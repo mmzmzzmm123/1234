@@ -2,6 +2,9 @@ package com.baoli.order.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson2.JSONObject;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +23,7 @@ import com.baoli.order.domain.BaoliBizOrderLabel;
 import com.baoli.order.service.IBaoliBizOrderLabelService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 订单标签管理Controller
@@ -33,7 +37,8 @@ public class BaoliBizOrderLabelController extends BaseController
 {
     @Autowired
     private IBaoliBizOrderLabelService baoliBizOrderLabelService;
-
+    @Autowired
+    private RestTemplate restTemplate;
     /**
      * 查询订单标签管理列表
      */
@@ -79,7 +84,24 @@ public class BaoliBizOrderLabelController extends BaseController
     {
         baoliBizOrderLabel.setSendUserId(getUserId());
         baoliBizOrderLabel.setStatus("01");//未审核
-        return toAjax(baoliBizOrderLabelService.insertBaoliBizOrderLabel(baoliBizOrderLabel));
+
+        int insertResult = baoliBizOrderLabelService.insertBaoliBizOrderLabel(baoliBizOrderLabel);
+        JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"Flowable1784092644025155584:8:1784236651778682880\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
+        JSONObject startUserInfo = request.getJSONObject("startUserInfo");
+        startUserInfo.put("id",getUserId());
+        startUserInfo.put("name", getUsername());
+        String processDefinitionId = "";
+
+        String labelKey="Flowable1784236563664744448:1:1784505613502406656";
+        String selectedUser = "{\"form_assign_user\":[{\"id\":5,\"name\":\"驻店测试用户\",\"type\":\"user\",\"sex\":false,\"selected\":false}]}";
+        JSONObject assignUser = JSONObject.parseObject(selectedUser);
+        assignUser.getJSONArray("form_assign_user").getJSONObject(0).put("id",baoliBizOrderLabel.getReceiveUserId());
+        request.put("formData", assignUser);
+        request.getJSONObject("formData").put("label",baoliBizOrderLabel);
+        processDefinitionId =labelKey;
+        request.put("processDefinitionId",processDefinitionId);
+        String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/process/start", request, String.class);
+        return toAjax(insertResult);
     }
 
     /**

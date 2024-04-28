@@ -3,11 +3,13 @@ package com.baoli.apply.controller;
 import com.alibaba.fastjson2.JSONObject;
 import com.baoli.apply.domain.BaoliBizApply;
 import com.baoli.apply.service.IBaoliBizApplyService;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -80,9 +82,37 @@ public class BaoliBizApplyController extends BaseController
         if(baoliBizApply.getStatus() == null){
             baoliBizApply.setStatus("02");
         }
-        JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"Flowable1784092644025155584:6:1784114952487907328\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
-        String response = restTemplate.postForObject("http://192.168.10.37:9999/workspace/process/start", request, String.class);
-        return toAjax(baoliBizApplyService.insertBaoliBizApply(baoliBizApply));
+        int insertResult = baoliBizApplyService.insertBaoliBizApply(baoliBizApply);
+        JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"Flowable1784092644025155584:8:1784236651778682880\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
+        JSONObject startUserInfo = request.getJSONObject("startUserInfo");
+        startUserInfo.put("id",getUserId());
+        startUserInfo.put("name", getUsername());
+        String processDefinitionId = "";
+        String accountReplyKey ="Flowable1784092644025155584:1:1784505501761953792";
+        String feeKey ="Flowable1784249957583171584:1:1784505585077608448";
+        String storeKey="Flowable1784238566084194304:4:1784505555042197504";
+        String labelKey="Flowable1784236563664744448:1:1784505613502406656";
+        request.getJSONObject("formData").put("applyId",baoliBizApply.getId());
+        switch(baoliBizApply.getApplyType()){
+            case "01":
+                processDefinitionId =storeKey;
+                request.getJSONObject("formData").put("form_applicant_role",getLoginUser().getUser().getRoles().get(0).getRoleId());
+                break;
+            case "02":
+                processDefinitionId =feeKey;
+                request.getJSONObject("formData").put("form_applicant_role",getLoginUser().getUser().getRoles().get(0).getRoleId());
+                break;
+            case "03":
+                processDefinitionId =accountReplyKey;
+                break;
+            default:
+                String selectedUser = "{\"form_assign_user\":[{\"id\":5,\"name\":\"驻店测试用户\",\"type\":\"user\",\"sex\":false,\"selected\":false}]}";
+                request.put("formData", JSONObject.parseObject(selectedUser));
+                processDefinitionId =labelKey;
+        }
+        request.put("processDefinitionId",processDefinitionId);
+        String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/process/start", request, String.class);
+        return toAjax(insertResult);
     }
 
     /**
