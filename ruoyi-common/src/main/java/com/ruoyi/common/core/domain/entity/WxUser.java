@@ -26,6 +26,15 @@ public class WxUser extends BaseEntity {
     /** 用户类型（00系统用户，01：微信用户）**/
     private String userType;
 
+    private Integer vip;
+
+    public Integer getVip() {
+        return vip;
+    }
+
+    public void setVip(Integer vip) {
+        this.vip = vip;
+    }
 
     public Long getUserId() {
         return userId;

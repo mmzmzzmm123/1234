@@ -82,6 +82,7 @@ public class WxUserController {
             return AjaxResult.error("新增用户'" + user.getUserName() + "'失败，手机号码已存在");
         }
         user.setUserType("01");
+        user.setPassword("123456");
         return toAjax(userService.insertUser(user));
     }
 
@@ -95,11 +96,14 @@ public class WxUserController {
      */
     @PostMapping("/login")
     @ApiOperation("微信用户登录")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "username", value = "用户名称", dataType = "String", dataTypeClass = String.class)
+    })
     public AjaxResult login(@RequestBody WxLoginBody loginBody)
     {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
-        String token = wxUserService.login(loginBody.getUsername(), loginBody.getPassword());
+        String token = wxUserService.login(loginBody.getUsername(), "123456");
         ajax.put(Constants.TOKEN, token);
         return ajax;
     }
@@ -137,6 +141,7 @@ public class WxUserController {
             wxUser.setUserType(sysUser.getUserType());
             wxUser.setPhonenumber(sysUser.getPhonenumber());
             wxUser.setNickName(sysUser.getNickName());
+            wxUser.setVip(sysUser.getVip());
             wxUserList.add(wxUser);
         }
         ExcelUtil<WxUser> util = new ExcelUtil<>(WxUser.class);

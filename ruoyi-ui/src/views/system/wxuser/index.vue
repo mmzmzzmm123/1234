@@ -59,6 +59,7 @@
           <el-table-column label="用户名称" align="center" key="userName" prop="userName" :show-overflow-tooltip="true" />
           <el-table-column label="用户昵称" align="center" key="nickName" prop="nickName" :show-overflow-tooltip="true" />
           <el-table-column label="手机号码" align="center" key="phonenumber" prop="phonenumber" />
+          <el-table-column label="vip" align="center" key="vip" prop="vip" />
           <el-table-column label="创建时间" align="center" prop="createTime">
             <template slot-scope="scope">
               <span>{{ parseTime(scope.row.createTime) }}</span>
