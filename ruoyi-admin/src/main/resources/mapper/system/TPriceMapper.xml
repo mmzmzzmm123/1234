@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.price.mapper.TPriceMapper">
+
+    <resultMap type="TPrice" id="TPriceResult">
+        <result property="id" column="id"/>
+        <result property="productId" column="product_id"/>
+        <result property="price" column="price"/>
+        <result property="hidePrice" column="hide_price"/>
+        <result property="recoveredPrice" column="recovered_price"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectTPriceVo">
+        select id, product_id, price, hide_price, recovered_price, create_time, update_time
+        from t_price
+    </sql>
+
+    <select id="selectTPriceList" parameterType="TPrice" resultMap="TPriceResult">
+        <include refid="selectTPriceVo"/>
+        <where>
+            <if test="productId != null ">and product_id = #{productId}</if>
+            <if test="price != null ">and price = #{price}</if>
+        </where>
+    </select>
+
+    <select id="selectTPriceById" parameterType="Long" resultMap="TPriceResult">
+        <include refid="selectTPriceVo"/>
+        where id = #{id}
+    </select>
+    <select id="queryLastTprice" resultMap="TPriceResult">
+        <include refid="selectTPriceVo"/>
+        where
+        product_id = #{productId}
+        <if test="loCreateTime != null">and create_time &lt; #{loCreateTime}</if>
+        order by create_time desc
+        limit 1
+    </select>
+
+    <insert id="insertTPrice" parameterType="TPrice">
+        insert into t_price
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="price != null">price,</if>
+            <if test="hidePrice != null">hide_price,</if>
+            <if test="recoveredPrice != null">recovered_price,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="price != null">#{price},</if>
+            <if test="hidePrice != null">#{hidePrice},</if>
+            <if test="recoveredPrice != null">#{recoveredPrice},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateTPrice" parameterType="TPrice">
+        update t_price
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="hidePrice != null">hide_price = #{hidePrice},</if>
+            <if test="recoveredPrice != null">recovered_price = #{recoveredPrice},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTPriceById" parameterType="Long">
+        delete
+        from t_price
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteTPriceByIds" parameterType="String">
+        delete from t_price where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

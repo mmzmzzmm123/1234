@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.category.mapper.TCategoryMapper">
+
+    <resultMap type="TCategory" id="TCategoryResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectTCategoryVo">
+        select id, name, create_time, update_time from t_category
+    </sql>
+
+    <select id="selectTCategoryList" parameterType="TCategory" resultMap="TCategoryResult">
+        <include refid="selectTCategoryVo"/>
+        <where>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+
+    <select id="selectTCategoryById" parameterType="Long" resultMap="TCategoryResult">
+        <include refid="selectTCategoryVo"/>
+        where id = #{id}
+    </select>
+    <select id="selectTCategoryListByIds" resultType="com.ruoyi.system.category.domain.TCategory">
+        <include refid="selectTCategoryVo"/>
+        where id in
+            <foreach collection="ids" item="id" separator="," open="(" close=")">
+                #{id}
+            </foreach>
+    </select>
+    <select id="selectTCategoryListByProductId" resultType="com.ruoyi.system.category.domain.TCategory">
+        select ty.id ,name from t_category ty left join t_product_category tpy on ty.id = tpy.category_id
+        where tpy.product_id = #{productId}
+    </select>
+
+    <insert id="insertTCategory" parameterType="TCategory" useGeneratedKeys="true" keyProperty="id">
+        insert into t_category
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTCategory" parameterType="TCategory">
+        update t_category
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTCategoryById" parameterType="Long">
+        delete from t_category where id = #{id}
+    </delete>
+
+    <delete id="deleteTCategoryByIds" parameterType="String">
+        delete from t_category where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
