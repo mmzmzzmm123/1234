@@ -88,6 +88,15 @@ public class BaoliBizRefuseOrder extends BaseEntity
     private String bankName;
     private String inStoreName;
     private Long applicantId;
+    private String provinceId;
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
 
     public Long getApplicantId() {
         return applicantId;

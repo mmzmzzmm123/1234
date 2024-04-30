@@ -30,7 +30,7 @@ public interface IBaoliBizOrderService
     public List<BaoliBizOrder> selectBaoliBizOrderList(BaoliBizOrder baoliBizOrder);
     public List<BaoliBizOrder> selectMyOrderList(BaoliBizOrder baoliBizOrder);
     public List<Map<String,Object>> selectMyOrder(BaoliBizOrder baoliBizOrder);
-
+    public List<Map<String,Object>> selectMyOrderCount(BaoliBizOrder baoliBizOrder);
     /**
      * 新增订单
      * 
@@ -38,7 +38,7 @@ public interface IBaoliBizOrderService
      * @return 结果
      */
     public int insertBaoliBizOrder(BaoliBizOrder baoliBizOrder);
-
+    public int transRefuseOrder(BaoliBizOrder baoliBizOrder);
     /**
      * 修改订单
      * 

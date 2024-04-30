@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertBaoliBizRefuseOrder" parameterType="BaoliBizRefuseOrder">
+    <insert id="insertBaoliBizRefuseOrder" parameterType="BaoliBizRefuseOrder" useGeneratedKeys="true" keyProperty="id">
         insert into baoli_biz_refuse_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>

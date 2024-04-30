@@ -73,6 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectBaoliBizOrderList" parameterType="BaoliBizOrder" resultMap="BaoliBizOrderResult">
         <include refid="selectBaoliBizOrderVo"/>
         <where>
+            refuse_order_id is null
             <if test="orderSchema != null  and orderSchema != ''"> and order_schema = #{orderSchema}</if>
             <if test="city != null  and city != ''"> and city = #{city}</if>
             <if test="storeLevel != null  and storeLevel != ''"> and store_level = #{storeLevel}</if>
@@ -81,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="loanType != null  and loanType != ''"> and loan_type = #{loanType}</if>
             <if test="orderNumber != null  and orderNumber != ''"> and order_number = #{orderNumber}</if>
             <if test="bank != null "> and bank = #{bank}</if>
-            <if test="innerOfficer != null  and innerOfficer != ''"> and inner_officer = #{innerOfficer}</if>
+            <if test="innerOfficer != null  and innerOfficer != ''"> and (inner_officer = #{innerOfficer} or applicant_id = #{innerOfficer})</if>
             <if test="customerName != null  and customerName != ''"> and customer_name like concat('%', #{customerName}, '%')</if>
             <if test="applyNumber != null  and applyNumber != ''"> and apply_number = #{applyNumber}</if>
             <if test="newEnergy != null  and newEnergy != ''"> and new_energy = #{newEnergy}</if>
@@ -114,13 +115,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="carModelId != null "> and car_model_id = #{carModelId}</if>
             <if test="status != null "> and status = #{status}</if>
             <if test="applicantId != null "> and applicant_id = #{applicantId}</if>
-            <if test="refuseOrderId != null "> and refuse_order_id = #{refuseOrderId}</if>
         </where>
     </select>
     <select id="selectMyOrderList" parameterType="BaoliBizOrder" resultMap="BaoliBizOrderResult">
         <include refid="selectBaoliBizOrderVo"/>
         <where>
-            status >= '05'
+            status >= '05' and refuse_order_id is null
             <if test="applicantId != null "> and applicant_id = #{applicantId}</if>
             <if test="orderYear != null "> and DATE_FORMAT(NOW(), '%Y') = #{orderYear}</if>
         </where>
@@ -129,10 +129,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectMyOrder" parameterType="BaoliBizOrder" resultType="map">
         <include refid="myOrder"/>
         <where>
-            status >= '05'
+            status >= '05' and refuse_order_id is null
             <if test="applicantId != null "> and applicant_id = #{applicantId}</if>
             <if test="orderYear != null "> and DATE_FORMAT(NOW(), '%Y') = #{orderYear}</if>
         </where>
+    </select>
+
+    <select id="selectMyOrderCount" parameterType="BaoliBizOrder" resultType="map">
+        select status,count(1) cnt from baoli_biz_order
+        <where>
+            refuse_order_id is null
+            <if test="applicantId != null "> and applicant_id = #{applicantId}</if>
+        </where>
+        group by status
     </select>
 
     <select id="selectBaoliBizOrderById" parameterType="Long" resultMap="BaoliBizOrderResult">

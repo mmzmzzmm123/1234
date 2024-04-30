@@ -115,6 +115,19 @@ public class BaoliBizOrderController extends BaseController
         List<Map<String,Object>> list = baoliBizOrderService.selectMyOrder(baoliBizOrder);
         return getDataTable(list);
     }
+
+    @PreAuthorize("@ss.hasPermi('order:orderManage:list')")
+    @GetMapping("/myOrderCount")
+    public TableDataInfo myOrderCount(BaoliBizOrder baoliBizOrder)
+    {
+        baoliBizOrder.setApplicantId(getUserId());
+        List<Map<String,Object>> list = baoliBizOrderService.selectMyOrderCount(baoliBizOrder);
+        List<BaoliBizOrder> orderList = baoliBizOrderService.selectBaoliBizOrderList(baoliBizOrder);
+        TableDataInfo result = getDataTable(list);
+        result.setTotal(orderList.size());
+        return result;
+    }
+
     /**
      * 导出订单列表
      */
@@ -150,6 +163,12 @@ public class BaoliBizOrderController extends BaseController
         return toAjax(baoliBizOrderService.insertBaoliBizOrder(baoliBizOrder));
     }
 
+    @PreAuthorize("@ss.hasPermi('order:orderManage:add')")
+    @PostMapping("/transRefuseOrder")
+    public AjaxResult transRefuseOrder(@RequestBody BaoliBizOrder baoliBizOrder)
+    {
+        return toAjax(baoliBizOrderService.transRefuseOrder(baoliBizOrder));
+    }
     /**
      * 修改订单
      */

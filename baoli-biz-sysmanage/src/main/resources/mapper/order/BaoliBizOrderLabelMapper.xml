@@ -14,10 +14,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="orderId"    column="order_id"    />
         <result property="status"    column="status"    />
         <result property="remark"    column="remark"    />
+        <result property="orderCustomerName"    column="customer_name"    />
+        <result property="orderLoanAmount"    column="loan_amount"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="orderStatus"    column="order_status"    />
     </resultMap>
 
     <sql id="selectBaoliBizOrderLabelVo">
-        select id, label_type,(select b.nick_name from sys_user b where b.user_id =a.send_user_id ) send_user_name,send_user_id,(select b.nick_name from sys_user b where b.user_id =a.send_user_id ) receive_user_name, receive_user_id, order_id, status, remark from baoli_biz_order_label a
+        select id, label_type,(select b.status from baoli_biz_order b where b.id = a.order_id) order_status,(select b.loan_amount from baoli_biz_order b where b.id = a.order_id) loan_amount,(select b.customer_name from baoli_biz_order b where b.id = a.order_id) customer_name,(select b.order_number from baoli_biz_order b where b.id = a.order_id) order_number,(select b.nick_name from sys_user b where b.user_id =a.send_user_id ) send_user_name,send_user_id,(select b.nick_name from sys_user b where b.user_id =a.receive_user_id ) receive_user_name, receive_user_id, order_id, status, remark from baoli_biz_order_label a
     </sql>
 
     <select id="selectBaoliBizOrderLabelList" parameterType="BaoliBizOrderLabel" resultMap="BaoliBizOrderLabelResult">

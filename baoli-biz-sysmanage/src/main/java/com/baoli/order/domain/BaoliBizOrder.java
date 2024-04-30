@@ -70,6 +70,14 @@ public class BaoliBizOrder extends BaseEntity
         return storeId;
     }
 
+    public String getRefuseReason() {
+        return refuseReason;
+    }
+
+    public void setRefuseReason(String refuseReason) {
+        this.refuseReason = refuseReason;
+    }
+
     public void setStoreId(Long storeId) {
         this.storeId = storeId;
     }
@@ -434,6 +442,22 @@ public class BaoliBizOrder extends BaseEntity
         this.carModelName = carModelName;
     }
 
+    public int getOrderCount() {
+        return orderCount;
+    }
+
+    public void setOrderCount(int orderCount) {
+        this.orderCount = orderCount;
+    }
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
     public Long getRefuseOrderId() {
         return refuseOrderId;
     }
@@ -602,5 +626,7 @@ public class BaoliBizOrder extends BaseEntity
     private String brandName;
     private String carSeriesName;
     private String carModelName;
-
+    private int orderCount;
+    private String provinceId;
+    private String refuseReason;
 }

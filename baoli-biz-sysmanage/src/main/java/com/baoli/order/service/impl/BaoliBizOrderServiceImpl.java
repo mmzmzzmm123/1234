@@ -3,6 +3,8 @@ package com.baoli.order.service.impl;
 import java.util.List;
 import java.util.Map;
 
+import com.baoli.order.domain.BaoliBizRefuseOrder;
+import com.baoli.order.mapper.BaoliBizRefuseOrderMapper;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,8 @@ public class BaoliBizOrderServiceImpl implements IBaoliBizOrderService
     @Autowired
     private BaoliBizOrderMapper baoliBizOrderMapper;
 
+    @Autowired
+    private BaoliBizRefuseOrderMapper baoliBizRefuseOrderMapper;
     /**
      * 查询订单
      * 
@@ -56,6 +60,11 @@ public class BaoliBizOrderServiceImpl implements IBaoliBizOrderService
         return baoliBizOrderMapper.selectMyOrder(baoliBizOrder);
     }
 
+    @Override
+    public List<Map<String, Object>> selectMyOrderCount(BaoliBizOrder baoliBizOrder) {
+        return baoliBizOrderMapper.selectMyOrderCount(baoliBizOrder);
+    }
+
     /**
      * 新增订单
      * 
@@ -67,6 +76,37 @@ public class BaoliBizOrderServiceImpl implements IBaoliBizOrderService
     {
         baoliBizOrder.setCreateTime(DateUtils.getNowDate());
         return baoliBizOrderMapper.insertBaoliBizOrder(baoliBizOrder);
+    }
+
+    @Override
+    public int transRefuseOrder(BaoliBizOrder  order) {
+        BaoliBizOrder baoliBizOrder = baoliBizOrderMapper.selectBaoliBizOrderById(order.getId());
+        //创建拒单
+        BaoliBizRefuseOrder refuseOrder = new BaoliBizRefuseOrder();
+        refuseOrder.setCity(baoliBizOrder.getCity());
+        refuseOrder.setStoreId(baoliBizOrder.getStoreId());
+        refuseOrder.setCarType(baoliBizOrder.getCarType());
+        refuseOrder.setLevel1BrandId(baoliBizOrder.getLevel1BrandId());
+        refuseOrder.setLevel2BrandId(baoliBizOrder.getLevel2BrandId());
+        refuseOrder.setCarSeriesId(baoliBizOrder.getCarSeriesId());
+        refuseOrder.setCarModelId(baoliBizOrder.getCarModelId());
+        refuseOrder.setLoanType(baoliBizOrder.getLoanType());
+        refuseOrder.setOrderNumber(baoliBizOrder.getOrderNumber());
+        refuseOrder.setBank(baoliBizOrder.getBank());
+        refuseOrder.setCustomerName(baoliBizOrder.getCustomerName());
+        refuseOrder.setApplyNumber(baoliBizOrder.getApplyNumber());
+        refuseOrder.setLoanAmount(baoliBizOrder.getLoanAmount());
+        refuseOrder.setInStore(baoliBizOrder.getApplicantId());
+        refuseOrder.setRefuseReason(order.getRefuseReason());
+        refuseOrder.setRemark(order.getRemark());
+        refuseOrder.setStatus(baoliBizOrder.getStatus());
+        refuseOrder.setCreateTime(DateUtils.getNowDate());
+        refuseOrder.setApplicantId(baoliBizOrder.getApplicantId());
+        refuseOrder.setProvinceId(baoliBizOrder.getProvinceId());
+        baoliBizRefuseOrderMapper.insertBaoliBizRefuseOrder(refuseOrder);
+        //修改订单(id,refuseOrderId)
+        baoliBizOrder.setRefuseOrderId(refuseOrder.getId());
+        return baoliBizOrderMapper.updateBaoliBizOrder(baoliBizOrder);
     }
 
     /**

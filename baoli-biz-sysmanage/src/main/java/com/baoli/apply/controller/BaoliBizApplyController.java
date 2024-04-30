@@ -13,6 +13,7 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
@@ -86,7 +87,7 @@ public class BaoliBizApplyController extends BaseController
         JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"Flowable1784092644025155584:8:1784236651778682880\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
         JSONObject startUserInfo = request.getJSONObject("startUserInfo");
         startUserInfo.put("id",getUserId());
-        startUserInfo.put("name", getUsername());
+        startUserInfo.put("name", getLoginUser().getUser().getNickName());
         String processDefinitionId = "";
         String accountReplyKey ="Flowable1784092644025155584:1:1784505501761953792";
         String feeKey ="Flowable1784249957583171584:1:1784505585077608448";
@@ -103,6 +104,9 @@ public class BaoliBizApplyController extends BaseController
                 request.getJSONObject("formData").put("form_applicant_role",getLoginUser().getUser().getRoles().get(0).getRoleId());
                 break;
             case "03":
+                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                String password = passwordEncoder.encode("000000");
+                request.getJSONObject("formData").put("password",password);
                 processDefinitionId =accountReplyKey;
                 break;
             default:

@@ -89,7 +89,7 @@ public class BaoliBizOrderLabelController extends BaseController
         JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"Flowable1784092644025155584:8:1784236651778682880\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
         JSONObject startUserInfo = request.getJSONObject("startUserInfo");
         startUserInfo.put("id",getUserId());
-        startUserInfo.put("name", getUsername());
+        startUserInfo.put("name", getLoginUser().getUser().getNickName());
         String processDefinitionId = "";
 
         String labelKey="Flowable1784236563664744448:1:1784505613502406656";
