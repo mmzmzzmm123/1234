@@ -95,6 +95,10 @@ public class SysLoginService
         }
         AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        //微信注册用户，不允许登录后台
+        if("01".equals(loginUser.getUser().getUserType())){
+            throw new ServiceException("无权限，请联系管理员");
+        }
         recordLoginInfo(loginUser.getUserId());
         // 生成token
         return tokenService.createToken(loginUser);

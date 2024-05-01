@@ -1,6 +1,11 @@
 package com.ruoyi.web.controller.system;
 
 import java.util.List;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -27,10 +32,25 @@ import com.ruoyi.system.service.ISysNoticeService;
  */
 @RestController
 @RequestMapping("/system/notice")
+@Api("通知公告")
 public class SysNoticeController extends BaseController
 {
     @Autowired
     private ISysNoticeService noticeService;
+
+
+    /**
+     * 获取通知公告列表
+     */
+    @GetMapping("/getNewNotice")
+    @ApiOperation("获取公共")
+    public SysNotice getNewNotice()
+    {
+        SysNotice notice = new SysNotice();
+        notice.setNoticeType("2");
+        List<SysNotice> list = noticeService.selectNoticeList(notice);
+        return list.isEmpty() ? null : list.get(0);
+    }
 
     /**
      * 获取通知公告列表
