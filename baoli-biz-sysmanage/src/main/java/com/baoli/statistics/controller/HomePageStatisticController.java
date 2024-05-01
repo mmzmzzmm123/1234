@@ -266,10 +266,13 @@ public class HomePageStatisticController {
         countSql = "SELECT * FROM `ruoyi-vue`.baoli_biz_month_task_evaluate WHERE YEAR = DATE_FORMAT(now(), '%Y') AND MONTH = DATE_FORMAT(now(), '%m') and city_id = ?";
         countResult = jdbcTemplate.queryForMap(countSql,regionId);
         double amount = 0;
-        String evaluateType = countResult.get("evaluate_type").toString();
-        String refrencePlan = countResult.get("refrence_plan").toString();
+        //String evaluateType = countResult.get("evaluate_type").toString();
+        //String refrencePlan = countResult.get("refrence_plan").toString();
         amount = Double.valueOf(countResult.get("amount").toString());
-        double monthTaskCompleted = (double)(monthOrder / amount);
+        double monthTaskCompleted = 0;
+        if(amount!=0){
+            monthTaskCompleted = (double)(monthOrder / amount);
+        }
         formattedNumber = df.format(monthTaskCompleted);
         monthTaskCompleted = Double.valueOf(formattedNumber);
         item = new HashMap<>(1);
