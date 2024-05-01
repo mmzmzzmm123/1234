@@ -1,44 +1,11 @@
 import request from '@/utils/request'
+// import { parseStrEmpty } from "@/utils/ruoyi";
 
-// 查询微信用户列表
-export function listWxuser(query) {
+// 查询用户列表
+export function listUser(query) {
   return request({
-    url: '/system/wxuser/list',
+    url: '/wx/user/list',
     method: 'get',
     params: query
-  })
-}
-
-// 查询微信用户详细
-export function getWxuser(id) {
-  return request({
-    url: '/system/wxuser/' + id,
-    method: 'get'
-  })
-}
-
-// 新增微信用户
-export function addWxuser(data) {
-  return request({
-    url: '/system/wxuser',
-    method: 'post',
-    data: data
-  })
-}
-
-// 修改微信用户
-export function updateWxuser(data) {
-  return request({
-    url: '/system/wxuser',
-    method: 'put',
-    data: data
-  })
-}
-
-// 删除微信用户
-export function delWxuser(id) {
-  return request({
-    url: '/system/wxuser/' + id,
-    method: 'delete'
   })
 }

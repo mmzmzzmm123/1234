@@ -71,6 +71,8 @@ public class LoginUser implements UserDetails
      */
     private SysUser user;
 
+
+
     public LoginUser()
     {
     }
