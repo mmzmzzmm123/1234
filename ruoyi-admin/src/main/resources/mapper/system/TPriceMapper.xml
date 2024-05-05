@@ -39,6 +39,13 @@
         order by create_time desc
         limit 1
     </select>
+    <select id="queryTpriceList" resultType="com.ruoyi.system.price.domain.TPrice">
+        <include refid="selectTPriceVo"/>
+        where
+        product_id = #{productId}
+        <if test="loCreateTime != null">and create_time > #{loCreateTime}</if>
+        order by create_time desc
+    </select>
 
     <insert id="insertTPrice" parameterType="TPrice">
         insert into t_price

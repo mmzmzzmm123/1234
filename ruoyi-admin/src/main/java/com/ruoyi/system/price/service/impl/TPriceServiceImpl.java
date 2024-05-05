@@ -107,4 +107,9 @@ public class TPriceServiceImpl implements ITPriceService
     public TPrice queryLastTprice(Long productId, Date loCreateTime) {
         return tPriceMapper.queryLastTprice(productId,loCreateTime);
     }
+
+    @Override
+    public List<TPrice> queryTpriceList(Long productId, Date loCreateTime) {
+        return tPriceMapper.queryTpriceList(productId,loCreateTime);
+    }
 }

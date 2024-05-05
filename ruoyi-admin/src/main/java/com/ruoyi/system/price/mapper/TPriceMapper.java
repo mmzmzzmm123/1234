@@ -62,4 +62,5 @@ public interface TPriceMapper
     public int deleteTPriceByIds(Long[] ids);
 
     public TPrice queryLastTprice(@Param("productId") Long productId, @Param("loCreateTime") Date loCreateTime);
+    public List<TPrice> queryTpriceList(@Param("productId") Long productId, @Param("loCreateTime") Date loCreateTime);
 }

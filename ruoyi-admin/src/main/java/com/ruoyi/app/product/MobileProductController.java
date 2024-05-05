@@ -2,6 +2,7 @@ package com.ruoyi.app.product;
 
 import com.ruoyi.app.product.ao.UserProductAO;
 import com.ruoyi.app.product.vo.MobileProductVO;
+import com.ruoyi.app.product.vo.ProductQuery;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
 import io.swagger.annotations.Api;
@@ -55,8 +56,8 @@ public class MobileProductController {
     * */
     @ApiOperation(value = "首页产品列表接口",notes = "首页产品列表接口")
     @GetMapping("/queryProductPriceList")
-    public R<List<MobileProductVO>> queryProductPriceList(){
-        return userProductAO.queryProductPriceList();
+    public R<List<MobileProductVO>> queryProductPriceList(@RequestBody ProductQuery productQuery){
+        return userProductAO.queryProductPriceList(productQuery);
     }
 
 

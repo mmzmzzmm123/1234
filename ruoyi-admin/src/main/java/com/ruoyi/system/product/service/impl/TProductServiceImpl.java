@@ -117,6 +117,8 @@ public class TProductServiceImpl implements ITProductService {
         TPrice tPrice = new TPrice();
         tPrice.setProductId(tProduct.getId());
         tPrice.setPrice(tProduct.getPrice());
+        tPrice.setHidePrice(tProduct.getHidePrice());
+        tPrice.setRecoveredPrice(tProduct.getRecoveredPrice());
         tPrice.setCreateTime(new Date());
         priceMapper.insertTPrice(tPrice);
         if (CollUtil.isNotEmpty(tProductVO.getCategoryList())) {

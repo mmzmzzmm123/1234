@@ -64,4 +64,5 @@ public interface ITPriceService
     TPrice queryLastTprice(Long productId);
     //查询loCreateTime之前最后一次改价的价格数据
     TPrice queryLastTprice(Long productId, Date loCreateTime);
+    List<TPrice> queryTpriceList(Long productId, Date loCreateTime);
 }
