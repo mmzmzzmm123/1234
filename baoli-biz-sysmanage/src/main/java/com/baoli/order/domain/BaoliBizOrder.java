@@ -482,6 +482,14 @@ public class BaoliBizOrder extends BaseEntity
         this.guidePrice = guidePrice;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
     /** 是否新车（01 新车 02 二手车） */
     @Excel(name = "是否新车")
     private String carType;
@@ -629,4 +637,5 @@ public class BaoliBizOrder extends BaseEntity
     private int orderCount;
     private String provinceId;
     private String refuseReason;
+    private String label;
 }
