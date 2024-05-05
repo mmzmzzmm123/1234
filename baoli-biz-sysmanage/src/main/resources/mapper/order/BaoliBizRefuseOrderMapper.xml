@@ -32,10 +32,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="brandName"    column="brand_name"    />
         <result property="bankName"    column="bank_name"    />
         <result property="inStoreName"    column="in_store_name"    />
+        <result property="applicantId"    column="applicant_id"    />
+        <result property="provinceId"    column="province_id"    />
     </resultMap>
 
     <sql id="selectBaoliBizRefuseOrderVo">
-        select id,(select city from bl_sys_cities b where b.cityid = a.city) city_name, city, (select `name` from baoli_biz_store b where b.id = a.store_id) store_name,store_id, car_type,(select `name` from baoli_biz_car_brand b where b.id = a.level1_brand_id) brand_name, level1_brand_id, level2_brand_id, car_series_id, car_model_id, loan_type, order_number,concat((SELECT dict_label FROM sys_dict_data b where dict_type ='bl_biz_bank' and b.dict_value =(select agency from bl_sys_bank c where c.id = a.bank)),'/', (select `name` from bl_sys_bank b where b.id = a.bank)) bank_name, bank, customer_name, apply_number, loan_amount, (SELECT nick_name FROM sys_user b where b.user_id = a.in_store) in_store_name,in_store, refuse_reason, remark, status, create_time, update_time, create_by, update_by from baoli_biz_refuse_order a
+        select applicant_id,province_id,id,(select city from bl_sys_cities b where b.cityid = a.city) city_name, city, (select `name` from baoli_biz_store b where b.id = a.store_id) store_name,store_id, car_type,(select `name` from baoli_biz_car_brand b where b.id = a.level1_brand_id) brand_name, level1_brand_id, level2_brand_id, car_series_id, car_model_id, loan_type, order_number,concat((SELECT dict_label FROM sys_dict_data b where dict_type ='bl_biz_bank' and b.dict_value =(select agency from bl_sys_bank c where c.id = a.bank)),'/', (select `name` from bl_sys_bank b where b.id = a.bank)) bank_name, bank, customer_name, apply_number, loan_amount, (SELECT nick_name FROM sys_user b where b.user_id = a.in_store) in_store_name,in_store, refuse_reason, remark, status, create_time, update_time, create_by, update_by from baoli_biz_refuse_order a
     </sql>
 
     <select id="selectBaoliBizRefuseOrderList" parameterType="BaoliBizRefuseOrder" resultMap="BaoliBizRefuseOrderResult">
@@ -57,6 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="inStore != null "> and in_store = #{inStore}</if>
             <if test="refuseReason != null  and refuseReason != ''"> and refuse_reason = #{refuseReason}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="applicantId != null  and applicantId != ''"> and applicant_id = #{applicantId}</if>
         </where>
     </select>
     
@@ -90,6 +93,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
             <if test="updateBy != null">update_by,</if>
+            <if test="provinceId != null">province_id,</if>
+            <if test="applicantId != null">applicant_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="id != null">#{id},</if>
@@ -114,6 +119,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>
             <if test="updateBy != null">#{updateBy},</if>
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="applicantId != null">#{applicantId},</if>
          </trim>
     </insert>
 
@@ -141,6 +148,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updateTime != null">update_time = #{updateTime},</if>
             <if test="createBy != null">create_by = #{createBy},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="provinceId != null">province_id = #{provinceId},</if>
+            <if test="applicantId != null">applicant_id = #{applicantId},</if>
         </trim>
         where id = #{id}
     </update>

@@ -23,6 +23,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updateBy"     column="update_by"    />
         <result property="updateTime"   column="update_time"  />
         <result property="remark"       column="remark"       />
+		<result property="areaRegion"       column="area_region"       />
+		<result property="provinceName"       column="province_name"       />
+		<result property="cityName"       column="city_name"       />
         <association property="dept"    javaType="SysDept"         resultMap="deptResult" />
         <collection  property="roles"   javaType="java.util.List"  resultMap="RoleResult" />
     </resultMap>
@@ -86,11 +89,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	</select>
 	
 	<select id="selectAllocatedList" parameterType="SysUser" resultMap="SysUserResult">
-	    select distinct u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
-	    from sys_user u
-			 left join sys_dept d on u.dept_id = d.dept_id
-			 left join sys_user_role ur on u.user_id = ur.user_id
-			 left join sys_role r on r.role_id = ur.role_id
+		select distinct r.area_region,ur.province_id,(select c.province from bl_sys_provinces c where c.provinceid=ur.province_id) province_name,(select c.city from bl_sys_cities c where c.cityid=ur.city_id) city_name,ur.city_id,u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.phonenumber, u.status, u.create_time
+		from sys_user u
+		left join sys_dept d on u.dept_id = d.dept_id
+		left join sys_user_role ur on u.user_id = ur.user_id
+		left join sys_role r on r.role_id = ur.role_id
 	    where u.del_flag = '0' and r.role_id = #{roleId}
 	    <if test="userName != null and userName != ''">
 			AND u.user_name like concat('%', #{userName}, '%')

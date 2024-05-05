@@ -89,9 +89,36 @@ public class SysUser extends BaseEntity
     /** 角色ID */
     private Long roleId;
 
+    private String areaRegion;
+    private String provinceName;
+    private String cityName;
     public SysUser()
     {
 
+    }
+
+    public String getAreaRegion() {
+        return areaRegion;
+    }
+
+    public void setAreaRegion(String areaRegion) {
+        this.areaRegion = areaRegion;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     public SysUser(Long userId)

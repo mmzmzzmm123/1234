@@ -83,39 +83,53 @@ public class BaoliBizApplyController extends BaseController
         if(baoliBizApply.getStatus() == null){
             baoliBizApply.setStatus("02");
         }
-        int insertResult = baoliBizApplyService.insertBaoliBizApply(baoliBizApply);
-        JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"Flowable1784092644025155584:8:1784236651778682880\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
-        JSONObject startUserInfo = request.getJSONObject("startUserInfo");
-        startUserInfo.put("id",getUserId());
-        startUserInfo.put("name", getLoginUser().getUser().getNickName());
-        String processDefinitionId = "";
-        String accountReplyKey ="Flowable1784092644025155584:1:1784505501761953792";
-        String feeKey ="Flowable1784249957583171584:1:1784505585077608448";
-        String storeKey="Flowable1784238566084194304:4:1784505555042197504";
-        String labelKey="Flowable1784236563664744448:1:1784505613502406656";
-        request.getJSONObject("formData").put("applyId",baoliBizApply.getId());
-        switch(baoliBizApply.getApplyType()){
-            case "01":
-                processDefinitionId =storeKey;
-                request.getJSONObject("formData").put("form_applicant_role",getLoginUser().getUser().getRoles().get(0).getRoleId());
-                break;
-            case "02":
-                processDefinitionId =feeKey;
-                request.getJSONObject("formData").put("form_applicant_role",getLoginUser().getUser().getRoles().get(0).getRoleId());
-                break;
-            case "03":
-                BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-                String password = passwordEncoder.encode("000000");
-                request.getJSONObject("formData").put("password",password);
-                processDefinitionId =accountReplyKey;
-                break;
-            default:
-                String selectedUser = "{\"form_assign_user\":[{\"id\":5,\"name\":\"驻店测试用户\",\"type\":\"user\",\"sex\":false,\"selected\":false}]}";
-                request.put("formData", JSONObject.parseObject(selectedUser));
-                processDefinitionId =labelKey;
+        int insertResult = 0;
+        //如果是新增咱春
+        if(baoliBizApply.getStatus().equals("01")){
+            if(baoliBizApply.getId()!=null){
+                insertResult = baoliBizApplyService.updateBaoliBizApply(baoliBizApply);
+            }else {
+                insertResult = baoliBizApplyService.insertBaoliBizApply(baoliBizApply);
+            }
+        } else {
+            if(baoliBizApply.getId()!=null){
+                insertResult = baoliBizApplyService.updateBaoliBizApply(baoliBizApply);
+            }else {
+                insertResult = baoliBizApplyService.insertBaoliBizApply(baoliBizApply);
+            }
+            JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"Flowable1784092644025155584:8:1784236651778682880\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
+            JSONObject startUserInfo = request.getJSONObject("startUserInfo");
+            startUserInfo.put("id", getUserId());
+            startUserInfo.put("name", getLoginUser().getUser().getNickName());
+            String processDefinitionId = "";
+            String accountReplyKey = "Flowable1784092644025155584:1:1784505501761953792";
+            String feeKey = "Flowable1784249957583171584:1:1784505585077608448";
+            String storeKey = "Flowable1784238566084194304:4:1784505555042197504";
+            String labelKey = "Flowable1784236563664744448:1:1784505613502406656";
+            request.getJSONObject("formData").put("applyId", baoliBizApply.getId());
+            switch (baoliBizApply.getApplyType()) {
+                case "01":
+                    processDefinitionId = storeKey;
+                    request.getJSONObject("formData").put("form_applicant_role", getLoginUser().getUser().getRoles().get(0).getRoleId());
+                    break;
+                case "02":
+                    processDefinitionId = feeKey;
+                    request.getJSONObject("formData").put("form_applicant_role", getLoginUser().getUser().getRoles().get(0).getRoleId());
+                    break;
+                case "03":
+                    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+                    String password = passwordEncoder.encode("000000");
+                    request.getJSONObject("formData").put("password", password);
+                    processDefinitionId = accountReplyKey;
+                    break;
+                default:
+                    String selectedUser = "{\"form_assign_user\":[{\"id\":5,\"name\":\"驻店测试用户\",\"type\":\"user\",\"sex\":false,\"selected\":false}]}";
+                    request.put("formData", JSONObject.parseObject(selectedUser));
+                    processDefinitionId = labelKey;
+            }
+            request.put("processDefinitionId", processDefinitionId);
+            String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/process/start", request, String.class);
         }
-        request.put("processDefinitionId",processDefinitionId);
-        String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/process/start", request, String.class);
         return toAjax(insertResult);
     }
 

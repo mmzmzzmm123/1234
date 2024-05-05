@@ -125,22 +125,31 @@ public class HomePageStatisticController {
      */
     private Map<String,Object> orderProcess(){
         Long userId = SecurityUtils.getUserId();
-        String status = "09";
+        String status = "11";
         Map<String,Object> result = new HashMap<>(1);
         Map<String,Object> countResult = null;
         Map<String,Object> item = null;
         // 非结单状态, 当前用户Id,非拒单
         String countSql = "SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where `status` <> ? and applicant_id = ? and refuse_order_id is null";
-        countResult = jdbcTemplate.queryForMap(countSql,status,userId);
+        List<Map<String,Object>> countList = jdbcTemplate.queryForList(countSql,status,userId);
+        String notComplete ="0";
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            notComplete = countResult.get("cnt").toString();
+        }
         item = new HashMap<>(1);
-        item.put("value",countResult.get("cnt"));
+        item.put("value",notComplete);
         item.put("param","");
         result.put("notComplete",item);
         // 结单状态, 当前用户Id,非拒单
         countSql = "SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where `status` =? and applicant_id = ? and refuse_order_id is null";
-        countResult = jdbcTemplate.queryForMap(countSql,status,userId);
+        countList = jdbcTemplate.queryForList(countSql,status,userId);
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            notComplete = countResult.get("cnt").toString();
+        }
         item = new HashMap<>(1);
-        item.put("value",countResult.get("cnt"));
+        item.put("value",notComplete);
         item.put("param","");
         result.put("completed",item);
         return result;
@@ -153,29 +162,56 @@ public class HomePageStatisticController {
         Map<String,Object> result = new HashMap<>(1);
         String countSql = "";
         Map<String,Object> countResult = null;
-        countSql = "select * FROM `ruoyi-vue`.sys_user_post_region where user_id = ?";
-        long userId = SecurityUtils.getUserId();
-        countResult = jdbcTemplate.queryForMap(countSql,userId);
-        String regionId = countResult.get("region_id").toString();
+        Long userId = SecurityUtils.getUserId();
+        countSql = "select (select b.area_region from `ruoyi-vue`.sys_role b where b.role_id = a.role_id) area_region,province_id,city_id FROM `ruoyi-vue`.sys_user_role a where a.user_id = ?";
+        String areaRegion = null;
+        String cityId = "-1";
+        String provinceId = "-1";
+        List<Map<String,Object>> countList = jdbcTemplate.queryForList(countSql,userId);
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            cityId = countResult.get("city_id")!=null ? countResult.get("city_id").toString() : null;
+            provinceId= countResult.get("province_id")!=null ? countResult.get("province_id").toString() :null;
+            areaRegion = countResult.get("area_region").toString();
+        }
 
-        countSql = "select round((select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and label= '01') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ?),4) ratio from dual";
-        countResult = jdbcTemplate.queryForMap(countSql,regionId,regionId);
+        String regionParam =" 1=1 ";
+        if(areaRegion.equals("01")){
+            regionParam = " city = '"+cityId+"'";
+        } else if (areaRegion.equals("02")){
+            regionParam = " province_id = '"+provinceId+"'";
+        }
+        String regionId = null;
+        countSql = "select ifnull(round((select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where "+ regionParam +" and label= '01') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where "+ regionParam +"),4),0) ratio from dual";
+        countList = jdbcTemplate.queryForList(countSql);
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            regionId = countResult.get("ratio").toString();
+        }
         Map<String,Object> item = null;
         item = new HashMap<>(1);
-        item.put("value",countResult.get("ratio"));
+        item.put("value",regionId);
         item.put("param","");
         result.put("clear",item);
 
-        countSql = "select round((select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and label= '02') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ?),4) ratio from dual";
-        countResult = jdbcTemplate.queryForMap(countSql,regionId,regionId);
+        countSql = "select ifnull(round((select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where "+ regionParam +" and label= '02') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where "+ regionParam +"),4),0) ratio from dual";
+        countList = jdbcTemplate.queryForList(countSql);
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            regionId = countResult.get("ratio").toString();
+        }
         item = new HashMap<>(1);
-        item.put("value",countResult.get("ratio"));
+        item.put("value",regionId);
         item.put("param","");
         result.put("bad",item);
-        countSql = "select round((select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and status>='08') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where city = ? and (status>='06')),4) ratio from dual;";
-        countResult = jdbcTemplate.queryForMap(countSql,regionId,regionId);
+        countSql = "select ifnull(round((select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where "+ regionParam +" and status>='08') / (select count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where "+ regionParam +" and (status>='06')),4),0) ratio from dual";
+        countList = jdbcTemplate.queryForList(countSql);
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            regionId = countResult.get("ratio").toString();
+        }
         item = new HashMap<>(1);
-        item.put("value",countResult.get("ratio"));
+        item.put("value",regionId);
         item.put("param","");
         result.put("mortgage",item);
         return result;
@@ -190,68 +226,115 @@ public class HomePageStatisticController {
         Map<String,Object> result = new HashMap<>(1);
         String countSql = "";
         Map<String,Object> countResult = null;
-        countSql = "select * FROM `ruoyi-vue`.sys_user_post_region where user_id = ?";
-        long userId = SecurityUtils.getUserId();
-        countResult = jdbcTemplate.queryForMap(countSql,userId);
-        String regionId = countResult.get("region_id").toString();
+        Long userId = SecurityUtils.getUserId();
+        countSql = "select (select b.area_region from `ruoyi-vue`.sys_role b where b.role_id = a.role_id) area_region,province_id,city_id FROM `ruoyi-vue`.sys_user_role a where a.user_id = ?";
+        String areaRegion = null;
+        String cityId = "-1";
+        String provinceId = "-1";
+        List<Map<String,Object>> countList = jdbcTemplate.queryForList(countSql,userId);
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            cityId = countResult.get("city_id")!=null ? countResult.get("city_id").toString() : null;
+            provinceId= countResult.get("province_id")!=null ? countResult.get("province_id").toString() :null;
+            areaRegion = countResult.get("area_region").toString();
+        }
+        String regionParam =" 1=1 ";
+        if(areaRegion.equals("01")){
+            regionParam = " city = '"+cityId+"'";
+        } else if (areaRegion.equals("02")){
+            regionParam = " province_id = '"+provinceId+"'";
+        }
 
-        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-01-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
+        String regionId = "-1";
+
+
+        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and "+ regionParam +" and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-01-01'),'%Y-%m-%d %H:%i:%s')";
+        countList = jdbcTemplate.queryForList(countSql,status);
+        String cnt = "0";
+        String sum = "0";
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            cnt = countResult.get("cnt").toString();
+            sum = countResult.get("sum").toString();
+        }
         // 年出单
         Map<String,Object> item = null;
         item = new HashMap<>(1);
-        item.put("value",countResult.get("cnt"));
+        item.put("value",cnt);
         item.put("param","");
         result.put("yearOrderCount01",item);
         item = new HashMap<>(1);
-        item.put("value",countResult.get("sum"));
+        item.put("value",sum);
         item.put("param","");
         result.put("yearOrderSum01",item);
-        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-01-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql,"07",regionId);
+        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and "+regionParam+" and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-01-01'),'%Y-%m-%d %H:%i:%s')";
+        countList = jdbcTemplate.queryForList(countSql,"08");
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            cnt = countResult.get("cnt").toString();
+            sum = countResult.get("sum").toString();
+        }
         // 年放款
         item = new HashMap<>(1);
-        item.put("value",countResult.get("cnt"));
+        item.put("value",cnt);
         item.put("param","");
         result.put("yearOrderCount02",item);
         item = new HashMap<>(1);
-        item.put("value",countResult.get("sum"));
+        item.put("value",sum);
         item.put("param","");
         result.put("yearOrderSum02",item);
-        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
+        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and "+regionParam+" and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
+        countList = jdbcTemplate.queryForList(countSql,status);
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            cnt = countResult.get("cnt").toString();
+            sum = countResult.get("sum").toString();
+        }
         // 月出单
         item = new HashMap<>(1);
-        item.put("value",countResult.get("cnt"));
+        item.put("value",cnt);
         item.put("param","");
         result.put("monthOrderCount01",item);
         item = new HashMap<>(1);
         // 月出单合计金额
-        double monthOrder= Double.valueOf(countResult.get("sum").toString());
+        double monthOrder= Double.valueOf(sum);
         item.put("value",monthOrder);
         item.put("param","");
         result.put("monthOrderSum01",item);
-        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql,"07",regionId);
+        countSql = "SELECT count(1) cnt,ifnull(sum(loan_amount),0) sum FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and "+regionParam+" and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
+        countList = jdbcTemplate.queryForList(countSql,"07");
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            cnt = countResult.get("cnt").toString();
+            sum = countResult.get("sum").toString();
+        }
         // 月放款
         item = new HashMap<>(1);
-        item.put("value",countResult.get("cnt"));
+        item.put("value",cnt);
         item.put("param","");
         result.put("monthOrderCount02",item);
         item = new HashMap<>(1);
-        item.put("value",countResult.get("sum"));
+        item.put("value",sum);
         item.put("param","");
         result.put("monthOrderSum02",item);
-        countSql = "SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql,"04",regionId);
-        int passed = Integer.valueOf(countResult.get("cnt").toString());
-        countSql = "SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where refuse_order_id is not null  and city= ? and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
-        countResult = jdbcTemplate.queryForMap(countSql,regionId);
-        int refuse = Integer.valueOf(countResult.get("cnt").toString());
+        countSql = "SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where `status` >= ? and "+regionParam+" and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
+        countList = jdbcTemplate.queryForList(countSql,"04");
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            cnt = countResult.get("cnt").toString();
+        }
+        int passed = Integer.valueOf(cnt);
+        countSql = "SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_order where refuse_order_id is not null  and "+regionParam+" and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')";
+        countList = jdbcTemplate.queryForList(countSql);
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            cnt = countResult.get("cnt").toString();
+        }
+        int refuse = Integer.valueOf(cnt);
 
         Float valid = 0f;
         if((passed + refuse) > 0){
-            valid = (float)(passed / passed + refuse);
+            valid = (float)(passed / (passed + refuse));
         }
         DecimalFormat df = new DecimalFormat("#.##");
         String formattedNumber = df.format(valid);
@@ -262,13 +345,25 @@ public class HomePageStatisticController {
         item.put("param","");
         result.put("approvePassed",item);
 
+        if(areaRegion.equals("01")){
+            regionParam = " city_id = '"+cityId+"'";
+        } else if (areaRegion.equals("02")){
+            regionParam = " province_id = '"+provinceId+"'";
+        }
         // 月任务完成率（暂时只考虑了按月度考核）
-        countSql = "SELECT * FROM `ruoyi-vue`.baoli_biz_month_task_evaluate WHERE YEAR = DATE_FORMAT(now(), '%Y') AND MONTH = DATE_FORMAT(now(), '%m') and city_id = ?";
-        countResult = jdbcTemplate.queryForMap(countSql,regionId);
         double amount = 0;
-        //String evaluateType = countResult.get("evaluate_type").toString();
-        //String refrencePlan = countResult.get("refrence_plan").toString();
-        amount = Double.valueOf(countResult.get("amount").toString());
+        countSql = "SELECT * FROM `ruoyi-vue`.baoli_biz_month_task_evaluate WHERE YEAR = DATE_FORMAT(now(), '%Y') AND MONTH = DATE_FORMAT(now(), '%m') and "+regionParam;
+        countList = jdbcTemplate.queryForList(countSql);
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            amount = Double.valueOf(countResult.get("amount").toString());
+        }
+
+        if(areaRegion.equals("01")){
+            regionParam = " city = '"+cityId+"'";
+        } else if (areaRegion.equals("02")){
+            regionParam = " province_id = '"+provinceId+"'";
+        }
         double monthTaskCompleted = 0;
         if(amount!=0){
             monthTaskCompleted = (double)(monthOrder / amount);
@@ -281,9 +376,9 @@ public class HomePageStatisticController {
         result.put("monthTaskCompleted",item);
 
         // 费用占比
-        countSql = "SELECT   ifnull((sum(fee1+fee2+fee3+fee4) / any_value(income)),0) fee_ratio FROM `ruoyi-vue`.baoli_biz_order where  city= ? and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s') group by city";
-        if(jdbcTemplate.queryForList(countSql,regionId).size()>0){
-            countResult = jdbcTemplate.queryForMap(countSql,regionId);
+        countSql = "SELECT   ifnull((sum(fee1+fee2+fee3+fee4) / any_value(income)),0) fee_ratio FROM `ruoyi-vue`.baoli_biz_order where  "+regionParam+" and refuse_order_id is null and create_time >= str_to_date(DATE_FORMAT(now(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s') group by city";
+        if(jdbcTemplate.queryForList(countSql).size()>0){
+            countResult = jdbcTemplate.queryForMap(countSql);
             amount = Double.valueOf(countResult.get("fee_ratio").toString());
         } else {
             amount = 0;
@@ -304,46 +399,86 @@ public class HomePageStatisticController {
         String countSql = "";
         Map<String,Object> countResult = null;
 
-        countSql = "select * FROM `ruoyi-vue`.sys_user_post_region where user_id = ?";
-        long userId = SecurityUtils.getUserId();
-        countResult = jdbcTemplate.queryForMap(countSql,userId);
-        String regionId = countResult.get("region_id").toString();
+        Long userId = SecurityUtils.getUserId();
+        countSql = "select (select b.area_region from `ruoyi-vue`.sys_role b where b.role_id = a.role_id) area_region,province_id,city_id FROM `ruoyi-vue`.sys_user_role a where a.user_id = ?";
+        String areaRegion = null;
+        String cityId = "-1";
+        String provinceId = "-1";
+        List<Map<String,Object>> countList = jdbcTemplate.queryForList(countSql,userId);
+        if(countList.size()>0){
+            countResult = countList.get(0);
+            cityId = countResult.get("city_id")!=null ? countResult.get("city_id").toString() : null;
+            provinceId= countResult.get("province_id")!=null ? countResult.get("province_id").toString() :null;
+            areaRegion = countResult.get("area_region").toString();
+        }
+        String regionParam =" 1=1 ";
+        if(areaRegion.equals("01")){
+            regionParam = " city_id = '"+cityId+"'";
+        } else if (areaRegion.equals("02")){
+            regionParam = " province_id = '"+provinceId+"'";
+        }
+        String regionId = null;
 
-        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store where status = ? and city_id = ?";
-        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
-        int total =Integer.valueOf(countResult.get("cnt").toString());
+
+        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store where status = ? and "+regionParam;
+        countList = jdbcTemplate.queryForList(countSql,status);
+        String cnt = "0";
+        if(countList.size() >0){
+            countResult = countList.get(0);
+            cnt = countResult.get("cnt").toString();
+        }
+        int total =Integer.valueOf(cnt);
         Map<String,Object> item = null;
         item = new HashMap<>(1);
         item.put("value",total);
         item.put("param","");
         result.put("total",item);
-        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(NOW(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')) and city_id = ?";
-        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
-        int monthOrder =Integer.valueOf(countResult.get("cnt").toString());
+        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(NOW(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')) and "+regionParam;
+        countList = jdbcTemplate.queryForList(countSql,status);
+        if(countList.size() >0){
+            countResult = countList.get(0);
+            cnt = countResult.get("cnt").toString();
+        }
+        int monthOrder =Integer.valueOf(cnt);
         item = new HashMap<>(1);
         item.put("value",monthOrder);
         item.put("param","");
         result.put("monthOrder",item);
-        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and not exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(NOW(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')) and city_id = ?";
-        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
+        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and not exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(NOW(), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')) and "+regionParam;
+        countList = jdbcTemplate.queryForList(countSql,status);
+        if(countList.size() >0){
+            countResult = countList.get(0);
+            cnt = countResult.get("cnt").toString();
+        }
         item = new HashMap<>(1);
-        item.put("value",countResult.get("cnt"));
+        item.put("value",cnt);
         item.put("param","");
         result.put("monthNoOrder",item);
-        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and not exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and  b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(date_sub(NOW(), interval 3 month), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')) and city_id = ?";
-        countResult = jdbcTemplate.queryForMap(countSql,status,regionId);
+        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store a where a.status = ? and not exists(select 1 from `ruoyi-vue`.baoli_biz_order b  where b.status >='04' and  b.store_id = a.id and b.create_time >=str_to_date(DATE_FORMAT(date_sub(NOW(), interval 3 month), '%Y-%m-01'),'%Y-%m-%d %H:%i:%s')) and "+regionParam;
+        countList = jdbcTemplate.queryForList(countSql,status);
+        if(countList.size() >0){
+            countResult = countList.get(0);
+            cnt = countResult.get("cnt").toString();
+        }
         item = new HashMap<>(1);
-        item.put("value",countResult.get("cnt"));
+        item.put("value",cnt);
         item.put("param","");
         result.put("threeMonthNoOrder",item);
-        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store where status = ? and city_id = ?";
-        countResult = jdbcTemplate.queryForMap(countSql,"03",regionId);
+        countSql ="SELECT count(1) cnt FROM `ruoyi-vue`.baoli_biz_store where status = ? and "+regionParam;
+        countList = jdbcTemplate.queryForList(countSql,"03");
+        if(countList.size() >0){
+            countResult = countList.get(0);
+            cnt = countResult.get("cnt").toString();
+        }
         item = new HashMap<>(1);
-        item.put("value",countResult.get("cnt"));
+        item.put("value",cnt);
         item.put("param","");
         result.put("except",item);
 
-        Float valid = (float)(monthOrder / total);
+        Float valid = 0F;
+        if(total!=0){
+            valid = (float)(monthOrder / total);
+        }
         DecimalFormat df = new DecimalFormat("#.##");
         String formattedNumber = df.format(valid);
         valid = Float.parseFloat(formattedNumber);
@@ -352,10 +487,14 @@ public class HomePageStatisticController {
         item.put("param","");
         result.put("valid",item);
 
-        countSql ="select (SELECT count(1) FROM `ruoyi-vue`.baoli_biz_store where city_id = ? and (status = '01' or exception_reason ='01')) / (SELECT count(1) FROM `ruoyi-vue`.baoli_biz_store where city_id = ?)  expand from dual";
-        countResult = jdbcTemplate.queryForMap(countSql,regionId,regionId);
+        countSql ="select ifnull((SELECT count(1) FROM `ruoyi-vue`.baoli_biz_store where "+regionParam+" and (status = '01' or exception_reason ='01')) / (SELECT count(1) FROM `ruoyi-vue`.baoli_biz_store where "+regionParam+"),0)  expand from dual";
+        countList = jdbcTemplate.queryForList(countSql);
+        if(countList.size() >0){
+            countResult = countList.get(0);
+            cnt = countResult.get("expand").toString();
+        }
         item = new HashMap<>(1);
-        item.put("value",countResult.get("expand"));
+        item.put("value",cnt);
         item.put("param","");
         result.put("expand",item);
         return result;

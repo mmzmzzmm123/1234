@@ -122,9 +122,15 @@ public class BaoliBizOrderController extends BaseController
     {
         baoliBizOrder.setApplicantId(getUserId());
         List<Map<String,Object>> list = baoliBizOrderService.selectMyOrderCount(baoliBizOrder);
-        List<BaoliBizOrder> orderList = baoliBizOrderService.selectBaoliBizOrderList(baoliBizOrder);
         TableDataInfo result = getDataTable(list);
-        result.setTotal(orderList.size());
+        result.setTotal(0);
+        if(list!=null&& list.size()>0){
+            list.forEach(sItem ->{
+                final Long total;
+                total = Long.valueOf(sItem.get("cnt").toString());
+                result.setTotal(result.getTotal()+total);
+            });
+        }
         return result;
     }
 
