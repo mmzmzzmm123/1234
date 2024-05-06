@@ -114,7 +114,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 .antMatchers("/login", "/register", "/captchaImage").permitAll()
                 //微信登录、注册
                 .antMatchers("/wx/user/login", "/wx/user/register").permitAll()
+                //app端首页查询产品信息接口
                 .antMatchers("/app/product/queryProductPriceList").permitAll()
+                //app端首页查询热门帖子接口
+                .antMatchers("/app/articles/hotList").permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()

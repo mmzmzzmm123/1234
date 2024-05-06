@@ -65,7 +65,6 @@ public class TProductController extends BaseController {
         startPage();
         List<TProduct> list = tProductService.selectTProductList(tProduct);
         List<TProductVO> voList = new ArrayList<>();
-
         if (CollUtil.isNotEmpty(list)) {
             // 组装分类
             for (TProduct t : list) {

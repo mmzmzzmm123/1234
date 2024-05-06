@@ -63,7 +63,7 @@ public class MobileProductVO implements Serializable {
     private BigDecimal subPrice;
 
     @ApiModelProperty("上次价格")
-    private TPrice tPrice;
+    private TpriceVO tPrice;
 
     @ApiModelProperty("商品分类")
     private List<TCategory> tCategoryList;
@@ -84,11 +84,11 @@ public class MobileProductVO implements Serializable {
         this.subPrice = subPrice;
     }
 
-    public TPrice gettPrice() {
+    public TpriceVO gettPrice() {
         return tPrice;
     }
 
-    public void settPrice(TPrice tPrice) {
+    public void settPrice(TpriceVO tPrice) {
         this.tPrice = tPrice;
     }
 

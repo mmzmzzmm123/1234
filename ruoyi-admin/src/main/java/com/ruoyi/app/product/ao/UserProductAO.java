@@ -6,6 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.ruoyi.app.product.vo.MobileProductVO;
 import com.ruoyi.app.product.vo.ProductQuery;
+import com.ruoyi.app.product.vo.TpriceVO;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.domain.entity.SysUser;
@@ -92,7 +93,10 @@ public class UserProductAO {
                 //查询价格变动
                 TPrice price = priceService.queryLastTprice(vo.getId());
                 if (ObjectUtil.isNotNull(price)) {
-                    vo.settPrice(price);
+                    TpriceVO tpriceVO = new TpriceVO();
+                    BeanUtil.copyProperties(price,tpriceVO);
+                    tpriceVO.setHidePrice("**");
+                    vo.settPrice(tpriceVO);
                     vo.setSubPrice(price.getPrice().subtract(vo.getPrice()));
                 }
             }
@@ -136,7 +140,10 @@ public class UserProductAO {
             TPrice price = priceService.queryLastTprice(tProduct.getId(), toLocateTime);
             if (ObjectUtil.isNotNull(price)) {
                 vo.setSubPrice(price.getPrice().subtract(tProduct.getPrice()));
-                vo.settPrice(price);
+                TpriceVO tpriceVO = new TpriceVO();
+                BeanUtil.copyProperties(price,tpriceVO);
+                tpriceVO.setHidePrice("**");
+                vo.settPrice(tpriceVO);
             } else {
                 vo.setSubPrice(BigDecimal.ZERO);
             }
