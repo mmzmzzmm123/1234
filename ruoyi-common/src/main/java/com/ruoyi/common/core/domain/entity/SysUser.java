@@ -89,6 +89,27 @@ public class SysUser extends BaseEntity
     /** 角色ID */
     private Long roleId;
 
+    /** 用户类型（00系统用户，01：微信用户）**/
+    private String userType;
+
+    private Integer vip;
+
+    public Integer getVip() {
+        return vip;
+    }
+
+    public void setVip(Integer vip) {
+        this.vip = vip;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
+
     public SysUser()
     {
 
@@ -319,6 +340,8 @@ public class SysUser extends BaseEntity
             .append("updateTime", getUpdateTime())
             .append("remark", getRemark())
             .append("dept", getDept())
+            .append("userType", getUserType())
+            .append("vip", getVip())
             .toString();
     }
 }

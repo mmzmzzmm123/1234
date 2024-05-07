@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.userproduct.mapper.TUserProductMapper">
+
+    <resultMap type="TUserProduct" id="TUserProductResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="productId"    column="product_id"    />
+        <result property="createTime"    column="create_time"    />
+    </resultMap>
+
+    <sql id="selectTUserProductVo">
+        select id, user_id, product_id, create_time from t_user_product
+    </sql>
+
+    <select id="selectTUserProductList" parameterType="TUserProduct" resultMap="TUserProductResult">
+        <include refid="selectTUserProductVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="productId != null "> and product_id = #{productId}</if>
+        </where>
+    </select>
+
+    <select id="selectTUserProductById" parameterType="Long" resultMap="TUserProductResult">
+        <include refid="selectTUserProductVo"/>
+        where id = #{id}
+    </select>
+    <select id="queryTProductsByUserId" resultType="com.ruoyi.system.product.domain.TProduct">
+        select tp.id,
+               tp.name,
+               tp.image,
+               tp.price,
+               tp.hide_price,
+               tp.recovered_price,
+               tp.status,
+               tp.description,
+               tp.create_time,
+               tp.update_time,
+               tp.version
+        from t_user_product tpc
+                 left join t_product tp on tp.id = tpc.product_id
+        where user_id = #{userId}
+
+    </select>
+
+    <insert id="insertTUserProduct" parameterType="TUserProduct">
+        insert into t_user_product
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="productId != null">product_id,</if>
+            <if test="createTime != null">create_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="productId != null">#{productId},</if>
+            <if test="createTime != null">#{createTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTUserProduct" parameterType="TUserProduct">
+        update t_user_product
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTUserProductById" parameterType="Long">
+        delete from t_user_product where id = #{id}
+    </delete>
+
+    <delete id="deleteTUserProductByIds" parameterType="String">
+        delete from t_user_product where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
