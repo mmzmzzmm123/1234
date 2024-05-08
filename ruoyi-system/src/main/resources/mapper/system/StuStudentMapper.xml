@@ -15,12 +15,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectStuStudentVo">
-        select student_id, student_name, student_age, student_hobby, student_sex, student_status, student_birthday from stu_student
+        select student_id, student_name, student_age, student_hobby, student_sex, student_status, student_birthday from stu_student stu
     </sql>
 
     <select id="selectStuStudentList" parameterType="StuStudent" resultMap="StuStudentResult">
         <include refid="selectStuStudentVo"/>
-        <where>  
+        <where>
+            1=1
             <if test="studentName != null  and studentName != ''"> and student_name like concat('%', #{studentName}, '%')</if>
             <if test="studentAge != null "> and student_age = #{studentAge}</if>
             <if test="studentHobby != null  and studentHobby != ''"> and student_hobby = #{studentHobby}</if>
@@ -28,10 +29,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentStatus != null  and studentStatus != ''"> and student_status = #{studentStatus}</if>
             <if test="studentBirthday != null "> and student_birthday = #{studentBirthday}</if>
         </where>
+        ${params.dataScope}
     </select>
     
     <select id="selectStuStudentByStudentId" parameterType="Long" resultMap="StuStudentResult">
-        <include refid="selectStuStudentVo"/>
+        <include refid="selectStuStudentVo"/>3
         where student_id = #{studentId}
     </select>
         
@@ -44,6 +46,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentSex != null">student_sex,</if>
             <if test="studentStatus != null">student_status,</if>
             <if test="studentBirthday != null">student_birthday,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="deptId != null">dept_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="studentName != null">#{studentName},</if>
@@ -52,6 +56,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="studentSex != null">#{studentSex},</if>
             <if test="studentStatus != null">#{studentStatus},</if>
             <if test="studentBirthday != null">#{studentBirthday},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="deptId != null">#{deptId},</if>
          </trim>
     </insert>
 

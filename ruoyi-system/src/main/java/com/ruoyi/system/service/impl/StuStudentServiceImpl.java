@@ -1,11 +1,16 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.List;
+
+import com.ruoyi.common.annotation.DataScope;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.system.mapper.StuStudentMapper;
 import com.ruoyi.system.domain.StuStudent;
 import com.ruoyi.system.service.IStuStudentService;
+
+import javax.annotation.Resource;
 
 /**
  * 学生信息Service业务层处理
@@ -16,7 +21,7 @@ import com.ruoyi.system.service.IStuStudentService;
 @Service
 public class StuStudentServiceImpl implements IStuStudentService 
 {
-    @Autowired
+    @Resource
     private StuStudentMapper stuStudentMapper;
 
     /**
@@ -35,9 +40,10 @@ public class StuStudentServiceImpl implements IStuStudentService
      * 查询学生信息列表
      * 
      * @param stuStudent 学生信息
-     * @return 学生信息
+     * @return 学生信息 stu
      */
     @Override
+    @DataScope(deptAlias = "stu",userAlias = "stu")
     public List<StuStudent> selectStuStudentList(StuStudent stuStudent)
     {
         return stuStudentMapper.selectStuStudentList(stuStudent);
@@ -52,6 +58,8 @@ public class StuStudentServiceImpl implements IStuStudentService
     @Override
     public int insertStuStudent(StuStudent stuStudent)
     {
+        stuStudent.setUserId(SecurityUtils.getUserId());
+        stuStudent.setDeptId(SecurityUtils.getDeptId());
         return stuStudentMapper.insertStuStudent(stuStudent);
     }
 
