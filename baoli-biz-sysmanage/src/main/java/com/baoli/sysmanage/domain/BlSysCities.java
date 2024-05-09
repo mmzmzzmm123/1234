@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 行政区域地州市信息对象 bl_sys_cities
  * 
@@ -30,6 +32,7 @@ public class BlSysCities extends BaseEntity
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private String provinceid;
 
+
     public String getProvinceName() {
         return provinceName;
     }
@@ -39,8 +42,35 @@ public class BlSysCities extends BaseEntity
     }
 
     private String provinceName;
+    private boolean limitCity;
+    private String areaRegion;
+    private List<String> limitAreas;
 
-    public void setId(Long id) 
+    public String getAreaRegion() {
+        return areaRegion;
+    }
+
+    public void setAreaRegion(String areaRegion) {
+        this.areaRegion = areaRegion;
+    }
+
+    public List<String> getLimitAreas() {
+        return limitAreas;
+    }
+
+    public void setLimitAreas(List<String> limitAreas) {
+        this.limitAreas = limitAreas;
+    }
+
+    public boolean isLimitCity() {
+        return limitCity;
+    }
+
+    public void setLimitCity(boolean limitCity) {
+        this.limitCity = limitCity;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

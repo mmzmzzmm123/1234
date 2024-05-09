@@ -92,9 +92,56 @@ public class SysUser extends BaseEntity
     private String areaRegion;
     private String provinceName;
     private String cityName;
+    private String provinceId;
+    private String cityId;
+    private boolean limitArea;
+    private List<String> cityIdList;
+
+    public String getRoleKey() {
+        return roleKey;
+    }
+
+    public void setRoleKey(String roleKey) {
+        this.roleKey = roleKey;
+    }
+
+    private String roleKey;
+
+    public List<String> getCityIdList() {
+        return cityIdList;
+    }
+
+    public void setCityIdList(List<String> cityIdList) {
+        this.cityIdList = cityIdList;
+    }
+
+    public boolean isLimitArea() {
+        return limitArea;
+    }
+
+    public void setLimitArea(boolean limitArea) {
+        this.limitArea = limitArea;
+    }
+
     public SysUser()
     {
 
+    }
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
     }
 
     public String getAreaRegion() {

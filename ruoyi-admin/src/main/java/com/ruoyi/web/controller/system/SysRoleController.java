@@ -105,6 +105,14 @@ public class SysRoleController extends BaseController
         return toAjax(roleService.insertRole(role));
 
     }
+    /**
+     * 新增用户角色
+     */
+    @PreAuthorize("@ss.hasPermi('system:role:add')")
+    @PostMapping("/addUserRole")
+    public AjaxResult addUserRole(@Validated @RequestBody SysUserRole userRole){
+        return toAjax(userService.updateUserRole(userRole));
+    }
 
     /**
      * 修改保存角色

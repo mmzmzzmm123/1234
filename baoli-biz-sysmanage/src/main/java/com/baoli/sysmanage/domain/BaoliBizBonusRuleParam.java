@@ -42,6 +42,8 @@ public class BaoliBizBonusRuleParam extends BaseEntity
     @Excel(name = "上级")
     private Long parentId;
 
+    private String inputParam;
+
     public void setId(Long id) 
     {
         this.id = id;
@@ -104,6 +106,14 @@ public class BaoliBizBonusRuleParam extends BaseEntity
     public Long getParentId() 
     {
         return parentId;
+    }
+
+    public String getInputParam() {
+        return inputParam;
+    }
+
+    public void setInputParam(String inputParam) {
+        this.inputParam = inputParam;
     }
 
     @Override

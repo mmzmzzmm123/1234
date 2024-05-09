@@ -41,7 +41,9 @@ public class BaoliBizBonusRuleParamController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(BaoliBizBonusRuleParam baoliBizBonusRuleParam)
     {
-        startPage();
+        if(baoliBizBonusRuleParam.isPageAble()){
+            startPage();
+        }
         List<BaoliBizBonusRuleParam> list = baoliBizBonusRuleParamService.selectBaoliBizBonusRuleParamList(baoliBizBonusRuleParam);
         return getDataTable(list);
     }

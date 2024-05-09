@@ -1,5 +1,6 @@
 package com.baoli.order.controller;
 
+import com.alibaba.fastjson2.JSONObject;
 import com.baoli.order.domain.BaoliBizOrder;
 import com.baoli.order.service.IBaoliBizOrderService;
 import com.ruoyi.common.annotation.Log;
@@ -11,6 +12,7 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.SimpleDateFormat;
@@ -31,6 +33,10 @@ public class BaoliBizOrderController extends BaseController
 {
     @Autowired
     private IBaoliBizOrderService baoliBizOrderService;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
     //订单流水号
     private static int serialNumber = 0;
     //订单日期前缀
@@ -166,14 +172,50 @@ public class BaoliBizOrderController extends BaseController
     public AjaxResult add(@RequestBody BaoliBizOrder baoliBizOrder)
     {
         baoliBizOrder.setApplicantId(getUserId());
-        return toAjax(baoliBizOrderService.insertBaoliBizOrder(baoliBizOrder));
+        int result = baoliBizOrderService.insertBaoliBizOrder(baoliBizOrder);
+        //如果status 是 02 提交 则发起工作流
+        if(baoliBizOrder.getStatus().equals("02")){
+            runProcess(baoliBizOrder);
+        }
+        return toAjax(result);
     }
 
     @PreAuthorize("@ss.hasPermi('order:orderManage:add')")
     @PostMapping("/transRefuseOrder")
     public AjaxResult transRefuseOrder(@RequestBody BaoliBizOrder baoliBizOrder)
     {
-        return toAjax(baoliBizOrderService.transRefuseOrder(baoliBizOrder));
+        int result = baoliBizOrderService.transRefuseOrder(baoliBizOrder);
+        if(baoliBizOrder.getAuditInfo()!=null){
+            refuse(baoliBizOrder);
+        }
+        return toAjax(result);
+    }
+    private void agree(BaoliBizOrder baoliBizOrder){
+        String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/agree", baoliBizOrder.getAuditInfo(), String.class);
+    }
+
+    private void refuse(BaoliBizOrder baoliBizOrder){
+        String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/refuse", baoliBizOrder.getAuditInfo(), String.class);
+    }
+    private void runProcess(BaoliBizOrder baoliBizOrder){
+        JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
+        JSONObject startUserInfo = request.getJSONObject("startUserInfo");
+        startUserInfo.put("id",getUserId());
+        startUserInfo.put("name", getLoginUser().getUser().getNickName());
+        String processDefinitionId = "";
+
+        String orderKey="Flowable1788388037957324800:1:1788494584678973440";
+        String selectedUser = "{\"form_assign_user\":[{\"id\":5,\"name\":\"驻店测试用户\",\"type\":\"user\",\"sex\":false,\"selected\":false}]}";
+
+        JSONObject assignUser = JSONObject.parseObject(selectedUser);
+        assignUser.getJSONArray("form_assign_user").getJSONObject(0).put("id",getUserId());
+        assignUser.put("form_pre_check_area","130000");
+        assignUser.put("orderId",baoliBizOrder.getId());
+        request.put("formData", assignUser);
+        processDefinitionId =orderKey;
+        request.put("processDefinitionId",processDefinitionId);
+        String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/process/start", request, String.class);
+
     }
     /**
      * 修改订单
@@ -183,7 +225,18 @@ public class BaoliBizOrderController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody BaoliBizOrder baoliBizOrder)
     {
-        return toAjax(baoliBizOrderService.updateBaoliBizOrder(baoliBizOrder));
+        int result = baoliBizOrderService.updateBaoliBizOrder(baoliBizOrder);
+        //如果status 是 02 提交 则发起工作流
+        if(baoliBizOrder.getStatus().equals("02")){
+            runProcess(baoliBizOrder);
+        }
+        // 不是 暂存，发起， 执行同意
+        if(!baoliBizOrder.getStatus().equals("01") && !baoliBizOrder.getStatus().equals("02")){
+            if(baoliBizOrder.getAuditInfo()!=null) {
+                agree(baoliBizOrder);
+            }
+        }
+        return toAjax(result);
     }
 
     /**
@@ -202,6 +255,8 @@ public class BaoliBizOrderController extends BaseController
     @PostMapping("/batchUpdateOrder")
     public AjaxResult batchUpdateOrder(@RequestBody Map<String,Object> shareOrders)
     {
-        return toAjax(baoliBizOrderService.batchUpdateOrder(shareOrders));
+        int result = baoliBizOrderService.batchUpdateOrder(shareOrders);
+        String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/agree", shareOrders.get("auditInfo"), String.class);
+        return toAjax(result);
     }
 }

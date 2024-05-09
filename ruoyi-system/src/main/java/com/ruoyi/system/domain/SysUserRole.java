@@ -16,6 +16,34 @@ public class SysUserRole
     /** 角色ID */
     private Long roleId;
 
+    private String provinceId;
+    private String cityId;
+    private String areaRegion;
+
+    public String getAreaRegion() {
+        return areaRegion;
+    }
+
+    public void setAreaRegion(String areaRegion) {
+        this.areaRegion = areaRegion;
+    }
+
+    public String getProvinceId() {
+        return provinceId;
+    }
+
+    public void setProvinceId(String provinceId) {
+        this.provinceId = provinceId;
+    }
+
+    public String getCityId() {
+        return cityId;
+    }
+
+    public void setCityId(String cityId) {
+        this.cityId = cityId;
+    }
+
     public Long getUserId()
     {
         return userId;

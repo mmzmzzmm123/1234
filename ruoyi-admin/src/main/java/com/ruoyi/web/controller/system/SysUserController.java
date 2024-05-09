@@ -1,8 +1,12 @@
 package com.ruoyi.web.controller.system;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.domain.SysUserRole;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,7 +64,25 @@ public class SysUserController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(SysUser user)
     {
-        startPage();
+        if(user.isPageAble()){
+            startPage();
+        }
+        if(user.isLimitArea()){
+            //获取当前用户所属区域
+            SysUserRole sysUserRole = new SysUserRole();
+            sysUserRole.setUserId(getUserId());
+            // 获取最大areaRegion()
+            List<SysUserRole> userRoleList = userService.selectUserRoleList(sysUserRole);
+            Optional<SysUserRole> op= userRoleList.stream().max(Comparator.comparing(SysUserRole::getAreaRegion));
+            // 如果areaRegion ==03 不限制 02 省 01 城市
+            List<String> areaList = null;
+            if(op.get().getAreaRegion().equals("01")){
+                areaList = userRoleList.stream().map(SysUserRole::getCityId).collect(Collectors.toList());
+            } else if(op.get().getAreaRegion().equals("02")){
+                areaList = userRoleList.stream().map(SysUserRole::getProvinceId).collect(Collectors.toList());
+            }
+            user.setCityIdList(areaList);
+        }
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);
     }

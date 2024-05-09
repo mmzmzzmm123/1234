@@ -431,6 +431,14 @@ public class SysUserServiceImpl implements ISysUserService
         }
     }
 
+    public int updateUserRole(SysUserRole sysUserRole)
+    {
+       return userRoleMapper.updateUserRole(sysUserRole);
+    }
+
+    public List<SysUserRole> selectUserRoleList(SysUserRole sysUserRole){
+        return userRoleMapper.selectUserRoleList(sysUserRole);
+    }
     /**
      * 通过用户ID删除用户
      * 

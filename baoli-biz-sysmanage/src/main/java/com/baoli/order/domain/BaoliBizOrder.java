@@ -1,9 +1,13 @@
 package com.baoli.order.domain;
 
+import com.alibaba.fastjson2.JSONObject;
+import net.sf.jsqlparser.expression.DateTimeLiteralExpression;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+
+import java.util.Date;
 
 /**
  * 订单对象 baoli_biz_order
@@ -68,6 +72,38 @@ public class BaoliBizOrder extends BaseEntity
 
     public Long getStoreId() {
         return storeId;
+    }
+
+    public Date getMortgageDate() {
+        return mortgageDate;
+    }
+
+    public void setMortgageDate(Date mortgageDate) {
+        this.mortgageDate = mortgageDate;
+    }
+
+    public Date getSubmitDate() {
+        return submitDate;
+    }
+
+    public void setSubmitDate(Date submitDate) {
+        this.submitDate = submitDate;
+    }
+
+    public Date getShareDate() {
+        return shareDate;
+    }
+
+    public void setShareDate(Date shareDate) {
+        this.shareDate = shareDate;
+    }
+
+    public Date getReleaseLoanDate() {
+        return releaseLoanDate;
+    }
+
+    public void setReleaseLoanDate(Date releaseLoanDate) {
+        this.releaseLoanDate = releaseLoanDate;
     }
 
     public String getRefuseReason() {
@@ -320,6 +356,30 @@ public class BaoliBizOrder extends BaseEntity
 
     public void setCompanionRelationship(String companionRelationship) {
         this.companionRelationship = companionRelationship;
+    }
+
+    public String getDetailInfoFiles() {
+        return detailInfoFiles;
+    }
+
+    public void setDetailInfoFiles(String detailInfoFiles) {
+        this.detailInfoFiles = detailInfoFiles;
+    }
+
+    public String getUploadLoanFiles() {
+        return uploadLoanFiles;
+    }
+
+    public void setUploadLoanFiles(String uploadLoanFiles) {
+        this.uploadLoanFiles = uploadLoanFiles;
+    }
+
+    public String getUploadArchiveFiles() {
+        return uploadArchiveFiles;
+    }
+
+    public void setUploadArchiveFiles(String uploadArchiveFiles) {
+        this.uploadArchiveFiles = uploadArchiveFiles;
     }
 
     public Long getCompanionNumber() {
@@ -638,4 +698,20 @@ public class BaoliBizOrder extends BaseEntity
     private String provinceId;
     private String refuseReason;
     private String label;
+    private String detailInfoFiles;
+    private String uploadLoanFiles;
+    private String uploadArchiveFiles;
+    private Date mortgageDate;
+    private Date submitDate;
+    private Date shareDate;
+    private Date releaseLoanDate;
+    private JSONObject auditInfo;
+
+    public JSONObject getAuditInfo() {
+        return auditInfo;
+    }
+
+    public void setAuditInfo(JSONObject auditInfo) {
+        this.auditInfo = auditInfo;
+    }
 }
