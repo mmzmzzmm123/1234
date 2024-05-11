@@ -9,7 +9,7 @@
         <version>3.8.6</version>
     </parent>
 
-    <artifactId>jjpt-bussiness</artifactId>
+    <artifactId>jjpt-business</artifactId>
     <dependencies>
         <dependency>
             <groupId>com.ruoyi</groupId>

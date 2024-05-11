@@ -144,7 +144,7 @@
 
             <dependency>
                 <groupId>com.ruoyi</groupId>
-                <artifactId>jjpt-bussiness</artifactId>
+                <artifactId>jjpt-business</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
 
@@ -186,7 +186,7 @@
         <module>ruoyi-quartz</module>
         <module>ruoyi-generator</module>
         <module>ruoyi-common</module>
-        <module>jjpt-bussiness</module>
+        <module>jjpt-business</module>
     </modules>
     <packaging>pom</packaging>
 
