@@ -2,8 +2,6 @@ package com.baoli.store.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.common.annotation.Anonymous;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,10 +22,10 @@ import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
 
 /**
- * 费率规则Controller
+ * 对店费率规则Controller
  * 
  * @author niujs
- * @date 2024-04-18
+ * @date 2024-05-10
  */
 @RestController
 @RequestMapping("/feeRateRule/feeRateRule")
@@ -37,10 +35,9 @@ public class BaoliBizFeeRateRuleController extends BaseController
     private IBaoliBizFeeRateRuleService baoliBizFeeRateRuleService;
 
     /**
-     * 查询费率规则列表
+     * 查询对店费率规则列表
      */
-    //@PreAuthorize("@ss.hasPermi('feeRateRule:feeRateRule:list')")
-    @Anonymous
+    @PreAuthorize("@ss.hasPermi('feeRateRule:feeRateRule:list')")
     @GetMapping("/list")
     public TableDataInfo list(BaoliBizFeeRateRule baoliBizFeeRateRule)
     {
@@ -50,20 +47,20 @@ public class BaoliBizFeeRateRuleController extends BaseController
     }
 
     /**
-     * 导出费率规则列表
+     * 导出对店费率规则列表
      */
     @PreAuthorize("@ss.hasPermi('feeRateRule:feeRateRule:export')")
-    @Log(title = "费率规则", businessType = BusinessType.EXPORT)
+    @Log(title = "对店费率规则", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, BaoliBizFeeRateRule baoliBizFeeRateRule)
     {
         List<BaoliBizFeeRateRule> list = baoliBizFeeRateRuleService.selectBaoliBizFeeRateRuleList(baoliBizFeeRateRule);
         ExcelUtil<BaoliBizFeeRateRule> util = new ExcelUtil<BaoliBizFeeRateRule>(BaoliBizFeeRateRule.class);
-        util.exportExcel(response, list, "费率规则数据");
+        util.exportExcel(response, list, "对店费率规则数据");
     }
 
     /**
-     * 获取费率规则详细信息
+     * 获取对店费率规则详细信息
      */
     @PreAuthorize("@ss.hasPermi('feeRateRule:feeRateRule:query')")
     @GetMapping(value = "/{id}")
@@ -73,10 +70,10 @@ public class BaoliBizFeeRateRuleController extends BaseController
     }
 
     /**
-     * 新增费率规则
+     * 新增对店费率规则
      */
     @PreAuthorize("@ss.hasPermi('feeRateRule:feeRateRule:add')")
-    @Log(title = "费率规则", businessType = BusinessType.INSERT)
+    @Log(title = "对店费率规则", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody BaoliBizFeeRateRule baoliBizFeeRateRule)
     {
@@ -84,10 +81,10 @@ public class BaoliBizFeeRateRuleController extends BaseController
     }
 
     /**
-     * 修改费率规则
+     * 修改对店费率规则
      */
     @PreAuthorize("@ss.hasPermi('feeRateRule:feeRateRule:edit')")
-    @Log(title = "费率规则", businessType = BusinessType.UPDATE)
+    @Log(title = "对店费率规则", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody BaoliBizFeeRateRule baoliBizFeeRateRule)
     {
@@ -95,10 +92,10 @@ public class BaoliBizFeeRateRuleController extends BaseController
     }
 
     /**
-     * 删除费率规则
+     * 删除对店费率规则
      */
     @PreAuthorize("@ss.hasPermi('feeRateRule:feeRateRule:remove')")
-    @Log(title = "费率规则", businessType = BusinessType.DELETE)
+    @Log(title = "对店费率规则", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
     {
