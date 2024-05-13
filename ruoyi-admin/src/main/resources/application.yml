@@ -68,11 +68,12 @@ spring:
       # 热部署开关
       enabled: true
   # redis 配置
-  #redis:
+  redis:
     # 地址
     #host: 122.9.144.163
+    host: localhost
     # 端口，默认为6379
-    #port: 6379
+    port: 6379
     # 数据库索引
     #database: 1
     # 密码
@@ -89,7 +90,12 @@ spring:
         #max-active: 8
         # #连接池最大阻塞等待时间（使用负值表示没有限制）
         #max-wait: -1ms
-
+  #datasource:
+   # username: root
+   # password: 123456
+   # driver-class-name: com.mysql.cj.jdbc.Driver
+   # url: jdbc:mysql://localhost:3306/ry-vue?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+       
 # token配置
 token:
   # 令牌自定义标识
