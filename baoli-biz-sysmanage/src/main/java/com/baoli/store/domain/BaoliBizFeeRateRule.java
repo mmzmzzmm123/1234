@@ -6,16 +6,16 @@ import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
 /**
- * 费率规则对象 baoli_biz_fee_rate_rule
+ * 对店费率规则对象 baoli_biz_fee_rate_rule
  * 
  * @author niujs
- * @date 2024-04-18
+ * @date 2024-05-10
  */
 public class BaoliBizFeeRateRule extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /**  */
     private Long id;
 
     /** 规则标题 */
@@ -30,8 +30,21 @@ public class BaoliBizFeeRateRule extends BaseEntity
     @Excel(name = "银行id")
     private Long bankId;
 
+    /** 品牌 */
+    @Excel(name = "品牌")
     private Long brandId;
+
+    /** 型号 */
+    @Excel(name = "型号")
     private Long modelId;
+
+    /** 补贴类型 */
+    @Excel(name = "补贴类型")
+    private String subsidyType;
+
+    /** 规则内容 */
+    @Excel(name = "规则内容")
+    private String content;
 
     public void setId(Long id) 
     {
@@ -65,26 +78,47 @@ public class BaoliBizFeeRateRule extends BaseEntity
         this.bankId = bankId;
     }
 
-    public Long getBrandId() {
-        return brandId;
-    }
-
-    public void setBrandId(Long brandId) {
-        this.brandId = brandId;
-    }
-
-    public Long getModelId() {
-        return modelId;
-    }
-
-    public void setModelId(Long modelId) {
-        this.modelId = modelId;
-    }
-
-    public Long getBankId()
+    public Long getBankId() 
     {
         return bankId;
     }
+    public void setBrandId(Long brandId) 
+    {
+        this.brandId = brandId;
+    }
+
+    public Long getBrandId() 
+    {
+        return brandId;
+    }
+    public void setModelId(Long modelId) 
+    {
+        this.modelId = modelId;
+    }
+
+    public Long getModelId() 
+    {
+        return modelId;
+    }
+    public void setSubsidyType(String subsidyType) 
+    {
+        this.subsidyType = subsidyType;
+    }
+
+    public String getSubsidyType() 
+    {
+        return subsidyType;
+    }
+    public void setContent(String content) 
+    {
+        this.content = content;
+    }
+
+    public String getContent() 
+    {
+        return content;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
@@ -93,6 +127,10 @@ public class BaoliBizFeeRateRule extends BaseEntity
             .append("feeRateType", getFeeRateType())
             .append("bankId", getBankId())
             .append("remark", getRemark())
+            .append("brandId", getBrandId())
+            .append("modelId", getModelId())
+            .append("subsidyType", getSubsidyType())
+            .append("content", getContent())
             .toString();
     }
 }

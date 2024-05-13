@@ -12,10 +12,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="remark"    column="remark"    />
         <result property="brandId"    column="brand_id"    />
         <result property="modelId"    column="model_id"    />
+        <result property="subsidyType"    column="subsidy_type"    />
+        <result property="content"    column="content"    />
     </resultMap>
 
     <sql id="selectBaoliBizFeeRateRuleVo">
-        select id, brand_id,model_id,title, fee_rate_type, bank_id, remark from baoli_biz_fee_rate_rule
+        select id, title, fee_rate_type, bank_id, remark, brand_id, model_id, subsidy_type, content from baoli_biz_fee_rate_rule
     </sql>
 
     <select id="selectBaoliBizFeeRateRuleList" parameterType="BaoliBizFeeRateRule" resultMap="BaoliBizFeeRateRuleResult">
@@ -24,8 +26,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="feeRateType != null  and feeRateType != ''"> and fee_rate_type = #{feeRateType}</if>
             <if test="bankId != null "> and bank_id = #{bankId}</if>
-            <if test="brandId != null  and brandId != ''"> and brand_id = #{brandId}</if>
-            <if test="modelId != null  and modelId != ''"> and model_id = #{modelId}</if>
+            <if test="brandId != null "> and brand_id = #{brandId}</if>
+            <if test="modelId != null "> and model_id = #{modelId}</if>
+            <if test="subsidyType != null  and subsidyType != ''"> and subsidy_type = #{subsidyType}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
         </where>
     </select>
     
@@ -43,6 +47,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark,</if>
             <if test="brandId != null">brand_id,</if>
             <if test="modelId != null">model_id,</if>
+            <if test="subsidyType != null">subsidy_type,</if>
+            <if test="content != null">content,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null">#{title},</if>
@@ -51,6 +57,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">#{remark},</if>
             <if test="brandId != null">#{brandId},</if>
             <if test="modelId != null">#{modelId},</if>
+            <if test="subsidyType != null">#{subsidyType},</if>
+            <if test="content != null">#{content},</if>
          </trim>
     </insert>
 
@@ -63,6 +71,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="remark != null">remark = #{remark},</if>
             <if test="brandId != null">brand_id = #{brandId},</if>
             <if test="modelId != null">model_id = #{modelId},</if>
+            <if test="subsidyType != null">subsidy_type = #{subsidyType},</if>
+            <if test="content != null">content = #{content},</if>
         </trim>
         where id = #{id}
     </update>
