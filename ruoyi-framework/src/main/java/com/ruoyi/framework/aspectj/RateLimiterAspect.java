@@ -24,10 +24,10 @@ import com.ruoyi.common.utils.ip.IpUtils;
  *
  * @author ruoyi
  */
-@Aspect
-@Component
+/*@Aspect
+@Component*/
 public class RateLimiterAspect
-{
+{/*
     private static final Logger log = LoggerFactory.getLogger(RateLimiterAspect.class);
 
     private RedisTemplate<Object, Object> redisTemplate;
@@ -85,5 +85,5 @@ public class RateLimiterAspect
         Class<?> targetClass = method.getDeclaringClass();
         stringBuffer.append(targetClass.getName()).append("-").append(method.getName());
         return stringBuffer.toString();
-    }
+    }*/
 }
