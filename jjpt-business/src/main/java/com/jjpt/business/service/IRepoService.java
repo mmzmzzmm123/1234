@@ -1,7 +1,8 @@
 package com.jjpt.business.service;
 
+import com.jjpt.business.modules.entity.Repo;
+
 import java.util.List;
-import com.jjpt.business.domain.Repo;
 
 /**
  * 题库信息Service接口

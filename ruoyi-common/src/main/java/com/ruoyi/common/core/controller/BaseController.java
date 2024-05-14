@@ -31,6 +31,18 @@ public class BaseController
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     /**
+     * 成功默认消息
+     */
+    private static final Integer CODE_SUCCESS = 0;
+    private static final String MSG_SUCCESS = "操作成功！";
+
+    /**
+     * 失败默认消息
+     */
+    private static final Integer CODE_FAILURE = 1;
+    private static final String MSG_FAILURE = "请求失败！";
+
+    /**
      * 将前台传递过来的日期格式的字符串，自动转化为Date类型
      */
     @InitBinder
@@ -89,7 +101,29 @@ public class BaseController
         rspData.setTotal(new PageInfo(list).getTotal());
         return rspData;
     }
+    protected TableDataInfo getDataTable(List<?> list, Long total)
+    {
+        TableDataInfo rspData = new TableDataInfo();
+        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setMsg("查询成功");
+        rspData.setRows(list);
+        rspData.setTotal(total);
+        return rspData;
+    }
 
+    protected <T> ApiRest<T> message(Integer code, String message, T data){
+        ApiRest<T> response = new ApiRest<>();
+        response.setCode(code);
+        response.setMsg(message);
+        if(data!=null) {
+            response.setData(data);
+        }
+        return response;
+    }
+
+    protected <T> ApiRest<T> successOK(T data){
+        return message(CODE_SUCCESS, MSG_SUCCESS, data);
+    }
     /**
      * 返回成功
      */

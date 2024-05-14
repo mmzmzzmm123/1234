@@ -1,44 +1,33 @@
-import request from '@/utils/request'
+import { post } from '@/utils/request'
 
-// 查询题库信息列表
-export function listRepo(query) {
-  return request({
-    url: '/business/repo/list',
-    method: 'get',
-    params: query
-  })
+/**
+ * 题库详情
+ * @param data
+ */
+export function fetchDetail(data) {
+  return post('/business/repo/detail', data)
 }
 
-// 查询题库信息详细
-export function getRepo(id) {
-  return request({
-    url: '/business/repo/' + id,
-    method: 'get'
-  })
+/**
+ * 保存题库
+ * @param data
+ */
+export function saveData(data) {
+  return post('/business/repo/save', data)
 }
 
-// 新增题库信息
-export function addRepo(data) {
-  return request({
-    url: '/business/repo',
-    method: 'post',
-    data: data
-  })
+/**
+ * 保存题库
+ * @param data
+ */
+export function fetchPaging(data) {
+  return post('/business/repo/paging', data)
 }
 
-// 修改题库信息
-export function updateRepo(data) {
-  return request({
-    url: '/business/repo',
-    method: 'put',
-    data: data
-  })
-}
-
-// 删除题库信息
-export function delRepo(id) {
-  return request({
-    url: '/business/repo/' + id,
-    method: 'delete'
-  })
+/**
+ * 题库批量操作
+ * @param data
+ */
+export function batchAction(data) {
+  return post('/business/repo/batch-action', data)
 }

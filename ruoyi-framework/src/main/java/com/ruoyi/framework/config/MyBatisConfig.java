@@ -29,15 +29,15 @@ import com.ruoyi.common.utils.StringUtils;
  * 
  * @author ruoyi
  */
-@Configuration
+/*@Configuration*/
 public class MyBatisConfig
 {
-    @Autowired
-    private Environment env;
+   /* @Autowired
+    private Environment env;*/
 
     static final String DEFAULT_RESOURCE_PATTERN = "**/*.class";
 
-    public static String setTypeAliasesPackage(String typeAliasesPackage)
+   /* public static String setTypeAliasesPackage(String typeAliasesPackage)
     {
         ResourcePatternResolver resolver = (ResourcePatternResolver) new PathMatchingResourcePatternResolver();
         MetadataReaderFactory metadataReaderFactory = new CachingMetadataReaderFactory(resolver);
@@ -128,5 +128,5 @@ public class MyBatisConfig
         sessionFactory.setMapperLocations(resolveMapperLocations(StringUtils.split(mapperLocations, ",")));
         sessionFactory.setConfigLocation(new DefaultResourceLoader().getResource(configLocation));
         return sessionFactory.getObject();
-    }
+    }*/
 }

@@ -1,63 +1,34 @@
 package com.jjpt.business.mapper;
 
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jjpt.business.modules.dto.RepoReqDTO;
+import com.jjpt.business.modules.dto.RepoRespDTO;
+import com.jjpt.business.modules.entity.Repo;
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
-import com.jjpt.business.domain.Repo;
-import org.apache.ibatis.annotations.Mapper;
 
 /**
- * 题库信息Mapper接口
- * 
- * @author ruoyi
- * @date 2024-05-11
- */
-
-public interface RepoMapper 
-{
-    /**
-     * 查询题库信息
-     * 
-     * @param id 题库信息主键
-     * @return 题库信息
-     */
-    public Repo selectRepoById(String id);
+* <p>
+* 题库Mapper
+* </p>
+*
+* @author 聪明笨狗
+* @since 2020-05-25 13:23
+*/
+public interface RepoMapper extends BaseMapper<Repo> {
 
     /**
-     * 查询题库信息列表
-     * 
-     * @param repo 题库信息
-     * @return 题库信息集合
+     * 分页查询题库
+     * @param page
+     * @param query
+     * @return
      */
-    public List<Repo> selectRepoList(Repo repo);
+    Page<RepoRespDTO> paging(Page page, @Param("query") RepoReqDTO query);
 
-    /**
-     * 新增题库信息
-     * 
-     * @param repo 题库信息
-     * @return 结果
-     */
-    public int insertRepo(Repo repo);
+    List<RepoRespDTO> pagings(@Param("query") RepoReqDTO query);
 
-    /**
-     * 修改题库信息
-     * 
-     * @param repo 题库信息
-     * @return 结果
-     */
-    public int updateRepo(Repo repo);
-
-    /**
-     * 删除题库信息
-     * 
-     * @param id 题库信息主键
-     * @return 结果
-     */
-    public int deleteRepoById(String id);
-
-    /**
-     * 批量删除题库信息
-     * 
-     * @param ids 需要删除的数据主键集合
-     * @return 结果
-     */
-    public int deleteRepoByIds(String[] ids);
 }

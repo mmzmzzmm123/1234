@@ -1,100 +1,48 @@
 package com.jjpt.business.service.impl;
 
-import java.util.List;
-import com.ruoyi.common.utils.DateUtils;
-import com.ruoyi.common.utils.uuid.IdUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.jjpt.business.mapper.RepoMapper;
-import com.jjpt.business.domain.Repo;
-import com.jjpt.business.service.IRepoService;
 
-import javax.annotation.Resource;
+
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jjpt.business.mapper.RepoMapper;
+import com.jjpt.business.modules.dto.PagingReqDTO;
+import com.jjpt.business.modules.dto.RepoDTO;
+import com.jjpt.business.modules.dto.RepoReqDTO;
+import com.jjpt.business.modules.dto.RepoRespDTO;
+import com.jjpt.business.modules.entity.Repo;
+import com.jjpt.business.service.RepoService;
+import com.jjpt.business.utils.BeanMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
- * 题库信息Service业务层处理
- * 
- * @author ruoyi
- * @date 2024-05-11
- */
+* <p>
+* 语言设置 服务实现类
+* </p>
+*
+* @author 聪明笨狗
+* @since 2020-05-25 13:23
+*/
 @Service
-public class RepoServiceImpl implements IRepoService 
-{
-    @Resource
-    private RepoMapper repoMapper;
+public class RepoServiceImpl extends ServiceImpl<RepoMapper, Repo> implements RepoService {
 
-    /**
-     * 查询题库信息
-     * 
-     * @param id 题库信息主键
-     * @return 题库信息
-     */
     @Override
-    public Repo selectRepoById(String id)
-    {
-        return repoMapper.selectRepoById(id);
-    }
+    public Page<RepoRespDTO> paging(PagingReqDTO<RepoReqDTO> reqDTO) {
+       Page<RepoRespDTO> paging = baseMapper.paging(reqDTO.toPage(), reqDTO.getParams());
 
-    /**
-     * 查询题库信息列表
-     * 
-     * @param repo 题库信息
-     * @return 题库信息
-     */
-    @Override
-    public List<Repo> selectRepoList(Repo repo)
-    {
-        return repoMapper.selectRepoList(repo);
-    }
 
-    /**
-     * 新增题库信息
-     * 
-     * @param repo 题库信息
-     * @return 结果
-     */
-    @Override
-    public int insertRepo(Repo repo)
-    {
-        repo.setCreateTime(DateUtils.getNowDate());
-        repo.setId(IdUtils.simpleUUID());
-        return repoMapper.insertRepo(repo);
-    }
+        return baseMapper.paging(reqDTO.toPage(), reqDTO.getParams());
+     }
 
-    /**
-     * 修改题库信息
-     * 
-     * @param repo 题库信息
-     * @return 结果
-     */
     @Override
-    public int updateRepo(Repo repo)
-    {
-        repo.setUpdateTime(DateUtils.getNowDate());
-        return repoMapper.updateRepo(repo);
-    }
+    public void save(RepoDTO reqDTO) {
 
-    /**
-     * 批量删除题库信息
-     * 
-     * @param ids 需要删除的题库信息主键
-     * @return 结果
-     */
-    @Override
-    public int deleteRepoByIds(String[] ids)
-    {
-        return repoMapper.deleteRepoByIds(ids);
-    }
-
-    /**
-     * 删除题库信息信息
-     * 
-     * @param id 题库信息主键
-     * @return 结果
-     */
-    @Override
-    public int deleteRepoById(String id)
-    {
-        return repoMapper.deleteRepoById(id);
+        //复制参数
+        Repo entity = new Repo();
+        BeanMapper.copy(reqDTO, entity);
+        this.saveOrUpdate(entity);
     }
 }
