@@ -1,6 +1,7 @@
 package com.ruoyi.web.controller.system;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,12 +14,11 @@ import com.ruoyi.system.service.ISysConfigService;
 
 /**
  * 注册验证
- * 
+ *
  * @author ruoyi
  */
 @RestController
-public class SysRegisterController extends BaseController
-{
+public class SysRegisterController extends BaseController {
     @Autowired
     private SysRegisterService registerService;
 
@@ -26,13 +26,23 @@ public class SysRegisterController extends BaseController
     private ISysConfigService configService;
 
     @PostMapping("/register")
-    public AjaxResult register(@RequestBody RegisterBody user)
-    {
-        if (!("true".equals(configService.selectConfigByKey("sys.account.registerUser"))))
-        {
+    public AjaxResult register(@RequestBody RegisterBody user) {
+        if (!("true".equals(configService.selectConfigByKey("sys.account.registerUser")))) {
             return error("当前系统没有开启注册功能！");
         }
         String msg = registerService.register(user);
         return StringUtils.isEmpty(msg) ? success() : error(msg);
+    }
+
+    @GetMapping("/getRegister")
+    public AjaxResult getRegister() {
+//        boolean register = registerService.getRegister();
+//        AjaxResult ajax = new AjaxResult();
+//        ajax.put("register",register);
+//        if (StringUtils.isEmpty(ajax)) {
+//            return error("当前系统没有开启注册功能！");
+//        }
+//        return ajax;
+        return AjaxResult.success(registerService.getRegister());
     }
 }
