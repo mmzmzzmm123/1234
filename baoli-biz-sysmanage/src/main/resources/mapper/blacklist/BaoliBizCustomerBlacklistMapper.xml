@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.blacklist.mapper.BaoliBizCustomerBlacklistMapper">
+    
+    <resultMap type="BaoliBizCustomerBlacklist" id="BaoliBizCustomerBlacklistResult">
+        <result property="id"    column="id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="certificateType"    column="certificate_type"    />
+        <result property="certificateNumber"    column="certificate_number"    />
+        <result property="provinceId"    column="province_id"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="provinceName"    column="province_name"    />
+        <result property="cityName"    column="city_name"    />
+        <result property="bankId"    column="bank_id"    />
+        <result property="phone"    column="phone"    />
+        <result property="reasons"    column="reasons"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizCustomerBlacklistVo">
+        select id, user_name, certificate_type, certificate_number,province_id, (select b.province from bl_sys_provinces b where b.provinceid = a.province_id) province_name,(select b.city from bl_sys_cities b where b.cityid = a.city_id) city_name,city_id,bank_id, phone, reasons, remark, create_by, create_time, update_by, update_time from baoli_biz_customer_blacklist a
+    </sql>
+
+    <select id="selectBaoliBizCustomerBlacklistList" parameterType="BaoliBizCustomerBlacklist" resultMap="BaoliBizCustomerBlacklistResult">
+        <include refid="selectBaoliBizCustomerBlacklistVo"/>
+        <where>  
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="certificateType != null  and certificateType != ''"> and certificate_type = #{certificateType}</if>
+            <if test="certificateNumber != null  and certificateNumber != ''"> and certificate_number = #{certificateNumber}</if>
+            <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
+            <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
+            <if test="bankId != null "> and bank_id = #{bankId}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="reasons != null  and reasons != ''"> and reasons = #{reasons}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizCustomerBlacklistById" parameterType="Long" resultMap="BaoliBizCustomerBlacklistResult">
+        <include refid="selectBaoliBizCustomerBlacklistVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizCustomerBlacklist" parameterType="BaoliBizCustomerBlacklist" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_customer_blacklist
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userName != null">user_name,</if>
+            <if test="certificateType != null">certificate_type,</if>
+            <if test="certificateNumber != null">certificate_number,</if>
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="bankId != null">bank_id,</if>
+            <if test="phone != null">phone,</if>
+            <if test="reasons != null">reasons,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userName != null">#{userName},</if>
+            <if test="certificateType != null">#{certificateType},</if>
+            <if test="certificateNumber != null">#{certificateNumber},</if>
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="bankId != null">#{bankId},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="reasons != null">#{reasons},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizCustomerBlacklist" parameterType="BaoliBizCustomerBlacklist">
+        update baoli_biz_customer_blacklist
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="certificateType != null">certificate_type = #{certificateType},</if>
+            <if test="certificateNumber != null">certificate_number = #{certificateNumber},</if>
+            <if test="provinceId != null">province_id = #{provinceId},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="bankId != null">bank_id = #{bankId},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="reasons != null">reasons = #{reasons},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizCustomerBlacklistById" parameterType="Long">
+        delete from baoli_biz_customer_blacklist where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizCustomerBlacklistByIds" parameterType="String">
+        delete from baoli_biz_customer_blacklist where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
