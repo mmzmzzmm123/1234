@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.task.mapper.BaoliBizMonthTaskMapper">
+    
+    <resultMap type="BaoliBizMonthTask" id="BaoliBizMonthTaskResult">
+        <result property="id"    column="id"    />
+        <result property="provinceId"    column="province_id"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="year"    column="year"    />
+        <result property="month"    column="month"    />
+        <result property="amount"    column="amount"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizMonthTaskVo">
+        select id, province_id, city_id, year, month, amount, status from baoli_biz_month_task
+    </sql>
+
+    <select id="selectBaoliBizMonthTaskList" parameterType="BaoliBizMonthTask" resultMap="BaoliBizMonthTaskResult">
+        <include refid="selectBaoliBizMonthTaskVo"/>
+        <where>  
+            <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
+            <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
+            <if test="year != null  and year != ''"> and year = #{year}</if>
+            <if test="month != null  and month != ''"> and month = #{month}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizMonthTaskById" parameterType="Long" resultMap="BaoliBizMonthTaskResult">
+        <include refid="selectBaoliBizMonthTaskVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizMonthTask" parameterType="BaoliBizMonthTask" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_month_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="year != null">year,</if>
+            <if test="month != null">month,</if>
+            <if test="amount != null">amount,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="year != null">#{year},</if>
+            <if test="month != null">#{month},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizMonthTask" parameterType="BaoliBizMonthTask">
+        update baoli_biz_month_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="provinceId != null">province_id = #{provinceId},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="year != null">year = #{year},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizMonthTaskById" parameterType="Long">
+        delete from baoli_biz_month_task where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizMonthTaskByIds" parameterType="String">
+        delete from baoli_biz_month_task where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

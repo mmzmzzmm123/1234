@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.task.mapper.BaoliBizYearTaskPlanEvaluateMapper">
+    
+    <resultMap type="BaoliBizYearTaskPlanEvaluate" id="BaoliBizYearTaskPlanEvaluateResult">
+        <result property="id"    column="id"    />
+        <result property="provinceId"    column="province_id"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="year"    column="year"    />
+        <result property="amount"    column="amount"    />
+        <result property="status"    column="status"    />
+        <result property="season1"    column="season1"    />
+        <result property="season2"    column="season2"    />
+        <result property="season3"    column="season3"    />
+        <result property="season4"    column="season4"    />
+        <result property="month1"    column="month1"    />
+        <result property="month2"    column="month2"    />
+        <result property="month3"    column="month3"    />
+        <result property="month4"    column="month4"    />
+        <result property="month5"    column="month5"    />
+        <result property="month6"    column="month6"    />
+        <result property="month7"    column="month7"    />
+        <result property="month8"    column="month8"    />
+        <result property="month9"    column="month9"    />
+        <result property="month10"    column="month10"    />
+        <result property="month11"    column="month11"    />
+        <result property="month12"    column="month12"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="assignTime"    column="assign_time"    />
+        <result property="month1EvaluateType"    column="month1_evaluate_type"    />
+        <result property="month1RefrencePlan"    column="month1_refrence_plan"    />
+        <result property="month2EvaluateType"    column="month2_evaluate_type"    />
+        <result property="month2RefrencePlan"    column="month2_refrence_plan"    />
+        <result property="month3EvaluateType"    column="month3_evaluate_type"    />
+        <result property="month3RefrencePlan"    column="month3_refrence_plan"    />
+        <result property="month4EvaluateType"    column="month4_evaluate_type"    />
+        <result property="month4RefrencePlan"    column="month4_refrence_plan"    />
+        <result property="month5EvaluateType"    column="month5_evaluate_type"    />
+        <result property="month5RefrencePlan"    column="month5_refrence_plan"    />
+        <result property="month6EvaluateType"    column="month6_evaluate_type"    />
+        <result property="month6RefrencePlan"    column="month6_refrence_plan"    />
+        <result property="month7EvaluateType"    column="month7_evaluate_type"    />
+        <result property="month7RefrencePlan"    column="month7_refrence_plan"    />
+        <result property="month8EvaluateType"    column="month8_evaluate_type"    />
+        <result property="month8RefrencePlan"    column="month8_refrence_plan"    />
+        <result property="month9EvaluateType"    column="month9_evaluate_type"    />
+        <result property="month9RefrencePlan"    column="month9_refrence_plan"    />
+        <result property="month10EvaluateType"    column="month10_evaluate_type"    />
+        <result property="month10RefrencePlan"    column="month10_refrence_plan"    />
+        <result property="month11EvaluateType"    column="month11_evaluate_type"    />
+        <result property="month11RefrencePlan"    column="month11_refrence_plan"    />
+        <result property="month12EvaluateType"    column="month12_evaluate_type"    />
+        <result property="month12RefrencePlan"    column="month12_refrence_plan"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizYearTaskPlanEvaluateVo">
+        select id, province_id, city_id, year, amount, status, season1, season2, season3, season4, month1, month2, month3, month4, month5, month6, month7, month8, month9, month10, month11, month12, create_time, assign_time, month1_evaluate_type, month1_refrence_plan, month2_evaluate_type, month2_refrence_plan, month3_evaluate_type, month3_refrence_plan, month4_evaluate_type, month4_refrence_plan, month5_evaluate_type, month5_refrence_plan, month6_evaluate_type, month6_refrence_plan, month7_evaluate_type, month7_refrence_plan, month8_evaluate_type, month8_refrence_plan, month9_evaluate_type, month9_refrence_plan, month10_evaluate_type, month10_refrence_plan, month11_evaluate_type, month11_refrence_plan, month12_evaluate_type, month12_refrence_plan from baoli_biz_year_task_plan_evaluate
+    </sql>
+
+    <select id="selectBaoliBizYearTaskPlanEvaluateList" parameterType="BaoliBizYearTaskPlanEvaluate" resultMap="BaoliBizYearTaskPlanEvaluateResult">
+        <include refid="selectBaoliBizYearTaskPlanEvaluateVo"/>
+        <where>  
+            <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
+            <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
+            <if test="year != null  and year != ''"> and year = #{year}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="season1 != null "> and season1 = #{season1}</if>
+            <if test="season2 != null "> and season2 = #{season2}</if>
+            <if test="season3 != null "> and season3 = #{season3}</if>
+            <if test="season4 != null "> and season4 = #{season4}</if>
+            <if test="month1 != null "> and month1 = #{month1}</if>
+            <if test="month2 != null "> and month2 = #{month2}</if>
+            <if test="month3 != null "> and month3 = #{month3}</if>
+            <if test="month4 != null "> and month4 = #{month4}</if>
+            <if test="month5 != null "> and month5 = #{month5}</if>
+            <if test="month6 != null "> and month6 = #{month6}</if>
+            <if test="month7 != null "> and month7 = #{month7}</if>
+            <if test="month8 != null "> and month8 = #{month8}</if>
+            <if test="month9 != null "> and month9 = #{month9}</if>
+            <if test="month10 != null "> and month10 = #{month10}</if>
+            <if test="month11 != null "> and month11 = #{month11}</if>
+            <if test="month12 != null "> and month12 = #{month12}</if>
+            <if test="assignTime != null "> and assign_time = #{assignTime}</if>
+            <if test="month1EvaluateType != null  and month1EvaluateType != ''"> and month1_evaluate_type = #{month1EvaluateType}</if>
+            <if test="month1RefrencePlan != null  and month1RefrencePlan != ''"> and month1_refrence_plan = #{month1RefrencePlan}</if>
+            <if test="month2EvaluateType != null  and month2EvaluateType != ''"> and month2_evaluate_type = #{month2EvaluateType}</if>
+            <if test="month2RefrencePlan != null  and month2RefrencePlan != ''"> and month2_refrence_plan = #{month2RefrencePlan}</if>
+            <if test="month3EvaluateType != null  and month3EvaluateType != ''"> and month3_evaluate_type = #{month3EvaluateType}</if>
+            <if test="month3RefrencePlan != null  and month3RefrencePlan != ''"> and month3_refrence_plan = #{month3RefrencePlan}</if>
+            <if test="month4EvaluateType != null  and month4EvaluateType != ''"> and month4_evaluate_type = #{month4EvaluateType}</if>
+            <if test="month4RefrencePlan != null  and month4RefrencePlan != ''"> and month4_refrence_plan = #{month4RefrencePlan}</if>
+            <if test="month5EvaluateType != null  and month5EvaluateType != ''"> and month5_evaluate_type = #{month5EvaluateType}</if>
+            <if test="month5RefrencePlan != null  and month5RefrencePlan != ''"> and month5_refrence_plan = #{month5RefrencePlan}</if>
+            <if test="month6EvaluateType != null  and month6EvaluateType != ''"> and month6_evaluate_type = #{month6EvaluateType}</if>
+            <if test="month6RefrencePlan != null  and month6RefrencePlan != ''"> and month6_refrence_plan = #{month6RefrencePlan}</if>
+            <if test="month7EvaluateType != null  and month7EvaluateType != ''"> and month7_evaluate_type = #{month7EvaluateType}</if>
+            <if test="month7RefrencePlan != null  and month7RefrencePlan != ''"> and month7_refrence_plan = #{month7RefrencePlan}</if>
+            <if test="month8EvaluateType != null  and month8EvaluateType != ''"> and month8_evaluate_type = #{month8EvaluateType}</if>
+            <if test="month8RefrencePlan != null  and month8RefrencePlan != ''"> and month8_refrence_plan = #{month8RefrencePlan}</if>
+            <if test="month9EvaluateType != null  and month9EvaluateType != ''"> and month9_evaluate_type = #{month9EvaluateType}</if>
+            <if test="month9RefrencePlan != null  and month9RefrencePlan != ''"> and month9_refrence_plan = #{month9RefrencePlan}</if>
+            <if test="month10EvaluateType != null  and month10EvaluateType != ''"> and month10_evaluate_type = #{month10EvaluateType}</if>
+            <if test="month10RefrencePlan != null  and month10RefrencePlan != ''"> and month10_refrence_plan = #{month10RefrencePlan}</if>
+            <if test="month11EvaluateType != null  and month11EvaluateType != ''"> and month11_evaluate_type = #{month11EvaluateType}</if>
+            <if test="month11RefrencePlan != null  and month11RefrencePlan != ''"> and month11_refrence_plan = #{month11RefrencePlan}</if>
+            <if test="month12EvaluateType != null  and month12EvaluateType != ''"> and month12_evaluate_type = #{month12EvaluateType}</if>
+            <if test="month12RefrencePlan != null  and month12RefrencePlan != ''"> and month12_refrence_plan = #{month12RefrencePlan}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizYearTaskPlanEvaluateById" parameterType="Long" resultMap="BaoliBizYearTaskPlanEvaluateResult">
+        <include refid="selectBaoliBizYearTaskPlanEvaluateVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizYearTaskPlanEvaluate" parameterType="BaoliBizYearTaskPlanEvaluate" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_year_task_plan_evaluate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="year != null">year,</if>
+            <if test="amount != null">amount,</if>
+            <if test="status != null">status,</if>
+            <if test="season1 != null">season1,</if>
+            <if test="season2 != null">season2,</if>
+            <if test="season3 != null">season3,</if>
+            <if test="season4 != null">season4,</if>
+            <if test="month1 != null">month1,</if>
+            <if test="month2 != null">month2,</if>
+            <if test="month3 != null">month3,</if>
+            <if test="month4 != null">month4,</if>
+            <if test="month5 != null">month5,</if>
+            <if test="month6 != null">month6,</if>
+            <if test="month7 != null">month7,</if>
+            <if test="month8 != null">month8,</if>
+            <if test="month9 != null">month9,</if>
+            <if test="month10 != null">month10,</if>
+            <if test="month11 != null">month11,</if>
+            <if test="month12 != null">month12,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="assignTime != null">assign_time,</if>
+            <if test="month1EvaluateType != null">month1_evaluate_type,</if>
+            <if test="month1RefrencePlan != null">month1_refrence_plan,</if>
+            <if test="month2EvaluateType != null">month2_evaluate_type,</if>
+            <if test="month2RefrencePlan != null">month2_refrence_plan,</if>
+            <if test="month3EvaluateType != null">month3_evaluate_type,</if>
+            <if test="month3RefrencePlan != null">month3_refrence_plan,</if>
+            <if test="month4EvaluateType != null">month4_evaluate_type,</if>
+            <if test="month4RefrencePlan != null">month4_refrence_plan,</if>
+            <if test="month5EvaluateType != null">month5_evaluate_type,</if>
+            <if test="month5RefrencePlan != null">month5_refrence_plan,</if>
+            <if test="month6EvaluateType != null">month6_evaluate_type,</if>
+            <if test="month6RefrencePlan != null">month6_refrence_plan,</if>
+            <if test="month7EvaluateType != null">month7_evaluate_type,</if>
+            <if test="month7RefrencePlan != null">month7_refrence_plan,</if>
+            <if test="month8EvaluateType != null">month8_evaluate_type,</if>
+            <if test="month8RefrencePlan != null">month8_refrence_plan,</if>
+            <if test="month9EvaluateType != null">month9_evaluate_type,</if>
+            <if test="month9RefrencePlan != null">month9_refrence_plan,</if>
+            <if test="month10EvaluateType != null">month10_evaluate_type,</if>
+            <if test="month10RefrencePlan != null">month10_refrence_plan,</if>
+            <if test="month11EvaluateType != null">month11_evaluate_type,</if>
+            <if test="month11RefrencePlan != null">month11_refrence_plan,</if>
+            <if test="month12EvaluateType != null">month12_evaluate_type,</if>
+            <if test="month12RefrencePlan != null">month12_refrence_plan,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="year != null">#{year},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="status != null">#{status},</if>
+            <if test="season1 != null">#{season1},</if>
+            <if test="season2 != null">#{season2},</if>
+            <if test="season3 != null">#{season3},</if>
+            <if test="season4 != null">#{season4},</if>
+            <if test="month1 != null">#{month1},</if>
+            <if test="month2 != null">#{month2},</if>
+            <if test="month3 != null">#{month3},</if>
+            <if test="month4 != null">#{month4},</if>
+            <if test="month5 != null">#{month5},</if>
+            <if test="month6 != null">#{month6},</if>
+            <if test="month7 != null">#{month7},</if>
+            <if test="month8 != null">#{month8},</if>
+            <if test="month9 != null">#{month9},</if>
+            <if test="month10 != null">#{month10},</if>
+            <if test="month11 != null">#{month11},</if>
+            <if test="month12 != null">#{month12},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="assignTime != null">#{assignTime},</if>
+            <if test="month1EvaluateType != null">#{month1EvaluateType},</if>
+            <if test="month1RefrencePlan != null">#{month1RefrencePlan},</if>
+            <if test="month2EvaluateType != null">#{month2EvaluateType},</if>
+            <if test="month2RefrencePlan != null">#{month2RefrencePlan},</if>
+            <if test="month3EvaluateType != null">#{month3EvaluateType},</if>
+            <if test="month3RefrencePlan != null">#{month3RefrencePlan},</if>
+            <if test="month4EvaluateType != null">#{month4EvaluateType},</if>
+            <if test="month4RefrencePlan != null">#{month4RefrencePlan},</if>
+            <if test="month5EvaluateType != null">#{month5EvaluateType},</if>
+            <if test="month5RefrencePlan != null">#{month5RefrencePlan},</if>
+            <if test="month6EvaluateType != null">#{month6EvaluateType},</if>
+            <if test="month6RefrencePlan != null">#{month6RefrencePlan},</if>
+            <if test="month7EvaluateType != null">#{month7EvaluateType},</if>
+            <if test="month7RefrencePlan != null">#{month7RefrencePlan},</if>
+            <if test="month8EvaluateType != null">#{month8EvaluateType},</if>
+            <if test="month8RefrencePlan != null">#{month8RefrencePlan},</if>
+            <if test="month9EvaluateType != null">#{month9EvaluateType},</if>
+            <if test="month9RefrencePlan != null">#{month9RefrencePlan},</if>
+            <if test="month10EvaluateType != null">#{month10EvaluateType},</if>
+            <if test="month10RefrencePlan != null">#{month10RefrencePlan},</if>
+            <if test="month11EvaluateType != null">#{month11EvaluateType},</if>
+            <if test="month11RefrencePlan != null">#{month11RefrencePlan},</if>
+            <if test="month12EvaluateType != null">#{month12EvaluateType},</if>
+            <if test="month12RefrencePlan != null">#{month12RefrencePlan},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizYearTaskPlanEvaluate" parameterType="BaoliBizYearTaskPlanEvaluate">
+        update baoli_biz_year_task_plan_evaluate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="provinceId != null">province_id = #{provinceId},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="year != null">year = #{year},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="season1 != null">season1 = #{season1},</if>
+            <if test="season2 != null">season2 = #{season2},</if>
+            <if test="season3 != null">season3 = #{season3},</if>
+            <if test="season4 != null">season4 = #{season4},</if>
+            <if test="month1 != null">month1 = #{month1},</if>
+            <if test="month2 != null">month2 = #{month2},</if>
+            <if test="month3 != null">month3 = #{month3},</if>
+            <if test="month4 != null">month4 = #{month4},</if>
+            <if test="month5 != null">month5 = #{month5},</if>
+            <if test="month6 != null">month6 = #{month6},</if>
+            <if test="month7 != null">month7 = #{month7},</if>
+            <if test="month8 != null">month8 = #{month8},</if>
+            <if test="month9 != null">month9 = #{month9},</if>
+            <if test="month10 != null">month10 = #{month10},</if>
+            <if test="month11 != null">month11 = #{month11},</if>
+            <if test="month12 != null">month12 = #{month12},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="assignTime != null">assign_time = #{assignTime},</if>
+            <if test="month1EvaluateType != null">month1_evaluate_type = #{month1EvaluateType},</if>
+            <if test="month1RefrencePlan != null">month1_refrence_plan = #{month1RefrencePlan},</if>
+            <if test="month2EvaluateType != null">month2_evaluate_type = #{month2EvaluateType},</if>
+            <if test="month2RefrencePlan != null">month2_refrence_plan = #{month2RefrencePlan},</if>
+            <if test="month3EvaluateType != null">month3_evaluate_type = #{month3EvaluateType},</if>
+            <if test="month3RefrencePlan != null">month3_refrence_plan = #{month3RefrencePlan},</if>
+            <if test="month4EvaluateType != null">month4_evaluate_type = #{month4EvaluateType},</if>
+            <if test="month4RefrencePlan != null">month4_refrence_plan = #{month4RefrencePlan},</if>
+            <if test="month5EvaluateType != null">month5_evaluate_type = #{month5EvaluateType},</if>
+            <if test="month5RefrencePlan != null">month5_refrence_plan = #{month5RefrencePlan},</if>
+            <if test="month6EvaluateType != null">month6_evaluate_type = #{month6EvaluateType},</if>
+            <if test="month6RefrencePlan != null">month6_refrence_plan = #{month6RefrencePlan},</if>
+            <if test="month7EvaluateType != null">month7_evaluate_type = #{month7EvaluateType},</if>
+            <if test="month7RefrencePlan != null">month7_refrence_plan = #{month7RefrencePlan},</if>
+            <if test="month8EvaluateType != null">month8_evaluate_type = #{month8EvaluateType},</if>
+            <if test="month8RefrencePlan != null">month8_refrence_plan = #{month8RefrencePlan},</if>
+            <if test="month9EvaluateType != null">month9_evaluate_type = #{month9EvaluateType},</if>
+            <if test="month9RefrencePlan != null">month9_refrence_plan = #{month9RefrencePlan},</if>
+            <if test="month10EvaluateType != null">month10_evaluate_type = #{month10EvaluateType},</if>
+            <if test="month10RefrencePlan != null">month10_refrence_plan = #{month10RefrencePlan},</if>
+            <if test="month11EvaluateType != null">month11_evaluate_type = #{month11EvaluateType},</if>
+            <if test="month11RefrencePlan != null">month11_refrence_plan = #{month11RefrencePlan},</if>
+            <if test="month12EvaluateType != null">month12_evaluate_type = #{month12EvaluateType},</if>
+            <if test="month12RefrencePlan != null">month12_refrence_plan = #{month12RefrencePlan},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizYearTaskPlanEvaluateById" parameterType="Long">
+        delete from baoli_biz_year_task_plan_evaluate where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizYearTaskPlanEvaluateByIds" parameterType="String">
+        delete from baoli_biz_year_task_plan_evaluate where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

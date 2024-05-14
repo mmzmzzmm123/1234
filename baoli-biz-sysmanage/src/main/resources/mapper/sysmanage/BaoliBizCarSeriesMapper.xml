@@ -28,13 +28,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <where>  
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="level2BrandId != null  and level2BrandId != ''"> and level2_brand_id = #{level2BrandId}</if>
-            <if test="brands != null  and brands != ''"> or brand_id in
+            <if test="brands != null  and brands != ''"> and brand_id in
                 <foreach collection="brands" index="index" item="item" open="(" separator="," close=")">
                     #{item}
                 </foreach>
             </if>
 
-            <if test="level2Brands != null  and level2Brands != ''"> or level2_brand_id in
+            <if test="level2Brands != null  and level2Brands != ''"> and level2_brand_id in
                 <foreach collection="level2Brands" index="i" item="item" open="(" separator="," close=")">
                     <foreach collection="item" index="j" separator="," item="item2">
                         <if test="j==1">

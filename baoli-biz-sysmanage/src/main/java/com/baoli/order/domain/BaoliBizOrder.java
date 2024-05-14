@@ -706,12 +706,92 @@ public class BaoliBizOrder extends BaseEntity
     private Date shareDate;
     private Date releaseLoanDate;
     private JSONObject auditInfo;
-
+    private String preCheckResult;
+    private String workPlaceLocation;
+    private String domicilePlaceLocation;
+    private String gender;
+    private String propertyType;
+    private String offerTransRecords;
+    private String psbcBankVip;
+    private String licenseLocationType;
+    private String licenseLocation;
     public JSONObject getAuditInfo() {
         return auditInfo;
     }
 
     public void setAuditInfo(JSONObject auditInfo) {
         this.auditInfo = auditInfo;
+    }
+
+    public String getPreCheckResult() {
+        return preCheckResult;
+    }
+
+    public void setPreCheckResult(String preCheckResult) {
+        this.preCheckResult = preCheckResult;
+    }
+
+    public String getWorkPlaceLocation() {
+        return workPlaceLocation;
+    }
+
+    public void setWorkPlaceLocation(String workPlaceLocation) {
+        this.workPlaceLocation = workPlaceLocation;
+    }
+
+    public String getDomicilePlaceLocation() {
+        return domicilePlaceLocation;
+    }
+
+    public void setDomicilePlaceLocation(String domicilePlaceLocation) {
+        this.domicilePlaceLocation = domicilePlaceLocation;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public String getPropertyType() {
+        return propertyType;
+    }
+
+    public void setPropertyType(String propertyType) {
+        this.propertyType = propertyType;
+    }
+
+    public String getOfferTransRecords() {
+        return offerTransRecords;
+    }
+
+    public void setOfferTransRecords(String offerTransRecords) {
+        this.offerTransRecords = offerTransRecords;
+    }
+
+    public String getPsbcBankVip() {
+        return psbcBankVip;
+    }
+
+    public void setPsbcBankVip(String psbcBankVip) {
+        this.psbcBankVip = psbcBankVip;
+    }
+
+    public String getLicenseLocationType() {
+        return licenseLocationType;
+    }
+
+    public void setLicenseLocationType(String licenseLocationType) {
+        this.licenseLocationType = licenseLocationType;
+    }
+
+    public String getLicenseLocation() {
+        return licenseLocation;
+    }
+
+    public void setLicenseLocation(String licenseLocation) {
+        this.licenseLocation = licenseLocation;
     }
 }

@@ -17,6 +17,7 @@ public class BaoliBizCarBrand extends BaseEntity
 
     /** 品牌id */
     private Long id;
+    private Long brandId;
     /** 品牌首字母 */
     @Excel(name = "品牌首字母")
     private String letter;
@@ -24,6 +25,7 @@ public class BaoliBizCarBrand extends BaseEntity
     /** 品牌名称 */
     @Excel(name = "品牌名称")
     private String name;
+    private String brandName;
 
     /** 上级品牌id */
     @Excel(name = "上级品牌")
@@ -97,6 +99,22 @@ public class BaoliBizCarBrand extends BaseEntity
 
     public void setParentName(String parentName) {
         this.parentName = parentName;
+    }
+
+    public Long getBrandId() {
+        return brandId;
+    }
+
+    public void setBrandId(Long brandId) {
+        this.brandId = brandId;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
     }
 
     @Override

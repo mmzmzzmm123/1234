@@ -11,13 +11,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="bankId"    column="bank_id"    />
         <result property="remark"    column="remark"    />
         <result property="brandId"    column="brand_id"    />
+        <result property="level2BrandId"    column="level2_brand_id"    />
         <result property="modelId"    column="model_id"    />
         <result property="subsidyType"    column="subsidy_type"    />
         <result property="content"    column="content"    />
     </resultMap>
 
     <sql id="selectBaoliBizFeeRateRuleVo">
-        select id, title, fee_rate_type, bank_id, remark, brand_id, model_id, subsidy_type, content from baoli_biz_fee_rate_rule
+        select (select b.`name` from  baoli_biz_car_brand b where b.id = a.level2_brand_id) as level2_brand_name,(select b.`name` from  baoli_biz_car_brand b where b.id = a.brand_id) as brand_name,(select b.name from baoli_biz_car_series b where b.id = a.series_id) series_name,(select b.name from baoli_biz_car_model b where b.id = a.model_id) model_name,id, title, fee_rate_type,concat((SELECT dict_label FROM sys_dict_data b where dict_type ='bl_biz_bank' and b.dict_value =(select agency from bl_sys_bank c where c.id = a.bank_id)),'/', (select `name` from bl_sys_bank b where b.id = a.bank_id)) bank_name, bank_id, remark, brand_id,level2_brand_id, model_id, subsidy_type, content from baoli_biz_fee_rate_rule a
     </sql>
 
     <select id="selectBaoliBizFeeRateRuleList" parameterType="BaoliBizFeeRateRule" resultMap="BaoliBizFeeRateRuleResult">
@@ -27,6 +28,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="feeRateType != null  and feeRateType != ''"> and fee_rate_type = #{feeRateType}</if>
             <if test="bankId != null "> and bank_id = #{bankId}</if>
             <if test="brandId != null "> and brand_id = #{brandId}</if>
+            <if test="level2BrandId != null "> and level2_brand_id = #{level2BrandId}</if>
+            <if test="seriesId != null "> and series_id = #{seriesId}</if>
             <if test="modelId != null "> and model_id = #{modelId}</if>
             <if test="subsidyType != null  and subsidyType != ''"> and subsidy_type = #{subsidyType}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
@@ -46,6 +49,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bankId != null">bank_id,</if>
             <if test="remark != null">remark,</if>
             <if test="brandId != null">brand_id,</if>
+            <if test="level2BrandId != null">level2_brand_id,</if>
+            <if test="seriesId != null">series_id,</if>
             <if test="modelId != null">model_id,</if>
             <if test="subsidyType != null">subsidy_type,</if>
             <if test="content != null">content,</if>
@@ -56,6 +61,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bankId != null">#{bankId},</if>
             <if test="remark != null">#{remark},</if>
             <if test="brandId != null">#{brandId},</if>
+            <if test="level2BrandId != null">#{level2BrandId},</if>
+            <if test="seriesId != null">#{seriesId},</if>
             <if test="modelId != null">#{modelId},</if>
             <if test="subsidyType != null">#{subsidyType},</if>
             <if test="content != null">#{content},</if>
@@ -70,6 +77,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="bankId != null">bank_id = #{bankId},</if>
             <if test="remark != null">remark = #{remark},</if>
             <if test="brandId != null">brand_id = #{brandId},</if>
+            <if test="level2BrandId != null">level2_brand_id = #{level2BrandId},</if>
+            <if test="seriesId != null">series_id = #{seriesId},</if>
             <if test="modelId != null">model_id = #{modelId},</if>
             <if test="subsidyType != null">subsidy_type = #{subsidyType},</if>
             <if test="content != null">content = #{content},</if>
