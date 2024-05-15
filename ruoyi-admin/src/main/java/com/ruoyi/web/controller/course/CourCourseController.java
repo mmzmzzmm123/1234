@@ -45,6 +45,9 @@ public class CourCourseController extends BaseController
     public TableDataInfo query(CourseQueryDTO courseQueryDTO)
     {
         startPage();
+        if (!isAdmin()) {
+            courseQueryDTO.setUserName(getUsername());
+        }
         List<CourCourse> list = courCourseService.queryCourCourseList(courseQueryDTO);
         return getDataTable(list);
     }

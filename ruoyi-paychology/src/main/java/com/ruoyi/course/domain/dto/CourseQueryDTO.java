@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 public class CourseQueryDTO extends BaseEntity {
+    private String userName;
     private String nameValue;
     private Integer typeValue;
     private Integer payTypeValue;

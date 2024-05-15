@@ -55,6 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             </if>
             <if test="nameValue != null  and nameValue != ''"> and name like concat('%', #{nameValue}, '%')</if>
             <if test="typeValue != null "> and type = #{typeValue}</if>
+            <if test="userName != null and userName != ''"> and user_name = #{userName}</if>
             <if test="payTypeValue != null "> and pay_type = #{payTypeValue}</if>
             <if test="authorValue != null  and authorValue != ''"> and author like concat('%', #{authorValue}, '%')</if>
             <if test="onSaleValue != null "> and on_sale = #{onSaleValue}</if>
