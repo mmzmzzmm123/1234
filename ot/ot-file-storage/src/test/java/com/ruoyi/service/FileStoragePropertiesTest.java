@@ -1,12 +1,16 @@
 package com.ruoyi.service;
 
 import com.ruoyi.FileStorageProperties;
+import com.ruoyi.bean.FileInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runner.Runner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import java.io.File;
+import java.io.FileInputStream;
 
 /**
  * @author yangyouqi
@@ -23,7 +27,17 @@ public class FileStoragePropertiesTest {
 
     @Test
     public void test() {
-        System.out.println(fileStorageService.getFileStorage().getPlatform());
-        System.out.println(fileStorageProperties);
+        String filePath = "C:\\Users\\yyq\\Desktop\\demo\\1.jpg";
+        File file = new File(filePath);
+        try (FileInputStream inputStream = new FileInputStream(file)) {
+            MockMultipartFile mockMultipartFile = new MockMultipartFile("file", file.getName(), "text/plain", inputStream);
+            FileInfo fileInfo = new FileInfo();
+            String upload = fileStorageService.getFileStorage().upload(mockMultipartFile,fileInfo);
+            System.out.println(upload);
+            System.out.println(fileStorageService.getFileStorage().getPlatform());
+            System.out.println(fileStorageProperties);
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
