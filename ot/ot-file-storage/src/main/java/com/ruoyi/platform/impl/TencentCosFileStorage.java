@@ -11,7 +11,7 @@ import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
-import com.ruoyi.FileStorageProperties.TencentCosConfig;
+import com.ruoyi.config.FileStorageProperties.TencentCosConfig;
 import com.ruoyi.bean.FileInfo;
 import com.ruoyi.platform.FileStorage;
 import lombok.Data;
@@ -59,7 +59,7 @@ public class TencentCosFileStorage implements FileStorage {
     }
 
     @Override
-    public String upload(MultipartFile multipartFile, FileInfo fileInfo) {
+    public FileInfo upload(MultipartFile multipartFile) {
         try {
             // 指定要上传到 COS 上对象键 (也是最终访问地址)
             String newKey = getFileKey(basePath,multipartFile.getName());
@@ -70,7 +70,7 @@ public class TencentCosFileStorage implements FileStorage {
             PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
             System.out.println(putObjectResult);
             // 返回内容
-            return newKey;
+            return new FileInfo();
         } catch (CosClientException | IOException e) {
             log.error("腾讯云文件上传异常：", e);
             throw new RuntimeException("文件上传异常：" + e.getMessage());
@@ -78,6 +78,16 @@ public class TencentCosFileStorage implements FileStorage {
             //关闭客户端(关闭后台线程)
             cosClient.shutdown();
         }
+    }
+
+    @Override
+    public String detectMime(FileInfo fileInfo) {
+        return "";
+    }
+
+    @Override
+    public void publishEvent(FileInfo fileInfo) {
+
     }
 
     /**
@@ -110,12 +120,6 @@ public class TencentCosFileStorage implements FileStorage {
      */
     public ObjectMetadata getObjectMetadata(FileInfo fileInfo) {
         ObjectMetadata metadata = new ObjectMetadata();
-        if (fileInfo.getSize() != null) metadata.setContentLength(fileInfo.getSize());
-        if (fileInfo.getContentType() != null) metadata.setContentType(fileInfo.getContentType());
-        metadata.setUserMetadata(fileInfo.getUserMetadata());
-        if (CollUtil.isNotEmpty(fileInfo.getMetadata())) {
-            fileInfo.getMetadata().forEach(metadata::setHeader);
-        }
         return metadata;
     }
 

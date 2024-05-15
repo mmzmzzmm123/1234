@@ -1,6 +1,5 @@
 package com.ruoyi.config;
 
-import com.ruoyi.FileStorageProperties;
 import com.ruoyi.platform.FileStorage;
 import com.ruoyi.service.FileStorageService;
 import lombok.extern.slf4j.Slf4j;

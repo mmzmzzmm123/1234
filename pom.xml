@@ -6,7 +6,7 @@
 
     <groupId>com.ruoyi</groupId>
     <artifactId>ruoyi</artifactId>
-    <version>${ruoyi.version}</version>
+    <version>3.8.6</version>
 
     <name>ruoyi</name>
     <url>http://www.ruoyi.vip</url>
@@ -42,10 +42,12 @@
         <hutool.version>5.3.1</hutool.version>
         <core.version>3.3.3</core.version>
         <wechat.version>4.6.0</wechat.version>
+        <tika.version>2.9.2</tika.version>
 
         <!--cos-->
         <cos_api.version>5.6.137</cos_api.version>
         <hutool.version>5.8.22</hutool.version>
+        <thumbnailator.version>0.4.20</thumbnailator.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -182,17 +184,23 @@
                 <artifactId>ot-common</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
-            <!-- 业务模块-->
+            <!--业务模块-->
+<!--            <dependency>-->
+<!--                <groupId>com.ruoyi</groupId>-->
+<!--                <artifactId>ot</artifactId>-->
+<!--                <version>${project.version}</version>-->
+<!--&lt;!&ndash;                <type>pom</type>&ndash;&gt;-->
+<!--&lt;!&ndash;                <scope>import</scope>&ndash;&gt;-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>onethinker</artifactId>
-                <version>${ruoyi.version}</version>
+                <version>${project.version}</version>
             </dependency>
-            <!--业务扩展模块-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
-                <artifactId>ot</artifactId>
-                <version>${ruoyi.version}</version>
+                <artifactId>ot-file-storage</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
@@ -240,18 +248,30 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--文件内容分析-->
+            <dependency>
+                <groupId>org.apache.tika</groupId>
+                <artifactId>tika-bom</artifactId>
+                <version>${tika.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>net.coobird</groupId>
+                <artifactId>thumbnailator</artifactId>
+                <version>${thumbnailator.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <modules>
+        <module>ot</module>
         <module>ot-admin</module>
         <module>ot-framework</module>
         <module>ot-system</module>
         <module>ot-quartz</module>
         <module>ot-generator</module>
         <module>ot-common</module>
-        <module>onethinker</module>
-        <module>ot</module>
     </modules>
     <packaging>pom</packaging>
 

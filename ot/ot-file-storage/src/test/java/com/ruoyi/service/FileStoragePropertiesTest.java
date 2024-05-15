@@ -1,6 +1,6 @@
 package com.ruoyi.service;
 
-import com.ruoyi.FileStorageProperties;
+import com.ruoyi.config.FileStorageProperties;
 import com.ruoyi.bean.FileInfo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,8 +31,7 @@ public class FileStoragePropertiesTest {
         File file = new File(filePath);
         try (FileInputStream inputStream = new FileInputStream(file)) {
             MockMultipartFile mockMultipartFile = new MockMultipartFile("file", file.getName(), "text/plain", inputStream);
-            FileInfo fileInfo = new FileInfo();
-            String upload = fileStorageService.getFileStorage().upload(mockMultipartFile,fileInfo);
+            FileInfo upload = fileStorageService.getFileStorage().upload(mockMultipartFile);
             System.out.println(upload);
             System.out.println(fileStorageService.getFileStorage().getPlatform());
             System.out.println(fileStorageProperties);

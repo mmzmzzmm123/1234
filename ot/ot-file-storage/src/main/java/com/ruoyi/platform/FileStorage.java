@@ -26,10 +26,22 @@ public interface FileStorage extends AutoCloseable {
     /**
      * 上传文件
      * @param file 文件内容
-     * @param fileInfo 文件类
      * @return
      */
-    String upload(MultipartFile file,FileInfo fileInfo);
+    FileInfo upload(MultipartFile file);
+
+    /**
+     * 检测文件的MIME类型
+     * @param fileInfo fileInfo
+     * @return
+     */
+    String detectMime(FileInfo fileInfo);
+
+    /**
+     * 推送事件处理
+     * @param fileInfo fileInfo
+     */
+    void publishEvent(FileInfo fileInfo);
 
     /**
      * 释放相关资源

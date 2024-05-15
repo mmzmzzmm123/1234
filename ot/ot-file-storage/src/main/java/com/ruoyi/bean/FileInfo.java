@@ -1,10 +1,16 @@
 package com.ruoyi.bean;
 
 import cn.hutool.core.lang.Dict;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -15,121 +21,74 @@ import java.util.Map;
 @Data
 @Accessors(chain = true)
 public class FileInfo implements Serializable {
-
     /**
      * 文件id
      */
     private String id;
-
     /**
-     * 文件访问地址
+     * 租户id
      */
-    private String url;
-
-    /**
-     * 文件大小，单位字节
-     */
-    private Long size;
-
+    private String tenantId;
     /**
      * 文件名称
      */
-    private String filename;
-
+    private String fileName;
     /**
-     * 原始文件名
+     * 文件指纹
      */
-    private String originalFilename;
-
+    private String fingerprint;
     /**
-     * 基础存储路径
+     * 文件大小(字节)
      */
-    private String basePath;
+    private long fileSize;
+    /**
+     * MIME文件类型
+     */
+    private String mimeType;
 
     /**
-     * 存储路径
+     * 文件路径
      */
     private String path;
-
     /**
      * 文件扩展名
      */
-    private String ext;
-
+    private String extension;
     /**
-     * MIME 类型
+     * 应用名称
      */
-    private String contentType;
-
+    private String appName;
     /**
-     * 存储平台
+     * 创建人id
      */
-    private String platform;
-
-    /**
-     * 缩略图访问路径
-     */
-    private String thUrl;
-
-    /**
-     * 缩略图名称
-     */
-    private String thFilename;
-
-    /**
-     * 缩略图大小，单位字节
-     */
-    private Long thSize;
-
-    /**
-     * 缩略图 MIME 类型
-     */
-    private String thContentType;
-
-    /**
-     * 文件所属对象id
-     */
-    private String objectId;
-
-    /**
-     * 文件所属对象类型，例如用户头像，评价图片
-     */
-    private String objectType;
-
-    /**
-     * 文件元数据
-     */
-    private Map<String, String> metadata;
-
-    /**
-     * 文件用户元数据
-     */
-    private Map<String, String> userMetadata;
-
-    /**
-     * 缩略图元数据
-     */
-    private Map<String, String> thMetadata;
-
-    /**
-     * 缩略图用户元数据
-     */
-    private Map<String, String> thUserMetadata;
-
-    /**
-     * 附加属性字典
-     */
-    private Dict attr;
-
-    /**
-     * 上传ID，仅在手动分片上传时使用
-     */
-    private String uploadId;
-
+    private String createUserId;
     /**
      * 创建时间
      */
-    private Date createTime;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime createTime;
+
+    /**
+     * 备注
+     */
+    private String remark;
+    /**
+     * 创建人ip
+     */
+    private String creatorIpAddresses;
+    /**
+     * 主机名称
+     */
+    private String hostName;
+
+    /**
+     * 磁盘存储路径
+     */
+    private String diskPath;
+
+    private Map<String, Object> attr;
 
     private static final long serialVersionUID = 1L;
 

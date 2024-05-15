@@ -3,18 +3,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
+    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.ruoyi</groupId>
-        <artifactId>ruoyi</artifactId>
+        <artifactId>ot</artifactId>
         <version>3.8.6</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
-
     <artifactId>onethinker</artifactId>
-
-    <description>
-        业务系统模块
-    </description>
+    <name>onethinker</name>
 
     <dependencies>
         <!-- 通用工具-->
@@ -27,29 +23,20 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ot-framework</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-crypto</artifactId>
         </dependency>
-
         <!--集成微信能力SDK-->
         <dependency>
             <groupId>com.github.binarywang</groupId>
             <artifactId>weixin-java-miniapp</artifactId>
         </dependency>
-
         <!-- springboot 发送邮件-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
-
         <!-- spring-boot-test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
