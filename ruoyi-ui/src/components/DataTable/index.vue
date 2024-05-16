@@ -130,6 +130,9 @@ export default {
      * 添加数据跳转
      */
     handleAdd() {
+      debugger;
+      console.log(this.options.addRoute);
+      this.options.addRoute
       if (this.options.addRoute) {
         this.$router.push({ name: this.options.addRoute, params: {}})
         return

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjpt.business.mapper.ElRepoMapper">
+    
+    <resultMap type="ElRepo" id="ElRepoResult">
+        <result property="id"    column="id"    />
+        <result property="code"    column="code"    />
+        <result property="title"    column="title"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="userId"    column="user_id"    />
+        <result property="deptId"    column="dept_id"    />
+    </resultMap>
+
+    <sql id="selectElRepoVo">
+        select id, code, title, remark, create_time, update_time, user_id, dept_id from el_repo
+    </sql>
+
+    <select id="selectElRepoList" parameterType="ElRepo" resultMap="ElRepoResult">
+        <include refid="selectElRepoVo"/>
+        <where>  
+            <if test="code != null  and code != ''"> and code = #{code}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+    </select>
+    
+    <select id="selectElRepoById" parameterType="String" resultMap="ElRepoResult">
+        <include refid="selectElRepoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertElRepo" parameterType="ElRepo">
+        insert into el_repo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="code != null and code != ''">code,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="deptId != null">dept_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="code != null and code != ''">#{code},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="deptId != null">#{deptId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElRepo" parameterType="ElRepo">
+        update el_repo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="code != null and code != ''">code = #{code},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="remark != null and remark != ''">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElRepoById" parameterType="String">
+        delete from el_repo where id = #{id}
+    </delete>
+
+    <delete id="deleteElRepoByIds" parameterType="String">
+        delete from el_repo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
