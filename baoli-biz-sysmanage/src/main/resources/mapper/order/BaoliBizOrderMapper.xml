@@ -79,6 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="psbcBankVip"    column="psbc_bank_vip"    />
         <result property="licenseLocationType"    column="license_location_type"    />
         <result property="licenseLocation"    column="license_location"    />
+        <result property="adjustLoanAmount"    column="adjust_loan_amount"    />
     </resultMap>
 
     <sql id="selectBaoliBizOrderVo">
@@ -135,6 +136,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="applicantId != null "> and applicant_id = #{applicantId}</if>
             <if test="provinceId != null "> and province_id = #{provinceId}</if>
             <if test="label != null "> and label = #{label}</if>
+            <if test="ids != null "> and id in
+                <foreach collection="ids" item="orderId" open="(" separator="," close=")">
+                    #{orderId}
+                </foreach></if>
+            <if test="startTime != null and endTime !=null"> and (submit_date &gt;= #{startTime} and submit_date &lt;= #{endTime})</if>
         </where>
     </select>
     <select id="selectMyOrderList" parameterType="BaoliBizOrder" resultMap="BaoliBizOrderResult">
@@ -232,6 +238,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="psbcBankVip != null">psbc_bank_vip,</if>
             <if test="licenseLocationType != null">license_location_type,</if>
             <if test="licenseLocation != null">license_location,</if>
+            <if test="submitDate != null">submit_date,</if>
+            <if test="adjustLoanAmount != null">adjust_loan_amount,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderSchema != null">#{orderSchema},</if>
@@ -295,6 +303,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="psbcBankVip != null">#{psbcBankVip},</if>
             <if test="licenseLocationType != null">#{licenseLocationType},</if>
             <if test="licenseLocation != null">#{licenseLocation},</if>
+            <if test="submitDate != null">now(),</if>
+            <if test="adjustLoanAmount != null">#{adjustLoanAmount},</if>
          </trim>
     </insert>
     <update id="batchUpdateOrder" parameterType="map">
@@ -350,7 +360,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="level2BrandId != null">level2_brand_id = #{level2BrandId},</if>
             <if test="carSeriesId != null">car_series_id = #{carSeriesId},</if>
             <if test="carModelId != null">car_model_id = #{carModelId},</if>
-            <if test="status != null">status = #{status},</if>
+            <if test="status != null">
+            status = #{status},
+                <if test="status =='02'">
+                    submit_date = now(),
+                </if>
+                <if test="status =='06'">
+                    share_date = now(),
+                </if>
+                <if test="status =='09'">
+                    release_loan_date = now(),
+                </if>
+                <if test="status =='10' and orderSchema != '03'">
+                    mortgage_date = now(),
+                </if>
+            </if>
             <if test="applicantId != null">applicant_id = #{applicantId},</if>
             <if test="refuseOrderId != null">refuse_order_id = #{refuseOrderId},</if>
             <if test="detailInfoFiles != null">detail_info_files = #{detailInfoFiles},</if>
@@ -370,6 +394,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="psbcBankVip != null">psbc_bank_vip = #{psbcBankVip},</if>
             <if test="licenseLocationType != null">license_location_type = #{licenseLocationType},</if>
             <if test="licenseLocation != null">license_location = #{licenseLocation},</if>
+            <if test="adjustLoanAmount != null">adjust_loan_amount = #{adjustLoanAmount},</if>
         </trim>
         where id = #{id}
     </update>

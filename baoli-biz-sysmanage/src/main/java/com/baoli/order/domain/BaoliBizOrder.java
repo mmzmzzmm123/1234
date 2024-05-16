@@ -715,6 +715,45 @@ public class BaoliBizOrder extends BaseEntity
     private String psbcBankVip;
     private String licenseLocationType;
     private String licenseLocation;
+    private Date startTime;
+    private Date endTime;
+    private Long[] ids;
+    private Long adjustLoanAmount;
+    private String auditResult;
+    private String auditComment;
+
+    public String getAuditResult() {
+        return auditResult;
+    }
+
+    public void setAuditResult(String auditResult) {
+        this.auditResult = auditResult;
+    }
+
+    public String getAuditComment() {
+        return auditComment;
+    }
+
+    public void setAuditComment(String auditComment) {
+        this.auditComment = auditComment;
+    }
+
+    public Long getAdjustLoanAmount() {
+        return adjustLoanAmount;
+    }
+
+    public void setAdjustLoanAmount(Long adjustLoanAmount) {
+        this.adjustLoanAmount = adjustLoanAmount;
+    }
+
+    public Long[] getIds() {
+        return ids;
+    }
+
+    public void setIds(Long[] ids) {
+        this.ids = ids;
+    }
+
     public JSONObject getAuditInfo() {
         return auditInfo;
     }
@@ -793,5 +832,21 @@ public class BaoliBizOrder extends BaseEntity
 
     public void setLicenseLocation(String licenseLocation) {
         this.licenseLocation = licenseLocation;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 }

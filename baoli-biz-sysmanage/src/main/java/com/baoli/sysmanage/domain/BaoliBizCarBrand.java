@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 汽车品牌对象 baoli_biz_car_brand
  * 
@@ -17,6 +19,16 @@ public class BaoliBizCarBrand extends BaseEntity
 
     /** 品牌id */
     private Long id;
+    private List<Long> ids;
+
+    public List<Long> getIds() {
+        return ids;
+    }
+
+    public void setIds(List<Long> ids) {
+        this.ids = ids;
+    }
+
     private Long brandId;
     /** 品牌首字母 */
     @Excel(name = "品牌首字母")

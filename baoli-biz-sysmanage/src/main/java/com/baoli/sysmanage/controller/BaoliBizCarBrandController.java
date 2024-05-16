@@ -2,6 +2,7 @@ package com.baoli.sysmanage.controller;
 
 import java.nio.charset.Charset;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
 
 import com.alibaba.fastjson2.JSONArray;
@@ -55,6 +56,34 @@ public class BaoliBizCarBrandController extends BaseController
             startPage();
         }
         List<BaoliBizCarBrand> list = baoliBizCarBrandService.selectBaoliBizCarBrandList(baoliBizCarBrand);
+        //过滤一级品牌
+        List<BaoliBizCarBrand> firstClassBrandList = list.stream().filter((BaoliBizCarBrand brand) ->{
+            return brand.getParentId() ==0;
+        }).collect(Collectors.toList());
+        //过滤二级品牌
+        List<BaoliBizCarBrand> secondClassBrandList = list.stream().filter((BaoliBizCarBrand brand) ->{
+            return brand.getParentId() !=0;
+        }).collect(Collectors.toList());
+        for (BaoliBizCarBrand bizCarBrand : secondClassBrandList) {
+            if(firstClassBrandList.stream().filter((BaoliBizCarBrand carBrand)->{
+                return carBrand.getId() == bizCarBrand.getParentId();
+            }).count() == 0){
+                BaoliBizCarBrand newItem = new BaoliBizCarBrand();
+                newItem.setId(bizCarBrand.getParentId());
+                firstClassBrandList.add(newItem);
+            }
+        }
+        //过滤出一级品牌
+        firstClassBrandList = firstClassBrandList.stream().filter((BaoliBizCarBrand brand) ->{
+            return brand.getParentId() == null;
+        }).collect(Collectors.toList());
+        if(firstClassBrandList.size()>0){
+           List<Long> ids = firstClassBrandList.stream().map(BaoliBizCarBrand::getId).collect(Collectors.toList());
+           BaoliBizCarBrand newParam = new BaoliBizCarBrand();
+           newParam.setIds(ids);
+            firstClassBrandList = baoliBizCarBrandService.selectBaoliBizCarBrandList(newParam);
+            list.addAll(firstClassBrandList);
+        }
         return getDataTable(list);
     }
 
