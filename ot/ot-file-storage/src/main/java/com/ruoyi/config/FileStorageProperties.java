@@ -23,11 +23,6 @@ public class FileStorageProperties {
     private String defaultPlatform;
 
     /**
-     * 缩略图后缀，例如【.min.jpg】【.png】
-     */
-    private String thumbnailSuffix;
-
-    /**
      * 允许的文件类型
      */
     private List<String> allowMime;
@@ -44,6 +39,11 @@ public class FileStorageProperties {
      * 水印配置
      */
     private WaterMark waterMark;
+
+    /**
+     * 允许的文件后缀
+     */
+    private List<String> allowExtension;
 
 
     private LocalConfig local;
@@ -72,26 +72,11 @@ public class FileStorageProperties {
          * 基础路径
          */
         private String basePath;
-
-        /**
-         * 允许的文件类型
-         */
-        private List<String> allowMime;
-
-        /**
-         * 缩略图配置
-         */
-        private Thumbnail thumbnail;
-        /**
-         * 水印配置
-         */
-        private WaterMark waterMark;
     }
 
     @Data
     @EqualsAndHashCode(callSuper = true)
     public static class LocalConfig extends BaseConfig {
-
     }
 
     @Data

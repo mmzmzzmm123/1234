@@ -10,6 +10,7 @@ import com.ruoyi.util.Tools;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,7 +53,7 @@ public class FileStorageService {
             "remark," +
             "creator_ip_address," +
             "host_name," +
-            "disk_path)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "disk_path,platform)values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     private static final String SAVE_FILE_RELATION_SQL = "insert into t_file_relation(" +
             "id," +
@@ -114,7 +115,8 @@ public class FileStorageService {
                 filePersistInfo.getFileInfo().getRemark(),
                 filePersistInfo.getFileInfo().getCreatorIpAddresses(),
                 filePersistInfo.getFileInfo().getHostName(),
-                filePersistInfo.getFileInfo().getDiskPath()
+                filePersistInfo.getFileInfo().getDiskPath(),
+                this.getFileStorage().getPlatform()
         };
         jdbcTemplate.update(SAVE_FILE_SQL, params);
         Object[] params2 = {

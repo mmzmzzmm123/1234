@@ -1,27 +1,32 @@
 package com.ruoyi.web.controller.filestorage;
 
-import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.bean.FileInfo;
 import com.ruoyi.bean.FilePersistInfo;
 import com.ruoyi.common.constant.ParameterNames;
+import com.ruoyi.common.constant.ServicePathConstant;
 import com.ruoyi.common.constant.SystemConst;
 import com.ruoyi.common.enums.FileRelationTypeEnum;
+import com.ruoyi.common.utils.ip.IpUtils;
 import com.ruoyi.event.FormFileUploadSuccessEvent;
+import com.ruoyi.platform.FileStorage;
 import com.ruoyi.service.FileStorageService;
-import io.swagger.v3.oas.annotations.Parameter;
-import org.apache.commons.codec.digest.DigestUtils;
+import lombok.extern.log4j.Log4j2;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,11 +38,14 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/file")
+@Log4j2
 public class FileStorageController {
 
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Autowired
+    private ApplicationContext applicationContext;
 
     /**
      * 文件上传
@@ -52,7 +60,7 @@ public class FileStorageController {
      * @param attr 扩展属性json字符串
      * @return
      */
-    @PostMapping(value = "/form/upload",
+    @PostMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/upload",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.TEXT_PLAIN_VALUE)
     String uploadFile(
@@ -68,7 +76,18 @@ public class FileStorageController {
         if (StringUtils.isBlank(userId)) {
             throw new InvalidParameterException("用户id不能为空");
         }
-        FileInfo fileInfo = fileStorageService.getFileStorage().upload(file);
+        FileInfo fileInfo = fileStorageService
+                .getFileStorage()
+                .serFile(file,name)
+                .upload();
+
+        fileInfo.setFileSize(file.getSize());
+        fileInfo.setHostName(IpUtils.getHostName());
+        fileInfo.setMimeType(type);
+
+        fileInfo.setAppName(appName);
+        fileInfo.setCreateUserId(userId);
+        fileInfo.setTenantId(tenantId);
         fileInfo.setFileName(name);
         fileInfo.setCreateUserId(userId);
         fileInfo.setTenantId(tenantId);
@@ -80,15 +99,33 @@ public class FileStorageController {
         filePersistInfo.setRelationType(relationType.name());
         filePersistInfo.setRelationTarget(relationTarget);
 
+
         String detectMime = fileStorageService.getFileStorage().detectMime(fileInfo);
         fileStorageService.saveFileInfo(filePersistInfo, detectMime);
 
-        fileStorageService.getFileStorage().publishEvent(fileInfo);
+
+        FormFileUploadSuccessEvent formFileUploadSuccessEvent;
+        // 本地存储才有路径，云端存储直接采用原数据
+        if ("local".equals(fileStorageService.getFileStorage().getPlatform())) {
+            Path dataFile = Paths.get(fileInfo.getDiskPath());
+            formFileUploadSuccessEvent = new FormFileUploadSuccessEvent(dataFile, fileInfo.getId(), fileInfo.getCreateUserId(), fileInfo.getMimeType());
+        } else {
+            formFileUploadSuccessEvent = new FormFileUploadSuccessEvent(fileInfo, fileInfo.getId(), fileInfo.getCreateUserId(), fileInfo.getMimeType());
+        }
+
+        applicationContext.publishEvent(formFileUploadSuccessEvent);
 
         Map<String, Object> map = StringUtils.isNotBlank(attr) ? JSONObject.parseObject(attr,Map.class) : new HashMap<>(0);
         if (!map.isEmpty()){
             fileStorageService.updateDateAttr(fileInfo.getId(),map);
         }
         return fileInfo.getId();
+    }
+
+
+    @EventListener
+    @Async
+    public void handleFormFileUploadSuccessEvent(FormFileUploadSuccessEvent formFileUploadSuccessEvent) {
+        fileStorageService.getFileStorage().handleFormFileUploadSuccessEvent(formFileUploadSuccessEvent);
     }
 }

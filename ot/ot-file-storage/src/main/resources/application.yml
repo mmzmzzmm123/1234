@@ -1,5 +1,57 @@
 ruoyi:
   file-storage: #文件存储配置，不使用的情况下可以不写
+    upload-expiration-period: 1d
+    waterMark: #水印配置
+      enabled: true
+    allow-extension: #允许的文件后缀
+    allow-mime: #允许的文件类型
+      - application/octet-stream
+      - application/offset+octet-stream
+      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      - application/vnd.openxmlformats-officedocument.presentationml.presentation
+      - application/msword
+      - application/pdf
+      - application/rtf
+      - application/zip
+      - application/vnd.ms-excel
+      - application/vnd.ms-outlook
+      - application/vnd.ms-powerpoint
+      - application/vnd.ms-project
+      - application/vnd.ms-works
+      - application/gzip
+      - application/x-compress
+      - application/x-compressed
+      - application/x-gzip
+      - application/x-mscardfile
+      - application/x-tar
+      - application/x-tika-ooxml
+      - application/x-tika-msoffice
+      - application/x-7z-compressed
+      - application/x-rar-compressed
+
+      - audio/mpeg
+      - audio/x-wav
+
+      - image/bmp
+      - image/gif
+      - image/jpeg
+      - image/png
+      - image/svg+xml
+      - image/tiff
+      - image/x-icon
+      - image/webp
+
+      - text/plain
+      - text/css
+      - text/html
+      - text/richtext
+      - application/xml
+
+      - video/mpeg
+      - video/quicktime
+      - video/x-msvideo
+      - video/mp4
     default-platform: tencent-cos #默认使用的存储平台
     thumbnail-suffix: ".min.jpg" #缩略图后缀，例如【.min.jpg】【.png】
     local:  # 本地存储

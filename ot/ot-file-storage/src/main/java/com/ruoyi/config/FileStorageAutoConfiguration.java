@@ -5,6 +5,7 @@ import com.ruoyi.service.FileStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -37,12 +38,12 @@ public class FileStorageAutoConfiguration {
      * @return
      */
     @Bean
-    public FileStorageService fileStorageService(@Autowired FileStorageProperties properties) {
+    public FileStorageService fileStorageService(@Autowired FileStorageProperties properties, @Autowired ApplicationContext applicationContext) {
         if (properties == null) throw new RuntimeException("properties 不能为 null");
         // 初始化各个存储平台
         String pageStr = "com.ruoyi.platform.impl.";
-        buildFileStorage(properties.getLocal(),pageStr + "LocalFileStorage",properties.getLocal().getClass());
-        buildFileStorage(properties.getTencentCos(),pageStr + "TencentCosFileStorage",properties.getTencentCos().getClass());
+        buildFileStorage(properties,pageStr + "LocalFileStorage",applicationContext);
+        buildFileStorage(properties,pageStr + "TencentCosFileStorage",applicationContext);
         // 本体
         FileStorageService service = new FileStorageService();
         service.setProperties(properties);
@@ -56,17 +57,18 @@ public class FileStorageAutoConfiguration {
 
     /**
      * 根据配置文件内容创建对应平台信息
-     * @param config 配置内容
-     * @param className 实例化类
-     * @param parameterTypes： 实例化参数类
+     *
+     * @param config             配置内容
+     * @param className          实例化类
+     * @param applicationContext
      */
-    public void buildFileStorage(Object config,String className,Class<?> parameterTypes) {
+    public void buildFileStorage(FileStorageProperties config, String className, ApplicationContext applicationContext) {
         if (Objects.nonNull(config)) {
             try {
                 Class<?> clazz = Class.forName(className);
-                Constructor<?> constructor = clazz.getConstructor(parameterTypes);
+                Constructor<?> constructor = clazz.getConstructor(FileStorageProperties.class,ApplicationContext.class);
                 constructor.setAccessible(true);
-                FileStorage instance = (FileStorage) constructor.newInstance(config);
+                FileStorage instance = (FileStorage) constructor.newInstance(config,applicationContext);
                 fileStorageList.add(instance);
             } catch (Exception e) {
                 log.warn("className:{} exception:",className,e);

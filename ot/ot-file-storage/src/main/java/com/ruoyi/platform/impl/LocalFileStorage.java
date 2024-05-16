@@ -1,8 +1,9 @@
 package com.ruoyi.platform.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.ruoyi.common.constant.ServicePathConstant;
+import com.ruoyi.common.webp.exc.WebpEncodeUtil;
 import com.ruoyi.config.FileStorageProperties;
-import com.ruoyi.config.FileStorageProperties.LocalConfig;
 import com.ruoyi.bean.FileInfo;
 import com.ruoyi.event.FormFileUploadSuccessEvent;
 import com.ruoyi.platform.FileStorage;
@@ -10,13 +11,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import net.coobird.thumbnailator.geometry.Positions;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.utils.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.event.EventListener;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
@@ -24,6 +22,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -44,13 +43,15 @@ public class LocalFileStorage implements FileStorage {
     private List<String> allowMime;
     private WaterMark waterMark;
     private Thumbnail thumbnail;
+    private String fileName;
+    private List<String> allowExtension;
+    private MultipartFile source;
     private static final int DEFAULT_THUMBNAIL_SIZE = 150;
     private static final String IMAGE = "image";
     private static final String WEBP_FILE = "webp";
     private static final String WEBP_ORIGINAL_FILE = "original.webp";
     private static final String THUMBNAIL_FILE = "thumb.jpg";
     private static final String WATERMARK_FILE = "watermark.jpg";
-    private static final String DATA_FILE = "data";
     private static final String WEBP_MIME = "image/webp";
     private static final String WEBP_EXTENSION = "." + WEBP_FILE;
     private static final String WEBP_ORIGIN_EXTENSION = "." + WEBP_ORIGINAL_FILE;
@@ -58,27 +59,42 @@ public class LocalFileStorage implements FileStorage {
     private static final String JPG_EXTENSION = ".jpg";
     private static final String YZY_APP_NAME = "YZY_H5";
     private static final String SERVICE_UPLOAD_CONTENT_TYPE = "application/offset+octet-stream";
+    String UPLOAD_PATH = ServicePathConstant.PREFIX_PUBLIC_PATH + "/tus/upload";
 
 
     private ApplicationContext applicationContext;
 
-    public LocalFileStorage(LocalConfig config) {
-        platform = config.getPlatform();
-        basePath = config.getBasePath();
+    public LocalFileStorage(FileStorageProperties config,ApplicationContext applicationContextImport) {
+        platform = config.getLocal().getPlatform();
+        basePath = config.getLocal().getBasePath();
         allowMime = config.getAllowMime();
         waterMark = config.getWaterMark();
         thumbnail = config.getThumbnail();
-        applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+        allowExtension = config.getAllowExtension();
+        applicationContext = applicationContextImport;
     }
 
     @Override
-    public void close() {
-        System.out.println("localFileStorage close");
+    public FileStorage setName(String name) {
+        this.fileName = name;
+        return this;
     }
+
+    @Override
+    public FileStorage serFile(MultipartFile source, String fileName) {
+        this.source = source;
+        this.fileName = fileName;
+        return this;
+    }
+
 
     @Override
     public FileInfo upload(MultipartFile file) {
-        String newKey = getFileKey(basePath, file.getName());
+        FileInfo fileInfo = new FileInfo();
+
+        String name = StringUtils.isBlank(fileName) ? file.getName() : this.fileName;
+        String extension = getExtension(name, allowExtension);
+        String newKey = getFileKey(basePath, fileInfo);
         Path dataFile = Paths.get(newKey);
         if (Files.notExists(dataFile)) {
             //noinspection ResultOfMethodCallIgnored
@@ -89,8 +105,25 @@ public class LocalFileStorage implements FileStorage {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new FileInfo();
+        // fileInfo id 保存在 getFileKey方法中
+        fileInfo.setExtension(extension);
+        fileInfo.setPath(String.join("/", "/service-file" + UPLOAD_PATH, fileInfo.getId()));
+        fileInfo.setDiskPath(newKey);
+        try (InputStream is = Files.newInputStream(dataFile.toFile().toPath())) {
+            String md5 = DigestUtils.md5Hex(is);
+            // 设置文件指纹
+            fileInfo.setFingerprint(md5);
+        } catch (Exception e) {
+            log.error("", e);
+        }
+        return fileInfo;
     }
+
+    @Override
+    public FileInfo upload() {
+        return this.upload(source);
+    }
+
 
     @Override
     public String detectMime(FileInfo fileInfo) {
@@ -127,14 +160,6 @@ public class LocalFileStorage implements FileStorage {
     }
 
     @Override
-    public void publishEvent(FileInfo fileInfo) {
-        Path dataFile = Paths.get(fileInfo.getDiskPath());
-        FormFileUploadSuccessEvent formFileUploadSuccessEvent = new FormFileUploadSuccessEvent(dataFile, fileInfo.getId(), fileInfo.getCreateUserId(), fileInfo.getMimeType());
-        applicationContext.publishEvent(formFileUploadSuccessEvent);
-    }
-
-    @EventListener
-    @Async
     public void handleFormFileUploadSuccessEvent(FormFileUploadSuccessEvent formFileUploadSuccessEvent) {
         log.debug("handleFormFileUploadSuccessEvent:{}", formFileUploadSuccessEvent);
         Path dataFile = (Path) formFileUploadSuccessEvent.getSource();
@@ -150,6 +175,16 @@ public class LocalFileStorage implements FileStorage {
                 processThumbnail(formFileUploadSuccessEvent.getId(), dataFile);
             } catch (Exception e) {
                 log.error("Process Thumbnail Error:{}", formFileUploadSuccessEvent.getId(), e);
+            }
+            try {
+                processWebp(formFileUploadSuccessEvent.getId(), dataFile);
+            } catch (Exception e) {
+                log.error("Process WebP Error:{}", formFileUploadSuccessEvent.getId(), e);
+            }
+            try {
+                processWebpOriginal(formFileUploadSuccessEvent.getId(), dataFile);
+            } catch (Exception e) {
+                log.error("Process WebP Original Error:{}", formFileUploadSuccessEvent.getId(), e);
             }
             log.debug("Finish Process Image Ext:{}", formFileUploadSuccessEvent.getId());
         }
@@ -208,38 +243,29 @@ public class LocalFileStorage implements FileStorage {
         log.debug("Finish Process Thumbnail:{}", id);
     }
 
-    private int[] getImgSize(File file) {
-        try {
-            BufferedImage img = ImageIO.read(file);
-            return new int[]{img.getWidth(), img.getHeight()};
-        } catch (IOException e) {
-            log.error("", e);
-            return new int[]{0, 0};
+    private void processWebp(String id, Path dataFile) throws IOException {
+        log.debug("Start Process Webp:{}", id);
+        Path waterMarkFile = getTransFile(dataFile, WATERMARK_FILE);
+        if (exists(waterMarkFile)) {
+            dataFile = waterMarkFile;
         }
+        Path webpFile = getTransFile(dataFile, WEBP_FILE);
+        int[] imgSize = getImgSize(dataFile.toFile());
+        int minWidth = 400;
+        int minHeight = 300;
+        if (imgSize[0] > minWidth && imgSize[1] > minHeight) {
+            WebpEncodeUtil.toWebp(dataFile, webpFile, (int) (imgSize[0] * 0.8), (int) (imgSize[1] * 0.8));
+        } else {
+            WebpEncodeUtil.toWebp(dataFile, webpFile);
+        }
+        log.debug("Finish Process Webp:{}", id);
     }
 
-    private Path getTransFile(Path dataFile, String type) {
-        return Paths.get(dataFile.getParent().toString(), String.join(".", DATA_FILE, type));
-    }
-
-    private BufferedImage getWatermark(String userId) {
-        final Font font = new Font(null, Font.PLAIN, 12);
-        BufferedImage image = new BufferedImage(262, 35, BufferedImage.TYPE_INT_RGB);
-        Graphics2D g = image.createGraphics();
-        image = g.getDeviceConfiguration().createCompatibleImage(260, 35, Transparency.TRANSLUCENT);
-
-        int y = 0;
-        int divider30 = 30;
-
-        g = image.createGraphics();
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setColor(Color.YELLOW);
-        g.setFont(font);
-        String txt = "IOPS" + userId;
-        log.debug("Create Watermark Txt:{},{}", userId, txt);
-        g.drawString(txt, 0, y + divider30);
-        g.dispose();
-        return image;
+    private void processWebpOriginal(String id, Path dataFile) throws IOException {
+        log.debug("Start Process Webp Original:{}", id);
+        Path webpOriginalFile = getTransFile(dataFile, WEBP_ORIGINAL_FILE);
+        WebpEncodeUtil.toWebp(dataFile, webpOriginalFile);
+        log.debug("Finish Process Webp Original:{}", id);
     }
 
     private boolean exists(Path file) {

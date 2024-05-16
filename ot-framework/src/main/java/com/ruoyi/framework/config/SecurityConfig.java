@@ -115,6 +115,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/onethinker/platformUser/login",
                         "/onethinker/platformUser/register",
                         "/onethinker/platformUser/getCodeForForgetPassword",
+                        "/**/public/**",
                         "/bk/**"
                 ).permitAll()
                 // 静态资源，可匿名访问

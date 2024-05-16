@@ -1,6 +1,8 @@
 package com.ruoyi.event;
 
+import com.ruoyi.bean.FileInfo;
 import org.springframework.context.ApplicationEvent;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 
@@ -14,6 +16,13 @@ public class FormFileUploadSuccessEvent extends ApplicationEvent {
 
     public FormFileUploadSuccessEvent(Path dataFile, String id, String userId, String mimeType) {
         super(dataFile);
+        this.id = id;
+        this.userId = userId;
+        this.mimeType = mimeType;
+    }
+
+    public FormFileUploadSuccessEvent(FileInfo fileInfo, String id, String userId, String mimeType) {
+        super(fileInfo);
         this.id = id;
         this.userId = userId;
         this.mimeType = mimeType;
