@@ -29,9 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
@@ -215,16 +213,18 @@ public class TencentCosFileStorage implements FileStorage {
                 builder.watermark(Positions.BOTTOM_CENTER, bufferedImage, 0.5f)
                         .watermark(Positions.TOP_CENTER, bufferedImage, 0.5f);
             }
-//            builder.scale(1).toFile(targetFile.toFile());
-            log.debug("Finish Process Watermark:{}", fileInfo.getId());
-            try {
+            // 将图像写入到 ByteArrayOutputStream 中
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            builder.scale(1).outputFormat("jpg").toOutputStream(os);
+            // 转换为 InputStream 并返回
+            try (InputStream is = new ByteArrayInputStream(os.toByteArray())) {
+                log.debug("Finish Process Watermark:{}", fileInfo.getId());
                 initTencentCloudCos();
-                String newKey = getTransFile(fileInfo.getPath(),WATERMARK_FILE);
-                ObjectMetadata metadata = getObjectMetadata(source);
-                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newKey,source.getInputStream(),metadata);
+                String newKey = getTransFile(fileInfo.getPath(), WATERMARK_FILE);
+                PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newKey, is, new ObjectMetadata());
                 // 上传到腾讯云存储对象中
-                PutObjectResult putObjectResult = cosClient.putObject(putObjectRequest);
-            }finally {
+                cosClient.putObject(putObjectRequest);
+            } finally {
                 // 关闭COS客户端
                 cosClient.shutdown();
                 cosClient = null;
@@ -262,6 +262,15 @@ public class TencentCosFileStorage implements FileStorage {
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(multipartFile.getSize());
         metadata.setContentType(multipartFile.getContentType());
+        return metadata;
+    }
+    /**
+     * 获取对象的元数据
+     */
+    public ObjectMetadata getObjectMetadata(InputStream is) {
+        ObjectMetadata metadata = new ObjectMetadata();
+//        metadata.setContentLength(is.getSize());
+//        metadata.setContentType(multipartFile.getContentType());
         return metadata;
     }
 }
