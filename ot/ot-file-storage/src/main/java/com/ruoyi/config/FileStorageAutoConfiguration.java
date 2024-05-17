@@ -38,12 +38,12 @@ public class FileStorageAutoConfiguration {
      * @return
      */
     @Bean
-    public FileStorageService fileStorageService(@Autowired FileStorageProperties properties, @Autowired ApplicationContext applicationContext) {
+    public FileStorageService fileStorageService(@Autowired FileStorageProperties properties) {
         if (properties == null) throw new RuntimeException("properties 不能为 null");
         // 初始化各个存储平台
         String pageStr = "com.ruoyi.platform.impl.";
-        buildFileStorage(properties,pageStr + "LocalFileStorage",applicationContext);
-        buildFileStorage(properties,pageStr + "TencentCosFileStorage",applicationContext);
+        buildFileStorage(properties,pageStr + "LocalFileStorage");
+        buildFileStorage(properties,pageStr + "TencentCosFileStorage");
         // 本体
         FileStorageService service = new FileStorageService();
         service.setProperties(properties);
@@ -60,15 +60,14 @@ public class FileStorageAutoConfiguration {
      *
      * @param config             配置内容
      * @param className          实例化类
-     * @param applicationContext
      */
-    public void buildFileStorage(FileStorageProperties config, String className, ApplicationContext applicationContext) {
+    public void buildFileStorage(FileStorageProperties config, String className) {
         if (Objects.nonNull(config)) {
             try {
                 Class<?> clazz = Class.forName(className);
-                Constructor<?> constructor = clazz.getConstructor(FileStorageProperties.class,ApplicationContext.class);
+                Constructor<?> constructor = clazz.getConstructor(FileStorageProperties.class);
                 constructor.setAccessible(true);
-                FileStorage instance = (FileStorage) constructor.newInstance(config,applicationContext);
+                FileStorage instance = (FileStorage) constructor.newInstance(config);
                 fileStorageList.add(instance);
             } catch (Exception e) {
                 log.warn("className:{} exception:",className,e);

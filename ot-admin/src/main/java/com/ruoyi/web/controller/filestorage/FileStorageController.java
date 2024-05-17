@@ -115,10 +115,6 @@ public class FileStorageController {
 
         applicationContext.publishEvent(formFileUploadSuccessEvent);
 
-        Map<String, Object> map = StringUtils.isNotBlank(attr) ? JSONObject.parseObject(attr,Map.class) : new HashMap<>(0);
-        if (!map.isEmpty()){
-            fileStorageService.updateDateAttr(fileInfo.getId(),map);
-        }
         return fileInfo.getId();
     }
 

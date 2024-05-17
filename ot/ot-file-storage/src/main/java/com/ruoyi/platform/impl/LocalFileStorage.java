@@ -46,32 +46,14 @@ public class LocalFileStorage implements FileStorage {
     private String fileName;
     private List<String> allowExtension;
     private MultipartFile source;
-    private static final int DEFAULT_THUMBNAIL_SIZE = 150;
-    private static final String IMAGE = "image";
-    private static final String WEBP_FILE = "webp";
-    private static final String WEBP_ORIGINAL_FILE = "original.webp";
-    private static final String THUMBNAIL_FILE = "thumb.jpg";
-    private static final String WATERMARK_FILE = "watermark.jpg";
-    private static final String WEBP_MIME = "image/webp";
-    private static final String WEBP_EXTENSION = "." + WEBP_FILE;
-    private static final String WEBP_ORIGIN_EXTENSION = "." + WEBP_ORIGINAL_FILE;
-    private static final String JPG_MIME = "image/jpeg";
-    private static final String JPG_EXTENSION = ".jpg";
-    private static final String YZY_APP_NAME = "YZY_H5";
-    private static final String SERVICE_UPLOAD_CONTENT_TYPE = "application/offset+octet-stream";
-    String UPLOAD_PATH = ServicePathConstant.PREFIX_PUBLIC_PATH + "/tus/upload";
 
-
-    private ApplicationContext applicationContext;
-
-    public LocalFileStorage(FileStorageProperties config,ApplicationContext applicationContextImport) {
+    public LocalFileStorage(FileStorageProperties config) {
         platform = config.getLocal().getPlatform();
         basePath = config.getLocal().getBasePath();
         allowMime = config.getAllowMime();
         waterMark = config.getWaterMark();
         thumbnail = config.getThumbnail();
         allowExtension = config.getAllowExtension();
-        applicationContext = applicationContextImport;
     }
 
     @Override

@@ -130,31 +130,6 @@ public class FileStorageService {
         jdbcTemplate.update(SAVE_FILE_RELATION_SQL, params2);
     }
 
-    public void updateDateAttr(String id, Map<String, Object> attrs) {
-        if (attrs == null || attrs.isEmpty()) {
-            return;
-        }
-//        FileInfo fileInfo = this.getFileInfo(id).orElseThrow(() -> new RuntimeException("文件", id));
-//        Set<String> nullAttrs = attrs.entrySet().parallelStream().filter(entry -> entry.getValue() == null).map(Map.Entry::getKey).collect(Collectors.toSet());
-//        String sql = "update iuser.t_file_attr set del_flag = 1,update_time = ?, update_user_id = ? where tenant_id = ? and file_id = ? and attr_name in " + SqlUtil.getInSql(nullAttrs);
-//        List<Object> args = new ArrayList<>(10);
-//        String userId = KeycloakClientUtil.getUserInfo().map(UserInfo::getId).orElse(null);
-//        args.add(DateTimeUtil.now());
-//        args.add(userId);
-//        args.add(SystemConst.DEFAULT_TENANT_ID);
-//        args.add(id);
-//        args.addAll(nullAttrs);
-//        transactionService.getJdbcTemplate().update(sql, args.toArray());
-//        sql = "insert into iuser.t_file_attr(id,tenant_id,file_id,attr_name,attr_value,px,create_user_id,create_time,del_flag)values(?,?,?,?,?,?,?,?,?)";
-//        List<Object[]> batchArgs = attrs.entrySet()
-//                .parallelStream()
-//                .filter(entry -> entry.getValue() != null)
-//                .map(entry -> new Object[]{RandomUtil.ulid(), SystemConst.DEFAULT_TENANT_ID, id, entry.getKey(), entry.getValue(), 0, userId, DateTimeUtil.now(), 0})
-//                .toList();
-//        transactionService.getJdbcTemplate().batchUpdate(sql, batchArgs);
-//        fileInfo.setAttr(attrs);
-    }
-
     private Map<String, Object> getFileInfo(String id) {
         return jdbcTemplate.queryForMap("select * from t_file where id = ?",id);
     }

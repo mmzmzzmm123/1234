@@ -12,6 +12,7 @@ import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import com.ruoyi.common.constant.ServicePathConstant;
+import com.ruoyi.common.webp.exc.WebpEncodeUtil;
 import com.ruoyi.config.FileStorageProperties;
 import com.ruoyi.bean.FileInfo;
 import com.ruoyi.event.FormFileUploadSuccessEvent;
@@ -37,6 +38,8 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
+import static java.nio.file.Files.exists;
+
 /**
  * 腾讯云 COS 存储
  *
@@ -61,22 +64,7 @@ public class TencentCosFileStorage implements FileStorage {
     private MultipartFile source;
     private List<String> allowExtension;
 
-    private static final int DEFAULT_THUMBNAIL_SIZE = 150;
-    private static final String IMAGE = "image";
-    private static final String WEBP_FILE = "webp";
-    private static final String WEBP_ORIGINAL_FILE = "original.webp";
-    private static final String THUMBNAIL_FILE = "thumb.jpg";
-    private static final String WATERMARK_FILE = "watermark.jpg";
-    private static final String WEBP_MIME = "image/webp";
-    private static final String WEBP_EXTENSION = "." + WEBP_FILE;
-    private static final String WEBP_ORIGIN_EXTENSION = "." + WEBP_ORIGINAL_FILE;
-    private static final String JPG_MIME = "image/jpeg";
-    private static final String JPG_EXTENSION = ".jpg";
-    private static final String YZY_APP_NAME = "YZY_H5";
-    private static final String SERVICE_UPLOAD_CONTENT_TYPE = "application/offset+octet-stream";
-    String UPLOAD_PATH = ServicePathConstant.PREFIX_PUBLIC_PATH + "/tus/upload";
-
-    public TencentCosFileStorage(FileStorageProperties config, ApplicationContext applicationContext) {
+    public TencentCosFileStorage(FileStorageProperties config) {
         this.platform = config.getTencentCos().getPlatform();
         this.secretId = config.getTencentCos().getSecretId();
         this.secretKey = config.getTencentCos().getSecretKey();
@@ -165,23 +153,114 @@ public class TencentCosFileStorage implements FileStorage {
             } catch (Exception e) {
                 log.error("Process Thumbnail Error:{}", formFileUploadSuccessEvent.getId(), e);
             }
-//            try {
-//                processThumbnail(formFileUploadSuccessEvent.getId(), fileInfo);
-//            } catch (Exception e) {
-//                log.error("Process Thumbnail Error:{}", formFileUploadSuccessEvent.getId(), e);
-//            }
-//            try {
-//                processWebp(formFileUploadSuccessEvent.getId(), fileInfo);
-//            } catch (Exception e) {
-//                log.error("Process WebP Error:{}", formFileUploadSuccessEvent.getId(), e);
-//            }
-//            try {
-//                processWebpOriginal(formFileUploadSuccessEvent.getId(), fileInfo);
-//            } catch (Exception e) {
-//                log.error("Process WebP Original Error:{}", formFileUploadSuccessEvent.getId(), e);
-//            }
+            try {
+                processThumbnail(fileInfo);
+            } catch (Exception e) {
+                log.error("Process Thumbnail Error:{}", formFileUploadSuccessEvent.getId(), e);
+            }
+            try {
+                processWebp(fileInfo);
+            } catch (Exception e) {
+                log.error("Process WebP Error:{}", formFileUploadSuccessEvent.getId(), e);
+            }
+            try {
+                processWebpOriginal(fileInfo);
+            } catch (Exception e) {
+                log.error("Process WebP Original Error:{}", formFileUploadSuccessEvent.getId(), e);
+            }
             log.debug("Finish Process Image Ext:{}", formFileUploadSuccessEvent.getId());
         }
+    }
+
+    private void processWebpOriginal(FileInfo fileInfo) throws IOException {
+        log.debug("Start Process Webp Original:{}", fileInfo.getId());
+        // 创建临时文件
+        File tempFile = File.createTempFile("temp", fileInfo.getExtension());
+        // 将MultipartFile转换为临时文件
+        source.transferTo(tempFile);
+        Path dataFile = tempFile.toPath();
+        Path webpOriginalFile = getTransFile(dataFile, WEBP_ORIGINAL_FILE);
+        if (exists(webpOriginalFile)) {
+            dataFile = webpOriginalFile;
+        }
+        WebpEncodeUtil.toWebp(dataFile, webpOriginalFile);
+        try {
+            initTencentCloudCos();
+            String newKey = getTransFile(fileInfo.getPath(), WEBP_ORIGINAL_FILE);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newKey, webpOriginalFile.toFile());
+            // 上传到腾讯云存储对象中
+            cosClient.putObject(putObjectRequest);
+        } finally {
+            // 关闭COS客户端
+            cosClient.shutdown();
+            cosClient = null;
+        }
+        log.debug("Finish Process Webp Original:{}", fileInfo.getId());
+    }
+
+    private void processWebp(FileInfo fileInfo) throws IOException {
+        log.debug("Start Process Webp:{}", fileInfo.getId());
+        // 创建临时文件
+        File tempFile = File.createTempFile("temp", fileInfo.getExtension());
+        // 将MultipartFile转换为临时文件
+        source.transferTo(tempFile);
+        Path dataFile = tempFile.toPath();
+        Path waterMarkFile = getTransFile(dataFile, WATERMARK_FILE);
+        if (exists(waterMarkFile)) {
+            dataFile = waterMarkFile;
+        }
+        Path webpFile = getTransFile(dataFile, WEBP_FILE);
+        int[] imgSize = getImgSize(dataFile.toFile());
+        int minWidth = 400;
+        int minHeight = 300;
+        if (imgSize[0] > minWidth && imgSize[1] > minHeight) {
+            WebpEncodeUtil.toWebp(dataFile, webpFile, (int) (imgSize[0] * 0.8), (int) (imgSize[1] * 0.8));
+        } else {
+            WebpEncodeUtil.toWebp(dataFile, webpFile);
+        }
+        try {
+            initTencentCloudCos();
+            String newKey = getTransFile(fileInfo.getPath(), WEBP_FILE);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newKey, webpFile.toFile());
+            // 上传到腾讯云存储对象中
+            cosClient.putObject(putObjectRequest);
+        } finally {
+            // 关闭COS客户端
+            cosClient.shutdown();
+            cosClient = null;
+        }
+        log.debug("Finish Process Webp:{}", fileInfo.getId());
+    }
+
+    private void processThumbnail(FileInfo fileInfo) throws IOException {
+        log.debug("Start Process Thumbnail:{}", fileInfo.getId());
+        int width = DEFAULT_THUMBNAIL_SIZE;
+        int height = DEFAULT_THUMBNAIL_SIZE;
+        float quality = 0.5f;
+        if (thumbnail != null) {
+            width = thumbnail.getWidth() <= 0 ? DEFAULT_THUMBNAIL_SIZE : thumbnail.getWidth();
+            height = thumbnail.getHeight() <= 0 ? DEFAULT_THUMBNAIL_SIZE : thumbnail.getHeight();
+            quality = thumbnail.getQuality();
+        }
+        // 将图像写入到 ByteArrayOutputStream 中
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        Thumbnails.of(source.getInputStream())
+                .size(width, height)
+                .outputQuality(quality).toOutputStream(os);
+        // 转换为 InputStream 并返回
+        try (InputStream is = new ByteArrayInputStream(os.toByteArray())) {
+            log.debug("Finish Process Watermark:{}", fileInfo.getId());
+            initTencentCloudCos();
+            String newKey = getTransFile(fileInfo.getPath(), THUMBNAIL_FILE);
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newKey, is, new ObjectMetadata());
+            // 上传到腾讯云存储对象中
+            cosClient.putObject(putObjectRequest);
+        } finally {
+            // 关闭COS客户端
+            cosClient.shutdown();
+            cosClient = null;
+        }
+        log.debug("Finish Process Thumbnail:{}", fileInfo.getId());
     }
 
     private void processWatermark(FileInfo fileInfo) throws IOException {

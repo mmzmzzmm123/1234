@@ -2,6 +2,7 @@ package com.ruoyi.platform;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.ruoyi.bean.FileInfo;
+import com.ruoyi.common.constant.ServicePathConstant;
 import com.ruoyi.event.FormFileUploadSuccessEvent;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
@@ -33,6 +34,20 @@ public interface FileStorage {
 
     String FILE_EXTENSION_FLAG = ".";
     String DATA_FILE = "data";
+    final int DEFAULT_THUMBNAIL_SIZE = 150;
+    final String IMAGE = "image";
+    final String WEBP_FILE = "webp";
+    final String WEBP_ORIGINAL_FILE = "original.webp";
+    final String THUMBNAIL_FILE = "thumb.jpg";
+    final String WATERMARK_FILE = "watermark.jpg";
+    final String WEBP_MIME = "image/webp";
+    final String WEBP_EXTENSION = "." + WEBP_FILE;
+    final String WEBP_ORIGIN_EXTENSION = "." + WEBP_ORIGINAL_FILE;
+    final String JPG_MIME = "image/jpeg";
+    final String JPG_EXTENSION = ".jpg";
+    final String YZY_APP_NAME = "YZY_H5";
+    final String SERVICE_UPLOAD_CONTENT_TYPE = "application/offset+octet-stream";
+    String UPLOAD_PATH = ServicePathConstant.PREFIX_PUBLIC_PATH + "/tus/upload";
 
     /**
      * 获取平台
