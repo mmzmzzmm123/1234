@@ -214,12 +214,6 @@
                 <version>${google.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-crypto</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
             <!--二维码-->
             <dependency>
                 <groupId>com.google.zxing</groupId>
