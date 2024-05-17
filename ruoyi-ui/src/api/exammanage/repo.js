@@ -9,6 +9,14 @@ export function listRepo(query) {
   })
 }
 
+export function listRepoAll(query) {
+  return request({
+    url: '/exammanage/repo/listAll',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询题库管理详细
 export function getRepo(id) {
   return request({

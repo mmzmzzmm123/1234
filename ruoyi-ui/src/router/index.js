@@ -205,7 +205,33 @@ export const dynamicRoutes = [
       }
     ]
   },
-
+  {
+    path: '/exammanage/qu-add',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:qu:add'],
+    children: [
+      {
+        path: 'addQu',
+        component: () => import('@/views/exammanage/qu/form'),
+        name: 'AddQu',
+        meta: {title: '新增试题',noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/qu-list',
+    component: Layout,
+    permissions: ['exammanage:qu:list'],
+    children: [
+      {
+        path: 'listQu',
+        component: () => import('@/views/exammanage/qu/index.vue'),
+        name: 'listQu',
+        meta: {title: '试题管理',noCache: true}
+      }
+    ]
+  }
 
 ]
 

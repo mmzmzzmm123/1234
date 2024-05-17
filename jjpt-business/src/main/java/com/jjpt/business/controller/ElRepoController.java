@@ -47,6 +47,16 @@ public class ElRepoController extends BaseController
     }
 
     /**
+     * 查询题库管理列表All
+     */
+
+    @GetMapping("/listAll")
+    public AjaxResult listAll(ElRepo elRepo)
+    {
+        return success(elRepoService.selectElRepoList(elRepo));
+    }
+
+    /**
      * 导出题库管理列表
      */
     @PreAuthorize("@ss.hasPermi('exammanage:repo:export')")
