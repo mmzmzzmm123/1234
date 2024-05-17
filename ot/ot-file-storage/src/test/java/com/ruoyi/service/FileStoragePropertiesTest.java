@@ -1,7 +1,7 @@
 package com.ruoyi.service;
 
-import com.ruoyi.config.FileStorageProperties;
 import com.ruoyi.bean.FileInfo;
+import com.ruoyi.config.FileStorageProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

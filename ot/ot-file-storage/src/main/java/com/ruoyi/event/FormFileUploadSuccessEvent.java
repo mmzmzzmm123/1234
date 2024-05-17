@@ -2,7 +2,6 @@ package com.ruoyi.event;
 
 import com.ruoyi.bean.FileInfo;
 import org.springframework.context.ApplicationEvent;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
 

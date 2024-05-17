@@ -1,7 +1,6 @@
 package com.ruoyi.service;
 
 import cn.hutool.core.util.StrUtil;
-import com.ruoyi.bean.FileInfo;
 import com.ruoyi.bean.FilePersistInfo;
 import com.ruoyi.common.constant.SystemConst;
 import com.ruoyi.config.FileStorageProperties;
@@ -10,16 +9,14 @@ import com.ruoyi.util.Tools;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
 /**
  * @author yangyouqi

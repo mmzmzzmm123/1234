@@ -3,34 +3,40 @@ package com.ruoyi.platform;
 import cn.hutool.core.collection.CollectionUtil;
 import com.ruoyi.bean.FileInfo;
 import com.ruoyi.common.constant.ServicePathConstant;
+import com.ruoyi.common.webp.exc.WebpEncodeUtil;
+import com.ruoyi.config.FileStorageProperties.Thumbnail;
+import com.ruoyi.config.FileStorageProperties.WaterMark;
 import com.ruoyi.event.FormFileUploadSuccessEvent;
-import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tika.Tika;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
+
+import static java.nio.file.Files.exists;
 
 /**
  * @author yangyouqi
  * @date 2024/5/14
  */
 public interface FileStorage {
+
+    static final Logger log = LoggerFactory.getLogger(FileStorage.class);
 
     String FILE_EXTENSION_FLAG = ".";
     String DATA_FILE = "data";
@@ -45,7 +51,6 @@ public interface FileStorage {
     final String WEBP_ORIGIN_EXTENSION = "." + WEBP_ORIGINAL_FILE;
     final String JPG_MIME = "image/jpeg";
     final String JPG_EXTENSION = ".jpg";
-    final String YZY_APP_NAME = "YZY_H5";
     final String SERVICE_UPLOAD_CONTENT_TYPE = "application/offset+octet-stream";
     String UPLOAD_PATH = ServicePathConstant.PREFIX_PUBLIC_PATH + "/tus/upload";
 
@@ -197,23 +202,6 @@ public interface FileStorage {
         return path + String.join(".", DATA_FILE, type);
     }
 
-    default String getUrlSafeBase64(String input) {
-        // 使用Java的Base64类进行编码
-        byte[] encodedBytes = Base64.getEncoder().encode(input.getBytes(StandardCharsets.UTF_8));
-        String base64 = new String(encodedBytes, StandardCharsets.UTF_8);
-
-        // 什么是 URL 安全的 BASE64 编码？
-        // 在数据万象的处理操作中，有很多参数需要进行 URL 安全的 BASE64 编码，例如文字水印的文字内容、颜色、字体设置和图片水印的水印图链接。URL 安全的 BASE64 编码具体规则为：
-        // 1. 将普通 BASE64 编码结果中的加号（+）替换成连接号（-）；
-        // 2. 将编码结果中的正斜线（/）替换成下划线（_）；
-        // 3. 将编码结果中的“=”去掉。
-        // 相关文档 https://cloud.tencent.com/document/product/460/86595#1b54a43c-d985-441d-9c89-81ac6c4adc39
-        // 根据规则进行替换
-        base64 = base64.replaceAll("\\+", "-").replaceAll("/", "_").replaceAll("=", "");
-
-        return base64;
-    }
-
     default BufferedImage getWatermark(String userId) {
         final Font font = new Font(null, Font.PLAIN, 12);
         BufferedImage image = new BufferedImage(262, 35, BufferedImage.TYPE_INT_RGB);
@@ -231,5 +219,101 @@ public interface FileStorage {
         g.drawString(txt, 0, y + divider30);
         g.dispose();
         return image;
+    }
+
+    default InputStream processWatermark(MultipartFile source, FileInfo fileInfo, WaterMark waterMark) throws IOException {
+        log.debug("Start Process Watermark:{},{}", fileInfo.getId(), fileInfo.getCreateUserId());
+        if (waterMark == null || !waterMark.isEnabled()) {
+            throw new RuntimeException("Process Watermark is null");
+        }
+        int minWidth = 300;
+        int minHeight = 100;
+        if (waterMark.getMinWidth() > 0) {
+            minWidth = waterMark.getMinWidth();
+        }
+        if (waterMark.getMinHeight() > 0) {
+            minHeight = waterMark.getMinHeight();
+        }
+        int[] imgSize = getImgSize(source);
+        if (imgSize[0] > minWidth && imgSize[1] > minHeight) {
+            log.debug("Start Process Watermark:{}", fileInfo.getId());
+            Thumbnails.Builder<BufferedImage> builder = Thumbnails.of(ImageIO.read(source.getInputStream()));
+            BufferedImage bufferedImage = getWatermark(fileInfo.getCreateUserId());
+            builder.watermark(Positions.CENTER, bufferedImage, 0.5f);
+            if (imgSize[0] > (minWidth + minWidth)) {
+                builder.watermark(Positions.BOTTOM_LEFT, bufferedImage, 0.5f)
+                        .watermark(Positions.BOTTOM_RIGHT, bufferedImage, 0.5f)
+                        .watermark(Positions.TOP_LEFT, bufferedImage, 0.5f)
+                        .watermark(Positions.TOP_RIGHT, bufferedImage, 0.5f);
+            } else {
+                builder.watermark(Positions.BOTTOM_CENTER, bufferedImage, 0.5f)
+                        .watermark(Positions.TOP_CENTER, bufferedImage, 0.5f);
+            }
+            // 将图像写入到 ByteArrayOutputStream 中
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            builder.scale(1).outputFormat(fileInfo.getExtension().replace(".","")).toOutputStream(os);
+            return new ByteArrayInputStream(os.toByteArray());
+        }
+        return null;
+    }
+
+
+    default InputStream processThumbnail(MultipartFile source,FileInfo fileInfo,Thumbnail thumbnail) throws IOException {
+        log.debug("Start Process Thumbnail:{}", fileInfo.getId());
+        int width = DEFAULT_THUMBNAIL_SIZE;
+        int height = DEFAULT_THUMBNAIL_SIZE;
+        float quality = 0.5f;
+        if (thumbnail != null) {
+            width = thumbnail.getWidth() <= 0 ? DEFAULT_THUMBNAIL_SIZE : thumbnail.getWidth();
+            height = thumbnail.getHeight() <= 0 ? DEFAULT_THUMBNAIL_SIZE : thumbnail.getHeight();
+            quality = thumbnail.getQuality();
+        }
+        // 将图像写入到 ByteArrayOutputStream 中
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        Thumbnails.of(source.getInputStream())
+                .size(width, height)
+                .outputQuality(quality).toOutputStream(os);
+
+        return new ByteArrayInputStream(os.toByteArray());
+    }
+
+    default Path processWebp(MultipartFile source,FileInfo fileInfo) throws IOException {
+        log.debug("Start Process Webp:{}", fileInfo.getId());
+        // 创建临时文件
+        File tempFile = File.createTempFile("temp", fileInfo.getExtension());
+        // 将MultipartFile转换为临时文件
+        source.transferTo(tempFile);
+        Path dataFile = tempFile.toPath();
+        Path waterMarkFile = getTransFile(dataFile, WATERMARK_FILE);
+        if (exists(waterMarkFile)) {
+            dataFile = waterMarkFile;
+        }
+        Path webpFile = getTransFile(dataFile, WEBP_FILE);
+        int[] imgSize = getImgSize(dataFile.toFile());
+        int minWidth = 400;
+        int minHeight = 300;
+        if (imgSize[0] > minWidth && imgSize[1] > minHeight) {
+            WebpEncodeUtil.toWebp(dataFile, webpFile, (int) (imgSize[0] * 0.8), (int) (imgSize[1] * 0.8));
+        } else {
+            WebpEncodeUtil.toWebp(dataFile, webpFile);
+        }
+        log.debug("Finish Process Webp:{}", fileInfo.getId());
+        return webpFile;
+    }
+
+    default Path processWebpOriginal(MultipartFile source,FileInfo fileInfo) throws IOException {
+        log.debug("Start Process Webp Original:{}", fileInfo.getId());
+        // 创建临时文件
+        File tempFile = File.createTempFile("temp", fileInfo.getExtension());
+        // 将MultipartFile转换为临时文件
+        source.transferTo(tempFile);
+        Path dataFile = tempFile.toPath();
+        Path webpOriginalFile = getTransFile(dataFile, WEBP_ORIGINAL_FILE);
+        if (exists(webpOriginalFile)) {
+            dataFile = webpOriginalFile;
+        }
+        WebpEncodeUtil.toWebp(dataFile, webpOriginalFile);
+        log.debug("Finish Process Webp Original:{}", fileInfo.getId());
+        return webpOriginalFile;
     }
 }

@@ -1,34 +1,31 @@
 package com.ruoyi.platform.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.ruoyi.common.constant.ServicePathConstant;
+import com.ruoyi.bean.FileInfo;
 import com.ruoyi.common.webp.exc.WebpEncodeUtil;
 import com.ruoyi.config.FileStorageProperties;
-import com.ruoyi.bean.FileInfo;
+import com.ruoyi.config.FileStorageProperties.Thumbnail;
+import com.ruoyi.config.FileStorageProperties.WaterMark;
 import com.ruoyi.event.FormFileUploadSuccessEvent;
 import com.ruoyi.platform.FileStorage;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.tika.Tika;
 import org.apache.tika.utils.StringUtils;
-import org.springframework.context.ApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import com.ruoyi.config.FileStorageProperties.*;
-import net.coobird.thumbnailator.Thumbnails;
 
 /**
  * @author yangyouqi
@@ -72,6 +69,7 @@ public class LocalFileStorage implements FileStorage {
 
     @Override
     public FileInfo upload(MultipartFile file) {
+        this.setSource(file);
         FileInfo fileInfo = new FileInfo();
 
         String name = StringUtils.isBlank(fileName) ? file.getName() : this.fileName;

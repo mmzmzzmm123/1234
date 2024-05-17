@@ -5,7 +5,6 @@ import com.ruoyi.service.FileStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -48,10 +47,6 @@ public class FileStorageAutoConfiguration {
         FileStorageService service = new FileStorageService();
         service.setProperties(properties);
         service.setFileStorageList(new CopyOnWriteArrayList<>(fileStorageList));
-//        service.setFileRecorder(fileRecorder);
-//        service.setAspectList(new CopyOnWriteArrayList<>(aspectList));
-//        service.setFileWrapperAdapterList(new CopyOnWriteArrayList<>(fileWrapperAdapterList));
-//        service.setContentTypeDetect(contentTypeDetect);
         return service;
     }
 
