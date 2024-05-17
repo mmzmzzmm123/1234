@@ -1,18 +1,15 @@
 package com.ruoyi.web.controller.filestorage;
 
-import com.alibaba.fastjson2.JSONObject;
-import com.ruoyi.bean.FileInfo;
-import com.ruoyi.bean.FilePersistInfo;
+import com.onethinker.bean.FileInfo;
+import com.onethinker.bean.FilePersistInfo;
 import com.ruoyi.common.constant.ParameterNames;
 import com.ruoyi.common.constant.ServicePathConstant;
 import com.ruoyi.common.constant.SystemConst;
 import com.ruoyi.common.enums.FileRelationTypeEnum;
 import com.ruoyi.common.utils.ip.IpUtils;
-import com.ruoyi.event.FormFileUploadSuccessEvent;
-import com.ruoyi.platform.FileStorage;
-import com.ruoyi.service.FileStorageService;
+import com.onethinker.event.FormFileUploadSuccessEvent;
+import com.onethinker.service.FileStorageService;
 import lombok.extern.log4j.Log4j2;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -28,8 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidParameterException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 文件上传
