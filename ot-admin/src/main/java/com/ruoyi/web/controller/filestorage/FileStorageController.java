@@ -1,7 +1,7 @@
 package com.ruoyi.web.controller.filestorage;
 
-import com.onethinker.bean.FileInfo;
-import com.onethinker.bean.FilePersistInfo;
+import com.onethinker.domain.FileInfo;
+import com.onethinker.domain.FileRelation;
 import com.ruoyi.common.constant.ParameterNames;
 import com.ruoyi.common.constant.ServicePathConstant;
 import com.ruoyi.common.constant.SystemConst;
@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidParameterException;
@@ -71,15 +72,11 @@ public class FileStorageController {
         if (StringUtils.isBlank(userId)) {
             throw new InvalidParameterException("用户id不能为空");
         }
-        FileInfo fileInfo = fileStorageService
-                .getFileStorage()
-                .serFile(file,name)
-                .upload();
+        FileInfo fileInfo = fileStorageService.getFileStorage().serFile(file,name).upload();
 
         fileInfo.setFileSize(file.getSize());
         fileInfo.setHostName(IpUtils.getHostName());
         fileInfo.setMimeType(type);
-
         fileInfo.setAppName(appName);
         fileInfo.setCreateUserId(userId);
         fileInfo.setTenantId(tenantId);
@@ -88,15 +85,11 @@ public class FileStorageController {
         fileInfo.setTenantId(tenantId);
         fileInfo.setAppName(appName);
         fileInfo.setMimeType(type);
+        fileInfo.setDetectMime(fileStorageService.getFileStorage().detectMime(fileInfo));
 
-        FilePersistInfo filePersistInfo = new FilePersistInfo();
-        filePersistInfo.setFileInfo(fileInfo);
-        filePersistInfo.setRelationType(relationType.name());
-        filePersistInfo.setRelationTarget(relationTarget);
+        FileRelation filePersistInfo = new FileRelation(fileInfo,relationType.name(),relationTarget);
 
-
-        String detectMime = fileStorageService.getFileStorage().detectMime(fileInfo);
-        fileStorageService.saveFileInfo(filePersistInfo, detectMime);
+        fileStorageService.saveFileInfo(filePersistInfo, fileInfo);
 
 
         FormFileUploadSuccessEvent formFileUploadSuccessEvent;

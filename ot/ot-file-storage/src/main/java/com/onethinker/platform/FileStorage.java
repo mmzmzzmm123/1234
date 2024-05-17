@@ -1,8 +1,7 @@
 package com.onethinker.platform;
 
 import cn.hutool.core.collection.CollectionUtil;
-import com.onethinker.bean.FileInfo;
-import com.onethinker.config.FileStorageProperties;
+import com.onethinker.domain.FileInfo;
 import com.onethinker.config.FileStorageProperties.*;
 import com.onethinker.event.FormFileUploadSuccessEvent;
 import com.ruoyi.common.constant.ServicePathConstant;
@@ -174,7 +173,7 @@ public interface FileStorage {
         }
     }
 
-    default int[] getImgSize(File file) {
+    default int[] getImgSize(java.io.File file) {
         try {
             BufferedImage img = ImageIO.read(file);
             return new int[]{img.getWidth(), img.getHeight()};
@@ -262,7 +261,7 @@ public interface FileStorage {
     }
 
 
-    default InputStream processThumbnail(MultipartFile source,FileInfo fileInfo,Thumbnail thumbnail) throws IOException {
+    default InputStream processThumbnail(MultipartFile source, FileInfo fileInfo, Thumbnail thumbnail) throws IOException {
         log.debug("Start Process Thumbnail:{}", fileInfo.getId());
         int width = DEFAULT_THUMBNAIL_SIZE;
         int height = DEFAULT_THUMBNAIL_SIZE;
@@ -280,12 +279,12 @@ public interface FileStorage {
         return new ByteArrayInputStream(os.toByteArray());
     }
 
-    default Path processWebp(MultipartFile source,FileInfo fileInfo,String filePath) throws IOException {
+    default Path processWebp(MultipartFile source, FileInfo fileInfo, String filePath) throws IOException {
         if (isWindows()) {
-            filePath = "D:\\" + filePath;
+            filePath = "C:\\" + filePath;
         }
         log.debug("Start Process Webp:{},{}", fileInfo.getId(),filePath);
-        File tempFile = new File(filePath + "/" + DATA_FILE);
+        java.io.File tempFile = new java.io.File(filePath + "/" + DATA_FILE);
         if (!tempFile.exists()) {
             tempFile.mkdirs();
             // 创建临时文件
@@ -309,13 +308,13 @@ public interface FileStorage {
         return webpFile;
     }
 
-    default Path processWebpOriginal(MultipartFile source,FileInfo fileInfo,String filePath) throws IOException {
+    default Path processWebpOriginal(MultipartFile source, FileInfo fileInfo, String filePath) throws IOException {
         // 创建临时文件
         if (isWindows()) {
-            filePath = "D:\\" + filePath;
+            filePath = "C:\\" + filePath;
         }
         log.debug("Start Process Webp Original:{},{}", fileInfo.getId(),filePath);
-        File tempFile = new File(filePath + "/" + DATA_FILE);
+        java.io.File tempFile = new java.io.File(filePath + "/" + DATA_FILE);
         if (!tempFile.exists()) {
             tempFile.mkdirs();
             // 将MultipartFile转换为临时文件
@@ -343,7 +342,7 @@ public interface FileStorage {
      */
     default boolean deleteDirectory(String dirPath) {
         if (isWindows()) {
-            dirPath = "D:\\" + dirPath;
+            dirPath = "C:\\" + dirPath;
         }
         Path path = Paths.get(dirPath);
         try {

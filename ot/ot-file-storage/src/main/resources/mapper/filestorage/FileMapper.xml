@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onethinker.mapper.FileMapper">
+
+    <resultMap type="FileInfo" id="FileResult">
+            <result property="id" column="id"/>
+            <result property="tenantId" column="tenant_id"/>
+            <result property="fileName" column="file_name"/>
+            <result property="fingerprint" column="fingerprint"/>
+            <result property="fileSize" column="file_size"/>
+            <result property="mimeType" column="mime_type"/>
+            <result property="extension" column="extension"/>
+            <result property="path" column="path"/>
+            <result property="appName" column="app_name"/>
+            <result property="createUserId" column="create_user_id"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateUserId" column="update_user_id"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="remark" column="remark"/>
+            <result property="creatorIpAddress" column="creator_ip_address"/>
+            <result property="hostName" column="host_name"/>
+            <result property="delFlag" column="del_flag"/>
+            <result property="diskPath" column="disk_path"/>
+            <result property="detectMime" column="detect_mime"/>
+            <result property="platform" column="platform"/>
+    </resultMap>
+
+    <sql id="selectFileVo">
+        select id, tenant_id, file_name, fingerprint, file_size, mime_type, extension, path, app_name, create_user_id, create_time, update_user_id, update_time, remark, creator_ip_address, host_name, del_flag, disk_path, detect_mime, platform
+        from t_file
+    </sql>
+
+    <select id="selectFileList" parameterType="FileInfo" resultMap="FileResult">
+        <include refid="selectFileVo"/>
+        <where>
+                        <if test="fileName != null  and fileName != ''">
+                            and file_name like concat('%', #{fileName}, '%')
+                        </if>
+                        <if test="fingerprint != null  and fingerprint != ''">
+                            and fingerprint = #{fingerprint}
+                        </if>
+                        <if test="fileSize != null ">
+                            and file_size = #{fileSize}
+                        </if>
+                        <if test="mimeType != null  and mimeType != ''">
+                            and mime_type = #{mimeType}
+                        </if>
+                        <if test="extension != null  and extension != ''">
+                            and extension = #{extension}
+                        </if>
+                        <if test="path != null  and path != ''">
+                            and path = #{path}
+                        </if>
+                        <if test="appName != null  and appName != ''">
+                            and app_name like concat('%', #{appName}, '%')
+                        </if>
+                        <if test="createUserId != null  and createUserId != ''">
+                            and create_user_id = #{createUserId}
+                        </if>
+                        <if test="updateUserId != null  and updateUserId != ''">
+                            and update_user_id = #{updateUserId}
+                        </if>
+                        <if test="creatorIpAddress != null  and creatorIpAddress != ''">
+                            and creator_ip_address = #{creatorIpAddress}
+                        </if>
+                        <if test="hostName != null  and hostName != ''">
+                            and host_name like concat('%', #{hostName}, '%')
+                        </if>
+                        <if test="diskPath != null  and diskPath != ''">
+                            and disk_path = #{diskPath}
+                        </if>
+                        <if test="detectMime != null  and detectMime != ''">
+                            and detect_mime = #{detectMime}
+                        </if>
+                        <if test="platform != null  and platform != ''">
+                            and platform = #{platform}
+                        </if>
+        </where>
+    </select>
+
+    <select id="selectFileById" parameterType="String"
+            resultMap="FileResult">
+            <include refid="selectFileVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertFile" parameterType="FileInfo">
+        insert into t_file
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">id,
+                    </if>
+                    <if test="tenantId != null">tenant_id,
+                    </if>
+                    <if test="fileName != null">file_name,
+                    </if>
+                    <if test="fingerprint != null">fingerprint,
+                    </if>
+                    <if test="fileSize != null">file_size,
+                    </if>
+                    <if test="mimeType != null">mime_type,
+                    </if>
+                    <if test="extension != null">extension,
+                    </if>
+                    <if test="path != null">path,
+                    </if>
+                    <if test="appName != null">app_name,
+                    </if>
+                    <if test="createUserId != null">create_user_id,
+                    </if>
+                    <if test="createTime != null">create_time,
+                    </if>
+                    <if test="updateUserId != null">update_user_id,
+                    </if>
+                    <if test="updateTime != null">update_time,
+                    </if>
+                    <if test="remark != null">remark,
+                    </if>
+                    <if test="creatorIpAddress != null">creator_ip_address,
+                    </if>
+                    <if test="hostName != null">host_name,
+                    </if>
+                    <if test="delFlag != null">del_flag,
+                    </if>
+                    <if test="diskPath != null">disk_path,
+                    </if>
+                    <if test="detectMime != null">detect_mime,
+                    </if>
+                    <if test="platform != null and platform != ''">platform,
+                    </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">#{id},
+                    </if>
+                    <if test="tenantId != null">#{tenantId},
+                    </if>
+                    <if test="fileName != null">#{fileName},
+                    </if>
+                    <if test="fingerprint != null">#{fingerprint},
+                    </if>
+                    <if test="fileSize != null">#{fileSize},
+                    </if>
+                    <if test="mimeType != null">#{mimeType},
+                    </if>
+                    <if test="extension != null">#{extension},
+                    </if>
+                    <if test="path != null">#{path},
+                    </if>
+                    <if test="appName != null">#{appName},
+                    </if>
+                    <if test="createUserId != null">#{createUserId},
+                    </if>
+                    <if test="createTime != null">#{createTime},
+                    </if>
+                    <if test="updateUserId != null">#{updateUserId},
+                    </if>
+                    <if test="updateTime != null">#{updateTime},
+                    </if>
+                    <if test="remark != null">#{remark},
+                    </if>
+                    <if test="creatorIpAddress != null">#{creatorIpAddress},
+                    </if>
+                    <if test="hostName != null">#{hostName},
+                    </if>
+                    <if test="delFlag != null">#{delFlag},
+                    </if>
+                    <if test="diskPath != null">#{diskPath},
+                    </if>
+                    <if test="detectMime != null">#{detectMime},
+                    </if>
+                    <if test="platform != null and platform != ''">#{platform},
+                    </if>
+        </trim>
+    </insert>
+
+    <update id="updateFile" parameterType="FileInfo">
+        update t_file
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="tenantId != null">tenant_id =
+                        #{tenantId},
+                    </if>
+                    <if test="fileName != null">file_name =
+                        #{fileName},
+                    </if>
+                    <if test="fingerprint != null">fingerprint =
+                        #{fingerprint},
+                    </if>
+                    <if test="fileSize != null">file_size =
+                        #{fileSize},
+                    </if>
+                    <if test="mimeType != null">mime_type =
+                        #{mimeType},
+                    </if>
+                    <if test="extension != null">extension =
+                        #{extension},
+                    </if>
+                    <if test="path != null">path =
+                        #{path},
+                    </if>
+                    <if test="appName != null">app_name =
+                        #{appName},
+                    </if>
+                    <if test="createUserId != null">create_user_id =
+                        #{createUserId},
+                    </if>
+                    <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                    <if test="updateUserId != null">update_user_id =
+                        #{updateUserId},
+                    </if>
+                    <if test="updateTime != null">update_time =
+                        #{updateTime},
+                    </if>
+                    <if test="remark != null">remark =
+                        #{remark},
+                    </if>
+                    <if test="creatorIpAddress != null">creator_ip_address =
+                        #{creatorIpAddress},
+                    </if>
+                    <if test="hostName != null">host_name =
+                        #{hostName},
+                    </if>
+                    <if test="delFlag != null">del_flag =
+                        #{delFlag},
+                    </if>
+                    <if test="diskPath != null">disk_path =
+                        #{diskPath},
+                    </if>
+                    <if test="detectMime != null">detect_mime =
+                        #{detectMime},
+                    </if>
+                    <if test="platform != null and platform != ''">platform =
+                        #{platform},
+                    </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFileById" parameterType="String">
+        delete from t_file where id = #{id}
+    </delete>
+
+    <delete id="deleteFileByIds" parameterType="String">
+        delete from t_file where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

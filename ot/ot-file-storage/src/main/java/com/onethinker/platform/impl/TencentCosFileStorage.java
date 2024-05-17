@@ -1,7 +1,7 @@
 package com.onethinker.platform.impl;
 
 import cn.hutool.core.lang.Assert;
-import com.onethinker.bean.FileInfo;
+import com.onethinker.domain.FileInfo;
 import com.onethinker.config.FileStorageProperties;
 import com.onethinker.config.FileStorageProperties.Thumbnail;
 import com.onethinker.config.FileStorageProperties.WaterMark;

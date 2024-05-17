@@ -1,6 +1,6 @@
 package com.onethinker.service;
 
-import com.onethinker.bean.FileInfo;
+import com.onethinker.domain.FileInfo;
 import com.onethinker.config.FileStorageProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -9,7 +9,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.io.File;
 import java.io.FileInputStream;
 
 /**
@@ -28,7 +27,7 @@ public class FileStoragePropertiesTest {
     @Test
     public void test() {
         String filePath = "C:\\Users\\yyq\\Desktop\\demo\\1.jpg";
-        File file = new File(filePath);
+        java.io.File file = new java.io.File(filePath);
         try (FileInputStream inputStream = new FileInputStream(file)) {
             MockMultipartFile mockMultipartFile = new MockMultipartFile("file", file.getName(), "text/plain", inputStream);
             FileInfo upload = fileStorageService.getFileStorage().upload(mockMultipartFile);

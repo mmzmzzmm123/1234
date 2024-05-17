@@ -40,7 +40,7 @@ public class FileStorageAutoConfiguration {
     public FileStorageService fileStorageService(@Autowired FileStorageProperties properties) {
         if (properties == null) throw new RuntimeException("properties 不能为 null");
         // 初始化各个存储平台
-        String pageStr = "com.ruoyi.platform.impl.";
+        String pageStr = "com.onethinker.platform.impl.";
         buildFileStorage(properties,pageStr + "LocalFileStorage");
         buildFileStorage(properties,pageStr + "TencentCosFileStorage");
         buildFileStorage(properties,pageStr + "HuaweiObsFileStorage");

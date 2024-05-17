@@ -1,6 +1,6 @@
 package com.onethinker.event;
 
-import com.onethinker.bean.FileInfo;
+import com.onethinker.domain.FileInfo;
 import org.springframework.context.ApplicationEvent;
 
 import java.nio.file.Path;

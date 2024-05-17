@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onethinker.mapper.FileRelationMapper">
+
+    <resultMap type="FileRelation" id="FileRelationResult">
+            <result property="id" column="id"/>
+            <result property="tenantId" column="tenant_id"/>
+            <result property="fileId" column="file_id"/>
+            <result property="relationType" column="relation_type"/>
+            <result property="relationTarget" column="relation_target"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="delFlag" column="del_flag"/>
+            <result property="updateUserId" column="update_user_id"/>
+            <result property="createUserId" column="create_user_id"/>
+            <result property="createUserName" column="create_user_name"/>
+            <result property="updateUserName" column="update_user_name"/>
+    </resultMap>
+
+    <sql id="selectFileRelationVo">
+        select id, tenant_id, file_id, relation_type, relation_target, create_time, update_time, del_flag, update_user_id, create_user_id, create_user_name, update_user_name
+        from t_file_relation
+    </sql>
+
+    <select id="selectFileRelationList" parameterType="FileRelation" resultMap="FileRelationResult">
+        <include refid="selectFileRelationVo"/>
+        <where>
+                        <if test="tenantId != null  and tenantId != ''">
+                            and tenant_id = #{tenantId}
+                        </if>
+                        <if test="fileId != null  and fileId != ''">
+                            and file_id = #{fileId}
+                        </if>
+                        <if test="relationType != null  and relationType != ''">
+                            and relation_type = #{relationType}
+                        </if>
+                        <if test="relationTarget != null  and relationTarget != ''">
+                            and relation_target = #{relationTarget}
+                        </if>
+                        <if test="updateUserId != null  and updateUserId != ''">
+                            and update_user_id = #{updateUserId}
+                        </if>
+                        <if test="createUserId != null  and createUserId != ''">
+                            and create_user_id = #{createUserId}
+                        </if>
+                        <if test="createUserName != null  and createUserName != ''">
+                            and create_user_name like concat('%', #{createUserName}, '%')
+                        </if>
+                        <if test="updateUserName != null  and updateUserName != ''">
+                            and update_user_name like concat('%', #{updateUserName}, '%')
+                        </if>
+        </where>
+    </select>
+
+    <select id="selectFileRelationById" parameterType="String"
+            resultMap="FileRelationResult">
+            <include refid="selectFileRelationVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertFileRelation" parameterType="FileRelation">
+        insert into t_file_relation
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="id != null">id,
+                    </if>
+                    <if test="tenantId != null">tenant_id,
+                    </if>
+                    <if test="fileId != null">file_id,
+                    </if>
+                    <if test="relationType != null">relation_type,
+                    </if>
+                    <if test="relationTarget != null">relation_target,
+                    </if>
+                    <if test="createTime != null">create_time,
+                    </if>
+                    <if test="updateTime != null">update_time,
+                    </if>
+                    <if test="delFlag != null">del_flag,
+                    </if>
+                    <if test="updateUserId != null">update_user_id,
+                    </if>
+                    <if test="createUserId != null">create_user_id,
+                    </if>
+                    <if test="createUserName != null">create_user_name,
+                    </if>
+                    <if test="updateUserName != null">update_user_name,
+                    </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="id != null">#{id},
+                    </if>
+                    <if test="tenantId != null">#{tenantId},
+                    </if>
+                    <if test="fileId != null">#{fileId},
+                    </if>
+                    <if test="relationType != null">#{relationType},
+                    </if>
+                    <if test="relationTarget != null">#{relationTarget},
+                    </if>
+                    <if test="createTime != null">#{createTime},
+                    </if>
+                    <if test="updateTime != null">#{updateTime},
+                    </if>
+                    <if test="delFlag != null">#{delFlag},
+                    </if>
+                    <if test="updateUserId != null">#{updateUserId},
+                    </if>
+                    <if test="createUserId != null">#{createUserId},
+                    </if>
+                    <if test="createUserName != null">#{createUserName},
+                    </if>
+                    <if test="updateUserName != null">#{updateUserName},
+                    </if>
+        </trim>
+    </insert>
+
+    <update id="updateFileRelation" parameterType="FileRelation">
+        update t_file_relation
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="tenantId != null">tenant_id =
+                        #{tenantId},
+                    </if>
+                    <if test="fileId != null">file_id =
+                        #{fileId},
+                    </if>
+                    <if test="relationType != null">relation_type =
+                        #{relationType},
+                    </if>
+                    <if test="relationTarget != null">relation_target =
+                        #{relationTarget},
+                    </if>
+                    <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                    <if test="updateTime != null">update_time =
+                        #{updateTime},
+                    </if>
+                    <if test="delFlag != null">del_flag =
+                        #{delFlag},
+                    </if>
+                    <if test="updateUserId != null">update_user_id =
+                        #{updateUserId},
+                    </if>
+                    <if test="createUserId != null">create_user_id =
+                        #{createUserId},
+                    </if>
+                    <if test="createUserName != null">create_user_name =
+                        #{createUserName},
+                    </if>
+                    <if test="updateUserName != null">update_user_name =
+                        #{updateUserName},
+                    </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFileRelationById" parameterType="String">
+        delete from t_file_relation where id = #{id}
+    </delete>
+
+    <delete id="deleteFileRelationByIds" parameterType="String">
+        delete from t_file_relation where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
