@@ -1,7 +1,11 @@
 package com.jjpt.business.service.impl;
 
 import java.util.List;
+
+import cn.hutool.core.util.IdUtil;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.uuid.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jjpt.business.mapper.ElRepoMapper;
@@ -53,7 +57,13 @@ public class ElRepoServiceImpl implements IElRepoService
     @Override
     public int insertElRepo(ElRepo elRepo)
     {
+        Long userId = SecurityUtils.getUserId();
+        Long deptId = SecurityUtils.getDeptId();
         elRepo.setCreateTime(DateUtils.getNowDate());
+        elRepo.setDeptId(deptId);
+        elRepo.setUserId(userId);
+        elRepo.setId(IdUtils.fastSimpleUUID());
+        elRepo.setCode(IdUtils.fastSimpleUUID());
         return elRepoMapper.insertElRepo(elRepo);
     }
 

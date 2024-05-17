@@ -161,7 +161,52 @@ export const dynamicRoutes = [
         meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
       }
     ]
-  }
+  },
+
+  {
+    path: '/exammanage/repo-add',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:repo:add'],
+    children: [
+      {
+        path: 'addRepo',
+        component: () => import('@/views/exammanage/repo/form'),
+        name: 'AddRepo',
+        meta: {title: '新增题库',noCache: true}
+      }
+    ]
+  },
+
+  {
+    path: '/exammanage/repo-update',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:repo:edit'],
+    children: [
+      {
+        path: 'updateRepo/:RepoId(\\d+)',
+        component: () => import('@/views/exammanage/repo/form'),
+        name: 'updateRepo',
+        meta: {title: '编辑题库'}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/repo-list',
+    component: Layout,
+    permissions: ['exammanage:repo:list'],
+    children: [
+      {
+        path: 'listRepo',
+        component: () => import('@/views/exammanage/repo/index.vue'),
+        name: 'listRepo',
+        meta: {title: '题库管理',noCache: true}
+      }
+    ]
+  },
+
+
 ]
 
 // 防止连续点击多次路由报错

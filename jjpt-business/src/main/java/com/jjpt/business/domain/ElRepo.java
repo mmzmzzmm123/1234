@@ -26,12 +26,10 @@ public class ElRepo extends BaseEntity
     @Excel(name = "题库名称")
     private String title;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+
     private Long userId;
 
-    /** $column.columnComment */
-    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+
     private Long deptId;
 
     public void setId(String id) 

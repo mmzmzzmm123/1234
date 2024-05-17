@@ -225,19 +225,22 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
+     /* this.reset();
       this.open = true;
       this.title = "添加题库管理";
+      const winId = row.winId;*/
+      this.$router.push("/exammanage/repo-add/addRepo");
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getRepo(id).then(response => {
+      this.$router.push("/exammanage/repo-add/addRepo/"+id);
+/*      getRepo(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改题库管理";
-      });
+      });*/
     },
     /** 提交按钮 */
     submitForm() {

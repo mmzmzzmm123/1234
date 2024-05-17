@@ -24,5 +24,54 @@
 
   </div>
 </template>
+
 <script>
+import { listRepo, getRepo, delRepo, addRepo, updateRepo } from "@/api/exammanage/repo";
+export default {
+  name: "AddRepo",
+  data(){
+    return{
+      postForm: {
+
+      },
+      loading: false,
+      rules:{
+        title: [{ required: true, message: '题库名称不能为空！' }],
+      }
+    }
+  },
+  created() {
+    const id = this.$route.params.id
+    if (typeof id !== 'undefined') {
+      this.getRepo(id)
+    }
+  },
+  methods:{
+    submitForm() {
+      console.log(JSON.stringify(this.postForm))
+
+      this.$refs.postForm.validate((valid) => {
+        if (!valid) {
+          return
+        }
+
+        addRepo(this.postForm).then(() => {
+          this.$notify({
+            title: '成功',
+            message: '题库保存成功！',
+            type: 'success',
+            duration: 2000
+          })
+          this.postForm = {};
+          this.$router.push('/exammanage/repo-list/listRepo')
+        })
+      })
+    },
+    onCancel() {
+      this.postForm = {};
+      this.$router.push('/exammanage/repo-list/listRepo')
+    }
+  }
+};
 </script>
+

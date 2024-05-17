@@ -1,6 +1,8 @@
 package com.jjpt.business.mapper;
 
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jjpt.business.domain.ElRepo;
 import org.mybatis.spring.annotation.MapperScan;
 
@@ -11,7 +13,7 @@ import org.mybatis.spring.annotation.MapperScan;
  * @date 2024-05-16
  */
 @MapperScan
-public interface ElRepoMapper 
+public interface ElRepoMapper extends BaseMapper<ElRepo>
 {
     /**
      * 查询题库管理
