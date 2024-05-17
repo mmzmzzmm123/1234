@@ -704,6 +704,7 @@ public class BaoliBizOrder extends BaseEntity
     private Date mortgageDate;
     private Date submitDate;
     private Date shareDate;
+    private Date licenseDate;
     private Date releaseLoanDate;
     private JSONObject auditInfo;
     private String preCheckResult;
@@ -756,6 +757,14 @@ public class BaoliBizOrder extends BaseEntity
 
     public JSONObject getAuditInfo() {
         return auditInfo;
+    }
+
+    public Date getLicenseDate() {
+        return licenseDate;
+    }
+
+    public void setLicenseDate(Date licenseDate) {
+        this.licenseDate = licenseDate;
     }
 
     public void setAuditInfo(JSONObject auditInfo) {

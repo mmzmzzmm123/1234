@@ -225,7 +225,7 @@ public class BaoliBizOrderController extends BaseController
         startUserInfo.put("name", getLoginUser().getUser().getNickName());
         String processDefinitionId = "";
 
-        String orderKey="Flowable1788388037957324800:7:1791008320736206848";
+        String orderKey="Flowable1788388037957324800:1:1791016548761096192";
         String selectedUser = "{\"form_assign_user\":[{\"id\":5,\"name\":\"驻店测试用户\",\"type\":\"user\",\"sex\":false,\"selected\":false}]}";
 
         JSONObject assignUser = JSONObject.parseObject(selectedUser);
@@ -246,7 +246,6 @@ public class BaoliBizOrderController extends BaseController
     @PutMapping
     public AjaxResult edit(@RequestBody BaoliBizOrder baoliBizOrder)
     {
-        int result = baoliBizOrderService.updateBaoliBizOrder(baoliBizOrder);
         //如果status 是 02 提交 则发起工作流
         if(baoliBizOrder.getStatus().equals("02")){
             runProcess(baoliBizOrder);
@@ -266,6 +265,13 @@ public class BaoliBizOrderController extends BaseController
                         bizFormData.put("form_bank_release_loan",2);
                     }
                 }
+                //内勤 审核放款金额 , 将 adjustLoanAmount 替换 loanAmount;(如果审批通过)
+                if(baoliBizOrder.getStatus().equals("09")){
+                    //内勤 审核放款金额 , 将 adjustLoanAmount 替换 loanAmount;
+                    if(baoliBizOrder.getAuditResult() == null || baoliBizOrder.getAuditResult().equals("01")) {
+                        baoliBizOrder.setLoanAmount(baoliBizOrder.getAdjustLoanAmount());
+                    }
+                }
                 baoliBizOrder.getAuditInfo().put("bizFormData",bizFormData);
                 if(baoliBizOrder.getAuditResult() == null || baoliBizOrder.getAuditResult().equals("01")){
                     agree(baoliBizOrder);
@@ -274,6 +280,7 @@ public class BaoliBizOrderController extends BaseController
                 }
             }
         }
+        int result = baoliBizOrderService.updateBaoliBizOrder(baoliBizOrder);
         return toAjax(result);
     }
 
@@ -320,7 +327,7 @@ public class BaoliBizOrderController extends BaseController
         }).findFirst();
 
        JSONObject taskObject = null;
-       if(taskVari.get()!=null){
+       if(taskVari != Optional.empty()){
            taskObject = (JSONObject) taskVari.get();
            // 构造auditInfo
            auditInfo = new JSONObject();

@@ -66,7 +66,7 @@ public class BaoliBizCarBrandController extends BaseController
         }).collect(Collectors.toList());
         for (BaoliBizCarBrand bizCarBrand : secondClassBrandList) {
             if(firstClassBrandList.stream().filter((BaoliBizCarBrand carBrand)->{
-                return carBrand.getId() == bizCarBrand.getParentId();
+                return carBrand.getId().compareTo(bizCarBrand.getParentId()) == 0;
             }).count() == 0){
                 BaoliBizCarBrand newItem = new BaoliBizCarBrand();
                 newItem.setId(bizCarBrand.getParentId());
