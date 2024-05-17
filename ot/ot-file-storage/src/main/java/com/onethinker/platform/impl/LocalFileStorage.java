@@ -1,14 +1,14 @@
-package com.ruoyi.platform.impl;
+package com.onethinker.platform.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Assert;
-import com.ruoyi.bean.FileInfo;
+import com.onethinker.bean.FileInfo;
 import com.ruoyi.common.webp.exc.WebpEncodeUtil;
-import com.ruoyi.config.FileStorageProperties;
-import com.ruoyi.config.FileStorageProperties.Thumbnail;
-import com.ruoyi.config.FileStorageProperties.WaterMark;
-import com.ruoyi.event.FormFileUploadSuccessEvent;
-import com.ruoyi.platform.FileStorage;
+import com.onethinker.config.FileStorageProperties;
+import com.onethinker.config.FileStorageProperties.Thumbnail;
+import com.onethinker.config.FileStorageProperties.WaterMark;
+import com.onethinker.event.FormFileUploadSuccessEvent;
+import com.onethinker.platform.FileStorage;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;

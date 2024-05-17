@@ -1,4 +1,4 @@
-package com.ruoyi.util;
+package com.onethinker.util;
 
 import java.io.IOException;
 import java.io.InputStream;

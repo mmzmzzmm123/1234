@@ -1,4 +1,4 @@
-package com.ruoyi.bean;
+package com.onethinker.bean;
 
 import lombok.Data;
 

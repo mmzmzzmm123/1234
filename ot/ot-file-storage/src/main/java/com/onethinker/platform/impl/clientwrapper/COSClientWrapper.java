@@ -1,4 +1,4 @@
-package com.ruoyi.platform.impl.clientwrapper;
+package com.onethinker.platform.impl.clientwrapper;
 
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;

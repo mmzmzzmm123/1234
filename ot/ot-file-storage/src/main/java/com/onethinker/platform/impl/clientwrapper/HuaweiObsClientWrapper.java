@@ -1,4 +1,4 @@
-package com.ruoyi.platform.impl.clientwrapper;
+package com.onethinker.platform.impl.clientwrapper;
 
 import cn.hutool.core.io.IoUtil;
 import com.obs.services.ObsClient;

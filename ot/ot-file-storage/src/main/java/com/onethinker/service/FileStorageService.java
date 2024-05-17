@@ -1,11 +1,11 @@
-package com.ruoyi.service;
+package com.onethinker.service;
 
 import cn.hutool.core.util.StrUtil;
-import com.ruoyi.bean.FilePersistInfo;
+import com.onethinker.bean.FilePersistInfo;
+import com.onethinker.config.FileStorageProperties;
+import com.onethinker.util.Tools;
 import com.ruoyi.common.constant.SystemConst;
-import com.ruoyi.config.FileStorageProperties;
-import com.ruoyi.platform.FileStorage;
-import com.ruoyi.util.Tools;
+import com.onethinker.platform.FileStorage;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

@@ -1,4 +1,4 @@
-package com.ruoyi.config;
+package com.onethinker.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

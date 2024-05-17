@@ -1,6 +1,6 @@
-package com.ruoyi.event;
+package com.onethinker.event;
 
-import com.ruoyi.bean.FileInfo;
+import com.onethinker.bean.FileInfo;
 import org.springframework.context.ApplicationEvent;
 
 import java.nio.file.Path;

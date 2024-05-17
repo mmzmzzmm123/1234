@@ -1,12 +1,13 @@
-package com.ruoyi.platform.impl;
+package com.onethinker.platform.impl;
 
 import cn.hutool.core.lang.Assert;
-import com.ruoyi.bean.FileInfo;
-import com.ruoyi.config.FileStorageProperties;
-import com.ruoyi.config.FileStorageProperties.*;
-import com.ruoyi.event.FormFileUploadSuccessEvent;
-import com.ruoyi.platform.FileStorage;
-import com.ruoyi.platform.impl.clientwrapper.HuaweiObsClientWrapper;
+import com.onethinker.bean.FileInfo;
+import com.onethinker.config.FileStorageProperties;
+import com.onethinker.config.FileStorageProperties.Thumbnail;
+import com.onethinker.config.FileStorageProperties.WaterMark;
+import com.onethinker.event.FormFileUploadSuccessEvent;
+import com.onethinker.platform.FileStorage;
+import com.onethinker.platform.impl.clientwrapper.COSClientWrapper;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,17 +21,19 @@ import java.util.List;
 import java.util.Objects;
 
 /**
+ * 腾讯云 COS 存储
+ *
  * @author yangyouqi
- * @date 2024/5/17
+ * @date 2024/5/14
  */
 @Data
 @NoArgsConstructor
 @Log4j2
-public class HuaweiObsFileStorage implements FileStorage {
+public class TencentCosFileStorage implements FileStorage {
     private String platform;
-    private String accessKey;
+    private String secretId;
     private String secretKey;
-    private String endPoint;
+    private String region;
     private String bucketName;
     private String basePath;
     private List<String> allowMime;
@@ -40,38 +43,35 @@ public class HuaweiObsFileStorage implements FileStorage {
     private MultipartFile source;
     private List<String> allowExtension;
 
-    public HuaweiObsFileStorage(FileStorageProperties config) {
-        this.platform = config.getHuaweiObs().getPlatform();
-        this.accessKey = config.getHuaweiObs().getAccessKey();
-        this.secretKey = config.getHuaweiObs().getSecretKey();
-        this.endPoint = config.getHuaweiObs().getEndPoint();
-        this.bucketName = config.getHuaweiObs().getBucketName();
-        this.basePath = config.getHuaweiObs().getBasePath();
-        this.allowMime = config.getAllowMime();
+    public TencentCosFileStorage(FileStorageProperties config) {
+        this.platform = config.getTencentCos().getPlatform();
+        this.secretId = config.getTencentCos().getSecretId();
+        this.secretKey = config.getTencentCos().getSecretKey();
+        this.bucketName = config.getTencentCos().getBucketName();
+        this.region = config.getTencentCos().getRegion();
+        this.basePath = config.getTencentCos().getBasePath();
         this.waterMark = config.getWaterMark();
         this.thumbnail = config.getThumbnail();
+        this.allowMime = config.getAllowMime();
         this.allowExtension = config.getAllowExtension();
     }
 
-
     @Override
     public FileStorage setName(String name) {
-        this.fileName = name;
+        fileName = name;
         return this;
     }
 
     @Override
     public FileInfo upload(MultipartFile file) {
         this.setSource(file);
-
         String name = StringUtils.isBlank(fileName) ? file.getName() : this.fileName;
         String extension = getExtension(name, allowExtension);
-
-        try (HuaweiObsClientWrapper obsClient = new HuaweiObsClientWrapper(accessKey, secretKey, endPoint)) {
+        try (COSClientWrapper cosClient = new COSClientWrapper(secretId, secretKey, region)) {
             FileInfo fileInfo = new FileInfo();
-            // 指定要上传到 obs 上对象键 (也是最终访问地址)
+            // 指定要上传到 COS 上对象键 (也是最终访问地址)
             String newKey = getFileKey(basePath, fileInfo);
-            obsClient.putObject(bucketName, newKey, file);
+            cosClient.putObject(bucketName, newKey, file);
             // fileInfo id 保存在 getFileKey方法中
             fileInfo.setExtension(extension);
             fileInfo.setPath(newKey.replace("/" + DATA_FILE, ""));
@@ -118,11 +118,11 @@ public class HuaweiObsFileStorage implements FileStorage {
         String fileMimeType = formFileUploadSuccessEvent.getMimeType();
         if (fileMimeType != null && fileMimeType.startsWith(IMAGE)) {
             log.debug("Start Process Image Ext:{}", formFileUploadSuccessEvent.getId());
-            try (HuaweiObsClientWrapper obsClient = new HuaweiObsClientWrapper(accessKey, secretKey, endPoint)) {
-                processWatermark(fileInfo, obsClient);
-                processThumbnail(fileInfo, obsClient);
-                processWebp(fileInfo, obsClient);
-                processWebpOriginal(fileInfo, obsClient);
+            try (COSClientWrapper cosClientWrapper = new COSClientWrapper(secretId, secretKey, region)) {
+                processWatermark(fileInfo, cosClientWrapper);
+                processThumbnail(fileInfo, cosClientWrapper);
+                processWebp(fileInfo, cosClientWrapper);
+                processWebpOriginal(fileInfo, cosClientWrapper);
             } catch (Exception e) {
                 log.error("{}客户端连接有误",platform, e);
             } finally {
@@ -134,46 +134,46 @@ public class HuaweiObsFileStorage implements FileStorage {
         }
     }
 
-    private void processWebpOriginal(FileInfo fileInfo, HuaweiObsClientWrapper obsClient) {
+    private void processWebpOriginal(FileInfo fileInfo, COSClientWrapper cosClient) {
         try {
             Path path = processWebpOriginal(source, fileInfo,basePath + "/" + fileInfo.getId());
             String newKey = getTransFile(fileInfo.getPath(), WEBP_ORIGINAL_FILE);
-            obsClient.putObject(bucketName, newKey, path.toFile());
+            cosClient.putObject(bucketName, newKey, path.toFile());
         } catch (Exception e) {
             log.error("Process WebP Original Error:{}", fileInfo.getId(), e);
         }
         log.debug("Finish Process Webp Original:{}", fileInfo.getId());
     }
 
-    private void processWebp(FileInfo fileInfo, HuaweiObsClientWrapper obsClient) {
+    private void processWebp(FileInfo fileInfo, COSClientWrapper cosClient) {
         log.debug("Start Process Webp:{}", fileInfo.getId());
         try {
             Path webpFile = processWebp(source, fileInfo,basePath + "/" + fileInfo.getId());
             String newKey = getTransFile(fileInfo.getPath(), WEBP_FILE);
-            obsClient.putObject(bucketName, newKey, webpFile.toFile());
+            cosClient.putObject(bucketName, newKey, webpFile.toFile());
         } catch (Exception e) {
             log.error("Process WebP Error:{}", fileInfo.getId(), e);
         }
         log.debug("Finish Process Webp:{}", fileInfo.getId());
     }
 
-    private void processThumbnail(FileInfo fileInfo, HuaweiObsClientWrapper obsClient) {
+    private void processThumbnail(FileInfo fileInfo, COSClientWrapper cosClient) {
         try (InputStream is = processThumbnail(source, fileInfo, thumbnail)) {
             String newKey = getTransFile(fileInfo.getPath(), THUMBNAIL_FILE);
-            obsClient.putObject(bucketName, newKey, is);
+            // 上传到腾讯云存储对象中
+            cosClient.putObject(bucketName, newKey, is);
         } catch (Exception e) {
             log.error("Process Thumbnail Error:{}", fileInfo.getId(), e);
         }
         log.debug("Finish Process Thumbnail:{}", fileInfo.getId());
     }
 
-    private void processWatermark(FileInfo fileInfo, HuaweiObsClientWrapper obsClientWrapper) {
+    private void processWatermark(FileInfo fileInfo, COSClientWrapper cosClientWrapper) {
         try (InputStream is = processWatermark(source, fileInfo, waterMark)) {
             String newKey = getTransFile(fileInfo.getPath(), WATERMARK_FILE);
-            obsClientWrapper.putObject(bucketName, newKey, is);
+            cosClientWrapper.putObject(bucketName, newKey, is);
         } catch (Exception e) {
             log.error("Process Thumbnail Error:{}", fileInfo.getId(), e);
         }
     }
-
 }

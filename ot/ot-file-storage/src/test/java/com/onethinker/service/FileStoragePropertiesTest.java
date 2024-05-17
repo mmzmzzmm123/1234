@@ -1,7 +1,7 @@
-package com.ruoyi.service;
+package com.onethinker.service;
 
-import com.ruoyi.bean.FileInfo;
-import com.ruoyi.config.FileStorageProperties;
+import com.onethinker.bean.FileInfo;
+import com.onethinker.config.FileStorageProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

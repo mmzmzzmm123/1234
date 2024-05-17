@@ -1,7 +1,7 @@
-package com.ruoyi.config;
+package com.onethinker.config;
 
-import com.ruoyi.platform.FileStorage;
-import com.ruoyi.service.FileStorageService;
+import com.onethinker.platform.FileStorage;
+import com.onethinker.service.FileStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration;
