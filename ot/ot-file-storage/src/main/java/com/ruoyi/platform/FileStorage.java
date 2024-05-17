@@ -7,6 +7,7 @@ import com.ruoyi.common.webp.exc.WebpEncodeUtil;
 import com.ruoyi.config.FileStorageProperties.Thumbnail;
 import com.ruoyi.config.FileStorageProperties.WaterMark;
 import com.ruoyi.event.FormFileUploadSuccessEvent;
+import com.ruoyi.platform.impl.clientwrapper.HuaweiObsClientWrapper;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.collections4.CollectionUtils;

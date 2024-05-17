@@ -56,6 +56,8 @@ public class FileStorageProperties {
 
     private AliYunOssConfig aliyunOss;
 
+    private HuaWeiObsConfig huaweiObs;
+
     /**
      * 基本的存储平台配置
      */
@@ -103,6 +105,17 @@ public class FileStorageProperties {
     @Data
     @EqualsAndHashCode(callSuper = true)
     public static class BaiduBosConfig extends BaseConfig {
+    }
+
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    public static class HuaWeiObsConfig extends BaseConfig {
+        private String enableStorage;
+        private String accessKey;
+        private String secretKey;
+        private String bucketName;
+        private String domain;
+        private String endPoint;
     }
 
 

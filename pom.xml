@@ -48,6 +48,8 @@
         <cos_api.version>5.6.137</cos_api.version>
         <hutool.version>5.8.22</hutool.version>
         <thumbnailator.version>0.4.20</thumbnailator.version>
+        <esdk-obs-java.version>3.22.12</esdk-obs-java.version>
+        <okhttp.version>4.9.0</okhttp.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -185,13 +187,6 @@
                 <version>${ruoyi.version}</version>
             </dependency>
             <!--业务模块-->
-<!--            <dependency>-->
-<!--                <groupId>com.ruoyi</groupId>-->
-<!--                <artifactId>ot</artifactId>-->
-<!--                <version>${project.version}</version>-->
-<!--&lt;!&ndash;                <type>pom</type>&ndash;&gt;-->
-<!--&lt;!&ndash;                <scope>import</scope>&ndash;&gt;-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>onethinker</artifactId>
@@ -250,11 +245,24 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--在线的图像缩略图生成工具-->
             <dependency>
                 <groupId>net.coobird</groupId>
                 <artifactId>thumbnailator</artifactId>
                 <version>${thumbnailator.version}</version>
             </dependency>
+            <!--华为云OBS-->
+            <dependency>
+                <groupId>com.huaweicloud</groupId>
+                <artifactId>esdk-obs-java</artifactId>
+                <version>${esdk-obs-java.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp3</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

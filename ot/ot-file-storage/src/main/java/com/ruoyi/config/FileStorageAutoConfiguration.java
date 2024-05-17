@@ -43,6 +43,7 @@ public class FileStorageAutoConfiguration {
         String pageStr = "com.ruoyi.platform.impl.";
         buildFileStorage(properties,pageStr + "LocalFileStorage");
         buildFileStorage(properties,pageStr + "TencentCosFileStorage");
+        buildFileStorage(properties,pageStr + "HuaweiObsFileStorage");
         // 本体
         FileStorageService service = new FileStorageService();
         service.setProperties(properties);

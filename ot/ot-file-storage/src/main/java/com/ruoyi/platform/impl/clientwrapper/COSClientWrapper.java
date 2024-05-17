@@ -1,4 +1,4 @@
-package com.ruoyi.platform.impl;
+package com.ruoyi.platform.impl.clientwrapper;
 
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
@@ -13,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,10 +38,6 @@ public class COSClientWrapper implements AutoCloseable {
         clientConfig.setHttpProtocol(HttpProtocol.https);
         // 3 生成 cos 客户端。
         this.cosClient = new COSClient(cred, clientConfig);
-    }
-
-    public COSClient getCOSClient() {
-        return cosClient;
     }
 
     @Override

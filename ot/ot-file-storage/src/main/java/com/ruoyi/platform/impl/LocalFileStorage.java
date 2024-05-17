@@ -1,6 +1,7 @@
 package com.ruoyi.platform.impl;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Assert;
 import com.ruoyi.bean.FileInfo;
 import com.ruoyi.common.webp.exc.WebpEncodeUtil;
 import com.ruoyi.config.FileStorageProperties;
@@ -26,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author yangyouqi
@@ -101,6 +103,7 @@ public class LocalFileStorage implements FileStorage {
 
     @Override
     public FileInfo upload() {
+        Assert.isTrue(Objects.nonNull(source),"source is null");
         return this.upload(source);
     }
 
