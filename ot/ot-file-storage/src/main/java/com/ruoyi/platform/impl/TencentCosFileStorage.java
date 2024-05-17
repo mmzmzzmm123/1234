@@ -19,9 +19,11 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.tika.utils.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 腾讯云 COS 存储
@@ -127,14 +129,18 @@ public class TencentCosFileStorage implements FileStorage {
                 processWebpOriginal(fileInfo, cosClientWrapper);
             } catch (Exception e) {
                 log.error("腾讯云客户端连接有误", e);
+            } finally {
+                String path = basePath + "/" + fileInfo.getId();
+                // 清理临时文件内容
+                deleteDirectory(path);
             }
-            log.debug("Finish Process Image Ext:{}", formFileUploadSuccessEvent.getId());
+            log.debug("Finish Process Image Ext End :{}", formFileUploadSuccessEvent.getId());
         }
     }
 
     private void processWebpOriginal(FileInfo fileInfo, COSClientWrapper cosClient) {
         try {
-            Path path = processWebpOriginal(source, fileInfo);
+            Path path = processWebpOriginal(source, fileInfo,basePath + "/" + fileInfo.getId());
             String newKey = getTransFile(fileInfo.getPath(), WEBP_ORIGINAL_FILE);
             cosClient.putObject(bucketName, newKey, path.toFile());
         } catch (Exception e) {
@@ -146,7 +152,7 @@ public class TencentCosFileStorage implements FileStorage {
     private void processWebp(FileInfo fileInfo, COSClientWrapper cosClient) {
         log.debug("Start Process Webp:{}", fileInfo.getId());
         try {
-            Path webpFile = processWebp(source, fileInfo);
+            Path webpFile = processWebp(source, fileInfo,basePath + "/" + fileInfo.getId());
             String newKey = getTransFile(fileInfo.getPath(), WEBP_FILE);
             cosClient.putObject(bucketName, newKey, webpFile.toFile());
         } catch (Exception e) {

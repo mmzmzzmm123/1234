@@ -21,6 +21,8 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -154,8 +156,8 @@ public interface FileStorage {
 
     default String queryDetectMime(MultipartFile file, List<String> allowMime) {
         Tika tika = new Tika();
-        try {
-            String detect = tika.detect(file.getInputStream());
+        try (InputStream inputStream = file.getInputStream()){
+            String detect = tika.detect(inputStream);
             if (!StringUtils.isBlank(detect)) {
                 String flag = ";";
                 String mime = detect;
@@ -168,8 +170,8 @@ public interface FileStorage {
             }
             return detect;
         } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     default int[] getImgSize(File file) {
@@ -182,8 +184,7 @@ public interface FileStorage {
     }
 
     default int[] getImgSize(MultipartFile file) {
-        try {
-            InputStream inputStream = file.getInputStream();
+        try (InputStream inputStream = file.getInputStream()){
             BufferedImage img = ImageIO.read(inputStream);
             return new int[]{img.getWidth(), img.getHeight()};
         } catch (IOException e) {
@@ -237,7 +238,10 @@ public interface FileStorage {
         int[] imgSize = getImgSize(source);
         if (imgSize[0] > minWidth && imgSize[1] > minHeight) {
             log.debug("Start Process Watermark:{}", fileInfo.getId());
-            Thumbnails.Builder<BufferedImage> builder = Thumbnails.of(ImageIO.read(source.getInputStream()));
+            Thumbnails.Builder<BufferedImage> builder;
+            try (InputStream is = source.getInputStream()){
+                builder = Thumbnails.of(ImageIO.read(is));
+            }
             BufferedImage bufferedImage = getWatermark(fileInfo.getCreateUserId());
             builder.watermark(Positions.CENTER, bufferedImage, 0.5f);
             if (imgSize[0] > (minWidth + minWidth)) {
@@ -270,19 +274,23 @@ public interface FileStorage {
         }
         // 将图像写入到 ByteArrayOutputStream 中
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        Thumbnails.of(source.getInputStream())
-                .size(width, height)
-                .outputQuality(quality).toOutputStream(os);
-
+        try (InputStream is = source.getInputStream()){
+            Thumbnails.of(is).size(width, height).outputQuality(quality).toOutputStream(os);
+        }
         return new ByteArrayInputStream(os.toByteArray());
     }
 
-    default Path processWebp(MultipartFile source,FileInfo fileInfo) throws IOException {
-        log.debug("Start Process Webp:{}", fileInfo.getId());
-        // 创建临时文件
-        File tempFile = File.createTempFile("temp", fileInfo.getExtension());
-        // 将MultipartFile转换为临时文件
-        source.transferTo(tempFile);
+    default Path processWebp(MultipartFile source,FileInfo fileInfo,String filePath) throws IOException {
+        if (isWindows()) {
+            filePath = "D:\\" + filePath;
+        }
+        log.debug("Start Process Webp:{},{}", fileInfo.getId(),filePath);
+        File tempFile = new File(filePath + "/" + DATA_FILE);
+        if (!tempFile.exists()) {
+            tempFile.mkdirs();
+            // 创建临时文件
+            source.transferTo(tempFile);
+        }
         Path dataFile = tempFile.toPath();
         Path waterMarkFile = getTransFile(dataFile, WATERMARK_FILE);
         if (exists(waterMarkFile)) {
@@ -301,12 +309,18 @@ public interface FileStorage {
         return webpFile;
     }
 
-    default Path processWebpOriginal(MultipartFile source,FileInfo fileInfo) throws IOException {
-        log.debug("Start Process Webp Original:{}", fileInfo.getId());
+    default Path processWebpOriginal(MultipartFile source,FileInfo fileInfo,String filePath) throws IOException {
         // 创建临时文件
-        File tempFile = File.createTempFile("temp", fileInfo.getExtension());
-        // 将MultipartFile转换为临时文件
-        source.transferTo(tempFile);
+        if (isWindows()) {
+            filePath = "D:\\" + filePath;
+        }
+        log.debug("Start Process Webp Original:{},{}", fileInfo.getId(),filePath);
+        File tempFile = new File(filePath + "/" + DATA_FILE);
+        if (!tempFile.exists()) {
+            tempFile.mkdirs();
+            // 将MultipartFile转换为临时文件
+            source.transferTo(tempFile);
+        }
         Path dataFile = tempFile.toPath();
         Path webpOriginalFile = getTransFile(dataFile, WEBP_ORIGINAL_FILE);
         if (exists(webpOriginalFile)) {
@@ -315,5 +329,41 @@ public interface FileStorage {
         WebpEncodeUtil.toWebp(dataFile, webpOriginalFile);
         log.debug("Finish Process Webp Original:{}", fileInfo.getId());
         return webpOriginalFile;
+    }
+
+    default boolean isWindows() {
+        return (System.getProperty("os.name").toLowerCase().contains("win"));
+    }
+
+    /**
+     * 删除指定路径的目录及其所有内容
+     *
+     * @param dirPath 目录的路径
+     * @return 如果目录及其内容被成功删除则返回 true，否则返回 false
+     */
+    default boolean deleteDirectory(String dirPath) {
+        if (isWindows()) {
+            dirPath = "D:\\" + dirPath;
+        }
+        Path path = Paths.get(dirPath);
+        try {
+            // 递归删除目录及其内容
+            deleteRecursively(path);
+            return true;
+        } catch (IOException e) {
+            System.err.println("删除目录时发生错误: " + e.getMessage());
+            return false;
+        }
+    }
+
+    default void deleteRecursively(Path path) throws IOException {
+        if (Files.isDirectory(path)) {
+            try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
+                for (Path entry : entries) {
+                    deleteRecursively(entry);
+                }
+            }
+        }
+        Files.delete(path);
     }
 }

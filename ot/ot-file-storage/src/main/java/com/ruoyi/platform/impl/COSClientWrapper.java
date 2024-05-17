@@ -9,8 +9,11 @@ import com.qcloud.cos.model.ObjectMetadata;
 import com.qcloud.cos.model.PutObjectRequest;
 import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +23,10 @@ import java.io.InputStream;
  * @date 2024/5/17
  */
 public class COSClientWrapper implements AutoCloseable {
+
+    private static final Logger log = LoggerFactory.getLogger(COSClientWrapper.class);
+
+
     private final COSClient cosClient;
 
     public COSClientWrapper(String secretId, String secretKey,String region) {
@@ -48,14 +55,17 @@ public class COSClientWrapper implements AutoCloseable {
     public PutObjectResult putObject(String bucketName, String newKey, MultipartFile file) throws IOException {
         // 获取对象的元数据
         ObjectMetadata metadata = getObjectMetadata(file);
-        // 上传到腾讯云存储对象中
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newKey, file.getInputStream(), metadata);
-        return cosClient.putObject(putObjectRequest);
+        try (final InputStream inputStream = file.getInputStream()){
+            // 上传到腾讯云存储对象中
+            PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newKey, inputStream, metadata);
+            return cosClient.putObject(putObjectRequest);
+        }
     }
 
     public PutObjectResult putObject(String bucketName, String newKey, InputStream is) {
         // 上传到腾讯云存储对象中
-        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newKey, is,new ObjectMetadata());
+        ObjectMetadata objectMetadata = getObjectMetadata(is);
+        PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newKey, is,objectMetadata);
         return cosClient.putObject(putObjectRequest);
     }
 
@@ -79,9 +89,6 @@ public class COSClientWrapper implements AutoCloseable {
      * 获取对象的元数据
      */
     public ObjectMetadata getObjectMetadata(InputStream is) {
-        ObjectMetadata metadata = new ObjectMetadata();
-//        metadata.setContentLength(is.getSize());
-//        metadata.setContentType(multipartFile.getContentType());
-        return metadata;
+        return new ObjectMetadata();
     }
 }
