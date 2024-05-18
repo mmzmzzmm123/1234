@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.jjpt.business.domain.ElQu;
+import com.jjpt.business.domain.dto.ElQuDto;
 import com.jjpt.business.service.IElQuService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -77,7 +78,7 @@ public class ElQuController extends BaseController
     @PreAuthorize("@ss.hasPermi('exammanage:qu:add')")
     @Log(title = "试题管理", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody ElQu elQu)
+    public AjaxResult add(@RequestBody ElQuDto elQu)
     {
         return toAjax(elQuService.insertElQu(elQu));
     }
@@ -88,9 +89,9 @@ public class ElQuController extends BaseController
     @PreAuthorize("@ss.hasPermi('exammanage:qu:edit')")
     @Log(title = "试题管理", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody ElQu elQu)
+    public AjaxResult edit(@RequestBody ElQuDto elQu)
     {
-        return toAjax(elQuService.updateElQu(elQu));
+        return toAjax(elQuService.insertElQu(elQu));
     }
 
     /**

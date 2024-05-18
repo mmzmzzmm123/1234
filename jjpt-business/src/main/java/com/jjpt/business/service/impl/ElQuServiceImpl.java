@@ -2,14 +2,21 @@ package com.jjpt.business.service.impl;
 
 import java.util.List;
 
+import cn.hutool.core.util.StrUtil;
 import com.jjpt.business.domain.ElQu;
+import com.jjpt.business.domain.ElQuAnswer;
+import com.jjpt.business.domain.dto.ElQuDto;
 import com.jjpt.business.mapper.ElQuMapper;
+import com.jjpt.business.service.IElQuAnswerService;
+import com.jjpt.business.service.IElQuRepoService;
 import com.jjpt.business.service.IElQuService;
+import com.jjpt.business.utils.BeanMapper;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -23,6 +30,10 @@ public class ElQuServiceImpl implements IElQuService
 {
     @Autowired
     private ElQuMapper elQuMapper;
+    @Autowired
+    private IElQuAnswerService elQuAnswerService;
+    @Autowired
+    private IElQuRepoService elQuRepoService;
 
     /**
      * 查询试题管理
@@ -55,16 +66,33 @@ public class ElQuServiceImpl implements IElQuService
      * @return 结果
      */
     @Override
-    public int insertElQu(ElQu elQu)
+    @Transactional(rollbackFor = Exception.class)
+    public int insertElQu(ElQuDto elQu)
     {
+
         Long userId = SecurityUtils.getUserId();
         Long deptId = SecurityUtils.getDeptId();
-        elQu.setCreateTime(DateUtils.getNowDate());
-        elQu.setDeptId(deptId);
-        elQu.setUserId(userId);
-        elQu.setId(IdUtils.fastSimpleUUID());
-        elQu.setCreateTime(DateUtils.getNowDate());
-        return elQuMapper.insertElQu(elQu);
+        //新增问题主表
+        ElQu qu = new ElQu();
+        String quId = elQu.getId();
+        if(StrUtil.isBlank(quId)){
+            quId = IdUtils.fastSimpleUUID();
+        }
+        BeanMapper.copy(elQu, qu);
+        qu.setCreateTime(DateUtils.getNowDate());
+        qu.setDeptId(deptId);
+        qu.setUserId(userId);
+        qu.setId(quId);
+        qu.setCreateTime(DateUtils.getNowDate());
+        elQuMapper.insertElQu(qu);
+         //新增问题选项表
+        List<ElQuAnswer> answerList = elQu.getAnswerList();
+        elQuAnswerService.saveAll(quId,answerList);
+        //保存到题库
+        elQuRepoService.saveAll(quId,elQu.getQuType(),elQu.getRepoIds());
+
+
+        return 1;
     }
 
     /**

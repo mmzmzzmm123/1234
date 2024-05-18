@@ -1,6 +1,7 @@
 package com.jjpt.business.service;
 
 import com.jjpt.business.domain.ElQu;
+import com.jjpt.business.domain.dto.ElQuDto;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ public interface IElQuService
      * @param elQu 试题管理
      * @return 结果
      */
-    public int insertElQu(ElQu elQu);
+    public int insertElQu(ElQuDto elQu);
 
     /**
      * 修改试题管理

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjpt.business.mapper.ElQuAnswerMapper">
+    
+    <resultMap type="ElQuAnswer" id="ElQuAnswerResult">
+        <result property="id"    column="id"    />
+        <result property="quId"    column="qu_id"    />
+        <result property="isRight"    column="is_right"    />
+        <result property="image"    column="image"    />
+        <result property="content"    column="content"    />
+        <result property="analysis"    column="analysis"    />
+    </resultMap>
+
+    <sql id="selectElQuAnswerVo">
+        select id, qu_id, is_right, image, content, analysis from el_qu_answer
+    </sql>
+
+    <select id="selectElQuAnswerList" parameterType="ElQuAnswer" resultMap="ElQuAnswerResult">
+        <include refid="selectElQuAnswerVo"/>
+        <where>  
+            <if test="quId != null  and quId != ''"> and qu_id = #{quId}</if>
+            <if test="isRight != null "> and is_right = #{isRight}</if>
+            <if test="image != null  and image != ''"> and image = #{image}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="analysis != null  and analysis != ''"> and analysis = #{analysis}</if>
+        </where>
+    </select>
+    
+    <select id="selectElQuAnswerById" parameterType="String" resultMap="ElQuAnswerResult">
+        <include refid="selectElQuAnswerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertElQuAnswer" parameterType="ElQuAnswer">
+        insert into el_qu_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="quId != null and quId != ''">qu_id,</if>
+            <if test="isRight != null">is_right,</if>
+            <if test="image != null and image != ''">image,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="analysis != null and analysis != ''">analysis,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="quId != null and quId != ''">#{quId},</if>
+            <if test="isRight != null">#{isRight},</if>
+            <if test="image != null and image != ''">#{image},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="analysis != null and analysis != ''">#{analysis},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElQuAnswer" parameterType="ElQuAnswer">
+        update el_qu_answer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="quId != null and quId != ''">qu_id = #{quId},</if>
+            <if test="isRight != null">is_right = #{isRight},</if>
+            <if test="image != null and image != ''">image = #{image},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="analysis != null and analysis != ''">analysis = #{analysis},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElQuAnswerById" parameterType="String">
+        delete from el_qu_answer where id = #{id}
+    </delete>
+
+    <delete id="deleteElQuAnswerByIds" parameterType="String">
+        delete from el_qu_answer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <delete id="deleteElQuAnswerByQuId">
+        delete from el_qu_answer where qu_id = #{quId};
+    </delete>
+</mapper>
