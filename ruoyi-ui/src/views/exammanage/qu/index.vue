@@ -312,20 +312,21 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-/*      this.reset();
-      this.open = true;
+      this.reset();
+      /*this.open = true;
       this.title = "添加试题管理";*/
       this.$router.push("/exammanage/qu-add/addQu");
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getQu(id).then(response => {
+      const quId = row.id || this.ids
+     /* getQu(id).then(response => {
         this.form = response.data;
         this.open = true;
         this.title = "修改试题管理";
-      });
+      });*/
+      this.$router.push(`/exammanage/qu-update/updateQu/${quId}`);
     },
     /** 提交按钮 */
     submitForm() {

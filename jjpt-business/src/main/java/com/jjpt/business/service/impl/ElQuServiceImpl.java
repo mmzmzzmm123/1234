@@ -1,10 +1,12 @@
 package com.jjpt.business.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import cn.hutool.core.util.StrUtil;
 import com.jjpt.business.domain.ElQu;
 import com.jjpt.business.domain.ElQuAnswer;
+import com.jjpt.business.domain.ElQuRepo;
 import com.jjpt.business.domain.dto.ElQuDto;
 import com.jjpt.business.mapper.ElQuMapper;
 import com.jjpt.business.service.IElQuAnswerService;
@@ -42,9 +44,27 @@ public class ElQuServiceImpl implements IElQuService
      * @return 试题管理
      */
     @Override
-    public ElQu selectElQuById(String id)
+    public ElQuDto selectElQuById(String id)
     {
-        return elQuMapper.selectElQuById(id);
+
+        ElQuDto elQuDto = new ElQuDto();
+        //1.查询题目
+        ElQu elQu = elQuMapper.selectElQuById(id);
+        BeanMapper.copy(elQu, elQuDto);
+
+        //2.查询答案
+        ElQuAnswer elQuAnswer = new ElQuAnswer();
+        elQuAnswer.setQuId(id);
+        List<ElQuAnswer> elQuAnswers = elQuAnswerService.selectElQuAnswerList(elQuAnswer);
+        elQuDto.setAnswerList(elQuAnswers);
+
+        //3.查询题库
+        ElQuRepo elQuRepo = new ElQuRepo();
+        elQuRepo.setQuId(id);
+        List<ElQuRepo> elQuRepos = elQuRepoService.selectElQuRepoList(elQuRepo);
+        List<String> collect = elQuRepos.stream().map(ElQuRepo::getRepoId).collect(Collectors.toList());
+        elQuDto.setRepoIds(collect);
+        return elQuDto;
     }
 
     /**
@@ -75,16 +95,20 @@ public class ElQuServiceImpl implements IElQuService
         //新增问题主表
         ElQu qu = new ElQu();
         String quId = elQu.getId();
-        if(StrUtil.isBlank(quId)){
-            quId = IdUtils.fastSimpleUUID();
-        }
         BeanMapper.copy(elQu, qu);
         qu.setCreateTime(DateUtils.getNowDate());
         qu.setDeptId(deptId);
         qu.setUserId(userId);
         qu.setId(quId);
         qu.setCreateTime(DateUtils.getNowDate());
-        elQuMapper.insertElQu(qu);
+        if(StrUtil.isBlank(quId)){
+            quId = IdUtils.fastSimpleUUID();
+            qu.setId(quId);
+            elQuMapper.insertElQu(qu);
+        }else{
+            elQuMapper.updateElQu(qu);
+        }
+
          //新增问题选项表
         List<ElQuAnswer> answerList = elQu.getAnswerList();
         elQuAnswerService.saveAll(quId,answerList);

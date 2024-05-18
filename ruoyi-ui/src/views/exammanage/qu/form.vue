@@ -171,10 +171,11 @@ export default {
     }
   },
   created() {
-    const id = this.$route.params.id
+    const id = this.$route.params.quId
+    debugger;
     if (typeof id !== 'undefined') {
       this.quTypeDisabled = true
-      this.fetchData(id)
+      this.getQu(id)
     }
   },
   methods: {
@@ -203,8 +204,8 @@ export default {
       this.postForm.answerList.splice(index, 1)
     },
 
-    fetchData(id) {
-      fetchDetail(id).then(response => {
+    getQu(id) {
+      getQu(id).then(response => {
         this.postForm = response.data
       })
     },

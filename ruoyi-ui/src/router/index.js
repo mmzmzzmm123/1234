@@ -185,10 +185,10 @@ export const dynamicRoutes = [
     permissions: ['exammanage:repo:edit'],
     children: [
       {
-        path: 'updateRepo/:RepoId(\\d+)',
+        path: 'updateRepo/:RepoId',
         component: () => import('@/views/exammanage/repo/form'),
         name: 'updateRepo',
-        meta: {title: '编辑题库'}
+        meta: {title: '编辑题库',noCache: true}
       }
     ]
   },
@@ -216,6 +216,20 @@ export const dynamicRoutes = [
         component: () => import('@/views/exammanage/qu/form'),
         name: 'AddQu',
         meta: {title: '新增试题',noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/qu-update',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:qu:edit'],
+    children: [
+      {
+        path: 'updateQu/:quId',
+        component: () => import('@/views/exammanage/qu/form'),
+        name: 'UpdateQu',
+        meta: {title: '编辑试题',noCache: true}
       }
     ]
   },

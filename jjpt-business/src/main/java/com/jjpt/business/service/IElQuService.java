@@ -20,7 +20,7 @@ public interface IElQuService
      * @param id 试题管理主键
      * @return 试题管理
      */
-    public ElQu selectElQuById(String id);
+    public ElQuDto selectElQuById(String id);
 
     /**
      * 查询试题管理列表
