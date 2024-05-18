@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjpt.business.mapper.ElExamMapper">
+    
+    <resultMap type="ElExam" id="ElExamResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="content"    column="content"    />
+        <result property="openType"    column="open_type"    />
+        <result property="state"    column="state"    />
+        <result property="timeLimit"    column="time_limit"    />
+        <result property="startTime"    column="start_time"    />
+        <result property="endTime"    column="end_time"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="totalScore"    column="total_score"    />
+        <result property="totalTime"    column="total_time"    />
+        <result property="qualifyScore"    column="qualify_score"    />
+        <result property="userId"    column="user_id"    />
+        <result property="deptId"    column="dept_id"    />
+    </resultMap>
+
+    <sql id="selectElExamVo">
+        select id, title, content, open_type, state, time_limit, start_time, end_time, create_time, update_time, total_score, total_time, qualify_score, user_id, dept_id from el_exam
+    </sql>
+
+    <select id="selectElExamList" parameterType="ElExam" resultMap="ElExamResult">
+        <include refid="selectElExamVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="openType != null "> and open_type = #{openType}</if>
+            <if test="state != null "> and state = #{state}</if>
+            <if test="timeLimit != null "> and time_limit = #{timeLimit}</if>
+            <if test="startTime != null "> and start_time = #{startTime}</if>
+            <if test="endTime != null "> and end_time = #{endTime}</if>
+            <if test="totalScore != null "> and total_score = #{totalScore}</if>
+            <if test="totalTime != null "> and total_time = #{totalTime}</if>
+            <if test="qualifyScore != null "> and qualify_score = #{qualifyScore}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+    </select>
+    
+    <select id="selectElExamById" parameterType="String" resultMap="ElExamResult">
+        <include refid="selectElExamVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertElExam" parameterType="ElExam">
+        insert into el_exam
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="content != null and content != ''">content,</if>
+            <if test="openType != null">open_type,</if>
+            <if test="state != null">state,</if>
+            <if test="timeLimit != null">time_limit,</if>
+            <if test="startTime != null">start_time,</if>
+            <if test="endTime != null">end_time,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="totalScore != null">total_score,</if>
+            <if test="totalTime != null">total_time,</if>
+            <if test="qualifyScore != null">qualify_score,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="deptId != null">dept_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="content != null and content != ''">#{content},</if>
+            <if test="openType != null">#{openType},</if>
+            <if test="state != null">#{state},</if>
+            <if test="timeLimit != null">#{timeLimit},</if>
+            <if test="startTime != null">#{startTime},</if>
+            <if test="endTime != null">#{endTime},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="totalScore != null">#{totalScore},</if>
+            <if test="totalTime != null">#{totalTime},</if>
+            <if test="qualifyScore != null">#{qualifyScore},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="deptId != null">#{deptId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElExam" parameterType="ElExam">
+        update el_exam
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="openType != null">open_type = #{openType},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="timeLimit != null">time_limit = #{timeLimit},</if>
+            <if test="startTime != null">start_time = #{startTime},</if>
+            <if test="endTime != null">end_time = #{endTime},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="totalScore != null">total_score = #{totalScore},</if>
+            <if test="totalTime != null">total_time = #{totalTime},</if>
+            <if test="qualifyScore != null">qualify_score = #{qualifyScore},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElExamById" parameterType="String">
+        delete from el_exam where id = #{id}
+    </delete>
+
+    <delete id="deleteElExamByIds" parameterType="String">
+        delete from el_exam where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
