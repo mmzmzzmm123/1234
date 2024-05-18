@@ -28,10 +28,6 @@ public class FileStorageProperties {
     private List<String> allowMime;
 
     /**
-     * The number of milliseconds after which an upload expires and can be removed
-     */
-    private Duration uploadExpirationPeriod;
-    /**
      * 缩略图配置
      */
     private Thumbnail thumbnail;
@@ -45,17 +41,14 @@ public class FileStorageProperties {
      */
     private List<String> allowExtension;
 
-
+    /**
+     * 各平台相关配置
+     **/
     private LocalConfig local;
-
     private TencentCosConfig tencentCos;
-
     private QiNiuKodoConfig qiNiuKodo;
-
     private BaiduBosConfig baiduBos;
-
     private AliYunOssConfig aliyunOss;
-
     private HuaWeiObsConfig huaweiObs;
 
     /**
@@ -64,16 +57,23 @@ public class FileStorageProperties {
     @Data
     @Accessors(chain = true)
     public static class BaseConfig {
-
         /**
          * 存储平台
          */
         private String platform;
-
         /**
          * 基础路径
          */
         private String basePath;
+        /**
+         * 访问路径
+         */
+        private String domain;
+
+        /**
+         * 是否启用
+         */
+        private Boolean enableStorage;
     }
 
     @Data
@@ -94,12 +94,10 @@ public class FileStorageProperties {
     @Data
     @EqualsAndHashCode(callSuper = true)
     public static class TencentCosConfig extends BaseConfig {
-        private String enableStorage;
         private String secretId;
         private String secretKey;
         private String region;
         private String bucketName;
-        private String domain;
     }
 
     @Data
@@ -110,11 +108,9 @@ public class FileStorageProperties {
     @Data
     @EqualsAndHashCode(callSuper = true)
     public static class HuaWeiObsConfig extends BaseConfig {
-        private String enableStorage;
         private String accessKey;
         private String secretKey;
         private String bucketName;
-        private String domain;
         private String endPoint;
     }
 
@@ -134,8 +130,6 @@ public class FileStorageProperties {
         private int minHeight;
         private boolean enabled;
     }
-
-
 }
 
 

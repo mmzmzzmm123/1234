@@ -33,12 +33,11 @@ public class HuaweiObsFileStorage implements FileStorage {
     private String endPoint;
     private String bucketName;
     private String basePath;
-    private List<String> allowMime;
+    private String domain;
+    private Boolean enableStorage;
     private WaterMark waterMark;
     private Thumbnail thumbnail;
-    private String fileName;
     private MultipartFile source;
-    private List<String> allowExtension;
 
     public HuaweiObsFileStorage(FileStorageProperties config) {
         this.platform = config.getHuaweiObs().getPlatform();
@@ -47,43 +46,25 @@ public class HuaweiObsFileStorage implements FileStorage {
         this.endPoint = config.getHuaweiObs().getEndPoint();
         this.bucketName = config.getHuaweiObs().getBucketName();
         this.basePath = config.getHuaweiObs().getBasePath();
-        this.allowMime = config.getAllowMime();
+        this.domain = config.getHuaweiObs().getDomain();
+        this.enableStorage = config.getHuaweiObs().getEnableStorage();
+
         this.waterMark = config.getWaterMark();
         this.thumbnail = config.getThumbnail();
-        this.allowExtension = config.getAllowExtension();
-    }
-
-
-    @Override
-    public FileStorage setName(String name) {
-        this.fileName = name;
-        return this;
     }
 
     @Override
     public FileInfo upload(MultipartFile file) {
+        Assert.isTrue(enableStorage,"enableStorage is False");
         this.setSource(file);
-
-        String name = StringUtils.isBlank(fileName) ? file.getName() : this.fileName;
-        String extension = getExtension(name, allowExtension);
-
         try (HuaweiObsClientWrapper obsClient = new HuaweiObsClientWrapper(accessKey, secretKey, endPoint)) {
             FileInfo fileInfo = new FileInfo();
             // 指定要上传到 obs 上对象键 (也是最终访问地址)
             String newKey = getFileKey(basePath, fileInfo);
             obsClient.putObject(bucketName, newKey, file);
             // fileInfo id 保存在 getFileKey方法中
-            fileInfo.setExtension(extension);
             fileInfo.setPath(newKey.replace("/" + DATA_FILE, ""));
             fileInfo.setDiskPath(newKey);
-            fileInfo.setMimeType(queryDetectMime(file, allowMime));
-            try (InputStream is = file.getInputStream()) {
-                String md5 = DigestUtils.md5Hex(is);
-                // 设置文件指纹
-                fileInfo.setFingerprint(md5);
-            } catch (Exception e) {
-                log.error("", e);
-            }
             // 返回内容
             return fileInfo;
         } catch (Exception e) {
@@ -99,16 +80,9 @@ public class HuaweiObsFileStorage implements FileStorage {
     }
 
     @Override
-    public FileStorage serFile(MultipartFile source, String fileName) {
+    public FileStorage serFile(MultipartFile source) {
         this.source = source;
-        this.fileName = fileName;
         return this;
-    }
-
-    @Override
-    public String detectMime(FileInfo fileInfo) {
-        // 在upload那边已经获取到了方法了
-        return fileInfo.getMimeType();
     }
 
     @Override

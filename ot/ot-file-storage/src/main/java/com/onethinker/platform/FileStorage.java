@@ -1,6 +1,7 @@
 package com.onethinker.platform;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.onethinker.config.FileStorageProperties;
 import com.onethinker.domain.FileInfo;
 import com.onethinker.config.FileStorageProperties.*;
 import com.onethinker.event.FormFileUploadSuccessEvent;
@@ -8,6 +9,7 @@ import com.ruoyi.common.constant.ServicePathConstant;
 import com.ruoyi.common.webp.exc.WebpEncodeUtil;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,54 +39,36 @@ import static java.nio.file.Files.exists;
  */
 public interface FileStorage {
 
-    static final Logger log = LoggerFactory.getLogger(FileStorage.class);
+    Logger log = LoggerFactory.getLogger(FileStorage.class);
 
     String FILE_EXTENSION_FLAG = ".";
     String DATA_FILE = "data";
-    final int DEFAULT_THUMBNAIL_SIZE = 150;
-    final String IMAGE = "image";
-    final String WEBP_FILE = "webp";
-    final String WEBP_ORIGINAL_FILE = "original.webp";
-    final String THUMBNAIL_FILE = "thumb.jpg";
-    final String WATERMARK_FILE = "watermark.jpg";
-    final String WEBP_MIME = "image/webp";
-    final String WEBP_EXTENSION = "." + WEBP_FILE;
-    final String WEBP_ORIGIN_EXTENSION = "." + WEBP_ORIGINAL_FILE;
-    final String JPG_MIME = "image/jpeg";
-    final String JPG_EXTENSION = ".jpg";
-    final String SERVICE_UPLOAD_CONTENT_TYPE = "application/offset+octet-stream";
+    int DEFAULT_THUMBNAIL_SIZE = 150;
+    String IMAGE = "image";
+    String WEBP_FILE = "webp";
+    String WEBP_ORIGINAL_FILE = "original.webp";
+    String THUMBNAIL_FILE = "thumb.jpg";
+    String WATERMARK_FILE = "watermark.jpg";
     String UPLOAD_PATH = ServicePathConstant.PREFIX_PUBLIC_PATH + "/tus/upload";
-
     /**
      * 获取平台
      */
     String getPlatform();
 
     /**
-     * 设置平台
-     *
-     * @param platform 平台标识
+     * 获取访问链接
      */
-    void setPlatform(String platform);
-
-    /**
-     * 设置文件名称
-     */
-    FileStorage setName(String name);
+    String getDomain();
 
     /**
      * 上传文件
      *
      * @param file 文件内容
-     * @return
      */
     FileInfo upload(MultipartFile file);
 
-
     /**
      * 上传文件
-     *
-     * @return
      */
     FileInfo upload();
 
@@ -92,25 +76,56 @@ public interface FileStorage {
      * 设置文件来源信息
      *
      * @param source   文件资源
-     * @param fileName 文件名称
+     */
+    FileStorage serFile(MultipartFile source);
+
+    /**
+     * 生成其他图片信息
+     * @param formFileUploadSuccessEvent formFileUploadSuccessEvent
+     */
+    void handleFormFileUploadSuccessEvent(FormFileUploadSuccessEvent formFileUploadSuccessEvent);
+
+    /**
+     * 设置文件指纹
+     *
+     * @param multipartFile fileInfo
      * @return
      */
-    FileStorage serFile(MultipartFile source, String fileName);
+    default String queryFingerprint(MultipartFile multipartFile) {
+        try (InputStream is = multipartFile.getInputStream()) {
+            return DigestUtils.md5Hex(is);
+        } catch (Exception e) {
+            log.error("", e);
+        }
+        return null;
+    }
 
     /**
      * 检测文件的MIME类型
      *
-     * @param fileInfo fileInfo
+     * @param file fileInfo
+     * @param allowMime allowMime
      * @return
      */
-    String detectMime(FileInfo fileInfo);
-
-    /**
-     * 生成其他图片信息
-     *
-     * @param formFileUploadSuccessEvent formFileUploadSuccessEvent
-     */
-    void handleFormFileUploadSuccessEvent(FormFileUploadSuccessEvent formFileUploadSuccessEvent);
+    default String queryDetectMime(MultipartFile file, List<String> allowMime) {
+        Tika tika = new Tika();
+        try (InputStream inputStream = file.getInputStream()){
+            String detect = tika.detect(inputStream);
+            if (!StringUtils.isBlank(detect)) {
+                String flag = ";";
+                String mime = detect;
+                if (detect.contains(flag)) {
+                    mime = detect.split(flag)[0];
+                }
+                if (CollectionUtil.isNotEmpty(allowMime) && !allowMime.contains(mime)) {
+                    throw new RuntimeException(detect);
+                }
+            }
+            return detect;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * 获取文件全路径（相对存储平台的存储路径）
@@ -153,27 +168,7 @@ public interface FileStorage {
         return StringUtils.lowerCase(extension);
     }
 
-    default String queryDetectMime(MultipartFile file, List<String> allowMime) {
-        Tika tika = new Tika();
-        try (InputStream inputStream = file.getInputStream()){
-            String detect = tika.detect(inputStream);
-            if (!StringUtils.isBlank(detect)) {
-                String flag = ";";
-                String mime = detect;
-                if (detect.contains(flag)) {
-                    mime = detect.split(flag)[0];
-                }
-                if (CollectionUtil.isNotEmpty(allowMime) && !allowMime.contains(mime)) {
-                    throw new RuntimeException(detect);
-                }
-            }
-            return detect;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    default int[] getImgSize(java.io.File file) {
+    default int[] getImgSize(File file) {
         try {
             BufferedImage img = ImageIO.read(file);
             return new int[]{img.getWidth(), img.getHeight()};
@@ -284,7 +279,7 @@ public interface FileStorage {
             filePath = "C:\\" + filePath;
         }
         log.debug("Start Process Webp:{},{}", fileInfo.getId(),filePath);
-        java.io.File tempFile = new java.io.File(filePath + "/" + DATA_FILE);
+        File tempFile = new File(filePath + "/" + DATA_FILE);
         if (!tempFile.exists()) {
             tempFile.mkdirs();
             // 创建临时文件
@@ -314,7 +309,7 @@ public interface FileStorage {
             filePath = "C:\\" + filePath;
         }
         log.debug("Start Process Webp Original:{},{}", fileInfo.getId(),filePath);
-        java.io.File tempFile = new java.io.File(filePath + "/" + DATA_FILE);
+        File tempFile = new File(filePath + "/" + DATA_FILE);
         if (!tempFile.exists()) {
             tempFile.mkdirs();
             // 将MultipartFile转换为临时文件
@@ -338,9 +333,8 @@ public interface FileStorage {
      * 删除指定路径的目录及其所有内容
      *
      * @param dirPath 目录的路径
-     * @return 如果目录及其内容被成功删除则返回 true，否则返回 false
      */
-    default boolean deleteDirectory(String dirPath) {
+    default void deleteDirectory(String dirPath) {
         if (isWindows()) {
             dirPath = "C:\\" + dirPath;
         }
@@ -348,10 +342,8 @@ public interface FileStorage {
         try {
             // 递归删除目录及其内容
             deleteRecursively(path);
-            return true;
         } catch (IOException e) {
             System.err.println("删除目录时发生错误: " + e.getMessage());
-            return false;
         }
     }
 

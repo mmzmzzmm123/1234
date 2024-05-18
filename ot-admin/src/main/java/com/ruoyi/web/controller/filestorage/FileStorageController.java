@@ -1,10 +1,17 @@
 package com.ruoyi.web.controller.filestorage;
 
+import com.onethinker.config.FileStorageProperties;
 import com.onethinker.domain.FileInfo;
 import com.onethinker.domain.FileRelation;
+import com.onethinker.dto.FileInfoFileInfoDTO;
+import com.onethinker.onethinker.domain.Activity;
+import com.onethinker.platform.FileStorage;
 import com.ruoyi.common.constant.ParameterNames;
 import com.ruoyi.common.constant.ServicePathConstant;
 import com.ruoyi.common.constant.SystemConst;
+import com.ruoyi.common.core.controller.BaseController;
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.FileRelationTypeEnum;
 import com.ruoyi.common.utils.ip.IpUtils;
 import com.onethinker.event.FormFileUploadSuccessEvent;
@@ -16,16 +23,14 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidParameterException;
+import java.util.List;
 
 /**
  * 文件上传
@@ -35,13 +40,21 @@ import java.security.InvalidParameterException;
 @RestController
 @RequestMapping("/file")
 @Log4j2
-public class FileStorageController {
-
-    @Autowired
-    private FileStorageService fileStorageService;
+public class FileStorageController extends BaseController {
 
     @Autowired
     private ApplicationContext applicationContext;
+
+    @Autowired
+    private FileStorageProperties fileStorageProperties;
+
+    private final FileStorage fileStorage;
+    private final FileStorageService fileStorageService;
+
+    public FileStorageController(@Autowired FileStorageService fileStorageService) {
+        this.fileStorage = fileStorageService.getFileStorage();
+        this.fileStorageService = fileStorageService;
+    }
 
     /**
      * 文件上传
@@ -52,7 +65,6 @@ public class FileStorageController {
      * @param userId 用户Id
      * @param tenantId 租户id
      * @param appName 上传应用名称
-     * @param type 类型
      * @param attr 扩展属性json字符串
      * @return
      */
@@ -67,16 +79,17 @@ public class FileStorageController {
             @RequestParam(name = ParameterNames.USER_ID, required = false) String userId,
             @RequestParam(name = ParameterNames.TENANT_ID, defaultValue = SystemConst.DEFAULT_TENANT_ID) String tenantId,
             @RequestParam(name = ParameterNames.APP_NAME) String appName,
-            @RequestParam(name = "type") String type,
             @RequestParam(name = "attr",required = false) String attr) {
         if (StringUtils.isBlank(userId)) {
             throw new InvalidParameterException("用户id不能为空");
         }
-        FileInfo fileInfo = fileStorageService.getFileStorage().serFile(file,name).upload();
+        // 校验文件扩展类型
+        String extension = fileStorage.getExtension(name, fileStorageProperties.getAllowExtension());
+
+        FileInfo fileInfo = fileStorage.serFile(file).upload();
 
         fileInfo.setFileSize(file.getSize());
         fileInfo.setHostName(IpUtils.getHostName());
-        fileInfo.setMimeType(type);
         fileInfo.setAppName(appName);
         fileInfo.setCreateUserId(userId);
         fileInfo.setTenantId(tenantId);
@@ -84,8 +97,11 @@ public class FileStorageController {
         fileInfo.setCreateUserId(userId);
         fileInfo.setTenantId(tenantId);
         fileInfo.setAppName(appName);
-        fileInfo.setMimeType(type);
-        fileInfo.setDetectMime(fileStorageService.getFileStorage().detectMime(fileInfo));
+        fileInfo.setExtension(extension);
+        fileInfo.setPlatform(fileStorage.getPlatform());
+        fileInfo.setMimeType(fileStorage.queryDetectMime(file,fileStorageProperties.getAllowMime()));
+        fileInfo.setDetectMime(fileStorage.queryDetectMime(file,fileStorageProperties.getAllowMime()));
+        fileInfo.setFingerprint(fileStorage.queryFingerprint(file));
 
         FileRelation filePersistInfo = new FileRelation(fileInfo,relationType.name(),relationTarget);
 
@@ -94,7 +110,7 @@ public class FileStorageController {
 
         FormFileUploadSuccessEvent formFileUploadSuccessEvent;
         // 本地存储才有路径，云端存储直接采用原数据
-        if ("local".equals(fileStorageService.getFileStorage().getPlatform())) {
+        if ("local".equals(fileStorage.getPlatform())) {
             Path dataFile = Paths.get(fileInfo.getDiskPath());
             formFileUploadSuccessEvent = new FormFileUploadSuccessEvent(dataFile, fileInfo.getId(), fileInfo.getCreateUserId(), fileInfo.getMimeType());
         } else {
@@ -106,10 +122,16 @@ public class FileStorageController {
         return fileInfo.getId();
     }
 
+    @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query")
+    public TableDataInfo queryFile(FileInfo fileInfo) {
+        startPage();
+        List<FileInfoFileInfoDTO> list = fileStorageService.selectFileList(fileInfo);
+        return getDataTable(list);
+    }
 
     @EventListener
     @Async
     public void handleFormFileUploadSuccessEvent(FormFileUploadSuccessEvent formFileUploadSuccessEvent) {
-        fileStorageService.getFileStorage().handleFormFileUploadSuccessEvent(formFileUploadSuccessEvent);
+        fileStorage.handleFormFileUploadSuccessEvent(formFileUploadSuccessEvent);
     }
 }

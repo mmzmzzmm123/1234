@@ -39,43 +39,33 @@ import java.util.Objects;
 public class LocalFileStorage implements FileStorage {
     private String platform;
     private String basePath;
-    private List<String> allowMime;
+    private String domain;
+    private Boolean enableStorage;
     private WaterMark waterMark;
     private Thumbnail thumbnail;
-    private String fileName;
-    private List<String> allowExtension;
     private MultipartFile source;
 
     public LocalFileStorage(FileStorageProperties config) {
         platform = config.getLocal().getPlatform();
         basePath = config.getLocal().getBasePath();
-        allowMime = config.getAllowMime();
+        domain = config.getLocal().getDomain();
+        enableStorage = config.getLocal().getEnableStorage();
         waterMark = config.getWaterMark();
         thumbnail = config.getThumbnail();
-        allowExtension = config.getAllowExtension();
     }
 
     @Override
-    public FileStorage setName(String name) {
-        this.fileName = name;
-        return this;
-    }
-
-    @Override
-    public FileStorage serFile(MultipartFile source, String fileName) {
+    public FileStorage serFile(MultipartFile source) {
         this.source = source;
-        this.fileName = fileName;
         return this;
     }
 
 
     @Override
     public FileInfo upload(MultipartFile file) {
+        Assert.isTrue(enableStorage,"enableStorage is False");
         this.setSource(file);
         FileInfo fileInfo = new FileInfo();
-
-        String name = StringUtils.isBlank(fileName) ? file.getName() : this.fileName;
-        String extension = getExtension(name, allowExtension);
         String newKey = getFileKey(basePath, fileInfo);
         Path dataFile = Paths.get(newKey);
         if (Files.notExists(dataFile)) {
@@ -88,16 +78,8 @@ public class LocalFileStorage implements FileStorage {
             throw new RuntimeException(e);
         }
         // fileInfo id 保存在 getFileKey方法中
-        fileInfo.setExtension(extension);
         fileInfo.setPath(String.join("/", "/service-file" + UPLOAD_PATH, fileInfo.getId()));
         fileInfo.setDiskPath(newKey);
-        try (InputStream is = Files.newInputStream(dataFile.toFile().toPath())) {
-            String md5 = DigestUtils.md5Hex(is);
-            // 设置文件指纹
-            fileInfo.setFingerprint(md5);
-        } catch (Exception e) {
-            log.error("", e);
-        }
         return fileInfo;
     }
 
@@ -105,41 +87,6 @@ public class LocalFileStorage implements FileStorage {
     public FileInfo upload() {
         Assert.isTrue(Objects.nonNull(source),"source is null");
         return this.upload(source);
-    }
-
-
-    @Override
-    public String detectMime(FileInfo fileInfo) {
-        Path dataFile = Paths.get(fileInfo.getDiskPath());
-        if (Files.exists(dataFile)) {
-            if (dataFile.toFile().length() > 0) {
-                Tika tika = new Tika();
-                try {
-                    String detect = tika.detect(dataFile);
-                    log.debug("Detect Mime:{}", detect);
-                    if (!StringUtils.isBlank(detect)) {
-                        String flag = ";";
-                        String mime = detect;
-                        if (detect.contains(flag)) {
-                            mime = detect.split(flag)[0];
-                        }
-                        if (CollectionUtil.isNotEmpty(allowMime) && !allowMime.contains(mime)) {
-                            throw new RuntimeException(detect);
-                        }
-                    } else {
-                        log.warn("Detect Mime Blank:{}", dataFile);
-                    }
-                    return detect;
-                } catch (IOException e) {
-                    log.error("", e);
-                }
-            } else {
-                log.debug("Data File Size 0:{}", dataFile);
-            }
-        } else {
-            log.debug("Data File Not Exists:{}", dataFile);
-        }
-        return null;
     }
 
     @Override

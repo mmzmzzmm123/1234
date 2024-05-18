@@ -36,13 +36,11 @@ public class TencentCosFileStorage implements FileStorage {
     private String region;
     private String bucketName;
     private String basePath;
-    private List<String> allowMime;
+    private String domain;
+    private Boolean enableStorage;
     private WaterMark waterMark;
     private Thumbnail thumbnail;
-    private String fileName;
     private MultipartFile source;
-    private List<String> allowExtension;
-
     public TencentCosFileStorage(FileStorageProperties config) {
         this.platform = config.getTencentCos().getPlatform();
         this.secretId = config.getTencentCos().getSecretId();
@@ -50,40 +48,24 @@ public class TencentCosFileStorage implements FileStorage {
         this.bucketName = config.getTencentCos().getBucketName();
         this.region = config.getTencentCos().getRegion();
         this.basePath = config.getTencentCos().getBasePath();
+        this.domain = config.getTencentCos().getDomain();
+        this.enableStorage = config.getTencentCos().getEnableStorage();
         this.waterMark = config.getWaterMark();
         this.thumbnail = config.getThumbnail();
-        this.allowMime = config.getAllowMime();
-        this.allowExtension = config.getAllowExtension();
-    }
-
-    @Override
-    public FileStorage setName(String name) {
-        fileName = name;
-        return this;
     }
 
     @Override
     public FileInfo upload(MultipartFile file) {
+        Assert.isTrue(enableStorage,"enableStorage is False");
         this.setSource(file);
-        String name = StringUtils.isBlank(fileName) ? file.getName() : this.fileName;
-        String extension = getExtension(name, allowExtension);
         try (COSClientWrapper cosClient = new COSClientWrapper(secretId, secretKey, region)) {
             FileInfo fileInfo = new FileInfo();
             // 指定要上传到 COS 上对象键 (也是最终访问地址)
             String newKey = getFileKey(basePath, fileInfo);
             cosClient.putObject(bucketName, newKey, file);
             // fileInfo id 保存在 getFileKey方法中
-            fileInfo.setExtension(extension);
             fileInfo.setPath(newKey.replace("/" + DATA_FILE, ""));
             fileInfo.setDiskPath(newKey);
-            fileInfo.setMimeType(queryDetectMime(file, allowMime));
-            try (InputStream is = file.getInputStream()) {
-                String md5 = DigestUtils.md5Hex(is);
-                // 设置文件指纹
-                fileInfo.setFingerprint(md5);
-            } catch (Exception e) {
-                log.error("", e);
-            }
             // 返回内容
             return fileInfo;
         } catch (Exception e) {
@@ -99,16 +81,9 @@ public class TencentCosFileStorage implements FileStorage {
     }
 
     @Override
-    public FileStorage serFile(MultipartFile source, String fileName) {
+    public FileStorage serFile(MultipartFile source) {
         this.source = source;
-        this.fileName = fileName;
         return this;
-    }
-
-    @Override
-    public String detectMime(FileInfo fileInfo) {
-        // 在upload那边已经获取到了方法了
-        return fileInfo.getMimeType();
     }
 
     @Override
