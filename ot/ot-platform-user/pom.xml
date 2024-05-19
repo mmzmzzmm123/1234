@@ -17,6 +17,11 @@
             <groupId>com.onethinker</groupId>
             <artifactId>ot-common</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.onethinker</groupId>
+            <artifactId>ot-onethinker</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

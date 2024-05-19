@@ -1,13 +1,13 @@
 package com.onethinker.file.service;
 
 import cn.hutool.core.util.StrUtil;
+import com.onethinker.common.utils.Tools;
 import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.config.FileStorageProperties;
 import com.onethinker.file.domain.FileRelation;
 import com.onethinker.file.dto.FileInfoFileInfoDTO;
 import com.onethinker.file.mapper.FileMapper;
 import com.onethinker.file.mapper.FileRelationMapper;
-import com.onethinker.file.util.Tools;
 import com.onethinker.file.platform.FileStorage;
 import com.onethinker.common.utils.DateUtils;
 import com.onethinker.common.utils.bean.BeanUtils;
