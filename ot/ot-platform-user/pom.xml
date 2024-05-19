@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>ot-platform-user</artifactId>
-    <name>平台用户模块 </name>
+    <name>ot-platform-user</name>
 
     <dependencies>
         <dependency>

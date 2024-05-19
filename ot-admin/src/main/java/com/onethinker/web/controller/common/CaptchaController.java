@@ -69,6 +69,8 @@ public class CaptchaController {
         } else if ("char".equals(captchaType)) {
             capStr = code = captchaProducer.createText();
             image = captchaProducer.createImage(capStr);
+        } else {
+            throw new RuntimeException("captchaType is null");
         }
 
         redisCache.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
