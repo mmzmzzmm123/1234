@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.ruoyi.common.annotation.Excel;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Date;
  */
 @Data
 @TableName("t_platform_user_detail")
-public class PlatformUserDetail {
+public class PlatformUserDetail implements Serializable {
 
     /**
      * 启用
