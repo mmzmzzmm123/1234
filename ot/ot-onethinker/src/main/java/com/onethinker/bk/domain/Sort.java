@@ -3,8 +3,8 @@ package com.onethinker.bk.domain;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.onethinker.bk.enums.SortTypeEnum;
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
+import com.onethinker.common.annotation.Excel;
+import com.onethinker.common.core.domain.BaseEntity;
 import lombok.Data;
 import org.springframework.util.StringUtils;
 

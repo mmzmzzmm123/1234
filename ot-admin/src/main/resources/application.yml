@@ -1,14 +1,14 @@
 # 项目相关配置
-ruoyi:
+onethinker:
   # 名称
-  name: RuoYi
+  name: onethinker
   # 版本
   version: 3.8.6
   # 版权年份
   copyrightYear: 2023
   # 实例演示开关
   demoEnabled: true
-  # 文件路径 示例（ Windows配置D:/ruoyi/uploadPath，Linux配置 /home/ruoyi/uploadPath）
+  # 文件路径 示例（ Windows配置D:/onethinker/uploadPath，Linux配置 /home/onethinker/uploadPath）
   profile: /onethinker/public/ywkj
   # 获取ip地址开关
   addressEnabled: false
@@ -148,7 +148,7 @@ server:
 # 日志配置
 logging:
   level:
-    com.ruoyi: debug
+    com.onethinker: debug
     org.springframework: warn
 
 # 用户配置

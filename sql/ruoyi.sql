@@ -5,7 +5,7 @@
  Source Server Type    : MySQL
  Source Server Version : 50743
  Source Host           : 114.132.69.190:3306
- Source Schema         : ruoyi
+ Source Schema         : Onethinker
 
  Target Server Type    : MySQL
  Target Server Version : 50743
@@ -55,10 +55,10 @@ CREATE TABLE `gen_table`
 -- ----------------------------
 INSERT INTO `gen_table`
 VALUES (1, 't_platform_user_integral_history', '平台用户积分流水记录表', NULL, NULL, 'PlatformUserIntegralHistory',
-        'crud', 'com.ruoyi.onethinker', 'onethinker', 'history', '平台用户积分流水记录', 'yangyouqi', '0', '/', NULL,
+        'crud', 'com.onethinker.onethinker', 'onethinker', 'history', '平台用户积分流水记录', 'yangyouqi', '0', '/', NULL,
         'onethinker', '2023-10-30 22:05:35', '', NULL, NULL);
 INSERT INTO `gen_table`
-VALUES (2, 't_activity', '活动表', NULL, NULL, 'Activity', 'crud', 'com.ruoyi.onethinker', 'onethinker', 'activity',
+VALUES (2, 't_activity', '活动表', NULL, NULL, 'Activity', 'crud', 'com.onethinker.onethinker', 'onethinker', 'activity',
         '活动', 'yangyouqi', '0', '/', NULL, 'onethinker', '2023-11-04 12:17:20', '', NULL, NULL);
 
 -- ----------------------------

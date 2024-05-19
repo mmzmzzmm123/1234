@@ -1,8 +1,8 @@
 package com.onethinker.onethinker.dto;
 
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.constant.AwardConstants;
-import com.ruoyi.common.utils.MathUtils;
+import com.onethinker.common.annotation.Excel;
+import com.onethinker.common.constant.AwardConstants;
+import com.onethinker.common.utils.MathUtils;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.util.ObjectUtils;

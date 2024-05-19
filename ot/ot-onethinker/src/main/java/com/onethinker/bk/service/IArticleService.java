@@ -3,7 +3,7 @@ package com.onethinker.bk.service;
 import com.onethinker.bk.domain.Article;
 import com.onethinker.bk.vo.ArticleVO;
 import com.onethinker.bk.vo.BaseRequestVO;
-import com.ruoyi.common.core.domain.AjaxResult;
+import com.onethinker.common.core.domain.AjaxResult;
 
 import java.util.List;
 import java.util.Map;

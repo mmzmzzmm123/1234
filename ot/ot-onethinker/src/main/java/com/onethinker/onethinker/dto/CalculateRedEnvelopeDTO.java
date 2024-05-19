@@ -1,6 +1,6 @@
 package com.onethinker.onethinker.dto;
 
-import com.ruoyi.common.utils.MathUtils;
+import com.onethinker.common.utils.MathUtils;
 import lombok.Data;
 
 import java.util.HashSet;

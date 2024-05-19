@@ -15,7 +15,7 @@ import java.util.List;
  */
 @Component
 @Data
-@ConfigurationProperties(prefix = "ruoyi.file-storage")
+@ConfigurationProperties(prefix = "onethinker.file-storage")
 public class FileStorageProperties {
     /**
      * 默认存储平台

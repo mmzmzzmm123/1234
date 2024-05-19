@@ -11,7 +11,7 @@ import com.onethinker.user.mapper.PlatformUserIntegralMapper;
 import com.onethinker.user.service.IPlatformUserDetailService;
 import com.onethinker.user.service.IPlatformUserIntegralHistoryService;
 import com.onethinker.user.service.IPlatformUserIntegralService;
-import com.ruoyi.common.enums.IntegralTypeEnum;
+import com.onethinker.common.enums.IntegralTypeEnum;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.BeanUtils;

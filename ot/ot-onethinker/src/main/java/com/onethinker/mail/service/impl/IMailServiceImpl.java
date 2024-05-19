@@ -4,10 +4,10 @@ import com.onethinker.bk.domain.WebInfo;
 import com.onethinker.bk.service.IWebInfoService;
 import com.onethinker.mail.service.IMailService;
 import com.onethinker.mail.utils.MailUtil;
-import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.enums.CacheEnum;
-import com.ruoyi.common.enums.SysConfigKeyEnum;
-import com.ruoyi.system.service.ISysConfigService;
+import com.onethinker.common.core.redis.RedisCache;
+import com.onethinker.common.enums.CacheEnum;
+import com.onethinker.common.enums.SysConfigKeyEnum;
+import com.onethinker.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

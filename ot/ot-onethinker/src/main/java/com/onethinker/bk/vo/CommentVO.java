@@ -4,7 +4,7 @@ package com.onethinker.bk.vo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.onethinker.bk.enums.CommentTypeEnum;
-import com.ruoyi.common.core.domain.AjaxResult;
+import com.onethinker.common.core.domain.AjaxResult;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.StringUtils;

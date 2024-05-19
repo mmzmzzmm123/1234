@@ -1,7 +1,7 @@
 package com.onethinker.onethinker.dto;
 
 import com.onethinker.onethinker.domain.SysFileInfo;
-import com.ruoyi.common.annotation.Excel;
+import com.onethinker.common.annotation.Excel;
 import lombok.Data;
 
 import java.util.List;

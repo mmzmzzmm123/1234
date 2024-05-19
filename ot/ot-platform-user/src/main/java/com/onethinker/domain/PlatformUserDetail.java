@@ -2,7 +2,7 @@ package com.onethinker.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.common.annotation.Excel;
+import com.onethinker.common.annotation.Excel;
 import lombok.Data;
 
 import java.io.Serializable;

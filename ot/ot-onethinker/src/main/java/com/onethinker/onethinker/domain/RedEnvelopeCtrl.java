@@ -1,7 +1,7 @@
 package com.onethinker.onethinker.domain;
 
-import com.ruoyi.common.annotation.Excel;
-import com.ruoyi.common.core.domain.BaseEntity;
+import com.onethinker.common.annotation.Excel;
+import com.onethinker.common.core.domain.BaseEntity;
 import lombok.Data;
 
 /**

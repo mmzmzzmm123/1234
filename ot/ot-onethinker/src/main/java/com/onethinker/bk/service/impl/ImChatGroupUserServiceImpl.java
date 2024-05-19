@@ -5,7 +5,7 @@ import com.onethinker.bk.domain.ImChatGroupUser;
 import com.onethinker.bk.mapper.ImChatGroupUserMapper;
 import com.onethinker.bk.service.IImChatGroupUserService;
 import com.onethinker.im.websocket.ImConfigConst;
-import com.ruoyi.common.utils.DateUtils;
+import com.onethinker.common.utils.DateUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 

@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.onethinker.bk.domain.ImChatUserGroupMessage;
 import com.onethinker.bk.mapper.ImChatUserGroupMessageMapper;
 import com.onethinker.bk.service.IImChatUserGroupMessageService;
-import com.ruoyi.common.utils.DateUtils;
+import com.onethinker.common.utils.DateUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 

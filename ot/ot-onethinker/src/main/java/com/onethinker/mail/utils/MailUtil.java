@@ -7,15 +7,14 @@ import com.onethinker.bk.domain.WebInfo;
 import com.onethinker.bk.enums.CommentTypeEnum;
 import com.onethinker.bk.service.ICommentService;
 import com.onethinker.bk.service.IWebInfoService;
-import com.onethinker.bk.service.impl.CommentServiceImpl;
 import com.onethinker.bk.vo.CommentVO;
 import com.onethinker.user.domain.PlatformUserDetail;
 import com.onethinker.user.service.IPlatformUserDetailService;
-import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.enums.CacheEnum;
-import com.ruoyi.common.enums.SysConfigKeyEnum;
-import com.ruoyi.common.utils.SecurityUtils;
-import com.ruoyi.system.service.ISysConfigService;
+import com.onethinker.common.core.redis.RedisCache;
+import com.onethinker.common.enums.CacheEnum;
+import com.onethinker.common.enums.SysConfigKeyEnum;
+import com.onethinker.common.utils.SecurityUtils;
+import com.onethinker.system.service.ISysConfigService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +31,7 @@ import javax.mail.MessagingException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Component
 public class MailUtil {

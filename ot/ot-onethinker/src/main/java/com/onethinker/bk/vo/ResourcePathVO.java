@@ -1,8 +1,8 @@
 package com.onethinker.bk.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.common.constant.BkConstants;
-import com.ruoyi.common.utils.SecurityUtils;
+import com.onethinker.common.constant.BkConstants;
+import com.onethinker.common.utils.SecurityUtils;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.util.StringUtils;

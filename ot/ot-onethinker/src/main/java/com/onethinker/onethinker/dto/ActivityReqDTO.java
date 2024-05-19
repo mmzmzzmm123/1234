@@ -1,7 +1,7 @@
 package com.onethinker.onethinker.dto;
 
-import com.ruoyi.common.enums.ActivityTypeEnum;
-import com.ruoyi.common.utils.SecurityUtils;
+import com.onethinker.common.enums.ActivityTypeEnum;
+import com.onethinker.common.utils.SecurityUtils;
 import lombok.Data;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;

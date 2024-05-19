@@ -1,6 +1,6 @@
 package com.onethinker.user.dto;
 
-import com.ruoyi.common.annotation.Excel;
+import com.onethinker.common.annotation.Excel;
 import lombok.Data;
 
 /**
