@@ -2,13 +2,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
-        <groupId>com.ruoyi</groupId>
-        <artifactId>ruoyi</artifactId>
+        <groupId>com.onethinker</groupId>
+        <artifactId>onethinker</artifactId>
         <version>3.8.6</version>
     </parent>
     <modules>
         <module>ot-file-storage</module>
-        <module>onethinker</module>
+        <module>ot-onethinker</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
