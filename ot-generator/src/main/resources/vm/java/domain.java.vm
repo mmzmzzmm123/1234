@@ -66,15 +66,4 @@ private static final long serialVersionUID = 1L;
             #end
         #end
     #end
-
-    #if($table.sub)
-    public List<${subClassName}> get${subClassName}List() {
-        return ${subclassName}List;
-    }
-
-    public void set${subClassName}List(List<${subClassName}> ${subclassName}List) {
-        this.${subclassName}List = ${subclassName}List;
-    }
-
-    #end
 }
