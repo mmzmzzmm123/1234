@@ -5,22 +5,22 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>com.ruoyi</groupId>
+        <groupId>com.onethinker</groupId>
         <artifactId>ot</artifactId>
         <version>3.8.6</version>
     </parent>
-    <artifactId>onethinker</artifactId>
-    <name>onethinker</name>
+    <artifactId>ot-onethinker</artifactId>
+    <name>ot-onethinker</name>
 
     <dependencies>
         <!-- 通用工具-->
         <dependency>
-            <groupId>com.ruoyi</groupId>
+            <groupId>com.onethinker</groupId>
             <artifactId>ot-common</artifactId>
         </dependency>
         <!-- 核心模块-->
         <dependency>
-            <groupId>com.ruoyi</groupId>
+            <groupId>com.onethinker</groupId>
             <artifactId>ot-framework</artifactId>
         </dependency>
         <dependency>
