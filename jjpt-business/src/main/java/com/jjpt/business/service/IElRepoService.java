@@ -2,6 +2,7 @@ package com.jjpt.business.service;
 
 import java.util.List;
 import com.jjpt.business.domain.ElRepo;
+import com.jjpt.business.domain.dto.ElRepoDto;
 
 /**
  * 题库管理Service接口
@@ -25,7 +26,7 @@ public interface IElRepoService
      * @param elRepo 题库管理
      * @return 题库管理集合
      */
-    public List<ElRepo> selectElRepoList(ElRepo elRepo);
+    public List<ElRepoDto> selectElRepoList(ElRepo elRepo);
 
     /**
      * 新增题库管理

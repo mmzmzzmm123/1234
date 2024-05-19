@@ -1,8 +1,14 @@
 package com.jjpt.business.service.impl;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.IdUtil;
+import com.jjpt.business.domain.dto.ElRepoDto;
+import com.jjpt.business.utils.BeanMapper;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.uuid.IdUtils;
@@ -43,9 +49,23 @@ public class ElRepoServiceImpl implements IElRepoService
      * @return 题库管理
      */
     @Override
-    public List<ElRepo> selectElRepoList(ElRepo elRepo)
+    public List<ElRepoDto> selectElRepoList(ElRepo elRepo)
     {
-        return elRepoMapper.selectElRepoList(elRepo);
+        List<ElRepoDto> res = new ArrayList<>();
+        List<ElRepo> elRepos = elRepoMapper.selectElRepoList(elRepo);
+        if(!CollUtil.isEmpty(elRepos)){
+            for(ElRepo val: elRepos){
+                ElRepoDto elRepoDto = new ElRepoDto();
+                BeanMapper.copy(val,elRepoDto);
+                Map<String,Object>  map =  elRepoMapper.selectTypeNumbyRepoId(val.getId());
+                elRepoDto.setRadioCount(Integer.valueOf(map.get("radioCount").toString()));
+                elRepoDto.setMultiCount(Integer.valueOf(map.get("multiCount").toString()));
+                elRepoDto.setJudgeCount(Integer.valueOf(map.get("judgeCount").toString()));
+                res.add(elRepoDto);
+            }
+        }
+
+        return res;
     }
 
     /**

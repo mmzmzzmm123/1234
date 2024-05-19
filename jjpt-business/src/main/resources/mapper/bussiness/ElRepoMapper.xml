@@ -82,4 +82,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectTypeNumbyRepoId" resultType="java.util.Map">
+        select * from (
+
+                          select count(*) as radioCount from el_qu_repo  where qu_type = 1 and  repo_id = #{repoId,jdbcType=VARCHAR} ) a left join (
+
+            select count(*) as multiCount from el_qu_repo  where qu_type = 2 and  repo_id = repo_id = #{repoId,jdbcType=VARCHAR}) b on 1 =1  left join (
+
+            select count(*) as judgeCount  from el_qu_repo  where qu_type = 3 and  repo_id = repo_id = #{repoId,jdbcType=VARCHAR}) c on 1=1
+    </select>
 </mapper>

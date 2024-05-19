@@ -1,6 +1,7 @@
 package com.jjpt.business.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jjpt.business.domain.ElRepo;
@@ -62,4 +63,6 @@ public interface ElRepoMapper extends BaseMapper<ElRepo>
      * @return 结果
      */
     public int deleteElRepoByIds(String[] ids);
+
+    Map<String, Object> selectTypeNumbyRepoId(String repoId);
 }

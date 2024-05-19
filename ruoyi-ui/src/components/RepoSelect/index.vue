@@ -55,7 +55,6 @@ export default {
   },
   created() {
     this.currentValue = this.value
-    debugger;
     this.listRepoAll()
   },
   methods: {

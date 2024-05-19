@@ -245,6 +245,19 @@ export const dynamicRoutes = [
         meta: {title: '试题管理',noCache: true}
       }
     ]
+  },
+  {
+    path: '/exammanage/exam-add',
+    component: Layout,
+    permissions: ['exammanage:qu:add'],
+    children: [
+      {
+        path: 'addExam',
+        component: () => import('@/views/exammanage/exam/form.vue'),
+        name: 'AddExam',
+        meta: {title: '新增考试',noCache: true}
+      }
+    ]
   }
 
 ]

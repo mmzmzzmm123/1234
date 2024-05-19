@@ -2,6 +2,8 @@ package com.jjpt.business.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.jjpt.business.domain.dto.ElRepoDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,7 +44,7 @@ public class ElRepoController extends BaseController
     public TableDataInfo list(ElRepo elRepo)
     {
         startPage();
-        List<ElRepo> list = elRepoService.selectElRepoList(elRepo);
+        List<ElRepoDto> list = elRepoService.selectElRepoList(elRepo);
         return getDataTable(list);
     }
 
@@ -64,8 +66,8 @@ public class ElRepoController extends BaseController
     @PostMapping("/export")
     public void export(HttpServletResponse response, ElRepo elRepo)
     {
-        List<ElRepo> list = elRepoService.selectElRepoList(elRepo);
-        ExcelUtil<ElRepo> util = new ExcelUtil<ElRepo>(ElRepo.class);
+        List<ElRepoDto> list = elRepoService.selectElRepoList(elRepo);
+        ExcelUtil<ElRepoDto> util = new ExcelUtil<ElRepoDto>(ElRepoDto.class);
         util.exportExcel(response, list, "题库管理数据");
     }
 

@@ -384,8 +384,9 @@ export default {
     /** 新增按钮操作 */
     handleAdd() {
       this.reset();
-      this.open = true;
-      this.title = "添加考试管理";
+ /*     this.open = true;
+      this.title = "添加考试管理";*/
+      this.$router.push("/exammanage/exam-add/addExam");
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
