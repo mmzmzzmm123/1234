@@ -199,6 +199,11 @@
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.onethinker</groupId>
+                <artifactId>ot-platform-user</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <!-- google集合工具导包 -->
             <dependency>
                 <groupId>com.google.guava</groupId>

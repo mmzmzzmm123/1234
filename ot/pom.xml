@@ -7,8 +7,9 @@
         <version>3.8.6</version>
     </parent>
     <modules>
-        <module>ot-file-storage</module>
         <module>ot-onethinker</module>
+        <module>ot-file-storage</module>
+        <module>ot-platform-user</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
