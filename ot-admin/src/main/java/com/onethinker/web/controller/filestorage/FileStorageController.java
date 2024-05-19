@@ -1,21 +1,19 @@
 package com.onethinker.web.controller.filestorage;
 
-import com.onethinker.config.FileStorageProperties;
-import com.onethinker.domain.FileInfo;
-import com.onethinker.domain.FileRelation;
-import com.onethinker.dto.FileInfoFileInfoDTO;
-import com.onethinker.onethinker.domain.Activity;
-import com.onethinker.platform.FileStorage;
+import com.onethinker.file.config.FileStorageProperties;
+import com.onethinker.file.domain.FileInfo;
+import com.onethinker.file.domain.FileRelation;
+import com.onethinker.file.dto.FileInfoFileInfoDTO;
+import com.onethinker.file.platform.FileStorage;
 import com.onethinker.common.constant.ParameterNames;
 import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.constant.SystemConst;
 import com.onethinker.common.core.controller.BaseController;
-import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.page.TableDataInfo;
 import com.onethinker.common.enums.FileRelationTypeEnum;
 import com.onethinker.common.utils.ip.IpUtils;
-import com.onethinker.event.FormFileUploadSuccessEvent;
-import com.onethinker.service.FileStorageService;
+import com.onethinker.file.event.FormFileUploadSuccessEvent;
+import com.onethinker.file.service.FileStorageService;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +24,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.InvalidParameterException;
