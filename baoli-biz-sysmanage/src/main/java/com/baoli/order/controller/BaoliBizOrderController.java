@@ -88,6 +88,7 @@ public class BaoliBizOrderController extends BaseController
         String formattedDate = sdf.format(calendar.getTime());
         Object formattedDateKey = redisTemplate.opsForValue().get(formattedDate);
         if(formattedDateKey == null){
+            formattedDateKey = formattedDate;
             redisTemplate.expire(formattedDate,24, TimeUnit.HOURS);
             redisTemplate.opsForValue().set("nextSerialNumber",0);
             redisTemplate.opsForValue().set(formattedDate,formattedDate);
@@ -176,7 +177,6 @@ public class BaoliBizOrderController extends BaseController
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
-        getTaskInfo(id,null);
         return success(baoliBizOrderService.selectBaoliBizOrderById(id));
     }
 
@@ -205,10 +205,14 @@ public class BaoliBizOrderController extends BaseController
     @PostMapping("/transRefuseOrder")
     public AjaxResult transRefuseOrder(@RequestBody BaoliBizOrder baoliBizOrder)
     {
-        int result = baoliBizOrderService.transRefuseOrder(baoliBizOrder);
+        if(baoliBizOrder.getAuditInfo()==null){
+            JSONObject taskInfo = getTaskInfo(baoliBizOrder.getId(),baoliBizOrder);
+            baoliBizOrder.setAuditInfo(taskInfo);
+        }
         if(baoliBizOrder.getAuditInfo()!=null){
             refuse(baoliBizOrder);
         }
+        int result = baoliBizOrderService.transRefuseOrder(baoliBizOrder);
         return toAjax(result);
     }
     private void agree(BaoliBizOrder baoliBizOrder){
@@ -216,6 +220,7 @@ public class BaoliBizOrderController extends BaseController
     }
 
     private void refuse(BaoliBizOrder baoliBizOrder){
+        baoliBizOrder.getAuditInfo().put("comments","否决");
         String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/refuse", baoliBizOrder.getAuditInfo(), String.class);
     }
     private void runProcess(BaoliBizOrder baoliBizOrder){
@@ -225,13 +230,14 @@ public class BaoliBizOrderController extends BaseController
         startUserInfo.put("name", getLoginUser().getUser().getNickName());
         String processDefinitionId = "";
 
-        String orderKey="Flowable1788388037957324800:1:1791016548761096192";
+        String orderKey="Flowable1788388037957324800:1:1792455447387574272";
         String selectedUser = "{\"form_assign_user\":[{\"id\":5,\"name\":\"驻店测试用户\",\"type\":\"user\",\"sex\":false,\"selected\":false}]}";
 
         JSONObject assignUser = JSONObject.parseObject(selectedUser);
         assignUser.getJSONArray("form_assign_user").getJSONObject(0).put("id",getUserId());
         assignUser.put("form_pre_check_area","130000");
         assignUser.put("orderId",baoliBizOrder.getId());
+        assignUser.put("customerName",baoliBizOrder.getCustomerName());
         request.put("formData", assignUser);
         processDefinitionId =orderKey;
         request.put("processDefinitionId",processDefinitionId);
@@ -252,7 +258,21 @@ public class BaoliBizOrderController extends BaseController
         }
         // 不是 暂存，发起， 执行同意
         if(!baoliBizOrder.getStatus().equals("01") && !baoliBizOrder.getStatus().equals("02")){
+            if(baoliBizOrder.getAuditInfo()==null){
+                JSONObject taskInfo = getTaskInfo(baoliBizOrder.getId(),baoliBizOrder);
+                baoliBizOrder.setAuditInfo(taskInfo);
+            }
             if(baoliBizOrder.getAuditInfo()!=null) {
+                JSONObject taskInfo = baoliBizOrder.getAuditInfo();
+                if(baoliBizOrder.getPreCheckResult()!=null){
+                    taskInfo.put("comments",baoliBizOrder.getPreCheckResult());
+                }
+                if(baoliBizOrder.getAuditResult()!=null){
+                    taskInfo.put("comments",baoliBizOrder.getAuditResult());
+                }
+                if(taskInfo.getString("comments")==null || taskInfo.getString("comments").equals("")){
+                    taskInfo.put("comments","同意");
+                }
                 JSONObject bizFormData = new JSONObject();
                 //在银行放款环节，增加默认参数
                 if(baoliBizOrder.getStatus().equals("07")){
@@ -299,8 +319,14 @@ public class BaoliBizOrderController extends BaseController
     @PostMapping("/batchUpdateOrder")
     public AjaxResult batchUpdateOrder(@RequestBody Map<String,Object> shareOrders)
     {
+        if(shareOrders!=null){
+           List<Integer> ids = (List<Integer>) shareOrders.get("ids");
+            for (Integer id : ids) {
+                JSONObject auditInfo = getTaskInfo(Long.valueOf(id.toString()),null);
+                String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/agree", auditInfo, String.class);
+            }
+        }
         int result = baoliBizOrderService.batchUpdateOrder(shareOrders);
-        String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/agree", shareOrders.get("auditInfo"), String.class);
         return toAjax(result);
     }
 
@@ -331,7 +357,7 @@ public class BaoliBizOrderController extends BaseController
            taskObject = (JSONObject) taskVari.get();
            // 构造auditInfo
            auditInfo = new JSONObject();
-           String comments = "";
+           String comments = null;
            comments = baoliBizOrder == null ? "":baoliBizOrder.getAuditComment() ==null ? "":baoliBizOrder.getAuditComment();
            auditInfo.put("currentUserInfo",userInfo);
            auditInfo.put("processInstanceId",taskObject.get("processInstanceId"));
