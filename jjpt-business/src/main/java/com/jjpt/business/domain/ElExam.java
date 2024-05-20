@@ -30,15 +30,15 @@ public class ElExam extends BaseEntity
 
     /** 1公开2部门3定员 */
     @Excel(name = "1公开2部门3定员")
-    private Long openType;
+    private Integer openType;
 
     /** 考试状态 */
     @Excel(name = "考试状态")
-    private Long state;
+    private Integer state;
 
     /** 是否限时 */
     @Excel(name = "是否限时")
-    private Long timeLimit;
+    private Boolean timeLimit;
 
     /** 开始时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -52,15 +52,15 @@ public class ElExam extends BaseEntity
 
     /** 总分数 */
     @Excel(name = "总分数")
-    private Long totalScore;
+    private Integer totalScore;
 
     /** 总时长（分钟） */
     @Excel(name = "总时长", readConverterExp = "分=钟")
-    private Long totalTime;
+    private Integer totalTime;
 
     /** 及格分数 */
     @Excel(name = "及格分数")
-    private Long qualifyScore;
+    private Integer qualifyScore;
 
     /** 用户ID */
     @Excel(name = "用户ID")
@@ -97,30 +97,30 @@ public class ElExam extends BaseEntity
     {
         return content;
     }
-    public void setOpenType(Long openType) 
+    public void setOpenType(Integer openType)
     {
         this.openType = openType;
     }
 
-    public Long getOpenType() 
+    public Integer getOpenType()
     {
         return openType;
     }
-    public void setState(Long state) 
+    public void setState(Integer state)
     {
         this.state = state;
     }
 
-    public Long getState() 
+    public Integer getState()
     {
         return state;
     }
-    public void setTimeLimit(Long timeLimit) 
+    public void setTimeLimit(Boolean timeLimit)
     {
         this.timeLimit = timeLimit;
     }
 
-    public Long getTimeLimit() 
+    public Boolean getTimeLimit()
     {
         return timeLimit;
     }
@@ -142,30 +142,30 @@ public class ElExam extends BaseEntity
     {
         return endTime;
     }
-    public void setTotalScore(Long totalScore) 
+    public void setTotalScore(Integer totalScore)
     {
         this.totalScore = totalScore;
     }
 
-    public Long getTotalScore() 
+    public Integer getTotalScore()
     {
         return totalScore;
     }
-    public void setTotalTime(Long totalTime) 
+    public void setTotalTime(Integer totalTime)
     {
         this.totalTime = totalTime;
     }
 
-    public Long getTotalTime() 
+    public Integer getTotalTime()
     {
         return totalTime;
     }
-    public void setQualifyScore(Long qualifyScore) 
+    public void setQualifyScore(Integer qualifyScore)
     {
         this.qualifyScore = qualifyScore;
     }
 
-    public Long getQualifyScore() 
+    public Integer getQualifyScore()
     {
         return qualifyScore;
     }

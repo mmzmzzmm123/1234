@@ -154,8 +154,8 @@
 
     </el-card>
 
-    <h3>权限配置</h3>
-    <el-card style="margin-top: 20px;">
+<!--    <h3>权限配置</h3>-->
+<!--    <el-card style="margin-top: 20px;">
 
       <el-radio-group v-model="postForm.openType" style="margin-bottom: 20px">
         <el-radio :label="1" border>完全公开</el-radio>
@@ -191,7 +191,7 @@
 
       </div>
 
-    </el-card>
+    </el-card>-->
 
     <div style="margin-top: 20px">
       <el-button type="primary" @click="handleSave">保存</el-button>
@@ -201,7 +201,7 @@
 </template>
 
 <script>
-import { fetchDetail, saveData } from '@/api/exammanage/exam'
+import { getExam, addExam,updateExam } from '@/api/exammanage/exam'
 
 import RepoSelect from '@/components/RepoSelect'
 
@@ -313,14 +313,15 @@ export default {
 
   },
   created() {
-    const id = this.$route.params.id
+
+    const id = this.$route.params.examId
     if (typeof id !== undefined) {
-      this.fetchData(id)
+      this.getExam(id)
     }
 
-    fetchTree({}).then(response => {
+/*    fetchTree({}).then(response => {
       this.treeData = response.data
-    })
+    })*/
   },
   methods: {
 
@@ -392,19 +393,11 @@ export default {
           type: 'warning'
         }).then(() => {
           this.submitForm()
+
         })
       })
     },
 
-    handleCheckChange() {
-      const that = this
-      // 置空
-      this.postForm.departIds = []
-      const nodes = this.$refs.tree.getCheckedNodes()
-      nodes.forEach(function(item) {
-        that.postForm.departIds.push(item.id)
-      })
-    },
 
     // 添加子项
     handleAdd() {
@@ -415,8 +408,8 @@ export default {
       this.repoList.splice(index, 1)
     },
 
-    fetchData(id) {
-      fetchDetail(id).then(response => {
+    getExam(id) {
+      getExam(id).then(response => {
         this.postForm = response.data
 
         if (this.postForm.startTime && this.postForm.endTime) {
@@ -431,15 +424,14 @@ export default {
       // 校验和处理数据
       this.postForm.repoList = this.repoList
 
-      saveData(this.postForm).then(() => {
+      addExam(this.postForm).then(() => {
         this.$notify({
           title: '成功',
           message: '考试保存成功！',
           type: 'success',
           duration: 2000
         })
-
-        this.$router.push({ name: 'ListExam' })
+        this.$router.push("/exammanage/exam-list/listExam");
       })
     },
 

@@ -391,12 +391,8 @@ export default {
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
-      const id = row.id || this.ids
-      getExam(id).then(response => {
-        this.form = response.data;
-        this.open = true;
-        this.title = "修改考试管理";
-      });
+      const examId = row.id || this.ids
+      this.$router.push(`/exammanage/exam-update/updateExam/${examId}`);
     },
     /** 提交按钮 */
     submitForm() {

@@ -1,6 +1,7 @@
 package com.jjpt.business.service;
 
 import com.jjpt.business.domain.ElExam;
+import com.jjpt.business.domain.dto.ExamSaveReqDto;
 
 import java.util.List;
 
@@ -19,7 +20,7 @@ public interface IElExamService
      * @param id 考试主主键
      * @return 考试主
      */
-    public ElExam selectElExamById(String id);
+    public ExamSaveReqDto selectElExamById(String id);
 
     /**
      * 查询考试主列表
@@ -35,7 +36,7 @@ public interface IElExamService
      * @param elExam 考试主
      * @return 结果
      */
-    public int insertElExam(ElExam elExam);
+    public int insertElExam(ExamSaveReqDto elExam);
 
     /**
      * 修改考试主

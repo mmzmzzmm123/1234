@@ -1,8 +1,11 @@
 package com.jjpt.business.service;
 
 import java.util.List;
+import java.util.Map;
+
 import com.jjpt.business.domain.ElRepo;
 import com.jjpt.business.domain.dto.ElRepoDto;
+import com.jjpt.business.mapper.ElRepoMapper;
 
 /**
  * 题库管理Service接口
@@ -59,4 +62,6 @@ public interface IElRepoService
      * @return 结果
      */
     public int deleteElRepoById(String id);
+
+    Map<String, Object> selectTypeNumbyRepoId(String repoId);
 }

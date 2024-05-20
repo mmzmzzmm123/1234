@@ -123,4 +123,9 @@ public class ElRepoServiceImpl implements IElRepoService
     {
         return elRepoMapper.deleteElRepoById(id);
     }
+
+    @Override
+    public Map<String, Object> selectTypeNumbyRepoId(String repoId) {
+        return elRepoMapper.selectTypeNumbyRepoId(repoId);
+    }
 }
