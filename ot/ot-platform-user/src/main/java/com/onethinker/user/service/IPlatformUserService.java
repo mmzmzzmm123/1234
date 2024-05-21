@@ -72,7 +72,6 @@ public class IPlatformUserService {
     @Autowired
     private SysLoginService sysLoginService;
 
-
     /**
      * 获取对应用户平台
      */
@@ -80,9 +79,9 @@ public class IPlatformUserService {
         try {
             Assert.isTrue(!ObjectUtils.isEmpty(userTypeEnum),"userTypeEnum is null ");
             Class<?> clazz = Class.forName(userTypeEnum.getInterfaceClass());
-            Constructor<?> constructor = clazz.getConstructor(IMinWechatService.class,IPlatformUserService.class,SysLoginService.class,ISysConfigService.class);
+            Constructor<?> constructor = clazz.getConstructor(IMinWechatService.class,IPlatformUserService.class,SysLoginService.class,ISysConfigService.class, RedisCache.class);
             constructor.setAccessible(true);
-            UserStorage instance = (UserStorage) constructor.newInstance(wechatService,this,sysLoginService,sysConfigService);
+            UserStorage instance = (UserStorage) constructor.newInstance(wechatService,this,sysLoginService,sysConfigService,redisCache);
             return Tools.cast(instance);
         } catch (Exception e) {
             throw new RuntimeException(e);

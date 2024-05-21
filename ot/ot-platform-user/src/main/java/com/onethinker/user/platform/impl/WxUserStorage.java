@@ -2,6 +2,7 @@ package com.onethinker.user.platform.impl;
 
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.hutool.core.lang.Assert;
+import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.SysConfigKeyEnum;
 import com.onethinker.common.utils.PhoneUtils;
 import com.onethinker.framework.web.service.SysLoginService;
@@ -35,7 +36,7 @@ public class WxUserStorage implements UserStorage {
 
 
 
-    public WxUserStorage(@Autowired IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService, ISysConfigService configService) {
+    public WxUserStorage(IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService, ISysConfigService configService, RedisCache redisCache) {
         this.minWechatService = minWechatService;
         this.platformUserService = platformUserService;
         this.loginService = loginService;
