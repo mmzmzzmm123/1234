@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { listExam, getExam, delExam, addExam, updateExam } from "@/api/exammanage/exam";
+import {listExam } from "@/api/exammanage/exam";
 
 export default {
   name: "Exam",
@@ -95,33 +95,6 @@ export default {
       },
       // 表单参数
       form: {},
-      // 表单校验
-      rules: {
-        title: [
-          { required: true, message: "考试名称不能为空", trigger: "blur" }
-        ],
-        content: [
-          { required: true, message: "考试描述不能为空", trigger: "blur" }
-        ],
-        openType: [
-          { required: true, message: "1公开2部门3定员不能为空", trigger: "change" }
-        ],
-        state: [
-          { required: true, message: "考试状态不能为空", trigger: "blur" }
-        ],
-        timeLimit: [
-          { required: true, message: "是否限时不能为空", trigger: "change" }
-        ],
-        totalScore: [
-          { required: true, message: "总分数不能为空", trigger: "blur" }
-        ],
-        totalTime: [
-          { required: true, message: "总时长不能为空", trigger: "blur" }
-        ],
-        qualifyScore: [
-          { required: true, message: "及格分数不能为空", trigger: "blur" }
-        ],
-      }
     };
   },
   created() {
