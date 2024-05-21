@@ -318,10 +318,6 @@ export default {
     if (typeof id !== undefined) {
       this.getExam(id)
     }
-
-/*    fetchTree({}).then(response => {
-      this.treeData = response.data
-    })*/
   },
   methods: {
 

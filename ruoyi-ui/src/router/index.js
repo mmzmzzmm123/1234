@@ -286,6 +286,20 @@ export const dynamicRoutes = [
         meta: {title: '考试列表', noCache: true}
       }
     ]
+  },
+  {
+    path: '/exammanage/prepare-exam',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:exam:edit'],
+    children: [
+      {
+        path: 'prepareExam/:examId',
+        component: () => import('@/views/exammanage/online/preview.vue'),
+        name: 'listExam',
+        meta: {title: '考试列表', noCache: true}
+      }
+    ]
   }
 
 ]
