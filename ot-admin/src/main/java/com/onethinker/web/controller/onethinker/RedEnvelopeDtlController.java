@@ -16,8 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * 红包明细Controller
- *
+ * 红包明细
  * @author yangyouqi
  * @date 2023-10-31
  */

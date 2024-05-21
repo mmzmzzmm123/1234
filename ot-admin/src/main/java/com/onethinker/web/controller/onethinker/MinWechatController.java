@@ -21,9 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 /**
+ * 微信小程序能力接入
  * @author : yangyouqi
  * @date : 2024/1/15 11:26
- * 微信小程序能力接入
+ *
  */
 @RestController
 @RequestMapping("/onethinker")

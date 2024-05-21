@@ -19,7 +19,7 @@ import com.onethinker.common.utils.poi.ExcelUtil;
 import com.onethinker.common.core.page.TableDataInfo;
 
 /**
- * 天气预报最新结果Controller
+ * 天气预报最新结果
  *
  * @author yangyouqi
  * @date 2024-03-08

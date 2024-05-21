@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * 订阅消息控制Controller
+ * 订阅消息
  *
  * @author yangyouqi
  * @date 2024-01-15

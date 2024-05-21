@@ -26,7 +26,7 @@ import com.onethinker.common.utils.poi.ExcelUtil;
 import com.onethinker.common.core.page.TableDataInfo;
 
 /**
- * 轮播图Controller
+ * 平台轮播图
  *
  * @author yangyouqi
  * @date 2024-03-08

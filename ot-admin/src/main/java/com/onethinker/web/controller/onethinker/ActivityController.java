@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * 活动Controller
+ * 平台活动
  *
  * @author yangyouqi
  * @date 2023-10-31

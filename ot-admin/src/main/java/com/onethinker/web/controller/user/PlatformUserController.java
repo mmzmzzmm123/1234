@@ -14,6 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 /**
+ * 平台用户接口
  * @author : yangyouqi
  * @date : 2023/10/23 0023 21:00
  */
@@ -28,7 +29,9 @@ public class PlatformUserController extends BaseController {
     private IPlatformUserService platformUserService;
 
     /**
-     * 平台用戶登錄
+     * 平台用戶登录
+     * @param reqDTO
+     * @return
      */
     @PostMapping(value = "/login")
     public AjaxResult platformUserLogin(@RequestBody PlatformUserReqDTO reqDTO) {
@@ -36,6 +39,11 @@ public class PlatformUserController extends BaseController {
         return AjaxResult.success("登录成功", result);
     }
 
+    /**
+     * 平台用户注册
+     * @param reqDTO
+     * @return
+     */
     @PostMapping(value = "/register")
     public AjaxResult platformUserRegister(@RequestBody PlatformUserReqDTO reqDTO) {
         PlatformUserResDTO result = platformUserService.getUserStorage(reqDTO.getSourceType()).register(reqDTO);

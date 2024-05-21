@@ -119,6 +119,11 @@ public class FileStorageController extends BaseController {
         return fileInfo.getId();
     }
 
+    /**
+     * 文件查询
+     * @param fileInfo
+     * @return
+     */
     @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query")
     public TableDataInfo queryFile(FileInfo fileInfo) {
         startPage();
