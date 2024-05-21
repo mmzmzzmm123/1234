@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.DiIntegrityArchivesMapper">
+    
+    <resultMap type="DiIntegrityArchives" id="DiIntegrityArchivesResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="jobId"    column="job_id"    />
+        <result property="birthDate"    column="birth_date"    />
+        <result property="positionLevel"    column="position_level"    />
+        <result property="qualification"    column="qualification"    />
+        <result property="graduationSchoolName"    column="graduation_school_name"    />
+        <result property="honoraryTitleFile"    column="honorary_title_file"    />
+        <result property="remarks"    column="remarks"    />
+    </resultMap>
+
+    <sql id="selectDiIntegrityArchivesVo">
+        select id, name, id_number, job_id, birth_date, position_level, qualification, graduation_school_name, honorary_title_file, remarks from di_integrity_archives
+    </sql>
+
+    <select id="selectDiIntegrityArchivesList" parameterType="DiIntegrityArchives" resultMap="DiIntegrityArchivesResult">
+        <include refid="selectDiIntegrityArchivesVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="idNumber != null  and idNumber != ''"> and id_number = #{idNumber}</if>
+            <if test="jobId != null  and jobId != ''"> and job_id = #{jobId}</if>
+            <if test="birthDate != null  and birthDate != ''"> and birth_date = #{birthDate}</if>
+            <if test="positionLevel != null  and positionLevel != ''"> and position_level = #{positionLevel}</if>
+            <if test="qualification != null  and qualification != ''"> and qualification = #{qualification}</if>
+            <if test="graduationSchoolName != null  and graduationSchoolName != ''"> and graduation_school_name like concat('%', #{graduationSchoolName}, '%')</if>
+            <if test="honoraryTitleFile != null  and honoraryTitleFile != ''"> and honorary_title_file = #{honoraryTitleFile}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+        </where>
+    </select>
+    
+    <select id="selectDiIntegrityArchivesById" parameterType="Long" resultMap="DiIntegrityArchivesResult">
+        <include refid="selectDiIntegrityArchivesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDiIntegrityArchives" parameterType="DiIntegrityArchives">
+        insert into di_integrity_archives
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="idNumber != null and idNumber != ''">id_number,</if>
+            <if test="jobId != null and jobId != ''">job_id,</if>
+            <if test="birthDate != null and birthDate != ''">birth_date,</if>
+            <if test="positionLevel != null">position_level,</if>
+            <if test="qualification != null">qualification,</if>
+            <if test="graduationSchoolName != null and graduationSchoolName != ''">graduation_school_name,</if>
+            <if test="honoraryTitleFile != null">honorary_title_file,</if>
+            <if test="remarks != null">remarks,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="idNumber != null and idNumber != ''">#{idNumber},</if>
+            <if test="jobId != null and jobId != ''">#{jobId},</if>
+            <if test="birthDate != null and birthDate != ''">#{birthDate},</if>
+            <if test="positionLevel != null">#{positionLevel},</if>
+            <if test="qualification != null">#{qualification},</if>
+            <if test="graduationSchoolName != null and graduationSchoolName != ''">#{graduationSchoolName},</if>
+            <if test="honoraryTitleFile != null">#{honoraryTitleFile},</if>
+            <if test="remarks != null">#{remarks},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDiIntegrityArchives" parameterType="DiIntegrityArchives">
+        update di_integrity_archives
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="idNumber != null and idNumber != ''">id_number = #{idNumber},</if>
+            <if test="jobId != null and jobId != ''">job_id = #{jobId},</if>
+            <if test="birthDate != null and birthDate != ''">birth_date = #{birthDate},</if>
+            <if test="positionLevel != null">position_level = #{positionLevel},</if>
+            <if test="qualification != null">qualification = #{qualification},</if>
+            <if test="graduationSchoolName != null and graduationSchoolName != ''">graduation_school_name = #{graduationSchoolName},</if>
+            <if test="honoraryTitleFile != null">honorary_title_file = #{honoraryTitleFile},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDiIntegrityArchivesById" parameterType="Long">
+        delete from di_integrity_archives where id = #{id}
+    </delete>
+
+    <delete id="deleteDiIntegrityArchivesByIds" parameterType="String">
+        delete from di_integrity_archives where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
