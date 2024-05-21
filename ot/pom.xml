@@ -10,6 +10,7 @@
         <module>ot-onethinker</module>
         <module>ot-file-storage</module>
         <module>ot-platform-user</module>
+        <module>ot-bx-service</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
