@@ -2,6 +2,7 @@ package com.jjpt.business.service;
 
 import java.util.List;
 import com.jjpt.business.domain.ElPaperQu;
+import com.jjpt.business.domain.dto.PaperQuDetailDTO;
 
 /**
  * 考试记录考题Service接口
@@ -62,4 +63,6 @@ public interface IElPaperQuService
     int sumObjective(String paperId);
 
     void updateElPaperQuByKey(ElPaperQu qu);
+
+    List<PaperQuDetailDTO> listForPaperResult(String paperId);
 }

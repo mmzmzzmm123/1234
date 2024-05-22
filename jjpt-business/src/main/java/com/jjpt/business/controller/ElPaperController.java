@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.jjpt.business.domain.ElPaperQu;
+import com.jjpt.business.domain.dto.ExamResultRespDTO;
 import com.jjpt.business.domain.dto.PaperAnswerDTO;
 import com.jjpt.business.domain.dto.PaperQuDetailDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -75,6 +76,12 @@ public class ElPaperController extends BaseController
         return success(respDTO);
     }
 
+    @GetMapping(value = "/paper-result")
+    public AjaxResult paperResult(@RequestParam("id")String id) {
+        ExamResultRespDTO respDTO = elPaperService.paperResult(id);
+        return success(respDTO);
+    }
+
 
 
     /**
@@ -93,9 +100,9 @@ public class ElPaperController extends BaseController
      * @param reqDTO
      * @return
      */
-    @PostMapping(value="/hand-exa")
+    @GetMapping(value="/hand-exam")
     public AjaxResult handleExam(@RequestParam("paperId")String paperId) {
-        elPaperService.handleExam(paperId);
+        elPaperService.handExam(paperId);
         return success();
     }
 

@@ -10,7 +10,7 @@
           距离考试结束还有：
           <exam-timer v-model="paperData.leftSeconds" @timeout="doHandler()" />
 
-          <el-button :loading="loading" style="float: right; margin-top: -10px" type="primary" icon="el-icon-plus" @click="handHandExam()">
+          <el-button :loading="loading" style="float: right; margin-top: -10px" type="primary" icon="el-icon-plus" @click="handHandExam()" v-hasPermi="['exammanage:paper:result']">
             {{ handleText }}
           </el-button>
 
@@ -218,14 +218,14 @@ export default {
       this.handleText = '正在交卷，请等待...'
       this.loading = true
 
-      const params = { id: this.paperId }
+      const params = { paperId: this.paperId }
       handExam(params).then(() => {
         this.$message({
           message: '试卷提交成功，即将进入试卷详情！',
           type: 'success'
         })
-
-        this.$router.push({ name: 'ShowExam', params: { id: this.paperId }})
+        const paperId = this.paperId
+        this.$router.push(`/exammanage/result-exam/resultExam/${paperId}`);
       })
     },
 

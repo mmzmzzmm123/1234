@@ -2,6 +2,7 @@ package com.jjpt.business.mapper;
 
 import java.util.List;
 import com.jjpt.business.domain.ElPaperQu;
+import com.jjpt.business.domain.dto.PaperQuDetailDTO;
 import org.apache.ibatis.annotations.Param;
 
 /**
@@ -63,4 +64,7 @@ public interface ElPaperQuMapper
     int sumObjective(String paperId);
 
     void updateElPaperQuByKey(ElPaperQu qu);
+
+    List<PaperQuDetailDTO> listByPaper(@Param("paperId") String paperId);
+
 }

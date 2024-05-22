@@ -1,6 +1,8 @@
 package com.jjpt.business.service.impl;
 
 import java.util.List;
+
+import com.jjpt.business.domain.dto.PaperQuDetailDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jjpt.business.mapper.ElPaperQuMapper;
@@ -101,5 +103,12 @@ public class ElPaperQuServiceImpl implements IElPaperQuService
     @Override
     public void updateElPaperQuByKey(ElPaperQu qu) {
         elPaperQuMapper.updateElPaperQuByKey(qu);
+    }
+
+    @Override
+    public List<PaperQuDetailDTO> listForPaperResult(String paperId) {
+
+
+        return elPaperQuMapper.listByPaper(paperId);
     }
 }

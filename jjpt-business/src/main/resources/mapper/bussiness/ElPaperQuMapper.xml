@@ -121,4 +121,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </trim>
         where paper_id = #{paperId} and qu_id=#{quId}
     </update>
+
+    <select id="listByPaper" resultType="com.jjpt.business.domain.dto.PaperQuDetailDTO">
+        SELECT pq.*,eq.content,eq.image
+        FROM el_paper_qu pq
+        LEFT JOIN el_qu eq ON pq.qu_id = eq.id
+        WHERE pq.paper_id=#{paperId}
+        ORDER BY pq.sort ASC
+    </select>
 </mapper>

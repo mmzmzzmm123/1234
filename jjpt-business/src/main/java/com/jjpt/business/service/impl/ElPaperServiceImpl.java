@@ -375,6 +375,16 @@ public class ElPaperServiceImpl implements IElPaperService {
     }
 
     @Override
+    public ExamResultRespDTO paperResult(String paperId) {
+        ExamResultRespDTO respDTO = new ExamResultRespDTO();
+        ElPaper paper = elPaperMapper.selectElPaperById(paperId);
+        BeanMapper.copy(paper, respDTO);
+        List<PaperQuDetailDTO> quList = paperQuService.listForPaperResult(paperId);
+        respDTO.setQuList(quList);
+        return respDTO;
+    }
+
+    @Override
     public void handExam(String paperId) {
         //获取试卷信息
         ElPaper paper = elPaperMapper.selectElPaperById(paperId);
@@ -422,37 +432,6 @@ public class ElPaperServiceImpl implements IElPaperService {
             }
             //加入错题本
             new Thread(() -> userBookService.addBook(paper.getExamId(), qu.getQuId())).run();
-        }
-
-
-    }
-
-
-    @Override
-    public void handleExam(String paperId) {
-        //获取试卷信息
-        ElPaper paper = elPaperMapper.selectElPaperById(paperId);
-        //如果不是正常的，抛出异常
-        if(!PaperState.ING.equals(paper.getState())){
-            throw new ServiceException("试卷状态不正确！");
-        }
-        // 客观分
-        int objScore = paperQuService.sumObjective(paperId);
-        paper.setObjScore(objScore);
-        paper.setUserScore(objScore);
-
-        // 主观分，因为要阅卷，所以给0
-        paper.setSubjScore(0);
-
-        // 待阅卷
-        if(paper.getHasSaq()) {
-            paper.setState(PaperState.WAIT_OPT);
-        }else {
-
-            // 同步保存考试成绩
-            userExamService.joinResult(paper.getUserId(), paper.getExamId(), objScore, objScore>=paper.getQualifyScore());
-
-            paper.setState(PaperState.FINISHED);
         }
 
 

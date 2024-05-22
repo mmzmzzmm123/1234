@@ -33,6 +33,22 @@ export function getPaperDetail(data) {
   })
 }
 
+export function handExam(data) {
+  return request({
+    url: '/exammanage/paper/qu-detail',
+    method: 'get',
+    params:data
+  })
+}
+
+export function paperResult(data) {
+  return request({
+    url: '/exammanage/paper/paper-result',
+    method: 'get',
+    params:data
+  })
+}
+
 // 新增考试记录
 export function addPaper(data) {
   return request({

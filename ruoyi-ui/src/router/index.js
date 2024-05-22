@@ -314,6 +314,20 @@ export const dynamicRoutes = [
         meta: {title: '开始考试', noCache: true}
       }
     ]
+  },
+  {
+    path: '/exammanage/result-exam',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:paper:result'],
+    children: [
+      {
+        path: 'resultExam/:paperId',
+        component: () => import('@/views/exammanage/online/result.vue'),
+        name: 'ResultExam',
+        meta: {title: '考试结果', noCache: true}
+      }
+    ]
   }
 
 ]

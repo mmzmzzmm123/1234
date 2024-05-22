@@ -3,6 +3,7 @@ package com.jjpt.business.service;
 import java.util.List;
 import com.jjpt.business.domain.ElPaper;
 import com.jjpt.business.domain.dto.ExamDetailRespDTO;
+import com.jjpt.business.domain.dto.ExamResultRespDTO;
 import com.jjpt.business.domain.dto.PaperAnswerDTO;
 import com.jjpt.business.domain.dto.PaperQuDetailDTO;
 
@@ -68,5 +69,6 @@ public interface IElPaperService
 
     void fillAnswer(PaperAnswerDTO reqDTO);
 
-    void handleExam(String paperId);
+
+    ExamResultRespDTO paperResult(String paperId);
 }
