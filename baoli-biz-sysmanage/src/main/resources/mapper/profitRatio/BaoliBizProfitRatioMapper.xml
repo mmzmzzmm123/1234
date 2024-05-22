@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.profitRatio.mapper.BaoliBizProfitRatioMapper">
+    
+    <resultMap type="BaoliBizProfitRatio" id="BaoliBizProfitRatioResult">
+        <result property="id"    column="id"    />
+        <result property="year"    column="year"    />
+        <result property="month"    column="month"    />
+        <result property="provinceId"    column="province_id"    />
+        <result property="cityId"    column="city_id"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizProfitRatioVo">
+        select a.*,(select city from bl_sys_cities b where a.city_id = b.cityid) city_name,(select province from bl_sys_provinces b where a.province_id = b.provinceid) province_name from baoli_biz_profit_ratio a
+    </sql>
+
+    <select id="selectBaoliBizProfitRatioList" parameterType="BaoliBizProfitRatio" resultType="map">
+        <if test="regionType == null">
+            <include refid="selectBaoliBizProfitRatioVo"/>
+            <where>
+                <if test="year != null  and year != ''"> and year = #{year}</if>
+                <if test="month != null  and month != ''"> and month = #{month}</if>
+                <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
+                <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
+            </where>
+       </if>
+
+        <if test="regionType != null and regionType != '' and regionType=='01'"><!-- 市 -->
+            select a.year
+            <if test="monthly != null  and monthly != ''">,a.month</if>
+            ,a.city_id,(select city from bl_sys_cities b where a.city_id = b.cityid) city_name
+            ,a.province_id,(select province from bl_sys_provinces b where a.province_id = b.provinceid) province_name from baoli_biz_profit_ratio a
+            <where>
+                <if test="year != null  and year != ''"> and a.year = #{year}</if>
+                <if test="month != null  and month != ''"> and a.month = #{month}</if>
+                <if test="provinceId != null  and provinceId != ''"> and a.province_id = #{provinceId}</if>
+            </where>
+            group by a.year
+            <if test="monthly != null  and monthly != ''">,a.month</if>
+            ,a.province_id,a.city_id
+        </if>
+
+
+        <if test="regionType != null and regionType != '' and regionType=='02'"><!-- 省 -->
+            select a.year
+            <if test="monthly != null  and monthly != ''">,a.month</if>
+            ,a.province_id,(select province from bl_sys_provinces b where a.province_id = b.provinceid) province_name from baoli_biz_profit_ratio a
+            <where>
+                <if test="year != null  and year != ''"> and a.year = #{year}</if>
+                <if test="month != null  and month != ''"> and a.month = #{month}</if>
+                <if test="provinceId != null  and provinceId != ''"> and a.province_id = #{provinceId}</if>
+            </where>
+            group by a.year
+            <if test="monthly != null  and monthly != ''">,a.month</if>
+            ,a.province_id
+        </if>
+
+        <if test="regionType != null and regionType != '' and regionType=='03'"><!-- 全公司 -->
+            select a.year
+            <if test="monthly != null  and monthly != ''">,a.month</if>
+            from baoli_biz_profit_ratio a
+            <where>
+                <if test="year != null  and year != ''"> and a.year = #{year}</if>
+                <if test="month != null  and month != ''"> and a.month = #{month}</if>
+            </where>
+            group by year
+            <if test="monthly != null  and monthly != ''">,a.month</if>
+        </if>
+    </select>
+    
+    <select id="selectBaoliBizProfitRatioById" parameterType="Long" resultType="map">
+        <include refid="selectBaoliBizProfitRatioVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizProfitRatio" parameterType="BaoliBizProfitRatio" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_profit_ratio
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="year != null">year,</if>
+            <if test="month != null">month,</if>
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="year != null">#{year},</if>
+            <if test="month != null">#{month},</if>
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="cityId != null">#{cityId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizProfitRatio" parameterType="BaoliBizProfitRatio">
+        update baoli_biz_profit_ratio
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="year != null">year = #{year},</if>
+            <if test="month != null">month = #{month},</if>
+            <if test="provinceId != null">province_id = #{provinceId},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizProfitRatioById" parameterType="Long">
+        delete from baoli_biz_profit_ratio where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizProfitRatioByIds" parameterType="String">
+        delete from baoli_biz_profit_ratio where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
