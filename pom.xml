@@ -265,6 +265,12 @@
                 <version>${okhttp.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.onethinker</groupId>
+                <artifactId>ot-bx-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

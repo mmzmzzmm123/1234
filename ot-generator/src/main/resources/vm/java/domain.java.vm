@@ -25,6 +25,7 @@ import lombok.Data;
     #set($Entity="TreeEntity")
 #end
 @Data
+@EqualsAndHashCode(callSuper = true)
 @TableName("${tableName}")
 public class ${ClassName} extends ${Entity} {
 private static final long serialVersionUID = 1L;

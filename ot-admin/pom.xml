@@ -84,6 +84,11 @@
             <artifactId>ot-platform-user</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.onethinker</groupId>
+            <artifactId>ot-bx-service</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

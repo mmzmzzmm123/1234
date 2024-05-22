@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.onethinker.bx.mapper.BxCustomerInfoMapper">
+
+    <resultMap type="BxCustomerInfo" id="BxCustomerInfoResult">
+            <result property="id" column="id"/>
+            <result property="companyName" column="company_name"/>
+            <result property="shortName" column="short_name"/>
+            <result property="customerType" column="customer_type"/>
+            <result property="manager" column="manager"/>
+            <result property="salesperson" column="salesperson"/>
+            <result property="productType" column="product_type"/>
+            <result property="region" column="region"/>
+            <result property="deliveryType" column="delivery_type"/>
+            <result property="contactPerson" column="contact_person"/>
+            <result property="mobile" column="mobile"/>
+            <result property="deliveryAddress" column="delivery_address"/>
+            <result property="notes" column="notes"/>
+            <result property="department" column="department"/>
+            <result property="createBy" column="create_by"/>
+            <result property="createTime" column="create_time"/>
+            <result property="updateBy" column="update_by"/>
+            <result property="updateTime" column="update_time"/>
+            <result property="remark" column="remark"/>
+    </resultMap>
+
+    <sql id="selectBxCustomerInfoVo">
+        select id, company_name, short_name, customer_type, manager, salesperson, product_type, region, delivery_type, contact_person, mobile, delivery_address, notes, department, create_by, create_time, update_by, update_time, remark
+        from bx_customer_info
+    </sql>
+
+    <select id="selectBxCustomerInfoList" parameterType="BxCustomerInfo" resultMap="BxCustomerInfoResult">
+        <include refid="selectBxCustomerInfoVo"/>
+        <where>
+                        <if test="companyName != null  and companyName != ''">
+                            and company_name like concat('%', #{companyName}, '%')
+                        </if>
+                        <if test="shortName != null  and shortName != ''">
+                            and short_name like concat('%', #{shortName}, '%')
+                        </if>
+                        <if test="customerType != null  and customerType != ''">
+                            and customer_type = #{customerType}
+                        </if>
+                        <if test="manager != null  and manager != ''">
+                            and manager = #{manager}
+                        </if>
+                        <if test="salesperson != null  and salesperson != ''">
+                            and salesperson = #{salesperson}
+                        </if>
+                        <if test="productType != null  and productType != ''">
+                            and product_type = #{productType}
+                        </if>
+                        <if test="region != null  and region != ''">
+                            and region = #{region}
+                        </if>
+                        <if test="deliveryType != null  and deliveryType != ''">
+                            and delivery_type = #{deliveryType}
+                        </if>
+                        <if test="contactPerson != null  and contactPerson != ''">
+                            and contact_person = #{contactPerson}
+                        </if>
+                        <if test="mobile != null  and mobile != ''">
+                            and mobile = #{mobile}
+                        </if>
+                        <if test="deliveryAddress != null  and deliveryAddress != ''">
+                            and delivery_address = #{deliveryAddress}
+                        </if>
+                        <if test="notes != null  and notes != ''">
+                            and notes = #{notes}
+                        </if>
+                        <if test="department != null  and department != ''">
+                            and department = #{department}
+                        </if>
+        </where>
+    </select>
+
+    <select id="selectBxCustomerInfoById" parameterType="Long"
+            resultMap="BxCustomerInfoResult">
+            <include refid="selectBxCustomerInfoVo"/>
+            where id = #{id}
+    </select>
+
+    <insert id="insertBxCustomerInfo" parameterType="BxCustomerInfo" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into bx_customer_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+                    <if test="companyName != null and companyName != ''">company_name,
+                    </if>
+                    <if test="shortName != null">short_name,
+                    </if>
+                    <if test="customerType != null">customer_type,
+                    </if>
+                    <if test="manager != null">manager,
+                    </if>
+                    <if test="salesperson != null">salesperson,
+                    </if>
+                    <if test="productType != null">product_type,
+                    </if>
+                    <if test="region != null">region,
+                    </if>
+                    <if test="deliveryType != null">delivery_type,
+                    </if>
+                    <if test="contactPerson != null">contact_person,
+                    </if>
+                    <if test="mobile != null">mobile,
+                    </if>
+                    <if test="deliveryAddress != null">delivery_address,
+                    </if>
+                    <if test="notes != null">notes,
+                    </if>
+                    <if test="department != null">department,
+                    </if>
+                    <if test="createBy != null">create_by,
+                    </if>
+                    <if test="createTime != null">create_time,
+                    </if>
+                    <if test="updateBy != null">update_by,
+                    </if>
+                    <if test="updateTime != null">update_time,
+                    </if>
+                    <if test="remark != null">remark,
+                    </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+                    <if test="companyName != null and companyName != ''">#{companyName},
+                    </if>
+                    <if test="shortName != null">#{shortName},
+                    </if>
+                    <if test="customerType != null">#{customerType},
+                    </if>
+                    <if test="manager != null">#{manager},
+                    </if>
+                    <if test="salesperson != null">#{salesperson},
+                    </if>
+                    <if test="productType != null">#{productType},
+                    </if>
+                    <if test="region != null">#{region},
+                    </if>
+                    <if test="deliveryType != null">#{deliveryType},
+                    </if>
+                    <if test="contactPerson != null">#{contactPerson},
+                    </if>
+                    <if test="mobile != null">#{mobile},
+                    </if>
+                    <if test="deliveryAddress != null">#{deliveryAddress},
+                    </if>
+                    <if test="notes != null">#{notes},
+                    </if>
+                    <if test="department != null">#{department},
+                    </if>
+                    <if test="createBy != null">#{createBy},
+                    </if>
+                    <if test="createTime != null">#{createTime},
+                    </if>
+                    <if test="updateBy != null">#{updateBy},
+                    </if>
+                    <if test="updateTime != null">#{updateTime},
+                    </if>
+                    <if test="remark != null">#{remark},
+                    </if>
+        </trim>
+    </insert>
+
+    <update id="updateBxCustomerInfo" parameterType="BxCustomerInfo">
+        update bx_customer_info
+        <trim prefix="SET" suffixOverrides=",">
+                    <if test="companyName != null and companyName != ''">company_name =
+                        #{companyName},
+                    </if>
+                    <if test="shortName != null">short_name =
+                        #{shortName},
+                    </if>
+                    <if test="customerType != null">customer_type =
+                        #{customerType},
+                    </if>
+                    <if test="manager != null">manager =
+                        #{manager},
+                    </if>
+                    <if test="salesperson != null">salesperson =
+                        #{salesperson},
+                    </if>
+                    <if test="productType != null">product_type =
+                        #{productType},
+                    </if>
+                    <if test="region != null">region =
+                        #{region},
+                    </if>
+                    <if test="deliveryType != null">delivery_type =
+                        #{deliveryType},
+                    </if>
+                    <if test="contactPerson != null">contact_person =
+                        #{contactPerson},
+                    </if>
+                    <if test="mobile != null">mobile =
+                        #{mobile},
+                    </if>
+                    <if test="deliveryAddress != null">delivery_address =
+                        #{deliveryAddress},
+                    </if>
+                    <if test="notes != null">notes =
+                        #{notes},
+                    </if>
+                    <if test="department != null">department =
+                        #{department},
+                    </if>
+                    <if test="createBy != null">create_by =
+                        #{createBy},
+                    </if>
+                    <if test="createTime != null">create_time =
+                        #{createTime},
+                    </if>
+                    <if test="updateBy != null">update_by =
+                        #{updateBy},
+                    </if>
+                    <if test="updateTime != null">update_time =
+                        #{updateTime},
+                    </if>
+                    <if test="remark != null">remark =
+                        #{remark},
+                    </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBxCustomerInfoById" parameterType="Long">
+        delete from bx_customer_info where id = #{id}
+    </delete>
+
+    <delete id="deleteBxCustomerInfoByIds" parameterType="String">
+        delete from bx_customer_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
