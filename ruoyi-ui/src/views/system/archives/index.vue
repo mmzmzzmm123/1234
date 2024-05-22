@@ -113,7 +113,7 @@
 
     <el-table v-loading="loading" :data="archivesList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键" align="center" prop="id" />
+      <!--<el-table-column label="主键" align="center" prop="id" />-->
       <el-table-column label="姓名" align="center" prop="name" />
       <el-table-column label="身份证号" align="center" prop="idNumber" />
       <el-table-column label="工号" align="center" prop="jobId" />
