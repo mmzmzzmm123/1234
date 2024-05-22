@@ -2,6 +2,7 @@ package com.jjpt.business.mapper;
 
 import java.util.List;
 import com.jjpt.business.domain.ElPaperQu;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 考试记录考题Mapper接口
@@ -60,4 +61,6 @@ public interface ElPaperQuMapper
     public int deleteElPaperQuByIds(String[] ids);
 
     int sumObjective(String paperId);
+
+    void updateElPaperQuByKey(ElPaperQu qu);
 }

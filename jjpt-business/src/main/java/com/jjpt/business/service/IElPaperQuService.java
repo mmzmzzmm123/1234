@@ -60,4 +60,6 @@ public interface IElPaperQuService
     public int deleteElPaperQuById(String id);
 
     int sumObjective(String paperId);
+
+    void updateElPaperQuByKey(ElPaperQu qu);
 }

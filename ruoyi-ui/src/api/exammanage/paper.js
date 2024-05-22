@@ -17,6 +17,14 @@ export function getPaper(id) {
   })
 }
 
+export function fillAnswer(data) {
+  return request({
+    url: '/exammanage/paper/fill-answer',
+    method: 'post',
+    data:data
+  })
+}
+
 export function getPaperDetail(data) {
   return request({
     url: '/exammanage/paper/qu-detail',

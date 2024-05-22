@@ -97,4 +97,9 @@ public class ElPaperQuServiceImpl implements IElPaperQuService
         return elPaperQuMapper.sumObjective(paperId);
 
     }
+
+    @Override
+    public void updateElPaperQuByKey(ElPaperQu qu) {
+        elPaperQuMapper.updateElPaperQuByKey(qu);
+    }
 }

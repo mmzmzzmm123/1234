@@ -104,4 +104,20 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         AND is_right=true
         AND qu_type &lt; 4
     </select>
+
+    <update id="updateElPaperQuByKey">
+        update el_paper_qu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="paperId != null and paperId != ''">paper_id = #{paperId},</if>
+            <if test="quId != null and quId != ''">qu_id = #{quId},</if>
+            <if test="quType != null">qu_type = #{quType},</if>
+            <if test="answered != null">answered = #{answered},</if>
+            <if test="answer != null and answer != ''">answer = #{answer},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="actualScore != null">actual_score = #{actualScore},</if>
+            <if test="isRight != null">is_right = #{isRight},</if>
+        </trim>
+        where paper_id = #{paperId} and qu_id=#{quId}
+    </update>
 </mapper>

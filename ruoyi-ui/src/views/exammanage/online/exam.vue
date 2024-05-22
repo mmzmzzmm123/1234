@@ -335,9 +335,7 @@ export default {
 
     // 试卷详情
     getPaper(id) {
-      //const params = { id: id }
       getPaper(id).then(response => {
-        debugger;
         // 试卷内容
         this.paperData = response.data
 

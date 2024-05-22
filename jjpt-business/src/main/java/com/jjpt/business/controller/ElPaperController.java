@@ -4,6 +4,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.jjpt.business.domain.ElPaperQu;
+import com.jjpt.business.domain.dto.PaperAnswerDTO;
 import com.jjpt.business.domain.dto.PaperQuDetailDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,7 +77,27 @@ public class ElPaperController extends BaseController
 
 
 
+    /**
+     * 填充答案
+     */
 
+
+    @PostMapping(value="/fill-answer")
+    public AjaxResult fillAnswer(@RequestBody PaperAnswerDTO reqDTO) {
+        elPaperService.fillAnswer(reqDTO);
+        return success();
+    }
+
+    /**
+     * 交卷操作
+     * @param reqDTO
+     * @return
+     */
+    @PostMapping(value="/hand-exa")
+    public AjaxResult handleExam(@RequestParam("paperId")String paperId) {
+        elPaperService.handleExam(paperId);
+        return success();
+    }
 
 
     /**

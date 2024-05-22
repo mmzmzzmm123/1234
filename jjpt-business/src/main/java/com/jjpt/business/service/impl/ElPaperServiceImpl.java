@@ -24,9 +24,12 @@ import com.ruoyi.common.utils.uuid.IdUtils;
 
 import com.ruoyi.quartz.domain.SysJob;
 import com.ruoyi.quartz.service.ISysJobService;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jjpt.business.mapper.ElPaperMapper;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 考试记录Service业务层处理
@@ -328,7 +331,6 @@ public class ElPaperServiceImpl implements IElPaperService {
 
         // 问题
         ElQu qu = elQuService.selectElQuById(quId);
-
         // 基本信息
         ElPaperQu queryEntity = new ElPaperQu();
         queryEntity.setPaperId(paperId);
@@ -342,5 +344,77 @@ public class ElPaperServiceImpl implements IElPaperService {
         respDTO.setAnswerList(list);
 
         return respDTO;
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void fillAnswer(PaperAnswerDTO reqDTO) {
+        // 未作答
+        if(CollectionUtils.isEmpty(reqDTO.getAnswers())
+                && StringUtils.isBlank(reqDTO.getAnswer())){
+            return;
+        }
+        ElPaperQuAnswer  queryEntity = new ElPaperQuAnswer();
+        queryEntity.setPaperId(reqDTO.getPaperId());
+        queryEntity.setQuId(reqDTO.getQuId());
+
+        //查找答案列表
+        List<ElPaperQuAnswer> list = paperQuAnswerService.selectElPaperQuAnswerList(queryEntity);
+        //是否正确
+        boolean right = true;
+
+        //更新正确答案
+        for (ElPaperQuAnswer item : list) {
+
+            if (reqDTO.getAnswers().contains(item.getId())) {
+                item.setChecked(true);
+            } else {
+                item.setChecked(false);
+            }
+
+            //有一个对不上就是错的
+            if (item.getIsRight()!=null && !item.getIsRight().equals(item.getChecked())) {
+                right = false;
+            }
+            paperQuAnswerService.updateElPaperQuAnswer(item);
+        }
+       //修改为已回答
+        ElPaperQu qu = new ElPaperQu();
+        qu.setQuId(reqDTO.getQuId());
+        qu.setPaperId(reqDTO.getPaperId());
+        qu.setIsRight(right);
+        qu.setAnswer(reqDTO.getAnswer());
+        qu.setAnswered(true);
+        paperQuService.updateElPaperQuByKey(qu);
+    }
+
+    @Override
+    public void handleExam(String paperId) {
+        //获取试卷信息
+        ElPaper paper = elPaperMapper.selectElPaperById(paperId);
+        //如果不是正常的，抛出异常
+        if(!PaperState.ING.equals(paper.getState())){
+            throw new ServiceException("试卷状态不正确！");
+        }
+        // 客观分
+        int objScore = paperQuService.sumObjective(paperId);
+        paper.setObjScore(objScore);
+        paper.setUserScore(objScore);
+
+        // 主观分，因为要阅卷，所以给0
+        paper.setSubjScore(0);
+
+        // 待阅卷
+        if(paper.getHasSaq()) {
+            paper.setState(PaperState.WAIT_OPT);
+        }else {
+
+            // 同步保存考试成绩
+            //userExamService.joinResult(paper.getUserId(), paper.getExamId(), objScore, objScore>=paper.getQualifyScore());
+
+            paper.setState(PaperState.FINISHED);
+        }
+
+
     }
 }
