@@ -15,6 +15,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="abc"    column="abc"    />
     </resultMap>
 
+
+
     <sql id="selectElPaperQuAnswerVo">
         select id, paper_id, answer_id, qu_id, is_right, checked, sort, abc from el_paper_qu_answer
     </sql>
@@ -85,4 +87,23 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="list" resultType="com.jjpt.business.domain.dto.PaperQuAnswerExtDTO">
+        SELECT pa.`id`,
+               pa.`paper_id` as paperId,
+               pa.`answer_id` as answerId,
+               pa.`qu_id` as quId,
+               pa.`checked` as checked,
+               pa.`sort` as sort,
+               pa.`abc` as abc ,
+               qa.content as content,
+               qa.image as image
+        FROM
+              el_paper_qu_answer pa
+        LEFT JOIN
+              el_qu_answer qa ON pa.answer_id=qa.id
+        WHERE pa.paper_id=#{paperId} AND pa.qu_id=#{quId}
+        ORDER BY pa.sort ASC
+
+    </select>
 </mapper>

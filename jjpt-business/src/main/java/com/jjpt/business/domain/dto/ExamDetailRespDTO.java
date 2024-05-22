@@ -7,6 +7,7 @@ import lombok.Data;
 import java.util.Calendar;
 import java.util.List;
 
+
 @Data
 public class ExamDetailRespDTO extends ElPaper {
 

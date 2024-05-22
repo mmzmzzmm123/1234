@@ -6,9 +6,7 @@ import java.util.*;
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.jjpt.business.domain.*;
-import com.jjpt.business.domain.dto.ElExamRepoExtDto;
-import com.jjpt.business.domain.dto.ExamDetailRespDTO;
-import com.jjpt.business.domain.dto.ExamSaveReqDto;
+import com.jjpt.business.domain.dto.*;
 import com.jjpt.business.emums.ExamState;
 import com.jjpt.business.emums.JobPrefix;
 import com.jjpt.business.emums.PaperState;
@@ -322,5 +320,27 @@ public class ElPaperServiceImpl implements IElPaperService {
 
 
 
+    }
+
+    @Override
+    public PaperQuDetailDTO findQuDetail(String paperId, String quId) {
+        PaperQuDetailDTO respDTO = new PaperQuDetailDTO();
+
+        // 问题
+        ElQu qu = elQuService.selectElQuById(quId);
+
+        // 基本信息
+        ElPaperQu queryEntity = new ElPaperQu();
+        queryEntity.setPaperId(paperId);
+        queryEntity.setQuId(quId);
+        List<ElPaperQu> elPaperQus = paperQuService.selectElPaperQuList(queryEntity);
+        ElPaperQu paperQu =  elPaperQus.get(0);
+        BeanMapper.copy(paperQu, respDTO);
+        respDTO.setContent(qu.getContent());
+        respDTO.setImage(qu.getImage());
+        List<PaperQuAnswerExtDTO> list = paperQuAnswerService.listForExam(paperId, quId);
+        respDTO.setAnswerList(list);
+
+        return respDTO;
     }
 }

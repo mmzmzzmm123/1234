@@ -17,6 +17,14 @@ export function getPaper(id) {
   })
 }
 
+export function getPaperDetail(data) {
+  return request({
+    url: '/exammanage/paper/qu-detail',
+    method: 'get',
+    params:data
+  })
+}
+
 // 新增考试记录
 export function addPaper(data) {
   return request({

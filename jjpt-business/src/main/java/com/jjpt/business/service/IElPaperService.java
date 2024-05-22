@@ -3,6 +3,7 @@ package com.jjpt.business.service;
 import java.util.List;
 import com.jjpt.business.domain.ElPaper;
 import com.jjpt.business.domain.dto.ExamDetailRespDTO;
+import com.jjpt.business.domain.dto.PaperQuDetailDTO;
 
 /**
  * 考试记录Service接口
@@ -61,4 +62,6 @@ public interface IElPaperService
     public int deleteElPaperById(String id);
 
     void handExam(String data);
+
+    PaperQuDetailDTO findQuDetail(String paperId, String quId);
 }

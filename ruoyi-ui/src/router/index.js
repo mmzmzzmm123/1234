@@ -310,7 +310,7 @@ export const dynamicRoutes = [
       {
         path: 'startExam/:paperId',
         component: () => import('@/views/exammanage/online/exam.vue'),
-        name: 'startExam',
+        name: 'StartExam',
         meta: {title: '开始考试', noCache: true}
       }
     ]

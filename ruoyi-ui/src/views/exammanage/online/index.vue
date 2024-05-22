@@ -16,7 +16,7 @@
       </el-form-item>
     </el-form>
 
-    <el-table v-loading="loading" :data="examList" @selection-change="handleSelectionChange">
+    <el-table v-loading="loading" :data="examList">
       <el-table-column label="考试名称" align="center" prop="title" />
       <el-table-column label="考试时间" align="center" prop="startTime" width="180">
         <template v-slot="scope">

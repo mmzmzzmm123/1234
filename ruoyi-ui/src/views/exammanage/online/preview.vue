@@ -81,13 +81,12 @@ export default {
       addPaper(this.postForm).then(response => {
         console.log(response)
 
-        if (response.code === 0) {
+        if (response.code == 200) {
            const paperId = response.data
            setTimeout(function() {
             this.loading = false
-            that.dialogVisible = false
-            this.$router.push(`/exammanage/start-exam/startExam/${paperId}`);
-
+            that.dialogVisible = false;
+            that.$router.push(`/exammanage/start-exam/startExam/${paperId}`);
           }, 1000)
         }
       }).catch(() => {

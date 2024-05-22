@@ -2,6 +2,7 @@ package com.jjpt.business.service;
 
 import java.util.List;
 import com.jjpt.business.domain.ElPaperQuAnswer;
+import com.jjpt.business.domain.dto.PaperQuAnswerExtDTO;
 
 /**
  * 考试记录答案Service接口
@@ -58,4 +59,6 @@ public interface IElPaperQuAnswerService
      * @return 结果
      */
     public int deleteElPaperQuAnswerById(String id);
+
+    List<PaperQuAnswerExtDTO> listForExam(String paperId, String quId);
 }

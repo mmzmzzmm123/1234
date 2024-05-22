@@ -2,6 +2,8 @@ package com.jjpt.business.mapper;
 
 import java.util.List;
 import com.jjpt.business.domain.ElPaperQuAnswer;
+import com.jjpt.business.domain.dto.PaperQuAnswerExtDTO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 考试记录答案Mapper接口
@@ -58,4 +60,6 @@ public interface ElPaperQuAnswerMapper
      * @return 结果
      */
     public int deleteElPaperQuAnswerByIds(String[] ids);
+
+    List<PaperQuAnswerExtDTO> list(@Param("paperId") String paperId, @Param("quId") String quId);
 }

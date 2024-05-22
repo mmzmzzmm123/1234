@@ -2,6 +2,7 @@ package com.jjpt.business.service.impl;
 
 import java.util.List;
 
+import com.jjpt.business.domain.dto.PaperQuAnswerExtDTO;
 import com.jjpt.business.service.IElPaperQuAnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -91,5 +92,12 @@ public class ElPaperQuAnswerServiceImpl implements IElPaperQuAnswerService
     public int deleteElPaperQuAnswerById(String id)
     {
         return elPaperQuAnswerMapper.deleteElPaperQuAnswerById(id);
+    }
+
+    @Override
+    public List<PaperQuAnswerExtDTO> listForExam(String paperId, String quId) {
+
+
+        return elPaperQuAnswerMapper.list(paperId, quId);
     }
 }

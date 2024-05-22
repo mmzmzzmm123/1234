@@ -104,7 +104,7 @@
 <script>
 
 
-import { getPaper, quDetail, handExam, fillAnswer } from '@/api/exammanage/paper'
+import {getPaper, quDetail, handExam, fillAnswer, getPaperDetail} from '@/api/exammanage/paper'
 import { Loading } from 'element-ui'
 import ExamTimer from '@/views/exammanage/online/components/ExamTimer'
 
@@ -145,7 +145,8 @@ export default {
     }
   },
   created() {
-    const id = this.$route.params.id
+    debugger;
+    const id = this.$route.params.paperId
     if (typeof id !== 'undefined') {
       this.paperId = id
       this.getPaper(id)
@@ -310,7 +311,7 @@ export default {
 
       // 查找下个详情
       const params = { paperId: this.paperId, quId: item.quId }
-      quDetail(params).then(response => {
+      getPaperDetail(params).then(response => {
         console.log(response)
         this.quData = response.data
         this.radioValue = ''
@@ -334,8 +335,9 @@ export default {
 
     // 试卷详情
     getPaper(id) {
-      const params = { id: id }
-      getPaper(params).then(response => {
+      //const params = { id: id }
+      getPaper(id).then(response => {
+        debugger;
         // 试卷内容
         this.paperData = response.data
 
