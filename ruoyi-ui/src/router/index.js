@@ -300,6 +300,20 @@ export const dynamicRoutes = [
         meta: {title: '考试列表', noCache: true}
       }
     ]
+  },
+  {
+    path: '/exammanage/start-exam',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:paper:add'],
+    children: [
+      {
+        path: 'startExam/:paperId',
+        component: () => import('@/views/exammanage/online/exam.vue'),
+        name: 'startExam',
+        meta: {title: '开始考试', noCache: true}
+      }
+    ]
   }
 
 ]

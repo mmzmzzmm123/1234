@@ -60,4 +60,6 @@ public interface IElQuAnswerService
     public int deleteElQuAnswerById(String id);
 
     void saveAll(String quId, List<ElQuAnswer> answerList);
+
+    List<ElQuAnswer> listAnswerByRandom(String quId);
 }

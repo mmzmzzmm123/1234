@@ -69,6 +69,8 @@ public class ElPaperController extends BaseController
         return success(elPaperService.selectElPaperById(id));
     }
 
+
+
     /**
      * 新增考试记录
      */
@@ -77,7 +79,7 @@ public class ElPaperController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody ElPaper elPaper)
     {
-        return toAjax(elPaperService.insertElPaper(elPaper));
+        return success(elPaperService.insertElPaper(elPaper));
     }
 
     /**

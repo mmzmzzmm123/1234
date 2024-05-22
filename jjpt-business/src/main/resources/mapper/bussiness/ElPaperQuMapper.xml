@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjpt.business.mapper.ElPaperQuMapper">
+    
+    <resultMap type="ElPaperQu" id="ElPaperQuResult">
+        <result property="id"    column="id"    />
+        <result property="paperId"    column="paper_id"    />
+        <result property="quId"    column="qu_id"    />
+        <result property="quType"    column="qu_type"    />
+        <result property="answered"    column="answered"    />
+        <result property="answer"    column="answer"    />
+        <result property="sort"    column="sort"    />
+        <result property="score"    column="score"    />
+        <result property="actualScore"    column="actual_score"    />
+        <result property="isRight"    column="is_right"    />
+    </resultMap>
+
+    <sql id="selectElPaperQuVo">
+        select id, paper_id, qu_id, qu_type, answered, answer, sort, score, actual_score, is_right from el_paper_qu
+    </sql>
+
+    <select id="selectElPaperQuList" parameterType="ElPaperQu" resultMap="ElPaperQuResult">
+        <include refid="selectElPaperQuVo"/>
+        <where>  
+            <if test="paperId != null  and paperId != ''"> and paper_id = #{paperId}</if>
+            <if test="quId != null  and quId != ''"> and qu_id = #{quId}</if>
+            <if test="quType != null "> and qu_type = #{quType}</if>
+            <if test="answered != null "> and answered = #{answered}</if>
+            <if test="answer != null  and answer != ''"> and answer = #{answer}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="score != null "> and score = #{score}</if>
+            <if test="actualScore != null "> and actual_score = #{actualScore}</if>
+            <if test="isRight != null "> and is_right = #{isRight}</if>
+        </where>
+    </select>
+    
+    <select id="selectElPaperQuById" parameterType="String" resultMap="ElPaperQuResult">
+        <include refid="selectElPaperQuVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertElPaperQu" parameterType="ElPaperQu">
+        insert into el_paper_qu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="paperId != null and paperId != ''">paper_id,</if>
+            <if test="quId != null and quId != ''">qu_id,</if>
+            <if test="quType != null">qu_type,</if>
+            <if test="answered != null">answered,</if>
+            <if test="answer != null and answer != ''">answer,</if>
+            <if test="sort != null">sort,</if>
+            <if test="score != null">score,</if>
+            <if test="actualScore != null">actual_score,</if>
+            <if test="isRight != null">is_right,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="paperId != null and paperId != ''">#{paperId},</if>
+            <if test="quId != null and quId != ''">#{quId},</if>
+            <if test="quType != null">#{quType},</if>
+            <if test="answered != null">#{answered},</if>
+            <if test="answer != null and answer != ''">#{answer},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="score != null">#{score},</if>
+            <if test="actualScore != null">#{actualScore},</if>
+            <if test="isRight != null">#{isRight},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElPaperQu" parameterType="ElPaperQu">
+        update el_paper_qu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="paperId != null and paperId != ''">paper_id = #{paperId},</if>
+            <if test="quId != null and quId != ''">qu_id = #{quId},</if>
+            <if test="quType != null">qu_type = #{quType},</if>
+            <if test="answered != null">answered = #{answered},</if>
+            <if test="answer != null and answer != ''">answer = #{answer},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="score != null">score = #{score},</if>
+            <if test="actualScore != null">actual_score = #{actualScore},</if>
+            <if test="isRight != null">is_right = #{isRight},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElPaperQuById" parameterType="String">
+        delete from el_paper_qu where id = #{id}
+    </delete>
+
+    <delete id="deleteElPaperQuByIds" parameterType="String">
+        delete from el_paper_qu where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!-- 计算总分 -->
+    <select id="sumObjective" resultType="int">
+        SELECT IFNULL(SUM(actual_score),0) as total
+        FROM el_paper_qu
+        WHERE paper_id=#{paperId}
+        AND is_right=true
+        AND qu_type &lt; 4
+    </select>
+</mapper>

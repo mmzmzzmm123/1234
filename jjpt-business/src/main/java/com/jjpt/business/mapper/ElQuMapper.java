@@ -1,6 +1,7 @@
 package com.jjpt.business.mapper;
 
 import com.jjpt.business.domain.ElQu;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -60,4 +61,9 @@ public interface ElQuMapper
      * @return 结果
      */
     public int deleteElQuByIds(String[] ids);
+
+    List<ElQu> listByRandom(@Param("repoId") String repoId,
+                          @Param("quType") Integer quType,
+                          @Param("excludes") List<String> excludes,
+                          @Param("size") Integer size);
 }

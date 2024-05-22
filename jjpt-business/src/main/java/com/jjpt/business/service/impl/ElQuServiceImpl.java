@@ -155,4 +155,9 @@ public class ElQuServiceImpl implements IElQuService
     {
         return elQuMapper.deleteElQuById(id);
     }
+
+    @Override
+    public List<ElQu> listByRamdom(String repoId, Integer quType, List<String> excludes, Integer size) {
+        return  elQuMapper.listByRandom(repoId, quType, excludes, size);
+    }
 }

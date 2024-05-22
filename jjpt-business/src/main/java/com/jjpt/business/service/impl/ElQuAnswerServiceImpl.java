@@ -154,6 +154,13 @@ public class ElQuAnswerServiceImpl implements IElQuAnswerService
 
     }
 
+    @Override
+    public List<ElQuAnswer> listAnswerByRandom(String quId) {
+        ElQuAnswer elQuAnswer = new ElQuAnswer();
+        elQuAnswer.setQuId(quId);
+        return elQuAnswerMapper.selectElQuAnswerList(elQuAnswer);
+    }
+
     /**
      * 查找已存在的列表
      * @param quId

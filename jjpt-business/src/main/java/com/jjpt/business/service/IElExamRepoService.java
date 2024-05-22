@@ -12,6 +12,9 @@ import com.jjpt.business.domain.dto.ElExamRepoExtDto;
  */
 public interface IElExamRepoService 
 {
+
+
+    public List<ElExamRepoExtDto> selectElExamRepoExtDtoList(String examId);
     /**
      * 查询考试题库
      * 
@@ -27,6 +30,9 @@ public interface IElExamRepoService
      * @return 考试题库集合
      */
     public List<ElExamRepo> selectElExamRepoList(ElExamRepo elExamRepo);
+
+
+
 
     /**
      * 新增考试题库

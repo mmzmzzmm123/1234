@@ -1,6 +1,7 @@
 package com.jjpt.business.service;
 
 import com.jjpt.business.domain.ElExam;
+import com.jjpt.business.domain.dto.ElExamRepoExtDto;
 import com.jjpt.business.domain.dto.ExamSaveReqDto;
 
 import java.util.List;
@@ -29,6 +30,9 @@ public interface IElExamService
      * @return 考试主集合
      */
     public List<ElExam> selectElExamList(ElExam elExam);
+
+
+
 
     /**
      * 新增考试主

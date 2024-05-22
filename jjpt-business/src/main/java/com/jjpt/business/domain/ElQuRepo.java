@@ -28,7 +28,7 @@ public class ElQuRepo extends BaseEntity
 
     /** 题目类型 */
     @Excel(name = "题目类型")
-    private Long quType;
+    private Integer quType;
 
     /** 排序 */
     @Excel(name = "排序")
@@ -61,12 +61,12 @@ public class ElQuRepo extends BaseEntity
     {
         return repoId;
     }
-    public void setQuType(Long quType) 
+    public void setQuType(Integer quType)
     {
         this.quType = quType;
     }
 
-    public Long getQuType() 
+    public Integer getQuType()
     {
         return quType;
     }

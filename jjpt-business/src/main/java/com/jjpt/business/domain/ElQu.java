@@ -20,11 +20,11 @@ public class ElQu extends BaseEntity
 
     /** 题目类型 */
     @Excel(name = "题目类型")
-    private Long quType;
+    private Integer quType;
 
     /** 1普通,2较难 */
     @Excel(name = "1普通,2较难")
-    private Long level;
+    private Integer level;
 
     /** 题目图片 */
     @Excel(name = "题目图片")
@@ -55,21 +55,21 @@ public class ElQu extends BaseEntity
     {
         return id;
     }
-    public void setQuType(Long quType) 
+    public void setQuType(Integer quType)
     {
         this.quType = quType;
     }
 
-    public Long getQuType() 
+    public Integer getQuType()
     {
         return quType;
     }
-    public void setLevel(Long level) 
+    public void setLevel(Integer level)
     {
         this.level = level;
     }
 
-    public Long getLevel() 
+    public Integer getLevel()
     {
         return level;
     }

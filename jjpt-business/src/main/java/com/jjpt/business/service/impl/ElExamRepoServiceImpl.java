@@ -1,10 +1,12 @@
 package com.jjpt.business.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.jjpt.business.domain.dto.ElExamRepoExtDto;
+import com.jjpt.business.service.IElRepoService;
 import com.jjpt.business.utils.BeanMapper;
 import com.ruoyi.common.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,27 @@ import org.springframework.transaction.annotation.Transactional;
 public class ElExamRepoServiceImpl implements IElExamRepoService {
     @Autowired
     private ElExamRepoMapper elExamRepoMapper;
+
+    @Autowired
+    private IElRepoService elRepoService;
+
+
+    @Override
+    public List<ElExamRepoExtDto>  selectElExamRepoExtDtoList(String examId){
+        ElExamRepo elExamRepo = new ElExamRepo();
+        elExamRepo.setExamId(examId);
+        List<ElExamRepo> elExamRepos = selectElExamRepoList(elExamRepo);
+        List<ElExamRepoExtDto> elExamRepoExtDtos = BeanMapper.mapList(elExamRepos, ElExamRepoExtDto.class);
+        for(ElExamRepoExtDto item : elExamRepoExtDtos){
+            Map<String, Object> stringObjectMap = elRepoService.selectTypeNumbyRepoId(item.getRepoId());
+            item.setTotalRadio(Integer.valueOf(stringObjectMap.get("radioCount").toString()));
+            item.setTotalMulti(Integer.valueOf(stringObjectMap.get("multiCount").toString()));
+            item.setTotalJudge(Integer.valueOf(stringObjectMap.get("judgeCount").toString()));
+        }
+        return elExamRepoExtDtos;
+    }
+
+
 
     /**
      * 查询考试题库

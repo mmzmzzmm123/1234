@@ -95,8 +95,9 @@ public class ElQuRepoServiceImpl implements IElQuRepoService
         return elQuRepoMapper.deleteElQuRepoById(id);
     }
 
+
     @Override
-    public void saveAll(String quId, Long quType, List<String> repoIds) {
+    public void saveAll(String quId, Integer quType, List<String> repoIds) {
         //先删除
         elQuRepoMapper.deleteByQuId(quId);
         //保存全部

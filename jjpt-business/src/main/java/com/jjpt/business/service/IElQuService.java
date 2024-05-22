@@ -61,4 +61,9 @@ public interface IElQuService
      * @return 结果
      */
     public int deleteElQuById(String id);
+
+    List<ElQu> listByRamdom(String repoId,
+                            Integer quType,
+                            List<String> excludes,
+                            Integer size);
 }

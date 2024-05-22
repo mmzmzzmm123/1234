@@ -2,6 +2,7 @@ package com.jjpt.business.service;
 
 import java.util.List;
 import com.jjpt.business.domain.ElPaper;
+import com.jjpt.business.domain.dto.ExamDetailRespDTO;
 
 /**
  * 考试记录Service接口
@@ -17,7 +18,7 @@ public interface IElPaperService
      * @param id 考试记录主键
      * @return 考试记录
      */
-    public ElPaper selectElPaperById(String id);
+    public ExamDetailRespDTO selectElPaperById(String id);
 
     /**
      * 查询考试记录列表
@@ -33,7 +34,7 @@ public interface IElPaperService
      * @param elPaper 考试记录
      * @return 结果
      */
-    public int insertElPaper(ElPaper elPaper);
+    public String insertElPaper(ElPaper elPaper);
 
     /**
      * 修改考试记录
@@ -58,4 +59,6 @@ public interface IElPaperService
      * @return 结果
      */
     public int deleteElPaperById(String id);
+
+    void handExam(String data);
 }

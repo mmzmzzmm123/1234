@@ -38,39 +38,39 @@ public class ElPaper extends BaseEntity
 
     /** 考试时长 */
     @Excel(name = "考试时长")
-    private Long totalTime;
+    private Integer totalTime;
 
     /** 用户时长 */
     @Excel(name = "用户时长")
-    private Long userTime;
+    private Integer userTime;
 
     /** 试卷总分 */
     @Excel(name = "试卷总分")
-    private Long totalScore;
+    private Integer totalScore;
 
     /** 及格分 */
     @Excel(name = "及格分")
-    private Long qualifyScore;
+    private Integer qualifyScore;
 
     /** 客观分 */
     @Excel(name = "客观分")
-    private Long objScore;
+    private Integer objScore;
 
     /** 主观分 */
     @Excel(name = "主观分")
-    private Long subjScore;
+    private Integer subjScore;
 
     /** 用户得分 */
     @Excel(name = "用户得分")
-    private Long userScore;
+    private Integer userScore;
 
     /** 是否包含简答题 */
     @Excel(name = "是否包含简答题")
-    private Long hasSaq;
+    private Boolean hasSaq;
 
     /** 试卷状态 */
     @Excel(name = "试卷状态")
-    private Long state;
+    private Integer state;
 
     /** 截止时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -122,84 +122,84 @@ public class ElPaper extends BaseEntity
     {
         return title;
     }
-    public void setTotalTime(Long totalTime) 
+    public void setTotalTime(Integer totalTime)
     {
         this.totalTime = totalTime;
     }
 
-    public Long getTotalTime() 
+    public Integer getTotalTime()
     {
         return totalTime;
     }
-    public void setUserTime(Long userTime) 
+    public void setUserTime(Integer userTime)
     {
         this.userTime = userTime;
     }
 
-    public Long getUserTime() 
+    public Integer getUserTime()
     {
         return userTime;
     }
-    public void setTotalScore(Long totalScore) 
+    public void setTotalScore(Integer totalScore)
     {
         this.totalScore = totalScore;
     }
 
-    public Long getTotalScore() 
+    public Integer getTotalScore()
     {
         return totalScore;
     }
-    public void setQualifyScore(Long qualifyScore) 
+    public void setQualifyScore(Integer qualifyScore)
     {
         this.qualifyScore = qualifyScore;
     }
 
-    public Long getQualifyScore() 
+    public Integer getQualifyScore()
     {
         return qualifyScore;
     }
-    public void setObjScore(Long objScore) 
+    public void setObjScore(Integer objScore)
     {
         this.objScore = objScore;
     }
 
-    public Long getObjScore() 
+    public Integer getObjScore()
     {
         return objScore;
     }
-    public void setSubjScore(Long subjScore) 
+    public void setSubjScore(Integer subjScore)
     {
         this.subjScore = subjScore;
     }
 
-    public Long getSubjScore() 
+    public Integer getSubjScore()
     {
         return subjScore;
     }
-    public void setUserScore(Long userScore) 
+    public void setUserScore(Integer userScore)
     {
         this.userScore = userScore;
     }
 
-    public Long getUserScore() 
+    public Integer getUserScore()
     {
         return userScore;
     }
-    public void setHasSaq(Long hasSaq) 
+    public void setHasSaq(Boolean hasSaq)
     {
         this.hasSaq = hasSaq;
     }
 
-    public Long getHasSaq() 
+    public Boolean getHasSaq()
     {
         return hasSaq;
     }
-    public void setState(Long state) 
+    public void setState(Integer state)
     {
         this.state = state;
     }
 
-    public Long getState() 
+    public Integer getState()
     {
         return state;
     }

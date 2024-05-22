@@ -61,5 +61,5 @@ public interface IElQuRepoService
      */
     public int deleteElQuRepoById(String id);
 
-    void saveAll(String quId, Long quType, List<String> repoIds);
+    void saveAll(String quId, Integer quType, List<String> repoIds);
 }

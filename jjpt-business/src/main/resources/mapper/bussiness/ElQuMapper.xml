@@ -97,4 +97,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="listByRandom" resultType="com.jjpt.business.domain.ElQu">
+        SELECT a.*
+        FROM el_qu a
+        LEFT JOIN el_qu_repo b ON a.id=b.qu_id
+        WHERE b.repo_id=#{repoId} AND a.qu_type=#{quType}
+        <if test="excludes!=null">
+            AND a.id NOT IN
+            <foreach item="item" collection="excludes" separator="," open="(" close=")" index="">'${item}'</foreach>
+        </if>
+        ORDER BY RAND()
+        LIMIT ${size}
+    </select>
 </mapper>

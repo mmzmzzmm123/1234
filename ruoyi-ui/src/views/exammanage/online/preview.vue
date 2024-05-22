@@ -25,7 +25,7 @@
 
       <el-col :span="24">
 
-        <el-button :loading="loading" type="primary" icon="el-icon-caret-right" @click="handleCreate">
+        <el-button :loading="loading" type="primary" icon="el-icon-caret-right" @click="handleCreate" v-hasPermi="['exammanage:paper:add']">
           开始考试
         </el-button>
 
@@ -41,7 +41,7 @@
 
 <script>
 import { getExam } from '@/api/exammanage/exam'
-/*import { createPaper } from '@/api/paper/exam'*/
+import { addPaper } from '@/api/exammanage/paper'
 
 export default {
   data() {
@@ -78,14 +78,16 @@ export default {
       const that = this
       this.loading = true
 
-      createPaper(this.postForm).then(response => {
+      addPaper(this.postForm).then(response => {
         console.log(response)
 
         if (response.code === 0) {
-          setTimeout(function() {
+           const paperId = response.data
+           setTimeout(function() {
             this.loading = false
             that.dialogVisible = false
-            that.$router.push({ name: 'StartExam', params: { id: response.data.id }})
+            this.$router.push(`/exammanage/start-exam/startExam/${paperId}`);
+
           }, 1000)
         }
       }).catch(() => {
