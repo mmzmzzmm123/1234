@@ -58,4 +58,6 @@ public interface IElUserExamService
      * @return 结果
      */
     public int deleteElUserExamById(String id);
+
+    void joinResult(Long userId, String examId, int objScore, boolean b);
 }

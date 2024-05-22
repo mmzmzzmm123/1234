@@ -1,6 +1,9 @@
 package com.jjpt.business.service.impl;
 
+import java.util.Date;
 import java.util.List;
+
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.ruoyi.common.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -92,5 +95,33 @@ public class ElUserExamServiceImpl implements IElUserExamService
     public int deleteElUserExamById(String id)
     {
         return elUserExamMapper.deleteElUserExamById(id);
+    }
+
+    @Override
+    public void joinResult(Long userId, String examId, int objScore, boolean b) {
+        ElUserExam record = new ElUserExam();
+        record.setUserId(userId);
+        record.setExamId(examId);
+        List<ElUserExam> elUserExams = elUserExamMapper.selectElUserExamList(record);
+        record = elUserExams.get(0);
+        if(record == null){
+            record = new ElUserExam();
+            record.setCreateTime(new Date());
+            record.setUpdateTime(new Date());
+            record.setUserId(userId);
+            record.setExamId(examId);
+            record.setMaxScore(objScore);
+            record.setPassed(b);
+            record.setId(IdWorker.getIdStr());
+            elUserExamMapper.insertElUserExam(record);
+            return;
+        }
+        record.setTryCount(record.getTryCount()+1);
+        record.setUpdateTime(new Date());
+        if(record.getMaxScore() < objScore){
+            record.setMaxScore(objScore);
+            record.setPassed(b);
+        }
+        elUserExamMapper.updateElUserExam(record);
     }
 }

@@ -7,10 +7,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.jjpt.business.domain.*;
 import com.jjpt.business.domain.dto.*;
-import com.jjpt.business.emums.ExamState;
-import com.jjpt.business.emums.JobPrefix;
-import com.jjpt.business.emums.PaperState;
-import com.jjpt.business.emums.QuType;
+import com.jjpt.business.emums.*;
 import com.jjpt.business.job.BreakExamJob;
 import com.jjpt.business.service.*;
 import com.jjpt.business.utils.BeanMapper;
@@ -55,6 +52,10 @@ public class ElPaperServiceImpl implements IElPaperService {
     private IElPaperQuAnswerService paperQuAnswerService;
     @Autowired
     private JobService jobService;
+    @Autowired
+    private IElUserExamService  userExamService;
+    @Autowired
+    private IElUserBookService  userBookService;
     /**
      * 展示的选项，ABC这样
      */
@@ -308,22 +309,7 @@ public class ElPaperServiceImpl implements IElPaperService {
         return elPaperMapper.deleteElPaperById(id);
     }
 
-    @Override
-    public void handExam(String paperId) {
-        //获取试卷信息
-        ElPaper paper = elPaperMapper.selectElPaperById(paperId);
-        //如果不是正常的，抛出异常
-        if(!PaperState.ING.equals(paper.getState())){
-            throw new ServiceException("试卷状态不正确！");
-        }
 
-        // 客观分
-        int objScore = paperQuService.sumObjective(paperId);
-
-
-
-
-    }
 
     @Override
     public PaperQuDetailDTO findQuDetail(String paperId, String quId) {
@@ -389,6 +375,60 @@ public class ElPaperServiceImpl implements IElPaperService {
     }
 
     @Override
+    public void handExam(String paperId) {
+        //获取试卷信息
+        ElPaper paper = elPaperMapper.selectElPaperById(paperId);
+        //如果不是正常的，抛出异常
+        if(!PaperState.ING.equals(paper.getState())){
+            throw new ServiceException("试卷状态不正确！");
+        }
+
+        // 客观分
+        int objScore = paperQuService.sumObjective(paperId);
+        // 主观分，因为要阅卷，所以给0
+        paper.setSubjScore(0);
+        // 待阅卷
+        if(paper.getHasSaq()) {
+            paper.setState(PaperState.WAIT_OPT);
+        }else {
+
+            // 同步保存考试成绩
+            userExamService.joinResult(paper.getUserId(), paper.getExamId(), objScore, objScore>=paper.getQualifyScore());
+
+            paper.setState(PaperState.FINISHED);
+        }
+        paper.setUpdateTime(new Date());
+        //计算考试时长
+        Calendar cl = Calendar.getInstance();
+        cl.setTimeInMillis(System.currentTimeMillis());
+        int userTime = (int)((System.currentTimeMillis() - paper.getCreateTime().getTime()) / 1000 / 60);
+        if(userTime == 0){
+            userTime = 1;
+        }
+        paper.setUserTime(userTime);
+       //更新试卷
+        elPaperMapper.updateElPaper(paper);
+        // 终止定时任务
+        String name = JobPrefix.BREAK_EXAM + paperId;
+        jobService.deleteJob(name, JobGroup.SYSTEM);
+        //把打错的问题加入错题本
+        ElPaperQu queryEntity = new ElPaperQu();
+        queryEntity.setPaperId(paper.getId());
+        List<ElPaperQu> list = paperQuService.selectElPaperQuList(queryEntity);
+        for(ElPaperQu qu: list){
+            // 主观题和对的都不加入错题库
+            if(qu.getIsRight()){
+                continue;
+            }
+            //加入错题本
+            new Thread(() -> userBookService.addBook(paper.getExamId(), qu.getQuId())).run();
+        }
+
+
+    }
+
+
+    @Override
     public void handleExam(String paperId) {
         //获取试卷信息
         ElPaper paper = elPaperMapper.selectElPaperById(paperId);
@@ -410,7 +450,7 @@ public class ElPaperServiceImpl implements IElPaperService {
         }else {
 
             // 同步保存考试成绩
-            //userExamService.joinResult(paper.getUserId(), paper.getExamId(), objScore, objScore>=paper.getQualifyScore());
+            userExamService.joinResult(paper.getUserId(), paper.getExamId(), objScore, objScore>=paper.getQualifyScore());
 
             paper.setState(PaperState.FINISHED);
         }
