@@ -1,11 +1,15 @@
 package com.onethinker.file.service;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.onethinker.common.enums.DeleteFlagEnum;
+import com.onethinker.common.enums.FileRealtionStatusEnum;
+import com.onethinker.common.enums.FileRelationTypeEnum;
 import com.onethinker.common.utils.Tools;
 import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.config.FileStorageProperties;
 import com.onethinker.file.domain.FileRelation;
-import com.onethinker.file.dto.FileInfoFileInfoDTO;
+import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.mapper.FileMapper;
 import com.onethinker.file.mapper.FileRelationMapper;
 import com.onethinker.file.platform.FileStorage;
@@ -14,6 +18,7 @@ import com.onethinker.common.utils.bean.BeanUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -89,16 +94,39 @@ public class FileStorageService {
      * @param fileInfo fileInfo
      * @return
      */
-    public List<FileInfoFileInfoDTO> selectFileList(FileInfo fileInfo) {
+    public List<FileInfoDTO> selectFileList(FileInfo fileInfo) {
         List<FileInfo> fileInfos = fileMapper.selectFileList(fileInfo);
 
         return fileInfos.parallelStream().map(e -> {
-            FileInfoFileInfoDTO fileInfoFileInfoDTO = new FileInfoFileInfoDTO();
+            FileInfoDTO fileInfoFileInfoDTO = new FileInfoDTO();
             BeanUtils.copyProperties(e,fileInfoFileInfoDTO);
             // 判断来源，取对于的访问地址
             fileInfoFileInfoDTO.setDomain(this.getFileStorage(e.getPlatform()).getDomain());
             return fileInfoFileInfoDTO;
         }).collect(Collectors.toList());
 
+    }
+
+    /**
+     * 根据文件类型获取有效文件数据
+     */
+    public List<FileInfoDTO> selectFileList(FileRelationTypeEnum typeEnum) {
+        LambdaQueryWrapper<FileRelation> relationLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        relationLambdaQueryWrapper.eq(FileRelation::getRelationTarget,typeEnum.name()).eq(FileRelation::getStatus, FileRealtionStatusEnum.INIT.getCode());
+        List<FileRelation> fileRelations = relationMapper.selectList(relationLambdaQueryWrapper);
+        if (fileRelations.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        List<String> fileIds = fileRelations.parallelStream().map(FileRelation::getFileId).collect(Collectors.toList());
+        LambdaQueryWrapper<FileInfo> fileInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
+        fileInfoLambdaQueryWrapper.in(FileInfo::getId, fileIds).eq(FileInfo::getDelFlag, DeleteFlagEnum.enabled.getCode());
+        List<FileInfo> fileInfos = fileMapper.selectList(fileInfoLambdaQueryWrapper);
+        return fileInfos.parallelStream().map(e -> {
+            FileInfoDTO fileInfoFileInfoDTO = new FileInfoDTO();
+            BeanUtils.copyProperties(e,fileInfoFileInfoDTO);
+            // 判断来源，取对于的访问地址
+            fileInfoFileInfoDTO.setDomain(this.getFileStorage(e.getPlatform()).getDomain());
+            return fileInfoFileInfoDTO;
+        }).collect(Collectors.toList());
     }
 }

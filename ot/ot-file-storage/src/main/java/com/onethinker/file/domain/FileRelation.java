@@ -74,6 +74,11 @@ public class FileRelation extends BaseEntity {
     @Excel(name = "更新用户姓名")
     private String updateUserName;
 
+    /**
+     * 文件状态
+     */
+    private Integer status;
+
 
     public FileRelation() {
     }

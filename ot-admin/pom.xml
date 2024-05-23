@@ -89,6 +89,10 @@
             <artifactId>ot-bx-service</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.onethinker</groupId>
+            <artifactId>ot-common</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,9 +1,14 @@
 package com.onethinker.web.controller.bx;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.onethinker.common.utils.poi.ExcelUtils;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +39,7 @@ import com.onethinker.common.core.page.TableDataInfo;
  */
 @RestController
 @RequestMapping("/bx/customer")
+@Log4j2
 public class BxCustomerInfoController extends BaseController {
     @Autowired
     private IBxCustomerInfoService bxCustomerInfoService;
@@ -98,5 +104,26 @@ public class BxCustomerInfoController extends BaseController {
     @DeleteMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(bxCustomerInfoService.deleteBxCustomerInfoByIds(ids));
+    }
+
+    /**
+     * 读取本地文件
+     */
+    @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/excel")
+    public void uploadExcel() {
+        File file = new File("C:\\Users\\yyq\\Desktop\\demo\\1.xlsx");
+        try {
+            List<BxCustomerInfo> bxCustomerInfos = ExcelUtils.readExcel(file, BxCustomerInfo.class);
+            System.out.println(bxCustomerInfos);
+        } catch (Exception e) {
+           log.error(e);
+        }
+        try (FileInputStream is = new FileInputStream(file)) {
+            ExcelUtil<BxCustomerInfo> util = new ExcelUtil<>(BxCustomerInfo.class);
+            List<BxCustomerInfo> bxCustomerInfos = util.importExcel("客户资料",is,1);
+            System.out.println(bxCustomerInfos);
+        }catch (Exception e) {
+            log.error(e);
+        }
     }
 }

@@ -214,7 +214,7 @@ public class IPlatformUserService {
      * @param type 用户类型
      * @return
      */
-    List<PlatformUserDetail> queryAllUserByType(String type) {
+    public List<PlatformUserDetail> queryAllUserByType(String type) {
         LambdaQueryWrapper<PlatformUserDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PlatformUserDetail::getType, type);
         return platformUserDetailMapper.selectList(queryWrapper);

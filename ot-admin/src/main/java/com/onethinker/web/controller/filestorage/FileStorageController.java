@@ -3,7 +3,7 @@ package com.onethinker.web.controller.filestorage;
 import com.onethinker.file.config.FileStorageProperties;
 import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.domain.FileRelation;
-import com.onethinker.file.dto.FileInfoFileInfoDTO;
+import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.platform.FileStorage;
 import com.onethinker.common.constant.ParameterNames;
 import com.onethinker.common.constant.ServicePathConstant;
@@ -127,7 +127,7 @@ public class FileStorageController extends BaseController {
     @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query")
     public TableDataInfo queryFile(FileInfo fileInfo) {
         startPage();
-        List<FileInfoFileInfoDTO> list = fileStorageService.selectFileList(fileInfo);
+        List<FileInfoDTO> list = fileStorageService.selectFileList(fileInfo);
         return getDataTable(list);
     }
 
