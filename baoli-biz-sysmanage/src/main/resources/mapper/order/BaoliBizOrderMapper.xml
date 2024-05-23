@@ -166,7 +166,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select status,count(1) cnt from baoli_biz_order
         <where>
             refuse_order_id is null
-            <if test="applicantId != null "> and ((inner_officer = #{applicantId}) and (status in ('02','09','10')) or applicant_id = #{applicantId})</if>
+            <!--<if test="applicantId != null "> and ((inner_officer = #{applicantId}) and (status in ('02','08','10','11')) or applicant_id = #{applicantId})</if> -->
         </where>
         group by status
     </select>

@@ -2,8 +2,6 @@ package com.baoli.store.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
-
-import com.ruoyi.common.annotation.Anonymous;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +25,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
  * 费用规则Controller
  * 
  * @author niujs
- * @date 2024-04-17
+ * @date 2024-05-23
  */
 @RestController
 @RequestMapping("/feeRule/feeRule")
@@ -39,8 +37,7 @@ public class BaoliBizFeeRuleController extends BaseController
     /**
      * 查询费用规则列表
      */
-    //PreAuthorize("@ss.hasPermi('feeRule:feeRule:list')")
-    @Anonymous
+    @PreAuthorize("@ss.hasPermi('feeRule:feeRule:list')")
     @GetMapping("/list")
     public TableDataInfo list(BaoliBizFeeRule baoliBizFeeRule)
     {

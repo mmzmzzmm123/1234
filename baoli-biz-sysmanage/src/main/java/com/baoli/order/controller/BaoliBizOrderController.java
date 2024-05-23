@@ -230,12 +230,24 @@ public class BaoliBizOrderController extends BaseController
         startUserInfo.put("name", getLoginUser().getUser().getNickName());
         String processDefinitionId = "";
 
-        String orderKey="Flowable1788388037957324800:1:1792506818686103552";
+        String orderKey="Flowable1788388037957324800:1:1793615187694071808"; // 先抵押后放款
+        if(baoliBizOrder.getOrderSchema().equals("03")){
+            orderKey="Flowable1788388037957324900:1:1793615158463967232"; // 免抵押
+        }
         String selectedUser = "{\"form_assign_user\":[{\"id\":5,\"name\":\"驻店测试用户\",\"type\":\"user\",\"sex\":false,\"selected\":false}]}";
 
         JSONObject assignUser = JSONObject.parseObject(selectedUser);
         assignUser.getJSONArray("form_assign_user").getJSONObject(0).put("id",getUserId());
-        assignUser.put("form_pre_check_area","130000");
+        //获取当前登录用户所属省份
+        String getUserRegionSql="select province_id from sys_user_role where user_id =? group by province_id";
+        List<Map<String,Object>> region = jdbcTemplate.queryForList(getUserRegionSql,getUserId());
+        StringBuffer buf =new StringBuffer();
+        if(region!=null && region.size()>0){
+            region.stream().forEach( item ->{
+                buf.append(",").append(item.get("province_id"));
+            });
+        }
+        assignUser.put("form_pre_check_area",buf.toString().substring(1));
         assignUser.put("orderId",baoliBizOrder.getId());
         assignUser.put("customerName",baoliBizOrder.getCustomerName());
         request.put("formData", assignUser);
@@ -290,6 +302,12 @@ public class BaoliBizOrderController extends BaseController
                     //内勤 审核放款金额 , 将 adjustLoanAmount 替换 loanAmount;
                     if(baoliBizOrder.getAuditResult() == null || baoliBizOrder.getAuditResult().equals("01")) {
                         baoliBizOrder.setLoanAmount(baoliBizOrder.getAdjustLoanAmount());
+                    }
+                }
+                if(baoliBizOrder.getStatus().equals("10")){
+                    BaoliBizOrder blOrder = baoliBizOrderService.selectBaoliBizOrderById(baoliBizOrder.getId());
+                    if(blOrder.getOrderSchema().equals("03")){
+                        baoliBizOrder.setStatus("11");
                     }
                 }
                 baoliBizOrder.getAuditInfo().put("bizFormData",bizFormData);

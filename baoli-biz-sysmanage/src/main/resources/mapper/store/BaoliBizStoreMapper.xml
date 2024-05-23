@@ -101,6 +101,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="brpPhoneNumber != null  and brpPhoneNumber != ''"> and brp_phone_number = #{brpPhoneNumber}</if>
             <if test="brpInStore != null  and brpInStore != ''"> and brp_in_store = #{brpInStore}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="status == null  || status == ''"> and status != '04'</if>
         </where>
     </select>
     

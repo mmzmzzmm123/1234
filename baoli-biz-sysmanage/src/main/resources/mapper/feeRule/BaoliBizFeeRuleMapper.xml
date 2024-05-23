@@ -10,10 +10,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="feeType"    column="fee_type"    />
         <result property="bankId"    column="bank_id"    />
         <result property="remark"    column="remark"    />
+        <result property="caculateType"    column="caculate_type"    />
+        <result property="executeType"    column="execute_type"    />
+        <result property="content"    column="content"    />
     </resultMap>
 
     <sql id="selectBaoliBizFeeRuleVo">
-        select id, title, fee_type, bank_id, remark from baoli_biz_fee_rule
+        select id, title, fee_type, bank_id, remark, caculate_type, execute_type, content from baoli_biz_fee_rule
     </sql>
 
     <select id="selectBaoliBizFeeRuleList" parameterType="BaoliBizFeeRule" resultMap="BaoliBizFeeRuleResult">
@@ -22,6 +25,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="title != null  and title != ''"> and title = #{title}</if>
             <if test="feeType != null  and feeType != ''"> and fee_type = #{feeType}</if>
             <if test="bankId != null "> and bank_id = #{bankId}</if>
+            <if test="caculateType != null  and caculateType != ''"> and caculate_type = #{caculateType}</if>
+            <if test="executeType != null  and executeType != ''"> and execute_type = #{executeType}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
         </where>
     </select>
     
@@ -37,12 +43,18 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="feeType != null">fee_type,</if>
             <if test="bankId != null">bank_id,</if>
             <if test="remark != null">remark,</if>
+            <if test="caculateType != null">caculate_type,</if>
+            <if test="executeType != null">execute_type,</if>
+            <if test="content != null">content,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null">#{title},</if>
             <if test="feeType != null">#{feeType},</if>
             <if test="bankId != null">#{bankId},</if>
             <if test="remark != null">#{remark},</if>
+            <if test="caculateType != null">#{caculateType},</if>
+            <if test="executeType != null">#{executeType},</if>
+            <if test="content != null">#{content},</if>
          </trim>
     </insert>
 
@@ -53,6 +65,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="feeType != null">fee_type = #{feeType},</if>
             <if test="bankId != null">bank_id = #{bankId},</if>
             <if test="remark != null">remark = #{remark},</if>
+            <if test="caculateType != null">caculate_type = #{caculateType},</if>
+            <if test="executeType != null">execute_type = #{executeType},</if>
+            <if test="content != null">content = #{content},</if>
         </trim>
         where id = #{id}
     </update>

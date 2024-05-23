@@ -7,7 +7,7 @@ import com.baoli.store.domain.BaoliBizFeeRule;
  * 费用规则Service接口
  * 
  * @author niujs
- * @date 2024-04-17
+ * @date 2024-05-23
  */
 public interface IBaoliBizFeeRuleService 
 {

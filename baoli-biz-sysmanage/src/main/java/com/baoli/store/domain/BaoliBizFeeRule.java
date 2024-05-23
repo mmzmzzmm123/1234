@@ -9,13 +9,13 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 费用规则对象 baoli_biz_fee_rule
  * 
  * @author niujs
- * @date 2024-04-17
+ * @date 2024-05-23
  */
 public class BaoliBizFeeRule extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** $column.columnComment */
+    /**  */
     private Long id;
 
     /** 规则标题 */
@@ -29,6 +29,18 @@ public class BaoliBizFeeRule extends BaseEntity
     /** 银行id */
     @Excel(name = "银行id")
     private Long bankId;
+
+    /** $column.columnComment */
+    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    private String caculateType;
+
+    /** $column.columnComment */
+    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    private String executeType;
+
+    /** $column.columnComment */
+    @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
+    private String content;
 
     public void setId(Long id) 
     {
@@ -66,6 +78,33 @@ public class BaoliBizFeeRule extends BaseEntity
     {
         return bankId;
     }
+    public void setCaculateType(String caculateType) 
+    {
+        this.caculateType = caculateType;
+    }
+
+    public String getCaculateType() 
+    {
+        return caculateType;
+    }
+    public void setExecuteType(String executeType) 
+    {
+        this.executeType = executeType;
+    }
+
+    public String getExecuteType() 
+    {
+        return executeType;
+    }
+    public void setContent(String content) 
+    {
+        this.content = content;
+    }
+
+    public String getContent() 
+    {
+        return content;
+    }
 
     @Override
     public String toString() {
@@ -75,6 +114,9 @@ public class BaoliBizFeeRule extends BaseEntity
             .append("feeType", getFeeType())
             .append("bankId", getBankId())
             .append("remark", getRemark())
+            .append("caculateType", getCaculateType())
+            .append("executeType", getExecuteType())
+            .append("content", getContent())
             .toString();
     }
 }
