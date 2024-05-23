@@ -23,7 +23,7 @@
       <view class="margin text-gray">欢迎您加入口袋心理服务平台，成为我们的一员。</view>
       <view class="margin padding-sm bg-gray">
         <view class="text-left margin-bottom-sm">请使用微信扫一扫或长按图片识别以下二维码完成缴费，缴费成功后平台工作人员会向您发放管理后台地址、账号密码。</view>
-        <image src="/static/consult/wePay.png" class="card-img"></image>
+        <image src="/static/consult/wePay2.png" class="card-img"></image>
         <view class="text-left padding-xs" v-if="order">
           <view>支付金额：¥{{ order.money.toFixed(2) }}</view>
           <view>收款方：口袋心理服务平台</view>

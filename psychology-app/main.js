@@ -1,8 +1,7 @@
 import App from "./App";
-
-import evaluationTabBar from '@/components/evaluation/tabBar.vue'
-import courseTabBar from '@/components/course/tabBar.vue'
-import consultTabBar from '@/components/consult/tabBar.vue'
+import evaluationTabBar from '@/components/evaluation/tabBar.vue';
+import courseTabBar from '@/components/course/tabBar.vue';
+import consultTabBar from '@/components/consult/tabBar.vue';
 import utils from "@/utils/common";
 
 // #ifndef VUE3

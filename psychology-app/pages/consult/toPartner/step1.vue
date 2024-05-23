@@ -230,7 +230,7 @@ export default {
       types: [
         {
           value: '1',
-          name: '合作型',
+          name: '学员入驻',
         },
         // {
         //   value: '2',
@@ -242,7 +242,7 @@ export default {
         // },
         {
           value: '4',
-          name: '签约型',
+          name: 'MCN合作',
         }
       ],
       sexs: [

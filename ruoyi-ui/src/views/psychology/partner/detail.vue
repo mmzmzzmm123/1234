@@ -142,7 +142,7 @@
       </el-col>
 
       <el-col :span="14">
-        <div class="title">其他经历</div>
+        <div class="title">个人体验经历</div>
         <el-table border :data="info.items.filter(a => a.type === 7)" size="mini">
           <el-table-column label="说明" align="center" prop="param1"/>
         </el-table>
