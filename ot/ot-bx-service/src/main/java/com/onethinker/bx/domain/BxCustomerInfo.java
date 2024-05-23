@@ -6,6 +6,8 @@ import com.onethinker.common.core.domain.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
+
 
 /**
  * 佰兴-客户信息表对象 bx_customer_info
@@ -101,5 +103,8 @@ public class BxCustomerInfo extends BaseEntity {
      */
     @Excel(name = "科室")
     private String department;
+
+    @Excel(name = "日期")
+    private Date date;
 
 }

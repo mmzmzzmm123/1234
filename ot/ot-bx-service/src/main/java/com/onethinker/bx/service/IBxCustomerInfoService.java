@@ -58,4 +58,17 @@ public interface IBxCustomerInfoService {
      * @return 结果
      */
     public int deleteBxCustomerInfoById(Long id);
+
+    /**
+     * 批量保存
+     * @param bxCustomerInfos
+     */
+    void saveEntry(List<BxCustomerInfo> bxCustomerInfos);
+
+    /**
+     * 导出数据
+     * @param bxCustomerInfo
+     * @return
+     */
+    List<BxCustomerInfo> export(BxCustomerInfo bxCustomerInfo);
 }

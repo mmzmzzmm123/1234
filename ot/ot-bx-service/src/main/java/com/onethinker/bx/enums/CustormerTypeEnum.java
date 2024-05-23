@@ -1,10 +1,14 @@
 package com.onethinker.bx.enums;
 
+import lombok.Data;
+import lombok.Getter;
+
 /**
  * 客户类别
  * @author yangyouqi
  * @date 2024/5/21
  */
+@Getter
 public enum CustormerTypeEnum {
     YI_YUAN("医院"),
 
@@ -19,5 +23,14 @@ public enum CustormerTypeEnum {
 
     CustormerTypeEnum(String desc) {
         this.desc = desc;
+    }
+
+    public static CustormerTypeEnum valueDesc(String desc) {
+        for (CustormerTypeEnum value : CustormerTypeEnum.values()) {
+            if (value.desc.equals(desc)) {
+                return value;
+            }
+        }
+        throw new RuntimeException("not desc:" + desc);
     }
 }

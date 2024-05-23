@@ -5,6 +5,7 @@ import cn.hutool.core.lang.Assert;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.SysConfigKeyEnum;
 import com.onethinker.common.utils.PhoneUtils;
+import com.onethinker.common.utils.StringUtils;
 import com.onethinker.framework.web.service.SysLoginService;
 import com.onethinker.system.service.ISysConfigService;
 import com.onethinker.user.domain.PlatformUser;
@@ -78,7 +79,7 @@ public class WxUserStorage implements UserStorage {
 
     @Override
     public PlatformUserResDTO login(PlatformUserReqDTO reqDTO) {
-        Assert.isTrue(StringUtil.isNotBlank(reqDTO.getCode()),"code is null");
+        Assert.isTrue(StringUtils.isNotEmpty(reqDTO.getCode()),"code is null");
         log.info("platform:{},code:{}",userTypeEnum.getMsg(),reqDTO.getCode());
         // 进行访问
         WxMaJscode2SessionResult sessionInfo = minWechatService.getSessionInfo(reqDTO.getCode());

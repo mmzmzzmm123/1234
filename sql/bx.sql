@@ -1,7 +1,7 @@
 CREATE TABLE bx_customer_info
 (
     `id`               int                                                     NOT NULL AUTO_INCREMENT COMMENT 'id',
-    `company_name`     VARCHAR(100)                                            NOT NULL COMMENT '公司名称',
+    `company_name`     VARCHAR(100) COMMENT '公司名称',
     `short_name`       VARCHAR(50) COMMENT '简称',
     `customer_type`    VARCHAR(3) COMMENT '客户类别',
     `manager`          VARCHAR(50) COMMENT '负责人',
@@ -20,4 +20,5 @@ CREATE TABLE bx_customer_info
     `update_time`      datetime                                                NULL DEFAULT NULL COMMENT '更新时间',
     `remark`           varchar(500) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '备注',
     PRIMARY KEY (`id`)
-)ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COMMENT ='佰星-客户信息';
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='佰星-客户信息';

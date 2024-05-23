@@ -2,12 +2,10 @@ package com.onethinker.web.controller.bx;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.onethinker.common.utils.poi.ExcelUtils;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +60,7 @@ public class BxCustomerInfoController extends BaseController {
     @Log(title = "佰兴-客户信息表", businessType = BusinessType.EXPORT)
     @PostMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, BxCustomerInfo bxCustomerInfo) {
-        List<BxCustomerInfo> list = bxCustomerInfoService.selectBxCustomerInfoList(bxCustomerInfo);
+        List<BxCustomerInfo> list = bxCustomerInfoService.export(bxCustomerInfo);
         ExcelUtil<BxCustomerInfo> util = new ExcelUtil<BxCustomerInfo>(BxCustomerInfo.class);
         util.exportExcel(response, list, "佰兴-客户信息表数据");
     }
@@ -112,16 +110,13 @@ public class BxCustomerInfoController extends BaseController {
     @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/excel")
     public void uploadExcel() {
         File file = new File("C:\\Users\\yyq\\Desktop\\demo\\1.xlsx");
-        try {
-            List<BxCustomerInfo> bxCustomerInfos = ExcelUtils.readExcel(file, BxCustomerInfo.class);
-            System.out.println(bxCustomerInfos);
-        } catch (Exception e) {
-           log.error(e);
-        }
         try (FileInputStream is = new FileInputStream(file)) {
             ExcelUtil<BxCustomerInfo> util = new ExcelUtil<>(BxCustomerInfo.class);
-            List<BxCustomerInfo> bxCustomerInfos = util.importExcel("客户资料",is,1);
-            System.out.println(bxCustomerInfos);
+            List<BxCustomerInfo> bxCustomerInfos = util.importExcel(is);
+            if (bxCustomerInfos.isEmpty()) {
+                return;
+            }
+            bxCustomerInfoService.saveEntry(bxCustomerInfos);
         }catch (Exception e) {
             log.error(e);
         }

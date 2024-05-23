@@ -56,7 +56,8 @@ public enum CacheEnum {
     /**
      * 网站基础信息
      */
-    WEB_INFO("bk_web_info:", "网站基础信息");
+    WEB_INFO("bk_web_info:", "网站基础信息"),
+    BX_CUSTOMER_INFO_KEY("bx_customer_info_key:", "佰兴-客户信息");
 
     private String code;
     private String msg;
