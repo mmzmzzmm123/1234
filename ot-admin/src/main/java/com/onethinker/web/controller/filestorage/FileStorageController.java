@@ -107,7 +107,7 @@ public class FileStorageController extends BaseController {
 
         FormFileUploadSuccessEvent formFileUploadSuccessEvent;
         // 本地存储才有路径，云端存储直接采用原数据
-        if ("local".equals(fileStorage.getPlatform())) {
+        if (fileStorageProperties.getLocal().getPlatform().equals(fileStorage.getPlatform())) {
             Path dataFile = Paths.get(fileInfo.getDiskPath());
             formFileUploadSuccessEvent = new FormFileUploadSuccessEvent(dataFile, fileInfo.getId(), fileInfo.getCreateUserId(), fileInfo.getMimeType());
         } else {

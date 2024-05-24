@@ -5,15 +5,17 @@ import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.config.FileStorageProperties;
 import com.onethinker.file.config.FileStorageProperties.Thumbnail;
 import com.onethinker.file.config.FileStorageProperties.WaterMark;
+import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.event.FormFileUploadSuccessEvent;
 import com.onethinker.file.platform.FileStorage;
 import com.onethinker.file.platform.impl.clientwrapper.COSClientWrapper;
+import com.qcloud.cos.model.COSObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -81,6 +83,19 @@ public class TencentCosFileStorage implements FileStorage {
     public FileStorage serFile(MultipartFile source) {
         this.source = source;
         return this;
+    }
+
+    @Override
+    public FileInputStream download(FileInfoDTO fileInfoDTO) {
+        try (COSClientWrapper cosClient = new COSClientWrapper(secretId, secretKey, region)){
+            COSObject cosObject = cosClient.getObject(bucketName, fileInfoDTO.getDiskPath());
+            // 保存到临时文件中
+            File tempFile = queryFileInputStream(cosObject.getObjectContent());
+            return new FileInputStream(tempFile);
+        }catch (Exception e) {
+            log.error("{}文件下载异常",platform, e);
+            throw new RuntimeException("文件上传异常：" + e.getMessage());
+        }
     }
 
     @Override

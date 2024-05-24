@@ -5,9 +5,7 @@ import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.http.HttpProtocol;
-import com.qcloud.cos.model.ObjectMetadata;
-import com.qcloud.cos.model.PutObjectRequest;
-import com.qcloud.cos.model.PutObjectResult;
+import com.qcloud.cos.model.*;
 import com.qcloud.cos.region.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,6 +66,11 @@ public class COSClientWrapper implements AutoCloseable {
         // 上传到腾讯云存储对象中
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newKey, file);
         return cosClient.putObject(putObjectRequest);
+    }
+
+    public COSObject getObject(String bucketName, String key) {
+        // 下载腾讯云数据
+        return cosClient.getObject(bucketName, key);
     }
 
     /**

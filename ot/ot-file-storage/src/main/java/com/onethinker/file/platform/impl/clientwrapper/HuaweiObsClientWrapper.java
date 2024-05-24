@@ -2,8 +2,10 @@ package com.onethinker.file.platform.impl.clientwrapper;
 
 import cn.hutool.core.io.IoUtil;
 import com.obs.services.ObsClient;
+import com.obs.services.model.ObsObject;
 import com.obs.services.model.PutObjectRequest;
 import com.obs.services.model.PutObjectResult;
+import com.qcloud.cos.model.COSObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,5 +58,9 @@ public class HuaweiObsClientWrapper implements AutoCloseable {
         request.setObjectKey(newKey);
         request.setFile(file);
         return obsClient.putObject(request);
+    }
+
+    public ObsObject getObject(String bucketName, String filePath) {
+        return obsClient.getObject(bucketName, filePath);
     }
 }

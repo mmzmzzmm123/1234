@@ -3,9 +3,11 @@ package com.onethinker.file.platform;
 import cn.hutool.core.collection.CollectionUtil;
 import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.config.FileStorageProperties.*;
+import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.event.FormFileUploadSuccessEvent;
 import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.webp.exc.WebpEncodeUtil;
+import com.qcloud.cos.model.COSObject;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -77,6 +79,13 @@ public interface FileStorage {
      * @param source   文件资源
      */
     FileStorage serFile(MultipartFile source);
+
+    /**
+     * 下载文件信息
+     * @param fileInfoDTO
+     * @return
+     */
+    FileInputStream download(FileInfoDTO fileInfoDTO) throws FileNotFoundException;
 
     /**
      * 生成其他图片信息
@@ -355,5 +364,25 @@ public interface FileStorage {
             }
         }
         Files.delete(path);
+    }
+
+    /**
+     * 获取临时文件流信息
+     * @param inputStream
+     * @return
+     */
+    default File queryFileInputStream(InputStream inputStream) throws IOException {
+        File tempFile = File.createTempFile("temp", null);
+        try (FileOutputStream fileOutputStream = new FileOutputStream(tempFile)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                fileOutputStream.write(buffer, 0, bytesRead);
+            }
+            return tempFile;
+        }catch (Exception e) {
+            log.error("文件流处理异常");
+            throw new RuntimeException("文件流处理异常：" + e.getMessage());
+        }
     }
 }

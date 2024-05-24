@@ -84,6 +84,7 @@ public class FileStorageService {
     @Transactional(rollbackFor = Exception.class)
     public void saveFileInfo(FileRelation fileRelation, FileInfo fileInfo) {
         fileRelation.setCreateTime(DateUtils.getNowDate());
+        fileRelation.setStatus(FileRealtionStatusEnum.INIT.getCode());
         fileInfo.setCreateTime(DateUtils.getNowDate());
         fileMapper.insert(fileInfo);
         relationMapper.insert(fileRelation);

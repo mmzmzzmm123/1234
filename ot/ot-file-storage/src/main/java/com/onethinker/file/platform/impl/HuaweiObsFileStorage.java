@@ -1,17 +1,24 @@
 package com.onethinker.file.platform.impl;
 
 import cn.hutool.core.lang.Assert;
+import com.obs.services.model.ObsObject;
+import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.event.FormFileUploadSuccessEvent;
+import com.onethinker.file.platform.impl.clientwrapper.COSClientWrapper;
 import com.onethinker.file.platform.impl.clientwrapper.HuaweiObsClientWrapper;
 import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.config.FileStorageProperties;
 import com.onethinker.file.config.FileStorageProperties.*;
 import com.onethinker.file.platform.FileStorage;
+import com.qcloud.cos.model.COSObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Objects;
@@ -80,6 +87,19 @@ public class HuaweiObsFileStorage implements FileStorage {
     public FileStorage serFile(MultipartFile source) {
         this.source = source;
         return this;
+    }
+
+    @Override
+    public FileInputStream download(FileInfoDTO fileInfoDTO) {
+        try (HuaweiObsClientWrapper obsClient = new HuaweiObsClientWrapper(accessKey, secretKey, endPoint)){
+            ObsObject cosObject = obsClient.getObject(bucketName, fileInfoDTO.getDiskPath());
+            // 保存到临时文件中
+            File tempFile = queryFileInputStream(cosObject.getObjectContent());
+            return new FileInputStream(tempFile);
+        }catch (Exception e) {
+            log.error("{}文件下载异常",platform, e);
+            throw new RuntimeException("文件上传异常：" + e.getMessage());
+        }
     }
 
     @Override

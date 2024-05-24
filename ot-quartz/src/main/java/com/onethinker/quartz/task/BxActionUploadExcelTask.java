@@ -43,9 +43,6 @@ public class BxActionUploadExcelTask {
     @Autowired
     private IBxCustomerInfoService bxCustomerInfoService;
 
-    @Autowired
-    private FileStorageProperties fileStorageProperties;
-
     /**
      * 处理客户信息上传文件
      */
@@ -58,8 +55,8 @@ public class BxActionUploadExcelTask {
         fileInfos.stream().filter(this::existsFileUpload).forEach(fileInfoDTO -> {
             // 更新为处理中 设置半小时
             setFileUploadRedis(fileInfoDTO.getId(),60 * 30);
-            File file = new File(fileInfoDTO.getDiskPath());
-            try (FileInputStream is = new FileInputStream(file)) {
+            // 获取对应资源流信息
+            try (FileInputStream is = fileStorageService.getFileStorage().download(fileInfoDTO)) {
                 ExcelUtil<BxCustomerInfo> util = new ExcelUtil<>(BxCustomerInfo.class);
                 List<BxCustomerInfo> bxCustomerInfos = util.importExcel(is);
                 bxCustomerInfoService.saveEntry(bxCustomerInfos);
@@ -71,12 +68,11 @@ public class BxActionUploadExcelTask {
             // 更新为处理成功
             setFileUploadRedis(fileInfoDTO.getId(),-1);
         });
-
     }
 
     private boolean existsFileUpload(FileInfoDTO fileInfoDTO) {
-        // 当前只处理本地上传的文件
-        if (!fileStorageProperties.getLocal().getPlatform().equals(fileInfoDTO.getPlatform())) {
+        // 当前当前有效配置信息
+        if (!fileStorageService.getFileStorage().getPlatform().equals(fileInfoDTO.getPlatform())) {
             return false;
         }
         // 校验redis缓存是否存在

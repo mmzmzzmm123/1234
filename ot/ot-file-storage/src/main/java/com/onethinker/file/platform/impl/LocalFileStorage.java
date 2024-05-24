@@ -6,6 +6,7 @@ import com.onethinker.common.webp.exc.WebpEncodeUtil;
 import com.onethinker.file.config.FileStorageProperties;
 import com.onethinker.file.config.FileStorageProperties.Thumbnail;
 import com.onethinker.file.config.FileStorageProperties.WaterMark;
+import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.event.FormFileUploadSuccessEvent;
 import com.onethinker.file.platform.FileStorage;
 import lombok.Data;
@@ -17,6 +18,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,6 +56,12 @@ public class LocalFileStorage implements FileStorage {
     public FileStorage serFile(MultipartFile source) {
         this.source = source;
         return this;
+    }
+
+    @Override
+    public FileInputStream download(FileInfoDTO fileInfoDTO) throws FileNotFoundException {
+        File file = new File(fileInfoDTO.getDiskPath());
+        return new FileInputStream(file);
     }
 
 

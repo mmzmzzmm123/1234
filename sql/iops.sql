@@ -40,6 +40,8 @@ CREATE INDEX idx_file_relation_02 ON t_file_relation (file_id);
 
 CREATE INDEX idx_file_relation_01 ON t_file_relation (tenant_id, relation_type, relation_target);
 
+ALTER TABLE t_file_relation ADD status INT DEFAULT 0 NOT NULL;
+
 -- 为表更改所有者在MySQL中通常不是一个常见的操作，通常在数据库级别处理用户权限
 -- 在MySQL中，你可以使用GRANT命令来授予特定用户对表的权限，例如：
 -- GRANT ALL PRIVILEGES ON t_file_relation TO 'iops'@'your_host';
