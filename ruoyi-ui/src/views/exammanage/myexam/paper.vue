@@ -18,11 +18,11 @@
         </el-col>
 
         <el-col :span="12">
-          是否合格：{{ item.userScore > item.qualifyScore ?'是':'否' }}
+          是否合格：{{ item.userScore >= item.qualifyScore ?'是':'否' }}
         </el-col>
 
         <el-col :span="12">
-          考试状态：{{ item.state | paperStateFilter }}
+          考试状态：{{  paperStateFilter(item.state) }}
         </el-col>
 
       </el-row>
@@ -36,6 +36,7 @@
 <script>
 
 import { listPaper } from '@/api/exammanage/paper'
+
 
 export default {
 
@@ -86,6 +87,15 @@ export default {
       listPaper(this.userId, this.examId).then(response => {
         this.paperList = response.rows;
       })
+    },
+     paperStateFilter(value) {
+      const map = {
+        '0': '考试中',
+        '1': '待阅卷',
+        '2': '已考完',
+        '3': '!已弃考'
+      }
+      return map[value]
     }
   }
 }
