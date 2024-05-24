@@ -12,4 +12,6 @@ public class ExamResultRespDTO extends ElPaper {
 
     private List<PaperQuDetailDTO> quList;
 
+    private String userId_dictText;
+
 }

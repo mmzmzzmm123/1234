@@ -102,8 +102,7 @@ public class ElUserExamServiceImpl implements IElUserExamService
         ElUserExam record = new ElUserExam();
         record.setUserId(userId);
         record.setExamId(examId);
-        List<ElUserExam> elUserExams = elUserExamMapper.selectElUserExamList(record);
-        record = elUserExams.get(0);
+        record = elUserExamMapper.selectElUserExamByKey(record);
         if(record == null){
             record = new ElUserExam();
             record.setCreateTime(new Date());

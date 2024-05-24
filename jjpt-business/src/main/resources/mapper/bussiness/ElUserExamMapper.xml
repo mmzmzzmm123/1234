@@ -88,4 +88,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectElUserExamByKey" resultType="com.jjpt.business.domain.ElUserExam">
+        <include refid="selectElUserExamVo"/>
+        <where>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="examId != null  and examId != ''"> and exam_id = #{examId}</if>
+            <if test="tryCount != null "> and try_count = #{tryCount}</if>
+            <if test="maxScore != null "> and max_score = #{maxScore}</if>
+            <if test="passed != null "> and passed = #{passed}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+    </select>
 </mapper>

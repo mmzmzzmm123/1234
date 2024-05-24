@@ -7,6 +7,7 @@ import com.jjpt.business.domain.ElPaperQu;
 import com.jjpt.business.domain.dto.ExamResultRespDTO;
 import com.jjpt.business.domain.dto.PaperAnswerDTO;
 import com.jjpt.business.domain.dto.PaperQuDetailDTO;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -79,6 +80,7 @@ public class ElPaperController extends BaseController
     @GetMapping(value = "/paper-result")
     public AjaxResult paperResult(@RequestParam("id")String id) {
         ExamResultRespDTO respDTO = elPaperService.paperResult(id);
+       // respDTO.setUserId_dictText(SecurityUtils.getUsername());
         return success(respDTO);
     }
 
