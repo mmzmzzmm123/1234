@@ -28,25 +28,34 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, user_id, dept_id, exam_id, title, total_time, user_time, total_score, qualify_score, obj_score, subj_score, user_score, has_saq, state, create_time, update_time, limit_time from el_paper
     </sql>
 
-    <select id="selectElPaperList" parameterType="ElPaper" resultMap="ElPaperResult">
-        <include refid="selectElPaperVo"/>
-        <where>  
-            <if test="userId != null "> and user_id = #{userId}</if>
-            <if test="deptId != null "> and dept_id = #{deptId}</if>
-            <if test="examId != null  and examId != ''"> and exam_id = #{examId}</if>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="totalTime != null "> and total_time = #{totalTime}</if>
-            <if test="userTime != null "> and user_time = #{userTime}</if>
-            <if test="totalScore != null "> and total_score = #{totalScore}</if>
-            <if test="qualifyScore != null "> and qualify_score = #{qualifyScore}</if>
-            <if test="objScore != null "> and obj_score = #{objScore}</if>
-            <if test="subjScore != null "> and subj_score = #{subjScore}</if>
-            <if test="userScore != null "> and user_score = #{userScore}</if>
-            <if test="hasSaq != null "> and has_saq = #{hasSaq}</if>
-            <if test="state != null "> and state = #{state}</if>
-            <if test="limitTime != null "> and limit_time = #{limitTime}</if>
+<!--    <select id="selectElPaperList" parameterType="ElPaper" resultMap="ElPaperResult">
+        SELECT pp.*,uc.real_name FROM el_paper pp
+        LEFT JOIN sys_user uc ON pp.user_id=uc.id
+        <where>
+            <if test="query!=null">
+                <if test="query.examId!=null and query.examId!=''">
+                    AND pp.exam_id=#{query.examId}
+                </if>
+
+                <if test="query.userId!=null and query.userId!=''">
+                    AND pp.user_id=#{query.userId}
+                </if>
+
+                <if test="query.departId!=null and query.departId!=''">
+                    AND pp.depart_id=#{query.departId}
+                </if>
+
+                <if test="query.state!=null">
+                    AND pp.state=#{query.state}
+                </if>
+                <if test="query.realName!=null and query.realName!=''">
+                    AND uc.real_name  LIKE CONCAT('%',#{query.realName},'%')
+                </if>
+            </if>
         </where>
-    </select>
+
+        ORDER BY create_time DESC
+    </select>-->
     
     <select id="selectElPaperById" parameterType="String" resultMap="ElPaperResult">
         <include refid="selectElPaperVo"/>
@@ -128,4 +137,33 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{id}
         </foreach>
     </delete>
+
+    <select id="selectElPaperList" resultType="com.jjpt.business.domain.dto.PaperListRespDTO">
+        SELECT pp.*,uc.nick_name as real_name FROM el_paper pp
+        LEFT JOIN sys_user uc ON pp.user_id=uc.user_id
+        <where>
+            <if test="query!=null">
+                <if test="query.examId!=null and query.examId!=''">
+                    AND pp.exam_id=#{query.examId}
+                </if>
+
+                <if test="query.userId!=null and query.userId!=''">
+                    AND pp.user_id=#{query.userId}
+                </if>
+
+                <if test="query.deptId!=null and query.deptId!=''">
+                    AND pp.dept_id=#{query.deptId}
+                </if>
+
+                <if test="query.state!=null">
+                    AND pp.state=#{query.state}
+                </if>
+                <if test="query.realName!=null and query.realName!=''">
+                    AND uc.nick_name  LIKE CONCAT('%',#{query.realName},'%')
+                </if>
+            </if>
+        </where>
+
+        ORDER BY create_time DESC
+    </select>
 </mapper>

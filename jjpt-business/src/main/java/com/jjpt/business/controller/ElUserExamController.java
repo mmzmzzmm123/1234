@@ -2,6 +2,8 @@ package com.jjpt.business.controller;
 
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
+
+import com.jjpt.business.domain.dto.UserExamRespDTO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,12 +41,15 @@ public class ElUserExamController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('exammanage:userexam:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ElUserExam elUserExam)
+    public TableDataInfo list(UserExamRespDTO elUserExam)
     {
         startPage();
-        List<ElUserExam> list = elUserExamService.selectElUserExamList(elUserExam);
+        List<UserExamRespDTO> list = elUserExamService.selectElUserExamList(elUserExam);
         return getDataTable(list);
     }
+
+
+
 
     /**
      * 导出考试记录列表
@@ -52,10 +57,10 @@ public class ElUserExamController extends BaseController
     @PreAuthorize("@ss.hasPermi('exammanage:userexam:export')")
     @Log(title = "考试记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ElUserExam elUserExam)
+    public void export(HttpServletResponse response, UserExamRespDTO elUserExam)
     {
-        List<ElUserExam> list = elUserExamService.selectElUserExamList(elUserExam);
-        ExcelUtil<ElUserExam> util = new ExcelUtil<ElUserExam>(ElUserExam.class);
+        List<UserExamRespDTO> list = elUserExamService.selectElUserExamList(elUserExam);
+        ExcelUtil<UserExamRespDTO> util = new ExcelUtil<>(UserExamRespDTO.class);
         util.exportExcel(response, list, "考试记录数据");
     }
 

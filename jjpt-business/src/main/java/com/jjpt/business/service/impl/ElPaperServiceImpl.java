@@ -104,7 +104,7 @@ public class ElPaperServiceImpl implements IElPaperService {
      * @return 考试记录
      */
     @Override
-    public List<ElPaper> selectElPaperList(ElPaper elPaper)
+    public List<PaperListRespDTO> selectElPaperList(PaperListRespDTO elPaper)
     {
         return elPaperMapper.selectElPaperList(elPaper);
     }
@@ -119,10 +119,10 @@ public class ElPaperServiceImpl implements IElPaperService {
     public String insertElPaper(ElPaper elPaper) {
         Long userId = SecurityUtils.getUserId();
         //校验
-        ElPaper checkElPaper = new ElPaper();
+        PaperListRespDTO checkElPaper = new PaperListRespDTO();
         checkElPaper.setState(PaperState.ING);
         checkElPaper.setUserId(userId);
-        List<ElPaper> elPapers = elPaperMapper.selectElPaperList(checkElPaper);
+        List<PaperListRespDTO> elPapers = elPaperMapper.selectElPaperList(checkElPaper);
         if(elPapers!=null&&elPapers.size()>0){
             throw new ServiceException("您有正在进行的考试！");
         }

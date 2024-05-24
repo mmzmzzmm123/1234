@@ -1,10 +1,13 @@
 package com.jjpt.business.service.impl;
 
+import java.security.Security;
 import java.util.Date;
 import java.util.List;
 
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.jjpt.business.domain.dto.UserExamRespDTO;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jjpt.business.mapper.ElUserExamMapper;
@@ -42,9 +45,10 @@ public class ElUserExamServiceImpl implements IElUserExamService
      * @return 考试记录
      */
     @Override
-    public List<ElUserExam> selectElUserExamList(ElUserExam elUserExam)
-    {
-        return elUserExamMapper.selectElUserExamList(elUserExam);
+    public List<UserExamRespDTO> selectElUserExamList(UserExamRespDTO query) {
+        query.setUserId(SecurityUtils.getUserId());
+
+        return elUserExamMapper.selectElUserExamList(query);
     }
 
     /**

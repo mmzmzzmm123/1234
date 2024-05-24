@@ -2,6 +2,8 @@ package com.jjpt.business.mapper;
 
 import java.util.List;
 import com.jjpt.business.domain.ElPaper;
+import com.jjpt.business.domain.dto.PaperListRespDTO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 考试记录Mapper接口
@@ -25,7 +27,7 @@ public interface ElPaperMapper
      * @param elPaper 考试记录
      * @return 考试记录集合
      */
-    public List<ElPaper> selectElPaperList(ElPaper elPaper);
+    public List<PaperListRespDTO> selectElPaperList(@Param("query")PaperListRespDTO query);
 
     /**
      * 新增考试记录
