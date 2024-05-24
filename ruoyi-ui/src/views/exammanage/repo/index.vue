@@ -17,6 +17,7 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
+
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -31,7 +32,7 @@
           icon="el-icon-plus"
           size="mini"
           @click="handleAdd"
-          v-hasPermi="['bussiness:repo:add']"
+          v-hasPermi="['exammanage:repo:add']"
         >新增</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -42,7 +43,7 @@
           size="mini"
           :disabled="single"
           @click="handleUpdate"
-          v-hasPermi="['bussiness:repo:edit']"
+          v-hasPermi="['exammanage:repo:edit']"
         >修改</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -53,7 +54,7 @@
           size="mini"
           :disabled="multiple"
           @click="handleDelete"
-          v-hasPermi="['bussiness:repo:remove']"
+          v-hasPermi="['exammanage:repo:remove']"
         >删除</el-button>
       </el-col>
       <el-col :span="1.5">
@@ -63,7 +64,7 @@
           icon="el-icon-download"
           size="mini"
           @click="handleExport"
-          v-hasPermi="['bussiness:repo:export']"
+          v-hasPermi="['exammanage:repo:export']"
         >导出</el-button>
       </el-col>
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
@@ -82,14 +83,14 @@
             type="text"
             icon="el-icon-edit"
             @click="handleUpdate(scope.row)"
-            v-hasPermi="['bussiness:repo:edit']"
+            v-hasPermi="['exammanage:repo:edit']"
           >修改</el-button>
           <el-button
             size="mini"
             type="text"
             icon="el-icon-delete"
             @click="handleDelete(scope.row)"
-            v-hasPermi="['bussiness:repo:remove']"
+            v-hasPermi="['exammanage:repo:remove']"
           >删除</el-button>
         </template>
       </el-table-column>
@@ -103,7 +104,7 @@
       @pagination="getList"
     />
 
-    <!-- 添加或修改题库信息对话框 -->
+    <!-- 添加或修改题库管理对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
         <el-form-item label="题库编号" prop="code">
@@ -125,7 +126,7 @@
 </template>
 
 <script>
-import { listRepo, getRepo, delRepo, addRepo, updateRepo } from "@/api/business/exammanage/repo";
+import { listRepo, getRepo, delRepo, addRepo, updateRepo } from "@/api/exammanage/repo";
 
 export default {
   name: "Repo",
@@ -143,7 +144,7 @@ export default {
       showSearch: true,
       // 总条数
       total: 0,
-      // 题库信息表格数据
+      // 题库管理表格数据
       repoList: [],
       // 弹出层标题
       title: "",
@@ -155,6 +156,8 @@ export default {
         pageSize: 10,
         code: null,
         title: null,
+        userId: null,
+        deptId: null
       },
       // 表单参数
       form: {},
@@ -176,7 +179,7 @@ export default {
     this.getList();
   },
   methods: {
-    /** 查询题库信息列表 */
+    /** 查询题库管理列表 */
     getList() {
       this.loading = true;
       listRepo(this.queryParams).then(response => {
@@ -198,7 +201,9 @@ export default {
         title: null,
         remark: null,
         createTime: null,
-        updateTime: null
+        updateTime: null,
+        userId: null,
+        deptId: null
       };
       this.resetForm("form");
     },
@@ -220,19 +225,22 @@ export default {
     },
     /** 新增按钮操作 */
     handleAdd() {
-      this.reset();
+     /* this.reset();
       this.open = true;
-      this.title = "添加题库信息";
+      this.title = "添加题库管理";
+      const winId = row.winId;*/
+      this.$router.push("/exammanage/repo-add/addRepo");
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
       this.reset();
       const id = row.id || this.ids
-      getRepo(id).then(response => {
+      this.$router.push("/exammanage/repo-add/addRepo/"+id);
+/*      getRepo(id).then(response => {
         this.form = response.data;
         this.open = true;
-        this.title = "修改题库信息";
-      });
+        this.title = "修改题库管理";
+      });*/
     },
     /** 提交按钮 */
     submitForm() {
@@ -257,7 +265,7 @@ export default {
     /** 删除按钮操作 */
     handleDelete(row) {
       const ids = row.id || this.ids;
-      this.$modal.confirm('是否确认删除题库信息编号为"' + ids + '"的数据项？').then(function() {
+      this.$modal.confirm('是否确认删除题库管理编号为"' + ids + '"的数据项？').then(function() {
         return delRepo(ids);
       }).then(() => {
         this.getList();
@@ -266,7 +274,7 @@ export default {
     },
     /** 导出按钮操作 */
     handleExport() {
-      this.download('bussiness/repo/export', {
+      this.download('exammanage/repo/export', {
         ...this.queryParams
       }, `repo_${new Date().getTime()}.xlsx`)
     }

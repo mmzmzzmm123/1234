@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjpt.business.mapper.ElUserExamMapper">
+    
+    <resultMap type="ElUserExam" id="ElUserExamResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="examId"    column="exam_id"    />
+        <result property="tryCount"    column="try_count"    />
+        <result property="maxScore"    column="max_score"    />
+        <result property="passed"    column="passed"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="deptId"    column="dept_id"    />
+    </resultMap>
+
+    <sql id="selectElUserExamVo">
+        select id, user_id, exam_id, try_count, max_score, passed, create_time, update_time, dept_id from el_user_exam
+    </sql>
+
+    <select id="selectElUserExamList" parameterType="ElUserExam" resultMap="ElUserExamResult">
+        <include refid="selectElUserExamVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="examId != null  and examId != ''"> and exam_id = #{examId}</if>
+            <if test="tryCount != null "> and try_count = #{tryCount}</if>
+            <if test="maxScore != null "> and max_score = #{maxScore}</if>
+            <if test="passed != null "> and passed = #{passed}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+    </select>
+    
+    <select id="selectElUserExamById" parameterType="String" resultMap="ElUserExamResult">
+        <include refid="selectElUserExamVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertElUserExam" parameterType="ElUserExam">
+        insert into el_user_exam
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="examId != null and examId != ''">exam_id,</if>
+            <if test="tryCount != null">try_count,</if>
+            <if test="maxScore != null">max_score,</if>
+            <if test="passed != null">passed,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="deptId != null">dept_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="examId != null and examId != ''">#{examId},</if>
+            <if test="tryCount != null">#{tryCount},</if>
+            <if test="maxScore != null">#{maxScore},</if>
+            <if test="passed != null">#{passed},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="deptId != null">#{deptId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElUserExam" parameterType="ElUserExam">
+        update el_user_exam
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="examId != null and examId != ''">exam_id = #{examId},</if>
+            <if test="tryCount != null">try_count = #{tryCount},</if>
+            <if test="maxScore != null">max_score = #{maxScore},</if>
+            <if test="passed != null">passed = #{passed},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElUserExamById" parameterType="String">
+        delete from el_user_exam where id = #{id}
+    </delete>
+
+    <delete id="deleteElUserExamByIds" parameterType="String">
+        delete from el_user_exam where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

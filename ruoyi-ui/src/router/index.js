@@ -70,7 +70,7 @@ export const constantRoutes = [
         path: 'index',
         component: () => import('@/views/index'),
         name: 'Index',
-        meta: { title: '首页', icon: 'dashboard', affix: true }
+        meta: {title: '首页', icon: 'dashboard', affix: true}
       }
     ]
   },
@@ -84,7 +84,7 @@ export const constantRoutes = [
         path: 'profile',
         component: () => import('@/views/system/user/profile/index'),
         name: 'Profile',
-        meta: { title: '个人中心', icon: 'user' }
+        meta: {title: '个人中心', icon: 'user'}
       }
     ]
   }
@@ -102,7 +102,7 @@ export const dynamicRoutes = [
         path: 'role/:userId(\\d+)',
         component: () => import('@/views/system/user/authRole'),
         name: 'AuthRole',
-        meta: { title: '分配角色', activeMenu: '/system/user' }
+        meta: {title: '分配角色', activeMenu: '/system/user'}
       }
     ]
   },
@@ -116,7 +116,7 @@ export const dynamicRoutes = [
         path: 'user/:roleId(\\d+)',
         component: () => import('@/views/system/role/authUser'),
         name: 'AuthUser',
-        meta: { title: '分配用户', activeMenu: '/system/role' }
+        meta: {title: '分配用户', activeMenu: '/system/role'}
       }
     ]
   },
@@ -130,7 +130,7 @@ export const dynamicRoutes = [
         path: 'index/:dictId(\\d+)',
         component: () => import('@/views/system/dict/data'),
         name: 'Data',
-        meta: { title: '字典数据', activeMenu: '/system/dict' }
+        meta: {title: '字典数据', activeMenu: '/system/dict'}
       }
     ]
   },
@@ -144,7 +144,7 @@ export const dynamicRoutes = [
         path: 'index/:jobId(\\d+)',
         component: () => import('@/views/monitor/job/log'),
         name: 'JobLog',
-        meta: { title: '调度日志', activeMenu: '/monitor/job' }
+        meta: {title: '调度日志', activeMenu: '/monitor/job'}
       }
     ]
   },
@@ -158,10 +158,178 @@ export const dynamicRoutes = [
         path: 'index/:tableId(\\d+)',
         component: () => import('@/views/tool/gen/editTable'),
         name: 'GenEdit',
-        meta: { title: '修改生成配置', activeMenu: '/tool/gen' }
+        meta: {title: '修改生成配置', activeMenu: '/tool/gen'}
+      }
+    ]
+  },
+
+  {
+    path: '/exammanage/repo-add',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:repo:add'],
+    children: [
+      {
+        path: 'addRepo',
+        component: () => import('@/views/exammanage/repo/form'),
+        name: 'AddRepo',
+        meta: {title: '新增题库', noCache: true}
+      }
+    ]
+  },
+
+  {
+    path: '/exammanage/repo-update',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:repo:edit'],
+    children: [
+      {
+        path: 'updateRepo/:RepoId',
+        component: () => import('@/views/exammanage/repo/form'),
+        name: 'updateRepo',
+        meta: {title: '编辑题库', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/repo-list',
+    component: Layout,
+    permissions: ['exammanage:repo:list'],
+    children: [
+      {
+        path: 'listRepo',
+        component: () => import('@/views/exammanage/repo/index.vue'),
+        name: 'listRepo',
+        meta: {title: '题库管理', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/qu-add',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:qu:add'],
+    children: [
+      {
+        path: 'addQu',
+        component: () => import('@/views/exammanage/qu/form'),
+        name: 'AddQu',
+        meta: {title: '新增试题', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/qu-update',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:qu:edit'],
+    children: [
+      {
+        path: 'updateQu/:quId',
+        component: () => import('@/views/exammanage/qu/form'),
+        name: 'UpdateQu',
+        meta: {title: '编辑试题', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/qu-list',
+    component: Layout,
+    permissions: ['exammanage:qu:list'],
+    children: [
+      {
+        path: 'listQu',
+        component: () => import('@/views/exammanage/qu/index.vue'),
+        name: 'listQu',
+        meta: {title: '试题管理', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/exam-add',
+    component: Layout,
+    permissions: ['exammanage:exam:add'],
+    hidden: true,
+    children: [
+      {
+        path: 'addExam',
+        component: () => import('@/views/exammanage/exam/form.vue'),
+        name: 'AddExam',
+        meta: {title: '新增考试', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/exam-update',
+    component: Layout,
+    permissions: [' exammange:exam:edit'],
+    hidden: true,
+    children: [
+      {
+        path: 'updateExam/:examId',
+        component: () => import('@/views/exammanage/exam/form.vue'),
+        name: 'UpdateExam',
+        meta: {title: '编辑考试', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/exam-list',
+    component: Layout,
+    permissions: ['exammanage:exam:list'],
+    children: [
+      {
+        path: 'listExam',
+        component: () => import('@/views/exammanage/exam/index.vue'),
+        name: 'listExam',
+        meta: {title: '考试列表', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/prepare-exam',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:exam:edit'],
+    children: [
+      {
+        path: 'prepareExam/:examId',
+        component: () => import('@/views/exammanage/online/preview.vue'),
+        name: 'listExam',
+        meta: {title: '考试列表', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/start-exam',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:paper:add'],
+    children: [
+      {
+        path: 'startExam/:paperId',
+        component: () => import('@/views/exammanage/online/exam.vue'),
+        name: 'StartExam',
+        meta: {title: '开始考试', noCache: true}
+      }
+    ]
+  },
+  {
+    path: '/exammanage/result-exam',
+    component: Layout,
+    hidden: true,
+    permissions: ['exammanage:paper:result'],
+    children: [
+      {
+        path: 'resultExam/:paperId',
+        component: () => import('@/views/exammanage/online/result.vue'),
+        name: 'ResultExam',
+        meta: {title: '考试结果', noCache: true}
       }
     ]
   }
+
 ]
 
 // 防止连续点击多次路由报错
@@ -178,6 +346,6 @@ Router.prototype.replace = function push(location) {
 
 export default new Router({
   mode: 'history', // 去掉url中的#
-  scrollBehavior: () => ({ y: 0 }),
+  scrollBehavior: () => ({y: 0}),
   routes: constantRoutes
 })

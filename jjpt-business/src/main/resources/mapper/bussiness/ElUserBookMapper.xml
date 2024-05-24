@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjpt.business.mapper.ElUserBookMapper">
+    
+    <resultMap type="ElUserBook" id="ElUserBookResult">
+        <result property="id"    column="id"    />
+        <result property="examId"    column="exam_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="quId"    column="qu_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="wrongCount"    column="wrong_count"    />
+        <result property="title"    column="title"    />
+        <result property="sort"    column="sort"    />
+        <result property="deptId"    column="dept_id"    />
+    </resultMap>
+
+    <sql id="selectElUserBookVo">
+        select id, exam_id, user_id, qu_id, create_time, update_time, wrong_count, title, sort, dept_id from el_user_book
+    </sql>
+
+    <select id="selectElUserBookList" parameterType="ElUserBook" resultMap="ElUserBookResult">
+        <include refid="selectElUserBookVo"/>
+        <where>  
+            <if test="examId != null  and examId != ''"> and exam_id = #{examId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="quId != null  and quId != ''"> and qu_id = #{quId}</if>
+            <if test="wrongCount != null "> and wrong_count = #{wrongCount}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+    </select>
+    
+    <select id="selectElUserBookById" parameterType="String" resultMap="ElUserBookResult">
+        <include refid="selectElUserBookVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertElUserBook" parameterType="ElUserBook">
+        insert into el_user_book
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="examId != null and examId != ''">exam_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="quId != null and quId != ''">qu_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="wrongCount != null">wrong_count,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="sort != null">sort,</if>
+            <if test="deptId != null">dept_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="examId != null and examId != ''">#{examId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="quId != null and quId != ''">#{quId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="wrongCount != null">#{wrongCount},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="deptId != null">#{deptId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElUserBook" parameterType="ElUserBook">
+        update el_user_book
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examId != null and examId != ''">exam_id = #{examId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="quId != null and quId != ''">qu_id = #{quId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="wrongCount != null">wrong_count = #{wrongCount},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElUserBookById" parameterType="String">
+        delete from el_user_book where id = #{id}
+    </delete>
+
+    <delete id="deleteElUserBookByIds" parameterType="String">
+        delete from el_user_book where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectElUserBookInfo" resultType="com.jjpt.business.domain.ElUserBook">
+        <include refid="selectElUserBookVo"/>
+        <where>
+            <if test="examId != null  and examId != ''"> and exam_id = #{examId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="quId != null  and quId != ''"> and qu_id = #{quId}</if>
+            <if test="wrongCount != null "> and wrong_count = #{wrongCount}</if>
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="sort != null ">
+                and sort <![CDATA[<]]> #{sort}
+            </if>
+            <if test="deptId != null "> and dept_id = #{deptId}</if>
+        </where>
+        order by `sort` desc  limit 1;
+
+    </select>
+</mapper>

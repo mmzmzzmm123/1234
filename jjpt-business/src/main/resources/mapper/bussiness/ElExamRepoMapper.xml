@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjpt.business.mapper.ElExamRepoMapper">
+    
+    <resultMap type="ElExamRepo" id="ElExamRepoResult">
+        <result property="id"    column="id"    />
+        <result property="examId"    column="exam_id"    />
+        <result property="repoId"    column="repo_id"    />
+        <result property="radioCount"    column="radio_count"    />
+        <result property="radioScore"    column="radio_score"    />
+        <result property="multiCount"    column="multi_count"    />
+        <result property="multiScore"    column="multi_score"    />
+        <result property="judgeCount"    column="judge_count"    />
+        <result property="judgeScore"    column="judge_score"    />
+        <result property="saqCount"    column="saq_count"    />
+        <result property="saqScore"    column="saq_score"    />
+    </resultMap>
+
+    <sql id="selectElExamRepoVo">
+        select id, exam_id, repo_id, radio_count, radio_score, multi_count, multi_score, judge_count, judge_score, saq_count, saq_score from el_exam_repo
+    </sql>
+
+    <select id="selectElExamRepoList" parameterType="ElExamRepo" resultMap="ElExamRepoResult">
+        <include refid="selectElExamRepoVo"/>
+        <where>  
+            <if test="examId != null  and examId != ''"> and exam_id = #{examId}</if>
+            <if test="repoId != null  and repoId != ''"> and repo_id = #{repoId}</if>
+            <if test="radioCount != null "> and radio_count = #{radioCount}</if>
+            <if test="radioScore != null "> and radio_score = #{radioScore}</if>
+            <if test="multiCount != null "> and multi_count = #{multiCount}</if>
+            <if test="multiScore != null "> and multi_score = #{multiScore}</if>
+            <if test="judgeCount != null "> and judge_count = #{judgeCount}</if>
+            <if test="judgeScore != null "> and judge_score = #{judgeScore}</if>
+            <if test="saqCount != null "> and saq_count = #{saqCount}</if>
+            <if test="saqScore != null "> and saq_score = #{saqScore}</if>
+        </where>
+    </select>
+    
+    <select id="selectElExamRepoById" parameterType="String" resultMap="ElExamRepoResult">
+        <include refid="selectElExamRepoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertElExamRepo" parameterType="ElExamRepo">
+        insert into el_exam_repo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="examId != null and examId != ''">exam_id,</if>
+            <if test="repoId != null and repoId != ''">repo_id,</if>
+            <if test="radioCount != null">radio_count,</if>
+            <if test="radioScore != null">radio_score,</if>
+            <if test="multiCount != null">multi_count,</if>
+            <if test="multiScore != null">multi_score,</if>
+            <if test="judgeCount != null">judge_count,</if>
+            <if test="judgeScore != null">judge_score,</if>
+            <if test="saqCount != null">saq_count,</if>
+            <if test="saqScore != null">saq_score,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="examId != null and examId != ''">#{examId},</if>
+            <if test="repoId != null and repoId != ''">#{repoId},</if>
+            <if test="radioCount != null">#{radioCount},</if>
+            <if test="radioScore != null">#{radioScore},</if>
+            <if test="multiCount != null">#{multiCount},</if>
+            <if test="multiScore != null">#{multiScore},</if>
+            <if test="judgeCount != null">#{judgeCount},</if>
+            <if test="judgeScore != null">#{judgeScore},</if>
+            <if test="saqCount != null">#{saqCount},</if>
+            <if test="saqScore != null">#{saqScore},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElExamRepo" parameterType="ElExamRepo">
+        update el_exam_repo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="examId != null and examId != ''">exam_id = #{examId},</if>
+            <if test="repoId != null and repoId != ''">repo_id = #{repoId},</if>
+            <if test="radioCount != null">radio_count = #{radioCount},</if>
+            <if test="radioScore != null">radio_score = #{radioScore},</if>
+            <if test="multiCount != null">multi_count = #{multiCount},</if>
+            <if test="multiScore != null">multi_score = #{multiScore},</if>
+            <if test="judgeCount != null">judge_count = #{judgeCount},</if>
+            <if test="judgeScore != null">judge_score = #{judgeScore},</if>
+            <if test="saqCount != null">saq_count = #{saqCount},</if>
+            <if test="saqScore != null">saq_score = #{saqScore},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElExamRepoById" parameterType="String">
+        delete from el_exam_repo where id = #{id}
+    </delete>
+
+    <delete id="deleteElExamRepoByIds" parameterType="String">
+        delete from el_exam_repo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteElExamRepoByExamId">
+        delete from el_exam_repo where exam_id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjpt.business.mapper.ElPaperQuAnswerMapper">
+    
+    <resultMap type="ElPaperQuAnswer" id="ElPaperQuAnswerResult">
+        <result property="id"    column="id"    />
+        <result property="paperId"    column="paper_id"    />
+        <result property="answerId"    column="answer_id"    />
+        <result property="quId"    column="qu_id"    />
+        <result property="isRight"    column="is_right"    />
+        <result property="checked"    column="checked"    />
+        <result property="sort"    column="sort"    />
+        <result property="abc"    column="abc"    />
+    </resultMap>
+
+
+
+    <sql id="selectElPaperQuAnswerVo">
+        select id, paper_id, answer_id, qu_id, is_right, checked, sort, abc from el_paper_qu_answer
+    </sql>
+
+    <select id="selectElPaperQuAnswerList" parameterType="ElPaperQuAnswer" resultMap="ElPaperQuAnswerResult">
+        <include refid="selectElPaperQuAnswerVo"/>
+        <where>  
+            <if test="paperId != null  and paperId != ''"> and paper_id = #{paperId}</if>
+            <if test="answerId != null  and answerId != ''"> and answer_id = #{answerId}</if>
+            <if test="quId != null  and quId != ''"> and qu_id = #{quId}</if>
+            <if test="isRight != null "> and is_right = #{isRight}</if>
+            <if test="checked != null "> and checked = #{checked}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+            <if test="abc != null  and abc != ''"> and abc = #{abc}</if>
+        </where>
+    </select>
+    
+    <select id="selectElPaperQuAnswerById" parameterType="String" resultMap="ElPaperQuAnswerResult">
+        <include refid="selectElPaperQuAnswerVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertElPaperQuAnswer" parameterType="ElPaperQuAnswer">
+        insert into el_paper_qu_answer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="paperId != null and paperId != ''">paper_id,</if>
+            <if test="answerId != null and answerId != ''">answer_id,</if>
+            <if test="quId != null and quId != ''">qu_id,</if>
+            <if test="isRight != null">is_right,</if>
+            <if test="checked != null">checked,</if>
+            <if test="sort != null">sort,</if>
+            <if test="abc != null and abc != ''">abc,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="paperId != null and paperId != ''">#{paperId},</if>
+            <if test="answerId != null and answerId != ''">#{answerId},</if>
+            <if test="quId != null and quId != ''">#{quId},</if>
+            <if test="isRight != null">#{isRight},</if>
+            <if test="checked != null">#{checked},</if>
+            <if test="sort != null">#{sort},</if>
+            <if test="abc != null and abc != ''">#{abc},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElPaperQuAnswer" parameterType="ElPaperQuAnswer">
+        update el_paper_qu_answer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="paperId != null and paperId != ''">paper_id = #{paperId},</if>
+            <if test="answerId != null and answerId != ''">answer_id = #{answerId},</if>
+            <if test="quId != null and quId != ''">qu_id = #{quId},</if>
+            <if test="isRight != null">is_right = #{isRight},</if>
+            <if test="checked != null">checked = #{checked},</if>
+            <if test="sort != null">sort = #{sort},</if>
+            <if test="abc != null and abc != ''">abc = #{abc},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElPaperQuAnswerById" parameterType="String">
+        delete from el_paper_qu_answer where id = #{id}
+    </delete>
+
+    <delete id="deleteElPaperQuAnswerByIds" parameterType="String">
+        delete from el_paper_qu_answer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="list" resultType="com.jjpt.business.domain.dto.PaperQuAnswerExtDTO">
+        SELECT pa.`id`,
+               pa.`paper_id` as paperId,
+               pa.`answer_id` as answerId,
+               pa.`qu_id` as quId,
+               pa.`checked` as checked,
+               pa.`sort` as sort,
+               pa.`abc` as abc ,
+               qa.content as content,
+               qa.image as image
+        FROM
+              el_paper_qu_answer pa
+        LEFT JOIN
+              el_qu_answer qa ON pa.answer_id=qa.id
+        WHERE pa.paper_id=#{paperId} AND pa.qu_id=#{quId}
+        ORDER BY pa.sort ASC
+
+    </select>
+</mapper>
