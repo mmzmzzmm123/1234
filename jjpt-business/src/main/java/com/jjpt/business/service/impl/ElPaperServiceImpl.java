@@ -395,6 +395,8 @@ public class ElPaperServiceImpl implements IElPaperService {
 
         // 客观分
         int objScore = paperQuService.sumObjective(paperId);
+        paper.setObjScore(objScore);
+        paper.setUserScore(objScore);
         // 主观分，因为要阅卷，所以给0
         paper.setSubjScore(0);
         // 待阅卷

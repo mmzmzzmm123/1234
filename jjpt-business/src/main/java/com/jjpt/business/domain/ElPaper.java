@@ -2,6 +2,7 @@ package com.jjpt.business.domain;
 
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.jjpt.business.annotation.Dict;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -20,7 +21,9 @@ public class ElPaper extends BaseEntity
     /** 试卷ID */
     private String id;
 
+
     /** 用户ID */
+    @Dict(dictTable = "sys_user", dicText = "nick_name", dicCode = "user_id")
     @Excel(name = "用户ID")
     private Long userId;
 

@@ -58,4 +58,6 @@ public interface ElUserExamMapper
      * @return 结果
      */
     public int deleteElUserExamByIds(String[] ids);
+
+    ElUserExam selectElUserExamByKey(ElUserExam record);
 }

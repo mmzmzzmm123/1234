@@ -35,7 +35,7 @@ export function getPaperDetail(data) {
 
 export function handExam(data) {
   return request({
-    url: '/exammanage/paper/qu-detail',
+    url: '/exammanage/paper/hand-exam',
     method: 'get',
     params:data
   })

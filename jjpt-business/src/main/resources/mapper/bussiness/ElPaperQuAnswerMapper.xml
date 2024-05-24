@@ -97,7 +97,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
                pa.`sort` as sort,
                pa.`abc` as abc ,
                qa.content as content,
-               qa.image as image
+               qa.image as image,
+               pa.is_right as isRight
         FROM
               el_paper_qu_answer pa
         LEFT JOIN

@@ -1,8 +1,13 @@
 package com.jjpt.business.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.jjpt.business.domain.dto.PaperQuAnswerExtDTO;
 import com.jjpt.business.domain.dto.PaperQuDetailDTO;
+import com.jjpt.business.service.IElPaperQuAnswerService;
+import com.jjpt.business.utils.BeanMapper;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.jjpt.business.mapper.ElPaperQuMapper;
@@ -16,10 +21,11 @@ import com.jjpt.business.service.IElPaperQuService;
  * @date 2024-05-21
  */
 @Service
-public class ElPaperQuServiceImpl implements IElPaperQuService 
-{
+public class ElPaperQuServiceImpl implements IElPaperQuService {
     @Autowired
     private ElPaperQuMapper elPaperQuMapper;
+    @Autowired
+    private IElPaperQuAnswerService  elPaperQuAnswerService;
 
     /**
      * 查询考试记录考题
@@ -108,7 +114,21 @@ public class ElPaperQuServiceImpl implements IElPaperQuService
     @Override
     public List<PaperQuDetailDTO> listForPaperResult(String paperId) {
 
+        List<PaperQuDetailDTO> res = new ArrayList<>();
+        ElPaperQu queryElPaperQu = new ElPaperQu();
 
-        return elPaperQuMapper.listByPaper(paperId);
+        queryElPaperQu.setPaperId(paperId);
+        List<ElPaperQu> elPaperQus = elPaperQuMapper.selectElPaperQuList(queryElPaperQu);
+
+        if(!CollectionUtils.isEmpty(elPaperQus)){
+            for (ElPaperQu elPaperQu : elPaperQus) {
+                 List<PaperQuAnswerExtDTO> paperQuAnswerExtDTOS = elPaperQuAnswerService.listForExam(elPaperQu.getPaperId(), elPaperQu.getQuId());
+                 PaperQuDetailDTO paperQuDetailDTO = new PaperQuDetailDTO();
+                 BeanMapper.copy(elPaperQu, paperQuDetailDTO);
+                 paperQuDetailDTO.setAnswerList(paperQuAnswerExtDTOS);
+                 res.add(paperQuDetailDTO);
+            }
+        }
+        return res;
     }
 }
