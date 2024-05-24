@@ -89,7 +89,7 @@
 					<div style="text-align: center;">制度库管理</div>
 			      </el-col>
 				  <el-col :span="6">
-					<el-button style="width: 75px; height: 75px;" type="success" icon="el-icon-check" ></el-button>
+					<el-button style="width: 75px; height: 75px;" type="success" @click="handleCaseButton" icon="el-icon-check" ></el-button>
 					<div style="text-align: center;">典型案例管理</div>
 			      </el-col>
 				  <el-col :span="6">
@@ -189,6 +189,12 @@ export default {
     }
   },
   methods: {
+	
+	handleCaseButton(){
+		location.href="manage/case/case";
+		
+	}
+	
    // handleSetLineChartData(type) {
      // this.lineChartData = lineChartData[type]
     //}
