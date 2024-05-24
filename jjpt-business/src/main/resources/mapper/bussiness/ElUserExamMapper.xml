@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, user_id, exam_id, try_count, max_score, passed, create_time, update_time, dept_id from el_user_exam
     </sql>
 
-    <select id="selectElUserExamList" parameterType="ElUserExam" resultMap="ElUserExamResult">
+<!--    <select id="selectElUserExamList" parameterType="ElUserExam" resultMap="ElUserExamResult">
         <include refid="selectElUserExamVo"/>
         <where>  
             <if test="userId != null "> and user_id = #{userId}</if>
@@ -30,7 +30,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="passed != null "> and passed = #{passed}</if>
             <if test="deptId != null "> and dept_id = #{deptId}</if>
         </where>
-    </select>
+    </select>-->
+
+
+
     
     <select id="selectElUserExamById" parameterType="String" resultMap="ElUserExamResult">
         <include refid="selectElUserExamVo"/>
@@ -99,5 +102,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="passed != null "> and passed = #{passed}</if>
             <if test="deptId != null "> and dept_id = #{deptId}</if>
         </where>
+    </select>
+
+    <select id="selectElUserExamList" resultType="com.jjpt.business.domain.dto.UserExamRespDTO">
+        SELECT ue.*,ee.title,uc.nick_name as real_name FROM el_user_exam ue
+        LEFT JOIN el_exam ee ON ue.exam_id=ee.id
+        LEFT JOIN sys_user uc ON ue.user_id=uc.user_id
+        WHERE ee.id IS NOT NULL AND uc.user_id IS NOT NULL
+
+        <if test="query!=null">
+
+            <if test="query.userId!=null">
+                AND ue.user_id= #{query.userId}
+            </if>
+
+            <if test="query.examId!=null and query.examId!=''">
+                AND ue.exam_id = #{query.examId}
+            </if>
+
+            <if test="query.title!=null and query.title!=''">
+                AND ee.title LIKE CONCAT('%',#{query.title},'%')
+            </if>
+            <if test="query.realName!=null and query.realName!=''">
+                AND uc.nick_name LIKE CONCAT('%',#{query.realName},'%')
+            </if>
+        </if>
     </select>
 </mapper>

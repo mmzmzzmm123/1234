@@ -2,10 +2,7 @@ package com.jjpt.business.service;
 
 import java.util.List;
 import com.jjpt.business.domain.ElPaper;
-import com.jjpt.business.domain.dto.ExamDetailRespDTO;
-import com.jjpt.business.domain.dto.ExamResultRespDTO;
-import com.jjpt.business.domain.dto.PaperAnswerDTO;
-import com.jjpt.business.domain.dto.PaperQuDetailDTO;
+import com.jjpt.business.domain.dto.*;
 
 /**
  * 考试记录Service接口
@@ -29,7 +26,7 @@ public interface IElPaperService
      * @param elPaper 考试记录
      * @return 考试记录集合
      */
-    public List<ElPaper> selectElPaperList(ElPaper elPaper);
+    public List<PaperListRespDTO> selectElPaperList(PaperListRespDTO elPaper);
 
     /**
      * 新增考试记录

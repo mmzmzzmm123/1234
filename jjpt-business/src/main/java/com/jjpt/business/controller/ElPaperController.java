@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.jjpt.business.domain.ElPaperQu;
 import com.jjpt.business.domain.dto.ExamResultRespDTO;
 import com.jjpt.business.domain.dto.PaperAnswerDTO;
+import com.jjpt.business.domain.dto.PaperListRespDTO;
 import com.jjpt.business.domain.dto.PaperQuDetailDTO;
 import com.ruoyi.common.utils.SecurityUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -38,10 +39,10 @@ public class ElPaperController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('exammanage:paper:list')")
     @GetMapping("/list")
-    public TableDataInfo list(ElPaper elPaper)
+    public TableDataInfo list(PaperListRespDTO elPaper)
     {
         startPage();
-        List<ElPaper> list = elPaperService.selectElPaperList(elPaper);
+        List<PaperListRespDTO> list = elPaperService.selectElPaperList(elPaper);
         return getDataTable(list);
     }
 
@@ -51,10 +52,10 @@ public class ElPaperController extends BaseController
     @PreAuthorize("@ss.hasPermi('exammanage:paper:export')")
     @Log(title = "考试记录", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, ElPaper elPaper)
+    public void export(HttpServletResponse response, PaperListRespDTO elPaper)
     {
-        List<ElPaper> list = elPaperService.selectElPaperList(elPaper);
-        ExcelUtil<ElPaper> util = new ExcelUtil<ElPaper>(ElPaper.class);
+        List<PaperListRespDTO> list = elPaperService.selectElPaperList(elPaper);
+        ExcelUtil<PaperListRespDTO> util = new ExcelUtil<>(PaperListRespDTO.class);
         util.exportExcel(response, list, "考试记录数据");
     }
 

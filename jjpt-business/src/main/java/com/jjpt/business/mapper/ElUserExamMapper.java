@@ -2,6 +2,8 @@ package com.jjpt.business.mapper;
 
 import java.util.List;
 import com.jjpt.business.domain.ElUserExam;
+import com.jjpt.business.domain.dto.UserExamRespDTO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * 考试记录Mapper接口
@@ -25,7 +27,7 @@ public interface ElUserExamMapper
      * @param elUserExam 考试记录
      * @return 考试记录集合
      */
-    public List<ElUserExam> selectElUserExamList(ElUserExam elUserExam);
+    public List<UserExamRespDTO> selectElUserExamList(@Param("query") UserExamRespDTO query);
 
     /**
      * 新增考试记录

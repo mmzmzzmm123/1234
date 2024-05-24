@@ -2,6 +2,7 @@ package com.jjpt.business.service;
 
 import java.util.List;
 import com.jjpt.business.domain.ElUserExam;
+import com.jjpt.business.domain.dto.UserExamRespDTO;
 
 /**
  * 考试记录Service接口
@@ -25,7 +26,7 @@ public interface IElUserExamService
      * @param elUserExam 考试记录
      * @return 考试记录集合
      */
-    public List<ElUserExam> selectElUserExamList(ElUserExam elUserExam);
+    public List<UserExamRespDTO> selectElUserExamList(UserExamRespDTO elUserExam);
 
     /**
      * 新增考试记录
