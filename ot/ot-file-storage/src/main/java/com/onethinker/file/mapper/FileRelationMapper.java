@@ -2,6 +2,7 @@ package com.onethinker.file.mapper;
 
 import java.util.List;
 
+import com.onethinker.common.enums.FileRealtionStatusEnum;
 import com.onethinker.file.domain.FileRelation;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
@@ -59,4 +60,13 @@ public interface FileRelationMapper extends BaseMapper<FileRelation> {
      * @return 结果
      */
     public int deleteFileRelationByIds(String[] ids);
+
+
+    /**
+     * 更新文件关联信息状态
+     * @param id
+     * @param orgStatus
+     * @param updateStatus
+     */
+    void updateFileRegionStatusByFileId(String id, Integer orgStatus, Integer updateStatus);
 }

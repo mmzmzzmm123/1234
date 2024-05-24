@@ -110,9 +110,9 @@ public class FileStorageService {
     /**
      * 根据文件类型获取有效文件数据
      */
-    public List<FileInfoDTO> selectFileList(FileRelationTypeEnum typeEnum) {
+    public List<FileInfoDTO> selectFileList(FileRelationTypeEnum typeEnum,FileRealtionStatusEnum statusEnum) {
         LambdaQueryWrapper<FileRelation> relationLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        relationLambdaQueryWrapper.eq(FileRelation::getRelationTarget,typeEnum.name()).eq(FileRelation::getStatus, FileRealtionStatusEnum.INIT.getCode());
+        relationLambdaQueryWrapper.eq(FileRelation::getRelationTarget,typeEnum.name()).eq(FileRelation::getStatus, statusEnum.getCode());
         List<FileRelation> fileRelations = relationMapper.selectList(relationLambdaQueryWrapper);
         if (fileRelations.isEmpty()) {
             return Lists.newArrayList();
@@ -128,5 +128,15 @@ public class FileStorageService {
             fileInfoFileInfoDTO.setDomain(this.getFileStorage(e.getPlatform()).getDomain());
             return fileInfoFileInfoDTO;
         }).collect(Collectors.toList());
+    }
+
+    /**
+     * 更新文件状态
+     * @param id
+     * @param orgStatus
+     * @param updateStatus
+     */
+    public void updateFileRegionStatusByFileId(String id, FileRealtionStatusEnum orgStatus, FileRealtionStatusEnum updateStatus) {
+        relationMapper.updateFileRegionStatusByFileId(id,orgStatus.getCode(),updateStatus.getCode());
     }
 }

@@ -156,6 +156,9 @@
         </trim>
         where id = #{id}
     </update>
+    <update id="updateFileRegionStatusByFileId" parameterType="String">
+        update t_file_relation set status = #{updateStatus} where file_id = #{id} and status = #{orgStatus}
+    </update>
 
     <delete id="deleteFileRelationById" parameterType="String">
         delete from t_file_relation where id = #{id}

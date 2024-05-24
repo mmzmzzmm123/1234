@@ -2,6 +2,7 @@ package com.onethinker.file.mapper;
 
 import java.util.List;
 
+import com.onethinker.common.enums.FileRealtionStatusEnum;
 import com.onethinker.file.domain.FileInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
