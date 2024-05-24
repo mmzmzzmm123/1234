@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjpt.business.mapper.ElPaperMapper">
+    
+    <resultMap type="ElPaper" id="ElPaperResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="deptId"    column="dept_id"    />
+        <result property="examId"    column="exam_id"    />
+        <result property="title"    column="title"    />
+        <result property="totalTime"    column="total_time"    />
+        <result property="userTime"    column="user_time"    />
+        <result property="totalScore"    column="total_score"    />
+        <result property="qualifyScore"    column="qualify_score"    />
+        <result property="objScore"    column="obj_score"    />
+        <result property="subjScore"    column="subj_score"    />
+        <result property="userScore"    column="user_score"    />
+        <result property="hasSaq"    column="has_saq"    />
+        <result property="state"    column="state"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="limitTime"    column="limit_time"    />
+    </resultMap>
+
+    <sql id="selectElPaperVo">
+        select id, user_id, dept_id, exam_id, title, total_time, user_time, total_score, qualify_score, obj_score, subj_score, user_score, has_saq, state, create_time, update_time, limit_time from el_paper
+    </sql>
+
+<!--    <select id="selectElPaperList" parameterType="ElPaper" resultMap="ElPaperResult">
+        SELECT pp.*,uc.real_name FROM el_paper pp
+        LEFT JOIN sys_user uc ON pp.user_id=uc.id
+        <where>
+            <if test="query!=null">
+                <if test="query.examId!=null and query.examId!=''">
+                    AND pp.exam_id=#{query.examId}
+                </if>
+
+                <if test="query.userId!=null and query.userId!=''">
+                    AND pp.user_id=#{query.userId}
+                </if>
+
+                <if test="query.departId!=null and query.departId!=''">
+                    AND pp.depart_id=#{query.departId}
+                </if>
+
+                <if test="query.state!=null">
+                    AND pp.state=#{query.state}
+                </if>
+                <if test="query.realName!=null and query.realName!=''">
+                    AND uc.real_name  LIKE CONCAT('%',#{query.realName},'%')
+                </if>
+            </if>
+        </where>
+
+        ORDER BY create_time DESC
+    </select>-->
+    
+    <select id="selectElPaperById" parameterType="String" resultMap="ElPaperResult">
+        <include refid="selectElPaperVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertElPaper" parameterType="ElPaper">
+        insert into el_paper
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="deptId != null">dept_id,</if>
+            <if test="examId != null and examId != ''">exam_id,</if>
+            <if test="title != null and title != ''">title,</if>
+            <if test="totalTime != null">total_time,</if>
+            <if test="userTime != null">user_time,</if>
+            <if test="totalScore != null">total_score,</if>
+            <if test="qualifyScore != null">qualify_score,</if>
+            <if test="objScore != null">obj_score,</if>
+            <if test="subjScore != null">subj_score,</if>
+            <if test="userScore != null">user_score,</if>
+            <if test="hasSaq != null">has_saq,</if>
+            <if test="state != null">state,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="limitTime != null">limit_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="deptId != null">#{deptId},</if>
+            <if test="examId != null and examId != ''">#{examId},</if>
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="totalTime != null">#{totalTime},</if>
+            <if test="userTime != null">#{userTime},</if>
+            <if test="totalScore != null">#{totalScore},</if>
+            <if test="qualifyScore != null">#{qualifyScore},</if>
+            <if test="objScore != null">#{objScore},</if>
+            <if test="subjScore != null">#{subjScore},</if>
+            <if test="userScore != null">#{userScore},</if>
+            <if test="hasSaq != null">#{hasSaq},</if>
+            <if test="state != null">#{state},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="limitTime != null">#{limitTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElPaper" parameterType="ElPaper">
+        update el_paper
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="deptId != null">dept_id = #{deptId},</if>
+            <if test="examId != null and examId != ''">exam_id = #{examId},</if>
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="totalTime != null">total_time = #{totalTime},</if>
+            <if test="userTime != null">user_time = #{userTime},</if>
+            <if test="totalScore != null">total_score = #{totalScore},</if>
+            <if test="qualifyScore != null">qualify_score = #{qualifyScore},</if>
+            <if test="objScore != null">obj_score = #{objScore},</if>
+            <if test="subjScore != null">subj_score = #{subjScore},</if>
+            <if test="userScore != null">user_score = #{userScore},</if>
+            <if test="hasSaq != null">has_saq = #{hasSaq},</if>
+            <if test="state != null">state = #{state},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="limitTime != null">limit_time = #{limitTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElPaperById" parameterType="String">
+        delete from el_paper where id = #{id}
+    </delete>
+
+    <delete id="deleteElPaperByIds" parameterType="String">
+        delete from el_paper where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectElPaperList" resultType="com.jjpt.business.domain.dto.PaperListRespDTO">
+        SELECT pp.*,uc.nick_name as real_name FROM el_paper pp
+        LEFT JOIN sys_user uc ON pp.user_id=uc.user_id
+        <where>
+            <if test="query!=null">
+                <if test="query.examId!=null and query.examId!=''">
+                    AND pp.exam_id=#{query.examId}
+                </if>
+
+                <if test="query.userId!=null and query.userId!=''">
+                    AND pp.user_id=#{query.userId}
+                </if>
+
+                <if test="query.deptId!=null and query.deptId!=''">
+                    AND pp.dept_id=#{query.deptId}
+                </if>
+
+                <if test="query.state!=null">
+                    AND pp.state=#{query.state}
+                </if>
+                <if test="query.realName!=null and query.realName!=''">
+                    AND uc.nick_name  LIKE CONCAT('%',#{query.realName},'%')
+                </if>
+            </if>
+        </where>
+
+        ORDER BY create_time DESC
+    </select>
+</mapper>

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jjpt.business.mapper.ElQuRepoMapper">
+    
+    <resultMap type="ElQuRepo" id="ElQuRepoResult">
+        <result property="id"    column="id"    />
+        <result property="quId"    column="qu_id"    />
+        <result property="repoId"    column="repo_id"    />
+        <result property="quType"    column="qu_type"    />
+        <result property="sort"    column="sort"    />
+    </resultMap>
+
+    <sql id="selectElQuRepoVo">
+        select id, qu_id, repo_id, qu_type, sort from el_qu_repo
+    </sql>
+
+    <select id="selectElQuRepoList" parameterType="ElQuRepo" resultMap="ElQuRepoResult">
+        <include refid="selectElQuRepoVo"/>
+        <where>  
+            <if test="quId != null  and quId != ''"> and qu_id = #{quId}</if>
+            <if test="repoId != null  and repoId != ''"> and repo_id = #{repoId}</if>
+            <if test="quType != null "> and qu_type = #{quType}</if>
+            <if test="sort != null "> and sort = #{sort}</if>
+        </where>
+    </select>
+    
+    <select id="selectElQuRepoById" parameterType="String" resultMap="ElQuRepoResult">
+        <include refid="selectElQuRepoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertElQuRepo" parameterType="ElQuRepo">
+        insert into el_qu_repo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="quId != null and quId != ''">qu_id,</if>
+            <if test="repoId != null and repoId != ''">repo_id,</if>
+            <if test="quType != null">qu_type,</if>
+            <if test="sort != null">sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="quId != null and quId != ''">#{quId},</if>
+            <if test="repoId != null and repoId != ''">#{repoId},</if>
+            <if test="quType != null">#{quType},</if>
+            <if test="sort != null">#{sort},</if>
+         </trim>
+    </insert>
+
+    <update id="updateElQuRepo" parameterType="ElQuRepo">
+        update el_qu_repo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="quId != null and quId != ''">qu_id = #{quId},</if>
+            <if test="repoId != null and repoId != ''">repo_id = #{repoId},</if>
+            <if test="quType != null">qu_type = #{quType},</if>
+            <if test="sort != null">sort = #{sort},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteElQuRepoById" parameterType="String">
+        delete from el_qu_repo where id = #{id}
+    </delete>
+
+    <delete id="deleteElQuRepoByIds" parameterType="String">
+        delete from el_qu_repo where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteByQuId">
+        delete from el_qu_repo where qu_id =#{quId}
+    </delete>
+</mapper>

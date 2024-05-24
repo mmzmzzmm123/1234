@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.DiClassicCaseMapper">
+    
+    <resultMap type="DiClassicCase" id="DiClassicCaseResult">
+        <result property="id"    column="id"    />
+        <result property="caseName"    column="case_name"    />
+        <result property="caseClassificationId"    column="case_classification_id"    />
+        <result property="caseClassificationName"    column="case_classification_name"    />
+        <result property="caseNumber"    column="case_number"    />
+        <result property="briefExplanationCase"    column="brief_explanation_case"    />
+        <result property="uploadOtherAttachments"    column="upload_other_attachments"    />
+        <result property="publisher"    column="publisher"    />
+    </resultMap>
+
+    <resultMap id="DiClassicCaseDiCaseClassificationResult" type="DiClassicCase" extends="DiClassicCaseResult">
+        <collection property="diCaseClassificationList" notNullColumn="sub_id" javaType="java.util.List" resultMap="DiCaseClassificationResult" />
+    </resultMap>
+
+    <resultMap type="DiCaseClassification" id="DiCaseClassificationResult">
+        <result property="id"    column="sub_id"    />
+        <result property="classificationNo"    column="sub_classification_no"    />
+        <result property="classificationName"    column="sub_classification_name"    />
+        <result property="classificationLabels"    column="sub_classification_labels"    />
+        <result property="isEnabled"    column="sub_is_enabled"    />
+        <result property="parentId"    column="sub_parent_id"    />
+        <result property="imageIcon"    column="sub_image_icon"    />
+        <result property="description"    column="sub_description"    />
+    </resultMap>
+
+    <sql id="selectDiClassicCaseVo">
+        select id, case_name, case_classification_id, case_classification_name, case_number, brief_explanation_case, upload_other_attachments, publisher from di_classic_case
+    </sql>
+
+    <select id="selectDiClassicCaseList" parameterType="DiClassicCase" resultMap="DiClassicCaseResult">
+        <include refid="selectDiClassicCaseVo"/>
+        <where>  
+            <if test="caseName != null  and caseName != ''"> and case_name like concat('%', #{caseName}, '%')</if>
+            <if test="caseClassificationId != null  and caseClassificationId != ''"> and case_classification_id = #{caseClassificationId}</if>
+            <if test="caseClassificationName != null  and caseClassificationName != ''"> and case_classification_name like concat('%', #{caseClassificationName}, '%')</if>
+            <if test="caseNumber != null  and caseNumber != ''"> and case_number = #{caseNumber}</if>
+            <if test="briefExplanationCase != null  and briefExplanationCase != ''"> and brief_explanation_case = #{briefExplanationCase}</if>
+            <if test="uploadOtherAttachments != null  and uploadOtherAttachments != ''"> and upload_other_attachments = #{uploadOtherAttachments}</if>
+            <if test="publisher != null  and publisher != ''"> and publisher = #{publisher}</if>
+        </where>
+    </select>
+    
+    <select id="selectDiClassicCaseById" parameterType="Long" resultMap="DiClassicCaseDiCaseClassificationResult">
+        select a.id, a.case_name, a.case_classification_id, a.case_classification_name, a.case_number, a.brief_explanation_case, a.upload_other_attachments, a.publisher,
+ b.id as sub_id, b.classification_no as sub_classification_no, b.classification_name as sub_classification_name, b.classification_labels as sub_classification_labels, b.is_enabled as sub_is_enabled, b.parent_id as sub_parent_id, b.image_icon as sub_image_icon, b.description as sub_description
+        from di_classic_case a
+        left join di_case_classification b on b.id = a.id
+        where a.id = #{id}
+    </select>
+        
+    <insert id="insertDiClassicCase" parameterType="DiClassicCase">
+        insert into di_classic_case
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="caseName != null">case_name,</if>
+            <if test="caseClassificationId != null">case_classification_id,</if>
+            <if test="caseClassificationName != null">case_classification_name,</if>
+            <if test="caseNumber != null and caseNumber != ''">case_number,</if>
+            <if test="briefExplanationCase != null and briefExplanationCase != ''">brief_explanation_case,</if>
+            <if test="uploadOtherAttachments != null and uploadOtherAttachments != ''">upload_other_attachments,</if>
+            <if test="publisher != null">publisher,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="caseName != null">#{caseName},</if>
+            <if test="caseClassificationId != null">#{caseClassificationId},</if>
+            <if test="caseClassificationName != null">#{caseClassificationName},</if>
+            <if test="caseNumber != null and caseNumber != ''">#{caseNumber},</if>
+            <if test="briefExplanationCase != null and briefExplanationCase != ''">#{briefExplanationCase},</if>
+            <if test="uploadOtherAttachments != null and uploadOtherAttachments != ''">#{uploadOtherAttachments},</if>
+            <if test="publisher != null">#{publisher},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDiClassicCase" parameterType="DiClassicCase">
+        update di_classic_case
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="caseName != null">case_name = #{caseName},</if>
+            <if test="caseClassificationId != null">case_classification_id = #{caseClassificationId},</if>
+            <if test="caseClassificationName != null">case_classification_name = #{caseClassificationName},</if>
+            <if test="caseNumber != null and caseNumber != ''">case_number = #{caseNumber},</if>
+            <if test="briefExplanationCase != null and briefExplanationCase != ''">brief_explanation_case = #{briefExplanationCase},</if>
+            <if test="uploadOtherAttachments != null and uploadOtherAttachments != ''">upload_other_attachments = #{uploadOtherAttachments},</if>
+            <if test="publisher != null">publisher = #{publisher},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDiClassicCaseById" parameterType="Long">
+        delete from di_classic_case where id = #{id}
+    </delete>
+
+    <delete id="deleteDiClassicCaseByIds" parameterType="String">
+        delete from di_classic_case where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteDiCaseClassificationByIds" parameterType="String">
+        delete from di_case_classification where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <delete id="deleteDiCaseClassificationById" parameterType="Long">
+        delete from di_case_classification where id = #{id}
+    </delete>
+
+    <insert id="batchDiCaseClassification">
+        insert into di_case_classification( id, classification_no, classification_name, classification_labels, is_enabled, parent_id, image_icon, description) values
+		<foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.classificationNo}, #{item.classificationName}, #{item.classificationLabels}, #{item.isEnabled}, #{item.parentId}, #{item.imageIcon}, #{item.description})
+        </foreach>
+    </insert>
+</mapper>

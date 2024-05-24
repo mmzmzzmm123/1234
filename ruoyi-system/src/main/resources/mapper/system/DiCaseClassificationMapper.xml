@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.DiCaseClassificationMapper">
+    
+    <resultMap type="DiCaseClassification" id="DiCaseClassificationResult">
+        <result property="id"    column="id"    />
+        <result property="classificationNo"    column="classification_no"    />
+        <result property="classificationName"    column="classification_name"    />
+        <result property="classificationLabels"    column="classification_labels"    />
+        <result property="isEnabled"    column="is_enabled"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="imageIcon"    column="image_icon"    />
+        <result property="description"    column="description"    />
+    </resultMap>
+
+    <sql id="selectDiCaseClassificationVo">
+        select id, classification_no, classification_name, classification_labels, is_enabled, parent_id, image_icon, description from di_case_classification
+    </sql>
+
+    <select id="selectDiCaseClassificationList" parameterType="DiCaseClassification" resultMap="DiCaseClassificationResult">
+        <include refid="selectDiCaseClassificationVo"/>
+        <where>  
+            <if test="classificationName != null  and classificationName != ''"> and classification_name like concat('%', #{classificationName}, '%')</if>
+            <if test="classificationLabels != null  and classificationLabels != ''"> and classification_labels = #{classificationLabels}</if>
+            <if test="isEnabled != null  and isEnabled != ''"> and is_enabled = #{isEnabled}</if>
+            <if test="parentId != null  and parentId != ''"> and parent_id = #{parentId}</if>
+            <if test="imageIcon != null  and imageIcon != ''"> and image_icon = #{imageIcon}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+        </where>
+    </select>
+    
+    <select id="selectDiCaseClassificationById" parameterType="Long" resultMap="DiCaseClassificationResult">
+        <include refid="selectDiCaseClassificationVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDiCaseClassification" parameterType="DiCaseClassification">
+        insert into di_case_classification
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="classificationNo != null">classification_no,</if>
+            <if test="classificationName != null and classificationName != ''">classification_name,</if>
+            <if test="classificationLabels != null">classification_labels,</if>
+            <if test="isEnabled != null and isEnabled != ''">is_enabled,</if>
+            <if test="parentId != null">parent_id,</if>
+            <if test="imageIcon != null">image_icon,</if>
+            <if test="description != null">description,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="classificationNo != null">#{classificationNo},</if>
+            <if test="classificationName != null and classificationName != ''">#{classificationName},</if>
+            <if test="classificationLabels != null">#{classificationLabels},</if>
+            <if test="isEnabled != null and isEnabled != ''">#{isEnabled},</if>
+            <if test="parentId != null">#{parentId},</if>
+            <if test="imageIcon != null">#{imageIcon},</if>
+            <if test="description != null">#{description},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDiCaseClassification" parameterType="DiCaseClassification">
+        update di_case_classification
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="classificationNo != null">classification_no = #{classificationNo},</if>
+            <if test="classificationName != null and classificationName != ''">classification_name = #{classificationName},</if>
+            <if test="classificationLabels != null">classification_labels = #{classificationLabels},</if>
+            <if test="isEnabled != null and isEnabled != ''">is_enabled = #{isEnabled},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+            <if test="imageIcon != null">image_icon = #{imageIcon},</if>
+            <if test="description != null">description = #{description},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDiCaseClassificationById" parameterType="Long">
+        delete from di_case_classification where id = #{id}
+    </delete>
+
+    <delete id="deleteDiCaseClassificationByIds" parameterType="String">
+        delete from di_case_classification where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

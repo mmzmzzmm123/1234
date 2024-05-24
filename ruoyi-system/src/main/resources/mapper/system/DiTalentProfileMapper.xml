@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.DiTalentProfileMapper">
+    
+    <resultMap type="DiTalentProfile" id="DiTalentProfileResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="jobId"    column="job_id"    />
+        <result property="birthDate"    column="birth_date"    />
+        <result property="rank"    column="rank"    />
+        <result property="qualification"    column="qualification"    />
+        <result property="nameGraduationSchool"    column="name_graduation_school"    />
+        <result property="honoraryTitle"    column="honorary_title"    />
+        <result property="remarks"    column="remarks"    />
+    </resultMap>
+
+    <sql id="selectDiTalentProfileVo">
+        select id, name, id_number, job_id, birth_date, rank, qualification, name_graduation_school, honorary_title, remarks from di_talent_profile
+    </sql>
+
+    <select id="selectDiTalentProfileList" parameterType="DiTalentProfile" resultMap="DiTalentProfileResult">
+        <include refid="selectDiTalentProfileVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="idNumber != null  and idNumber != ''"> and id_number = #{idNumber}</if>
+            <if test="jobId != null  and jobId != ''"> and job_id = #{jobId}</if>
+            <if test="birthDate != null  and birthDate != ''"> and birth_date = #{birthDate}</if>
+            <if test="rank != null  and rank != ''"> and rank = #{rank}</if>
+            <if test="qualification != null  and qualification != ''"> and qualification = #{qualification}</if>
+            <if test="nameGraduationSchool != null  and nameGraduationSchool != ''"> and name_graduation_school = #{nameGraduationSchool}</if>
+            <if test="honoraryTitle != null  and honoraryTitle != ''"> and honorary_title = #{honoraryTitle}</if>
+            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
+        </where>
+    </select>
+    
+    <select id="selectDiTalentProfileById" parameterType="Long" resultMap="DiTalentProfileResult">
+        <include refid="selectDiTalentProfileVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertDiTalentProfile" parameterType="DiTalentProfile">
+        insert into di_talent_profile
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="name != null and name != ''">name,</if>
+            <if test="idNumber != null and idNumber != ''">id_number,</if>
+            <if test="jobId != null and jobId != ''">job_id,</if>
+            <if test="birthDate != null and birthDate != ''">birth_date,</if>
+            <if test="rank != null">rank,</if>
+            <if test="qualification != null">qualification,</if>
+            <if test="nameGraduationSchool != null and nameGraduationSchool != ''">name_graduation_school,</if>
+            <if test="honoraryTitle != null">honorary_title,</if>
+            <if test="remarks != null">remarks,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="name != null and name != ''">#{name},</if>
+            <if test="idNumber != null and idNumber != ''">#{idNumber},</if>
+            <if test="jobId != null and jobId != ''">#{jobId},</if>
+            <if test="birthDate != null and birthDate != ''">#{birthDate},</if>
+            <if test="rank != null">#{rank},</if>
+            <if test="qualification != null">#{qualification},</if>
+            <if test="nameGraduationSchool != null and nameGraduationSchool != ''">#{nameGraduationSchool},</if>
+            <if test="honoraryTitle != null">#{honoraryTitle},</if>
+            <if test="remarks != null">#{remarks},</if>
+         </trim>
+    </insert>
+
+    <update id="updateDiTalentProfile" parameterType="DiTalentProfile">
+        update di_talent_profile
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="idNumber != null and idNumber != ''">id_number = #{idNumber},</if>
+            <if test="jobId != null and jobId != ''">job_id = #{jobId},</if>
+            <if test="birthDate != null and birthDate != ''">birth_date = #{birthDate},</if>
+            <if test="rank != null">rank = #{rank},</if>
+            <if test="qualification != null">qualification = #{qualification},</if>
+            <if test="nameGraduationSchool != null and nameGraduationSchool != ''">name_graduation_school = #{nameGraduationSchool},</if>
+            <if test="honoraryTitle != null">honorary_title = #{honoraryTitle},</if>
+            <if test="remarks != null">remarks = #{remarks},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteDiTalentProfileById" parameterType="Long">
+        delete from di_talent_profile where id = #{id}
+    </delete>
+
+    <delete id="deleteDiTalentProfileByIds" parameterType="String">
+        delete from di_talent_profile where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
