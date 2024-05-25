@@ -48,9 +48,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <insert id="insertBaoliBizCarBrand" parameterType="BaoliBizCarBrand" useGeneratedKeys="true" keyProperty="id">
         insert into baoli_biz_car_brand
         <trim prefix="(" suffix=")" suffixOverrides=",">
+            parent_id,
             <if test="name != null">name,</if>
             <if test="letter != null">letter,</if>
-            <if test="parentId != null">parent_id,</if>
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
             <if test="createBy != null">create_by,</if>
@@ -59,9 +59,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="indexId != null">index_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">#{parentId},</if>
+            <if test="parentId == null">0,</if>
             <if test="name != null">#{name},</if>
             <if test="letter != null">#{letter},</if>
-            <if test="parentId != null">#{parentId},</if>
             <if test="createTime != null">#{createTime},</if>
             <if test="updateTime != null">#{updateTime},</if>
             <if test="createBy != null">#{createBy},</if>

@@ -42,6 +42,7 @@ public class BaoliBizRefuseOrderController extends BaseController
     public TableDataInfo list(BaoliBizRefuseOrder baoliBizRefuseOrder)
     {
         startPage();
+        baoliBizRefuseOrder.setApplicantId(getUserId());
         List<BaoliBizRefuseOrder> list = baoliBizRefuseOrderService.selectBaoliBizRefuseOrderList(baoliBizRefuseOrder);
         return getDataTable(list);
     }

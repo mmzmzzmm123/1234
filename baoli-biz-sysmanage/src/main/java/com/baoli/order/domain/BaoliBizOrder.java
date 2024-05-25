@@ -618,9 +618,6 @@ public class BaoliBizOrder extends BaseEntity
     @Excel(name = "是否贴息")
     private String isDiscount;
 
-    /** 总费率 */
-    @Excel(name = "总费率")
-    private Long feeRatio;
 
     /** 是否惠享荣 */
     @Excel(name = "是否惠享荣")
@@ -722,6 +719,47 @@ public class BaoliBizOrder extends BaseEntity
     private Long adjustLoanAmount;
     private String auditResult;
     private String auditComment;
+
+    private String publicAccount;
+    private String accountName;
+    private Double cardPersonRate;
+    private Double storeFeeRate;
+
+    public String getPublicAccount() {
+        return publicAccount;
+    }
+
+    public void setPublicAccount(String publicAccount) {
+        this.publicAccount = publicAccount;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public Double getCardPersonRate() {
+        return cardPersonRate;
+    }
+
+    public void setCardPersonRate(Double cardPersonRate) {
+        this.cardPersonRate = cardPersonRate;
+    }
+
+    public Double getStoreFeeRate() {
+        return storeFeeRate;
+    }
+
+    public void setStoreFeeRate(Double storeFeeRate) {
+        this.storeFeeRate = storeFeeRate;
+    }
+
+    /** 总费率 */
+    @Excel(name = "总费率")
+    private Long feeRatio;
 
     public String getAuditResult() {
         return auditResult;

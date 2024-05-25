@@ -9,6 +9,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="title"    column="title"    />
         <result property="feeType"    column="fee_type"    />
         <result property="bankId"    column="bank_id"    />
+        <result property="bankName"    column="bank_name"    />
         <result property="remark"    column="remark"    />
         <result property="caculateType"    column="caculate_type"    />
         <result property="executeType"    column="execute_type"    />
@@ -16,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectBaoliBizFeeRuleVo">
-        select id, title, fee_type, bank_id, remark, caculate_type, execute_type, content from baoli_biz_fee_rule
+        select id, title, fee_type, (select b.name from bl_sys_bank b where b.id = a.bank_id) bank_name,bank_id, remark, caculate_type, execute_type, content from baoli_biz_fee_rule a
     </sql>
 
     <select id="selectBaoliBizFeeRuleList" parameterType="BaoliBizFeeRule" resultMap="BaoliBizFeeRuleResult">

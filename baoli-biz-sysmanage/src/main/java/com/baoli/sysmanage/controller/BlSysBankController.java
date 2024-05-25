@@ -1,7 +1,14 @@
 package com.baoli.sysmanage.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.alibaba.fastjson2.JSONArray;
+import com.baoli.store.domain.BaoliBizStore;
+import com.baoli.store.service.IBaoliBizStoreService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +40,8 @@ public class BlSysBankController extends BaseController
 {
     @Autowired
     private IBlSysBankService blSysBankService;
+    @Autowired
+    private IBaoliBizStoreService baoliBizStoreService;
 
     /**
      * 查询银行管理列表
@@ -41,11 +50,52 @@ public class BlSysBankController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(BlSysBank blSysBank)
     {
-        startPage();
+        if(blSysBank.isPageAble()){
+            startPage();
+        }
         List<BlSysBank> list = blSysBankService.selectBlSysBankList(blSysBank);
         return getDataTable(list);
     }
+    @PreAuthorize("@ss.hasPermi('sysmanage:bank:list')")
+    @GetMapping("/listSignBanks")
+    public TableDataInfo listSignBanks(BlSysBank blSysBank){
+        BaoliBizStore store = baoliBizStoreService.selectBaoliBizStoreById(blSysBank.getStoreId());
+        JSONArray banks = JSONArray.parse(store.getSignBanks());
+        List<Integer> bankIds = new ArrayList<>(1);
+        for(int i=0;i<banks.size();i++){
+            bankIds.add((Integer)banks.getJSONObject(i).get("bankId"));
+        }
+        blSysBank.setParentSignBanks(bankIds);
+        List<BlSysBank> list = blSysBankService.selectBlSysBankList(blSysBank);
+        // 有下级
+        list = list.stream().filter((BlSysBank bl) ->{
+            return bl.getParentId() !=null;
+        }).collect(Collectors.toList());
 
+        while(list.size()> 0){
+            bankIds = filterList(list,bankIds);
+
+            blSysBank.setParentSignBanks(bankIds);
+            list = blSysBankService.selectBlSysBankList(blSysBank);
+        }
+        blSysBank.setSignBanks(bankIds);
+        blSysBank.setParentSignBanks(null);
+        list = blSysBankService.selectBlSysBankList(blSysBank);
+        return getDataTable(list);
+    }
+
+    private List<Integer> filterList(List<BlSysBank> list,List<Integer> bankIds){
+        AtomicReference<List<Integer>> finalBankIds = new AtomicReference<>(bankIds);
+        list.forEach(tmpItem ->{
+            finalBankIds.set(bankIds.stream().filter(bankItem -> {
+                return tmpItem.getParentId().longValue() != bankItem.longValue();
+            }).collect(Collectors.toList()));
+        });
+        list.forEach(tmpItem ->{
+            finalBankIds.get().add(tmpItem.getId().intValue());
+        });
+        return  finalBankIds.get();
+    }
     /**
      * 导出银行管理列表
      */
@@ -77,7 +127,20 @@ public class BlSysBankController extends BaseController
     @PostMapping
     public AjaxResult add(@RequestBody BlSysBank blSysBank)
     {
-        return toAjax(blSysBankService.insertBlSysBank(blSysBank));
+        String bankNames;
+        int result = 0;
+        // 如果需要批量添加
+        if(blSysBank.getName().contains(",")){
+            bankNames = blSysBank.getName();
+            String[] names = bankNames.split(",");
+            for (String name : names) {
+                blSysBank.setName(name);
+                result = blSysBankService.insertBlSysBank(blSysBank);
+            }
+        } else {
+            result = blSysBankService.insertBlSysBank(blSysBank);
+        }
+        return toAjax(result);
     }
 
     /**

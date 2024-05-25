@@ -18,11 +18,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="parentName"    column="parent_name"    />
     </resultMap>
 
     <sql id="selectBlSysBankVo">
-        select id, province_id,(select b.province from bl_sys_provinces b where b.provinceid = a.province_id) province_name, city_id,(select c.city from bl_sys_cities c  where c.cityid = a.city_id) city_name, name, code,bank_type, agency, create_by, create_time, update_by, update_time from bl_sys_bank a
-    </sql>
+        select ifnull(concat((select `name` from bl_sys_bank b where b.id = a.parent_id), '/',name),name) name,parent_id,id, province_id,(select b.province from bl_sys_provinces b where b.provinceid = a.province_id) province_name, city_id,(select c.city from bl_sys_cities c  where c.cityid = a.city_id) city_name, code,bank_type, agency, create_by, create_time, update_by, update_time from bl_sys_bank a
+</sql>
 
     <select id="selectBlSysBankList" parameterType="BlSysBank" resultMap="BlSysBankResult">
         <include refid="selectBlSysBankVo"/>
@@ -30,9 +32,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
             <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="code != null  and code != ''"> and code = #{code}</if>
+
             <if test="agency != null  and agency != ''"> and agency = #{agency}</if>
             <if test="bankType != null  and bankType != ''"> and bank_type = #{bankType}</if>
+            <if test="signBanks != null  and signBanks != ''"> and id in
+                <foreach collection="signBanks" item="signBank" open="(" separator="," close=")">
+                    #{signBank}
+                </foreach>
+            </if>
+            <if test="parentSignBanks != null  and parentSignBanks != ''"> and parent_id in
+                <foreach collection="parentSignBanks" item="signBank" open="(" separator="," close=")">
+                    #{signBank}
+                </foreach>
+            </if>
         </where>
     </select>
     
@@ -54,6 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time,</if>
             <if test="updateBy != null">update_by,</if>
             <if test="updateTime != null">update_time,</if>
+            <if test="parentId != null">parent_id,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="provinceId != null">#{provinceId},</if>
@@ -66,6 +79,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">#{createTime},</if>
             <if test="updateBy != null">#{updateBy},</if>
             <if test="updateTime != null">#{updateTime},</if>
+            <if test="parentId != null">#{parentId},</if>
          </trim>
     </insert>
 
@@ -82,6 +96,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateBy != null">update_by = #{updateBy},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
         </trim>
         where id = #{id}
     </update>

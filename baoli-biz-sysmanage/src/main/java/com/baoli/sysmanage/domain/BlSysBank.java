@@ -5,6 +5,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 银行管理对象 bl_sys_bank
  * 
@@ -65,8 +67,53 @@ public class BlSysBank extends BaseEntity
     /** 银行类型 */
     @Excel(name = "银行类型")
     private String bankType;
+    private Long parentId;
+    private String parentName;
+    private Long storeId;
+    private List<Integer> signBanks;
+    private List<Integer> parentSignBanks;
 
-    public void setId(Long id) 
+    public List<Integer> getParentSignBanks() {
+        return parentSignBanks;
+    }
+
+    public void setParentSignBanks(List<Integer> parentSignBanks) {
+        this.parentSignBanks = parentSignBanks;
+    }
+
+    public List<Integer> getSignBanks() {
+        return signBanks;
+    }
+
+    public void setSignBanks(List<Integer> signBanks) {
+        this.signBanks = signBanks;
+    }
+
+    public Long getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Long storeId) {
+        this.storeId = storeId;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public Long getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

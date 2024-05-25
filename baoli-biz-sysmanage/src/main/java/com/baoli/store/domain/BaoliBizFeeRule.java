@@ -30,6 +30,15 @@ public class BaoliBizFeeRule extends BaseEntity
     @Excel(name = "银行id")
     private Long bankId;
 
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
+    }
+
+    private String bankName;
     /** $column.columnComment */
     @Excel(name = "${comment}", readConverterExp = "$column.readConverterExp()")
     private String caculateType;
