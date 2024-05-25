@@ -1,7 +1,16 @@
 package com.baoli.store.controller;
 
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.common.core.domain.entity.SysRole;
+import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.system.domain.SysUserRole;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,6 +43,8 @@ public class BaoliBizStoreController extends BaseController
     @Autowired
     private IBaoliBizStoreService baoliBizStoreService;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
     /**
      * 查询商户管理列表
      */
@@ -41,7 +52,31 @@ public class BaoliBizStoreController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(BaoliBizStore baoliBizStore)
     {
-        startPage();
+        if(baoliBizStore.isPageAble()){
+            startPage();
+        }
+        List<SysRole> userRole = getLoginUser().getUser().getRoles();
+        Optional<SysRole> role= userRole.stream().max(Comparator.comparing(SysRole::getAreaRegion));
+        String areaRegion = "01";
+        areaRegion = role.get().getAreaRegion();
+        //不限制区域
+        if(!areaRegion.equals("03")){
+            List<Map<String,Object>> result = jdbcTemplate.queryForList("select (select area_region from sys_role b where b.role_id= a.role_id) area_region,province_id,city_id from sys_user_role a where user_id=?",getUserId());
+
+            List<Map<String,Object>> province = result.stream().filter((Map<String,Object> item)->{
+                return item.get("area_region").equals("02");
+            }).collect(Collectors.toList());
+
+            List<Map<String,Object>> city = result.stream().filter((Map<String,Object> item)->{
+                return item.get("area_region").equals("01");
+            }).collect(Collectors.toList());
+            if(province!=null && province.size()>0){
+                baoliBizStore.setProvinceParam(province);
+            }
+            if(city!=null && city.size()>0){
+                baoliBizStore.setCityParam(city);
+            }
+        }
         List<BaoliBizStore> list = baoliBizStoreService.selectBaoliBizStoreList(baoliBizStore);
         return getDataTable(list);
     }
