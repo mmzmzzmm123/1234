@@ -1,9 +1,13 @@
 package com.onethinker.file.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.onethinker.common.annotation.Excel;
 import com.onethinker.common.core.domain.BaseEntity;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 文件关联信息对象 t_file_relation
@@ -13,7 +17,7 @@ import lombok.Data;
  */
 @Data
 @TableName("t_file_relation")
-public class FileRelation extends BaseEntity {
+public class FileRelation implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -78,6 +82,18 @@ public class FileRelation extends BaseEntity {
      * 文件状态
      */
     private Integer status;
+
+    /**
+     * 创建时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
+
+    /**
+     * 更新时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date updateTime;
 
 
     public FileRelation() {
