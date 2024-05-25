@@ -1,11 +1,14 @@
 package com.onethinker.user.dto;
 
+import cn.hutool.crypto.SecureUtil;
 import com.github.pagehelper.util.StringUtil;
+import com.onethinker.common.constant.BkConstants;
 import com.onethinker.common.enums.PlatformUserTypeEnum;
 import lombok.Data;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 /**
@@ -53,5 +56,10 @@ public class PlatformUserReqDTO {
 //        if (StringUtils.isEmpty(phone) && StringUtils.isEmpty(email)) {
 //            throw new RuntimeException("手机号与邮箱不能同时为空");
 //        }
+    }
+
+    public String getPassword() {
+        return SecureUtil.aes(BkConstants.CRYPOTJS_KEY.getBytes(StandardCharsets.UTF_8)).encryptBase64(password);
+//        return password;
     }
 }

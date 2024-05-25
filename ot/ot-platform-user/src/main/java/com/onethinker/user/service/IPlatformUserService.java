@@ -124,20 +124,14 @@ public class IPlatformUserService {
         if (redisCache.hasKey(redisKey)) {
             return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(), PlatformUserDetail.class);
         }
-        PlatformUserDetail platformUserDetail = new PlatformUserDetail();
-        platformUserDetail.setDataId(dataId);
-        List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
-        if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
-            // 如果是空的情况下看看是否是账号信息保存
-            platformUserDetail = new PlatformUserDetail();
-            platformUserDetail.setUsername(dataId);
-            platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
-            if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
-                return null;
-            }
+        LambdaQueryWrapper<PlatformUserDetail> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PlatformUserDetail::getDataId,dataId);
+        PlatformUserDetail platformUserDetail = platformUserDetailMapper.selectOne(queryWrapper);
+        if (ObjectUtils.isEmpty(platformUserDetail)) {
+            return null;
         }
-        redisCache.setCacheObject(redisKey, platformUserDetails.get(0), 1, TimeUnit.DAYS);
-        return platformUserDetails.get(0);
+        redisCache.setCacheObject(redisKey, platformUserDetail, 1, TimeUnit.DAYS);
+        return platformUserDetail;
     }
 
     /**
