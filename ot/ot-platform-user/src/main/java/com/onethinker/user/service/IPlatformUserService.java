@@ -287,7 +287,6 @@ public class IPlatformUserService {
             password = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_PASSWORD);
         }
         platformUserDetail.setPassword(SecureUtil.aes(BkConstants.CRYPOTJS_KEY.getBytes(StandardCharsets.UTF_8)).encryptBase64(password));
-//        platformUserDetail.setPassword(password);
         platformUserDetail.setNickName(platformUser.getNickName());
         platformUserDetail.setDataId(platformUser.getDataId());
         platformUserDetail.setWeight(System.currentTimeMillis());
