@@ -2,6 +2,7 @@ package com.ruoyi.web.controller.system;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
@@ -9,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.ruoyi.system.domain.SysUserRole;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,7 +58,49 @@ public class SysUserController extends BaseController
 
     @Autowired
     private ISysPostService postService;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
+    /**
+     * 获取用户角色区域
+     */
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/listUserRoleRegion")
+    public TableDataInfo listUserRoleRegion(Long userId){
+        List<Map<String,Object>> result = null;
+        result = jdbcTemplate.queryForList("select id,role_id,user_id,role_name,province_id,city_id,(SELECT dict_label FROM sys_dict_data b where dict_type ='bl_area_region' and b.dict_value =m.area_region) area_region_name,\n" +
+                "(select province from bl_sys_provinces b where b.provinceid = m.province_id) province_name,\n" +
+                "(select city from bl_sys_cities b where b.cityid = m.city_id) city_name\n" +
+                " from (\n" +
+                "select id,role_id,user_id,(select role_name from sys_role b where b.role_id = a.role_id) role_name,(select area_region from sys_role b where b.role_id= a.role_id) area_region,ifnull(province_id,0) province_id,ifnull(city_id,0) city_id from sys_user_role a where a.user_id = ?\n" +
+                ") m",userId);
+        return getDataTable(result);
+    }
+
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @GetMapping("/delUserRoleRegion")
+    public AjaxResult delUserRoleRegion(Long id){
+        int result = 0;
+        result = jdbcTemplate.update("delete from sys_user_role where id = ? ",id);
+        return toAjax(result);
+    }
+    @PreAuthorize("@ss.hasPermi('system:user:list')")
+    @PostMapping("/addUserRoleRegion")
+    public AjaxResult addUserRoleRegion(@RequestBody Map<String,Object> userRole){
+        int result = 0;
+        String insertSql ="insert into sys_user_role(role_id,user_id) values (?,?)";
+        if(userRole.get("areaRegion").toString().equals("02")){
+            insertSql ="insert into sys_user_role(role_id,user_id,province_id) values (?,?,?)";
+            result = jdbcTemplate.update(insertSql,userRole.get("roleId"),userRole.get("userId"),userRole.get("provinceId"));
+        }
+        else if(userRole.get("areaRegion").toString().equals("01")){
+            insertSql ="insert into sys_user_role(role_id,user_id,province_id,city_id) values (?,?,?,?)";
+            result = jdbcTemplate.update(insertSql,userRole.get("roleId"),userRole.get("userId"),userRole.get("provinceId"),userRole.get("cityId"));
+        } else {
+            result = jdbcTemplate.update(insertSql,userRole.get("roleId"),userRole.get("userId"));
+        }
+        return toAjax(result);
+    }
     /**
      * 获取用户列表
      */

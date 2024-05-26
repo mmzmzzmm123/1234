@@ -61,7 +61,7 @@ public class BaoliBizStoreController extends BaseController
         areaRegion = role.get().getAreaRegion();
         //不限制区域
         if(!areaRegion.equals("03")){
-            List<Map<String,Object>> result = jdbcTemplate.queryForList("select (select area_region from sys_role b where b.role_id= a.role_id) area_region,province_id,city_id from sys_user_role a where user_id=?",getUserId());
+            List<Map<String,Object>> result = jdbcTemplate.queryForList("select (select area_region from sys_role b where b.role_id= a.role_id) area_region,ifnull(province_id,0) province_id,ifnull(city_id,0) city_id from sys_user_role a where user_id=?",getUserId());
 
             List<Map<String,Object>> province = result.stream().filter((Map<String,Object> item)->{
                 return item.get("area_region").equals("02");

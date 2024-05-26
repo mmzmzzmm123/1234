@@ -102,16 +102,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="brpInStore != null  and brpInStore != ''"> and brp_in_store = #{brpInStore}</if>
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="status == null  || status == ''"> and status != '04'</if>
-            <if test="provinceParam != null"> and province_id in
+             <!-- 只有省 没有市 -->
+            <if test="provinceParam != null and cityParam == null"> and province_id in
              <foreach collection="provinceParam" item="province" separator="," open="(" close=")">
                #{province.province_id}
              </foreach>
              </if>
-
-            <if test="cityParam != null"> and city_id in
+            <!-- 只有市 没有省 -->
+            <if test="cityParam != null and provinceParam == null"> and city_id in
                 <foreach collection="cityParam" item="city" separator="," open="(" close=")">
                     #{city.city_id}
                 </foreach>
+            </if>
+
+            <!-- 省市 都有 -->
+            <if test="provinceParam != null and cityParam != null"> and ((province_id in
+                <foreach collection="provinceParam" item="province" separator="," open="(" close=")">
+                    #{province.province_id}
+                </foreach>
+                ) or (
+                city_id in
+                <foreach collection="cityParam" item="city" separator="," open="(" close=")">
+                    #{city.city_id}
+                </foreach>
+                ))
             </if>
         </where>
     </select>
