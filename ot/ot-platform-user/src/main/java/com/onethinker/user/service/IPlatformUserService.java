@@ -7,8 +7,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.onethinker.common.constant.BkConstants;
 import com.onethinker.common.core.redis.RedisCache;
-import com.onethinker.common.enums.CacheEnum;
-import com.onethinker.common.enums.SysConfigKeyEnum;
+import com.onethinker.common.enums.*;
 import com.onethinker.common.utils.DateUtils;
 import com.onethinker.common.utils.SecurityUtils;
 import com.onethinker.common.utils.StringUtils;
@@ -19,8 +18,6 @@ import com.onethinker.system.service.ISysConfigService;
 import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.domain.PlatformUserDetail;
 import com.onethinker.user.dto.PlatformUserReqDTO;
-import com.onethinker.common.enums.CodeTypeEnum;
-import com.onethinker.common.enums.PlatformUserTypeEnum;
 import com.onethinker.user.mapper.PlatformUserDetailMapper;
 import com.onethinker.user.mapper.PlatformUserMapper;
 import com.onethinker.user.platform.UserStorage;
@@ -122,7 +119,7 @@ public class IPlatformUserService {
         String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + dataId;
 
         if (redisCache.hasKey(redisKey)) {
-            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(), PlatformUserDetail.class);
+            return redisCache.getCacheObject(redisKey);
         }
         LambdaQueryWrapper<PlatformUserDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PlatformUserDetail::getDataId,dataId);
@@ -225,7 +222,7 @@ public class IPlatformUserService {
             // 保存
             platformUserDetail.setAvatarUrl(ObjectUtils.isEmpty(reqDTO.getAvatarUrl()) ? platformUser.getAvatarUrl() : reqDTO.getAvatarUrl());
             platformUserDetail.setNickName(ObjectUtils.isEmpty(reqDTO.getNickName()) ? platformUser.getNickName() : reqDTO.getNickName());
-            platformUserDetail.setEnabled(PlatformUserDetail.STATE_TYPE_ENABLED);
+            platformUserDetail.setEnabled(SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
             platformUserDetail.setType(PlatformUserTypeEnum.WX.name());
             platformUserDetail.setDataId(reqDTO.getDataId());
             platformUserDetail.setWeight(System.currentTimeMillis());
@@ -267,7 +264,7 @@ public class IPlatformUserService {
     public PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser, PlatformUserReqDTO reqDTO) {
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
         platformUserDetail.setAvatarUrl(platformUser.getAvatarUrl());
-        platformUserDetail.setEnabled(PlatformUserDetail.STATE_TYPE_ENABLED);
+        platformUserDetail.setEnabled(SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
         platformUserDetail.setType(PlatformUserTypeEnum.WEB.name());
         if (StringUtils.isNotEmpty(reqDTO.getUserName())) {
             platformUserDetail.setUsername(reqDTO.getUserName());
@@ -278,9 +275,9 @@ public class IPlatformUserService {
         if (StringUtils.isNotEmpty(reqDTO.getPassword())) {
             password = reqDTO.getPassword();
         } else {
-            password = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_PASSWORD);
+            password = SecureUtil.aes(BkConstants.CRYPOTJS_KEY.getBytes(StandardCharsets.UTF_8)).encryptBase64(sysConfigService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_PASSWORD));
         }
-        platformUserDetail.setPassword(SecureUtil.aes(BkConstants.CRYPOTJS_KEY.getBytes(StandardCharsets.UTF_8)).encryptBase64(password));
+        platformUserDetail.setPassword(password);
         platformUserDetail.setNickName(platformUser.getNickName());
         platformUserDetail.setDataId(platformUser.getDataId());
         platformUserDetail.setWeight(System.currentTimeMillis());

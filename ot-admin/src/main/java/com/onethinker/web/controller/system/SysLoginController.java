@@ -9,6 +9,7 @@ import com.onethinker.common.utils.SecurityUtils;
 import com.onethinker.framework.web.service.SysLoginService;
 import com.onethinker.framework.web.service.SysPermissionService;
 import com.onethinker.system.service.ISysMenuService;
+import com.onethinker.user.service.IPlatformUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,9 @@ public class SysLoginController {
 
     @Autowired
     private SysPermissionService permissionService;
+
+    @Autowired
+    private IPlatformUserService platformUserService;
 
     /**
      * 登录方法
@@ -66,6 +70,7 @@ public class SysLoginController {
         ajax.put("user", user);
         ajax.put("roles", roles);
         ajax.put("permissions", permissions);
+        ajax.put("platformUser",platformUserService.queryLoginUserInfo());
         return ajax;
     }
 

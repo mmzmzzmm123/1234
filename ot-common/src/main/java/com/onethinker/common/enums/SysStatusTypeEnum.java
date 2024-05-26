@@ -1,0 +1,24 @@
+package com.onethinker.common.enums;
+
+import lombok.Getter;
+
+/**
+ * @author yangyouqi
+ * @date 2024/5/26
+ *
+ */
+@Getter
+public enum SysStatusTypeEnum {
+    STATUS_TYPE_ENABLED(0,"启用"),
+
+    STATUS_TYPE_DISABLE(1,"禁用");
+
+    int code;
+
+    String desc;
+
+    SysStatusTypeEnum(int code, String desc) {
+        this.code = code;
+        this.desc = desc;
+    }
+}

@@ -18,17 +18,6 @@ import java.util.Date;
 @TableName("t_platform_user_detail")
 public class PlatformUserDetail implements Serializable {
 
-    /**
-     * 启用
-     */
-    public static final Integer STATE_TYPE_ENABLED = 1;
-
-    /**
-     * 禁用
-     */
-    public static final Integer STATE_TYPE_DISABLE = 0;
-
-
     private static final long serialVersionUID = 1L;
 
     public static final String DEFAULT_PASSWORD = "default_password";
