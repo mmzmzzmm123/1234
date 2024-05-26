@@ -254,11 +254,11 @@ public class BaoliBizOrder extends BaseEntity
         this.isDiscount = isDiscount;
     }
 
-    public Long getFeeRatio() {
+    public Double getFeeRatio() {
         return feeRatio;
     }
 
-    public void setFeeRatio(Long feeRatio) {
+    public void setFeeRatio(Double feeRatio) {
         this.feeRatio = feeRatio;
     }
 
@@ -759,7 +759,7 @@ public class BaoliBizOrder extends BaseEntity
 
     /** 总费率 */
     @Excel(name = "总费率")
-    private Long feeRatio;
+    private Double feeRatio;
 
     public String getAuditResult() {
         return auditResult;

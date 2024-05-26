@@ -9,10 +9,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="title"    column="title"    />
         <result property="feeRateType"    column="fee_rate_type"    />
         <result property="bankId"    column="bank_id"    />
+        <result property="bankName"    column="bank_name"    />
         <result property="remark"    column="remark"    />
         <result property="brandId"    column="brand_id"    />
+        <result property="brandName"    column="brand_id"    />
         <result property="level2BrandId"    column="level2_brand_id"    />
         <result property="modelId"    column="model_id"    />
+        <result property="modelName"    column="model_id"    />
         <result property="subsidyType"    column="subsidy_type"    />
         <result property="content"    column="content"    />
     </resultMap>

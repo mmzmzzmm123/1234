@@ -81,6 +81,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="licenseLocation"    column="license_location"    />
         <result property="adjustLoanAmount"    column="adjust_loan_amount"    />
         <result property="licenseDate"    column="license_date"    />
+        <result property="publicAccount"    column="public_account"    />
+        <result property="accountName"    column="account_name"    />
+        <result property="cardPersonRate"    column="card_person_rate"    />
+        <result property="storeFeeRate"    column="store_fee_rate"    />
     </resultMap>
 
     <sql id="selectBaoliBizOrderVo">
@@ -395,6 +399,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="adjustLoanAmount != null">adjust_loan_amount = #{adjustLoanAmount},</if>
             <if test="mortgageDate != null">mortgage_date = #{mortgageDate},</if>
             <if test="licenseDate != null">license_date = #{licenseDate},</if>
+            <if test="publicAccount != null">public_account = #{publicAccount},</if>
+            <if test="accountName != null">account_name = #{accountName},</if>
+            <if test="cardPersonRate != null">card_person_rate = #{cardPersonRate},</if>
+            <if test="storeFeeRate != null">store_fee_rate = #{storeFeeRate},</if>
         </trim>
         where id = #{id}
     </update>

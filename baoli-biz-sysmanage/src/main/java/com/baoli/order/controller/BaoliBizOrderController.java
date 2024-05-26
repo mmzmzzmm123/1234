@@ -4,6 +4,10 @@ import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.baoli.order.domain.BaoliBizOrder;
 import com.baoli.order.service.IBaoliBizOrderService;
+import com.baoli.store.domain.BaoliBizFeeRateRule;
+import com.baoli.store.domain.BaoliBizStore;
+import com.baoli.store.service.IBaoliBizFeeRateRuleService;
+import com.baoli.store.service.IBaoliBizStoreService;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
@@ -11,6 +15,7 @@ import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.enums.BusinessType;
 import com.ruoyi.common.utils.DateUtils;
 import com.ruoyi.common.utils.poi.ExcelUtil;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,6 +41,10 @@ public class BaoliBizOrderController extends BaseController
 {
     @Autowired
     private IBaoliBizOrderService baoliBizOrderService;
+    @Autowired
+    private IBaoliBizStoreService baoliBizStoreService;
+    @Autowired
+    private IBaoliBizFeeRateRuleService baoliBizFeeRateRuleService;
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -54,6 +63,70 @@ public class BaoliBizOrderController extends BaseController
         startPage();
         List<BaoliBizOrder> list = baoliBizOrderService.selectBaoliBizOrderList(baoliBizOrder);
         return getDataTable(list);
+    }
+
+    @PreAuthorize("@ss.hasPermi('order:orderManage:list')")
+    @GetMapping("/listFeeRate")
+    public Map<String,Object> listFeeRate(@Param("orderId") Long orderId,@Param("opType") String opType){
+        Map<String,Object> result = new HashMap<>(1);
+        List<Map<String,Object>> storeFeeRateList = new ArrayList<>(1);
+        List<Map<String,Object>> customRateList = new ArrayList<>(1);
+        List<Map<String,Object>> totalRateList = new ArrayList<>(1);
+        //1 获取订单信息，取得 费率类型（新车、二手车、特殊车型），车型，银行，贴息，期数，商户id
+        BaoliBizOrder baoliBizOrder = baoliBizOrderService.selectBaoliBizOrderById(orderId);
+        String isDiscount = (opType == null || opType.equals("")) ? "01" : opType.equals("N") ? "01": "02";
+        Long storeId = baoliBizOrder.getStoreId();
+        Long modelId = baoliBizOrder.getCarModelId();
+        Long bankId = baoliBizOrder.getBank();
+        String period =baoliBizOrder.getPeriodNumber();
+        String carType = baoliBizOrder.getCarType();
+        //2 根据商户Id，获取费率信息，用上面的参数过滤费率
+        BaoliBizStore baoliBizStore = baoliBizStoreService.selectBaoliBizStoreById(storeId);
+        JSONArray feeRate = null;
+        if(baoliBizStore.getFeeRateSchema()!=null){
+            feeRate = JSONArray.parse(baoliBizStore.getFeeRateSchema());
+            // 获取全部费率规则
+            for(int i=0;i<feeRate.size();i++){
+                JSONArray ruleIds = (JSONArray)feeRate.getJSONObject(i).get("ruleIds");
+                BaoliBizFeeRateRule baoliBizFeeRateRule = baoliBizFeeRateRuleService.selectBaoliBizFeeRateRuleById(ruleIds.getLong(0));
+                //判断是否贴息、银行
+                if(isDiscount.equals(baoliBizFeeRateRule.getSubsidyType()) && bankId.equals(baoliBizFeeRateRule.getBankId())){
+                    //如果是特殊车型
+                    if(baoliBizFeeRateRule.getModelId()!=null){
+                        if(modelId!=null && modelId == baoliBizFeeRateRule.getModelId()){
+
+                        }
+                    } else {
+                        JSONArray rules = null;
+                        if(baoliBizFeeRateRule.getContent()!=null){
+                            rules = JSONArray.parse(baoliBizFeeRateRule.getContent());
+                            for(int j=0;j<rules.size();j++){
+                                if(rules.getJSONObject(j).getString("periodValue").equals(period)){
+                                    Map<String,Object> map = new HashMap<>(1);
+                                    map.put("label",rules.getJSONObject(j).get("cardholderRate"));
+                                    map.put("value",rules.getJSONObject(j).get("cardholderRate"));
+                                    storeFeeRateList.add(map);
+                                    map = new HashMap<>(1);
+                                    map.put("label",rules.getJSONObject(j).get("totalFeeRate"));
+                                    map.put("value",rules.getJSONObject(j).get("totalFeeRate"));
+                                    totalRateList.add(map);
+                                    map = new HashMap<>(1);
+                                    double cust = rules.getJSONObject(j).getDouble("totalFeeRate") - rules.getJSONObject(j).getDouble("cardholderRate") ;
+                                    map.put("label",cust);
+                                    map.put("value",cust);
+                                    customRateList.add(map);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        result.put("totalFeeRate",totalRateList);
+        result.put("custFeeRate",customRateList);
+        result.put("storeFeeRate",storeFeeRateList);
+        //3 返回 费率列表
+        return result;
     }
 
     @PreAuthorize("@ss.hasPermi('order:orderManage:list')")
@@ -217,6 +290,7 @@ public class BaoliBizOrderController extends BaseController
     }
     private void agree(BaoliBizOrder baoliBizOrder){
         String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/agree", baoliBizOrder.getAuditInfo(), String.class);
+        System.out.println(response);
     }
 
     private void refuse(BaoliBizOrder baoliBizOrder){
@@ -248,13 +322,19 @@ public class BaoliBizOrderController extends BaseController
             });
         }
         assignUser.put("form_pre_check_area",buf.toString().substring(1));
+        //如果预审区域不是河北省内
+        if(!buf.toString().equals("130000")){
+            assignUser.put("form_pre_check","2");
+            //如果不预审,并且status == 02 ，则修改status = 03
+            jdbcTemplate.update("update baoli_biz_order set status ='03' where id = ?",baoliBizOrder.getId());
+        }
         assignUser.put("orderId",baoliBizOrder.getId());
         assignUser.put("customerName",baoliBizOrder.getCustomerName());
         request.put("formData", assignUser);
         processDefinitionId =orderKey;
         request.put("processDefinitionId",processDefinitionId);
         String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/process/start", request, String.class);
-
+        System.out.println(response);
     }
     /**
      * 修改订单
