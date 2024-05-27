@@ -47,6 +47,9 @@
         <thumbnailator.version>0.4.20</thumbnailator.version>
         <esdk-obs-java.version>3.22.12</esdk-obs-java.version>
         <okhttp.version>4.9.0</okhttp.version>
+
+        <!--sms-->
+        <tencentcloud.sdk.version>3.1.1000</tencentcloud.sdk.version>
     </properties>
 
     <!-- 依赖声明 -->
@@ -274,6 +277,12 @@
                 <groupId>com.onethinker</groupId>
                 <artifactId>ot-bx-service</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.tencentcloudapi</groupId>
+                <artifactId>tencentcloud-sdk-java</artifactId>
+                <version>${tencentcloud.sdk.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

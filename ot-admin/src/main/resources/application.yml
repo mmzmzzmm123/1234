@@ -5,13 +5,11 @@ onethinker:
   # 版本
   version: 3.8.6
   # 版权年份
-  copyrightYear: 2023
-  # 实例演示开关
-  demoEnabled: true
+  copyrightYear: 2024
   # 文件路径 示例（ Windows配置D:/onethinker/uploadPath，Linux配置 /home/onethinker/uploadPath）
   profile: /onethinker/public/ywkj
   # 获取ip地址开关
-  addressEnabled: false
+  addressEnabled: true
   # 验证码类型 math 数字计算 char 字符验证
   captchaType: math
   #文件存储配置，不使用的情况下可以不写
@@ -21,69 +19,22 @@ onethinker:
       enabled: true
     #允许的文件后缀 不写默认全部允许
     allow-extension:
-    #允许的文件类型
+    #允许的文件类型 不写默认全部允许
     allow-mime:
-      - application/octet-stream
-      - application/offset+octet-stream
-      - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
-      - application/vnd.openxmlformats-officedocument.wordprocessingml.document
-      - application/vnd.openxmlformats-officedocument.presentationml.presentation
-      - application/msword
-      - application/pdf
-      - application/rtf
-      - application/zip
-      - application/vnd.ms-excel
-      - application/vnd.ms-outlook
-      - application/vnd.ms-powerpoint
-      - application/vnd.ms-project
-      - application/vnd.ms-works
-      - application/gzip
-      - application/x-compress
-      - application/x-compressed
-      - application/x-gzip
-      - application/x-mscardfile
-      - application/x-tar
-      - application/x-tika-ooxml
-      - application/x-tika-msoffice
-      - application/x-7z-compressed
-      - application/x-rar-compressed
-
-      - audio/mpeg
-      - audio/x-wav
-
-      - image/bmp
-      - image/gif
-      - image/jpeg
-      - image/png
-      - image/svg+xml
-      - image/tiff
-      - image/x-icon
-      - image/webp
-
-      - text/plain
-      - text/css
-      - text/html
-      - text/richtext
-      - application/xml
-
-      - video/mpeg
-      - video/quicktime
-      - video/x-msvideo
-      - video/mp4
     #默认使用的存储平台
-    default-platform: huawei-obs
+    default-platform: local
     # 本地存储
     local:
       # 存储平台标识
       platform: local
       # 文件路径
-      base-path: C:/Users/yyq/Desktop/upload
+      base-path: /onethinker/public/ywkj
       # 访问域名
       domain: http://127.0.0.1:18081/
     # 腾讯云 COS
     tencent-cos:
       # 存储平台标识
-      platform: tencent-cos
+      platform: tencent
       # 启用存储
       enable-storage: true
       secret-id: 'AKIDDskl0ELH1jJoFXn7OxdkqJoEUjMcrtpq'
@@ -99,7 +50,7 @@ onethinker:
     # 华为云 OBS ，不使用的情况下可以不写
     huawei-obs:
       # 存储平台标识
-      platform: huawei-obs
+      platform: huawei
       # 启用存储
       enable-storage: false
       access-key: 'T3FOARI4F8K8MOHWG49F'
@@ -113,18 +64,27 @@ onethinker:
     #阿里云 OSS
     aliyun-oss:
       # 存储平台标识
-      platform: aliyun-oss
+      platform: aliyun
       base-path: /home
     #七牛云 kodo
     qiniu-kodo:
       # 存储平台标识
-      platform: qiniu-kodo
+      platform: qiniu
       base-path: /home
     # 百度云 BOS
     baidu-bos:
       # 存储平台标识
-      platform: baidu-bos
+      platform: baidu
       base-path: /home
+  sms-storage:
+    # 腾讯云 COS
+    tencent-sms:
+      # 存储平台标识
+      platform: tencent
+      # 启用下发
+      enable-storage: true
+      secret-id: 'AKIDDskl0ELH1jJoFXn7OxdkqJoEUjMcrtpq'
+      secret-key: 'SrM1fZPSfkijoz2AJZqBRaozxoYClKtV'
 
 
 # 开发环境配置

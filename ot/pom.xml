@@ -11,6 +11,7 @@
         <module>ot-file-storage</module>
         <module>ot-platform-user</module>
         <module>ot-bx-service</module>
+        <module>ot-sms-storage</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>
