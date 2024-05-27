@@ -4,6 +4,7 @@ import cn.hutool.crypto.SecureUtil;
 import com.github.pagehelper.util.StringUtil;
 import com.onethinker.common.constant.BkConstants;
 import com.onethinker.common.enums.PlatformUserTypeEnum;
+import com.onethinker.common.utils.SecurityUtils;
 import lombok.Data;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -27,6 +28,7 @@ public class PlatformUserReqDTO {
 
     private String code;
     private String openId;
+
     private String phone;
 
     private String avatarUrl;
@@ -67,8 +69,28 @@ public class PlatformUserReqDTO {
         Assert.isTrue(!password.matches(specialCharPattern), "必须包含至少一个特殊字符");
     }
 
+    /**
+     * 校验绑定手机号相关参数信息
+     *
+     */
+    public void existsParamsByBindPhoneOrEmail() {
+        Assert.isTrue(StringUtil.isNotEmpty(code),"验证码不能为空");
+        Assert.isTrue(StringUtil.isNotEmpty(uuid),"验证码信息不能为空");
+        if (StringUtil.isEmpty(phone) && StringUtil.isEmpty(email)) {
+            throw new RuntimeException("绑定信息不存在");
+        }
+        String dataId = SecurityUtils.getLoginUser().getDataId();
+        if (Objects.isNull(this.dataId)) {
+            this.dataId = dataId;
+        } else if (!Objects.equals(dataId,this.dataId)) {
+            throw new RuntimeException("用户信息非法，请重新登录");
+        }
+    }
+
     public String getPassword() {
         return SecureUtil.aes(BkConstants.CRYPOTJS_KEY.getBytes(StandardCharsets.UTF_8)).encryptBase64(password);
 //        return password;
     }
+
+
 }

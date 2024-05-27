@@ -56,7 +56,7 @@ public class WebUserStorage implements UserStorage {
         // 参数有效性校验
         reqDTO.existsParams();
         // 验证码有效性校验
-        validateCaptcha(reqDTO.getDataId(),reqDTO.getCode(),reqDTO.getUuid());
+        platformUserService.validateCaptcha(reqDTO.getDataId(),reqDTO.getCode(),reqDTO.getUuid());
         // 保存用户明细信息
         PlatformUserDetail existsUser = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
         Assert.isTrue(ObjectUtils.isEmpty(existsUser), "账号已被注册");
@@ -76,30 +76,5 @@ public class WebUserStorage implements UserStorage {
         // 获取权限内容
         String token = loginService.loginFe(platformUserDetail.getDataId());
         return PlatformUserResDTO.foramtResponse(token, platformUserDetail);
-    }
-
-    /**
-     * 校验验证码
-     *
-     * @param username 用户名
-     * @param code     验证码
-     * @param uuid     唯一标识
-     * @return 结果
-     */
-    public void validateCaptcha(String username, String code, String uuid) {
-        boolean captchaEnabled = configService.selectCaptchaEnabled();
-        if (captchaEnabled) {
-            String verifyKey = CacheEnum.CAPTCHA_CODE_KEY.getCode() + com.onethinker.common.utils.StringUtils.nvl(uuid, "");
-            String captcha = redisCache.getCacheObject(verifyKey);
-            redisCache.deleteObject(verifyKey);
-            if (captcha == null) {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));
-                throw new CaptchaExpireException();
-            }
-            if (!code.equalsIgnoreCase(captcha)) {
-                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")));
-                throw new CaptchaException();
-            }
-        }
     }
 }
