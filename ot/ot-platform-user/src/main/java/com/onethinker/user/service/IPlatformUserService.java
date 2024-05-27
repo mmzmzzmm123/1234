@@ -1,12 +1,13 @@
 package com.onethinker.user.service;
 
-import cn.hutool.crypto.SecureUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.github.pagehelper.util.StringUtil;
-import com.onethinker.common.constant.BkConstants;
 import com.onethinker.common.constant.Constants;
 import com.onethinker.common.core.redis.RedisCache;
-import com.onethinker.common.enums.*;
+import com.onethinker.common.enums.CacheEnum;
+import com.onethinker.common.enums.PlatformUserTypeEnum;
+import com.onethinker.common.enums.SysConfigKeyEnum;
+import com.onethinker.common.enums.SysStatusTypeEnum;
 import com.onethinker.common.exception.user.CaptchaException;
 import com.onethinker.common.exception.user.CaptchaExpireException;
 import com.onethinker.common.utils.*;
@@ -15,11 +16,9 @@ import com.onethinker.framework.manager.factory.AsyncFactory;
 import com.onethinker.framework.web.service.SysLoginService;
 import com.onethinker.mail.service.IMailService;
 import com.onethinker.system.service.ISysConfigService;
-import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.domain.PlatformUserDetail;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.mapper.PlatformUserDetailMapper;
-import com.onethinker.user.mapper.PlatformUserMapper;
 import com.onethinker.user.platform.UserStorage;
 import com.onethinker.wechat.service.IMinWechatService;
 import lombok.Data;
@@ -30,7 +29,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 
 import java.lang.reflect.Constructor;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -53,9 +51,6 @@ public class IPlatformUserService {
 
     @Autowired
     private PlatformUserDetailMapper platformUserDetailMapper;
-
-    @Autowired
-    private PlatformUserMapper platformUserMapper;
 
     @Autowired
     private ISysConfigService configService;
@@ -141,56 +136,6 @@ public class IPlatformUserService {
         LambdaQueryWrapper<PlatformUserDetail> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PlatformUserDetail::getType, type);
         return platformUserDetailMapper.selectList(queryWrapper);
-    }
-
-    public PlatformUserDetail saveEntryUserDetailByWx(PlatformUser platformUser, PlatformUserReqDTO reqDTO) {
-        String redisKey = REDIS_KEY + reqDTO.getDataId();
-
-        PlatformUserDetail platformUserDetail = new PlatformUserDetail();
-        platformUserDetail.setDataId(reqDTO.getDataId());
-        platformUserDetail.setType(PlatformUserTypeEnum.WX.name());
-        List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
-        if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
-            // 保存
-            platformUserDetail.setAvatarUrl(ObjectUtils.isEmpty(reqDTO.getAvatarUrl()) ? platformUser.getAvatarUrl() : reqDTO.getAvatarUrl());
-            platformUserDetail.setNickName(ObjectUtils.isEmpty(reqDTO.getNickName()) ? platformUser.getNickName() : reqDTO.getNickName());
-            platformUserDetail.setEnabled(SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
-            platformUserDetail.setType(PlatformUserTypeEnum.WX.name());
-            platformUserDetail.setDataId(reqDTO.getDataId());
-            platformUserDetail.setWeight(System.currentTimeMillis());
-            platformUserDetail.setCreateTime(new Date());
-            platformUserDetail.setLoginEndTime(System.currentTimeMillis());
-            platformUserDetailMapper.insertPlatformUserDetail(platformUserDetail);
-        } else {
-            // 更新手机号
-            platformUserDetail = platformUserDetails.get(0);
-            if (!ObjectUtils.isEmpty(platformUserDetail.getDataId()) && !platformUserDetail.getDataId().equals(platformUser.getDataId())) {
-                throw new RuntimeException("该微信号已绑定手机号");
-            }
-            platformUserDetail.setDataId(platformUser.getDataId());
-            platformUserDetail.setUpdateTime(new Date());
-            platformUserDetailMapper.updatePlatformUserDetail(platformUserDetail);
-        }
-        redisCache.setCacheObject(redisKey, platformUserDetail, 1, TimeUnit.DAYS);
-        return platformUserDetail;
-    }
-
-    public void existsWxRegister(String openId, String phone) {
-        PlatformUserDetail platformUserDetail = new PlatformUserDetail();
-        platformUserDetail.setDataId(phone);
-        platformUserDetail.setType(PlatformUserTypeEnum.WEB.name());
-        List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectPlatformUserDetailList(platformUserDetail);
-        if (ObjectUtils.isEmpty(platformUserDetails) || platformUserDetails.isEmpty()) {
-            return;
-        }
-        platformUserDetail = platformUserDetails.get(0);
-        if (!platformUserDetail.getDataId().equals(openId)) {
-            throw new RuntimeException("手机号已被其他微信绑定");
-        }
-    }
-
-    public void insertPlatformUser(PlatformUser platformUser) {
-        platformUserMapper.insertPlatformUser(platformUser);
     }
 
     /**

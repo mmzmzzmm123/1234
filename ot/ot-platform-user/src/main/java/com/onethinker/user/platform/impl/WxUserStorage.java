@@ -1,24 +1,18 @@
 package com.onethinker.user.platform.impl;
 
-import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.hutool.core.lang.Assert;
 import com.onethinker.common.core.redis.RedisCache;
-import com.onethinker.common.enums.SysConfigKeyEnum;
-import com.onethinker.common.utils.PhoneUtils;
+import com.onethinker.common.enums.PlatformUserTypeEnum;
 import com.onethinker.common.utils.StringUtils;
 import com.onethinker.framework.web.service.SysLoginService;
 import com.onethinker.system.service.ISysConfigService;
-import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.domain.PlatformUserDetail;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
-import com.onethinker.common.enums.PlatformUserTypeEnum;
 import com.onethinker.user.platform.UserStorage;
 import com.onethinker.user.service.IPlatformUserService;
 import com.onethinker.wechat.service.IMinWechatService;
 import lombok.extern.log4j.Log4j2;
-import org.apache.poi.util.StringUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Date;

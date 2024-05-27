@@ -1,13 +1,7 @@
 package com.onethinker.user.platform;
 
-import com.onethinker.common.enums.CacheEnum;
-import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author yangyouqi

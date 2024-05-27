@@ -2,19 +2,10 @@ package com.onethinker.user.platform.impl;
 
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.onethinker.common.constant.Constants;
 import com.onethinker.common.core.redis.RedisCache;
-import com.onethinker.common.enums.CacheEnum;
 import com.onethinker.common.enums.PlatformUserTypeEnum;
-import com.onethinker.common.enums.SysConfigKeyEnum;
-import com.onethinker.common.exception.user.CaptchaException;
-import com.onethinker.common.exception.user.CaptchaExpireException;
-import com.onethinker.common.utils.MessageUtils;
-import com.onethinker.framework.manager.AsyncManager;
-import com.onethinker.framework.manager.factory.AsyncFactory;
 import com.onethinker.framework.web.service.SysLoginService;
 import com.onethinker.system.service.ISysConfigService;
-import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.domain.PlatformUserDetail;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
@@ -22,12 +13,8 @@ import com.onethinker.user.platform.UserStorage;
 import com.onethinker.user.service.IPlatformUserService;
 import com.onethinker.wechat.service.IMinWechatService;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 /**
