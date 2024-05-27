@@ -97,15 +97,15 @@ public class BaoliBizApplyController extends BaseController
             }else {
                 insertResult = baoliBizApplyService.insertBaoliBizApply(baoliBizApply);
             }
-            JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"Flowable1784092644025155584:8:1784236651778682880\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
+            JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
             JSONObject startUserInfo = request.getJSONObject("startUserInfo");
             startUserInfo.put("id", getUserId());
             startUserInfo.put("name", getLoginUser().getUser().getNickName());
             String processDefinitionId = "";
-            String accountReplyKey = "Flowable1784092644025155584:1:1793615214676029440";
-            String feeKey = "Flowable1784249957583171584:1:1793615300965445633";
-            String storeKey = "Flowable1784238566084194304:1:1793615269235535872";
-            String labelKey = "Flowable1784236563664744448:1:1793615241490214912";
+            String accountReplyKey = "Flowable1784092644025155584:1:1794722076439949312";
+            String feeKey = "Flowable1784249957583171584:1:1794722166613291008";
+            String storeKey = "Flowable1784238566084194304:1:1794722140981899264";
+            String labelKey = "Flowable1784236563664744448:1:1794722113890889728";
             request.getJSONObject("formData").put("applyId", baoliBizApply.getId());
             switch (baoliBizApply.getApplyType()) {
                 case "01":

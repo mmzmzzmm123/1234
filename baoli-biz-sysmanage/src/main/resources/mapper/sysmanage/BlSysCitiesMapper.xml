@@ -22,21 +22,30 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="cityid != null  and cityid != ''"> and cityid = #{cityid}</if>
             <if test="city != null  and city != ''"> and city = #{city}</if>
             <if test="provinceid != null  and provinceid != ''"> and provinceid = #{provinceid}</if>
-            <if test="areaRegion != null  and areaRegion != '' and areaRegion =='01' ">
-                <if test="limitAreas != null">
-                    and cityid in
-                    <foreach item="city" collection="limitAreas" open="(" separator="," close=")">
-                        #{city}
-                    </foreach>
-                </if>
+            <if test="limitCities != null and limitProvinces ==null">
+                and cityid in
+                <foreach item="city" collection="limitCities" open="(" separator="," close=")">
+                    #{city.cityId}
+                </foreach>
             </if>
-            <if test="areaRegion != null  and areaRegion != '' and areaRegion =='02' ">
-                <if test="limitAreas != null">
-                    provinceid in
-                    <foreach item="province" collection="limitAreas" open="(" separator="," close=")">
-                        #{province}
-                    </foreach>
-                </if>
+
+            <if test="limitCities == null  and limitProvinces !=null">
+                and provinceid in
+                <foreach item="city" collection="limitProvinces" open="(" separator="," close=")">
+                    #{city.provinceId}
+                </foreach>
+            </if>
+
+            <if test="limitCities != null and limitProvinces !=null">
+                and ((provinceid in
+                <foreach item="city" collection="limitProvinces" open="(" separator="," close=")">
+                    #{city.provinceId}
+                </foreach>)
+                or (cityid in
+                <foreach item="city" collection="limitCities" open="(" separator="," close=")">
+                    #{city.cityId}
+                </foreach>
+                ))
             </if>
         </where>
     </select>

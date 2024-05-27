@@ -160,7 +160,7 @@ public class BaoliBizStore extends BaseEntity
 
     /** 被回访驻店 */
     @Excel(name = "被回访驻店")
-    private String brpInStore;
+    private Long brpInStore;
 
     private String cityName;
     private String brandName;
@@ -494,12 +494,12 @@ public class BaoliBizStore extends BaseEntity
     {
         return brpPhoneNumber;
     }
-    public void setBrpInStore(String brpInStore) 
+    public void setBrpInStore(Long brpInStore)
     {
         this.brpInStore = brpInStore;
     }
 
-    public String getBrpInStore() 
+    public Long getBrpInStore()
     {
         return brpInStore;
     }

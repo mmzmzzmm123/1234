@@ -86,13 +86,13 @@ public class BaoliBizOrderLabelController extends BaseController
         baoliBizOrderLabel.setStatus("01");//未审核
 
         int insertResult = baoliBizOrderLabelService.insertBaoliBizOrderLabel(baoliBizOrderLabel);
-        JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"Flowable1784092644025155584:8:1784236651778682880\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
+        JSONObject request = JSONObject.parseObject("{\"processDefinitionId\":\"\",\"formData\":{},\"processUsers\":{},\"startUserInfo\":{\"id\":\"1\",\"name\":\"admin\",\"type\":\"user\"}}");
         JSONObject startUserInfo = request.getJSONObject("startUserInfo");
         startUserInfo.put("id",getUserId());
         startUserInfo.put("name", getLoginUser().getUser().getNickName());
         String processDefinitionId = "";
 
-        String labelKey="Flowable1784236563664744448:1:1793615241490214912";
+        String labelKey="Flowable1784236563664744448:1:1794722113890889728";
         String selectedUser = "{\"form_assign_user\":[{\"id\":5,\"name\":\"驻店测试用户\",\"type\":\"user\",\"sex\":false,\"selected\":false}]}";
         JSONObject assignUser = JSONObject.parseObject(selectedUser);
         assignUser.getJSONArray("form_assign_user").getJSONObject(0).put("id",baoliBizOrderLabel.getReceiveUserId());

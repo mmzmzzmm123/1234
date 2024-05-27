@@ -1,5 +1,6 @@
 package com.baoli.sysmanage.domain;
 
+import com.ruoyi.system.domain.SysUserRole;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -43,23 +44,23 @@ public class BlSysCities extends BaseEntity
 
     private String provinceName;
     private boolean limitCity;
-    private String areaRegion;
-    private List<String> limitAreas;
+    private List<SysUserRole> limitCities;
+    private List<SysUserRole> limitProvinces;
 
-    public String getAreaRegion() {
-        return areaRegion;
+    public List<SysUserRole> getLimitCities() {
+        return limitCities;
     }
 
-    public void setAreaRegion(String areaRegion) {
-        this.areaRegion = areaRegion;
+    public void setLimitCities(List<SysUserRole> limitCities) {
+        this.limitCities = limitCities;
     }
 
-    public List<String> getLimitAreas() {
-        return limitAreas;
+    public List<SysUserRole> getLimitProvinces() {
+        return limitProvinces;
     }
 
-    public void setLimitAreas(List<String> limitAreas) {
-        this.limitAreas = limitAreas;
+    public void setLimitProvinces(List<SysUserRole> limitProvinces) {
+        this.limitProvinces = limitProvinces;
     }
 
     public boolean isLimitCity() {

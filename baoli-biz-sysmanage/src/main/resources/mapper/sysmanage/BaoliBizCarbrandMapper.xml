@@ -28,6 +28,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
             <if test="letter != null  and letter != ''"> and ifnull(b.letter,(select a.letter from baoli_biz_car_brand a where a.id = b.parent_id)) = #{letter}</if>
             <if test="parentId != null "> and parent_id = #{parentId}</if>
+            <!--<if test="brandLevel == null "> and parent_id = 0</if>-->
             <if test="status != null  and status != ''"> and status = #{status}</if>
             <if test="indexId != null  and indexId != ''"> and index_id = #{indexId}</if>
             <if test="brandId != null  and brandId != ''"> and (id = #{brandId} or parent_id = #{brandId})</if>

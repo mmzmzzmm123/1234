@@ -59,16 +59,18 @@ public class BlSysCitiesController extends BaseController
             sysUserRole.setUserId(getUserId());
             // 获取最大areaRegion()
             List<SysUserRole> userRoleList = userService.selectUserRoleList(sysUserRole);
-            Optional<SysUserRole> op= userRoleList.stream().max(Comparator.comparing(SysUserRole::getAreaRegion));
-            // 如果areaRegion ==03 不限制 02 省 01 城市
-            List<String> areaList = null;
-            if(op.get().getAreaRegion().equals("01")){
-                areaList = userRoleList.stream().map(SysUserRole::getCityId).collect(Collectors.toList());
-            } else if(op.get().getAreaRegion().equals("02")){
-                areaList = userRoleList.stream().map(SysUserRole::getProvinceId).collect(Collectors.toList());
+            List<SysUserRole> cities = userRoleList.stream().filter(sysUserRole1 -> {
+                return sysUserRole1.getAreaRegion().equals("01");
+            }).collect(Collectors.toList());
+            List<SysUserRole> provinces = userRoleList.stream().filter(sysUserRole1 -> {
+                return sysUserRole1.getAreaRegion().equals("02");
+            }).collect(Collectors.toList());
+            if(cities!=null && cities.size()>0){
+                blSysCities.setLimitCities(cities);
             }
-            blSysCities.setAreaRegion(op.get().getAreaRegion());
-            blSysCities.setLimitAreas(areaList);
+            if(provinces!=null && provinces.size()>0){
+                blSysCities.setLimitProvinces(provinces);
+            }
         }
         List<BlSysCities> list = blSysCitiesService.selectBlSysCitiesList(blSysCities);
         return getDataTable(list);

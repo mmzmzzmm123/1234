@@ -49,8 +49,17 @@ public class BaoliBizCarBrand extends BaseEntity
     private String status;
     /** 汽车之家index_id */
     private String indexId;
+    private String brandLevel;
 
-    public void setId(Long id) 
+    public String getBrandLevel() {
+        return brandLevel;
+    }
+
+    public void setBrandLevel(String brandLevel) {
+        this.brandLevel = brandLevel;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
