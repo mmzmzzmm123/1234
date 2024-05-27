@@ -43,8 +43,6 @@ public class WebUserStorage implements UserStorage {
     private final ISysConfigService configService;
     private final RedisCache redisCache;
 
-
-
     public WebUserStorage(IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService, ISysConfigService configService,RedisCache redisCache) {
         this.platformUserService = platformUserService;
         this.loginService = loginService;
@@ -54,63 +52,30 @@ public class WebUserStorage implements UserStorage {
     }
     @Override
     @Transactional
-    public PlatformUserResDTO register(PlatformUserReqDTO reqDTO) {
+    public void register(PlatformUserReqDTO reqDTO) {
         // 参数有效性校验
         reqDTO.existsParams();
         // 验证码有效性校验
-        String dataId = existsByCode(reqDTO);
+        validateCaptcha(reqDTO.getDataId(),reqDTO.getCode(),reqDTO.getUuid());
         // 保存用户明细信息
-        PlatformUserDetail existsUser = platformUserService.selectPlatformUserDetailByDataId(dataId);
+        PlatformUserDetail existsUser = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
         Assert.isTrue(ObjectUtils.isEmpty(existsUser), "账号已被注册");
-        // 保存用户信息
-        PlatformUser platformUser = new PlatformUser();
-        platformUser.setDataId(dataId);
-        platformUser.setEnabled(PlatformUser.STATE_TYPE_ENABLED);
-        platformUser.setWeight(System.currentTimeMillis());
-        platformUser.setCreateTime(new Date());
-        platformUser.setAvatarUrl(configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_AVATAR_URL));
-        platformUser.setNickName(configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_NICK_NAME) + System.currentTimeMillis());
-        platformUserService.insertPlatformUser(platformUser);
         // 保存用户明细信息
-        PlatformUserDetail platformUserDetail = platformUserService.saveEntryUserDetailByAccount(platformUser, reqDTO);
-        // 获取权限内容
-        String token = loginService.loginFe(platformUserDetail.getDataId(), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
-        return PlatformUserResDTO.foramtResponse(token, platformUserDetail);
+        platformUserService.saveEntryUserDetail(reqDTO,PlatformUserTypeEnum.WEB);
     }
 
     @Override
     public PlatformUserResDTO login(PlatformUserReqDTO reqDTO) {
         // 根据来源不同实例化不同具体实例
         log.info("platform:{},dataId:{}",userTypeEnum.getMsg(),reqDTO.getCode());
-        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getDataId()), "凭证信息不能为空");
-        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPassword()), "密码信息不能为空");
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getDataId()), "账户不能为空");
+        Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPassword()), "密码不能为空");
         PlatformUserDetail platformUserDetail = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
-        Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail), "账号不存在");
-        Assert.isTrue(Objects.equals(reqDTO.getPassword(), platformUserDetail.getPassword()), "账户密码有误");
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail), "账号/密码有误");
+        Assert.isTrue(Objects.equals(reqDTO.getPassword(), platformUserDetail.getPassword()), "账号/密码有误");
         // 获取权限内容
-        String token = loginService.loginFe(platformUserDetail.getDataId(), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
+        String token = loginService.loginFe(platformUserDetail.getDataId());
         return PlatformUserResDTO.foramtResponse(token, platformUserDetail);
-    }
-
-    private String existsByCode(PlatformUserReqDTO reqDTO) {
-        String dataId = "";
-        String redisKey = "";
-        if (StringUtils.hasText(reqDTO.getPhone())) {
-            redisKey = CacheEnum.CAPTCHA_CODE_KEY.getCode().concat(reqDTO.getPhone()) + "_1";
-            String codeCache = redisCache.getCacheObject(redisKey);
-            Assert.isTrue(Objects.equals(codeCache, reqDTO.getCode()),"手机验证码错误！");
-            dataId = reqDTO.getPhone();
-        } else if (StringUtils.hasText(reqDTO.getEmail())) {
-            redisKey = CacheEnum.CAPTCHA_CODE_KEY.getCode().concat(reqDTO.getEmail()) + "_2";
-            String codeCache = redisCache.getCacheObject(redisKey);
-            Assert.isTrue(Objects.equals(codeCache, reqDTO.getCode()),"邮箱验证码错误！");
-            dataId = reqDTO.getEmail();
-        } else {
-            validateCaptcha(reqDTO.getUserName(),reqDTO.getCode(),reqDTO.getUuid());
-            dataId = reqDTO.getUserName();
-        }
-        redisCache.deleteObject(redisKey);
-        return dataId;
     }
 
     /**

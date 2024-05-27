@@ -53,6 +53,22 @@ public class IMinWechatServiceImpl implements IMinWechatService {
     }
 
     @Override
+    public String getIMinWechatOpenIdByCode(String code) {
+        Assert.isTrue(!StringUtils.isEmpty(code), "code不能为空");
+        try {
+            WxMaJscode2SessionResult session = this.getWxMaService().getUserService().getSessionInfo(code);
+            log.info(session.getSessionKey());
+            log.info(session.getOpenid());
+            return session.getOpenid();
+        } catch (WxErrorException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            WxMaConfigHolder.remove();//清理ThreadLocal
+        }
+    }
+
+    @Override
     public WxMaUserInfo getUserInfo(String sessionKey, String encryptedData, String ivStr) {
         // 解密用户信息
         try {

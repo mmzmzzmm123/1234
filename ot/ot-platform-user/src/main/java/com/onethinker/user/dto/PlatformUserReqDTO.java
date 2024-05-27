@@ -23,7 +23,6 @@ public class PlatformUserReqDTO {
      */
     private PlatformUserTypeEnum sourceType;
 
-    private String userName;
     private String password;
 
     private String code;
@@ -47,15 +46,25 @@ public class PlatformUserReqDTO {
      */
     public void existsParams() {
         String regex = "\\d{11}";
-        Assert.isTrue(StringUtil.isNotEmpty(userName),"账号不能为空");
-        Assert.isTrue(!userName.matches(regex), "账号不能为11位数字！");
-        Assert.isTrue(!userName.contains("@"), "账号不能包含@！");
-//        if (StringUtils.hasText(phone) && StringUtils.hasText(email)) {
-//            throw new RuntimeException("手机号与邮箱只能选择其中一个！");
-//        }
-//        if (StringUtils.isEmpty(phone) && StringUtils.isEmpty(email)) {
-//            throw new RuntimeException("手机号与邮箱不能同时为空");
-//        }
+        Assert.isTrue(StringUtil.isNotEmpty(dataId),"账号不能为空");
+        Assert.isTrue(!dataId.matches(regex), "账号不能为11位数字");
+        Assert.isTrue(!dataId.contains("@"), "账号不能包含@");
+        //密码规则：
+        //1.密码长度必须在8到20个字符之间。
+        //2.必须包含至少一个大写字母。
+        //3.必须包含至少一个小写字母。
+        //4.必须包含至少一个数字。
+        //5.必须包含至少一个特殊字符（例如，@, #, $, %, ^, &, *等）。
+        String upperCasePattern = ".*[A-Z].*";
+        String lowerCasePattern = ".*[a-z].*";
+        String digitPattern = ".*[0-9].*";
+        String specialCharPattern = ".*[!@#$%^&*()_+\\-=[\\]{};':\"\\\\|,.<>/?].*";
+        Assert.isTrue(StringUtil.isNotEmpty(password),"密码不能为空");
+        Assert.isTrue(password.length() >= 8 && password.length() <= 20,"长度在8到20个字符之间");
+        Assert.isTrue(!password.matches(upperCasePattern), "包含至少一个大写字母");
+        Assert.isTrue(!password.matches(lowerCasePattern), "必须包含至少一个小写字母");
+        Assert.isTrue(!password.matches(digitPattern), "必须包含至少一个数字");
+        Assert.isTrue(!password.matches(specialCharPattern), "必须包含至少一个特殊字符");
     }
 
     public String getPassword() {

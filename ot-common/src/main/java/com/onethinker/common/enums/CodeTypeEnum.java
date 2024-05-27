@@ -12,7 +12,9 @@ public enum CodeTypeEnum {
 
     PHONE("手机验证码"),
 
-    MAIL("邮箱验证码");
+    MAIL("邮箱验证码"),
+
+    IMAGE("图形验证码");
 
     String msg;
 

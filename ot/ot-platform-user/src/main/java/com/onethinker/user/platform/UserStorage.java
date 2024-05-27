@@ -18,10 +18,10 @@ public interface UserStorage {
     /**
      * 用户注册 保存用户信息
      */
-    public PlatformUserResDTO register(PlatformUserReqDTO reqDTO);
+    void register(PlatformUserReqDTO reqDTO);
 
     /**
      * 用户登录 获取token
      */
-    public PlatformUserResDTO login(PlatformUserReqDTO userReqDTO);
+    PlatformUserResDTO login(PlatformUserReqDTO userReqDTO);
 }

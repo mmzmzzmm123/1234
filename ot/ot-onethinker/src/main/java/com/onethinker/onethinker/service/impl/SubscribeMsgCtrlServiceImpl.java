@@ -3,6 +3,7 @@ package com.onethinker.onethinker.service.impl;
 import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.common.enums.SysStatusTypeEnum;
 import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
 import com.onethinker.onethinker.mapper.SubscribeMsgCtrlMapper;
 import com.onethinker.onethinker.service.ISubscribeMsgCtrlService;
@@ -108,7 +109,7 @@ public class SubscribeMsgCtrlServiceImpl extends ServiceImpl<SubscribeMsgCtrlMap
             return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(), SubscribeMsgCtrl.class);
         }
         LambdaQueryWrapper<SubscribeMsgCtrl> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(SubscribeMsgCtrl::getTemplateId, templateId).eq(SubscribeMsgCtrl::getEnabled, SubscribeMsgCtrl.STATE_TYPE_ENABLED);
+        queryWrapper.eq(SubscribeMsgCtrl::getTemplateId, templateId).eq(SubscribeMsgCtrl::getEnabled, SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
         SubscribeMsgCtrl subscribeMsgCtrl = subscribeMsgCtrlMapper.selectOne(queryWrapper);
         if (ObjectUtils.isEmpty(subscribeMsgCtrl)) {
             return null;

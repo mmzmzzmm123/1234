@@ -20,6 +20,13 @@ public interface IMinWechatService {
      */
     WxMaJscode2SessionResult getSessionInfo(String code);
 
+    /**
+     * 获取openId
+     * @param code 登录时获取的 code
+     * @return
+     */
+    String getIMinWechatOpenIdByCode(String code);
+
 
     /**
      * 解密用户敏感数据.

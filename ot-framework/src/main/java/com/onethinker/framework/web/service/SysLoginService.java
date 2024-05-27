@@ -163,14 +163,16 @@ public class SysLoginService {
         sysUser.setLoginDate(DateUtils.getNowDate());
         userService.updateUserProfile(sysUser);
     }
-
     /**
      * 前端获取token
      *
-     * @param dataId
+     * @param dataId 用户id
      * @return
      */
-    public String loginFe(String dataId, String username, String password) {
+    public String loginFe(String dataId) {
+
+        String username = configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(SysConfigKeyEnum.PU_USER_NAME.getCode()));
+        String password = configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(SysConfigKeyEnum.PU_USER_PASSWORD.getCode()));
         // 登录前置校验
         loginPreCheck(username, password);
         // 用户验证

@@ -46,35 +46,18 @@ public class WxUserStorage implements UserStorage {
     }
 
     @Override
-    public PlatformUserResDTO register(PlatformUserReqDTO reqDTO) {
+    public void register(PlatformUserReqDTO reqDTO) {
         // 微信登录注册
         Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getOpenId()), "用户凭证不能为空");
-        Assert.isTrue(PhoneUtils.isMobiPhoneNum(reqDTO.getPhone()), "手机号有误");
-        // 校验手机号是否被绑定
-        platformUserService.existsWxRegister(reqDTO.getOpenId(), reqDTO.getPhone());
-        PlatformUserDetail platformUserDetail = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getPhone());
+        PlatformUserDetail platformUserDetail = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
         if (!ObjectUtils.isEmpty(platformUserDetail)) {
             // 处理更新时间
             platformUserDetail.setUpdateTime(new Date());
             platformUserService.updatePlatformUserDetail(platformUserDetail);
         } else {
             // 创建用户信息
-            PlatformUser platformUser = new PlatformUser();
-            platformUser.setEnabled(PlatformUser.STATE_TYPE_ENABLED);
-            platformUser.setDataId(reqDTO.getPhone());
-            platformUser.setWeight(System.currentTimeMillis());
-            platformUser.setCreateTime(new Date());
-            platformUser.setAvatarUrl(ObjectUtils.isEmpty(reqDTO.getAvatarUrl()) ? configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_AVATAR_URL) : reqDTO.getAvatarUrl());
-            platformUser.setNickName(ObjectUtils.isEmpty(reqDTO.getNickName()) ? configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_NICK_NAME) + System.currentTimeMillis() : reqDTO.getNickName());
-            platformUserService.insertPlatformUser(platformUser);
-            // 另外保存一份网页端账号信息
-            platformUserService.saveEntryUserDetailByAccount(platformUser, reqDTO);
-            // 保存微信账号信息
-            platformUserDetail = platformUserService.saveEntryUserDetailByWx(platformUser, reqDTO);
+            platformUserService.saveEntryUserDetail(reqDTO,PlatformUserTypeEnum.WX);
         }
-        // 获取权限内容
-        String token = loginService.loginFe(reqDTO.getPhone(), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
-        return PlatformUserResDTO.foramtResponse(token, platformUserDetail);
     }
 
     @Override
@@ -82,15 +65,15 @@ public class WxUserStorage implements UserStorage {
         Assert.isTrue(StringUtils.isNotEmpty(reqDTO.getCode()),"code is null");
         log.info("platform:{},code:{}",userTypeEnum.getMsg(),reqDTO.getCode());
         // 进行访问
-        WxMaJscode2SessionResult sessionInfo = minWechatService.getSessionInfo(reqDTO.getCode());
-        reqDTO.setDataId(sessionInfo.getOpenid());
+        String dataId = minWechatService.getIMinWechatOpenIdByCode(reqDTO.getCode());
+        reqDTO.setDataId(dataId);
         PlatformUserDetail platformUserDetail = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
         if (ObjectUtils.isEmpty(platformUserDetail)) {
-            // 微信登录保存相关信息
-            platformUserDetail = platformUserService.saveEntryUserDetailByWx(new PlatformUser(), reqDTO);
+            // 调用注册方法进行保存
+            register(reqDTO);
         }
         // 获取权限内容
-        String token = loginService.loginFe(reqDTO.getDataId(), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_NAME)), configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(PlatformUser.PU_USER_PASSWORD)));
+        String token = loginService.loginFe(reqDTO.getDataId());
         return PlatformUserResDTO.foramtResponse(token, platformUserDetail);
     }
 }

@@ -1,10 +1,7 @@
 package com.onethinker.user.service;
 
 import cn.hutool.crypto.SecureUtil;
-import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.onethinker.common.constant.BkConstants;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.*;
@@ -33,10 +30,7 @@ import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * @author yangyouqi
@@ -61,13 +55,16 @@ public class IPlatformUserService {
     private PlatformUserMapper platformUserMapper;
 
     @Autowired
-    private ISysConfigService sysConfigService;
+    private ISysConfigService configService;
 
     @Autowired
     private IMinWechatService wechatService;
 
     @Autowired
     private SysLoginService sysLoginService;
+
+
+    private final String REDIS_KEY = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode();
 
     /**
      * 获取对应用户平台
@@ -78,45 +75,33 @@ public class IPlatformUserService {
             Class<?> clazz = Class.forName(userTypeEnum.getInterfaceClass());
             Constructor<?> constructor = clazz.getConstructor(IMinWechatService.class,IPlatformUserService.class,SysLoginService.class,ISysConfigService.class, RedisCache.class);
             constructor.setAccessible(true);
-            UserStorage instance = (UserStorage) constructor.newInstance(wechatService,this,sysLoginService,sysConfigService,redisCache);
+            UserStorage instance = (UserStorage) constructor.newInstance(wechatService,this,sysLoginService, configService,redisCache);
             return Tools.cast(instance);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-
-    public void getCodeForForgetPassword(String place, CodeTypeEnum flag) {
-        // 随机数
-        int code = new Random().nextInt(900000) + 100000;
-        if (CodeTypeEnum.PHONE.equals(flag)) {
-            log.info(place + "---" + "手机验证码---" + code);
-        } else if (CodeTypeEnum.MAIL.equals(flag)) {
-            log.info(place + "---" + "邮箱验证码---" + code);
-            // 发送邮箱验证码处理
-            mailService.sendMailCode(place, code);
-        }
-        // 保存5分钟
-        redisCache.setCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + place + "_" + flag, String.valueOf(code), 5, TimeUnit.MINUTES);
-    }
-
+    /**
+     * 更新平台用户信息
+     * @param platformUserDetail 用户对象
+     * @return 更新值
+     */
     public int updatePlatformUserDetail(PlatformUserDetail platformUserDetail) {
         platformUserDetail.setUpdateTime(DateUtils.getNowDate());
-        int i = platformUserDetailMapper.updatePlatformUserDetail(platformUserDetail);
         // 删除用户信息
-        redisCache.deleteObject(CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY + platformUserDetail.getDataId());
-        return i;
+        redisCache.deleteObject(REDIS_KEY + platformUserDetail.getDataId());
+        return platformUserDetailMapper.updatePlatformUserDetail(platformUserDetail);
     }
-
 
     /**
      * 获取用户信息
      *
-     * @param dataId
+     * @param dataId 登录凭证
      * @return
      */
     public PlatformUserDetail selectPlatformUserDetailByDataId(String dataId) {
-        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + dataId;
+        String redisKey = REDIS_KEY + dataId;
 
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheObject(redisKey);
@@ -133,71 +118,12 @@ public class IPlatformUserService {
 
     /**
      * 获取当前登录用户信息
-     *
      * @return
      */
     public PlatformUserDetail queryLoginUserInfo() {
         String dataId = SecurityUtils.getLoginUser().getDataId();
         Assert.isTrue(StringUtils.isNotEmpty(dataId),"dataId is null");
         return selectPlatformUserDetailByDataId(dataId);
-    }
-
-    /**
-     * 批量获取用户信息
-     * @param puUserIds
-     * @return
-     */
-    public Map<String, String> selectUserPhoneByUserIds(List<Long> puUserIds) {
-        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + String.join(",", puUserIds.toString());
-        if (redisCache.hasKey(redisKey)) {
-            return redisCache.getCacheMap(redisKey);
-        }
-        io.jsonwebtoken.lang.Assert.isTrue(!ObjectUtils.isEmpty(puUserIds) && !puUserIds.isEmpty(), "不能查询全用户信息");
-        List<PlatformUser> platformUsers = platformUserMapper.selectPlatformUserByIds(puUserIds);
-        if (ObjectUtils.isEmpty(platformUsers)) {
-            return Maps.newHashMap();
-        }
-        Map<String, String> result = platformUsers.stream().collect(Collectors.toMap(e -> e.getId().toString(), PlatformUser::getDataId));
-        redisCache.setCacheMap(redisKey, result);
-        redisCache.expire(redisKey, 1, TimeUnit.DAYS);
-        return result;
-    }
-
-    /**
-     * 通过用户id查询用户信息
-     * @param userId
-     * @return
-     */
-    public PlatformUserDetail getPlatFormUserDetailByUserId(Long userId) {
-        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + userId;
-        if (redisCache.hasKey(redisKey)) {
-            return JSON.parseObject(redisCache.getCacheObject(redisKey).toString(), PlatformUserDetail.class);
-        }
-        PlatformUserDetail platformUserDetail = platformUserDetailMapper.selectPlatformUserDetailById(userId);
-        io.jsonwebtoken.lang.Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail), "用户信息不存在");
-        redisCache.setCacheObject(redisKey, platformUserDetail, 1, TimeUnit.DAYS);
-        return platformUserDetail;
-    }
-
-    /**
-     * 根据状态查询用户信息
-     * @param enabled
-     * @return
-     */
-    List<PlatformUserDetail> queryStatus(Integer enabled) {
-        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + "enabled_" + enabled;
-        if (redisCache.hasKey(redisKey)) {
-            return redisCache.getCacheList(redisKey);
-        }
-        LambdaQueryWrapper<PlatformUserDetail> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PlatformUserDetail::getEnabled, enabled);
-        List<PlatformUserDetail> platformUserDetails = platformUserDetailMapper.selectList(queryWrapper);
-        if (platformUserDetails.isEmpty()) {
-            return Lists.newArrayList();
-        }
-        redisCache.setCacheList(redisKey, platformUserDetails);
-        redisCache.expire(redisKey, 1, TimeUnit.DAYS);
-        return platformUserDetails;
     }
 
     /**
@@ -212,7 +138,7 @@ public class IPlatformUserService {
     }
 
     public PlatformUserDetail saveEntryUserDetailByWx(PlatformUser platformUser, PlatformUserReqDTO reqDTO) {
-        String redisKey = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + reqDTO.getDataId();
+        String redisKey = REDIS_KEY + reqDTO.getDataId();
 
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
         platformUserDetail.setDataId(reqDTO.getDataId());
@@ -261,30 +187,19 @@ public class IPlatformUserService {
         platformUserMapper.insertPlatformUser(platformUser);
     }
 
-    public PlatformUserDetail saveEntryUserDetailByAccount(PlatformUser platformUser, PlatformUserReqDTO reqDTO) {
+    public PlatformUserDetail saveEntryUserDetail(PlatformUserReqDTO reqDTO,PlatformUserTypeEnum platformUserTypeEnum) {
         PlatformUserDetail platformUserDetail = new PlatformUserDetail();
-        platformUserDetail.setAvatarUrl(platformUser.getAvatarUrl());
+        platformUserDetail.setAvatarUrl(configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_AVATAR_URL));
+        platformUserDetail.setNickName(configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_NICK_NAME) + System.currentTimeMillis());
         platformUserDetail.setEnabled(SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
-        platformUserDetail.setType(PlatformUserTypeEnum.WEB.name());
-        if (StringUtils.isNotEmpty(reqDTO.getUserName())) {
-            platformUserDetail.setUsername(reqDTO.getUserName());
-        } else {
-            platformUserDetail.setUsername(platformUser.getDataId());
-        }
-        String password = "";
-        if (StringUtils.isNotEmpty(reqDTO.getPassword())) {
-            password = reqDTO.getPassword();
-        } else {
-            password = SecureUtil.aes(BkConstants.CRYPOTJS_KEY.getBytes(StandardCharsets.UTF_8)).encryptBase64(sysConfigService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_PASSWORD));
-        }
-        platformUserDetail.setPassword(password);
-        platformUserDetail.setNickName(platformUser.getNickName());
-        platformUserDetail.setDataId(platformUser.getDataId());
+        platformUserDetail.setType(platformUserTypeEnum.name());
+        platformUserDetail.setPassword(reqDTO.getPassword());
+        platformUserDetail.setDataId(reqDTO.getDataId());
         platformUserDetail.setWeight(System.currentTimeMillis());
         platformUserDetail.setCreateTime(new Date());
         platformUserDetailMapper.insertPlatformUserDetail(platformUserDetail);
         // 清理下缓存信息
-        redisCache.deleteObject(CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + platformUser.getDataId());
+        redisCache.deleteObject(REDIS_KEY + reqDTO.getDataId());
         return platformUserDetail;
     }
 }

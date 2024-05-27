@@ -3,6 +3,7 @@ package com.onethinker.onethinker.service.impl;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import com.github.pagehelper.PageHelper;
+import com.onethinker.common.enums.SysStatusTypeEnum;
 import com.onethinker.onethinker.domain.RedEnvelopeCtrl;
 import com.onethinker.onethinker.domain.RedEnvelopeDtl;
 import com.onethinker.onethinker.dto.CalculateRedEnvelopeDTO;
@@ -87,7 +88,7 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
                     RedEnvelopeDtl redEnvelopeDtl = new RedEnvelopeDtl();
                     // 基本内容
                     redEnvelopeDtl.setCreateTime(new Date());
-                    redEnvelopeDtl.setEnabled(RedEnvelopeDtl.STATE_TYPE_ENABLED);
+                    redEnvelopeDtl.setEnabled(SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
                     redEnvelopeDtl.setWeight(System.currentTimeMillis());
                     // 特别内容
                     redEnvelopeDtl.setBatchNo(redEnvelopeDtlDTO.getBatchNo());
@@ -105,7 +106,7 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
                     RedEnvelopeDtl redEnvelopeDtl = new RedEnvelopeDtl();
                     // 基本内容
                     redEnvelopeDtl.setCreateTime(new Date());
-                    redEnvelopeDtl.setEnabled(RedEnvelopeCtrl.STATE_TYPE_ENABLED);
+                    redEnvelopeDtl.setEnabled(SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
                     redEnvelopeDtl.setWeight(System.currentTimeMillis());
                     // 特别内容
                     redEnvelopeDtl.setBatchNo(redEnvelopeDtlDTO.getBatchNo());

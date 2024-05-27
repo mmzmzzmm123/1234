@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * @Title: PlatformUserIntegralResDTO
  * @Author itmei
- * @Package com.onethinker.onethinker.dto
+ * @Package com.onethinker.user.dto
  * @Date 2023/10/28 22:46
  * @description: 用户积分返回对象
  */

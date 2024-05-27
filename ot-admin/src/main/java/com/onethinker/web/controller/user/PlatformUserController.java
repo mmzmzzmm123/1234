@@ -41,30 +41,20 @@ public class PlatformUserController extends BaseController {
 
     /**
      * 平台用户注册
+     * 目前平台注册不强制绑定手机号，邮箱等信息，而是通过账号密码进行注册，如微信小程序等有平台标识的，则直接通过对应平台进行登录
+     * 绑定手机号，邮箱等信息则是通过平台我的信息那边进行绑定，接口{}
      * @param reqDTO
      * @return
      */
     @PostMapping(value = "/register")
     public AjaxResult platformUserRegister(@RequestBody PlatformUserReqDTO reqDTO) {
-        PlatformUserResDTO result = platformUserService.getUserStorage(reqDTO.getSourceType()).register(reqDTO);
-        return AjaxResult.success(result);
-    }
-
-    /**
-     * 忘记密码 获取验证码
-     * <p>
-     * 1 手机号
-     * 2 邮箱
-     */
-    @GetMapping("/getCodeForForgetPassword")
-    public AjaxResult getCodeForForgetPassword(@RequestParam("place") String place, @RequestParam("flag") CodeTypeEnum flag) {
-        platformUserService.getCodeForForgetPassword(place,flag);
-        return AjaxResult.success();
+        platformUserService.getUserStorage(reqDTO.getSourceType()).register(reqDTO);
+        return AjaxResult.success("注册成功");
     }
 
     /**
      * 更新用户信息
-     * @param platformUserDetail
+     * @param platformUserDetail 平台用户对象
      * @return
      */
     @PostMapping(value = "/update")
