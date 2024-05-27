@@ -61,4 +61,11 @@ public class BaseEntity implements Serializable {
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
     @TableField(exist = false)
     private Map<String, Object> params;
+
+    public Map<String, Object> getParams() {
+        if (params == null) {
+            params = Maps.newHashMap();
+        }
+        return params;
+    }
 }
