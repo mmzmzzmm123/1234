@@ -16,7 +16,7 @@ import com.onethinker.framework.manager.factory.AsyncFactory;
 import com.onethinker.framework.web.service.SysLoginService;
 import com.onethinker.mail.service.IMailService;
 import com.onethinker.system.service.ISysConfigService;
-import com.onethinker.user.domain.PlatformUserDetail;
+import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.mapper.PlatformUserDetailMapper;
 import com.onethinker.user.platform.UserStorage;
@@ -83,14 +83,14 @@ public class IPlatformUserService {
     /**
      * 更新平台用户信息
      *
-     * @param platformUserDetail 用户对象
+     * @param platformUser 用户对象
      * @return 更新值
      */
-    public int updatePlatformUserDetail(PlatformUserDetail platformUserDetail) {
-        platformUserDetail.setUpdateTime(DateUtils.getNowDate());
+    public int updatePlatformUserDetail(PlatformUser platformUser) {
+        platformUser.setUpdateTime(DateUtils.getNowDate());
         // 删除用户信息
-        redisCache.deleteObject(REDIS_KEY + platformUserDetail.getDataId());
-        return platformUserDetailMapper.updatePlatformUserDetail(platformUserDetail);
+        redisCache.deleteObject(REDIS_KEY + platformUser.getDataId());
+        return platformUserDetailMapper.updatePlatformUserDetail(platformUser);
     }
 
     /**
@@ -99,20 +99,20 @@ public class IPlatformUserService {
      * @param dataId 登录凭证
      * @return
      */
-    public PlatformUserDetail selectPlatformUserDetailByDataId(String dataId) {
+    public PlatformUser selectPlatformUserDetailByDataId(String dataId) {
         String redisKey = REDIS_KEY + dataId;
 
         if (redisCache.hasKey(redisKey)) {
             return redisCache.getCacheObject(redisKey);
         }
-        LambdaQueryWrapper<PlatformUserDetail> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PlatformUserDetail::getDataId, dataId);
-        PlatformUserDetail platformUserDetail = platformUserDetailMapper.selectOne(queryWrapper);
-        if (ObjectUtils.isEmpty(platformUserDetail)) {
+        LambdaQueryWrapper<PlatformUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PlatformUser::getDataId, dataId);
+        PlatformUser platformUser = platformUserDetailMapper.selectOne(queryWrapper);
+        if (ObjectUtils.isEmpty(platformUser)) {
             return null;
         }
-        redisCache.setCacheObject(redisKey, platformUserDetail, 1, TimeUnit.DAYS);
-        return platformUserDetail;
+        redisCache.setCacheObject(redisKey, platformUser, 1, TimeUnit.DAYS);
+        return platformUser;
     }
 
     /**
@@ -120,7 +120,7 @@ public class IPlatformUserService {
      *
      * @return
      */
-    public PlatformUserDetail queryLoginUserInfo() {
+    public PlatformUser queryLoginUserInfo() {
         String dataId = SecurityUtils.getLoginUser().getDataId();
         Assert.isTrue(StringUtils.isNotEmpty(dataId), "dataId is null");
         return selectPlatformUserDetailByDataId(dataId);
@@ -132,9 +132,9 @@ public class IPlatformUserService {
      * @param type 用户类型
      * @return
      */
-    public List<PlatformUserDetail> queryAllUserByType(String type) {
-        LambdaQueryWrapper<PlatformUserDetail> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PlatformUserDetail::getType, type);
+    public List<PlatformUser> queryAllUserByType(String type) {
+        LambdaQueryWrapper<PlatformUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PlatformUser::getType, type);
         return platformUserDetailMapper.selectList(queryWrapper);
     }
 
@@ -145,20 +145,19 @@ public class IPlatformUserService {
      * @param platformUserTypeEnum
      * @return
      */
-    public PlatformUserDetail saveEntryUserDetail(PlatformUserReqDTO reqDTO, PlatformUserTypeEnum platformUserTypeEnum) {
-        PlatformUserDetail platformUserDetail = new PlatformUserDetail();
-        platformUserDetail.setAvatarUrl(configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_AVATAR_URL));
-        platformUserDetail.setNickName(configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_NICK_NAME) + System.currentTimeMillis());
-        platformUserDetail.setEnabled(SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
-        platformUserDetail.setType(platformUserTypeEnum.name());
-        platformUserDetail.setPassword(reqDTO.getPassword());
-        platformUserDetail.setDataId(reqDTO.getDataId());
-        platformUserDetail.setWeight(System.currentTimeMillis());
-        platformUserDetail.setCreateTime(new Date());
-        platformUserDetailMapper.insertPlatformUserDetail(platformUserDetail);
+    public PlatformUser saveEntryUserDetail(PlatformUserReqDTO reqDTO, PlatformUserTypeEnum platformUserTypeEnum) {
+        PlatformUser platformUser = new PlatformUser();
+        platformUser.setAvatarUrl(configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_AVATAR_URL));
+        platformUser.setNickName(configService.selectConfigByKey(SysConfigKeyEnum.DEFAULT_NICK_NAME) + System.currentTimeMillis());
+        platformUser.setEnabled(SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
+        platformUser.setType(platformUserTypeEnum.name());
+        platformUser.setPassword(reqDTO.getPassword());
+        platformUser.setDataId(reqDTO.getDataId());
+        platformUser.setCreateTime(new Date());
+        platformUserDetailMapper.insertPlatformUserDetail(platformUser);
         // 清理下缓存信息
         redisCache.deleteObject(REDIS_KEY + reqDTO.getDataId());
-        return platformUserDetail;
+        return platformUser;
     }
 
     public void bindPhoneOrEmail(PlatformUserReqDTO reqDTO) {

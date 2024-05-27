@@ -9,18 +9,16 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 平台用户详情信息对象 t_platform_user_detail
+ * 平台用户详情信息对象 t_platform_user
  *
  * @author yangyouqi
  * @date 2023-10-23
  */
 @Data
-@TableName("t_platform_user_detail")
-public class PlatformUserDetail implements Serializable {
+@TableName("t_platform_user")
+public class PlatformUser implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    public static final String DEFAULT_PASSWORD = "default_password";
 
     /**
      * 表主键
@@ -34,21 +32,15 @@ public class PlatformUserDetail implements Serializable {
     private Integer enabled;
 
     /**
-     * 权重
-     */
-    @Excel(name = "权重")
-    private Long weight;
-
-    /**
      * 用户头像
      */
-    @Excel(name = "用户头像")
+    @Excel(name = "用户平台头像")
     private String avatarUrl;
 
     /**
-     * 用户类型: 1：微信用户
+     * 用户类型
      */
-    @Excel(name = "用户类型: 1：微信用户 2:账户密码登录")
+    @Excel(name = "用户类型")
     private String type;
 
     /**
@@ -64,12 +56,6 @@ public class PlatformUserDetail implements Serializable {
     private Long loginEndTime;
 
     /**
-     * 用户账号
-     */
-    @Excel(name = "用户账号")
-    private String username;
-
-    /**
      * 用户密码
      */
     @Excel(name = "用户密码")
@@ -78,7 +64,7 @@ public class PlatformUserDetail implements Serializable {
     /**
      * 用户昵称
      */
-    @Excel(name = "用户昵称")
+    @Excel(name = "用户昵称，Web端初次注册用户昵称等于用户账户")
     private String nickName;
 
     /**
@@ -92,6 +78,7 @@ public class PlatformUserDetail implements Serializable {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
+
 
     @Excel(name = "备注")
     private String remark;

@@ -1,6 +1,6 @@
 package com.onethinker.user.dto;
 
-import com.onethinker.user.domain.PlatformUserDetail;
+import com.onethinker.user.domain.PlatformUser;
 import lombok.Data;
 
 /**
@@ -17,12 +17,12 @@ public class PlatformUserResDTO {
 
     private String dataId;
 
-    public static PlatformUserResDTO foramtResponse(String token, PlatformUserDetail platformUserDetail) {
+    public static PlatformUserResDTO foramtResponse(String token, PlatformUser platformUser) {
         PlatformUserResDTO platformUserResDTO = new PlatformUserResDTO();
         platformUserResDTO.setToken(token);
-        platformUserResDTO.setNickName(platformUserDetail.getNickName());
-        platformUserResDTO.setAvatarUrl(platformUserDetail.getAvatarUrl());
-        platformUserResDTO.setDataId(platformUserDetail.getDataId());
+        platformUserResDTO.setNickName(platformUser.getNickName());
+        platformUserResDTO.setAvatarUrl(platformUser.getAvatarUrl());
+        platformUserResDTO.setDataId(platformUser.getDataId());
         return platformUserResDTO;
     }
 }

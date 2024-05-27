@@ -7,7 +7,7 @@ import com.onethinker.common.enums.PlatformUserTypeEnum;
 import com.onethinker.common.utils.DateUtils;
 import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
 import com.onethinker.onethinker.service.ISubscribeMsgCtrlService;
-import com.onethinker.user.domain.PlatformUserDetail;
+import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.service.IPlatformUserService;
 import com.onethinker.weatherinfo.service.IWeatherInfoService;
 import com.onethinker.wechat.service.IMinWechatService;
@@ -47,8 +47,8 @@ public class SubscribeTemplateTask {
      */
     public void sendSubscribeTemplateByWeatherInfo() {
         // 发送模版消息,这里后续新增一张用户订阅表，然后获取可发送的用户进行处理
-        List<PlatformUserDetail> platformUserDetails =  platformUserService.queryAllUserByType(PlatformUserTypeEnum.WX.name());
-        if (platformUserDetails.isEmpty()) {
+        List<PlatformUser> platformUsers =  platformUserService.queryAllUserByType(PlatformUserTypeEnum.WX.name());
+        if (platformUsers.isEmpty()) {
             return;
         }
         // 获取当前城市信息（可以通过用户设定，目前先暂时用广州的值）
@@ -62,9 +62,9 @@ public class SubscribeTemplateTask {
         if (ObjectUtils.isEmpty(subscribeMsgCtrl)) {
             return;
         }
-        for (PlatformUserDetail platformUserDetail : platformUserDetails) {
+        for (PlatformUser platformUser : platformUsers) {
             WxMaSubscribeMessage subscribeMessage = new WxMaSubscribeMessage();
-            subscribeMessage.setToUser(platformUserDetail.getDataId());
+            subscribeMessage.setToUser(platformUser.getDataId());
             subscribeMessage.setTemplateId(templateId);
             JSONObject dataFrom = JSONObject.parse(subscribeMsgCtrl.getData());
             List<WxMaSubscribeMessage.MsgData> data = Lists.newArrayList();

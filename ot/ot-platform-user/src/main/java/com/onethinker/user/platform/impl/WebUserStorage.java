@@ -6,7 +6,7 @@ import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.PlatformUserTypeEnum;
 import com.onethinker.framework.web.service.SysLoginService;
 import com.onethinker.system.service.ISysConfigService;
-import com.onethinker.user.domain.PlatformUserDetail;
+import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
 import com.onethinker.user.platform.UserStorage;
@@ -45,7 +45,7 @@ public class WebUserStorage implements UserStorage {
         // 验证码有效性校验
         platformUserService.validateCaptcha(reqDTO.getDataId(),reqDTO.getCode(),reqDTO.getUuid());
         // 保存用户明细信息
-        PlatformUserDetail existsUser = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
+        PlatformUser existsUser = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
         Assert.isTrue(ObjectUtils.isEmpty(existsUser), "账号已被注册");
         // 保存用户明细信息
         platformUserService.saveEntryUserDetail(reqDTO,PlatformUserTypeEnum.WEB);
@@ -57,11 +57,11 @@ public class WebUserStorage implements UserStorage {
         log.info("platform:{},dataId:{}",userTypeEnum.getMsg(),reqDTO.getCode());
         Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getDataId()), "账户不能为空");
         Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getPassword()), "密码不能为空");
-        PlatformUserDetail platformUserDetail = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
-        Assert.isTrue(!ObjectUtils.isEmpty(platformUserDetail), "账号/密码有误");
-        Assert.isTrue(Objects.equals(reqDTO.getPassword(), platformUserDetail.getPassword()), "账号/密码有误");
+        PlatformUser platformUser = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
+        Assert.isTrue(!ObjectUtils.isEmpty(platformUser), "账号/密码有误");
+        Assert.isTrue(Objects.equals(reqDTO.getPassword(), platformUser.getPassword()), "账号/密码有误");
         // 获取权限内容
-        String token = loginService.loginFe(platformUserDetail.getDataId());
-        return PlatformUserResDTO.foramtResponse(token, platformUserDetail);
+        String token = loginService.loginFe(platformUser.getDataId());
+        return PlatformUserResDTO.foramtResponse(token, platformUser);
     }
 }

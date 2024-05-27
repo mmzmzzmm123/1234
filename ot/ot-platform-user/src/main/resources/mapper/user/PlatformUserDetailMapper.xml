@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.onethinker.user.mapper.PlatformUserDetailMapper">
 
-    <resultMap type="PlatformUserDetail" id="PlatformUserDetailResult">
+    <resultMap type="PlatformUser" id="PlatformUserDetailResult">
         <result property="id" column="id"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
@@ -25,7 +25,7 @@
         username, password,nick_name from t_platform_user_detail
     </sql>
 
-    <select id="selectPlatformUserDetailList" parameterType="PlatformUserDetail" resultMap="PlatformUserDetailResult">
+    <select id="selectPlatformUserDetailList" parameterType="PlatformUser" resultMap="PlatformUserDetailResult">
         <include refid="selectPlatformUserDetailVo"/>
         <where>
             <if test="enabled != null ">and enabled = #{enabled}</if>
@@ -45,7 +45,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insertPlatformUserDetail" parameterType="PlatformUserDetail" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertPlatformUserDetail" parameterType="PlatformUser" useGeneratedKeys="true" keyProperty="id">
         insert into t_platform_user_detail
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="createTime != null">create_time,</if>
@@ -77,7 +77,7 @@
         </trim>
     </insert>
 
-    <update id="updatePlatformUserDetail" parameterType="PlatformUserDetail">
+    <update id="updatePlatformUserDetail" parameterType="PlatformUser">
         update t_platform_user_detail
         <trim prefix="SET" suffixOverrides=",">
             <if test="createTime != null">create_time = #{createTime},</if>

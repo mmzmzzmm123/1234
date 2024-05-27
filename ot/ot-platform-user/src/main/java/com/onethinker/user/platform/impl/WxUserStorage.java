@@ -6,7 +6,7 @@ import com.onethinker.common.enums.PlatformUserTypeEnum;
 import com.onethinker.common.utils.StringUtils;
 import com.onethinker.framework.web.service.SysLoginService;
 import com.onethinker.system.service.ISysConfigService;
-import com.onethinker.user.domain.PlatformUserDetail;
+import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
 import com.onethinker.user.platform.UserStorage;
@@ -43,11 +43,11 @@ public class WxUserStorage implements UserStorage {
     public void register(PlatformUserReqDTO reqDTO) {
         // 微信登录注册
         Assert.isTrue(!ObjectUtils.isEmpty(reqDTO.getOpenId()), "用户凭证不能为空");
-        PlatformUserDetail platformUserDetail = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
-        if (!ObjectUtils.isEmpty(platformUserDetail)) {
+        PlatformUser platformUser = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
+        if (!ObjectUtils.isEmpty(platformUser)) {
             // 处理更新时间
-            platformUserDetail.setUpdateTime(new Date());
-            platformUserService.updatePlatformUserDetail(platformUserDetail);
+            platformUser.setUpdateTime(new Date());
+            platformUserService.updatePlatformUserDetail(platformUser);
         } else {
             // 创建用户信息
             platformUserService.saveEntryUserDetail(reqDTO,PlatformUserTypeEnum.WX);
@@ -61,13 +61,13 @@ public class WxUserStorage implements UserStorage {
         // 进行访问
         String dataId = minWechatService.getIMinWechatOpenIdByCode(reqDTO.getCode());
         reqDTO.setDataId(dataId);
-        PlatformUserDetail platformUserDetail = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
-        if (ObjectUtils.isEmpty(platformUserDetail)) {
+        PlatformUser platformUser = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
+        if (ObjectUtils.isEmpty(platformUser)) {
             // 调用注册方法进行保存
             register(reqDTO);
         }
         // 获取权限内容
         String token = loginService.loginFe(reqDTO.getDataId());
-        return PlatformUserResDTO.foramtResponse(token, platformUserDetail);
+        return PlatformUserResDTO.foramtResponse(token, platformUser);
     }
 }

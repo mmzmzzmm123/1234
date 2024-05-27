@@ -1,10 +1,9 @@
 package com.onethinker.web.controller.user;
 
 import com.onethinker.common.constant.ServicePathConstant;
-import com.onethinker.user.domain.PlatformUserDetail;
+import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
-import com.onethinker.common.enums.CodeTypeEnum;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.redis.RedisCache;
@@ -66,14 +65,14 @@ public class PlatformUserController extends BaseController {
 
     /**
      * 更新用户信息
-     * @param platformUserDetail 平台用户对象
+     * @param platformUser 平台用户对象
      * @return
      */
     @PostMapping(value = "/update")
-    public AjaxResult platformUserUpdate(@RequestBody PlatformUserDetail platformUserDetail) {
-        PlatformUserDetail resDTO = platformUserService.queryLoginUserInfo();
-        platformUserDetail.setId(resDTO.getId());
-        platformUserService.updatePlatformUserDetail(platformUserDetail);
+    public AjaxResult platformUserUpdate(@RequestBody PlatformUser platformUser) {
+        PlatformUser resDTO = platformUserService.queryLoginUserInfo();
+        platformUser.setId(resDTO.getId());
+        platformUserService.updatePlatformUserDetail(platformUser);
         redisCache.deleteObject(CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode() + resDTO.getDataId());
         return AjaxResult.success("更新成功");
     }
@@ -85,7 +84,7 @@ public class PlatformUserController extends BaseController {
     @PreAuthorize("@ss.hasPermi('onethinker:user:query')")
     @GetMapping(value = "/queryLoginUserInfo")
     public AjaxResult queryLoginUserInfo() {
-        PlatformUserDetail resDTO = platformUserService.queryLoginUserInfo();
+        PlatformUser resDTO = platformUserService.queryLoginUserInfo();
         return AjaxResult.success(resDTO);
     }
 
