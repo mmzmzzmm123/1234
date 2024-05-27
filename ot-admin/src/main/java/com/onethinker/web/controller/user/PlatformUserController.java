@@ -1,6 +1,7 @@
 package com.onethinker.web.controller.user;
 
 import com.onethinker.common.constant.ServicePathConstant;
+import com.onethinker.common.enums.CodeTypeEnum;
 import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
@@ -53,13 +54,24 @@ public class PlatformUserController extends BaseController {
     }
 
     /**
-     * 绑定手机号或邮箱
+     * 绑定手机号
      * @param reqDTO
      * @return
      */
-    @PostMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/bindPhoneOrEmail")
-    public AjaxResult bindPhoneOrEmail(@RequestBody PlatformUserReqDTO reqDTO) {
-        platformUserService.bindPhoneOrEmail(reqDTO);
+    @PostMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/bindPhone")
+    public AjaxResult bindPhone(@RequestBody PlatformUserReqDTO reqDTO) {
+        platformUserService.bindPhoneOrEmail(reqDTO, CodeTypeEnum.PHONE);
+        return AjaxResult.success("绑定账号成功");
+    }
+
+    /**
+     * 绑定邮箱
+     * @param reqDTO
+     * @return
+     */
+    @PostMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/bindEmail")
+    public AjaxResult bindEmail(@RequestBody PlatformUserReqDTO reqDTO) {
+        platformUserService.bindPhoneOrEmail(reqDTO,CodeTypeEnum.MAIL);
         return AjaxResult.success("绑定账号成功");
     }
 

@@ -11,7 +11,7 @@ import java.util.List;
  * @author yangyouqi
  * @date 2023-10-23
  */
-public interface PlatformUserDetailMapper  extends BaseMapper<PlatformUser> {
+public interface PlatformUserMapper extends BaseMapper<PlatformUser> {
     /**
      * 查询平台用户详情信息
      *

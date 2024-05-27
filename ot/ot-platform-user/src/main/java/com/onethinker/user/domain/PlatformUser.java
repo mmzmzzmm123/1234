@@ -64,8 +64,20 @@ public class PlatformUser implements Serializable {
     /**
      * 用户昵称
      */
-    @Excel(name = "用户昵称，Web端初次注册用户昵称等于用户账户")
+    @Excel(name = "用户昵称")
     private String nickName;
+
+    /**
+     * 用户手机号 每个渠道来源下唯一
+     */
+    @Excel(name = "用户手机号")
+    private String phone;
+
+    /**
+     * 用户邮箱 每个渠道来源下唯一
+     */
+    @Excel(name = "邮箱")
+    private String email;
 
     /**
      * 创建时间
@@ -82,4 +94,6 @@ public class PlatformUser implements Serializable {
 
     @Excel(name = "备注")
     private String remark;
+
+
 }

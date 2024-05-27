@@ -11,7 +11,9 @@ import lombok.Getter;
 public enum SysStatusTypeEnum {
     STATUS_TYPE_ENABLED(0,"启用"),
 
-    STATUS_TYPE_DISABLE(1,"禁用");
+    STATUS_TYPE_DISABLE(1,"禁用"),
+
+    STATUS_TYPE_DELETE(4,"删除");
 
     int code;
 

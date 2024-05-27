@@ -3,6 +3,7 @@ package com.onethinker.user.dto;
 import cn.hutool.crypto.SecureUtil;
 import com.github.pagehelper.util.StringUtil;
 import com.onethinker.common.constant.BkConstants;
+import com.onethinker.common.enums.CodeTypeEnum;
 import com.onethinker.common.enums.PlatformUserTypeEnum;
 import com.onethinker.common.utils.SecurityUtils;
 import lombok.Data;
@@ -73,12 +74,16 @@ public class PlatformUserReqDTO {
      * 校验绑定手机号相关参数信息
      *
      */
-    public void existsParamsByBindPhoneOrEmail() {
+    public void existsParamsByBindPhoneOrEmail(CodeTypeEnum codeTypeEnum) {
         Assert.isTrue(StringUtil.isNotEmpty(code),"验证码不能为空");
         Assert.isTrue(StringUtil.isNotEmpty(uuid),"验证码信息不能为空");
-        if (StringUtil.isEmpty(phone) && StringUtil.isEmpty(email)) {
+        Assert.isTrue(Objects.nonNull(codeTypeEnum),"更新内容不能为空");
+        if (CodeTypeEnum.PHONE.equals(codeTypeEnum) && StringUtil.isEmpty(phone)) {
+            throw new RuntimeException("绑定信息不存在");
+        } else  if (CodeTypeEnum.MAIL.equals(codeTypeEnum) && StringUtil.isEmpty(email)) {
             throw new RuntimeException("绑定信息不存在");
         }
+
         String dataId = SecurityUtils.getLoginUser().getDataId();
         if (Objects.isNull(this.dataId)) {
             this.dataId = dataId;

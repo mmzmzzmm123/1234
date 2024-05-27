@@ -10,11 +10,11 @@ import lombok.Getter;
 @Getter
 public enum CodeTypeEnum {
 
-    PHONE("手机验证码"),
+    PHONE("手机"),
 
-    MAIL("邮箱验证码"),
+    MAIL("邮箱"),
 
-    IMAGE("图形验证码");
+    IMAGE("图形");
 
     String msg;
 

@@ -1,13 +1,9 @@
 package com.onethinker.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.github.pagehelper.util.StringUtil;
 import com.onethinker.common.constant.Constants;
 import com.onethinker.common.core.redis.RedisCache;
-import com.onethinker.common.enums.CacheEnum;
-import com.onethinker.common.enums.PlatformUserTypeEnum;
-import com.onethinker.common.enums.SysConfigKeyEnum;
-import com.onethinker.common.enums.SysStatusTypeEnum;
+import com.onethinker.common.enums.*;
 import com.onethinker.common.exception.user.CaptchaException;
 import com.onethinker.common.exception.user.CaptchaExpireException;
 import com.onethinker.common.utils.*;
@@ -18,7 +14,7 @@ import com.onethinker.mail.service.IMailService;
 import com.onethinker.system.service.ISysConfigService;
 import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.dto.PlatformUserReqDTO;
-import com.onethinker.user.mapper.PlatformUserDetailMapper;
+import com.onethinker.user.mapper.PlatformUserMapper;
 import com.onethinker.user.platform.UserStorage;
 import com.onethinker.wechat.service.IMinWechatService;
 import lombok.Data;
@@ -31,6 +27,7 @@ import org.springframework.util.ObjectUtils;
 import java.lang.reflect.Constructor;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -50,7 +47,7 @@ public class IPlatformUserService {
     private RedisCache redisCache;
 
     @Autowired
-    private PlatformUserDetailMapper platformUserDetailMapper;
+    private PlatformUserMapper platformUserMapper;
 
     @Autowired
     private ISysConfigService configService;
@@ -90,7 +87,7 @@ public class IPlatformUserService {
         platformUser.setUpdateTime(DateUtils.getNowDate());
         // 删除用户信息
         redisCache.deleteObject(REDIS_KEY + platformUser.getDataId());
-        return platformUserDetailMapper.updatePlatformUserDetail(platformUser);
+        return platformUserMapper.updatePlatformUserDetail(platformUser);
     }
 
     /**
@@ -107,7 +104,7 @@ public class IPlatformUserService {
         }
         LambdaQueryWrapper<PlatformUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PlatformUser::getDataId, dataId);
-        PlatformUser platformUser = platformUserDetailMapper.selectOne(queryWrapper);
+        PlatformUser platformUser = platformUserMapper.selectOne(queryWrapper);
         if (ObjectUtils.isEmpty(platformUser)) {
             return null;
         }
@@ -135,7 +132,7 @@ public class IPlatformUserService {
     public List<PlatformUser> queryAllUserByType(String type) {
         LambdaQueryWrapper<PlatformUser> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(PlatformUser::getType, type);
-        return platformUserDetailMapper.selectList(queryWrapper);
+        return platformUserMapper.selectList(queryWrapper);
     }
 
     /**
@@ -154,19 +151,37 @@ public class IPlatformUserService {
         platformUser.setPassword(reqDTO.getPassword());
         platformUser.setDataId(reqDTO.getDataId());
         platformUser.setCreateTime(new Date());
-        platformUserDetailMapper.insertPlatformUserDetail(platformUser);
+        platformUserMapper.insertPlatformUserDetail(platformUser);
         // 清理下缓存信息
         redisCache.deleteObject(REDIS_KEY + reqDTO.getDataId());
         return platformUser;
     }
 
-    public void bindPhoneOrEmail(PlatformUserReqDTO reqDTO) {
+    public void bindPhoneOrEmail(PlatformUserReqDTO reqDTO, CodeTypeEnum codeTypeEnum) {
         // 校验参数有效值
-        reqDTO.existsParamsByBindPhoneOrEmail();
-        String phoneOrEmailValue = StringUtil.isNotEmpty(reqDTO.getPhone()) ? reqDTO.getPhone() : reqDTO.getEmail();
+        reqDTO.existsParamsByBindPhoneOrEmail(codeTypeEnum);
+        String phoneOrEmailValue = CodeTypeEnum.PHONE.equals(codeTypeEnum) ? reqDTO.getPhone() : reqDTO.getEmail();
         // 验证码是否有效
         validateCaptcha(phoneOrEmailValue,reqDTO.getCode(),reqDTO.getUuid());
+        PlatformUser platformUser = selectPlatformUserDetailByDataId(reqDTO.getDataId());
+        LambdaQueryWrapper<PlatformUser> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(PlatformUser::getType,platformUser.getType());
+        queryWrapper.ne(PlatformUser::getEnabled,SysStatusTypeEnum.STATUS_TYPE_DELETE.getCode());
         // 校验账号是否被绑定
+        if (CodeTypeEnum.PHONE.equals(codeTypeEnum)) {
+            queryWrapper.eq(PlatformUser::getPhone,reqDTO.getPhone());
+            platformUser.setPhone(reqDTO.getPhone());
+        } else if (CodeTypeEnum.MAIL.equals(codeTypeEnum)) {
+            queryWrapper.eq(PlatformUser::getEmail,reqDTO.getEmail());
+            platformUser.setEmail(reqDTO.getEmail());
+        }
+        PlatformUser existsPlatformUser = platformUserMapper.selectOne(queryWrapper);
+        if (Objects.nonNull(existsPlatformUser) && !existsPlatformUser.getDataId().equals(platformUser.getDataId())) {
+          throw new RuntimeException(codeTypeEnum.getMsg() + "已被其他平台用户绑定");
+        }
+        // 更新用户信息
+        platformUser.setUpdateTime(new Date());
+        platformUserMapper.updatePlatformUserDetail(platformUser);
     }
 
 
