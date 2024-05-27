@@ -1,6 +1,7 @@
 package com.onethinker.web.controller.monitor;
 
 import com.onethinker.common.annotation.Log;
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.page.TableDataInfo;
@@ -27,7 +28,7 @@ public class SysOperlogController extends BaseController {
     private ISysOperLogService operLogService;
 
     @PreAuthorize("@ss.hasPermi('monitor:operlog:list')")
-    @GetMapping("/list")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
     public TableDataInfo list(SysOperLog operLog) {
         startPage();
         List<SysOperLog> list = operLogService.selectOperLogList(operLog);
@@ -36,7 +37,7 @@ public class SysOperlogController extends BaseController {
 
     @Log(title = "操作日志", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('monitor:operlog:export')")
-    @PostMapping("/export")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, SysOperLog operLog) {
         List<SysOperLog> list = operLogService.selectOperLogList(operLog);
         ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);
@@ -45,14 +46,14 @@ public class SysOperlogController extends BaseController {
 
     @Log(title = "操作日志", businessType = BusinessType.DELETE)
     @PreAuthorize("@ss.hasPermi('monitor:operlog:remove')")
-    @DeleteMapping("/{operIds}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{operIds}")
     public AjaxResult remove(@PathVariable Long[] operIds) {
         return toAjax(operLogService.deleteOperLogByIds(operIds));
     }
 
     @Log(title = "操作日志", businessType = BusinessType.CLEAN)
     @PreAuthorize("@ss.hasPermi('monitor:operlog:remove')")
-    @DeleteMapping("/clean")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/clean")
     public AjaxResult clean() {
         operLogService.cleanOperLog();
         return success();

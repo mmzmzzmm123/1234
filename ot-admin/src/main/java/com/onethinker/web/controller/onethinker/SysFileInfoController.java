@@ -1,5 +1,6 @@
 package com.onethinker.web.controller.onethinker;
 
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.onethinker.domain.SysFileInfo;
 import com.onethinker.onethinker.dto.SysFileInfoReqDTO;
 import com.onethinker.onethinker.service.ISysFileInfoService;
@@ -30,7 +31,7 @@ public class SysFileInfoController extends BaseController {
      * 查询文件信息列表
      */
     @PreAuthorize("@ss.hasPermi('onethinker:file:list')")
-    @GetMapping("/list")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
     public TableDataInfo list(SysFileInfo sysFileInfo) {
         startPage();
         List<SysFileInfo> list = sysFileInfoService.selectSysFileInfoList(sysFileInfo);
@@ -41,7 +42,7 @@ public class SysFileInfoController extends BaseController {
      * 获取文件信息详细信息
      */
     @PreAuthorize("@ss.hasPermi('onethinker:file:query')")
-    @GetMapping(value = "/{fileId}")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/{fileId}")
     public AjaxResult getInfo(@PathVariable("fileId") String fileId) {
         return success(sysFileInfoService.selectSysFileInfoByFileId(fileId));
     }
@@ -51,7 +52,7 @@ public class SysFileInfoController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:file:add')")
     @Log(title = "文件信息", businessType = BusinessType.INSERT)
-    @PostMapping(value = "/upload")
+    @PostMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/upload")
     public AjaxResult upload(SysFileInfoReqDTO sysFileInfoReqDTO) {
         return AjaxResult.success(sysFileInfoService.upload(sysFileInfoReqDTO));
     }
@@ -61,7 +62,7 @@ public class SysFileInfoController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:file:remove')")
     @Log(title = "文件信息", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{fileIds}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{fileIds}")
     public AjaxResult remove(@PathVariable String[] fileIds) {
         return toAjax(sysFileInfoService.deleteSysFileInfoByFileIds(fileIds));
     }

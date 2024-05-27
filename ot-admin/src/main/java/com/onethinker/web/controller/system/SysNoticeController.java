@@ -1,6 +1,7 @@
 package com.onethinker.web.controller.system;
 
 import com.onethinker.common.annotation.Log;
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.page.TableDataInfo;
@@ -29,7 +30,7 @@ public class SysNoticeController extends BaseController {
      * 获取通知公告列表
      */
     @PreAuthorize("@ss.hasPermi('system:notice:list')")
-    @GetMapping("/list")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
     public TableDataInfo list(SysNotice notice) {
         startPage();
         List<SysNotice> list = noticeService.selectNoticeList(notice);
@@ -40,7 +41,7 @@ public class SysNoticeController extends BaseController {
      * 根据通知公告编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:notice:query')")
-    @GetMapping(value = "/{noticeId}")
+    @GetMapping( value =ServicePathConstant.PREFIX_SERVICE_PATH +  "/{noticeId}")
     public AjaxResult getInfo(@PathVariable Long noticeId) {
         return success(noticeService.selectNoticeById(noticeId));
     }
@@ -72,7 +73,7 @@ public class SysNoticeController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:notice:remove')")
     @Log(title = "通知公告", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{noticeIds}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{noticeIds}")
     public AjaxResult remove(@PathVariable Long[] noticeIds) {
         return toAjax(noticeService.deleteNoticeByIds(noticeIds));
     }

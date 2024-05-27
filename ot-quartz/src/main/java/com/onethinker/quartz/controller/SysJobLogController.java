@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.onethinker.common.constant.ServicePathConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,7 +38,7 @@ public class SysJobLogController extends BaseController {
      * 查询定时任务调度日志列表
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:list')")
-    @GetMapping("/list")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
     public TableDataInfo list(SysJobLog sysJobLog) {
         startPage();
         List<SysJobLog> list = jobLogService.selectJobLogList(sysJobLog);
@@ -49,7 +50,7 @@ public class SysJobLogController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:export')")
     @Log(title = "任务调度日志", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, SysJobLog sysJobLog) {
         List<SysJobLog> list = jobLogService.selectJobLogList(sysJobLog);
         ExcelUtil<SysJobLog> util = new ExcelUtil<SysJobLog>(SysJobLog.class);
@@ -60,7 +61,7 @@ public class SysJobLogController extends BaseController {
      * 根据调度编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:query')")
-    @GetMapping(value = "/{jobLogId}")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/{jobLogId}")
     public AjaxResult getInfo(@PathVariable Long jobLogId) {
         return success(jobLogService.selectJobLogById(jobLogId));
     }
@@ -71,7 +72,7 @@ public class SysJobLogController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:remove')")
     @Log(title = "定时任务调度日志", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{jobLogIds}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{jobLogIds}")
     public AjaxResult remove(@PathVariable Long[] jobLogIds) {
         return toAjax(jobLogService.deleteJobLogByIds(jobLogIds));
     }
@@ -81,7 +82,7 @@ public class SysJobLogController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:remove')")
     @Log(title = "调度日志", businessType = BusinessType.CLEAN)
-    @DeleteMapping("/clean")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/clean")
     public AjaxResult clean() {
         jobLogService.cleanJobLog();
         return success();

@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.onethinker.domain.Banner;
 import com.onethinker.onethinker.service.IBannerService;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -53,7 +54,7 @@ public class BannerController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:banner:export')")
     @Log(title = "轮播图", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, Banner banner) {
         List<Banner> list = bannerService.selectBannerList(banner);
         ExcelUtil<Banner> util = new ExcelUtil<Banner>(Banner. class);
@@ -64,7 +65,7 @@ public class BannerController extends BaseController {
      * 获取轮播图详细信息
      */
     @PreAuthorize("@ss.hasPermi('onethinker:banner:query')")
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(bannerService.selectBannerById(id));
     }
@@ -94,7 +95,7 @@ public class BannerController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:banner:remove')")
     @Log(title = "轮播图", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(bannerService.deleteBannerByIds(ids));
     }

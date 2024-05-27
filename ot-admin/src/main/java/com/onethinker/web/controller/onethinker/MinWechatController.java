@@ -3,6 +3,7 @@ package com.onethinker.web.controller.onethinker;
 import cn.binarywang.wx.miniapp.bean.WxMaSubscribeMessage;
 import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
 import com.onethinker.onethinker.service.ISubscribeMsgCtrlService;
 import com.onethinker.wechat.service.IMinWechatService;
@@ -37,7 +38,7 @@ public class MinWechatController extends BaseController {
     /**
      * 测试发布订阅消息
      */
-    @GetMapping(value = "/sendSubscribeMsgTest")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/sendSubscribeMsgTest")
     public AjaxResult myBatisTest(@RequestParam String templateId) {
         SubscribeMsgCtrl subscribeMsgCtrl = subscribeMsgCtrlService.findEntryByTemplateId(templateId);
         Assert.isTrue(ObjectUtils.isNotEmpty(subscribeMsgCtrl), "模版信息不存在");

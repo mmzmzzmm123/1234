@@ -3,6 +3,7 @@ package com.onethinker.web.controller.common;
 import com.google.code.kaptcha.Producer;
 import com.onethinker.common.config.OnethinkerConfig;
 import com.onethinker.common.constant.Constants;
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.CacheEnum;
@@ -43,7 +44,7 @@ public class CaptchaController {
     /**
      * 生成验证码
      */
-    @GetMapping("/captchaImage")
+    @GetMapping(ServicePathConstant.PREFIX_PUBLIC_PATH + "/captchaImage")
     public AjaxResult getCode(HttpServletResponse response) throws IOException {
         AjaxResult ajax = AjaxResult.success();
         boolean captchaEnabled = configService.selectCaptchaEnabled();

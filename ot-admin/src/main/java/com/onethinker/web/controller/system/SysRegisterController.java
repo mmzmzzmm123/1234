@@ -1,5 +1,6 @@
 package com.onethinker.web.controller.system;
 
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.domain.model.RegisterBody;
@@ -25,7 +26,7 @@ public class SysRegisterController extends BaseController {
     @Autowired
     private ISysConfigService configService;
 
-    @PostMapping("/register")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/register")
     public AjaxResult register(@RequestBody RegisterBody user) {
         if (!("true".equals(configService.selectConfigByKey(SysConfigKeyEnum.SYS_ACCOUNT_REGISTERUSER)))) {
             return error("当前系统没有开启注册功能！");

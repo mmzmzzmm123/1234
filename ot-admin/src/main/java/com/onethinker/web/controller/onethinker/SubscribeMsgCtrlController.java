@@ -1,5 +1,6 @@
 package com.onethinker.web.controller.onethinker;
 
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
 import com.onethinker.onethinker.service.ISubscribeMsgCtrlService;
 import com.onethinker.common.annotation.Log;
@@ -31,7 +32,7 @@ public class SubscribeMsgCtrlController extends BaseController {
      * 查询订阅消息控制列表
      */
     @PreAuthorize("@ss.hasPermi('onethinker:ctrl:list')")
-    @GetMapping("/list")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
     public TableDataInfo list(SubscribeMsgCtrl subscribeMsgCtrl) {
         startPage();
         List<SubscribeMsgCtrl> list = subscribeMsgCtrlService.selectSubscribeMsgCtrlList(subscribeMsgCtrl);
@@ -43,7 +44,7 @@ public class SubscribeMsgCtrlController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:ctrl:export')")
     @Log(title = "订阅消息控制", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, SubscribeMsgCtrl subscribeMsgCtrl) {
         List<SubscribeMsgCtrl> list = subscribeMsgCtrlService.selectSubscribeMsgCtrlList(subscribeMsgCtrl);
         ExcelUtil<SubscribeMsgCtrl> util = new ExcelUtil<SubscribeMsgCtrl>(SubscribeMsgCtrl.class);
@@ -54,7 +55,7 @@ public class SubscribeMsgCtrlController extends BaseController {
      * 获取订阅消息控制详细信息
      */
     @PreAuthorize("@ss.hasPermi('onethinker:ctrl:query')")
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(subscribeMsgCtrlService.selectSubscribeMsgCtrlById(id));
     }
@@ -84,7 +85,7 @@ public class SubscribeMsgCtrlController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:ctrl:remove')")
     @Log(title = "订阅消息控制", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(subscribeMsgCtrlService.deleteSubscribeMsgCtrlByIds(ids));
     }

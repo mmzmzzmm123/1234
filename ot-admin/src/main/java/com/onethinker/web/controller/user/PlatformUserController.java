@@ -34,7 +34,7 @@ public class PlatformUserController extends BaseController {
      * @param reqDTO
      * @return
      */
-    @PostMapping(value = "/login")
+    @PostMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/login")
     public AjaxResult platformUserLogin(@RequestBody PlatformUserReqDTO reqDTO) {
         PlatformUserResDTO result = platformUserService.getUserStorage(reqDTO.getSourceType()).login(reqDTO);
         return AjaxResult.success("登录成功", result);
@@ -47,7 +47,7 @@ public class PlatformUserController extends BaseController {
      * @param reqDTO
      * @return
      */
-    @PostMapping(value = "/register")
+    @PostMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/register")
     public AjaxResult platformUserRegister(@RequestBody PlatformUserReqDTO reqDTO) {
         platformUserService.getUserStorage(reqDTO.getSourceType()).register(reqDTO);
         return AjaxResult.success("注册成功");
@@ -80,7 +80,7 @@ public class PlatformUserController extends BaseController {
      * @param platformUser 平台用户对象
      * @return
      */
-    @PostMapping(value = "/update")
+    @PostMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/update")
     public AjaxResult platformUserUpdate(@RequestBody PlatformUser platformUser) {
         PlatformUser resDTO = platformUserService.queryLoginUserInfo();
         platformUser.setId(resDTO.getId());
@@ -94,7 +94,7 @@ public class PlatformUserController extends BaseController {
      * @return
      */
     @PreAuthorize("@ss.hasPermi('onethinker:user:query')")
-    @GetMapping(value = "/queryLoginUserInfo")
+    @GetMapping(value =ServicePathConstant.PREFIX_SERVICE_PATH +  "/queryLoginUserInfo")
     public AjaxResult queryLoginUserInfo() {
         PlatformUser resDTO = platformUserService.queryLoginUserInfo();
         return AjaxResult.success(resDTO);

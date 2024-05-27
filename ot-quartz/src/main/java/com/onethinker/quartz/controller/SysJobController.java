@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
+import com.onethinker.common.constant.ServicePathConstant;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -45,7 +46,7 @@ public class SysJobController extends BaseController {
      * 查询定时任务列表
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:list')")
-    @GetMapping("/list")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
     public TableDataInfo list(SysJob sysJob) {
         startPage();
         List<SysJob> list = jobService.selectJobList(sysJob);
@@ -57,7 +58,7 @@ public class SysJobController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:export')")
     @Log(title = "定时任务", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, SysJob sysJob) {
         List<SysJob> list = jobService.selectJobList(sysJob);
         ExcelUtil<SysJob> util = new ExcelUtil<SysJob>(SysJob.class);
@@ -68,7 +69,7 @@ public class SysJobController extends BaseController {
      * 获取定时任务详细信息
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:query')")
-    @GetMapping(value = "/{jobId}")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/{jobId}")
     public AjaxResult getInfo(@PathVariable("jobId") Long jobId) {
         return success(jobService.selectJobById(jobId));
     }
@@ -126,7 +127,7 @@ public class SysJobController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:changeStatus')")
     @Log(title = "定时任务", businessType = BusinessType.UPDATE)
-    @PutMapping("/changeStatus")
+    @PutMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysJob job) throws SchedulerException {
         SysJob newJob = jobService.selectJobById(job.getJobId());
         newJob.setStatus(job.getStatus());
@@ -138,7 +139,7 @@ public class SysJobController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:changeStatus')")
     @Log(title = "定时任务", businessType = BusinessType.UPDATE)
-    @PutMapping("/run")
+    @PutMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/run")
     public AjaxResult run(@RequestBody SysJob job) throws SchedulerException {
         boolean result = jobService.run(job);
         return result ? success() : error("任务不存在或已过期！");
@@ -149,7 +150,7 @@ public class SysJobController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:remove')")
     @Log(title = "定时任务", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{jobIds}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{jobIds}")
     public AjaxResult remove(@PathVariable Long[] jobIds) throws SchedulerException, TaskException {
         jobService.deleteJobByIds(jobIds);
         return success();
