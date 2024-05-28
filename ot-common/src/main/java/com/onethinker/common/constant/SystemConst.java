@@ -127,4 +127,9 @@ public interface SystemConst {
      * 空格符
      */
     String SYMBOL_BLANK = " ";
+
+    /**
+     * 密钥
+     */
+    public static final String CRYPOTJS_KEY = "aoligeimeimaobin";
 }

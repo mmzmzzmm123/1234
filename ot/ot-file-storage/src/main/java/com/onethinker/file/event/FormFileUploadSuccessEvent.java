@@ -1,13 +1,15 @@
 package com.onethinker.file.event;
 
 import com.onethinker.file.domain.FileInfo;
+import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
 import java.nio.file.Path;
 
 /**
- * @author liujunlin
+ * @author yangyouqi
  */
+@Getter
 public class FormFileUploadSuccessEvent extends ApplicationEvent {
     private final String id;
     private final String userId;
@@ -25,17 +27,5 @@ public class FormFileUploadSuccessEvent extends ApplicationEvent {
         this.id = id;
         this.userId = userId;
         this.mimeType = mimeType;
-    }
-
-    public String getMimeType() {
-        return mimeType;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getUserId() {
-        return userId;
     }
 }

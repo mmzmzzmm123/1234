@@ -68,9 +68,9 @@ public class IPlatformUserService {
         try {
             Assert.isTrue(!ObjectUtils.isEmpty(userTypeEnum), "userTypeEnum is null ");
             Class<?> clazz = Class.forName(userTypeEnum.getInterfaceClass());
-            Constructor<?> constructor = clazz.getConstructor(IMinWechatService.class, IPlatformUserService.class, SysLoginService.class, ISysConfigService.class, RedisCache.class);
+            Constructor<?> constructor = clazz.getConstructor(IMinWechatService.class, IPlatformUserService.class, SysLoginService.class);
             constructor.setAccessible(true);
-            UserStorage instance = (UserStorage) constructor.newInstance(wechatService, this, sysLoginService, configService, redisCache);
+            UserStorage instance = (UserStorage) constructor.newInstance(wechatService, this, sysLoginService);
             return Tools.cast(instance);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -97,6 +97,9 @@ public class IPlatformUserService {
      * @return
      */
     public PlatformUser selectPlatformUserDetailByDataId(String dataId) {
+        if (dataId == null) {
+            return null;
+        }
         String redisKey = REDIS_KEY + dataId;
 
         if (redisCache.hasKey(redisKey)) {
@@ -157,6 +160,11 @@ public class IPlatformUserService {
         return platformUser;
     }
 
+    /**
+     * 绑定手机号或邮箱
+     * @param reqDTO
+     * @param codeTypeEnum 邮箱
+     */
     public void bindPhoneOrEmail(PlatformUserReqDTO reqDTO, CodeTypeEnum codeTypeEnum) {
         // 校验参数有效值
         reqDTO.existsParamsByBindPhoneOrEmail(codeTypeEnum);

@@ -12,6 +12,7 @@ import lombok.Data;
  */
 @Data
 public class PlatformUserIntegral extends BaseEntity {
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -41,14 +42,13 @@ public class PlatformUserIntegral extends BaseEntity {
      * 平台用户
      */
     @Excel(name = "平台用户")
-    private Long puUserId;
+    private String dataId;
 
     /**
      * 活动批次号
      */
     @Excel(name = "活动批次号")
     private String batchNo;
-
 
     /**
      * 原剩余积分

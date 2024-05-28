@@ -42,7 +42,7 @@ public class PlatformUserIntegralHistory extends BaseEntity {
      * 平台用户
      */
     @Excel(name = "平台用户")
-    private Long puUserId;
+    private String dataId;
 
     /**
      * 活动批次号

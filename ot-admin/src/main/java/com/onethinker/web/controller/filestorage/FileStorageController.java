@@ -5,7 +5,6 @@ import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.domain.FileRelation;
 import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.platform.FileStorage;
-import com.onethinker.common.constant.ParameterNames;
 import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.constant.SystemConst;
 import com.onethinker.common.core.controller.BaseController;
@@ -70,12 +69,12 @@ public class FileStorageController extends BaseController {
             produces = MediaType.TEXT_PLAIN_VALUE)
     String uploadFile(
             @RequestParam(name = "file") MultipartFile file,
-            @RequestParam(name = ParameterNames.RELATION_TYPE, required = false) FileRelationTypeEnum relationType,
-            @RequestParam(name = ParameterNames.RELATION_TARGET, required = false) String relationTarget,
+            @RequestParam(name = "relation_type", required = false) FileRelationTypeEnum relationType,
+            @RequestParam(name = "relation_target", required = false) String relationTarget,
             @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = ParameterNames.USER_ID, required = false) String userId,
-            @RequestParam(name = ParameterNames.TENANT_ID, defaultValue = SystemConst.DEFAULT_TENANT_ID) String tenantId,
-            @RequestParam(name = ParameterNames.APP_NAME) String appName,
+            @RequestParam(name = "user_id", required = false) String userId,
+            @RequestParam(name = "tenant_id", defaultValue = SystemConst.DEFAULT_TENANT_ID) String tenantId,
+            @RequestParam(name = "app_name") String appName,
             @RequestParam(name = "attr",required = false) String attr) {
         if (StringUtils.isBlank(userId)) {
             throw new InvalidParameterException("用户id不能为空");

@@ -27,15 +27,13 @@ public class WxUserStorage implements UserStorage {
     private final IMinWechatService minWechatService;
     private final IPlatformUserService platformUserService;
     private final SysLoginService loginService;
-    private final ISysConfigService configService;
 
 
 
-    public WxUserStorage(IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService, ISysConfigService configService, RedisCache redisCache) {
+    public WxUserStorage(IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService) {
         this.minWechatService = minWechatService;
         this.platformUserService = platformUserService;
         this.loginService = loginService;
-        this.configService = configService;
         this.userTypeEnum = PlatformUserTypeEnum.WX;
     }
 

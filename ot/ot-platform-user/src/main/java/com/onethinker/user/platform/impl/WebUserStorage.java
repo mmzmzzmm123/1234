@@ -27,14 +27,10 @@ public class WebUserStorage implements UserStorage {
     private final PlatformUserTypeEnum userTypeEnum;
     private final IPlatformUserService platformUserService;
     private final SysLoginService loginService;
-    private final ISysConfigService configService;
-    private final RedisCache redisCache;
 
-    public WebUserStorage(IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService, ISysConfigService configService,RedisCache redisCache) {
+    public WebUserStorage(IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService) {
         this.platformUserService = platformUserService;
         this.loginService = loginService;
-        this.configService = configService;
-        this.redisCache = redisCache;
         this.userTypeEnum = PlatformUserTypeEnum.WEB;
     }
     @Override
