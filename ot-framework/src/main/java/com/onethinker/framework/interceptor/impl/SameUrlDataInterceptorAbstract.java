@@ -33,7 +33,7 @@ public class SameUrlDataInterceptorAbstract extends AbstractRepeatSubmitIntercep
     public final String REPEAT_TIME = "repeatTime";
 
     // 令牌自定义标识
-    @Value("${token.header}")
+    @Value("${onethinker.token.header}")
     private String header;
 
     @Autowired

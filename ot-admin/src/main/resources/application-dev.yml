@@ -1,0 +1,46 @@
+## 环境差异化
+config:
+  server:
+    port: 18081
+    context-path: /ywkj-be
+  swagger:
+    enabled: true
+  profile:
+    basePath: C://onethinker/public/ywkj
+  file-storage:
+    #默认使用的存储平台
+    default-platform: local
+    # 本地存储
+    local:
+      # 访问域名
+      domain: http://127.0.0.1:18081/
+    # 腾讯云 COS
+    tencent-cos:
+      # 存储平台标识
+      secret-id: 'AKIDDskl0ELH1jJoFXn7OxdkqJoEUjMcrtpq'
+      secret-key: 'SrM1fZPSfkijoz2AJZqBRaozxoYClKtV'
+      #存仓库所在地域
+      region: 'ap-guangzhou'
+      # 令牌桶名称
+      bucket-name: 'cos-iops-1258646189'
+    # 华为云 OBS ，不使用的情况下可以不写
+    huawei-obs:
+      # 启用存储
+      access-key: 'T3FOARI4F8K8MOHWG49F'
+      secret-key: 'ZDnNl3SzvHb5wJubf4xPX6ro5oecsLF9aKy8y9td'
+      end-point: 'obs.cn-east-3.myhuaweicloud.com'
+      bucket-name: 'obs-iops'
+
+  token:
+    # 令牌密钥
+    secret: abcdefghijklmnopqrstuvwxyz
+    # 令牌有效期（默认2小时）
+    expireTime: 120
+
+# 日志配置
+logging:
+  level:
+    com.onethinker: debug
+    org.springframework: debug
+
+

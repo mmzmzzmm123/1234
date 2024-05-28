@@ -1,6 +1,8 @@
 package com.onethinker.common.config;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +13,15 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "onethinker")
+@Data
+@Accessors(chain = true)
 public class OnethinkerConfig {
+
+    /**
+     * 作者信息
+     */
+    private AuthConfig auth;
+
     /**
      * 项目名称
      */
@@ -21,73 +31,30 @@ public class OnethinkerConfig {
      * 版本
      */
     private String version;
-
-    /**
-     * 版权年份
-     */
-    private String copyrightYear;
-
     /**
      * 上传路径
      */
     private static String profile;
 
     /**
-     * 获取地址开关
-     */
-    private static boolean addressEnabled;
-
-    /**
      * 验证码类型
      */
     private static String captchaType;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getCopyrightYear() {
-        return copyrightYear;
-    }
-
-    public void setCopyrightYear(String copyrightYear) {
-        this.copyrightYear = copyrightYear;
-    }
-
-    public static String getProfile() {
-        return profile;
-    }
 
     public void setProfile(String profile) {
         OnethinkerConfig.profile = profile;
     }
 
-    public static boolean isAddressEnabled() {
-        return addressEnabled;
-    }
-
-    public void setAddressEnabled(boolean addressEnabled) {
-        OnethinkerConfig.addressEnabled = addressEnabled;
+    public void setCaptchaType(String captchaType) {
+        OnethinkerConfig.captchaType = captchaType;
     }
 
     public static String getCaptchaType() {
         return captchaType;
     }
 
-    public void setCaptchaType(String captchaType) {
-        OnethinkerConfig.captchaType = captchaType;
+    public static String getProfile() {
+        return profile;
     }
 
     /**
@@ -116,5 +83,13 @@ public class OnethinkerConfig {
      */
     public static String getUploadPath() {
         return profile + "/upload";
+    }
+
+    @Data
+    @Accessors(chain = true)
+    public static class AuthConfig {
+        public String name;
+        public String url;
+        public String email;
     }
 }
