@@ -45,7 +45,7 @@ public class SysLoginController {
      * @param loginBody 登录信息
      * @return 结果
      */
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/login")
+    @PostMapping( ServicePathConstant.PREFIX_PUBLIC_PATH + "/login")
     public AjaxResult login(@RequestBody LoginBody loginBody) {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌

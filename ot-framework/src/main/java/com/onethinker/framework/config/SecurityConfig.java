@@ -1,5 +1,6 @@
 package com.onethinker.framework.config;
 
+import com.onethinker.common.constant.ServicePathConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
@@ -109,15 +110,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // 过滤请求
                 .authorizeRequests()
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
-                .antMatchers("/login",
-                        "/register",
-                        "/captchaImage",
-                        "/onethinker/platformUser/login",
-                        "/onethinker/platformUser/register",
-                        "/onethinker/platformUser/getCodeForForgetPassword",
-                        "/**/public/**",
-                        "/bk/**"
-                ).permitAll()
+                .antMatchers("/**"+ ServicePathConstant.PREFIX_PUBLIC_PATH +"/**").permitAll()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()

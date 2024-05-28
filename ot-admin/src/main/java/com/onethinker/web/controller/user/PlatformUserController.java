@@ -34,7 +34,7 @@ public class PlatformUserController extends BaseController {
      * @param reqDTO
      * @return
      */
-    @PostMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/login")
+    @PostMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH +  "/login")
     public AjaxResult platformUserLogin(@RequestBody PlatformUserReqDTO reqDTO) {
         PlatformUserResDTO result = platformUserService.getUserStorage(reqDTO.getSourceType()).login(reqDTO);
         return AjaxResult.success("登录成功", result);
@@ -47,7 +47,7 @@ public class PlatformUserController extends BaseController {
      * @param reqDTO
      * @return
      */
-    @PostMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/register")
+    @PostMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/register")
     public AjaxResult platformUserRegister(@RequestBody PlatformUserReqDTO reqDTO) {
         platformUserService.getUserStorage(reqDTO.getSourceType()).register(reqDTO);
         return AjaxResult.success("注册成功");
