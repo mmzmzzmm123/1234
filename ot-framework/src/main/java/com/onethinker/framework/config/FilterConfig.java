@@ -23,15 +23,15 @@ import com.onethinker.common.utils.StringUtils;
  */
 @Configuration
 public class FilterConfig {
-    @Value("${xss.excludes}")
+    @Value("${onethinker.xss.excludes}")
     private String excludes;
 
-    @Value("${xss.urlPatterns}")
+    @Value("${onethinker.xss.urlPatterns}")
     private String urlPatterns;
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Bean
-    @ConditionalOnProperty(value = "xss.enabled", havingValue = "true")
+    @ConditionalOnProperty(value = "onethinker.xss.enabled", havingValue = "true")
     public FilterRegistrationBean xssFilterRegistration() {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);

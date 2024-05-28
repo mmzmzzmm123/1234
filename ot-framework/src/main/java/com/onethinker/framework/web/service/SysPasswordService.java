@@ -29,10 +29,10 @@ public class SysPasswordService {
     @Autowired
     private RedisCache redisCache;
 
-    @Value(value = "${user.password.maxRetryCount}")
+    @Value(value = "${onethinker.user.password.maxRetryCount}")
     private int maxRetryCount;
 
-    @Value(value = "${user.password.lockTime}")
+    @Value(value = "${onethinker.user.password.lockTime}")
     private int lockTime;
 
     /**

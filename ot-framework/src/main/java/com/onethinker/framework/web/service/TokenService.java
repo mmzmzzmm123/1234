@@ -37,15 +37,15 @@ public class TokenService {
     private static final Logger log = LoggerFactory.getLogger(TokenService.class);
 
     // 令牌自定义标识
-    @Value("${token.header}")
+    @Value("${onethinker.token.header}")
     private String header;
 
     // 令牌秘钥
-    @Value("${token.secret}")
+    @Value("${onethinker.token.secret}")
     private String secret;
 
     // 令牌有效期（默认30分钟）
-    @Value("${token.expireTime}")
+    @Value("${onethinker.token.expireTime}")
     private int expireTime;
 
     protected static final long MILLIS_SECOND = 1000;
