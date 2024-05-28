@@ -51,7 +51,7 @@ public class SysUserController extends BaseController {
      * 获取用户列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
+    @GetMapping( "/list")
     public TableDataInfo list(SysUser user) {
         startPage();
         List<SysUser> list = userService.selectUserList(user);
@@ -60,7 +60,7 @@ public class SysUserController extends BaseController {
 
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:user:export')")
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
+    @PostMapping( "/export")
     public void export(HttpServletResponse response, SysUser user) {
         List<SysUser> list = userService.selectUserList(user);
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
@@ -69,7 +69,7 @@ public class SysUserController extends BaseController {
 
     @Log(title = "用户管理", businessType = BusinessType.IMPORT)
     @PreAuthorize("@ss.hasPermi('system:user:import')")
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/importData")
+    @PostMapping( "/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         List<SysUser> userList = util.importExcel(file.getInputStream());
@@ -78,7 +78,7 @@ public class SysUserController extends BaseController {
         return success(message);
     }
 
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/importTemplate")
+    @PostMapping( "/importTemplate")
     public void importTemplate(HttpServletResponse response) {
         ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
         util.importTemplateExcel(response, "用户数据");
@@ -88,7 +88,7 @@ public class SysUserController extends BaseController {
      * 根据用户编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:user:query')")
-    @GetMapping(value = {ServicePathConstant.PREFIX_SERVICE_PATH + "/",ServicePathConstant.PREFIX_SERVICE_PATH +  "/{userId}"})
+    @GetMapping(value = {"/", "/{userId}"})
     public AjaxResult getInfo(@PathVariable(value = "userId", required = false) Long userId) {
         userService.checkUserDataScope(userId);
         AjaxResult ajax = AjaxResult.success();
@@ -148,7 +148,7 @@ public class SysUserController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:remove')")
     @Log(title = "用户管理", businessType = BusinessType.DELETE)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{userIds}")
+    @DeleteMapping( "/{userIds}")
     public AjaxResult remove(@PathVariable Long[] userIds) {
         if (ArrayUtils.contains(userIds, getUserId())) {
             return error("当前用户不能删除");
@@ -161,7 +161,7 @@ public class SysUserController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:resetPwd')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
-    @PutMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/resetPwd")
+    @PutMapping( "/resetPwd")
     public AjaxResult resetPwd(@RequestBody SysUser user) {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
@@ -175,7 +175,7 @@ public class SysUserController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "用户管理", businessType = BusinessType.UPDATE)
-    @PutMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/changeStatus")
+    @PutMapping( "/changeStatus")
     public AjaxResult changeStatus(@RequestBody SysUser user) {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
@@ -187,7 +187,7 @@ public class SysUserController extends BaseController {
      * 根据用户编号获取授权角色
      */
     @PreAuthorize("@ss.hasPermi('system:user:query')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/authRole/{userId}")
+    @GetMapping( "/authRole/{userId}")
     public AjaxResult authRole(@PathVariable("userId") Long userId) {
         AjaxResult ajax = AjaxResult.success();
         SysUser user = userService.selectUserById(userId);
@@ -202,7 +202,7 @@ public class SysUserController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:user:edit')")
     @Log(title = "用户管理", businessType = BusinessType.GRANT)
-    @PutMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/authRole")
+    @PutMapping( "/authRole")
     public AjaxResult insertAuthRole(Long userId, Long[] roleIds) {
         userService.checkUserDataScope(userId);
         userService.insertUserAuth(userId, roleIds);
@@ -213,7 +213,7 @@ public class SysUserController extends BaseController {
      * 获取部门树列表
      */
     @PreAuthorize("@ss.hasPermi('system:user:list')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/deptTree")
+    @GetMapping( "/deptTree")
     public AjaxResult deptTree(SysDept dept) {
         return success(deptService.selectDeptTreeList(dept));
     }

@@ -30,7 +30,7 @@ public class SysNoticeController extends BaseController {
      * 获取通知公告列表
      */
     @PreAuthorize("@ss.hasPermi('system:notice:list')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
+    @GetMapping( "/list")
     public TableDataInfo list(SysNotice notice) {
         startPage();
         List<SysNotice> list = noticeService.selectNoticeList(notice);
@@ -41,7 +41,7 @@ public class SysNoticeController extends BaseController {
      * 根据通知公告编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:notice:query')")
-    @GetMapping( value =ServicePathConstant.PREFIX_SERVICE_PATH +  "/{noticeId}")
+    @GetMapping( value = "/{noticeId}")
     public AjaxResult getInfo(@PathVariable Long noticeId) {
         return success(noticeService.selectNoticeById(noticeId));
     }
@@ -73,7 +73,7 @@ public class SysNoticeController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:notice:remove')")
     @Log(title = "通知公告", businessType = BusinessType.DELETE)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{noticeIds}")
+    @DeleteMapping( "/{noticeIds}")
     public AjaxResult remove(@PathVariable Long[] noticeIds) {
         return toAjax(noticeService.deleteNoticeByIds(noticeIds));
     }

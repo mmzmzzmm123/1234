@@ -28,7 +28,7 @@ public class SysOperlogController extends BaseController {
     private ISysOperLogService operLogService;
 
     @PreAuthorize("@ss.hasPermi('monitor:operlog:list')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
+    @GetMapping( "/list")
     public TableDataInfo list(SysOperLog operLog) {
         startPage();
         List<SysOperLog> list = operLogService.selectOperLogList(operLog);
@@ -37,7 +37,7 @@ public class SysOperlogController extends BaseController {
 
     @Log(title = "操作日志", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('monitor:operlog:export')")
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
+    @PostMapping( "/export")
     public void export(HttpServletResponse response, SysOperLog operLog) {
         List<SysOperLog> list = operLogService.selectOperLogList(operLog);
         ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);
@@ -46,14 +46,14 @@ public class SysOperlogController extends BaseController {
 
     @Log(title = "操作日志", businessType = BusinessType.DELETE)
     @PreAuthorize("@ss.hasPermi('monitor:operlog:remove')")
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{operIds}")
+    @DeleteMapping( "/{operIds}")
     public AjaxResult remove(@PathVariable Long[] operIds) {
         return toAjax(operLogService.deleteOperLogByIds(operIds));
     }
 
     @Log(title = "操作日志", businessType = BusinessType.CLEAN)
     @PreAuthorize("@ss.hasPermi('monitor:operlog:remove')")
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/clean")
+    @DeleteMapping( "/clean")
     public AjaxResult clean() {
         operLogService.cleanOperLog();
         return success();

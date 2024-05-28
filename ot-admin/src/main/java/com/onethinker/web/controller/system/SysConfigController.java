@@ -33,7 +33,7 @@ public class SysConfigController extends BaseController {
      * 获取参数配置列表
      */
     @PreAuthorize("@ss.hasPermi('system:config:list')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
+    @GetMapping( "/list")
     public TableDataInfo list(SysConfig config) {
         startPage();
         List<SysConfig> list = configService.selectConfigList(config);
@@ -42,7 +42,7 @@ public class SysConfigController extends BaseController {
 
     @Log(title = "参数管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:config:export')")
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
+    @PostMapping( "/export")
     public void export(HttpServletResponse response, SysConfig config) {
         List<SysConfig> list = configService.selectConfigList(config);
         ExcelUtil<SysConfig> util = new ExcelUtil<SysConfig>(SysConfig.class);
@@ -53,7 +53,7 @@ public class SysConfigController extends BaseController {
      * 根据参数编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:config:query')")
-    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/{configId}")
+    @GetMapping(value = "/{configId}")
     public AjaxResult getInfo(@PathVariable Long configId) {
         return success(configService.selectConfigById(configId));
     }
@@ -61,7 +61,7 @@ public class SysConfigController extends BaseController {
     /**
      * 根据参数键名查询参数值
      */
-    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/configKey/{configKey}")
+    @GetMapping(value =  "/configKey/{configKey}")
     public AjaxResult getConfigKey(@PathVariable String configKey) {
         return success(configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(configKey)));
     }
@@ -99,7 +99,7 @@ public class SysConfigController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @Log(title = "参数管理", businessType = BusinessType.DELETE)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{configIds}")
+    @DeleteMapping( "/{configIds}")
     public AjaxResult remove(@PathVariable Long[] configIds) {
         configService.deleteConfigByIds(configIds);
         return success();
@@ -110,7 +110,7 @@ public class SysConfigController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @Log(title = "参数管理", businessType = BusinessType.CLEAN)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/refreshCache")
+    @DeleteMapping( "/refreshCache")
     public AjaxResult refreshCache() {
         configService.resetConfigCache();
         return success();

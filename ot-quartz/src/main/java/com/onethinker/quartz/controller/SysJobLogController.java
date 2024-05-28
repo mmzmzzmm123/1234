@@ -38,7 +38,7 @@ public class SysJobLogController extends BaseController {
      * 查询定时任务调度日志列表
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:list')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
+    @GetMapping("/list")
     public TableDataInfo list(SysJobLog sysJobLog) {
         startPage();
         List<SysJobLog> list = jobLogService.selectJobLogList(sysJobLog);
@@ -50,7 +50,7 @@ public class SysJobLogController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:export')")
     @Log(title = "任务调度日志", businessType = BusinessType.EXPORT)
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
+    @PostMapping("/export")
     public void export(HttpServletResponse response, SysJobLog sysJobLog) {
         List<SysJobLog> list = jobLogService.selectJobLogList(sysJobLog);
         ExcelUtil<SysJobLog> util = new ExcelUtil<SysJobLog>(SysJobLog.class);
@@ -61,7 +61,7 @@ public class SysJobLogController extends BaseController {
      * 根据调度编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:query')")
-    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/{jobLogId}")
+    @GetMapping(value = "/{jobLogId}")
     public AjaxResult getInfo(@PathVariable Long jobLogId) {
         return success(jobLogService.selectJobLogById(jobLogId));
     }
@@ -72,7 +72,7 @@ public class SysJobLogController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:remove')")
     @Log(title = "定时任务调度日志", businessType = BusinessType.DELETE)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{jobLogIds}")
+    @DeleteMapping("/{jobLogIds}")
     public AjaxResult remove(@PathVariable Long[] jobLogIds) {
         return toAjax(jobLogService.deleteJobLogByIds(jobLogIds));
     }
@@ -82,7 +82,7 @@ public class SysJobLogController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('monitor:job:remove')")
     @Log(title = "调度日志", businessType = BusinessType.CLEAN)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/clean")
+    @DeleteMapping("/clean")
     public AjaxResult clean() {
         jobLogService.cleanJobLog();
         return success();

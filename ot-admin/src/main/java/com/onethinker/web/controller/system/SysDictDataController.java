@@ -35,7 +35,7 @@ public class SysDictDataController extends BaseController {
     private ISysDictTypeService dictTypeService;
 
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
-    @GetMapping(ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
+    @GetMapping("/list")
     public TableDataInfo list(SysDictData dictData) {
         startPage();
         List<SysDictData> list = dictDataService.selectDictDataList(dictData);
@@ -44,7 +44,7 @@ public class SysDictDataController extends BaseController {
 
     @Log(title = "字典数据", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:dict:export')")
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
+    @PostMapping( "/export")
     public void export(HttpServletResponse response, SysDictData dictData) {
         List<SysDictData> list = dictDataService.selectDictDataList(dictData);
         ExcelUtil<SysDictData> util = new ExcelUtil<SysDictData>(SysDictData.class);
@@ -55,7 +55,7 @@ public class SysDictDataController extends BaseController {
      * 查询字典数据详细
      */
     @PreAuthorize("@ss.hasPermi('system:dict:query')")
-    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/{dictCode}")
+    @GetMapping(value =  "/{dictCode}")
     public AjaxResult getInfo(@PathVariable Long dictCode) {
         return success(dictDataService.selectDictDataById(dictCode));
     }
@@ -63,7 +63,7 @@ public class SysDictDataController extends BaseController {
     /**
      * 根据字典类型查询字典数据信息
      */
-    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/type/{dictType}")
+    @GetMapping(value =  "/type/{dictType}")
     public AjaxResult dictType(@PathVariable String dictType) {
         List<SysDictData> data = dictTypeService.selectDictDataByType(dictType);
         if (StringUtils.isNull(data)) {
@@ -99,7 +99,7 @@ public class SysDictDataController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
     @Log(title = "字典类型", businessType = BusinessType.DELETE)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{dictCodes}")
+    @DeleteMapping( "/{dictCodes}")
     public AjaxResult remove(@PathVariable Long[] dictCodes) {
         dictDataService.deleteDictDataByIds(dictCodes);
         return success();

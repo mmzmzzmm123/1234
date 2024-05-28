@@ -1,6 +1,7 @@
 package com.onethinker.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.api.R;
 import com.onethinker.common.constant.Constants;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.*;
@@ -121,9 +122,7 @@ public class IPlatformUserService {
      * @return
      */
     public PlatformUser queryLoginUserInfo() {
-        String dataId = SecurityUtils.getLoginUser().getDataId();
-        Assert.isTrue(StringUtils.isNotEmpty(dataId), "dataId is null");
-        return selectPlatformUserDetailByDataId(dataId);
+        return selectPlatformUserDetailByDataId(SecurityUtils.getLoginUser().getDataId());
     }
 
     /**

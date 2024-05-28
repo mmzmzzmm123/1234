@@ -32,7 +32,7 @@ public class SysDeptController extends BaseController {
      * 获取部门列表
      */
     @PreAuthorize("@ss.hasPermi('system:dept:list')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
+    @GetMapping( "/list")
     public AjaxResult list(SysDept dept) {
         List<SysDept> depts = deptService.selectDeptList(dept);
         return success(depts);
@@ -42,7 +42,7 @@ public class SysDeptController extends BaseController {
      * 查询部门列表（排除节点）
      */
     @PreAuthorize("@ss.hasPermi('system:dept:list')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list/exclude/{deptId}")
+    @GetMapping( "/list/exclude/{deptId}")
     public AjaxResult excludeChild(@PathVariable(value = "deptId", required = false) Long deptId) {
         List<SysDept> depts = deptService.selectDeptList(new SysDept());
         depts.removeIf(d -> d.getDeptId().intValue() == deptId || ArrayUtils.contains(StringUtils.split(d.getAncestors(), ","), deptId + ""));
@@ -53,7 +53,7 @@ public class SysDeptController extends BaseController {
      * 根据部门编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:dept:query')")
-    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/{deptId}")
+    @GetMapping(value =  "/{deptId}")
     public AjaxResult getInfo(@PathVariable Long deptId) {
         deptService.checkDeptDataScope(deptId);
         return success(deptService.selectDeptById(deptId));
@@ -98,7 +98,7 @@ public class SysDeptController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:dept:remove')")
     @Log(title = "部门管理", businessType = BusinessType.DELETE)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{deptId}")
+    @DeleteMapping( "/{deptId}")
     public AjaxResult remove(@PathVariable Long deptId) {
         if (deptService.hasChildByDeptId(deptId)) {
             return warn("存在下级部门,不允许删除");

@@ -32,7 +32,7 @@ public class SysLogininforController extends BaseController {
     private SysPasswordService passwordService;
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:list')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
+    @GetMapping( "/list")
     public TableDataInfo list(SysLogininfor logininfor) {
         startPage();
         List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
@@ -41,7 +41,7 @@ public class SysLogininforController extends BaseController {
 
     @Log(title = "登录日志", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:export')")
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
+    @PostMapping( "/export")
     public void export(HttpServletResponse response, SysLogininfor logininfor) {
         List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
         ExcelUtil<SysLogininfor> util = new ExcelUtil<SysLogininfor>(SysLogininfor.class);
@@ -50,14 +50,14 @@ public class SysLogininforController extends BaseController {
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
     @Log(title = "登录日志", businessType = BusinessType.DELETE)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{infoIds}")
+    @DeleteMapping( "/{infoIds}")
     public AjaxResult remove(@PathVariable Long[] infoIds) {
         return toAjax(logininforService.deleteLogininforByIds(infoIds));
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:remove')")
     @Log(title = "登录日志", businessType = BusinessType.CLEAN)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/clean")
+    @DeleteMapping( "/clean")
     public AjaxResult clean() {
         logininforService.cleanLogininfor();
         return success();
@@ -65,7 +65,7 @@ public class SysLogininforController extends BaseController {
 
     @PreAuthorize("@ss.hasPermi('monitor:logininfor:unlock')")
     @Log(title = "账户解锁", businessType = BusinessType.OTHER)
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/unlock/{userName}")
+    @GetMapping( "/unlock/{userName}")
     public AjaxResult unlock(@PathVariable("userName") String userName) {
         passwordService.clearLoginRecordCache(userName);
         return success();

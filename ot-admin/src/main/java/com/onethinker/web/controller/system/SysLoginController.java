@@ -60,7 +60,7 @@ public class SysLoginController {
      *
      * @return 用户信息
      */
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "getInfo")
+    @GetMapping( "/getInfo")
     public AjaxResult getInfo() {
         SysUser user = SecurityUtils.getLoginUser().getUser();
         // 角色集合
@@ -80,7 +80,7 @@ public class SysLoginController {
      *
      * @return 路由信息
      */
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "getRouters")
+    @GetMapping( "/getRouters")
     public AjaxResult getRouters() {
         Long userId = SecurityUtils.getUserId();
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);

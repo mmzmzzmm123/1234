@@ -32,7 +32,7 @@ public class SysPostController extends BaseController {
      * 获取岗位列表
      */
     @PreAuthorize("@ss.hasPermi('system:post:list')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
+    @GetMapping( "/list")
     public TableDataInfo list(SysPost post) {
         startPage();
         List<SysPost> list = postService.selectPostList(post);
@@ -41,7 +41,7 @@ public class SysPostController extends BaseController {
 
     @Log(title = "岗位管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:post:export')")
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
+    @PostMapping( "/export")
     public void export(HttpServletResponse response, SysPost post) {
         List<SysPost> list = postService.selectPostList(post);
         ExcelUtil<SysPost> util = new ExcelUtil<SysPost>(SysPost.class);
@@ -52,7 +52,7 @@ public class SysPostController extends BaseController {
      * 根据岗位编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:post:query')")
-    @GetMapping( value =ServicePathConstant.PREFIX_SERVICE_PATH +  "/{postId}")
+    @GetMapping( value = "/{postId}")
     public AjaxResult getInfo(@PathVariable Long postId) {
         return success(postService.selectPostById(postId));
     }
@@ -94,7 +94,7 @@ public class SysPostController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:post:remove')")
     @Log(title = "岗位管理", businessType = BusinessType.DELETE)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{postIds}")
+    @DeleteMapping( "/{postIds}")
     public AjaxResult remove(@PathVariable Long[] postIds) {
         return toAjax(postService.deletePostByIds(postIds));
     }
@@ -102,7 +102,7 @@ public class SysPostController extends BaseController {
     /**
      * 获取岗位选择框列表
      */
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/optionselect")
+    @GetMapping( "/optionselect")
     public AjaxResult optionselect() {
         List<SysPost> posts = postService.selectPostAll();
         return success(posts);

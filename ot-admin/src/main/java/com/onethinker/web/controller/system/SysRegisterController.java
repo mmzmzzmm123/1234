@@ -26,7 +26,7 @@ public class SysRegisterController extends BaseController {
     @Autowired
     private ISysConfigService configService;
 
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/register")
+    @PostMapping( "/register")
     public AjaxResult register(@RequestBody RegisterBody user) {
         if (!("true".equals(configService.selectConfigByKey(SysConfigKeyEnum.SYS_ACCOUNT_REGISTERUSER)))) {
             return error("当前系统没有开启注册功能！");

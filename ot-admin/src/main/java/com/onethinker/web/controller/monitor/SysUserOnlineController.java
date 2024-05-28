@@ -36,7 +36,7 @@ public class SysUserOnlineController extends BaseController {
     private RedisCache redisCache;
 
     @PreAuthorize("@ss.hasPermi('monitor:online:list')")
-    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
+    @GetMapping( "/list")
     public TableDataInfo list(String ipaddr, String userName) {
         Collection<String> keys = redisCache.keys(CacheEnum.LOGIN_TOKEN_KEY.getCode() + "*");
         List<SysUserOnline> userOnlineList = new ArrayList<SysUserOnline>();
@@ -62,7 +62,7 @@ public class SysUserOnlineController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('monitor:online:forceLogout')")
     @Log(title = "在线用户", businessType = BusinessType.FORCE)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{tokenId}")
+    @DeleteMapping( "/{tokenId}")
     public AjaxResult forceLogout(@PathVariable String tokenId) {
         redisCache.deleteObject(CacheEnum.LOGIN_TOKEN_KEY.getCode() + tokenId);
         return success();
