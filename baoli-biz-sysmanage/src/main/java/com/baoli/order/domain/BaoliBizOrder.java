@@ -724,6 +724,15 @@ public class BaoliBizOrder extends BaseEntity
     private String accountName;
     private Double cardPersonRate;
     private Double storeFeeRate;
+    private Double rebateRate;
+
+    public Double getRebateRate() {
+        return rebateRate;
+    }
+
+    public void setRebateRate(Double rebateRate) {
+        this.rebateRate = rebateRate;
+    }
 
     public String getPublicAccount() {
         return publicAccount;

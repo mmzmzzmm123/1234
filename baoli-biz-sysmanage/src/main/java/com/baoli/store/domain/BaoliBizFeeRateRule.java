@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.Date;
+import java.util.function.DoubleBinaryOperator;
+
 /**
  * 对店费率规则对象 baoli_biz_fee_rate_rule
  * 
@@ -26,9 +29,7 @@ public class BaoliBizFeeRateRule extends BaseEntity
     @Excel(name = "费率类型")
     private String feeRateType;
 
-    /** 银行id */
-    @Excel(name = "银行id")
-    private Long bankId;
+    private String bankId;
 
     /** 品牌 */
     @Excel(name = "品牌")
@@ -45,13 +46,76 @@ public class BaoliBizFeeRateRule extends BaseEntity
 
     /** 规则内容 */
     @Excel(name = "规则内容")
-    private String content;
+    //private String content;
 
     private String brandName;
     private String level2BrandName;
     private String modelName;
     private String bankName;
     private String seriesName;
+    private String period; // 期数
+    private Double totalFeeRate; // 总费率
+    private Double rebateRate; // 返佣比率
+    private Double cardPersonRate; // 持卡人费率
+    private Double storeFeeRate; // 商户费率 （总费率 - 持卡人费率）
+    private Date startTime;
+    private Date finishTime;
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Date getFinishTime() {
+        return finishTime;
+    }
+
+    public void setFinishTime(Date finishTime) {
+        this.finishTime = finishTime;
+    }
+
+    public String getPeriod() {
+        return period;
+    }
+
+    public void setPeriod(String period) {
+        this.period = period;
+    }
+
+    public Double getTotalFeeRate() {
+        return totalFeeRate;
+    }
+
+    public void setTotalFeeRate(Double totalFeeRate) {
+        this.totalFeeRate = totalFeeRate;
+    }
+
+    public Double getRebateRate() {
+        return rebateRate;
+    }
+
+    public void setRebateRate(Double rebateRate) {
+        this.rebateRate = rebateRate;
+    }
+
+    public Double getCardPersonRate() {
+        return cardPersonRate;
+    }
+
+    public void setCardPersonRate(Double cardPersonRate) {
+        this.cardPersonRate = cardPersonRate;
+    }
+
+    public Double getStoreFeeRate() {
+        return storeFeeRate;
+    }
+
+    public void setStoreFeeRate(Double storeFeeRate) {
+        this.storeFeeRate = storeFeeRate;
+    }
 
     public Long getSeriesId() {
         return seriesId;
@@ -136,12 +200,12 @@ public class BaoliBizFeeRateRule extends BaseEntity
     {
         return feeRateType;
     }
-    public void setBankId(Long bankId) 
+    public void setBankId(String bankId)
     {
         this.bankId = bankId;
     }
 
-    public Long getBankId() 
+    public String getBankId()
     {
         return bankId;
     }
@@ -172,15 +236,15 @@ public class BaoliBizFeeRateRule extends BaseEntity
     {
         return subsidyType;
     }
-    public void setContent(String content) 
-    {
-        this.content = content;
-    }
-
-    public String getContent() 
-    {
-        return content;
-    }
+//    public void setContent(String content)
+//    {
+//        this.content = content;
+//    }
+//
+//    public String getContent()
+//    {
+//        return content;
+//    }
 
     @Override
     public String toString() {
@@ -192,8 +256,6 @@ public class BaoliBizFeeRateRule extends BaseEntity
             .append("remark", getRemark())
             .append("brandId", getBrandId())
             .append("modelId", getModelId())
-            .append("subsidyType", getSubsidyType())
-            .append("content", getContent())
             .toString();
     }
 }

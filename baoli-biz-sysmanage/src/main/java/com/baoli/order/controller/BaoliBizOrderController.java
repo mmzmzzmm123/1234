@@ -69,17 +69,20 @@ public class BaoliBizOrderController extends BaseController
     @GetMapping("/listFeeRate")
     public Map<String,Object> listFeeRate(@Param("orderId") Long orderId,@Param("opType") String opType){
         Map<String,Object> result = new HashMap<>(1);
-        List<Map<String,Object>> storeFeeRateList = new ArrayList<>(1);
-        List<Map<String,Object>> customRateList = new ArrayList<>(1);
         List<Map<String,Object>> totalRateList = new ArrayList<>(1);
         //1 获取订单信息，取得 费率类型（新车、二手车、特殊车型），车型，银行，贴息，期数，商户id
         BaoliBizOrder baoliBizOrder = baoliBizOrderService.selectBaoliBizOrderById(orderId);
-        String isDiscount = (opType == null || opType.equals("")) ? "01" : opType.equals("N") ? "01": "02";
+        String isDiscount = null;
+        if(opType==null || opType.equals("N")){
+            isDiscount = "01";
+        } else {
+            isDiscount = "02";
+        }
         Long storeId = baoliBizOrder.getStoreId();
         Long modelId = baoliBizOrder.getCarModelId();
         Long bankId = baoliBizOrder.getBank();
-        String period =baoliBizOrder.getPeriodNumber();
-        String carType = baoliBizOrder.getCarType();
+        String period =baoliBizOrder.getPeriodNumber(); // 期数
+        String carType = baoliBizOrder.getCarType();  //
         //2 根据商户Id，获取费率信息，用上面的参数过滤费率
         BaoliBizStore baoliBizStore = baoliBizStoreService.selectBaoliBizStoreById(storeId);
         JSONArray feeRate = null;
@@ -89,42 +92,71 @@ public class BaoliBizOrderController extends BaseController
             for(int i=0;i<feeRate.size();i++){
                 JSONArray ruleIds = (JSONArray)feeRate.getJSONObject(i).get("ruleIds");
                 BaoliBizFeeRateRule baoliBizFeeRateRule = baoliBizFeeRateRuleService.selectBaoliBizFeeRateRuleById(ruleIds.getLong(0));
-                //判断是否贴息、银行
-                if(isDiscount.equals(baoliBizFeeRateRule.getSubsidyType()) && bankId.equals(baoliBizFeeRateRule.getBankId())){
+                //判断是否贴息
+                if(isDiscount.equals("02") && isDiscount.equals(baoliBizFeeRateRule.getSubsidyType())){
                     //如果是特殊车型
                     if(baoliBizFeeRateRule.getModelId()!=null){
-                        if(modelId!=null && modelId == baoliBizFeeRateRule.getModelId()){
-
-                        }
-                    } else {
-                        JSONArray rules = null;
-                        if(baoliBizFeeRateRule.getContent()!=null){
-                            rules = JSONArray.parse(baoliBizFeeRateRule.getContent());
-                            for(int j=0;j<rules.size();j++){
-                                if(rules.getJSONObject(j).getString("periodValue").equals(period)){
-                                    Map<String,Object> map = new HashMap<>(1);
-                                    map.put("label",rules.getJSONObject(j).get("cardholderRate"));
-                                    map.put("value",rules.getJSONObject(j).get("cardholderRate"));
-                                    storeFeeRateList.add(map);
-                                    map = new HashMap<>(1);
-                                    map.put("label",rules.getJSONObject(j).get("totalFeeRate"));
-                                    map.put("value",rules.getJSONObject(j).get("totalFeeRate"));
-                                    totalRateList.add(map);
-                                    map = new HashMap<>(1);
-                                    double cust = rules.getJSONObject(j).getDouble("totalFeeRate") - rules.getJSONObject(j).getDouble("cardholderRate") ;
-                                    map.put("label",cust);
-                                    map.put("value",cust);
-                                    customRateList.add(map);
-                                }
+                        if(modelId!=null && modelId.longValue() == baoliBizFeeRateRule.getModelId() .longValue()&& period.equals(baoliBizFeeRateRule.getPeriod()) && carType.equals(baoliBizFeeRateRule.getFeeRateType())) {
+                            //执行提贴息政策
+                            Map<String,Object> obj = null;
+                            Map<String,Object> obj1 = null;
+                            List<Map<String, Object>> tmp = totalRateList.stream().filter(a -> {
+                                return a.get("totalValue").equals(baoliBizFeeRateRule.getTotalFeeRate());
+                            }).collect(Collectors.toList());
+                            if(tmp.size() ==0 ){
+                                obj = new HashMap<>(1);
+                                obj.put("totalLabel", baoliBizFeeRateRule.getTotalFeeRate() + "%");
+                                obj.put("totalValue", baoliBizFeeRateRule.getTotalFeeRate());
+                                totalRateList.add(obj);
+                            } else {
+                                obj = tmp.get(0);
+                            }
+                            List<Map<String,Object>> children =null;
+                            // 确认是否有children,没有加上，有了，取出，增加一个对象
+                            if(!obj.containsKey("children")){
+                                children = new ArrayList<>(1);
+                            } else {
+                                children = (List<Map<String,Object>>)obj.get("children");
+                            }
+                            // 遍历 持卡人费率是否存在
+                            List<Map<String, Object>> tmp1 = children.stream().filter(a -> {
+                                return a.get("cardPersonValue").equals(baoliBizFeeRateRule.getCardPersonRate());
+                            }).collect(Collectors.toList());
+                            if(tmp1.size() ==0){
+                                obj1 = new HashMap<>(1);
+                                obj1.put("cardPersonLabel",baoliBizFeeRateRule.getCardPersonRate()+"%");
+                                obj1.put("cardPersonValue",baoliBizFeeRateRule.getCardPersonRate());
+                                obj1.put("storeLabel",baoliBizFeeRateRule.getStoreFeeRate()+"%");
+                                obj1.put("storeValue",baoliBizFeeRateRule.getStoreFeeRate());
+                                obj1.put("rebateValue",baoliBizFeeRateRule.getRebateRate());
+                                children.add(obj1);
+                                obj.put("children",children);
                             }
                         }
                     }
                 }
+
+                //非贴息
+                if(isDiscount.equals("01") && isDiscount.equals(baoliBizFeeRateRule.getSubsidyType())){
+                    Map<String,Object> obj = null;
+//                    List<Map<String,Object>> tmp= totalRateList.stream().filter(a ->{
+//                      return  a.get("totalValue").equals(baoliBizFeeRateRule.getTotalFeeRate());
+//                    }).collect(Collectors.toList());
+//                    if(tmp.size() ==0 ){
+                        obj = new HashMap<>(1);
+                        obj.put("totalLabel",baoliBizFeeRateRule.getTotalFeeRate()+"%");
+                        obj.put("totalValue",baoliBizFeeRateRule.getTotalFeeRate());
+                        obj.put("rebateValue",baoliBizFeeRateRule.getRebateRate());
+                        obj.put("storeValue",baoliBizFeeRateRule.getStoreFeeRate());
+                        // 期数、费率类型
+                        if(period.equals(baoliBizFeeRateRule.getPeriod()) && carType.equals(baoliBizFeeRateRule.getFeeRateType())){
+                            totalRateList.add(obj);
+                        }
+//                    }
+                }
             }
         }
-        result.put("totalFeeRate",totalRateList);
-        result.put("custFeeRate",customRateList);
-        result.put("storeFeeRate",storeFeeRateList);
+        result.put("feeRateList",totalRateList);
         //3 返回 费率列表
         return result;
     }
@@ -323,7 +355,7 @@ public class BaoliBizOrderController extends BaseController
         }
         assignUser.put("form_pre_check_area",buf.toString().substring(1));
         //如果预审区域不是河北省内
-        if(!buf.toString().equals("130000")){
+        if(!buf.toString().contains("130000")){
             assignUser.put("form_pre_check","2");
             //如果不预审,并且status == 02 ，则修改status = 03
             jdbcTemplate.update("update baoli_biz_order set status ='03' where id = ?",baoliBizOrder.getId());
