@@ -1,6 +1,7 @@
 package com.onethinker.web.controller.system;
 
 import com.onethinker.common.annotation.Log;
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.page.TableDataInfo;
@@ -32,7 +33,7 @@ public class SysConfigController extends BaseController {
      * 获取参数配置列表
      */
     @PreAuthorize("@ss.hasPermi('system:config:list')")
-    @GetMapping("/list")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
     public TableDataInfo list(SysConfig config) {
         startPage();
         List<SysConfig> list = configService.selectConfigList(config);
@@ -41,7 +42,7 @@ public class SysConfigController extends BaseController {
 
     @Log(title = "参数管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:config:export')")
-    @PostMapping("/export")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, SysConfig config) {
         List<SysConfig> list = configService.selectConfigList(config);
         ExcelUtil<SysConfig> util = new ExcelUtil<SysConfig>(SysConfig.class);
@@ -52,7 +53,7 @@ public class SysConfigController extends BaseController {
      * 根据参数编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:config:query')")
-    @GetMapping(value = "/{configId}")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/{configId}")
     public AjaxResult getInfo(@PathVariable Long configId) {
         return success(configService.selectConfigById(configId));
     }
@@ -60,7 +61,7 @@ public class SysConfigController extends BaseController {
     /**
      * 根据参数键名查询参数值
      */
-    @GetMapping(value = "/configKey/{configKey}")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/configKey/{configKey}")
     public AjaxResult getConfigKey(@PathVariable String configKey) {
         return success(configService.selectConfigByKey(SysConfigKeyEnum.getSysConfigKeyEnumByCode(configKey)));
     }
@@ -98,7 +99,7 @@ public class SysConfigController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @Log(title = "参数管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{configIds}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{configIds}")
     public AjaxResult remove(@PathVariable Long[] configIds) {
         configService.deleteConfigByIds(configIds);
         return success();
@@ -109,7 +110,7 @@ public class SysConfigController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:config:remove')")
     @Log(title = "参数管理", businessType = BusinessType.CLEAN)
-    @DeleteMapping("/refreshCache")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/refreshCache")
     public AjaxResult refreshCache() {
         configService.resetConfigCache();
         return success();

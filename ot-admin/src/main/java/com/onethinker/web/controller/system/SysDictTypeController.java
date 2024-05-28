@@ -1,6 +1,7 @@
 package com.onethinker.web.controller.system;
 
 import com.onethinker.common.annotation.Log;
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.domain.entity.SysDictType;
@@ -28,7 +29,7 @@ public class SysDictTypeController extends BaseController {
     private ISysDictTypeService dictTypeService;
 
     @PreAuthorize("@ss.hasPermi('system:dict:list')")
-    @GetMapping("/list")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
     public TableDataInfo list(SysDictType dictType) {
         startPage();
         List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
@@ -37,7 +38,7 @@ public class SysDictTypeController extends BaseController {
 
     @Log(title = "字典类型", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:dict:export')")
-    @PostMapping("/export")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, SysDictType dictType) {
         List<SysDictType> list = dictTypeService.selectDictTypeList(dictType);
         ExcelUtil<SysDictType> util = new ExcelUtil<SysDictType>(SysDictType.class);
@@ -48,7 +49,7 @@ public class SysDictTypeController extends BaseController {
      * 查询字典类型详细
      */
     @PreAuthorize("@ss.hasPermi('system:dict:query')")
-    @GetMapping(value = "/{dictId}")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/{dictId}")
     public AjaxResult getInfo(@PathVariable Long dictId) {
         return success(dictTypeService.selectDictTypeById(dictId));
     }
@@ -86,7 +87,7 @@ public class SysDictTypeController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
     @Log(title = "字典类型", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{dictIds}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{dictIds}")
     public AjaxResult remove(@PathVariable Long[] dictIds) {
         dictTypeService.deleteDictTypeByIds(dictIds);
         return success();
@@ -97,7 +98,7 @@ public class SysDictTypeController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:dict:remove')")
     @Log(title = "字典类型", businessType = BusinessType.CLEAN)
-    @DeleteMapping("/refreshCache")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/refreshCache")
     public AjaxResult refreshCache() {
         dictTypeService.resetDictCache();
         return success();
@@ -106,7 +107,7 @@ public class SysDictTypeController extends BaseController {
     /**
      * 获取字典选择框列表
      */
-    @GetMapping("/optionselect")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/optionselect")
     public AjaxResult optionselect() {
         List<SysDictType> dictTypes = dictTypeService.selectDictTypeAll();
         return success(dictTypes);

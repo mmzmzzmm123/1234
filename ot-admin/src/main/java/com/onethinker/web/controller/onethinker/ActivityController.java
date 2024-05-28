@@ -1,5 +1,6 @@
 package com.onethinker.web.controller.onethinker;
 
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.onethinker.domain.Activity;
 import com.onethinker.onethinker.dto.ActivityReqDTO;
 import com.onethinker.onethinker.service.IActivityService;
@@ -32,7 +33,7 @@ public class ActivityController extends BaseController {
      * 查询活动列表
      */
     @PreAuthorize("@ss.hasPermi('onethinker:activity:list')")
-    @GetMapping("/list")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
     public TableDataInfo list(Activity activity) {
         startPage();
         List<Activity> list = activityService.selectActivityList(activity);
@@ -44,7 +45,7 @@ public class ActivityController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:activity:export')")
     @Log(title = "活动", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, Activity activity) {
         List<Activity> list = activityService.selectActivityList(activity);
         ExcelUtil<Activity> util = new ExcelUtil<Activity>(Activity.class);
@@ -55,7 +56,7 @@ public class ActivityController extends BaseController {
      * 获取活动详细信息
      */
     @PreAuthorize("@ss.hasPermi('onethinker:activity:query')")
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +   "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(activityService.selectActivityById(id));
     }
@@ -65,7 +66,7 @@ public class ActivityController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:activity:add')")
     @Log(title = "活动", businessType = BusinessType.INSERT)
-    @PostMapping(value = "/add")
+    @PostMapping(value =ServicePathConstant.PREFIX_SERVICE_PATH +  "/add")
     public AjaxResult add(@RequestBody ActivityReqDTO activity) {
         return toAjax(activityService.insertActivity(activity));
     }
@@ -75,7 +76,7 @@ public class ActivityController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:activity:edit')")
     @Log(title = "活动", businessType = BusinessType.UPDATE)
-    @PutMapping(value = "/update")
+    @PutMapping(value =ServicePathConstant.PREFIX_SERVICE_PATH +  "/update")
     public AjaxResult edit(@RequestBody Activity activity) {
         return toAjax(activityService.updateActivity(activity));
     }
@@ -85,7 +86,7 @@ public class ActivityController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:activity:remove')")
     @Log(title = "活动", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(activityService.deleteActivityByIds(ids));
     }
@@ -93,7 +94,7 @@ public class ActivityController extends BaseController {
     /**
      * 获取活动详细信息
      */
-    @GetMapping(value = "/myBatisTest")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/myBatisTest")
     public AjaxResult myBatisTest(@RequestParam("id") Long id) {
         return success(activityService.queryActivityMyBatisPuls(id));
     }

@@ -1,6 +1,7 @@
 package com.onethinker.web.controller.system;
 
 import com.onethinker.common.constant.Constants;
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.domain.entity.SysMenu;
 import com.onethinker.common.core.domain.entity.SysUser;
@@ -44,7 +45,7 @@ public class SysLoginController {
      * @param loginBody 登录信息
      * @return 结果
      */
-    @PostMapping("/login")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/login")
     public AjaxResult login(@RequestBody LoginBody loginBody) {
         AjaxResult ajax = AjaxResult.success();
         // 生成令牌
@@ -59,7 +60,7 @@ public class SysLoginController {
      *
      * @return 用户信息
      */
-    @GetMapping("getInfo")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "getInfo")
     public AjaxResult getInfo() {
         SysUser user = SecurityUtils.getLoginUser().getUser();
         // 角色集合
@@ -79,7 +80,7 @@ public class SysLoginController {
      *
      * @return 路由信息
      */
-    @GetMapping("getRouters")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "getRouters")
     public AjaxResult getRouters() {
         Long userId = SecurityUtils.getUserId();
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);

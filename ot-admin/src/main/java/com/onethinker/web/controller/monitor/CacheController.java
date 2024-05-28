@@ -1,5 +1,6 @@
 package com.onethinker.web.controller.monitor;
 
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.enums.CacheEnum;
 import com.onethinker.common.utils.StringUtils;
@@ -32,7 +33,7 @@ public class CacheController {
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
-    @GetMapping()
+    @GetMapping(ServicePathConstant.PREFIX_SERVICE_PATH)
     public AjaxResult getInfo() throws Exception {
         Properties info = (Properties) redisTemplate.execute((RedisCallback<Object>) connection -> connection.info());
         Properties commandStats = (Properties) redisTemplate.execute((RedisCallback<Object>) connection -> connection.info("commandstats"));
@@ -55,20 +56,20 @@ public class CacheController {
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
-    @GetMapping("/getNames")
+    @GetMapping(ServicePathConstant.PREFIX_SERVICE_PATH + "/getNames")
     public AjaxResult cache() {
         return AjaxResult.success(CACHES);
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
-    @GetMapping("/getKeys/{cacheName}")
+    @GetMapping(ServicePathConstant.PREFIX_SERVICE_PATH + "/getKeys/{cacheName}")
     public AjaxResult getCacheKeys(@PathVariable String cacheName) {
         Set<String> cacheKeys = redisTemplate.keys(cacheName + "*");
         return AjaxResult.success(cacheKeys);
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
-    @GetMapping("/getValue/{cacheName}/{cacheKey}")
+    @GetMapping(ServicePathConstant.PREFIX_SERVICE_PATH + "/getValue/{cacheName}/{cacheKey}")
     public AjaxResult getCacheValue(@PathVariable String cacheName, @PathVariable String cacheKey) {
         String cacheValue = redisTemplate.opsForValue().get(cacheKey);
         SysCache sysCache = new SysCache(cacheName, cacheKey, cacheValue);
@@ -76,7 +77,7 @@ public class CacheController {
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
-    @DeleteMapping("/clearCacheName/{cacheName}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/clearCacheName/{cacheName}")
     public AjaxResult clearCacheName(@PathVariable String cacheName) {
         Collection<String> cacheKeys = redisTemplate.keys(cacheName + "*");
         redisTemplate.delete(cacheKeys);
@@ -84,14 +85,14 @@ public class CacheController {
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
-    @DeleteMapping("/clearCacheKey/{cacheKey}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/clearCacheKey/{cacheKey}")
     public AjaxResult clearCacheKey(@PathVariable String cacheKey) {
         redisTemplate.delete(cacheKey);
         return AjaxResult.success();
     }
 
     @PreAuthorize("@ss.hasPermi('monitor:cache:list')")
-    @DeleteMapping("/clearCacheAll")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/clearCacheAll")
     public AjaxResult clearCacheAll() {
         Collection<String> cacheKeys = redisTemplate.keys("*");
         redisTemplate.delete(cacheKeys);

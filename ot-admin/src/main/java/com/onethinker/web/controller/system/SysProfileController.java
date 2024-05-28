@@ -2,6 +2,7 @@ package com.onethinker.web.controller.system;
 
 import com.onethinker.common.annotation.Log;
 import com.onethinker.common.config.OnethinkerConfig;
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.domain.entity.SysUser;
@@ -74,7 +75,7 @@ public class SysProfileController extends BaseController {
      * 重置密码
      */
     @Log(title = "个人信息", businessType = BusinessType.UPDATE)
-    @PutMapping("/updatePwd")
+    @PutMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/updatePwd")
     public AjaxResult updatePwd(String oldPassword, String newPassword) {
         LoginUser loginUser = getLoginUser();
         String userName = loginUser.getUsername();
@@ -98,7 +99,7 @@ public class SysProfileController extends BaseController {
      * 头像上传
      */
     @Log(title = "用户头像", businessType = BusinessType.UPDATE)
-    @PostMapping("/avatar")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/avatar")
     public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file) throws Exception {
         if (!file.isEmpty()) {
             LoginUser loginUser = getLoginUser();

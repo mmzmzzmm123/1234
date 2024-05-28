@@ -1,6 +1,7 @@
 package com.onethinker.web.controller.system;
 
 import com.onethinker.common.annotation.Log;
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.page.TableDataInfo;
@@ -31,7 +32,7 @@ public class SysPostController extends BaseController {
      * 获取岗位列表
      */
     @PreAuthorize("@ss.hasPermi('system:post:list')")
-    @GetMapping("/list")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
     public TableDataInfo list(SysPost post) {
         startPage();
         List<SysPost> list = postService.selectPostList(post);
@@ -40,7 +41,7 @@ public class SysPostController extends BaseController {
 
     @Log(title = "岗位管理", businessType = BusinessType.EXPORT)
     @PreAuthorize("@ss.hasPermi('system:post:export')")
-    @PostMapping("/export")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, SysPost post) {
         List<SysPost> list = postService.selectPostList(post);
         ExcelUtil<SysPost> util = new ExcelUtil<SysPost>(SysPost.class);
@@ -51,7 +52,7 @@ public class SysPostController extends BaseController {
      * 根据岗位编号获取详细信息
      */
     @PreAuthorize("@ss.hasPermi('system:post:query')")
-    @GetMapping(value = "/{postId}")
+    @GetMapping( value =ServicePathConstant.PREFIX_SERVICE_PATH +  "/{postId}")
     public AjaxResult getInfo(@PathVariable Long postId) {
         return success(postService.selectPostById(postId));
     }
@@ -93,7 +94,7 @@ public class SysPostController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('system:post:remove')")
     @Log(title = "岗位管理", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{postIds}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{postIds}")
     public AjaxResult remove(@PathVariable Long[] postIds) {
         return toAjax(postService.deletePostByIds(postIds));
     }
@@ -101,7 +102,7 @@ public class SysPostController extends BaseController {
     /**
      * 获取岗位选择框列表
      */
-    @GetMapping("/optionselect")
+    @GetMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/optionselect")
     public AjaxResult optionselect() {
         List<SysPost> posts = postService.selectPostAll();
         return success(posts);

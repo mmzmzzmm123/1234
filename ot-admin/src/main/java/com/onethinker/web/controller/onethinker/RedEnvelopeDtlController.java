@@ -1,5 +1,6 @@
 package com.onethinker.web.controller.onethinker;
 
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.onethinker.domain.RedEnvelopeDtl;
 import com.onethinker.onethinker.service.IRedEnvelopeDtlService;
 import com.onethinker.common.annotation.Log;
@@ -30,7 +31,7 @@ public class RedEnvelopeDtlController extends BaseController {
      * 查询红包明细列表
      */
     @PreAuthorize("@ss.hasPermi('onethinker:dtl:list')")
-    @GetMapping("/list")
+    @GetMapping(ServicePathConstant.PREFIX_SERVICE_PATH + "/list")
     public TableDataInfo list(RedEnvelopeDtl redEnvelopeDtl) {
         startPage();
         List<RedEnvelopeDtl> list = redEnvelopeDtlService.selectRedEnvelopeDtlList(redEnvelopeDtl);
@@ -42,7 +43,7 @@ public class RedEnvelopeDtlController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:dtl:export')")
     @Log(title = "红包明细", businessType = BusinessType.EXPORT)
-    @PostMapping("/export")
+    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, RedEnvelopeDtl redEnvelopeDtl) {
         List<RedEnvelopeDtl> list = redEnvelopeDtlService.selectRedEnvelopeDtlList(redEnvelopeDtl);
         ExcelUtil<RedEnvelopeDtl> util = new ExcelUtil<RedEnvelopeDtl>(RedEnvelopeDtl.class);
@@ -53,7 +54,7 @@ public class RedEnvelopeDtlController extends BaseController {
      * 获取红包明细详细信息
      */
     @PreAuthorize("@ss.hasPermi('onethinker:dtl:query')")
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(redEnvelopeDtlService.selectRedEnvelopeDtlById(id));
     }
@@ -63,7 +64,7 @@ public class RedEnvelopeDtlController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:dtl:remove')")
     @Log(title = "红包明细", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{ids}")
+    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(redEnvelopeDtlService.deleteRedEnvelopeDtlByIds(ids));
     }
