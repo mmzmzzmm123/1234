@@ -22,15 +22,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Configuration
 public class FileStorageAutoConfiguration {
 
-    private final ConfigurationPropertiesAutoConfiguration configurationPropertiesAutoConfiguration;
+    private static FileStorageService instance = null;
+
     /**
      * 存储平台
      */
     private List<FileStorage> fileStorageList = new ArrayList<>();
 
-    public FileStorageAutoConfiguration(ConfigurationPropertiesAutoConfiguration configurationPropertiesAutoConfiguration) {
-        this.configurationPropertiesAutoConfiguration = configurationPropertiesAutoConfiguration;
-    }
 
     /**
      * 初始化各平台实例
@@ -38,17 +36,22 @@ public class FileStorageAutoConfiguration {
      */
     @Bean
     public FileStorageService fileStorageService(@Autowired FileStorageProperties properties) {
-        if (properties == null) throw new RuntimeException("properties 不能为 null");
-        // 初始化各个存储平台
-        String pageStr = "com.onethinker.file.platform.impl.";
-        buildFileStorage(properties,pageStr + "LocalFileStorage");
-        buildFileStorage(properties,pageStr + "TencentCosFileStorage");
-        buildFileStorage(properties,pageStr + "HuaweiObsFileStorage");
-        // 本体
-        FileStorageService service = new FileStorageService();
-        service.setProperties(properties);
-        service.setFileStorageList(new CopyOnWriteArrayList<>(fileStorageList));
-        return service;
+        if (instance == null) {
+            synchronized (FileStorageAutoConfiguration.class) {
+                if (instance == null) {
+                    if (properties == null) throw new RuntimeException("properties 不能为 null");
+                    // 初始化各个存储平台
+                    String pageStr = "com.onethinker.file.platform.impl.";
+                    buildFileStorage(properties,pageStr + "LocalFileStorage");
+                    buildFileStorage(properties,pageStr + "TencentCosFileStorage");
+                    buildFileStorage(properties,pageStr + "HuaweiObsFileStorage");
+                    // 本体
+                    instance = new FileStorageService();
+                    instance.setFileStorageList(new CopyOnWriteArrayList<>(fileStorageList));
+                }
+            }
+        }
+        return instance;
     }
 
     /**

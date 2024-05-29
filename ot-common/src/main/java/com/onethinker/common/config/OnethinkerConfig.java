@@ -39,18 +39,10 @@ public class OnethinkerConfig {
     /**
      * 验证码类型
      */
-    private static String captchaType;
+    private String captchaType;
 
     public void setProfile(String profile) {
         OnethinkerConfig.profile = profile;
-    }
-
-    public void setCaptchaType(String captchaType) {
-        OnethinkerConfig.captchaType = captchaType;
-    }
-
-    public static String getCaptchaType() {
-        return captchaType;
     }
 
     public static String getProfile() {

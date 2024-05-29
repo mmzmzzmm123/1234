@@ -1,5 +1,6 @@
 package com.onethinker.web.controller.filestorage;
 
+import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.file.config.FileStorageProperties;
 import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.domain.FileRelation;
@@ -20,6 +21,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +32,7 @@ import java.util.List;
 
 /**
  * 文件上传
+ *
  * @author yangyouqi
  * @date 2024/5/15
  */
@@ -54,31 +57,26 @@ public class FileStorageController extends BaseController {
 
     /**
      * 文件上传
-     * @param file 文件
+     *
+     * @param file         文件
      * @param relationType 关联目标类型
-     * @param relationTarget 关联目标id
-     * @param name 文件名称
-     * @param userId 用户Id
-     * @param tenantId 租户id
-     * @param appName 上传应用名称
-     * @param attr 扩展属性json字符串
+     * @param name         文件名称
+     * @param userId       用户Id
+     * @param tenantId     租户id
+     * @param attr         扩展属性json字符串
      * @return
      */
     @PostMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/upload",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
-            produces = MediaType.TEXT_PLAIN_VALUE)
-    String uploadFile(
-            @RequestParam(name = "file") MultipartFile file,
-            @RequestParam(name = "relation_type", required = false) FileRelationTypeEnum relationType,
-            @RequestParam(name = "relation_target", required = false) String relationTarget,
-            @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "user_id", required = false) String userId,
-            @RequestParam(name = "tenant_id", defaultValue = SystemConst.DEFAULT_TENANT_ID) String tenantId,
-            @RequestParam(name = "app_name") String appName,
-            @RequestParam(name = "attr",required = false) String attr) {
-        if (StringUtils.isBlank(userId)) {
-            throw new InvalidParameterException("用户id不能为空");
-        }
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public AjaxResult uploadFile(@RequestParam(name = "file") MultipartFile file,
+                                 @RequestParam(name = "relation_type") FileRelationTypeEnum relationType,
+                                 @RequestParam(name = "name", required = false) String name,
+                                 @RequestParam(name = "user_id") String userId,
+                                 @RequestParam(name = "tenant_id", defaultValue = SystemConst.DEFAULT_TENANT_ID) String tenantId,
+                                 @RequestParam(name = "attr", required = false) String attr) {
+        Assert.notNull(userId, "用户id不能为空");
+
         // 校验文件扩展类型
         String extension = fileStorage.getExtension(name, fileStorageProperties.getAllowExtension());
 
@@ -86,20 +84,17 @@ public class FileStorageController extends BaseController {
 
         fileInfo.setFileSize(file.getSize());
         fileInfo.setHostName(IpUtils.getHostName());
-        fileInfo.setAppName(appName);
-        fileInfo.setCreateUserId(userId);
         fileInfo.setTenantId(tenantId);
         fileInfo.setFileName(name);
         fileInfo.setCreateUserId(userId);
         fileInfo.setTenantId(tenantId);
-        fileInfo.setAppName(appName);
         fileInfo.setExtension(extension);
         fileInfo.setPlatform(fileStorage.getPlatform());
-        fileInfo.setMimeType(fileStorage.queryDetectMime(file,fileStorageProperties.getAllowMime()));
-        fileInfo.setDetectMime(fileStorage.queryDetectMime(file,fileStorageProperties.getAllowMime()));
+        fileInfo.setMimeType(fileStorage.queryDetectMime(file, fileStorageProperties.getAllowMime()));
+        fileInfo.setDetectMime(fileStorage.queryDetectMime(file, fileStorageProperties.getAllowMime()));
         fileInfo.setFingerprint(fileStorage.queryFingerprint(file));
 
-        FileRelation filePersistInfo = new FileRelation(fileInfo,relationType.name(),relationTarget);
+        FileRelation filePersistInfo = new FileRelation(fileInfo, relationType.name());
 
         fileStorageService.saveFileInfo(filePersistInfo, fileInfo);
 
@@ -115,11 +110,24 @@ public class FileStorageController extends BaseController {
 
         applicationContext.publishEvent(formFileUploadSuccessEvent);
 
-        return fileInfo.getId();
+        return success("文件上传成功", fileInfo.getId());
     }
 
     /**
      * 文件查询
+     *
+     * @param fileId
+     * @return
+     */
+    @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query/{fileId}")
+    public AjaxResult queryFileByFileId(@PathVariable("fileId") String fileId) {
+        FileInfoDTO file = fileStorageService.queryFileByFileId(fileId);
+        return success("查询成功", file.getDomain() + file.getPath());
+    }
+
+    /**
+     * 文件查询
+     *
      * @param fileInfo
      * @return
      */

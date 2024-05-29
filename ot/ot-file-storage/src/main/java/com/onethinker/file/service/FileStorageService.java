@@ -1,10 +1,14 @@
 package com.onethinker.file.service;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.onethinker.common.core.redis.RedisCache;
+import com.onethinker.common.enums.CacheEnum;
 import com.onethinker.common.enums.DeleteFlagEnum;
 import com.onethinker.common.enums.FileRealtionStatusEnum;
 import com.onethinker.common.enums.FileRelationTypeEnum;
+import com.onethinker.common.utils.StringUtils;
 import com.onethinker.common.utils.Tools;
 import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.config.FileStorageProperties;
@@ -24,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -32,12 +37,9 @@ import java.util.stream.Collectors;
  * 用来处理文件存储，对接多个平台
  */
 @Slf4j
-@Getter
-@Setter
 public class FileStorageService {
 
-    private FileStorageProperties properties;
-
+    @Setter
     private CopyOnWriteArrayList<FileStorage> fileStorageList;
 
     @Autowired
@@ -45,6 +47,14 @@ public class FileStorageService {
 
     @Autowired
     private FileRelationMapper relationMapper;
+
+    @Autowired
+    private RedisCache redisCache;
+
+    @Autowired
+    private FileStorageProperties properties;
+
+    private final String redisKey = CacheEnum.QUERY_FILE_INFO_KEY.getCode();
 
     /**
      * 获取默认的存储平台
@@ -85,6 +95,7 @@ public class FileStorageService {
     public void saveFileInfo(FileRelation fileRelation, FileInfo fileInfo) {
         fileRelation.setCreateTime(DateUtils.getNowDate());
         fileRelation.setStatus(FileRealtionStatusEnum.INIT.getCode());
+        fileRelation.setCreateUserId(fileInfo.getCreateUserId());
         fileInfo.setCreateTime(DateUtils.getNowDate());
         fileMapper.insert(fileInfo);
         relationMapper.insert(fileRelation);
@@ -113,7 +124,7 @@ public class FileStorageService {
      */
     public List<FileInfoDTO> selectFileList(FileRelationTypeEnum typeEnum,FileRealtionStatusEnum statusEnum) {
         LambdaQueryWrapper<FileRelation> relationLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        relationLambdaQueryWrapper.eq(FileRelation::getRelationTarget,typeEnum.name()).eq(FileRelation::getStatus, statusEnum.getCode());
+        relationLambdaQueryWrapper.eq(FileRelation::getRelationType,typeEnum.name()).eq(FileRelation::getStatus, statusEnum.getCode());
         List<FileRelation> fileRelations = relationMapper.selectList(relationLambdaQueryWrapper);
         if (fileRelations.isEmpty()) {
             return Lists.newArrayList();
@@ -139,5 +150,28 @@ public class FileStorageService {
      */
     public void updateFileRegionStatusByFileId(String id, FileRealtionStatusEnum orgStatus, FileRealtionStatusEnum updateStatus) {
         relationMapper.updateFileRegionStatusByFileId(id,orgStatus.getCode(),updateStatus.getCode());
+    }
+
+    /**
+     * 查询文件类型
+     * @param fileId 文件id
+     * @return
+     */
+    public FileInfoDTO queryFileByFileId(String fileId) {
+        Assert.notNull(fileId,"fileId is null");
+        String key = redisKey + fileId;
+        if (redisCache.hasKey(key)) {
+            return redisCache.getCacheObject(key);
+        }
+        FileInfo fileInfo = fileMapper.selectById(fileId);
+        Assert.notNull(fileInfo,"fileInfo is null");
+        // 获取文件类型
+        FileInfoDTO result = new FileInfoDTO();
+        BeanUtils.copyProperties(fileInfo,result);
+        // 判断来源，取对于的访问地址
+        result.setDomain(this.getFileStorage(fileInfo.getPlatform()).getDomain());
+        // 文件一旦上传就不会变更，这里时间可以久点
+        redisCache.setCacheObject(key, result,180, TimeUnit.DAYS);
+        return result;
     }
 }

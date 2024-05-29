@@ -889,7 +889,6 @@ CREATE TABLE `t_file`  (
   `mime_type` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT 'MIME文件类型',
   `extension` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '文件扩展名',
   `path` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '文件路径',
-  `app_name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '应用名称',
   `create_user_id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '创建人id',
   `create_time` timestamp(6) NULL DEFAULT NULL COMMENT '创建人时间',
   `update_user_id` varchar(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '更新人',

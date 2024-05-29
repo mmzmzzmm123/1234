@@ -44,7 +44,7 @@ public class CommonController {
      * @param fileName 文件名称
      * @param delete   是否删除
      */
-    @GetMapping(ServicePathConstant.PREFIX_PUBLIC_PATH + "/download")
+    @GetMapping("/download")
     public void fileDownload(String fileName, Boolean delete, HttpServletResponse response, HttpServletRequest request) {
         try {
             if (!FileUtils.checkAllowDownload(fileName)) {
@@ -67,7 +67,7 @@ public class CommonController {
     /**
      * 通用上传请求（单个）
      */
-    @PostMapping(ServicePathConstant.PREFIX_PUBLIC_PATH + "/upload")
+    @PostMapping("/upload")
     public AjaxResult uploadFile(MultipartFile file) throws Exception {
         try {
             // 上传文件路径
@@ -89,7 +89,7 @@ public class CommonController {
     /**
      * 通用上传请求（多个）
      */
-    @PostMapping(ServicePathConstant.PREFIX_PUBLIC_PATH + "/uploads")
+    @PostMapping("/uploads")
     public AjaxResult uploadFiles(List<MultipartFile> files) throws Exception {
         try {
             // 上传文件路径
@@ -121,7 +121,7 @@ public class CommonController {
     /**
      * 本地资源通用下载
      */
-    @GetMapping(ServicePathConstant.PREFIX_PUBLIC_PATH + "/download/resource")
+    @GetMapping("/download/resource")
     public void resourceDownload(String resource, HttpServletRequest request, HttpServletResponse response)
             throws Exception {
         try {

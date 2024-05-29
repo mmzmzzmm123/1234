@@ -13,7 +13,6 @@
             <result property="mimeType" column="mime_type"/>
             <result property="extension" column="extension"/>
             <result property="path" column="path"/>
-            <result property="appName" column="app_name"/>
             <result property="createUserId" column="create_user_id"/>
             <result property="createTime" column="create_time"/>
             <result property="updateUserId" column="update_user_id"/>
@@ -28,7 +27,7 @@
     </resultMap>
 
     <sql id="selectFileVo">
-        select id, tenant_id, file_name, fingerprint, file_size, mime_type, extension, path, app_name, create_user_id, create_time, update_user_id, update_time, remark, creator_ip_address, host_name, del_flag, disk_path, detect_mime, platform
+        select id, tenant_id, file_name, fingerprint, file_size, mime_type, extension, path, create_user_id, create_time, update_user_id, update_time, remark, creator_ip_address, host_name, del_flag, disk_path, detect_mime, platform
         from t_file
     </sql>
 
@@ -52,9 +51,6 @@
                         </if>
                         <if test="path != null  and path != ''">
                             and path = #{path}
-                        </if>
-                        <if test="appName != null  and appName != ''">
-                            and app_name like concat('%', #{appName}, '%')
                         </if>
                         <if test="createUserId != null  and createUserId != ''">
                             and create_user_id = #{createUserId}
@@ -104,8 +100,6 @@
                     <if test="extension != null">extension,
                     </if>
                     <if test="path != null">path,
-                    </if>
-                    <if test="appName != null">app_name,
                     </if>
                     <if test="createUserId != null">create_user_id,
                     </if>
@@ -197,9 +191,6 @@
                     </if>
                     <if test="path != null">path =
                         #{path},
-                    </if>
-                    <if test="appName != null">app_name =
-                        #{appName},
                     </if>
                     <if test="createUserId != null">create_user_id =
                         #{createUserId},

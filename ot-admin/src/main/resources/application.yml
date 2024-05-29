@@ -93,6 +93,8 @@ onethinker:
     local:
       # 存储平台标识
       platform: local
+      # 启用存储
+      enable-storage: true
       # 文件路径
       base-path: ${config.profile.basePath}
       # 访问域名

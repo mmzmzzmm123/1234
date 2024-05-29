@@ -61,7 +61,9 @@ public enum CacheEnum {
 
     UPLOAD_FILE_STATUS("upload_file_status:","文件上传状态"),
 
-    QUERY_USER_INTEGRAL_KEY("query_user_integral_key:", "平台用户积分信息");
+    QUERY_USER_INTEGRAL_KEY("query_user_integral_key:", "平台用户积分信息"),
+
+    QUERY_FILE_INFO_KEY("query_file_info_key:","查询文件信息");
 
     private String code;
     private String msg;

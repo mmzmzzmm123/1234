@@ -16,7 +16,12 @@ public enum FileRelationTypeEnum {
     /**
      * 佰星-客户信息文件上传导入
      */
-    BX_CUSTOMER("客户信息")
+    BX_CUSTOMER("客户信息"),
+
+    /**
+     * 后台上传
+     */
+    SYS_ADMIN("后台管理页面")
     ;
 
     private final String desc;

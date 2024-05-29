@@ -41,6 +41,9 @@ public class CaptchaController {
     @Autowired
     private ISysConfigService configService;
 
+    @Autowired
+    private OnethinkerConfig onethinkerConfig;
+
     /**
      * 生成验证码
      */
@@ -61,7 +64,7 @@ public class CaptchaController {
         BufferedImage image = null;
 
         // 生成验证码
-        String captchaType = OnethinkerConfig.getCaptchaType();
+        String captchaType = onethinkerConfig.getCaptchaType();
         if ("math".equals(captchaType)) {
             String capText = captchaProducerMath.createText();
             capStr = capText.substring(0, capText.lastIndexOf("@"));

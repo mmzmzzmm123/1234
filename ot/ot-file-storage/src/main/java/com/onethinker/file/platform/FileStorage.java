@@ -50,7 +50,7 @@ public interface FileStorage {
     String WEBP_ORIGINAL_FILE = "original.webp";
     String THUMBNAIL_FILE = "thumb.jpg";
     String WATERMARK_FILE = "watermark.jpg";
-    String UPLOAD_PATH = ServicePathConstant.PREFIX_PUBLIC_PATH + "/tus/upload";
+    String UPLOAD_PATH = "/tus/upload";
     /**
      * 获取平台
      */

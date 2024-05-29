@@ -1,9 +1,13 @@
 package com.onethinker.file.domain;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.onethinker.common.annotation.Excel;
 import com.onethinker.common.core.domain.BaseEntity;
 import lombok.Data;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 文件信息对象 t_file
@@ -13,7 +17,7 @@ import lombok.Data;
  */
 @Data
 @TableName("t_file")
-public class FileInfo extends BaseEntity {
+public class FileInfo implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -63,12 +67,6 @@ public class FileInfo extends BaseEntity {
     private String path;
 
     /**
-     * 应用名称
-     */
-    @Excel(name = "应用名称")
-    private String appName;
-
-    /**
      * 创建人id
      */
     @Excel(name = "创建人id")
@@ -114,6 +112,12 @@ public class FileInfo extends BaseEntity {
      */
     @Excel(name = "来源")
     private String platform;
+
+    /**
+     * 创建时间
+     */
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date createTime;
 
 
 }

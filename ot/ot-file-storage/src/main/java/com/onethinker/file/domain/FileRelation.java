@@ -44,12 +44,6 @@ public class FileRelation implements Serializable {
     private String relationType;
 
     /**
-     * 关联类型业务ID
-     */
-    @Excel(name = "关联类型业务ID")
-    private String relationTarget;
-
-    /**
      * 删除标识：1-删除, 0-正常可用
      */
     private int delFlag;
@@ -99,12 +93,11 @@ public class FileRelation implements Serializable {
     public FileRelation() {
     }
 
-    public FileRelation(FileInfo fileInfo, String relationType, String relationTarget) {
+    public FileRelation(FileInfo fileInfo, String relationType) {
         this.tenantId = fileInfo.getTenantId();
         this.fileId = fileInfo.getId();
         this.delFlag = 0;
         this.relationType = relationType;
-        this.relationTarget = relationTarget;
     }
 
 
