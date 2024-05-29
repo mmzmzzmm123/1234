@@ -10,9 +10,9 @@ import lombok.Getter;
 @Getter
 public enum FileRelationTypeEnum {
     /**
-     * 头像
+     * 管理页面头像
      */
-    AVATAR("头像"),
+    ADMIN_AVATAR("管理页面头像"),
     /**
      * 佰星-客户信息文件上传导入
      */
