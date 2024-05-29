@@ -48,7 +48,7 @@ public interface FileStorage {
     String WEBP_ORIGINAL_FILE = "original.webp";
     String THUMBNAIL_FILE = "thumb.jpg";
     String WATERMARK_FILE = "watermark.jpg";
-    String UPLOAD_PATH = "/tus/upload";
+    String UPLOAD_PATH = "/file-server";
     /**
      * 获取平台
      */
@@ -143,7 +143,7 @@ public interface FileStorage {
         String id = UUID.randomUUID().toString().replaceAll("-", "");
         fileInfo.setId(id);
         // 获取文件全路径（相对存储平台的存储路径）
-        return String.join("/", basePath, "uploads", "form", String.valueOf(now.getYear()), String.valueOf(now.getMonthValue()), String.valueOf(now.getDayOfMonth()), id, "data");
+        return String.join("/", basePath, "form", String.valueOf(now.getYear()), String.valueOf(now.getMonthValue()), String.valueOf(now.getDayOfMonth()), id, "data");
     }
 
     /**

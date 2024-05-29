@@ -81,7 +81,8 @@ public class LocalFileStorage implements FileStorage {
             throw new RuntimeException(e);
         }
         // fileInfo id 保存在 getFileKey方法中
-        fileInfo.setPath(String.join("/", "/service-file" + UPLOAD_PATH, fileInfo.getId()));
+        String path = newKey.replace(basePath,UPLOAD_PATH).replace("/data","");
+        fileInfo.setPath(path);
         fileInfo.setDiskPath(newKey);
         return fileInfo;
     }
