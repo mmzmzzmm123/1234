@@ -2,6 +2,9 @@ package com.onethinker.onethinker.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.file.dto.FileInfoDTO;
+import com.onethinker.file.platform.FileStorage;
+import com.onethinker.file.service.FileStorageService;
 import com.onethinker.onethinker.domain.Activity;
 import com.onethinker.onethinker.domain.SysFileInfo;
 import com.onethinker.onethinker.dto.ActivityReqDTO;
@@ -11,7 +14,6 @@ import com.onethinker.onethinker.factory.ActivityDetailFactory;
 import com.onethinker.onethinker.factory.service.IActivityDetailService;
 import com.onethinker.onethinker.mapper.ActivityMapper;
 import com.onethinker.onethinker.service.IActivityService;
-import com.onethinker.onethinker.service.ISysFileInfoService;
 import com.onethinker.common.enums.ActivityTypeEnum;
 import com.onethinker.common.utils.DateUtils;
 import lombok.extern.log4j.Log4j2;
@@ -38,8 +40,15 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     @Autowired
     private ActivityDetailFactory activityDetailFactory;
 
-    @Autowired
-    private ISysFileInfoService sysFileInfoService;
+    private final FileStorage fileStorage;
+
+    private FileStorageService fileStorageService;
+
+
+    public ActivityServiceImpl(@Autowired FileStorageService fileStorageService) {
+        this.fileStorage = fileStorageService.getFileStorage();
+        this.fileStorageService = fileStorageService;
+    }
 
     /**
      * 查询活动
@@ -64,8 +73,8 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
             }
         }
         // 获取文件内容
-        SysFileInfo sysFileInfo = sysFileInfoService.selectSysFileInfoByFileId(activity.getBgUrl());
-        resultDTO.setBgUrlInfo(sysFileInfo);
+        FileInfoDTO fileInfoDTO = fileStorageService.queryFileByFileId(activity.getBgUrl());
+        resultDTO.setBgUrlInfo(fileInfoDTO);
         return resultDTO;
     }
 

@@ -1,4 +1,4 @@
-package com.onethinker.file.config;
+package com.onethinker.common.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -6,7 +6,6 @@ import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.util.List;
 
 /**
@@ -15,12 +14,11 @@ import java.util.List;
  */
 @Component
 @Data
-@ConfigurationProperties(prefix = "onethinker.file-storage")
 public class FileStorageProperties {
     /**
      * 默认存储平台
      */
-    private String defaultPlatform;
+    public String defaultPlatform;
 
     /**
      * 允许的文件类型
@@ -46,9 +44,6 @@ public class FileStorageProperties {
      **/
     private LocalConfig local;
     private TencentCosConfig tencentCos;
-    private QiNiuKodoConfig qiNiuKodo;
-    private BaiduBosConfig baiduBos;
-    private AliYunOssConfig aliyunOss;
     private HuaWeiObsConfig huaweiObs;
 
     /**
@@ -83,26 +78,11 @@ public class FileStorageProperties {
 
     @Data
     @EqualsAndHashCode(callSuper = true)
-    public static class AliYunOssConfig extends BaseConfig {
-    }
-
-    @Data
-    @EqualsAndHashCode(callSuper = true)
-    public static class QiNiuKodoConfig extends BaseConfig {
-    }
-
-    @Data
-    @EqualsAndHashCode(callSuper = true)
     public static class TencentCosConfig extends BaseConfig {
         private String secretId;
         private String secretKey;
         private String region;
         private String bucketName;
-    }
-
-    @Data
-    @EqualsAndHashCode(callSuper = true)
-    public static class BaiduBosConfig extends BaseConfig {
     }
 
     @Data

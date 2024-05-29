@@ -38,6 +38,9 @@ public class CommonController {
 
     private static final String FILE_DELIMETER = ",";
 
+    @Autowired
+    private OnethinkerConfig onethinkerConfig;
+
     /**
      * 通用下载请求
      *
@@ -129,7 +132,7 @@ public class CommonController {
                 throw new Exception(StringUtils.format("资源文件({})非法，不允许下载。 ", resource));
             }
             // 本地资源路径
-            String localPath = OnethinkerConfig.getProfile();
+            String localPath = onethinkerConfig.getProfile();
             // 数据库资源地址
             String downloadPath = localPath + StringUtils.substringAfter(resource, Constants.RESOURCE_PREFIX);
             // 下载名称

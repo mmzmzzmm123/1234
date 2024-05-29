@@ -42,5 +42,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.onethinker</groupId>
+            <artifactId>ot-file-storage</artifactId>
+        </dependency>
     </dependencies>
 </project>

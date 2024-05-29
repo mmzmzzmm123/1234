@@ -2,13 +2,13 @@ package com.onethinker.file.platform.impl;
 
 import cn.hutool.core.lang.Assert;
 import com.obs.services.model.ObsObject;
+import com.onethinker.common.config.FileStorageProperties;
 import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.event.FormFileUploadSuccessEvent;
 import com.onethinker.file.platform.impl.clientwrapper.COSClientWrapper;
 import com.onethinker.file.platform.impl.clientwrapper.HuaweiObsClientWrapper;
 import com.onethinker.file.domain.FileInfo;
-import com.onethinker.file.config.FileStorageProperties;
-import com.onethinker.file.config.FileStorageProperties.*;
+import com.onethinker.common.config.FileStorageProperties.*;
 import com.onethinker.file.platform.FileStorage;
 import com.qcloud.cos.model.COSObject;
 import lombok.Data;

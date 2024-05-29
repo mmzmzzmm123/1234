@@ -1,17 +1,18 @@
 package com.onethinker.file.config;
 
+import com.onethinker.common.config.FileStorageProperties;
+import com.onethinker.common.config.OnethinkerConfig;
 import com.onethinker.file.platform.FileStorage;
 import com.onethinker.file.service.FileStorageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.Assert;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
@@ -32,19 +33,20 @@ public class FileStorageAutoConfiguration {
 
     /**
      * 初始化各平台实例
+     *
      * @return
      */
     @Bean
-    public FileStorageService fileStorageService(@Autowired FileStorageProperties properties) {
+    public FileStorageService fileStorageService(@Autowired OnethinkerConfig config) {
         if (instance == null) {
             synchronized (FileStorageAutoConfiguration.class) {
                 if (instance == null) {
-                    if (properties == null) throw new RuntimeException("properties 不能为 null");
+                    Assert.notNull(config.fileStorage, "fileStorage is null");
                     // 初始化各个存储平台
                     String pageStr = "com.onethinker.file.platform.impl.";
-                    buildFileStorage(properties,pageStr + "LocalFileStorage");
-                    buildFileStorage(properties,pageStr + "TencentCosFileStorage");
-                    buildFileStorage(properties,pageStr + "HuaweiObsFileStorage");
+                    buildFileStorage(config.fileStorage, pageStr + "LocalFileStorage");
+                    buildFileStorage(config.fileStorage, pageStr + "TencentCosFileStorage");
+                    buildFileStorage(config.fileStorage, pageStr + "HuaweiObsFileStorage");
                     // 本体
                     instance = new FileStorageService();
                     instance.setFileStorageList(new CopyOnWriteArrayList<>(fileStorageList));
@@ -57,20 +59,18 @@ public class FileStorageAutoConfiguration {
     /**
      * 根据配置文件内容创建对应平台信息
      *
-     * @param config             配置内容
-     * @param className          实例化类
+     * @param config    配置内容
+     * @param className 实例化类
      */
     public void buildFileStorage(FileStorageProperties config, String className) {
-        if (Objects.nonNull(config)) {
-            try {
-                Class<?> clazz = Class.forName(className);
-                Constructor<?> constructor = clazz.getConstructor(FileStorageProperties.class);
-                constructor.setAccessible(true);
-                FileStorage instance = (FileStorage) constructor.newInstance(config);
-                fileStorageList.add(instance);
-            } catch (Exception e) {
-                log.warn("className:{} exception:",className,e);
-            }
+        try {
+            Class<?> clazz = Class.forName(className);
+            Constructor<?> constructor = clazz.getConstructor(FileStorageProperties.class);
+            constructor.setAccessible(true);
+            FileStorage instance = (FileStorage) constructor.newInstance(config);
+            fileStorageList.add(instance);
+        } catch (Exception e) {
+            log.warn("className:{} exception:", className, e);
         }
     }
 }

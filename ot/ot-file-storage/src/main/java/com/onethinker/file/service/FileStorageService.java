@@ -3,23 +3,21 @@ package com.onethinker.file.service;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.onethinker.common.config.OnethinkerConfig;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.CacheEnum;
 import com.onethinker.common.enums.DeleteFlagEnum;
 import com.onethinker.common.enums.FileRealtionStatusEnum;
 import com.onethinker.common.enums.FileRelationTypeEnum;
-import com.onethinker.common.utils.StringUtils;
+import com.onethinker.common.utils.DateUtils;
 import com.onethinker.common.utils.Tools;
+import com.onethinker.common.utils.bean.BeanUtils;
 import com.onethinker.file.domain.FileInfo;
-import com.onethinker.file.config.FileStorageProperties;
 import com.onethinker.file.domain.FileRelation;
 import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.mapper.FileMapper;
 import com.onethinker.file.mapper.FileRelationMapper;
 import com.onethinker.file.platform.FileStorage;
-import com.onethinker.common.utils.DateUtils;
-import com.onethinker.common.utils.bean.BeanUtils;
-import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.compress.utils.Lists;
@@ -52,7 +50,7 @@ public class FileStorageService {
     private RedisCache redisCache;
 
     @Autowired
-    private FileStorageProperties properties;
+    private OnethinkerConfig config;
 
     private final String redisKey = CacheEnum.QUERY_FILE_INFO_KEY.getCode();
 
@@ -60,7 +58,7 @@ public class FileStorageService {
      * 获取默认的存储平台
      */
     public <T extends FileStorage> T getFileStorage() {
-        return this.getFileStorage(properties.getDefaultPlatform());
+        return this.getFileStorage(config.fileStorage.defaultPlatform);
     }
 
     /**

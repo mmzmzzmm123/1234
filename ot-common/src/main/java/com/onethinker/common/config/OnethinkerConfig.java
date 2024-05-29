@@ -2,6 +2,7 @@ package com.onethinker.common.config;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -34,6 +35,7 @@ public class OnethinkerConfig {
     /**
      * 上传路径
      */
+    @Getter
     private static String profile;
 
     /**
@@ -41,12 +43,13 @@ public class OnethinkerConfig {
      */
     private String captchaType;
 
+    /**
+     * 文件上传类型
+     */
+    public FileStorageProperties fileStorage;
+
     public void setProfile(String profile) {
         OnethinkerConfig.profile = profile;
-    }
-
-    public static String getProfile() {
-        return profile;
     }
 
     /**

@@ -2,20 +2,17 @@ package com.onethinker.quartz.task;
 
 import com.onethinker.bx.domain.BxCustomerInfo;
 import com.onethinker.bx.service.IBxCustomerInfoService;
-import com.onethinker.common.core.domain.entity.SysUser;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.CacheEnum;
 import com.onethinker.common.enums.FileRealtionStatusEnum;
 import com.onethinker.common.enums.FileRelationTypeEnum;
 import com.onethinker.common.utils.poi.ExcelUtil;
-import com.onethinker.file.config.FileStorageProperties;
 import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.service.FileStorageService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
-import oshi.PlatformEnum;
 
 import java.io.File;
 import java.io.FileInputStream;

@@ -1,13 +1,11 @@
 package com.onethinker.file.platform;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.onethinker.common.webp.exc.WebpEncodeUtil;
+import com.onethinker.common.config.FileStorageProperties.*;
 import com.onethinker.file.domain.FileInfo;
-import com.onethinker.file.config.FileStorageProperties.*;
 import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.event.FormFileUploadSuccessEvent;
-import com.onethinker.common.constant.ServicePathConstant;
-import com.onethinker.common.webp.exc.WebpEncodeUtil;
-import com.qcloud.cos.model.COSObject;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.codec.digest.DigestUtils;

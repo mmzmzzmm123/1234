@@ -1,5 +1,6 @@
 package com.onethinker.onethinker.dto;
 
+import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.onethinker.domain.SysFileInfo;
 import com.onethinker.common.annotation.Excel;
 import lombok.Data;
@@ -74,10 +75,10 @@ public class ActivityResDTO {
     /**
      * 上传图片信息
      **/
-    private SysFileInfo bgUrlInfo;
+    private FileInfoDTO bgUrlInfo;
 
     /**
      * 活动轮播图信息
      **/
-    private List<SysFileInfo> bannerInfo;
+    private List<FileInfoDTO> bannerInfo;
 }
