@@ -35,7 +35,7 @@ public class BxActionUploadExcelTask {
     @Autowired
     private RedisCache redisCache;
 
-    private static final String redisKey = CacheEnum.UPLOAD_FILE_STATUS.getCode();
+    private static final String REDIS_KEY = CacheEnum.UPLOAD_FILE_STATUS.getCode();
 
     @Autowired
     private IBxCustomerInfoService bxCustomerInfoService;
@@ -73,7 +73,7 @@ public class BxActionUploadExcelTask {
             return false;
         }
         // 校验redis缓存是否存在
-        if (!redisCache.hasKey(redisKey + fileInfoDTO.getId())) {
+        if (!redisCache.hasKey(REDIS_KEY + fileInfoDTO.getId())) {
             return false;
         }
         // 校验文件资源是否存在
@@ -82,9 +82,9 @@ public class BxActionUploadExcelTask {
 
     private void setFileUploadRedis(String fileId,Integer outTime) {
         if (outTime == -1) {
-            redisCache.setCacheObject(redisKey + fileId,"success");
+            redisCache.setCacheObject(REDIS_KEY + fileId,"success");
         } else {
-            redisCache.setCacheObject(redisKey + fileId,"doing",outTime, TimeUnit.MINUTES);
+            redisCache.setCacheObject(REDIS_KEY + fileId,"doing",outTime, TimeUnit.MINUTES);
         }
     }
 }

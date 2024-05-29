@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("ALL")
 public final class HtmlFilter {
     /**
      * regex flag union representing /si modifiers in php

@@ -9,6 +9,10 @@ import lombok.Getter;
  */
 @Getter
 public enum SysStatusTypeEnum {
+
+    /**
+     * 系统状态枚举
+     */
     STATUS_TYPE_ENABLED(0,"启用"),
 
     STATUS_TYPE_DISABLE(1,"禁用"),

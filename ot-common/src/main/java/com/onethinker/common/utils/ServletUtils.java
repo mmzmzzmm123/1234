@@ -23,6 +23,7 @@ import java.util.Map;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("ALL")
 public class ServletUtils {
     /**
      * 获取String参数

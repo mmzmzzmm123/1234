@@ -27,8 +27,8 @@ public class MathUtils {
         }
         BigDecimal result = new BigDecimal(a.longValue());
         for (T value : b) {
-            BigDecimal valueBDecimal = new BigDecimal(value.longValue());
-            result = valueBDecimal.add(result);
+            BigDecimal valueBigDecimal = new BigDecimal(value.longValue());
+            result = valueBigDecimal.add(result);
         }
         return result.longValue();
     }
@@ -46,8 +46,8 @@ public class MathUtils {
         }
         BigDecimal result = new BigDecimal(a.longValue());
         for (T value : b) {
-            BigDecimal valueBDecimal = new BigDecimal(value.longValue());
-            result = result.subtract(valueBDecimal);
+            BigDecimal valueBigDecimal = new BigDecimal(value.longValue());
+            result = result.subtract(valueBigDecimal);
         }
         return result.longValue();
     }
@@ -65,8 +65,8 @@ public class MathUtils {
         }
         BigDecimal result = new BigDecimal(a.longValue());
         for (T value : b) {
-            BigDecimal valueBDecimal = new BigDecimal(value.longValue());
-            result = valueBDecimal.multiply(result);
+            BigDecimal valueBigDecimal = new BigDecimal(value.longValue());
+            result = valueBigDecimal.multiply(result);
         }
         return result.longValue();
     }
@@ -87,8 +87,8 @@ public class MathUtils {
             if (ObjectUtils.isEmpty(result)) {
                 throw new RuntimeException("计算错误，被除数不能为0");
             }
-            BigDecimal valueBDecimal = new BigDecimal(value.longValue());
-            result = result.divide(valueBDecimal, RoundingMode.HALF_UP);
+            BigDecimal valueBigDecimal = new BigDecimal(value.longValue());
+            result = result.divide(valueBigDecimal, RoundingMode.HALF_UP);
         }
         return result.longValue();
     }
@@ -107,8 +107,8 @@ public class MathUtils {
         }
         BigDecimal result = new BigDecimal(a.longValue());
         for (T value : b) {
-            BigDecimal valueBDecimal = new BigDecimal(value.longValue());
-            result = result.remainder(valueBDecimal);
+            BigDecimal valueBigDecimal = new BigDecimal(value.longValue());
+            result = result.remainder(valueBigDecimal);
         }
         return result.intValue();
     }
@@ -126,8 +126,8 @@ public class MathUtils {
         }
         BigDecimal result = new BigDecimal(a.longValue());
         for (T value : b) {
-            BigDecimal valueBDecimal = new BigDecimal(value.longValue());
-            result = valueBDecimal.max(result);
+            BigDecimal valueBigDecimal = new BigDecimal(value.longValue());
+            result = valueBigDecimal.max(result);
         }
         return result.longValue();
     }
@@ -145,8 +145,8 @@ public class MathUtils {
         }
         BigDecimal result = new BigDecimal(a.longValue());
         for (T value : b) {
-            BigDecimal valueBDecimal = new BigDecimal(value.longValue());
-            result = valueBDecimal.min(result);
+            BigDecimal valueBigDecimal = new BigDecimal(value.longValue());
+            result = valueBigDecimal.min(result);
         }
         return result.longValue();
     }

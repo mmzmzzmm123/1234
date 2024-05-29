@@ -11,6 +11,7 @@ import java.util.*;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("ALL")
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
     /**
      * 空字符串

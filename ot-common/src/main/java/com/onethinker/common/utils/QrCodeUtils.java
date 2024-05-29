@@ -1,11 +1,12 @@
 package com.onethinker.common.utils;
 
+import com.github.pagehelper.util.StringUtil;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.common.BitMatrix;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
-import org.springframework.util.StringUtils;
+import com.onethinker.common.utils.file.FileUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -76,7 +77,7 @@ public class QrCodeUtils {
             return image;
         }
         // 插入logo图片
-        if (!StringUtils.isEmpty(logoPath)) {
+        if (!StringUtil.isEmpty(logoPath)) {
             QrCodeUtils.insertImage(image, logoPath, needCompress);
         }
         return image;

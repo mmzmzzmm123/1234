@@ -8,6 +8,9 @@ import lombok.Getter;
  */
 @Getter
 public enum DeleteFlagEnum {
+    /**
+     * 删除状态枚举
+     */
     delete(1,"已删除"),
     enabled(0,"正常");
 

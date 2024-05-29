@@ -19,6 +19,7 @@ import java.util.Arrays;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("ALL")
 public class ImageUtils {
     private static final Logger log = LoggerFactory.getLogger(ImageUtils.class);
 

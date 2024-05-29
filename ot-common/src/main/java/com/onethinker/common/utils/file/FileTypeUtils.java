@@ -9,6 +9,7 @@ import java.io.File;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("ALL")
 public class FileTypeUtils {
     /**
      * 获取文件类型

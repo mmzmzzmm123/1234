@@ -164,7 +164,7 @@ public class DateUtils extends org.apache.commons.lang3.time.DateUtils {
         return Date.from(zdt.toInstant());
     }
 
-    public static String DayOfWeek() {
+    public static String dayOfWeek() {
         // 获取当前日期
         LocalDate today = LocalDate.now();
 

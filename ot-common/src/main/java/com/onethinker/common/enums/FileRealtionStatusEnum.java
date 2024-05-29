@@ -10,6 +10,9 @@ import lombok.Getter;
 @Getter
 public enum FileRealtionStatusEnum {
 
+    /**
+     * 文件处理状态枚举
+     */
     INIT(0,"初始化"),
     DOING(1,"进行中"),
     SUCCESS(2,"已处理"),

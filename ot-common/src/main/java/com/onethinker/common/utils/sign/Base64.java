@@ -5,6 +5,7 @@ package com.onethinker.common.utils.sign;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("ALL")
 public final class Base64 {
     static private final int BASELENGTH = 128;
     static private final int LOOKUPLENGTH = 64;

@@ -7,6 +7,7 @@ import com.onethinker.common.utils.StringUtils;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("ALL")
 public class EscapeUtil {
     public static final String RE_HTML_MARK = "(<[^<]*?>)|(<[\\s]*?/[^<]*?>)|(<[^<]*?/[\\s]*?>)";
 

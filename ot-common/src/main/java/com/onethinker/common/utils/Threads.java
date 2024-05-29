@@ -10,6 +10,7 @@ import java.util.concurrent.*;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("ALL")
 public class Threads {
     private static final Logger logger = LoggerFactory.getLogger(Threads.class);
 

@@ -84,11 +84,7 @@ public class SubscribeTemplateTask {
             subscribeMessage.setData(data);
             subscribeMessage.setPage(subscribeMsgCtrl.getPage());
             subscribeMessage.setMiniprogramState(subscribeMsgCtrl.getMiniprogramState());
-            try {
-                wechatService.sendSubscribeMsg(subscribeMessage);
-            } catch (WxErrorException e) {
-                log.error(e.getError());
-            }
+            wechatService.sendSubscribeMsg(subscribeMessage);
         }
     }
 

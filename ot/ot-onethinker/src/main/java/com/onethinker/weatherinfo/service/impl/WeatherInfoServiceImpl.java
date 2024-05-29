@@ -136,7 +136,7 @@ public class WeatherInfoServiceImpl extends ServiceImpl<WeatherInfoMapper, Weath
         // 晚上温度
         String nightTemp = allResultObj.getString("nighttemp");
         // 当前星期几
-        String week = DateUtils.DayOfWeek();
+        String week = DateUtils.dayOfWeek();
         // 拼接
         String resultText;
         if (Objects.nonNull(type) && type.length > 0) {

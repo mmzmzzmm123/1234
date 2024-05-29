@@ -48,6 +48,7 @@ import java.util.stream.Collectors;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("ALL")
 public class ExcelUtil<T> {
     private static final Logger log = LoggerFactory.getLogger(ExcelUtil.class);
 

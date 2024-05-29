@@ -19,6 +19,7 @@ import java.nio.charset.StandardCharsets;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("AlibabaUndefineMagicConstant")
 public class FileUtils {
     public static String FILENAME_PATTERN = "[a-zA-Z0-9_\\-\\|\\.\\u4e00-\\u9fa5]+";
 
@@ -240,5 +241,15 @@ public class FileUtils {
         }
         String baseName = FilenameUtils.getBaseName(fileName);
         return baseName;
+    }
+
+    /**
+     * 获取指定文件的输入流
+     *
+     * @param logoPath 文件的路径
+     * @return
+     */
+    public static InputStream getResourceAsStream(String logoPath) {
+        return FileUtils.class.getResourceAsStream(logoPath);
     }
 }

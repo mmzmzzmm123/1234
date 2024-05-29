@@ -10,6 +10,9 @@ import lombok.Getter;
 @Getter
 public enum CodeTypeEnum {
 
+    /**
+     * 验证码枚举
+     */
     PHONE("手机"),
 
     MAIL("邮箱"),

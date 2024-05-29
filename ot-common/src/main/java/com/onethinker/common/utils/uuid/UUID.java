@@ -13,6 +13,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("ALL")
 public final class UUID implements java.io.Serializable, Comparable<UUID> {
     private static final long serialVersionUID = -1185015143654744140L;
 

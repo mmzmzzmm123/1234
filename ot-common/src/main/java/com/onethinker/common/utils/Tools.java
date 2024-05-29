@@ -3,6 +3,7 @@ package com.onethinker.common.utils;
 import java.io.IOException;
 import java.io.InputStream;
 
+@SuppressWarnings("ALL")
 public class Tools {
     /**
      * 获取父路径
@@ -49,7 +50,9 @@ public class Tools {
      */
     public static long getSize(InputStream in) throws IOException {
         long size = 0;
-        while (in.read() != -1) size++;
+        while (in.read() != -1) {
+            size++;
+        }
         return size;
     }
 
@@ -58,7 +61,11 @@ public class Tools {
      */
     @SafeVarargs
     public static <T> T getNotNull(T... args) {
-        for (T t : args) if (t != null) return t;
+        for (T t : args)  {
+            if (t != null) {
+                return t;
+            }
+        }
         throw new NullPointerException();
     }
 }

@@ -7,6 +7,7 @@ import com.onethinker.common.utils.StringUtils;
  *
  * @author yangyouqi
  */
+@SuppressWarnings("ALL")
 public class PageDomain {
     /**
      * 当前记录起始索引
