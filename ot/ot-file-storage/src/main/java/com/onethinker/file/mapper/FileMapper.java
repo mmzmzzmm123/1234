@@ -18,7 +18,7 @@ public interface FileMapper extends BaseMapper<FileInfo> {
      * @param id 文件信息主键
      * @return 文件信息
      */
-    public FileInfo selectFileById(String id);
+    FileInfo selectFileById(String id);
 
     /**
      * 查询文件信息列表
@@ -26,7 +26,7 @@ public interface FileMapper extends BaseMapper<FileInfo> {
      * @param file 文件信息
      * @return 文件信息集合
      */
-    public List<FileInfo> selectFileList(FileInfo file);
+    List<FileInfo> selectFileList(FileInfo file);
 
     /**
      * 新增文件信息
@@ -34,7 +34,7 @@ public interface FileMapper extends BaseMapper<FileInfo> {
      * @param file 文件信息
      * @return 结果
      */
-    public int insertFile(FileInfo file);
+    int insertFile(FileInfo file);
 
     /**
      * 修改文件信息
@@ -42,7 +42,7 @@ public interface FileMapper extends BaseMapper<FileInfo> {
      * @param file 文件信息
      * @return 结果
      */
-    public int updateFile(FileInfo file);
+    int updateFile(FileInfo file);
 
     /**
      * 删除文件信息
@@ -50,7 +50,7 @@ public interface FileMapper extends BaseMapper<FileInfo> {
      * @param id 文件信息主键
      * @return 结果
      */
-    public int deleteFileById(String id);
+    int deleteFileById(String id);
 
     /**
      * 批量删除文件信息
@@ -58,5 +58,5 @@ public interface FileMapper extends BaseMapper<FileInfo> {
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteFileByIds(String[] ids);
+    int deleteFileByIds(String[] ids);
 }

@@ -18,7 +18,7 @@ public interface BxCustomerInfoMapper extends BaseMapper<BxCustomerInfo> {
      * @param id 佰兴-客户信息表主键
      * @return 佰兴-客户信息表
      */
-    public BxCustomerInfo selectBxCustomerInfoById(Long id);
+    BxCustomerInfo selectBxCustomerInfoById(Long id);
 
     /**
      * 查询佰兴-客户信息表列表
@@ -26,7 +26,7 @@ public interface BxCustomerInfoMapper extends BaseMapper<BxCustomerInfo> {
      * @param bxCustomerInfo 佰兴-客户信息表
      * @return 佰兴-客户信息表集合
      */
-    public List<BxCustomerInfo> selectBxCustomerInfoList(BxCustomerInfo bxCustomerInfo);
+    List<BxCustomerInfo> selectBxCustomerInfoList(BxCustomerInfo bxCustomerInfo);
 
     /**
      * 新增佰兴-客户信息表
@@ -34,7 +34,7 @@ public interface BxCustomerInfoMapper extends BaseMapper<BxCustomerInfo> {
      * @param bxCustomerInfo 佰兴-客户信息表
      * @return 结果
      */
-    public int insertBxCustomerInfo(BxCustomerInfo bxCustomerInfo);
+    int insertBxCustomerInfo(BxCustomerInfo bxCustomerInfo);
 
     /**
      * 修改佰兴-客户信息表
@@ -42,7 +42,7 @@ public interface BxCustomerInfoMapper extends BaseMapper<BxCustomerInfo> {
      * @param bxCustomerInfo 佰兴-客户信息表
      * @return 结果
      */
-    public int updateBxCustomerInfo(BxCustomerInfo bxCustomerInfo);
+    int updateBxCustomerInfo(BxCustomerInfo bxCustomerInfo);
 
     /**
      * 删除佰兴-客户信息表
@@ -50,7 +50,7 @@ public interface BxCustomerInfoMapper extends BaseMapper<BxCustomerInfo> {
      * @param id 佰兴-客户信息表主键
      * @return 结果
      */
-    public int deleteBxCustomerInfoById(Long id);
+    int deleteBxCustomerInfoById(Long id);
 
     /**
      * 批量删除佰兴-客户信息表
@@ -58,5 +58,5 @@ public interface BxCustomerInfoMapper extends BaseMapper<BxCustomerInfo> {
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deleteBxCustomerInfoByIds(Long[] ids);
+    int deleteBxCustomerInfoByIds(Long[] ids);
 }

@@ -99,16 +99,16 @@ public class WeatherInfoServiceImpl extends ServiceImpl<WeatherInfoMapper, Weath
 
     @Override
     public String selectNewWeatherInfoByCity(String city,String... type) {
-        StringBuffer url = new StringBuffer("https://restapi.amap.com/v3/weather/weatherInfo?parameters");
+        StringBuilder url = new StringBuilder("https://restapi.amap.com/v3/weather/weatherInfo?parameters");
         url.append("&key=e00f9370db14dae128473190e1b73507")
                 .append("&city=").append(city)
                 .append("&extensions=");
         // 获取实时温度
-        String baseUrl = url.toString() + "base";
+        String baseUrl = url + "base";
         String baseResult = HttpUtils.sendGet(baseUrl);
         JSONObject resultObj = JSONObject.parseObject(baseResult).getJSONArray("lives").getJSONObject(0);
         // 获取预报温度
-        String allUrl = url.toString() + "all";
+        String allUrl = url + "all";
         String allResult = HttpUtils.sendGet(allUrl);
         JSONArray casts = JSONObject.parseObject(allResult).getJSONArray("forecasts").getJSONObject(0).getJSONArray("casts");
         // 取当天的温度差
@@ -138,7 +138,7 @@ public class WeatherInfoServiceImpl extends ServiceImpl<WeatherInfoMapper, Weath
         // 当前星期几
         String week = DateUtils.DayOfWeek();
         // 拼接
-        String resultText = "";
+        String resultText;
         if (Objects.nonNull(type) && type.length > 0) {
             resultText = "早上温度：{{dayTemp}}°,晚上温度：{{nightTemp}}°";
         } else {

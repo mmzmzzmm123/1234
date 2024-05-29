@@ -97,7 +97,7 @@ public class IPlatformUserService {
      * 获取用户信息
      *
      * @param dataId 登录凭证
-     * @return
+     * @return 用户信息
      */
     public PlatformUser selectPlatformUserDetailByDataId(String dataId) {
         if (dataId == null) {
@@ -121,7 +121,7 @@ public class IPlatformUserService {
     /**
      * 获取当前登录用户信息
      *
-     * @return
+     * @return 当前登录用户信息
      */
     public PlatformUser queryLoginUserInfo() {
         return selectPlatformUserDetailByDataId(SecurityUtils.getLoginUser().getDataId());
@@ -131,7 +131,7 @@ public class IPlatformUserService {
      * 查询对于类型下的所有用户信息
      *
      * @param type 用户类型
-     * @return
+     * @return 用户信息
      */
     public List<PlatformUser> queryAllUserByType(String type) {
         LambdaQueryWrapper<PlatformUser> queryWrapper = new LambdaQueryWrapper<>();
@@ -142,9 +142,9 @@ public class IPlatformUserService {
     /**
      * 保存账号信息
      *
-     * @param reqDTO
-     * @param platformUserTypeEnum
-     * @return
+     * @param reqDTO 请求数据
+     * @param platformUserTypeEnum 枚举类型
+     * @return 保存用户信息
      */
     public PlatformUser saveEntryUserDetail(PlatformUserReqDTO reqDTO, PlatformUserTypeEnum platformUserTypeEnum) {
         PlatformUser platformUser = new PlatformUser();
@@ -163,7 +163,7 @@ public class IPlatformUserService {
 
     /**
      * 绑定手机号或邮箱
-     * @param reqDTO
+     * @param reqDTO 保存信息
      * @param codeTypeEnum 邮箱
      */
     public void bindPhoneOrEmail(PlatformUserReqDTO reqDTO, CodeTypeEnum codeTypeEnum) {
@@ -200,7 +200,6 @@ public class IPlatformUserService {
      * @param dataId 各种登录相关凭证
      * @param code   验证码
      * @param uuid   唯一标识
-     * @return 结果
      */
     public void validateCaptcha(String dataId, String code, String uuid) {
         boolean captchaEnabled = configService.selectCaptchaEnabled();

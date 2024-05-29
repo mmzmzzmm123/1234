@@ -5,8 +5,6 @@ import com.obs.services.ObsClient;
 import com.obs.services.model.ObsObject;
 import com.obs.services.model.PutObjectRequest;
 import com.obs.services.model.PutObjectResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -18,9 +16,6 @@ import java.io.InputStream;
  * @date 2024/5/17
  */
 public class HuaweiObsClientWrapper implements AutoCloseable {
-
-    private static final Logger log = LoggerFactory.getLogger(HuaweiObsClientWrapper.class);
-
 
     private volatile ObsClient obsClient;
 

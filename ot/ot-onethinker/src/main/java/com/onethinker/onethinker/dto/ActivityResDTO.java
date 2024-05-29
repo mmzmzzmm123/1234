@@ -7,11 +7,8 @@ import lombok.Data;
 import java.util.List;
 
 /**
- * @Title: ActivityResDTO
- * @Author itmei
- * @Package com.onethinker.onethinker.dto
- * @Date 2023/11/7 21:54
- * @description: 活动类返回数据
+ * @author yyq
+ * @date 2023/11/7 21:54
  */
 @Data
 public class ActivityResDTO {

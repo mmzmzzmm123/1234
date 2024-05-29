@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.onethinker.common.enums.ActivityTypeEnum;
 import com.onethinker.common.utils.DateUtils;
 import com.onethinker.file.dto.FileInfoDTO;
-import com.onethinker.file.platform.FileStorage;
 import com.onethinker.file.service.FileStorageService;
 import com.onethinker.onethinker.domain.Activity;
 import com.onethinker.onethinker.dto.ActivityReqDTO;
@@ -39,15 +38,10 @@ public class ActivityServiceImpl extends ServiceImpl<ActivityMapper, Activity> i
     @Autowired
     private ActivityDetailFactory activityDetailFactory;
 
-    private final FileStorage fileStorage;
-
+    @Autowired
     private FileStorageService fileStorageService;
 
 
-    public ActivityServiceImpl(@Autowired FileStorageService fileStorageService) {
-        this.fileStorage = fileStorageService.getFileStorage();
-        this.fileStorageService = fileStorageService;
-    }
 
     /**
      * 查询活动

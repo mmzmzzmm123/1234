@@ -242,7 +242,7 @@ public interface FileStorage {
      * 获取图片信息
      *
      * @param path 文件
-     * @param type     文件类型
+     * @param type 文件类型
      * @return 图片信息
      */
     default String getTransFile(String path, String type) {
@@ -254,6 +254,7 @@ public interface FileStorage {
 
     /**
      * 获取图片信息
+     *
      * @param userId 用户id
      * @return 图片信息
      */
@@ -278,8 +279,9 @@ public interface FileStorage {
 
     /**
      * 获取图片流信息
-     * @param source 文件来源
-     * @param fileInfo 文件信息
+     *
+     * @param source    文件来源
+     * @param fileInfo  文件信息
      * @param waterMark 图片信息
      * @return 图片流
      * @throws IOException io异常
@@ -326,8 +328,9 @@ public interface FileStorage {
 
     /**
      * 获取图片流信息
-     * @param source 文件来源
-     * @param fileInfo 文件信息
+     *
+     * @param source    文件来源
+     * @param fileInfo  文件信息
      * @param thumbnail 图片信息
      * @return 图片流
      * @throws IOException io异常
@@ -352,7 +355,8 @@ public interface FileStorage {
 
     /**
      * 获取图片路径信息
-     * @param source 文件来源
+     *
+     * @param source   文件来源
      * @param fileInfo 文件信息
      * @param filePath 图片路径
      * @return 图片路径信息
@@ -393,7 +397,8 @@ public interface FileStorage {
 
     /**
      * 获取图片路径信息
-     * @param source 文件来源
+     *
+     * @param source   文件来源
      * @param fileInfo 文件信息
      * @param filePath 图片路径
      * @return 图片路径信息
@@ -407,9 +412,13 @@ public interface FileStorage {
         log.debug("Start Process Webp Original:{},{}", fileInfo.getId(), filePath);
         File tempFile = new File(filePath + File.separator + DATA_FILE);
         if (!tempFile.exists()) {
-            tempFile.mkdirs();
-            // 将MultipartFile转换为临时文件
-            source.transferTo(tempFile);
+            if (tempFile.mkdirs()) {
+                // 将MultipartFile转换为临时文件
+                source.transferTo(tempFile);
+            } else {
+                throw new IOException("Could not create temp file");
+            }
+
         }
         Path dataFile = tempFile.toPath();
         Path webpOriginalFile = getTransFile(dataFile, WEBP_ORIGINAL_FILE);
@@ -423,6 +432,7 @@ public interface FileStorage {
 
     /**
      * 判断是否是win环境
+     *
      * @return 是否是win环境
      */
     default boolean isWindows() {
@@ -449,6 +459,7 @@ public interface FileStorage {
 
     /**
      * 删除指定路径的目录及其所有内容
+     *
      * @param path 目录的路径
      * @throws IOException io异常
      */

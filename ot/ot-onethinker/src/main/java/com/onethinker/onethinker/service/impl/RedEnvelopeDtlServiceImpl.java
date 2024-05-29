@@ -72,18 +72,18 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
         reqParams.setBatchNo(redEnvelopeDtlDTO.getBatchNo());
         List<RedEnvelopeDtl> redEnvelopeDtls = redEnvelopeDtlMapper.selectRedEnvelopeDtlList(reqParams);
         // 当前批次
-        Integer nowBatch = redEnvelopeDtls.isEmpty() ? 0 : redEnvelopeDtls.get(0).getBatch();
+        int nowBatch = redEnvelopeDtls.isEmpty() ? 0 : redEnvelopeDtls.get(0).getBatch();
         // 需要更新的最终结果
         List<RedEnvelopeDtl> saveEntitys = new ArrayList<>();
 
         // 计算出一批需要生成多少明细红包数据
-        Long batchNum = MathUtils.divide(redEnvelopeDtlDTO.getTotalSum(), redEnvelopeDtlDTO.getBatchSum());
+        long batchNum = MathUtils.divide(redEnvelopeDtlDTO.getTotalSum(), redEnvelopeDtlDTO.getBatchSum());
         // 生成红包明细
         if (AwardConstants.TYPE_FIXED.equals(redEnvelopeDtlDTO.getType())) {
             // 固定生成
             if (AwardConstants.LUCKY_AWARD_TYPE_NO.equals(redEnvelopeDtlDTO.getLuckyAward())) {
                 CalculateRedEnvelopeDTO calculateRedEnvelopeDTO = CalculateRedEnvelopeDTO.calculateRedEnvelopeBatchBaseInfo(redEnvelopeDtlDTO.getTotalMoney(), redEnvelopeDtlDTO.getTotalSum(), redEnvelopeDtlDTO.getBatchSum());
-                for (Integer i = 0; i < batchNum; i++) {
+                for (int i = 0; i < batchNum; i++) {
                     RedEnvelopeDtl redEnvelopeDtl = new RedEnvelopeDtl();
                     // 基本内容
                     redEnvelopeDtl.setCreateTime(new Date());
@@ -180,7 +180,7 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
 
         String filePath = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DETAIL_FILE_PATH) + "/" + redEnvelopeDtl.getBatchNo();
         // 生成规则 批次号 + 批次 + 时间戳后8位 + 随机数
-        String fileName = redEnvelopeDtl.getBatchNo() + "_" + redEnvelopeDtl.getBatch() + "_" + new String(System.currentTimeMillis() + "").substring(4) + "_" + RandomUtils.nextInt() + ".jpg";
+        String fileName = redEnvelopeDtl.getBatchNo() + "_" + redEnvelopeDtl.getBatch() + "_" + (System.currentTimeMillis() + "").substring(4) + "_" + RandomUtils.nextInt() + ".jpg";
         try {
             QrCodeUtils.encode(encrypt, filePath, fileName);
         } catch (Exception e) {

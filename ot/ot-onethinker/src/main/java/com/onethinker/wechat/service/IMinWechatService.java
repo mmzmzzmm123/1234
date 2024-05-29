@@ -3,7 +3,6 @@ package com.onethinker.wechat.service;
 import cn.binarywang.wx.miniapp.bean.WxMaJscode2SessionResult;
 import cn.binarywang.wx.miniapp.bean.WxMaSubscribeMessage;
 import cn.binarywang.wx.miniapp.bean.WxMaUserInfo;
-import me.chanjar.weixin.common.error.WxErrorException;
 
 /**
  * @author : yangyouqi

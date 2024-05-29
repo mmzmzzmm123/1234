@@ -4,14 +4,13 @@ import cn.binarywang.wx.miniapp.bean.WxMaSubscribeMessage;
 import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Lists;
 import com.onethinker.common.constant.ServicePathConstant;
-import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
-import com.onethinker.onethinker.service.ISubscribeMsgCtrlService;
-import com.onethinker.wechat.service.IMinWechatService;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.utils.DateUtils;
+import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
+import com.onethinker.onethinker.service.ISubscribeMsgCtrlService;
+import com.onethinker.wechat.service.IMinWechatService;
 import io.jsonwebtoken.lang.Assert;
-import me.chanjar.weixin.common.error.WxErrorException;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,12 +62,7 @@ public class MinWechatController extends BaseController {
         subscribeMessage.setData(data);
         subscribeMessage.setPage(subscribeMsgCtrl.getPage());
         subscribeMessage.setMiniprogramState(subscribeMsgCtrl.getMiniprogramState());
-        try {
-            wechatService.sendSubscribeMsg(subscribeMessage);
-        } catch (WxErrorException e) {
-            System.out.println(e.getError());
-            return error(e.getMessage());
-        }
+        wechatService.sendSubscribeMsg(subscribeMessage);
         return success();
     }
 }
