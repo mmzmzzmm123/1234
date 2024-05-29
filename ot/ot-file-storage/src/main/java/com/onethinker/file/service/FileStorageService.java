@@ -87,8 +87,8 @@ public class FileStorageService {
     /**
      * 保存实体
      *
-     * @param fileRelation
-     * @param fileInfo
+     * @param fileRelation 文件关联信息对象
+     * @param fileInfo 文件内容
      */
     @Transactional(rollbackFor = Exception.class)
     public void saveFileInfo(FileRelation fileRelation, FileInfo fileInfo) {
@@ -103,7 +103,7 @@ public class FileStorageService {
     /**
      * 获取 文件集合信息
      * @param fileInfo fileInfo
-     * @return
+     * @return 返回文件信息
      */
     public List<FileInfoDTO> selectFileList(FileInfo fileInfo) {
         List<FileInfo> fileInfos = fileMapper.selectFileList(fileInfo);
@@ -143,9 +143,6 @@ public class FileStorageService {
 
     /**
      * 更新文件状态
-     * @param id
-     * @param orgStatus
-     * @param updateStatus
      */
     public void updateFileRegionStatusByFileId(String id, FileRealtionStatusEnum orgStatus, FileRealtionStatusEnum updateStatus) {
         relationMapper.updateFileRegionStatusByFileId(id,orgStatus.getCode(),updateStatus.getCode());
@@ -154,7 +151,6 @@ public class FileStorageService {
     /**
      * 查询文件类型
      * @param fileId 文件id
-     * @return
      */
     public FileInfoDTO queryFileByFileId(String fileId) {
         Assert.notNull(fileId,"fileId is null");

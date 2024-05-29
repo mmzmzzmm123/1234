@@ -1,8 +1,9 @@
 package com.onethinker.file.platform;
 
 import cn.hutool.core.collection.CollectionUtil;
+import com.onethinker.common.config.FileStorageProperties.Thumbnail;
+import com.onethinker.common.config.FileStorageProperties.WaterMark;
 import com.onethinker.common.webp.exc.WebpEncodeUtil;
-import com.onethinker.common.config.FileStorageProperties.*;
 import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.event.FormFileUploadSuccessEvent;
@@ -364,9 +365,13 @@ public interface FileStorage {
         log.debug("Start Process Webp:{},{}", fileInfo.getId(), filePath);
         File tempFile = new File(filePath + File.separator + DATA_FILE);
         if (!tempFile.exists()) {
-            tempFile.mkdirs();
-            // 创建临时文件
-            source.transferTo(tempFile);
+            if (tempFile.mkdirs()) {
+                // 创建临时文件
+                source.transferTo(tempFile);
+            } else {
+                throw new IOException("Could not create temp file");
+            }
+
         }
         Path dataFile = tempFile.toPath();
         Path waterMarkFile = getTransFile(dataFile, WATERMARK_FILE);

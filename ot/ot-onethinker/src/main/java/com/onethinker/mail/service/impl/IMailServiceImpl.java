@@ -36,7 +36,7 @@ public class IMailServiceImpl implements IMailService {
         String text = getCodeMail(code);
 
         Integer count = redisCache.getCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + mail.get(0));
-        if (count == null || count < Integer.parseInt(sysConfigService.selectConfigByKey(SysConfigKeyEnum.CODE_MAIL_COUNT) + "")) {
+        if (count == null || count < Integer.parseInt(sysConfigService.selectConfigByKey(SysConfigKeyEnum.CODE_MAIL_COUNT))) {
             mailUtil.sendMailMessage(mail, "您有一封来自扬万科技的回执！", text);
             if (count == null) {
                 redisCache.setCacheObject(CacheEnum.CAPTCHA_CODE_KEY.getCode() + mail.get(0), 1, 1, TimeUnit.DAYS);
@@ -51,14 +51,7 @@ public class IMailServiceImpl implements IMailService {
     private String getCodeMail(int i) {
         String webName = "OneThinker";
 
-        /**
-         * 1. 网站名称
-         * 2. 邮件类型
-         * 3. 发件人
-         * 4. 发件内容
-         * 5. originalText
-         * 6. 网站名称
-         */
+        // 1. 网站名称 2. 邮件类型 3. 发件人 4. 发件内容 5. originalText 6. 网站名称
         return String.format(
                 mailUtil.getMailText(),
                 webName,

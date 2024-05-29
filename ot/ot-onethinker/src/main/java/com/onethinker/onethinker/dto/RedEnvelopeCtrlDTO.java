@@ -154,7 +154,7 @@ public class RedEnvelopeCtrlDTO {
         }
 
         // 这里只需要校验最终生成类型是否合理即可
-        CalculateRedEnvelopeDTO calculateRedEnvelopeDTO = null;
+        CalculateRedEnvelopeDTO calculateRedEnvelopeDTO;
         // 固定生成
         if (AwardConstants.TYPE_FIXED.equals(type)) {
             if (luckyAward.equals(AwardConstants.LUCKY_AWARD_TYPE_NO)) {

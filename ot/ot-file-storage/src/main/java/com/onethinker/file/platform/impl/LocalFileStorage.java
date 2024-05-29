@@ -1,10 +1,11 @@
 package com.onethinker.file.platform.impl;
 
 import cn.hutool.core.lang.Assert;
-import com.onethinker.file.domain.FileInfo;
-import com.onethinker.common.webp.exc.WebpEncodeUtil;
 import com.onethinker.common.config.FileStorageProperties;
-import com.onethinker.common.config.FileStorageProperties.*;
+import com.onethinker.common.config.FileStorageProperties.Thumbnail;
+import com.onethinker.common.config.FileStorageProperties.WaterMark;
+import com.onethinker.common.webp.exc.WebpEncodeUtil;
+import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.event.FormFileUploadSuccessEvent;
 import com.onethinker.file.platform.FileStorage;

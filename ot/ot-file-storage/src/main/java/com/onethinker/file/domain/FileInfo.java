@@ -3,7 +3,6 @@ package com.onethinker.file.domain;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.onethinker.common.annotation.Excel;
-import com.onethinker.common.core.domain.BaseEntity;
 import lombok.Data;
 
 import java.io.Serializable;

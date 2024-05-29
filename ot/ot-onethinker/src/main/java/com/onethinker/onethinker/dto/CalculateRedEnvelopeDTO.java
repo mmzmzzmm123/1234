@@ -8,11 +8,8 @@ import java.util.Random;
 import java.util.Set;
 
 /**
- * @Title: RedEnvelopeView
- * @Author YYQ
- * @Package com.cloud.model.view.activity
- * @Date 2023/7/23 20:53
- * @description: 红包金额计算处理
+ * @author YYQ
+ * @date 2023/7/23 20:53
  */
 @Data
 public class CalculateRedEnvelopeDTO {
@@ -199,11 +196,11 @@ public class CalculateRedEnvelopeDTO {
 
         if (luckyAwardCount >= batchNum) {
             // 幸运数大于等于批次数的话，那么当前批次所有数据都是幸运奖
-            for (Integer i = 0; i < batchNum; i++) {
+            for (int i = 0; i < batchNum; i++) {
                 luckyPositions.add(i + 1);
             }
         } else {
-            for (Integer i = 0; i < luckyAwardCount; i++) {
+            for (int i = 0; i < luckyAwardCount; i++) {
                 Random random = new Random();
                 int value = random.nextInt(Integer.parseInt(String.valueOf(batchNum)));
                 if (luckyPositions.contains(value)) {

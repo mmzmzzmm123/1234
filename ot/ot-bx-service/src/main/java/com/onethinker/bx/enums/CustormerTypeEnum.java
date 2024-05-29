@@ -1,6 +1,5 @@
 package com.onethinker.bx.enums;
 
-import lombok.Data;
 import lombok.Getter;
 
 /**

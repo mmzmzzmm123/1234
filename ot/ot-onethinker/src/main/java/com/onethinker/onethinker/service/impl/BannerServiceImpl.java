@@ -1,18 +1,15 @@
 package com.onethinker.onethinker.service.impl;
 
-import java.util.List;
-
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.common.utils.DateUtils;
 import com.onethinker.onethinker.domain.Banner;
 import com.onethinker.onethinker.mapper.BannerMapper;
 import com.onethinker.onethinker.service.IBannerService;
-import com.onethinker.common.utils.DateUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import java.util.List;
 
 /**
  * 轮播图Service业务层处理

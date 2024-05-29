@@ -19,7 +19,7 @@ public interface IActivityService {
      * @param id 活动主键
      * @return 活动
      */
-    public ActivityResDTO selectActivityById(Long id);
+    ActivityResDTO selectActivityById(Long id);
 
     /**
      * 查询活动列表
@@ -27,7 +27,7 @@ public interface IActivityService {
      * @param activity 活动
      * @return 活动集合
      */
-    public List<Activity> selectActivityList(Activity activity);
+    List<Activity> selectActivityList(Activity activity);
 
     /**
      * 新增活动
@@ -35,7 +35,7 @@ public interface IActivityService {
      * @param activity 活动
      * @return 结果
      */
-    public int insertActivity(ActivityReqDTO activity);
+    int insertActivity(ActivityReqDTO activity);
 
     /**
      * 修改活动
@@ -43,7 +43,7 @@ public interface IActivityService {
      * @param activity 活动
      * @return 结果
      */
-    public int updateActivity(Activity activity);
+    int updateActivity(Activity activity);
 
     /**
      * 批量删除活动
@@ -51,7 +51,7 @@ public interface IActivityService {
      * @param ids 需要删除的活动主键集合
      * @return 结果
      */
-    public int deleteActivityByIds(Long[] ids);
+    int deleteActivityByIds(Long[] ids);
 
     /**
      * 删除活动信息
@@ -59,10 +59,11 @@ public interface IActivityService {
      * @param id 活动主键
      * @return 结果
      */
-    public int deleteActivityById(Long id);
+    int deleteActivityById(Long id);
 
     /**
      * mybatispuls查询
+     *
      * @param id id
      * @return 活动信息
      */

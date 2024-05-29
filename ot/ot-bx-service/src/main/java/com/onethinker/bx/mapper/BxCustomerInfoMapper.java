@@ -1,9 +1,9 @@
 package com.onethinker.bx.mapper;
 
-import java.util.List;
-
-import com.onethinker.bx.domain.BxCustomerInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.bx.domain.BxCustomerInfo;
+
+import java.util.List;
 
 /**
  * 佰兴-客户信息表Mapper接口

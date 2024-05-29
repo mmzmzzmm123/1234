@@ -2,10 +2,8 @@ package com.onethinker.user.platform.impl;
 
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
-import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.PlatformUserTypeEnum;
 import com.onethinker.framework.web.service.SysLoginService;
-import com.onethinker.system.service.ISysConfigService;
 import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
@@ -13,7 +11,6 @@ import com.onethinker.user.platform.UserStorage;
 import com.onethinker.user.service.IPlatformUserService;
 import com.onethinker.wechat.service.IMinWechatService;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 

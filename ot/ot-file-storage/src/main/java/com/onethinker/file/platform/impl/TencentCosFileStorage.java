@@ -1,9 +1,10 @@
 package com.onethinker.file.platform.impl;
 
 import cn.hutool.core.lang.Assert;
-import com.onethinker.file.domain.FileInfo;
 import com.onethinker.common.config.FileStorageProperties;
-import com.onethinker.common.config.FileStorageProperties.*;
+import com.onethinker.common.config.FileStorageProperties.Thumbnail;
+import com.onethinker.common.config.FileStorageProperties.WaterMark;
+import com.onethinker.file.domain.FileInfo;
 import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.event.FormFileUploadSuccessEvent;
 import com.onethinker.file.platform.FileStorage;
@@ -14,7 +15,9 @@ import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Objects;
 
@@ -39,6 +42,7 @@ public class TencentCosFileStorage implements FileStorage {
     private WaterMark waterMark;
     private Thumbnail thumbnail;
     private MultipartFile source;
+
     public TencentCosFileStorage(FileStorageProperties config) {
         this.platform = config.getTencentCos().getPlatform();
         this.secretId = config.getTencentCos().getSecretId();

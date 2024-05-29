@@ -30,7 +30,7 @@ public interface IActivityDetailService<T> {
      * 更新活动信息
      * @param doTemp 更新数据
      * @param status 更新状态
-     * @return
+     * @return 更新条数
      */
     int updateEntry(T doTemp, Integer status);
 }

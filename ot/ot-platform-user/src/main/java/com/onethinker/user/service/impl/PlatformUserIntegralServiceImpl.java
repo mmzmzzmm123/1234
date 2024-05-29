@@ -7,7 +7,6 @@ import com.onethinker.common.enums.CacheEnum;
 import com.onethinker.common.enums.IntegralTypeEnum;
 import com.onethinker.common.enums.SysStatusTypeEnum;
 import com.onethinker.common.utils.SecurityUtils;
-import com.onethinker.framework.web.domain.server.Sys;
 import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.domain.PlatformUserIntegral;
 import com.onethinker.user.domain.PlatformUserIntegralHistory;
@@ -76,8 +75,8 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
                 userIntegral.setCreateTime(new Date());
                 userIntegral.setCreateBy(SecurityUtils.getLoginUser().getUsername());
                 userIntegral.setEnabled(SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
-                userIntegral.setTotalIntegral(Long.valueOf(integral));
-                userIntegral.setResidualIntegral(Long.valueOf(integral));
+                userIntegral.setTotalIntegral(integral);
+                userIntegral.setResidualIntegral(integral);
                 // 调用保存接口
             } else {
                 userIntegral.setUpdateTime(new Date());

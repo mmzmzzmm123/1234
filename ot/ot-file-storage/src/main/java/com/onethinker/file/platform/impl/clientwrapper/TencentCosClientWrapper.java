@@ -5,7 +5,10 @@ import com.qcloud.cos.ClientConfig;
 import com.qcloud.cos.auth.BasicCOSCredentials;
 import com.qcloud.cos.auth.COSCredentials;
 import com.qcloud.cos.http.HttpProtocol;
-import com.qcloud.cos.model.*;
+import com.qcloud.cos.model.COSObject;
+import com.qcloud.cos.model.ObjectMetadata;
+import com.qcloud.cos.model.PutObjectRequest;
+import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +23,6 @@ import java.io.InputStream;
  * @date 2024/5/17
  */
 public class TencentCosClientWrapper implements AutoCloseable {
-
-    private static final Logger log = LoggerFactory.getLogger(TencentCosClientWrapper.class);
-
 
     private final COSClient cosClient;
 
@@ -57,7 +57,7 @@ public class TencentCosClientWrapper implements AutoCloseable {
 
     public PutObjectResult putObject(String bucketName, String newKey, InputStream is) {
         // 上传到腾讯云存储对象中
-        ObjectMetadata objectMetadata = getObjectMetadata(is);
+        ObjectMetadata objectMetadata = getObjectMetadata();
         PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, newKey, is,objectMetadata);
         return cosClient.putObject(putObjectRequest);
     }
@@ -86,7 +86,7 @@ public class TencentCosClientWrapper implements AutoCloseable {
     /**
      * 获取对象的元数据
      */
-    public ObjectMetadata getObjectMetadata(InputStream is) {
+    public ObjectMetadata getObjectMetadata() {
         return new ObjectMetadata();
     }
 }

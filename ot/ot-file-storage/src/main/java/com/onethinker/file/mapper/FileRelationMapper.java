@@ -1,10 +1,9 @@
 package com.onethinker.file.mapper;
 
-import java.util.List;
-
-import com.onethinker.common.enums.FileRealtionStatusEnum;
-import com.onethinker.file.domain.FileRelation;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.onethinker.file.domain.FileRelation;
+
+import java.util.List;
 
 /**
  * 文件关联信息Mapper接口

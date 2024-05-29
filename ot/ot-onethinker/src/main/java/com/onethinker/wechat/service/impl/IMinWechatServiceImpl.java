@@ -11,9 +11,9 @@ import cn.binarywang.wx.miniapp.config.impl.WxMaDefaultConfigImpl;
 import cn.binarywang.wx.miniapp.util.WxMaConfigHolder;
 import com.alibaba.fastjson2.JSONObject;
 import com.google.common.collect.Maps;
-import com.onethinker.wechat.service.IMinWechatService;
 import com.onethinker.common.enums.SysConfigKeyEnum;
 import com.onethinker.system.service.ISysConfigService;
+import com.onethinker.wechat.service.IMinWechatService;
 import io.jsonwebtoken.lang.Assert;
 import lombok.extern.log4j.Log4j2;
 import me.chanjar.weixin.common.error.WxErrorException;
@@ -72,8 +72,7 @@ public class IMinWechatServiceImpl implements IMinWechatService {
     public WxMaUserInfo getUserInfo(String sessionKey, String encryptedData, String ivStr) {
         // 解密用户信息
         try {
-            WxMaUserInfo userInfo = this.getWxMaService().getUserService().getUserInfo(sessionKey, encryptedData, ivStr);
-            return userInfo;
+            return this.getWxMaService().getUserService().getUserInfo(sessionKey, encryptedData, ivStr);
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage());
@@ -83,12 +82,12 @@ public class IMinWechatServiceImpl implements IMinWechatService {
     }
 
     @Override
-    public void sendSubscribeMsg(WxMaSubscribeMessage subscribeMessage) throws WxErrorException {
+    public void sendSubscribeMsg(WxMaSubscribeMessage subscribeMessage) {
         Assert.isTrue(ObjectUtils.isNotEmpty(subscribeMessage), "参数请求为空");
         // 获取发送消息service
         WxMaMsgService msgService = this.getWxMaService().getMsgService();
         try {
-            log.info("发送模版消息：" + JSONObject.toJSONString(subscribeMessage));
+            log.info("发送模版消息：{}", JSONObject.toJSONString(subscribeMessage));
             msgService.sendSubscribeMsg(subscribeMessage);
         } catch (Exception e) {
             log.error(e.getMessage(), e);

@@ -3,6 +3,7 @@ package com.onethinker.mail.utils;
 import com.alibaba.fastjson2.JSONObject;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.system.service.ISysConfigService;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,14 +54,8 @@ public class MailUtil {
     @Autowired
     private JavaMailSender mailSender;
 
-    @Autowired
-    private ISysConfigService sysConfigService;
-
     @Value("${spring.mail.username}")
     private String sendMailer;
-
-    @Autowired
-    private RedisCache redisCache;
 
     /**
      * 1. 网站名称
@@ -70,6 +65,7 @@ public class MailUtil {
      * 5. originalText
      * 6. 网站名称
      */
+    @Getter
     private String mailText;
 
     @PostConstruct
@@ -107,10 +103,6 @@ public class MailUtil {
                 "        </div>\n" +
                 "    </div>\n" +
                 "</div>";
-    }
-
-    public String getMailText() {
-        return mailText;
     }
 
     @Async

@@ -17,7 +17,7 @@ public interface PlatformUserIntegralMapper {
      * @param id 平台用户积分主键
      * @return 平台用户积分
      */
-    public PlatformUserIntegral selectPlatformUserIntegralById(Long id);
+    PlatformUserIntegral selectPlatformUserIntegralById(Long id);
 
     /**
      * 查询平台用户积分列表
@@ -25,7 +25,7 @@ public interface PlatformUserIntegralMapper {
      * @param platformUserIntegral 平台用户积分
      * @return 平台用户积分集合
      */
-    public List<PlatformUserIntegral> selectPlatformUserIntegralList(PlatformUserIntegral platformUserIntegral);
+    List<PlatformUserIntegral> selectPlatformUserIntegralList(PlatformUserIntegral platformUserIntegral);
 
     /**
      * 新增平台用户积分
@@ -33,7 +33,7 @@ public interface PlatformUserIntegralMapper {
      * @param platformUserIntegral 平台用户积分
      * @return 结果
      */
-    public int insertPlatformUserIntegral(PlatformUserIntegral platformUserIntegral);
+    int insertPlatformUserIntegral(PlatformUserIntegral platformUserIntegral);
 
     /**
      * 修改平台用户积分
@@ -41,7 +41,7 @@ public interface PlatformUserIntegralMapper {
      * @param platformUserIntegral 平台用户积分
      * @return 结果
      */
-    public int updatePlatformUserIntegral(PlatformUserIntegral platformUserIntegral);
+    int updatePlatformUserIntegral(PlatformUserIntegral platformUserIntegral);
 
     /**
      * 删除平台用户积分
@@ -49,7 +49,7 @@ public interface PlatformUserIntegralMapper {
      * @param id 平台用户积分主键
      * @return 结果
      */
-    public int deletePlatformUserIntegralById(Long id);
+    int deletePlatformUserIntegralById(Long id);
 
     /**
      * 批量删除平台用户积分
@@ -57,7 +57,7 @@ public interface PlatformUserIntegralMapper {
      * @param ids 需要删除的数据主键集合
      * @return 结果
      */
-    public int deletePlatformUserIntegralByIds(Long[] ids);
+    int deletePlatformUserIntegralByIds(Long[] ids);
 
     /**
      * 更新用户积分信息

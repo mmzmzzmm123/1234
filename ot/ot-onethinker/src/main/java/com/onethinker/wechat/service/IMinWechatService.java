@@ -46,7 +46,6 @@ public interface IMinWechatService {
      * </pre>
      *
      * @param subscribeMessage 订阅消息
-     * @throws WxErrorException 微信异常
      */
-    void sendSubscribeMsg(WxMaSubscribeMessage subscribeMessage) throws WxErrorException;
+    void sendSubscribeMsg(WxMaSubscribeMessage subscribeMessage);
 }

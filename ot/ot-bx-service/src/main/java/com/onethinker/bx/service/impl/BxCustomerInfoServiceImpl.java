@@ -1,31 +1,26 @@
 package com.onethinker.bx.service.impl;
 
+import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.onethinker.bx.domain.BxCustomerInfo;
+import com.onethinker.bx.enums.CustormerTypeEnum;
+import com.onethinker.bx.enums.DeliveryTypeEnum;
+import com.onethinker.bx.enums.ProductTypeEnum;
+import com.onethinker.bx.mapper.BxCustomerInfoMapper;
+import com.onethinker.bx.service.IBxCustomerInfoService;
+import com.onethinker.common.core.redis.RedisCache;
+import com.onethinker.common.enums.CacheEnum;
+import com.onethinker.common.utils.DateUtils;
+import com.onethinker.common.utils.StringUtils;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import com.alibaba.fastjson2.JSONObject;
-import com.onethinker.bx.enums.CustormerTypeEnum;
-import com.onethinker.bx.enums.DeliveryTypeEnum;
-import com.onethinker.bx.enums.ProductTypeEnum;
-import com.onethinker.common.core.redis.RedisCache;
-import com.onethinker.common.enums.CacheEnum;
-import com.onethinker.common.enums.DeleteFlagEnum;
-import com.onethinker.common.utils.DateUtils;
-import com.onethinker.common.utils.StringUtils;
-import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.onethinker.bx.mapper.BxCustomerInfoMapper;
-import com.onethinker.bx.domain.BxCustomerInfo;
-import com.onethinker.bx.service.IBxCustomerInfoService;
-import lombok.extern.log4j.Log4j2;
-
-import javax.annotation.Resource;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 
 /**
  * 佰兴-客户信息表Service业务层处理
@@ -175,7 +170,7 @@ public class BxCustomerInfoServiceImpl extends ServiceImpl<BxCustomerInfoMapper,
 
     @Override
     public void saveEntry(List<BxCustomerInfo> bxCustomerInfos) {
-        bxCustomerInfos.parallelStream().filter(this::executeBatch).forEach(bxCustomerInfo -> {
+        bxCustomerInfos.parallelStream().filter(e -> !executeBatch(e)).forEach(bxCustomerInfo -> {
             if (Objects.isNull(bxCustomerInfo.getDate())) {
                 bxCustomerInfo.setCreateTime(new Date());
             } else {
@@ -214,7 +209,7 @@ public class BxCustomerInfoServiceImpl extends ServiceImpl<BxCustomerInfoMapper,
     private boolean executeBatch(BxCustomerInfo bxCustomerInfo) {
         String key = CacheEnum.BX_CUSTOMER_INFO_KEY.getCode() + bxCustomerInfo.getCompanyName() + "_" + bxCustomerInfo.getMobile();
         // 查看redis是否存在数据
-        return true;
+        return redisCache.hasKey(key);
     }
 
     private void setRedisCache(BxCustomerInfo bxCustomerInfo) {
