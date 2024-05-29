@@ -53,7 +53,7 @@ public class IMinWechatServiceImpl implements IMinWechatService {
     }
 
     @Override
-    public String getIMinWechatOpenIdByCode(String code) {
+    public String getMinWechatOpenIdByCode(String code) {
         Assert.isTrue(!StringUtils.isEmpty(code), "code不能为空");
         try {
             WxMaJscode2SessionResult session = this.getWxMaService().getUserService().getSessionInfo(code);

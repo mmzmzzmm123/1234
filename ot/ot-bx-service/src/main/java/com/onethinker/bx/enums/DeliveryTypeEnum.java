@@ -9,11 +9,10 @@ import lombok.Getter;
  */
 @Getter
 public enum DeliveryTypeEnum {
-    SF("顺丰快递"),
-
-    RG("直接送货"),
-
-    SF_SHORT("顺丰");
+    /**
+     * 送货方式
+     */
+    SF("顺丰快递"), RG("直接送货"), SF_SHORT("顺丰");
 
 
     final String desc;

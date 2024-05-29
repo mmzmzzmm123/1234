@@ -10,14 +10,10 @@ import lombok.Getter;
  */
 @Getter
 public enum CustormerTypeEnum {
-    YI_YUAN("医院"),
-
-    GE_REN("个人"),
-
-    JI_GONG_SUO("技工所"),
-
-    ZHEN_SUO("诊所")
-    ;
+    /**
+     * 客户类别
+     */
+    YI_YUAN("医院"), GE_REN("个人"), JI_GONG_SUO("技工所"),ZHEN_SUO("诊所");
 
     final String desc;
 

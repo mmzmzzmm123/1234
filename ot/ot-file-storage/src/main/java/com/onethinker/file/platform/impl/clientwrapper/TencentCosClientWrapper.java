@@ -19,14 +19,14 @@ import java.io.InputStream;
  * @author yangyouqi
  * @date 2024/5/17
  */
-public class COSClientWrapper implements AutoCloseable {
+public class TencentCosClientWrapper implements AutoCloseable {
 
-    private static final Logger log = LoggerFactory.getLogger(COSClientWrapper.class);
+    private static final Logger log = LoggerFactory.getLogger(TencentCosClientWrapper.class);
 
 
     private final COSClient cosClient;
 
-    public COSClientWrapper(String secretId, String secretKey,String region) {
+    public TencentCosClientWrapper(String secretId, String secretKey, String region) {
         // 1 初始化用户身份信息（secretId, secretKey）。
         COSCredentials cred = new BasicCOSCredentials(secretId, secretKey);
         // 2 设置 bucket 的区域, COS 地域的简称请参照 https://cloud.tencent.com/document/product/436/6224

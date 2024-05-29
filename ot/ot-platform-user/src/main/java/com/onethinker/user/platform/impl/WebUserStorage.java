@@ -34,7 +34,6 @@ public class WebUserStorage implements UserStorage {
         this.userTypeEnum = PlatformUserTypeEnum.WEB;
     }
     @Override
-    @Transactional
     public void register(PlatformUserReqDTO reqDTO) {
         // 参数有效性校验
         reqDTO.existsParams();

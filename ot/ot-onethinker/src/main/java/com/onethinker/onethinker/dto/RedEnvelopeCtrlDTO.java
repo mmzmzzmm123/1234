@@ -1,12 +1,13 @@
 package com.onethinker.onethinker.dto;
 
+import cn.hutool.core.util.ObjectUtil;
 import com.onethinker.common.annotation.Excel;
 import com.onethinker.common.constant.AwardConstants;
 import com.onethinker.common.utils.MathUtils;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
-import org.springframework.util.StringUtils;
 
 /**
  * @author : yangyouqi
@@ -115,15 +116,12 @@ public class RedEnvelopeCtrlDTO {
 
     public void existsReqParams() {
         // 校验数据有效性
-        if (StringUtils.isEmpty(batchNo)) {
-            throw new RuntimeException("批次号不能为空");
+        Assert.notNull(batchNo, "批次号不能为空");
+        if (ObjectUtil.isEmpty(batchSum) || batchSum <= 0) {
+            batchSum = 1;
         }
-        if (StringUtils.isEmpty(batchSum) || batchSum <= 0) {
-            throw new RuntimeException("生成批次数最小为1");
-        }
-        if (StringUtils.isEmpty(createUserId)) {
-            throw new RuntimeException("生成管理员Id不能为空");
-        }
+        Assert.notNull(createUserId, "生成管理员Id不能为空");
+
         if (ObjectUtils.isEmpty(totalMoney) || ObjectUtils.isEmpty(totalSum) || totalMoney <= 0 || totalSum <= 0) {
             throw new RuntimeException("奖品总金额或奖品总数量不能为空");
         }
@@ -134,7 +132,7 @@ public class RedEnvelopeCtrlDTO {
         if (totalSum > totalMoney) {
             throw new RuntimeException("奖品金额分配不均");
         }
-        if (StringUtils.isEmpty(luckyAward)) {
+        if (ObjectUtil.isEmpty(luckyAward)) {
             luckyAward = 0;
         }
         if (AwardConstants.LUCKY_AWARD_TYPE_YES.equals(luckyAward)) {
@@ -166,9 +164,9 @@ public class RedEnvelopeCtrlDTO {
             }
         } else {
             // 随机生成
-            calculateRedEnvelopeDTO = CalculateRedEnvelopeDTO.CalculateRandomRedEnvelopView(totalMoney, totalSum, batchSum, luckyAwardMoney, luckyAwardCount);
+            calculateRedEnvelopeDTO = CalculateRedEnvelopeDTO.calculateRandomRedEnvelopView(totalMoney, totalSum, batchSum, luckyAwardMoney, luckyAwardCount);
         }
-        if (StringUtils.isEmpty(calculateRedEnvelopeDTO.getExistsSurplus()) || calculateRedEnvelopeDTO.getExistsSurplus() != 0) {
+        if (ObjectUtil.isEmpty(calculateRedEnvelopeDTO.getExistsSurplus()) || calculateRedEnvelopeDTO.getExistsSurplus() != 0) {
             log.info("最终分配的数据：{}", calculateRedEnvelopeDTO.getExistsSurplus());
             throw new RuntimeException("奖品金额分配不均");
         }

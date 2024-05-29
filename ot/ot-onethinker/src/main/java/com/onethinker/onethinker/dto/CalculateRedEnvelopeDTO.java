@@ -9,7 +9,7 @@ import java.util.Set;
 
 /**
  * @Title: RedEnvelopeView
- * @Author itmei
+ * @Author YYQ
  * @Package com.cloud.model.view.activity
  * @Date 2023/7/23 20:53
  * @description: 红包金额计算处理
@@ -17,32 +17,57 @@ import java.util.Set;
 @Data
 public class CalculateRedEnvelopeDTO {
 
-    // 总金额
+    /**
+     * 总金额
+     */
     private Long totalMoney;
-    // 总数量
+    /**
+     * 总数量
+     */
     private Integer totalSum;
-    // 总批次
+    /**
+     * 总批次
+     */
     private Integer totalBatch;
-    // 每一批金额
+    /**
+     * 每一批金额
+     */
     private Long batchMoney;
-    // 每一批奖品数
+    /**
+     * 每一批奖品数
+     */
     private Long batchNum;
 
-    // 总幸运奖金额
+    /**
+     * 总幸运奖金额
+     */
     private Long totalLuckyAwardMoney;
-    // 总幸运奖品数
+    /**
+     * 总幸运奖品数
+     */
     private Long totalLuckyAwardSum;
-    // 每一批幸运奖奖金额
+    /**
+     * 每一批幸运奖奖金额
+     */
     private Long batchluckyAwardMoney;
-    // 每一批幸运奖数
+    /**
+     * 每一批幸运奖数
+     */
     private Integer batchLuckyAwardNum;
 
-    // 总金额 % 总数量 是否为0
+    /**
+     * 总金额 % 总数量 是否为0
+     */
     private Integer existsSurplus;
 
 
     /**
-     * 不存在幸运奖时，通关总金额、总数量、总批次计算每一批金额和奖品数
+     * 不存在幸运奖时，通关总金额、总数量、总批次计算每批金额和奖品数
+     *
+     * @param totalMoney 总金额
+     * @param totalSum   总数量
+     * @param totalBatch 总批次
+     * @return 红包金额计算处理视图
      */
     public static CalculateRedEnvelopeDTO calculateRedEnvelopeBatchBaseInfo(Long totalMoney, Integer totalSum, Integer totalBatch) {
         CalculateRedEnvelopeDTO calculateRedEnvelopeDTO = new CalculateRedEnvelopeDTO();
@@ -65,22 +90,29 @@ public class CalculateRedEnvelopeDTO {
 
 
     /**
-     * 存在幸运奖时，通过总金额、总数量、总批次、幸运奖金额、幸运奖批次计算每一批金额和奖品数
+     * 存在幸运奖时，通过总金额、总数量、总批次、幸运奖金额、幸运奖批次计算每批金额和奖品数
+     *
+     * @param totalMoney           总金额
+     * @param totalSum             总数量
+     * @param totalBatch           总批次
+     * @param batchLuckyAwardMoney 幸运奖金额
+     * @param batchLuckyAwardNum   幸运奖批次
+     * @return 每批金额和奖品数
      */
     public static CalculateRedEnvelopeDTO calculateRedEnvelopeBatchBaseInfo(Long totalMoney, Integer totalSum, Integer totalBatch,
-                                                                            Long batchluckyAwardMoney, Integer batchluckyAwardNum) {
+                                                                            Long batchLuckyAwardMoney, Integer batchLuckyAwardNum) {
         CalculateRedEnvelopeDTO calculateRedEnvelopeDTO = new CalculateRedEnvelopeDTO();
         // 基本信息
         calculateRedEnvelopeDTO.setTotalMoney(totalMoney);
         calculateRedEnvelopeDTO.setTotalSum(totalSum);
         calculateRedEnvelopeDTO.setTotalBatch(totalBatch);
-        calculateRedEnvelopeDTO.setBatchluckyAwardMoney(batchluckyAwardMoney);
-        calculateRedEnvelopeDTO.setBatchLuckyAwardNum(batchluckyAwardNum);
+        calculateRedEnvelopeDTO.setBatchluckyAwardMoney(batchLuckyAwardMoney);
+        calculateRedEnvelopeDTO.setBatchLuckyAwardNum(batchLuckyAwardNum);
 
         // 幸运奖总数
-        long totalLuckyAwardSum = MathUtils.multiply(totalBatch, batchluckyAwardNum);
+        long totalLuckyAwardSum = MathUtils.multiply(totalBatch, batchLuckyAwardNum);
         // 幸运奖总金额
-        long totalLuckyAwardMoney = MathUtils.multiply(totalLuckyAwardSum, batchluckyAwardMoney);
+        long totalLuckyAwardMoney = MathUtils.multiply(totalLuckyAwardSum, batchLuckyAwardMoney);
         // 总剩余数量： 总数量 - 幸运奖数
         long surplusSum = MathUtils.subtract(totalSum, totalLuckyAwardSum);
         if (surplusSum < 0) {
@@ -110,26 +142,26 @@ public class CalculateRedEnvelopeDTO {
     /**
      * 计算随机数据
      *
-     * @param totalMoney
-     * @param totalSum
-     * @param totalBatch
-     * @param batchluckyAwardMoney
-     * @param batchluckyAwardNum
-     * @return
+     * @param totalMoney           总金额
+     * @param totalSum             总数量
+     * @param totalBatch           总批次
+     * @param batchLuckyAwardMoney 幸运奖金额
+     * @param batchLuckyAwardNum   幸运奖批次
+     * @return 随机数据
      */
-    public static CalculateRedEnvelopeDTO CalculateRandomRedEnvelopView(Long totalMoney, Integer totalSum, Integer totalBatch, Long batchluckyAwardMoney, Integer batchluckyAwardNum) {
+    public static CalculateRedEnvelopeDTO calculateRandomRedEnvelopView(Long totalMoney, Integer totalSum, Integer totalBatch, Long batchLuckyAwardMoney, Integer batchLuckyAwardNum) {
 
         CalculateRedEnvelopeDTO calculateRedEnvelopeDTO = new CalculateRedEnvelopeDTO();
         // 基本信息
         calculateRedEnvelopeDTO.setTotalMoney(totalMoney);
         calculateRedEnvelopeDTO.setTotalSum(totalSum);
         calculateRedEnvelopeDTO.setTotalBatch(totalBatch);
-        calculateRedEnvelopeDTO.setBatchluckyAwardMoney(batchluckyAwardMoney);
-        calculateRedEnvelopeDTO.setBatchLuckyAwardNum(batchluckyAwardNum);
+        calculateRedEnvelopeDTO.setBatchluckyAwardMoney(batchLuckyAwardMoney);
+        calculateRedEnvelopeDTO.setBatchLuckyAwardNum(batchLuckyAwardNum);
         // 幸运奖总数
-        long totalLuckyAwardSum = MathUtils.multiply(totalBatch, batchluckyAwardNum);
+        long totalLuckyAwardSum = MathUtils.multiply(totalBatch, batchLuckyAwardNum);
         // 幸运奖总金额
-        long totalLuckyAwardMoney = MathUtils.multiply(totalLuckyAwardSum, batchluckyAwardMoney);
+        long totalLuckyAwardMoney = MathUtils.multiply(totalLuckyAwardSum, batchLuckyAwardMoney);
         // 总剩余数量： 总数量 - 幸运奖数
         long surplusSum = MathUtils.subtract(totalSum, totalLuckyAwardSum);
         if (surplusSum < 0) {
@@ -146,7 +178,6 @@ public class CalculateRedEnvelopeDTO {
         Integer existsSurplus = MathUtils.subtract(surplusMoney, surplusSum) > 0 ? 0 : 1;
 
         // 这里是随机生成，所以这里就不赋值操作了
-//        calculateRedEnvelopeView.setBatchMoney(batchMoney);
         calculateRedEnvelopeDTO.setBatchNum(batchNum);
         calculateRedEnvelopeDTO.setTotalLuckyAwardMoney(totalLuckyAwardMoney);
         calculateRedEnvelopeDTO.setTotalLuckyAwardSum(totalLuckyAwardSum);
@@ -161,7 +192,7 @@ public class CalculateRedEnvelopeDTO {
      *
      * @param batchNum         : 批次数
      * @param luckyAwardCount: 幸运数
-     * @return
+     * @return 幸运奖数
      */
     public static Set<Integer> calculatedLuckyPosition(Long batchNum, Integer luckyAwardCount) {
         Set<Integer> luckyPositions = new HashSet<>();
@@ -184,10 +215,5 @@ public class CalculateRedEnvelopeDTO {
             }
         }
         return luckyPositions;
-    }
-
-    public static void main(String[] args) {
-
-        System.out.println(calculatedLuckyPosition(4L, 3));
     }
 }

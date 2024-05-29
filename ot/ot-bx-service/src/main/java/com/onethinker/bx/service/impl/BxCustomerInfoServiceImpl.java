@@ -182,7 +182,7 @@ public class BxCustomerInfoServiceImpl extends ServiceImpl<BxCustomerInfoMapper,
                 bxCustomerInfo.setCreateTime(bxCustomerInfo.getDate());
             }
             bxCustomerInfo.setCreateBy("onethinker");
-            if (!StringUtils.isEmpty(bxCustomerInfo.getDeliveryType()) && bxCustomerInfo.getDeliveryType().length() >= 4) {
+            if (!StringUtils.isEmpty(bxCustomerInfo.getDeliveryType()) && bxCustomerInfo.getDeliveryType().length() >= DeliveryTypeEnum.SF.getDesc().length()) {
                 if (bxCustomerInfo.getDeliveryType().contains(DeliveryTypeEnum.SF_SHORT.getDesc())) {
                     bxCustomerInfo.setDeliveryType(DeliveryTypeEnum.SF.getDesc());
                 } else {

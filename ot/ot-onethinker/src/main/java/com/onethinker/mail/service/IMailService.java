@@ -9,7 +9,8 @@ public interface IMailService {
     /**
      * 发送验证码处理
      *
-     * @param place
+     * @param place 用户
+     * @param code 验证码
      */
     void sendMailCode(String place, int code);
 }

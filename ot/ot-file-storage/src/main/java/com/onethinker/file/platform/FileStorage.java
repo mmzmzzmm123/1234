@@ -49,13 +49,18 @@ public interface FileStorage {
     String THUMBNAIL_FILE = "thumb.jpg";
     String WATERMARK_FILE = "watermark.jpg";
     String UPLOAD_PATH = "/file-server";
+
     /**
      * 获取平台
+     *
+     * @return 返回平台内容
      */
     String getPlatform();
 
     /**
      * 获取访问链接
+     *
+     * @return 返回域名信息
      */
     String getDomain();
 
@@ -63,30 +68,37 @@ public interface FileStorage {
      * 上传文件
      *
      * @param file 文件内容
+     * @return 返回文件信息
      */
     FileInfo upload(MultipartFile file);
 
     /**
      * 上传文件
+     *
+     * @return 返回文件信息
      */
     FileInfo upload();
 
     /**
      * 设置文件来源信息
      *
-     * @param source   文件资源
+     * @param source 文件资源
+     * @return 返回对应平台文件处理
      */
     FileStorage serFile(MultipartFile source);
 
     /**
      * 下载文件信息
-     * @param fileInfoDTO
-     * @return
+     *
+     * @param fileInfoDTO 文件信息
+     * @return 返回文件下载
+     * @throws FileNotFoundException 文件不存在
      */
     FileInputStream download(FileInfoDTO fileInfoDTO) throws FileNotFoundException;
 
     /**
      * 生成其他图片信息
+     *
      * @param formFileUploadSuccessEvent formFileUploadSuccessEvent
      */
     void handleFormFileUploadSuccessEvent(FormFileUploadSuccessEvent formFileUploadSuccessEvent);
@@ -95,7 +107,7 @@ public interface FileStorage {
      * 设置文件指纹
      *
      * @param multipartFile fileInfo
-     * @return
+     * @return 返回MD5
      */
     default String queryFingerprint(MultipartFile multipartFile) {
         try (InputStream is = multipartFile.getInputStream()) {
@@ -109,13 +121,13 @@ public interface FileStorage {
     /**
      * 检测文件的MIME类型
      *
-     * @param file fileInfo
+     * @param file      fileInfo
      * @param allowMime allowMime
-     * @return
+     * @return 返回文件扩展名
      */
     default String queryDetectMime(MultipartFile file, List<String> allowMime) {
         Tika tika = new Tika();
-        try (InputStream inputStream = file.getInputStream()){
+        try (InputStream inputStream = file.getInputStream()) {
             String detect = tika.detect(inputStream);
             if (!StringUtils.isBlank(detect)) {
                 String flag = ";";
@@ -137,13 +149,15 @@ public interface FileStorage {
      * 获取文件全路径（相对存储平台的存储路径）
      *
      * @param basePath 基本路径
+     * @param fileInfo 文件信息
+     * @return 返回文件路径
      */
     default String getFileKey(String basePath, FileInfo fileInfo) {
         LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Shanghai"));
         String id = UUID.randomUUID().toString().replaceAll("-", "");
         fileInfo.setId(id);
         // 获取文件全路径（相对存储平台的存储路径）
-        return String.join("/", basePath, "form", String.valueOf(now.getYear()), String.valueOf(now.getMonthValue()), String.valueOf(now.getDayOfMonth()), id, "data");
+        return String.join(File.separator, basePath, "form", String.valueOf(now.getYear()), String.valueOf(now.getMonthValue()), String.valueOf(now.getDayOfMonth()), id, "data");
     }
 
     /**
@@ -166,6 +180,13 @@ public interface FileStorage {
         return null;
     }
 
+    /**
+     * 获取文件扩展名
+     *
+     * @param fileName   文件全名
+     * @param extensions 文件校验
+     * @return 文件扩展名
+     */
     default String getExtension(String fileName, List<String> extensions) {
         String extension = getExtension(fileName);
         if (CollectionUtils.isNotEmpty(extensions) && !extensions.contains(extension)) {
@@ -174,6 +195,12 @@ public interface FileStorage {
         return StringUtils.lowerCase(extension);
     }
 
+    /**
+     * 获取图片信息
+     *
+     * @param file 文件
+     * @return 图片信息
+     */
     default int[] getImgSize(File file) {
         try {
             BufferedImage img = ImageIO.read(file);
@@ -183,8 +210,15 @@ public interface FileStorage {
         }
     }
 
+
+    /**
+     * 获取图片信息
+     *
+     * @param file 文件
+     * @return 图片信息
+     */
     default int[] getImgSize(MultipartFile file) {
-        try (InputStream inputStream = file.getInputStream()){
+        try (InputStream inputStream = file.getInputStream()) {
             BufferedImage img = ImageIO.read(inputStream);
             return new int[]{img.getWidth(), img.getHeight()};
         } catch (IOException e) {
@@ -192,17 +226,36 @@ public interface FileStorage {
         }
     }
 
+    /**
+     * 获取图片信息
+     *
+     * @param dataFile 文件
+     * @param type     文件类型
+     * @return 图片信息
+     */
     default Path getTransFile(Path dataFile, String type) {
         return Paths.get(dataFile.getParent().toString(), String.join(".", DATA_FILE, type));
     }
 
+    /**
+     * 获取图片信息
+     *
+     * @param path 文件
+     * @param type     文件类型
+     * @return 图片信息
+     */
     default String getTransFile(String path, String type) {
-        if (ObjectUtils.isNotEmpty(path) && !path.endsWith("/")) {
-            path = path + "/";
+        if (ObjectUtils.isNotEmpty(path) && !path.endsWith(File.separator)) {
+            path = path + File.separator;
         }
         return path + String.join(".", DATA_FILE, type);
     }
 
+    /**
+     * 获取图片信息
+     * @param userId 用户id
+     * @return 图片信息
+     */
     default BufferedImage getWatermark(String userId) {
         final Font font = new Font(null, Font.PLAIN, 12);
         BufferedImage image = new BufferedImage(262, 35, BufferedImage.TYPE_INT_RGB);
@@ -222,6 +275,14 @@ public interface FileStorage {
         return image;
     }
 
+    /**
+     * 获取图片流信息
+     * @param source 文件来源
+     * @param fileInfo 文件信息
+     * @param waterMark 图片信息
+     * @return 图片流
+     * @throws IOException io异常
+     */
     default InputStream processWatermark(MultipartFile source, FileInfo fileInfo, WaterMark waterMark) throws IOException {
         log.debug("Start Process Watermark:{},{}", fileInfo.getId(), fileInfo.getCreateUserId());
         if (waterMark == null || !waterMark.isEnabled()) {
@@ -239,7 +300,7 @@ public interface FileStorage {
         if (imgSize[0] > minWidth && imgSize[1] > minHeight) {
             log.debug("Start Process Watermark:{}", fileInfo.getId());
             Thumbnails.Builder<BufferedImage> builder;
-            try (InputStream is = source.getInputStream()){
+            try (InputStream is = source.getInputStream()) {
                 builder = Thumbnails.of(ImageIO.read(is));
             }
             BufferedImage bufferedImage = getWatermark(fileInfo.getCreateUserId());
@@ -255,13 +316,21 @@ public interface FileStorage {
             }
             // 将图像写入到 ByteArrayOutputStream 中
             ByteArrayOutputStream os = new ByteArrayOutputStream();
-            builder.scale(1).outputFormat(fileInfo.getExtension().replace(".","")).toOutputStream(os);
+            builder.scale(1).outputFormat(fileInfo.getExtension().replace(".", "")).toOutputStream(os);
             return new ByteArrayInputStream(os.toByteArray());
         }
         return null;
     }
 
 
+    /**
+     * 获取图片流信息
+     * @param source 文件来源
+     * @param fileInfo 文件信息
+     * @param thumbnail 图片信息
+     * @return 图片流
+     * @throws IOException io异常
+     */
     default InputStream processThumbnail(MultipartFile source, FileInfo fileInfo, Thumbnail thumbnail) throws IOException {
         log.debug("Start Process Thumbnail:{}", fileInfo.getId());
         int width = DEFAULT_THUMBNAIL_SIZE;
@@ -274,18 +343,26 @@ public interface FileStorage {
         }
         // 将图像写入到 ByteArrayOutputStream 中
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        try (InputStream is = source.getInputStream()){
+        try (InputStream is = source.getInputStream()) {
             Thumbnails.of(is).size(width, height).outputQuality(quality).toOutputStream(os);
         }
         return new ByteArrayInputStream(os.toByteArray());
     }
 
+    /**
+     * 获取图片路径信息
+     * @param source 文件来源
+     * @param fileInfo 文件信息
+     * @param filePath 图片路径
+     * @return 图片路径信息
+     * @throws IOException io异常
+     */
     default Path processWebp(MultipartFile source, FileInfo fileInfo, String filePath) throws IOException {
         if (isWindows()) {
             filePath = "C:\\" + filePath;
         }
-        log.debug("Start Process Webp:{},{}", fileInfo.getId(),filePath);
-        File tempFile = new File(filePath + "/" + DATA_FILE);
+        log.debug("Start Process Webp:{},{}", fileInfo.getId(), filePath);
+        File tempFile = new File(filePath + File.separator + DATA_FILE);
         if (!tempFile.exists()) {
             tempFile.mkdirs();
             // 创建临时文件
@@ -309,13 +386,21 @@ public interface FileStorage {
         return webpFile;
     }
 
+    /**
+     * 获取图片路径信息
+     * @param source 文件来源
+     * @param fileInfo 文件信息
+     * @param filePath 图片路径
+     * @return 图片路径信息
+     * @throws IOException io异常
+     */
     default Path processWebpOriginal(MultipartFile source, FileInfo fileInfo, String filePath) throws IOException {
         // 创建临时文件
         if (isWindows()) {
             filePath = "C:\\" + filePath;
         }
-        log.debug("Start Process Webp Original:{},{}", fileInfo.getId(),filePath);
-        File tempFile = new File(filePath + "/" + DATA_FILE);
+        log.debug("Start Process Webp Original:{},{}", fileInfo.getId(), filePath);
+        File tempFile = new File(filePath + File.separator + DATA_FILE);
         if (!tempFile.exists()) {
             tempFile.mkdirs();
             // 将MultipartFile转换为临时文件
@@ -331,6 +416,10 @@ public interface FileStorage {
         return webpOriginalFile;
     }
 
+    /**
+     * 判断是否是win环境
+     * @return 是否是win环境
+     */
     default boolean isWindows() {
         return (System.getProperty("os.name").toLowerCase().contains("win"));
     }
@@ -353,6 +442,11 @@ public interface FileStorage {
         }
     }
 
+    /**
+     * 删除指定路径的目录及其所有内容
+     * @param path 目录的路径
+     * @throws IOException io异常
+     */
     default void deleteRecursively(Path path) throws IOException {
         if (Files.isDirectory(path)) {
             try (DirectoryStream<Path> entries = Files.newDirectoryStream(path)) {
@@ -366,8 +460,10 @@ public interface FileStorage {
 
     /**
      * 获取临时文件流信息
-     * @param inputStream
-     * @return
+     *
+     * @param inputStream 文件流
+     * @return 文件信息
+     * @throws IOException io异常
      */
     default File queryFileInputStream(InputStream inputStream) throws IOException {
         File tempFile = File.createTempFile("temp", null);
@@ -378,7 +474,7 @@ public interface FileStorage {
                 fileOutputStream.write(buffer, 0, bytesRead);
             }
             return tempFile;
-        }catch (Exception e) {
+        } catch (Exception e) {
             log.error("文件流处理异常");
             throw new RuntimeException("文件流处理异常：" + e.getMessage());
         }

@@ -1,11 +1,9 @@
 package com.onethinker.user.platform.impl;
 
 import cn.hutool.core.lang.Assert;
-import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.PlatformUserTypeEnum;
 import com.onethinker.common.utils.StringUtils;
 import com.onethinker.framework.web.service.SysLoginService;
-import com.onethinker.system.service.ISysConfigService;
 import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
@@ -57,7 +55,7 @@ public class WxUserStorage implements UserStorage {
         Assert.isTrue(StringUtils.isNotEmpty(reqDTO.getCode()),"code is null");
         log.info("platform:{},code:{}",userTypeEnum.getMsg(),reqDTO.getCode());
         // 进行访问
-        String dataId = minWechatService.getIMinWechatOpenIdByCode(reqDTO.getCode());
+        String dataId = minWechatService.getMinWechatOpenIdByCode(reqDTO.getCode());
         reqDTO.setDataId(dataId);
         PlatformUser platformUser = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
         if (ObjectUtils.isEmpty(platformUser)) {

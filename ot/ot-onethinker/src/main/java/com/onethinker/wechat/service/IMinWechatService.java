@@ -16,16 +16,16 @@ public interface IMinWechatService {
      * 获取登录后的session信息.
      *
      * @param code 登录时获取的 code
-     * @return .
+     * @return 微信用户信息
      */
     WxMaJscode2SessionResult getSessionInfo(String code);
 
     /**
      * 获取openId
      * @param code 登录时获取的 code
-     * @return
+     * @return openId
      */
-    String getIMinWechatOpenIdByCode(String code);
+    String getMinWechatOpenIdByCode(String code);
 
 
     /**
@@ -34,17 +34,19 @@ public interface IMinWechatService {
      * @param sessionKey    会话密钥
      * @param encryptedData 消息密文
      * @param ivStr         加密算法的初始向量
+     *
+     * @return 微信用户信息
      */
     WxMaUserInfo getUserInfo(String sessionKey, String encryptedData, String ivStr);
 
     /**
      * <pre>
-     * 发送订阅消息
-     * https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.send.html
+     *
+     * <a href="https://developers.weixin.qq.com/miniprogram/dev/api-backend/open-api/subscribe-message/subscribeMessage.send.html">发送订阅消息官方文档</a>
      * </pre>
      *
      * @param subscribeMessage 订阅消息
-     * @throws WxErrorException .
+     * @throws WxErrorException 微信异常
      */
     void sendSubscribeMsg(WxMaSubscribeMessage subscribeMessage) throws WxErrorException;
 }

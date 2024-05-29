@@ -62,10 +62,8 @@ public interface PlatformUserIntegralMapper {
     /**
      * 更新用户积分信息
      *
-     * @param integral         所添加积分
-     * @param residualIntegral 原账号剩余积分
-     * @param id
-     * @return
+     * @param params         请求参数
+     * @return 结果
      */
     int updateIntegralByResidualIntegralAndId(PlatformUserIntegral params);
 }

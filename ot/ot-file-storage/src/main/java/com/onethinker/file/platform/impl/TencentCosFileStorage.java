@@ -7,7 +7,7 @@ import com.onethinker.common.config.FileStorageProperties.*;
 import com.onethinker.file.dto.FileInfoDTO;
 import com.onethinker.file.event.FormFileUploadSuccessEvent;
 import com.onethinker.file.platform.FileStorage;
-import com.onethinker.file.platform.impl.clientwrapper.COSClientWrapper;
+import com.onethinker.file.platform.impl.clientwrapper.TencentCosClientWrapper;
 import com.qcloud.cos.model.COSObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -56,7 +56,7 @@ public class TencentCosFileStorage implements FileStorage {
     public FileInfo upload(MultipartFile file) {
         Assert.isTrue(enableStorage,"enableStorage is False");
         this.setSource(file);
-        try (COSClientWrapper cosClient = new COSClientWrapper(secretId, secretKey, region)) {
+        try (TencentCosClientWrapper cosClient = new TencentCosClientWrapper(secretId, secretKey, region)) {
             FileInfo fileInfo = new FileInfo();
             // 指定要上传到 COS 上对象键 (也是最终访问地址)
             String newKey = getFileKey(basePath, fileInfo);
@@ -86,7 +86,7 @@ public class TencentCosFileStorage implements FileStorage {
 
     @Override
     public FileInputStream download(FileInfoDTO fileInfoDTO) {
-        try (COSClientWrapper cosClient = new COSClientWrapper(secretId, secretKey, region)){
+        try (TencentCosClientWrapper cosClient = new TencentCosClientWrapper(secretId, secretKey, region)){
             COSObject cosObject = cosClient.getObject(bucketName, fileInfoDTO.getDiskPath());
             // 保存到临时文件中
             File tempFile = queryFileInputStream(cosObject.getObjectContent());
@@ -104,11 +104,11 @@ public class TencentCosFileStorage implements FileStorage {
         String fileMimeType = formFileUploadSuccessEvent.getMimeType();
         if (fileMimeType != null && fileMimeType.startsWith(IMAGE)) {
             log.debug("Start Process Image Ext:{}", formFileUploadSuccessEvent.getId());
-            try (COSClientWrapper cosClientWrapper = new COSClientWrapper(secretId, secretKey, region)) {
-                processWatermark(fileInfo, cosClientWrapper);
-                processThumbnail(fileInfo, cosClientWrapper);
-                processWebp(fileInfo, cosClientWrapper);
-                processWebpOriginal(fileInfo, cosClientWrapper);
+            try (TencentCosClientWrapper tencentCosClientWrapper = new TencentCosClientWrapper(secretId, secretKey, region)) {
+                processWatermark(fileInfo, tencentCosClientWrapper);
+                processThumbnail(fileInfo, tencentCosClientWrapper);
+                processWebp(fileInfo, tencentCosClientWrapper);
+                processWebpOriginal(fileInfo, tencentCosClientWrapper);
             } catch (Exception e) {
                 log.error("{}客户端连接有误",platform, e);
             } finally {
@@ -120,7 +120,7 @@ public class TencentCosFileStorage implements FileStorage {
         }
     }
 
-    private void processWebpOriginal(FileInfo fileInfo, COSClientWrapper cosClient) {
+    private void processWebpOriginal(FileInfo fileInfo, TencentCosClientWrapper cosClient) {
         try {
             Path path = processWebpOriginal(source, fileInfo,basePath + "/" + fileInfo.getId());
             String newKey = getTransFile(fileInfo.getPath(), WEBP_ORIGINAL_FILE);
@@ -131,7 +131,7 @@ public class TencentCosFileStorage implements FileStorage {
         log.debug("Finish Process Webp Original:{}", fileInfo.getId());
     }
 
-    private void processWebp(FileInfo fileInfo, COSClientWrapper cosClient) {
+    private void processWebp(FileInfo fileInfo, TencentCosClientWrapper cosClient) {
         log.debug("Start Process Webp:{}", fileInfo.getId());
         try {
             Path webpFile = processWebp(source, fileInfo,basePath + "/" + fileInfo.getId());
@@ -143,7 +143,7 @@ public class TencentCosFileStorage implements FileStorage {
         log.debug("Finish Process Webp:{}", fileInfo.getId());
     }
 
-    private void processThumbnail(FileInfo fileInfo, COSClientWrapper cosClient) {
+    private void processThumbnail(FileInfo fileInfo, TencentCosClientWrapper cosClient) {
         try (InputStream is = processThumbnail(source, fileInfo, thumbnail)) {
             String newKey = getTransFile(fileInfo.getPath(), THUMBNAIL_FILE);
             // 上传到腾讯云存储对象中
@@ -154,10 +154,10 @@ public class TencentCosFileStorage implements FileStorage {
         log.debug("Finish Process Thumbnail:{}", fileInfo.getId());
     }
 
-    private void processWatermark(FileInfo fileInfo, COSClientWrapper cosClientWrapper) {
+    private void processWatermark(FileInfo fileInfo, TencentCosClientWrapper tencentCosClientWrapper) {
         try (InputStream is = processWatermark(source, fileInfo, waterMark)) {
             String newKey = getTransFile(fileInfo.getPath(), WATERMARK_FILE);
-            cosClientWrapper.putObject(bucketName, newKey, is);
+            tencentCosClientWrapper.putObject(bucketName, newKey, is);
         } catch (Exception e) {
             log.error("Process Thumbnail Error:{}", fileInfo.getId(), e);
         }

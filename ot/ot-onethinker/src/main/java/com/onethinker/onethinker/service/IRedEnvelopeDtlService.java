@@ -40,6 +40,7 @@ public interface IRedEnvelopeDtlService {
      * 修改红包明细
      *
      * @param redEnvelopeDtl 红包明细
+     * @param qrCodeStatus 二维码状态
      * @return 结果
      */
     public int updateRedEnvelopeDtl(RedEnvelopeDtl redEnvelopeDtl, Integer qrCodeStatus);
@@ -63,8 +64,8 @@ public interface IRedEnvelopeDtlService {
     /**
      * 创建二维码内容
      *
-     * @param redEnvelopeDtl
-     * @return
+     * @param redEnvelopeDtl 红包明细详情
+     * @return 二维码内容
      */
     String createQrCodeBaseInfo(RedEnvelopeDtl redEnvelopeDtl);
 }

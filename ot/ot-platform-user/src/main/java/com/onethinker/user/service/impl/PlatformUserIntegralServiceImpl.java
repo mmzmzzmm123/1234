@@ -148,18 +148,17 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
         PlatformUserIntegral userIntegral = getIntegral(dataId, activityId);
         // 查redis看是否存在更新中的数据
         String key = redisKey + "deductIntegral:" + dataId + ":" + integral;
-        if (redisCache.hasKey(key))  throw new RuntimeException("当前存在相同的积分数据，请稍后再扣除吧");
+        if (redisCache.hasKey(key)) {
+            throw new RuntimeException("当前存在相同的积分数据，请稍后再扣除吧" + dataId);
+        }
         redisCache.setCacheObject(key, LocalDateTime.now(), 1, TimeUnit.HOURS);
         try {
-            if (Objects.isNull(userIntegral)) {
-                throw new RuntimeException("用户积分不足");
-            } else {
-                Assert.isTrue(userIntegral.getResidualIntegral() > integral,"用户积分不足");
-                userIntegral.setUpdateTime(new Date());
-                userIntegral.setUpdateBy(SecurityUtils.getLoginUser().getUsername());
-                userIntegral.setResidualIntegral(userIntegral.getResidualIntegral() - integral);
-                // 调用更新接口
-            }
+            Assert.isTrue(Objects.nonNull(userIntegral), "用户积分不足");
+            Assert.isTrue(userIntegral.getResidualIntegral() > integral, "用户积分不足");
+            userIntegral.setUpdateTime(new Date());
+            userIntegral.setUpdateBy(SecurityUtils.getLoginUser().getUsername());
+            userIntegral.setResidualIntegral(userIntegral.getResidualIntegral() - integral);
+            // 调用更新接口
             // 保存历史记录接口
             applicationContext.publishEvent(new ActionUserIntegralSuccessEvent(userIntegral, integralType, integral));
         } catch (Exception e) {
@@ -183,7 +182,7 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
             return redisCache.getCacheObject(key);
         }
         LambdaQueryWrapper<PlatformUserIntegral> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PlatformUserIntegral::getDataId, dataId).eq(PlatformUserIntegral::getBatchNo,activityId).eq(PlatformUserIntegral::getEnabled, SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
+        queryWrapper.eq(PlatformUserIntegral::getDataId, dataId).eq(PlatformUserIntegral::getBatchNo, activityId).eq(PlatformUserIntegral::getEnabled, SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
         // 查询返回
         return null;
     }
@@ -200,7 +199,7 @@ public class PlatformUserIntegralServiceImpl implements IPlatformUserIntegralSer
             return redisCache.getCacheObject(key);
         }
         LambdaQueryWrapper<PlatformUserIntegralHistory> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(PlatformUserIntegralHistory::getDataId, dataId).eq(PlatformUserIntegralHistory::getBatchNo,activityId).eq(PlatformUserIntegralHistory::getEnabled, SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
+        queryWrapper.eq(PlatformUserIntegralHistory::getDataId, dataId).eq(PlatformUserIntegralHistory::getBatchNo, activityId).eq(PlatformUserIntegralHistory::getEnabled, SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
         // 查询返回
         return null;
     }
