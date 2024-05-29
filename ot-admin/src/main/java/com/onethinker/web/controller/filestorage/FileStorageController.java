@@ -79,9 +79,9 @@ public class FileStorageController extends BaseController {
     @PostMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/upload",
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public AjaxResult uploadFile(@RequestParam(name = "file") MultipartFile file,
-                                 @RequestParam(name = "relation_type") FileRelationTypeEnum relationType,
-                                 @RequestParam(name = "user_id",required = false) String userId,
-                                 @RequestParam(name = "tenant_id", defaultValue = SystemConst.DEFAULT_TENANT_ID) String tenantId,
+                                 @RequestParam(name = "relationType") FileRelationTypeEnum relationType,
+                                 @RequestParam(name = "userId",required = false) String userId,
+                                 @RequestParam(name = "tenantId", defaultValue = SystemConst.DEFAULT_TENANT_ID) String tenantId,
                                  @RequestParam(name = "attr", required = false) String attr) {
         if (StringUtils.isEmpty(userId) && Objects.isNull(SecurityUtils.getUserId())) {
             throw new RuntimeException("用户id不能为空");
@@ -122,9 +122,9 @@ public class FileStorageController extends BaseController {
 
         // 头像进行更新用户信息
         if (FileRelationTypeEnum.ADMIN_AVATAR.equals(relationType)) {
-            userService.updateUserAvatar(loginUser.getUsername(), fileInfo.getId());
+            userService.updateUserAvatar(loginUser.getUsername(), fileStorageService.getFileStorage().getDomain() + fileInfo.getPath());
             // 更新缓存用户头像
-            loginUser.getUser().setAvatar(fileInfo.getId());
+            loginUser.getUser().setAvatar(fileStorageService.getFileStorage().getDomain() + fileInfo.getPath());
             tokenService.setLoginUser(loginUser);
         }
         applicationContext.publishEvent(formFileUploadSuccessEvent);

@@ -13,7 +13,7 @@ config:
     # 本地存储
     local:
       # 访问域名
-      domain: http://127.0.0.1:18081/
+      domain: http://127.0.0.1
     # 腾讯云 COS
     tencent-cos:
       # 存储平台标识
