@@ -1,4 +1,4 @@
-package com.onethinker.web.controller.weatherInfo;
+package com.onethinker.web.controller.weatherinfo;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class WeatherInfoController extends BaseController {
     @PostMapping(ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, WeatherInfo weatherInfo) {
         List<WeatherInfo> list = weatherInfoService.selectWeatherInfoList(weatherInfo);
-        ExcelUtil<WeatherInfo> util = new ExcelUtil<WeatherInfo>(WeatherInfo.class);
+        ExcelUtil<WeatherInfo> util = new ExcelUtil<>(WeatherInfo.class);
         util.exportExcel(response, list, "天气预报最新结果数据");
     }
 

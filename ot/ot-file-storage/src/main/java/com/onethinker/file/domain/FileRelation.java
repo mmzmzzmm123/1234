@@ -89,15 +89,21 @@ public class FileRelation implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateTime;
 
+    /**
+     * 文件扩展数据
+     */
+    private String attr;
+
 
     public FileRelation() {
     }
 
-    public FileRelation(FileInfo fileInfo, String relationType) {
+    public FileRelation(FileInfo fileInfo, String relationType,String attr) {
         this.tenantId = fileInfo.getTenantId();
         this.fileId = fileInfo.getId();
         this.delFlag = 0;
         this.relationType = relationType;
+        this.attr = attr;
     }
 
 

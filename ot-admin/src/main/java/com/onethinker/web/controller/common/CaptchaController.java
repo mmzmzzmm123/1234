@@ -7,6 +7,7 @@ import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.CacheEnum;
+import com.onethinker.common.enums.CaptchaTypeEnum;
 import com.onethinker.common.utils.sign.Base64;
 import com.onethinker.common.utils.uuid.IdUtils;
 import com.onethinker.system.service.ISysConfigService;
@@ -48,7 +49,7 @@ public class CaptchaController {
      * 生成验证码
      */
     @GetMapping(ServicePathConstant.PREFIX_PUBLIC_PATH + "/captchaImage")
-    public AjaxResult getCode(HttpServletResponse response) throws IOException {
+    public AjaxResult getCode() {
         AjaxResult ajax = AjaxResult.success();
         boolean captchaEnabled = configService.selectCaptchaEnabled();
         ajax.put("captchaEnabled", captchaEnabled);
@@ -60,17 +61,17 @@ public class CaptchaController {
         String uuid = IdUtils.simpleUuid();
         String verifyKey = CacheEnum.CAPTCHA_CODE_KEY.getCode() + uuid;
 
-        String capStr = null, code = null;
-        BufferedImage image = null;
+        String capStr, code;
+        BufferedImage image;
 
         // 生成验证码
         String captchaType = onethinkerConfig.getCaptchaType();
-        if ("math".equals(captchaType)) {
+        if (CaptchaTypeEnum.MATH.getValue().equals(captchaType)) {
             String capText = captchaProducerMath.createText();
             capStr = capText.substring(0, capText.lastIndexOf("@"));
             code = capText.substring(capText.lastIndexOf("@") + 1);
             image = captchaProducerMath.createImage(capStr);
-        } else if ("char".equals(captchaType)) {
+        } else if (CaptchaTypeEnum.CHAR.getValue().equals(captchaType)) {
             capStr = code = captchaProducer.createText();
             image = captchaProducer.createImage(capStr);
         } else {
