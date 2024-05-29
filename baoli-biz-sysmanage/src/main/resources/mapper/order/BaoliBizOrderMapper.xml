@@ -86,10 +86,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="cardPersonRate"    column="card_person_rate"    />
         <result property="storeFeeRate"    column="store_fee_rate"    />
         <result property="rebateRate"    column="rebate_rate"    />
+        <result property="fee1"    column="fee1"    />
+        <result property="fee2"    column="fee2"    />
+        <result property="fee3"    column="fee3"    />
+        <result property="fee4"    column="fee4"    />
+        <result property="storeFee"    column="store_fee"    />
+
     </resultMap>
 
     <sql id="selectBaoliBizOrderVo">
-        select a.public_account,a.account_name,a.card_person_rate,a.store_fee_rate,a.rebate_rate,a.license_date,a.adjust_loan_amount,a.work_place_location,a.domicile_place_location,a.gender,a.property_type,a.offer_trans_records,a.psbc_bank_vip,a.license_location_type,a.license_location,a.mortgage_date,a.submit_date,a.share_date,a.release_loan_date,a.detail_info_files,a.upload_loan_files,a.upload_archive_files,a.label,a.province_id,(select b.nick_name from sys_user b where b.user_id = a.applicant_id) applicant_name,(select b.city from bl_sys_cities b where b.cityid = a.city) city_name,(select b.name from baoli_biz_store b where b.id = a.store_id) store_name,concat((SELECT dict_label FROM sys_dict_data b where dict_type ='bl_biz_bank' and b.dict_value =(select agency from bl_sys_bank c where c.id = a.bank)),'/', (select `name` from bl_sys_bank b where b.id = a.bank)) bank_name,(select b.nick_name from sys_user b where b.user_id = a.inner_officer) inner_officer_name,concat((select b.`name` from  baoli_biz_car_brand b where b.id = a.level1_brand_id),' / ',(select b.`name` from  baoli_biz_car_brand b where b.id = a.level2_brand_id)) as brand_name,(select b.name from baoli_biz_car_series b where b.id = a.car_series_id) car_series_name,(select b.name from baoli_biz_car_model b where b.id = a.car_model_id) car_model_name,id, guide_price,status,refuse_order_id,applicant_id,order_schema, city, store_level, store_id, car_type, loan_type, order_number, bank, inner_officer, customer_name, apply_number, new_energy, invoice_price, loan_amount, down_payment, loan_ratio, period_number, supply_material_type, customer_phone_number, customer_work_union, is_discount, fee_ratio, is_hxr, business_number, credit_card_number, customer_age, married, exists_drive_license, domicile_type, work_place, work_field, work_category, education, companion_relationship, companion_number, create_time, update_time, create_by, update_by,level1_brand_id,level2_brand_id,car_series_id,car_model_id from baoli_biz_order a
+        select (ifnull(loan_amount,0) * ifnull(rebate_rate,0) /100) store_fee,a.fee1,a.fee2,a.fee3,a.fee4,a.public_account,a.account_name,a.card_person_rate,a.store_fee_rate,a.rebate_rate,a.license_date,a.adjust_loan_amount,a.work_place_location,a.domicile_place_location,a.gender,a.property_type,a.offer_trans_records,a.psbc_bank_vip,a.license_location_type,a.license_location,a.mortgage_date,a.submit_date,a.share_date,a.release_loan_date,a.detail_info_files,a.upload_loan_files,a.upload_archive_files,a.label,a.province_id,(select b.nick_name from sys_user b where b.user_id = a.applicant_id) applicant_name,(select b.city from bl_sys_cities b where b.cityid = a.city) city_name,(select b.name from baoli_biz_store b where b.id = a.store_id) store_name,concat((SELECT dict_label FROM sys_dict_data b where dict_type ='bl_biz_bank' and b.dict_value =(select agency from bl_sys_bank c where c.id = a.bank)),'/', (select `name` from bl_sys_bank b where b.id = a.bank)) bank_name,(select b.nick_name from sys_user b where b.user_id = a.inner_officer) inner_officer_name,concat((select b.`name` from  baoli_biz_car_brand b where b.id = a.level1_brand_id),' / ',(select b.`name` from  baoli_biz_car_brand b where b.id = a.level2_brand_id)) as brand_name,(select b.name from baoli_biz_car_series b where b.id = a.car_series_id) car_series_name,(select b.name from baoli_biz_car_model b where b.id = a.car_model_id) car_model_name,id, guide_price,status,refuse_order_id,applicant_id,order_schema, city, store_level, store_id, car_type, loan_type, order_number, bank, inner_officer, customer_name, apply_number, new_energy, invoice_price, loan_amount, down_payment, loan_ratio, period_number, supply_material_type, customer_phone_number, customer_work_union, is_discount, fee_ratio, is_hxr, business_number, credit_card_number, customer_age, married, exists_drive_license, domicile_type, work_place, work_field, work_category, education, companion_relationship, companion_number, create_time, update_time, create_by, update_by,level1_brand_id,level2_brand_id,car_series_id,car_model_id from baoli_biz_order a
     </sql>
 
     <sql id="myOrder">
@@ -246,6 +252,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="licenseLocation != null">license_location,</if>
             <if test="submitDate != null">submit_date,</if>
             <if test="adjustLoanAmount != null">adjust_loan_amount,</if>
+            <if test="fee1 != null">fee1,</if>
+            <if test="fee2 != null">fee2,</if>
+            <if test="fee3 != null">fee3,</if>
+            <if test="fee4 != null">fee4,</if>
+            <!--if test="storeFee != null">store_fee,</if-->
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="orderSchema != null">#{orderSchema},</if>
@@ -311,6 +322,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="licenseLocation != null">#{licenseLocation},</if>
             <if test="submitDate != null">now(),</if>
             <if test="adjustLoanAmount != null">#{adjustLoanAmount},</if>
+            <if test="fee1 != null">#{fee1},</if>
+            <if test="fee2 != null">#{fee2},</if>
+            <if test="fee3 != null">#{fee3},</if>
+            <if test="fee4 != null">#{fee4},</if>
+            <!--if test="storeFee != null">#{storeFee},</if-->
          </trim>
     </insert>
     <update id="batchUpdateOrder" parameterType="map">
@@ -404,8 +420,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="accountName != null">account_name = #{accountName},</if>
             <if test="cardPersonRate != null">card_person_rate = #{cardPersonRate},</if>
             <if test="storeFeeRate != null">store_fee_rate = #{storeFeeRate},</if>
-            <if test="storeFeeRate != null">store_fee_rate = #{storeFeeRate},</if>
             <if test="rebateRate != null">rebate_rate = #{rebateRate},</if>
+            <if test="fee1 != null">fee1 = #{fee1},</if>
+            <if test="fee2 != null">fee2 = #{fee2},</if>
+            <if test="fee3 != null">fee3 = #{fee3},</if>
+            <if test="fee4 != null">fee4 = #{fee4},</if>
+            <!--if test="storeFee != null">store_fee = #{storeFee},</if-->
         </trim>
         where id = #{id}
     </update>

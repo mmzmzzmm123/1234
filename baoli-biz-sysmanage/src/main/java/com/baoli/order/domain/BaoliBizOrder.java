@@ -725,6 +725,51 @@ public class BaoliBizOrder extends BaseEntity
     private Double cardPersonRate;
     private Double storeFeeRate;
     private Double rebateRate;
+    private Double fee1;
+    private Double fee2;
+    private Double fee3;
+    private Double fee4;
+    private Double storeFee;
+
+    public Double getFee1() {
+        return fee1;
+    }
+
+    public void setFee1(Double fee1) {
+        this.fee1 = fee1;
+    }
+
+    public Double getFee2() {
+        return fee2;
+    }
+
+    public void setFee2(Double fee2) {
+        this.fee2 = fee2;
+    }
+
+    public Double getFee3() {
+        return fee3;
+    }
+
+    public void setFee3(Double fee3) {
+        this.fee3 = fee3;
+    }
+
+    public Double getFee4() {
+        return fee4;
+    }
+
+    public void setFee4(Double fee4) {
+        this.fee4 = fee4;
+    }
+
+    public Double getStoreFee() {
+        return storeFee;
+    }
+
+    public void setStoreFee(Double storeFee) {
+        this.storeFee = storeFee;
+    }
 
     public Double getRebateRate() {
         return rebateRate;

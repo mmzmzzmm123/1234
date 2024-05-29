@@ -52,8 +52,17 @@ public class BaoliBizCompanyFeeRateRule extends BaseEntity
     /** 规则内容 */
     @Excel(name = "规则内容")
     private String content;
+    private String takeValueMode;
 
-    public void setId(Long id) 
+    public String getTakeValueMode() {
+        return takeValueMode;
+    }
+
+    public void setTakeValueMode(String takeValueMode) {
+        this.takeValueMode = takeValueMode;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }
