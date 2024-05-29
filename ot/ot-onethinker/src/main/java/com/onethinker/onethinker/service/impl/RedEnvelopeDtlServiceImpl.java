@@ -101,7 +101,7 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
                 CalculateRedEnvelopeDTO calculateRedEnvelopeDTO = CalculateRedEnvelopeDTO.calculateRedEnvelopeBatchBaseInfo(redEnvelopeDtlDTO.getTotalMoney(), redEnvelopeDtlDTO.getTotalSum(), redEnvelopeDtlDTO.getBatchSum(), redEnvelopeDtlDTO.getLuckyAwardMoney(), redEnvelopeDtlDTO.getLuckyAwardCount());
                 // 需要计算大奖再哪个位置先
                 Set<Integer> luckyAwards = CalculateRedEnvelopeDTO.calculatedLuckyPosition(batchNum, redEnvelopeDtlDTO.getLuckyAwardCount());
-                for (Integer i = 0; i < batchNum; i++) {
+                for (int i = 0; i < batchNum; i++) {
                     RedEnvelopeDtl redEnvelopeDtl = new RedEnvelopeDtl();
                     // 基本内容
                     redEnvelopeDtl.setCreateTime(new Date());
