@@ -3,7 +3,7 @@ package com.onethinker.common.enums;
 import java.util.Objects;
 
 /**
- * @author : yangyouqi
+ * @author yangyouqi
  * @date : 2023/11/3 0003 11:49
  */
 public enum ActivityTypeEnum {

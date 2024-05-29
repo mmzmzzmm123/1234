@@ -1,7 +1,7 @@
 package com.onethinker.common.enums;
 
 /**
- * @author : yangyouqi
+ * @author yangyouqi
  * @date : 2023/10/27 0027 21:05
  */
 public enum IntegralTypeEnum {

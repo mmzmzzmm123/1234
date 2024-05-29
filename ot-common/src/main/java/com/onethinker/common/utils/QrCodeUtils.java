@@ -19,7 +19,7 @@ import java.util.Hashtable;
 
 /**
  * @Title: QrCodeUtils
- * @Author itmei
+ * @Author yangyouqi
  * @Package com.cloud.commons.utils
  * @Date 2023/7/23 22:56
  * @description: 二维码工具类

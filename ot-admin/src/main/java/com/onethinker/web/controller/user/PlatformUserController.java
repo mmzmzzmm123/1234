@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * 平台用户接口
- * @author : yangyouqi
+ * @author yangyouqi
  * @date : 2023/10/23 0023 21:00
  */
 @RestController

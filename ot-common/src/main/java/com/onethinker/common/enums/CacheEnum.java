@@ -2,7 +2,7 @@ package com.onethinker.common.enums;
 
 /**
  * @Title: CacheEnum
- * @Author itmei
+ * @Author yangyouqi
  * @Package com.onethinker.common.constant
  * @Date 2023/10/24 21:46
  * @description: 缓存key常量枚举

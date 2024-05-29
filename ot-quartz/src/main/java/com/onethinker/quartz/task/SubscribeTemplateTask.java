@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * @author : yangyouqi
+ * @author yangyouqi
  * @date : 2024/3/15 11:46
  * 模版消息定时任务
  */
