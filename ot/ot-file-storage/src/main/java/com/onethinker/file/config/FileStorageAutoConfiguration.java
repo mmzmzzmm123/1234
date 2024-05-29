@@ -28,7 +28,7 @@ public class FileStorageAutoConfiguration {
     /**
      * 存储平台
      */
-    private List<FileStorage> fileStorageList = new ArrayList<>();
+    private final List<FileStorage> fileStorageList = new ArrayList<>();
 
 
     /**
