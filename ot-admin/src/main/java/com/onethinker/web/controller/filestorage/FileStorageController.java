@@ -143,8 +143,8 @@ public class FileStorageController extends BaseController {
      * @param fileId 文件id
      * @return 返回文件内容信息
      */
-    @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query/{fileId}")
-    public AjaxResult queryFileByFileId(@PathVariable("fileId") String fileId) {
+    @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query/fileId")
+    public AjaxResult queryFileByFileId(@RequestParam("fileId") String fileId) {
         FileInfoDTO file = fileStorageService.queryFileByFileId(fileId);
         return success("查询成功", file.getDomain() + file.getPath());
     }
@@ -155,8 +155,8 @@ public class FileStorageController extends BaseController {
      * @param fileIds 文件id 按逗号区分
      * @return 返回文件内容信息
      */
-    @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query/{fileIds}")
-    public AjaxResult queryFileByFileIds(@PathVariable("fileIds") String fileIds) {
+    @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query/fileIds")
+    public AjaxResult queryFileByFileIds(@RequestParam("fileIds") String fileIds) {
         Map<String,FileInfoDTO> file = fileStorageService.queryFileByFileIds(fileIds);
         return success(file);
     }
@@ -169,7 +169,7 @@ public class FileStorageController extends BaseController {
      * @param fileId 文件Id
      * @return 返回文件内容
      */
-    @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query")
+    @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query/param")
     public TableDataInfo queryFile(@RequestParam(name = "activityId", required = false) String activityId,
                                    @RequestParam(name = "relationType",required = false) FileRelationTypeEnum relationType,
                                    @RequestParam(name = "fileId",required = false) String fileId) {
