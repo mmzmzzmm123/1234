@@ -507,13 +507,6 @@ INSERT INTO `sys_menu` VALUES (1101, '天气预报最新结果新增', 1099, 2, 
 INSERT INTO `sys_menu` VALUES (1102, '天气预报最新结果修改', 1099, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'onethinker:weatherInfo:edit', '#', 'admin', '2024-03-08 10:28:55', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (1103, '天气预报最新结果删除', 1099, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'onethinker:weatherInfo:remove', '#', 'admin', '2024-03-08 10:28:55', '', NULL, '');
 INSERT INTO `sys_menu` VALUES (1104, '天气预报最新结果导出', 1099, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'onethinker:weatherInfo:export', '#', 'admin', '2024-03-08 10:28:55', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (1105, '轮播图', 1071, 1, 'banner', 'onethinker/banner/index', NULL, 1, 0, 'C', '0', '0', 'onethinker:banner:list', '#', 'admin', '2024-03-08 15:09:46', '', NULL, '轮播图菜单');
-INSERT INTO `sys_menu` VALUES (1106, '轮播图查询', 1105, 1, '#', '', NULL, 1, 0, 'F', '0', '0', 'onethinker:banner:query', '#', 'admin', '2024-03-08 15:09:46', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (1107, '轮播图新增', 1105, 2, '#', '', NULL, 1, 0, 'F', '0', '0', 'onethinker:banner:add', '#', 'admin', '2024-03-08 15:09:46', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (1108, '轮播图修改', 1105, 3, '#', '', NULL, 1, 0, 'F', '0', '0', 'onethinker:banner:edit', '#', 'admin', '2024-03-08 15:09:46', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (1109, '轮播图删除', 1105, 4, '#', '', NULL, 1, 0, 'F', '0', '0', 'onethinker:banner:remove', '#', 'admin', '2024-03-08 15:09:46', '', NULL, '');
-INSERT INTO `sys_menu` VALUES (1110, '轮播图导出', 1105, 5, '#', '', NULL, 1, 0, 'F', '0', '0', 'onethinker:banner:export', '#', 'admin', '2024-03-08 15:09:46', '', NULL, '');
-
 -- ----------------------------
 -- Table structure for sys_notice
 -- ----------------------------
@@ -855,27 +848,6 @@ CREATE TABLE `t_award_winner`  (
 -- ----------------------------
 -- Records of t_award_winner
 -- ----------------------------
-
--- ----------------------------
--- Table structure for t_banner
--- ----------------------------
-DROP TABLE IF EXISTS `t_banner`;
-CREATE TABLE `t_banner`  (
-  `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '表主键',
-  `create_time` datetime NULL DEFAULT NULL COMMENT '添加时间',
-  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
-  `enabled` int(11) NULL DEFAULT 1 COMMENT '是否可见，0为不可见，1为可见',
-  `weight` bigint(20) NULL DEFAULT 0 COMMENT '权重',
-  `image_url` longtext CHARACTER SET utf8 COLLATE utf8_general_ci NULL COMMENT '图片地址',
-  `url` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '跳转地址',
-  `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '备注',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '轮播图' ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Records of t_banner
--- ----------------------------
-
 -- ----------------------------
 -- Table structure for t_file
 -- ----------------------------
