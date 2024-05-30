@@ -49,7 +49,7 @@ server:
       min-spare: 100
 # mybatisPlus 配置
 mybatis-plus:
-  type-aliases-package: com.**.**.domain
+  type-aliases-package: com.onethinker.**.domain,com.onethinker.**.dto
   mapper-locations: classpath*:mapper/**/*Mapper.xml
   config-location: classpath:mybatis/mybatis-config.xml
 # PageHelper分页插件

@@ -32,6 +32,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -137,7 +138,7 @@ public class FileStorageController extends BaseController {
     }
 
     /**
-     * 文件查询
+     * 单文件查询
      *
      * @param fileId 文件id
      * @return 返回文件内容信息
@@ -149,17 +150,38 @@ public class FileStorageController extends BaseController {
     }
 
     /**
-     * 文件查询
+     * 多单文件查询
      *
-     * @param fileInfo 文件id
+     * @param fileIds 文件id 按逗号区分
+     * @return 返回文件内容信息
+     */
+    @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query/{fileIds}")
+    public AjaxResult queryFileByFileIds(@PathVariable("fileIds") String fileIds) {
+        Map<String,FileInfoDTO> file = fileStorageService.queryFileByFileIds(fileIds);
+        return success(file);
+    }
+
+    /**
+     * 指定文件查询
+     *
+     * @param activityId 活动Id
+     * @param relationType 文件类型
+     * @param fileId 文件Id
      * @return 返回文件内容
      */
     @GetMapping(value = ServicePathConstant.PREFIX_PUBLIC_PATH + "/form/query")
-    public TableDataInfo queryFile(FileInfo fileInfo) {
+    public TableDataInfo queryFile(@RequestParam(name = "activityId", required = false) String activityId,
+                                   @RequestParam(name = "relationType",required = false) FileRelationTypeEnum relationType,
+                                   @RequestParam(name = "fileId",required = false) String fileId) {
         startPage();
-        List<FileInfoDTO> list = fileStorageService.selectFileList(fileInfo);
+        FileInfoDTO fileInfoDTO = new FileInfoDTO();
+        fileInfoDTO.setActivityId(activityId);
+        fileInfoDTO.setRelationType(relationType);
+        fileInfoDTO.setId(fileId);
+        List<FileInfoDTO> list = fileStorageService.selectFileList(fileInfoDTO);
         return getDataTable(list);
     }
+
 
     @EventListener
     @Async

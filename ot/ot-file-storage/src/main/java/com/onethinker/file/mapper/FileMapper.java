@@ -2,6 +2,7 @@ package com.onethinker.file.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.onethinker.file.domain.FileInfo;
+import com.onethinker.file.dto.FileInfoDTO;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ public interface FileMapper extends BaseMapper<FileInfo> {
      * @param file 文件信息
      * @return 文件信息集合
      */
-    List<FileInfo> selectFileList(FileInfo file);
+    List<FileInfo> selectFileList(FileInfoDTO file);
 
     /**
      * 新增文件信息

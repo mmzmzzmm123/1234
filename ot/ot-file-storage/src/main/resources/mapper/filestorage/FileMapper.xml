@@ -16,8 +16,6 @@
             <result property="createUserId" column="create_user_id"/>
             <result property="createTime" column="create_time"/>
             <result property="updateUserId" column="update_user_id"/>
-            <result property="updateTime" column="update_time"/>
-            <result property="remark" column="remark"/>
             <result property="creatorIpAddress" column="creator_ip_address"/>
             <result property="hostName" column="host_name"/>
             <result property="delFlag" column="del_flag"/>
@@ -27,11 +25,11 @@
     </resultMap>
 
     <sql id="selectFileVo">
-        select id, tenant_id, file_name, fingerprint, file_size, mime_type, extension, path, create_user_id, create_time, update_user_id, update_time, remark, creator_ip_address, host_name, del_flag, disk_path, detect_mime, platform
+        select id, tenant_id, file_name, fingerprint, file_size, mime_type, extension, path, create_user_id, create_time, update_user_id, creator_ip_address, host_name, del_flag, disk_path, detect_mime, platform
         from t_file
     </sql>
 
-    <select id="selectFileList" parameterType="FileInfo" resultMap="FileResult">
+    <select id="selectFileList" parameterType="FileInfoDTO" resultMap="FileResult">
         <include refid="selectFileVo"/>
         <where>
                         <if test="fileName != null  and fileName != ''">
@@ -73,6 +71,13 @@
                         <if test="platform != null  and platform != ''">
                             and platform = #{platform}
                         </if>
+                        <if test="ids != null and ids != ''">
+                            and id in
+                            <foreach item="id" collection="ids" open="(" separator="," close=")">
+                                #{id}
+                            </foreach>
+                        </if>
+
         </where>
     </select>
 
@@ -106,10 +111,6 @@
                     <if test="createTime != null">create_time,
                     </if>
                     <if test="updateUserId != null">update_user_id,
-                    </if>
-                    <if test="updateTime != null">update_time,
-                    </if>
-                    <if test="remark != null">remark,
                     </if>
                     <if test="creatorIpAddress != null">creator_ip_address,
                     </if>
@@ -148,10 +149,6 @@
                     <if test="createTime != null">#{createTime},
                     </if>
                     <if test="updateUserId != null">#{updateUserId},
-                    </if>
-                    <if test="updateTime != null">#{updateTime},
-                    </if>
-                    <if test="remark != null">#{remark},
                     </if>
                     <if test="creatorIpAddress != null">#{creatorIpAddress},
                     </if>
@@ -200,12 +197,6 @@
                     </if>
                     <if test="updateUserId != null">update_user_id =
                         #{updateUserId},
-                    </if>
-                    <if test="updateTime != null">update_time =
-                        #{updateTime},
-                    </if>
-                    <if test="remark != null">remark =
-                        #{remark},
                     </if>
                     <if test="creatorIpAddress != null">creator_ip_address =
                         #{creatorIpAddress},

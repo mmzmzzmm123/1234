@@ -2,11 +2,11 @@ package com.onethinker.file.service;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.onethinker.common.config.OnethinkerConfig;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.CacheEnum;
-import com.onethinker.common.enums.DeleteFlagEnum;
 import com.onethinker.common.enums.FileRealtionStatusEnum;
 import com.onethinker.common.enums.FileRelationTypeEnum;
 import com.onethinker.common.utils.DateUtils;
@@ -24,9 +24,13 @@ import org.apache.commons.compress.utils.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -99,48 +103,6 @@ public class FileStorageService {
         fileMapper.insert(fileInfo);
         relationMapper.insert(fileRelation);
     }
-
-    /**
-     * 获取 文件集合信息
-     * @param fileInfo fileInfo
-     * @return 返回文件信息
-     */
-    public List<FileInfoDTO> selectFileList(FileInfo fileInfo) {
-        List<FileInfo> fileInfos = fileMapper.selectFileList(fileInfo);
-
-        return fileInfos.parallelStream().map(e -> {
-            FileInfoDTO fileInfoFileInfoDTO = new FileInfoDTO();
-            BeanUtils.copyProperties(e,fileInfoFileInfoDTO);
-            // 判断来源，取对于的访问地址
-            fileInfoFileInfoDTO.setDomain(this.getFileStorage(e.getPlatform()).getDomain());
-            return fileInfoFileInfoDTO;
-        }).collect(Collectors.toList());
-
-    }
-
-    /**
-     * 根据文件类型获取有效文件数据
-     */
-    public List<FileInfoDTO> selectFileList(FileRelationTypeEnum typeEnum,FileRealtionStatusEnum statusEnum) {
-        LambdaQueryWrapper<FileRelation> relationLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        relationLambdaQueryWrapper.eq(FileRelation::getRelationType,typeEnum.name()).eq(FileRelation::getStatus, statusEnum.getCode());
-        List<FileRelation> fileRelations = relationMapper.selectList(relationLambdaQueryWrapper);
-        if (fileRelations.isEmpty()) {
-            return Lists.newArrayList();
-        }
-        List<String> fileIds = fileRelations.parallelStream().map(FileRelation::getFileId).collect(Collectors.toList());
-        LambdaQueryWrapper<FileInfo> fileInfoLambdaQueryWrapper = new LambdaQueryWrapper<>();
-        fileInfoLambdaQueryWrapper.in(FileInfo::getId, fileIds).eq(FileInfo::getDelFlag, DeleteFlagEnum.enabled.getCode());
-        List<FileInfo> fileInfos = fileMapper.selectList(fileInfoLambdaQueryWrapper);
-        return fileInfos.parallelStream().map(e -> {
-            FileInfoDTO fileInfoFileInfoDTO = new FileInfoDTO();
-            BeanUtils.copyProperties(e,fileInfoFileInfoDTO);
-            // 判断来源，取对于的访问地址
-            fileInfoFileInfoDTO.setDomain(this.getFileStorage(e.getPlatform()).getDomain());
-            return fileInfoFileInfoDTO;
-        }).collect(Collectors.toList());
-    }
-
     /**
      * 更新文件状态
      */
@@ -149,24 +111,97 @@ public class FileStorageService {
     }
 
     /**
+     * 根据文件类型获取有效文件数据
+     */
+    public List<FileInfoDTO> selectFileList(FileRelationTypeEnum typeEnum,FileRealtionStatusEnum statusEnum) {
+        FileInfoDTO fileInfoDTO = new FileInfoDTO();
+        fileInfoDTO.setRelationType(typeEnum);
+        fileInfoDTO.setRelationStatus(statusEnum);
+        return this.selectFileList(fileInfoDTO);
+    }
+
+    /**
+     * 获取 文件集合信息
+     * @param reqDTO fileInfo
+     * @return 返回文件信息
+     */
+    public List<FileInfoDTO> selectFileList(FileInfoDTO reqDTO) {
+        if (Objects.nonNull(reqDTO.getActivityId()) || Objects.nonNull(reqDTO.getRelationType())) {
+            LambdaQueryWrapper<FileRelation> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(Objects.nonNull(reqDTO.getRelationType()),FileRelation::getRelationType, reqDTO.getRelationType())
+                    .isNotNull(Objects.nonNull(reqDTO.getActivityId()),FileRelation::getAttr)
+                    .eq(Objects.nonNull(reqDTO.getId()),FileRelation::getFileId, reqDTO.getId());
+            List<FileRelation> fileRelations = relationMapper.selectList(queryWrapper);
+            if (fileRelations.isEmpty()) {
+                return Lists.newArrayList();
+            }
+            // 进行过滤数据
+            List<String> fileIds = fileRelations.parallelStream().filter(e -> {
+                if (Objects.nonNull(reqDTO.getActivityId())) {
+                    JSONObject attrObj = JSONObject.parseObject(e.getAttr());
+                    return Objects.equals(reqDTO.getActivityId(), attrObj.get("activityId"));
+                }
+                return true;
+            }).map(FileRelation::getFileId).collect(Collectors.toList());
+
+            if (fileIds.isEmpty()) {
+                return Lists.newArrayList();
+            }
+            reqDTO.setIds(fileIds);
+        }
+        List<FileInfo> fileInfos = fileMapper.selectFileList(reqDTO);
+
+        return fileInfos.parallelStream().map(e -> queryFileByFileId(e.getId(),e)).collect(Collectors.toList());
+    }
+
+    /**
      * 查询文件类型
      * @param fileId 文件id
      */
-    public FileInfoDTO queryFileByFileId(String fileId) {
+    public FileInfoDTO queryFileByFileId(String fileId,FileInfo... queryFileInfo) {
         Assert.notNull(fileId,"fileId is null");
         String key = redisKey + fileId;
         if (redisCache.hasKey(key)) {
             return redisCache.getCacheObject(key);
         }
-        FileInfo fileInfo = fileMapper.selectById(fileId);
-        Assert.notNull(fileInfo,"fileInfo is null");
-        // 获取文件类型
+
+        FileInfo fileInfo;
+        if (queryFileInfo == null || queryFileInfo.length == 0) {
+            fileInfo = fileMapper.selectById(fileId);
+            Assert.notNull(fileInfo,"fileInfo is null");
+        } else {
+            fileInfo = queryFileInfo[0];
+        }
         FileInfoDTO result = new FileInfoDTO();
+        // 获取文件类型
         BeanUtils.copyProperties(fileInfo,result);
         // 判断来源，取对于的访问地址
-        result.setDomain(this.getFileStorage(fileInfo.getPlatform()).getDomain());
+        result.setDomain(this.getFileStorageVerify(result.getPlatform()).getDomain());
+        // 获取文件分类信息
+        LambdaQueryWrapper<FileRelation> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(FileRelation::getFileId,result.getId());
+        FileRelation fileRelation = relationMapper.selectOne(queryWrapper);
+        if (Objects.nonNull(fileRelation)) {
+            result.setTenantId(fileRelation.getTenantId());
+            result.setRelationType(FileRelationTypeEnum.valueOf(fileRelation.getRelationType()));
+            // 判断扩展字段是否存在活动id
+            if (Objects.nonNull(fileRelation.getAttr())) {
+                JSONObject attrObj = JSONObject.parseObject(fileRelation.getAttr());
+                result.setActivityId(attrObj.getString("activityId"));
+            }
+        }
         // 文件一旦上传就不会变更，这里时间可以久点
         redisCache.setCacheObject(key, result,180, TimeUnit.DAYS);
         return result;
+    }
+
+    /**
+     * 查询文件信息
+     * @param fileIds 文件ids
+     * @return 返回文件信息
+     */
+    public Map<String, FileInfoDTO> queryFileByFileIds(String fileIds) {
+        Assert.notNull(fileIds,"fileIds is null");
+        return Arrays.stream(fileIds.split(",")).collect(Collectors.toMap(Function.identity(),this::queryFileByFileId));
     }
 }
