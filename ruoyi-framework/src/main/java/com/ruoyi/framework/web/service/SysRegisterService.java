@@ -20,7 +20,7 @@ import com.ruoyi.system.service.ISysUserService;
 
 /**
  * 注册校验方法
- * 
+ *
  * @author ruoyi
  */
 @Component
@@ -46,6 +46,7 @@ public class SysRegisterService
 
         // 验证码开关
         boolean captchaEnabled = configService.selectCaptchaEnabled();
+
         if (captchaEnabled)
         {
             validateCaptcha(username, registerBody.getCode(), registerBody.getUuid());
@@ -92,7 +93,7 @@ public class SysRegisterService
 
     /**
      * 校验验证码
-     * 
+     *
      * @param username 用户名
      * @param code 验证码
      * @param uuid 唯一标识
@@ -111,5 +112,10 @@ public class SysRegisterService
         {
             throw new CaptchaException();
         }
+    }
+
+    public boolean getRegister() {
+        // 注册开关
+        return configService.selectRegisterEnabled();
     }
 }
