@@ -38,11 +38,11 @@ public class BannerController extends BaseController {
     @Autowired
     private IBannerService bannerService;
 
-/**
- * 查询轮播图列表
- */
-@PreAuthorize("@ss.hasPermi('onethinker:banner:list')")
-@GetMapping("/list")
+    /**
+     * 查询轮播图列表
+     */
+    @PreAuthorize("@ss.hasPermi('onethinker:banner:list')")
+    @GetMapping("/list")
     public TableDataInfo list(Banner banner) {
         startPage();
         List<Banner> list = bannerService.selectBannerList(banner);
@@ -54,10 +54,10 @@ public class BannerController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:banner:export')")
     @Log(title = "轮播图", businessType = BusinessType.EXPORT)
-    @PostMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
+    @PostMapping(ServicePathConstant.PREFIX_SERVICE_PATH + "/export")
     public void export(HttpServletResponse response, Banner banner) {
         List<Banner> list = bannerService.selectBannerList(banner);
-        ExcelUtil<Banner> util = new ExcelUtil<Banner>(Banner. class);
+        ExcelUtil<Banner> util = new ExcelUtil<>(Banner.class);
         util.exportExcel(response, list, "轮播图数据");
     }
 
@@ -65,7 +65,7 @@ public class BannerController extends BaseController {
      * 获取轮播图详细信息
      */
     @PreAuthorize("@ss.hasPermi('onethinker:banner:query')")
-    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH +  "/{id}")
+    @GetMapping(value = ServicePathConstant.PREFIX_SERVICE_PATH + "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id) {
         return success(bannerService.selectBannerById(id));
     }
@@ -95,7 +95,7 @@ public class BannerController extends BaseController {
      */
     @PreAuthorize("@ss.hasPermi('onethinker:banner:remove')")
     @Log(title = "轮播图", businessType = BusinessType.DELETE)
-    @DeleteMapping( ServicePathConstant.PREFIX_SERVICE_PATH + "/{ids}")
+    @DeleteMapping(ServicePathConstant.PREFIX_SERVICE_PATH + "/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids) {
         return toAjax(bannerService.deleteBannerByIds(ids));
     }

@@ -10,13 +10,13 @@
             <result property="updateTime" column="update_time"/>
             <result property="enabled" column="enabled"/>
             <result property="weight" column="weight"/>
-            <result property="imageUrl" column="image_url"/>
+            <result property="fileId" column="file_id"/>
             <result property="url" column="url"/>
             <result property="remark" column="remark"/>
     </resultMap>
 
     <sql id="selectBannerVo">
-        select id, create_time, update_time, enabled, weight, image_url, url, remark
+        select id, create_time, update_time, enabled, weight, file_id, url, remark
         from t_banner
     </sql>
 
@@ -29,8 +29,8 @@
                         <if test="weight != null ">
                             and weight = #{weight}
                         </if>
-                        <if test="imageUrl != null  and imageUrl != ''">
-                            and image_url = #{imageUrl}
+                        <if test="fileId != null  and fileId != ''">
+                            and file_id = #{fileId}
                         </if>
                         <if test="url != null  and url != ''">
                             and url = #{url}
@@ -56,7 +56,7 @@
                     </if>
                     <if test="weight != null">weight,
                     </if>
-                    <if test="imageUrl != null">image_url,
+                    <if test="fileId != null">file_id,
                     </if>
                     <if test="url != null">url,
                     </if>
@@ -72,7 +72,7 @@
                     </if>
                     <if test="weight != null">#{weight},
                     </if>
-                    <if test="imageUrl != null">#{imageUrl},
+                    <if test="fileId != null">#{fileId},
                     </if>
                     <if test="url != null">#{url},
                     </if>
@@ -96,8 +96,8 @@
                     <if test="weight != null">weight =
                         #{weight},
                     </if>
-                    <if test="imageUrl != null">image_url =
-                        #{imageUrl},
+                    <if test="fileId != null">file_id =
+                        #{fileId},
                     </if>
                     <if test="url != null">url =
                         #{url},

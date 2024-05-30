@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.onethinker.common.annotation.Excel;
 import com.onethinker.common.core.domain.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * 轮播图对象 t_banner
@@ -11,6 +12,7 @@ import lombok.Data;
  * @author yangyouqi
  * @date 2024-03-08
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 @TableName("t_banner")
 public class Banner extends BaseEntity {
@@ -34,16 +36,21 @@ public class Banner extends BaseEntity {
     private Long weight;
 
     /**
-     * 图片地址
+     * 文件id
      */
-    @Excel(name = "图片地址")
-    private String imageUrl;
+    @Excel(name = "文件id")
+    private String fileId;
 
     /**
      * 跳转地址
      */
     @Excel(name = "跳转地址")
     private String url;
+
+    /**
+     * 图片地址，属于额外补充数据
+     */
+    private String imageUrl;
 
 
 }

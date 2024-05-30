@@ -2,6 +2,8 @@ package com.onethinker.onethinker.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.onethinker.common.utils.DateUtils;
+import com.onethinker.file.dto.FileInfoDTO;
+import com.onethinker.file.service.FileStorageService;
 import com.onethinker.onethinker.domain.Banner;
 import com.onethinker.onethinker.mapper.BannerMapper;
 import com.onethinker.onethinker.service.IBannerService;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 轮播图Service业务层处理
@@ -22,6 +25,9 @@ import java.util.List;
 public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> implements IBannerService {
     @Resource
     private BannerMapper bannerMapper;
+
+    @Resource
+    private FileStorageService fileStorageService;
 
     /**
      * 查询轮播图
@@ -42,7 +48,16 @@ public class BannerServiceImpl extends ServiceImpl<BannerMapper, Banner> impleme
      */
     @Override
     public List<Banner> selectBannerList(Banner banner) {
-        return bannerMapper.selectBannerList(banner);
+        List<Banner> banners = bannerMapper.selectBannerList(banner);
+        return banners.parallelStream().peek(e -> {
+            // 获取文件对应的图片信息
+            try {
+                FileInfoDTO fileInfoDTO = fileStorageService.queryFileByFileId(e.getFileId());
+                e.setImageUrl(fileInfoDTO.getDomain() + fileInfoDTO.getPath());
+            }catch (Exception ex) {
+                log.error("轮播图图片{}不存在{}",e.getFileId(),ex.getMessage());
+            }
+        }).collect(Collectors.toList());
     }
 
     /**
