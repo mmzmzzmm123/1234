@@ -9,8 +9,8 @@
         <artifactId>ot-modules</artifactId>
         <version>3.8.6</version>
     </parent>
-    <artifactId>ot-onethinker</artifactId>
-    <name>ot-onethinker</name>
+    <artifactId>ot-modules-activity</artifactId>
+    <name>ot-modules-activity</name>
 
     <dependencies>
         <!-- 通用工具-->
@@ -45,7 +45,7 @@
 
         <dependency>
             <groupId>com.onethinker</groupId>
-            <artifactId>ot-file-storage</artifactId>
+            <artifactId>ot-modules-file</artifactId>
         </dependency>
     </dependencies>
 </project>

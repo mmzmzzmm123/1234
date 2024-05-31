@@ -8,10 +8,10 @@
     </parent>
 
     <modules>
-        <module>ot-onethinker</module>
-        <module>ot-file-storage</module>
-        <module>ot-platform-user</module>
-        <module>ot-bx-service</module>
+        <module>ot-modules-activity</module>
+        <module>ot-modules-file</module>
+        <module>ot-modules-user</module>
+        <module>ot-modules-bx</module>
     </modules>
 
     <modelVersion>4.0.0</modelVersion>

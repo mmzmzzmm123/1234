@@ -194,12 +194,12 @@
             <!--业务模块-->
             <dependency>
                 <groupId>com.onethinker</groupId>
-                <artifactId>ot-onethinker</artifactId>
+                <artifactId>ot-modules-activity</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.onethinker</groupId>
-                <artifactId>ot-file-storage</artifactId>
+                <artifactId>ot-modules-file</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -209,7 +209,7 @@
             </dependency>
             <dependency>
                 <groupId>com.onethinker</groupId>
-                <artifactId>ot-platform-user</artifactId>
+                <artifactId>ot-modules-user</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <!-- google集合工具导包 -->
@@ -275,7 +275,7 @@
 
             <dependency>
                 <groupId>com.onethinker</groupId>
-                <artifactId>ot-bx-service</artifactId>
+                <artifactId>ot-modules-bx</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

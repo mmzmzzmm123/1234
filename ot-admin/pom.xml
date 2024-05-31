@@ -56,12 +56,12 @@
         <!-- 业务模块-->
         <dependency>
             <groupId>com.onethinker</groupId>
-            <artifactId>ot-onethinker</artifactId>
+            <artifactId>ot-modules-activity</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.onethinker</groupId>
-            <artifactId>ot-file-storage</artifactId>
+            <artifactId>ot-modules-file</artifactId>
         </dependency>
 
         <dependency>
@@ -73,12 +73,12 @@
 
         <dependency>
             <groupId>com.onethinker</groupId>
-            <artifactId>ot-platform-user</artifactId>
+            <artifactId>ot-modules-user</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.onethinker</groupId>
-            <artifactId>ot-bx-service</artifactId>
+            <artifactId>ot-modules-bx</artifactId>
         </dependency>
 
         <dependency>

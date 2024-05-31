@@ -6,8 +6,8 @@
         <artifactId>ot-modules</artifactId>
         <version>3.8.6</version>
     </parent>
-    <artifactId>ot-file-storage</artifactId>
-    <name>ot-file-storage</name>
+    <artifactId>ot-modules-file</artifactId>
+    <name>ot-modules-file</name>
 
     <dependencies>
         <dependency>

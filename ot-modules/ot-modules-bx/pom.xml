@@ -9,18 +9,13 @@
         <version>3.8.6</version>
     </parent>
 
-    <artifactId>ot-platform-user</artifactId>
-    <name>ot-platform-user</name>
+    <artifactId>ot-modules-bx</artifactId>
+    <name>ot-modules-bx</name>
 
     <dependencies>
         <dependency>
             <groupId>com.onethinker</groupId>
             <artifactId>ot-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.onethinker</groupId>
-            <artifactId>ot-onethinker</artifactId>
         </dependency>
     </dependencies>
 
