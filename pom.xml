@@ -288,7 +288,7 @@
     </dependencyManagement>
 
     <modules>
-        <module>ot</module>
+        <module>ot-modules</module>
         <module>ot-admin</module>
         <module>ot-framework</module>
         <module>ot-system</module>

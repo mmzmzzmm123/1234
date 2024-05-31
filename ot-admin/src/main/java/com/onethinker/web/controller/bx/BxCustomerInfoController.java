@@ -1,33 +1,23 @@
 package com.onethinker.web.controller.bx;
 
+import com.onethinker.bx.domain.BxCustomerInfo;
+import com.onethinker.bx.service.IBxCustomerInfoService;
+import com.onethinker.common.annotation.Log;
+import com.onethinker.common.constant.ServicePathConstant;
+import com.onethinker.common.core.controller.BaseController;
+import com.onethinker.common.core.domain.AjaxResult;
+import com.onethinker.common.core.page.TableDataInfo;
+import com.onethinker.common.enums.BusinessType;
+import com.onethinker.common.utils.poi.ExcelUtil;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
-import lombok.extern.log4j.Log4j2;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.onethinker.common.annotation.Log;
-import com.onethinker.common.core.controller.BaseController;
-import com.onethinker.common.core.domain.AjaxResult;
-import com.onethinker.common.enums.BusinessType;
-import com.onethinker.common.constant.ServicePathConstant;
-
-import com.onethinker.bx.domain.BxCustomerInfo;
-import com.onethinker.bx.service.IBxCustomerInfoService;
-import com.onethinker.common.utils.poi.ExcelUtil;
-import com.onethinker.common.core.page.TableDataInfo;
 
 /**
  * 佰兴-客户信息表

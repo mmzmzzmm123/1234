@@ -6,7 +6,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.onethinker</groupId>
-        <artifactId>ot</artifactId>
+        <artifactId>ot-modules</artifactId>
         <version>3.8.6</version>
     </parent>
     <artifactId>ot-onethinker</artifactId>
