@@ -730,6 +730,24 @@ public class BaoliBizOrder extends BaseEntity
     private Double fee3;
     private Double fee4;
     private Double storeFee;
+    private Double incomeRate;
+    private Double income;
+
+    public Double getIncome() {
+        return income;
+    }
+
+    public void setIncome(Double income) {
+        this.income = income;
+    }
+
+    public Double getIncomeRate() {
+        return incomeRate;
+    }
+
+    public void setIncomeRate(Double incomeRate) {
+        this.incomeRate = incomeRate;
+    }
 
     public Double getFee1() {
         return fee1;

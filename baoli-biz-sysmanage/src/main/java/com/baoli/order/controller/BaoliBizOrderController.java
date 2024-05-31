@@ -449,14 +449,20 @@ public class BaoliBizOrderController extends BaseController
     @PostMapping("/batchUpdateOrder")
     public AjaxResult batchUpdateOrder(@RequestBody Map<String,Object> shareOrders)
     {
+        Long orderId = 0L;
         if(shareOrders!=null){
            List<Integer> ids = (List<Integer>) shareOrders.get("ids");
+            orderId = Long.valueOf(ids.get(0));
             for (Integer id : ids) {
                 JSONObject auditInfo = getTaskInfo(Long.valueOf(id.toString()),null);
                 String response = restTemplate.postForObject("http://127.0.0.1:9999/workspace/agree", auditInfo, String.class);
             }
         }
-        int result = baoliBizOrderService.batchUpdateOrder(shareOrders);
+        //int result = baoliBizOrderService.batchUpdateOrder(shareOrders);
+        BaoliBizOrder baoliBizOrder = new BaoliBizOrder();
+        baoliBizOrder.setId(orderId);
+        baoliBizOrder.setStatus(shareOrders.get("status").toString());
+        int result = baoliBizOrderService.updateBaoliBizOrder(baoliBizOrder);
         return toAjax(result);
     }
 

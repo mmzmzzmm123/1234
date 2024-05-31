@@ -26,7 +26,7 @@ public class BaoliBizCompanyFeeRateRule extends BaseEntity
 
     /** 银行id */
     @Excel(name = "银行id")
-    private Long bankId;
+    private String bankId;
 
     /** 省份 */
     @Excel(name = "省份")
@@ -53,6 +53,24 @@ public class BaoliBizCompanyFeeRateRule extends BaseEntity
     @Excel(name = "规则内容")
     private String content;
     private String takeValueMode;
+    private String cityName;
+    private String provinceName;
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public String getProvinceName() {
+        return provinceName;
+    }
+
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
+    }
 
     public String getTakeValueMode() {
         return takeValueMode;
@@ -80,12 +98,12 @@ public class BaoliBizCompanyFeeRateRule extends BaseEntity
     {
         return title;
     }
-    public void setBankId(Long bankId) 
+    public void setBankId(String bankId)
     {
         this.bankId = bankId;
     }
 
-    public Long getBankId() 
+    public String getBankId()
     {
         return bankId;
     }

@@ -15,11 +15,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="executeWay"    column="execute_way"    />
         <result property="content"    column="content"    />
         <result property="takeValueMode"    column="take_value_mode"    />
+        <result property="provinceName"    column="province_name"    />
+        <result property="cityName"    column="city_name"    />
     </resultMap>
 
     <sql id="selectBaoliBizCompanyFeeRateRuleVo">
-        select take_value_mode,id, title, bank_id, province_id, city_id, start_time, finish_time, execute_way, content from baoli_biz_company_fee_rate_rule
-    </sql>
+        select (select city from bl_sys_cities b where b.cityid = a.city_id) city_name,(select province from bl_sys_provinces b where b.provinceid = a.province_id) province_name,take_value_mode,id, title, bank_id, province_id, city_id, start_time, finish_time, execute_way, content from baoli_biz_company_fee_rate_rule a   </sql>
 
     <select id="selectBaoliBizCompanyFeeRateRuleList" parameterType="BaoliBizCompanyFeeRateRule" resultMap="BaoliBizCompanyFeeRateRuleResult">
         <include refid="selectBaoliBizCompanyFeeRateRuleVo"/>

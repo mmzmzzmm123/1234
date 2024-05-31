@@ -29,10 +29,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="storeFeeRate"    column="store_fee_rate"    />
         <result property="startTime"    column="start_time"    />
         <result property="finishTime"    column="finish_time"    />
+        <result property="executeType"    column="execute_type"    />
     </resultMap>
 
     <sql id="selectBaoliBizFeeRateRuleVo">
-        select a.start_time,a.finish_time,a.series_id,a.period,a.total_fee_rate,a.rebate_rate,a.card_person_rate,a.store_fee_rate,(select b.`name` from  baoli_biz_car_brand b where b.id = a.level2_brand_id) as level2_brand_name,(select b.`name` from  baoli_biz_car_brand b where b.id = a.brand_id) as brand_name,(select b.name from baoli_biz_car_series b where b.id = a.series_id) series_name,(select b.name from baoli_biz_car_model b where b.id = a.model_id) model_name,id, title, fee_rate_type,(SELECT dict_label FROM sys_dict_data b where dict_type ='bl_biz_bank' and b.dict_value = a.bank_id) bank_name, bank_id, remark, brand_id,level2_brand_id, model_id, subsidy_type from baoli_biz_fee_rate_rule a
+        select a.execute_type,a.start_time,a.finish_time,a.series_id,a.period,a.total_fee_rate,a.rebate_rate,a.card_person_rate,a.store_fee_rate,(select b.`name` from  baoli_biz_car_brand b where b.id = a.level2_brand_id) as level2_brand_name,(select b.`name` from  baoli_biz_car_brand b where b.id = a.brand_id) as brand_name,(select b.name from baoli_biz_car_series b where b.id = a.series_id) series_name,(select b.name from baoli_biz_car_model b where b.id = a.model_id) model_name,id, title, fee_rate_type,(SELECT dict_label FROM sys_dict_data b where dict_type ='bl_biz_bank' and b.dict_value = a.bank_id) bank_name, bank_id, remark, brand_id,level2_brand_id, model_id, subsidy_type from baoli_biz_fee_rate_rule a
     </sql>
 
     <select id="selectBaoliBizFeeRateRuleList" parameterType="BaoliBizFeeRateRule" resultMap="BaoliBizFeeRateRuleResult">
@@ -73,6 +74,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="storeFeeRate != null">store_fee_rate,</if>
             <if test="startTime != null">start_time,</if>
             <if test="finishTime != null">finish_time,</if>
+            <if test="executeType != null">execute_type,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="title != null">#{title},</if>
@@ -91,6 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="storeFeeRate != null">#{storeFeeRate},</if>
             <if test="startTime != null">#{startTime},</if>
             <if test="finishTime != null">#{finishTime},</if>
+            <if test="executeType != null">#{executeType},</if>
          </trim>
     </insert>
 
@@ -113,6 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="storeFeeRate != null">store_fee_rate = #{storeFeeRate},</if>
             <if test="startTime != null">start_time = #{startTime},</if>
             <if test="finishTime != null">finish_time = #{finishTime},</if>
+            <if test="executeType != null">execute_type = #{executeType},</if>
         </trim>
         where id = #{id}
     </update>

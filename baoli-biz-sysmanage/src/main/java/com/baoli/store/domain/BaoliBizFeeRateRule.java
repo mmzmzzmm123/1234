@@ -60,6 +60,15 @@ public class BaoliBizFeeRateRule extends BaseEntity
     private Double storeFeeRate; // 商户费率 （总费率 - 持卡人费率）
     private Date startTime;
     private Date finishTime;
+    private String executeType;
+
+    public String getExecuteType() {
+        return executeType;
+    }
+
+    public void setExecuteType(String executeType) {
+        this.executeType = executeType;
+    }
 
     public Date getStartTime() {
         return startTime;
