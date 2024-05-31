@@ -1,5 +1,6 @@
 package com.onethinker.activity.service.impl;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
 import com.github.pagehelper.PageHelper;
@@ -170,12 +171,13 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
 
     @Override
     public String createQrCodeBaseInfo(RedEnvelopeDtl redEnvelopeDtl) {
-        // 二维码内容 随机字符串##批次号##明细id##当前批次
+        // 二维码内容 随机字符串##批次号##明细id##当前批次##红包明细时间
         RSA rsa = new RSA(sysConfigService.selectConfigByKey(SysConfigKeyEnum.QR_CODE_RSA_PRIVATE_KEY), sysConfigService.selectConfigByKey(SysConfigKeyEnum.QR_CODE_RSA_PUBLIC_KEY));
         String content = UUID.randomUUID().toString().replaceAll("-", "") + AwardConstants.CREATE_QR_CODE_CONTENT_DELIMITER
                 + redEnvelopeDtl.getBatchNo() + AwardConstants.CREATE_QR_CODE_CONTENT_DELIMITER
                 + redEnvelopeDtl.getId() + AwardConstants.CREATE_QR_CODE_CONTENT_DELIMITER
-                + redEnvelopeDtl.getBatch();
+                + redEnvelopeDtl.getBatch() + AwardConstants.CREATE_QR_CODE_CONTENT_DELIMITER
+                + redEnvelopeDtl.getCreateTime().getTime();
         String encrypt = rsa.encryptBase64(content, KeyType.PublicKey);
 
         String filePath = sysConfigService.selectConfigByKey(SysConfigKeyEnum.DETAIL_FILE_PATH) + "/" + redEnvelopeDtl.getBatchNo();
@@ -187,5 +189,24 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
             throw new RuntimeException("生成二维码失败:" + e.getMessage());
         }
         return filePath + "/" + fileName;
+    }
+
+    @Override
+    public RedEnvelopeDtl scanCode(String scanCodeContent) {
+        String[] split = scanCodeContent.split(AwardConstants.CREATE_QR_CODE_CONTENT_DELIMITER);
+        if (split.length != AwardConstants.CREATE_QR_CODE_LENGTH) {
+            // 二维码非法，将当前IP次数+1，达到次数进行拉黑处理
+            throw new RuntimeException("非法二维码");
+        }
+        String batchNo = split[0];
+        String redEnvelopeDtlId = split[1];
+        String batch = split[2];
+        String createTime = split[3];
+        if (batchNo == null || batchNo.isEmpty() || redEnvelopeDtlId == null || redEnvelopeDtlId.isEmpty() || createTime == null || createTime.isEmpty() || batch == null || batch.isEmpty()) {
+            // 二维码非法，将当前IP次数+1，达到次数进行拉黑处理
+            throw new RuntimeException("非法二维码");
+        }
+
+        return null;
     }
 }

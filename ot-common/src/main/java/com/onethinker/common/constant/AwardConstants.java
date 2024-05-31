@@ -63,4 +63,8 @@ public class AwardConstants {
      * 红包每批生成数
      */
     public static final Integer AWARD_BATCH_CREATE_SUM = 200;
+    /**
+     * 创建二维码有效属性长度
+     */
+    public static int CREATE_QR_CODE_LENGTH = 4;
 }

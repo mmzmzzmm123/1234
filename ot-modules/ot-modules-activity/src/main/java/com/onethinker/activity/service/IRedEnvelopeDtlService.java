@@ -68,4 +68,11 @@ public interface IRedEnvelopeDtlService {
      * @return 二维码内容
      */
     String createQrCodeBaseInfo(RedEnvelopeDtl redEnvelopeDtl);
+
+    /**
+     * 扫描二维码获取明细数据
+     * @param scanCodeContent 二维码内容
+     * @return 结果
+     */
+    RedEnvelopeDtl scanCode(String scanCodeContent);
 }

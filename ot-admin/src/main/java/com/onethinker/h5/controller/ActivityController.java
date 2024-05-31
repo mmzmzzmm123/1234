@@ -1,17 +1,14 @@
 package com.onethinker.h5.controller;
 
 import com.onethinker.activity.dto.ActivityResDTO;
-import com.onethinker.activity.platform.ActivityStorage;
 import com.onethinker.activity.service.ActivityStorageService;
+import com.onethinker.activity.service.IRedEnvelopeDtlService;
 import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.page.TableDataInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,7 +24,8 @@ public class ActivityController extends BaseController {
     @Autowired
     private ActivityStorageService activityStorageService;
 
-
+    @Autowired
+    private IRedEnvelopeDtlService redEnvelopeDtlService;
     /**
      * 查询当前活动信息
      */
@@ -46,7 +44,11 @@ public class ActivityController extends BaseController {
         return success(activityStorageService.queryActivityBaseInfo(activityId));
     }
 
-
-
-
+    /**
+     * 扫码领红包
+     */
+    @GetMapping(ServicePathConstant.PREFIX_SERVICE_PATH + "/scanCode/{scanCodeContent}")
+    public AjaxResult scanCode(@PathVariable String scanCodeContent) {
+        return success(redEnvelopeDtlService.scanCode(scanCodeContent));
+    }
 }
