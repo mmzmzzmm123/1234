@@ -40,6 +40,7 @@
         <core.version>3.3.3</core.version>
         <wechat.version>4.6.0</wechat.version>
         <tika.version>2.9.2</tika.version>
+        <yaml.version>2.0</yaml.version>
 
         <!--cos-->
         <cos_api.version>5.6.137</cos_api.version>
@@ -283,6 +284,12 @@
                 <groupId>com.tencentcloudapi</groupId>
                 <artifactId>tencentcloud-sdk-java</artifactId>
                 <version>${tencentcloud.sdk.version}</version>
+            </dependency>
+            <!-- yml解析器 -->
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${yaml.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
