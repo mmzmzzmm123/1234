@@ -9,8 +9,8 @@ import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
 import com.onethinker.user.platform.UserStorage;
 import com.onethinker.user.service.IPlatformUserService;
-import com.onethinker.activity.service.IMinWechatService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.ApplicationContext;
 
 import java.util.Objects;
 
@@ -21,21 +21,26 @@ import java.util.Objects;
 @Log4j2
 public class WebUserStorage implements UserStorage {
 
-    private final PlatformUserTypeEnum userTypeEnum;
+    private final PlatformUserTypeEnum userTypeEnum = PlatformUserTypeEnum.WEB;
     private final IPlatformUserService platformUserService;
     private final SysLoginService loginService;
 
-    public WebUserStorage(IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService) {
-        this.platformUserService = platformUserService;
-        this.loginService = loginService;
-        this.userTypeEnum = PlatformUserTypeEnum.WEB;
+//    public WebUserStorage(IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService) {
+//        this.platformUserService = platformUserService;
+//        this.loginService = loginService;
+//        this.userTypeEnum = PlatformUserTypeEnum.WEB;
+//    }
+    public WebUserStorage(ApplicationContext applicationContext) {
+        this.platformUserService = applicationContext.getBean(IPlatformUserService.class);
+        this.loginService = applicationContext.getBean(SysLoginService.class);
     }
+
     @Override
     public void register(PlatformUserReqDTO reqDTO) {
         // 参数有效性校验
         reqDTO.existsParams();
         // 验证码有效性校验
-        platformUserService.validateCaptcha(reqDTO.getDataId(),reqDTO.getCode(),reqDTO.getUuid());
+//        platformUserService.validateCaptcha(reqDTO.getDataId(),reqDTO.getCode(),reqDTO.getUuid());
         // 保存用户明细信息
         PlatformUser existsUser = platformUserService.selectPlatformUserDetailByDataId(reqDTO.getDataId());
         Assert.isTrue(ObjectUtils.isEmpty(existsUser), "账号已被注册");

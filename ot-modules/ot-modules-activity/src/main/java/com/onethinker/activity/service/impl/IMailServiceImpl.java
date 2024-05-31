@@ -1,10 +1,10 @@
 package com.onethinker.activity.service.impl;
 
+import com.onethinker.activity.service.IMailService;
+import com.onethinker.activity.utils.MailUtil;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.CacheEnum;
 import com.onethinker.common.enums.SysConfigKeyEnum;
-import com.onethinker.activity.service.IMailService;
-import com.onethinker.activity.utils.MailUtil;
 import com.onethinker.system.service.ISysConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -2,7 +2,6 @@ package com.onethinker.common.utils.ip;
 
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.onethinker.common.config.OnethinkerConfig;
 import com.onethinker.common.constant.Constants;
 import com.onethinker.common.utils.StringUtils;
 import com.onethinker.common.utils.http.HttpUtils;

@@ -1,13 +1,5 @@
 package com.onethinker.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.onethinker.common.annotation.DataScope;
 import com.onethinker.common.constant.UserConstants;
 import com.onethinker.common.core.domain.TreeSelect;
@@ -22,6 +14,13 @@ import com.onethinker.common.utils.spring.SpringUtils;
 import com.onethinker.system.mapper.SysDeptMapper;
 import com.onethinker.system.mapper.SysRoleMapper;
 import com.onethinker.system.service.ISysDeptService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 部门管理 服务实现

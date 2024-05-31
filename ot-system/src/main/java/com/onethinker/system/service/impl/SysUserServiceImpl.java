@@ -1,19 +1,5 @@
 package com.onethinker.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.validation.Validator;
-
-import com.onethinker.system.service.ISysUserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
-
 import com.onethinker.common.annotation.DataScope;
 import com.onethinker.common.constant.UserConstants;
 import com.onethinker.common.core.domain.entity.SysRole;
@@ -27,12 +13,20 @@ import com.onethinker.common.utils.spring.SpringUtils;
 import com.onethinker.system.domain.SysPost;
 import com.onethinker.system.domain.SysUserPost;
 import com.onethinker.system.domain.SysUserRole;
-import com.onethinker.system.mapper.SysPostMapper;
-import com.onethinker.system.mapper.SysRoleMapper;
-import com.onethinker.system.mapper.SysUserMapper;
-import com.onethinker.system.mapper.SysUserPostMapper;
-import com.onethinker.system.mapper.SysUserRoleMapper;
+import com.onethinker.system.mapper.*;
 import com.onethinker.system.service.ISysConfigService;
+import com.onethinker.system.service.ISysUserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+
+import javax.validation.Validator;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * 用户 业务层处理

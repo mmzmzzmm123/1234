@@ -1,8 +1,8 @@
 package com.onethinker.system.mapper;
 
-import java.util.List;
-
 import com.onethinker.common.core.domain.entity.SysRole;
+
+import java.util.List;
 
 /**
  * 角色表 数据层

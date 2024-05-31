@@ -1,10 +1,9 @@
 package com.onethinker.system.mapper;
 
-import java.util.List;
-
+import com.onethinker.common.core.domain.entity.SysDept;
 import org.apache.ibatis.annotations.Param;
 
-import com.onethinker.common.core.domain.entity.SysDept;
+import java.util.List;
 
 /**
  * 部门管理 数据层

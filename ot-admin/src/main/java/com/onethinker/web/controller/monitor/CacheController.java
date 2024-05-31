@@ -1,6 +1,5 @@
 package com.onethinker.web.controller.monitor;
 
-import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.enums.CacheEnum;
 import com.onethinker.common.utils.StringUtils;

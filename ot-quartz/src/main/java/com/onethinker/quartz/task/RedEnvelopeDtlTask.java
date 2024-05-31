@@ -1,19 +1,21 @@
 package com.onethinker.quartz.task;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.PageHelper;
 import com.onethinker.activity.domain.RedEnvelopeDtl;
 import com.onethinker.activity.dto.RedEnvelopeCtrlDTO;
-import com.onethinker.activity.factory.ActivityDetailFactory;
-import com.onethinker.activity.factory.service.IActivityDetailService;
+import com.onethinker.activity.platform.ActivityStorage;
+import com.onethinker.activity.service.ActivityStorageService;
 import com.onethinker.activity.service.IRedEnvelopeDtlService;
 import com.onethinker.common.constant.AwardConstants;
 import com.onethinker.common.enums.ActivityTypeEnum;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -27,48 +29,45 @@ import java.util.List;
 @Log4j2
 public class RedEnvelopeDtlTask {
 
+    private final ActivityStorage activityStorage;
 
-    @Resource
+    @Autowired
     private IRedEnvelopeDtlService redEnvelopeDtlService;
 
-    @Resource
-    private ActivityDetailFactory activityDetailFactory;
+    public RedEnvelopeDtlTask(ActivityStorageService activityStorageService) {
+        this.activityStorage = activityStorageService.getActivityStorageVerify(ActivityTypeEnum.RED_ENVELOPE);
+    }
 
     /**
      * 创建红包明细数据
      */
     public void createRedEnvelopDtlTask() {
 //        log.info("------开始执行生成红包明细记录------");
-        IActivityDetailService<RedEnvelopeCtrlDTO> activityDetailService = activityDetailFactory.queryActivityDetailByActivityType(ActivityTypeEnum.RED_ENVELOPE.getCode());
-
         RedEnvelopeCtrlDTO redEnvelopeCtrlDTO = new RedEnvelopeCtrlDTO();
         redEnvelopeCtrlDTO.setStatus(AwardConstants.CREATE_QR_CODE_STATUS_INIT);
         // 分页处理
         PageHelper.startPage(1, 200);
-        List<RedEnvelopeCtrlDTO> redEnvelopeCtrlList = activityDetailService.queryRedEnvelopeCtrlByParams(redEnvelopeCtrlDTO);
-        if (redEnvelopeCtrlList.isEmpty()) {
-//            log.info("暂不需生成红包明细");
+        List<Map> redEnvelopeCtrlMap = activityStorage.queryEntryByParams(redEnvelopeCtrlDTO);
+        if (redEnvelopeCtrlMap.isEmpty()) {
             return;
         }
-        log.info("开始生成红包明细，生成数量：{}", redEnvelopeCtrlList.size());
-        for (RedEnvelopeCtrlDTO reqDTO : redEnvelopeCtrlList) {
+        log.info("开始生成红包明细，生成数量：{}", redEnvelopeCtrlMap.size());
+        for (Map entry : redEnvelopeCtrlMap) {
+            ObjectMapper mapper = new ObjectMapper();
+            RedEnvelopeCtrlDTO reqDTO = mapper.convertValue(entry, RedEnvelopeCtrlDTO.class);
             try {
                 // 更新成生成中状态
-                int result = activityDetailService.updateEntry(reqDTO, AwardConstants.CREATE_DTL_STATUS_DOING);
-                if (result == 0) {
-                    // 更新失败
-                    continue;
-                }
+                activityStorage.updateEntry(reqDTO, AwardConstants.CREATE_DTL_STATUS_DOING);
                 // 创建红包明细记录信息
-                Integer createQrcodeStatus = redEnvelopeDtlService.insertRedEnvelopeDtl(reqDTO);
+                int createQrcodeStatus = redEnvelopeDtlService.insertRedEnvelopeDtl(reqDTO);
                 if (createQrcodeStatus != 0) {
-                    activityDetailService.updateEntry(reqDTO, AwardConstants.CREATE_DTL_STATUS_SUCCESS);
+                    activityStorage.updateEntry(reqDTO, AwardConstants.CREATE_DTL_STATUS_SUCCESS);
                 } else {
-                    activityDetailService.updateEntry(reqDTO, AwardConstants.CREATE_DTL_STATUS_INIT);
+                    activityStorage.updateEntry(reqDTO, AwardConstants.CREATE_DTL_STATUS_INIT);
                 }
             } catch (Exception e) {
                 reqDTO.setRemark(e.getMessage());
-                activityDetailService.updateEntry(reqDTO, AwardConstants.CREATE_QR_CODE_STATUS_DOING);
+                activityStorage.updateEntry(reqDTO, AwardConstants.CREATE_QR_CODE_STATUS_DOING);
             }
         }
     }

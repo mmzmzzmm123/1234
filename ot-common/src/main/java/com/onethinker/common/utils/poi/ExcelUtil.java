@@ -2,6 +2,8 @@ package com.onethinker.common.utils.poi;
 
 import com.google.common.collect.Maps;
 import com.onethinker.common.annotation.Excel;
+import com.onethinker.common.annotation.Excel.ColumnType;
+import com.onethinker.common.annotation.Excel.Type;
 import com.onethinker.common.annotation.Excels;
 import com.onethinker.common.config.OnethinkerConfig;
 import com.onethinker.common.core.domain.AjaxResult;
@@ -14,8 +16,6 @@ import com.onethinker.common.utils.file.FileTypeUtils;
 import com.onethinker.common.utils.file.FileUtils;
 import com.onethinker.common.utils.file.ImageUtils;
 import com.onethinker.common.utils.reflect.ReflectUtils;
-import com.onethinker.common.annotation.Excel.ColumnType;
-import com.onethinker.common.annotation.Excel.Type;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;

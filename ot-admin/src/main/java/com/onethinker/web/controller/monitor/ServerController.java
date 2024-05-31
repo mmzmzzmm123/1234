@@ -1,6 +1,5 @@
 package com.onethinker.web.controller.monitor;
 
-import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.framework.web.domain.Server;
 import org.springframework.security.access.prepost.PreAuthorize;

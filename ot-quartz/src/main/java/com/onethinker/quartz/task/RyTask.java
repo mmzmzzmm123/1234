@@ -1,8 +1,7 @@
 package com.onethinker.quartz.task;
 
-import org.springframework.stereotype.Component;
-
 import com.onethinker.common.utils.StringUtils;
+import org.springframework.stereotype.Component;
 
 /**
  * 定时任务调度测试

@@ -1,7 +1,6 @@
 package com.onethinker.web.controller.system;
 
 import com.onethinker.common.annotation.Log;
-import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.domain.entity.SysDept;

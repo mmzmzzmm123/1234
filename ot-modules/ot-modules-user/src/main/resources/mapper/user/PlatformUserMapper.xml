@@ -19,7 +19,7 @@
     </resultMap>
 
     <sql id="selectPlatformUserDetailVo">
-        select id, create_time, update_time, enabled,  avatar_url, type, data_id, login_end_time, remark,password,nick_name from t_platform_user_detail
+        select id, create_time, update_time, enabled,  avatar_url, type, data_id, login_end_time, remark,password,nick_name from t_platform_user
     </sql>
 
     <select id="selectPlatformUserDetailList" parameterType="PlatformUser" resultMap="PlatformUserDetailResult">
@@ -41,7 +41,7 @@
     </select>
 
     <insert id="insertPlatformUserDetail" parameterType="PlatformUser" useGeneratedKeys="true" keyProperty="id">
-        insert into t_platform_user_detail
+        insert into t_platform_user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="createTime != null">create_time,</if>
             <if test="updateTime != null">update_time,</if>
@@ -69,7 +69,7 @@
     </insert>
 
     <update id="updatePlatformUserDetail" parameterType="PlatformUser">
-        update t_platform_user_detail
+        update t_platform_user
         <trim prefix="SET" suffixOverrides=",">
             <if test="createTime != null">create_time = #{createTime},</if>
             <if test="updateTime != null">update_time = #{updateTime},</if>
@@ -86,11 +86,11 @@
     </update>
 
     <delete id="deletePlatformUserDetailById" parameterType="Long">
-        delete from t_platform_user_detail where id = #{id}
+        delete from t_platform_user where id = #{id}
     </delete>
 
     <delete id="deletePlatformUserDetailByIds" parameterType="String">
-        delete from t_platform_user_detail where id in
+        delete from t_platform_user where id in
         <foreach item="id" collection="array" open="(" separator="," close=")">
             #{id}
         </foreach>

@@ -1,8 +1,8 @@
 package com.onethinker.system.mapper;
 
-import java.util.List;
-
 import com.onethinker.system.domain.SysNotice;
+
+import java.util.List;
 
 /**
  * 通知公告表 数据层

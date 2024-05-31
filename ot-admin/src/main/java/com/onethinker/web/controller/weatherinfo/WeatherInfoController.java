@@ -1,23 +1,20 @@
 package com.onethinker.web.controller.weatherinfo;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
-import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.activity.domain.WeatherInfo;
 import com.onethinker.activity.service.IWeatherInfoService;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.onethinker.common.annotation.Log;
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
-import com.onethinker.common.enums.BusinessType;
-
-import com.onethinker.common.utils.poi.ExcelUtil;
 import com.onethinker.common.core.page.TableDataInfo;
+import com.onethinker.common.enums.BusinessType;
+import com.onethinker.common.utils.poi.ExcelUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 天气预报最新结果

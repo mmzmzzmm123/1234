@@ -1,9 +1,9 @@
 package com.onethinker.system.service;
 
-import java.util.List;
-
 import com.onethinker.common.core.domain.entity.SysDictData;
 import com.onethinker.common.core.domain.entity.SysDictType;
+
+import java.util.List;
 
 /**
  * 字典 业务层

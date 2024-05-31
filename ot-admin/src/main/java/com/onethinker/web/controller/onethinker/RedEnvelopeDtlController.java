@@ -1,9 +1,9 @@
 package com.onethinker.web.controller.onethinker;
 
-import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.activity.domain.RedEnvelopeDtl;
 import com.onethinker.activity.service.IRedEnvelopeDtlService;
 import com.onethinker.common.annotation.Log;
+import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.page.TableDataInfo;

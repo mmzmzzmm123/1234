@@ -1,5 +1,6 @@
 package com.onethinker.activity.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.onethinker.activity.domain.RedEnvelopeDtl;
 import org.apache.ibatis.annotations.Param;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @author yangyouqi
  * @date 2023-10-31
  */
-public interface RedEnvelopeDtlMapper {
+public interface RedEnvelopeDtlMapper extends BaseMapper<RedEnvelopeDtl> {
     /**
      * 查询红包明细
      *

@@ -1,22 +1,5 @@
 package com.onethinker.quartz.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletResponse;
-
-import com.onethinker.common.constant.ServicePathConstant;
-import org.quartz.SchedulerException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.onethinker.common.annotation.Log;
 import com.onethinker.common.constant.Constants;
 import com.onethinker.common.core.controller.BaseController;
@@ -30,6 +13,13 @@ import com.onethinker.quartz.domain.SysJob;
 import com.onethinker.quartz.service.ISysJobService;
 import com.onethinker.quartz.util.CronUtils;
 import com.onethinker.quartz.util.ScheduleUtils;
+import org.quartz.SchedulerException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * 调度任务信息操作处理

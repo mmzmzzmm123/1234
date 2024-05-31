@@ -1,8 +1,8 @@
 package com.onethinker.system.mapper;
 
-import java.util.List;
-
 import com.onethinker.common.core.domain.entity.SysDictType;
+
+import java.util.List;
 
 /**
  * 字典表 数据层

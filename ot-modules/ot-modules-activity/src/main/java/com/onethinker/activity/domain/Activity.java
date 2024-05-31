@@ -66,8 +66,8 @@ public class Activity extends BaseEntity {
     /**
      * 活动类型id
      */
-    @Excel(name = "活动类型id")
-    private Integer activityType;
+    @Excel(name = "活动类型")
+    private String activityType;
 
 
 }

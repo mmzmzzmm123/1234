@@ -1,15 +1,5 @@
 package com.onethinker.system.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.onethinker.common.annotation.DataScope;
 import com.onethinker.common.constant.UserConstants;
 import com.onethinker.common.core.domain.entity.SysRole;
@@ -26,6 +16,11 @@ import com.onethinker.system.mapper.SysRoleMapper;
 import com.onethinker.system.mapper.SysRoleMenuMapper;
 import com.onethinker.system.mapper.SysUserRoleMapper;
 import com.onethinker.system.service.ISysRoleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 
 /**
  * 角色 业务层处理

@@ -1,8 +1,8 @@
 package com.onethinker.system.service;
 
-import java.util.List;
-
 import com.onethinker.system.domain.SysPost;
+
+import java.util.List;
 
 /**
  * 岗位信息 服务层

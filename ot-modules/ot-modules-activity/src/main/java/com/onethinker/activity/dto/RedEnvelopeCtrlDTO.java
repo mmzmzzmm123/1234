@@ -117,20 +117,19 @@ public class RedEnvelopeCtrlDTO {
     public void existsReqParams() {
         // 校验数据有效性
         Assert.notNull(batchNo, "批次号不能为空");
-        if (ObjectUtil.isEmpty(batchSum) || batchSum <= 0) {
-            batchSum = 1;
-        }
         Assert.notNull(createUserId, "生成管理员Id不能为空");
 
         if (ObjectUtils.isEmpty(totalMoney) || ObjectUtils.isEmpty(totalSum) || totalMoney <= 0 || totalSum <= 0) {
             throw new RuntimeException("奖品总金额或奖品总数量不能为空");
         }
-        // 做下限制，每个批次最多生成200笔的红包记录
-        if (MathUtils.divide(totalSum, batchSum) > AwardConstants.AWARD_BATCH_CREATE_SUM) {
-            throw new RuntimeException("分配有误，每个批次最多生成" + AwardConstants.AWARD_BATCH_CREATE_SUM + "个红包");
-        }
         if (totalSum > totalMoney) {
             throw new RuntimeException("奖品金额分配不均");
+        }
+        // 做下限制，每个批次最多生成200笔的红包记录
+        if (totalSum > AwardConstants.AWARD_BATCH_CREATE_SUM) {
+            batchSum = MathUtils.divideCeil(totalSum,AwardConstants.AWARD_BATCH_CREATE_SUM);
+        } else {
+            batchSum = 1;
         }
         if (ObjectUtil.isEmpty(luckyAward)) {
             luckyAward = 0;

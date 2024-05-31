@@ -1,5 +1,6 @@
 package com.onethinker.activity.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.onethinker.activity.domain.RedEnvelopeCtrl;
 import com.onethinker.activity.dto.RedEnvelopeCtrlDTO;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @author yangyouqi
  * @date 2023-10-31
  */
-public interface RedEnvelopeCtrlMapper {
+public interface RedEnvelopeCtrlMapper extends BaseMapper<RedEnvelopeCtrl> {
     /**
      * 查询红包批控制
      *

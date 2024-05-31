@@ -62,14 +62,14 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
     /**
      * 新增红包明细
      *
-     * @param redEnvelopeDtlDTO 红包明细
+     * @param redEnvelopeCtrlDTO 红包明细
      * @return 结果
      */
     @Override
-    public int insertRedEnvelopeDtl(RedEnvelopeCtrlDTO redEnvelopeDtlDTO) {
+    public int insertRedEnvelopeDtl(RedEnvelopeCtrlDTO redEnvelopeCtrlDTO) {
         PageHelper.startPage(1, 1);
         RedEnvelopeDtl reqParams = new RedEnvelopeDtl();
-        reqParams.setBatchNo(redEnvelopeDtlDTO.getBatchNo());
+        reqParams.setBatchNo(redEnvelopeCtrlDTO.getBatchNo());
         List<RedEnvelopeDtl> redEnvelopeDtls = redEnvelopeDtlMapper.selectRedEnvelopeDtlList(reqParams);
         // 当前批次
         int nowBatch = redEnvelopeDtls.isEmpty() ? 0 : redEnvelopeDtls.get(0).getBatch();
@@ -77,12 +77,12 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
         List<RedEnvelopeDtl> saveEntitys = new ArrayList<>();
 
         // 计算出一批需要生成多少明细红包数据
-        long batchNum = MathUtils.divide(redEnvelopeDtlDTO.getTotalSum(), redEnvelopeDtlDTO.getBatchSum());
+        long batchNum = MathUtils.divide(redEnvelopeCtrlDTO.getTotalSum(), redEnvelopeCtrlDTO.getBatchSum());
         // 生成红包明细
-        if (AwardConstants.TYPE_FIXED.equals(redEnvelopeDtlDTO.getType())) {
+        if (AwardConstants.TYPE_FIXED.equals(redEnvelopeCtrlDTO.getType())) {
             // 固定生成
-            if (AwardConstants.LUCKY_AWARD_TYPE_NO.equals(redEnvelopeDtlDTO.getLuckyAward())) {
-                CalculateRedEnvelopeDTO calculateRedEnvelopeDTO = CalculateRedEnvelopeDTO.calculateRedEnvelopeBatchBaseInfo(redEnvelopeDtlDTO.getTotalMoney(), redEnvelopeDtlDTO.getTotalSum(), redEnvelopeDtlDTO.getBatchSum());
+            if (AwardConstants.LUCKY_AWARD_TYPE_NO.equals(redEnvelopeCtrlDTO.getLuckyAward())) {
+                CalculateRedEnvelopeDTO calculateRedEnvelopeDTO = CalculateRedEnvelopeDTO.calculateRedEnvelopeBatchBaseInfo(redEnvelopeCtrlDTO.getTotalMoney(), redEnvelopeCtrlDTO.getTotalSum(), redEnvelopeCtrlDTO.getBatchSum());
                 for (int i = 0; i < batchNum; i++) {
                     RedEnvelopeDtl redEnvelopeDtl = new RedEnvelopeDtl();
                     // 基本内容
@@ -90,17 +90,17 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
                     redEnvelopeDtl.setEnabled(SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
                     redEnvelopeDtl.setWeight(System.currentTimeMillis());
                     // 特别内容
-                    redEnvelopeDtl.setBatchNo(redEnvelopeDtlDTO.getBatchNo());
+                    redEnvelopeDtl.setBatchNo(redEnvelopeCtrlDTO.getBatchNo());
                     redEnvelopeDtl.setMoney(calculateRedEnvelopeDTO.getBatchMoney());
                     redEnvelopeDtl.setLuckyAwardType(AwardConstants.LUCKY_AWARD_TYPE_NO);
                     redEnvelopeDtl.setBatch(nowBatch + 1);
                     redEnvelopeDtl.setQrCodeStatus(AwardConstants.CREATE_QR_CODE_STATUS_INIT);
                     saveEntitys.add(redEnvelopeDtl);
                 }
-            } else if (AwardConstants.LUCKY_AWARD_TYPE_YES.equals(redEnvelopeDtlDTO.getLuckyAward())) {
-                CalculateRedEnvelopeDTO calculateRedEnvelopeDTO = CalculateRedEnvelopeDTO.calculateRedEnvelopeBatchBaseInfo(redEnvelopeDtlDTO.getTotalMoney(), redEnvelopeDtlDTO.getTotalSum(), redEnvelopeDtlDTO.getBatchSum(), redEnvelopeDtlDTO.getLuckyAwardMoney(), redEnvelopeDtlDTO.getLuckyAwardCount());
+            } else if (AwardConstants.LUCKY_AWARD_TYPE_YES.equals(redEnvelopeCtrlDTO.getLuckyAward())) {
+                CalculateRedEnvelopeDTO calculateRedEnvelopeDTO = CalculateRedEnvelopeDTO.calculateRedEnvelopeBatchBaseInfo(redEnvelopeCtrlDTO.getTotalMoney(), redEnvelopeCtrlDTO.getTotalSum(), redEnvelopeCtrlDTO.getBatchSum(), redEnvelopeCtrlDTO.getLuckyAwardMoney(), redEnvelopeCtrlDTO.getLuckyAwardCount());
                 // 需要计算大奖再哪个位置先
-                Set<Integer> luckyAwards = CalculateRedEnvelopeDTO.calculatedLuckyPosition(batchNum, redEnvelopeDtlDTO.getLuckyAwardCount());
+                Set<Integer> luckyAwards = CalculateRedEnvelopeDTO.calculatedLuckyPosition(batchNum, redEnvelopeCtrlDTO.getLuckyAwardCount());
                 for (int i = 0; i < batchNum; i++) {
                     RedEnvelopeDtl redEnvelopeDtl = new RedEnvelopeDtl();
                     // 基本内容
@@ -108,10 +108,10 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
                     redEnvelopeDtl.setEnabled(SysStatusTypeEnum.STATUS_TYPE_ENABLED.getCode());
                     redEnvelopeDtl.setWeight(System.currentTimeMillis());
                     // 特别内容
-                    redEnvelopeDtl.setBatchNo(redEnvelopeDtlDTO.getBatchNo());
+                    redEnvelopeDtl.setBatchNo(redEnvelopeCtrlDTO.getBatchNo());
                     if (luckyAwards.contains(i)) {
                         redEnvelopeDtl.setLuckyAwardType(AwardConstants.LUCKY_AWARD_TYPE_YES);
-                        redEnvelopeDtl.setMoney(redEnvelopeDtlDTO.getLuckyAwardMoney());
+                        redEnvelopeDtl.setMoney(redEnvelopeCtrlDTO.getLuckyAwardMoney());
                     } else {
                         redEnvelopeDtl.setLuckyAwardType(AwardConstants.LUCKY_AWARD_TYPE_NO);
                         redEnvelopeDtl.setMoney(calculateRedEnvelopeDTO.getBatchMoney());
@@ -123,7 +123,7 @@ public class RedEnvelopeDtlServiceImpl implements IRedEnvelopeDtlService {
                 }
 
             } else {
-                log.warn("生成红包明细类型有误，请开发排除问题，目前类型为：{}", redEnvelopeDtlDTO.getLuckyAward());
+                log.warn("生成红包明细类型有误，请开发排除问题，目前类型为：{}", redEnvelopeCtrlDTO.getLuckyAward());
             }
         } else {
             // 随机生成

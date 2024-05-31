@@ -1,8 +1,8 @@
 package com.onethinker.system.mapper;
 
-import java.util.List;
-
 import com.onethinker.system.domain.SysPost;
+
+import java.util.List;
 
 /**
  * 岗位信息 数据层

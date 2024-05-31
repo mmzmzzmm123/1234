@@ -56,17 +56,14 @@ public class PlatformUserReqDTO {
         //2.必须包含至少一个大写字母。
         //3.必须包含至少一个小写字母。
         //4.必须包含至少一个数字。
-        //5.必须包含至少一个特殊字符（例如，@, #, $, %, ^, &, *等）。
         String upperCasePattern = ".*[A-Z].*";
         String lowerCasePattern = ".*[a-z].*";
         String digitPattern = ".*[0-9].*";
-        String specialCharPattern = ".*[!@#$%^&*()_+\\-=[\\]{};':\"\\\\|,.<>/?].*";
         Assert.isTrue(StringUtil.isNotEmpty(password),"密码不能为空");
         Assert.isTrue(password.length() >= 8 && password.length() <= 20,"长度在8到20个字符之间");
-        Assert.isTrue(!password.matches(upperCasePattern), "包含至少一个大写字母");
-        Assert.isTrue(!password.matches(lowerCasePattern), "必须包含至少一个小写字母");
-        Assert.isTrue(!password.matches(digitPattern), "必须包含至少一个数字");
-        Assert.isTrue(!password.matches(specialCharPattern), "必须包含至少一个特殊字符");
+        Assert.isTrue(password.matches(upperCasePattern), "包含至少一个大写字母");
+        Assert.isTrue(password.matches(lowerCasePattern), "必须包含至少一个小写字母");
+        Assert.isTrue(password.matches(digitPattern), "必须包含至少一个数字");
     }
 
     /**

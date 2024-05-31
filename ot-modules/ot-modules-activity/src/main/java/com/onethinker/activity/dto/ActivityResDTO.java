@@ -68,6 +68,8 @@ public class ActivityResDTO {
 
     private RedEnvelopeCtrlDTO redEnvelopeCtrlDTO;
 
+    private List<RedEnvelopeCtrlDTO> redEnvelopes;
+
     /**
      * 上传图片信息
      **/

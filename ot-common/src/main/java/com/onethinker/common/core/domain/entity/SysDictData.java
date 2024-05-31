@@ -1,9 +1,9 @@
 package com.onethinker.common.core.domain.entity;
 
 import com.onethinker.common.annotation.Excel;
+import com.onethinker.common.annotation.Excel.ColumnType;
 import com.onethinker.common.constant.UserConstants;
 import com.onethinker.common.core.domain.BaseEntity;
-import com.onethinker.common.annotation.Excel.ColumnType;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 

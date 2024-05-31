@@ -1,6 +1,8 @@
 package com.onethinker.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.onethinker.activity.service.IMailService;
+import com.onethinker.activity.service.IMinWechatService;
 import com.onethinker.common.constant.Constants;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.*;
@@ -13,16 +15,15 @@ import com.onethinker.common.utils.Tools;
 import com.onethinker.framework.manager.AsyncManager;
 import com.onethinker.framework.manager.factory.AsyncFactory;
 import com.onethinker.framework.web.service.SysLoginService;
-import com.onethinker.activity.service.IMailService;
 import com.onethinker.system.service.ISysConfigService;
 import com.onethinker.user.domain.PlatformUser;
 import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.mapper.PlatformUserMapper;
 import com.onethinker.user.platform.UserStorage;
-import com.onethinker.activity.service.IMinWechatService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -61,6 +62,9 @@ public class IPlatformUserService {
     @Autowired
     private SysLoginService sysLoginService;
 
+    @Autowired
+    private ApplicationContext applicationContext;
+
 
     private final String REDIS_KEY = CacheEnum.QUERY_USER_DETAIL_DATA_ID_KEY.getCode();
 
@@ -71,9 +75,11 @@ public class IPlatformUserService {
         try {
             Assert.isTrue(!ObjectUtils.isEmpty(userTypeEnum), "userTypeEnum is null ");
             Class<?> clazz = Class.forName(userTypeEnum.getInterfaceClass());
-            Constructor<?> constructor = clazz.getConstructor(IMinWechatService.class, IPlatformUserService.class, SysLoginService.class);
+//            Constructor<?> constructor = clazz.getConstructor(IMinWechatService.class, IPlatformUserService.class, SysLoginService.class);
+            Constructor<?> constructor = clazz.getConstructor(ApplicationContext.class);
             constructor.setAccessible(true);
-            UserStorage instance = (UserStorage) constructor.newInstance(wechatService, this, sysLoginService);
+//            UserStorage instance = (UserStorage) constructor.newInstance(wechatService, this, sysLoginService);
+            UserStorage instance = (UserStorage) constructor.newInstance(applicationContext);
             return Tools.cast(instance);
         } catch (Exception e) {
             throw new RuntimeException(e);

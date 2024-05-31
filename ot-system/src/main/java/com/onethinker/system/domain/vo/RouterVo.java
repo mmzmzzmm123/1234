@@ -1,8 +1,8 @@
 package com.onethinker.system.domain.vo;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
+
+import java.util.List;
 
 /**
  * 路由配置信息

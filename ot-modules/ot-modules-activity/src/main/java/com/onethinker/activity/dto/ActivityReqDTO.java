@@ -52,7 +52,7 @@ public class ActivityReqDTO {
     /**
      * 活动类型id
      */
-    private Integer activityType;
+    private ActivityTypeEnum activityType;
 
     /**
      * 活动明细-红包
@@ -75,6 +75,7 @@ public class ActivityReqDTO {
     private String remark;
 
     public void existsParams() {
+        Assert.notNull(activityType,"活动类型有误");
         if (ObjectUtils.isEmpty(startTime) || ObjectUtils.isEmpty(endTime)) {
             throw new RuntimeException("活动时间不能为空");
         }
@@ -89,9 +90,8 @@ public class ActivityReqDTO {
         }
         sysUserId = SecurityUtils.getUserId();
 
-        ActivityTypeEnum.existsActivityTypeEnumByCode(activityType);
 
-        if (ActivityTypeEnum.RED_ENVELOPE.getCode().equals(activityType)) {
+        if (ActivityTypeEnum.RED_ENVELOPE.equals(activityType)) {
             // 红包相关校验
             Assert.isTrue(!ObjectUtils.isEmpty(redEnvelopeCtrlDTO), "生成红包数据不能为空");
             redEnvelopeCtrlDTO.setCreateUserId(sysUserId);

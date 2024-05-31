@@ -1,10 +1,9 @@
 package com.onethinker.system.mapper;
 
-import java.util.List;
-
+import com.onethinker.common.core.domain.entity.SysUser;
 import org.apache.ibatis.annotations.Param;
 
-import com.onethinker.common.core.domain.entity.SysUser;
+import java.util.List;
 
 /**
  * 用户表 数据层

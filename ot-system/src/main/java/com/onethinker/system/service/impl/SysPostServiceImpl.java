@@ -1,10 +1,5 @@
 package com.onethinker.system.service.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.onethinker.common.constant.UserConstants;
 import com.onethinker.common.exception.ServiceException;
 import com.onethinker.common.utils.StringUtils;
@@ -12,6 +7,10 @@ import com.onethinker.system.domain.SysPost;
 import com.onethinker.system.mapper.SysPostMapper;
 import com.onethinker.system.mapper.SysUserPostMapper;
 import com.onethinker.system.service.ISysPostService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * 岗位信息 服务层处理

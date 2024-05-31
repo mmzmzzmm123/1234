@@ -1,13 +1,5 @@
 package com.onethinker.quartz.util;
 
-import java.util.Date;
-
-import org.quartz.Job;
-import org.quartz.JobExecutionContext;
-import org.quartz.JobExecutionException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.onethinker.common.constant.Constants;
 import com.onethinker.common.constant.ScheduleConstants;
 import com.onethinker.common.utils.ExceptionUtil;
@@ -17,6 +9,13 @@ import com.onethinker.common.utils.spring.SpringUtils;
 import com.onethinker.quartz.domain.SysJob;
 import com.onethinker.quartz.domain.SysJobLog;
 import com.onethinker.quartz.service.ISysJobLogService;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Date;
 
 /**
  * 抽象quartz调用

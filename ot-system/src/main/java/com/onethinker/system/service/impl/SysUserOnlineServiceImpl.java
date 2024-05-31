@@ -1,11 +1,10 @@
 package com.onethinker.system.service.impl;
 
-import org.springframework.stereotype.Service;
-
 import com.onethinker.common.core.domain.model.LoginUser;
 import com.onethinker.common.utils.StringUtils;
 import com.onethinker.system.domain.SysUserOnline;
 import com.onethinker.system.service.ISysUserOnlineService;
+import org.springframework.stereotype.Service;
 
 /**
  * 在线用户 服务层处理

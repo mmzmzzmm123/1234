@@ -1,6 +1,7 @@
 package com.onethinker.user.platform.impl;
 
 import cn.hutool.core.lang.Assert;
+import com.onethinker.activity.service.IMinWechatService;
 import com.onethinker.common.enums.PlatformUserTypeEnum;
 import com.onethinker.common.utils.StringUtils;
 import com.onethinker.framework.web.service.SysLoginService;
@@ -9,8 +10,8 @@ import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
 import com.onethinker.user.platform.UserStorage;
 import com.onethinker.user.service.IPlatformUserService;
-import com.onethinker.activity.service.IMinWechatService;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.context.ApplicationContext;
 import org.springframework.util.ObjectUtils;
 
 import java.util.Date;
@@ -21,19 +22,24 @@ import java.util.Date;
  */
 @Log4j2
 public class WxUserStorage implements UserStorage {
-    private final PlatformUserTypeEnum userTypeEnum;
+    private final PlatformUserTypeEnum userTypeEnum = PlatformUserTypeEnum.WX;
     private final IMinWechatService minWechatService;
     private final IPlatformUserService platformUserService;
     private final SysLoginService loginService;
 
 
+//    public WxUserStorage(IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService) {
+//        this.minWechatService = minWechatService;
+//        this.platformUserService = platformUserService;
+//        this.loginService = loginService;
+//    }
 
-    public WxUserStorage(IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService) {
-        this.minWechatService = minWechatService;
-        this.platformUserService = platformUserService;
-        this.loginService = loginService;
-        this.userTypeEnum = PlatformUserTypeEnum.WX;
+    public WxUserStorage(ApplicationContext applicationContext) {
+        this.minWechatService = applicationContext.getBean(IMinWechatService.class);
+        this.platformUserService = applicationContext.getBean(IPlatformUserService.class);
+        this.loginService = applicationContext.getBean(SysLoginService.class);
     }
+
 
     @Override
     public void register(PlatformUserReqDTO reqDTO) {
@@ -46,14 +52,14 @@ public class WxUserStorage implements UserStorage {
             platformUserService.updatePlatformUserDetail(platformUser);
         } else {
             // 创建用户信息
-            platformUserService.saveEntryUserDetail(reqDTO,PlatformUserTypeEnum.WX);
+            platformUserService.saveEntryUserDetail(reqDTO, PlatformUserTypeEnum.WX);
         }
     }
 
     @Override
     public PlatformUserResDTO login(PlatformUserReqDTO reqDTO) {
-        Assert.isTrue(StringUtils.isNotEmpty(reqDTO.getCode()),"code is null");
-        log.info("platform:{},code:{}",userTypeEnum.getMsg(),reqDTO.getCode());
+        Assert.isTrue(StringUtils.isNotEmpty(reqDTO.getCode()), "code is null");
+        log.info("platform:{},code:{}", userTypeEnum.getMsg(), reqDTO.getCode());
         // 进行访问
         String dataId = minWechatService.getMinWechatOpenIdByCode(reqDTO.getCode());
         reqDTO.setDataId(dataId);

@@ -68,7 +68,7 @@ public class FileStorageService {
     /**
      * 获取对应的存储平台
      */
-    public <T extends FileStorage> T getFileStorage(String platform) {
+    private  <T extends FileStorage> T getFileStorage(String platform) {
         for (FileStorage fileStorage : fileStorageList) {
             if (fileStorage.getPlatform().equals(platform)) {
                 return Tools.cast(fileStorage);

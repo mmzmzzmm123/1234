@@ -95,6 +95,29 @@ public class MathUtils {
 
 
     /**
+     * 除法 向上取整
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public static <T extends Number> Integer divideCeil(T a, T... b) {
+        if (ObjectUtils.isEmpty(b) || ObjectUtils.isEmpty(b[0])) {
+            return a.intValue();
+        }
+        BigDecimal result = new BigDecimal(a.longValue());
+        for (T value : b) {
+            if (ObjectUtils.isEmpty(result)) {
+                throw new RuntimeException("计算错误，被除数不能为0");
+            }
+            BigDecimal valueBigDecimal = new BigDecimal(value.longValue());
+            result = result.divide(valueBigDecimal, RoundingMode.UP);
+        }
+        return result.intValue();
+    }
+
+
+    /**
      * 求余
      *
      * @param a

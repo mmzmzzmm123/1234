@@ -1,14 +1,14 @@
 package com.onethinker.web.controller.user;
 
 import com.onethinker.common.constant.ServicePathConstant;
-import com.onethinker.common.enums.CodeTypeEnum;
-import com.onethinker.user.domain.PlatformUser;
-import com.onethinker.user.dto.PlatformUserReqDTO;
-import com.onethinker.user.dto.PlatformUserResDTO;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.CacheEnum;
+import com.onethinker.common.enums.CodeTypeEnum;
+import com.onethinker.user.domain.PlatformUser;
+import com.onethinker.user.dto.PlatformUserReqDTO;
+import com.onethinker.user.dto.PlatformUserResDTO;
 import com.onethinker.user.service.IPlatformUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

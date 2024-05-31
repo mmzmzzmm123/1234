@@ -915,7 +915,7 @@ CREATE TABLE `t_platform_user`  (
   `update_time` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   `enabled` int(11) NULL DEFAULT 1 COMMENT '是否可见，0为不可见，1为可见',
   `avatar_url` varchar(512) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户头像',
-  `type` int(11) NOT NULL DEFAULT 0 COMMENT '用户类型',
+  `type` varchar(20) NOT NULL COMMENT '用户类型',
   `data_id` varchar(60) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '0' COMMENT '抽象id，针对不同平台标识唯一标识',
   `login_end_time` bigint(20) NOT NULL DEFAULT 0 COMMENT '最后登录时间',
   `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '' COMMENT '备注',
@@ -925,7 +925,7 @@ CREATE TABLE `t_platform_user`  (
   `email` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户邮箱号',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `un_data_id`(`data_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '平台用户详情信息' ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '平台用户信息' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of t_platform_user

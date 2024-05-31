@@ -1,8 +1,6 @@
 package com.onethinker.web.controller.system;
 
 import com.onethinker.common.annotation.Log;
-import com.onethinker.common.config.OnethinkerConfig;
-import com.onethinker.common.constant.ServicePathConstant;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;
 import com.onethinker.common.core.domain.entity.SysUser;
@@ -10,13 +8,10 @@ import com.onethinker.common.core.domain.model.LoginUser;
 import com.onethinker.common.enums.BusinessType;
 import com.onethinker.common.utils.SecurityUtils;
 import com.onethinker.common.utils.StringUtils;
-import com.onethinker.common.utils.file.FileUploadUtils;
-import com.onethinker.common.utils.file.MimeTypeUtils;
 import com.onethinker.framework.web.service.TokenService;
 import com.onethinker.system.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 个人信息 业务处理

@@ -1,13 +1,5 @@
 package com.onethinker.system.service.impl;
 
-import java.util.Collection;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.onethinker.common.annotation.DataSource;
 import com.onethinker.common.constant.UserConstants;
 import com.onethinker.common.core.redis.RedisCache;
@@ -20,6 +12,12 @@ import com.onethinker.common.utils.StringUtils;
 import com.onethinker.system.domain.SysConfig;
 import com.onethinker.system.mapper.SysConfigMapper;
 import com.onethinker.system.service.ISysConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * 参数配置 服务层实现

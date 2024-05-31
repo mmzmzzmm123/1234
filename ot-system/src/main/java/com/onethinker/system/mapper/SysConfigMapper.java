@@ -1,8 +1,8 @@
 package com.onethinker.system.mapper;
 
-import java.util.List;
-
 import com.onethinker.system.domain.SysConfig;
+
+import java.util.List;
 
 /**
  * 参数配置 数据层

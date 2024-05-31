@@ -1,8 +1,8 @@
 package com.onethinker.system.service;
 
-import java.util.List;
-
 import com.onethinker.system.domain.SysNotice;
+
+import java.util.List;
 
 /**
  * 公告 服务层
