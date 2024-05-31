@@ -47,7 +47,7 @@ public class RedEnvelopeDtlTask {
         redEnvelopeCtrlDTO.setStatus(AwardConstants.CREATE_QR_CODE_STATUS_INIT);
         // 分页处理
         PageHelper.startPage(1, 200);
-        List<Map> redEnvelopeCtrlMap = activityStorage.queryEntryByParams(redEnvelopeCtrlDTO);
+        List<Map> redEnvelopeCtrlMap = activityStorage.queryCtrlEntryByParams(redEnvelopeCtrlDTO);
         if (redEnvelopeCtrlMap.isEmpty()) {
             return;
         }

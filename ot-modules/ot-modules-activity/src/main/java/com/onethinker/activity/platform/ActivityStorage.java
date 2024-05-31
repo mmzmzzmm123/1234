@@ -1,6 +1,5 @@
 package com.onethinker.activity.platform;
 
-import com.onethinker.activity.domain.RedEnvelopeDtl;
 import com.onethinker.activity.dto.ActivityReqDTO;
 import com.onethinker.activity.dto.ActivityResDTO;
 import com.onethinker.common.enums.ActivityTypeEnum;
@@ -53,5 +52,5 @@ public interface ActivityStorage {
      * @param redEnvelopeCtrlDTO
      * @return
      */
-    List<Map> queryEntryByParams(Object redEnvelopeCtrlDTO);
+    List<Map> queryCtrlEntryByParams(Object redEnvelopeCtrlDTO);
 }

@@ -89,7 +89,7 @@ public class RedEnvelopeActivityStorage implements ActivityStorage {
     }
 
     @Override
-    public List<Map> queryEntryByParams(Object reqDTO) {
+    public List<Map> queryCtrlEntryByParams(Object reqDTO) {
         RedEnvelopeCtrl redEnvelopeCtrl = new RedEnvelopeCtrl();
         BeanUtils.copyProperties(reqDTO, redEnvelopeCtrl);
         List<RedEnvelopeCtrl> redEnvelopeCtrlList = redEnvelopeCtrlMapper.selectRedEnvelopeCtrlList(redEnvelopeCtrl);

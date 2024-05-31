@@ -1,6 +1,7 @@
 package com.onethinker.activity.service;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.onethinker.activity.domain.Activity;
 import com.onethinker.activity.dto.ActivityReqDTO;
 import com.onethinker.activity.dto.ActivityResDTO;
@@ -9,6 +10,7 @@ import com.onethinker.activity.platform.ActivityStorage;
 import com.onethinker.common.core.redis.RedisCache;
 import com.onethinker.common.enums.ActivityTypeEnum;
 import com.onethinker.common.enums.CacheEnum;
+import com.onethinker.common.enums.SysStatusTypeEnum;
 import com.onethinker.common.utils.DateUtils;
 import com.onethinker.common.utils.Tools;
 import lombok.extern.log4j.Log4j2;
@@ -164,5 +166,20 @@ public class ActivityStorageService {
         Activity activity = new Activity();
         activity.setActivityType(activityTypeEnum.name());
         return this.queryActivityBaseInfoList(activity);
+    }
+
+    public List<ActivityResDTO> queryActivityList() {
+        LambdaQueryWrapper<Activity> queryWrapper = new LambdaQueryWrapper<>();
+        // 按照活动开始时间顺序排序
+        queryWrapper.eq(Activity::getEnabled, SysStatusTypeEnum.STATUS_TYPE_ENABLED).orderByAsc(Activity::getStartTime);
+        List<Activity> activities = activityMapper.selectList(queryWrapper);
+        if (activities.isEmpty()) {
+            return Lists.newArrayList();
+        }
+        return activities.parallelStream().map(e -> {
+            ActivityResDTO activityResDTO = new ActivityResDTO();
+            BeanUtils.copyProperties(e,activityResDTO);
+            return activityResDTO;
+        }).collect(Collectors.toList());
     }
 }
