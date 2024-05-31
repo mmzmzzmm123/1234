@@ -27,13 +27,6 @@ public class WxUserStorage implements UserStorage {
     private final IPlatformUserService platformUserService;
     private final SysLoginService loginService;
 
-
-//    public WxUserStorage(IMinWechatService minWechatService, IPlatformUserService platformUserService, SysLoginService loginService) {
-//        this.minWechatService = minWechatService;
-//        this.platformUserService = platformUserService;
-//        this.loginService = loginService;
-//    }
-
     public WxUserStorage(ApplicationContext applicationContext) {
         this.minWechatService = applicationContext.getBean(IMinWechatService.class);
         this.platformUserService = applicationContext.getBean(IPlatformUserService.class);

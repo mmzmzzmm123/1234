@@ -19,14 +19,10 @@ import java.util.Objects;
 @Data
 public class PlatformUserReqDTO {
 
-    /**
-     * 平台用户来源 1：微信平台登录 2：账户密码登录
-     */
-    private PlatformUserTypeEnum sourceType;
-
     private String password;
 
     private String code;
+
     private String openId;
 
     private String phone;

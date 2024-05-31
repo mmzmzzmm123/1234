@@ -73,12 +73,9 @@ public class IPlatformUserService {
      */
     public <T extends UserStorage> T getUserStorage(PlatformUserTypeEnum userTypeEnum) {
         try {
-            Assert.isTrue(!ObjectUtils.isEmpty(userTypeEnum), "userTypeEnum is null ");
             Class<?> clazz = Class.forName(userTypeEnum.getInterfaceClass());
-//            Constructor<?> constructor = clazz.getConstructor(IMinWechatService.class, IPlatformUserService.class, SysLoginService.class);
             Constructor<?> constructor = clazz.getConstructor(ApplicationContext.class);
             constructor.setAccessible(true);
-//            UserStorage instance = (UserStorage) constructor.newInstance(wechatService, this, sysLoginService);
             UserStorage instance = (UserStorage) constructor.newInstance(applicationContext);
             return Tools.cast(instance);
         } catch (Exception e) {
