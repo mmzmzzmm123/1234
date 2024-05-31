@@ -9,7 +9,7 @@ import com.onethinker.user.dto.PlatformUserReqDTO;
 import com.onethinker.user.dto.PlatformUserResDTO;
 import com.onethinker.user.platform.UserStorage;
 import com.onethinker.user.service.IPlatformUserService;
-import com.onethinker.wechat.service.IMinWechatService;
+import com.onethinker.activity.service.IMinWechatService;
 import lombok.extern.log4j.Log4j2;
 
 import java.util.Objects;

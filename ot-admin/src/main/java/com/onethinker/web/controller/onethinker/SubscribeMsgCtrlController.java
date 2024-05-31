@@ -1,8 +1,8 @@
 package com.onethinker.web.controller.onethinker;
 
 import com.onethinker.common.constant.ServicePathConstant;
-import com.onethinker.onethinker.domain.SubscribeMsgCtrl;
-import com.onethinker.onethinker.service.ISubscribeMsgCtrlService;
+import com.onethinker.activity.domain.SubscribeMsgCtrl;
+import com.onethinker.activity.service.ISubscribeMsgCtrlService;
 import com.onethinker.common.annotation.Log;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;

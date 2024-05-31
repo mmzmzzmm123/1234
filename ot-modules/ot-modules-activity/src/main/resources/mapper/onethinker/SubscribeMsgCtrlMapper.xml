@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.onethinker.onethinker.mapper.SubscribeMsgCtrlMapper">
+<mapper namespace="com.onethinker.activity.mapper.SubscribeMsgCtrlMapper">
 
     <resultMap type="SubscribeMsgCtrl" id="SubscribeMsgCtrlResult">
         <result property="id" column="id"/>

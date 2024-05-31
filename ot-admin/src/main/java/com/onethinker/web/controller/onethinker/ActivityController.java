@@ -1,9 +1,9 @@
 package com.onethinker.web.controller.onethinker;
 
 import com.onethinker.common.constant.ServicePathConstant;
-import com.onethinker.onethinker.domain.Activity;
-import com.onethinker.onethinker.dto.ActivityReqDTO;
-import com.onethinker.onethinker.service.IActivityService;
+import com.onethinker.activity.domain.Activity;
+import com.onethinker.activity.dto.ActivityReqDTO;
+import com.onethinker.activity.service.IActivityService;
 import com.onethinker.common.annotation.Log;
 import com.onethinker.common.core.controller.BaseController;
 import com.onethinker.common.core.domain.AjaxResult;

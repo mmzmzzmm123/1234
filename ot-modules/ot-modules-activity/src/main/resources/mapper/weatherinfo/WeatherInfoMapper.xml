@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.onethinker.weatherinfo.mapper.WeatherInfoMapper">
+<mapper namespace="com.onethinker.activity.mapper.WeatherInfoMapper">
 
     <resultMap type="WeatherInfo" id="WeatherInfoResult">
             <result property="id" column="id"/>

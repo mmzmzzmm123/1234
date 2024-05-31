@@ -1,11 +1,11 @@
 package com.onethinker.quartz.task;
 
 import com.github.pagehelper.PageHelper;
-import com.onethinker.onethinker.domain.RedEnvelopeDtl;
-import com.onethinker.onethinker.dto.RedEnvelopeCtrlDTO;
-import com.onethinker.onethinker.factory.ActivityDetailFactory;
-import com.onethinker.onethinker.factory.service.IActivityDetailService;
-import com.onethinker.onethinker.service.IRedEnvelopeDtlService;
+import com.onethinker.activity.domain.RedEnvelopeDtl;
+import com.onethinker.activity.dto.RedEnvelopeCtrlDTO;
+import com.onethinker.activity.factory.ActivityDetailFactory;
+import com.onethinker.activity.factory.service.IActivityDetailService;
+import com.onethinker.activity.service.IRedEnvelopeDtlService;
 import com.onethinker.common.constant.AwardConstants;
 import com.onethinker.common.enums.ActivityTypeEnum;
 import lombok.extern.log4j.Log4j2;

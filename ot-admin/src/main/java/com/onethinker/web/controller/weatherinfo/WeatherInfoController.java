@@ -5,8 +5,8 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.onethinker.common.constant.ServicePathConstant;
-import com.onethinker.weatherinfo.domain.WeatherInfo;
-import com.onethinker.weatherinfo.service.IWeatherInfoService;
+import com.onethinker.activity.domain.WeatherInfo;
+import com.onethinker.activity.service.IWeatherInfoService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
