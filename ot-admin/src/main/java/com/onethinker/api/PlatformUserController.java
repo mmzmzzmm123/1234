@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author yangyouqi
  * @date : 2023/10/23 0023 21:00
  */
-@RestController
+@RestController("wxUserController")
 @RequestMapping("/onethinker"+ ServicePathConstant.PREFIX_WX_API_PATH +"/platformUser")
 public class PlatformUserController extends BaseController {
 

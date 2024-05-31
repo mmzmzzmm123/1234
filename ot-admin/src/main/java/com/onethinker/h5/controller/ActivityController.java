@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2024/5/31
  * H5活动API接口
  */
-@RestController
-@RequestMapping("/onethinker/"+ ServicePathConstant.PREFIX_SERVICE_PATH +"/activity")
+@RestController("webActivityController")
+@RequestMapping("/onethinker/"+ ServicePathConstant.PREFIX_WEB_API_PATH +"/activity")
 public class ActivityController {
 
 
