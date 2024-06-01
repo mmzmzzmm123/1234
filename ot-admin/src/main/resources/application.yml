@@ -73,7 +73,7 @@ onethinker:
   # 名称
   name: onethinker
   # 版本
-  version: 3.8.6
+  version: 1.0.1
   # 文件路径 示例（ Windows配置D:/onethinker/uploadPath，Linux配置 /home/onethinker/uploadPath）
   profile: ${config.profile.basePath}
   # 验证码类型 math 数字计算 char 字符验证
