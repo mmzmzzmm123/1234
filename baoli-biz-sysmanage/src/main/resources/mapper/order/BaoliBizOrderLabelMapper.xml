@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.order.mapper.BaoliBizOrderLabelMapper">
+    
+    <resultMap type="BaoliBizOrderLabel" id="BaoliBizOrderLabelResult">
+        <result property="id"    column="id"    />
+        <result property="labelType"    column="label_type"    />
+        <result property="sendUserId"    column="send_user_id"    />
+        <result property="receiveUserId"    column="receive_user_id"    />
+        <result property="sendUserName"    column="send_user_name"    />
+        <result property="receiveUserName"    column="receive_user_name"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="status"    column="status"    />
+        <result property="remark"    column="remark"    />
+        <result property="orderCustomerName"    column="customer_name"    />
+        <result property="orderLoanAmount"    column="loan_amount"    />
+        <result property="orderNumber"    column="order_number"    />
+        <result property="orderStatus"    column="order_status"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizOrderLabelVo">
+        select id, label_type,(select b.status from baoli_biz_order b where b.id = a.order_id) order_status,(select b.loan_amount from baoli_biz_order b where b.id = a.order_id) loan_amount,(select b.customer_name from baoli_biz_order b where b.id = a.order_id) customer_name,(select b.order_number from baoli_biz_order b where b.id = a.order_id) order_number,(select b.nick_name from sys_user b where b.user_id =a.send_user_id ) send_user_name,send_user_id,(select b.nick_name from sys_user b where b.user_id =a.receive_user_id ) receive_user_name, receive_user_id, order_id, status, remark from baoli_biz_order_label a
+    </sql>
+
+    <select id="selectBaoliBizOrderLabelList" parameterType="BaoliBizOrderLabel" resultMap="BaoliBizOrderLabelResult">
+        <include refid="selectBaoliBizOrderLabelVo"/>
+        <where>  
+            <if test="labelType != null  and labelType != ''"> and label_type = #{labelType}</if>
+            <if test="sendUserId != null "> and send_user_id = #{sendUserId}</if>
+            <if test="receiveUserId != null "> and receive_user_id = #{receiveUserId}</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizOrderLabelById" parameterType="Long" resultMap="BaoliBizOrderLabelResult">
+        <include refid="selectBaoliBizOrderLabelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizOrderLabel" parameterType="BaoliBizOrderLabel" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_order_label
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="labelType != null">label_type,</if>
+            <if test="sendUserId != null">send_user_id,</if>
+            <if test="receiveUserId != null">receive_user_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="status != null">status,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="labelType != null">#{labelType},</if>
+            <if test="sendUserId != null">#{sendUserId},</if>
+            <if test="receiveUserId != null">#{receiveUserId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="status != null">#{status},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizOrderLabel" parameterType="BaoliBizOrderLabel">
+        update baoli_biz_order_label
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="labelType != null">label_type = #{labelType},</if>
+            <if test="sendUserId != null">send_user_id = #{sendUserId},</if>
+            <if test="receiveUserId != null">receive_user_id = #{receiveUserId},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizOrderLabelById" parameterType="Long">
+        delete from baoli_biz_order_label where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizOrderLabelByIds" parameterType="String">
+        delete from baoli_biz_order_label where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

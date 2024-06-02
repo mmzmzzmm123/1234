@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.sysmanage.mapper.BlSysCitiesMapper">
+    
+    <resultMap type="BlSysCities" id="BlSysCitiesResult">
+        <result property="id"    column="id"    />
+        <result property="cityid"    column="cityid"    />
+        <result property="city"    column="city"    />
+        <result property="provinceid"    column="provinceid"    />
+        <result property="provinceName"    column="province_name"    />
+    </resultMap>
+
+    <sql id="selectBlSysCitiesVo">
+        select id, cityid, city, provinceid,(select b. province from bl_sys_provinces b where b.provinceid = a.provinceid) province_name from bl_sys_cities a
+    </sql>
+
+    <select id="selectBlSysCitiesList" parameterType="BlSysCities" resultMap="BlSysCitiesResult">
+        <include refid="selectBlSysCitiesVo"/>
+        <where>  
+            <if test="cityid != null  and cityid != ''"> and cityid = #{cityid}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="provinceid != null  and provinceid != ''"> and provinceid = #{provinceid}</if>
+            <if test="limitCities != null and limitProvinces ==null">
+                and cityid in
+                <foreach item="city" collection="limitCities" open="(" separator="," close=")">
+                    #{city.cityId}
+                </foreach>
+            </if>
+
+            <if test="limitCities == null  and limitProvinces !=null">
+                and provinceid in
+                <foreach item="city" collection="limitProvinces" open="(" separator="," close=")">
+                    #{city.provinceId}
+                </foreach>
+            </if>
+
+            <if test="limitCities != null and limitProvinces !=null">
+                and ((provinceid in
+                <foreach item="city" collection="limitProvinces" open="(" separator="," close=")">
+                    #{city.provinceId}
+                </foreach>)
+                or (cityid in
+                <foreach item="city" collection="limitCities" open="(" separator="," close=")">
+                    #{city.cityId}
+                </foreach>
+                ))
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectBlSysCitiesById" parameterType="Long" resultMap="BlSysCitiesResult">
+        <include refid="selectBlSysCitiesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBlSysCities" parameterType="BlSysCities" useGeneratedKeys="true" keyProperty="id">
+        insert into bl_sys_cities
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="cityid != null and cityid != ''">cityid,</if>
+            <if test="city != null and city != ''">city,</if>
+            <if test="provinceid != null and provinceid != ''">provinceid,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="cityid != null and cityid != ''">#{cityid},</if>
+            <if test="city != null and city != ''">#{city},</if>
+            <if test="provinceid != null and provinceid != ''">#{provinceid},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBlSysCities" parameterType="BlSysCities">
+        update bl_sys_cities
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="cityid != null and cityid != ''">cityid = #{cityid},</if>
+            <if test="city != null and city != ''">city = #{city},</if>
+            <if test="provinceid != null and provinceid != ''">provinceid = #{provinceid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBlSysCitiesById" parameterType="Long">
+        delete from bl_sys_cities where id = #{id}
+    </delete>
+
+    <delete id="deleteBlSysCitiesByIds" parameterType="String">
+        delete from bl_sys_cities where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

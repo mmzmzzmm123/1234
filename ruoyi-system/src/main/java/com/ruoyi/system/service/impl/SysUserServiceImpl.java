@@ -293,9 +293,9 @@ public class SysUserServiceImpl implements ISysUserService
     {
         Long userId = user.getUserId();
         // 删除用户与角色关联
-        userRoleMapper.deleteUserRoleByUserId(userId);
+        //userRoleMapper.deleteUserRoleByUserId(userId);
         // 新增用户与角色管理
-        insertUserRole(user);
+        //insertUserRole(user);
         // 删除用户与岗位关联
         userPostMapper.deleteUserPostByUserId(userId);
         // 新增用户与岗位管理
@@ -435,6 +435,14 @@ public class SysUserServiceImpl implements ISysUserService
         }
     }
 
+    public int updateUserRole(SysUserRole sysUserRole)
+    {
+       return userRoleMapper.updateUserRole(sysUserRole);
+    }
+
+    public List<SysUserRole> selectUserRoleList(SysUserRole sysUserRole){
+        return userRoleMapper.selectUserRoleList(sysUserRole);
+    }
     /**
      * 通过用户ID删除用户
      * 

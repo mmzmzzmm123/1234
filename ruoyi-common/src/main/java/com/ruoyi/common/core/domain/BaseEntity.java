@@ -3,6 +3,7 @@ package com.ruoyi.common.core.domain;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -16,6 +17,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 public class BaseEntity implements Serializable
 {
     private static final long serialVersionUID = 1L;
+
+    /* 设置是否分页(默认为true) */
+    private boolean pageAble = true;
 
     /** 搜索值 */
     @JsonIgnore
@@ -37,6 +41,25 @@ public class BaseEntity implements Serializable
 
     /** 备注 */
     private String remark;
+
+    private List<Map<String,Object>> provinceParam;
+    private List<Map<String,Object>> cityParam;
+
+    public List<Map<String, Object>> getProvinceParam() {
+        return provinceParam;
+    }
+
+    public void setProvinceParam(List<Map<String, Object>> provinceParam) {
+        this.provinceParam = provinceParam;
+    }
+
+    public List<Map<String, Object>> getCityParam() {
+        return cityParam;
+    }
+
+    public void setCityParam(List<Map<String, Object>> cityParam) {
+        this.cityParam = cityParam;
+    }
 
     /** 请求参数 */
     @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -100,6 +123,14 @@ public class BaseEntity implements Serializable
     public void setRemark(String remark)
     {
         this.remark = remark;
+    }
+
+    public boolean isPageAble() {
+        return pageAble;
+    }
+
+    public void setPageAble(boolean pageAble) {
+        this.pageAble = pageAble;
     }
 
     public Map<String, Object> getParams()

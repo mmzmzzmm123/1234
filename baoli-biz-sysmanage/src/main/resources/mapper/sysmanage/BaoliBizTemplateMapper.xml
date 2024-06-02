@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.template.mapper.BaoliBizTemplateMapper">
+    
+    <resultMap type="BaoliBizTemplate" id="BaoliBizTemplateResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="businessType"    column="business_type"    />
+        <result property="content"    column="content"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizTemplateVo">
+        select id, title, business_type, content, remark from baoli_biz_template
+    </sql>
+
+    <select id="selectBaoliBizTemplateList" parameterType="BaoliBizTemplate" resultMap="BaoliBizTemplateResult">
+        <include refid="selectBaoliBizTemplateVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="businessType != null  and businessType != ''"> and business_type = #{businessType}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizTemplateById" parameterType="Long" resultMap="BaoliBizTemplateResult">
+        <include refid="selectBaoliBizTemplateVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizTemplate" parameterType="BaoliBizTemplate" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_template
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="businessType != null">business_type,</if>
+            <if test="content != null">content,</if>
+            <if test="remark != null">remark,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="businessType != null">#{businessType},</if>
+            <if test="content != null">#{content},</if>
+            <if test="remark != null">#{remark},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizTemplate" parameterType="BaoliBizTemplate">
+        update baoli_biz_template
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="businessType != null">business_type = #{businessType},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizTemplateById" parameterType="Long">
+        delete from baoli_biz_template where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizTemplateByIds" parameterType="String">
+        delete from baoli_biz_template where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

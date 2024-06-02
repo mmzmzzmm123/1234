@@ -64,6 +64,16 @@ public class SysRole extends BaseEntity
     /** 角色菜单权限 */
     private Set<String> permissions;
 
+    private String areaRegion;
+
+    public String getAreaRegion() {
+        return areaRegion;
+    }
+
+    public void setAreaRegion(String areaRegion) {
+        this.areaRegion = areaRegion;
+    }
+
     public SysRole()
     {
 

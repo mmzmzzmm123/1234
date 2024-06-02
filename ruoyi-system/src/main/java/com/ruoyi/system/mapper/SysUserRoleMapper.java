@@ -42,7 +42,8 @@ public interface SysUserRoleMapper
      * @return 结果
      */
     public int batchUserRole(List<SysUserRole> userRoleList);
-
+    public int updateUserRole(SysUserRole sysUserRole);
+    public List<SysUserRole> selectUserRoleList(SysUserRole sysUserRole);
     /**
      * 删除用户和角色关联信息
      * 

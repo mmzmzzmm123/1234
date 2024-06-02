@@ -38,6 +38,8 @@ public class SysPost extends BaseEntity
     @Excel(name = "状态", readConverterExp = "0=正常,1=停用")
     private String status;
 
+    private String areaRegion;
+    private  String multiSelect;
     /** 用户是否存在此岗位标识 默认不存在 */
     private boolean flag = false;
 
@@ -105,7 +107,23 @@ public class SysPost extends BaseEntity
     {
         this.flag = flag;
     }
-    
+
+    public String getAreaRegion() {
+        return areaRegion;
+    }
+
+    public void setAreaRegion(String areaRegion) {
+        this.areaRegion = areaRegion;
+    }
+
+    public String getMultiSelect() {
+        return multiSelect;
+    }
+
+    public void setMultiSelect(String multiSelect) {
+        this.multiSelect = multiSelect;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)

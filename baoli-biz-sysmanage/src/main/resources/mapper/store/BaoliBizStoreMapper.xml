@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.store.mapper.BaoliBizStoreMapper">
+    
+    <resultMap type="BaoliBizStore" id="BaoliBizStoreResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="brandId"    column="brand_id"    />
+        <result property="group"    column="group"    />
+        <result property="provinceId"    column="province_id"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="dealerType"    column="dealer_type"    />
+        <result property="mostSellModel"    column="most_sell_model"    />
+        <result property="staffAmount"    column="staff_amount"    />
+        <result property="gmName"    column="gm_name"    />
+        <result property="gmPhoneNumber"    column="gm_phone_number"    />
+        <result property="smName"    column="sm_name"    />
+        <result property="smPhoneNumber"    column="sm_phone_number"    />
+        <result property="foName"    column="fo_name"    />
+        <result property="foPhoneNumber"    column="fo_phone_number"    />
+        <result property="monthSellsAmout"    column="month_sells_amout"    />
+        <result property="permeationRate"    column="permeation_rate"    />
+        <result property="brandPr"    column="brand_pr"    />
+        <result property="bankPr"    column="bank_pr"    />
+        <result property="sfInvestor"    column="sf_investor"    />
+        <result property="sfRate"    column="sf_rate"    />
+        <result property="discountCars"    column="discount_cars"    />
+        <result property="discountSellsRate"    column="discount_sells_rate"    />
+        <result property="discountBank"    column="discount_bank"    />
+        <result property="nonDiscountCars"    column="non_discount_cars"    />
+        <result property="nonDiscountSellsRate"    column="non_discount_sells_rate"    />
+        <result property="defectRate"    column="defect_rate"    />
+        <result property="brandDefectRate"    column="brand_defect_rate"    />
+        <result property="bankDefectRate"    column="bank_defect_rate"    />
+        <result property="keyPerson"    column="key_person"    />
+        <result property="kpPosition"    column="kp_position"    />
+        <result property="kpPhoneNumber"    column="kp_phone_number"    />
+        <result property="remark"    column="remark"    />
+        <result property="sellsPolicy"    column="sells_policy"    />
+        <result property="beReviewPerson"    column="be_review_person"    />
+        <result property="brpPosition"    column="brp_position"    />
+        <result property="brpPhoneNumber"    column="brp_phone_number"    />
+        <result property="brpInStore"    column="brp_in_store"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="cityName"    column="city_name"    />
+        <result property="brandName"    column="brand_name"    />
+        <result property="signBanks"    column="sign_banks"    />
+        <result property="status"    column="status"    />
+        <result property="exceptionDesc"    column="exception_desc"    />
+        <result property="feeSchema"    column="fee_schema"    />
+        <result property="feeRateSchema"    column="fee_rate_schema"    />
+        <result property="exceptionReason"    column="exception_reason"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizStoreVo">
+        select id,exception_reason,status,fee_schema,fee_rate_schema,exception_desc,sign_banks, name,(select `name` from baoli_biz_car_brand b where b.id = a.brand_id) brand_name,brand_id, `group`, province_id,(select city from bl_sys_cities b where b.cityid = a.city_id) city_name, city_id, dealer_type, most_sell_model, staff_amount, gm_name, gm_phone_number, sm_name, sm_phone_number, fo_name, fo_phone_number, month_sells_amout, permeation_rate, brand_pr, bank_pr, sf_investor, sf_rate, discount_cars, discount_sells_rate, discount_bank, non_discount_cars, non_discount_sells_rate, defect_rate, brand_defect_rate, bank_defect_rate, key_person, kp_position, kp_phone_number, remark, sells_policy, be_review_person, brp_position, brp_phone_number, brp_in_store, create_time, update_time, create_by, update_by from baoli_biz_store a
+    </sql>
+
+    <select id="selectBaoliBizStoreList" parameterType="BaoliBizStore" resultMap="BaoliBizStoreResult">
+        <include refid="selectBaoliBizStoreVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="brandId != null "> and brand_id = #{brandId}</if>
+            <if test="group != null  and group != ''"> and `group` like concat('%', #{group}, '%')</if>
+            <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
+            <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
+            <if test="dealerType != null  and dealerType != ''"> and dealer_type = #{dealerType}</if>
+            <if test="mostSellModel != null  and mostSellModel != ''"> and most_sell_model = #{mostSellModel}</if>
+            <if test="staffAmount != null "> and staff_amount = #{staffAmount}</if>
+            <if test="gmName != null  and gmName != ''"> and gm_name like concat('%', #{gmName}, '%')</if>
+            <if test="gmPhoneNumber != null  and gmPhoneNumber != ''"> and gm_phone_number = #{gmPhoneNumber}</if>
+            <if test="smName != null  and smName != ''"> and sm_name like concat('%', #{smName}, '%')</if>
+            <if test="smPhoneNumber != null  and smPhoneNumber != ''"> and sm_phone_number = #{smPhoneNumber}</if>
+            <if test="foName != null  and foName != ''"> and fo_name like concat('%', #{foName}, '%')</if>
+            <if test="foPhoneNumber != null  and foPhoneNumber != ''"> and fo_phone_number = #{foPhoneNumber}</if>
+            <if test="monthSellsAmout != null "> and month_sells_amout = #{monthSellsAmout}</if>
+            <if test="permeationRate != null  and permeationRate != ''"> and permeation_rate = #{permeationRate}</if>
+            <if test="brandPr != null  and brandPr != ''"> and brand_pr = #{brandPr}</if>
+            <if test="bankPr != null  and bankPr != ''"> and bank_pr = #{bankPr}</if>
+            <if test="sfInvestor != null  and sfInvestor != ''"> and sf_investor = #{sfInvestor}</if>
+            <if test="sfRate != null  and sfRate != ''"> and sf_rate = #{sfRate}</if>
+            <if test="discountCars != null  and discountCars != ''"> and discount_cars = #{discountCars}</if>
+            <if test="discountSellsRate != null  and discountSellsRate != ''"> and discount_sells_rate = #{discountSellsRate}</if>
+            <if test="discountBank != null  and discountBank != ''"> and discount_bank = #{discountBank}</if>
+            <if test="nonDiscountCars != null  and nonDiscountCars != ''"> and non_discount_cars = #{nonDiscountCars}</if>
+            <if test="nonDiscountSellsRate != null  and nonDiscountSellsRate != ''"> and non_discount_sells_rate = #{nonDiscountSellsRate}</if>
+            <if test="defectRate != null  and defectRate != ''"> and defect_rate = #{defectRate}</if>
+            <if test="brandDefectRate != null  and brandDefectRate != ''"> and brand_defect_rate = #{brandDefectRate}</if>
+            <if test="bankDefectRate != null  and bankDefectRate != ''"> and bank_defect_rate = #{bankDefectRate}</if>
+            <if test="keyPerson != null  and keyPerson != ''"> and key_person = #{keyPerson}</if>
+            <if test="kpPosition != null  and kpPosition != ''"> and kp_position = #{kpPosition}</if>
+            <if test="kpPhoneNumber != null  and kpPhoneNumber != ''"> and kp_phone_number = #{kpPhoneNumber}</if>
+            <if test="sellsPolicy != null  and sellsPolicy != ''"> and sells_policy = #{sellsPolicy}</if>
+            <if test="beReviewPerson != null  and beReviewPerson != ''"> and be_review_person = #{beReviewPerson}</if>
+            <if test="brpPosition != null  and brpPosition != ''"> and brp_position = #{brpPosition}</if>
+            <if test="brpPhoneNumber != null  and brpPhoneNumber != ''"> and brp_phone_number = #{brpPhoneNumber}</if>
+            <if test="brpInStore != null  and brpInStore != ''"> and brp_in_store = #{brpInStore}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="status == null  || status == ''"> and status != '04'</if>
+             <!-- 只有省 没有市 -->
+            <if test="provinceParam != null and cityParam == null"> and province_id in
+             <foreach collection="provinceParam" item="province" separator="," open="(" close=")">
+               #{province.province_id}
+             </foreach>
+             </if>
+            <!-- 只有市 没有省 -->
+            <if test="cityParam != null and provinceParam == null"> and city_id in
+                <foreach collection="cityParam" item="city" separator="," open="(" close=")">
+                    #{city.city_id}
+                </foreach>
+            </if>
+
+            <!-- 省市 都有 -->
+            <if test="provinceParam != null and cityParam != null"> and ((province_id in
+                <foreach collection="provinceParam" item="province" separator="," open="(" close=")">
+                    #{province.province_id}
+                </foreach>
+                ) or (
+                city_id in
+                <foreach collection="cityParam" item="city" separator="," open="(" close=")">
+                    #{city.city_id}
+                </foreach>
+                ))
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizStoreById" parameterType="Long" resultMap="BaoliBizStoreResult">
+        <include refid="selectBaoliBizStoreVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizStore" parameterType="BaoliBizStore" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_store
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="brandId != null">brand_id,</if>
+            <if test="group != null">`group`,</if>
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="dealerType != null">dealer_type,</if>
+            <if test="mostSellModel != null">most_sell_model,</if>
+            <if test="staffAmount != null">staff_amount,</if>
+            <if test="gmName != null">gm_name,</if>
+            <if test="gmPhoneNumber != null">gm_phone_number,</if>
+            <if test="smName != null">sm_name,</if>
+            <if test="smPhoneNumber != null">sm_phone_number,</if>
+            <if test="foName != null">fo_name,</if>
+            <if test="foPhoneNumber != null">fo_phone_number,</if>
+            <if test="monthSellsAmout != null">month_sells_amout,</if>
+            <if test="permeationRate != null">permeation_rate,</if>
+            <if test="brandPr != null">brand_pr,</if>
+            <if test="bankPr != null">bank_pr,</if>
+            <if test="sfInvestor != null">sf_investor,</if>
+            <if test="sfRate != null">sf_rate,</if>
+            <if test="discountCars != null">discount_cars,</if>
+            <if test="discountSellsRate != null">discount_sells_rate,</if>
+            <if test="discountBank != null">discount_bank,</if>
+            <if test="nonDiscountCars != null">non_discount_cars,</if>
+            <if test="nonDiscountSellsRate != null">non_discount_sells_rate,</if>
+            <if test="defectRate != null">defect_rate,</if>
+            <if test="brandDefectRate != null">brand_defect_rate,</if>
+            <if test="bankDefectRate != null">bank_defect_rate,</if>
+            <if test="keyPerson != null">key_person,</if>
+            <if test="kpPosition != null">kp_position,</if>
+            <if test="kpPhoneNumber != null">kp_phone_number,</if>
+            <if test="remark != null">remark,</if>
+            <if test="sellsPolicy != null">sells_policy,</if>
+            <if test="beReviewPerson != null">be_review_person,</if>
+            <if test="brpPosition != null">brp_position,</if>
+            <if test="brpPhoneNumber != null">brp_phone_number,</if>
+            <if test="brpInStore != null">brp_in_store,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="status != null">status,</if>
+            <if test="exceptionDesc != null">exception_desc,</if>
+            <if test="signBanks != null">sign_banks,</if>
+            <if test="exceptionReason != null">exception_reason,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="brandId != null">#{brandId},</if>
+            <if test="group != null">#{group},</if>
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="dealerType != null">#{dealerType},</if>
+            <if test="mostSellModel != null">#{mostSellModel},</if>
+            <if test="staffAmount != null">#{staffAmount},</if>
+            <if test="gmName != null">#{gmName},</if>
+            <if test="gmPhoneNumber != null">#{gmPhoneNumber},</if>
+            <if test="smName != null">#{smName},</if>
+            <if test="smPhoneNumber != null">#{smPhoneNumber},</if>
+            <if test="foName != null">#{foName},</if>
+            <if test="foPhoneNumber != null">#{foPhoneNumber},</if>
+            <if test="monthSellsAmout != null">#{monthSellsAmout},</if>
+            <if test="permeationRate != null">#{permeationRate},</if>
+            <if test="brandPr != null">#{brandPr},</if>
+            <if test="bankPr != null">#{bankPr},</if>
+            <if test="sfInvestor != null">#{sfInvestor},</if>
+            <if test="sfRate != null">#{sfRate},</if>
+            <if test="discountCars != null">#{discountCars},</if>
+            <if test="discountSellsRate != null">#{discountSellsRate},</if>
+            <if test="discountBank != null">#{discountBank},</if>
+            <if test="nonDiscountCars != null">#{nonDiscountCars},</if>
+            <if test="nonDiscountSellsRate != null">#{nonDiscountSellsRate},</if>
+            <if test="defectRate != null">#{defectRate},</if>
+            <if test="brandDefectRate != null">#{brandDefectRate},</if>
+            <if test="bankDefectRate != null">#{bankDefectRate},</if>
+            <if test="keyPerson != null">#{keyPerson},</if>
+            <if test="kpPosition != null">#{kpPosition},</if>
+            <if test="kpPhoneNumber != null">#{kpPhoneNumber},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="sellsPolicy != null">#{sellsPolicy},</if>
+            <if test="beReviewPerson != null">#{beReviewPerson},</if>
+            <if test="brpPosition != null">#{brpPosition},</if>
+            <if test="brpPhoneNumber != null">#{brpPhoneNumber},</if>
+            <if test="brpInStore != null">#{brpInStore},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="status != null">#{status},</if>
+            <if test="exceptionDesc != null">#{exceptionDesc},</if>
+            <if test="signBanks != null">#{signBanks},</if>
+            <if test="exceptionReason != null">#{exceptionReason},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizStore" parameterType="BaoliBizStore">
+        update baoli_biz_store
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="brandId != null">brand_id = #{brandId},</if>
+            <if test="group != null">`group` = #{group},</if>
+            <if test="provinceId != null">province_id = #{provinceId},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="dealerType != null">dealer_type = #{dealerType},</if>
+            <if test="mostSellModel != null">most_sell_model = #{mostSellModel},</if>
+            <if test="staffAmount != null">staff_amount = #{staffAmount},</if>
+            <if test="gmName != null">gm_name = #{gmName},</if>
+            <if test="gmPhoneNumber != null">gm_phone_number = #{gmPhoneNumber},</if>
+            <if test="smName != null">sm_name = #{smName},</if>
+            <if test="smPhoneNumber != null">sm_phone_number = #{smPhoneNumber},</if>
+            <if test="foName != null">fo_name = #{foName},</if>
+            <if test="foPhoneNumber != null">fo_phone_number = #{foPhoneNumber},</if>
+            <if test="monthSellsAmout != null">month_sells_amout = #{monthSellsAmout},</if>
+            <if test="permeationRate != null">permeation_rate = #{permeationRate},</if>
+            <if test="brandPr != null">brand_pr = #{brandPr},</if>
+            <if test="bankPr != null">bank_pr = #{bankPr},</if>
+            <if test="sfInvestor != null">sf_investor = #{sfInvestor},</if>
+            <if test="sfRate != null">sf_rate = #{sfRate},</if>
+            <if test="discountCars != null">discount_cars = #{discountCars},</if>
+            <if test="discountSellsRate != null">discount_sells_rate = #{discountSellsRate},</if>
+            <if test="discountBank != null">discount_bank = #{discountBank},</if>
+            <if test="nonDiscountCars != null">non_discount_cars = #{nonDiscountCars},</if>
+            <if test="nonDiscountSellsRate != null">non_discount_sells_rate = #{nonDiscountSellsRate},</if>
+            <if test="defectRate != null">defect_rate = #{defectRate},</if>
+            <if test="brandDefectRate != null">brand_defect_rate = #{brandDefectRate},</if>
+            <if test="bankDefectRate != null">bank_defect_rate = #{bankDefectRate},</if>
+            <if test="keyPerson != null">key_person = #{keyPerson},</if>
+            <if test="kpPosition != null">kp_position = #{kpPosition},</if>
+            <if test="kpPhoneNumber != null">kp_phone_number = #{kpPhoneNumber},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="sellsPolicy != null">sells_policy = #{sellsPolicy},</if>
+            <if test="beReviewPerson != null">be_review_person = #{beReviewPerson},</if>
+            <if test="brpPosition != null">brp_position = #{brpPosition},</if>
+            <if test="brpPhoneNumber != null">brp_phone_number = #{brpPhoneNumber},</if>
+            <if test="brpInStore != null">brp_in_store = #{brpInStore},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="signBanks != null">sign_banks = #{signBanks},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="exceptionDesc != null">exception_desc= #{exceptionDesc},</if>
+            <if test="feeSchema != null">fee_schema= #{feeSchema},</if>
+            <if test="feeRateSchema != null">fee_rate_schema= #{feeRateSchema},</if>
+            <if test="exceptionReason != null">exception_reason= #{exceptionReason},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizStoreById" parameterType="Long">
+        delete from baoli_biz_store where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizStoreByIds" parameterType="String">
+        delete from baoli_biz_store where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

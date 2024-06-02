@@ -59,7 +59,9 @@ public class SysRoleController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(SysRole role)
     {
-        startPage();
+        if(role.isPageAble()){
+            startPage();
+        }
         List<SysRole> list = roleService.selectRoleList(role);
         return getDataTable(list);
     }
@@ -104,6 +106,14 @@ public class SysRoleController extends BaseController
         role.setCreateBy(getUsername());
         return toAjax(roleService.insertRole(role));
 
+    }
+    /**
+     * 新增用户角色
+     */
+    @PreAuthorize("@ss.hasPermi('system:role:add')")
+    @PostMapping("/addUserRole")
+    public AjaxResult addUserRole(@Validated @RequestBody SysUserRole userRole){
+        return toAjax(userService.updateUserRole(userRole));
     }
 
     /**

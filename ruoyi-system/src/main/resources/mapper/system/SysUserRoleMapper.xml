@@ -7,8 +7,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<resultMap type="SysUserRole" id="SysUserRoleResult">
 		<result property="userId"     column="user_id"      />
 		<result property="roleId"     column="role_id"      />
+		<result property="provinceId"     column="province_id"      />
+		<result property="cityId"     column="city_id"      />
+		<result property="areaRegion"     column="area_region"      />
 	</resultMap>
 
+	<select id="selectUserRoleList" parameterType="SysUserRole" resultMap="SysUserRoleResult">
+    select a.*,b.area_region from sys_user_role a left join sys_role b on a.role_id = b.role_id
+    <where>
+		<if test="userId != null and userId != ''">
+			AND user_id = #{userId}
+		</if>
+		<if test="roleId != null and roleId != ''">
+			AND role_id = #{roleId}
+		</if>
+	</where>
+	</select>
 	<delete id="deleteUserRoleByUserId" parameterType="Long">
 		delete from sys_user_role where user_id=#{userId}
 	</delete>
@@ -30,7 +44,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			(#{item.userId},#{item.roleId})
 		</foreach>
 	</insert>
-	
+
+	<update id="updateUserRole" parameterType="SysUserRole">
+		update sys_user_role
+		<trim prefix="SET" suffixOverrides=",">
+		<if test="provinceId != null">province_id = #{provinceId},</if>
+		<if test="cityId != null">city_id = #{cityId},</if>
+		</trim>
+		where user_id =  #{userId} and role_id = #{roleId}
+	</update>
+
 	<delete id="deleteUserRoleInfo" parameterType="SysUserRole">
 		delete from sys_user_role where user_id=#{userId} and role_id=#{roleId}
 	</delete>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.sysmanage.mapper.BaoliBizCarModelMapper">
+    
+    <resultMap type="BaoliBizCarModel" id="BaoliBizCarModelResult">
+        <result property="id"    column="id"    />
+        <result property="name"    column="name"    />
+        <result property="brandId"    column="brand_id"    />
+        <result property="level2BrandId"    column="level2_brand_id"    />
+        <result property="brandName"    column="brand_name"    />
+        <result property="level2BrandName"    column="level2_brand_name"    />
+        <result property="serieName"    column="serie_name"    />
+        <result property="serieId"    column="serie_id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="status"    column="status"    />
+        <result property="guidePrice"    column="guide_price"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizCarModelVo">
+        select id, name, brand_id, level2_brand_id, serie_id,(select b.name from baoli_biz_car_brand b where b.id = a.brand_id) brand_name,(select b.name from baoli_biz_car_brand b where b.id = a.level2_brand_id) level2_brand_name, (select b.name from baoli_biz_car_series b where b.id = a.serie_id) serie_name, create_time, update_time, create_by, update_by, status ,guide_price from baoli_biz_car_model a
+    </sql>
+
+    <select id="selectBaoliBizCarModelList" parameterType="BaoliBizCarModel" resultMap="BaoliBizCarModelResult">
+        <include refid="selectBaoliBizCarModelVo"/>
+        <where>  
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="brandId != null "> and brand_id = #{brandId}</if>
+            <if test="level2BrandId != null "> and level2_brand_id = #{level2BrandId}</if>
+            <if test="serieId != null "> and serie_id = #{serieId}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+        order by id desc
+    </select>
+    
+    <select id="selectBaoliBizCarModelById" parameterType="Long" resultMap="BaoliBizCarModelResult">
+        <include refid="selectBaoliBizCarModelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizCarModel" parameterType="BaoliBizCarModel" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_car_model
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="name != null">name,</if>
+            <if test="brandId != null">brand_id,</if>
+            <if test="level2BrandId != null">level2_brand_id,</if>
+            <if test="serieId != null">serie_id,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="status != null">status,</if>
+            <if test="guidePrice != null">guide_price,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="name != null">#{name},</if>
+            <if test="brandId != null">#{brandId},</if>
+            <if test="level2BrandId != null">#{level2BrandId},</if>
+            <if test="serieId != null">#{serieId},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="status != null">#{status},</if>
+            <if test="guidePrice != null">#{guidePrice},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizCarModel" parameterType="BaoliBizCarModel">
+        update baoli_biz_car_model
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="name != null">name = #{name},</if>
+            <if test="brandId != null">brand_id = #{brandId},</if>
+            <if test="level2BrandId != null">level2_brand_id = #{level2BrandId},</if>
+            <if test="serieId != null">serie_id = #{serieId},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="guidePrice != null">guide_price = #{guidePrice},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizCarModelById" parameterType="Long">
+        delete from baoli_biz_car_model where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizCarModelByIds" parameterType="String">
+        delete from baoli_biz_car_model where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

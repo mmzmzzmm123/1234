@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.sysmanage.mapper.BlSysBankMapper">
+    
+    <resultMap type="BlSysBank" id="BlSysBankResult">
+        <result property="id"    column="id"    />
+        <result property="provinceId"    column="province_id"    />
+        <result property="provinceName"    column="province_name"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="cityName"    column="city_name"    />
+        <result property="name"    column="name"    />
+        <result property="code"    column="code"    />
+        <result property="bankType"    column="bank_type"    />
+        <result property="agency"    column="agency"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="parentId"    column="parent_id"    />
+        <result property="parentName"    column="parent_name"    />
+    </resultMap>
+
+    <sql id="selectBlSysBankVo">
+        select ifnull(concat((select `name` from bl_sys_bank b where b.id = a.parent_id), '/',name),name) name,parent_id,id, province_id,(select b.province from bl_sys_provinces b where b.provinceid = a.province_id) province_name, city_id,(select c.city from bl_sys_cities c  where c.cityid = a.city_id) city_name, code,bank_type, agency, create_by, create_time, update_by, update_time from bl_sys_bank a
+</sql>
+
+    <select id="selectBlSysBankList" parameterType="BlSysBank" resultMap="BlSysBankResult">
+        <include refid="selectBlSysBankVo"/>
+        <where>  
+            <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
+            <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+
+            <if test="agency != null  and agency != ''"> and agency = #{agency}</if>
+            <if test="bankType != null  and bankType != ''"> and bank_type = #{bankType}</if>
+            <if test="signBanks != null  and signBanks != ''"> and id in
+                <foreach collection="signBanks" item="signBank" open="(" separator="," close=")">
+                    #{signBank}
+                </foreach>
+            </if>
+            <if test="parentSignBanks != null  and parentSignBanks != ''"> and parent_id in
+                <foreach collection="parentSignBanks" item="signBank" open="(" separator="," close=")">
+                    #{signBank}
+                </foreach>
+            </if>
+        </where>
+    </select>
+    
+    <select id="selectBlSysBankById" parameterType="Long" resultMap="BlSysBankResult">
+        <include refid="selectBlSysBankVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBlSysBank" parameterType="BlSysBank" useGeneratedKeys="true" keyProperty="id">
+        insert into bl_sys_bank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="name != null">name,</if>
+            <if test="code != null">code,</if>
+            <if test="agency != null">agency,</if>
+            <if test="bankType != null">bank_type,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="parentId != null">parent_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="code != null">#{code},</if>
+            <if test="agency != null">#{agency},</if>
+            <if test="bankType != null">#{bankType},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="parentId != null">#{parentId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBlSysBank" parameterType="BlSysBank">
+        update bl_sys_bank
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="provinceId != null">province_id = #{provinceId},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="agency != null">agency = #{agency},</if>
+            <if test="bankType != null">bank_type = #{bankType},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="parentId != null">parent_id = #{parentId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBlSysBankById" parameterType="Long">
+        delete from bl_sys_bank where id = #{id}
+    </delete>
+
+    <delete id="deleteBlSysBankByIds" parameterType="String">
+        delete from bl_sys_bank where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

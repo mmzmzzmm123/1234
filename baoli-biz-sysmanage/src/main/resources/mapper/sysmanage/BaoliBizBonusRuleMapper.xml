@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.sysmanage.mapper.BaoliBizBonusRuleMapper">
+    
+    <resultMap type="BaoliBizBonusRule" id="BaoliBizBonusRuleResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="roleId"    column="role_id"    />
+        <result property="provinceId"    column="province_id"    />
+        <result property="cityId"    column="city_id"    />
+        <result property="content"    column="content"    />
+        <result property="remark"    column="remark"    />
+        <result property="status"    column="status"    />
+    </resultMap>
+
+    <sql id="selectBaoliBizBonusRuleVo">
+        select id, title, role_id, province_id, city_id, content, remark, status from baoli_biz_bonus_rule
+    </sql>
+
+    <select id="selectBaoliBizBonusRuleList" parameterType="BaoliBizBonusRule" resultMap="BaoliBizBonusRuleResult">
+        <include refid="selectBaoliBizBonusRuleVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="roleId != null "> and role_id = #{roleId}</if>
+            <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
+            <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
+            <if test="content != null  and content != ''"> and content = #{content}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectBaoliBizBonusRuleById" parameterType="Long" resultMap="BaoliBizBonusRuleResult">
+        <include refid="selectBaoliBizBonusRuleVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBaoliBizBonusRule" parameterType="BaoliBizBonusRule" useGeneratedKeys="true" keyProperty="id">
+        insert into baoli_biz_bonus_rule
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null">title,</if>
+            <if test="roleId != null">role_id,</if>
+            <if test="provinceId != null">province_id,</if>
+            <if test="cityId != null">city_id,</if>
+            <if test="content != null">content,</if>
+            <if test="remark != null">remark,</if>
+            <if test="status != null">status,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null">#{title},</if>
+            <if test="roleId != null">#{roleId},</if>
+            <if test="provinceId != null">#{provinceId},</if>
+            <if test="cityId != null">#{cityId},</if>
+            <if test="content != null">#{content},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="status != null">#{status},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBaoliBizBonusRule" parameterType="BaoliBizBonusRule">
+        update baoli_biz_bonus_rule
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null">title = #{title},</if>
+            <if test="roleId != null">role_id = #{roleId},</if>
+            <if test="provinceId != null">province_id = #{provinceId},</if>
+            <if test="cityId != null">city_id = #{cityId},</if>
+            <if test="content != null">content = #{content},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBaoliBizBonusRuleById" parameterType="Long">
+        delete from baoli_biz_bonus_rule where id = #{id}
+    </delete>
+
+    <delete id="deleteBaoliBizBonusRuleByIds" parameterType="String">
+        delete from baoli_biz_bonus_rule where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

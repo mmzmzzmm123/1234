@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baoli.sysmanage.mapper.BlSysProvincesMapper">
+    
+    <resultMap type="BlSysProvinces" id="BlSysProvincesResult">
+        <result property="id"    column="id"    />
+        <result property="provinceid"    column="provinceid"    />
+        <result property="province"    column="province"    />
+    </resultMap>
+
+    <sql id="selectBlSysProvincesVo">
+        select id, provinceid, province from bl_sys_provinces
+    </sql>
+
+    <select id="selectBlSysProvincesList" parameterType="BlSysProvinces" resultMap="BlSysProvincesResult">
+        <include refid="selectBlSysProvincesVo"/>
+        <where>  
+            <if test="provinceid != null  and provinceid != ''"> and provinceid = #{provinceid}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+        </where>
+    </select>
+    
+    <select id="selectBlSysProvincesById" parameterType="Long" resultMap="BlSysProvincesResult">
+        <include refid="selectBlSysProvincesVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBlSysProvinces" parameterType="BlSysProvinces" useGeneratedKeys="true" keyProperty="id">
+        insert into bl_sys_provinces
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="provinceid != null and provinceid != ''">provinceid,</if>
+            <if test="province != null and province != ''">province,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="provinceid != null and provinceid != ''">#{provinceid},</if>
+            <if test="province != null and province != ''">#{province},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBlSysProvinces" parameterType="BlSysProvinces">
+        update bl_sys_provinces
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="provinceid != null and provinceid != ''">provinceid = #{provinceid},</if>
+            <if test="province != null and province != ''">province = #{province},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBlSysProvincesById" parameterType="Long">
+        delete from bl_sys_provinces where id = #{id}
+    </delete>
+
+    <delete id="deleteBlSysProvincesByIds" parameterType="String">
+        delete from bl_sys_provinces where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
