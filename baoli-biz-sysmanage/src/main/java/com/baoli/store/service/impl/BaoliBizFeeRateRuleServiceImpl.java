@@ -55,6 +55,7 @@ public class BaoliBizFeeRateRuleServiceImpl implements IBaoliBizFeeRateRuleServi
         return baoliBizFeeRateRuleMapper.insertBaoliBizFeeRateRule(baoliBizFeeRateRule);
     }
 
+
     /**
      * 修改对店费率规则
      * 

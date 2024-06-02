@@ -41,7 +41,9 @@ public class BaoliBizFeeRuleController extends BaseController
     @GetMapping("/list")
     public TableDataInfo list(BaoliBizFeeRule baoliBizFeeRule)
     {
-        startPage();
+        if(baoliBizFeeRule.isPageAble()){
+            startPage();
+        }
         List<BaoliBizFeeRule> list = baoliBizFeeRuleService.selectBaoliBizFeeRuleList(baoliBizFeeRule);
         return getDataTable(list);
     }

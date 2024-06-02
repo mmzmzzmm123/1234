@@ -39,15 +39,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectBaoliBizFeeRateRuleList" parameterType="BaoliBizFeeRateRule" resultMap="BaoliBizFeeRateRuleResult">
         <include refid="selectBaoliBizFeeRateRuleVo"/>
         <where>  
-            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
             <if test="feeRateType != null  and feeRateType != ''"> and fee_rate_type = #{feeRateType}</if>
             <if test="bankId != null "> and bank_id = #{bankId}</if>
             <if test="brandId != null "> and brand_id = #{brandId}</if>
             <if test="level2BrandId != null "> and level2_brand_id = #{level2BrandId}</if>
             <if test="seriesId != null "> and series_id = #{seriesId}</if>
             <if test="modelId != null "> and model_id = #{modelId}</if>
+            <if test="period != null "> and period = #{period}</if>
+            <if test="totalFeeRate != null "> and total_fee_rate = #{totalFeeRate}</if>
+            <if test="rebateRate != null "> and rebate_rate = #{rebateRate}</if>
             <if test="subsidyType != null  and subsidyType != ''"> and subsidy_type = #{subsidyType}</if>
         </where>
+        order by title
     </select>
     
     <select id="selectBaoliBizFeeRateRuleById" parameterType="Long" resultMap="BaoliBizFeeRateRuleResult">
