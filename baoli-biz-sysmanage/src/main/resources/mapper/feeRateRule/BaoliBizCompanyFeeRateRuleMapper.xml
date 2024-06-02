@@ -25,7 +25,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="selectBaoliBizCompanyFeeRateRuleList" parameterType="BaoliBizCompanyFeeRateRule" resultMap="BaoliBizCompanyFeeRateRuleResult">
         <include refid="selectBaoliBizCompanyFeeRateRuleVo"/>
         <where>  
-            <if test="title != null  and title != ''"> and title = #{title}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
             <if test="bankId != null "> and bank_id = #{bankId}</if>
             <if test="provinceId != null  and provinceId != ''"> and province_id = #{provinceId}</if>
             <if test="cityId != null  and cityId != ''"> and city_id = #{cityId}</if>
@@ -34,6 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="executeWay != null  and executeWay != ''"> and execute_way = #{executeWay}</if>
             <if test="content != null  and content != ''"> and content = #{content}</if>
         </where>
+        order by title
     </select>
     
     <select id="selectBaoliBizCompanyFeeRateRuleById" parameterType="Long" resultMap="BaoliBizCompanyFeeRateRuleResult">
