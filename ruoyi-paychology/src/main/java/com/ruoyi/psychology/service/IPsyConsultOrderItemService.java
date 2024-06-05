@@ -1,6 +1,7 @@
 package com.ruoyi.psychology.service;
 
 import com.ruoyi.psychology.domain.PsyConsultOrderItem;
+import com.ruoyi.psychology.dto.OrderItemDTO;
 
 import java.util.List;
 
@@ -26,5 +27,7 @@ public interface IPsyConsultOrderItemService
     List<PsyConsultOrderItem> getList(Long orderId);
 
     PsyConsultOrderItem getOneByOrderId(Long orderId);
+
+    List<OrderItemDTO> getOrderItemList(Long consultantId,String day);    
 
 }

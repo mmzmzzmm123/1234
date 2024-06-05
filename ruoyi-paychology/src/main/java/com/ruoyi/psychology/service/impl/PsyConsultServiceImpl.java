@@ -169,6 +169,15 @@ public class PsyConsultServiceImpl implements IPsyConsultService {
     }
 
     @Override
+    public PsyConsult getByPhone(String phone) {
+
+        LambdaQueryWrapper<PsyConsult> wp = Wrappers.lambdaQuery();
+        wp.eq(PsyConsult::getPhonenumber, phone);
+
+        return psyConsultMapper.selectOne(wp);
+    }
+
+    @Override
     public List<PsyConsult> getList(PsyConsultVO req) {
         if (SecurityUtils.getUserIdByNotAdmin() != 0L) {
             req.setUserId(SecurityUtils.getUserIdByNotAdmin());

@@ -1,6 +1,8 @@
 package com.ruoyi.framework.config;
 
 import com.ruoyi.framework.security.filter.AppJwtAuthenticationTokenFilter;
+import com.ruoyi.framework.security.filter.ConsultJwtAuthenticationTokenFilter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
@@ -57,6 +59,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 
     @Autowired
     private AppJwtAuthenticationTokenFilter appJwtAuthenticationTokenFilter;
+
+    @Autowired
+    private ConsultJwtAuthenticationTokenFilter consultJwtAuthenticationTokenFilter;
     
     /**
      * 跨域过滤器
@@ -117,6 +122,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
                 // 对于登录login 注册register 验证码captchaImage 允许匿名访问
                 .antMatchers("/login", "/register", "/captchaImage").anonymous()
                 .antMatchers("/app/**").anonymous()
+                //.antMatchers("/consult/**").anonymous()
                 // 静态资源，可匿名访问
                 .antMatchers(HttpMethod.GET, "/", "/*.html", "/**/*.html", "/**/*.css", "/**/*.js", "/profile/**").permitAll()
                 .antMatchers("/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/*/api-docs", "/druid/**").permitAll()
@@ -132,7 +138,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         httpSecurity.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
         httpSecurity.addFilterBefore(corsFilter, LogoutFilter.class);
         // 添加app JWT filter
-        httpSecurity.addFilterBefore(appJwtAuthenticationTokenFilter, JwtAuthenticationTokenFilter.class);
+        httpSecurity.addFilterBefore(appJwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        httpSecurity.addFilterBefore(consultJwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     /**

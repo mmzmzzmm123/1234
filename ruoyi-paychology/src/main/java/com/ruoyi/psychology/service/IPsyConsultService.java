@@ -20,6 +20,8 @@ public interface IPsyConsultService {
 
     PsyConsultVO getOne(Long id);
 
+    PsyConsult getByPhone(String phone);
+
     List<PsyConsult> search(PsyConsultReq req);
 
     List<PsyConsult> getList(PsyConsultVO req);

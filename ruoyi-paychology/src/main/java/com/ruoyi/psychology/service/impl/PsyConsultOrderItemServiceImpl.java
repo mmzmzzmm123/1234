@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.psychology.constant.ConsultConstant;
 import com.ruoyi.psychology.domain.PsyConsultOrderItem;
+import com.ruoyi.psychology.dto.OrderItemDTO;
 import com.ruoyi.psychology.mapper.PsyConsultOrderItemMapper;
 import com.ruoyi.psychology.service.IPsyConsultOrderItemService;
 import org.apache.commons.collections4.CollectionUtils;
@@ -68,4 +69,12 @@ public class PsyConsultOrderItemServiceImpl extends ServiceImpl<PsyConsultOrderI
         List<PsyConsultOrderItem> items = psyConsultOrderItemMapper.selectList(wp);
         return CollectionUtils.isNotEmpty(items) ? items.get(0) : null;
     }
+
+    @Override
+    public List<OrderItemDTO> getOrderItemList(Long consultantId,String day) {
+
+       return  psyConsultOrderItemMapper.getOrderItemList(consultantId, day);
+    }
+
+    
 }

@@ -19,6 +19,10 @@ public class CacheConstants
     public static final String APP_LOGIN_TOKEN_KEY = "app_login_tokens:";
 
     /**
+     * 登录用户 redis key
+     */
+    public static final String CONSULT_LOGIN_TOKEN_KEY = "consult_login_tokens:";
+    /**
      * 验证码 redis key
      */
     public static final String CAPTCHA_CODE_KEY = "captcha_codes:";

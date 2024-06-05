@@ -3,6 +3,7 @@ package com.ruoyi.psychology.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ruoyi.psychology.domain.PsyConsultOrder;
 import com.ruoyi.psychology.domain.PsyConsultOrderItem;
+import com.ruoyi.psychology.dto.OrderItemDTO;
 import com.ruoyi.psychology.vo.PsyConsultOrderVO;
 
 import java.util.List;
@@ -15,5 +16,5 @@ import java.util.List;
  */
 public interface PsyConsultOrderItemMapper extends BaseMapper<PsyConsultOrderItem>
 {
-
+    public List<OrderItemDTO> getOrderItemList(Long consultantId,String day) ;
 }

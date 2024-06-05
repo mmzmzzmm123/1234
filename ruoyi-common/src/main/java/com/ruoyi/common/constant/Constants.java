@@ -91,6 +91,11 @@ public class Constants
     public static final String APP_LOGIN_USER_KEY = "app_login_user_key";
 
     /**
+     * 令牌前缀
+     */
+    public static final String CONSULT_LOGIN_USER_KEY = "consult_login_user_key";
+
+    /**
      * 用户ID
      */
     public static final String JWT_USERID = "userid";
