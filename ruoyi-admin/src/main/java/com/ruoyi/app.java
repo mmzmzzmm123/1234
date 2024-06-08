@@ -2,7 +2,5 @@ package com.ruoyi;
 
 public class app {
     String ruoyi1;
-    double ga;
-
-
+    double ga1;
 }
