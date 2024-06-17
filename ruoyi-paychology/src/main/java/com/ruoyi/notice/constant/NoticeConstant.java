@@ -13,7 +13,7 @@ public interface NoticeConstant {
 
     String NOTICE_AD = "2";
 
-    // 1=,咨询师,2=培训人员
+    // 1=,咨询师,2=用户
     String SOURCE_PSY = "1";
 
     String SOURCE_COURSE = "2";
