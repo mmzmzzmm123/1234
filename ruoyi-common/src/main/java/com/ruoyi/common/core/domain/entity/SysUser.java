@@ -77,6 +77,9 @@ public class SysUser extends BaseEntity
     })
     private SysDept dept;
 
+    @Excel(name = "微信账号")
+    private String weChatAccount;
+
     /** 角色对象 */
     private List<SysRole> roles;
 
@@ -295,6 +298,16 @@ public class SysUser extends BaseEntity
     public void setRoleId(Long roleId)
     {
         this.roleId = roleId;
+    }
+
+    public void setWeChatAccount(String weChatAccount)
+    {
+        this.weChatAccount = weChatAccount;
+    }
+
+    public String getWeChatAccount()
+    {
+        return weChatAccount;
     }
 
     @Override
