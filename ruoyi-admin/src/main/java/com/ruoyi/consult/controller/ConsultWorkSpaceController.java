@@ -9,6 +9,7 @@ import com.ruoyi.framework.web.service.ConsultTokenService;
 import com.ruoyi.psychology.dto.OrderItemDTO;
 import com.ruoyi.psychology.service.IPsyConsultOrderItemService;
 import com.ruoyi.web.controller.common.CommonCosController;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,9 @@ import java.time.format.DateTimeFormatter;
 
 
 @RestController
-@RequestMapping("/consult/work")
-public class ConsultWorkControllre extends BaseController {
+@RequestMapping("/consult/workspace")
+@Api(value = "ConsultWorkSpaceController" ,tags = {" 工作台api"})
+public class ConsultWorkSpaceController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(CommonCosController.class);
 
  
@@ -48,7 +50,7 @@ public class ConsultWorkControllre extends BaseController {
         String time=currentDate.format(DateTimeFormatter.ofPattern("hh:mm"));
 
         List<OrderItemDTO> list = psyConsultOrderItemService.getOrderItemList(loginUser.getConsultId(),day);
-         return AjaxResult.success(list);
+        return AjaxResult.success(list);
     }
 
 }

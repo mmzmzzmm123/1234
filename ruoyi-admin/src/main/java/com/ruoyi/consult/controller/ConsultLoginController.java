@@ -6,15 +6,11 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.ConsultDTO;
 import com.ruoyi.common.core.domain.dto.ConsultLoginDTO;
-import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.consult.common.dcloud.CloudFunctions;
-import com.ruoyi.course.domain.CourCourseClass;
-import com.ruoyi.course.service.ICourCourseClassService;
 import com.ruoyi.framework.web.service.ConsultTokenService;
 import com.ruoyi.psychology.domain.PsyConsult;
 import com.ruoyi.psychology.service.IPsyConsultService;
 import com.ruoyi.web.controller.common.CommonCosController;
-import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/consult")
-public class ConsultLoginControllre extends BaseController {
+public class ConsultLoginController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(CommonCosController.class);
 
     @Autowired
