@@ -7,6 +7,7 @@ import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ruoyi.common.constant.NewConstants;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.common.utils.NewDateUtil;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.psychology.constant.ConsultConstant;
@@ -268,6 +269,21 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
         work.setUsed(JSONObject.toJSONString(uesd));
         psyConsultWorkMapper.updateById(work);
         return work;
+    }
+
+    @Override
+    public HashMap<String, String> getWorkDetail(PsyWorkReq req) {
+        List<Long> ids = getConsultIds(req);
+        req.setEnd(req.getStart());
+        List<HashMap<String, String>> list = getWorks(req, ids);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
+    }
+
+    @Override
+    public List<HashMap<String, String>> getWorks(PsyWorkReq req) {
+        List<Long> ids = getConsultIds(req);
+        List<HashMap<String, String>> list = getWorks(req, ids);
+        return list;
     }
 
     @Override

@@ -30,18 +30,22 @@ import java.util.concurrent.TimeUnit;
  * @author ruoyi
  */
 @Component
-public class ConsultTokenService {
+public class ConsultantTokenService {
     // 令牌自定义标识
-    @Value("${consult.token.header}")
+    @Value("${consultant.token.header}")
     private String header;
 
     // 令牌秘钥
-    @Value("${consult.token.secret}")
+    @Value("${consultant.token.secret}")
     private String secret;
 
     // 令牌有效期（默认30分钟）单位为s
-    @Value("${consult.token.expireTime}")
+    @Value("${consultant.token.expireTime}")
     private int expireTime;
+
+    // 客户端类型
+    @Value("${consultant.token.clientType}")
+    private String clientType;
 
     protected static final long MILLIS_SECOND = 1000;
 
@@ -159,6 +163,7 @@ public class ConsultTokenService {
         loginUser.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
         loginUser.setBrowser(userAgent.getBrowser().getName());
         loginUser.setOs(userAgent.getOperatingSystem().getName());
+        loginUser.setClientType(clientType);
     }
 
     /**
@@ -216,7 +221,7 @@ public class ConsultTokenService {
         return CacheConstants.CONSULT_LOGIN_TOKEN_KEY + uuid;
     }
 
-    public static ConsultTokenService getInstance() {
-        return SpringUtils.getBean(ConsultTokenService.class);
+    public static ConsultantTokenService getInstance() {
+        return SpringUtils.getBean(ConsultantTokenService.class);
     }
 }

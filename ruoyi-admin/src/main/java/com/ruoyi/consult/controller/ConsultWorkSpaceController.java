@@ -5,7 +5,7 @@ import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.ConsultDTO;
-import com.ruoyi.framework.web.service.ConsultTokenService;
+import com.ruoyi.framework.web.service.ConsultantTokenService;
 import com.ruoyi.psychology.dto.OrderItemDTO;
 import com.ruoyi.psychology.service.IPsyConsultOrderItemService;
 import com.ruoyi.web.controller.common.CommonCosController;
@@ -33,13 +33,13 @@ public class ConsultWorkSpaceController extends BaseController {
     @Autowired
     private IPsyConsultOrderItemService psyConsultOrderItemService;
     @Autowired
-    private ConsultTokenService consultTokenService;
+    private ConsultantTokenService consultantTokenService;
 
-    @GetMapping("/list")
+    @GetMapping("/task/list")
     @RateLimiter
     public AjaxResult list(HttpServletRequest request)
     {
-       ConsultDTO loginUser = consultTokenService.getLoginUser(request);
+       ConsultDTO loginUser = consultantTokenService.getLoginUser(request);
 
         //用时间工具类获取当前时间
         // Use time utility class to get the current date

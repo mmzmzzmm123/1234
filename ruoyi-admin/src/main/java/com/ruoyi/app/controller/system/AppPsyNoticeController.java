@@ -33,4 +33,5 @@ public class AppPsyNoticeController extends BaseController
         return AjaxResult.success(noticeService.selectNoticeById(noticeId));
     }
 
+
 }

@@ -7,7 +7,7 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.ConsultDTO;
 import com.ruoyi.common.core.domain.dto.ConsultLoginDTO;
 import com.ruoyi.consult.common.dcloud.CloudFunctions;
-import com.ruoyi.framework.web.service.ConsultTokenService;
+import com.ruoyi.framework.web.service.ConsultantTokenService;
 import com.ruoyi.psychology.domain.PsyConsult;
 import com.ruoyi.psychology.service.IPsyConsultService;
 import com.ruoyi.web.controller.common.CommonCosController;
@@ -24,7 +24,7 @@ public class ConsultLoginController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(CommonCosController.class);
 
     @Autowired
-    ConsultTokenService consultTokenService;
+    ConsultantTokenService consultantTokenService;
 
     @Autowired
     IPsyConsultService psyConsultService;
@@ -40,14 +40,12 @@ public class ConsultLoginController extends BaseController {
             ConsultDTO consultDTO=new ConsultDTO();
             consultDTO.setConsultId(psyConsult.getUserId());
             consultDTO.setPhone( psyConsult.getPhonenumber());
-            String token=consultTokenService.createToken(consultDTO,360000);
+            String token= consultantTokenService.createToken(consultDTO,360000);
             return AjaxResult.success(token);
         } catch (Exception e) {
             log.error("login error",e);
             return AjaxResult.error("login error");
         }
-
-
     }
 
 }

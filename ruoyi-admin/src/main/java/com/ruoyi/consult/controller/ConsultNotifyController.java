@@ -1,4 +1,4 @@
-package com.ruoyi.app.controller.psychology;
+package com.ruoyi.consult.controller;
 
 import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
@@ -16,15 +16,15 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * 用户端通知表 Controller
+ * 咨询师通知表 Controller
  *
  * @author ruoyi
  * @date 2022-08-26
  */
 @RestController
-@RequestMapping("/app/notice")
-@Api(value = "AppPsyCourseNoticeController" ,tags = {"用户端通知api"})
-public class AppPsyCourseNoticeController extends BaseController implements NoticeConstant {
+@RequestMapping("/consult/notice")
+@Api(value = "CourseNoticeController" ,tags = {" 咨询师通知api"})
+public class ConsultNotifyController extends BaseController implements NoticeConstant {
 
     @Autowired
     private IPsyCourNoticeService psyCourNoticeService;
@@ -32,14 +32,14 @@ public class AppPsyCourseNoticeController extends BaseController implements Noti
     /**
      * 通知 list
      */
-    @PostMapping("/{source}/list")
-    @ApiOperation(value = "通知分页列表")
+    @PostMapping("/list")
+    @ApiOperation(value = "咨询师通知分页列表")
     @RateLimiter
     public TableDataInfo list(@PathVariable("source") String source, @RequestBody PsyCourNotice psyCourNotice)
     {
         startPage();
         psyCourNotice.setNoticeType(NOTICE_MSG);
-        psyCourNotice.setSourceType(SOURCE_COURSE);
+        psyCourNotice.setSourceType(SOURCE_PSY);
         if(StringUtils.isNoneBlank(psyCourNotice.getStatus())){
             psyCourNotice.setStatus(STATUS_NOT_READ);
         }
@@ -51,7 +51,7 @@ public class AppPsyCourseNoticeController extends BaseController implements Noti
     /**
      * 通知详情
      */
-    @ApiOperation(value = "通知详情")
+    @ApiOperation(value = "咨询师通知详情")
     @GetMapping(value = "/view/{id}")
     public AjaxResult view(@PathVariable("id") Long id)
     {

@@ -1,5 +1,6 @@
 package com.ruoyi.psychology.service;
 
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.psychology.domain.PsyConsultWork;
 import com.ruoyi.psychology.dto.HeaderDTO;
 import com.ruoyi.psychology.request.PsyConsultWorkReq;
@@ -10,6 +11,10 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface IPsyConsultWorkService {
+
+    HashMap<String, String> getWorkDetail(PsyWorkReq req);
+
+    List<HashMap<String, String>> getWorks(PsyWorkReq req);
 
     List<PsyConsultWork> getList(PsyConsultWorkVO req);
 

@@ -58,7 +58,11 @@ public class ConsultDTO  {
      */
     private LoginType loginType;
 
-    
+
+    /**
+     * 客户端类型
+     */
+    private String clientType;
 
 
 
