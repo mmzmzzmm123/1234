@@ -64,8 +64,6 @@ public class BusPostOrderServiceImpl implements IBusPostOrderService {
      */
     @Override
     public int insertBusPostOrder(BusPostOrder busPostOrder) {
-        busPostOrder.setCreatedAt(new Date());
-        busPostOrder.setUpdatedAt(new Date());
         return busPostOrderMapper.insertBusPostOrder(busPostOrder);
     }
 
@@ -77,7 +75,6 @@ public class BusPostOrderServiceImpl implements IBusPostOrderService {
      */
     @Override
     public int updateBusPostOrder(BusPostOrder busPostOrder) {
-        busPostOrder.setUpdatedAt(new Date());
         return busPostOrderMapper.updateBusPostOrder(busPostOrder);
     }
 

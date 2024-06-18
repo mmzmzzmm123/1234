@@ -7,11 +7,14 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StatusUtils;
 import com.ruoyi.portal.form.PayForm;
 import com.ruoyi.system.domain.BusPostOrder;
+import com.ruoyi.system.domain.BusTransactions;
 import com.ruoyi.system.manager.PayManager;
 import com.ruoyi.system.service.BusPostOrderExtraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
 
 /**
  * Description:
@@ -32,6 +35,35 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
 
     @Autowired
     private PayManager payManager;
+
+    @Autowired
+    private BusTransactionsExtraServiceImpl busTransactionsExtraService;
+
+
+    /**
+     * 新增订单
+     *
+     * @param busPostOrder 订单
+     * @return 结果
+     */
+    @Override
+    public int insertBusPostOrder(BusPostOrder busPostOrder) {
+        busPostOrder.setCreatedAt(new Date());
+        busPostOrder.setUpdatedAt(new Date());
+        return super.insertBusPostOrder(busPostOrder);
+    }
+
+    /**
+     * 修改订单
+     *
+     * @param busPostOrder 订单
+     * @return 结果
+     */
+    @Override
+    public int updateBusPostOrder(BusPostOrder busPostOrder) {
+        busPostOrder.setUpdatedAt(new Date());
+        return super.updateBusPostOrder(busPostOrder);
+    }
 
     /**
      * 发布订单
@@ -64,6 +96,11 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         busPostOrder1.setOrderId(orderId);
         busPostOrder.setStatus(StatusUtils.updateStatus(busPostOrder.getStatus(), PostOrderStatus.pay.getValue()));
         updateBusPostOrder(busPostOrder1);
+
+        BusTransactions busTransactions = new BusTransactions();
+
+
+//        busTransactionsExtraService.insertBusTransactions();
     }
 
 }
