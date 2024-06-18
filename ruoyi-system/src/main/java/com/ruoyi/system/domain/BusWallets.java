@@ -42,6 +42,11 @@ public class BusWallets extends BaseEntity
     @Excel(name = "钱包更新时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updatedAt;
 
+    /** 钱包创建时间 */
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @Excel(name = "钱包创建时间", width = 30, dateFormat = "yyyy-MM-dd")
+    private Date createdAt;
+
     public void setWalletId(Long walletId) 
     {
         this.walletId = walletId;
@@ -96,6 +101,15 @@ public class BusWallets extends BaseEntity
     {
         return updatedAt;
     }
+    public void setCreatedAt(Date createdAt) 
+    {
+        this.createdAt = createdAt;
+    }
+
+    public Date getCreatedAt() 
+    {
+        return createdAt;
+    }
 
     @Override
     public String toString() {
@@ -106,6 +120,7 @@ public class BusWallets extends BaseEntity
             .append("frozenBalance", getFrozenBalance())
             .append("version", getVersion())
             .append("updatedAt", getUpdatedAt())
+            .append("createdAt", getCreatedAt())
             .toString();
     }
 }
