@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BusWalletsExtraMapper">
+
+    <resultMap type="BusWallets" id="BusWalletsResult">
+        <result property="walletId" column="wallet_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="balance" column="balance"/>
+        <result property="frozenBalance" column="frozen_balance"/>
+        <result property="version" column="version"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+
+    <update id="deduction">
+        UPDATE Wallets
+        SET balance = #{wallet.balance} - #{amount},
+            version = version + 1
+        WHERE wallet_id = #{wallet.walletId}
+          AND balance = #{wallet.balance}
+          AND version = #{wallet.version};
+    </update>
+
+</mapper>

@@ -4,7 +4,9 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.portal.form.BusPostOrderForm;
+import com.ruoyi.portal.form.PayForm;
 import com.ruoyi.system.domain.BusPostOrder;
+import com.ruoyi.system.service.BusPostOrderExtraService;
 import com.ruoyi.system.service.IBusPostOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
@@ -35,16 +37,26 @@ public class PostOrderController {
 
 
     @Autowired
-    private IBusPostOrderService busPostOrderService;
+    private BusPostOrderExtraService busPostOrderService;
 
 
-
+    /**
+     * 发布订单
+     * @param busPostOrderForm
+     * @return
+     */
     @RequestMapping("/postOrder")
     public AjaxResult postOrder(BusPostOrderForm busPostOrderForm){
         BusPostOrder busPostOrder = new BusPostOrder();
         BeanUtils.copyProperties(busPostOrderForm,busPostOrder);
-        busPostOrderService.postOrder(busPostOrder);
-        return AjaxResult.success();
+        return  busPostOrderService.postOrder(busPostOrder)>0? AjaxResult.success(busPostOrder):AjaxResult.error();
     }
 
+
+
+    @RequestMapping("/payOrder")
+    public AjaxResult payOrder(PayForm payForm){
+        busPostOrderService.payOrder(payForm);
+        return AjaxResult.success();
+    }
 }

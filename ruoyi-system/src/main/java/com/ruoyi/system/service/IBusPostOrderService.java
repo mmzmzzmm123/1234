@@ -1,6 +1,9 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
+
+import com.ruoyi.common.core.domain.AjaxResult;
+import com.ruoyi.portal.form.PayForm;
 import com.ruoyi.system.domain.BusPostOrder;
 
 /**
@@ -59,5 +62,4 @@ public interface IBusPostOrderService
      */
     public int deleteBusPostOrderByOrderId(Long orderId);
 
-    void postOrder(BusPostOrder busPostOrder);
 }

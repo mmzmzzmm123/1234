@@ -16,50 +16,54 @@ package com.ruoyi.common.enums;
  */
 public enum PostOrderStatus {
 
-    /**
-     * 已接单
-     */
-    ORDER_RECEIVED(1, "已接单"),
 
+    init(1,"已创建"),
+
+    pay(2,"已支付"),
     /**
      * 未接单
      */
-    ORDER_PENDING(2, "未接单"),
+    ORDER_PENDING(3, "未接单"),
+
+    /**
+     * 已接单
+     */
+    ORDER_RECEIVED(4, "已接单"),
 
     /**
      * 已打烊
      */
-    SHOP_CLOSED(3, "已打烊"),
+    SHOP_CLOSED(5, "已打烊"),
 
     /**
      * 制作中
      */
-    IN_PRODUCTION(4, "制作中"),
+    IN_PRODUCTION(6, "制作中"),
 
     /**
      * 已发货
      */
-    SHIPPED(5, "已发货"),
+    SHIPPED(7, "已发货"),
 
     /**
      * 已完成
      */
-    COMPLETED(6, "已完成"),
+    COMPLETED(8, "已完成"),
 
     /**
      * 已撤销
      */
-    CANCELLED(7, "已撤销"),
+    CANCELLED(9, "已撤销"),
 
     /**
      * 仲裁中
      */
-    IN_ARBITRATION(8, "仲裁中"),
+    IN_ARBITRATION(10, "仲裁中"),
 
     /**
      * 已超时
      */
-    TIMEOUT(9, "已超时");
+    TIMEOUT(11, "已超时");
 
     private final int value;
     private final String remark;

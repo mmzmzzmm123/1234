@@ -1,6 +1,5 @@
 package com.ruoyi.system.domain;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -27,11 +26,11 @@ public class BusWallets extends BaseEntity
 
     /** 钱包余额 */
     @Excel(name = "钱包余额")
-    private BigDecimal balance;
+    private Long balance;
 
     /** 冻结金额 */
     @Excel(name = "冻结金额")
-    private BigDecimal frozenBalance;
+    private Long frozenBalance;
 
     /** 版本号，用于乐观锁 */
     @Excel(name = "版本号，用于乐观锁")
@@ -65,21 +64,21 @@ public class BusWallets extends BaseEntity
     {
         return userId;
     }
-    public void setBalance(BigDecimal balance) 
+    public void setBalance(Long balance) 
     {
         this.balance = balance;
     }
 
-    public BigDecimal getBalance() 
+    public Long getBalance() 
     {
         return balance;
     }
-    public void setFrozenBalance(BigDecimal frozenBalance) 
+    public void setFrozenBalance(Long frozenBalance) 
     {
         this.frozenBalance = frozenBalance;
     }
 
-    public BigDecimal getFrozenBalance() 
+    public Long getFrozenBalance() 
     {
         return frozenBalance;
     }

@@ -4,9 +4,15 @@ import java.util.Date;
 import java.util.List;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.enums.OrderValidityStatus;
+import com.ruoyi.common.enums.PayType;
 import com.ruoyi.common.enums.PostOrderStatus;
+import com.ruoyi.common.exception.portal.InsufficientBalanceException;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StatusUtils;
+import com.ruoyi.portal.form.PayForm;
 import com.ruoyi.system.domain.BusWallets;
+import com.ruoyi.system.manager.PayManager;
 import com.ruoyi.system.service.IBusWalletsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,8 +32,7 @@ public class BusPostOrderServiceImpl implements IBusPostOrderService {
     @Autowired
     private BusPostOrderMapper busPostOrderMapper;
 
-    @Autowired
-    private IBusWalletsService busWalletsService;
+
 
     /**
      * 查询订单
@@ -98,30 +103,6 @@ public class BusPostOrderServiceImpl implements IBusPostOrderService {
         return busPostOrderMapper.deleteBusPostOrderByOrderId(orderId);
     }
 
-    /**
-     * 发布订单
-     *
-     * @param busPostOrder
-     */
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void postOrder(BusPostOrder busPostOrder) {
-        SysUser user = SecurityUtils.getLoginUser().getUser();
-        Long userId = user.getUserId();
-        busPostOrder.setMerchantId(userId);
-        BusWallets walletByUser = findWalletByUser(userId);
-//        if (walletByUser.getBalance())
-        insertBusPostOrder(busPostOrder);
-    }
 
 
-    private BusWallets findWalletByUser(Long userId) {
-        BusWallets busWallets = new BusWallets();
-        busWallets.setUserId(userId);
-        List<BusWallets> busWalletsList = busWalletsService.selectBusWalletsList(busWallets);
-        if (busWalletsList.size() != 1) {
-            throw new RuntimeException("钱包信息异常");
-        }
-        return busWalletsList.get(0);
-    }
 }

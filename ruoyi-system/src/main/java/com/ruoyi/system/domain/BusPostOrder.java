@@ -71,7 +71,7 @@ public class BusPostOrder extends BaseEntity
 
     /** 订单状态 */
     @Excel(name = "订单状态")
-    private String status;
+    private Integer status;
 
     /** 收货地址 */
     @Excel(name = "收货地址")
@@ -86,6 +86,14 @@ public class BusPostOrder extends BaseEntity
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "更新时间", width = 30, dateFormat = "yyyy-MM-dd")
     private Date updatedAt;
+
+    /** 订单有效状态 */
+    @Excel(name = "订单有效状态")
+    private Integer orderValidityStatus;
+
+    /** 支付类型1.钱包 2.微信支付 */
+    @Excel(name = "支付类型1.钱包 2.微信支付")
+    private Integer payType;
 
     public void setOrderId(Long orderId) 
     {
@@ -204,12 +212,12 @@ public class BusPostOrder extends BaseEntity
     {
         return partialShipment;
     }
-    public void setStatus(String status) 
+    public void setStatus(Integer status) 
     {
         this.status = status;
     }
 
-    public String getStatus() 
+    public Integer getStatus() 
     {
         return status;
     }
@@ -240,6 +248,24 @@ public class BusPostOrder extends BaseEntity
     {
         return updatedAt;
     }
+    public void setOrderValidityStatus(Integer orderValidityStatus) 
+    {
+        this.orderValidityStatus = orderValidityStatus;
+    }
+
+    public Integer getOrderValidityStatus() 
+    {
+        return orderValidityStatus;
+    }
+    public void setPayType(Integer payType) 
+    {
+        this.payType = payType;
+    }
+
+    public Integer getPayType() 
+    {
+        return payType;
+    }
 
     @Override
     public String toString() {
@@ -261,6 +287,8 @@ public class BusPostOrder extends BaseEntity
             .append("address", getAddress())
             .append("createdAt", getCreatedAt())
             .append("updatedAt", getUpdatedAt())
+            .append("orderValidityStatus", getOrderValidityStatus())
+            .append("payType", getPayType())
             .toString();
     }
 }
