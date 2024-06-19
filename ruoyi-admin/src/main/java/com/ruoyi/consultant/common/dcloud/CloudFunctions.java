@@ -1,4 +1,4 @@
-package com.ruoyi.consult.common.dcloud;
+package com.ruoyi.consultant.common.dcloud;
 
 import java.util.HashMap;
 import java.util.Map;

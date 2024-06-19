@@ -1,4 +1,4 @@
-package com.ruoyi.consult.controller;
+package com.ruoyi.consultant.controller;
 
 
 import com.ruoyi.common.annotation.RateLimiter;
@@ -6,7 +6,7 @@ import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.ConsultDTO;
 import com.ruoyi.common.core.domain.dto.ConsultLoginDTO;
-import com.ruoyi.consult.common.dcloud.CloudFunctions;
+import com.ruoyi.consultant.common.dcloud.CloudFunctions;
 import com.ruoyi.framework.web.service.ConsultantTokenService;
 import com.ruoyi.psychology.domain.PsyConsult;
 import com.ruoyi.psychology.service.IPsyConsultService;
@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/consult")
-public class ConsultLoginController extends BaseController {
+@RequestMapping("/consultant")
+public class ConsultantLoginController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(CommonCosController.class);
 
     @Autowired

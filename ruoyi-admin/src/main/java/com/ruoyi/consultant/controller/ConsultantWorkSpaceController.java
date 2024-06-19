@@ -1,4 +1,4 @@
-package com.ruoyi.consult.controller;
+package com.ruoyi.consultant.controller;
 
 
 import com.ruoyi.common.annotation.RateLimiter;
@@ -24,9 +24,9 @@ import java.time.format.DateTimeFormatter;
 
 
 @RestController
-@RequestMapping("/consult/workspace")
-@Api(value = "ConsultWorkSpaceController" ,tags = {" 工作台api"})
-public class ConsultWorkSpaceController extends BaseController {
+@RequestMapping("/consultant/workspace")
+@Api(value = "ConsultantWorkSpaceController" ,tags = {" 工作台api"})
+public class ConsultantWorkSpaceController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(CommonCosController.class);
 
  

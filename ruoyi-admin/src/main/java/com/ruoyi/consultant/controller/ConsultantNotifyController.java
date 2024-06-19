@@ -1,4 +1,4 @@
-package com.ruoyi.consult.controller;
+package com.ruoyi.consultant.controller;
 
 import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
@@ -22,9 +22,9 @@ import java.util.List;
  * @date 2022-08-26
  */
 @RestController
-@RequestMapping("/consult/notice")
-@Api(value = "CourseNoticeController" ,tags = {" 咨询师通知api"})
-public class ConsultNotifyController extends BaseController implements NoticeConstant {
+@RequestMapping("/consultant/notice")
+@Api(value = "ConsultantNotifyController" ,tags = {" 咨询师通知api"})
+public class ConsultantNotifyController extends BaseController implements NoticeConstant {
 
     @Autowired
     private IPsyCourNoticeService psyCourNoticeService;

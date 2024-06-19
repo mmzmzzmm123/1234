@@ -1,4 +1,4 @@
-package com.ruoyi.consult.common.dcloud;
+package com.ruoyi.consultant.common.dcloud;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Map;

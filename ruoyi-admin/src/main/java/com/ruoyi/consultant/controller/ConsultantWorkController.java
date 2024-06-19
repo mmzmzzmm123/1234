@@ -1,4 +1,4 @@
-package com.ruoyi.consult.controller;
+package com.ruoyi.consultant.controller;
 
 import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
@@ -6,16 +6,12 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.ConsultDTO;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.framework.web.service.ConsultantTokenService;
-import com.ruoyi.notice.domain.PsyCourNotice;
-import com.ruoyi.notice.service.IPsyCourNoticeService;
 import com.ruoyi.psychology.request.PsyWorkReq;
 import com.ruoyi.psychology.service.IPsyConsultWorkService;
 import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,9 +23,9 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/consult/class")
-@Api(value = "ConsultWorkController" ,tags = {" 排班api"})
-public class ConsultWorkController extends BaseController {
+@RequestMapping("/consultant/work")
+@Api(value = "ConsultantWorkController" ,tags = {" 排班api"})
+public class ConsultantWorkController extends BaseController {
 
     @Autowired
     private ConsultantTokenService consultantTokenService;
