@@ -54,6 +54,32 @@ public class PostOrderController {
     }
 
 
+    @RepeatSubmit
+    @PostMapping("/postOrderList")
+    public AjaxResult postOrderList(@RequestBody BusPostOrderForm busPostOrderForm) {
+        BusPostOrder busPostOrder = new BusPostOrder();
+        BeanUtils.copyProperties(busPostOrderForm, busPostOrder);
+        return busPostOrderService.postOrder(busPostOrder) > 0 ? AjaxResult.success(busPostOrder) : AjaxResult.error();
+    }
+
+
+    /**
+     * 没有接单之前允许修改订单
+     * @param busPostOrderForm
+     * @return
+     */
+    @RepeatSubmit
+    @PostMapping("/updateOrder")
+    public AjaxResult updateOrder(@RequestBody BusPostOrderForm busPostOrderForm) {
+        return busPostOrderService.updateOrderByUserId(busPostOrderForm) > 0 ? AjaxResult.success() : AjaxResult.error();
+    }
+
+
+    /**
+     * 查询我的订单
+     * @param busPostOrderForm
+     * @return
+     */
     @GetMapping("/findOrderListByUserId")
     @DataScope(userAlias = DataScopeAspect.DATA_SCOPE_SELF)
     public AjaxResult findOrderListByUserId(@RequestBody BusPostOrderForm busPostOrderForm) {
@@ -72,7 +98,7 @@ public class PostOrderController {
     //confirm
 
     /**
-     * 确认发货
+     * 确认发货(同意发货)
      * @param orderId
      * @return
      */

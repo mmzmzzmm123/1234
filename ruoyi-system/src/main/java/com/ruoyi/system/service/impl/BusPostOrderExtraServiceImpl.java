@@ -8,13 +8,12 @@ import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StatusUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.portal.form.BusPostOrderForm;
-import com.ruoyi.portal.form.PayForm;
 import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.domain.BusTransactions;
 import com.ruoyi.system.manager.PayManager;
 import com.ruoyi.system.mapper.BusPostOrderExtraMapper;
+import com.ruoyi.system.service.BusOrderAssignmentsExtraService;
 import com.ruoyi.system.service.BusPostOrderExtraService;
-import com.wechat.pay.java.service.profitsharing.model.OrderStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -51,6 +50,9 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
 
     @Autowired
     private BusPostOrderExtraMapper busPostOrderExtraMapper;
+
+    @Autowired
+    private BusOrderAssignmentsExtraService busOrderAssignmentsExtraService;
 
     /**
      * 新增订单
@@ -91,7 +93,10 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         busPostOrder.setMerchantId(userId);
         busPostOrder.setStatus(PostOrderStatus.init.getValue());
         busPostOrder.setOrderValidityStatus(OrderValidityStatus.NORMAL.getValue());
-        return insertBusPostOrder(busPostOrder);
+        int orderCount = insertBusPostOrder(busPostOrder);
+        int orderAssignmentCount = busOrderAssignmentsExtraService.createByOrder(busPostOrder);
+        //只要有不成功的返回的都是0
+        return orderCount * orderAssignmentCount;
     }
 
     @Override
@@ -109,11 +114,7 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         BusTransactions busTransactions = new BusTransactions();
         busTransactionsExtraService.insertBusTransactions(busTransactions);
         //支付成功 更新状态 新增支付流水记录
-        BusPostOrder busPostOrder1 = new BusPostOrder();
-        busPostOrder1.setOrderId(orderId);
-        busPostOrder1.setPayType(payType);
-        busPostOrder.setStatus(StatusUtils.updateStatus(busPostOrder.getStatus(), PostOrderStatus.pay.getValue()));
-        updateBusPostOrder(busPostOrder1);
+        updateBusPostOrder(buildPayOrder(orderId, payType, busPostOrder.getStatus()));
 
         boolean paySuccess = payManager.pay(payType, busPostOrder.getAmount());
         if (!paySuccess) {
@@ -121,7 +122,14 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         }
 
         busTransactionsExtraService.updateBusTransactions(busTransactions);
+    }
 
+    private BusPostOrder buildPayOrder(Long orderId, Integer payType, Integer oldStatus) {
+        BusPostOrder busPostOrder = new BusPostOrder();
+        busPostOrder.setOrderId(orderId);
+        busPostOrder.setPayType(payType);
+        busPostOrder.setStatus(StatusUtils.updateStatus(oldStatus, PostOrderStatus.pay.getValue()));
+        return busPostOrder;
     }
 
     @Override
@@ -155,11 +163,11 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
     public int confirm(Long orderId) {
         checkUser(orderId);
         BusPostOrder busPostOrder = selectBusPostOrderByOrderId(orderId);
-        if (!StatusUtils.hasStatus(busPostOrder.getStatus(),PostOrderStatus.IN_PRODUCTION_COMPLETED.getValue())) {
-            throw new RuntimeException("制作未完成");
-        }
+//        if (!StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.IN_PRODUCTION_COMPLETED.getValue())) {
+//            throw new RuntimeException("制作未完成");
+//        }
 
-        if (StatusUtils.hasStatus(busPostOrder.getStatus(),PostOrderStatus.CONFIRM.getValue())) {
+        if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.CONFIRM.getValue())) {
             throw new RuntimeException("已同意发货");
         }
         Integer newStatus = StatusUtils.updateStatus(busPostOrder.getStatus(), PostOrderStatus.CONFIRM.getValue());
@@ -201,9 +209,10 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         Long merchantId = busPostOrder.getMerchantId();
         Long userId = SecurityUtils.getUserId();
         if (!merchantId.equals(userId)) {
-            throw new RuntimeException("无法操作他们发布的订单");
+            throw new RuntimeException("无法操作他人发布的订单");
         }
     }
+
     private void checkUser(Long orderId) {
         checkUser(selectBusPostOrderByOrderId(orderId));
     }

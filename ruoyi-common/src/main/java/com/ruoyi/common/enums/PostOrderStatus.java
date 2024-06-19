@@ -39,7 +39,6 @@ public enum PostOrderStatus {
      * 制作中
      */
     IN_PRODUCTION(6, "制作中"),
-    IN_PRODUCTION_COMPLETED(6, "制作完成"),
 
     CONFIRM(7,"同意发货"),
 
@@ -66,11 +65,12 @@ public enum PostOrderStatus {
      * 仲裁中
      */
     IN_ARBITRATION(10, "仲裁中"),
+    ARBITRATION_ENDED(11, "仲裁结束"),
 
     /**
      * 已超时
      */
-    TIMEOUT(11, "已超时");
+    TIMEOUT(12, "已超时");
 
     private final int value;
     private final String remark;
