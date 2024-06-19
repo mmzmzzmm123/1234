@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.gauge.mapper.PsyOrderPayMapper">
+<mapper namespace="com.renxin.gauge.mapper.PsyOrderPayMapper">
     
-    <resultMap type="com.ruoyi.gauge.domain.PsyOrderPay" id="PsyOrderPayResult">
+    <resultMap type="com.renxin.gauge.domain.PsyOrderPay" id="PsyOrderPayResult">
         <result property="id"    column="id"    />
         <result property="orderId"    column="order_id"    />
         <result property="payStatus"    column="pay_status"    />
@@ -19,7 +19,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, order_id, pay_status, amount, pay_id, pay_type, create_time, create_by from psy_order_pay
     </sql>
 
-    <select id="selectPsyOrderPayList" parameterType="com.ruoyi.gauge.domain.PsyOrderPay" resultMap="PsyOrderPayResult">
+    <select id="selectPsyOrderPayList" parameterType="com.renxin.gauge.domain.PsyOrderPay" resultMap="PsyOrderPayResult">
         <include refid="selectPsyOrderPayVo"/>
         <where>  
             <if test="orderId != null "> and order_id = #{orderId}</if>
@@ -35,7 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertPsyOrderPay" parameterType="com.ruoyi.gauge.domain.PsyOrderPay">
+    <insert id="insertPsyOrderPay" parameterType="com.renxin.gauge.domain.PsyOrderPay">
         insert into psy_order_pay
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -59,7 +59,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatePsyOrderPay" parameterType="com.ruoyi.gauge.domain.PsyOrderPay">
+    <update id="updatePsyOrderPay" parameterType="com.renxin.gauge.domain.PsyOrderPay">
         update psy_order_pay
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderId != null">order_id = #{orderId},</if>
@@ -73,7 +73,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </update>
 
-    <update id="updatePsyOrderPayByOrderId" parameterType="com.ruoyi.gauge.domain.PsyOrderPay">
+    <update id="updatePsyOrderPayByOrderId" parameterType="com.renxin.gauge.domain.PsyOrderPay">
         update psy_order_pay
         <trim prefix="SET" suffixOverrides=",">
             <if test="payStatus != null">pay_status = #{payStatus},</if>

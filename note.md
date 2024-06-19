@@ -1,6 +1,6 @@
 ###后端
 ```
-com.ruoyi     
+com.renxin     
 ├── admin                                // api入口
 │       └── app.controller               // 移动端api
 │             └── course                 // 课程接口

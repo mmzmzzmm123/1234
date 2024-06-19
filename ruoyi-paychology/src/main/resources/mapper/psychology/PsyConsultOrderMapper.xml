@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultOrderMapper">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultOrderMapper">
 
     <update id="tombstonedByIds">
         update psy_consult_work set del_flag = 1 where id in
@@ -67,7 +67,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by a.create_time desc
     </select>
 
-    <select id="getOrderList" resultType="com.ruoyi.psychology.dto.OrderListDTO">
+    <select id="getOrderList" resultType="com.renxin.psychology.dto.OrderListDTO">
         select a.id, a.order_no, a.consult_id, a.consult_name, a.ref_consult_id, a.ref_consult_name, a.serve_id, a.serve_name, a.user_id,a.remark,a.memo1,a.reason,
                a.nick_name, a.amount, a.num, a.buy_num, a.del_flag, a.status, a.create_by, a.order_time,a.pay_status,
                a.create_time, a.update_by, a.update_time, a.pay, a.source, a.channel, a.pay_time, b.avatar,
@@ -90,7 +90,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="getOrderDetail" resultType="com.ruoyi.psychology.dto.OrderDTO">
+    <select id="getOrderDetail" resultType="com.renxin.psychology.dto.OrderDTO">
         select a.id, a.order_no, a.consult_id, a.consult_name, a.ref_consult_id, a.ref_consult_name, a.serve_id, a.serve_name, a.user_id,a.remark,a.memo1,a.reason,
                a.nick_name, a.amount, a.num, a.buy_num, a.del_flag, a.status, a.create_by, a.order_time,
                a.create_time, a.update_by, a.update_time, b.avatar,b.wx_card, a.pay, a.source, a.channel, a.pay_time,a.pay_status,c.phone,

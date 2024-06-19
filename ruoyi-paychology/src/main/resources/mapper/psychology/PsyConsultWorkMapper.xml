@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultWorkMapper">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultWorkMapper">
 
-    <select id="checkDataUnique" resultType="com.ruoyi.psychology.domain.PsyConsultWork">
+    <select id="checkDataUnique" resultType="com.renxin.psychology.domain.PsyConsultWork">
         <include refid="selectPsyConsultWorkVo"/>
         where consult_id = #{consultId} and del_flag = 0
         and (time_start <![CDATA[ <= ]]> #{timeEnd} and time_end <![CDATA[ >= ]]> #{timeStart})
@@ -65,7 +65,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by a.id
     </select>
 
-    <select id="getWorks" resultType="com.ruoyi.psychology.vo.PsyConsultWorkVO">
+    <select id="getWorks" resultType="com.renxin.psychology.vo.PsyConsultWorkVO">
         select b.nick_name, b.user_name, a.id, a.consult_id, a.day, a.week, a.time_start, a.time_end, a.status, a.live, a.used,a.consult_type from psy_consult_work a inner join psy_consult b on a.consult_id = b.id
         <where>
             <if test="ids != null and ids.size() > 0">
@@ -82,7 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by a.day asc
     </select>
 
-    <select id="getOrderItems" resultType="com.ruoyi.psychology.vo.PsyConsultOrderItemVO">
+    <select id="getOrderItems" resultType="com.renxin.psychology.vo.PsyConsultOrderItemVO">
         select b.order_id, b.day, b.time_start, b.time_end, a.nick_name create_by from psy_consult_order a
         INNER JOIN psy_consult_order_item b on a.id = b.order_id
         <where>

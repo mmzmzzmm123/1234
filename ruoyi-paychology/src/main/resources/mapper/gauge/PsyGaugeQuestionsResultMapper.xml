@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeQuestionsResultMapper">
+<mapper namespace="com.renxin.gauge.mapper.PsyGaugeQuestionsResultMapper">
 
-    <resultMap type="com.ruoyi.gauge.domain.PsyGaugeQuestionsResult" id="PsyGaugeQuestionsResultResult">
+    <resultMap type="com.renxin.gauge.domain.PsyGaugeQuestionsResult" id="PsyGaugeQuestionsResultResult">
         <result property="id" column="id"/>
         <result property="userId" column="user_id"/>
         <result property="gaugeId" column="gauge_id"/>
@@ -21,7 +21,7 @@
         from psy_gauge_questions_result
     </sql>
 
-    <select id="selectPsyGaugeQuestionsResultList" parameterType="com.ruoyi.gauge.domain.PsyGaugeQuestionsResult"
+    <select id="selectPsyGaugeQuestionsResultList" parameterType="com.renxin.gauge.domain.PsyGaugeQuestionsResult"
             resultMap="PsyGaugeQuestionsResultResult">
         <include refid="selectPsyGaugeQuestionsResultVo"/>
         <where>
@@ -40,7 +40,7 @@
         where id = #{id}
     </select>
 
-    <insert id="insertPsyGaugeQuestionsResult" parameterType="com.ruoyi.gauge.domain.PsyGaugeQuestionsResult"
+    <insert id="insertPsyGaugeQuestionsResult" parameterType="com.renxin.gauge.domain.PsyGaugeQuestionsResult"
             useGeneratedKeys="true" keyProperty="id">
         insert into psy_gauge_questions_result
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -65,7 +65,7 @@
         </trim>
     </insert>
 
-    <update id="updatePsyGaugeQuestionsResult" parameterType="com.ruoyi.gauge.domain.PsyGaugeQuestionsResult">
+    <update id="updatePsyGaugeQuestionsResult" parameterType="com.renxin.gauge.domain.PsyGaugeQuestionsResult">
         update psy_gauge_questions_result
         <trim prefix="SET" suffixOverrides=",">
             <if test="userId != null">user_id = #{userId},</if>
@@ -159,7 +159,7 @@
     </insert>
 
     <select id="selectPsyGaugeQuestionsResult" parameterType="map"
-            resultType="com.ruoyi.gauge.domain.PsyGaugeQuestionsResult">
+            resultType="com.renxin.gauge.domain.PsyGaugeQuestionsResult">
         <include refid="selectPsyGaugeQuestionsResultVo"/>
         where user_id = #{userId} and order_id  = #{orderId}
     </select>

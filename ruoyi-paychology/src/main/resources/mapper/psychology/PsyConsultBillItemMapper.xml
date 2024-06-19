@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultBillItemMapper">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultBillItemMapper">
 
-    <select id="getOrderItems" resultType="com.ruoyi.psychology.domain.PsyConsultBillItem">
+    <select id="getOrderItems" resultType="com.renxin.psychology.domain.PsyConsultBillItem">
         SELECT
             a.id,
             a.order_id  order_id,
@@ -37,7 +37,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by a.order_id asc,a.real_time asc
     </select>
 
-    <select id="getItemList" resultType="com.ruoyi.psychology.dto.BillItemDTO">
+    <select id="getItemList" resultType="com.renxin.psychology.dto.BillItemDTO">
         SELECT
         a.id,
         a.order_id,
@@ -69,7 +69,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by a.order_id asc,a.use_time asc
     </select>
 
-    <select id="getItemListForDetail" resultType="com.ruoyi.psychology.domain.PsyConsultBillItem">
+    <select id="getItemListForDetail" resultType="com.renxin.psychology.domain.PsyConsultBillItem">
         SELECT
         a.id,
         a.order_id,
@@ -107,7 +107,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         order by a.consult_name, a.order_id asc,a.use_time asc
     </select>
 
-    <select id="getBillItems" resultType="com.ruoyi.psychology.domain.PsyConsultBillItem">
+    <select id="getBillItems" resultType="com.renxin.psychology.domain.PsyConsultBillItem">
         select * from psy_consult_bill_item
         where bill_id = 0 and  use_time <![CDATA[ >= ]]> #{startTime} and use_time <![CDATA[ <= ]]> #{endTime}
     </select>

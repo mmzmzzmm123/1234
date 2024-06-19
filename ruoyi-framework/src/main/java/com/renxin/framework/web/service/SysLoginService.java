@@ -1,0 +1,157 @@
+package com.renxin.framework.web.service;
+
+import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Component;
+import com.renxin.common.constant.CacheConstants;
+import com.renxin.common.constant.Constants;
+import com.renxin.common.core.domain.entity.SysUser;
+import com.renxin.common.core.domain.model.LoginUser;
+import com.renxin.common.core.redis.RedisCache;
+import com.renxin.common.exception.ServiceException;
+import com.renxin.common.exception.user.CaptchaException;
+import com.renxin.common.exception.user.CaptchaExpireException;
+import com.renxin.common.exception.user.UserPasswordNotMatchException;
+import com.renxin.common.utils.DateUtils;
+import com.renxin.common.utils.MessageUtils;
+import com.renxin.common.utils.ServletUtils;
+import com.renxin.common.utils.StringUtils;
+import com.renxin.common.utils.ip.IpUtils;
+import com.renxin.framework.manager.AsyncManager;
+import com.renxin.framework.manager.factory.AsyncFactory;
+import com.renxin.framework.security.context.AuthenticationContextHolder;
+import com.renxin.system.service.ISysConfigService;
+import com.renxin.system.service.ISysUserService;
+
+/**
+ * 登录校验方法
+ * 
+ * @author renxin
+ */
+@Component
+public class SysLoginService
+{
+    @Autowired
+    private TokenService tokenService;
+
+    @Resource
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private RedisCache redisCache;
+    
+    @Autowired
+    private ISysUserService userService;
+
+    @Autowired
+    private ISysConfigService configService;
+
+    /**
+     * 登录验证
+     * 
+     * @param username 用户名
+     * @param password 密码
+     * @param code 验证码
+     * @param uuid 唯一标识
+     * @return 结果
+     */
+    public String login(String username, String password, String code, String uuid)
+    {
+        boolean captchaEnabled = configService.selectCaptchaEnabled();
+        // 验证码开关
+        if (captchaEnabled)
+        {
+            validateCaptcha(username, code, uuid);
+        }
+        // 用户验证
+        Authentication authentication = null;
+        try
+        {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
+            AuthenticationContextHolder.setContext(authenticationToken);
+            // 该方法会去调用UserDetailsServiceImpl.loadUserByUsername
+            authentication = authenticationManager.authenticate(authenticationToken);
+        }
+        catch (Exception e)
+        {
+            if (e instanceof BadCredentialsException)
+            {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.password.not.match")));
+                throw new UserPasswordNotMatchException();
+            }
+            else
+            {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage()));
+                throw new ServiceException(e.getMessage());
+            }
+        }
+        finally
+        {
+            AuthenticationContextHolder.clearContext();
+        }
+
+        // 咨询师状态判断
+        String consultStatus = userService.getConsultStatus(username);
+        if (StringUtils.isNotBlank(consultStatus) && "1".equals(consultStatus)) {
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.blocked")));
+            throw new ServiceException(MessageUtils.message("user.blocked"));
+        }
+        // 合同状态判断
+        if (StringUtils.isNotBlank(consultStatus) && "0".equals(consultStatus)) {
+            int num = userService.getContractNumByUserName(username);
+            if (num == 0) {
+                AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.blocked")));
+                throw new ServiceException(MessageUtils.message("user.blocked"));
+            }
+        }
+
+        AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_SUCCESS, MessageUtils.message("user.login.success")));
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        recordLoginInfo(loginUser.getUserId());
+        // 生成token
+        return tokenService.createToken(loginUser);
+    }
+
+    /**
+     * 校验验证码
+     * 
+     * @param username 用户名
+     * @param code 验证码
+     * @param uuid 唯一标识
+     * @return 结果
+     */
+    public void validateCaptcha(String username, String code, String uuid)
+    {
+        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
+        String captcha = redisCache.getCacheObject(verifyKey);
+        redisCache.deleteObject(verifyKey);
+        if (captcha == null)
+        {
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.expire")));
+            throw new CaptchaExpireException();
+        }
+        if (!code.equalsIgnoreCase(captcha))
+        {
+            AsyncManager.me().execute(AsyncFactory.recordLogininfor(username, Constants.LOGIN_FAIL, MessageUtils.message("user.jcaptcha.error")));
+            throw new CaptchaException();
+        }
+    }
+
+    /**
+     * 记录登录信息
+     *
+     * @param userId 用户ID
+     */
+    public void recordLoginInfo(Long userId)
+    {
+        SysUser sysUser = new SysUser();
+        sysUser.setUserId(userId);
+        sysUser.setLoginIp(IpUtils.getIpAddr(ServletUtils.getRequest()));
+        sysUser.setLoginDate(DateUtils.getNowDate());
+        userService.updateUserProfile(sysUser);
+    }
+}

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeMapper">
+<mapper namespace="com.renxin.gauge.mapper.PsyGaugeMapper">
     
-    <resultMap type="com.ruoyi.gauge.domain.PsyGauge" id="PsyGaugeResult">
+    <resultMap type="com.renxin.gauge.domain.PsyGauge" id="PsyGaugeResult">
         <result property="id"    column="id"    />
         <result property="title"    column="title"    />
         <result property="subtitle"    column="subtitle"    />
@@ -33,7 +33,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, title, subtitle, head_picture, introduce, gauge_class, gauge_num, price, num, gauge_ratio, gauge_score, wrong, radar, type,create_by, create_time, update_by, update_time, remark,gauge_des,list_show_picture  from psy_gauge
     </sql>
 
-    <select id="selectPsyGaugeList" parameterType="com.ruoyi.gauge.domain.PsyGauge" resultMap="PsyGaugeResult">
+    <select id="selectPsyGaugeList" parameterType="com.renxin.gauge.domain.PsyGauge" resultMap="PsyGaugeResult">
         <include refid="selectPsyGaugeVo"/>
         <where>  
             <if test="title != null  and title != ''"> and title = #{title}</if>
@@ -58,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertPsyGauge" parameterType="com.ruoyi.gauge.domain.PsyGauge" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertPsyGauge" parameterType="com.renxin.gauge.domain.PsyGauge" useGeneratedKeys="true" keyProperty="id">
         insert into psy_gauge
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="title != null">title,</if>
@@ -100,7 +100,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatePsyGauge" parameterType="com.ruoyi.gauge.domain.PsyGauge">
+    <update id="updatePsyGauge" parameterType="com.renxin.gauge.domain.PsyGauge">
         update psy_gauge
         <trim prefix="SET" suffixOverrides=",">
             <if test="title != null">title = #{title},</if>

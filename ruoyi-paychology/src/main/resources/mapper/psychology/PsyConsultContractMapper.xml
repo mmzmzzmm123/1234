@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultContractMapper">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultContractMapper">
 
     <resultMap type="PsyConsultContract" id="PsyConsultContractResult">
         <result property="id"    column="id"    />
@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="getListByUserName" resultType="com.ruoyi.psychology.domain.PsyConsultContract">
+    <select id="getListByUserName" resultType="com.renxin.psychology.domain.PsyConsultContract">
         select a.* from psy_consult_contract a inner join psy_consult b on a.consult_id = b.id
         where b.user_name = #{userName} and a.status = '1'
     </select>
@@ -55,7 +55,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
               AND (start_time <![CDATA[ >= ]]> #{startTime} or end_time <![CDATA[ <= ]]> #{endTime})
     </select>
 
-    <select id="getConsultList" resultType="com.ruoyi.psychology.domain.PsyConsult">
+    <select id="getConsultList" resultType="com.renxin.psychology.domain.PsyConsult">
         SELECT id,user_id,user_name,nick_name FROM psy_consult where status = '0'
     </select>
 

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeBannerConfigMapper">
+<mapper namespace="com.renxin.gauge.mapper.PsyGaugeBannerConfigMapper">
     
-    <resultMap type="com.ruoyi.gauge.domain.PsyGaugeBannerConfig" id="PsyGaugeBannerConfigResult">
+    <resultMap type="com.renxin.gauge.domain.PsyGaugeBannerConfig" id="PsyGaugeBannerConfigResult">
         <result property="id"    column="id"    />
         <result property="bannerUrl"    column="banner_url"    />
         <result property="linkUrl"    column="link_url"    />
@@ -17,7 +17,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, banner_url, link_url, banner_type, create_by, create_time from psy_gauge_banner_config
     </sql>
 
-    <select id="selectPsyGaugeBannerConfigList" parameterType="com.ruoyi.gauge.domain.PsyGaugeBannerConfig" resultMap="PsyGaugeBannerConfigResult">
+    <select id="selectPsyGaugeBannerConfigList" parameterType="com.renxin.gauge.domain.PsyGaugeBannerConfig" resultMap="PsyGaugeBannerConfigResult">
         <include refid="selectPsyGaugeBannerConfigVo"/>
         <where>  
             <if test="bannerUrl != null  and bannerUrl != ''"> and banner_url = #{bannerUrl}</if>
@@ -31,7 +31,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertPsyGaugeBannerConfig" parameterType="com.ruoyi.gauge.domain.PsyGaugeBannerConfig">
+    <insert id="insertPsyGaugeBannerConfig" parameterType="com.renxin.gauge.domain.PsyGaugeBannerConfig">
         insert into psy_gauge_banner_config
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
@@ -51,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatePsyGaugeBannerConfig" parameterType="com.ruoyi.gauge.domain.PsyGaugeBannerConfig">
+    <update id="updatePsyGaugeBannerConfig" parameterType="com.renxin.gauge.domain.PsyGaugeBannerConfig">
         update psy_gauge_banner_config
         <trim prefix="SET" suffixOverrides=",">
             <if test="bannerUrl != null and bannerUrl != ''">banner_url = #{bannerUrl},</if>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.gauge.mapper.PsyWorkManagementMapper">
+<mapper namespace="com.renxin.gauge.mapper.PsyWorkManagementMapper">
     
     <resultMap type="PsyWorkManagement" id="PsyWorkManagementResult">
         <result property="id"    column="id"    />

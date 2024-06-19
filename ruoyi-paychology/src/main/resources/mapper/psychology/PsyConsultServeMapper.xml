@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultServeMapper">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultServeMapper">
 
     <update id="tombstonedByIds">
         update psy_consult_serve set del_flag = 1 where id in
@@ -11,7 +11,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </update>
 
-    <select id="getServeRef" resultType="com.ruoyi.psychology.vo.PsyConsultServeVO">
+    <select id="getServeRef" resultType="com.renxin.psychology.vo.PsyConsultServeVO">
         select a.serve_id,a.consult_id, b.nick_name, b.user_name,b.status,
         (SELECT count(id) FROM psy_consult_order WHERE consult_id = a.consult_id and serve_id = a.serve_id and pay_status = '2') num
         from psy_consult_serve a inner join psy_consult b on a.consult_id = b.id
@@ -21,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="getConsultServeRef" resultType="com.ruoyi.psychology.vo.PsyConsultServeVO">
+    <select id="getConsultServeRef" resultType="com.renxin.psychology.vo.PsyConsultServeVO">
         select distinct a.consult_id,b.nick_name, b.user_name from psy_consult_serve a inner join psy_consult b on a.consult_id = b.id
         <where>
             <if test="consultId != null  and consultId != ''"> and a.consult_id = #{consultId}</if>

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.course.mapper.CourOrderMapper">
+<mapper namespace="com.renxin.course.mapper.CourOrderMapper">
     
     <resultMap type="CourOrder" id="CourOrderResult">
         <result property="id"    column="id"    />
@@ -89,7 +89,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </foreach>
     </delete>
 
-    <select id="getOrderDetailById" parameterType="Integer" resultType="com.ruoyi.course.vo.OrderVO">
+    <select id="getOrderDetailById" parameterType="Integer" resultType="com.renxin.course.vo.OrderVO">
         select co.id, co.order_id, co.status, co.user_id, co.amount as amount, co.course_id, pop.pay_status , pop.amount as pay_amount
         from cour_order co
         left join psy_order_pay pop
@@ -97,7 +97,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where co.id = #{id}
     </select>
 
-    <select id="queryOrderList" parameterType="com.ruoyi.course.domain.dto.OrderQueryDTO" resultType="com.ruoyi.course.vo.OrderQueryVO">
+    <select id="queryOrderList" parameterType="com.renxin.course.domain.dto.OrderQueryDTO" resultType="com.renxin.course.vo.OrderQueryVO">
         select co.id, co.order_id as orderId, co.status, co.user_id, pu.name as userName, co.amount, co.create_time as createTime,  co.course_id, cc.name as courseName
         from cour_order co
         left join psy_user pu

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultMapper">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultMapper">
 
-    <select id="search" resultType="com.ruoyi.psychology.domain.PsyConsult">
+    <select id="search" resultType="com.renxin.psychology.domain.PsyConsult">
         select id, user_id, user_name, nicK_name, avatar, email, phonenumber, sex, tabs, way, way_str, wx_card, zx_word, zx_style, notice, experience, info, detail, serve, work_num, work_time, work_hours, del_flag, is_show, status, qualification, index_qualification, create_by, create_time, update_by, update_time,
         qualification, index_qualification, mode, city, province, genre, img, share, lang,
         (SELECT count(id) FROM psy_consult_work WHERE `live` != '[]' and `live` != `used` and consult_id = psy_consult.id and `day` = DATE_FORMAT(NOW(),'%Y-%m-%d')) buy,

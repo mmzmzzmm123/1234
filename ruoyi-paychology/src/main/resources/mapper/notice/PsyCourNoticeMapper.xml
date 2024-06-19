@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.notice.mapper.PsyCourNoticeMapper">
+<mapper namespace="com.renxin.notice.mapper.PsyCourNoticeMapper">
     
-    <resultMap type="com.ruoyi.notice.domain.PsyCourNotice" id="PsyCourNoticeResult">
+    <resultMap type="com.renxin.notice.domain.PsyCourNotice" id="PsyCourNoticeResult">
         <result property="noticeId"    column="notice_id"    />
         <result property="noticeTitle"    column="notice_title"    />
         <result property="noticeType"    column="notice_type"    />
@@ -22,7 +22,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select notice_id, notice_title, notice_type, source_type, notice_content, status, create_by, create_time, update_by, update_time, remark from psy_cour_notice
     </sql>
 
-    <select id="selectPsyCourNoticeList" parameterType="com.ruoyi.notice.domain.PsyCourNotice" resultMap="PsyCourNoticeResult">
+    <select id="selectPsyCourNoticeList" parameterType="com.renxin.notice.domain.PsyCourNotice" resultMap="PsyCourNoticeResult">
         <include refid="selectPsyCourNoticeVo"/>
         <where>  
             <if test="noticeTitle != null  and noticeTitle != ''"> and notice_title = #{noticeTitle}</if>
@@ -38,7 +38,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where notice_id = #{noticeId}
     </select>
         
-    <insert id="insertPsyCourNotice" parameterType="com.ruoyi.notice.domain.PsyCourNotice" useGeneratedKeys="true" keyProperty="noticeId">
+    <insert id="insertPsyCourNotice" parameterType="com.renxin.notice.domain.PsyCourNotice" useGeneratedKeys="true" keyProperty="noticeId">
         insert into psy_cour_notice
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="noticeTitle != null and noticeTitle != ''">notice_title,</if>
@@ -66,7 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatePsyCourNotice" parameterType="com.ruoyi.notice.domain.PsyCourNotice">
+    <update id="updatePsyCourNotice" parameterType="com.renxin.notice.domain.PsyCourNotice">
         update psy_cour_notice
         <trim prefix="SET" suffixOverrides=",">
             <if test="noticeTitle != null and noticeTitle != ''">notice_title = #{noticeTitle},</if>

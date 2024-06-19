@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultantMapper">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultantMapper">
     
     <resultMap type="PsyConsultant" id="PsyConsultantResult">
         <result property="id"    column="id"    />

@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.gauge.mapper.PsyOrderMapper">
+<mapper namespace="com.renxin.gauge.mapper.PsyOrderMapper">
 
-    <resultMap type="com.ruoyi.gauge.domain.PsyOrder" id="PsyOrderResult">
+    <resultMap type="com.renxin.gauge.domain.PsyOrder" id="PsyOrderResult">
         <result property="id" column="id"/>
         <result property="orderId" column="order_id"/>
         <result property="gaugeId" column="gauge_id"/>
@@ -36,7 +36,7 @@
         from psy_order
     </sql>
 
-    <select id="selectPsyOrderList" parameterType="com.ruoyi.gauge.domain.PsyOrder" resultMap="PsyOrderResult">
+    <select id="selectPsyOrderList" parameterType="com.renxin.gauge.domain.PsyOrder" resultMap="PsyOrderResult">
         <include refid="selectPsyOrderVo"/>
         <where>
             <if test="orderId != null  and orderId != ''">and order_id = #{orderId}</if>
@@ -58,17 +58,17 @@
                  left join psy_user u ON po.user_id = u.id
     </sql>
 
-    <select id="selectPsyOrderById" parameterType="Integer" resultType="com.ruoyi.gauge.domain.PsyOrder">
+    <select id="selectPsyOrderById" parameterType="Integer" resultType="com.renxin.gauge.domain.PsyOrder">
         <include refid="selectPsyOrder"/>
         where po.id = #{id}
     </select>
 
-    <select id="selectPsyOrderByOrderId" parameterType="String" resultType="com.ruoyi.gauge.domain.PsyOrder">
+    <select id="selectPsyOrderByOrderId" parameterType="String" resultType="com.renxin.gauge.domain.PsyOrder">
         <include refid="selectPsyOrder"/>
         where po.order_id = #{orderId}
     </select>
 
-    <insert id="insertPsyOrder" parameterType="com.ruoyi.gauge.domain.PsyOrder" useGeneratedKeys="true"
+    <insert id="insertPsyOrder" parameterType="com.renxin.gauge.domain.PsyOrder" useGeneratedKeys="true"
             keyProperty="id">
         insert into psy_order
         <trim prefix="(" suffix=")" suffixOverrides=",">
@@ -93,7 +93,7 @@
         </trim>
     </insert>
 
-    <update id="updatePsyOrder" parameterType="com.ruoyi.gauge.domain.PsyOrder">
+    <update id="updatePsyOrder" parameterType="com.renxin.gauge.domain.PsyOrder">
         update psy_order
         <trim prefix="SET" suffixOverrides=",">
             <if test="orderId != null and orderId != ''">order_id = #{orderId},</if>
@@ -131,7 +131,7 @@
         </foreach>
     </delete>
 
-    <select id="queryOrderPage" resultType="com.ruoyi.gauge.domain.PsyOrder">
+    <select id="queryOrderPage" resultType="com.renxin.gauge.domain.PsyOrder">
         select po.id, po.order_id as orderId, po.gauge_id as gaugeId, gauge.title as gaugeTitle,po.mobile,po.sex,po.age,
                po.order_status as orderStatus, po.amount, po.gauge_status as gaugeStatus, po.create_time as createTime, po.create_by as createBy,
                gauge.gauge_des as gaugeDes, gauge.type as gaugeType, gauge.gauge_num,
@@ -162,7 +162,7 @@
           and gauge_status = 1
     </select>
 
-    <select id="queryOrderList" resultType="com.ruoyi.gauge.domain.PsyOrder">
+    <select id="queryOrderList" resultType="com.renxin.gauge.domain.PsyOrder">
         select po.id,po.order_id,po.gauge_id,po.order_status,po.amount,po.gauge_status,po.create_time,po.create_by,po.user_id,po.mobile,po.sex,po.age,
                gauge.title as gaugeTitle,pu.name as userName
         from psy_order po inner join psy_gauge gauge ON po.gauge_id = gauge.id
@@ -177,7 +177,7 @@
         order by po.create_time desc
     </select>
 
-    <select id="getOrderByCancel" parameterType="com.ruoyi.gauge.domain.PsyOrder" resultMap="PsyOrderResult">
+    <select id="getOrderByCancel" parameterType="com.renxin.gauge.domain.PsyOrder" resultMap="PsyOrderResult">
         <include refid="selectPsyOrderVo"/>
         <where>
             <if test="status != null">and order_status = #{status}</if>

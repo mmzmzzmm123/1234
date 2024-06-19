@@ -2,8 +2,8 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.psychology.mapper.PsyConsultOrderItemMapper">
-<select id="getOrderItemList" resultType="com.ruoyi.psychology.dto.OrderItemDTO">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultOrderItemMapper">
+<select id="getOrderItemList" resultType="com.renxin.psychology.dto.OrderItemDTO">
    SELECT
     a.*,
     b.user_name AS `consultantName`,

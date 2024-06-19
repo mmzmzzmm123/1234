@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.course.mapper.CourCourseMapper">
+<mapper namespace="com.renxin.course.mapper.CourCourseMapper">
     
     <resultMap type="CourCourse" id="CourCourseResult">
         <result property="id"    column="id"    />
@@ -43,7 +43,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         </where>
     </select>
 
-    <select id="queryCourCourseList" parameterType="com.ruoyi.course.domain.dto.CourseQueryDTO" resultMap="CourCourseResult">
+    <select id="queryCourCourseList" parameterType="com.renxin.course.domain.dto.CourseQueryDTO" resultMap="CourCourseResult">
         <include refid="selectCourCourseVo"/>
         <where>
             delete_flag = 0

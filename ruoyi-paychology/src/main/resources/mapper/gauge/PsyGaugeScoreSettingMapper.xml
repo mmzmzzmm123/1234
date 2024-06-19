@@ -2,9 +2,9 @@
 <!DOCTYPE mapper
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.gauge.mapper.PsyGaugeScoreSettingMapper">
+<mapper namespace="com.renxin.gauge.mapper.PsyGaugeScoreSettingMapper">
     
-    <resultMap type="com.ruoyi.gauge.domain.PsyGaugeScoreSetting" id="PsyGaugeScoreSettingResult">
+    <resultMap type="com.renxin.gauge.domain.PsyGaugeScoreSetting" id="PsyGaugeScoreSettingResult">
         <result property="id"    column="id"    />
         <result property="gaugeId"    column="gauge_id"    />
         <result property="start"    column="start"    />
@@ -26,7 +26,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         select id, gauge_id, start, end, lat, proposal,result,memo1,memo2,memo3,memo4,memo5,memo6,memo7,params from psy_gauge_score_setting
     </sql>
 
-    <select id="selectPsyGaugeScoreSettingList" parameterType="com.ruoyi.gauge.domain.PsyGaugeScoreSetting" resultMap="PsyGaugeScoreSettingResult">
+    <select id="selectPsyGaugeScoreSettingList" parameterType="com.renxin.gauge.domain.PsyGaugeScoreSetting" resultMap="PsyGaugeScoreSettingResult">
         <include refid="selectPsyGaugeScoreSettingVo"/>
         <where>  
             <if test="gaugeId != null "> and gauge_id = #{gaugeId}</if>
@@ -49,7 +49,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         where id = #{id}
     </select>
         
-    <insert id="insertPsyGaugeScoreSetting" parameterType="com.ruoyi.gauge.domain.PsyGaugeScoreSetting" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertPsyGaugeScoreSetting" parameterType="com.renxin.gauge.domain.PsyGaugeScoreSetting" useGeneratedKeys="true" keyProperty="id">
         insert into psy_gauge_score_setting
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="gaugeId != null">gauge_id,</if>
@@ -83,7 +83,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
          </trim>
     </insert>
 
-    <update id="updatePsyGaugeScoreSetting" parameterType="com.ruoyi.gauge.domain.PsyGaugeScoreSetting">
+    <update id="updatePsyGaugeScoreSetting" parameterType="com.renxin.gauge.domain.PsyGaugeScoreSetting">
         update psy_gauge_score_setting
         <trim prefix="SET" suffixOverrides=",">
             <if test="gaugeId != null">gauge_id = #{gaugeId},</if>
