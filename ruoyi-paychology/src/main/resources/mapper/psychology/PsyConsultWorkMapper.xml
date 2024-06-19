@@ -26,10 +26,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="createTime"    column="create_time"    />
         <result property="updateBy"    column="update_by"    />
         <result property="updateTime"    column="update_time"    />
+        <result property="consultType"    column="consult_type"    />
     </resultMap>
 
     <sql id="selectPsyConsultWorkVo">
-        select id, consult_id, day, week, time_start, time_end, times, status, live, used, create_by, create_time, update_by, update_time from psy_consult_work
+        select id, consult_id, day, week, time_start, time_end, times, status, live, used, create_by, create_time, update_by, update_time,consult_type from psy_consult_work
     </sql>
 
     <select id="getList" parameterType="PsyConsultWork" resultMap="PsyConsultWorkResult">
@@ -65,7 +66,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </select>
 
     <select id="getWorks" resultType="com.ruoyi.psychology.vo.PsyConsultWorkVO">
-        select b.nick_name, b.user_name, a.id, a.consult_id, a.day, a.week, a.time_start, a.time_end, a.status, a.live, a.used from psy_consult_work a inner join psy_consult b on a.consult_id = b.id
+        select b.nick_name, b.user_name, a.id, a.consult_id, a.day, a.week, a.time_start, a.time_end, a.status, a.live, a.used,a.consult_type from psy_consult_work a inner join psy_consult b on a.consult_id = b.id
         <where>
             <if test="ids != null and ids.size() > 0">
                 and a.consult_id in

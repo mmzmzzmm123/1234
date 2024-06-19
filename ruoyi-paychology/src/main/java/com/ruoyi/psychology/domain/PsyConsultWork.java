@@ -52,4 +52,7 @@ public class PsyConsultWork extends BasePlusEntity implements Serializable
     /** 状态（0正常 1休息） */
     private String status;
 
+    /** 咨询类型 1 咨询 2倾听 3督导 */
+    private String consultType;
+
 }

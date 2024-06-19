@@ -65,4 +65,9 @@ public class ConsultConstant {
     public static final String CONTRACT_STATUS_6 = "6";
     public static final String CONTRACT_STATUS_7 = "7";
 
+    /** 咨询类型 1 咨询 2倾听 3督导 */
+    public static final String CONSULT_TYPE_1 = "1";
+    public static final String CONSULT_TYPE_2 = "2";
+    public static final String CONSULT_TYPE_3 = "3";
+
 }

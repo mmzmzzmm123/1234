@@ -143,6 +143,11 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
         return headers;
     }
 
+    private List<Long> getConsultDetailIds(PsyWorkReq req) {
+        req.setEnd(req.getStart());
+        return psyConsultWorkMapper.getConsultIds(req);
+    }
+
     @Override
     public List<Long> getConsultIds(PsyWorkReq req) {
         Calendar calendar = Calendar.getInstance();
@@ -181,6 +186,7 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
             List<PsyConsultWorkVO> works = getConsultWorks(req1);
             HashMap<String, String> node = new HashMap<>();
             node.put("id", String.valueOf(consultId));
+
             node.put("nickName", works.get(0).getNickName());
             node.put("userName", StrUtil.format("(系统账号:{})", works.get(0).getUserName()));
             req1.setStatus(ConsultConstant.PAY_STATUE_PAID);
@@ -273,8 +279,7 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
 
     @Override
     public HashMap<String, String> getWorkDetail(PsyWorkReq req) {
-        List<Long> ids = getConsultIds(req);
-        req.setEnd(req.getStart());
+        List<Long> ids = getConsultDetailIds(req);
         List<HashMap<String, String>> list = getWorks(req, ids);
         return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
@@ -294,6 +299,9 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int add(PsyConsultWorkVO req) {
+        if(StringUtils.isBlank(req.getConsultType())){
+            req.setConsultType(ConsultConstant.CONSULT_TYPE_1);
+        }
         converTime(req);
         return psyConsultWorkMapper.insert(BeanUtil.toBean(req, PsyConsultWork.class));
     }
@@ -301,6 +309,7 @@ public class PsyConsultWorkServiceImpl extends ServiceImpl<PsyConsultWorkMapper,
     @Override
     @Transactional(rollbackFor = Exception.class)
     public int update(PsyConsultWorkVO req) {
+        req.setConsultType(null);
         converTime(req);
         return psyConsultWorkMapper.updateById(BeanUtil.toBean(req, PsyConsultWork.class));
     }

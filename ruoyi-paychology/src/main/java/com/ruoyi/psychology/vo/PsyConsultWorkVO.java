@@ -24,6 +24,9 @@ public class PsyConsultWorkVO extends BaseValObj implements Serializable
     private String nickName;
     private String userName;
 
+    /** 咨询类型 1 咨询 2倾听 3督导 */
+    private String consultType;
+
     /** 天 */
     private String day;
 

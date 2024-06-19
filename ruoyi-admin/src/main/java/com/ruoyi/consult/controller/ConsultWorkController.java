@@ -14,6 +14,7 @@ import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -59,15 +60,22 @@ public class ConsultWorkController extends BaseController {
             req.setIds(Collections.singletonList(loginUser.getConsultId()));
         }
         HashMap<String, String> list = psyConsultWorkService.getWorkDetail(req);
-        return AjaxResult.success(list);
+        if(list != null && !list.isEmpty()){
+            return AjaxResult.successData(list);
+        }else{
+            return AjaxResult.success();
+        }
+
     }
 
     @ApiOperation(value = "咨询师排班新增")
-    @GetMapping("/create")
+    @PostMapping("/create")
     public AjaxResult getWorks(@RequestBody PsyConsultWorkVO req,HttpServletRequest request)
     {
         ConsultDTO loginUser = consultantTokenService.getLoginUser(request);
-        psyConsultWorkService.add(req);
-        return AjaxResult.success();
+        if(loginUser != null){
+            req.setConsultId(loginUser.getConsultId());
+        }
+        return AjaxResult.success(psyConsultWorkService.add(req));
     }
 }
