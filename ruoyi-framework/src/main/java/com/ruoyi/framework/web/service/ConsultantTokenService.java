@@ -60,6 +60,15 @@ public class ConsultantTokenService {
      *
      * @return 用户id
      */
+    public Integer getUserId(HttpServletRequest request) {
+        ConsultDTO loginUser = getLoginUser(request);
+        return loginUser != null && loginUser.getUserId() != null ? loginUser.getUserId() : -1;
+    }
+
+    /**
+     *
+     * @return 咨询师id
+     */
     public Long getConsultId(HttpServletRequest request) {
         ConsultDTO loginUser = getLoginUser(request);
         return loginUser != null && loginUser.getConsultId() != null ? loginUser.getConsultId() : -1;

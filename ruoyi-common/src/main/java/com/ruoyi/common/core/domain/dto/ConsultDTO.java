@@ -10,8 +10,13 @@ import java.util.Collection;
 @Data
 public class ConsultDTO  implements UserDetails {
 
-     /**
+    /**
      * 用户id
+     */
+    private Integer userId;
+
+     /**
+     * 咨询师ID
      */
     private Long consultId;
     /**
