@@ -70,8 +70,6 @@ public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
-
-
     public void output(Object json, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String header = request.getHeader("Origin");
         response.setContentType("application/json;charset=UTF-8;");
