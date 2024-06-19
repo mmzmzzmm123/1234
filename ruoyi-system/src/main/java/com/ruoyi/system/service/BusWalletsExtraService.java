@@ -1,6 +1,9 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.system.domain.BusWallets;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Description:
@@ -19,4 +22,10 @@ import com.ruoyi.system.domain.BusWallets;
 public interface BusWalletsExtraService extends IBusWalletsService {
 
     boolean deduction(BusWallets wallet, Long amount);
+
+
+    List<BusWallets>  findWalletByUser();
+
+    @Transactional(rollbackFor = Exception.class)
+    boolean initWallet();
 }

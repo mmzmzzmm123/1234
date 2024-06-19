@@ -1,7 +1,10 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.portal.form.BusPostOrderForm;
 import com.ruoyi.portal.form.PayForm;
 import com.ruoyi.system.domain.BusPostOrder;
+
+import java.util.List;
 
 /**
  * Description:
@@ -21,4 +24,9 @@ public interface BusPostOrderExtraService extends IBusPostOrderService{
     int postOrder(BusPostOrder busPostOrder);
 
     void payOrder(PayForm payForm);
+
+    int updateOrderByUserId(BusPostOrderForm busPostOrderForm);
+
+    List<BusPostOrder> findOrderListByUserId(BusPostOrderForm busPostOrderForm);
+
 }

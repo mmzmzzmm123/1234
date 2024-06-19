@@ -1,6 +1,7 @@
 package com.ruoyi.portal.form;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.xss.Xss;
 
 import java.util.Date;
@@ -19,7 +20,7 @@ import java.util.Date;
  * ------------------------------------------------------------------
  * 2024-06-18     张李鑫                     1.0         1.0 Version
  */
-public class BusPostOrderForm {
+public class BusPostOrderForm extends BaseEntity {
 
     /** 订单ID */
     private Long orderId;
@@ -63,6 +64,16 @@ public class BusPostOrderForm {
     /** 收货地址 */
     private String address;
 
+    private Boolean orderPending;
+
+
+    public Boolean getOrderPending() {
+        return orderPending;
+    }
+
+    public void setOrderPending(Boolean orderPending) {
+        this.orderPending = orderPending;
+    }
 
     public Long getOrderId() {
         return orderId;

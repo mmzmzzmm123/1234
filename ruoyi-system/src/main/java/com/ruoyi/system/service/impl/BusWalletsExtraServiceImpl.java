@@ -1,10 +1,16 @@
 package com.ruoyi.system.service.impl;
 
+import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.domain.BusWallets;
 import com.ruoyi.system.mapper.BusWalletsExtraMapper;
 import com.ruoyi.system.service.BusWalletsExtraService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Description:
@@ -20,7 +26,8 @@ import org.springframework.stereotype.Component;
  * ------------------------------------------------------------------
  * 2024-06-18     张李鑫                     1.0         1.0 Version
  */
-@Component("BusWalletsExtraService")
+@Primary
+@Service("BusWalletsExtraService")
 public class BusWalletsExtraServiceImpl extends BusWalletsServiceImpl implements BusWalletsExtraService {
     @Autowired
     private BusWalletsExtraMapper busWalletsExtraMapper;
@@ -36,5 +43,43 @@ public class BusWalletsExtraServiceImpl extends BusWalletsServiceImpl implements
     @Override
     public boolean deduction(BusWallets wallet, Long amount) {
         return busWalletsExtraMapper.deduction(wallet, amount) > 0;
+    }
+
+    @Override
+    public List<BusWallets> findWalletByUser() {
+        Long userId = SecurityUtils.getUserId();
+        BusWallets busWallets = new BusWallets();
+        busWallets.setUserId(userId);
+        return super.selectBusWalletsList(busWallets);
+    }
+
+    @Override
+    public int insertBusWallets(BusWallets busWallets) {
+        busWallets.setUpdatedAt(new Date());
+        busWallets.setCreatedAt(new Date());
+        return super.insertBusWallets(busWallets);
+    }
+
+    @Override
+    public int updateBusWallets(BusWallets busWallets) {
+        busWallets.setUpdatedAt(new Date());
+        return super.updateBusWallets(busWallets);
+    }
+
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean initWallet() {
+        List<BusWallets> wallets = findWalletByUser();
+        if (wallets.isEmpty()) {
+            BusWallets busWallets = new BusWallets();
+            Long userId = SecurityUtils.getUserId();
+            busWallets.setUserId(userId);
+            busWallets.setBalance(0L);
+            busWallets.setFrozenBalance(0L);
+            busWallets.setVersion(0L);
+            return insertBusWallets(busWallets)>0;
+        }
+        return true;
     }
 }

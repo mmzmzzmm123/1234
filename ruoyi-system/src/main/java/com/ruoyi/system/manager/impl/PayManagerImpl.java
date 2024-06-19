@@ -33,19 +33,14 @@ public class PayManagerImpl implements PayManager {
     private BusWalletsExtraService busWalletsService;
 
 
-    private BusWallets findWalletByUser() {
-        Long userId = SecurityUtils.getUserId();
-        BusWallets busWallets = new BusWallets();
-        busWallets.setUserId(userId);
-        List<BusWallets> busWalletsList = busWalletsService.selectBusWalletsList(busWallets);
+
+
+    public boolean wallPay(Long amount) {
+        List<BusWallets> busWalletsList = busWalletsService.findWalletByUser();
         if (busWalletsList.size() != 1) {
             throw new RuntimeException("钱包信息异常");
         }
-        return busWalletsList.get(0);
-    }
-
-    public boolean wallPay(Long amount) {
-        BusWallets wallet = findWalletByUser();
+        BusWallets wallet = busWalletsList.get(0);
         Long balance = wallet.getBalance();
         if (balance >= amount) {
             return busWalletsService.deduction(wallet, amount);

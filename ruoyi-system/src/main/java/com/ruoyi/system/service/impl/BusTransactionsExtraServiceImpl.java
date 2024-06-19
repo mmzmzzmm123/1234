@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.system.service.BusTransactionsExtraService;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,5 +19,6 @@ import org.springframework.stereotype.Component;
  * 2024-06-18     张李鑫                     1.0         1.0 Version
  */
 @Component("busTransactionsExtraServiceImpl")
+@Primary
 public class BusTransactionsExtraServiceImpl extends BusTransactionsServiceImpl implements BusTransactionsExtraService {
 }
