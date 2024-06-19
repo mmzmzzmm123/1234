@@ -31,7 +31,7 @@ public class TokenController extends BaseController {
     public AjaxResult getToken(@PathVariable("id") Long id){
         PsyConsultVO psyConsult= psyConsultService.getOne(id);
         ConsultDTO consultDTO=new ConsultDTO();
-        consultDTO.setConsultId(psyConsult.getUserId());
+        consultDTO.setConsultId(psyConsult.getId());
         consultDTO.setPhone(psyConsult.getPhonenumber());
         String token = consultantTokenService.createToken(consultDTO,3600000);
         log.info("token:{}",token);

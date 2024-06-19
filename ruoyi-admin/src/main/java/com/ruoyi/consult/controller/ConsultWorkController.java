@@ -4,6 +4,7 @@ import com.ruoyi.common.annotation.RateLimiter;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.ConsultDTO;
+import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.framework.web.service.ConsultantTokenService;
 import com.ruoyi.psychology.request.PsyWorkReq;
 import com.ruoyi.psychology.service.IPsyConsultWorkService;
@@ -35,7 +36,7 @@ public class ConsultWorkController extends BaseController {
     @ApiOperation(value = "咨询师排版计划表")
     @PostMapping("/todo")
     @RateLimiter
-    public AjaxResult list(@RequestBody PsyWorkReq req,HttpServletRequest request)
+    public TableDataInfo list(@RequestBody PsyWorkReq req, HttpServletRequest request)
     {
         ConsultDTO loginUser = consultantTokenService.getLoginUser(request);
         if(loginUser != null){
@@ -43,7 +44,7 @@ public class ConsultWorkController extends BaseController {
         }
         startPage();
         List<HashMap<String, String>>  list = psyConsultWorkService.getWorks(req);
-        return AjaxResult.success(getDataTable(list));
+        return getDataTable(list);
     }
 
     @ApiOperation(value = "咨询师排班详情")

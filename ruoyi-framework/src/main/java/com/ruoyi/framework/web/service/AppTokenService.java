@@ -43,6 +43,22 @@ public class AppTokenService {
     @Value("${app.token.expireTime}")
     private int expireTime;
 
+
+    @Value("${consultant.token.header}")
+    private String consultantHeader;
+
+    // 令牌秘钥
+    @Value("${consultant.token.secret}")
+    private String consultantSecret;
+
+    // 令牌有效期（默认30分钟）单位为s
+    @Value("${consultant.token.expireTime}")
+    private int consultantExpireTime;
+
+    // 客户端类型
+    @Value("${consultant.token.clientType}")
+    private String consultantClientType;
+
     protected static final long MILLIS_SECOND = 1000;
 
     protected static final long MILLIS_MINUTE = 60 * MILLIS_SECOND;
@@ -60,6 +76,28 @@ public class AppTokenService {
         LoginDTO loginUser = getLoginUser(request);
         return loginUser != null && loginUser.getUserId() != null ? loginUser.getUserId() : -1;
     }
+
+    /**
+     * 获取用户身份信息
+     *
+     * @return 用户信息
+     */
+    public LoginDTO getConsultantLoginUser(HttpServletRequest request) {
+        // 获取请求携带的令牌
+        String token = getConsultantToken(request);
+        if (StringUtils.isNotEmpty(token)) {
+            try {
+                Claims claims = consultantParseToken(token);
+                LoginDTO user = new LoginDTO();
+                user.setClientType(consultantClientType);
+                return user;
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
 
     /**
      * 获取用户身份信息
@@ -180,6 +218,19 @@ public class AppTokenService {
      * @param token 令牌
      * @return 数据声明
      */
+    private Claims consultantParseToken(String token) {
+        return Jwts.parser()
+                .setSigningKey(consultantSecret)
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    /**
+     * 从令牌中获取数据声明
+     *
+     * @param token 令牌
+     * @return 数据声明
+     */
     private Claims parseToken(String token) {
         return Jwts.parser()
                 .setSigningKey(secret)
@@ -196,6 +247,20 @@ public class AppTokenService {
     public String getUsernameFromToken(String token) {
         Claims claims = parseToken(token);
         return claims.getSubject();
+    }
+
+    /**
+     * 获取请求token
+     *
+     * @param request
+     * @return token
+     */
+    private String getConsultantToken(HttpServletRequest request) {
+        String token = request.getHeader(consultantHeader);
+        if (StringUtils.isNotEmpty(token) && token.startsWith(Constants.TOKEN_PREFIX)) {
+            token = token.replace(Constants.TOKEN_PREFIX, "");
+        }
+        return token;
     }
 
     /**

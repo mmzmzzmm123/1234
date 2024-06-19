@@ -3,21 +3,18 @@ package com.ruoyi.framework.security.filter;
 import com.alibaba.fastjson2.JSONObject;
 import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.domain.dto.ConsultDTO;
-import com.ruoyi.common.core.domain.dto.LoginDTO;
 import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.framework.web.service.AppTokenService;
-import com.ruoyi.framework.web.service.ConsultTokenService;
+import com.ruoyi.framework.web.service.ConsultantTokenService;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,7 +31,7 @@ public class ConsultJwtAuthenticationTokenFilter extends OncePerRequestFilter {
     private static final Logger log = LoggerFactory.getLogger(ConsultJwtAuthenticationTokenFilter.class);
 
     @Autowired
-    private ConsultTokenService consultTokenService;
+    private ConsultantTokenService consultantTokenService;
 
     private static final String COMMA = ",";
 
@@ -44,7 +41,7 @@ public class ConsultJwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         // 检查URL
         if (request.getRequestURI().startsWith("/consult")) {
-            ConsultDTO loginUser = consultTokenService.getLoginUser(request);
+            ConsultDTO loginUser = consultantTokenService.getLoginUser(request);
 
             if (StringUtils.isNull(loginUser)) {
                 JSONObject json = new JSONObject();
@@ -55,12 +52,21 @@ public class ConsultJwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 response.getWriter().write(JSONObject.toJSONString(json));
                 return;
             } else {
-                consultTokenService.verifyToken(loginUser);
+                consultantTokenService.verifyToken(loginUser);
             }
         }
 
         chain.doFilter(request, response);
     }
 
-   
+
+
+    public void output(Object json, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String header = request.getHeader("Origin");
+        response.setContentType("application/json;charset=UTF-8;");
+        ServletOutputStream out = response.getOutputStream();
+        out.println(JSONObject.toJSONString(json));
+        out.flush();
+        out.close();
+    }
 }

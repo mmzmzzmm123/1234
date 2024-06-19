@@ -39,12 +39,20 @@ public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Value("${app.filter.urls}")
     private String filterUrls;
 
+    private static final String CONSULTANT = "consultant";
     private static final String COMMA = ",";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
+        if (loginUser == null) {
+            loginUser = appTokenService.getConsultantLoginUser(request);
+            if(loginUser != null && CONSULTANT.equalsIgnoreCase(loginUser.getClientType())){
+                chain.doFilter(request, response);
+            }
+        }
+
         boolean flag = false;
         for (String filterUrl : filterUrls.split(COMMA)) {
             AntPathMatcher matcher = new AntPathMatcher();
@@ -66,7 +74,6 @@ public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
                 appTokenService.verifyToken(loginUser);
             }
         }
-
         chain.doFilter(request, response);
     }
 
