@@ -63,8 +63,22 @@ public class PostOrderController {
 
     @RepeatSubmit
     @PostMapping("/payOrder")
-    public AjaxResult payOrder(@RequestBody PayForm payForm) {
-        busPostOrderService.payOrder(payForm);
+    public AjaxResult payOrder(@RequestBody BusPostOrderForm busPostOrderForm) {
+        busPostOrderService.payOrder(busPostOrderForm);
         return AjaxResult.success();
+    }
+
+
+    //confirm
+
+    /**
+     * 确认发货
+     * @param orderId
+     * @return
+     */
+    @RepeatSubmit
+    @PostMapping("/confirm")
+    public AjaxResult confirm(Long orderId) {
+        return busPostOrderService.confirm(orderId)>0?AjaxResult.success():AjaxResult.error();
     }
 }

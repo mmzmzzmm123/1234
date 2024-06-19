@@ -96,18 +96,22 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void payOrder(PayForm payForm) {
-        Integer payType = payForm.getPayType();
-        Long orderId = payForm.getOrderId();
+    public void payOrder(BusPostOrderForm busPostOrderForm) {
+        Integer payType = busPostOrderForm.getPayType();
+        Long orderId = busPostOrderForm.getOrderId();
         BusPostOrder busPostOrder = selectBusPostOrderByOrderId(orderId);
-        check(busPostOrder);
+        checkUser(busPostOrder);
 
+        if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.pay.getValue())) {
+            throw new RuntimeException("无法支付他人订单");
+        }
 
         BusTransactions busTransactions = new BusTransactions();
         busTransactionsExtraService.insertBusTransactions(busTransactions);
         //支付成功 更新状态 新增支付流水记录
         BusPostOrder busPostOrder1 = new BusPostOrder();
         busPostOrder1.setOrderId(orderId);
+        busPostOrder1.setPayType(payType);
         busPostOrder.setStatus(StatusUtils.updateStatus(busPostOrder.getStatus(), PostOrderStatus.pay.getValue()));
         updateBusPostOrder(busPostOrder1);
 
@@ -122,13 +126,9 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
 
     @Override
     public int updateOrderByUserId(BusPostOrderForm busPostOrderForm) {
-        Long userId = SecurityUtils.getUserId();
         Long orderId = busPostOrderForm.getOrderId();
-        BusPostOrder busPostOrder = super.selectBusPostOrderByOrderId(orderId);
-        if (!busPostOrder.getMerchantId().equals(userId)) {
-            throw new RuntimeException("无法修改他们订单");
-        }
-
+        BusPostOrder busPostOrder = selectBusPostOrderByOrderId(orderId);
+        checkUser(busPostOrder);
         if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.ORDER_RECEIVED.getValue())) {
             throw new RuntimeException("已被接单 无法修改");
         }
@@ -151,6 +151,24 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         return busPostOrderExtraMapper.findOrderListByUserId(statusList, userId);
     }
 
+    @Override
+    public int confirm(Long orderId) {
+        checkUser(orderId);
+        BusPostOrder busPostOrder = selectBusPostOrderByOrderId(orderId);
+        if (!StatusUtils.hasStatus(busPostOrder.getStatus(),PostOrderStatus.IN_PRODUCTION_COMPLETED.getValue())) {
+            throw new RuntimeException("制作未完成");
+        }
+
+        if (StatusUtils.hasStatus(busPostOrder.getStatus(),PostOrderStatus.CONFIRM.getValue())) {
+            throw new RuntimeException("已同意发货");
+        }
+        Integer newStatus = StatusUtils.updateStatus(busPostOrder.getStatus(), PostOrderStatus.CONFIRM.getValue());
+        busPostOrder = new BusPostOrder();
+        busPostOrder.setStatus(newStatus);
+        busPostOrder.setOrderId(orderId);
+        return updateBusPostOrder(busPostOrder);
+    }
+
     /**
      * 获取未接单的状态
      *
@@ -159,7 +177,7 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
     public List<Integer> getPendingStatus() {
         ArrayList<Integer> statusList = new ArrayList<>();
         statusList.add(PostOrderStatus.init.getValue());//创建
-        statusList.add(StatusUtils.updateStatus(PostOrderStatus.init.getValue(),PostOrderStatus.pay.getValue()));//已支付
+        statusList.add(StatusUtils.updateStatus(PostOrderStatus.init.getValue(), PostOrderStatus.pay.getValue()));//已支付
         return statusList;
     }
 
@@ -169,18 +187,24 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
      * @return
      */
     public List<Integer> getReceivedStatus() {
-        return StatusUtils.getStatusListWithIncluded(PostOrderStatus.values().length,PostOrderStatus.ORDER_RECEIVED.getValue());
+        return StatusUtils.getStatusListWithIncluded(PostOrderStatus.values().length, PostOrderStatus.ORDER_RECEIVED.getValue());
     }
 
 
-    private void check(BusPostOrder busPostOrder) {
+    /**
+     * 检查当前操作人是否是订单发布人
+     *
+     * @param busPostOrder
+     * @return
+     */
+    private void checkUser(BusPostOrder busPostOrder) {
         Long merchantId = busPostOrder.getMerchantId();
         Long userId = SecurityUtils.getUserId();
-        if (merchantId.equals(userId)) {
-            throw new RuntimeException("无法支付他人订单");
+        if (!merchantId.equals(userId)) {
+            throw new RuntimeException("无法操作他们发布的订单");
         }
-        if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.pay.getValue())) {
-            throw new RuntimeException("无法支付他人订单");
-        }
+    }
+    private void checkUser(Long orderId) {
+        checkUser(selectBusPostOrderByOrderId(orderId));
     }
 }

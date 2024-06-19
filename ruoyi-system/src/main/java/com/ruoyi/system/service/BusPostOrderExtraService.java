@@ -23,10 +23,11 @@ import java.util.List;
 public interface BusPostOrderExtraService extends IBusPostOrderService{
     int postOrder(BusPostOrder busPostOrder);
 
-    void payOrder(PayForm payForm);
+    void payOrder(BusPostOrderForm busPostOrderForm);
 
     int updateOrderByUserId(BusPostOrderForm busPostOrderForm);
 
     List<BusPostOrder> findOrderListByUserId(BusPostOrderForm busPostOrderForm);
 
+    int confirm(Long orderId);
 }

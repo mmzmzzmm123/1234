@@ -20,5 +20,5 @@ import java.util.List;
  * 2024-06-19     张李鑫                     1.0         1.0 Version
  */
 public interface BusPostOrderExtraMapper extends BusPostOrderMapper{
-    List<BusPostOrder> findOrderListByUserId(@Param("statusList") List<Integer> statusList, @Param("userId") Long userId);
+    List<BusPostOrder> findOrderListByUserId(@Param("statusList") List<Integer> statusList, @Param("userId") Long merchantId);
 }

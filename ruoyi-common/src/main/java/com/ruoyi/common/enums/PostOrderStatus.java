@@ -39,16 +39,23 @@ public enum PostOrderStatus {
      * 制作中
      */
     IN_PRODUCTION(6, "制作中"),
+    IN_PRODUCTION_COMPLETED(6, "制作完成"),
+
+    CONFIRM(7,"同意发货"),
 
     /**
      * 已发货
      */
-    SHIPPED(7, "已发货"),
+    SHIPPED(8, "已发货"),
+
+//    SHIPPED(8, "已收货"),
+//    SHIPPED(8, "拒绝收货"),
+//    SHIPPED(8, "退货"),
 
     /**
      * 已完成
      */
-    COMPLETED(8, "已完成"),
+    COMPLETED(9, "已完成"),//这里指的订单完成
 
     /**
      * 已撤销

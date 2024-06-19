@@ -33,24 +33,8 @@
     <select id="findOrderListByUserId" parameterType="BusPostOrder" resultMap="BusPostOrderResult">
         <include refid="selectBusPostOrderVo"/>
         <where>
-            <if test="merchantId != null "> and merchant_id = #{merchantId}</if>
-            <if test="title != null  and title != ''"> and title = #{title}</if>
-            <if test="amount != null "> and amount = #{amount}</if>
-            <if test="validityPeriod != null "> and validity_period = #{validityPeriod}</if>
-            <if test="productType != null "> and product_type = #{productType}</if>
-            <if test="quantity != null "> and quantity = #{quantity}</if>
-            <if test="closingTime != null "> and closing_time = #{closingTime}</if>
-            <if test="securityDeposit != null "> and security_deposit = #{securityDeposit}</if>
-            <if test="shippingParty != null  and shippingParty != ''"> and shipping_party = #{shippingParty}</if>
-            <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
-            <if test="tutorialUrl != null  and tutorialUrl != ''"> and tutorial_url = #{tutorialUrl}</if>
-            <if test="partialShipment != null "> and partial_shipment = #{partialShipment}</if>
-            <if test="status != null "> and status = #{status}</if>
-            <if test="address != null  and address != ''"> and address = #{address}</if>
-            <if test="createdAt != null "> and created_at = #{createdAt}</if>
-            <if test="updatedAt != null "> and updated_at = #{updatedAt}</if>
-            <if test="orderValidityStatus != null "> and order_validity_status = #{orderValidityStatus}</if>
-            <if test="payType != null "> and pay_type = #{payType}</if>
+            <if test="merchantId != null ">and merchant_id = #{merchantId}</if>
+            <if test="statusList != null ">and `status` in(#{status})</if>
         </where>
     </select>
 

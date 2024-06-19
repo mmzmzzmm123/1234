@@ -44,6 +44,8 @@ public class BusPostOrderForm extends BaseEntity {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date closingTime;
 
+    private Integer payType;
+
     /** 时效保证金 */
     private Long securityDeposit;
 
@@ -66,6 +68,14 @@ public class BusPostOrderForm extends BaseEntity {
 
     private Boolean orderPending;
 
+
+    public Integer getPayType() {
+        return payType;
+    }
+
+    public void setPayType(Integer payType) {
+        this.payType = payType;
+    }
 
     public Boolean getOrderPending() {
         return orderPending;
