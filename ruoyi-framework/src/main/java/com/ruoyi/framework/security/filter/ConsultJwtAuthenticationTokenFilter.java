@@ -38,7 +38,7 @@ public class ConsultJwtAuthenticationTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         // 检查URL
-        if (request.getRequestURI().startsWith("/consult")) {
+        if (request.getRequestURI().startsWith("/consultant")) {
             ConsultDTO loginUser = consultantTokenService.getLoginUser(request);
 
             if (StringUtils.isNull(loginUser)) {

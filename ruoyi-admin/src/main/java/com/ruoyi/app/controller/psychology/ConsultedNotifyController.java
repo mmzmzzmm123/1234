@@ -24,7 +24,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/app/notice")
 @Api(value = "AppPsyNotifyController" ,tags = {"用户端通知api"})
-public class AppPsyNotifyController extends BaseController implements NoticeConstant {
+public class ConsultedNotifyController extends BaseController implements NoticeConstant {
 
     @Autowired
     private IPsyCourNoticeService psyCourNoticeService;
