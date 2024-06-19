@@ -6,12 +6,15 @@ import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.domain.dto.ConsultDTO;
 import com.ruoyi.common.core.page.TableDataInfo;
 import com.ruoyi.framework.web.service.ConsultantTokenService;
+import com.ruoyi.notice.domain.PsyCourNotice;
+import com.ruoyi.notice.service.IPsyCourNoticeService;
 import com.ruoyi.psychology.request.PsyWorkReq;
 import com.ruoyi.psychology.service.IPsyConsultWorkService;
 import com.ruoyi.psychology.vo.PsyConsultWorkVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

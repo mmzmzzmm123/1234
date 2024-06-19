@@ -5,7 +5,6 @@ import com.ruoyi.common.constant.RespMessageConstants;
 import com.ruoyi.common.core.domain.dto.ConsultDTO;
 import com.ruoyi.common.utils.StringUtils;
 import com.ruoyi.framework.web.service.ConsultantTokenService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * token过滤器 验证token有效性
@@ -58,8 +56,6 @@ public class ConsultJwtAuthenticationTokenFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response);
     }
-
-
 
     public void output(Object json, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String header = request.getHeader("Origin");

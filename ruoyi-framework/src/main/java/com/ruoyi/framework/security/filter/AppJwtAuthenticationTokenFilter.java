@@ -46,13 +46,6 @@ public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         LoginDTO loginUser = appTokenService.getLoginUser(request);
-        if (loginUser == null) {
-            loginUser = appTokenService.getConsultantLoginUser(request);
-            if(loginUser != null && CONSULTANT.equalsIgnoreCase(loginUser.getClientType())){
-                chain.doFilter(request, response);
-            }
-        }
-
         boolean flag = false;
         for (String filterUrl : filterUrls.split(COMMA)) {
             AntPathMatcher matcher = new AntPathMatcher();
@@ -76,6 +69,8 @@ public class AppJwtAuthenticationTokenFilter extends OncePerRequestFilter {
         }
         chain.doFilter(request, response);
     }
+
+
 
     public void output(Object json, HttpServletRequest request, HttpServletResponse response) throws IOException {
         String header = request.getHeader("Origin");
