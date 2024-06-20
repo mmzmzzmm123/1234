@@ -45,7 +45,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <sql id="selectPsyConsultOrderVo">
         select a.id, a.order_no, a.consult_id, a.ref_consult_id, a.ref_consult_name, a.consult_name, a.serve_id, a.serve_name, a.user_id, a.nick_name, a.amount, num, a.buy_num, a.del_flag,
-               a.status, a.create_by, a.create_time, a.update_by, a.update_time, a.pay, a.source, a.channel, a.pay_time, a.pay_status, a.order_time, b.phone, a.remark, a.memo1, a.reason
+               a.status, a.create_by, a.create_time, a.update_by, a.update_time, a.pay, a.source, a.channel, a.pay_time, a.pay_status, a.order_time, b.phone, a.remark, a.memo1, a.reason, a.consult_type
         from psy_consult_order a
             left join psy_user b on a.user_id = b.id
     </sql>
