@@ -15,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 /**
  * Description:
  * Copyright:   Copyright (c)2024
@@ -52,8 +54,6 @@ public class PostOrderController {
         BeanUtils.copyProperties(busPostOrderForm, busPostOrder);
         return busPostOrderService.postOrder(busPostOrder) > 0 ? AjaxResult.success(busPostOrder) : AjaxResult.error();
     }
-
-
     @RepeatSubmit
     @PostMapping("/postOrderList")
     public AjaxResult postOrderList(@RequestBody BusPostOrderForm busPostOrderForm) {

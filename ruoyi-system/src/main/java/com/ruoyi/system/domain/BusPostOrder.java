@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 订单对象 bus_post_order
  * 
  * @author ruoyi
- * @date 2024-06-18
+ * @date 2024-06-20
  */
 public class BusPostOrder extends BaseEntity
 {
@@ -34,20 +34,20 @@ public class BusPostOrder extends BaseEntity
 
     /** 订单时效（小时） */
     @Excel(name = "订单时效", readConverterExp = "小=时")
-    private Long validityPeriod;
+    private Integer validityPeriod;
 
     /** 产品类型 */
     @Excel(name = "产品类型")
-    private Long productType;
+    private Integer productType;
 
     /** 总数量 */
     @Excel(name = "总数量")
-    private Long quantity;
+    private Integer quantity;
 
     /** 打烊时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
     @Excel(name = "打烊时间", width = 30, dateFormat = "yyyy-MM-dd")
-    private Date closingTime;
+    private Date sampleTime;
 
     /** 时效保证金 */
     @Excel(name = "时效保证金")
@@ -95,6 +95,10 @@ public class BusPostOrder extends BaseEntity
     @Excel(name = "支付类型1.钱包 2.微信支付")
     private Integer payType;
 
+    /** 是否需要打样 0 不需要 1需要 */
+    @Excel(name = "是否需要打样 0 不需要 1需要")
+    private Integer sample;
+
     public void setOrderId(Long orderId) 
     {
         this.orderId = orderId;
@@ -131,41 +135,41 @@ public class BusPostOrder extends BaseEntity
     {
         return amount;
     }
-    public void setValidityPeriod(Long validityPeriod) 
+    public void setValidityPeriod(Integer validityPeriod) 
     {
         this.validityPeriod = validityPeriod;
     }
 
-    public Long getValidityPeriod() 
+    public Integer getValidityPeriod() 
     {
         return validityPeriod;
     }
-    public void setProductType(Long productType) 
+    public void setProductType(Integer productType) 
     {
         this.productType = productType;
     }
 
-    public Long getProductType() 
+    public Integer getProductType() 
     {
         return productType;
     }
-    public void setQuantity(Long quantity) 
+    public void setQuantity(Integer quantity) 
     {
         this.quantity = quantity;
     }
 
-    public Long getQuantity() 
+    public Integer getQuantity() 
     {
         return quantity;
     }
-    public void setClosingTime(Date closingTime) 
+    public void setSampleTime(Date sampleTime) 
     {
-        this.closingTime = closingTime;
+        this.sampleTime = sampleTime;
     }
 
-    public Date getClosingTime() 
+    public Date getSampleTime() 
     {
-        return closingTime;
+        return sampleTime;
     }
     public void setSecurityDeposit(Long securityDeposit) 
     {
@@ -266,6 +270,15 @@ public class BusPostOrder extends BaseEntity
     {
         return payType;
     }
+    public void setSample(Integer sample) 
+    {
+        this.sample = sample;
+    }
+
+    public Integer getSample() 
+    {
+        return sample;
+    }
 
     @Override
     public String toString() {
@@ -277,7 +290,7 @@ public class BusPostOrder extends BaseEntity
             .append("validityPeriod", getValidityPeriod())
             .append("productType", getProductType())
             .append("quantity", getQuantity())
-            .append("closingTime", getClosingTime())
+            .append("sampleTime", getSampleTime())
             .append("securityDeposit", getSecurityDeposit())
             .append("shippingParty", getShippingParty())
             .append("remarks", getRemarks())
@@ -289,6 +302,7 @@ public class BusPostOrder extends BaseEntity
             .append("updatedAt", getUpdatedAt())
             .append("orderValidityStatus", getOrderValidityStatus())
             .append("payType", getPayType())
+            .append("sample", getSample())
             .toString();
     }
 }

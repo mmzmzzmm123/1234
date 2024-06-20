@@ -30,4 +30,10 @@ public interface BusPostOrderExtraService extends IBusPostOrderService{
     List<BusPostOrder> findOrderListByUserId(BusPostOrderForm busPostOrderForm);
 
     int confirm(Long orderId);
+
+    List<BusPostOrder> findSampleOrder();
+
+    BusPostOrder checkOrderTimeoutAndSampling(Long orderId);
+
+    BusPostOrder orderTimeout(Long aLong);
 }

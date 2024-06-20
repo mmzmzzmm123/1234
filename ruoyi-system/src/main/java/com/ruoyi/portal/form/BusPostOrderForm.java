@@ -69,6 +69,10 @@ public class BusPostOrderForm extends BaseEntity {
     private Boolean orderPending;
 
 
+    public static void main(String[] args) {
+        //1000*5/
+//        System.out.println(1*95/100);
+    }
     public Integer getPayType() {
         return payType;
     }

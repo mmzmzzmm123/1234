@@ -7,7 +7,7 @@ import com.ruoyi.system.domain.BusPostOrder;
  * 订单Mapper接口
  * 
  * @author ruoyi
- * @date 2024-06-18
+ * @date 2024-06-20
  */
 public interface BusPostOrderMapper 
 {

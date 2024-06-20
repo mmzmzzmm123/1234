@@ -12,7 +12,7 @@
         <result property="validityPeriod"    column="validity_period"    />
         <result property="productType"    column="product_type"    />
         <result property="quantity"    column="quantity"    />
-        <result property="closingTime"    column="closing_time"    />
+        <result property="sampleTime"    column="samply_time"    />
         <result property="securityDeposit"    column="security_deposit"    />
         <result property="shippingParty"    column="shipping_party"    />
         <result property="remarks"    column="remarks"    />
@@ -24,6 +24,7 @@
         <result property="updatedAt"    column="updated_at"    />
         <result property="orderValidityStatus"    column="order_validity_status"    />
         <result property="payType"    column="pay_type"    />
+        <result property="sample"    column="samply"    />
     </resultMap>
 
     <sql id="selectBusPostOrderVo">
@@ -33,6 +34,19 @@
     <select id="findOrderListByUserId" parameterType="BusPostOrder" resultMap="BusPostOrderResult">
         <include refid="selectBusPostOrderVo"/>
         <where>
+            <if test="sample != null ">and sample = #{sample}</if>
+            <if test="orderValidityStatus != null ">and order_validity_status = #{orderValidityStatus}</if>
+            <if test="statusList != null ">and `status` in(#{status})</if>
+        </where>
+    </select>
+
+
+
+
+    <select id="findSampleOrder" parameterType="BusPostOrder" resultMap="BusPostOrderResult">
+        <include refid="selectBusPostOrderVo"/>
+        <where>
+            <if test="merchantId != null ">and merchant_id = #{merchantId}</if>
             <if test="merchantId != null ">and merchant_id = #{merchantId}</if>
             <if test="statusList != null ">and `status` in(#{status})</if>
         </where>

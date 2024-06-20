@@ -7,34 +7,22 @@ package com.ruoyi.common.enums;
  *
  * @author: 张李鑫
  * @version: 1.0
- * Create at:   2024-06-18 15:41:49
+ * Create at:   2024-06-20 10:00:23
  * <p>
  * Modification History:
  * Date         Author      Version     Description
  * ------------------------------------------------------------------
- * 2024-06-18     张李鑫                     1.0         1.0 Version
+ * 2024-06-20     张李鑫                     1.0         1.0 Version
  */
-public enum OrderValidityStatus {
-    /**
-     * 正常
-     */
-    NORMAL(1, "正常"),
+public enum OrderSampleType {
+    SAMPLING_REQUIRED(1, "需要打样"),
+    NO_SAMPLING_REQUIRED(0, "不需要打样");
 
-    /**
-     * 已取消
-     */
-    CANCELLED(2, "已取消"),
-
-    /**
-     * 已超时
-     */
-    SAMPLE_TIMEOUT(3, "打样已超时"),
-    ORDER_TIMEOUT(3, "订单已超时");
 
     private final int value;
     private final String remark;
 
-    OrderValidityStatus(int value, String remark) {
+    OrderSampleType(int value, String remark) {
         this.value = value;
         this.remark = remark;
     }

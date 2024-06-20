@@ -33,7 +33,7 @@ public enum PostOrderStatus {
     /**
      * 已打烊
      */
-    SHOP_CLOSED(5, "已打烊"),
+    SHOP_SAMPLE(5, "已打烊"),
 
     /**
      * 制作中

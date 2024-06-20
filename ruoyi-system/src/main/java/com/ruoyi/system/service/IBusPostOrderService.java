@@ -1,16 +1,13 @@
 package com.ruoyi.system.service;
 
 import java.util.List;
-
-import com.ruoyi.common.core.domain.AjaxResult;
-import com.ruoyi.portal.form.PayForm;
 import com.ruoyi.system.domain.BusPostOrder;
 
 /**
  * 订单Service接口
  * 
  * @author ruoyi
- * @date 2024-06-18
+ * @date 2024-06-20
  */
 public interface IBusPostOrderService 
 {
@@ -61,5 +58,4 @@ public interface IBusPostOrderService
      * @return 结果
      */
     public int deleteBusPostOrderByOrderId(Long orderId);
-
 }

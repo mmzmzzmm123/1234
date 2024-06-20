@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
+import com.ruoyi.common.enums.OrderSampleType;
 import com.ruoyi.common.enums.OrderValidityStatus;
 import com.ruoyi.common.enums.PostOrderStatus;
 import com.ruoyi.common.utils.PageUtils;
@@ -12,8 +13,11 @@ import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.domain.BusTransactions;
 import com.ruoyi.system.manager.PayManager;
 import com.ruoyi.system.mapper.BusPostOrderExtraMapper;
+import com.ruoyi.system.orderTask.SampleTask;
 import com.ruoyi.system.service.BusOrderAssignmentsExtraService;
 import com.ruoyi.system.service.BusPostOrderExtraService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -40,6 +44,9 @@ import java.util.List;
 @Service("BusPostOrderExtraServiceImpl")
 @Primary
 public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implements BusPostOrderExtraService {
+
+
+    private static final Logger log = LoggerFactory.getLogger(BusPostOrderExtraServiceImpl.class);
 
     @Autowired
     private PayManager payManager;
@@ -175,6 +182,59 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         busPostOrder.setStatus(newStatus);
         busPostOrder.setOrderId(orderId);
         return updateBusPostOrder(busPostOrder);
+    }
+
+    /**
+     * 查询需要打样切还没打样的订单数据
+     *
+     * @return
+     */
+    @Override
+    public List<BusPostOrder> findSampleOrder() {
+        BusPostOrder busPostOrder = new BusPostOrder();
+        busPostOrder.setSample(OrderSampleType.SAMPLING_REQUIRED.getValue());//需要打样
+        busPostOrder.setOrderValidityStatus(OrderValidityStatus.NORMAL.getValue());//订单正常
+        List<Integer> statusListExcluded = StatusUtils.getStatusListExcluded(PostOrderStatus.SHOP_SAMPLE.getValue());//没有打样
+        return busPostOrderExtraMapper.findSampleOrder(busPostOrder, statusListExcluded);
+    }
+
+    /**
+     * 订单检查 如果超时订单已经打样 什么都不做 如果没有打样更新订单异常状态
+     * @param orderId 订单id
+     * @return 订单是否超时
+     */
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public BusPostOrder checkOrderTimeoutAndSampling(Long orderId) {
+        BusPostOrder oldOrder = selectBusPostOrderByOrderId(orderId);
+        Integer status = oldOrder.getStatus();
+        if (!StatusUtils.hasStatus(status, PostOrderStatus.SHOP_SAMPLE.getValue())) {
+            log.info("订单打样超时 id:{} 超时", orderId);
+            updateOrderValidity(orderId);
+        }
+        return oldOrder;
+    }
+
+    private void updateOrderValidity(Long orderId){
+        BusPostOrder busPostOrder = new BusPostOrder();
+        busPostOrder.setOrderId(orderId);
+        busPostOrder.setOrderValidityStatus(OrderValidityStatus.SAMPLE_TIMEOUT.getValue());
+        updateBusPostOrder(busPostOrder);
+    }
+
+    /**
+     * 检查订单是否超时
+     * @param orderId
+     * @return
+     */
+    @Override
+    public BusPostOrder orderTimeout(Long orderId) {
+        BusPostOrder oldOrder = selectBusPostOrderByOrderId(orderId);
+        Integer status = oldOrder.getStatus();
+        if (!StatusUtils.hasStatus(status, PostOrderStatus.SHIPPED.getValue())) {
+            updateOrderValidity(orderId);
+        }
+        return oldOrder;
     }
 
     /**

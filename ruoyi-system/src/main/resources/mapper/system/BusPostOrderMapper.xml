@@ -12,7 +12,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="validityPeriod"    column="validity_period"    />
         <result property="productType"    column="product_type"    />
         <result property="quantity"    column="quantity"    />
-        <result property="closingTime"    column="closing_time"    />
+        <result property="sampleTime"    column="samply_time"    />
         <result property="securityDeposit"    column="security_deposit"    />
         <result property="shippingParty"    column="shipping_party"    />
         <result property="remarks"    column="remarks"    />
@@ -24,10 +24,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         <result property="updatedAt"    column="updated_at"    />
         <result property="orderValidityStatus"    column="order_validity_status"    />
         <result property="payType"    column="pay_type"    />
+        <result property="sample"    column="samply"    />
     </resultMap>
 
     <sql id="selectBusPostOrderVo">
-        select order_id, merchant_id, title, amount, validity_period, product_type, quantity, closing_time, security_deposit, shipping_party, remarks, tutorial_url, partial_shipment, status, address, created_at, updated_at, order_validity_status, pay_type from bus_post_order
+        select order_id, merchant_id, title, amount, validity_period, product_type, quantity, samply_time, security_deposit, shipping_party, remarks, tutorial_url, partial_shipment, status, address, created_at, updated_at, order_validity_status, pay_type, samply from bus_post_order
     </sql>
 
     <select id="selectBusPostOrderList" parameterType="BusPostOrder" resultMap="BusPostOrderResult">
@@ -39,7 +40,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="validityPeriod != null "> and validity_period = #{validityPeriod}</if>
             <if test="productType != null "> and product_type = #{productType}</if>
             <if test="quantity != null "> and quantity = #{quantity}</if>
-            <if test="closingTime != null "> and closing_time = #{closingTime}</if>
+            <if test="sampleTime != null "> and samply_time = #{sampleTime}</if>
             <if test="securityDeposit != null "> and security_deposit = #{securityDeposit}</if>
             <if test="shippingParty != null  and shippingParty != ''"> and shipping_party = #{shippingParty}</if>
             <if test="remarks != null  and remarks != ''"> and remarks = #{remarks}</if>
@@ -51,6 +52,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updatedAt != null "> and updated_at = #{updatedAt}</if>
             <if test="orderValidityStatus != null "> and order_validity_status = #{orderValidityStatus}</if>
             <if test="payType != null "> and pay_type = #{payType}</if>
+            <if test="sample != null "> and samply = #{sample}</if>
         </where>
     </select>
     
@@ -68,7 +70,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="validityPeriod != null">validity_period,</if>
             <if test="productType != null">product_type,</if>
             <if test="quantity != null">quantity,</if>
-            <if test="closingTime != null">closing_time,</if>
+            <if test="sampleTime != null">samply_time,</if>
             <if test="securityDeposit != null">security_deposit,</if>
             <if test="shippingParty != null and shippingParty != ''">shipping_party,</if>
             <if test="remarks != null">remarks,</if>
@@ -80,6 +82,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updatedAt != null">updated_at,</if>
             <if test="orderValidityStatus != null">order_validity_status,</if>
             <if test="payType != null">pay_type,</if>
+            <if test="sample != null">samply,</if>
          </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
             <if test="merchantId != null">#{merchantId},</if>
@@ -88,7 +91,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="validityPeriod != null">#{validityPeriod},</if>
             <if test="productType != null">#{productType},</if>
             <if test="quantity != null">#{quantity},</if>
-            <if test="closingTime != null">#{closingTime},</if>
+            <if test="sampleTime != null">#{sampleTime},</if>
             <if test="securityDeposit != null">#{securityDeposit},</if>
             <if test="shippingParty != null and shippingParty != ''">#{shippingParty},</if>
             <if test="remarks != null">#{remarks},</if>
@@ -100,6 +103,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updatedAt != null">#{updatedAt},</if>
             <if test="orderValidityStatus != null">#{orderValidityStatus},</if>
             <if test="payType != null">#{payType},</if>
+            <if test="sample != null">#{sample},</if>
          </trim>
     </insert>
 
@@ -112,7 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="validityPeriod != null">validity_period = #{validityPeriod},</if>
             <if test="productType != null">product_type = #{productType},</if>
             <if test="quantity != null">quantity = #{quantity},</if>
-            <if test="closingTime != null">closing_time = #{closingTime},</if>
+            <if test="sampleTime != null">samply_time = #{sampleTime},</if>
             <if test="securityDeposit != null">security_deposit = #{securityDeposit},</if>
             <if test="shippingParty != null and shippingParty != ''">shipping_party = #{shippingParty},</if>
             <if test="remarks != null">remarks = #{remarks},</if>
@@ -124,6 +128,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="updatedAt != null">updated_at = #{updatedAt},</if>
             <if test="orderValidityStatus != null">order_validity_status = #{orderValidityStatus},</if>
             <if test="payType != null">pay_type = #{payType},</if>
+            <if test="sample != null">samply = #{sample},</if>
         </trim>
         where order_id = #{orderId}
     </update>
