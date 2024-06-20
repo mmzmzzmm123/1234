@@ -1,5 +1,6 @@
 package com.ruoyi.system.orderTask;
 
+import com.ruoyi.common.core.redis.RedisCache;
 import com.ruoyi.common.delayed.DelayedElement;
 import com.ruoyi.common.delayed.Task;
 import com.ruoyi.common.enums.PostOrderStatus;
@@ -9,11 +10,14 @@ import com.ruoyi.system.service.BusPostOrderExtraService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Description: 打样的延迟队列
@@ -37,18 +41,21 @@ public class OrderSampleTask extends Task<Long> {
 
     private static final Logger log = LoggerFactory.getLogger(OrderSampleTask.class);
 
+    @Value("${supply.quantity}")
+    private Integer quantity;//设置集群数量 多集群的情况下定时任务只处理自己的任务
+
 
     @Autowired
     private OrderTimeoutTask orderTimeoutTask;
 
-    private final ConcurrentHashMap<Long, String> orderIdCache;
+    private final ConcurrentSkipListSet<Long> orderIdCache;
 
     @Autowired
     private BusPostOrderExtraService postOrderExtraService;
 
     public OrderSampleTask() {
         super(1, true);
-        this.orderIdCache = new ConcurrentHashMap<>();
+        this.orderIdCache = new ConcurrentSkipListSet<>();
     }
 
     @Override
@@ -63,6 +70,7 @@ public class OrderSampleTask extends Task<Long> {
             }
         }
     }
+
 
     public void process() throws InterruptedException {
         DelayedElement<Long> element = getDelayQueue().take();// 阻塞等待直到元素可获取
@@ -88,8 +96,7 @@ public class OrderSampleTask extends Task<Long> {
         List<BusPostOrder> list = postOrderExtraService.findSampleOrder();
         for (BusPostOrder busPostOrder : list) {
             Long orderId = busPostOrder.getOrderId();
-            if (!orderIdCache.containsKey(orderId)) {
-                orderIdCache.put(orderId, "");
+            if (orderId % quantity == 0 && orderIdCache.add(orderId)) {
                 Date sampleTime = busPostOrder.getSampleTime();
                 //加一天 Action is not a functional interface
                 getDelayQueue().offer(new DelayedElement<>(busPostOrder.getOrderId(), new Date().getTime() - sampleTime.getTime() + dayTime, checkOrder));

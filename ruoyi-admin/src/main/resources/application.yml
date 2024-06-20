@@ -131,3 +131,7 @@ xss:
 task:
   enable: true
 appId: 3
+
+supply:
+  quantity: 1
+

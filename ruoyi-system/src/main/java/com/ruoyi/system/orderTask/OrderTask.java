@@ -26,6 +26,8 @@ public class OrderTask {
 
     private static final Logger log = LoggerFactory.getLogger(OrderTask.class);
 
+    @Value("${supply.quantity}")
+    private Integer quantity;//设置集群数量 多集群的情况下定时任务只处理自己的任务
 
     @Value("${task.enable}")
     public boolean taskEnable;

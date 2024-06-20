@@ -177,8 +177,7 @@ public class RedisCache
      * @param key
      * @return
      */
-    public <T> Set<T> getCacheSet(final String key)
-    {
+    public <T> Set<T> getCacheSet(final String key) {
         return redisTemplate.opsForSet().members(key);
     }
 
