@@ -223,3 +223,10 @@ export const timeList = {
     { text: '最近30天', val: 'lately30' },
   ]
 }
+
+// 咨询类型
+export const consultType = [
+  { label: '咨询', value: '1' },
+  { label: '倾听', value: '2' },
+  { label: '督导', value: '3' },
+]
