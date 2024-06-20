@@ -1,54 +1,47 @@
 package com.renxin.psychology.domain;
 
+import java.math.BigDecimal;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.renxin.common.annotation.Excel;
 import com.renxin.common.core.domain.BaseEntity;
 
 /**
- * 咨询师地址对象 psy_consultant_address
+ * 提现订单对象 psy_consultant_withdrawal_order
  * 
  * @author renxin
  * @date 2024-06-20
  */
-public class PsyConsultantAddress extends BaseEntity
+public class PsyConsultantWithdrawalOrder extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
 
-    /** 地址ID */
-    private Long addressId;
+    /** 提现ID */
+    private Long withdrawalNo;
 
     /** 咨询师ID */
     @Excel(name = "咨询师ID")
     private Long consultantId;
 
-    /** 1 默认 0 未默认 */
-    @Excel(name = "1 默认 0 未默认")
+    /** 1 成功  0 处理中 4失败 */
+    @Excel(name = "1 成功  0 处理中 4失败")
     private String status;
 
-    /** 联系人名 */
-    @Excel(name = "联系人名")
-    private String contactName;
-
-    /** 联系电话 */
-    @Excel(name = "联系电话")
-    private String contactTelephone;
-
-    /** 联系地址 */
-    @Excel(name = "联系地址")
-    private String contactAddress;
+    /** 提现金额 */
+    @Excel(name = "提现金额")
+    private BigDecimal withdrawalAmount;
 
     /** 0 未删除 1 删除 */
     private String delFlag;
 
-    public void setAddressId(Long addressId) 
+    public void setWithdrawalNo(Long withdrawalNo) 
     {
-        this.addressId = addressId;
+        this.withdrawalNo = withdrawalNo;
     }
 
-    public Long getAddressId() 
+    public Long getWithdrawalNo() 
     {
-        return addressId;
+        return withdrawalNo;
     }
     public void setConsultantId(Long consultantId) 
     {
@@ -68,32 +61,14 @@ public class PsyConsultantAddress extends BaseEntity
     {
         return status;
     }
-    public void setContactName(String contactName) 
+    public void setWithdrawalAmount(BigDecimal withdrawalAmount) 
     {
-        this.contactName = contactName;
+        this.withdrawalAmount = withdrawalAmount;
     }
 
-    public String getContactName() 
+    public BigDecimal getWithdrawalAmount() 
     {
-        return contactName;
-    }
-    public void setContactTelephone(String contactTelephone) 
-    {
-        this.contactTelephone = contactTelephone;
-    }
-
-    public String getContactTelephone() 
-    {
-        return contactTelephone;
-    }
-    public void setContactAddress(String contactAddress) 
-    {
-        this.contactAddress = contactAddress;
-    }
-
-    public String getContactAddress() 
-    {
-        return contactAddress;
+        return withdrawalAmount;
     }
     public void setDelFlag(String delFlag) 
     {
@@ -108,12 +83,10 @@ public class PsyConsultantAddress extends BaseEntity
     @Override
     public String toString() {
         return new ToStringBuilder(this,ToStringStyle.MULTI_LINE_STYLE)
-            .append("addressId", getAddressId())
+            .append("withdrawalNo", getWithdrawalNo())
             .append("consultantId", getConsultantId())
             .append("status", getStatus())
-            .append("contactName", getContactName())
-            .append("contactTelephone", getContactTelephone())
-            .append("contactAddress", getContactAddress())
+            .append("withdrawalAmount", getWithdrawalAmount())
             .append("delFlag", getDelFlag())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
