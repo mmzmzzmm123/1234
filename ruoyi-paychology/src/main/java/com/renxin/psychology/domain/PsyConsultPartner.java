@@ -101,10 +101,10 @@ public class PsyConsultPartner extends BasePlusEntity implements Serializable
     @Excel(name = "证件照")
     private String cardImg;
 
-    /** 0-草稿,1-审核中,2-审核通过-已开通账号,3-审核通过-未开通账号,4-审核驳回 */
+    /** 0-草稿,1-审核中,2-审核通过-已开通账号,3-审核通过-未开通账号,4-审核驳回,5-实名认证中 */
     private String status;
 
-    @Excel(name = "0-草稿,1-审核中,2-审核通过-已开通账号,3-审核通过-未开通账号,4-审核驳回")
+    @Excel(name = "0-草稿,1-审核中,2-审核通过-已开通账号,3-审核通过-未开通账号,4-审核驳回,5-实名认证中")
     @TableField(exist = false)
     private String statusName;
 

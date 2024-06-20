@@ -99,7 +99,8 @@ public class PsyConsultPartnerServiceImpl implements IPsyConsultPartnerService
     public AjaxResult createUser(Long id) {
         PsyConsultPartner partner = psyConsultPartnerMapper.selectById(id);
         List<PsyConsultPartnerItem> items = partnerItemService.getListById(id);
-        if (!ConsultConstant.PARTNER_STATUS_2.equals(partner.getStatus()) && !ConsultConstant.PARTNER_STATUS_3.equals(partner.getStatus())) {
+        if (!ConsultConstant.PARTNER_STATUS_2.equals(partner.getStatus()) && !ConsultConstant.PARTNER_STATUS_3.equals(partner.getStatus())
+                && !ConsultConstant.PARTNER_STATUS_5.equals(partner.getStatus())) {
             return AjaxResult.error("单据状态异常");
         }
 
