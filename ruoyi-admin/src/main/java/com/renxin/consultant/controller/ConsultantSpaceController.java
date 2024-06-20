@@ -21,15 +21,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
-
-
 @RestController
 @RequestMapping("/consultant/workspace")
 @Api(value = "ConsultantWorkSpaceController" ,tags = {" 工作台api"})
-public class ConsultantWorkSpaceController extends BaseController {
+public class ConsultantSpaceController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(CommonCosController.class);
 
- 
     @Autowired
     private IPsyConsultOrderItemService psyConsultOrderItemService;
     @Autowired
