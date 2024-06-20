@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Description: 打样的延迟队列
@@ -30,27 +31,30 @@ import java.util.List;
  */
 
 @Component
-public class SampleTask extends Task<Long> {
+public class OrderSampleTask extends Task<Long> {
 
     private final long dayTime = 1000 * 60 * 60 * 24;
 
-    private static final Logger log = LoggerFactory.getLogger(SampleTask.class);
+    private static final Logger log = LoggerFactory.getLogger(OrderSampleTask.class);
 
 
     @Autowired
-    private OrderTask orderTask;
+    private OrderTimeoutTask orderTimeoutTask;
+
+    private final ConcurrentHashMap<Long, String> orderIdCache;
 
     @Autowired
     private BusPostOrderExtraService postOrderExtraService;
 
-    public SampleTask() {
+    public OrderSampleTask() {
         super(1, true);
+        this.orderIdCache = new ConcurrentHashMap<>();
     }
 
     @Override
     public void run() {
         log.info("SampleTask is run .....");
-        init(postOrderExtraService::checkOrderTimeoutAndSampling);
+        init();
         while (true) {
             try {
                 process();
@@ -63,27 +67,33 @@ public class SampleTask extends Task<Long> {
     public void process() throws InterruptedException {
         DelayedElement<Long> element = getDelayQueue().take();// 阻塞等待直到元素可获取
         Long orderId = element.getElement();
+        orderIdCache.remove(orderId);
         BusPostOrder busPostOrder = ((CheckOrderTimeoutAndSampling) element.getTaskAction()).process(orderId);
         Integer status = busPostOrder.getStatus();
         if (StatusUtils.hasStatus(status, PostOrderStatus.SHOP_SAMPLE.getValue())) {
             log.info("订单进入时效性检查队列 id:{} ", orderId);
-            orderTask.add(orderId, dayTime * busPostOrder.getValidityPeriod(), postOrderExtraService::orderTimeout);
+            orderTimeoutTask.add(orderId, dayTime * busPostOrder.getValidityPeriod(), postOrderExtraService::orderTimeout);
         }
     }
 
+
+    public synchronized void init() {
+        init(postOrderExtraService::checkOrderTimeoutAndSampling);
+    }
 
     /**
      * 初始化任务
      */
-    public void init(CheckOrderTimeoutAndSampling checkOrder) {
+    public synchronized void init(CheckOrderTimeoutAndSampling checkOrder) {
         List<BusPostOrder> list = postOrderExtraService.findSampleOrder();
         for (BusPostOrder busPostOrder : list) {
-            Date sampleTime = busPostOrder.getSampleTime();
-            //加一天 Action is not a functional interface
-            getDelayQueue().offer(new DelayedElement<>(busPostOrder.getOrderId(), new Date().getTime() - sampleTime.getTime() + dayTime, checkOrder));
+            Long orderId = busPostOrder.getOrderId();
+            if (!orderIdCache.containsKey(orderId)) {
+                orderIdCache.put(orderId, "");
+                Date sampleTime = busPostOrder.getSampleTime();
+                //加一天 Action is not a functional interface
+                getDelayQueue().offer(new DelayedElement<>(busPostOrder.getOrderId(), new Date().getTime() - sampleTime.getTime() + dayTime, checkOrder));
+            }
         }
-
-
     }
-
 }

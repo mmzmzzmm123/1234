@@ -3,6 +3,7 @@ package com.ruoyi.system.mapper;
 import com.ruoyi.system.domain.BusPostOrder;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
  * 2024-06-19     张李鑫                     1.0         1.0 Version
  */
 public interface BusPostOrderExtraMapper extends BusPostOrderMapper{
-    List<BusPostOrder> findOrderListByUserId(@Param("statusList") List<Integer> statusList, @Param("userId") Long merchantId);
+    List<BusPostOrder> findOrderListByUserId(@Param("statusList") List<Integer> statusList, @Param("merchantId") Long merchantId);
 
-    List<BusPostOrder> findSampleOrder(@Param("busPostOrder")BusPostOrder busPostOrder, @Param("statusList")List<Integer> statusList);
+    List<BusPostOrder> findSampleOrder(@Param("busPostOrder")BusPostOrder busPostOrder, @Param("statusList")List<Integer> statusList, @Param("date") Date date);
 }

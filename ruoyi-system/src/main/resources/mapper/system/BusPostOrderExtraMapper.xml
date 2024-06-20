@@ -12,7 +12,7 @@
         <result property="validityPeriod"    column="validity_period"    />
         <result property="productType"    column="product_type"    />
         <result property="quantity"    column="quantity"    />
-        <result property="sampleTime"    column="samply_time"    />
+        <result property="sampleTime"    column="sample_time"    />
         <result property="securityDeposit"    column="security_deposit"    />
         <result property="shippingParty"    column="shipping_party"    />
         <result property="remarks"    column="remarks"    />
@@ -31,11 +31,12 @@
         select order_id, merchant_id, title, amount, validity_period, product_type, quantity, closing_time, security_deposit, shipping_party, remarks, tutorial_url, partial_shipment, status, address, created_at, updated_at, order_validity_status, pay_type from bus_post_order
     </sql>
 
-    <select id="findOrderListByUserId" parameterType="BusPostOrder" resultMap="BusPostOrderResult">
+    <select id="findSampleOrder" parameterType="BusPostOrder" resultMap="BusPostOrderResult">
         <include refid="selectBusPostOrderVo"/>
         <where>
             <if test="sample != null ">and sample = #{sample}</if>
             <if test="orderValidityStatus != null ">and order_validity_status = #{orderValidityStatus}</if>
+            <if test="sample_time != null ">and sample_time >=#{date}</if>
             <if test="statusList != null ">and `status` in(#{status})</if>
         </where>
     </select>
@@ -43,10 +44,9 @@
 
 
 
-    <select id="findSampleOrder" parameterType="BusPostOrder" resultMap="BusPostOrderResult">
+    <select id="findOrderListByUserId" parameterType="BusPostOrder" resultMap="BusPostOrderResult">
         <include refid="selectBusPostOrderVo"/>
         <where>
-            <if test="merchantId != null ">and merchant_id = #{merchantId}</if>
             <if test="merchantId != null ">and merchant_id = #{merchantId}</if>
             <if test="statusList != null ">and `status` in(#{status})</if>
         </where>

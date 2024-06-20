@@ -15,8 +15,6 @@ package com.ruoyi.common.enums;
  * 2024-06-18     张李鑫                     1.0         1.0 Version
  */
 public enum PostOrderStatus {
-
-
     init(1,"已创建"),
 
     pay(2,"已支付"),
@@ -24,17 +22,14 @@ public enum PostOrderStatus {
      * 未接单
      */
     ORDER_PENDING(3, "未接单"),
-
     /**
      * 已接单
      */
     ORDER_RECEIVED(4, "已接单"),
-
     /**
      * 已打烊
      */
     SHOP_SAMPLE(5, "已打烊"),
-
     /**
      * 制作中
      */
@@ -48,7 +43,6 @@ public enum PostOrderStatus {
     SHIPPED(8, "已发货"),
 
 //    SHIPPED(8, "已收货"),
-//    SHIPPED(8, "拒绝收货"),
 //    SHIPPED(8, "退货"),
 
     /**

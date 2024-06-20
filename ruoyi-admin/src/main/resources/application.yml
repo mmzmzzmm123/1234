@@ -128,5 +128,6 @@ xss:
   # 匹配链接
   urlPatterns: /system/*,/monitor/*,/tool/*
 
-
-appId:
+task:
+  enable: true
+appId: 3

@@ -25,11 +25,14 @@ public enum OrderValidityStatus {
      */
     CANCELLED(2, "已取消"),
 
+
     /**
      * 已超时
      */
     SAMPLE_TIMEOUT(3, "打样已超时"),
-    ORDER_TIMEOUT(3, "订单已超时");
+    ORDER_TIMEOUT(4, "订单已超时");
+
+
 
     private final int value;
     private final String remark;

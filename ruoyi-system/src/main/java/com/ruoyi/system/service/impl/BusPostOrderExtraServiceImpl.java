@@ -13,7 +13,6 @@ import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.domain.BusTransactions;
 import com.ruoyi.system.manager.PayManager;
 import com.ruoyi.system.mapper.BusPostOrderExtraMapper;
-import com.ruoyi.system.orderTask.SampleTask;
 import com.ruoyi.system.service.BusOrderAssignmentsExtraService;
 import com.ruoyi.system.service.BusPostOrderExtraService;
 import org.slf4j.Logger;
@@ -195,7 +194,7 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         busPostOrder.setSample(OrderSampleType.SAMPLING_REQUIRED.getValue());//需要打样
         busPostOrder.setOrderValidityStatus(OrderValidityStatus.NORMAL.getValue());//订单正常
         List<Integer> statusListExcluded = StatusUtils.getStatusListExcluded(PostOrderStatus.SHOP_SAMPLE.getValue());//没有打样
-        return busPostOrderExtraMapper.findSampleOrder(busPostOrder, statusListExcluded);
+        return busPostOrderExtraMapper.findSampleOrder(busPostOrder, statusListExcluded,new Date());
     }
 
     /**
@@ -210,15 +209,15 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         Integer status = oldOrder.getStatus();
         if (!StatusUtils.hasStatus(status, PostOrderStatus.SHOP_SAMPLE.getValue())) {
             log.info("订单打样超时 id:{} 超时", orderId);
-            updateOrderValidity(orderId);
+            updateOrderValidity(orderId,OrderValidityStatus.SAMPLE_TIMEOUT.getValue());
         }
         return oldOrder;
     }
 
-    private void updateOrderValidity(Long orderId){
+    private void updateOrderValidity(Long orderId,Integer status){
         BusPostOrder busPostOrder = new BusPostOrder();
         busPostOrder.setOrderId(orderId);
-        busPostOrder.setOrderValidityStatus(OrderValidityStatus.SAMPLE_TIMEOUT.getValue());
+        busPostOrder.setOrderValidityStatus(status);
         updateBusPostOrder(busPostOrder);
     }
 
@@ -232,7 +231,7 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         BusPostOrder oldOrder = selectBusPostOrderByOrderId(orderId);
         Integer status = oldOrder.getStatus();
         if (!StatusUtils.hasStatus(status, PostOrderStatus.SHIPPED.getValue())) {
-            updateOrderValidity(orderId);
+            updateOrderValidity(orderId,OrderValidityStatus.ORDER_TIMEOUT.getValue());
         }
         return oldOrder;
     }
