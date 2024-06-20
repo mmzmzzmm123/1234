@@ -9,7 +9,7 @@ const CompressionPlugin = require('compression-webpack-plugin')
 
 const name = process.env.VUE_APP_TITLE || '口袋心理课堂' // 网页标题
 
-const port = 8088 //process.env.port || process.env.npm_config_port || 80 // 端口
+const port = 28088 //process.env.port || process.env.npm_config_port || 80 // 端口
 
 // vue.config.js 配置说明
 //官方vue.config.js 参考文档 https://cli.vuejs.org/zh/config/#css-loaderoptions
