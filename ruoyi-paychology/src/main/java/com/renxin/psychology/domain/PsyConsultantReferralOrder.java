@@ -1,5 +1,9 @@
 package com.renxin.psychology.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.renxin.common.annotation.Excel;
@@ -11,6 +15,10 @@ import com.renxin.common.core.domain.BaseEntity;
  * @author renxin
  * @date 2024-06-20
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@TableName("psy_consultant_referral_order")
 public class PsyConsultantReferralOrder extends BaseEntity
 {
     private static final long serialVersionUID = 1L;

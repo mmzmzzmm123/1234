@@ -1,7 +1,11 @@
 package com.renxin.psychology.domain;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.renxin.common.annotation.Excel;
@@ -14,7 +18,10 @@ import java.util.Date;
  * @author jack
  * @date 2024-05-26
  */
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
+@TableName("psy_consultant_bankcard")
 public class PsyConsultantBankCard
 {
     private static final long serialVersionUID = 1L;

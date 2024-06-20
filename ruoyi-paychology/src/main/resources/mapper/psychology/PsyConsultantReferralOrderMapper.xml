@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultantReferralOrderMapper">
+    
+    <resultMap type="PsyConsultantReferralOrder" id="PsyConsultantReferralOrderResult">
+        <result property="referralId"    column="referral_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="consultantId"    column="consultant_id"    />
+        <result property="fromConsultId"    column="from_consult_id"    />
+        <result property="referralRemark"    column="referral_remark"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultantReferralOrderVo">
+        select referral_id, user_id, consultant_id, from_consult_id, referral_remark, status, del_flag, create_by, create_time, update_by, update_time from psy_consultant_referral_order
+    </sql>
+
+    <select id="selectPsyConsultantReferralOrderList" parameterType="PsyConsultantReferralOrder" resultMap="PsyConsultantReferralOrderResult">
+        <include refid="selectPsyConsultantReferralOrderVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="consultantId != null "> and consultant_id = #{consultantId}</if>
+            <if test="fromConsultId != null "> and from_consult_id = #{fromConsultId}</if>
+            <if test="referralRemark != null  and referralRemark != ''"> and referral_remark = #{referralRemark}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyConsultantReferralOrderByReferralId" parameterType="Long" resultMap="PsyConsultantReferralOrderResult">
+        <include refid="selectPsyConsultantReferralOrderVo"/>
+        where referral_id = #{referralId}
+    </select>
+        
+    <insert id="insertPsyConsultantReferralOrder" parameterType="PsyConsultantReferralOrder">
+        insert into psy_consultant_referral_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="referralId != null">referral_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="consultantId != null">consultant_id,</if>
+            <if test="fromConsultId != null">from_consult_id,</if>
+            <if test="referralRemark != null">referral_remark,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="referralId != null">#{referralId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="consultantId != null">#{consultantId},</if>
+            <if test="fromConsultId != null">#{fromConsultId},</if>
+            <if test="referralRemark != null">#{referralRemark},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyConsultantReferralOrder" parameterType="PsyConsultantReferralOrder">
+        update psy_consultant_referral_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="consultantId != null">consultant_id = #{consultantId},</if>
+            <if test="fromConsultId != null">from_consult_id = #{fromConsultId},</if>
+            <if test="referralRemark != null">referral_remark = #{referralRemark},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where referral_id = #{referralId}
+    </update>
+
+    <delete id="deletePsyConsultantReferralOrderByReferralId" parameterType="Long">
+        delete from psy_consultant_referral_order where referral_id = #{referralId}
+    </delete>
+
+    <delete id="deletePsyConsultantReferralOrderByReferralIds" parameterType="String">
+        delete from psy_consultant_referral_order where referral_id in 
+        <foreach item="referralId" collection="array" open="(" separator="," close=")">
+            #{referralId}
+        </foreach>
+    </delete>
+</mapper>
