@@ -3,6 +3,7 @@ package com.renxin.consultant.controller;
 import com.renxin.common.annotation.RateLimiter;
 import com.renxin.common.core.domain.AjaxResult;
 import com.renxin.framework.web.service.ConsultantTokenService;
+import com.renxin.psychology.constant.ConsultConstant;
 import com.renxin.psychology.domain.PsyConsultPartner;
 import com.renxin.psychology.domain.PsyConsultPartnerItem;
 import com.renxin.psychology.service.IPsyConsultPartnerService;
@@ -61,6 +62,7 @@ public class ConsultantPartnerController {
     {
         Integer userId = consultantTokenService.getUserId(request);
         entity.setUserId(userId);
+        entity.setStatus(ConsultConstant.PARTNER_STATUS_5);
         return AjaxResult.success(partnerService.save(entity));
     }
 
@@ -72,4 +74,21 @@ public class ConsultantPartnerController {
         return AjaxResult.success(partnerService.getInfoByUserId(userId));
     }
 
+    /**
+     * uni 实人认证
+     * https://doc.dcloud.net.cn/uniCloud/frv/intro.html
+     *
+     * @param entity
+     * @param request
+     * @return
+     */
+    @PostMapping(value = "/facialAuth")
+    @RateLimiter
+    public AjaxResult facialAuth(PsyConsultPartner entity,HttpServletRequest request)
+    {
+        Integer userId = consultantTokenService.getUserId(request);
+        entity.setUserId(userId);
+        entity.setStatus(ConsultConstant.PARTNER_STATUS_1);
+        return AjaxResult.success(partnerService.save(entity));
+    }
 }
