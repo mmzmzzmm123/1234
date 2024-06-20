@@ -38,6 +38,8 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     /** 咨询类型  */
     private String consultType;
 
+    private String consultTypeName;
+
     /** 咨询师 */
     @Excel(name = "咨询师")
     private String consultName;

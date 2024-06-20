@@ -87,6 +87,7 @@
       <el-table-column label="咨询师" width="100" align="center" prop="consultName" />
       <el-table-column label="用户名称" width="100" align="center" prop="nickName" />
       <el-table-column label="用户手机号" width="120" align="center" prop="phone" />
+      <el-table-column label="咨询类型" width="120" align="center" prop="consultTypeName" />
       <el-table-column label="订单总价" width="100" align="center" prop="amount">
         <template slot-scope="scope">
           {{ scope.row.amount.toFixed(2) }}
