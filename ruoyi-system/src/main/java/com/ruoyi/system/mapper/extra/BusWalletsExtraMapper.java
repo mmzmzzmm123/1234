@@ -22,6 +22,8 @@ import java.util.List;
  */
 public interface BusWalletsExtraMapper extends BusWalletsMapper {
     int deduction(@Param("wallet") BusWallets wallet, @Param("amount") Long amount);
+    int frozenBalance(@Param("wallet") BusWallets wallet, @Param("amount") Long amount);
 
     List<BusWallets>  selectBusWalletsByUserIdForUpdate(@Param("userId")Long userId);
+
 }

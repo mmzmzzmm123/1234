@@ -17,11 +17,16 @@
     <sql id="selectBusOrderAssignmentsVo">
         select assignment_id, order_id, user_id, accepted_at, status, created_at, updated_at from bus_order_assignments
     </sql>
+    <update id="setUserIdAndUpdateStatusById">
+        update bus_order_assignments
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="status != null">status = #{newStatus},</if>
+        </trim>
+        where assignment_id = #{assignmentId}
+        and status=#{oldStatus}
+    </update>
 
-    <select id="setUserIdAndUpdateStatsuById" parameterType="BusOrderAssignments" resultMap="BusOrderAssignmentsResult">
-
-
-    </select>
 
 
 </mapper>

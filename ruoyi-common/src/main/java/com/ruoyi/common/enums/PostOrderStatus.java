@@ -15,56 +15,29 @@ package com.ruoyi.common.enums;
  * 2024-06-18     张李鑫                     1.0         1.0 Version
  */
 public enum PostOrderStatus {
-    init(1,"已创建"),
 
-    pay(2,"已支付"),
-    /**
-     * 未接单
-     */
-    ORDER_PENDING(3, "未接单"),
-    /**
-     * 已接单
-     */
-    ORDER_RECEIVED(4, "已接单"),
-    /**
-     * 已打烊
-     */
-    SHOP_SAMPLE(5, "已打烊"),
-    /**
-     * 制作中
-     */
-    IN_PRODUCTION(6, "制作中"),
+    CREATED( 1, "已创建"),               // 1
+    PAY_TODO( 2, "待支付"),              // 2
+    PAY_PROCESS( 3, "支付中"),           // 4
+    PAID( 4, "已支付"),                  // 8
 
-    CONFIRM(7,"同意发货"),
+    CANCEL_REQUESTED( 15, "申请撤销"),    // 16
+    CANCELLED( 6, "已撤销"),             // 32
+    TIMEOUT( 7, "已超时"),               // 64
 
-    /**
-     * 已发货
-     */
-    SHIPPED(8, "已发货"),
+    ORDER_RECEIVED( 8, "已接单"),        // 128
+    SHOP_SAMPLE( 9, "已打样"),           // 256
+    SHOP_SAMPLE_CONFIRMED( 10, "确认打样"), // 512
 
-//    SHIPPED(8, "已收货"),
-//    SHIPPED(8, "退货"),
 
-    /**
-     * 已完成
-     */
-    COMPLETED(9, "已完成"),//这里指的订单完成
+    CONFIRM_SHIPMENT( 11, "同意发货"),   // 4096
+    SHIPPED_RECEIVED( 12, "确认收货"),   // 8192
+    RETURN_REQUESTED( 13, "申请退货"),   // 16384
+    SHIPPED_RETURNED( 14, "确认退货"),   // 16384
 
-    /**
-     * 已撤销
-     */
-    CANCELLED(9, "已撤销"),
-
-    /**
-     * 仲裁中
-     */
-    IN_ARBITRATION(10, "仲裁中"),
-    ARBITRATION_ENDED(11, "仲裁结束"),
-
-    /**
-     * 已超时
-     */
-    TIMEOUT(12, "已超时");
+    COMPLETED( 16, "已完成");
+    
+    
 
     private final int value;
     private final String remark;

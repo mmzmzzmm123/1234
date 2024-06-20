@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.impl.extra;
 
+import com.github.pagehelper.PageHelper;
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.enums.OrderSampleType;
 import com.ruoyi.common.enums.OrderValidityStatus;
@@ -98,7 +99,7 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         Long userId = user.getUserId();
         busPostOrder.setOrderId(null);
         busPostOrder.setMerchantId(userId);
-        busPostOrder.setStatus(PostOrderStatus.init.getValue());
+        busPostOrder.setStatus(PostOrderStatus.CREATED.getValue());
         busPostOrder.setOrderValidityStatus(OrderValidityStatus.NORMAL.getValue());
         int orderCount = insertBusPostOrder(busPostOrder);
         int orderAssignmentCount = busOrderAssignmentsExtraService.createByOrder(busPostOrder);
@@ -114,7 +115,7 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         BusPostOrder busPostOrder = selectBusPostOrderByOrderId(orderId);
         checkUser(busPostOrder);
 
-        if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.pay.getValue())) {
+        if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.PAID.getValue())) {
             throw new RuntimeException("无法支付他人订单");
         }
 
@@ -135,7 +136,7 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         BusPostOrder busPostOrder = new BusPostOrder();
         busPostOrder.setOrderId(orderId);
         busPostOrder.setPayType(payType);
-        busPostOrder.setStatus(StatusUtils.updateStatus(oldStatus, PostOrderStatus.pay.getValue()));
+        busPostOrder.setStatus(StatusUtils.updateStatus(oldStatus, PostOrderStatus.PAID.getValue()));
         return busPostOrder;
     }
 
@@ -162,7 +163,8 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         PageUtils.startPage();
         Boolean orderPending = busPostOrderForm.getOrderPending();
         //是否已经接单   如果没有状态字段查询所有订单 如果有的话根据状态查询
-        List<Integer> statusList = orderPending == null ? new ArrayList<>() : (orderPending ? getPendingStatus() : getReceivedStatus());
+        List<Integer> statusList = orderPending == null ? null : (orderPending ? getPendingStatus() : getReceivedStatus());
+        PageUtils.startPage();
         return busPostOrderExtraMapper.findOrderListByUserId(statusList, userId);
     }
 
@@ -170,17 +172,14 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
     public int confirm(Long orderId) {
         checkUser(orderId);
         BusPostOrder busPostOrder = selectBusPostOrderByOrderId(orderId);
-//        if (!StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.IN_PRODUCTION_COMPLETED.getValue())) {
-//            throw new RuntimeException("制作未完成");
-//        }
-
-        if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.CONFIRM.getValue())) {
+        if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.CONFIRM_SHIPMENT.getValue())) {
             throw new RuntimeException("已同意发货");
         }
-        Integer newStatus = StatusUtils.updateStatus(busPostOrder.getStatus(), PostOrderStatus.CONFIRM.getValue());
+        Integer newStatus = StatusUtils.updateStatus(busPostOrder.getStatus(), PostOrderStatus.CONFIRM_SHIPMENT.getValue());
         busPostOrder = new BusPostOrder();
         busPostOrder.setStatus(newStatus);
         busPostOrder.setOrderId(orderId);
+        //todo:这里需要把订单加入到延迟队列中
         return updateBusPostOrder(busPostOrder);
     }
 
@@ -195,11 +194,12 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         busPostOrder.setSample(OrderSampleType.SAMPLING_REQUIRED.getValue());//需要打样
         busPostOrder.setOrderValidityStatus(OrderValidityStatus.NORMAL.getValue());//订单正常
         List<Integer> statusListExcluded = StatusUtils.getStatusListExcluded(PostOrderStatus.SHOP_SAMPLE.getValue());//没有打样
-        return busPostOrderExtraMapper.findSampleOrder(busPostOrder, statusListExcluded,new Date());
+        return busPostOrderExtraMapper.findSampleOrder(busPostOrder, statusListExcluded, new Date());
     }
 
     /**
      * 订单检查 如果超时订单已经打样 什么都不做 如果没有打样更新订单异常状态
+     *
      * @param orderId 订单id
      * @return 订单是否超时
      */
@@ -210,12 +210,12 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         Integer status = oldOrder.getStatus();
         if (!StatusUtils.hasStatus(status, PostOrderStatus.SHOP_SAMPLE.getValue())) {
             log.info("订单打样超时 id:{} 超时", orderId);
-            updateOrderValidity(orderId,OrderValidityStatus.SAMPLE_TIMEOUT.getValue());
+            updateOrderValidity(orderId, OrderValidityStatus.SAMPLE_TIMEOUT.getValue());
         }
         return oldOrder;
     }
 
-    private void updateOrderValidity(Long orderId,Integer status){
+    private void updateOrderValidity(Long orderId, Integer status) {
         BusPostOrder busPostOrder = new BusPostOrder();
         busPostOrder.setOrderId(orderId);
         busPostOrder.setOrderValidityStatus(status);
@@ -224,17 +224,19 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
 
     /**
      * 检查订单是否超时
+     *
      * @param orderId
      * @return
      */
     @Override
     public BusPostOrder orderTimeout(Long orderId) {
+        //todo:这里订单超时有问题 需要修改
         BusPostOrder oldOrder = selectBusPostOrderByOrderId(orderId);
         Integer status = oldOrder.getStatus();
-        if (!StatusUtils.hasStatus(status, PostOrderStatus.SHIPPED.getValue())) {
-            updateOrderValidity(orderId,OrderValidityStatus.ORDER_TIMEOUT.getValue());
+        if (!StatusUtils.hasStatus(status, PostOrderStatus.SHOP_SAMPLE.getValue())) {
+            updateOrderValidity(orderId, OrderValidityStatus.ORDER_TIMEOUT.getValue());
         }
-        return oldOrder;
+        return null;
     }
 
     /**
@@ -243,10 +245,22 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
      * @return
      */
     public List<Integer> getPendingStatus() {
-        ArrayList<Integer> statusList = new ArrayList<>();
-        statusList.add(PostOrderStatus.init.getValue());//创建
-        statusList.add(StatusUtils.updateStatus(PostOrderStatus.init.getValue(), PostOrderStatus.pay.getValue()));//已支付
-        return statusList;
+        return StatusUtils.getStatusListExcluded(PostOrderStatus.values().length,
+                PostOrderStatus.CONFIRM_SHIPMENT.getValue(),
+                PostOrderStatus.SHIPPED_RECEIVED.getValue(),
+                PostOrderStatus.RETURN_REQUESTED.getValue(),
+                PostOrderStatus.SHIPPED_RETURNED.getValue(),
+                PostOrderStatus.COMPLETED.getValue(),
+                PostOrderStatus.SHOP_SAMPLE.getValue(),
+                PostOrderStatus.SHOP_SAMPLE.getValue(),
+                PostOrderStatus.ORDER_RECEIVED.getValue(),
+                PostOrderStatus.TIMEOUT.getValue(),
+                PostOrderStatus.CANCELLED.getValue()
+        );
+//        ArrayList<Integer> statusList = new ArrayList<>();
+//        statusList.add(PostOrderStatus.CREATED.getValue());//创建
+//        statusList.add(StatusUtils.updateStatus(PostOrderStatus.CREATED.getValue(), PostOrderStatus.CREATED.getValue()));//已支付
+//        return statusList;
     }
 
     /**

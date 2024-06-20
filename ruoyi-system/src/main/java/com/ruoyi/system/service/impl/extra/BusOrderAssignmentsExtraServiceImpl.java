@@ -50,9 +50,17 @@ public class BusOrderAssignmentsExtraServiceImpl extends BusOrderAssignmentsServ
         return insertBusOrderAssignments(busOrderAssignments);
     }
 
+    /**
+     * 抢单
+     * @param userId
+     * @param newStatus
+     * @param oldStatus
+     * @param assignmentId
+     * @return
+     */
     @Override
-    public boolean setUserIdAndUpdateStatsuById(Long userId, int status, Long assignmentId) {
-        return busOrderAssignmentsExtraMapper.setUserIdAndUpdateStatsuById(userId,status,assignmentId)>0;
+    public boolean takeOrder(Long userId, int newStatus,int oldStatus,  Long assignmentId) {
+        return busOrderAssignmentsExtraMapper.setUserIdAndUpdateStatusById(userId,  newStatus, oldStatus,assignmentId)>0;
     }
 
 

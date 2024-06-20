@@ -5,6 +5,9 @@ import com.ruoyi.system.domain.BusWallets;
 import com.ruoyi.system.mapper.extra.BusWalletsExtraMapper;
 import com.ruoyi.system.service.extra.BusWalletsExtraService;
 import com.ruoyi.system.service.impl.BusWalletsServiceImpl;
+import com.ruoyi.system.service.impl.SysUserServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -33,9 +36,11 @@ public class BusWalletsExtraServiceImpl extends BusWalletsServiceImpl implements
     @Autowired
     private BusWalletsExtraMapper busWalletsExtraMapper;
 
+    private static final Logger log = LoggerFactory.getLogger(BusWalletsExtraServiceImpl.class);
+
 
     /**
-     * 扣款
+     * 扣款:把款项冻结 直到订单结束
      *
      * @param wallet
      * @param amount
@@ -43,8 +48,22 @@ public class BusWalletsExtraServiceImpl extends BusWalletsServiceImpl implements
      */
     @Override
     public boolean deduction(BusWallets wallet, Long amount) {
+        log.info("用户冻结:{} 用户id:{}", amount, wallet.getUserId());
         return busWalletsExtraMapper.deduction(wallet, amount) > 0;
     }
+//
+//    /**
+//     * 冻结金额
+//     *
+//     * @param wallet
+//     * @param amount
+//     * @return
+//     */
+//    @Override
+//    public boolean frozenBalance(BusWallets wallet, Long amount) {
+//        log.info("用户冻结:{} 用户id:{}", amount, wallet.getUserId());
+//        return busWalletsExtraMapper.frozenBalance(wallet, amount) > 0;
+//    }
 
     @Override
     public List<BusWallets> findWalletByUser() {

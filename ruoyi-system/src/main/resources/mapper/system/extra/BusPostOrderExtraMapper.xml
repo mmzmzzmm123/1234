@@ -39,6 +39,7 @@
             <if test="sample_time != null ">and sample_time >=#{date}</if>
             <if test="statusList != null ">and `status` in(#{status})</if>
         </where>
+        order by  created_at desc;
     </select>
 
 
@@ -50,6 +51,7 @@
             <if test="merchantId != null ">and merchant_id = #{merchantId}</if>
             <if test="statusList != null ">and `status` in(#{status})</if>
         </where>
+        order by  created_at desc;
     </select>
 
 </mapper>

@@ -22,12 +22,26 @@
 
     <update id="deduction">
         UPDATE Wallets
-        SET balance = #{wallet.balance} - #{amount},
+        SET balance = balance - #{amount},
+            frozen_balance=frozen_balance+#{amount},
             version = version + 1
         WHERE wallet_id = #{wallet.walletId}
           AND balance = #{wallet.balance}
           AND version = #{wallet.version};
     </update>
+
+
+    <update id="frozenBalance">
+        UPDATE Wallets
+        SET balance = balance - #{amount},
+            frozen_balance=frozen_balance+#{amount},
+            version = version + 1
+        WHERE wallet_id = #{wallet.walletId}
+          AND balance = #{wallet.balance}
+          AND version = #{wallet.version};
+    </update>
+
+
 
 
 

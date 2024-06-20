@@ -1,5 +1,7 @@
 package com.ruoyi.system.mapper.extra;
 
+import org.apache.ibatis.annotations.Param;
+
 /**
  * Description:
  * Copyright:   Copyright (c)2024
@@ -15,5 +17,5 @@ package com.ruoyi.system.mapper.extra;
  * 2024-06-20     张李鑫                     1.0         1.0 Version
  */
 public interface BusOrderAssignmentsExtraMapper {
-    int setUserIdAndUpdateStatsuById(Long userId, int status, Long assignmentId);
+    int setUserIdAndUpdateStatusById(@Param("userId") Long userId, @Param("newStatus")int newStatus, @Param("oldStatus")int oldStatus,@Param("assignmentId") Long assignmentId);
 }
