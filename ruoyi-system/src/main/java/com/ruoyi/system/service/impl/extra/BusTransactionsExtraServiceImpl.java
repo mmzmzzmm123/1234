@@ -1,6 +1,7 @@
-package com.ruoyi.system.service.impl;
+package com.ruoyi.system.service.impl.extra;
 
-import com.ruoyi.system.service.BusTransactionsExtraService;
+import com.ruoyi.system.service.extra.BusTransactionsExtraService;
+import com.ruoyi.system.service.impl.BusTransactionsServiceImpl;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 

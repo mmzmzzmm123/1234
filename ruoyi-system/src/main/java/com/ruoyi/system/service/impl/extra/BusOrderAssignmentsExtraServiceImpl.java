@@ -1,8 +1,12 @@
-package com.ruoyi.system.service.impl;
+package com.ruoyi.system.service.impl.extra;
 
+import com.ruoyi.common.enums.OrderAssignmentStatus;
 import com.ruoyi.system.domain.BusOrderAssignments;
 import com.ruoyi.system.domain.BusPostOrder;
-import com.ruoyi.system.service.BusOrderAssignmentsExtraService;
+import com.ruoyi.system.mapper.extra.BusOrderAssignmentsExtraMapper;
+import com.ruoyi.system.service.extra.BusOrderAssignmentsExtraService;
+import com.ruoyi.system.service.impl.BusOrderAssignmentsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,6 +30,12 @@ import java.util.Date;
 @Primary
 @Service("BusOrderAssignmentsExtraServiceImpl")
 public class BusOrderAssignmentsExtraServiceImpl extends BusOrderAssignmentsServiceImpl implements BusOrderAssignmentsExtraService {
+
+
+    @Autowired
+    private BusOrderAssignmentsExtraMapper busOrderAssignmentsExtraMapper;
+
+
     /**
      * 在生成订单的时候同时生成接单数据 行锁保证线程安全
      * @param busPostOrder
@@ -36,7 +46,13 @@ public class BusOrderAssignmentsExtraServiceImpl extends BusOrderAssignmentsServ
     public int createByOrder(BusPostOrder busPostOrder) {
         BusOrderAssignments busOrderAssignments = new BusOrderAssignments();
         busOrderAssignments.setOrderId(busOrderAssignments.getOrderId());
-        return 0;
+        busOrderAssignments.setStatus(OrderAssignmentStatus.UNACCEPTED.getValue());
+        return insertBusOrderAssignments(busOrderAssignments);
+    }
+
+    @Override
+    public boolean setUserIdAndUpdateStatsuById(Long userId, int status, Long assignmentId) {
+        return busOrderAssignmentsExtraMapper.setUserIdAndUpdateStatsuById(userId,status,assignmentId)>0;
     }
 
 

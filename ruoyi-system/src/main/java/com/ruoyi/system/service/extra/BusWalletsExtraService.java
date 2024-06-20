@@ -1,6 +1,7 @@
-package com.ruoyi.system.service;
+package com.ruoyi.system.service.extra;
 
 import com.ruoyi.system.domain.BusWallets;
+import com.ruoyi.system.service.IBusWalletsService;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -26,6 +27,7 @@ public interface BusWalletsExtraService extends IBusWalletsService {
 
     List<BusWallets>  findWalletByUser();
 
-    @Transactional(rollbackFor = Exception.class)
     boolean initWallet();
+
+    BusWallets selectBusWalletsByUserIdForUpdate();
 }

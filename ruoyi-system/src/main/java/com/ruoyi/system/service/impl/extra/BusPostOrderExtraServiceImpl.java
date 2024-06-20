@@ -1,4 +1,4 @@
-package com.ruoyi.system.service.impl;
+package com.ruoyi.system.service.impl.extra;
 
 import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.enums.OrderSampleType;
@@ -12,9 +12,10 @@ import com.ruoyi.portal.form.BusPostOrderForm;
 import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.domain.BusTransactions;
 import com.ruoyi.system.manager.PayManager;
-import com.ruoyi.system.mapper.BusPostOrderExtraMapper;
-import com.ruoyi.system.service.BusOrderAssignmentsExtraService;
-import com.ruoyi.system.service.BusPostOrderExtraService;
+import com.ruoyi.system.mapper.extra.BusPostOrderExtraMapper;
+import com.ruoyi.system.service.extra.BusOrderAssignmentsExtraService;
+import com.ruoyi.system.service.extra.BusPostOrderExtraService;
+import com.ruoyi.system.service.impl.BusPostOrderServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

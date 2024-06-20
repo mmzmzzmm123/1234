@@ -17,14 +17,13 @@ import java.util.List;
 
 /**
  * 订单Controller
- * 
+ *
  * @author ruoyi
  * @date 2024-06-18
  */
 @RestController
 @RequestMapping("/system/order")
-public class BusPostOrderController extends BaseController
-{
+public class BusPostOrderController extends BaseController {
     @Autowired
     private IBusPostOrderService busPostOrderService;
 
@@ -33,8 +32,7 @@ public class BusPostOrderController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:order:list')")
     @GetMapping("/list")
-    public TableDataInfo list(BusPostOrder busPostOrder)
-    {
+    public TableDataInfo list(BusPostOrder busPostOrder) {
         startPage();
         List<BusPostOrder> list = busPostOrderService.selectBusPostOrderList(busPostOrder);
         return getDataTable(list);
@@ -46,8 +44,7 @@ public class BusPostOrderController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:order:export')")
     @Log(title = "订单", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
-    public void export(HttpServletResponse response, BusPostOrder busPostOrder)
-    {
+    public void export(HttpServletResponse response, BusPostOrder busPostOrder) {
         List<BusPostOrder> list = busPostOrderService.selectBusPostOrderList(busPostOrder);
         ExcelUtil<BusPostOrder> util = new ExcelUtil<BusPostOrder>(BusPostOrder.class);
         util.exportExcel(response, list, "订单数据");
@@ -58,8 +55,7 @@ public class BusPostOrderController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:order:query')")
     @GetMapping(value = "/{orderId}")
-    public AjaxResult getInfo(@PathVariable("orderId") Long orderId)
-    {
+    public AjaxResult getInfo(@PathVariable("orderId") Long orderId) {
         return success(busPostOrderService.selectBusPostOrderByOrderId(orderId));
     }
 
@@ -69,8 +65,7 @@ public class BusPostOrderController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:order:add')")
     @Log(title = "订单", businessType = BusinessType.INSERT)
     @PostMapping
-    public AjaxResult add(@RequestBody BusPostOrder busPostOrder)
-    {
+    public AjaxResult add(@RequestBody BusPostOrder busPostOrder) {
         return toAjax(busPostOrderService.insertBusPostOrder(busPostOrder));
     }
 
@@ -80,8 +75,7 @@ public class BusPostOrderController extends BaseController
     @PreAuthorize("@ss.hasPermi('system:order:edit')")
     @Log(title = "订单", businessType = BusinessType.UPDATE)
     @PutMapping
-    public AjaxResult edit(@RequestBody BusPostOrder busPostOrder)
-    {
+    public AjaxResult edit(@RequestBody BusPostOrder busPostOrder) {
         return toAjax(busPostOrderService.updateBusPostOrder(busPostOrder));
     }
 
@@ -90,9 +84,8 @@ public class BusPostOrderController extends BaseController
      */
     @PreAuthorize("@ss.hasPermi('system:order:remove')")
     @Log(title = "订单", businessType = BusinessType.DELETE)
-	@DeleteMapping("/{orderIds}")
-    public AjaxResult remove(@PathVariable Long[] orderIds)
-    {
+    @DeleteMapping("/{orderIds}")
+    public AjaxResult remove(@PathVariable Long[] orderIds) {
         return toAjax(busPostOrderService.deleteBusPostOrderByOrderIds(orderIds));
     }
 }

@@ -1,10 +1,9 @@
 package com.ruoyi.system.manager.impl;
 
 import com.ruoyi.common.enums.PayType;
-import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.domain.BusWallets;
 import com.ruoyi.system.manager.PayManager;
-import com.ruoyi.system.service.BusWalletsExtraService;
+import com.ruoyi.system.service.extra.BusWalletsExtraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;

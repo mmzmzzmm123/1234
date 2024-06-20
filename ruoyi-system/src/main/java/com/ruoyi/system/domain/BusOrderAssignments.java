@@ -11,7 +11,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * 记录用户接单的信息对象 bus_order_assignments
  * 
  * @author ruoyi
- * @date 2024-06-18
+ * @date 2024-06-20
  */
 public class BusOrderAssignments extends BaseEntity
 {
@@ -35,7 +35,7 @@ public class BusOrderAssignments extends BaseEntity
 
     /** 接单状态 (e.g., 进行中, 已完成, 已取消) */
     @Excel(name = "接单状态 (e.g., 进行中, 已完成, 已取消)")
-    private String status;
+    private Integer status;
 
     /** 创建时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -83,12 +83,12 @@ public class BusOrderAssignments extends BaseEntity
     {
         return acceptedAt;
     }
-    public void setStatus(String status) 
+    public void setStatus(Integer status) 
     {
         this.status = status;
     }
 
-    public String getStatus() 
+    public Integer getStatus() 
     {
         return status;
     }

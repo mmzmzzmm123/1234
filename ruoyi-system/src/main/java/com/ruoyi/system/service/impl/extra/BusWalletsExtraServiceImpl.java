@@ -1,9 +1,10 @@
-package com.ruoyi.system.service.impl;
+package com.ruoyi.system.service.impl.extra;
 
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.system.domain.BusWallets;
-import com.ruoyi.system.mapper.BusWalletsExtraMapper;
-import com.ruoyi.system.service.BusWalletsExtraService;
+import com.ruoyi.system.mapper.extra.BusWalletsExtraMapper;
+import com.ruoyi.system.service.extra.BusWalletsExtraService;
+import com.ruoyi.system.service.impl.BusWalletsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -78,8 +79,17 @@ public class BusWalletsExtraServiceImpl extends BusWalletsServiceImpl implements
             busWallets.setBalance(0L);
             busWallets.setFrozenBalance(0L);
             busWallets.setVersion(0L);
-            return insertBusWallets(busWallets)>0;
+            return insertBusWallets(busWallets) > 0;
         }
         return true;
+    }
+
+    @Override
+    public BusWallets selectBusWalletsByUserIdForUpdate() {
+        List<BusWallets> wallets = busWalletsExtraMapper.selectBusWalletsByUserIdForUpdate(SecurityUtils.getLoginUser().getUserId());
+        if (wallets.isEmpty()) {
+            throw new RuntimeException("钱包异常");
+        }
+        return wallets.get(0);
     }
 }

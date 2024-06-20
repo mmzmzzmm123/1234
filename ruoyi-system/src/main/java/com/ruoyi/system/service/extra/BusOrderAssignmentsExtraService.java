@@ -1,8 +1,12 @@
-package com.ruoyi.system.service;
+package com.ruoyi.system.service.extra;
 
+import com.ruoyi.common.enums.OrderAssignmentStatus;
 import com.ruoyi.system.domain.BusOrderAssignments;
 import com.ruoyi.system.domain.BusPostOrder;
+import com.ruoyi.system.service.IBusOrderAssignmentsService;
+import org.apache.ibatis.annotations.Param;
 
+import javax.validation.constraints.Past;
 import java.util.List;
 
 /**
@@ -14,4 +18,6 @@ import java.util.List;
 public interface BusOrderAssignmentsExtraService extends IBusOrderAssignmentsService {
 
     int createByOrder(BusPostOrder busPostOrder);
+
+    boolean setUserIdAndUpdateStatsuById(Long userId, int value, Long assignmentId);
 }

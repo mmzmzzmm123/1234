@@ -1,4 +1,6 @@
-package com.ruoyi.system.service;
+package com.ruoyi.system.service.extra;
+
+import com.ruoyi.system.service.IBusTransactionsService;
 
 /**
  * Description:
@@ -14,5 +16,5 @@ package com.ruoyi.system.service;
  * ------------------------------------------------------------------
  * 2024-06-18     张李鑫                     1.0         1.0 Version
  */
-public interface BusTransactionsExtraService extends IBusTransactionsService{
+public interface BusTransactionsExtraService extends IBusTransactionsService {
 }

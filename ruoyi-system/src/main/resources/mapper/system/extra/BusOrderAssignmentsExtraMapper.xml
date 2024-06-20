@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.extra.BusOrderAssignmentsExtraMapper">
+
+    <resultMap type="BusOrderAssignments" id="BusOrderAssignmentsResult">
+        <result property="assignmentId"    column="assignment_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="acceptedAt"    column="accepted_at"    />
+        <result property="status"    column="status"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+    </resultMap>
+
+    <sql id="selectBusOrderAssignmentsVo">
+        select assignment_id, order_id, user_id, accepted_at, status, created_at, updated_at from bus_order_assignments
+    </sql>
+
+    <select id="setUserIdAndUpdateStatsuById" parameterType="BusOrderAssignments" resultMap="BusOrderAssignmentsResult">
+
+
+    </select>
+
+
+</mapper>

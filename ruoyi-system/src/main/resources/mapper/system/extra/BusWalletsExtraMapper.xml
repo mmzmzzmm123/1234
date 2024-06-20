@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.ruoyi.system.mapper.BusWalletsExtraMapper">
+<mapper namespace="com.ruoyi.system.mapper.extra.BusWalletsExtraMapper">
 
     <resultMap type="BusWallets" id="BusWalletsResult">
         <result property="walletId" column="wallet_id"/>
@@ -15,6 +15,11 @@
     </resultMap>
 
 
+    <sql id="selectBusWalletsVo">
+        select wallet_id, user_id, balance, frozen_balance, version, updated_at, created_at from bus_wallets
+    </sql>
+
+
     <update id="deduction">
         UPDATE Wallets
         SET balance = #{wallet.balance} - #{amount},
@@ -23,5 +28,14 @@
           AND balance = #{wallet.balance}
           AND version = #{wallet.version};
     </update>
+
+
+
+
+    <select id="selectBusWalletsByUserIdForUpdate" parameterType="BusWallets" resultMap="BusWalletsResult">
+        <include refid="selectBusWalletsVo"/>
+        where user_id = #{userId}
+        for update
+    </select>
 
 </mapper>

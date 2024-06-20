@@ -1,8 +1,8 @@
-package com.ruoyi.system.service;
+package com.ruoyi.system.service.extra;
 
 import com.ruoyi.portal.form.BusPostOrderForm;
-import com.ruoyi.portal.form.PayForm;
 import com.ruoyi.system.domain.BusPostOrder;
+import com.ruoyi.system.service.IBusPostOrderService;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import java.util.List;
  * ------------------------------------------------------------------
  * 2024-06-18     张李鑫                     1.0         1.0 Version
  */
-public interface BusPostOrderExtraService extends IBusPostOrderService{
+public interface BusPostOrderExtraService extends IBusPostOrderService {
     int postOrder(BusPostOrder busPostOrder);
 
     void payOrder(BusPostOrderForm busPostOrderForm);
