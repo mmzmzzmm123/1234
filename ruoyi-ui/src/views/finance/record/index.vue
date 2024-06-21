@@ -9,112 +9,24 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="订单ID ：提现订单ID" prop="orderId">
-        <el-input
-          v-model="queryParams.orderId"
-          placeholder="请输入订单ID ：提现订单ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="支付前账户余额" prop="accountAmount">
-        <el-input
-          v-model="queryParams.accountAmount"
-          placeholder="请输入支付前账户余额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
-      <el-form-item label="支付金额" prop="payAmount">
-        <el-input
-          v-model="queryParams.payAmount"
-          placeholder="请输入支付金额"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:record:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:record:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:record:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:record:export']"
-        >导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
-
     <el-table v-loading="loading" :data="recordList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
       <el-table-column label="记录ID" align="center" prop="recordId" />
       <el-table-column label="账户ID" align="center" prop="consultantId" />
-      <el-table-column label="1 成功 0 失败" align="center" prop="status" />
-      <el-table-column label="0 分成 1 提现" align="center" prop="payType" />
-      <el-table-column label="订单ID ：提现订单ID" align="center" prop="orderId" />
+      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="提现类型" align="center" prop="payType" />
+      <el-table-column label="订单ID" align="center" prop="orderId" />
       <el-table-column label="支付前账户余额" align="center" prop="accountAmount" />
       <el-table-column label="支付金额" align="center" prop="payAmount" />
       <el-table-column label="支付消息结果" align="center" prop="payMessage" />
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template slot-scope="scope">
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-edit"
-            @click="handleUpdate(scope.row)"
-            v-hasPermi="['system:record:edit']"
-          >修改</el-button>
-          <el-button
-            size="mini"
-            type="text"
-            icon="el-icon-delete"
-            @click="handleDelete(scope.row)"
-            v-hasPermi="['system:record:remove']"
-          >删除</el-button>
-        </template>
-      </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -129,8 +41,8 @@
         <el-form-item label="账户ID" prop="consultantId">
           <el-input v-model="form.consultantId" placeholder="请输入账户ID" />
         </el-form-item>
-        <el-form-item label="订单ID ：提现订单ID" prop="orderId">
-          <el-input v-model="form.orderId" placeholder="请输入订单ID ：提现订单ID" />
+        <el-form-item label="订单ID" prop="orderId">
+          <el-input v-model="form.orderId" placeholder="请输入订单ID" />
         </el-form-item>
         <el-form-item label="支付前账户余额" prop="accountAmount">
           <el-input v-model="form.accountAmount" placeholder="请输入支付前账户余额" />
@@ -154,7 +66,7 @@
 </template>
 
 <script>
-import { listRecord, getRecord, delRecord, addRecord, updateRecord } from "@/api/system/record";
+import { listRecord, getRecord, delRecord, addRecord, updateRecord } from "@/api/psychology/record";
 
 export default {
   name: "Record",
