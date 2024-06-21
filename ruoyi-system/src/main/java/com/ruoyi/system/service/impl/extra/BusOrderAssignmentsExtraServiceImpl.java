@@ -45,7 +45,7 @@ public class BusOrderAssignmentsExtraServiceImpl extends BusOrderAssignmentsServ
     @Transactional(rollbackFor = Exception.class)
     public int createByOrder(BusPostOrder busPostOrder) {
         BusOrderAssignments busOrderAssignments = new BusOrderAssignments();
-        busOrderAssignments.setOrderId(busOrderAssignments.getOrderId());
+        busOrderAssignments.setOrderId(busPostOrder.getOrderId());
         busOrderAssignments.setStatus(OrderAssignmentStatus.UNACCEPTED.getValue());
         return insertBusOrderAssignments(busOrderAssignments);
     }

@@ -2,16 +2,12 @@ package com.ruoyi.system.service.impl.extra;
 
 import com.ruoyi.system.domain.PostOrderImages;
 import com.ruoyi.system.mapper.extra.PostOrderImagesExtraMapper;
-import com.ruoyi.system.service.IPostOrderImagesService;
 import com.ruoyi.system.service.extra.IPostOrderImagesExtraService;
 import com.ruoyi.system.service.impl.PostOrderImagesServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,17 +33,20 @@ public class IPostOrderImagesExtraServiceImpl extends PostOrderImagesServiceImpl
     private PostOrderImagesExtraMapper postOrderImagesExtraMapper;
 
 
-
     @Override
     public int insertPostOrderImageBatch(List<String> imageList, Long orderId) {
+        if (imageList == null || imageList.isEmpty()) {
+            //没有要上传的图片
+            return 1;
+        }
         List<PostOrderImages> insertArrayList = imageList.stream()
-                        .map((imageUrl) -> build(imageUrl, orderId))
-                        .collect(Collectors.toList());
+                .map((imageUrl) -> build(imageUrl, orderId))
+                .collect(Collectors.toList());
         return postOrderImagesExtraMapper.insertBatch(insertArrayList);
     }
 
 
-    private PostOrderImages build(String imageUrl,Long orderId){
+    private PostOrderImages build(String imageUrl, Long orderId) {
         PostOrderImages postOrderImages = new PostOrderImages();
         postOrderImages.setImageUrl(imageUrl);
         postOrderImages.setOrderId(orderId);

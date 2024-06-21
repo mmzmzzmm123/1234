@@ -39,7 +39,7 @@ public class OrderAssignmentsController {
 
 
     /**
-     * 抢单
+     * 打样
      * @return
      */
     @RequestMapping("/sample")

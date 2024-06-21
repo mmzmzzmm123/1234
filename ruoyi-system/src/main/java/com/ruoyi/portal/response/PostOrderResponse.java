@@ -1,7 +1,6 @@
-package com.ruoyi.portal.form;
+package com.ruoyi.portal.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.xss.Xss;
 
 import java.util.Date;
@@ -14,15 +13,14 @@ import java.util.List;
  *
  * @author: 张李鑫
  * @version: 1.0
- * Create at:   2024-06-18 14:20:54
+ * Create at:   2024-06-21 17:17:26
  * <p>
  * Modification History:
  * Date         Author      Version     Description
  * ------------------------------------------------------------------
- * 2024-06-18     张李鑫                     1.0         1.0 Version
+ * 2024-06-21     张李鑫                     1.0         1.0 Version
  */
-public class BusPostOrderForm extends BaseEntity {
-
+public class PostOrderResponse {
     /** 订单ID */
     private Long orderId;
     /** 订单标题 */
@@ -67,13 +65,6 @@ public class BusPostOrderForm extends BaseEntity {
     /** 收货地址 */
     private String address;
 
-    /**
-     * false:未接单 true:已接单
-     */
-    private Boolean orderPending;
-
-
-    private List<String>imageList;
 
     public Long getOrderId() {
         return orderId;
@@ -185,21 +176,5 @@ public class BusPostOrderForm extends BaseEntity {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public Boolean getOrderPending() {
-        return orderPending;
-    }
-
-    public void setOrderPending(Boolean orderPending) {
-        this.orderPending = orderPending;
-    }
-
-    public List<String> getImageList() {
-        return imageList;
-    }
-
-    public void setImageList(List<String> imageList) {
-        this.imageList = imageList;
     }
 }

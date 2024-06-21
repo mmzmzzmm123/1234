@@ -16,19 +16,23 @@ package com.ruoyi.common.enums;
  */
 public enum PostOrderStatus {
 
-    CREATED( 1, "已创建"),               // 1
-    PAY_TODO( 2, "待支付"),              // 2
-    PAY_PROCESS( 3, "支付中"),           // 4
-    PAID( 4, "已支付"),                  // 8
+    //把异常的状态放在前面
+    CANCEL_REQUESTED( 1, "申请撤销"),    // 1
+    CANCELLED( 2, "已撤销"),             // 2
+    TIMEOUT( 3, "已超时"),               // 4
 
-    CANCEL_REQUESTED( 15, "申请撤销"),    // 16
-    CANCELLED( 6, "已撤销"),             // 32
-    TIMEOUT( 7, "已超时"),               // 64
+
+    CREATED( 4, "已创建"),               // 8
+    PAY_TODO( 5, "待支付"),              // 16
+    PAY_PROCESS( 6, "支付中"),           // 32
+    PAID( 7, "已支付"),                  // 64
 
     ORDER_RECEIVED( 8, "已接单"),        // 128
-    SHOP_SAMPLE( 9, "已打样"),           // 256
-    SHOP_SAMPLE_CONFIRMED( 10, "确认打样"), // 512
-    CONFIRM_SHIPMENT( 11, "发货确认"), // 512
+
+
+    SHOP_SAMPLE( 9, "已打样"),           //
+    SHOP_SAMPLE_CONFIRMED( 10, "确认打样"), //
+    CONFIRM_SHIPMENT( 11, "发货确认"), //
 
 
     AGREED_TO_SHIP( 12, "同意发货"),   // 4096

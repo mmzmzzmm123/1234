@@ -13,13 +13,17 @@ import com.ruoyi.common.utils.bean.BeanUtils;
 import com.ruoyi.common.utils.file.FileUploadUtils;
 import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.framework.aspectj.DataScopeAspect;
+import com.ruoyi.portal.form.BusPostCursorForm;
 import com.ruoyi.portal.form.BusPostOrderForm;
+import com.ruoyi.portal.response.PostOrderResponse;
 import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.service.extra.BusPostOrderExtraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
 
@@ -57,21 +61,24 @@ public class PostOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('api:order')")
     public AjaxResult postOrder(@RequestBody BusPostOrderForm busPostOrderForm) {
         BusPostOrder busPostOrder = busPostOrderService.postOrder(busPostOrderForm);
-        return busPostOrder != null ? AjaxResult.success(busPostOrder) : AjaxResult.error();
+        PostOrderResponse response = BeanUtils.convert(busPostOrder, PostOrderResponse.class);
+        return busPostOrder != null ? AjaxResult.success(response) : AjaxResult.error();
     }
 
     /**
-     * 订单列表
+     * 订单列表 正序分页 即时间从小到大开始检索 这样可以避免数据混乱
+     * <p>
+     * //CursorForm
      *
-     * @param busPostOrderForm
+     * @param busPostCursorForm
      * @return
      */
     @RepeatSubmit
     @PostMapping("/list")
     @PreAuthorize("@ss.hasPermi('api:order')")
-    public TableDataInfo postOrderList(@RequestBody BusPostOrderForm busPostOrderForm) {
-        startPage();
-        return getDataTable(busPostOrderService.list(busPostOrderForm));
+    public AjaxResult postOrderList(BusPostCursorForm busPostCursorForm) {
+        List<BusPostOrder> list = busPostOrderService.list(busPostCursorForm);
+        return AjaxResult.success(BeanUtils.convertList(list, PostOrderResponse.class));
     }
 
 
@@ -98,9 +105,9 @@ public class PostOrderController extends BaseController {
     @GetMapping("/findOrderListByUserId")
     @PreAuthorize("@ss.hasPermi('api:order')")
     @DataScope(userAlias = DataScopeAspect.DATA_SCOPE_SELF)
-    public TableDataInfo findOrderListByUserId(@RequestBody BusPostOrderForm busPostOrderForm) {
+    public TableDataInfo findOrderListByUserId(BusPostOrderForm busPostOrderForm) {
         startPage();
-        return  getDataTable(busPostOrderService.findOrderListByUserId(busPostOrderForm));
+        return getDataTable(busPostOrderService.findOrderListByUserId(busPostOrderForm));
     }
 
 
@@ -113,7 +120,7 @@ public class PostOrderController extends BaseController {
     }
 
     /**
-     * 商家图片上传 todo:有优化的点
+     * 商家图片上传 todo:有优化的点 但是觉得用户量小没必要
      *
      * @param file
      * @return

@@ -1,5 +1,6 @@
 package com.ruoyi.system.service.extra;
 
+import com.ruoyi.portal.form.BusPostCursorForm;
 import com.ruoyi.portal.form.BusPostOrderForm;
 import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.service.IBusPostOrderService;
@@ -37,5 +38,5 @@ public interface BusPostOrderExtraService extends IBusPostOrderService {
 
     BusPostOrder orderTimeout(Long aLong);
 
-    List<BusPostOrder> list(BusPostOrderForm busPostOrderForm);
+    List<BusPostOrder> list(BusPostCursorForm busPostOrderForm);
 }

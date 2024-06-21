@@ -9,6 +9,7 @@ import com.ruoyi.common.utils.PageUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StatusUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
+import com.ruoyi.portal.form.BusPostCursorForm;
 import com.ruoyi.portal.form.BusPostOrderForm;
 import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.domain.BusTransactions;
@@ -167,9 +168,24 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
             throw new RuntimeException("用户信息异常");
         }
         Boolean orderPending = busPostOrderForm.getOrderPending();
-        //是否已经接单   如果没有状态字段查询所有订单 如果有的话根据状态查询
-        List<Integer> statusList = orderPending == null ? null : (orderPending ? getPendingStatus() : getReceivedStatus());
-        return busPostOrderExtraMapper.findOrderListByUserId(statusList, userId);
+        //在状态中 从已创建这个状态开始到后面都是连续的 已接单对应的10进制的数是128 所以当状态>=128的情况下 当前商品一定处于已接单的状态
+        Integer fullBitStatus = StatusUtils.getIntByBit(PostOrderStatus.ORDER_RECEIVED.getValue());//获取在未接单的状态下的最大状态值
+
+        //如果已接单状态区间就是 fullBitStatus(128)-> （1<<PostOrderStatus.COMPLETED.getValue()）-1 这个区间
+        //如果是未接单状态就是 0-128（(1<<PostOrderStatus.ORDER_RECEIVED.getValue())-1）这样的状态区间
+        Integer startStatus = null;
+        Integer endStatus = null;
+        if (null != orderPending) {
+            startStatus = orderPending ? fullBitStatus : 0;
+            endStatus = orderPending ? StatusUtils.getFullBitStatus(PostOrderStatus.COMPLETED.getValue()) : fullBitStatus;
+        }
+        return busPostOrderExtraMapper.findOrderListByUserId(startStatus, endStatus, userId);
+    }
+
+    public static void main(String[] args) {
+        int value = PostOrderStatus.ORDER_RECEIVED.getValue();
+        Integer fullBitStatus = StatusUtils.getIntByBit(value);
+        System.out.println(fullBitStatus);
     }
 
     @Override
@@ -244,7 +260,8 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
     }
 
     @Override
-    public List<BusPostOrder> list(BusPostOrderForm busPostOrderForm) {
+    public List<BusPostOrder> list(BusPostCursorForm busPostOrderForm) {
+
         //todo:
         return null;
     }
@@ -261,7 +278,6 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
                 PostOrderStatus.SHIPPED_RETURNED.getValue(),
                 PostOrderStatus.RETURN_REQUESTED.getValue(),
                 PostOrderStatus.SHIPPED_RECEIVED.getValue(),
-
                 PostOrderStatus.CONFIRM_SHIPMENT.getValue(),
                 PostOrderStatus.SHOP_SAMPLE_CONFIRMED.getValue(),
                 PostOrderStatus.SHOP_SAMPLE.getValue(),
@@ -270,10 +286,6 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
                 PostOrderStatus.CANCELLED.getValue(),
                 PostOrderStatus.CANCEL_REQUESTED.getValue()
         );
-//        ArrayList<Integer> statusList = new ArrayList<>();
-//        statusList.add(PostOrderStatus.CREATED.getValue());//创建
-//        statusList.add(StatusUtils.updateStatus(PostOrderStatus.CREATED.getValue(), PostOrderStatus.CREATED.getValue()));//已支付
-//        return statusList;
     }
 
     /**
