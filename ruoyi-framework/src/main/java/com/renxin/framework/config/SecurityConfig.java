@@ -1,8 +1,5 @@
 package com.renxin.framework.config;
 
-import com.renxin.framework.security.filter.AppJwtAuthenticationTokenFilter;
-import com.renxin.framework.security.filter.ConsultJwtAuthenticationTokenFilter;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.annotation.Order;
@@ -57,12 +54,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Autowired
     private JwtAuthenticationTokenFilter authenticationTokenFilter;
 
-    @Autowired
-    private AppJwtAuthenticationTokenFilter appJwtAuthenticationTokenFilter;
-
-    @Autowired
-    private ConsultJwtAuthenticationTokenFilter consultJwtAuthenticationTokenFilter;
-    
     /**
      * 跨域过滤器
      */
@@ -137,9 +128,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
         // 添加CORS filter
         httpSecurity.addFilterBefore(corsFilter, JwtAuthenticationTokenFilter.class);
         httpSecurity.addFilterBefore(corsFilter, LogoutFilter.class);
-        // 添加app JWT filter
-        httpSecurity.addFilterBefore(appJwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
-        httpSecurity.addFilterBefore(consultJwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     /**

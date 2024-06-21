@@ -3,6 +3,7 @@ package com.renxin.framework.web.service;
 import com.renxin.common.constant.CacheConstants;
 import com.renxin.common.constant.Constants;
 import com.renxin.common.core.domain.dto.ConsultDTO;
+import com.renxin.common.core.domain.entity.SysDictData;
 import com.renxin.common.core.redis.RedisCache;
 import com.renxin.common.utils.ServletUtils;
 import com.renxin.common.utils.StringUtils;
@@ -10,6 +11,9 @@ import com.renxin.common.utils.ip.AddressUtils;
 import com.renxin.common.utils.ip.IpUtils;
 import com.renxin.common.utils.spring.SpringUtils;
 import com.renxin.common.utils.uuid.IdUtils;
+import com.renxin.system.service.ISysDeptService;
+import com.renxin.system.service.ISysDictDataService;
+import com.renxin.system.service.ISysUserService;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -19,8 +23,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 
+import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -32,20 +38,13 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class ConsultantTokenService {
     // 令牌自定义标识
-    @Value("${consultant.token.header}")
     private String header;
 
     // 令牌秘钥
-    @Value("${consultant.token.secret}")
     private String secret;
 
     // 令牌有效期（默认30分钟）单位为s
-    @Value("${consultant.token.expireTime}")
     private int expireTime;
-
-    // 客户端类型
-    @Value("${consultant.token.clientType}")
-    private String clientType;
 
     protected static final long MILLIS_SECOND = 1000;
 
@@ -55,6 +54,41 @@ public class ConsultantTokenService {
 
     @Autowired
     private RedisCache redisCache;
+
+    @Autowired
+    private ISysDictDataService sysDictDataService;
+
+    // 定义常量：咨询师授权令牌的关键字，用于在令牌存储或传输中作为标识。
+    private static final String DICT_CONSULTANT_KEY = "consultant_auth_token";
+    // 定义常量：咨询师令牌的头部标识，用于在HTTP请求中携带令牌。
+    private static final String DICT_CONSULTANT_HEARDER = "consultant.token.header";
+    // 定义常量：咨询师令牌的密钥，用于生成和验证令牌的完整性。
+    private static final String DICT_CONSULTANT_SECRET = "consultant.token.secret";
+    // 定义常量：咨询师令牌的过期时间关键字，用于存储或检查令牌的有效期。
+    private static final String DICT_CONSULTANT_EXPIRETIME = "consultant.token.expireTime";
+
+
+    @PostConstruct
+    public void init() {
+
+        SysDictData dictData = new SysDictData();
+        dictData.setDictType(DICT_CONSULTANT_KEY);
+
+        List<SysDictData> list = sysDictDataService.selectDictDataList(dictData);
+        if (ObjectUtils.isEmpty(list)) {
+            throw new RuntimeException("获取令牌秘钥失败");
+        }
+
+        for (SysDictData dict : list){
+            if (DICT_CONSULTANT_HEARDER.equals(dict.getDictLabel())){
+                header = dict.getDictValue();
+            }else if (DICT_CONSULTANT_SECRET.equals(dict.getDictLabel())){
+                secret = dict.getDictValue();
+            }else if (DICT_CONSULTANT_EXPIRETIME.equals(dict.getDictLabel())){
+                expireTime = Integer.parseInt(dict.getDictValue());
+            }
+        }
+    }
 
     /**
      *
@@ -172,7 +206,6 @@ public class ConsultantTokenService {
         loginUser.setLoginLocation(AddressUtils.getRealAddressByIP(ip));
         loginUser.setBrowser(userAgent.getBrowser().getName());
         loginUser.setOs(userAgent.getOperatingSystem().getName());
-        loginUser.setClientType(clientType);
     }
 
     /**

@@ -252,10 +252,3 @@ wxchat:
 #    appId: wxb973c5107125a24b
 #    appSecret: ad2c1dd102b31f8d6ac942882180ae71
 #    redirectUri: http://192.168.137.1:8081/pages/logincallback
-
-consultant:
-  token:
-    header: Authorization
-    clientType: consultant
-    secret: f259b9c0951de86bcfda3e482e7b3c45
-    expireTime: 1200000
