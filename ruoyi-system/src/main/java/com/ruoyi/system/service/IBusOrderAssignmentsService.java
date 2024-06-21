@@ -7,7 +7,7 @@ import com.ruoyi.system.domain.BusOrderAssignments;
  * 记录用户接单的信息Service接口
  * 
  * @author ruoyi
- * @date 2024-06-18
+ * @date 2024-06-20
  */
 public interface IBusOrderAssignmentsService 
 {

@@ -233,10 +233,10 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         //todo:这里订单超时有问题 需要修改
         BusPostOrder oldOrder = selectBusPostOrderByOrderId(orderId);
         Integer status = oldOrder.getStatus();
-        if (!StatusUtils.hasStatus(status, PostOrderStatus.SHOP_SAMPLE.getValue())) {
+        if (!StatusUtils.hasStatus(status, PostOrderStatus.CONFIRM_SHIPMENT.getValue())) {
             updateOrderValidity(orderId, OrderValidityStatus.ORDER_TIMEOUT.getValue());
         }
-        return null;
+        return oldOrder;
     }
 
     /**
@@ -246,16 +246,18 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
      */
     public List<Integer> getPendingStatus() {
         return StatusUtils.getStatusListExcluded(PostOrderStatus.values().length,
-                PostOrderStatus.CONFIRM_SHIPMENT.getValue(),
-                PostOrderStatus.SHIPPED_RECEIVED.getValue(),
-                PostOrderStatus.RETURN_REQUESTED.getValue(),
-                PostOrderStatus.SHIPPED_RETURNED.getValue(),
                 PostOrderStatus.COMPLETED.getValue(),
-                PostOrderStatus.SHOP_SAMPLE.getValue(),
+                PostOrderStatus.SHIPPED_RETURNED.getValue(),
+                PostOrderStatus.RETURN_REQUESTED.getValue(),
+                PostOrderStatus.SHIPPED_RECEIVED.getValue(),
+
+                PostOrderStatus.CONFIRM_SHIPMENT.getValue(),
+                PostOrderStatus.SHOP_SAMPLE_CONFIRMED.getValue(),
                 PostOrderStatus.SHOP_SAMPLE.getValue(),
                 PostOrderStatus.ORDER_RECEIVED.getValue(),
                 PostOrderStatus.TIMEOUT.getValue(),
-                PostOrderStatus.CANCELLED.getValue()
+                PostOrderStatus.CANCELLED.getValue(),
+                PostOrderStatus.CANCEL_REQUESTED.getValue()
         );
 //        ArrayList<Integer> statusList = new ArrayList<>();
 //        statusList.add(PostOrderStatus.CREATED.getValue());//创建

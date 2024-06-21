@@ -47,7 +47,7 @@ public enum OrderAssignmentStatus {
     CANCEL_REQUESTED(3, "申请撤销"),           // 3
     CANCELLED(4, "已撤销"),                   // 4
 
-    SHOP_CLOSED(5, "已打烊"),                 // 5
+    SHOP_SAMPLE(5, "已打烊"),                 // 5
 
     IN_PRODUCTION(6, "制作中"),                // 6
     PRODUCTION_COMPLETED(7, "制作完成"),       // 7

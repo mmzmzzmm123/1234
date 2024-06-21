@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 2024-06-20     张李鑫                     1.0         1.0 Version
  */
 @RestController
-@RequestMapping("/api/postOrder")
+@RequestMapping("/api/orderAssignments")
 public class OrderAssignmentsController {
 
     @Autowired
@@ -34,6 +34,16 @@ public class OrderAssignmentsController {
      */
     @RequestMapping("/takeOrder")
     public AjaxResult takeOrder(Long orderId) {
+        return AjaxResult.success(orderService.takeOrder(orderId));
+    }
+
+
+    /**
+     * 抢单
+     * @return
+     */
+    @RequestMapping("/sample")
+    public AjaxResult sample(Long orderId) {
         return AjaxResult.success(orderService.takeOrder(orderId));
     }
 

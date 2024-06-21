@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.OrderAssignmentImagesMapper">
+    
+    <resultMap type="OrderAssignmentImages" id="OrderAssignmentImagesResult">
+        <result property="imageId"    column="image_id"    />
+        <result property="assignmentId"    column="assignment_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="imageUrl"    column="image_url"    />
+        <result property="uploadedAt"    column="uploaded_at"    />
+    </resultMap>
+
+    <sql id="selectOrderAssignmentImagesVo">
+        select image_id, assignment_id, user_id, order_id, image_url, uploaded_at from order_assignment_images
+    </sql>
+
+    <select id="selectOrderAssignmentImagesList" parameterType="OrderAssignmentImages" resultMap="OrderAssignmentImagesResult">
+        <include refid="selectOrderAssignmentImagesVo"/>
+        <where>  
+            <if test="assignmentId != null "> and assignment_id = #{assignmentId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="imageUrl != null  and imageUrl != ''"> and image_url = #{imageUrl}</if>
+            <if test="uploadedAt != null "> and uploaded_at = #{uploadedAt}</if>
+        </where>
+    </select>
+    
+    <select id="selectOrderAssignmentImagesByImageId" parameterType="Long" resultMap="OrderAssignmentImagesResult">
+        <include refid="selectOrderAssignmentImagesVo"/>
+        where image_id = #{imageId}
+    </select>
+
+    <insert id="insertOrderAssignmentImages" parameterType="OrderAssignmentImages" useGeneratedKeys="true" keyProperty="imageId">
+        insert into order_assignment_images
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="assignmentId != null">assignment_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="imageUrl != null and imageUrl != ''">image_url,</if>
+            <if test="uploadedAt != null">uploaded_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="assignmentId != null">#{assignmentId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="imageUrl != null and imageUrl != ''">#{imageUrl},</if>
+            <if test="uploadedAt != null">#{uploadedAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOrderAssignmentImages" parameterType="OrderAssignmentImages">
+        update order_assignment_images
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="assignmentId != null">assignment_id = #{assignmentId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="imageUrl != null and imageUrl != ''">image_url = #{imageUrl},</if>
+            <if test="uploadedAt != null">uploaded_at = #{uploadedAt},</if>
+        </trim>
+        where image_id = #{imageId}
+    </update>
+
+    <delete id="deleteOrderAssignmentImagesByImageId" parameterType="Long">
+        delete from order_assignment_images where image_id = #{imageId}
+    </delete>
+
+    <delete id="deleteOrderAssignmentImagesByImageIds" parameterType="String">
+        delete from order_assignment_images where image_id in 
+        <foreach item="imageId" collection="array" open="(" separator="," close=")">
+            #{imageId}
+        </foreach>
+    </delete>
+</mapper>

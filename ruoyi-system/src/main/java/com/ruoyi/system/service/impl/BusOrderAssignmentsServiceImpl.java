@@ -11,7 +11,7 @@ import com.ruoyi.system.service.IBusOrderAssignmentsService;
  * 记录用户接单的信息Service业务层处理
  * 
  * @author ruoyi
- * @date 2024-06-18
+ * @date 2024-06-20
  */
 @Service
 public class BusOrderAssignmentsServiceImpl implements IBusOrderAssignmentsService 

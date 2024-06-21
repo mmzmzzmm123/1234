@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BusArbitrationsMapper">
+    
+    <resultMap type="BusArbitrations" id="BusArbitrationsResult">
+        <result property="arbitrationId"    column="arbitration_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="requestedBy"    column="requested_by"    />
+        <result property="reason"    column="reason"    />
+        <result property="status"    column="status"    />
+        <result property="result"    column="result"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+    </resultMap>
+
+    <sql id="selectBusArbitrationsVo">
+        select arbitration_id, order_id, requested_by, reason, status, result, created_at, updated_at from bus_arbitrations
+    </sql>
+
+    <select id="selectBusArbitrationsList" parameterType="BusArbitrations" resultMap="BusArbitrationsResult">
+        <include refid="selectBusArbitrationsVo"/>
+        <where>  
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="requestedBy != null "> and requested_by = #{requestedBy}</if>
+            <if test="reason != null  and reason != ''"> and reason = #{reason}</if>
+            <if test="status != null "> and status = #{status}</if>
+            <if test="result != null  and result != ''"> and result = #{result}</if>
+            <if test="createdAt != null "> and created_at = #{createdAt}</if>
+            <if test="updatedAt != null "> and updated_at = #{updatedAt}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusArbitrationsByArbitrationId" parameterType="Long" resultMap="BusArbitrationsResult">
+        <include refid="selectBusArbitrationsVo"/>
+        where arbitration_id = #{arbitrationId}
+    </select>
+
+    <insert id="insertBusArbitrations" parameterType="BusArbitrations" useGeneratedKeys="true" keyProperty="arbitrationId">
+        insert into bus_arbitrations
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">order_id,</if>
+            <if test="requestedBy != null">requested_by,</if>
+            <if test="reason != null">reason,</if>
+            <if test="status != null">status,</if>
+            <if test="result != null">result,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderId != null">#{orderId},</if>
+            <if test="requestedBy != null">#{requestedBy},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="status != null">#{status},</if>
+            <if test="result != null">#{result},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusArbitrations" parameterType="BusArbitrations">
+        update bus_arbitrations
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="requestedBy != null">requested_by = #{requestedBy},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="result != null">result = #{result},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+        </trim>
+        where arbitration_id = #{arbitrationId}
+    </update>
+
+    <delete id="deleteBusArbitrationsByArbitrationId" parameterType="Long">
+        delete from bus_arbitrations where arbitration_id = #{arbitrationId}
+    </delete>
+
+    <delete id="deleteBusArbitrationsByArbitrationIds" parameterType="String">
+        delete from bus_arbitrations where arbitration_id in 
+        <foreach item="arbitrationId" collection="array" open="(" separator="," close=")">
+            #{arbitrationId}
+        </foreach>
+    </delete>
+</mapper>
