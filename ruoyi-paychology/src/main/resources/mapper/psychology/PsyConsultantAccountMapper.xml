@@ -90,4 +90,15 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             #{consultantId}
         </foreach>
     </delete>
+
+    <insert id="initAccount">
+        insert into psy_consultant_account (consultant_id,withdrawal_password, status, create_by,create_time,update_by,update_time)
+        SELECT id as consultant_id,'123456' as withdrawal_password,'1' as status,'admin' as create_by, create_time,'admin' as update_by, update_time
+        FROM psy_consult t
+        where not exists (
+        SELECT id
+        FROM psy_consultant_account t2
+        WHERE t2.consultant_id = t.id
+        )
+    </insert>
 </mapper>

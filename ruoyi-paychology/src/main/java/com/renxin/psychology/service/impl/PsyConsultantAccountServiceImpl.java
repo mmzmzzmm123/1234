@@ -20,6 +20,11 @@ public class PsyConsultantAccountServiceImpl implements IPsyConsultantAccountSer
     @Autowired
     private PsyConsultantAccountMapper psyConsultantAccountMapper;
 
+    @Override
+    public void initAccount() {
+        psyConsultantAccountMapper.initAccount();
+    }
+
     /**
      * 查询账户
      * 

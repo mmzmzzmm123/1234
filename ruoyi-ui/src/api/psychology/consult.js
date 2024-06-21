@@ -41,6 +41,14 @@ export function adminListConsult(query) {
   })
 }
 
+export function accountListConsult(query) {
+  return request({
+    url: '/finance/account/List',
+    method: 'get',
+    params: query
+  })
+}
+
 // 查询咨询类型详细
 export function getConsult(id) {
   return request({

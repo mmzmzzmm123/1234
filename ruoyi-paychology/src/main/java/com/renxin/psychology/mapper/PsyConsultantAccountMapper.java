@@ -12,6 +12,9 @@ import java.util.List;
  */
 public interface PsyConsultantAccountMapper 
 {
+
+    public void initAccount();
+
     /**
      * 查询账户
      * 

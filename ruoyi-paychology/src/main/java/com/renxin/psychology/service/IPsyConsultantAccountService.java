@@ -12,6 +12,7 @@ import java.util.List;
  */
 public interface IPsyConsultantAccountService 
 {
+    public void initAccount();
     /**
      * 查询账户
      * 

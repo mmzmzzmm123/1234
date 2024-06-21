@@ -104,7 +104,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -141,7 +141,7 @@
 </template>
 
 <script>
-import { listAddress, getAddress, delAddress, addAddress, updateAddress } from "@/api/system/address";
+import { listAddress, getAddress, delAddress, addAddress, updateAddress } from "@/api/psychology/address";
 
 export default {
   name: "Address",

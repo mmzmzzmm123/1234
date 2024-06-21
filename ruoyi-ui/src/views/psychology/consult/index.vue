@@ -51,17 +51,6 @@
           >新增</el-button>
         </router-link>
       </el-col>
-<!--      <el-col :span="1.5">-->
-<!--        <el-button-->
-<!--          type="danger"-->
-<!--          plain-->
-<!--          icon="el-icon-delete"-->
-<!--          size="mini"-->
-<!--          :disabled="multiple"-->
-<!--          @click="handleDelete"-->
-<!--          v-hasPermi="['psychology:consult:remove']"-->
-<!--        >删除</el-button>-->
-<!--      </el-col>-->
       <el-col :span="1.5">
         <el-button
           type="warning"
@@ -113,6 +102,9 @@
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button  size="mini" type="text" @click="handleFinanceWin(scope.row)">
+             账户余额
+          </el-button>
           <el-button
             size="mini"
             type="text"
@@ -125,13 +117,6 @@
             @click="handleUpdate(scope.row)"
             v-hasPermi="['psychology:consult:edit']"
           >修改</el-button>
-<!--          <el-button-->
-<!--            size="mini"-->
-<!--            type="text"-->
-<!--            icon="el-icon-delete"-->
-<!--            @click="handleDelete(scope.row)"-->
-<!--            v-hasPermi="['psychology:consult:remove']"-->
-<!--          >删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>
@@ -157,19 +142,28 @@
         <el-button @click="cancelServe">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 咨询师账户余额信息 -->
+    <el-dialog title="账户余额" :visible.sync="openFinanceRef" width="900px" append-to-body>
+      <account-ref v-if="openFinanceRef" :id="consultId" @setServe="setServe"/>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancelFinance">取 消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { refConsultServe, adminListConsult, delConsult, updateConsult } from "@/api/psychology/consult";
+import { refConsultServe, adminListConsult, delConsult, updateConsult,accountListConsult } from "@/api/psychology/consult";
 
 import serve from "./serve";
 import serveRef from "./serveRef";
+import accountRef from "../account/index";
 import { checkPermi } from "@/utils/permission";
 
 export default {
   name: "Consult",
-  components: { serve, serveRef },
+  components: { serve, serveRef ,accountRef},
   // dicts: ['consult_sex','consult_type'],
   data() {
     return {
@@ -198,6 +192,7 @@ export default {
       // 服务编辑弹出层
       openServe: false,
       openServeRef: false,
+      openFinanceRef: false,
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -259,6 +254,10 @@ export default {
       this.consultId = ''
       this.cIds = []
     },
+    cancelFinance() {
+      this.openFinanceRef = false;
+      this.consultId = ''
+    },
     setServe (ids) {
       this.cIds = ids
     },
@@ -267,6 +266,12 @@ export default {
       this.consultId = row.id
       this.openServeRef = true;
       this.titleServe = "关联服务";
+    },
+    /** 财务按钮操作 */
+    handleFinanceWin(row) {
+      this.consultId = row.id
+      this.openFinanceRef = true;
+      this.titleServe = "财务服务";
     },
     /** 修改服务按钮操作 */
     handleServeList(row) {
@@ -284,6 +289,15 @@ export default {
     getList() {
       this.loading = true;
       adminListConsult(this.queryParams).then(response => {
+        this.consultList = response.rows;
+        this.total = response.total;
+        this.loading = false;
+      });
+    },
+    /** 查询账户信息列表 */
+    getFinanceList() {
+      this.loading = true;
+      accountListConsult(this.queryParams).then(response => {
         this.consultList = response.rows;
         this.total = response.total;
         this.loading = false;

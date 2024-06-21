@@ -94,7 +94,7 @@
         </template>
       </el-table-column>
     </el-table>
-    
+
     <pagination
       v-show="total>0"
       :total="total"
@@ -125,7 +125,7 @@
 </template>
 
 <script>
-import { listDebitcard, getDebitcard, delDebitcard, addDebitcard, updateDebitcard } from "@/api/system/debitcard";
+import { listDebitcard, getDebitcard, delDebitcard, addDebitcard, updateDebitcard } from "@/api/psychology/debitcard";
 
 export default {
   name: "Debitcard",
