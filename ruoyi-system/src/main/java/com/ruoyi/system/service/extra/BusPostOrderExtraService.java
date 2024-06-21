@@ -21,7 +21,7 @@ import java.util.List;
  * 2024-06-18     张李鑫                     1.0         1.0 Version
  */
 public interface BusPostOrderExtraService extends IBusPostOrderService {
-    int postOrder(BusPostOrder busPostOrder);
+    BusPostOrder postOrder(BusPostOrderForm busPostOrder);
 
     void payOrder(BusPostOrderForm busPostOrderForm);
 
@@ -36,4 +36,6 @@ public interface BusPostOrderExtraService extends IBusPostOrderService {
     BusPostOrder checkOrderTimeoutAndSampling(Long orderId);
 
     BusPostOrder orderTimeout(Long aLong);
+
+    List<BusPostOrder> list(BusPostOrderForm busPostOrderForm);
 }

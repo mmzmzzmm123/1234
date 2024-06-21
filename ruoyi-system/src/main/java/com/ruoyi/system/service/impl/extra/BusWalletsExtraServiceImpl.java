@@ -31,7 +31,7 @@ import java.util.List;
  * 2024-06-18     张李鑫                     1.0         1.0 Version
  */
 @Primary
-@Service("BusWalletsExtraService")
+@Service
 public class BusWalletsExtraServiceImpl extends BusWalletsServiceImpl implements BusWalletsExtraService {
     @Autowired
     private BusWalletsExtraMapper busWalletsExtraMapper;

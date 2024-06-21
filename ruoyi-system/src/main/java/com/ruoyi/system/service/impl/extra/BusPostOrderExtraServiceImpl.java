@@ -14,8 +14,10 @@ import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.domain.BusTransactions;
 import com.ruoyi.system.manager.PayManager;
 import com.ruoyi.system.mapper.extra.BusPostOrderExtraMapper;
+import com.ruoyi.system.service.IPostOrderImagesService;
 import com.ruoyi.system.service.extra.BusOrderAssignmentsExtraService;
 import com.ruoyi.system.service.extra.BusPostOrderExtraService;
+import com.ruoyi.system.service.extra.IPostOrderImagesExtraService;
 import com.ruoyi.system.service.impl.BusPostOrderServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +64,10 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
     @Autowired
     private BusOrderAssignmentsExtraService busOrderAssignmentsExtraService;
 
+
+    @Autowired
+    private IPostOrderImagesExtraService postOrderImagesExtraService;
+
     /**
      * 新增订单
      *
@@ -90,21 +96,24 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
     /**
      * 发布订单
      *
-     * @param busPostOrder
+     * @param busPostOrderForm
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public int postOrder(BusPostOrder busPostOrder) {
-        SysUser user = SecurityUtils.getLoginUser().getUser();
-        Long userId = user.getUserId();
+    public BusPostOrder postOrder(BusPostOrderForm busPostOrderForm) {
+        BusPostOrder busPostOrder = new BusPostOrder();
+        BeanUtils.copyProperties(busPostOrderForm, busPostOrder);
+
         busPostOrder.setOrderId(null);
-        busPostOrder.setMerchantId(userId);
+        busPostOrder.setMerchantId(SecurityUtils.getLoginUser().getUser().getUserId());
+
         busPostOrder.setStatus(PostOrderStatus.CREATED.getValue());
         busPostOrder.setOrderValidityStatus(OrderValidityStatus.NORMAL.getValue());
         int orderCount = insertBusPostOrder(busPostOrder);
+        int imageCount = postOrderImagesExtraService.insertPostOrderImageBatch(busPostOrderForm.getImageList(), busPostOrder.getOrderId());
         int orderAssignmentCount = busOrderAssignmentsExtraService.createByOrder(busPostOrder);
         //只要有不成功的返回的都是0
-        return orderCount * orderAssignmentCount;
+        return orderCount * imageCount * orderAssignmentCount > 0 ? busPostOrder : null;
     }
 
     @Override
@@ -118,17 +127,14 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.PAID.getValue())) {
             throw new RuntimeException("无法支付他人订单");
         }
-
         BusTransactions busTransactions = new BusTransactions();
         busTransactionsExtraService.insertBusTransactions(busTransactions);
         //支付成功 更新状态 新增支付流水记录
         updateBusPostOrder(buildPayOrder(orderId, payType, busPostOrder.getStatus()));
-
         boolean paySuccess = payManager.pay(payType, busPostOrder.getAmount());
         if (!paySuccess) {
             throw new RuntimeException("支付失败");
         }
-
         busTransactionsExtraService.updateBusTransactions(busTransactions);
     }
 
@@ -160,11 +166,9 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         if (userId == null) {
             throw new RuntimeException("用户信息异常");
         }
-        PageUtils.startPage();
         Boolean orderPending = busPostOrderForm.getOrderPending();
         //是否已经接单   如果没有状态字段查询所有订单 如果有的话根据状态查询
         List<Integer> statusList = orderPending == null ? null : (orderPending ? getPendingStatus() : getReceivedStatus());
-        PageUtils.startPage();
         return busPostOrderExtraMapper.findOrderListByUserId(statusList, userId);
     }
 
@@ -238,6 +242,13 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         }
         return oldOrder;
     }
+
+    @Override
+    public List<BusPostOrder> list(BusPostOrderForm busPostOrderForm) {
+        //todo:
+        return null;
+    }
+
 
     /**
      * 获取未接单的状态

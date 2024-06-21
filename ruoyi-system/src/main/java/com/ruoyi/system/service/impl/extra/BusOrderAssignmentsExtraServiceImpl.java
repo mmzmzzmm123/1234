@@ -28,7 +28,7 @@ import java.util.Date;
  * 2024-06-19     张李鑫                     1.0         1.0 Version
  */
 @Primary
-@Service("BusOrderAssignmentsExtraServiceImpl")
+@Service
 public class BusOrderAssignmentsExtraServiceImpl extends BusOrderAssignmentsServiceImpl implements BusOrderAssignmentsExtraService {
 
 

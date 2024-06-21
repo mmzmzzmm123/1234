@@ -5,6 +5,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
 import com.ruoyi.common.xss.Xss;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Description:
@@ -42,7 +43,7 @@ public class BusPostOrderForm extends BaseEntity {
 
     /** 打烊时间 */
     @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date closingTime;
+    private Date sampleTime;
 
     private Integer payType;
 
@@ -66,9 +67,13 @@ public class BusPostOrderForm extends BaseEntity {
     /** 收货地址 */
     private String address;
 
+    /**
+     * false:未接单 true:已接单
+     */
     private Boolean orderPending;
 
 
+    private List<String>imageList;
     public static void main(String[] args) {
         //1000*5/
 //        System.out.println(1*95/100);
@@ -138,12 +143,12 @@ public class BusPostOrderForm extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public Date getClosingTime() {
-        return closingTime;
+    public Date getSampleTime() {
+        return sampleTime;
     }
 
-    public void setClosingTime(Date closingTime) {
-        this.closingTime = closingTime;
+    public void setSampleTime(Date sampleTime) {
+        this.sampleTime = sampleTime;
     }
 
     public Long getSecurityDeposit() {
@@ -194,22 +199,11 @@ public class BusPostOrderForm extends BaseEntity {
         this.address = address;
     }
 
-    @Override
-    public String toString() {
-        return "BusPostOrderForm{" +
-                "orderId=" + orderId +
-                ", title='" + title + '\'' +
-                ", amount=" + amount +
-                ", validityPeriod=" + validityPeriod +
-                ", productType=" + productType +
-                ", quantity=" + quantity +
-                ", closingTime=" + closingTime +
-                ", securityDeposit=" + securityDeposit +
-                ", shippingParty='" + shippingParty + '\'' +
-                ", remarks='" + remarks + '\'' +
-                ", tutorialUrl='" + tutorialUrl + '\'' +
-                ", partialShipment=" + partialShipment +
-                ", address='" + address + '\'' +
-                '}';
+    public List<String> getImageList() {
+        return imageList;
+    }
+
+    public void setImageList(List<String> imageList) {
+        this.imageList = imageList;
     }
 }
