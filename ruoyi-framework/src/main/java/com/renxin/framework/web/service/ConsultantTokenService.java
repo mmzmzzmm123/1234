@@ -69,7 +69,7 @@ public class ConsultantTokenService {
 
 
     @PostConstruct
-    public void init() {
+    public String initData() {
 
         SysDictData dictData = new SysDictData();
         dictData.setDictType(DICT_CONSULTANT_KEY);
@@ -88,6 +88,7 @@ public class ConsultantTokenService {
                 expireTime = Integer.parseInt(dict.getDictValue());
             }
         }
+        return header;
     }
 
     /**

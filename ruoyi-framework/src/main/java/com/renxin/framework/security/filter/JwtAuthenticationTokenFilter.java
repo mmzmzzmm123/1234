@@ -60,22 +60,26 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
             }
         }
 
-        // 检查是否为咨询用户，并进行身份验证
-        String consultantHeaderName = request.getHeader(consultantHeader);
-        if(StringUtils.isNotEmpty(consultantHeaderName)){
-            // 获取当前登录的咨询用户
-            ConsultDTO consultUser = consultantTokenService.getLoginUser(request);
-            // 当咨询用户存在且当前认证为空时，进行身份验证
-            if (StringUtils.isNotNull(consultUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
-            {
-                // 验证用户令牌
-                consultantTokenService.verifyToken(consultUser);
-                // 创建并设置认证令牌
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(consultUser, null, consultUser.getAuthorities());
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        this.consultantHeader = consultantTokenService.initData();
+        if(StringUtils.isNotEmpty(consultantHeader)){
+            // 检查是否为咨询用户，并进行身份验证
+            String consultantHeaderName = request.getHeader(consultantHeader);
+            if(StringUtils.isNotEmpty(consultantHeaderName)){
+                // 获取当前登录的咨询用户
+                ConsultDTO consultUser = consultantTokenService.getLoginUser(request);
+                // 当咨询用户存在且当前认证为空时，进行身份验证
+                if (StringUtils.isNotNull(consultUser) && StringUtils.isNull(SecurityUtils.getAuthentication()))
+                {
+                    // 验证用户令牌
+                    consultantTokenService.verifyToken(consultUser);
+                    // 创建并设置认证令牌
+                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(consultUser, null, consultUser.getAuthorities());
+                    authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+                }
             }
         }
+
         chain.doFilter(request, response);
     }
 }
