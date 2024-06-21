@@ -31,7 +31,6 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
     @Value("${token.header}")
     private String appHeader;
 
-    @Value("${consultant.token.header}")
     private String consultantHeader;
 
     @Autowired
