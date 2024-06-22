@@ -145,7 +145,7 @@
 
     <!-- 咨询师账户余额信息 -->
     <el-dialog title="账户余额" :visible.sync="openFinanceRef" width="900px" append-to-body>
-      <account-ref v-if="openFinanceRef" :id="consultId" @setServe="setServe"/>
+      <account-ref v-if="openFinanceRef" :id="bingConsultId"/>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelFinance">取 消</el-button>
       </div>
@@ -193,6 +193,7 @@ export default {
       openServe: false,
       openServeRef: false,
       openFinanceRef: false,
+      bingConsultId: '',
       // 查询参数
       queryParams: {
         pageNum: 1,
@@ -269,7 +270,9 @@ export default {
     },
     /** 财务按钮操作 */
     handleFinanceWin(row) {
-      this.consultId = row.id
+      console.log(row.id);
+      this.bingConsultId = row.id
+      console.log(this.bingConsultId)
       this.openFinanceRef = true;
       this.titleServe = "财务服务";
     },

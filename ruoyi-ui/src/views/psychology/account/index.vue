@@ -2,9 +2,21 @@
   <div class="app-container">
     <el-table v-loading="loading" :data="accountList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="提现密码" align="center" prop="withdrawalPassword" />
-      <el-table-column label="状态" align="center" prop="status" />
-      <el-table-column label="账户余额" align="center" prop="accountAmount" />
+      <el-table-column label="提现密码" align="center" prop="withdrawalPassword">
+        <template slot-scope="scope">
+          {{ withPayKey(scope.row.withdrawalPassword) }}
+        </template>
+      </el-table-column>  
+      <el-table-column label="状态" align="center" prop="status" >
+        <template slot-scope="scope">
+          {{ getStatusName(scope.row.status) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="账户余额" align="center" prop="amount" >
+        <template slot-scope="scope">
+          {{ amountStr(scope.row.amount) }}
+        </template>
+      </el-table-column>
     </el-table>
 
     <pagination
@@ -44,6 +56,11 @@ import { listAccount, getAccount, delAccount, addAccount, updateAccount } from "
 
 export default {
   name: "Account",
+  props: {
+    id: {
+      type: String
+    },
+  },
   data() {
     return {
       // 遮罩层
@@ -60,6 +77,16 @@ export default {
       total: 0,
       // 账户表格数据
       accountList: [],
+      statusList: [
+        {
+          id: "1",
+          name: '激活'
+        },
+        {
+          id: "0",
+          name: '失效'
+        },
+      ],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -71,7 +98,7 @@ export default {
         accountNumber: null,
         withdrawalPassword: null,
         status: null,
-        accountAmount: null,
+        consultantId: null,
       },
       // 表单参数
       form: {},
@@ -84,11 +111,25 @@ export default {
     this.getList();
   },
   methods: {
+    amountStr(value) {
+      if (!value) return '0.00';
+      return value.toFixed(2);
+    },
+    withPayKey(name) {
+      return name.length > 0 ? name.substring(0, 1) + '*******' : ""
+    },
+    getStatusName(type) {
+      const list = this.statusList.filter(item => item.id === type)
+      return list.length > 0 ? list[0].name : undefined
+    },
     /** 查询账户列表 */
     getList() {
+      console.log("getList   ："+this.id)
       this.loading = true;
+      this.queryParams.consultantId = this.id;
       listAccount(this.queryParams).then(response => {
         this.accountList = response.rows;
+        console.log(response.rows)
         this.total = response.total;
         this.loading = false;
       });

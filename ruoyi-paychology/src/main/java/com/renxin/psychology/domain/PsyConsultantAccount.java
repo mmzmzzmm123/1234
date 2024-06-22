@@ -42,7 +42,7 @@ public class PsyConsultantAccount extends BaseEntity
 
     /** 账户余额 */
     @Excel(name = "账户余额")
-    private BigDecimal accountAmount;
+    private BigDecimal amount;
 
     /** 0 未删除 1 删除 */
     private String delFlag;
@@ -83,14 +83,14 @@ public class PsyConsultantAccount extends BaseEntity
     {
         return status;
     }
-    public void setAccountAmount(BigDecimal accountAmount) 
+    public void setAmount(BigDecimal accountAmount)
     {
-        this.accountAmount = accountAmount;
+        this.amount = accountAmount;
     }
 
-    public BigDecimal getAccountAmount() 
+    public BigDecimal getAmount()
     {
-        return accountAmount;
+        return amount;
     }
     public void setDelFlag(String delFlag) 
     {
@@ -109,7 +109,7 @@ public class PsyConsultantAccount extends BaseEntity
             .append("accountNumber", getAccountNumber())
             .append("withdrawalPassword", getWithdrawalPassword())
             .append("status", getStatus())
-            .append("accountAmount", getAccountAmount())
+            .append("amount", getAmount())
             .append("delFlag", getDelFlag())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
