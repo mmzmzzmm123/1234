@@ -7,6 +7,7 @@ import com.ruoyi.common.enums.TransactionType;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StatusUtils;
 import com.ruoyi.portal.form.BusPostOrderForm;
+import com.ruoyi.portal.form.RefuseFrom;
 import com.ruoyi.system.domain.BusOrderAssignments;
 import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.domain.BusTransactions;
@@ -121,6 +122,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public int sample(Long orderId) {
         BusPostOrder busPostOrder = postOrderExtraService.selectBusPostOrderByOrderId(orderId);
         Date sampleTime = busPostOrder.getSampleTime();
@@ -137,11 +139,17 @@ public class OrderServiceImpl implements OrderService {
                 BusOrderAssignments busOrderAssignments = busOrderAssignmentsExtraService.selectByOrderId(orderId);
                 busOrderAssignments.setStatus(StatusUtils.updateStatus(busOrderAssignments.getStatus(), OrderAssignmentStatus.SHOP_SAMPLE.getValue()));
                 busPostOrder.setStatus(StatusUtils.updateStatus(busPostOrder.getStatus(), OrderAssignmentStatus.SHOP_SAMPLE.getValue()));
+
                 postOrderExtraService.updateBusPostOrder(busPostOrder);
-                busOrderAssignmentsExtraService.updateBusOrderAssignments(busOrderAssignments);
+                return busOrderAssignmentsExtraService.updateBusOrderAssignments(busOrderAssignments);
             }
         }
         throw new RuntimeException(OrderValidityStatus.getRemarkByValue(orderValidityStatus));
+    }
+
+    @Override
+    public int refuse(RefuseFrom refuseFrom) {
+        return 0;
     }
 
     /**

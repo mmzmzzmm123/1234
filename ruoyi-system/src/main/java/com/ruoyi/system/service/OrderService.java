@@ -1,6 +1,7 @@
 package com.ruoyi.system.service;
 
 import com.ruoyi.portal.form.BusPostOrderForm;
+import com.ruoyi.portal.form.RefuseFrom;
 import com.ruoyi.system.domain.BusOrderAssignments;
 
 /**
@@ -25,4 +26,6 @@ public interface OrderService {
     int confirm(Long orderId);
 
     int sample(Long orderId);
+
+    int refuse(RefuseFrom refuseFrom);
 }

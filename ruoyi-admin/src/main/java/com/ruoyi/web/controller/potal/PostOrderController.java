@@ -15,6 +15,7 @@ import com.ruoyi.common.utils.file.MimeTypeUtils;
 import com.ruoyi.framework.aspectj.DataScopeAspect;
 import com.ruoyi.portal.form.BusPostCursorForm;
 import com.ruoyi.portal.form.BusPostOrderForm;
+import com.ruoyi.portal.form.RefuseFrom;
 import com.ruoyi.portal.response.PostOrderResponse;
 import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.service.OrderService;
@@ -158,5 +159,19 @@ public class PostOrderController extends BaseController {
     @PreAuthorize("@ss.hasPermi('api:order')")
     public AjaxResult confirm(Long orderId) {
         return orderService.confirm(orderId) > 0 ? AjaxResult.success() : AjaxResult.error();
+    }
+    //refuse
+
+    /**
+     * 确认发货(同意发货)
+     *
+     * @param orderId
+     * @return
+     */
+    @RepeatSubmit
+    @PostMapping("/refuse")
+    @PreAuthorize("@ss.hasPermi('api:order')")
+    public AjaxResult refuse(RefuseFrom refuseFrom) {
+        return orderService.refuse(refuseFrom) > 0 ? AjaxResult.success() : AjaxResult.error();
     }
 }
