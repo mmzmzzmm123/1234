@@ -1,5 +1,6 @@
 package com.ruoyi.system.service;
 
+import com.ruoyi.portal.form.BusPostOrderForm;
 import com.ruoyi.system.domain.BusOrderAssignments;
 
 /**
@@ -19,4 +20,7 @@ import com.ruoyi.system.domain.BusOrderAssignments;
 public interface OrderService {
     boolean takeOrder(Long orderId);
 
+    void payOrder(BusPostOrderForm busPostOrderForm);
+
+    int confirm(Long orderId);
 }

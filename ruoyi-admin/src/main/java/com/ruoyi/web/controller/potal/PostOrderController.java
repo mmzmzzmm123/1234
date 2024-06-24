@@ -17,6 +17,7 @@ import com.ruoyi.portal.form.BusPostCursorForm;
 import com.ruoyi.portal.form.BusPostOrderForm;
 import com.ruoyi.portal.response.PostOrderResponse;
 import com.ruoyi.system.domain.BusPostOrder;
+import com.ruoyi.system.service.OrderService;
 import com.ruoyi.system.service.extra.BusPostOrderExtraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -49,6 +50,8 @@ public class PostOrderController extends BaseController {
     @Autowired
     private BusPostOrderExtraService busPostOrderService;
 
+    @Autowired
+    private OrderService orderService;
 
     /**
      * 发布订单
@@ -115,7 +118,7 @@ public class PostOrderController extends BaseController {
     @PostMapping("/payOrder")
     @PreAuthorize("@ss.hasPermi('api:order')")
     public AjaxResult payOrder(@RequestBody BusPostOrderForm busPostOrderForm) {
-        busPostOrderService.payOrder(busPostOrderForm);
+        orderService.payOrder(busPostOrderForm);
         return AjaxResult.success();
     }
 
@@ -149,6 +152,6 @@ public class PostOrderController extends BaseController {
     @PostMapping("/confirm")
     @PreAuthorize("@ss.hasPermi('api:order')")
     public AjaxResult confirm(Long orderId) {
-        return busPostOrderService.confirm(orderId) > 0 ? AjaxResult.success() : AjaxResult.error();
+        return orderService.confirm(orderId) > 0 ? AjaxResult.success() : AjaxResult.error();
     }
 }

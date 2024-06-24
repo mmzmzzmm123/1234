@@ -25,13 +25,13 @@ import java.util.List;
 public interface BusPostOrderExtraService extends IBusPostOrderService {
     BusPostOrder postOrder(BusPostOrderForm busPostOrder);
 
-    void payOrder(BusPostOrderForm busPostOrderForm);
+//    void payOrder(BusPostOrderForm busPostOrderForm);
 
     int updateOrderByUserId(BusPostOrderForm busPostOrderForm);
 
     List<BusPostOrder> findOrderListByUserId(BusPostOrderForm busPostOrderForm);
 
-    int confirm(Long orderId);
+//    int confirm(Long orderId);
 
     List<BusPostOrder> findSampleOrder(List<Long>ids);
 
@@ -41,4 +41,7 @@ public interface BusPostOrderExtraService extends IBusPostOrderService {
 
     List<BusPostOrder> list(BusPostCursorForm busPostOrderForm);
 
+    void checkUser(BusPostOrder busPostOrder);
+
+    void checkUser(Long orderId);
 }

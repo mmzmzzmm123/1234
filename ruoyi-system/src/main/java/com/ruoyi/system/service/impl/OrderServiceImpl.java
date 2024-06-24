@@ -1,14 +1,20 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.enums.OrderAssignmentStatus;
+import com.ruoyi.common.enums.PostOrderStatus;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.common.utils.StatusUtils;
+import com.ruoyi.portal.form.BusPostOrderForm;
 import com.ruoyi.system.domain.BusOrderAssignments;
 import com.ruoyi.system.domain.BusPostOrder;
+import com.ruoyi.system.domain.BusTransactions;
 import com.ruoyi.system.domain.BusWallets;
+import com.ruoyi.system.manager.PayManager;
 import com.ruoyi.system.service.OrderService;
 import com.ruoyi.system.service.extra.BusOrderAssignmentsExtraService;
 import com.ruoyi.system.service.extra.BusPostOrderExtraService;
 import com.ruoyi.system.service.extra.BusWalletsExtraService;
+import com.ruoyi.system.service.impl.extra.BusTransactionsExtraServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +48,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private BusWalletsExtraService busWalletsExtraService;
+
+
+    @Autowired
+    private PayManager payManager;
+
+    @Autowired
+    private BusTransactionsExtraServiceImpl busTransactionsExtraService;
 
 
     /**
@@ -93,5 +106,51 @@ public class OrderServiceImpl implements OrderService {
         busOrderAssignments.setOrderId(busPostOrder.getOrderId());
         busOrderAssignments.setStatus(OrderAssignmentStatus.UNACCEPTED.getValue());
         return busOrderAssignmentsExtraService.selectBusOrderAssignmentsList(busOrderAssignments);
+    }
+
+
+    @Override
+    public int confirm(Long orderId) {
+        postOrderExtraService.checkUser(orderId);
+        BusPostOrder busPostOrder = postOrderExtraService.selectBusPostOrderByOrderId(orderId);
+        if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.CONFIRM_SHIPMENT.getValue())) {
+            throw new RuntimeException("已同意发货");
+        }
+        Integer newStatus = StatusUtils.updateStatus(busPostOrder.getStatus(), PostOrderStatus.CONFIRM_SHIPMENT.getValue());
+        busPostOrder = new BusPostOrder();
+        busPostOrder.setStatus(newStatus);
+        busPostOrder.setOrderId(orderId);
+        //todo:这里需要把订单加入到延迟队列中
+        return postOrderExtraService.updateBusPostOrder(busPostOrder);
+    }
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void payOrder(BusPostOrderForm busPostOrderForm) {
+        Integer payType = busPostOrderForm.getPayType();
+        Long orderId = busPostOrderForm.getOrderId();
+        BusPostOrder busPostOrder = postOrderExtraService.selectBusPostOrderByOrderId(orderId);
+        postOrderExtraService.checkUser(busPostOrder);
+
+        if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.PAID.getValue())) {
+            throw new RuntimeException("无法支付他人订单");
+        }
+        BusTransactions busTransactions = new BusTransactions();
+        busTransactionsExtraService.insertBusTransactions(busTransactions);
+        //支付成功 更新状态 新增支付流水记录
+        postOrderExtraService.updateBusPostOrder(buildPayOrder(orderId, payType, busPostOrder.getStatus()));
+        boolean paySuccess = payManager.pay(payType, busPostOrder.getAmount());
+        if (!paySuccess) {
+            throw new RuntimeException("支付失败");
+        }
+        busTransactionsExtraService.updateBusTransactions(busTransactions);
+    }
+
+
+    private BusPostOrder buildPayOrder(Long orderId, Integer payType, Integer oldStatus) {
+        BusPostOrder busPostOrder = new BusPostOrder();
+        busPostOrder.setOrderId(orderId);
+        busPostOrder.setPayType(payType);
+        busPostOrder.setStatus(StatusUtils.updateStatus(oldStatus, PostOrderStatus.PAID.getValue()));
+        return busPostOrder;
     }
 }
