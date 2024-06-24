@@ -114,12 +114,17 @@ public class PostOrderController extends BaseController {
     }
 
 
+    /**
+     * 主要用于在 钱包余额支付
+     *
+     * @param busPostOrderForm
+     * @return
+     */
     @RepeatSubmit
     @PostMapping("/payOrder")
     @PreAuthorize("@ss.hasPermi('api:order')")
     public AjaxResult payOrder(@RequestBody BusPostOrderForm busPostOrderForm) {
-        orderService.payOrder(busPostOrderForm);
-        return AjaxResult.success();
+        return orderService.payOrder(busPostOrderForm) ? AjaxResult.success() : AjaxResult.error("支付失败");
     }
 
     /**

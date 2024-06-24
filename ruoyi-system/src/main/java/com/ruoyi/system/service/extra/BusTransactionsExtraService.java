@@ -1,5 +1,7 @@
 package com.ruoyi.system.service.extra;
 
+import com.ruoyi.common.enums.TransactionType;
+import com.ruoyi.system.domain.BusTransactions;
 import com.ruoyi.system.service.IBusTransactionsService;
 
 /**
@@ -17,4 +19,5 @@ import com.ruoyi.system.service.IBusTransactionsService;
  * 2024-06-18     张李鑫                     1.0         1.0 Version
  */
 public interface BusTransactionsExtraService extends IBusTransactionsService {
+    BusTransactions create(TransactionType transactionType, Long amount);
 }

@@ -18,5 +18,9 @@ import com.ruoyi.portal.form.PayForm;
  */
 public interface PayManager {
 
+    boolean wallPay(Long amount);
+
+    boolean wechatPay(Long amount);
+
     boolean pay(Integer payType, Long amount);
 }

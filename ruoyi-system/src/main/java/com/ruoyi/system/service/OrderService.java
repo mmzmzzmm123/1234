@@ -20,7 +20,7 @@ import com.ruoyi.system.domain.BusOrderAssignments;
 public interface OrderService {
     boolean takeOrder(Long orderId);
 
-    void payOrder(BusPostOrderForm busPostOrderForm);
+    boolean payOrder(BusPostOrderForm busPostOrderForm);
 
     int confirm(Long orderId);
 

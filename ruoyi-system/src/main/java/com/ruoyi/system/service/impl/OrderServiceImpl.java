@@ -3,6 +3,7 @@ package com.ruoyi.system.service.impl;
 import com.ruoyi.common.enums.OrderAssignmentStatus;
 import com.ruoyi.common.enums.OrderValidityStatus;
 import com.ruoyi.common.enums.PostOrderStatus;
+import com.ruoyi.common.enums.TransactionType;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StatusUtils;
 import com.ruoyi.portal.form.BusPostOrderForm;
@@ -54,9 +55,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private PayManager payManager;
-
-    @Autowired
-    private BusTransactionsExtraServiceImpl busTransactionsExtraService;
 
 
     /**
@@ -135,10 +133,10 @@ public class OrderServiceImpl implements OrderService {
                 busPostOrder.setOrderValidityStatus(OrderValidityStatus.SAMPLE_TIMEOUT.getValue());
                 postOrderExtraService.updateBusPostOrder(busPostOrder);
                 return OrderValidityStatus.SAMPLE_TIMEOUT.getValue();
-            }else {
-                BusOrderAssignments busOrderAssignments=busOrderAssignmentsExtraService.selectByOrderId(orderId);
-                busOrderAssignments.setStatus(StatusUtils.updateStatus(busOrderAssignments.getStatus(),OrderAssignmentStatus.SHOP_SAMPLE.getValue()));
-                busPostOrder.setStatus(StatusUtils.updateStatus(busPostOrder.getStatus(),OrderAssignmentStatus.SHOP_SAMPLE.getValue()));
+            } else {
+                BusOrderAssignments busOrderAssignments = busOrderAssignmentsExtraService.selectByOrderId(orderId);
+                busOrderAssignments.setStatus(StatusUtils.updateStatus(busOrderAssignments.getStatus(), OrderAssignmentStatus.SHOP_SAMPLE.getValue()));
+                busPostOrder.setStatus(StatusUtils.updateStatus(busPostOrder.getStatus(), OrderAssignmentStatus.SHOP_SAMPLE.getValue()));
                 postOrderExtraService.updateBusPostOrder(busPostOrder);
                 busOrderAssignmentsExtraService.updateBusOrderAssignments(busOrderAssignments);
             }
@@ -153,7 +151,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void payOrder(BusPostOrderForm busPostOrderForm) {
+    public boolean payOrder(BusPostOrderForm busPostOrderForm) {
         Integer payType = busPostOrderForm.getPayType();
         Long orderId = busPostOrderForm.getOrderId();
         BusPostOrder busPostOrder = postOrderExtraService.selectBusPostOrderByOrderId(orderId);
@@ -162,15 +160,13 @@ public class OrderServiceImpl implements OrderService {
         if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.PAID.getValue())) {
             throw new RuntimeException("无法支付他人订单");
         }
-        BusTransactions busTransactions = new BusTransactions();
-        busTransactionsExtraService.insertBusTransactions(busTransactions);
-        //支付成功 更新状态 新增支付流水记录
-        postOrderExtraService.updateBusPostOrder(buildPayOrder(orderId, payType, busPostOrder.getStatus()));
-        boolean paySuccess = payManager.pay(payType, busPostOrder.getAmount());
-        if (!paySuccess) {
-            throw new RuntimeException("支付失败");
+
+        boolean paySuccess = payManager.wallPay(busPostOrder.getAmount());
+        if (paySuccess) {
+            //支付成功 更新状态 新增支付流水记录
+            return postOrderExtraService.updateBusPostOrder(buildPayOrder(orderId, payType, busPostOrder.getStatus())) > 0;
         }
-        busTransactionsExtraService.updateBusTransactions(busTransactions);
+        return paySuccess;
     }
 
 
