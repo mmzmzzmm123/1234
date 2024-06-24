@@ -1,23 +1,53 @@
 <template>
   <div class="app-container">
-    <el-table v-loading="loading" :data="accountList" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="提现密码" align="center" prop="withdrawalPassword">
-        <template slot-scope="scope">
-          {{ withPayKey(scope.row.withdrawalPassword) }}
-        </template>
-      </el-table-column>  
-      <el-table-column label="状态" align="center" prop="status" >
-        <template slot-scope="scope">
-          {{ getStatusName(scope.row.status) }}
-        </template>
-      </el-table-column>
-      <el-table-column label="账户余额" align="center" prop="amount" >
-        <template slot-scope="scope">
-          {{ amountStr(scope.row.amount) }}
-        </template>
-      </el-table-column>
-    </el-table>
+    <el-form ref="form" :model="form" label-width="120px" >
+      <el-row>
+          <el-col :span="8">
+            <el-form-item label="状态:" prop="status">
+                {{form.status}}
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
+            <el-form-item label="金额:" prop="amount">
+               {{form.amount}}
+            </el-form-item>
+          </el-col>
+     </el-row>  
+    </el-form>
+    <template>
+      <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="账户记录" name="first">
+          <el-table v-loading="loading" :data="recordList" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column label="提现类型" align="center" prop="payType" >
+              <template slot-scope="scope">
+                {{ payTypeName(scope.row.payType) }}
+              </template>
+            </el-table-column>
+            <el-table-column label="订单ID" align="center" prop="orderId" />
+            <el-table-column label="状态" align="center" prop="status">
+              <template slot-scope="scope">
+                {{ payStatusName(scope.row.status) }}
+              </template>
+            </el-table-column> 
+            <el-table-column label="提现金额" align="center" prop="payAmount" />
+            <el-table-column label="更新时间" align="center" prop="updateTime" />
+          </el-table>
+        </el-tab-pane>
+        <el-tab-pane label="提现记录" name="second">
+          <el-table v-loading="loading" :data="recordList" @selection-change="handleSelectionChange">
+            <el-table-column type="selection" width="55" align="center" />
+            <el-table-column label="状态" align="center" prop="status">
+              <template slot-scope="scope">
+                {{ payStatusName(scope.row.status) }}
+              </template>
+            </el-table-column>   
+            <el-table-column label="提现金额" align="center" prop="withdrawalAmount" />
+            <el-table-column label="提现日期" align="center" prop="updateTime" />
+          </el-table>
+        </el-tab-pane>
+      </el-tabs>
+    </template>
 
     <pagination
       v-show="total>0"
@@ -52,7 +82,10 @@
 </template>
 
 <script>
-import { listAccount, getAccount, delAccount, addAccount, updateAccount } from "@/api/psychology/account";
+
+import {  getAccount, delAccount, addAccount, updateAccount } from "@/api/psychology/account";
+import { listRecord} from "@/api/psychology/record";
+import { listOrder} from "@/api/psychology/withdrawal";
 
 export default {
   name: "Account",
@@ -60,9 +93,14 @@ export default {
     id: {
       type: String
     },
+    model:{
+      status:'',
+      amount:'',
+    },
   },
   data() {
     return {
+      activeName: 'first',
       // 遮罩层
       loading: true,
       // 选中数组
@@ -76,7 +114,27 @@ export default {
       // 总条数
       total: 0,
       // 账户表格数据
-      accountList: [],
+      recordList: [],
+      payTypeDic :[
+        {
+          id: "0",
+          name: '分成'
+        },
+        {
+          id: "1",
+          name: '提现'
+        },
+      ],
+      payStatusDic :[
+        {
+          id: "0",
+          name: '失败'
+        },
+        {
+          id: "1",
+          name: '成功'
+        },
+      ],
       statusList: [
         {
           id: "1",
@@ -101,7 +159,11 @@ export default {
         consultantId: null,
       },
       // 表单参数
-      form: {},
+      form: {
+        status:'',
+        amount:'',
+
+      },
       // 表单校验
       rules: {
       }
@@ -111,6 +173,22 @@ export default {
     this.getList();
   },
   methods: {
+    handleClick(tab, event) {
+        this.queryParams.consultantId = this.id;
+        if(this.activeName == 'first'){
+          listRecord(this.queryParams).then(response => {
+            this.recordList = response.rows;
+            this.total = response.total;
+            this.loading = false;
+          }); 
+        }else{
+          listOrder(this.queryParams).then(response => {
+            this.recordList = response.rows;
+            this.total = response.total;
+            this.loading = false;
+          }); 
+        }
+      },
     amountStr(value) {
       if (!value) return '0.00';
       return value.toFixed(2);
@@ -122,17 +200,39 @@ export default {
       const list = this.statusList.filter(item => item.id === type)
       return list.length > 0 ? list[0].name : undefined
     },
+    payTypeName(type) {
+      const list = this.payTypeDic.filter(item => item.id === type)
+      return list.length > 0 ? list[0].name : undefined
+    },
+    payStatusName(type) {
+      const list = this.payStatusDic.filter(item => item.id === type)
+      return list.length > 0 ? list[0].name : undefined
+    },
     /** 查询账户列表 */
     getList() {
-      console.log("getList   ："+this.id)
       this.loading = true;
       this.queryParams.consultantId = this.id;
-      listAccount(this.queryParams).then(response => {
-        this.accountList = response.rows;
-        console.log(response.rows)
-        this.total = response.total;
-        this.loading = false;
+      const consultantId = this.id
+      getAccount(consultantId).then(response => {
+        const list = this.statusList.filter(item => item.id === response.data.status)
+        this.form.status = list.length > 0 ? list[0].name :"";
+        this.form.amount =  response.data.amount? '0.00':response.data.amount.toFixed(2);
       });
+
+      if(this.activeName == 'first'){
+        listRecord(this.queryParams).then(response => {
+          this.recordList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        }); 
+      }else{
+        listOrder(this.queryParams).then(response => {
+          this.recordList = response.rows;
+          this.total = response.total;
+          this.loading = false;
+        }); 
+      }
+     
     },
     // 取消按钮
     cancel() {

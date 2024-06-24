@@ -1,14 +1,6 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="咨询师ID" prop="consultantId">
-        <el-input
-          v-model="queryParams.consultantId"
-          placeholder="请输入咨询师ID"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
       <el-form-item label="联系人名" prop="contactName">
         <el-input
           v-model="queryParams.contactName"
@@ -31,57 +23,13 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="el-icon-plus"
-          size="mini"
-          @click="handleAdd"
-          v-hasPermi="['system:address:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="el-icon-edit"
-          size="mini"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['system:address:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="el-icon-delete"
-          size="mini"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['system:address:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="el-icon-download"
-          size="mini"
-          @click="handleExport"
-          v-hasPermi="['system:address:export']"
-        >导出</el-button>
-      </el-col>
-      <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
-
     <el-table v-loading="loading" :data="addressList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="地址ID" align="center" prop="addressId" />
-      <el-table-column label="咨询师ID" align="center" prop="consultantId" />
-      <el-table-column label="1 默认 0 未默认" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status" >
+        <template slot-scope="scope">
+          {{ getStatusName(scope.row.status) }}
+        </template>
+      </el-table-column>  
       <el-table-column label="联系人名" align="center" prop="contactName" />
       <el-table-column label="联系电话" align="center" prop="contactTelephone" />
       <el-table-column label="联系地址" align="center" prop="contactAddress" />
@@ -116,9 +64,6 @@
     <!-- 添加或修改咨询师地址对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="咨询师ID" prop="consultantId">
-          <el-input v-model="form.consultantId" placeholder="请输入咨询师ID" />
-        </el-form-item>
         <el-form-item label="联系人名" prop="contactName">
           <el-input v-model="form.contactName" placeholder="请输入联系人名" />
         </el-form-item>
@@ -145,12 +90,25 @@ import { listAddress, getAddress, delAddress, addAddress, updateAddress } from "
 
 export default {
   name: "Address",
+  props: {
+    id: {
+      type: String
+    },
+  },
   data() {
     return {
       // 遮罩层
       loading: true,
       // 选中数组
       ids: [],
+      statusList:[  {
+          id: "1",
+          name: '激活'
+        },
+        {
+          id: "0",
+          name: '失效'
+        }],
       // 非单个禁用
       single: true,
       // 非多个禁用
@@ -192,9 +150,15 @@ export default {
     this.getList();
   },
   methods: {
+    getStatusName(type) {
+      const list = this.statusList.filter(item => item.id === type)
+      return list.length > 0 ? list[0].name : undefined
+    },
     /** 查询咨询师地址列表 */
     getList() {
       this.loading = true;
+      this.queryParams.consultantId = this.id;
+      console.log(this.consultantId) 
       listAddress(this.queryParams).then(response => {
         this.addressList = response.rows;
         this.total = response.total;
@@ -226,6 +190,7 @@ export default {
     /** 搜索按钮操作 */
     handleQuery() {
       this.queryParams.pageNum = 1;
+      this.consultantId = this.id;
       this.getList();
     },
     /** 重置按钮操作 */
