@@ -15,32 +15,6 @@ package com.ruoyi.common.enums;
  * 2024-06-19     张李鑫                     1.0         1.0 Version
  */
 public enum OrderAssignmentStatus {
-
-
-//    UNACCEPTED(1, "未接单"),
-//    ACCEPTED(2, "已接单"),
-//    CANCELLED(3, "申请撤销"),
-//    CANCELLED1(3, "已撤销"),
-//    /**
-//     * 已打烊
-//     */
-//    SHOP_SAMPLE(5, "已打样"),
-//    /**
-//     * 制作中
-//     */
-//    IN_PRODUCTION(6, "制作中"),
-//    IN_PRODUCTION1(6, "制作完成"),
-//    /**
-//     * 已发货
-//     */
-//    SHIPPED(8, "已发货"),
-//
-//
-//    DEPOSIT_REFUNDED(4, "保证金已退还"), // Deposit Refunded
-//    PAYMENT_RECEIVED(5, "货款已到账"), // Payment Received
-//    COMPLETED(9, "已完成"),//这里指的订单完成
-//    TIMEOUT(12, "已超时");
-
     UNACCEPTED(1, "未接单"),                  // 1
     ACCEPTED(2, "已接单"),                    // 2
 

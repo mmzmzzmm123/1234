@@ -23,4 +23,6 @@ public interface OrderService {
     void payOrder(BusPostOrderForm busPostOrderForm);
 
     int confirm(Long orderId);
+
+    int sample(Long orderId);
 }

@@ -97,8 +97,8 @@ public class OrderSampleTask extends Task<Long> {
             Long orderId = busPostOrder.getOrderId();
             if (orderId % quantity == 0 && orderIdCache.add(orderId)) {
                 Date sampleTime = busPostOrder.getSampleTime();
-                //加一天 Action is not a functional interface
-                getDelayQueue().offer(new DelayedElement<>(busPostOrder.getOrderId(), new Date().getTime() - sampleTime.getTime() + dayTime, checkOrder));
+                //加一天
+                getDelayQueue().offer(new DelayedElement<>(busPostOrder.getOrderId(), sampleTime.getTime() -new Date().getTime() + dayTime, checkOrder));
             }
         }
     }

@@ -27,6 +27,10 @@
         and status=#{oldStatus}
     </update>
 
+    <select id="selectByOrderId" parameterType="Long" resultMap="BusOrderAssignmentsResult">
+        <include refid="selectBusOrderAssignmentsVo"/>
+        where order_id = #{order_id}
+    </select>
 
 
 </mapper>

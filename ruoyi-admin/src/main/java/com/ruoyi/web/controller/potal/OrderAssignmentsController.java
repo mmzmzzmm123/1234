@@ -44,7 +44,7 @@ public class OrderAssignmentsController {
      */
     @RequestMapping("/sample")
     public AjaxResult sample(Long orderId) {
-        return AjaxResult.success(orderService.takeOrder(orderId));
+        return AjaxResult.success(orderService.sample(orderId));
     }
 
 }

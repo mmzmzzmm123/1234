@@ -20,4 +20,6 @@ public interface BusOrderAssignmentsExtraService extends IBusOrderAssignmentsSer
     int createByOrder(BusPostOrder busPostOrder);
 
     boolean takeOrder(Long userId, int newStatus,int oldStatus, Long assignmentId);
+
+    BusOrderAssignments selectByOrderId(Long orderId);
 }

@@ -1,6 +1,7 @@
 package com.ruoyi.system.service.impl;
 
 import com.ruoyi.common.enums.OrderAssignmentStatus;
+import com.ruoyi.common.enums.OrderValidityStatus;
 import com.ruoyi.common.enums.PostOrderStatus;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StatusUtils;
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -80,9 +82,6 @@ public class OrderServiceImpl implements OrderService {
     }
 
 
-
-
-
     private void hasMoney(BusWallets busWallets, BusPostOrder busPostOrder) {
         Long securityDeposit = busPostOrder.getSecurityDeposit();
         if (busWallets.getBalance() < securityDeposit) {
@@ -120,9 +119,38 @@ public class OrderServiceImpl implements OrderService {
         busPostOrder = new BusPostOrder();
         busPostOrder.setStatus(newStatus);
         busPostOrder.setOrderId(orderId);
-        //todo:这里需要把订单加入到延迟队列中
         return postOrderExtraService.updateBusPostOrder(busPostOrder);
     }
+
+    @Override
+    public int sample(Long orderId) {
+        BusPostOrder busPostOrder = postOrderExtraService.selectBusPostOrderByOrderId(orderId);
+        Date sampleTime = busPostOrder.getSampleTime();
+        Integer orderValidityStatus = busPostOrder.getOrderValidityStatus();
+
+        if (orderValidityStatus == OrderValidityStatus.NORMAL.getValue()) {
+            // 加一天
+            long time = sampleTime.getTime() + 1000 * 60 * 60 * 24;
+            if (new Date().getTime() > time) {
+                busPostOrder.setOrderValidityStatus(OrderValidityStatus.SAMPLE_TIMEOUT.getValue());
+                postOrderExtraService.updateBusPostOrder(busPostOrder);
+                return OrderValidityStatus.SAMPLE_TIMEOUT.getValue();
+            }else {
+                BusOrderAssignments busOrderAssignments=busOrderAssignmentsExtraService.selectByOrderId(orderId);
+                busOrderAssignments.setStatus(StatusUtils.updateStatus(busOrderAssignments.getStatus(),OrderAssignmentStatus.SHOP_SAMPLE.getValue()));
+                busPostOrder.setStatus(StatusUtils.updateStatus(busPostOrder.getStatus(),OrderAssignmentStatus.SHOP_SAMPLE.getValue()));
+                postOrderExtraService.updateBusPostOrder(busPostOrder);
+                busOrderAssignmentsExtraService.updateBusOrderAssignments(busOrderAssignments);
+            }
+        }
+        throw new RuntimeException(OrderValidityStatus.getRemarkByValue(orderValidityStatus));
+    }
+
+    /**
+     * 支付订单
+     *
+     * @param busPostOrderForm
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void payOrder(BusPostOrderForm busPostOrderForm) {

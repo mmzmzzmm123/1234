@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Description:
@@ -38,6 +39,7 @@ public class BusOrderAssignmentsExtraServiceImpl extends BusOrderAssignmentsServ
 
     /**
      * 在生成订单的时候同时生成接单数据 行锁保证线程安全
+     *
      * @param busPostOrder
      * @return
      */
@@ -52,6 +54,7 @@ public class BusOrderAssignmentsExtraServiceImpl extends BusOrderAssignmentsServ
 
     /**
      * 抢单
+     *
      * @param userId
      * @param newStatus
      * @param oldStatus
@@ -59,8 +62,17 @@ public class BusOrderAssignmentsExtraServiceImpl extends BusOrderAssignmentsServ
      * @return
      */
     @Override
-    public boolean takeOrder(Long userId, int newStatus,int oldStatus,  Long assignmentId) {
-        return busOrderAssignmentsExtraMapper.setUserIdAndUpdateStatusById(userId,  newStatus, oldStatus,assignmentId)>0;
+    public boolean takeOrder(Long userId, int newStatus, int oldStatus, Long assignmentId) {
+        return busOrderAssignmentsExtraMapper.setUserIdAndUpdateStatusById(userId, newStatus, oldStatus, assignmentId) > 0;
+    }
+
+    @Override
+    public BusOrderAssignments selectByOrderId(Long orderId) {
+        List<BusOrderAssignments> busOrderAssignments = busOrderAssignmentsExtraMapper.selectByOrderId(orderId);
+        if (busOrderAssignments.size()==1){
+            return busOrderAssignments.get(0);
+        }
+        throw new RuntimeException("订单异常");
     }
 
 

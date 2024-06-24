@@ -24,14 +24,13 @@ public enum OrderValidityStatus {
      * 已取消
      */
     CANCELLED(2, "已取消"),
-
+    Arbitrations(3,"仲裁中"),
 
     /**
      * 已超时
      */
-    SAMPLE_TIMEOUT(3, "打样已超时"),
-    ORDER_TIMEOUT(4, "订单已超时");
-
+    SAMPLE_TIMEOUT(4, "打样已超时"),
+    ORDER_TIMEOUT(5, "订单已超时");
 
 
     private final int value;
@@ -40,6 +39,16 @@ public enum OrderValidityStatus {
     OrderValidityStatus(int value, String remark) {
         this.value = value;
         this.remark = remark;
+    }
+
+    public static String getRemarkByValue(Integer value) {
+        OrderValidityStatus[] values = OrderValidityStatus.values();
+        for (OrderValidityStatus orderValidityStatus : values) {
+            if (value.equals(orderValidityStatus.getValue())) {
+                return orderValidityStatus.getRemark();
+            }
+        }
+        return "";
     }
 
     public int getValue() {
