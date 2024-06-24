@@ -103,7 +103,10 @@
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-button  size="mini" type="text" @click="handleFinanceWin(scope.row)">
-             账户余额
+             账户
+          </el-button>
+          <el-button  size="mini" type="text" @click="handleAddressWin(scope.row)">
+             地址
           </el-button>
           <el-button
             size="mini"
@@ -144,12 +147,18 @@
     </el-dialog>
 
     <!-- 咨询师账户余额信息 -->
-    <el-dialog title="账户余额" :visible.sync="openFinanceRef" width="900px" append-to-body>
+    <el-dialog title="账户" :visible.sync="openFinanceRef" width="900px" append-to-body>
       <account-ref v-if="openFinanceRef" :id="bingConsultId"/>
       <div slot="footer" class="dialog-footer">
         <el-button @click="cancelFinance">取 消</el-button>
       </div>
     </el-dialog>
+
+    <!-- 咨询地址信息 -->
+    <el-dialog title="地址" :visible.sync="openAddressRef" width="900px" append-to-body>
+      <addressRef v-if="openAddressRef" :id="bingConsultId" />
+    </el-dialog>
+    
   </div>
 </template>
 
@@ -159,11 +168,12 @@ import { refConsultServe, adminListConsult, delConsult, updateConsult,accountLis
 import serve from "./serve";
 import serveRef from "./serveRef";
 import accountRef from "../account/index";
+import addressRef from "../address/index";
 import { checkPermi } from "@/utils/permission";
 
 export default {
   name: "Consult",
-  components: { serve, serveRef ,accountRef},
+  components: { serve, serveRef ,accountRef,addressRef},
   // dicts: ['consult_sex','consult_type'],
   data() {
     return {
@@ -193,6 +203,7 @@ export default {
       openServe: false,
       openServeRef: false,
       openFinanceRef: false,
+      openAddressRef: false,
       bingConsultId: '',
       // 查询参数
       queryParams: {
@@ -257,7 +268,11 @@ export default {
     },
     cancelFinance() {
       this.openFinanceRef = false;
-      this.consultId = ''
+      this.bingConsultId = ''
+    },
+    cancelAddress() {
+      this.cancelAddress = false;
+      this.bingConsultId = ''
     },
     setServe (ids) {
       this.cIds = ids
@@ -270,11 +285,16 @@ export default {
     },
     /** 财务按钮操作 */
     handleFinanceWin(row) {
-      console.log(row.id);
       this.bingConsultId = row.id
-      console.log(this.bingConsultId)
       this.openFinanceRef = true;
       this.titleServe = "财务服务";
+    },
+    /** 地址按钮操作 */
+    handleAddressWin(row) {
+      this.bingConsultId = row.id
+      console.log("id:"+this.bingConsultId)
+      this.openAddressRef = true;
+      this.titleServe = "地址服务";
     },
     /** 修改服务按钮操作 */
     handleServeList(row) {
