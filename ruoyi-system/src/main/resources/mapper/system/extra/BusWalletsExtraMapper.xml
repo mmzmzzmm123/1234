@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.extra.BusWalletsExtraMapper">
+
+    <resultMap type="BusWallets" id="BusWalletsResult">
+        <result property="walletId" column="wallet_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="balance" column="balance"/>
+        <result property="frozenBalance" column="frozen_balance"/>
+        <result property="version" column="version"/>
+        <result property="updatedAt" column="updated_at"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+
+    <sql id="selectBusWalletsVo">
+        select wallet_id, user_id, balance, frozen_balance, version, updated_at, created_at from bus_wallets
+    </sql>
+
+
+    <update id="deduction">
+        UPDATE Wallets
+        SET balance = balance - #{amount},
+            frozen_balance=frozen_balance+#{amount},
+            version = version + 1
+        WHERE wallet_id = #{wallet.walletId}
+          AND balance = #{wallet.balance}
+          AND version = #{wallet.version};
+    </update>
+
+
+    <update id="frozenBalance">
+        UPDATE Wallets
+        SET balance = balance - #{amount},
+            frozen_balance=frozen_balance+#{amount},
+            version = version + 1
+        WHERE wallet_id = #{wallet.walletId}
+          AND balance = #{wallet.balance}
+          AND version = #{wallet.version};
+    </update>
+
+
+
+
+
+
+    <select id="selectBusWalletsByUserIdForUpdate" parameterType="BusWallets" resultMap="BusWalletsResult">
+        <include refid="selectBusWalletsVo"/>
+        where user_id = #{userId}
+        for update
+    </select>
+
+</mapper>

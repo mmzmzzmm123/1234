@@ -39,6 +39,28 @@ public class BeanUtils extends org.springframework.beans.BeanUtils
             e.printStackTrace();
         }
     }
+    public static <T> T convert(Object value, Class<T> clazz) {
+        if (null != value) {
+            try {
+                T target = clazz.newInstance();
+                copyProperties(value, target);
+                return target;
+            } catch (Exception ignored) {
+            }
+        }
+        return null;
+    }
+
+    public static <E, T> List<T> convertList(List<E> source, Class<T> clazz) {
+        if (!source.isEmpty()) {
+            List<T> newList = new ArrayList<>();
+            for (E e : source) {
+                (newList).add(convert(e, clazz));
+            }
+            return newList;
+        }
+        return new ArrayList<>();
+    }
 
     /**
      * 获取对象的setter方法。

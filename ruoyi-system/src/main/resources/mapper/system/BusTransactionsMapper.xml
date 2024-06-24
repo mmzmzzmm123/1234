@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BusTransactionsMapper">
+    
+    <resultMap type="BusTransactions" id="BusTransactionsResult">
+        <result property="transactionId"    column="transaction_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="transactionType"    column="transaction_type"    />
+        <result property="amount"    column="amount"    />
+        <result property="transactionDate"    column="transaction_date"    />
+        <result property="status"    column="status"    />
+        <result property="description"    column="description"    />
+        <result property="createdAt"    column="created_at"    />
+        <result property="updatedAt"    column="updated_at"    />
+    </resultMap>
+
+    <sql id="selectBusTransactionsVo">
+        select transaction_id, user_id, transaction_type, amount, transaction_date, status, description, created_at, updated_at from bus_transactions
+    </sql>
+
+    <select id="selectBusTransactionsList" parameterType="BusTransactions" resultMap="BusTransactionsResult">
+        <include refid="selectBusTransactionsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="transactionType != null  and transactionType != ''"> and transaction_type = #{transactionType}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="transactionDate != null "> and transaction_date = #{transactionDate}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+            <if test="createdAt != null "> and created_at = #{createdAt}</if>
+            <if test="updatedAt != null "> and updated_at = #{updatedAt}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusTransactionsByTransactionId" parameterType="Long" resultMap="BusTransactionsResult">
+        <include refid="selectBusTransactionsVo"/>
+        where transaction_id = #{transactionId}
+    </select>
+
+    <insert id="insertBusTransactions" parameterType="BusTransactions" useGeneratedKeys="true" keyProperty="transactionId">
+        insert into bus_transactions
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="transactionType != null and transactionType != ''">transaction_type,</if>
+            <if test="amount != null">amount,</if>
+            <if test="transactionDate != null">transaction_date,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="description != null">description,</if>
+            <if test="createdAt != null">created_at,</if>
+            <if test="updatedAt != null">updated_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="transactionType != null and transactionType != ''">#{transactionType},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="transactionDate != null">#{transactionDate},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="description != null">#{description},</if>
+            <if test="createdAt != null">#{createdAt},</if>
+            <if test="updatedAt != null">#{updatedAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusTransactions" parameterType="BusTransactions">
+        update bus_transactions
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="transactionType != null and transactionType != ''">transaction_type = #{transactionType},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="transactionDate != null">transaction_date = #{transactionDate},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="createdAt != null">created_at = #{createdAt},</if>
+            <if test="updatedAt != null">updated_at = #{updatedAt},</if>
+        </trim>
+        where transaction_id = #{transactionId}
+    </update>
+
+    <delete id="deleteBusTransactionsByTransactionId" parameterType="Long">
+        delete from bus_transactions where transaction_id = #{transactionId}
+    </delete>
+
+    <delete id="deleteBusTransactionsByTransactionIds" parameterType="String">
+        delete from bus_transactions where transaction_id in 
+        <foreach item="transactionId" collection="array" open="(" separator="," close=")">
+            #{transactionId}
+        </foreach>
+    </delete>
+</mapper>

@@ -31,8 +31,7 @@ public class SysPermissionService
      * @param user 用户信息
      * @return 角色权限信息
      */
-    public Set<String> getRolePermission(SysUser user)
-    {
+    public Set<String> getRolePermission(SysUser user) {
         Set<String> roles = new HashSet<String>();
         // 管理员拥有所有权限
         if (user.isAdmin())

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.PostOrderImagesMapper">
+    
+    <resultMap type="PostOrderImages" id="PostOrderImagesResult">
+        <result property="imageId"    column="image_id"    />
+        <result property="postOrderId"    column="post_order_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="orderId"    column="order_id"    />
+        <result property="imageUrl"    column="image_url"    />
+        <result property="uploadedAt"    column="uploaded_at"    />
+    </resultMap>
+
+    <sql id="selectPostOrderImagesVo">
+        select image_id, post_order_id, user_id, order_id, image_url, uploaded_at from post_order_images
+    </sql>
+
+    <select id="selectPostOrderImagesList" parameterType="PostOrderImages" resultMap="PostOrderImagesResult">
+        <include refid="selectPostOrderImagesVo"/>
+        <where>  
+            <if test="postOrderId != null "> and post_order_id = #{postOrderId}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="orderId != null "> and order_id = #{orderId}</if>
+            <if test="imageUrl != null  and imageUrl != ''"> and image_url = #{imageUrl}</if>
+            <if test="uploadedAt != null "> and uploaded_at = #{uploadedAt}</if>
+        </where>
+    </select>
+    
+    <select id="selectPostOrderImagesByImageId" parameterType="Long" resultMap="PostOrderImagesResult">
+        <include refid="selectPostOrderImagesVo"/>
+        where image_id = #{imageId}
+    </select>
+
+    <insert id="insertPostOrderImages" parameterType="PostOrderImages" useGeneratedKeys="true" keyProperty="imageId">
+        insert into post_order_images
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="postOrderId != null">post_order_id,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="orderId != null">order_id,</if>
+            <if test="imageUrl != null and imageUrl != ''">image_url,</if>
+            <if test="uploadedAt != null">uploaded_at,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="postOrderId != null">#{postOrderId},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="orderId != null">#{orderId},</if>
+            <if test="imageUrl != null and imageUrl != ''">#{imageUrl},</if>
+            <if test="uploadedAt != null">#{uploadedAt},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePostOrderImages" parameterType="PostOrderImages">
+        update post_order_images
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="postOrderId != null">post_order_id = #{postOrderId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="imageUrl != null and imageUrl != ''">image_url = #{imageUrl},</if>
+            <if test="uploadedAt != null">uploaded_at = #{uploadedAt},</if>
+        </trim>
+        where image_id = #{imageId}
+    </update>
+
+    <delete id="deletePostOrderImagesByImageId" parameterType="Long">
+        delete from post_order_images where image_id = #{imageId}
+    </delete>
+
+    <delete id="deletePostOrderImagesByImageIds" parameterType="String">
+        delete from post_order_images where image_id in 
+        <foreach item="imageId" collection="array" open="(" separator="," close=")">
+            #{imageId}
+        </foreach>
+    </delete>
+</mapper>

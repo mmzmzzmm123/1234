@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.BusWithdrawalsMapper">
+    
+    <resultMap type="BusWithdrawals" id="BusWithdrawalsResult">
+        <result property="withdrawalId"    column="withdrawal_id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="amount"    column="amount"    />
+        <result property="withdrawalDate"    column="withdrawal_date"    />
+        <result property="status"    column="status"    />
+        <result property="processedAt"    column="processed_at"    />
+        <result property="description"    column="description"    />
+    </resultMap>
+
+    <sql id="selectBusWithdrawalsVo">
+        select withdrawal_id, user_id, amount, withdrawal_date, status, processed_at, description from bus_withdrawals
+    </sql>
+
+    <select id="selectBusWithdrawalsList" parameterType="BusWithdrawals" resultMap="BusWithdrawalsResult">
+        <include refid="selectBusWithdrawalsVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="amount != null "> and amount = #{amount}</if>
+            <if test="withdrawalDate != null "> and withdrawal_date = #{withdrawalDate}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="processedAt != null "> and processed_at = #{processedAt}</if>
+            <if test="description != null  and description != ''"> and description = #{description}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusWithdrawalsByWithdrawalId" parameterType="Long" resultMap="BusWithdrawalsResult">
+        <include refid="selectBusWithdrawalsVo"/>
+        where withdrawal_id = #{withdrawalId}
+    </select>
+
+    <insert id="insertBusWithdrawals" parameterType="BusWithdrawals" useGeneratedKeys="true" keyProperty="withdrawalId">
+        insert into bus_withdrawals
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="amount != null">amount,</if>
+            <if test="withdrawalDate != null">withdrawal_date,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="processedAt != null">processed_at,</if>
+            <if test="description != null">description,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="amount != null">#{amount},</if>
+            <if test="withdrawalDate != null">#{withdrawalDate},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="processedAt != null">#{processedAt},</if>
+            <if test="description != null">#{description},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusWithdrawals" parameterType="BusWithdrawals">
+        update bus_withdrawals
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="amount != null">amount = #{amount},</if>
+            <if test="withdrawalDate != null">withdrawal_date = #{withdrawalDate},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="processedAt != null">processed_at = #{processedAt},</if>
+            <if test="description != null">description = #{description},</if>
+        </trim>
+        where withdrawal_id = #{withdrawalId}
+    </update>
+
+    <delete id="deleteBusWithdrawalsByWithdrawalId" parameterType="Long">
+        delete from bus_withdrawals where withdrawal_id = #{withdrawalId}
+    </delete>
+
+    <delete id="deleteBusWithdrawalsByWithdrawalIds" parameterType="String">
+        delete from bus_withdrawals where withdrawal_id in 
+        <foreach item="withdrawalId" collection="array" open="(" separator="," close=")">
+            #{withdrawalId}
+        </foreach>
+    </delete>
+</mapper>
