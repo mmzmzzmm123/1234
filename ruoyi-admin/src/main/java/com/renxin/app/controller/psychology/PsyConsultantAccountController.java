@@ -74,7 +74,8 @@ public class PsyConsultantAccountController extends BaseController
     @GetMapping(value = "/{consultantId}")
     public AjaxResult getInfo(@PathVariable("consultantId") Long consultantId)
     {
-        return AjaxResult.success(psyConsultantAccountService.selectPsyConsultantAccountByConsultantId(consultantId));
+        PsyConsultantAccount account = psyConsultantAccountService.selectPsyConsultantAccountByConsultantId(consultantId);
+        return AjaxResult.success(account);
     }
 
     /**

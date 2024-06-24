@@ -38,6 +38,7 @@ public class PsyConsultOrder extends BasePlusEntity implements Serializable
     /** 咨询类型  */
     private String consultType;
 
+    @TableField(exist = false)
     private String consultTypeName;
 
     /** 咨询师 */

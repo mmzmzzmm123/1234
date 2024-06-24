@@ -35,6 +35,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="payAmount != null "> and pay_amount = #{payAmount}</if>
             <if test="payMessage != null  and payMessage != ''"> and pay_message = #{payMessage}</if>
         </where>
+        order by update_time desc
     </select>
     
     <select id="selectPsyConsultantAccountRecordByRecordId" parameterType="Long" resultMap="PsyConsultantAccountRecordResult">
