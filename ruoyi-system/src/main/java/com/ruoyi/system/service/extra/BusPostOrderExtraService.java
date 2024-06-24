@@ -5,6 +5,7 @@ import com.ruoyi.portal.form.BusPostOrderForm;
 import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.service.IBusPostOrderService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -32,11 +33,12 @@ public interface BusPostOrderExtraService extends IBusPostOrderService {
 
     int confirm(Long orderId);
 
-    List<BusPostOrder> findSampleOrder();
+    List<BusPostOrder> findSampleOrder(List<Long>ids);
 
     BusPostOrder checkOrderTimeoutAndSampling(Long orderId);
 
     BusPostOrder orderTimeout(Long aLong);
 
     List<BusPostOrder> list(BusPostCursorForm busPostOrderForm);
+
 }

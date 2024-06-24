@@ -28,7 +28,7 @@ import java.util.List;
 import static com.ruoyi.common.utils.SecurityUtils.getLoginUser;
 
 /**
- * Description:
+ * Description: 订单发布 控制层
  * Copyright:   Copyright (c)2024
  * Company:
  *
@@ -127,9 +127,9 @@ public class PostOrderController extends BaseController {
      * @throws Exception
      */
     @PostMapping("/upload")
-    public AjaxResult avatar(@RequestParam("avatarfile") MultipartFile file) throws Exception {
+    public AjaxResult uploadFile(@RequestParam("file") MultipartFile file) throws Exception {
         if (!file.isEmpty()) {
-            String image = FileUploadUtils.upload(RuoYiConfig.getAvatarPath(), file, MimeTypeUtils.IMAGE_EXTENSION);
+            String image = FileUploadUtils.upload(RuoYiConfig.getImagePath(), file, MimeTypeUtils.IMAGE_EXTENSION);
             AjaxResult ajax = AjaxResult.success();
             ajax.put("imgUrl", image);
             // 更新缓存用户头像

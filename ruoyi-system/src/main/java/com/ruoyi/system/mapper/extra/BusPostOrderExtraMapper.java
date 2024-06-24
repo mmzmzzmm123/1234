@@ -24,5 +24,7 @@ import java.util.List;
 public interface BusPostOrderExtraMapper extends BusPostOrderMapper {
     List<BusPostOrder> findOrderListByUserId(@Param("startStatus") Integer startStatus,@Param("endStatus") Integer endStatus, @Param("merchantId") Long merchantId);
 
-    List<BusPostOrder> findSampleOrder(@Param("busPostOrder")BusPostOrder busPostOrder, @Param("statusList")List<Integer> statusList, @Param("date") Date date);
+    List<BusPostOrder> findSampleOrder(@Param("busPostOrder")BusPostOrder busPostOrder, @Param("statusList")List<Integer> statusList, @Param("date") Date date,@Param("ids")List<Long>ids);
+
+    List<BusPostOrder> cursorList(@Param("lastId") Long lastId,@Param("limit") Integer limit,@Param("status") Integer status);
 }

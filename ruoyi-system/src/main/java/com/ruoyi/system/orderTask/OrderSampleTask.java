@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.stream.Collectors;
 
 /**
  * Description: 打样的延迟队列
@@ -90,7 +92,7 @@ public class OrderSampleTask extends Task<Long> {
      * 初始化任务
      */
     public synchronized void init(CheckOrderTimeoutAndSampling checkOrder) {
-        List<BusPostOrder> list = postOrderExtraService.findSampleOrder();
+        List<BusPostOrder> list = postOrderExtraService.findSampleOrder(new ArrayList<>(orderIdCache));
         for (BusPostOrder busPostOrder : list) {
             Long orderId = busPostOrder.getOrderId();
             if (orderId % quantity == 0 && orderIdCache.add(orderId)) {

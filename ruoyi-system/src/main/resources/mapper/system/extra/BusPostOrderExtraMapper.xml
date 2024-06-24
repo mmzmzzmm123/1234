@@ -55,10 +55,22 @@
         <where>
             <if test="sample != null ">and sample = #{sample}</if>
             <if test="orderValidityStatus != null ">and order_validity_status = #{orderValidityStatus}</if>
-            <if test="sample_time != null ">and sample_time >=#{date}</if>
+            <if test="sample_time != null ">and sample_time &gt;=#{date}</if>
+            <if test="ids != null ">and order_id not in #{ids}</if>
             <if test="statusList != null ">and `status` in(#{status})</if>
         </where>
         order by created_at desc
+    </select>
+
+
+    <select id="cursorList" resultMap="BusPostOrderResult">
+        <include refid="selectBusPostOrderVo"/>
+        <where>
+            <if test="lastId != null ">and order_id &gt; #{lastId}</if>
+            <if test="status != null ">and `status` &lt;= #{status}</if>
+        </where>
+        order by created_at
+        limit #{limit}
     </select>
 
 
@@ -66,8 +78,8 @@
         <include refid="selectBusPostOrderVo"/>
         <where>
             <if test="merchantId != null ">and merchant_id = #{merchantId}</if>
-            <if test="startStatus != null ">and `status` &gt;=(#{startStatus})</if>
-            <if test="endStatus != null ">and `status` &lt;= (#{endStatus})</if>
+            <if test="startStatus != null ">and `status` &gt;=#{startStatus}</if>
+            <if test="endStatus != null ">and `status` &lt;= #{endStatus}</if>
         </where>
         order by created_at desc
     </select>

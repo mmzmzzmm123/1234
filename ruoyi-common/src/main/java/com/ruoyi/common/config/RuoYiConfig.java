@@ -104,6 +104,15 @@ public class RuoYiConfig
         return getProfile() + "/avatar";
     }
 
+
+    /**
+     * 获取头像上传路径
+     */
+    public static String getImagePath()
+    {
+        return getProfile() + "/image";
+    }
+
     /**
      * 获取下载路径
      */

@@ -25,7 +25,7 @@ public class BusTransactions extends BaseEntity
     private Long userId;
 
     /** 交易类型 (e.g., 充值, 提现, 订单支付, 订单收入) */
-    @Excel(name = "交易类型 (e.g., 充值, 提现, 订单支付, 订单收入)")
+    @Excel(name = "交易类型 (e.g.,微信支付, 充值, 提现, 订单支付, 订单收入)")
     private String transactionType;
 
     /** 交易金额 */

@@ -1,11 +1,8 @@
 package com.ruoyi.system.service.impl.extra;
 
-import com.github.pagehelper.PageHelper;
-import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.enums.OrderSampleType;
 import com.ruoyi.common.enums.OrderValidityStatus;
 import com.ruoyi.common.enums.PostOrderStatus;
-import com.ruoyi.common.utils.PageUtils;
 import com.ruoyi.common.utils.SecurityUtils;
 import com.ruoyi.common.utils.StatusUtils;
 import com.ruoyi.common.utils.bean.BeanUtils;
@@ -15,7 +12,6 @@ import com.ruoyi.system.domain.BusPostOrder;
 import com.ruoyi.system.domain.BusTransactions;
 import com.ruoyi.system.manager.PayManager;
 import com.ruoyi.system.mapper.extra.BusPostOrderExtraMapper;
-import com.ruoyi.system.service.IPostOrderImagesService;
 import com.ruoyi.system.service.extra.BusOrderAssignmentsExtraService;
 import com.ruoyi.system.service.extra.BusPostOrderExtraService;
 import com.ruoyi.system.service.extra.IPostOrderImagesExtraService;
@@ -27,7 +23,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -155,9 +150,7 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         if (StatusUtils.hasStatus(busPostOrder.getStatus(), PostOrderStatus.ORDER_RECEIVED.getValue())) {
             throw new RuntimeException("已被接单 无法修改");
         }
-        busPostOrder = new BusPostOrder();
-        BeanUtils.copyProperties(busPostOrderForm, busPostOrder);
-        return super.updateBusPostOrder(busPostOrder);
+        return super.updateBusPostOrder(BeanUtils.convert(busPostOrderForm,BusPostOrder.class));
     }
 
 
@@ -209,12 +202,12 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
      * @return
      */
     @Override
-    public List<BusPostOrder> findSampleOrder() {
+    public List<BusPostOrder> findSampleOrder(List<Long>ids) {
         BusPostOrder busPostOrder = new BusPostOrder();
         busPostOrder.setSample(OrderSampleType.SAMPLING_REQUIRED.getValue());//需要打样
         busPostOrder.setOrderValidityStatus(OrderValidityStatus.NORMAL.getValue());//订单正常
         List<Integer> statusListExcluded = StatusUtils.getStatusListExcluded(PostOrderStatus.SHOP_SAMPLE.getValue());//没有打样
-        return busPostOrderExtraMapper.findSampleOrder(busPostOrder, statusListExcluded, new Date());
+        return busPostOrderExtraMapper.findSampleOrder(busPostOrder, statusListExcluded, new Date(),ids);
     }
 
     /**
@@ -259,11 +252,20 @@ public class BusPostOrderExtraServiceImpl extends BusPostOrderServiceImpl implem
         return oldOrder;
     }
 
+    /**
+     * 游标分页
+     *
+     * @param busPostOrderForm
+     * @return
+     */
     @Override
     public List<BusPostOrder> list(BusPostCursorForm busPostOrderForm) {
-
-        //todo:
-        return null;
+        Integer limit = busPostOrderForm.getLimit();
+        limit = limit == null ? 20 : limit;
+        if (limit > 100) {
+            throw new RuntimeException("参数异常分页参数过大");
+        }
+        return busPostOrderExtraMapper.cursorList(busPostOrderForm.getLastId(),limit, StatusUtils.getIntByBit(PostOrderStatus.ORDER_RECEIVED.getValue()));
     }
 
 
