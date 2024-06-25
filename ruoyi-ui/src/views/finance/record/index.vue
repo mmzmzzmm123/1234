@@ -17,14 +17,22 @@
 
     <el-table v-loading="loading" :data="recordList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="记录ID" align="center" prop="recordId" />
       <el-table-column label="账户ID" align="center" prop="consultantId" />
-      <el-table-column label="状态" align="center" prop="status" />
-      <el-table-column label="提现类型" align="center" prop="payType" />
+      <el-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+            {{ payStatusName(scope.row.status) }}
+         </template>
+      </el-table-column> 
+      <el-table-column label="提现类型" align="center" prop="payType">
+        <template slot-scope="scope">
+            {{ payTypeName(scope.row.payType) }}
+        </template>
+      </el-table-column>  
       <el-table-column label="订单ID" align="center" prop="orderId" />
       <el-table-column label="支付前账户余额" align="center" prop="accountAmount" />
       <el-table-column label="支付金额" align="center" prop="payAmount" />
       <el-table-column label="支付消息结果" align="center" prop="payMessage" />
+      <el-table-column label="更新时间" align="center" prop="updateTime" />
     </el-table>
 
     <pagination
@@ -86,6 +94,26 @@ export default {
       total: 0,
       // 账户明细流水表格数据
       recordList: [],
+      payStatusDic :[
+        {
+          id: "0",
+          name: '失败'
+        },
+        {
+          id: "1",
+          name: '成功'
+        },
+      ],
+      payTypeDic :[
+        {
+          id: "0",
+          name: '分成'
+        },
+        {
+          id: "1",
+          name: '提现'
+        },
+      ],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -116,6 +144,14 @@ export default {
     this.getList();
   },
   methods: {
+    payTypeName(type) {
+      const list = this.payTypeDic.filter(item => item.id === type)
+      return list.length > 0 ? list[0].name : undefined
+    },
+    payStatusName(type) {
+      const list = this.payStatusDic.filter(item => item.id === type)
+      return list.length > 0 ? list[0].name : undefined
+    },
     /** 查询账户明细流水列表 */
     getList() {
       this.loading = true;

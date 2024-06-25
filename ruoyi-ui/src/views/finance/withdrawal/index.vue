@@ -17,10 +17,14 @@
 
     <el-table v-loading="loading" :data="orderList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="提现ID" align="center" prop="withdrawalNo" />
       <el-table-column label="咨询师ID" align="center" prop="consultantId" />
-      <el-table-column label="状态" align="center" prop="status" />
+      <el-table-column label="状态" align="center" prop="status">
+        <template slot-scope="scope">
+                {{ payStatusName(scope.row.status) }}
+              </template>
+      </el-table-column> 
       <el-table-column label="提现金额" align="center" prop="withdrawalAmount" />
+      <el-table-column label="提现日期" align="center" prop="updateTime" />
     </el-table>
 
     <pagination
@@ -73,6 +77,16 @@ export default {
       total: 0,
       // 提现订单表格数据
       orderList: [],
+      payStatusDic :[
+        {
+          id: "0",
+          name: '失败'
+        },
+        {
+          id: "1",
+          name: '成功'
+        },
+      ],
       // 弹出层标题
       title: "",
       // 是否显示弹出层
@@ -99,6 +113,10 @@ export default {
     this.getList();
   },
   methods: {
+    payStatusName(type) {
+      const list = this.payStatusDic.filter(item => item.id === type)
+      return list.length > 0 ? list[0].name : undefined
+    },
     /** 查询提现订单列表 */
     getList() {
       this.loading = true;
