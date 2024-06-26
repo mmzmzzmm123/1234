@@ -12,14 +12,15 @@ import com.renxin.web.controller.common.CommonCosController;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.List;
+
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @RestController
 @RequestMapping("/consultant/workspace")
@@ -27,9 +28,9 @@ import java.time.format.DateTimeFormatter;
 public class ConsultantSpaceController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(CommonCosController.class);
 
-    @Autowired
+    @Resource
     private IPsyConsultOrderItemService psyConsultOrderItemService;
-    @Autowired
+    @Resource
     private ConsultantTokenService consultantTokenService;
 
     @GetMapping("/task/list")

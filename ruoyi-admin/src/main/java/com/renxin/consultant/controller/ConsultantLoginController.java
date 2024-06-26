@@ -13,20 +13,21 @@ import com.renxin.psychology.service.IPsyConsultService;
 import com.renxin.web.controller.common.CommonCosController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/consultant")
 public class ConsultantLoginController extends BaseController {
     private static final Logger log = LoggerFactory.getLogger(CommonCosController.class);
 
-    @Autowired
+    @Resource
     ConsultantTokenService consultantTokenService;
 
-    @Autowired
+    @Resource
     IPsyConsultService psyConsultService;
 
     @GetMapping("/login")

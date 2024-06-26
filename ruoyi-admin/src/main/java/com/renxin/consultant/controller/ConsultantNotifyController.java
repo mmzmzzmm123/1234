@@ -10,9 +10,9 @@ import com.renxin.notice.service.IPsyCourNoticeService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -26,7 +26,7 @@ import java.util.List;
 @Api(value = "ConsultantNotifyController" ,tags = {" 咨询师通知api"})
 public class ConsultantNotifyController extends BaseController implements NoticeConstant {
 
-    @Autowired
+    @Resource
     private IPsyCourNoticeService psyCourNoticeService;
 
     /**
