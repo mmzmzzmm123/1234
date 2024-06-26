@@ -39,14 +39,14 @@ public class ConsultantAddressController extends BaseController {
     }
 
     @ApiOperation(value = "新增咨询师地址")
-    @PostMapping
+    @PostMapping(value = "/add")
     public AjaxResult add(@RequestBody PsyConsultantAddress psyConsultantAddress)
     {
         return toAjax(psyConsultantAddressService.insertPsyConsultantAddress(psyConsultantAddress));
     }
 
     @ApiOperation(value = "修改咨询师地址")
-    @PostMapping
+    @PostMapping(value = "/edit")
     public AjaxResult edit(@RequestBody PsyConsultantAddress psyConsultantAddress)
     {
         return toAjax(psyConsultantAddressService.updatePsyConsultantAddress(psyConsultantAddress));
