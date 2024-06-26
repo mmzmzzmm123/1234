@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultantSupervisionMemberMapper">
+    
+    <resultMap type="PsyConsultantSupervisionMember" id="PsyConsultantSupervisionMemberResult">
+        <result property="id"    column="id"    />
+        <result property="supervisionId"    column="supervision_id"    />
+        <result property="supervisionType"    column="supervision_type"    />
+        <result property="orderNo"    column="order_no"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultantSupervisionMemberVo">
+        select id, supervision_id, supervision_type, order_no, member_id, remark, del_flag, create_by, create_time, update_by, update_time from psy_consultant_supervision_member
+    </sql>
+
+    <select id="selectPsyConsultantSupervisionMemberList" parameterType="PsyConsultantSupervisionMember" resultMap="PsyConsultantSupervisionMemberResult">
+        <include refid="selectPsyConsultantSupervisionMemberVo"/>
+        <where>  
+            <if test="supervisionId != null "> and supervision_id = #{supervisionId}</if>
+            <if test="supervisionType != null  and supervisionType != ''"> and supervision_type = #{supervisionType}</if>
+            <if test="orderNo != null "> and order_no = #{orderNo}</if>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyConsultantSupervisionMemberById" parameterType="Long" resultMap="PsyConsultantSupervisionMemberResult">
+        <include refid="selectPsyConsultantSupervisionMemberVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyConsultantSupervisionMember" parameterType="PsyConsultantSupervisionMember">
+        insert into psy_consultant_supervision_member
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="supervisionId != null">supervision_id,</if>
+            <if test="supervisionType != null">supervision_type,</if>
+            <if test="orderNo != null">order_no,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="supervisionId != null">#{supervisionId},</if>
+            <if test="supervisionType != null">#{supervisionType},</if>
+            <if test="orderNo != null">#{orderNo},</if>
+            <if test="memberId != null">#{memberId},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyConsultantSupervisionMember" parameterType="PsyConsultantSupervisionMember">
+        update psy_consultant_supervision_member
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="supervisionId != null">supervision_id = #{supervisionId},</if>
+            <if test="supervisionType != null">supervision_type = #{supervisionType},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyConsultantSupervisionMemberById" parameterType="Long">
+        delete from psy_consultant_supervision_member where id = #{id}
+    </delete>
+
+    <delete id="deletePsyConsultantSupervisionMemberByIds" parameterType="String">
+        delete from psy_consultant_supervision_member where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

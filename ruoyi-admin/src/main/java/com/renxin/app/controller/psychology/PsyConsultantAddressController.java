@@ -38,7 +38,6 @@ public class PsyConsultantAddressController extends BaseController
     /**
      * 查询咨询师地址列表
      */
-    @PreAuthorize("@ss.hasPermi('system:address:list')")
     @GetMapping("/list")
     public TableDataInfo list(PsyConsultantAddress psyConsultantAddress)
     {
@@ -50,7 +49,6 @@ public class PsyConsultantAddressController extends BaseController
     /**
      * 导出咨询师地址列表
      */
-    @PreAuthorize("@ss.hasPermi('system:address:export')")
     @Log(title = "咨询师地址", businessType = BusinessType.EXPORT)
     @PostMapping("/export")
     public void export(HttpServletResponse response, PsyConsultantAddress psyConsultantAddress)
@@ -63,7 +61,6 @@ public class PsyConsultantAddressController extends BaseController
     /**
      * 获取咨询师地址详细信息
      */
-    @PreAuthorize("@ss.hasPermi('system:address:query')")
     @GetMapping(value = "/{addressId}")
     public AjaxResult getInfo(@PathVariable("addressId") Long addressId)
     {
@@ -73,7 +70,6 @@ public class PsyConsultantAddressController extends BaseController
     /**
      * 新增咨询师地址
      */
-    @PreAuthorize("@ss.hasPermi('system:address:add')")
     @Log(title = "咨询师地址", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@RequestBody PsyConsultantAddress psyConsultantAddress)
@@ -84,7 +80,6 @@ public class PsyConsultantAddressController extends BaseController
     /**
      * 修改咨询师地址
      */
-    @PreAuthorize("@ss.hasPermi('system:address:edit')")
     @Log(title = "咨询师地址", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@RequestBody PsyConsultantAddress psyConsultantAddress)
@@ -95,7 +90,6 @@ public class PsyConsultantAddressController extends BaseController
     /**
      * 删除咨询师地址
      */
-    @PreAuthorize("@ss.hasPermi('system:address:remove')")
     @Log(title = "咨询师地址", businessType = BusinessType.DELETE)
 	@DeleteMapping("/{addressIds}")
     public AjaxResult remove(@PathVariable Long[] addressIds)

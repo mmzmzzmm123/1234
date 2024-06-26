@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultantEquityMapper">
+    
+    <resultMap type="PsyConsultantEquity" id="PsyConsultantEquityResult">
+        <result property="id"    column="id"    />
+        <result property="consultantId"    column="consultant_id"    />
+        <result property="packageId"    column="package_id"    />
+        <result property="teamSupervision"    column="team_supervision"    />
+        <result property="supervisionNumber"    column="supervision_number"    />
+        <result property="personSupervision"    column="person_supervision"    />
+        <result property="supervisionNumber2"    column="supervision_number2"    />
+        <result property="personExperience"    column="person_experience"    />
+        <result property="supervisionNumber3"    column="supervision_number3"    />
+        <result property="courseSupervision"    column="course_supervision"    />
+        <result property="supervisionNumber4"    column="supervision_number4"    />
+        <result property="status"    column="status"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultantEquityVo">
+        select id, consultant_id, package_id, team_supervision, supervision_number, person_supervision, supervision_number2, person_experience, supervision_number3, course_supervision, supervision_number4, status, del_flag, create_by, create_time, update_by, update_time from psy_consultant_equity
+    </sql>
+
+    <select id="selectPsyConsultantEquityList" parameterType="PsyConsultantEquity" resultMap="PsyConsultantEquityResult">
+        <include refid="selectPsyConsultantEquityVo"/>
+        <where>  
+            <if test="consultantId != null "> and consultant_id = #{consultantId}</if>
+            <if test="packageId != null "> and package_id = #{packageId}</if>
+            <if test="teamSupervision != null  and teamSupervision != ''"> and team_supervision = #{teamSupervision}</if>
+            <if test="supervisionNumber != null "> and supervision_number = #{supervisionNumber}</if>
+            <if test="personSupervision != null  and personSupervision != ''"> and person_supervision = #{personSupervision}</if>
+            <if test="supervisionNumber2 != null "> and supervision_number2 = #{supervisionNumber2}</if>
+            <if test="personExperience != null  and personExperience != ''"> and person_experience = #{personExperience}</if>
+            <if test="supervisionNumber3 != null "> and supervision_number3 = #{supervisionNumber3}</if>
+            <if test="courseSupervision != null  and courseSupervision != ''"> and course_supervision = #{courseSupervision}</if>
+            <if test="supervisionNumber4 != null "> and supervision_number4 = #{supervisionNumber4}</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyConsultantEquityById" parameterType="Long" resultMap="PsyConsultantEquityResult">
+        <include refid="selectPsyConsultantEquityVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyConsultantEquity" parameterType="PsyConsultantEquity">
+        insert into psy_consultant_equity
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="consultantId != null">consultant_id,</if>
+            <if test="packageId != null">package_id,</if>
+            <if test="teamSupervision != null">team_supervision,</if>
+            <if test="supervisionNumber != null">supervision_number,</if>
+            <if test="personSupervision != null">person_supervision,</if>
+            <if test="supervisionNumber2 != null">supervision_number2,</if>
+            <if test="personExperience != null">person_experience,</if>
+            <if test="supervisionNumber3 != null">supervision_number3,</if>
+            <if test="courseSupervision != null">course_supervision,</if>
+            <if test="supervisionNumber4 != null">supervision_number4,</if>
+            <if test="status != null">status,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="consultantId != null">#{consultantId},</if>
+            <if test="packageId != null">#{packageId},</if>
+            <if test="teamSupervision != null">#{teamSupervision},</if>
+            <if test="supervisionNumber != null">#{supervisionNumber},</if>
+            <if test="personSupervision != null">#{personSupervision},</if>
+            <if test="supervisionNumber2 != null">#{supervisionNumber2},</if>
+            <if test="personExperience != null">#{personExperience},</if>
+            <if test="supervisionNumber3 != null">#{supervisionNumber3},</if>
+            <if test="courseSupervision != null">#{courseSupervision},</if>
+            <if test="supervisionNumber4 != null">#{supervisionNumber4},</if>
+            <if test="status != null">#{status},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyConsultantEquity" parameterType="PsyConsultantEquity">
+        update psy_consultant_equity
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="consultantId != null">consultant_id = #{consultantId},</if>
+            <if test="packageId != null">package_id = #{packageId},</if>
+            <if test="teamSupervision != null">team_supervision = #{teamSupervision},</if>
+            <if test="supervisionNumber != null">supervision_number = #{supervisionNumber},</if>
+            <if test="personSupervision != null">person_supervision = #{personSupervision},</if>
+            <if test="supervisionNumber2 != null">supervision_number2 = #{supervisionNumber2},</if>
+            <if test="personExperience != null">person_experience = #{personExperience},</if>
+            <if test="supervisionNumber3 != null">supervision_number3 = #{supervisionNumber3},</if>
+            <if test="courseSupervision != null">course_supervision = #{courseSupervision},</if>
+            <if test="supervisionNumber4 != null">supervision_number4 = #{supervisionNumber4},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyConsultantEquityById" parameterType="Long">
+        delete from psy_consultant_equity where id = #{id}
+    </delete>
+
+    <delete id="deletePsyConsultantEquityByIds" parameterType="String">
+        delete from psy_consultant_equity where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

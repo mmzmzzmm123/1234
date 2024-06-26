@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultantSupervisionMemberRecordMapper">
+    
+    <resultMap type="PsyConsultantSupervisionMemberRecord" id="PsyConsultantSupervisionMemberRecordResult">
+        <result property="id"    column="id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="supervisionType"    column="supervision_type"    />
+        <result property="supervisionId"    column="supervision_id"    />
+        <result property="memberId"    column="member_id"    />
+        <result property="evaluateLabel"    column="evaluate_label"    />
+        <result property="evaluateScore"    column="evaluate_score"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultantSupervisionMemberRecordVo">
+        select id, task_id, supervision_type, supervision_id, member_id, evaluate_label, evaluate_score, del_flag, create_by, create_time, update_by, update_time from psy_consultant_supervision_member_record
+    </sql>
+
+    <select id="selectPsyConsultantSupervisionMemberRecordList" parameterType="PsyConsultantSupervisionMemberRecord" resultMap="PsyConsultantSupervisionMemberRecordResult">
+        <include refid="selectPsyConsultantSupervisionMemberRecordVo"/>
+        <where>  
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="supervisionType != null  and supervisionType != ''"> and supervision_type = #{supervisionType}</if>
+            <if test="supervisionId != null "> and supervision_id = #{supervisionId}</if>
+            <if test="memberId != null  and memberId != ''"> and member_id = #{memberId}</if>
+            <if test="evaluateLabel != null  and evaluateLabel != ''"> and evaluate_label = #{evaluateLabel}</if>
+            <if test="evaluateScore != null "> and evaluate_score = #{evaluateScore}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyConsultantSupervisionMemberRecordById" parameterType="Long" resultMap="PsyConsultantSupervisionMemberRecordResult">
+        <include refid="selectPsyConsultantSupervisionMemberRecordVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertPsyConsultantSupervisionMemberRecord" parameterType="PsyConsultantSupervisionMemberRecord">
+        insert into psy_consultant_supervision_member_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="supervisionType != null">supervision_type,</if>
+            <if test="supervisionId != null">supervision_id,</if>
+            <if test="memberId != null">member_id,</if>
+            <if test="evaluateLabel != null">evaluate_label,</if>
+            <if test="evaluateScore != null">evaluate_score,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="supervisionType != null">#{supervisionType},</if>
+            <if test="supervisionId != null">#{supervisionId},</if>
+            <if test="memberId != null">#{memberId},</if>
+            <if test="evaluateLabel != null">#{evaluateLabel},</if>
+            <if test="evaluateScore != null">#{evaluateScore},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyConsultantSupervisionMemberRecord" parameterType="PsyConsultantSupervisionMemberRecord">
+        update psy_consultant_supervision_member_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="supervisionType != null">supervision_type = #{supervisionType},</if>
+            <if test="supervisionId != null">supervision_id = #{supervisionId},</if>
+            <if test="memberId != null">member_id = #{memberId},</if>
+            <if test="evaluateLabel != null">evaluate_label = #{evaluateLabel},</if>
+            <if test="evaluateScore != null">evaluate_score = #{evaluateScore},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deletePsyConsultantSupervisionMemberRecordById" parameterType="Long">
+        delete from psy_consultant_supervision_member_record where id = #{id}
+    </delete>
+
+    <delete id="deletePsyConsultantSupervisionMemberRecordByIds" parameterType="String">
+        delete from psy_consultant_supervision_member_record where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

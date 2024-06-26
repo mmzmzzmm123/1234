@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultantSupervisionTaskMapper">
+    
+    <resultMap type="PsyConsultantSupervisionTask" id="PsyConsultantSupervisionTaskResult">
+        <result property="taskId"    column="task_id"    />
+        <result property="supervisionId"    column="supervision_id"    />
+        <result property="supervisionType"    column="supervision_type"    />
+        <result property="consultantId"    column="consultant_id"    />
+        <result property="taskDatetime"    column="task_datetime"    />
+        <result property="cycle"    column="cycle"    />
+        <result property="cycleNumber"    column="cycle_number"    />
+        <result property="theme"    column="theme"    />
+        <result property="supervisionRecord"    column="supervision_record"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultantSupervisionTaskVo">
+        select task_id, supervision_id, supervision_type, consultant_id, task_datetime, cycle, cycle_number, theme, supervision_record, del_flag, create_by, create_time, update_by, update_time from psy_consultant_supervision_task
+    </sql>
+
+    <select id="selectPsyConsultantSupervisionTaskList" parameterType="PsyConsultantSupervisionTask" resultMap="PsyConsultantSupervisionTaskResult">
+        <include refid="selectPsyConsultantSupervisionTaskVo"/>
+        <where>  
+            <if test="supervisionId != null "> and supervision_id = #{supervisionId}</if>
+            <if test="supervisionType != null  and supervisionType != ''"> and supervision_type = #{supervisionType}</if>
+            <if test="consultantId != null  and consultantId != ''"> and consultant_id = #{consultantId}</if>
+            <if test="taskDatetime != null "> and task_datetime = #{taskDatetime}</if>
+            <if test="cycle != null  and cycle != ''"> and cycle = #{cycle}</if>
+            <if test="cycleNumber != null "> and cycle_number = #{cycleNumber}</if>
+            <if test="theme != null  and theme != ''"> and theme = #{theme}</if>
+            <if test="supervisionRecord != null  and supervisionRecord != ''"> and supervision_record = #{supervisionRecord}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyConsultantSupervisionTaskByTaskId" parameterType="Long" resultMap="PsyConsultantSupervisionTaskResult">
+        <include refid="selectPsyConsultantSupervisionTaskVo"/>
+        where task_id = #{taskId}
+    </select>
+        
+    <insert id="insertPsyConsultantSupervisionTask" parameterType="PsyConsultantSupervisionTask">
+        insert into psy_consultant_supervision_task
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">task_id,</if>
+            <if test="supervisionId != null">supervision_id,</if>
+            <if test="supervisionType != null">supervision_type,</if>
+            <if test="consultantId != null">consultant_id,</if>
+            <if test="taskDatetime != null">task_datetime,</if>
+            <if test="cycle != null">cycle,</if>
+            <if test="cycleNumber != null">cycle_number,</if>
+            <if test="theme != null">theme,</if>
+            <if test="supervisionRecord != null">supervision_record,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="taskId != null">#{taskId},</if>
+            <if test="supervisionId != null">#{supervisionId},</if>
+            <if test="supervisionType != null">#{supervisionType},</if>
+            <if test="consultantId != null">#{consultantId},</if>
+            <if test="taskDatetime != null">#{taskDatetime},</if>
+            <if test="cycle != null">#{cycle},</if>
+            <if test="cycleNumber != null">#{cycleNumber},</if>
+            <if test="theme != null">#{theme},</if>
+            <if test="supervisionRecord != null">#{supervisionRecord},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyConsultantSupervisionTask" parameterType="PsyConsultantSupervisionTask">
+        update psy_consultant_supervision_task
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="supervisionId != null">supervision_id = #{supervisionId},</if>
+            <if test="supervisionType != null">supervision_type = #{supervisionType},</if>
+            <if test="consultantId != null">consultant_id = #{consultantId},</if>
+            <if test="taskDatetime != null">task_datetime = #{taskDatetime},</if>
+            <if test="cycle != null">cycle = #{cycle},</if>
+            <if test="cycleNumber != null">cycle_number = #{cycleNumber},</if>
+            <if test="theme != null">theme = #{theme},</if>
+            <if test="supervisionRecord != null">supervision_record = #{supervisionRecord},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where task_id = #{taskId}
+    </update>
+
+    <delete id="deletePsyConsultantSupervisionTaskByTaskId" parameterType="Long">
+        delete from psy_consultant_supervision_task where task_id = #{taskId}
+    </delete>
+
+    <delete id="deletePsyConsultantSupervisionTaskByTaskIds" parameterType="String">
+        delete from psy_consultant_supervision_task where task_id in 
+        <foreach item="taskId" collection="array" open="(" separator="," close=")">
+            #{taskId}
+        </foreach>
+    </delete>
+</mapper>

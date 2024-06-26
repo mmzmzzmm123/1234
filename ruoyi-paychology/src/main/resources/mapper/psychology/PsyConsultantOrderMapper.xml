@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.renxin.psychology.mapper.PsyConsultantOrderMapper">
+    
+    <resultMap type="PsyConsultantOrder" id="PsyConsultantOrderResult">
+        <result property="orderNo"    column="order_no"    />
+        <result property="serverId"    column="server_id"    />
+        <result property="serverType"    column="server_type"    />
+        <result property="serverName"    column="server_name"    />
+        <result property="status"    column="status"    />
+        <result property="payCustomerId"    column="pay_customer_id"    />
+        <result property="payCustomerName"    column="pay_customer_name"    />
+        <result property="payAmount"    column="pay_amount"    />
+        <result property="payDatetime"    column="pay_datetime"    />
+        <result property="payStatus"    column="pay_status"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectPsyConsultantOrderVo">
+        select order_no, server_id, server_type, server_name, status, pay_customer_id, pay_customer_name, pay_amount, pay_datetime, pay_status, remark, del_flag, create_by, create_time, update_by, update_time from psy_consultant_order
+    </sql>
+
+    <select id="selectPsyConsultantOrderList" parameterType="PsyConsultantOrder" resultMap="PsyConsultantOrderResult">
+        <include refid="selectPsyConsultantOrderVo"/>
+        <where>  
+            <if test="orderNo != null  and orderNo != ''"> and order_no = #{orderNo}</if>
+            <if test="serverId != null  and serverId != ''"> and server_id = #{serverId}</if>
+            <if test="serverType != null "> and server_type = #{serverType}</if>
+            <if test="serverName != null  and serverName != ''"> and server_name like concat('%', #{serverName}, '%')</if>
+            <if test="status != null  and status != ''"> and status = #{status}</if>
+            <if test="payCustomerId != null "> and pay_customer_id = #{payCustomerId}</if>
+            <if test="payCustomerName != null  and payCustomerName != ''"> and pay_customer_name like concat('%', #{payCustomerName}, '%')</if>
+            <if test="payAmount != null "> and pay_amount = #{payAmount}</if>
+            <if test="payDatetime != null "> and pay_datetime = #{payDatetime}</if>
+            <if test="payStatus != null  and payStatus != ''"> and pay_status = #{payStatus}</if>
+        </where>
+    </select>
+    
+    <select id="selectPsyConsultantOrderByOrderNo" parameterType="String" resultMap="PsyConsultantOrderResult">
+        <include refid="selectPsyConsultantOrderVo"/>
+        where order_no = #{orderNo}
+    </select>
+        
+    <insert id="insertPsyConsultantOrder" parameterType="PsyConsultantOrder">
+        insert into psy_consultant_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null and orderNo != ''">order_no,</if>
+            <if test="serverId != null and serverId != ''">server_id,</if>
+            <if test="serverType != null">server_type,</if>
+            <if test="serverName != null">server_name,</if>
+            <if test="status != null">status,</if>
+            <if test="payCustomerId != null">pay_customer_id,</if>
+            <if test="payCustomerName != null">pay_customer_name,</if>
+            <if test="payAmount != null">pay_amount,</if>
+            <if test="payDatetime != null">pay_datetime,</if>
+            <if test="payStatus != null">pay_status,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderNo != null and orderNo != ''">#{orderNo},</if>
+            <if test="serverId != null and serverId != ''">#{serverId},</if>
+            <if test="serverType != null">#{serverType},</if>
+            <if test="serverName != null">#{serverName},</if>
+            <if test="status != null">#{status},</if>
+            <if test="payCustomerId != null">#{payCustomerId},</if>
+            <if test="payCustomerName != null">#{payCustomerName},</if>
+            <if test="payAmount != null">#{payAmount},</if>
+            <if test="payDatetime != null">#{payDatetime},</if>
+            <if test="payStatus != null">#{payStatus},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updatePsyConsultantOrder" parameterType="PsyConsultantOrder">
+        update psy_consultant_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="serverId != null and serverId != ''">server_id = #{serverId},</if>
+            <if test="serverType != null">server_type = #{serverType},</if>
+            <if test="serverName != null">server_name = #{serverName},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="payCustomerId != null">pay_customer_id = #{payCustomerId},</if>
+            <if test="payCustomerName != null">pay_customer_name = #{payCustomerName},</if>
+            <if test="payAmount != null">pay_amount = #{payAmount},</if>
+            <if test="payDatetime != null">pay_datetime = #{payDatetime},</if>
+            <if test="payStatus != null">pay_status = #{payStatus},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where order_no = #{orderNo}
+    </update>
+
+    <delete id="deletePsyConsultantOrderByOrderNo" parameterType="String">
+        delete from psy_consultant_order where order_no = #{orderNo}
+    </delete>
+
+    <delete id="deletePsyConsultantOrderByOrderNos" parameterType="String">
+        delete from psy_consultant_order where order_no in 
+        <foreach item="orderNo" collection="array" open="(" separator="," close=")">
+            #{orderNo}
+        </foreach>
+    </delete>
+</mapper>
