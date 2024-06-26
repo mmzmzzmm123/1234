@@ -129,3 +129,170 @@ CREATE TABLE `psy_consultant_withdrawal_order`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb3 COLLATE = utf8mb3_bin COMMENT = '提现订单' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
+
+-- ----------------------------
+-- Table structure for psy_consultant_equity
+-- ----------------------------
+DROP TABLE IF EXISTS `psy_consultant_equity`;
+CREATE TABLE `psy_consultant_equity`  (
+  `id` bigint NOT NULL COMMENT '权益主键',
+  `consultant_id` bigint NULL DEFAULT NULL COMMENT '咨询师ID',
+  `package_id` bigint NULL DEFAULT NULL COMMENT '套餐ID',
+  `team_supervision` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '团督周期 第几期',
+  `supervision_number` int NULL DEFAULT NULL COMMENT '套餐次数',
+  `person_supervision` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '个督套餐',
+  `supervision_number2` int NULL DEFAULT NULL COMMENT '个督套餐次数',
+  `person_experience` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '体验套餐',
+  `supervision_number3` int NULL DEFAULT NULL COMMENT '体验套餐次数',
+  `course_supervision` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '课程套餐',
+  `supervision_number4` int NULL DEFAULT NULL COMMENT '课程套餐次数',
+  `status` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '0:失效 1:有效',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 1代表删除）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '咨询师权益表' ROW_FORMAT = Dynamic;
+
+
+-- ----------------------------
+-- Table structure for psy_consultant_equity_verification
+-- ----------------------------
+DROP TABLE IF EXISTS `psy_consultant_equity_verification`;
+CREATE TABLE `psy_consultant_equity_verification`  (
+  `id` bigint NOT NULL COMMENT '权益主键',
+  `consultant_id` bigint NULL DEFAULT NULL COMMENT '咨询师ID',
+  `order_id` bigint NULL DEFAULT NULL COMMENT '订单ID',
+  `cycle_type` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '1团督 2 个督 3体验  4课程',
+  `cycle_number` int NULL DEFAULT NULL COMMENT '核销次数',
+  `status` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '0:失效 1:有效',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 1代表删除）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '咨询师权益核销表' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for psy_consultant_order
+-- ----------------------------
+DROP TABLE IF EXISTS `psy_consultant_order`;
+CREATE TABLE `psy_consultant_order`  (
+  `order_no` varchar(80) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '流水编号',
+  `server_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL COMMENT '服务ID :体验ID、个督ID、课程ID 套餐ID',
+  `server_type` int NOT NULL COMMENT '服务类型  1：体验 2:个督、3:团督、4:课程 5:个人套餐',
+  `server_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '服务名称',
+  `status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '订单状态0-待付款 1-进行中 2-已完成 3-已取消',
+  `pay_customer_id` int NOT NULL COMMENT '支付咨询者id',
+  `pay_customer_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '支付咨询者名称',
+  `pay_amount` decimal(10, 2) NULL DEFAULT NULL COMMENT '实际支付费用',
+  `pay_datetime` datetime NULL DEFAULT NULL COMMENT '付款时间',
+  `pay_status` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '支付状态 0 未支付 1 支持成功  2抵扣成功 3 失败',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 1代表删除）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间'
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '咨询师订单' ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `psy_consultant_package`;
+CREATE TABLE `psy_consultant_package`  (
+  `package_id` bigint NOT NULL COMMENT '套餐主键',
+  `product_name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '套餐名称',
+  `product_pic_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '套餐产品图片地址',
+  `detail_pic_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '详情图片地址',
+  `cycle_type` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '1团督 2 个督 3体验  4课程',
+  `cycle_number` int NULL DEFAULT NULL COMMENT '套餐次数',
+  `status` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '0:失效 1:有效',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 1代表删除）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`package_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '咨询师成长套餐表' ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `psy_consultant_supervision_member`;
+CREATE TABLE `psy_consultant_supervision_member`  (
+  `id` bigint NOT NULL COMMENT '团体成员主键',
+  `supervision_id` bigint NULL DEFAULT NULL COMMENT '督导团员ID、个体督导ID、个体体验ID',
+  `supervision_type` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '1:团督  2.个体督导  3个体体验',
+  `order_no` bigint NULL DEFAULT NULL COMMENT '订单ID',
+  `member_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '成员ID(咨询师ID）',
+  `remark` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '备注',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 1代表删除）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间'
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '督导成员表' ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `psy_consultant_supervision_member_record`;
+CREATE TABLE `psy_consultant_supervision_member_record`  (
+  `id` bigint NOT NULL COMMENT '团体成员主键',
+  `task_id` bigint NULL DEFAULT NULL COMMENT '督导任务ID',
+  `supervision_type` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '1:团督  2.个体督导  3个体体验',
+  `supervision_id` bigint NULL DEFAULT NULL COMMENT '督导团员ID、个体督导ID、个体体验ID',
+  `member_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '成员ID 、督导ID',
+  `evaluate_label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '评价标签',
+  `evaluate_score` decimal(10, 2) NULL DEFAULT NULL COMMENT '评价分数',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 1代表删除）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间'
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '督导笔记、成员评价 标签评价' ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `psy_consultant_supervision_task`;
+CREATE TABLE `psy_consultant_supervision_task`  (
+  `task_id` bigint NOT NULL COMMENT '任务ID',
+  `supervision_id` bigint NULL DEFAULT NULL COMMENT '团督ID 个督ID',
+  `supervision_type` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '1:团督  2.个体督导  3个人体验',
+  `consultant_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '咨询师ID',
+  `task_datetime` datetime NULL DEFAULT NULL COMMENT '任务执行时间',
+  `cycle` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '周期',
+  `cycle_number` int NULL DEFAULT NULL COMMENT '周期次数',
+  `theme` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '主题',
+  `supervision_record` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '督导记录',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 1代表删除）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`task_id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '咨询师团督任务' ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `psy_consultant_supervision_task_case`;
+CREATE TABLE `psy_consultant_supervision_task_case`  (
+  `task_id` bigint NOT NULL COMMENT '任务ID',
+  `user_id` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '督导对象ID'
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '督导任务个案' ROW_FORMAT = Dynamic;
+
+
+DROP TABLE IF EXISTS `psy_consultant_team_supervision`;
+CREATE TABLE `psy_consultant_team_supervision`  (
+  `id` bigint NOT NULL COMMENT '团督主键',
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '团督标题',
+  `logo_pic_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '团督logo',
+  `detail_pic_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '团督明细地址',
+  `cycle` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '周期',
+  `cycle_number` int NULL DEFAULT NULL COMMENT '周期次数',
+  `consultant_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '带领者咨询师',
+  `status` char(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '0:招募中 1:已开始 2:已结束 3:暂停',
+  `remark` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL COMMENT '团督备注',
+  `del_flag` char(1) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT '0' COMMENT '删除标志（0代表存在 1代表删除）',
+  `create_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '创建人',
+  `create_time` datetime NULL DEFAULT NULL COMMENT '创建时间',
+  `update_by` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NULL DEFAULT NULL COMMENT '更新者',
+  `update_time` datetime NULL DEFAULT NULL COMMENT '更新时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_0900_ai_ci COMMENT = '咨询师团督' ROW_FORMAT = Dynamic;
